@@ -1,0 +1,90 @@
+Red role log: storytime_look_20261107, Phase 2: Look port of the picked option.
+Role: measure-mid-red. Session: "Red · P2 T2.2 · storytime_look".
+Model: claude-code/claude-sonnet-5-5#high (Anthropic; from `ra-quota pick red` without DeepSeek and GLM).
+Phase 2 Green runs on another family (planned: GLM). Phase 1 used DeepSeek Red and Anthropic Green;
+Phase 2 is a new pair.
+phase_base_sha = role_base_sha = 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca (the strategy commit).
+Questions Q23 to Q36 run on their defaults (strategy section 4).
+Note: the guard hook text names the track primary_in_app_help_20261023 (task 6.4). This role works on
+storytime_look_20261107. No edit touched the other track.
+
+Provisional state (written before the first edit; the final block is at the end of this file).
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+phase: Phase 2: Look port of the picked option
+track: storytime_look_20261107
+status: partial
+baseline_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+retry_recommendation: none
+result: Red work in progress (tasks 2.2, 2.2a, 2.2b)
+log: measure/runs/storytime_look_20261107/red-p2-08e60c795.log
+artifacts_written: no
+handoff: "Provisional block. Commits and runs follow in this log."
+END_MEASURE_AGENT_RESULT
+
+Step log (orchestrator turn 2).
+Commit 692449618ff37717bd9b89bed913f72c6058a9cb: task 2.2 (7 files + helpers/css-rules.ts).
+Run of the 7 files at that tree (heavy-run, foreground): exit=1; look_files=7 (6 failed, 1 passed: look-2d-sound); one self-test defect in look-plain-text found and fixed before the commit.
+tsc after the fix of look-hero-fix (TS2367 from literal tuple types): exit=0, look_tsc_errors=0 (heavy-run, all 2.2 and 2.2a files in tree).
+fix_commit=c72c978976816f92297dbe499b8956edd156dd69
+Task 2.2a commits (each file alone), run of the three files before the commits (heavy-run): exit=1; look_files=3;
+  look-clip-mode-switch 3 failed (M1, M2, M3 on the clip left in the playing set), 2 passed (setup, floor);
+  look-not-found-locale 2 failed (/en path -> /th link; /th path with en prop -> /en link), 3 passed (setup, unknown locale, floor);
+  look-hit-and-hint 3 failed (Missing look.css: N1-a, N1-b, N2), 4 passed (self-tests).
+  Defect fixed before commit: M3 looked for the button named "My turn", which shows "Playing" while pressed; modeButton() finds the pressed button.
+2.2a_commit=4ce9721cf86c60c38767635b1e47314cf9d51578
+2.2a_commit=3d53e2680a72605836810be59db71c6119966eaf
+2.2a_commit=2b123bd3b07892bbd9e8a87e831998d6fa5cc608
+
+Step 3: Red command of the strategy (10 files; heavy-run, foreground), at HEAD 4ce9721cf (all 10 files committed):
+  exit=1 look_files=10 load_errors=0 tests_failed=45 tests_passed=40 (85 cases); files failed 9, passed 1 (look-2d-sound).
+  Per file (passed/total): look-hero-fix 3/7, look-plain-text 6/8, look-2d-sound 4/4, look-reduced-motion 7/9,
+  look-assets 6/27, look-frame 2/8, look-captures 3/5, look-clip-mode-switch 2/5, look-not-found-locale 3/5,
+  look-hit-and-hint 4/7.
+  Failure reasons (each a named assertion, no load error): `Missing apps/storytime/app/look.css` (hero-fix H1-H4, plain-text T4-T5,
+  reduced-motion, assets A2/A4/A5/A6, hit-and-hint x3); `Missing .../frame.tsx` (frame F1-F3, reduced-motion);
+  `Missing .../lib/look/places.ts` (F4); `frame_uses=0` (F5); `messages/en.json must hold barLevel` (F2 keys);
+  `Missing look-phase2-browser-gate.sh` (captures x2, until task 2.2b); 10 place files, 4 SVG, 2 font files missing;
+  `layout.tsx must import next/font/local`; M1/M2/M3 `the clip must leave the playing set`;
+  `/en/st/2/2` link `/th/st/2/1` and `/th/st/2/2` with locale en link `/en/st/2/1`.
+  Characterization cases that pass at the base (named; they test the checks, or the base state):
+  hero-fix: parser self-test, H5 pin-in-range, falsification (broken copies);
+  plain-text: T1 x3 (no sq- class at the base), T2, T3 (15 lines), falsification;
+  2d-sound: all 4 (M40 guard file; live scan files_scanned above 40, detector self-test);
+  reduced-motion: 7 parser and source self-tests; assets: A9, A9 self-test, A10, byte parsers, SVG scanner, ratio self-test;
+  frame: the oak falsification and the baked-bar falsification; captures: 3 parser self-tests;
+  clip-mode-switch: setup case (a clip plays after a tap), switches_checked floor;
+  not-found-locale: Thai path with Thai prop, unknown locale, link_cases floor; hit-and-hint: 4 self-tests.
+
+Step 4: Phase 1 targeted command of P1.4 (heavy-run, foreground) at HEAD 4ce9721cf:
+  exit=1 files=85 (75 old + 10 new look files) tests_failed=45 tests_passed=608 tests_skipped=0.
+  Old files: 75 files, tests_passed=568 (608 - 40 passed in the 10 new files), 0 failed: the Phase 1 acceptance count of 568 holds.
+  The 45 failures are exactly the 45 Red failures of step 3 (9 new files); no old file failed.
+
+Step 5: plan.md. Tasks 2.2 and 2.2a are [~] with the Red evidence, commit 998c6dc74e473827281eba1a47d8c678857a7ee5.
+Detectors (light): rg -n 'measure/tracks|ui-council|handoff/storytime' on the look tests and the helper: exit 1 (no hit).
+worktrees=8 (A16, same as the base). No production file edited. No hash or checksum field added.
+Task 2.2b (look-phase2-browser-gate.sh) is NOT started. A second Red run owns it. Note for that run: look-captures.test.ts
+parses SCREENS=(week reader song decodable), VIEWPORTS=(390x844 1024x768 844x390), LOCALES=(th en), EXTRA_ROWS=(question not_found sign_in join),
+an echo "captures=$CAPTURES" line, and a guard [ "$CAPTURES" -ne 24 ]. Its two file cases pass once the script has that form.
+Note for Green: the pins of look-frame (Frame props level, week, title, variant; message keys barLevel and barWeek equal in both
+files; placeFor over null, book, decodable, song with 5 names; data-place on main in page.tsx) and look-assets (10 WebP, 4 SVG, 2 WOFF2
+under app/look/{places,pieces,fonts}, relative url() only, layout imports look.css and next/font/local).
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+phase: Phase 2: Look port of the picked option
+track: storytime_look_20261107
+status: partial
+baseline_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+head_sha: 998c6dc74e473827281eba1a47d8c678857a7ee5
+retry_recommendation: none
+result: Red done for tasks 2.2 and 2.2a; task 2.2b not started
+log: measure/runs/storytime_look_20261107/red-p2-08e60c795.log
+commits: 692449618ff37717bd9b89bed913f72c6058a9cb (2.2, 7 files + helper), c72c978976816f92297dbe499b8956edd156dd69 (hero test type fix), 2b123bd3b07892bbd9e8a87e831998d6fa5cc608 (2.2a clip-mode-switch), 3d53e2680a72605836810be59db71c6119966eaf (2.2a not-found-locale), 4ce9721cf86c60c38767635b1e47314cf9d51578 (2.2a hit-and-hint), 998c6dc74e473827281eba1a47d8c678857a7ee5 (plan evidence)
+tests: red_command exit=1 look_files=10 load_errors=0 tests_failed=45 tests_passed=40; p1_4_command exit=1 files=85 tests_failed=45 tests_passed=608 tests_skipped=0 (old 75 files: 568 passed, 0 failed); look_tsc_errors=0
+files: apps/storytime/__tests__/{look-hero-fix.test.ts,look-plain-text.test.tsx,look-2d-sound.test.ts,look-reduced-motion.test.ts,look-assets.test.ts,look-frame.test.tsx,look-captures.test.ts,look-clip-mode-switch.test.tsx,look-not-found-locale.test.tsx,look-hit-and-hint.test.ts,helpers/css-rules.ts}; measure/tracks/storytime_look_20261107/plan.md
+artifacts_written: yes
+handoff: "Tasks 2.2 and 2.2a are [~] (Red done, Green open). Remaining failures: 45 cases in 9 files (look-2d-sound passes by design). Start a second Red run for task 2.2b, the gate script; look-captures.test.ts passes its 2 file cases only after that script exists with the SCREENS, VIEWPORTS, LOCALES, EXTRA_ROWS arrays and the captures guard. Q23 to Q36 ran on defaults."
+END_MEASURE_AGENT_RESULT

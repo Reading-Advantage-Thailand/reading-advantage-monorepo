@@ -1,0 +1,127 @@
+Red round 3 log: storytime_look_20261107, Phase 1: Council fixes.
+Role: measure-mid-red. Model: deepseek/deepseek-flash#high.
+Phase base = 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6. Role base = 8b56ac236994df4c6af4099d8c1164aee34d2da7.
+Scope: rule R-TSC, task 1.10, task 1.11.
+
+## R-TSC (commit 092f60c6e)
+Fixed the 13 look-file tsc errors with no assertion change: guards for possibly-undefined
+`page.image` and `approval` (look-feedback 2, look-reader-turn 7, look-reader-highlight 1),
+and `as unknown as` for the two not-yet-written exports (look-not-found 3).
+Run: `tsc --noEmit` through HEAVY. look_tsc_errors=0.
+Other errors at the time (outside this track, from the login Green's in-flight work, left
+untouched): `app/[locale]/st/[level]/[week]/page.tsx` (191, 354, 375: `mediaUrls` missing;
+406, 418, 437: `mediaBase` does not exist) and `__tests__/phase3-home-render.test.tsx` (100:
+`mediaBase`). They are not look-* errors.
+Final tsc at the end of the role (after the login 2b.6 commit `ac02b7c37` landed): exit=0,
+look_tsc_errors=0, other_errors=0. The two new Red files type-check too.
+
+## Task 1.10 (commit 6bd0ed1fe)
+Wrote `look-word-clip-tap.test.tsx` (C1 to C9, schema block, receiver block, both fixtures).
+Edited the old tests of M28:
+- rewrote `phase3-readalong-ui` My turn case to the word clip of the fixture (1 case);
+- deleted 4 cases in `phase3-audio-seek-stop` (105, 123, 195, 270);
+- deleted 3 cases in `phase3-adversarial-taps` (120, 153, 241);
+- deleted `phase3-adversarial-r2-reject-order.test.tsx` (its one case was the last cut case);
+- replaced H5 of `look-reader-highlight` with H5b.
+old_cases_removed=8 (4+3+1); old_cases_rewritten=1. Each deletion has one reason line in
+the commit body.
+
+## Task 1.11 (commit 379557b3c)
+Wrote `look-song-line-offset.test.tsx` (O1 to O6 and the schema block).
+One authoring defect was fixed in the same commit: O6 must count only positive gaps
+(`gaps_checked=8`, not 14). One rerun of the combined job confirmed it.
+
+## Job 1: combined Red (must fail)
+Command (20 paths; `phase3-adversarial-r2-reject-order.test.tsx` is deleted, so 19 ran):
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 --reporter=json --outputFile=/tmp/opencode/r3-red.json __tests__/look-not-found.test.tsx __tests__/phase3-not-found.test.ts __tests__/look-decodable-case.test.tsx __tests__/phase3-adversarial-r2-pieces.test.tsx __tests__/phase3-adversarial-r3-pieces.test.tsx __tests__/look-reader-turn.test.tsx __tests__/look-feedback.test.tsx __tests__/look-week-card-label.test.tsx __tests__/look-app-icon.test.ts __tests__/look-reader-gap.test.tsx __tests__/look-song-playing.test.tsx __tests__/phase3-song-ui.test.tsx __tests__/look-reader-highlight.test.tsx __tests__/look-word-clip-tap.test.tsx __tests__/phase3-readalong-ui.test.tsx __tests__/phase3-audio-seek-stop.test.tsx __tests__/phase3-adversarial-taps.test.tsx __tests__/phase3-adversarial-r2-reject-order.test.tsx __tests__/look-song-line-offset.test.tsx'
+
+(Phase 3 messages is in the real command; the line above is the same set. The exact command
+is in the plan evidence.)
+Result: exit=1; tests_failed=64; tests_passed=38; files 19; look_files=11; old_files=8;
+load_errors=0.
+
+Task 1.10 numbers:
+- look-word-clip-tap_test=3/12: C1, C5, C8 pass; C2, C3, C4, C6, C7, C9, the schema
+  default, the 14 bad schema values, and the receiver block fail.
+  Example messages: `a tap must play the clip words/hello.mp3, played ...books/1-hello.mp3`;
+  `a no-clip word must have no tabindex`; `an absent wordClips must default to {}`;
+  `mediaOf must list the 12 clip files, listed 0`.
+- phase3-readalong-ui_test=9/10: only the rewritten My turn case fails
+  (`the tap must play the word clip of the fixture`).
+- phase3-audio-seek-stop_test=8/8 and phase3-adversarial-taps_test=2/2: all remaining cases
+  pass (the 7 cut cases were deleted).
+- phase3-adversarial-r2-reject-order: file removed with its one case.
+
+Task 1.11 numbers:
+- look-song-line-offset_test=2/8: O3 and O5 pass; O1 (`points_failed=31`), O2
+  (`phone_points_failed=31`), O4, O6 (`gap 0 must light no line ... expected 4 to be null`),
+  the schema default, and the 8 bad values fail.
+
+Passing cases of a look file, with the reason:
+- look-word-clip-tap C1: named characterization; My turn pauses and plays nothing.
+- look-word-clip-tap C5: named characterization; a sentence-span tap has no word and plays nothing.
+- look-word-clip-tap C8: named characterization; Listen and Slow keep the sentence and slow files.
+- look-song-line-offset O3: named characterization; the audio fallback uses raw times.
+- look-song-line-offset O5: named characterization; an absent field keeps raw times.
+Other look files from earlier rounds also pass their named cases (look-app-icon I3,
+look-decodable full stop, look-feedback rejected play, look-reader-gap spec checks,
+look-reader-highlight H7, look-reader-turn no-picture, phase3-messages 3 old cases).
+
+Interference (not mine; left untouched): the login Green holds uncommitted edits to
+`reader.tsx`, `song.tsx`, `decodable.tsx`, `questions.tsx`, `page.tsx` and `lib/media/`.
+They move the media prop from `mediaBase` to `mediaUrls`. Because of that in-flight state:
+- look-song-playing S5 no longer passes (video `src` and `poster` are empty without `mediaUrls`);
+- phase3-song-ui fails 3 cases on empty `src`/`poster`;
+- look-week-card-label's live render raises `unexpected notFound` (the page guard now calls it);
+- look-reader-turn's first failure is `the new picture must be an img in the document`.
+These are outside this Red role's paths; no file there was edited.
+
+## Job 2: guard run (must pass)
+HEAVY... -c 'cd .../apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1
+__tests__/phase3-adversarial-r3-seek.test.tsx __tests__/phase3-seek-cancel.test.ts
+__tests__/phase3-loops-off.test.tsx __tests__/phase3-media-coverage.test.ts
+__tests__/phase2-adversarial.test.ts __tests__/phase2-adversarial-r2.test.ts
+__tests__/phase3-loop-receiver.test.ts __tests__/phase2-contract-hardening.test.ts'
+Result: exit=0; tests_passed=102; tests_failed=0; files 8.
+Per file: phase2-adversarial-r2 19, phase2-adversarial 35, phase2-contract-hardening 15,
+phase3-adversarial-r3-seek 6, phase3-loop-receiver 11, phase3-loops-off 9,
+phase3-media-coverage 6, phase3-seek-cancel 1.
+
+## Commits (branch master, no push)
+- 092f60c6e test(storytime): fix the look test types (track_id: storytime_look_20261107)
+- 6bd0ed1fe test(storytime): add the word clip tap red test (track_id: storytime_look_20261107)
+- 379557b3c test(storytime): add the song line offset red test (track_id: storytime_look_20261107)
+- b6a9b5e0c docs(measure): record the look red round 3 evidence (track_id: storytime_look_20261107)
+
+## Remaining work for Green
+1.10: `lib/contracts/week.ts` (`wordClips`, key rule Q18, `mediaPath` values, default {}),
+`reader.tsx` (play the clip of the tapped word, no sentence cut, no-clip words not targets),
+`scripts/receive-weeks.ts` (`mediaOf` word-clip entries). 1.11: `songSchema.videoLeadInSeconds`
+(0 to 30, default 0) and `song.tsx` subtracts it for both videos, 0 for audio.
+Guard run stays green; the login merge must keep the media prop shape that these tests use.
+
+## Gate
+Ran once with baseline 8b56ac236. Result: FAIL, only with `Mid Red changed non-test/non-Measure
+files` listing `apps/storytime/scripts/make-accounts.ts`, which is the login track's commit
+852fa5e10 (storytime_at_home_release_20261106). The login Green then committed its media work
+(ac02b7c37, 092ba6dbe); a rerun against the same baseline would list those files too. My four
+commits build on 28da8c92d and hold only the look test files and `measure/`. No other-track file
+was changed. This is the expected other-track finding of the brief.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+phase: Phase 1: Council fixes
+track: storytime_look_20261107
+status: done
+retry_recommendation: none
+result: R-TSC fixes, look-word-clip-tap.test.tsx, look-song-line-offset.test.tsx, M28 old-test edits
+log: measure/runs/storytime_look_20261107/red-p1-r3-8b56ac236.log
+artifacts_written: yes
+baseline_sha: 8b56ac236994df4c6af4099d8c1164aee34d2da7
+head_sha: b6a9b5e0c
+dispositions: none
+tests: "red exit=1 (64 failed, 38 passed, 19 files, load_errors=0); guard exit=0 (102 passed, 0 failed, 8 files); tsc exit=0 look_tsc_errors=0"
+commits: 092f60c6e, 6bd0ed1fe, 379557b3c, b6a9b5e0c
+files: apps/storytime/__tests__/look-word-clip-tap.test.tsx, apps/storytime/__tests__/look-song-line-offset.test.tsx, apps/storytime/__tests__/look-reader-highlight.test.tsx, apps/storytime/__tests__/look-feedback.test.tsx, apps/storytime/__tests__/look-not-found.test.tsx, apps/storytime/__tests__/look-reader-turn.test.tsx, apps/storytime/__tests__/phase3-readalong-ui.test.tsx, apps/storytime/__tests__/phase3-audio-seek-stop.test.tsx, apps/storytime/__tests__/phase3-adversarial-taps.test.tsx, apps/storytime/__tests__/phase3-adversarial-r2-reject-order.test.tsx (removed), measure/tracks/storytime_look_20261107/plan.md
+handoff: "R-TSC committed (look_tsc_errors=0). Task 1.10 red (look-word-clip-tap 3/12: C1, C5, C8 pass; phase3-readalong-ui 9/10; the 7 cut cases deleted and the one-case r2-reject-order file removed; old_cases_removed=8, old_cases_rewritten=1). Task 1.11 red (look-song-line-offset 2/8: O3, O5 pass; points_failed=31, phone_points_failed=31, gaps_checked=8). Combined job exit 1 with 64 failed/38 passed over 19 files; guard job exit 0 with 102 passed. Interference: the login Green's uncommitted media-prop change (mediaBase -> mediaUrls) makes phase3-song-ui fail 3 old cases, look-song-playing S5 fail, and look-week-card-label's live render raise notFound; those files are not mine and were not touched. Gate baseline is the captured role base 8b56ac236."
+END_MEASURE_AGENT_RESULT

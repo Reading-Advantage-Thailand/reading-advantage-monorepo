@@ -1,0 +1,282 @@
+=== Green P3 T3.6 evidence log (role measure-jr-green, model nvidia/stepfun-ai/step-5-preview#high) ===
+phase_base_sha=2655632aaff89ed8f0e45c3d910f915f04ea0ec9
+role_base_sha=960fbcd9baa2385bfda71e368f4a9720a044c2f5
+note: gates 2, 3, 4, and 6 first ran at 15:05 to 15:08 against a predecessor of lib/content.ts that differed only in a comment line. The runs below are the runs of the final file, after the comment no longer holds the literal public-name spelling that the detector of P3.4 line 795 scans for.
+
+ RUN  v4.1.8 /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime
+
+
+ Test Files  1 passed (1)
+      Tests  13 passed (13)
+   Start at  15:15:24
+   Duration  1.44s (transform 279ms, setup 0ms, import 358ms, tests 712ms, environment 0ms)
+
+EXIT=0
+=== gate 1 labels (same gate with the verbose reporter) ===
+files_checked=25
+draft_week_cases=6
+mutants_rejected=3
+ Test Files  1 passed (1)
+      Tests  13 passed (13)
+grep_exit=0
+tsc_exit=0
+EXIT=0
+eslint_exit=0
+EXIT=0
+=== gate 5: the detectors of P3.4 line 795 (exit 1 means no hit) ===
+rg_leak_exit=1
+131:    wordClips: z.record(wordClipKey, mediaPath).default({}),
+rg_wordClips_exit=0
+270:    videoLeadInSeconds: z.number().min(0).max(30).default(0),
+rg_leadin_exit=0
+rg_public_exit=1
+=== gate 6: build-graph update ===
+Updated 1 files (15 → 15 nodes, 16 → 16 edges)
+EXIT=0
+
+ RUN  v4.1.8 /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime
+
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's play() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's play() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's play() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's play() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+Not implemented: HTMLMediaElement's pause() method
+
+ Test Files  93 passed (93)
+      Tests  715 passed (715)
+   Start at  15:18:22
+   Duration  180.94s (transform 4.62s, setup 0ms, import 20.42s, tests 84.95s, environment 53.52s)
+
+EXIT=0
+
+MEASURE_AGENT_RESULT
+status: complete
+phase_base_sha: 2655632aaff89ed8f0e45c3d910f915f04ea0ec9
+role_base_sha: 960fbcd9baa2385bfda71e368f4a9720a044c2f5
+green_head_sha: f438d09d72328a94ba04888358d8455419756ea4
+dispositions: F1=FIX; F2=FIX
+review_a_corrections: F1 plan.md task 3.2 count 22 (4+4+4+6+4); F2 plan.md task 3.3 clip_paths_checked=173 (R3), 163 stays clip_keys_total (R4)
+handoff:
+  Code: one commit, apps/storytime/lib/content.ts alone.
+  - f438d09d72328a94ba04888358d8455419756ea4 feat(look): add the draft week review switch (track_id: storytime_look_20261107)
+  Gates (foreground, heavy-run; full output in this log):
+  1. the new test, the Red command of P3.11: exit 0; Test Files 1 passed (1); Tests 13 passed (13); files_checked=25; draft_week_cases=6; mutants_rejected=3.
+     The same command rerun first at role_base_sha 960fbcd9b: exit 1; tests_failed=3 ((b), the log line, (e2)); tests_passed=10; tests_skipped=0.
+  2. the look glob of P3.4: exit 0; Test Files 93 passed (93); Tests 715 passed (715); tests_failed=0; tests_skipped=0. R-COUNT-3: 92 files and 702 tests recorded at b9ba532bf (91 files at the Phase 2 checkpoint f1bcd1b7f + look-r3-import.test.ts) plus this file = 93 files and 715 tests.
+  3. tsc --noEmit for apps/storytime: exit 0; look_tsc_errors=0.
+  4. ESLint on apps/storytime/lib/content.ts: exit 0.
+  5. the detectors of P3.4 line 795: the leak scan of the two new test files exits 1; wordClips exits 0; videoLeadInSeconds exits 0; NEXT_PUBLIC_ on lib/content.ts exits 1.
+  6. build-graph update ./graph.db apps/storytime/lib/content.ts: exit 0.
+  Files: no new production file; no new test file; the only changed file is apps/storytime/lib/content.ts. No week file, no teacher file, and no deploy file changed.
+  Blocked tasks: none. Task 3.4 stays [b] deferred:daniel (the bucket upload of AC-3.8); its state is unchanged.
+  Evidence log: measure/runs/storytime_look_20261107/green-p3-t36-960fbcd9b.log
+END_MEASURE_AGENT_RESULT
+
+commits:
+  implementation (code alone): f438d09d72328a94ba04888358d8455419756ea4
+  plan evidence (plan.md alone): 3a080e490b067aeb0c41d1f23fd3122d53714794
+  final Green HEAD: 3a080e490b067aeb0c41d1f23fd3122d53714794
+  note: the plan commit sits on top of f438d09d7; a parallel session commit (9f784b842, track accounting_drive_intake_20261109) moved between them and is not part of this track.

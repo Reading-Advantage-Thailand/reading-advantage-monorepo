@@ -1,0 +1,85 @@
+Review C (UX and API end-to-end contract) of Phase 3: Week content r3 import, round 2.
+
+Provenance
+- role_base_sha = 3a080e490b067aeb0c41d1f23fd3122d53714794 (git rev-parse HEAD at the role start).
+- phase_base_sha = 2655632aaff89ed8f0e45c3d910f915f04ea0ec9.
+- audited_head_sha = 3a080e490b067aeb0c41d1f23fd3122d53714794.
+- The audited head is the current head, so the working tree holds the audited revision.
+- git diff --name-only b9ba532bf 3a080e490 -- apps/storytime/content apps/storytime/app apps/storytime/messages packages/read-along exits 0 with no output. No content file, no route, no message and no read-along file changed since round 1, so the child-facing checks of round 1 carry over unchanged.
+
+Contract applicability
+- Applicable. Test strategy P3.7 names Review C as required for this phase and names the switch of tasks 3.5 and 3.6 in its scope. The switch decides which week a child may open.
+
+Scope of the round
+- The new code is the switch of commit f438d09d7, one file: apps/storytime/lib/content.ts. The Red test of task 3.5 is apps/storytime/__tests__/look-draft-week-switch.test.ts.
+- git diff --name-only 2655632aa 3a080e490 -- apps/storytime/messages apps/storytime/app packages/read-along exits 0 with no output. The phase changed no interface message, no page text and no teacher page.
+
+Trace 1, with the switch unset a child sees what round 1 saw. Holds.
+- apps/storytime/lib/content.ts line 39 holds DRAFT_WEEKS_ENV = STORYTIME_REVIEW_DRAFT_WEEKS.
+- lines 45 to 46 hold showDraftWeeks(), which returns true only for the exact value 1.
+- line 130 sets review to false when the value is unset, and line 131 keeps the loaded week unchanged.
+- line 134 runs readinessBlocker on the unchanged week, so a draft week answers 404 as in round 1, and line 136 writes no review log.
+- apps/storytime/app/[locale]/st/[level]/[week]/page.tsx line 263 loads the week with loadVisibleWeek, and line 265 answers 404 with notFound() when the loader returns null.
+- apps/storytime/app/[locale]/not-found.tsx line 23 reads highestOpenWeeks(), and apps/storytime/lib/content.ts line 184 opens a week only when the readiness gate holds or when the draft-media switch is set. The 404 view names no draft week.
+- apps/storytime/app/[locale]/st/page.tsx is the return fallback and holds no week list, so no route shows a draft week.
+
+Trace 2, with both review values set to 1 the six imported weeks open. Holds.
+- A parsed scan of the week files shows meta.status draft for w02 to w07, with the approval parts images approved, audio draft and song draft.
+- Every book page of w02 to w07 holds an image file, so no page blocks those weeks.
+- apps/storytime/lib/content.ts line 130 judges the draft week by the published rules, line 134 finds no missing picture, line 141 names the audio and song parts, line 142 opens the draft media, and line 144 writes the log line storytime week <key> shows a draft week (review switch).
+- line 169 applies the same rule in highestOpenWeeks(), and the function writes no log.
+- The published rules still hold under the switch: a missing page picture still blocks, and media that is not approved still needs STORYTIME_SHOW_DRAFT_MEDIA.
+
+Trace 3, the review week w08 stays closed. Holds.
+- apps/storytime/content/l2/w08.json holds an empty books array and the status draft.
+- The published rules of apps/storytime/lib/readiness.ts keep a week with no books out of the app, so the switch does not open w08. The local review stays on the six imported weeks.
+
+Trace 4, the media URL of a clip resolves through the local media root. Holds.
+- The week files name the clip paths as l2/media/wNN/words/, and the media root of each week holds the same tree, for example l2/media/w02/words/wa-how.mp3 under the root of the w02 package.
+- apps/storytime/lib/media/sign.ts signs every media path of the week through mediaPathsOf, and apps/storytime/lib/media/url.ts gives the signed URL of the file.
+- The storage stand-in of apps/storytime/__tests__/look-phase2-browser-gate.sh lines 2020 to 2072 maps a request path to a file under the media root after the bucket segment, and lines 2087 to 2094 start the app with STORYTIME_MEDIA_BASE=gs://storytime-app-media, STORYTIME_STORAGE_ENDPOINT, STORYTIME_STORAGE_ACCESS_KEY and STORYTIME_STORAGE_SECRET_KEY.
+
+Trace 5, no page text and no message changed. Holds.
+- git diff --name-only b9ba532bf 3a080e490 -- apps/storytime/messages apps/storytime/app packages/read-along exits 0 with no output.
+- apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx line 368 builds the tap key with toLowerCase, and line 530 builds the visible target with the same normalizer, so the visible target and the played clip always agree.
+
+Findings
+- F2 Minor, carried from round 1. The tap normalizer is toLowerCase only and does not apply the K2 form. The switch changed no reader line, and no imported word shows the gap today.
+- F3 Minor, carried from round 1. The decodable book of w01 holds 11 clip keys that no screen plays. The switch changed no decodable line.
+- F4 Nit, new in this round. The P3.8 line for a word with no clip needs a fixture, because every timed word of w02 to w07 holds a clip. The browser review role owns the fixture and the line.
+- F1 of round 1 is closed. It named the draft weeks as a planned task, and tasks 3.5 and 3.6 delivered the switch.
+- No CONTEST item arrived for this role in this round, so no finding is withdrawn or kept by a contest.
+
+Browser review set-up
+- The environment values are STORYTIME_REVIEW_DRAFT_WEEKS=1, STORYTIME_SHOW_DRAFT_MEDIA=1, STORYTIME_CONTENT_DIR at the content folder of the local review copy, STORYTIME_MEDIA_BASE=gs://storytime-app-media, STORYTIME_STORAGE_ENDPOINT at the local stand-in, STORYTIME_STORAGE_ACCESS_KEY=local-access-key, STORYTIME_STORAGE_SECRET_KEY=local-secret-key, and STORYTIME_DATABASE_URL at the local database.
+- The media root is the root of the week: ~/Desktop/handoff/w0N-storytime-app-package-r3/ for w02 to w07, and ~/Desktop/handoff/w01-storytime-app-package-r4/ for w01.
+- The start command of a local review copy, from apps/storytime/package.json: ../../node_modules/.bin/next build, then ../../node_modules/.bin/next start --hostname 127.0.0.1 -p <free port> with the values above. A sign-in comes before each week page.
+- The route a reviewer opens for each week is /th/st/2/<week>?part=book, and /th/st/2/1?part=book for w01.
+- The tap word per week is w02 How, w03 It, w04 This, w05 I, w06 cat, w07 ball, and w01 Hello. The clip of each tap word sits under l2/media/wNN/words/ of the media root of its week.
+
+Checks
+- The focused test run of the switch exits 0 with Test Files 1 passed (1) and Tests 13 passed (13), duration 1.47 s.
+- The heavy-run wrapper was rejected by the shell guard in every form. The orchestrator ruled that a single test file run is a light job under the machine rules, so the plain run is the evidence of this round.
+- bash measure/doctor.sh was not run in round 2. The doctor input did not change, and round 1 recorded the known Nit only: FAIL: measure/automation-supervisor.py not found.
+
+Verdict
+- Pass. The switch keeps the child contract with the value unset, opens the six imported weeks in the local review copy with both values set, leaves the review week closed, and changes no page text, no message and no teacher page.
+- No blocking finding and no violation list holds an item. F2 and F3 carry over as nonblocking, and F4 is a Nit for the browser review role.
+
+MEASURE_AGENT_RESULT
+role: measure-review-c-ux-api
+track: storytime_look_20261107
+phase: Phase 3: Week content r3 import
+baseline_sha: 2655632aaff89ed8f0e45c3d910f915f04ea0ec9
+audited_head_sha: 3a080e490b067aeb0c41d1f23fd3122d53714794
+status: pass
+summary: The review switch holds the child-facing contract. With STORYTIME_REVIEW_DRAFT_WEEKS unset, the loader runs the path of round 1: a draft week answers 404, the 404 view names no draft week, and no route shows one. With both review values set to 1, the loader returns w02 to w07 with their imported content, so the taps of P3.8 can run, and the review week w08 stays closed because it holds no books. The switch changed one source file and one test file. No page text, no Thai or English message, and no teacher page changed. Round 1 findings F2 and F3 carry over as nonblocking, and one new Nit records that the P3.8 line for a word with no clip needs a fixture.
+blocking_findings: none
+nonblocking_findings: F2 [Minor] apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx line 368, the tap normalizer is toLowerCase only and does not apply the K2 form, and the switch changed no reader line. F3 [Minor] apps/storytime/content/l2/w01.json line 1330, the decodable book holds 11 clip keys that no screen plays, and the switch changed no decodable line. F4 [Nit] measure/tracks/storytime_look_20261107/test-strategy.md line 830, the P3.8 line for a word with no clip needs a fixture, because every timed word of w02 to w07 holds a clip.
+test_strategy_violations: none
+live_contract_violations: none
+prod_wiring_violations: none
+route_parity_violations: none
+retry_recommendation: none
+confidence: high
+END_MEASURE_AGENT_RESULT

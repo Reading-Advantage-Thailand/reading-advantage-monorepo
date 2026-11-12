@@ -1,0 +1,42 @@
+role: measure strategy (amendment of section P2b)
+track: storytime_look_20261107
+date: 2026-11-10
+model: claude-code/claude-sonnet-5-5
+phase_base_sha: 3480f904c509dc2d66fa827dba73df95b3768c65 (not moved; no new SHA embedded except evidence commits 5c386d9cd, 6dc89f6bb, e7f3e4f9a, f5e90e099)
+role_base_sha: 65b8325b045fbe3da1d7bae3281bad05f2f74366
+file_changed: measure/tracks/storytime_look_20261107/test-strategy.md
+commit: d4ae91a6d docs(measure): amend the brand chrome strategy after r4 (track_id: storytime_look_20261107)
+
+changes:
+1. Header: one amendment line after the Phase 2b line (2026-11-10, model, cause).
+2. P2b.9: table rebuilt from git diff --name-only 3480f904c..65b8325b0 -- apps packages (36 paths: 3 added, 4 deleted, 29 changed).
+   New rows: packages/read-along/lib/highlight.ts and components/read-along/read-along-passage.tsx (class strings, P-1, AC-4.9),
+   the two package tests, look-council-r2 and r3 tests (R-EDIT-2b), done-mark.tsx (comment only, r4 A2-F5).
+   q-tip-l.svg and q-tip-r.svg changed from kept to deleted (r1 F-3, r2 look check). Not-allowed list is the AC-4.7 set.
+3. M56 marked superseded by P-1 (white on #92400e; dark #92400e on #fcd34d). Review A and Review B rows of P2b.6 name the P-1 change.
+   Related text that contradicted P-1 also changed: B6 rows and the P2b.8 read-along bullet.
+4. Closeout item 4: the diff command reads packages/read-along/hooks, apps/storytime/lib/highlight-windows.ts, apps/storytime/app/look/places/.
+5. Closeout item 5: gate-r5 at 65b8325b0 exits 1, PASS=93 FAIL=9. Rows 15 to 19 must PASS. The nine song rows are excluded to the Phase 3 acceptance.
+   captures=24 checked: gate-r5.log line 1 prints captures=24 and capture_rows=24; value stays. console_errors=0 corrected:
+   the 404 view row prints console_errors=1 (the 404 status of the page under test).
+6. Closeout item 6 and P2b.4: the 12 s rule is void as a gate; PM receipt quoted exactly; r3 and r4 sets recorded; video lengths 10.96, 11.56, 10.84 (r3), 10.4 s.
+7. P2b.6 browser review row: input is the newest set (r4-*) and gate-r5, at 390 x 844; own captures allowed at the acceptance HEAD.
+8. Section 4: new row Q47 (the song-row exclusion, default applied).
+
+song rows evidence (item 4 of the brief):
+- Last recorded PASS: green-p2-4bca5a504.log, look-phase2-browser-gate.sh PASS=86 FAIL=0 at 6dc89f6bb (default song 6 cases).
+- No record at or before the phase base 3480f904c shows the nine rows failing.
+- Earliest record of the failure: task 2b.4 first launch (plan notes, HEAD e7f3e4f9a, FAIL=22); that log was overwritten.
+  Earliest surviving text naming the rows: green-p2b-r1-ebc2d94b6.log finding f7. Earliest surviving gate log: gate-r2.log (17:15).
+- Between 6dc89f6bb and 3480f904c Phase 3 changed content w01 to w08 (801 insertions) and no look-phase2-browser-gate run is recorded. Suspect, not a finding.
+- Review A r3 (review-a-p2b-r3-65b8325b0.json): Phase 2b changed one class name in song.tsx and did not cause them.
+
+scratch: none left in /tmp.
+
+MEASURE_AGENT_RESULT
+status: done
+commit: d4ae91a6d116658818a46480dfd2856a1bca9af7 (parent 65b8325b0)
+file: measure/tracks/storytime_look_20261107/test-strategy.md
+phase_base_sha: unchanged (3480f904c509dc2d66fa827dba73df95b3768c65)
+handoff: Question Q47 (default applied): no record at or before the phase base shows the nine song rows failing; the last recorded PASS is at 6dc89f6bb. Default: the rows are excluded from Phase 2b and the Phase 3 acceptance owns them. Options: (a) keep the default, optionally ask the Phase 3 owner to bisect 6dc89f6bb..3480f904c (week content import is the suspect); (b) treat the rows as blocking Phase 2b and spawn a Green role for the song-row cause. Also changed beyond the brief: B6 rows and the P2b.8 read-along bullet, because they contradicted P-1.
+END_MEASURE_AGENT_RESULT

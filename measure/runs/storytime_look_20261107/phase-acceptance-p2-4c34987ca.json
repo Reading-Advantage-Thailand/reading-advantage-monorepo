@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "status": "aborted",
+  "summary": "Stopped by the orchestrator at the PM route correction of 2026-11-09: a GLM acceptance is not independent, because GLM wrote a Phase 2 Green. Not a gate result.",
+  "audited_head_sha": "4c34987ca774a5cd6323b4ce5d7bbb5a716797ee",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "Abort record. The audit ended with no gate result. No heavy-run job had started, so there was no pid to kill.",
+    "Route note carried: green-p2-126189088.log (glm-latest) is the Phase 2 Green of this track, model opencode/glm-5.3-flash-free, the same family as this acceptance.",
+    "The prior provisional pass files were overwritten in place with this abort record."
+  ],
+  "commands": [],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/phase-acceptance-p2-4c34987ca.json",
+    "measure/runs/storytime_look_20261107/phase-acceptance-p2-4c34987ca.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [
+    "GLM wrote Phase 2 Green (green-p2-126189088.log); a GLM acceptance is not independent. Accepted at the PM route correction of 2026-11-09."
+  ],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

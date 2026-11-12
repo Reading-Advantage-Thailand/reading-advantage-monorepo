@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "storytime_look_20261107",
+  "phase": "Phase 2: Look port of the picked option",
+  "status": "pass",
+  "verdict": "pass",
+  "summary": "Round r4 covers task 2.3h only. The audited look head is 9fb4df869 and the look code head is 52f26abea. No look file changed between the look head and the role base 607ebe251, so the rule under test is the shipped rule. The new file apps/storytime/__tests__/look-adversarial-p2-r4.test.ts reads apps/storytime/app/look.css with the helper helpers/css-rules.ts. It pins three facts inside @media (max-height: 500px): the plaque rule sets no definite height, the rule keeps min-height: 40px, and the plaque stays absolute and holds a bottom edge. The file holds four self-test mutants of the shipped text in memory, and each mutant is rejected by one named check: M1 (height: 40px) by P1, M2 (min-height removed) by P2, M3 (position: static) by P3, M4 (bottom removed) by P3. The heavy job passed with 3 files and 18 tests, and tsc and ESLint pass. The browser gate was not rerun in this round. The Red run at head 6388eb064 is the proof that the gate row kills the height mutant, and the Green run at head 9fb4df869 is the pass. No implementation defect is open, so no work goes to Green.",
+  "retry_recommendation": "escalate_human",
+  "confidence": "high",
+  "phase_base_sha": "08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca",
+  "role_base_sha": "607ebe251e93453e7ae02fd57bb942fa7217aed6",
+  "audited_head_sha": "9fb4df8696eaf690005aeee3ffc11c4a57338b81",
+  "model_route": "minimax-cn-coding-plan/MiniMax-M3.1-Flash (the 2.3h Green is nvidia/stepfun-ai/step-5-preview and its Red is deepseek/deepseek-flash, so both are excluded)",
+  "mutants_rejected": "4 of 4",
+  "commits": ["d90c4c24f7b94e37a6305b9d132419856f8d4469"],
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "The new file is an artifact test, so it proves the rule text and not the layout (test strategy P2.5: jsdom loads no CSS and proves no layout). The proof of the plaque geometry stays the browser gate row 3, and this round did not rerun that gate.",
+    "The gap of round r3 about the fixed plaque height is now closed by the Green commit 52f26abea and by the new file. The other gap of round r3 stays open: the synchronous-throw branches of playAudio in reader.tsx and of playElement in decodable.tsx hold the isAbortError guard, and no case makes play() throw in step. This round is narrow and did not close it."
+  ],
+  "evidence": [
+    "Provenance: git rev-parse HEAD at run start printed 607ebe251e93453e7ae02fd57bb942fa7217aed6 (exit 0). git log --oneline 9fb4df869..HEAD -- apps/storytime prints one line, the test commit d90c4c24f of this role, and git diff 52f26abea..HEAD -- apps/storytime/app/look.css prints 0 lines. The audited rule is the shipped rule.",
+    "The rule under test: apps/storytime/app/look.css line 824 holds the plaque rule inside @media (max-height: 500px), with min-height: 40px at line 829, height: auto at line 830, and bottom: -16px at line 831. The base rule at line 209 holds position: absolute at line 210 and min-height: 88px at line 221.",
+    "Heavy run, one job: exit 0, Test Files 3 passed (3), Tests 18 passed (18). The new file holds 5 cases and the two older adversarial files hold 13.",
+    "tsc --noEmit in apps/storytime: exit 0. ESLint on the new file from apps/storytime: exit 0.",
+    "Mutants: a separate read of the shipped text with the same helper printed the failure of each mutant, and the base printed none: M1 gives height=40px (P1), M2 gives no min-height (P2), M3 gives position=static (P3), M4 gives no bottom (P3). Each mutant changed the text, and the test asserts that.",
+    "Browser gate not rerun in this round. The Red run (measure/runs/storytime_look_20261107/red-p2-2.3h.log, head 6388eb064, exit 1) shows the row frame long title 60 characters failing with plaque_overflow_px=20 at 568x320 en and th and at 844x390 en and th, and plaque_h_px=40. The Green run (green-p2-2.3h.log, head 9fb4df869, exit 0) shows 86 checks with PASS=86 and FAIL=0, and the same row with plaque_overflow_px=0 and plaque_h_px=66.",
+    "The tree holds no probe file: git status --porcelain apps/storytime prints nothing after the commit. measure/runs/ is gitignored, so both result files stay outside the index.",
+    "Not run by this role: the browser gates, a push, and any network call."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> 607ebe251e93453e7ae02fd57bb942fa7217aed6 (exit 0) at run start, -> d90c4c24f7b94e37a6305b9d132419856f8d4469 after the commit",
+    "heavy-run: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-adversarial-p2-r4.test.ts __tests__/look-adversarial-p2.test.tsx __tests__/look-adversarial-p2-defects.test.tsx' -> exit 0, 3 files, 18 tests",
+    "heavy-run tsc: cd apps/storytime && ../../node_modules/.bin/tsc --noEmit -> exit 0",
+    "heavy-run eslint: cd apps/storytime && ../../node_modules/.bin/eslint __tests__/look-adversarial-p2-r4.test.ts -> exit 0",
+    "git add -- apps/storytime/__tests__/look-adversarial-p2-r4.test.ts && git commit --only -m 'test(look): pin the landscape plaque rule of task 2.3h (track_id: storytime_look_20261107)' -- apps/storytime/__tests__/look-adversarial-p2-r4.test.ts -> exit 0, commit d90c4c24f, 1 file, header 90 characters",
+    "git status --porcelain apps/storytime -> empty"
+  ],
+  "changed_files": ["apps/storytime/__tests__/look-adversarial-p2-r4.test.ts"],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "security_violations": [],
+  "architecture_violations": [],
+  "test_violations": [],
+  "spec_violations": [],
+  "handoff": {
+    "owner": "none",
+    "summary": "No implementation defect is open. The new file pins the landscape plaque rule of task 2.3h, all four self-test mutants are rejected, and the three adversarial files pass at the audited head.",
+    "verification": "The orchestrator runs role-gate --role adversarial-testing with PROJECT_TESTS equal to the full look glob through heavy-run.",
+    "mutants": [
+      { "id": "M1", "file": "apps/storytime/app/look.css", "mutant": "the landscape plaque height goes back to 40px", "killed_by": "P1", "exit": 1 },
+      { "id": "M2", "file": "apps/storytime/app/look.css", "mutant": "the landscape min-height pin removed", "killed_by": "P2", "exit": 1 },
+      { "id": "M3", "file": "apps/storytime/app/look.css", "mutant": "the plaque position becomes static", "killed_by": "P3", "exit": 1 },
+      { "id": "M4", "file": "apps/storytime/app/look.css", "mutant": "the landscape bottom edge removed", "killed_by": "P3", "exit": 1 }
+    ],
+    "scratch_left": 0
+  }
+}

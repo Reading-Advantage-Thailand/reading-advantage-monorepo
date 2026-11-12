@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "role": "review-c",
+  "track": "storytime_look_20261107",
+  "phase": "Phase 2b: Brand chrome",
+  "baseline_sha": "4eebabbb2e062a21a95644279a97842f68ad0999",
+  "audited_head_sha": "4eebabbb2e062a21a95644279a97842f68ad0999",
+  "contract_applicability": "applicable",
+  "ux_applicability": "applicable",
+  "webbridge_status": "not_run",
+  "webbridge_evidence": {
+    "screenshots": [],
+    "accessibility_snapshots": [],
+    "interactions": []
+  },
+  "status": "pass",
+  "summary": "No flow, route, link, form, aria label, or tap size changed in the screen files of the phase: 16 of the 17 changed app files change only class strings, and frame.tsx changes the hero markup. The level and week label is one visible copy with no aria-hidden, and the logo alt text does not repeat the label. The Thai text sits in the label only, because the title is the English week title (lang en) in both locales, and the r2 captures show no clipped Thai mark. No route is added or removed. I found no blocking item in my scope. Three nonblocking items remain: the gold focus ring is weak on the new amber and cream grounds and no test reads it (C-F1), the pressed sound button fill is 4.25 to 1 (C-F2), and the teacher link flow has no live proof and one link is under 48 px (C-F3). Review A blockers A-F1 and A-F2 (gate rows 15, 17, 18) stand and are outside this verdict. No browser, build, or server ran.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "C-F1 [Major] review-c: The gold focus ring is unchanged and still reaches every a and button, but it is weak on the new grounds and no test or gate row reads it. look.css:49-53 sets outline 4px solid var(--sq-gold) (#f5b932) with offset 3px, so the ring sits outside the control, on the ground behind it. Computed contrast of the ring: 4.01 to 1 against brown #92400e, 1.23 to 1 against amber #fcd34d, 1.70 to 1 against the cream #fffaf0 of the panels, the body, and the sign-in, join, 404, and teacher pages. Phase 2b gave every button an amber 3px edge (look.css:409-423) and the song play button, the sound button, and the word chips an amber fill, so the ring is now the same hue family as the control edge. A keyboard or switch user on a cream panel sees a ring below the 3 to 1 non-text target. Rationale: the cream case existed before the phase, but the phase changed the control hue, and the spec and the gate say nothing about focus, so a regression is not caught. Evidence: look.css:49-53, 409-423, 450-458; grep of apps/storytime/app and look-phase2-browser-gate.sh finds no other focus rule and no focus row. Proposal: FIX by Green (use a two-tone ring: a brown outline plus a white outer ring, or a brown outline on cream grounds) with a Red source case that reads the focus rule; ESCALATE to Daniel instead if the gold ring is a brand choice.",
+    "C-F2 [Nit] review-c: The pressed decodable sound button uses fill #fbbf24 with a brown label, which is 4.25 to 1, below the 4.5 to 1 target of AC-4.5. look.css:467-472 sets background-color #fbbf24 for button[aria-pressed=true]. The value is not the --st-amber token, so the AC-4.5 source rule does not see it, and the gate row 14 pressedVerdict (look-phase2-browser-gate.sh:304-309, 1923-1950) compares only the two fills and reads no contrast. The label is 19 px at weight 600, so WCAG large text (3 to 1) still passes. Rationale: the pressed state is the state a child sees while the sound plays, and the contrast proof reads the idle state only. Proposal: FIX by Green (use #fde68a, 5.69 to 1, which the reader pressed button already uses, or keep #fbbf24 and ESCALATE the 4.5 target to the spec owner).",
+    "C-F3 [Nit] review-c: The teacher link flow has no live proof, and one teacher link is under the 48 px tap floor. Gate row 18 for teacher week and teacher day returns status=200 with chrome_brand_pairs=0 and tap_under_48=0 (gate-r2.log:123-124), so the rows measure a page with no restyled link. This adds flow evidence to A-F2: the Open the lesson link (week-view.tsx:170-176, py-2 on a 24 px line, about 40 px) and the Back to the week link are not proven at 48 px. The Back to the week link in the day page is a direct child of main and takes the main > a floor (look.css:57-61); the Open the lesson link sits inside an li and takes no floor. The phase changed only the colors of these links. Rationale: the teacher pages are not child screens, so the floor may not apply; no record says so. Proposal: ESCALATE to the orchestrator (decide whether the 48 px floor covers teacher pages); Red adds the teacher session fix of A-F2 first."
+  ],
+  "evidence": [
+    "HEAD equals audited_head_sha 4eebabbb2e062a21a95644279a97842f68ad0999 (git rev-parse HEAD). Range 3480f904c..4eebabbb2 read for apps/storytime/app.",
+    "Contract applicability: applicable. The phase changes the markup and the class strings of the screens 1 to 9 of the Storytime app (frame.tsx, join, sign-in, not-found-view, st fallback, week page, reader, decodable, questions, song, teacher week and day). No endpoint, no server action, no route, and no API response changed (git diff of the range holds no route.ts, no actions file, no proxy file).",
+    "Item 1, links and buttons: the diff of join/page.tsx, sign-in/page.tsx, not-found-view.tsx, st/page.tsx, week page.tsx, questions.tsx, reader.tsx, decodable.tsx, song.tsx, teacher week-view.tsx, and teacher day page.tsx changes only className strings. No href, onClick, type, form action, hidden locale input, aria-label, aria-pressed, disabled, or min-h-12/min-h-16 token changed. The 404 link keeps min-h-12 and the href to the highest open week (not-found-view.tsx:10). The week home part links keep href=?part= (page.tsx:187) and min-h-16. The sign-out forms keep the hidden locale input and the submit button (page.tsx:493, st/page.tsx:41, sign-in/page.tsx:102).",
+    "Item 1, tap size: look.css keeps min-height 52 px and min-width 52 px for every button in main[data-place] (look.css:409-412), 48 px for the decodable word buttons (look.css:558-560), and 48 px for the tricky-word chips (look.css:593-596, 853-856). gate-r2.log:18-41 and :72-85 print tap_under_48=0 for the 24 captures, the sign-in, join, 404, and question rows in en and th. The Tailwind class changes on controls inside main[data-place] are overridden by look.css, so the new class colors apply on the pages without data-place only (sign-in, join, 404, st fallback, teacher).",
+    "Item 1, decodable word buttons: the new hover class hover:bg-[#fef3c7] (decodable.tsx:576) loses to the rule background: transparent at look.css:558-569 (specificity 0,2,2 against 0,2,0), as the old hover:bg-neutral-100 did. No flow change. Tricky-word chips: the class text-[#92400e] on amber (decodable.tsx:631) loses to the look.css rule at :593-602 (brown fill, white label, amber edge); the rendered chip is white on brown, 7.09 to 1.",
+    "Item 2, label: frame.tsx:66-68 renders one p[data-level-week] with the interface-locale text, lang set to the locale, and no aria-hidden. The old hidden track copy and the game bar are removed (frame.tsx diff). The label is the only node with the route text. look.css:136-155 keeps it visible: no clip, white on brown 7.09 to 1, 14 px, line-height 1.5. The logo is img[data-logo] with alt Storytime Advantage (frame.tsx:69) and no label text in the alt, so a screen reader reads the label once, the logo name once, then the h1. The logo svg title is not read for an img element with an alt.",
+    "Item 3, focus: no focus rule other than look.css:49-53. No outline: none and no focus: class exists in apps/storytime/app (grep). The ring color --sq-gold was not changed by the phase. Contrast values were computed with the WCAG relative luminance formula (execute tool, no file written): gold vs brown 4.01, vs amber 1.23, vs cream 1.70, vs white 1.77. Plain text inputs of the sign-in page have no ring rule (pre-existing, out of scope).",
+    "Item 4, Thai: the h1 of the frame is lang=en and receives week.meta.title (page.tsx:345), so the fitted title holds English text in both locales. Thai appears in the label (14 px, line-height 1.5, 1 px vertical padding in a pill) and in the buttons (line-height 1.5). r2-01 and r2-03 show the Thai label (ระดับ 2 · สัปดาห์ 1, สัปดาห์ 2) with every upper vowel and tone mark whole, and the Thai headings and buttons whole. gate-r2.log shows clipped_text=0 for the th rows. Line-height 1.25 applies to the English title only, so the ascender question has no Thai case in the shipped titles. A Thai title would need a new check.",
+    "Item 5, captures: r2-01 and r2-03 (th, 390 x 844) show the logo at the top left, the label centered at the top, and the amber plaque with the title below the hero, with no overlap. r2-02 (th reader) shows the back arrow disabled, the next arrow brown, Read it to me pressed (amber fill and the label กำลังเล่น), the two other mode buttons cream, and the sign-out button brown. Every control is visible and named. The captures cover portrait only.",
+    "Route parity: no route is added, removed, or renamed; the 404 link target, the sign-in link, the join link, and the teacher links keep the same href templates. Frame has one consumer (week page.tsx:342).",
+    "Inline style of frame.tsx:73-86 uses 100cqi. header[data-hero] gains container-type inline-size (look.css:107). The header is a stretched flex child of main (page.tsx:335, flex-col, no items- class), so the inline-size containment does not collapse the width; r2 captures show the full width.",
+    "Landscape 844 x 390: the logo over the label and the inline font that defeats the 20 px media font are Review A finding A-F3. This role adds one fact: the Thai label is wider than the English label, so the overlap with the 48 px logo at left 16 px is larger in th. I did not run a browser; the claim comes from look.css:164-173 and 768-786.",
+    "Not re-raised, per the brief: A-F1 to A-F8. Not run: vitest, tsc, ESLint, any browser, any server. The shell tool denied two commands; the file tools were used for the reads."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> 4eebabbb2e062a21a95644279a97842f68ad0999",
+    "git diff --stat 3480f904c..4eebabbb2 -> 30 files",
+    "git diff 3480f904c..4eebabbb2 -- apps/storytime/app (without look.css, pieces, logo) and -- apps/storytime/app/look.css -> read",
+    "grep for focus, outline, aria-pressed in apps/storytime/app and look-phase2-browser-gate.sh -> read",
+    "read r2-01, r2-02, r2-03 png and gate-r2.log lines 18-131",
+    "execute tool: WCAG contrast computation for 12 color pairs -> no file written"
+  ],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/review-c-p2b-4eebabbb2.json",
+    "measure/runs/storytime_look_20261107/review-c-p2b-4eebabbb2.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "medium"
+}

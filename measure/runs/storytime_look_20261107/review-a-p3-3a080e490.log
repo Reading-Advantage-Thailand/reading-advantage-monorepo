@@ -1,0 +1,50 @@
+MEASURE_AGENT_RESULT
+status: pass
+role: measure-review-a-correctness
+track: storytime_look_20261107
+phase: Phase 3: Week content r3 import
+round: 2
+phase_base_sha: 2655632aaff89ed8f0e45c3d910f915f04ea0ec9
+role_base_sha: 3a080e490b067aeb0c41d1f23fd3122d53714794
+audited_head_sha: 3a080e490b067aeb0c41d1f23fd3122d53714794
+summary: Review A of Phase 3 at audited head 3a080e490: pass. The three round-1 evidence-text Blockers F1 to F3 are closed. The new task 3.5 and 3.6 pass the correctness checks. One nonblocking Nit: the task-3.1 Red evidence quotes a clip_paths_total label that the test does not hold. The shell guard of this session refused the heavy-run wrapper and the plain vitest command, so the test result is cited from the Review B artifact and the Green log.
+blocking_findings: 0
+nonblocking_findings: 1
+confidence: high
+retry_recommendation: none
+
+F1 closed: measure/tracks/storytime_look_20261107/plan.md:70 reads 22 differing leaf paths and shows the sum 4 + 4 + 4 + 6 + 4 = 22.
+F2 closed: measure/tracks/storytime_look_20261107/plan.md:71 reads clip_paths_checked=173 for case R3 and clip_keys_total=163 for case R4. No clip_paths_total label remains.
+F3 closed: measure/tracks/storytime_look_20261107/test-strategy.md:764 and :802 read weeks_equal=6 with w01_diff_outside_share=0. test-strategy.md:790 reads clip_paths_checked=173 and states that the file emits no clip_paths_total label.
+Switch parse: apps/storytime/lib/content.ts:39 exports DRAFT_WEEKS_ENV with the value STORYTIME_REVIEW_DRAFT_WEEKS; lines 45 to 47 read the exact value 1 only.
+No public name: rg -n 'NEXT_PUBLIC_' apps/storytime/lib/content.ts exits 1 with no hit.
+Fall-through: apps/storytime/lib/content.ts:130 to 134 judge a draft week as a published week, so a missing picture still blocks and media that is not approved still needs showDraftMedia() at line 142.
+Log line: apps/storytime/lib/content.ts:136 writes storytime week <key> shows a draft week (review switch).
+highestOpenWeeks: apps/storytime/lib/content.ts:179 to 184 apply the same rule and hold no log call.
+Switch off: the review flag is false and the judged copy is the loaded week, so the old path holds.
+Test cases: apps/storytime/__tests__/look-draft-week-switch.test.ts holds cases (a) to (g) plus (e2) at lines 244 to 392, the three mutants at lines 396 to 444, and the labeled counts at lines 446 to 453.
+Count guard: lines 362 to 366 assert files_checked above 0 before the scan at line 367.
+Positive control: lines 375 to 388 build a scratch copy of apps/storytime/cloudbuild.yaml with the name appended and assert the scan catches it.
+Scope: git show --name-only over the 18 phase commits lists only the P3.9 allowed paths, so look_out_of_scope_paths=0.
+Import unchanged: git diff --name-only b9ba532bf 3a080e490 -- apps/storytime/content is empty, so the round-1 import checks carry forward.
+Nit F1: measure/tracks/storytime_look_20261107/plan.md:69 and measure/runs/storytime_look_20261107/red-p3-2655632aa.log:10 quote the label clip_paths_total=0, and the test holds no such label. The counts are 0 at the Red base, so the property holds. Fix: name clip_paths_checked=0 or drop the label.
+
+commands:
+- git rev-parse HEAD -> exit 0: 3a080e490b067aeb0c41d1f23fd3122d53714794, the role_base_sha and equal to audited_head_sha.
+- git diff --name-only b9ba532bf 3a080e490 -- apps/storytime/content -> exit 0: empty output.
+- git log 2655632aaff89ed8f0e45c3d910f915f04ea0ec9..3a080e490 --format=%H --grep='track_id: storytime_look_20261107' -> exit 0: 18 commits, look_out_of_scope_paths=0.
+- rg -n 'NEXT_PUBLIC_' apps/storytime/lib/content.ts -> exit 1: no hit.
+- git ls-files -z with the four deploy pathspecs -> exit 0: 24 paths, plus the apps.json row gives files_checked=25.
+- HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-draft-week-switch.test.ts __tests__/look-r3-import.test.ts' -> rejected by the shell guard with permission denied, on every form of the command.
+- cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-draft-week-switch.test.ts __tests__/look-r3-import.test.ts -> rejected by the shell guard with permission denied.
+- cited: measure/runs/storytime_look_20261107/review-b-p3-3a080e490.json:16 records the heavy-run of the switch test -> exit 0: Test Files 1 passed (1), Tests 13 passed (13), files_checked=25, draft_week_cases=6, mutants_rejected=3.
+- cited: measure/runs/storytime_look_20261107/green-p3-t36-960fbcd9b.log lines 9 to 18 -> exit 0: Tests 13 passed (13); lines 248 to 249 -> exit 0: Test Files 93 passed (93), Tests 715 passed (715).
+- doctor: not rerun in this round; measure/runs/storytime_look_20261107/review-a-p3-b9ba532bf.json:54 records the known Nit only.
+
+changed_files: apps/storytime/lib/content.ts; apps/storytime/__tests__/look-draft-week-switch.test.ts
+test_strategy_violations: 0
+live_contract_violations: 0
+prod_wiring_violations: 0
+route_parity_violations: 0
+result_json: measure/runs/storytime_look_20261107/review-a-p3-3a080e490.json
+END_MEASURE_AGENT_RESULT

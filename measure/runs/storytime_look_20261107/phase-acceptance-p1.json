@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "PROVISIONAL: this artifact is written before any heavy command. The acceptance run is not finished. The verdict is unknown at this point.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "PROVISIONAL placeholder. Refine at the end of the run."
+  ],
+  "commands": [],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/phase-acceptance-p1.json",
+    "measure/runs/storytime_look_20261107/phase-acceptance-p1.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "low"
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Remediation rem1 (task 3.7) is correct. The two stale pins now hold values that the shipped data proves, the tests keep their exact strength, no production file changed, and the plan evidence of task 3.7 matches the commits and the observed run.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "F781 counts verified against shipped data: apps/storytime/content/l2/w01.json holds 108 strings that end in a media extension (grep tool, limit 200); 1 sits in the approval subtree (approval.audio.source, line 25, ends in song.mp3), so mediaPathsOf with the approval filter leaves 107 non-approval media entries. Hand enumeration of unique file values: 9 phoneme clips + 6 family pictures + 11 book-1 files + 12 book-1 word clips + 11 book-2 files + 10 book-2 word clips (wa-nan.mp3 repeats) + 6 song-line pictures (point-to-self, wave, point-forward, clap, hands-out, nod) + 5 song files = 70 unique files. The test pin toBe(70) at login-media-sign.test.ts:86 is proven.",
+    "F781 control verified: unique files whose path ends in '.file' outside approval = 6 family + 10 book-1 (cover, 8 pages, audio.file) + 10 book-2 + 6 song lines = 32; the test pin toBe(32) at login-media-sign.test.ts:96 is proven. file-only files are a subset of the expected set, so the old-pin unsigned count is 70 - 32 = 38; the pin toHaveLength(38) at line 99 is proven. The counts are labeled-integer assertions on computed sets, not digit-only text matches.",
+    "F782 verified: the regex /\\btabIndex\\s*[:=]/g matches exactly one site in apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx (line 1008, tabIndex={-1}, count 1) and exactly two in packages/read-along/components/read-along/read-along-passage.tsx (lines 111 and 170, count 2). The grep over all of apps/storytime and all of packages/read-along finds no other production tabIndex site, so the toEqual list at look-adversarial-p2b.test.ts:339 is exact and complete. sourceFiles() walks apps/storytime/app first, then packages/read-along/components, then lib, so the list order matches the walk order.",
+    "Test strength kept: the diff of a04837606 changes only the expected constants (42 to 70, 26 to 32, 16 to 38) and widens the M4 toEqual list from one entry to two; every check stays an exact equality, no check became a range, and the M5 self-test and the M4 positive control at line 391 stay in place.",
+    "No production file changed in the rem1 commits: git show --stat for 83ff86879, a04837606, and 48a851a98 lists only measure/tracks/storytime_look_20261107/plan.md (twice) and the two test files.",
+    "Plan evidence of task 3.7 matches: plan.md line 90 names phase_base_sha=2655632aaff89ed8f0e45c3d910f915f04ea0ec9, role_base_sha=2399d3075888275c937cd98dc78dab5a9e664fd0, the test commit a04837606, the two files, no production file, and the count proof media_entries_total=108 / 70 / 32 / 38, which matches this audit's independent hand count. Item (2) of the evidence claims 'Test Files 3 passed (3); Tests 18 passed (18)' for the two-file command; this audit ran the permitted command at HEAD and observed the identical output, so the claim is not false.",
+    "The base-run claim of item (1) is consistent with the pre-edit file: the old pin toBe(42) sat at line 84 and the old M4 list held one entry, so the recorded failure messages ('expected 70 to be 42' at line 84; 'expected [ ...(2) ] to deeply equal [ Array(1) ]') match the removed code of the diff.",
+    "No vacuous-pass pattern: if w01.json lost its media values, expected.size would drop below 70 and the pin would fail; if a new tab stop appeared in any glob file, the two-entry toEqual list would fail. Both checks fail on a missing or extra deliverable."
+  ],
+  "commands": [
+    "git rev-parse HEAD  # 48a851a989681aa7dd2018865a9b52b70f0ac7c2, equals the audited HEAD",
+    "git log --oneline 2655632a..48a851a98 and git show --stat 83ff86879 a04837606 48a851a98  # rem1 commits carry only plan.md and the two test files; other commits in the range belong to other tracks and are out of scope",
+    "git show a04837606 -- apps/storytime/__tests__/login-media-sign.test.ts apps/storytime/__tests__/look-adversarial-p2b.test.ts  # the pin diff",
+    "HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/login-media-sign.test.ts __tests__/look-adversarial-p2b.test.ts'  # Test Files 3 passed (3); Tests 18 passed (18); exit 0",
+    "grep tool: '\\.(mp3|wav|...)$' over apps/storytime/content/l2/w01.json with limit 200  # 108 matches, line 25 is the approval prose entry",
+    "grep tool: '\\btabIndex\\s*[:=]' over apps/storytime and packages/read-along  # lesson-flow.tsx:1008 (1 hit), read-along-passage.tsx:111,170 (2 hits), no other production hit"
+  ],
+  "changed_files": [
+    "measure/tracks/storytime_look_20261107/plan.md (commit 83ff86879, task 3.7 to [~])",
+    "apps/storytime/__tests__/login-media-sign.test.ts (commit a04837606)",
+    "apps/storytime/__tests__/look-adversarial-p2b.test.ts (commit a04837606)",
+    "measure/tracks/storytime_look_20261107/plan.md (commit 48a851a98, task 3.7 to [x] with evidence)"
+  ],
+  "vacuous_pass_violations": [],
+  "digit_only_count_violations": [],
+  "false_claim_text_violations": [],
+  "unnecessary_abstraction_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "audited_head_sha": "48a851a989681aa7dd2018865a9b52b70f0ac7c2",
+  "route": "opencode/glm-5.3-flash-free#high",
+  "ratings": [
+    { "axis": "correctness", "score": 5, "evidence": "Both pins hold values proven by an independent hand count of the shipped w01.json (70, 32, 38) and by the tabIndex grep (1 and 2 sites)." },
+    { "axis": "test_meaning", "score": 4, "evidence": "The diff keeps every check an exact equality and the base run is recorded; this audit re-ran only the post-fix command, so the base-run failure output is corroborated by the diff, not re-observed." },
+    { "axis": "scope_discipline", "score": 5, "evidence": "git show --stat shows the three commits carry only plan.md and the two named test files." },
+    { "axis": "evidence_quality", "score": 5, "evidence": "Plan.md line 90 states phase base, role base, commit ids, count proof, and run outputs, and the claimed post-fix output matches this audit's observed 'Test Files 3 passed (3); Tests 18 passed (18)'." }
+  ]
+}

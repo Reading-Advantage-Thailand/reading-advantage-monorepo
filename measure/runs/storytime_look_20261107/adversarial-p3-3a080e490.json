@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "The Phase 3 adversarial round at the audited head 3a080e490b067aeb0c41d1f23fd3122d53714794 adds 65 cases in three files, and every case passes. The K2 and path file attacks edge keys and traversal shapes against the contract and the R3 rule, and pins the 173 shipped clip entries. The switch file attacks the review value matrix and proves w02 and w08 stay closed. The runbook file scans the nine tracked runbooks and closes review B F1 at test level. Two divergences stay nonblocking: the reader tap normalizes with toLowerCase only (review C F2), and the contract key rule takes a hyphen that the K2 rule forbids (strategy M49). The commit is 3d35c47fa1f6edcf4b8eeaa5c72db642b911ebb2. The role base is 182ab9464068b613c41624bbf6ca3e4beaae9ddf.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "Review C F2 kept: the reader tap normalizer in apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx (line 530) is toLowerCase() only, while the K2 import gate also normalizes NFC and curly apostrophes. No shipped timed word triggers the divergence: the new test proves every timed word of the seven weeks maps to a clip key by both normalizers.",
+    "Strategy M49 kept: the contract wordClipKey (apps/storytime/lib/contracts/week.ts) takes a hyphen, and the K2 rule of the import gate forbids it. The new test pins the divergence: a hyphen key parses in weekSchema and fails the K2 pattern. A hyphen word in a future package would pass the contract and fail the import gate."
+  ],
+  "evidence": [
+    "runbook_files_checked=9: the runbook scan closes review B F1 at test level; no tracked runbook holds STORYTIME_REVIEW_DRAFT_WEEKS or NEXT_PUBLIC_STORYTIME_REVIEW, and the positive control with --set-env-vars=STORYTIME_REVIEW_DRAFT_WEEKS=1 fails the scan",
+    "clip_entries_checked=173: every clip entry of the seven weeks holds a K2-form key and the R3 path l2/media/wNN/words/wa-<key>.mp3",
+    "every timed word of the seven weeks maps to a clip key by toLowerCase and by the K2 form; every clip key maps to a timed word",
+    "duplicate keys across the two books of one week resolve to one path: w01 nan; w04 is, this; w06 a, can, pip, see; w07 a, is, pip",
+    "the switch lifts only the draft blocker: with STORYTIME_REVIEW_DRAFT_WEEKS=1, w02 stays closed (media_not_approved) and w08 stays closed (missing_picture)",
+    "observation: every shipped draft week w02 to w07 holds draft media approval, so the switch opens no shipped week today; a review week needs approved media and a draft status",
+    "the first heavy run failed on two test expectations that contradicted strategy P3.11 (review mode relaxes only the draft blocker); the expectations were corrected and the rerun passed; no production code changed",
+    "git diff 3a080e490..182ab9464 -- apps/storytime measure/tracks/storytime_look_20261107 is empty; the two later commits belong to the accounting track",
+    "the app-local ./node_modules/.bin/vitest is not linked; the run used ../../node_modules/.bin/vitest"
+  ],
+  "commands": [
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd apps/storytime && CI=true ./node_modules/.bin/vitest run --maxWorkers=1 <3 files>' -> exit=127 (app-local vitest not linked)",
+    "same heavy-run with ../../node_modules/.bin/vitest -> exit=1 (2 assertions contradicted strategy P3.11; test expectations corrected, no production change)",
+    "same heavy-run with ../../node_modules/.bin/vitest -> exit=0; Test Files 3 passed (3); Tests 65 passed (65)",
+    "cd apps/storytime && ../../node_modules/.bin/eslint __tests__/look-adversarial-p3-k2-paths.test.ts __tests__/look-adversarial-p3-switch.test.ts __tests__/look-adversarial-runbook-scan.test.ts -> exit=0",
+    "git add <3 test files> && git commit -m \"test(look): add the phase 3 adversarial tests (track_id: storytime_look_20261107)\" -> exit=0; commit=3d35c47fa1f6edcf4b8eeaa5c72db642b911ebb2"
+  ],
+  "changed_files": [
+    "apps/storytime/__tests__/look-adversarial-p3-k2-paths.test.ts",
+    "apps/storytime/__tests__/look-adversarial-p3-switch.test.ts",
+    "apps/storytime/__tests__/look-adversarial-runbook-scan.test.ts"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

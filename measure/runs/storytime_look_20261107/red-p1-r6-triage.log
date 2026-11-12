@@ -1,0 +1,91 @@
+# Red r6 triage: the nine failing rows of the phase 3 browser gate
+
+Track: `storytime_look_20261107`, Phase 1 `Council fixes`.
+Base: `phase_base_sha` 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6.
+Role base: 1902a8215299d96c4079fb877d38b351eb1f7c55.
+Role: measure-mid-red (DeepSeek flash, high). Look Green: claude-sonnet-5-5.
+
+## Run evidence
+
+Command: `bash apps/storytime/__tests__/phase3-browser-gate.sh` (foreground; the script enters
+`heavy-run.sh` by itself). The script prints `PASS=<p>, FAIL=<f>`, not a `=== Total ===` line.
+
+- Before: `PASS=67, FAIL=9` of 76 rows.
+- After: `PASS=73, FAIL=3` of 76 rows.
+
+The 3 remaining rows are the class X rows below; the orchestrator routes them to the login track.
+
+## Triage table
+
+| Row | Class | Cited AC or commit | Measured value | New expectation |
+|---|---|---|---|---|
+| Week 404 (draft week 2) | S | AC-1.1, AC-1.2; commit `5ab3834bb` | `status=404 lang=th thai=false english=false` (the old text is gone) | the not-open pair shows: `สัปดาห์นี้ยังไม่เปิด` and `This week is not open yet`, and one link of 48 px or more to the highest open week |
+| `tap_target_min_px_player` book 360x800 | S | AC-1.9; plan task 1.8; commit `db8b093bb`; UX F1 | `min=5, elements=10`; the smallest is the word "I" (F1: hit area 13.27 x 39 px) | 44 px on every control; the accepted word hit area holds at least 10 x 36 px effective per word |
+| `tap_target_min_px_player` book 800x360 | S | same as above | `min=5, elements=10` | same rule; measured 14 x 42 px effective |
+| `all_controls_visible` week 844x390 | X (login) | commit `ef36b6c37` (track `storytime_at_home_release_20261106`) adds the sign-out form at `page.tsx:453`; no look AC moves it | `controls_outside=1`, `outside=["button[ออกจากระบบ] bottom=902 right=283"]` | none for this track: the sign-out control sits below the 844x390 fold on three screens |
+| `all_controls_visible` decodable 844x390 | X (login) | same | `outside=["button[ออกจากระบบ] bottom=464 right=283"]` | same |
+| `all_controls_visible` song 844x390 | X (login) | same | `outside=["button[ออกจากระบบ] bottom=1496 right=283"]` | same |
+| `contrast_min_ratio_x100` hover | S | AC-1.12; plan task 1.10; commit `db8b093bb`; UX F2 | "the hover state holds no opaque background after the pointer rests": the row hovered `[data-word]` nth(2), which now has no clip and so is not a target and holds no hover class; the shipped w01 holds no `wordClips` (F2: `clip_words_on_page=0`) | hover a word that holds a clip; the row throws when the fixture holds no target, so it cannot pass on a page without one; the 450 floor stays |
+| `word_cut_overshoot_ms` | S | AC-1.12; plan task 1.10; commit `db8b093bb` | `TimeoutError`: the tap no longer seeks or stops the sentence audio, so no pause fires | the tap plays the word's own clip and the sentence audio sees `sentence_seeks=0` and `sentence_pauses=0` |
+| `word_cut_early_ms` | S | AC-1.12; plan task 1.10 | "the word cut measurement did not run" (the row above produced no value) | a word without a clip is not a tap target: no tab stop, no play; a clip word keeps its `-1` tab stop as the positive control |
+
+Classes: `class_s=6 class_r=0 class_x=3`.
+
+## Why each class S edit holds the same strength
+
+- Week 404: the old row held two texts; the new row holds two texts, the 404 status, the locale
+  language, the highest open week read from the loaded content, and a 48 px link (new). The
+  `/th/nowhere` self-test keeps the `old` variant, so the language half still runs.
+- Tap targets: the old row held one 44 px floor over one selector. The new row holds the 44 px
+  floor over every control and bounds the accepted word exception by count, by the presence of
+  the pseudo hit area, and by a 10 x 36 px floor per word, and it fails on a reader page with no
+  words (`words=0` there is a failure).
+- Hover: the old row measured one hover state. The new row measures the hover state of a real
+  target and fails when the fixture holds none, so it is not weaker.
+- Word cut rows: the old rows measured the pause time of a behavior that AC-1.12 deleted. The
+  new rows hold the three clauses of AC-1.12: the own clip, no seek, no stop, and the no-clip
+  rule.
+
+## Deviations recorded
+
+1. The orchestrator allowed the script rows as an edit path for this triage. The commit holds the
+   script only.
+2. The commit subject from the handoff is 102 characters; the commitlint header limit is 100. The
+   subject is `test(storytime): update the phase 3 gate rows for look changes (track_id: storytime_look_20261107)`
+   (98 characters, same intent).
+3. The gate's sign-in helper now posts with the origin of its own request. An uncommitted change of
+   the login track (`lib/auth/same-origin.ts`, `ownOriginOf`) compares the `Origin` header to the
+   `Host` header, so the fixed `http://localhost:<port>` origin answers 403 against the
+   `127.0.0.1` bind (`Error: sign-in of staff-01 gave status 403`). That line belongs to the login
+   track; the orchestrator can move it.
+4. The fixture adds `wordClips` for the w01 readalong book (all words except `i`), because the
+   shipped week holds no clips and AC-1.12 rows would have no target. The fixture copy is part of
+   the script; the shipped file is untouched.
+
+## Remaining failures (class X, login track)
+
+`all_controls_visible` fails on the week, decodable, and song screens at 844x390. The control out
+of view is `button[ออกจากระบบ]` (the sign-out form of `page.tsx:453`, commit `ef36b6c37`). The
+reader and question screens pass. The look phase 1 browser gate row 4 measures horizontal page
+overflow (`page_overflow=0`) at phone landscape; that row passes. No look AC asks to move the
+sign-out control, and the control is not child-facing.
+
+MEASURE_AGENT_RESULT
+status: done
+role: measure-mid-red
+model: deepseek/deepseek-flash#high
+track: storytime_look_20261107
+phase: Phase 1: Council fixes
+phase_base_sha: 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6
+role_base_sha: 1902a8215299d96c4079fb877d38b351eb1f7c55
+head: 97569137d8e2716dfe54afbacf1e420a4a52d7a2 (after the commit)
+gate_command: bash apps/storytime/__tests__/phase3-browser-gate.sh
+gate_total_before: PASS=67, FAIL=9 (76 rows)
+gate_total_after: PASS=73, FAIL=3 (76 rows)
+class_s: 6
+class_r: 0
+class_x: 3
+commit: 97569137d test(storytime): update the phase 3 gate rows for look changes (track_id: storytime_look_20261107)
+files: apps/storytime/__tests__/phase3-browser-gate.sh
+remaining_failures: all_controls_visible on week, decodable, and song at 844x390 (button[ออกจากระบบ], login track)
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,10 @@
+MEASURE_AGENT_RESULT
+role: measure-ux-browser-review
+track: storytime_look_20261107
+phase: P3
+role_base_sha: 583c9ce805d6d60f34d8f5788aaee69e6a09c74e
+model_route: minimax-cn-coding-plan/MiniMax-M3.1-Flash
+status: inconclusive
+result_file: measure/runs/storytime_look_20261107/ux-browser-p3-583c9ce80.json
+handoff: The launch of launch.sh ran once and ended with exit code 1 at the line '=== Total: FAIL rows present ==='. The build passed this time, because commit ff4a4b86d fixed the four type errors that stopped run 1 at 993dc3e7c. The browser then ran, and all 16 FAIL rows share one cause in the harness: browser.mjs called context.addCookies(cookies) before signInRow() filled the array, so the phone context held no session cookie. Every protected route then answered the sign-in page, the captures show the sign-in form, and the six tap rows timed out on the selector [data-word]. The app is not at fault: a diagnostic against the same build signs in with curl and gets HTTP 200 with the week body for /th/st/2/1, and a probe of SYSTEM Chrome shows that copying the jar keeps the cookie. The harness fix is applied and node --check passes, so the next launch uses the fixed harness. The review needs one more launch of launch.sh to produce the P3.8 values; no value of console_errors, failed_requests, tap_wNN or taps_checked exists yet for the seven week pages. This run used a 2200 MB floor with the 2048 MB heap cap, and no memory pressure stopped the build. No phone result is claimed.
+END_MEASURE_AGENT_RESULT

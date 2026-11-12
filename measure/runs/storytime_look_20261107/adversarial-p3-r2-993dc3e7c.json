@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "The Phase 3 adversarial round r2 fixes the type break that the UX browser review of P3.8 found at the audited head 993dc3e7c085184ab6643399307230149a92723b. The defect reproduced: the TypeScript step of the app build failed with four TS2345 errors in the adversarial switch test file. The cause was the helper loadWeek, which returned Record<string, any> while readinessBlocker takes WeekReadiness with a required meta field. The fix is type only. The helper now returns a loaded week type that extends WeekReadiness. No case, message, expected value, or expect line changed. All four checks pass. The test counts equal the counts before the change. The fix commit is ff4a4b86d3f3d608807e3f0b2272d06e18181111 and the plan evidence commit is 583c9ce805d6d60f34d8f5788aaee69e6a09c74e. The next build was not run by this role, so the UX browser rerun owns that check.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "Gap kept from the r1 record: the adversarial gate of the round at 3d35c47fa ran vitest and ESLint only. It had no tsc step, so a type break in a new test file passed the gate and reached the production build. The written strategy asks no tsc of the adversarial role, so this is a gap of the gate, not a breach of the strategy.",
+    "Review C F2 kept from the r1 record: the reader tap normalizer in apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx (line 530) is toLowerCase only, while the K2 import gate also normalizes NFC and curly apostrophes. No shipped timed word triggers the divergence.",
+    "Strategy M49 kept from the r1 record: the contract wordClipKey in apps/storytime/lib/contracts/week.ts takes a hyphen, and the K2 rule of the import gate forbids it. The r1 test pins the divergence, so a hyphen word in a future package would pass the contract and fail the import gate."
+  ],
+  "evidence": [
+    "Baseline before the change: the three adversarial files through heavy-run exited 0 with Test Files 3 passed (3) and Tests 65 passed (65). The counts after the change are the same.",
+    "The defect reproduced at the role base: tsc --noEmit for apps/storytime through heavy-run exited 2 and named four TS2345 errors in __tests__/look-adversarial-p3-switch.test.ts at lines 91, 99, 107, and 110. Each error says that an argument of type Record<string, any> is not assignable to a parameter of type WeekReadiness, because meta is missing.",
+    "The cause: the helper loadWeek at line 28 returned Record<string, any>, and readinessBlocker at apps/storytime/lib/readiness.ts line 94 takes WeekReadiness, which holds the required field meta at line 35. Vitest does not check types, so the unit run passed while the build failed.",
+    "The fix is type only: the helper now returns LoadedWeek, a type that extends WeekReadiness, and the file adds the loaded approval, picture, page, and book types. The file keeps the same cases, messages, and expected values.",
+    "Check 1, tsc --noEmit for apps/storytime through heavy-run: exit 0 with no output. The same command exited 2 before the fix.",
+    "Check 2, the three adversarial files through heavy-run: exit 0 with Test Files 3 passed (3) and Tests 65 passed (65). The counts equal the baseline.",
+    "Check 3, ESLint on the changed file: exit 0 with no output.",
+    "Check 4, the diff of the fix: git diff -U0 over the changed file matches no line that starts with a plus or a minus and holds an expect call, so no expect line changed. The file holds 13 expect calls before and after, and 10 it or it.each blocks before and after.",
+    "Extra regression run, the look glob __tests__/look-*.test.ts and __tests__/look-*.test.tsx through heavy-run: exit 0 with 37 test files and 310 tests. The run printed no failed test.",
+    "The fix commit is ff4a4b86d3f3d608807e3f0b2272d06e18181111 and carries one file, apps/storytime/__tests__/look-adversarial-p3-switch.test.ts.",
+    "The plan evidence commit is 583c9ce805d6d60f34d8f5788aaee69e6a09c74e and carries one file, measure/tracks/storytime_look_20261107/plan.md, with one added sub-bullet under task 3.6. It changed no task mark.",
+    "The next build was not run by this role, so the build check of the UX browser rerun stays open. The tsc step of that build is the check that this run passed.",
+    "No production code changed. The diff of the fix touches only one test file and one plan line."
+  ],
+  "commands": [
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-adversarial-p3-switch.test.ts __tests__/look-adversarial-p3-k2-paths.test.ts __tests__/look-adversarial-runbook-scan.test.ts' (baseline, before the change) -> exit 0; Test Files 3 passed (3); Tests 65 passed (65)",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && ../../node_modules/.bin/tsc --noEmit' (before the change) -> exit 2; four TS2345 errors at lines 91, 99, 107, and 110 of __tests__/look-adversarial-p3-switch.test.ts",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && ../../node_modules/.bin/tsc --noEmit' (check 1, after the change) -> exit 0; no output",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-adversarial-p3-switch.test.ts __tests__/look-adversarial-p3-k2-paths.test.ts __tests__/look-adversarial-runbook-scan.test.ts' (check 2, after the change) -> exit 0; Test Files 3 passed (3); Tests 65 passed (65)",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && ../../node_modules/.bin/eslint __tests__/look-adversarial-p3-switch.test.ts' (check 3) -> exit 0; no output",
+    "git diff -U0 -- apps/storytime/__tests__/look-adversarial-p3-switch.test.ts (check 4) -> exit 1 from the count filter; 0 lines hold a changed expect call",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-*.test.ts' (extra regression run) -> exit 0; 13 test files; 152 tests",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-*.test.ts __tests__/look-*.test.tsx' (extra regression run) -> exit 0; 37 test files; 310 tests",
+    "git add apps/storytime/__tests__/look-adversarial-p3-switch.test.ts && git commit -m 'test(look): type the adversarial week loader (track_id: storytime_look_20261107)' -- apps/storytime/__tests__/look-adversarial-p3-switch.test.ts -> exit 0; commit=ff4a4b86d3f3d608807e3f0b2272d06e18181111",
+    "git add measure/tracks/storytime_look_20261107/plan.md && git commit -m 'docs(measure): record the look p3 adversarial r2 (track_id: storytime_look_20261107)' -- measure/tracks/storytime_look_20261107/plan.md -> exit 0; commit=583c9ce805d6d60f34d8f5788aaee69e6a09c74e"
+  ],
+  "changed_files": [
+    "apps/storytime/__tests__/look-adversarial-p3-switch.test.ts",
+    "measure/tracks/storytime_look_20261107/plan.md",
+    "measure/runs/storytime_look_20261107/adversarial-p3-r2-993dc3e7c.json",
+    "measure/runs/storytime_look_20261107/adversarial-p3-r2-993dc3e7c.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

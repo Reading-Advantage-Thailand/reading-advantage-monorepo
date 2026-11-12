@@ -1,0 +1,107 @@
+Review C (UX and API end-to-end contract) of Phase 3: Week content r3 import.
+
+Provenance
+- role_base_sha = 5f05fd3534a808e406ae46ca6ca3fca3eef90e1d (git rev-parse HEAD at the role start).
+- phase_base_sha = 2655632aaff89ed8f0e45c3d910f915f04ea0ec9.
+- audited_head_sha = b9ba532bffad493c868e1e8ae2dc3e8d8007f044.
+- The repository HEAD moved past the audited head because other tracks commit in parallel. The audit covers the fixed revision.
+- git diff --name-only b9ba532bf 5f05fd353 -- apps/storytime packages/read-along exits 0 with no output. The working tree holds the same Storytime code and content as the audited head.
+
+Contract applicability
+- Applicable. Test strategy P3.7 names Review C as required for this phase. The phase adds 163 clip paths and one song field that reach a child-facing screen.
+
+Scope of the phase
+- The 11 phase commits touch only apps/storytime/content/l2/w01.json to w08.json, apps/storytime/content/source.json, nine test files and measure/tracks/storytime_look_20261107/plan.md.
+- git diff --name-only 2655632aa b9ba532bf -- apps/storytime/messages apps/storytime/lib apps/storytime/app packages/read-along exits 0 with no output. The phase changed no interface message, no contract and no route.
+
+Trace 1, a word tap plays the clip of that word. Holds.
+- apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx line 194 reads the clip map of the book.
+- reader.tsx line 368 builds the key with word.word.toLowerCase().
+- reader.tsx line 369 guards the lookup with Object.hasOwn(wordClips, key).
+- reader.tsx line 370 builds the URL with mediaUrl(mediaUrls, wordClips[key]).
+- reader.tsx line 379 sets clip.src, and the clip plays on its own element.
+- apps/storytime/lib/media/url.ts gives the signed URL of the file.
+- apps/storytime/lib/media/sign.ts signs every media path of the week through mediaPathsOf, so a clip path reaches the browser.
+- apps/storytime/scripts/receive-weeks.ts line 102 lists every word clip value with kind word-clip, so the media list covers the imported clips.
+
+Trace 2, a word with no clip is not a tap target. Holds.
+- packages/read-along/components/read-along/read-along-passage.tsx line 131 computes the target with wordIsTarget.
+- read-along-passage.tsx line 160 adds the pointer cursor only for a target.
+- read-along-passage.tsx lines 169 and 170 add the click handler and the tab stop only for a target.
+- reader.tsx line 530 passes wordIsTarget with the same normalizer as the tap, so the visible target and the played clip always agree.
+- apps/storytime/__tests__/look-word-clip-tap.test.tsx line 320 holds the fixture case C4.
+
+Trace 3, the song of w01 keeps its lead-in of 3 s. Holds.
+- apps/storytime/content/l2/w01.json holds song.videoLeadInSeconds 3 with song.video and song.videoPhone.
+- apps/storytime/app/[locale]/st/[level]/[week]/song.tsx line 90 reads the lead-in.
+- song.tsx line 113 subtracts the lead-in from the media clock.
+
+Trace 4, the songs of w02 to w07 stay audio-only with a lead-in of 0. Holds.
+- The raw JSON of w02 to w07 holds no song.video, no song.videoPhone and no song.videoLeadInSeconds.
+- apps/storytime/lib/contracts/week.ts line 270 gives the default 0.
+- song.tsx line 90 uses 0 for a week with no video.
+
+Trace 5, the K2 key form against the normalizer of the tap. Holds for the imported data, with a latent gap.
+- The normalizer of the tap is toLowerCase only, at reader.tsx lines 368 and 530. It does not apply the K2 form.
+- apps/storytime/__tests__/look-r3-import.test.ts lines 104 to 110 hold the K2 form, and lines 176 to 183 check every key against it.
+- A parsed scan of the seven imported week files returns 0 clip keys with an apostrophe, 0 timed words with a character outside a-z, and 0 display words that fail to match their audio word.
+- So no page word that a child can tap misses its key today. The gap is latent.
+
+Trace 6, the interface Thai drafts and the teacher screens. Holds.
+- The phase changed no file of apps/storytime/messages, so every Thai draft stays as it was.
+- apps/storytime/app/[locale]/teacher/[level]/[week]/week-view.tsx lines 104 to 111 render focus.trickyWords, lines 130 to 152 render the family words, and lines 163 to 178 render the lesson titles.
+- apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/page.tsx line 87 renders the script title.
+- No clip key is rendered on any screen.
+
+Trace 7, the new scripts[].share blocks of w01 and w08. Holds.
+- The PM decision of 2026-11-09 commits them. The draft Thai caption is not a finding.
+- apps/storytime/lib/contracts/week.ts lines 402 to 412 leave the script shape open, so the share block passes the parse.
+- apps/storytime/scripts/receive-weeks.ts mediaOf reads no share field, and mediaPathsOf finds no media extension in a share caption.
+- No app page renders a share field. The only reader of the scripts is the teacher week view.
+
+Tap word list for the browser review
+- w02, How, clip l2/media/w02/words/wa-how.mp3, key line apps/storytime/content/l2/w02.json line 979, sentence line 372, word line 377.
+- w03, It, clip l2/media/w03/words/wa-it.mp3, key line apps/storytime/content/l2/w03.json line 713, sentence line 338, word line 343.
+- w04, This, clip l2/media/w04/words/wa-this.mp3, key line apps/storytime/content/l2/w04.json line 846, sentence line 373, word line 378.
+- w05, I, clip l2/media/w05/words/wa-i.mp3, key line apps/storytime/content/l2/w05.json line 804, sentence line 345, word line 350.
+- w06, cat, clip l2/media/w06/words/wa-cat.mp3, key line apps/storytime/content/l2/w06.json line 864, sentence line 339, word line 344.
+- w07, ball, clip l2/media/w07/words/wa-ball.mp3, key line apps/storytime/content/l2/w07.json line 1005, sentence line 354, word line 359.
+- w01, Hello, clip l2/media/w01/words/wa-hello.mp3, key line apps/storytime/content/l2/w01.json line 818, sentence line 354, word line 359.
+- A parsed scan of the seven imported week files returns 0 timed words without a clip in every book. No word of w02 to w07 holds none, so the P3.8 line of each week reads own_clip.
+- The read-along wordClips block starts at line 815 of w01.json, line 971 of w02.json, line 709 of w03.json, line 834 of w04.json, line 796 of w05.json, line 860 of w06.json and line 1003 of w07.json. Each cited clip key line sits inside that block. Each cited page sentence line sits inside the read-along book, which starts at line 223, 236, 209, 234, 227, 219 and 224 of the same files.
+
+Findings
+- F1 Major. The weeks w02 to w07 hold meta.status draft, so the week route answers 404 for them, and the clip files stay outside the media bucket until task 3.4 runs. The phase changed no meta.status, so the import itself is clean. The PM decided at 14:2x that w02 to w07 stay draft because Workbooks owns meta.status, and that look P3 gains the tasks 3.5 and 3.6 with a review-only switch STORYTIME_REVIEW_DRAFT_WEEKS=1 that opens draft weeks in the local review environment only. The fact is a planned task, not a blocker of this review.
+- F2 Minor. The normalizer of the tap is toLowerCase only, so a future page word with a curly apostrophe or with trailing punctuation would be a visible tap target whose key lookup misses. The phase did not introduce the normalizer, and no imported word shows the gap today.
+- F3 Minor. The w01 decodable book ships 11 clip keys that no screen plays. The decodable word tap still cuts the sentence recording. The phase introduced the data, and the decodable behaviour is pre-existing.
+
+Browser review set-up
+- The review opens the weeks with the review-only switch of the tasks 3.5 and 3.6, and it serves the clips from the media root of the hand-off folder, because the clip files are not in the media bucket until task 3.4 runs.
+- The P3.8 line of each week reads own_clip. Every timed word of every book of w02 to w07 holds a clip, so the shipped data holds no word that has no clip. The review proves the second case with a fixture, or it records that the property holds for every word of the week.
+
+Checks
+- Focused tests through heavy-run, foreground: exit 0. Test Files 3 passed (3); Tests 27 passed (27); duration 7.79 s. The files are __tests__/look-word-clip-tap.test.tsx, __tests__/look-r3-import.test.ts and __tests__/look-adversarial-clips.test.tsx.
+- bash measure/doctor.sh: exit 1. Two PASS lines and one FAIL line: FAIL: measure/automation-supervisor.py not found. That line is the known Nit. No other FAIL line appears, so the doctor does not block the phase.
+- The file and line numbers of the tap words: measured with rg -n on the seven week files of the working tree, which hold the same content as the audited head.
+
+Verdict
+- Pass. The import keeps the child-facing contract, and the phase changed data only. No blocking finding and no violation list holds an item.
+- F1 is a planned task after the PM decision of 14:2x, so no question goes to the user and the retry recommendation stays none.
+
+MEASURE_AGENT_RESULT
+role: measure-review-c-ux-api
+track: storytime_look_20261107
+phase: Phase 3: Week content r3 import
+baseline_sha: 2655632aaff89ed8f0e45c3d910f915f04ea0ec9
+audited_head_sha: b9ba532bffad493c868e1e8ae2dc3e8d8007f044
+status: pass
+summary: The import keeps the child-facing contract. A tap in the reader plays the clip of that word, a word with no clip is not a tap target, the song of w01 keeps its lead-in of 3 s, and the songs of w02 to w07 stay audio-only with a lead-in of 0. The phase changed data only: the 11 phase commits touch the eight week files, source.json, nine test files and plan.md. The interface Thai drafts are unchanged, no teacher screen shows a clip key, and no share field of w01 or w08 reaches a child or a parent. Three findings stay open as nonblocking. F1 is now a planned task: the PM decided at 14:2x that w02 to w07 stay draft because Workbooks owns meta.status, and that look P3 gains the tasks 3.5 and 3.6 with a review-only switch STORYTIME_REVIEW_DRAFT_WEEKS=1 that opens draft weeks in the local review environment only. F2 is a latent gap in the tap normalizer. F3 is data that no screen plays.
+blocking_findings: none
+nonblocking_findings: F1 [Major] apps/storytime/content/l2/w02.json to w07.json, the six weeks hold meta.status draft and the route answers 404 for them; the phase changed no meta.status, and the PM decided at 14:2x that look P3 gains the tasks 3.5 and 3.6 with the review-only switch STORYTIME_REVIEW_DRAFT_WEEKS=1, so the fact is a planned task and not a blocker of this review. F2 [Minor] apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx line 368, the tap normalizer is toLowerCase only and does not apply the K2 form, and the phase did not introduce it. F3 [Minor] apps/storytime/content/l2/w01.json line 1330, the decodable book holds 11 clip keys that no screen plays, and the phase introduced the data only.
+test_strategy_violations: none
+live_contract_violations: none
+prod_wiring_violations: none
+route_parity_violations: none
+retry_recommendation: none
+confidence: high
+END_MEASURE_AGENT_RESULT

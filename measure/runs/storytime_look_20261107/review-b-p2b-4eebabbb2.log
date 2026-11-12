@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: measure-review-b-security
+status: complete
+track: storytime_look_20261107
+phase: Phase 2b: Brand chrome
+commits: none
+tests_run: no test run; source and diff reads only
+files_changed: measure/runs/storytime_look_20261107/review-b-p2b-4eebabbb2.json, measure/runs/storytime_look_20261107/review-b-p2b-4eebabbb2.log
+plan_updates: none
+known_failures: none
+handoff: Security scope applied to the logo asset only (P2b.6). The copied SVG is inert: no script, no event handler, no foreignObject, no href, no xlink:href, no url(), no @import; the one http:// is the SVG namespace. It matches the read-only source in byte size and document prefix; the byte-for-byte check used the read tool and the byte size, not cmp, because the shell read of the source folder was denied. frame.tsx:73 renders one img with the fixed alt "Storytime Advantage" and no inline markup; no dangerouslySetInnerHTML exists in apps/storytime. frame.tsx:73-80 sets the inline style from title.length only, so no CSS injection from week content. The login-owned pages, the teacher pages, and the 403 page change className lines only; the teacher access checks and the sign-in form contract are unchanged. The gate fixture and STORYTIME_TEACHER_ROUTES=1 stay in the mktemp folder and the next start process, and no tracked deploy or cloudbuild file holds the fixture account or the environment names. Verdict pass, no findings, retry_recommendation none.
+dispositions: none
+END_MEASURE_AGENT_RESULT

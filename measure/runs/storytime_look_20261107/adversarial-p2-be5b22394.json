@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "storytime_look_20261107",
+  "phase": "Phase 2: Look port of the picked option",
+  "status": "fail",
+  "verdict": "fail",
+  "summary": "The adversarial round of Phase 2 at the audited code head be5b22394398e0c0c7117a5e347674f64e9721dd added 13 cases in two files. Eleven cases pass on the shipped tree, and two cases fail on real product defects, so the phase does not pass. K2a: a rapid mode-switch storm shows the red sound-error alert while the narration plays, because reader.tsx lines 243-256 treat every rejected play() as a failure and a browser aborts the pending play with AbortError when the mode switch writes a new src. S4b: a one-page book never records its finish, because the done write at reader.tsx line 202 needs book.pages.length > 1. The two failing cases live in apps/storytime/__tests__/look-adversarial-p2-defects.test.tsx as the Red proof for Green. The eleven passing cases live in apps/storytime/__tests__/look-adversarial-p2.test.tsx. Nine one-line mutants in a scratch copy were rejected by the cases. The role base is dd66da7e33d7a0dccce5ffb50bf8a449beb0265c, the HEAD at run start; the audited code head is be5b22394398e0c0c7117a5e347674f64e9721dd, and no look-track commit lies between the two heads.",
+  "retry_recommendation": "route_to_green",
+  "confidence": "high",
+  "phase_base_sha": "08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca",
+  "role_base_sha": "dd66da7e33d7a0dccce5ffb50bf8a449beb0265c",
+  "audited_head_sha": "be5b22394398e0c0c7117a5e347674f64e9721dd",
+  "model_route": "minimax-cn-coding-plan/MiniMax-M3.1-Flash (substitute for the excluded Anthropic and DeepSeek Phase 2 families; the table model kimi k3-256k was on wait)",
+  "mutants_rejected": "9 of 9",
+  "commits": [
+    "a4f4b67e9 test(storytime): add the adversarial look cases of phase 2 (track_id: storytime_look_20261107)",
+    "433a613ae test(storytime): hold two failing red cases for the green fix (track_id: storytime_look_20261107)"
+  ],
+  "blocking_findings": [
+    "K2a [Major] a rapid mode-switch storm shows a false sound-error alert: apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx lines 243-256. The playAudio helper attaches a catch to every rejected play() promise and calls setAudioFailed(true) with no check of the error name. A browser aborts the pending play promise with AbortError when the media load algorithm runs, and startListen, startMyTurn and startSlow each write a new src to the sentence audio (reader.tsx lines 307-347). The red alert therefore appears while the sound plays, and the child reads a failure that did not happen. The sibling screen already guards this case: decodable.tsx lines 244-274 hold the isAbortError helper and skip the alert for an aborted play (finding F120), and the reader clip path holds the same guard at reader.tsx lines 381-385. Action: Green reuses the isAbortError guard in playAudio, so an AbortError shows no alert and a real rejection still shows it. The Red case is apps/storytime/__tests__/look-adversarial-p2-defects.test.tsx (K2a).",
+    "S4b [Minor] a one-page book never records its finish: apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx line 202. The done write runs only when book.pages.length > 1, so a book with one page writes no record at its last page and the Done badge of that card never appears. The decodable writes at its last page without a page-count condition (decodable.tsx line 225). This confirms the one-page-book finding of Review A at be5b22394. Action: Green writes the record when the reader reaches its last page, with no page-count condition. The Red case is apps/storytime/__tests__/look-adversarial-p2-defects.test.tsx (S4b)."
+  ],
+  "nonblocking_findings": [
+    "A browser gap for the UX browser review: the plaque has no nowrap rule and holds a max-width, but the plaque of the landscape block sets a fixed height of 40 px (app/look.css lines 821-831). A 60-character title at 568 x 320 needs more room than 40 px, so the title text can leave the plaque box. The browser gate row 3 measures a 60-character title at 390 x 844, 1024 x 768 and 844 x 390, and no row measures it at 320 x 568 or at 568 x 320. The case needs a browser measurement, not a jsdom case.",
+    "A browser gap for the UX browser review: the forced-colors palette and the 200 percent text zoom need a browser run. The jsdom cases pin the state signals that survive a forced palette (the sound button changes its label and its aria-pressed state, and the done badge keeps a stroked mark), and they pin the font stacks and the ground colours, but no case proves the painted palette under a forced palette.",
+    "The week parent speaker shows no message when its recording fails to load, and the song screen shows none either. The reader and the decodable show a role=alert message. The look phase does not name this surface, so the gap is recorded and not routed. apps/storytime/app/[locale]/st/[level]/[week]/speaker-button.tsx lines 29-34 swallow the play rejection."
+  ],
+  "evidence": [
+    "git rev-parse HEAD at run start printed dd66da7e33d7a0dccce5ffb50bf8a449beb0265c (exit 0). That is the role base. The audited code head is be5b22394398e0c0c7117a5e347674f64e9721dd, and git log --grep=storytime_look_20261107 between the two heads prints no commit.",
+    "The passing file run: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-adversarial-p2.test.tsx' printed exit 0, Test Files 1 passed (1), Tests 11 passed (11), load_errors=0.",
+    "The defects file run, same heavy-run wrapper: exit 1, Test Files 1 failed (1), Tests 2 failed (2). The two failures are K2a and S4b.",
+    "K2a failed with the named assertion: a mode switch must not show the sound error (the browser aborts the pending play): expected <p role=\"alert\" lang=\"en\" ...>Sound could not be played</p> to be null.",
+    "S4b failed with the named assertion: a one-page book must record its finish: expected 'one_page_record={}' to be 'one_page_record={\"2:1:book\":true}'.",
+    "Mutant run A (scratch copy of the app tree under /tmp/opencode/look-mutant/copyA, four one-line mutants in reader.tsx): the run printed exit 1 with 2 failed and 11 passed. The failures are K1 (the clip error listener removed) and S4 (the counter format changed to 1/1). K2a and S4b pass with their one-line fixes, so both cases discriminate the defect.",
+    "Mutant run B (scratch copy copyB, five one-line mutants in reader.tsx, decodable.tsx, speaker-button.tsx and done-mark.tsx): the run printed exit 1 with 7 failed and 6 passed. The failures are K2b (the alert render hidden), S1 (the sr-only class removed), S2 (the isAbortError guard removed), S3 (the setSoundPlaying(false) removed), S5 (the audio lookup changed to document.querySelector), plus K2a and S4b, which stay broken because copyB holds no fix.",
+    "mutants_rejected=9 of 9: the nine scratch-copy mutants were A1 the AbortError guard in playAudio (K2a passes with it), A2 the done write without the page-count condition (S4b passes with it), A3 the removed clip error listener (K1 fails), A4 the counter format (S4 fails), B1 the hidden alert (K2b fails), B2 the removed isAbortError guard (S2 fails), B3 the removed setSoundPlaying(false) (S3 fails), B4 the document.querySelector audio lookup (S5 fails), and B5 the removed sr-only class (S1 fails).",
+    "The four artifact cases carry in-file self-tests with one-line in-memory mutants: a nowrap plaque (V1), a font stack without a generic face (V2), a ground without a background colour (A1), and a picture cap outside the short-height block (C1). Each self-test fails on the mutant.",
+    "reader.tsx lines 243-256: playAudio attaches result.catch(() => { setAudioFailed(true); clearStopTimer(); }) with no check of the error name.",
+    "reader.tsx line 202: if (finished || (book.pages.length > 1 && pageIndex >= book.pages.length - 1)) markPartDone(doneKey);",
+    "reader.tsx lines 307-347: startListen, startMyTurn and startSlow each write a new src to the sentence audio, so the media load algorithm runs and the pending play promise is aborted.",
+    "decodable.tsx lines 244-274: the isAbortError helper skips the alert for an aborted play (finding F120). reader.tsx lines 381-385 hold the same guard for the word clip.",
+    "app/look.css lines 209-235: the plaque rule sets no white-space and holds max-width: calc(100% - 24px). app/look.css lines 821-831: the landscape plaque sets height: 40px.",
+    "app/look.css lines 72-82: the place ground holds background-color: #2b6a3a, and app/look.css lines 102-110: the hero window holds background-color: #2b6a3a.",
+    "app/look.css line 31: the display stack ends with ui-sans-serif, system-ui, sans-serif, and app/look.css lines 530-534: the reading face ends with sans-serif.",
+    "app/look.css lines 869-879: the short-height block holds the 110 px reader cap and the 84 px decodable cap, and app/look.css lines 789-794: the 340 px cap sits in the min-height: 501px block.",
+    "The scratch copies under /tmp/opencode/look-mutant were deleted after the mutant run.",
+    "git status --porcelain apps/storytime printed nothing after the two commits, so the apps/storytime tree is clean."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> dd66da7e33d7a0dccce5ffb50bf8a449beb0265c, exit 0",
+    "git log --oneline -1 -> a4f4b67e9 (the passing cases) and 433a613ae (the two failing Red cases)",
+    "heavy-run: vitest run --maxWorkers=1 __tests__/look-adversarial-p2.test.tsx in apps/storytime -> exit 0, 11 of 11",
+    "heavy-run: vitest run --maxWorkers=1 __tests__/look-adversarial-p2-defects.test.tsx in apps/storytime -> exit 1, 2 failed",
+    "heavy-run: vitest run --maxWorkers=1 __tests__/look-adversarial-p2.test.tsx in /tmp/opencode/look-mutant/copyA -> exit 1, 2 failed and 11 passed",
+    "heavy-run: vitest run --maxWorkers=1 __tests__/look-adversarial-p2.test.tsx in /tmp/opencode/look-mutant/copyB -> exit 1, 7 failed and 6 passed",
+    "cat of measure/tracks/storytime_look_20261107/plan.md, spec.md, test-strategy.md, and of measure/runs/storytime_look_20261107/review-a-p2-be5b22394.json and review-c-p2-be5b22394.json",
+    "read of app/look.css, app/[locale]/frame.tsx, app/[locale]/st/[level]/[week]/page.tsx, reader.tsx, decodable.tsx, done-mark.tsx, speaker-button.tsx, lib/done.ts, app/[locale]/not-found-view.tsx",
+    "not run by this role: any whole-app tsc, any browser gate, and any push"
+  ],
+  "changed_files": [
+    "apps/storytime/__tests__/look-adversarial-p2.test.tsx (commit a4f4b67e9, 11 cases)",
+    "apps/storytime/__tests__/look-adversarial-p2-defects.test.tsx (commit 433a613ae, 2 failing Red cases)"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "security_violations": [],
+  "architecture_violations": [],
+  "test_violations": [],
+  "spec_violations": [],
+  "handoff": {
+    "owner": "Green",
+    "summary": "Two Red cases fail on the audited code head, and both sit in apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx.",
+    "defects": [
+      {
+        "case": "K2a",
+        "file": "apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx",
+        "lines": "243-256",
+        "summary": "playAudio treats an aborted play as a failure, so a mode-switch storm shows the red sound-error alert while the sound plays.",
+        "action": "Reuse the isAbortError guard of decodable.tsx (lines 244-274, finding F120): an AbortError rejection shows no alert, and a real rejection still shows it.",
+        "red_case": "apps/storytime/__tests__/look-adversarial-p2-defects.test.tsx (K2a)"
+      },
+      {
+        "case": "S4b",
+        "file": "apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx",
+        "lines": "202",
+        "summary": "The done write needs book.pages.length > 1, so a one-page book never records its finish.",
+        "action": "Write the record when the reader reaches its last page, with no page-count condition.",
+        "red_case": "apps/storytime/__tests__/look-adversarial-p2-defects.test.tsx (S4b)"
+      }
+    ],
+    "exit_criterion": "Both cases of apps/storytime/__tests__/look-adversarial-p2-defects.test.tsx must pass, and the eleven cases of apps/storytime/__tests__/look-adversarial-p2.test.tsx must keep passing.",
+    "browser_gaps": [
+      "The 60-character title in the plaque at 320 x 568 and at 568 x 320 (the landscape plaque has a fixed height of 40 px).",
+      "The forced-colors palette and the 200 percent text zoom on the four screens."
+    ],
+    "scratch": "The mutant copies under /tmp/opencode/look-mutant were deleted after the run."
+  }
+}

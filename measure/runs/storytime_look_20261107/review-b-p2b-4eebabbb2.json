@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-b-security",
+  "track": "storytime_look_20261107",
+  "phase": "Phase 2b: Brand chrome",
+  "phase_base_sha": "3480f904c509dc2d66fa827dba73df95b3768c65",
+  "role_base_sha": "4eebabbb2e062a21a95644279a97842f68ad0999",
+  "baseline_sha": "4eebabbb2e062a21a95644279a97842f68ad0999",
+  "audited_head_sha": "4eebabbb2e062a21a95644279a97842f68ad0999",
+  "security_applicability": "applicable",
+  "security_applicability_reason": "P2b.6 applies Review B to the logo asset only. The phase diff adds one served SVG file, one <img> render in frame.tsx, and one inline style value. No auth, session, database, route, cookie, header, secret, or schema change enters the range, so no full security review is required.",
+  "status": "pass",
+  "summary": "The logo asset is inert and byte-identical in shape to the read-only source; the frame renders one <img> with a fixed alt text and no inline SVG markup or dangerouslySetInnerHTML; the inline style values come from the number title.length and no raw title text; the login-owned pages, the teacher pages, and the 403 page change className lines only; the gate fixture and its environment stay inside the mktemp folder and the next start process, and no tracked deploy or cloudbuild file holds STORYTIME_TEACHER_ROUTES, STORYTIME_REVIEW_DRAFT_WEEKS, or the Teacher One fixture name. Blocker: none. The byte-for-byte comparison of the copied logo used the read tool and the byte size, not cmp, because the shell read of the read-only source folder was denied.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "apps/storytime/app/look/logo/storytime-advantage.svg is new in 3480f904c..4eebabbb2 (commit 46dbf25ed) and holds no script, no on*= event handler attribute, no foreignObject, no href, no xlink:href, no url(), and no @import: the one http:// occurrence is the SVG namespace http://www.w3.org/2000/svg, which is not a fetchable reference.",
+    "The copied logo matches the read-only source /home/daniebo/Desktop/advantage-pr/assets/logos/vector/square/storytime-advantage.svg: both files are 18883 bytes and share the same leading svg element, and a read of the source confirms the same document prefix. Gap: the byte-for-byte comparison used the read tool and the byte size, not cmp, because the shell read of the read-only source folder was denied.",
+    "apps/storytime/app/[locale]/frame.tsx:73 renders one <img data-logo src={logoSource} alt=\"Storytime Advantage\" width={46} height={46} />: an <img> element, not inline SVG markup, and the alt text is a fixed English brand string. A grep of apps/storytime for dangerouslySetInnerHTML and __html returns no match in app, lib, or proxy.ts.",
+    "apps/storytime/app/[locale]/frame.tsx:73-80 sets --title-chars from title.length and fontSize from a clamp() template that embeds title.length * 0.68 and a fixed variant value: the value is a number, not raw title text, so no CSS injection can come from week content. The title is a React text child of <h1>, so React escapes it, and lib/contracts/week.ts holds z.string().min(1) for the title.",
+    "The login-owned pages change className lines only. git diff -U0 3480f904c..4eebabbb2 over apps/storytime/app/[locale]/sign-in/page.tsx, join/page.tsx, not-found-view.tsx, st/page.tsx, teacher/[level]/[week]/[day]/page.tsx, and teacher/[level]/[week]/week-view.tsx holds no changed line outside a className value. The sign-in form keeps method=\"post\" action=\"/api/auth/sign-in\", the hidden locale and next inputs, name=\"username\" and autoComplete=\"username\", name=\"password\" and autoComplete=\"current-password\", the form to /api/auth/sign-out, the SIGN_IN_USERNAME_COOKIE read, safeReturnPath(query.next, ...), and mayOpenPath(user, next).",
+    "The teacher access checks are unchanged: apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/page.tsx:60-73 keeps requireRole(\"teacher\", returnPath), then teacherRoutesEnabled() with notFound(), then TeacherForbidden, and lib/teacher.ts still reads process.env.STORYTIME_TEACHER_ROUTES === \"1\". The 403 page apps/storytime/app/[locale]/teacher/forbidden.tsx is not in the diff.",
+    "apps/storytime/__tests__/look-phase2-browser-gate.sh:74 makes TMP_DIR with mktemp -d -t storytime-look-p2-XXXXXX outside the repository, line 124 removes it, line 2433 writes the accounts.csv fixture with Teacher One into $TMP_DIR/accounts, and line 2559 sets STORYTIME_TEACHER_ROUTES=1 only in the next start process environment. A scan of every tracked Dockerfile*, cloudbuild*, .yaml, and .env file of the repository returns 0 hits for STORYTIME_TEACHER_ROUTES, STORYTIME_REVIEW_DRAFT_WEEKS, and Teacher One; apps/storytime/cloudbuild.yaml sets only BUILD_ID and apps/storytime/Dockerfile sets no STORYTIME_* name. The dummy storage keys local-access-key and local-secret-key appear in no deploy file.",
+    "No new route, public/ folder, cookie, header rule, secret, schema field, environment name, storage call, network call, or dependency enters the range, and look.css adds no @font-face, no @import, and no remote url(): its url() lines are relative look/places/*.webp paths and one pre-existing inline data:image/svg+xml background. A2 and A6 do not apply: no draft to published gate, no consent artifact, and no registry claim of a resolved security state."
+  ],
+  "commands": [
+    "git diff --stat 3480f904c509dc2d66fa827dba73df95b3768c65 4eebabbb2e062a21a95644279a97842f68ad0999",
+    "git log --oneline 3480f904c509dc2d66fa827dba73df95b3768c65..4eebabbb2e062a21a95644279a97842f68ad0999",
+    "git diff 3480f904c509dc2d66fa827dba73df95b3768c65 4eebabbb2e062a21a95644279a97842f68ad0999 -- apps/storytime/app/[locale]/frame.tsx",
+    "git diff -U0 3480f904c509dc2d66fa827dba73df95b3768c65 4eebabbb2e062a21a95644279a97842f68ad0999 -- apps/storytime/app/[locale]/sign-in apps/storytime/app/[locale]/join apps/storytime/app/[locale]/teacher apps/storytime/app/[locale]/not-found-view.tsx apps/storytime/app/[locale]/st",
+    "python3 scan of apps/storytime/app/look/logo/storytime-advantage.svg for script, handler, foreignObject, href, xlink:href, url(, @import, and remote http",
+    "python3 scan of every tracked Dockerfile*, cloudbuild*, .yaml, and .env file for STORYTIME_TEACHER_ROUTES, STORYTIME_REVIEW_DRAFT_WEEKS, and Teacher One"
+  ],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/review-b-p2b-4eebabbb2.json",
+    "measure/runs/storytime_look_20261107/review-b-p2b-4eebabbb2.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "medium"
+}

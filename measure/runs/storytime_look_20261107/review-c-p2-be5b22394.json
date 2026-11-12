@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-c-ux-api",
+  "track": "storytime_look_20261107",
+  "phase": "Phase 2: Look port of the picked option",
+  "status": "pass",
+  "verdict": "pass",
+  "summary": "Review C of Phase 2 at audited HEAD be5b22394 finds no blocking finding: the six council round 3 items, the hero pins, the 48 px targets, the clip-word marker, the plain-text face, the sign-in and 404 rows, and the AC-8.2 song ratio all hold. Four non-blocking findings stay: two Thai keys with no draft status, a parent speaker with no pressed state, the Q29 letter-shape confirmation, and a dead locale prop.",
+  "phase_base_sha": "08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca",
+  "role_base_sha": "be5b22394398e0c0c7117a5e347674f64e9721dd",
+  "audited_head_sha": "be5b22394398e0c0c7117a5e347674f64e9721dd",
+  "model_route": "nvidia/stepfun-ai/step-5-preview#high (substitute for kimi-for-coding; Anthropic and DeepSeek excluded)",
+  "contract_applicability": "applicable",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 [Major] the new Thai game-bar keys carry no draft status for the 2026-11-16 sitting: apps/storytime/messages/th.json line 52 holds barLevel and line 53 holds barWeek, while only partDone (line 54) has partDoneStatus draft (line 55); apps/storytime/messages/en.json line 54 holds no status key. Action: Daniel marks barLevel and barWeek at the sitting, or the PM records a draft decision.",
+    "N2 [Minor] the parent speaker play button has no pressed or playing state, so a parent cannot tell that a tap played: apps/storytime/app/[locale]/st/[level]/[week]/speaker-button.tsx line 27. Action: optional aria-pressed or a playing label at a later task.",
+    "N3 [Minor] the Q29 decodable face uses the display face (Fredoka for Latin, Mitr for Thai) while the read-along sentence keeps Sarabun: app/look.css line 531 against lines 565-600. Action: Daniel confirms the letter shapes at the 2026-11-16 sitting; Review C accepts the captured state.",
+    "N4 [Minor] the 404 view keeps locale in its props type but reads it no more after N6: apps/storytime/app/[locale]/not-found-view.tsx lines 25-27. Action: drop the dead prop in a later edit."
+  ],
+  "evidence": [
+    "git log -1 --format=%H exit 0 returns be5b22394398e0c0c7117a5e347674f64e9721dd; the audited head is current.",
+    "measure/tracks/storytime_look_20261107/test-strategy.md line 612 marks Review C yes (required) for this phase.",
+    "measure/runs/storytime_look_20261107/green-p2-4bca5a504.log line 19: look-phase2-browser-gate exit 0, PASS=86 FAIL=0, row 14 six verdicts PASS.",
+    "measure/runs/storytime_look_20261107/green-p2-4bca5a504.log line 21: phase3-browser-gate exit 0, PASS=80 FAIL=0, transferred_bytes_first_load=293506.",
+    "apps/storytime/messages/th.json lines 52-55: barLevel, barWeek, partDone, partDoneStatus.",
+    "apps/storytime/messages/en.json lines 52-54: barLevel, barWeek, partDone with no status key.",
+    "app/look.css lines 53-61 hold the shared ground tokens, the focus ring, and the main > a floor of 48 px for the sign-in, teacher, and 404 links.",
+    "app/look.css lines 404-405 hide the chevron only on li that has a data-done-badge; app/look.css lines 407-425 give the 32x32 gold badge.",
+    "app/look.css lines 500-505 give the decodable pressed rule more class weight than the idle rule; app/look.css lines 544-553 give the page counter pill.",
+    "app/look.css lines 877-879 cap the decodable picture at 84 px inside the short-height query only.",
+    "reader.tsx line 539 keeps aria-live polite on the data-page-count counter; decodable.tsx lines 551 and 558 keep aria-pressed and the playing label.",
+    "speaker-button.tsx lines 25-37 give a native button with aria-label and an aria-hidden glyph; page.tsx line 379 keeps lang th on the parent line in both locales."
+  ],
+  "commands": [
+    "git log -1 --format=%H (exit 0)",
+    "sed -n 600,625p measure/tracks/storytime_look_20261107/test-strategy.md",
+    "git diff 08e60c79..be5b22394 -- apps/storytime (stat and message files)",
+    "grep of data-done-badge, aria-pressed, data-page-count, and 84px in app/look.css",
+    "cat of green-p2-4bca5a504.log"
+  ],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/review-c-p2-be5b22394.json",
+    "measure/runs/storytime_look_20261107/review-c-p2-be5b22394.log"
+  ],
+  "security_violations": [],
+  "architecture_violations": [],
+  "test_violations": [],
+  "spec_violations": [],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "handoff": null
+}

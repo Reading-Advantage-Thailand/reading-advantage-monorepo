@@ -1,0 +1,71 @@
+# Adversarial round log — storytime_look_20261107 Phase 1 (P1.6)
+
+Audited HEAD: 413467c3a91434650679bda5a1e895dd512cfae1 (role base; phase base 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6).
+The phase diff over apps/storytime and packages/read-along is empty, so the round attacks the reviewed production tree.
+
+## New adversarial files (5 files, 33 cases, all passing, each committed)
+
+- look-adversarial-not-found.test.tsx — 6 passed — commit 34a42d97b. Hostile 404 paths, empty openWeeks, draft-media switch exact match.
+- look-adversarial-reader.test.tsx — 6 passed — commit 14dbf025b. Rapid page turns, rejected play(), image that never loads, two audio buttons in one tap.
+- look-adversarial-highlight.test.tsx — 11 passed — commit 873df9038, type-only fix 5fa7b3471 (no assertion change). X1 seek back re-aligns; X2 pause holds, resume keeps; X3 ended clears and re-arms nothing; X4 page turn leaks nothing; X5 unmount cancels the pending frame; X6 1 s frame gap follows the jumped time (kills a timeupdate-only model); X7 30 fps lights [0,1,2,3]; X8 equal/touching/out-of-order/empty window inputs (kills the identity and overlap mutants).
+- look-adversarial-clips.test.tsx — 7 passed — commit f273c67fb. K1 inherited-property keys rejected, 40/41 key boundary pinned; K2 prototype-polluted map grants only the own clip; K3 ../ value plays nothing and alerts (kills URL concatenation); K4 20-tap storm reuses one clip element, no timer leak; K5 mode switch keeps the listen invariants; K6 unsigned clip URL alerts and the reader keeps working; K7 decodable clips list as word-clip and never leak into the read-along page.
+- look-adversarial-song.test.tsx — 3 passed — commit 9381b23e5. S1 lead-in 30 at 45 points; S2 lead-in beyond the first line lights nothing below the lead-in (kills the Math.max(0, t-lead) clamp); S3 negative currentTime clears, lights nothing, never throws.
+
+## Gates
+
+- tsc (rule R-TSC): tsc --noEmit under heavy-run exits 0. look_tsc_errors=0. Two TS2353 excess-property errors in X8b were fixed by a typed variable, no assertion change.
+- P1.4 final targeted run: 75 files, 568 tests, 567 passed, 1 failed in 147 s.
+
+## The one failure is external interference
+
+phase1-service.test.ts AC-1.2 fails on the current tree. The concurrent track per_app_cicd_20261107 rewrote apps/storytime/cloudbuild.yaml on the shared master: commit a8eeaf793 (2026-11-07 19:51) turned the deploy step into a bash -c script, so the test filter args[0]==='run' && args[1]==='deploy' finds 0 steps. git merge-base --is-ancestor proves a8eeaf793 and 586981581 are not ancestors of the role base. The test passes against the role-base yaml. Reproduced standalone (1 failed, 2 passed); release-*.test.ts pass standalone (48/48). Not fixed here: this role changes no production file, and the owning tracks are active on master.
+
+## Findings
+
+Blocking: none. Every attack was repelled by the implementation under audit.
+
+Nonblocking:
+1. K5 observation (owner Green): a mode switch during a word clip leaves the clip element playing over the sentence audio; startListen/startMyTurn/startSlow pause only audioRef, never clipRef (reader.tsx lines 297-331). Does not break AC-1.12.
+2. Carried from review C: the hit area of 'I' is under 44 px.
+3. Carried from review C: the tap affordance of a clip word is pointer-only.
+4. Carried from review C: the lyric line lags up to 250 ms on timeupdate.
+5. External interference (no owner in this track): master is red on phase1-service AC-1.2 until the owning track updates the test for the a8eeaf793 deploy-step shape.
+
+MEASURE_AGENT_RESULT
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Adversarial round P1.6 complete: 33 new cases in 5 files, all passing and committed (34a42d97b, 14dbf025b, 873df9038, f273c67fb, 9381b23e5, type fix 5fa7b3471). No blocking finding. look_tsc_errors=0. P1.4 final run: 568 tests, 567 passed, 1 failed; the failure (phase1-service AC-1.2) is external interference from per_app_cicd_20261107 commit a8eeaf793 on the shared master, not the audited phase.",
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "phase_base_sha": "4154e0ff2659a2d7f856b488f78b4acc0f25bfe6",
+  "role_base_sha": "413467c3a91434650679bda5a1e895dd512cfae1",
+  "audited_head_sha": "413467c3a91434650679bda5a1e895dd512cfae1",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "K5 (owner Green): mode switch during a clip leaves the clip playing over the sentence audio; clipRef is never paused on mode switches (reader.tsx lines 297-331)",
+    "Hit area of 'I' under 44 px (carried from review C)",
+    "Pointer-only tap affordance on clip words (carried from review C)",
+    "250 ms lyric lag on timeupdate (carried from review C)",
+    "External interference: phase1-service AC-1.2 red on master after per_app_cicd_20261107 a8eeaf793 rewrote the deploy step; not an ancestor of the role base; owning track to update the test"
+  ],
+  "evidence": [
+    "look_tsc_errors=0 (heavy-run tsc --noEmit exit 0)",
+    "P1.4 final run: 75 files, 568 tests, 567 passed, 1 failed (phase1-service AC-1.2, external)",
+    "Kill proofs: X6 beats a timeupdate-only model; X8a/X8b beat identity and overlap window mutants; K1 beats inherited-key lookups (({}).toString truthy); K3 beats base-URL concatenation (no play src holds '..'); S2 beats the Math.max(0, t-lead) clamp",
+    "git merge-base --is-ancestor a8eeaf793 413467c3a and 586981581 413467c3a: both NOT ancestors of the role base"
+  ],
+  "changed_files": [
+    "apps/storytime/__tests__/look-adversarial-not-found.test.tsx",
+    "apps/storytime/__tests__/look-adversarial-reader.test.tsx",
+    "apps/storytime/__tests__/look-adversarial-highlight.test.tsx",
+    "apps/storytime/__tests__/look-adversarial-clips.test.tsx",
+    "apps/storytime/__tests__/look-adversarial-song.test.tsx"
+  ],
+  "commits": ["34a42d97b", "14dbf025b", "873df9038", "f273c67fb", "9381b23e5", "5fa7b3471"],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": []
+}
+END_MEASURE_AGENT_RESULT

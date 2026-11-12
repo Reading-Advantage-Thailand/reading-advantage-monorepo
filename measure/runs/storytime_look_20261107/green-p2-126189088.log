@@ -1,0 +1,223 @@
+Green role log: storytime_look_20261107, Phase 2: Look port of the picked option.
+Role: measure-jr-green. Session: "Green · P2 T2.3 · storytime_look".
+Model: volcengine-agent-plan/glm-latest#high (GLM; the Red model of this phase is
+claude-code/claude-sonnet-5-5#high, Anthropic; different family).
+phase_base_sha = 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca (immutable).
+role_base_sha = 12618908885c0dd766c4815d3b53a936b6be717e (the Phase 2 Red 2b head).
+Both values resolve. The committed Red change (692449618..126189088, look tests, helper,
+gate script) sits inside phase_base_sha..HEAD. The Red model family (Anthropic) is not used
+for any coder of this phase; no coder ran (the subagent depth limit blocked delegation, so
+Green did the bounded asset work itself).
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+phase: Phase 2: Look port of the picked option
+track: storytime_look_20261107
+status: in_progress
+baseline_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+retry_recommendation: none
+result: Green work in progress (tasks 2.3d, 2.3, 2.3a, 2.3b, 2.3c)
+log: measure/runs/storytime_look_20261107/green-p2-126189088.log
+artifacts_written: no
+handoff: "Provisional block. Commits and runs follow in this log."
+END_MEASURE_AGENT_RESULT
+
+Step log.
+
+Pre-flight reads: spec.md (FR-2, AC-2.1 to AC-2.8), plan.md (Phase 2), test-strategy.md
+(P2 in full, section 2.2.2, Q23 to Q36), both Red logs, the ten look Red test files, the
+css-rules helper, and look-phase2-browser-gate.sh. git status at the start: only unrelated
+dirty paths (next-env.d.ts files, untracked files of other roles); none staged, none touched.
+
+Q31 hand-off check (the one allowed checksum step), run in
+~/Desktop/handoff/storytime-cover-pieces-svg: `sha256sum -c MANIFEST.txt` exit 0 with
+"OK" for all 11 listed files (compare.png, q-bar.png, q-bar.svg, q-crest.png, q-crest.svg,
+q-plaque.png, q-plaque.svg, q-tip-l.png, q-tip-l.svg, q-tip-r.png, q-tip-r.svg) and a
+warning that 49 prose lines are improperly formatted (the manifest text around the checksum
+lines; the checksum lines themselves all verify). The quiet pipe form
+(`grep -E '^[0-9a-f]{64} ' MANIFEST.txt | sha256sum -c --quiet -`) also exits 0.
+svg_source=final: the four final pieces are used.
+
+PM decision of 2026-11-08 on the 24 px sign-in link: the shared-rule path is tried first
+(a `main > a` rule in look.css); the sign-in page itself is not edited. The outcome is
+recorded in the task 2.3 evidence below.
+
+Progress section (written after a provider stop, orchestrator turn 2).
+
+Done and committed:
+- Task 2.3d: code commit 881a8f686, plan commit ea541f504. The 2.2a Red files plus the
+  Phase 1 guard files pass (6 files, 44/44, exit 0, heavy-run).
+
+Done in the worktree, not yet committed (task 2.3):
+- apps/storytime/lib/look/places.ts (new): placeFor over null/book/decodable/song, five
+  places, pure.
+- apps/storytime/app/[locale]/frame.tsx (new): Frame with level, week, title, variant;
+  header[data-hero], [data-game-bar] text, [data-crest], h1 plaque. The component is sync and
+  reads the two bar keys from messages/en.json (the keys hold the same value in both files,
+  the pattern of not-found-view.tsx), so the old tests that render the page JSX in jsdom keep
+  working (an async server component child would break react-dom rendering).
+- apps/storytime/app/[locale]/layout.tsx: next/font/local for fredoka-latin.woff2 and
+  mitr-500-thai.woff2 (the Primary OFL files), look.css imported after globals.css.
+- apps/storytime/app/[locale]/st/[level]/[week]/page.tsx: main carries data-place and
+  data-hero from placeFor; the bare header is replaced by Frame (cover for home and song,
+  band for book and decodable). shared_file_commits_since_base=0 before the edit.
+- apps/storytime/messages/{en,th}.json: barLevel "ระดับ {level}" and barWeek
+  "สัปดาห์ {week}", equal values in both files (Thai drafts). shared_file_commits_since_base=0.
+- apps/storytime/app/look.css: the full port of the study CSS with the Q30/Q36/M30 changes.
+- Assets: 10 WebP places (generated from the cover art, EDGE=16 trim, quality 78, all
+  under 250 KB, edge_delta max 13.7 with T=40), 4 final SVG pieces, 2 WOFF2 fonts.
+
+Left: run the 2.3 unit gate (queued on the heavy lock behind other tracks' jobs), commit
+2.3, then the hero pins 2.3a (song stage 220 px), 2.3b (band 96 px), 2.3c (band 120 px at
+640 px), then the gates of the brief (Red files, P1.4 command, tsc, ESLint, the phase 2
+browser gate, phase3/phase1 gates, the login targeted command), the Q23 row change of
+phase3-browser-gate.sh with its record in both plans, and the final result block.
+
+Known Red-gate defect found while planning (to be confirmed by the gate run and reported in
+the final block): row 4 of look-phase2-browser-gate.sh asserts woff2_files === 2, but the
+built CSS holds 8 Sarabun woff2 url()s from next/font/google (measured in the committed
+build chunk; the Red base run also printed woff2_files=8). The strategy P2.9 pins Sarabun
+as the reading face next to the two look fonts, so the count is 10, not 2, and the row can
+never pass without dropping Sarabun. Green does not edit the committed Red gate; the final
+block requests a Mid Red retry for that one row.
+
+Second known conflict (row 7 of the same gate): under prefers-reduced-motion: reduce every
+element must report a computed transition-duration of 0 s, but the read-along package
+words and sentences carry unconditional Tailwind duration-150/duration-200 (the committed
+build chunk shows .duration-150{transition-duration:.15s}; motion-reduce:transition-none
+clears the property only). Zeroing them needs a transition-duration declaration under
+reduce, and look-reduced-motion.test.ts rejects every transition-* declaration of look.css
+outside a pure (prefers-reduced-motion: no-preference) block (the media check is an exact
+array-element match, so a `not (...)` spelling does not pass it). The in-scope files cannot
+carry the fix: globals.css is song-stage rules only (section 2.2.2) and the package path is
+allowed for a data attribute only (closeout item 3). The final block routes this to the
+orchestrator with the options.
+
+
+
+Commits and runs (orchestrator turn 3; the Red correction f050b5c9e fixed the two gate
+conflicts: row 4 counts look_woff2_files with woff2_files_total printed, and row 7 accepts
+transition-property none under reduce, so the not(...) block of look.css was removed).
+
+- Task 2.3 code commit 96cd59b7a. Unit gate (heavy-run, foreground): the seven 2.2 Red
+  files, exit 1 with only the three hero pins failing (H1 no stage height, H2 172px, H3
+  200px), tests_passed=65 of 68; the six files of the task pass in full.
+- Task 2.3a code commit 461f9c650: .song-stage[data-phone=true] height 220px, the video
+  fills the card at 9:16. phase3-browser-gate.sh AC-8.2 phone ratio row 562 -> 1491 +-5
+  (R-GATE2, Q23). Run after the commit: look-hero-fix 5 of 7 (H1 passes).
+- Task 2.3b code commit d229f0a86: band 96px below 640px. Run: look-hero-fix 6 of 7 (H2
+  passes; only H3 remains).
+- Task 2.3c code commit c6715a181: band 120px inside (min-width: 640px). Run (heavy-run,
+  foreground): all ten Phase 2 Red files, exit 0, files=10, tests_failed=0, tests_passed=85,
+  tests_skipped=0. Gate 1 of the brief passes.
+
+Orchestrator turn 4 notes and the gate runs after them.
+
+- Import defect at HEAD: the Frame import of page.tsx used two levels up (it resolved to
+  app/[locale]/st/frame) and broke six old test files at load time (the first P1.4 run:
+  exit 1, files 79 passed 6 failed, tests 636 passed 0 failed, all six failures were load
+  errors of the page import). Fix commit 0e3185435 (three levels up). tsc --noEmit after
+  the fix: exit 0, look_tsc_errors=0 (heavy-run, foreground). ESLint on the six changed
+  .ts/.tsx files (layout.tsx, frame.tsx, page.tsx, reader.tsx, not-found-view.tsx,
+  places.ts): exit 0 (heavy-run, foreground).
+- Commit incident (named for the record): commit d229f0a86 (task 2.3b) also carries the
+  two login Red r12 test files apps/storytime/__tests__/login-return-path.test.ts and
+  apps/storytime/__tests__/login-signin-handler.test.ts, swept in through the shared git
+  index; they belong to track storytime_at_home_release_20261106. No history rewrite; the
+  exception line sits in the plan under the 2.3 evidence (commit ebeb49dff, PM decision
+  2026-11-08). Every later look commit uses a pathspec.
+- Gate 2, the P1.4 targeted command plus the Phase 2 files through its look glob
+  (heavy-run, foreground, after the import fix): exit 0; Test Files 85 passed (85);
+  Tests 653 passed (653); tests_failed=0; tests_skipped=0. R-COUNT-2: 568 base
+  (M36) + new_tests_p2 85 - old_cases_removed_p2 0 = 653; the sum holds.
+
+Gate 4, look-phase2-browser-gate.sh (runs plain; it re-enters heavy-run itself).
+
+Run 1 (at HEAD c6715a181 + ecc020d62): gate_exit=1; Total: 73 checks (PASS=63, FAIL=10);
+captures=24; capture_rows=24; console_errors=0. Ten FAIL rows, four causes:
+(1) the six reader captures: tap_under_48=4, the read-along word ELEMENT rect was 57x33
+(the tap rule reads the element box, not the hit area);
+(2) hero song th/en 390x844: active_line_bottom_px=852.1 above the 844 px view;
+(3) hero reader en 1024x768: audio_bottom_px=796.5 above the 768 fold (the English audio
+labels wrap the button row; th passed at 736.5);
+(4) reader clip marker: clip_words=0, because the passage applied the word tabindex only
+in My turn mode.
+Everything else passed on the first run, including look_woff2_files=2,
+woff2_files_total=10, motion_violations=0, edge_delta_max=13.7, gap_max_delta_px=0,
+word_hit_h_px_min=58, plain text, reduced motion with the positive control, the sign-in
+and join rows (tap_under_48=0, the main > a shared rule works), and the 404 link rows.
+
+Fix commit 46ac146a0 (pathspec commit): the word box is 48 px tall (inline-block,
+min-height, no layout width), the cover hero is 280 px, a tall screen caps the page
+picture at 340 px, and the passage stays interactive in every mode so the marker shows
+from the first view (a tap outside My turn still plays nothing). The 16 reader-touching
+unit files pass after the change (heavy-run, foreground): 16 files, 141 of 141 cases,
+exit 0.
+
+Run 2 (at HEAD 46ac146a0): gate_exit=0; Total: 73 checks (PASS=73, FAIL=0); captures=24;
+capture_rows=24; console_errors=0; contrast_pairs_checked=474; song_stage_height_px=220;
+hero_band_height_px_phone=96; hero_band_height_px_tablet=120; active_line_bottom_px=832.1;
+audio_bottom_px=754 (en tablet); look_woff2_files=2; woff2_files_total=10;
+edge_delta_max=13.7; edge_bad_control_flagged=1; gap_max_delta_px=0; word_hit_h_px_min=72;
+clip_words_marked=3 of 3, no_clip_words_marked=0; motion_violations=0;
+motion_positive_control=1; public_dir=absent; port_closed for both ports.
+
+Session r2 (new Green session after the GLM session faulted twice; its context filled up).
+
+- Model: deepseek/deepseek-flash#high (DeepSeek; different family from the Red model
+  claude-code/claude-sonnet-5-5#high, Anthropic). A PM-accepted substitution after the second
+  GLM fault, 2026-11-08. No coder is delegated in this session.
+- Session start HEAD: 9c34b0c7c. phase_base_sha 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca and
+  role_base_sha 12618908885c0dd766c4815d3b53a936b6be717e both resolve; the Red change
+  692449618..126189088 sits inside phase_base_sha..HEAD.
+- The commit 9c34b0c7c reason (it was not in this log): "fix(storytime): fit the look into the
+  phone and landscape views". It changes look.css only (+63 -13): the landscape band goes 84 to
+  64 px with a 16 px bottom margin, the game bar is 220 px wide at 11 px, the plaque shrinks to
+  40 px with 24x32 tips, and the landscape reader and decodable cards get slim padding and
+  type sizes, so every control ends inside the 390 px fold of 844x390.
+- The phase3-browser-gate.sh PASS=80, FAIL=0 run of the last session was at 43162d278 (its log
+  /tmp/opencode/p3-gate-run3.log, mtime 11:53), not at 9c34b0c7c. It was rerun in this session.
+- phase3-browser-gate.sh run r2 at 9c34b0c7c: gate_exit=1; FAIL=1 of 80; the only FAIL was
+  AC-5.3 first-load transfer (transferred_bytes_first_load=300384 over the 300000 cap). The
+  phone ratio row passed with video_box_ratio_x1000_phone=1491 (Q23 confirmed).
+- Fix commit f05ab07d1: meadow-p.webp and path-p.webp re-encode at quality 78 from the same
+  1080x1920 decode (146422 and 153008 bytes; psnr 46.5 dB and 48.1 dB). They carry the first-load
+  home ground and hero of /th/st/2/1. look-assets.test.ts 27 of 27 cases, exit 0.
+- phase3-browser-gate.sh run r3 at f05ab07d1: gate_exit=0; PASS=80, FAIL=0; PASS=5, FAIL=0 for
+  the build and fixture rows; transferred_bytes_first_load=299274; video_box_ratio_x1000_phone=1491.
+
+Session r2 close (follow-up turn).
+
+- Plan-evidence commit 7cdb64e1e: the look plan holds the 2.4 evidence and the Q23 confirmation;
+  it changes only measure/tracks/storytime_look_20261107/plan.md.
+- Q23 line commit 0866f9041: measure/tracks/storytime_at_home_release_20261106/plan.md held the
+  line "Q23 record" (562 -> 1491 +-5, 328 px column over the 220 px stage, task 2.3a, commit
+  461f9c650, run at f05ab07d1 with video_box_ratio_x1000_phone=1491); the file was clean before
+  the edit, and the commit holds only that file.
+- Final HEAD 0866f9041. No push, no deploy; no gate rerun in this turn.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+phase: Phase 2: Look port of the picked option
+track: storytime_look_20261107
+task: 2.4 gates
+status: complete
+phase_base_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha: 12618908885c0dd766c4815d3b53a936b6be717e
+head_sha: 0866f90412e6a26ddc726ada102ea885ffda7610
+commits: 881a8f686, ea541f504, 96cd59b7a, 461f9c650, d229f0a86, c6715a181, ecc020d62, 0e3185435, ebeb49dff, 46ac146a0, 9c34b0c7c, f05ab07d1, 7cdb64e1e, 0866f9041
+gates:
+- phase3-browser-gate.sh at 9c34b0c7c: exit 1 (the only FAIL: transferred_bytes_first_load=300384 over 300000)
+- look-assets.test.ts (27 cases): exit 0
+- phase3-browser-gate.sh at f05ab07d1: exit 0 (PASS=80, FAIL=0; transferred_bytes_first_load=299274; video_box_ratio_x1000_phone=1491)
+- look-phase2-browser-gate.sh at f05ab07d1: exit 0 (Total 73 checks, PASS=73, FAIL=0; captures=24; look_woff2_files=2; woff2_files_total=10; motion_violations=0)
+- look-phase1-browser-gate.sh at f05ab07d1: exit 0 (PASS=13, FAIL=0)
+- P1.4 targeted command with the look glob: exit 0 (85 files, 653 tests)
+- login targeted command of test-strategy P2b.4: exit 0 (73 files, 539 tests)
+- tsc --noEmit in apps/storytime: exit 0
+- eslint on the six look .ts/.tsx files: exit 0
+q32_capture: cd /home/daniebo/Desktop/reading-advantage-monorepo && bash apps/storytime/__tests__/look-phase2-browser-gate.sh > /tmp/opencode/look-g2/look-p2-gate.log 2>&1
+q32_capture_note: the gate writes no screenshot folder; its 24 capture rows are in-page measurements.
+q32_capture_sha: f05ab07d148cd5fa98b979b97acca119bd4a5baf
+handoff: "Task 2.4 marked [x] in the look plan with every automated gate green. Open for the next roles: the UI council round 2 score (AC-2.4, PM role), the reviews, and task 2.5 for Daniel. The 2.3 evidence line still names the original largest place file (161636 bytes at commit 96cd59b7a); the load fix f05ab07d1 re-encoded meadow-p (146422) and path-p (153008) and the look gate still reads edge_delta_max=13.7."
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "Final acceptance fails. One task remains open, the quality gate fails, and three closeout invariants fail.",
+  "blocking_findings": [
+    "F861 [Blocking] plan.md:55 keeps task 2.4 at [~]. AC-2.4 requires 85.0, but plan.md:53 records 82.2. Final acceptance cannot close a non-deferred task.",
+    "F862 [Blocking] phase1-quality-gates.sh exited 1 with PASS=1 and FAIL=1. apps/storytime/__tests__/phase5-measure-file.test.ts:250 uses encoding utf and triggers TS2769.",
+    "F863 [Blocking] anti-patterns.md A16 requires exactly one worktree. git worktree list returned seven. The Phase 3 capture count was eight, so P3.5 item 6 also fails.",
+    "F864 [Blocking] bash measure/doctor.sh exited 1. measure/automation-supervisor.py is absent. The closeout standard requires exit 0.",
+    "F865 [Blocking] HEAD is 15d0beb4f73e6a506e0168a1b3a8859195e9f816, not the audited dc2766600. No phase-acceptance result targets current HEAD."
+  ],
+  "nonblocking_findings": [
+    "F866 [Nonblocking] Independence deviation: Kimi ran review-a-a6d696902 and Phase 2 acceptance. No route strictly meets rule 4. Kimi wrote no Red or Green. The PM may void this deviation."
+  ],
+  "evidence": [
+    "track_base_sha=4154e0ff2659a2d7f856b488f78b4acc0f25bfe6. role_base_sha=15d0beb4f73e6a506e0168a1b3a8859195e9f816. audited_head_sha=dc2766600f5990ecff1f37c88170e8c7d873815b.",
+    "All four phase headings carry their required checkpoints. The four named phase-acceptance results have status pass and no blocking findings.",
+    "The latest phase-acceptance result targets 48a851a989681aa7dd2018865a9b52b70f0ac7c2. Current HEAD contains one later sales-track documentation commit.",
+    "Gate 1 passed through heavy-run with HEAVY_PRIORITY=p1. Vitest reported 108 files and 987 tests. No test failed or skipped.",
+    "Gate 2 failed during storytime:check-types. Turbo reported 19 successful tasks of 22 before the type error stopped the run.",
+    "The failing phase5 test belongs to storytime_app_rebuild_20261025. Commit 811a9d8113e42ea801318d118f8dfcbb5d13d2b3 added it. The file exists at the audited HEAD with encoding utf.",
+    "git status --short -- apps/storytime returned no entries. No uncommitted Storytime file changed either gate result.",
+    "Tasks 2.5, 2b.5, and 3.4 remain [b] deferred:daniel. The w02 to w07 draft state remains unchanged. Task 3.7 records the F781 and F782 corrections.",
+    "A5 found no false current count claim. Plan task 3.7 claims 108 files and 987 tests, matching Gate 1. Older counts name earlier heads.",
+    "A6 found no adversarial-state overstatement in the track registry entry. The registry still names Phase 2 as next, but closeout owns that update.",
+    "A9 passed. The tests/*.sh search found no measure/tracks/<id>/plan.md, spec.md, or test-strategy.md reference.",
+    "The track-commit scan found hash terms only in documentation and existing handoff manifest checks. It found no added product hash mechanism.",
+    "I independently read the plan, spec, strategy, phase results, and reviewer results. I did not adopt the Kimi verdicts as this verdict."
+  ],
+  "commands": [
+    "HEAVY_PRIORITY=p1 heavy-run with the P3.4 look glob -> exit 0; Test Files 108 passed; Tests 987 passed.",
+    "HEAVY_PRIORITY=p1 bash apps/storytime/__tests__/phase1-quality-gates.sh -> exit 1; PASS=1 FAIL=1; TS2769 at phase5-measure-file.test.ts:250.",
+    "bash measure/doctor.sh -> exit 1; measure/automation-supervisor.py not found.",
+    "git rev-parse HEAD -> 15d0beb4f73e6a506e0168a1b3a8859195e9f816.",
+    "git log dc2766600f5990ecff1f37c88170e8c7d873815b..HEAD -> one sales_training_2027_20261015 documentation commit.",
+    "git worktree list -> seven entries; master plus six auxiliary worktrees.",
+    "git status --short -- apps/storytime -> no entries.",
+    "rg over tests/*.sh for active track document paths -> no matches.",
+    "git log -p over track commits with added hash-term scan -> documentation and existing handoff checks only."
+  ],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/final-acceptance-dc2766600.json",
+    "measure/runs/storytime_look_20261107/final-acceptance-dc2766600.log"
+  ],
+  "test_strategy_violations": [
+    "F862: the configured quality gate exits 1.",
+    "F863: A16 and P3.5 item 6 fail with seven worktrees against one required and eight captured.",
+    "F864: the required doctor gate exits 1.",
+    "F865: the audited HEAD is not current, and no phase acceptance targets current HEAD."
+  ],
+  "live_contract_violations": [
+    "F861: AC-2.4 remains unmet at 82.2 against 85.0, and task 2.4 remains non-deferred and open."
+  ],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [
+    "F866: the recorded independence deviation does not strictly meet rule 4 and needs the PM disposition."
+  ],
+  "retry_recommendation": "remediate",
+  "confidence": "high",
+  "audited_head_sha": "dc2766600f5990ecff1f37c88170e8c7d873815b",
+  "route": "kimi-code-plan-cn/k3.1-pro#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "The main look and import behavior has test proof, but spec.md:90 requires 85.0 and plan.md:53 records 82.2."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The P3.4 look glob passed 987 tests, and the reviewed Red commits precede their Green commits."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 3,
+      "evidence": "The phase results record accepted swept login and www files, plus the F782 strategy-table omission."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Gate counts and commit evidence are extensive, but Phase 2 accepted an open task and Phase 3 accepted the A16 mismatch."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-a-a6d696902.json passed Phase 1 with real 70-file evidence; my 108-file gate recheck covers its look cases."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "opencode/glm-5.3-flash-free#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-a-p3-48a851a98.json gives count and exact-equality proof for F781 and F782; Gate 1 rechecks the F782 file."
+    },
+    {
+      "reviewer_role": "review-b",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-b-p3-3a080e490.json proves the exact switch value and positive control; Gate 1 includes its 13 switch cases."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "opencode/glm-5.3-flash-free#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-c-p3-48a851a98.json reproduces the 70/32/38 pins and retains three disclosed nonblocking findings."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 4,
+      "evidence": "adversarial-p3-r2-993dc3e7c.json records a type-only fix with unchanged cases; Gate 1 passes its 65 cases."
+    }
+  ]
+}

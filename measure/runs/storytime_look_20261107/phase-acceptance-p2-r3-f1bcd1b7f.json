@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase 2 acceptance round 3 passes at f1bcd1b7f473aad1f517da727631012883175854. Finding F1 is closed: Green ran the required build-graph update, and independent inspection finds Frame at frame.tsx lines 44 to 67 and placeFor at places.ts lines 38 to 40. Plan task 2.4 records the update and keeps its accepted [~] marker. The scoped log from 4c34987ca through HEAD is empty, so the round-2 evidence for items 1 to 7 and 9 to 12 carries without heavy reruns. Item 8 now holds, and the worktree count remains 8. The proposed checkpoint is f1bcd1b7f473aad1f517da727631012883175854.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 [Minor] phase-acceptance: UX F2 carries to Daniel's 2026-11-18 check. At 200 percent page zoom, the 195 CSS px layout is below the 320 CSS px reflow floor; ux-browser-p2-9fb4df869.json lines 7 and 29 record the measurements.",
+    "N2 [Minor] phase-acceptance: UX F3 carries to Daniel's check. Browser text-size settings do not enlarge the px-pinned look text; ux-browser-p2-9fb4df869.json lines 8 and 30 record the evidence.",
+    "N3 [Nit] phase-acceptance: UX F5 carries to Daniel's check. A long landscape title plaque touches the game bar chip, but hides no title text; ux-browser-p2-9fb4df869.json line 9 records the evidence.",
+    "N4 [Nit] phase-acceptance: UX F6 carries to Daniel's check. The 500 ms pressed-sound capture happens after the clip ends; the canonical pressed-state rows still pass; ux-browser-p2-9fb4df869.json line 10 records the evidence.",
+    "N5 [Nit] phase-acceptance: the Thai fixture is `สัปดาห์ที่ยาวและยาวที่สุดในโรงเรื่องของเราทั้งหมดในโลกใบนี้ๆ` at look-adversarial-p2.test.tsx line 414. The break between `โลกใบน` and `นี้ๆ` is between words, not inside a word; ux-browser-p2-9fb4df869.json line 28 confirms it.",
+    "N6 [Nit] phase-acceptance: the synchronous-throw branches of playAudio and playElement still lack a direct case. Adversarial r4 records this narrow coverage gap at adversarial-p2-9fb4df869.json line 20."
+  ],
+  "evidence": [
+    "F1 closed: green-p2-f1-graph.log lines 50 to 68 record `build-graph update ./graph.db` for frame.tsx, places.ts, and layout.tsx, exit 0, with `Updated 3 files (4 → 19 nodes, 8 → 25 edges)`. Independent `build-graph inspect ./graph.db Frame` exited 0 and found the exported function at frame.tsx lines 44 to 67. Independent inspection of placeFor exited 0 and found the exported function at places.ts lines 38 to 40.",
+    "Provenance: `git rev-parse HEAD` returned 4b07e79008e9e60d955d61010409b0ae025a210a, exit 0. The audited look HEAD is f1bcd1b7f473aad1f517da727631012883175854. `git log --oneline 4c34987ca..HEAD -- apps/storytime packages/read-along` printed no line, exit 0. The current HEAD commit belongs to another track. No implementation or test content changed after round 2.",
+    "Round-2 prerequisite evidence carries: the audit-result checker printed PASS and exited 0 for review-a-p2-9fb4df869, review-c-p2-9fb4df869, adversarial-p2-9fb4df869, and ux-browser-p2-9fb4df869. Review B is not applicable at test-strategy.md line 636. The only commit after 9fb4df869 in the earlier scoped range was test-only d90c4c24f.",
+    "Item 1 carries: the targeted look-glob Vitest command through heavy-run exited 0 with 91 files and 694 tests. The guard command exited 0 with 8 files and 60 tests. Whole-app tsc exited 0. ESLint exited 0 on 32 changed TypeScript files with 0 errors and 2 warnings. All five source detectors returned the required no-hit exit code 1.",
+    "Item 2 carries: red_before_green=14 named relationships, and all 17 Phase 2 Red and adversarial files exist. The round-2 JSON records every Red and Green pair.",
+    "Item 3 carries: the scope pipeline over look commits exited 0 with look_paths=60 and look_out_of_scope_paths=0. The two swept login files have the recorded exception at test-strategy.md line 585.",
+    "Item 4 carries: phase1-quality-gates.sh through heavy-run exited 0 with PASS=2 and FAIL=0. Its inner Turbo run passed 22 of 22 tasks and 109 Storytime files with 807 tests.",
+    "Item 5 carries from ux-browser-p2-9fb4df869.json lines 17 and 18: J2 exited 0 with PASS=86, FAIL=0, captures=24, console_errors=0, and hero measurements 220, 96, and 120 CSS px. F1 of the UX review is closed.",
+    "Item 6 carries from ux-browser-p2-9fb4df869.json line 25: J3 exited 0. Look-phase1 passed 13 checks, phase3 passed 80 browser checks and 5 shell checks, and phase2b passed 37 checks.",
+    "Item 7 carries: N1, N2, N3/N4, and N6 have Red cases and Green commit 881a8f686. N5 is a recorded non-goal at test-strategy.md line 650. The targeted suite passed all carried cases.",
+    "Item 8 now holds: `git worktree list | wc -l` printed 8, exit 0. The graph contains both new exports. Plan.md task 2.4, line 55, records the exact update command, exit 0, the node and edge counts, and both source locations. Commit f1bcd1b7f changes plan.md alone.",
+    "Item 9 carries: test-strategy.md line 601 and plan.md line 53 record the accepted PM disposition. Council round 3 scored 82.2, the PM stopped the loop, and no role claims 85.0. Task 2.4 keeps its accepted [~] marker.",
+    "Item 10 carries: all four prerequisite artifacts pass the checker. This pass proposes the checkpoint; the later Build session writes it.",
+    "Item 11 carries: plan.md line 45 records asset_origin_places=cover-art, asset_origin_pieces=workbooks, asset_origin_fonts=study, and svg_source=final. Green log green-p2-126189088.log lines 32 to 39 record the final SVG verification.",
+    "Item 12 carries: plan.md line 56 keeps task 2.5 at `[b] deferred:daniel`. Daniel's 2026-11-18 look check remains the human gate. No phone result is claimed.",
+    "A5 holds: the plan's PASS claims match the round-2 runs and cited browser results. The graph remediation adds no PASS or FAIL claim. A3, A4, A6, and A7 remain untriggered because the phase changes no contract-test framework, filters, or tracks registry. No stale intentional-red test sits in the passing suites.",
+    "Model route: kimi-code-plan-cn/k3.1-pro#high. The PM decision of 2026-11-09 records that Kimi wrote no Phase 2 Red or Green, so this audit is independent. The PM accepts Kimi's small pace overshoot for this critical-path gate. The stopped opencode/glm-5.3-flash-free run and phase-acceptance-p2-4c34987ca.* are void because GLM wrote a Phase 2 Green."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> 4b07e79008e9e60d955d61010409b0ae025a210a, exit 0",
+    "git log --oneline 4c34987ca..HEAD -- apps/storytime packages/read-along -> no output, exit 0",
+    "build-graph inspect ./graph.db Frame -> exit 0, exported function at frame.tsx lines 44 to 67",
+    "build-graph inspect ./graph.db placeFor -> exit 0, exported function at places.ts lines 38 to 40",
+    "git worktree list | wc -l -> 8, exit 0",
+    "git show --stat f1bcd1b7f473aad1f517da727631012883175854 -> plan.md alone, exit 0",
+    "No heavy suite or browser gate rerun: the scoped log is empty, so round-2 results carry"
+  ],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/phase-acceptance-p2-r3-f1bcd1b7f.json",
+    "measure/runs/storytime_look_20261107/phase-acceptance-p2-r3-f1bcd1b7f.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

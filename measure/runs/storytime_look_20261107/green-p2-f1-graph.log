@@ -1,0 +1,98 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: storytime_look_20261107
+phase: Phase 2: Look port of the picked option
+task: 2.4
+phase_base_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha: 4c34987ca774a5cd6323b4ce5d7bbb5a716797ee
+model_route: nvidia/stepfun-ai/step-5-preview#high
+red_model: deepseek/deepseek-flash#high
+status: complete
+summary: >-
+  Green remediated acceptance finding F1 of
+  phase-acceptance-p2-r2-4c34987ca. The finding is closeout item 8: no Green
+  log recorded the build-graph update for the new Phase 2 exports, and
+  graph.db held no Frame or placeFor node. Green ran one incremental
+  build-graph update for frame.tsx, lib/look/places.ts, and layout.tsx, and
+  proved the two named nodes with inspect and the file with search. No
+  production file, message file, or test changed. No browser gate, tsc, or
+  ESLint gate ran: the finding is a graph-record gap, not a code defect, and
+  the phase acceptance already cites those gates at the 2.3h head. graph.db is
+  git-ignored (git check-ignore -v prints .gitignore:48:graph.db), so the
+  update leaves no commit. Task 2.4 keeps its [~] marker; it is a PM-recorded
+  exception and this role does not flip it. The appended plan sentence is the
+  evidence for closeout item 8.
+routed_findings:
+  - id: F1
+    severity: Blocker
+    disposition: FIX
+    source: measure/runs/storytime_look_20261107/phase-acceptance-p2-r2-4c34987ca.json
+    note: >-
+      The graph update ran and the Frame and placeFor nodes now exist with
+      their file paths. The plan line records the command, the exit codes, and
+      the node locations.
+tasks_flipped:
+  - task: "2.4"
+    marker: unchanged "[~] (PM exception)"
+    reason: >-
+      The task marker is a PM-recorded exception and this role does not change
+      it. The finding is closed by the graph update and the plan record.
+tasks_blocked: []
+commits:
+  - sha: f1bcd1b7f473aad1f517da727631012883175854
+    subject: docs(measure): record the look phase 2 build-graph update (track_id: storytime_look_20261107)
+    files:
+      - measure/tracks/storytime_look_20261107/plan.md
+    note: >-
+      Committed with a pathspec. Unrelated work in measure/tracks.md, the
+      primary_in_app_help_20261023 plan, and accounting_drive_intake_20261109
+      stayed untouched and unstaged.
+commands:
+  - cmd: >-
+      git log --oneline 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca..HEAD -- apps/storytime packages/read-along
+    exit: 0
+    note: >-
+      Only d90c4c24f (the task 2.3h Red test) is inside the range. The
+      committed Red change is confirmed.
+  - cmd: >-
+      build-graph update ./graph.db 'apps/storytime/app/[locale]/frame.tsx' apps/storytime/lib/look/places.ts 'apps/storytime/app/[locale]/layout.tsx'
+    exit: 0
+    output: Updated 3 files (4 → 19 nodes, 8 → 25 edges)
+  - cmd: build-graph inspect ./graph.db Frame
+    exit: 0
+    node_line: function:Frame (./apps/storytime/app/[locale]/frame.tsx:44–67)
+    summary: Renders the hero frame of a week screen.
+  - cmd: build-graph inspect ./graph.db placeFor
+    exit: 0
+    node_line: function:placeFor (./apps/storytime/lib/look/places.ts:38–40)
+    summary: Picks the places of one part of a week.
+  - cmd: build-graph search ./graph.db places.ts
+    exit: 0
+    node_line: >-
+      file | places.ts | /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime/lib/look/places.ts
+  - cmd: git check-ignore -v graph.db
+    exit: 0
+    node_line: .gitignore:48:graph.db graph.db
+  - cmd: git ls-files measure/runs/storytime_look_20261107/ | wc -l
+    exit: 0
+    note: >-
+      Zero. The track run directory is a git-ignored local artifact set
+      (.gitignore:56:measure/runs/), so this log file is not committed. Every
+      other log in the directory is also untracked. Only curated
+      *.feedback.md and *-result.json files are tracked under measure/runs/.
+local_artifacts:
+  - path: measure/runs/storytime_look_20261107/green-p2-f1-graph.log
+    committed: false
+    reason: measure/runs/ is git-ignored; no force add was used.
+new_files: []
+gates_not_run:
+  - reason: >-
+      The finding is a build-graph record gap. The phase acceptance already
+      cites the browser gates, tsc, ESLint, and the targeted suite at the
+      2.3h head (commit 9fb4df869). No code changed after that head, so a
+      rerun adds no evidence.
+anti_patterns:
+  A5: not triggered - no PASS or FAIL count is claimed in the plan sentence.
+  A6: not triggered - no tracks.md resolution line was written.
+  A7: not triggered - no rg filter changed.
+END_MEASURE_AGENT_RESULT

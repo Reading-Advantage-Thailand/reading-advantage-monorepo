@@ -1,0 +1,37 @@
+Green 2.3e (council round 1 fixes), role measure-jr-green, model claude-code/claude-sonnet-5-5#high
+phase_base_sha=08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca role_base_sha=023b161911ca7759687d26bc2baa0afdde6231cf
+code commit 6250afadd; plan evidence commit a1d3bb741 (head)
+
+gate 1 Red command pre-fix: exit=1, Tests 5 failed | 3 passed (8). Post-fix: exit=0 (with look-frame: 2 files, 16 tests).
+gate 2 P1.4 look glob: exit=0, Test Files 86 passed, Tests 661 passed.
+gate 3 look-phase2-browser-gate.sh: exit=0, Total 76 (PASS=76, FAIL=0), captures=24, hud_overlap_px=0,
+  hud_font_px_min=14, mode_button_contrast_min=14.52, double_space_runs=0, space_before_punct=0.
+  First try failed spacing (double_space_runs=4, decodable): the label sat left in the 48 px box.
+  Fix: justify-content: center in look.css; the rerun passed.
+gate 4 look-phase1-browser-gate.sh: exit=0, PASS=13, FAIL=0, audio_bg_filled=1.
+gate 5 phase3-browser-gate.sh: exit=0, PASS=80 FAIL=0, decodable tap min 48/48, transferred_bytes_first_load=299465.
+gate 6 login P2b.4 command: exit=0, 74 files, 544 tests.
+gate 7 tsc --noEmit exit=0; eslint frame/decodable/reader/page/look-frame.test exit=0.
+Raw logs: /tmp/opencode/look-g3/
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: storytime_look_20261107
+phase: Phase 2: Look port of the picked option
+task: 2.3e
+phase_base_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha: 023b161911ca7759687d26bc2baa0afdde6231cf
+head_sha: a1d3bb741fa23e355590e35a5fb3d87c61562993
+commits: 6250afadd (code: fix(storytime): apply the look council round 1 fixes), a1d3bb741 (plan evidence)
+gates:
+  1 red command (vitest __tests__/look-council-r1.test.tsx): pre-fix exit=1 (5 failed, 3 passed); post-fix exit=0
+  2 P1.4 look glob (heavy-run vitest): exit=0; Test Files 86 passed (86); Tests 661 passed (661)
+  3 bash apps/storytime/__tests__/look-phase2-browser-gate.sh: exit=0; Total 76 (PASS=76, FAIL=0); captures=24; hud_overlap_px=0; double_space_runs=0; space_before_punct=0; mode_button_contrast_min=14.52
+  4 bash apps/storytime/__tests__/look-phase1-browser-gate.sh: exit=0; PASS=13, FAIL=0
+  5 bash apps/storytime/__tests__/phase3-browser-gate.sh: exit=0; PASS=80, FAIL=0; decodable tap min 48; transferred_bytes_first_load=299465
+  6 login P2b.4 vitest command (heavy-run): exit=0; Test Files 74 passed (74); Tests 544 passed (544)
+  7 tsc --noEmit: exit=0; eslint frame.tsx decodable.tsx reader.tsx page.tsx look-frame.test.tsx: exit=0
+tasks: 2.3e [x] (6250afadd); 2.4 stays [~] (council round 2 score open); 2.5 untouched
+new_files: none
+handoff: Two older checks changed because the PM decision supersedes them: look-frame.test.tsx F2 (en and th barLevel/barWeek must differ) and look-phase1-browser-gate.sh row 4 (audio buttons must be filled, emit audio_bg_filled). Reviewers should confirm both edits. The UI council round 2 score (AC-2.4) is next for the PM. Song pictograms stay with Daniel (M-3).
+END_MEASURE_AGENT_RESULT

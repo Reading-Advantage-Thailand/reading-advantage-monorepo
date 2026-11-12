@@ -1,0 +1,40 @@
+Red P2 T2.2b r2, track storytime_look_20261107, role measure-mid-red
+model: claude-code/claude-sonnet-5-5#high
+phase_base_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha: ea541f50454d161914e8ed64e5511b07f6b0e1c8
+
+Scope: apps/storytime/__tests__/look-phase2-browser-gate.sh only (plus plan evidence). No production edit.
+Dirty paths (look Green and login Red work, not staged): layout.tsx, page.tsx, look.css, frame.tsx, app/look, lib/look,
+messages, login tests, phase3-browser-gate.sh, the storytime_at_home plan.
+
+Change 1, row 4: counts the woff2 files whose bytes equal the files of app/look/fonts/ (Buffer.equals).
+ Prints look_woff2_files, woff2_files_total, look_font_sources, font_remote_urls, css_remote_imports.
+ Verdict fontVerdict(look, total): look === 2 and total >= look.
+Change 2, row 7: motionOffender(animationName, transitionProperty, transitionDuration). An element fails when
+ animation-name is not none, or when transition-property is not none and a duration is above 0 s.
+ Positive control unchanged.
+Self-test: 9 mutants became 14 (2 for fontVerdict, 3 for motionOffender); 5 new controls.
+
+Runs:
+ bash -n: exit 0
+ --self-test: exit 0; selftest_mutants_rejected=14 selftest_mutants_checked=14; === Total: 1 checks (PASS=1, FAIL=0) ===
+ look-captures.test.ts: not completed; the heavy-lock queue held for 900 s and the command timed out.
+ Full gate: not run (the look Green runs it at its HEAD).
+
+Commits: f050b5c9e (script alone); the plan evidence commit is 6557420a97e8312ba4b17e53565d0469a83918a5.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: storytime_look_20261107
+phase: Phase 2: Look port of the picked option
+task: 2.2b
+status: complete
+baseline_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha: ea541f50454d161914e8ed64e5511b07f6b0e1c8
+head: 6557420a97e8312ba4b17e53565d0469a83918a5
+commits: f050b5c9ef6f126cf81b1ae2691bf5a7aaffb0c3 (script), 6557420a97e8312ba4b17e53565d0469a83918a5 (plan evidence)
+tests: bash -n exit 0; --self-test exit 0 (14 of 14 mutants rejected)
+files: apps/storytime/__tests__/look-phase2-browser-gate.sh
+remaining_failures: none by this role; the full gate is not run
+handoff: look Green runs the full gate at its HEAD
+END_MEASURE_AGENT_RESULT

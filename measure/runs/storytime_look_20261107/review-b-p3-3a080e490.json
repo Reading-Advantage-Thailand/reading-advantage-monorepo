@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Review B on Phase 3 tasks 3.5 and 3.6 (the draft week review switch) at audited head 3a080e490: pass. Part 1, the value parse: showDraftWeeks() (apps/storytime/lib/content.ts:45-47) is true only for the exact value 1, reads the server-side process.env name STORYTIME_REVIEW_DRAFT_WEEKS (content.ts:39), never a NEXT_PUBLIC_ name, and no request input can set it. Every app importer of lib/content.ts is a server component (the four app/ page files hold no 'use client'; no components/ file imports it; look-not-found.test.tsx:424 pins this). Part 2, the fall-through: with the switch on, a draft week is judged by the published-week rules in loadVisibleWeek (content.ts:130-157): a missing picture still blocks, and media that is not approved still needs showDraftMedia(); highestOpenWeeks (content.ts:179-186) applies the identical rule with no log; no other gate changed (the phase diff touches only lib/content.ts in lib/; readiness.ts and lib/media/sign.ts are untouched). With the switch off, review is false and judged equals the loaded week, so the path is the old one (diff-verified). Part 3, the deploy-config test: case (f) scans every tracked deploy file that can set an env value for storytime (apps/storytime/cloudbuild.yaml, the Dockerfile via **/Dockerfile*, tracked .env* via **/.env*, .github/workflows/*.yml, the scripts/ci/apps.json storytime row); no Cloud Run service YAML or traffic file exists under apps/storytime; files_checked is asserted above 0 first, and my run records files_checked=25; case (g) is a real positive control (a scratch copy of the real cloudbuild.yaml with the name appended is caught). The adversarial test passes 13/13 through heavy-run. One nonblocking note: the scan misses docs/runbooks/storytime-deploy.md, the manual deploy runbook, which today sets no review name. A2 not triggered: no test flips a draft to published; the switch judges in memory and writes no file. A6: the registry claim matches the green test. Default on the runtime guard: not needed; the pipeline has no --set-env-vars path for the name; the accepted hand-set path is covered by the deploy-time service-environment check.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F1 [Nonblocking] apps/storytime/__tests__/look-draft-week-switch.test.ts:204-218: the deploy scan of case (f) does not read docs/runbooks/storytime-deploy.md, the manual deploy runbook. Today the runbook sets no review name: its commands carry no --set-env-vars (docs/runbooks/storytime-deploy.md:24-26, 51-52). A future edit could add one there without a case (f) failure. Rationale: the scan covers every tracked pipeline file that can set an env value; the runbook is a human path outside the pipeline, and the PM accepted a test-only guard. Default: extend the scan to the runbook in a later cleanup, or add STORYTIME_REVIEW_DRAFT_WEEKS to the deploy-time service-environment check of the release track (storytime_at_home_release_20261106 plan task [b] 3.1 already reads the deployed revision environment for STORYTIME_SHOW_DRAFT_MEDIA). Note: gcloud run deploy with no --set-env-vars preserves a hand-set service env value across revisions, so a hand-set value would persist silently; the deploy-time environment read is the right control, not an app runtime guard."
+  ],
+  "evidence": [
+    "role_base_sha: git rev-parse HEAD at session start returned 3a080e490b067aeb0c41d1f23fd3122d53714794, equal to audited_head_sha; at audit end HEAD had moved to fb0bfb949 (a parallel docs commit) and git diff 3a080e490..HEAD -- apps/storytime docs/runbooks/storytime-deploy.md .github/workflows scripts/ci/apps.json is empty, so every audited file matches the audited head.",
+    "Part 1: apps/storytime/lib/content.ts:39 exports DRAFT_WEEKS_ENV = 'STORYTIME_REVIEW_DRAFT_WEEKS'; lines 45-47 show showDraftWeeks() returns process.env[DRAFT_WEEKS_ENV] === '1'. No NEXT_PUBLIC_ name exists; repo-wide grep under apps/ and scripts/ finds the name only in lib/content.ts and the test file.",
+    "Part 1 client bundling: importers of lib/content.ts in app code are exactly four server pages (app/[locale]/teacher/[level]/[week]/[day]/page.tsx, app/[locale]/teacher/[level]/[week]/page.tsx, app/[locale]/not-found.tsx, app/[locale]/st/[level]/[week]/page.tsx); grep -L 'use client' lists all four, so none is a client component; no components/ file imports lib/content.ts.",
+    "Part 2: the phase diff of lib/content.ts shows the switch-off path is unchanged (review=false makes judged = loaded.week) and the missing-picture and media-approval rules run on judged in both loadVisibleWeek and highestOpenWeeks; apps/storytime/lib/readiness.ts is untouched in the phase range; apps/storytime/lib/media/sign.ts is untouched in the phase range (only content.ts changed under lib/).",
+    "Part 3 scan coverage verified by hand: apps/storytime holds only cloudbuild.yaml (no other *.yaml, no service YAML, no traffic file); cloudbuild.yaml deploy step (lines 44-51) has no --set-env-vars; Dockerfile has no STORYTIME_REVIEW env; .github/workflows holds exactly three .yml files, all scanned, and cd-apps.yml only submits the per-app cloudbuild config; scripts/ci/apps.json storytime row carries no env value; no tracked .env* file exists for storytime.",
+    "Part 3 test shape: case (f) at look-draft-week-switch.test.ts:360-372 asserts files_checked > 0 before the scan; case (g) at lines 374-392 builds a scratch copy of the real apps/storytime/cloudbuild.yaml with 'STORYTIME_REVIEW_DRAFT_WEEKS=1' appended and asserts the scan catches it, so the positive control is real.",
+    "Adversarial test green: the heavy-run command on __tests__/look-draft-week-switch.test.ts exited 0 three times with Test Files 1 passed (1) and Tests 13 passed (13); the labeled counts printed by the suite are files_checked=25, draft_week_cases=6, mutants_rejected=3, meeting the A4 floors.",
+    "A2 check: no test or code in the phase range writes meta.status or persists a status change; the switch builds an in-memory judged copy only; shipped week files keep meta.status draft for w02 to w07.",
+    "A6 check: measure/tracks.md line 73-74 records tasks 3.5 and 3.6 done with green evidence; the claimed test is green at the audited head, so the registry does not outrun the implementation.",
+    "Out-of-scope observation: a full-suite probe run (828 tests, triggered by an extra CLI flag) failed only __tests__/login-media-sign.test.ts (a login-track Red file that fails by design per test-strategy M2), because the Phase 3 import raised the w01 media count from 42 to 70; this is the login track's pinned expectation to update in its own Green, not a defect of tasks 3.5/3.6."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> 3a080e490b067aeb0c41d1f23fd3122d53714794 (equals audited_head_sha; role_base_sha)",
+    "git diff --stat 2655632aaff89ed8f0e45c3d910f915f04ea0ec9..3a080e490b067aeb0c41d1f23fd3122d53714794 -- apps/storytime -> 20 files changed (content JSONs, lib/content.ts, tests)",
+    "git diff 2655632a..3a080e490 -- apps/storytime/lib/content.ts -> the switch-off path identical; fall-through rules on judged; highestOpenWeeks mirrors loadVisibleWeek",
+    "grep -L 'use client' on the four app importers of lib/content.ts -> all four listed (none is a client component)",
+    "git ls-files ':(glob)apps/storytime/**/cloudbuild*.yaml' ':(glob)**/Dockerfile*' ':(glob)**/.env*' '.github/workflows/*.yml' -> 24 paths; the scan's files_checked=25 adds the apps.json row",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd .../apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-draft-week-switch.test.ts' -> exit 0: Test Files 1 passed (1), Tests 13 passed (13)",
+    "same heavy-run command with --disable-console-intercept (probe for the labeled counts) -> exit 1: the flag made vitest run the whole suite (111 files, 828 tests); the switch test still passed and printed files_checked=25 draft_week_cases=6 mutants_rejected=3; the single failure was login-media-sign.test.ts (login-track Red file, fails by design per M2)",
+    "git diff --stat 3a080e490..HEAD -- apps/storytime docs/runbooks/storytime-deploy.md .github/workflows scripts/ci/apps.json -> empty (audited files unchanged since the audited head)"
+  ],
+  "changed_files": [
+    "apps/storytime/lib/content.ts",
+    "apps/storytime/__tests__/look-draft-week-switch.test.ts",
+    "apps/storytime/content/l2/w01.json",
+    "apps/storytime/content/l2/w02.json",
+    "apps/storytime/content/l2/w03.json",
+    "apps/storytime/content/l2/w04.json",
+    "apps/storytime/content/l2/w05.json",
+    "apps/storytime/content/l2/w06.json",
+    "apps/storytime/content/l2/w07.json",
+    "apps/storytime/content/l2/w08.json",
+    "apps/storytime/content/source.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "role": "measure-review-b-security",
+  "track": "storytime_look_20261107",
+  "phase": "Phase 3: Week content r3 import",
+  "baseline_sha": "2655632aaff89ed8f0e45c3d910f915f04ea0ec9",
+  "audited_head_sha": "3a080e490b067aeb0c41d1f23fd3122d53714794"
+}

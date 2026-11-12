@@ -1,0 +1,59 @@
+Phase 2b acceptance log. Track storytime_look_20261107. Audited SHA cc48d29ee0ac5fc32f6972feff188bf41ee3a62f.
+Model route: claude-code/claude-sonnet-5-5#high. The Red model was opencode/minimax-m3.1-flash-free#high. The Green models were DeepSeek.
+
+Provenance
+- HEAD at the start: cc48d29ee0ac5fc32f6972feff188bf41ee3a62f (the audited SHA).
+- HEAD later moved to 3c82ab25f (23:34:26). It belongs to storytime_app_rebuild_20261025 (task 4.3) and changes only
+  teacher/[level]/[week]/[day]/lesson-flow.tsx and page.tsx. It is not a finding of this phase.
+- Commits after the reviews (65b8325b0 to cc48d29ee) touch test files and measure files only: d4ae91a6d, f63f2171e,
+  cc48d29ee (look track) and 06f57fb43, 2947b9e1e, a4f4a1a35 (other tracks). The reviews still apply.
+- Review A, B, and C target 65b8325b0. Adversarial and UX target f63f2171e. All five read as pass, 0 blocking, retry none.
+  The audit-result checker script was not found, so the fields were read with jq.
+
+Closeout items
+1. PASS. 1a vitest, 21 named files plus 2 adversarial files: Test Files 23 passed (23); Tests 197 passed (197); 0 failed; 0 skipped.
+   1b packages/read-along: Test Files 9 passed (9); Tests 105 passed (105) (same as Green r4).
+   1c tsc --noEmit: TSC_EXIT=0. 1d ESLint on 22 files: ESLINT_EXIT=0; 0 errors; 2 warnings (look-council-r3, present before the phase).
+   The exit codes of 1a and 1b were not echoed; vitest printed no failure line.
+   Green r4 said 22 files and 188 tests without a file list; the difference is one unlisted file with 5 tests (NB4).
+2. PASS. red_before_green=2. 4dca54e79 (Red) precedes 46dbf25ed (Green). Each remediation Red precedes its Green.
+3. PASS. look_out_of_scope_paths=0. 34 paths, each with a row in P2b.9 (one path belongs to another track).
+   login_owned_changed_lines=24; login_owned_non_class_lines=0.
+4. PASS. The protected diff (hooks, highlight-windows.ts, look/places) prints 0 lines. The read-along diff holds class strings and
+   one JSDoc comment line only.
+5. PASS with the stated exception. gate-r5 prints 102 checks (PASS=93, FAIL=9). Rows 15 to 19 PASS. The nine FAIL rows are the song rows.
+6. PASS. The r4 set (4 files, 10.4 s video), the r2 set, and the r3 set exist with bytes above 0.
+7. PASS. build-graph inspect shows Frame at frame.tsx 55 to 77. git worktree list prints 8 lines.
+8. PASS. All five prerequisite results exist and read as pass.
+9. PASS. Task 2b.5 stays [b] deferred:daniel. No pass is written for Daniel.
+A5 holds. A3, A4, A6, and A7 are not triggered (no framework surface in the diff).
+
+Nonblocking items
+NB1 (strategy path count 36 against 31), NB2 (stale detector 3), NB3 (uncommitted green r4 log append), NB4 (unlisted 22nd file),
+NB5 (no literal r2_captures=4 label), NB6 (heads-up on 3c82ab25f). All accepted, each with an owner in the result JSON.
+Carried items (Review A F14 and F15, Review C C2-F3 and C3-F1, adversarial N1 to N4, UX N1 to N11): accepted. UX N1 and N2 (zoom) go to
+Daniel's look check of task 2b.5.
+Sent to the Phase 3 acceptance: the nine song rows of gate-r5 (Q47). Owner: the Phase 3 acceptance role, with the orchestrator.
+
+Checkpoint
+The edit tool and the shell denied every write to measure/tracks/storytime_look_20261107/plan.md (two edit calls and two shell calls).
+No checkpoint commit exists. The orchestrator applies the checkpoint as follows:
+  line 59 of plan.md: "## Phase 2b: Brand chrome" becomes "## Phase 2b: Brand chrome [checkpoint: cc48d29ee]"
+  commit only plan.md with the header: docs(measure): record the brand chrome checkpoint (track_id: storytime_look_20261107)
+
+MEASURE_AGENT_RESULT
+role: phase_acceptance
+track: storytime_look_20261107
+phase: Phase 2b: Brand chrome
+phase_base_sha: 3480f904c509dc2d66fa827dba73df95b3768c65
+role_base_sha: cc48d29ee0ac5fc32f6972feff188bf41ee3a62f
+audited_head_sha: cc48d29ee0ac5fc32f6972feff188bf41ee3a62f
+model_route: claude-code/claude-sonnet-5-5#high
+status: pass
+verdict: PASS
+summary: All nine closeout items hold at cc48d29ee. The item 1 rerun passed (23 files, 197 tests; read-along 9 files, 105 tests; tsc 0; ESLint 0). The nine song rows go to the Phase 3 acceptance. Task 2b.5 stays deferred to Daniel.
+retry_recommendation: none
+checkpoint_sha_proposed: cc48d29ee0ac5fc32f6972feff188bf41ee3a62f
+checkpoint_commit: none (the write to plan.md was denied; the orchestrator applies the checkpoint commit)
+handoff: Append [checkpoint: cc48d29ee] to the Phase 2b heading and commit plan.md alone with the header docs(measure): record the brand chrome checkpoint (track_id: storytime_look_20261107). Send the nine song rows to the Phase 3 acceptance. Commit or discard the uncommitted append to green-p2b-r4-e18000e5d.log.
+END_MEASURE_AGENT_RESULT

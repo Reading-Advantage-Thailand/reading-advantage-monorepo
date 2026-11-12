@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "role": "review-a",
+  "track": "storytime_look_20261107",
+  "phase": "Phase 2b: Brand chrome",
+  "baseline_sha": "4b9033cec86ccf2cdf9a48702d39271943f17018",
+  "audited_head_sha": "65b8325b045fbe3da1d7bae3281bad05f2f74366",
+  "status": "pass",
+  "summary": "All five round 2 findings are closed or reduced to a nit. The three lost gate helpers exist again, and the self-test now fails when a listed helper is missing. The band plaque fits its font from var(--title-chars). The focus ring carries an important box shadow and a white outline. Gate-r5 at HEAD shows rows 15 to 19 PASS, including 32 banner cases, 7 of 7 pages, and 4 of 4 focus targets. The 9 song-row failures are not caused by Phase 2b. I found no blocker and no new defect; two nits remain. I could not re-run vitest because the shell denied the heavy-run call; the test counts rest on the Green log and the r5 gate log.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F14 [Nit] review-a: A2-F4 (reduced) brandForbiddenVerdict (look-phase2-browser-gate.sh:405-411) now reads the status (200 or 403), but a blank page with status 200, zero chrome pairs, and zero buttons still passes (A4 type). Rationale: the r5 log shows 'brand pages 403 page th status=200 ... chrome_brand_pairs=0 ... buttons=0', so the row cannot tell the forbidden view from an empty document. The orchestrator decision that the 403 link is not chrome stands. The 404 view now needs one brand pair (brandNotFoundVerdict, with a self-test mutant) and passes with chrome_brand_pairs=1. Proposal: DEFER to Phase 3; add one visible-text or heading check to the forbidden verdict.",
+    "F15 [Nit] review-a: The ROW_HELPERS list (look-phase2-browser-gate.sh, ROW_HELPERS and missingHelpers) is a fixed list of 25 names. A helper that a row calls but the list omits (for example parseCssColor, contrastOf, guarded) is not caught by the self-test. Rationale: the defect class of A2-F1 is closed for the 25 listed names, and a lost helper still fails closed in the row (the row prints 'the row raises an error'), so this is not a vacuous pass. The C-F1b unit case scores :is() selectors with a regex that over-counts, but with an important shadow it compares only rules that also set an important shadow, and row 19 reads the computed ring in a browser. Proposal: DEFER; derive the list from the row bodies or add a ReferenceError probe."
+  ],
+  "evidence": [
+    "F9 (A2-F1) closed: look-phase2-browser-gate.sh again defines BRAND_FAMILIES, readBrandElements, isRgbOf, BRAND_BLUE, BRAND_AMBER, BRAND_BROWN, brandToneSummary, and readBrandBanner (diff 4b9033cec..65b8325b0, hunk after readBrandChrome), and ROW_HELPERS with eval(name) makes the self-test fail with selftest_missing_helpers=<names> when one is gone (Red log lines 386-389 show exit=1 and selftest_missing_helpers=readBrandElements for a copy without the helper). Gate-r5.log shows row 16 PASS with blue_text_or_ground=0 and chrome_contrast_min=4.92, row 17 PASS with brand_banner_cases=32, and row 18 PASS with brand_page_cases=7 and no ReferenceError.",
+    "F10 (A2-F2) closed: apps/storytime/app/look.css:211-218 gives the band plaque font-size clamp(20px, calc((100cqi - 48px) / (var(--title-chars) * 0.68)), 44px) and min-height 26px; the base rule (look.css:198) and the landscape block (look.css:784) also read var(--title-chars). Row 17 now walks 8 titles x 2 locales on the band hero (?part=book) as well as the cover hero, and the log shows brand_banner_cases=32, brand_banner_failures=0, banner_ratio_min=0.8, banner_ratio_max=0.8. Row 17 also requires logo_title_overlap_px=0 on the band cases. The Red case F-2b now loops over every plaque rule, so a fixed font on any plaque rule fails it.",
+    "F11 (A2-F3) closed: look.css:42-48 is ':is(a, button, [tabindex]):focus-visible' with 'outline: 3px solid #fff' and 'box-shadow: 0 0 0 6px var(--st-brown) !important'. Row 19 reads the computed ring in a browser on four targets (decodable word button, mode button, week tile link, sign-in button): each reports outline rgb(255, 255, 255) 3px and box-shadow rgb(146, 64, 14) 0px 0px 0px 6px. The Red case C-F1b fails at the pre-fix state (Red log: tests_failed=2 at d35f0492c) and passes after a564b0b5b. No tsx file in apps/storytime/app uses tabindex, so the [tabindex] arm adds no focus ring to a container. Side effect noted: the important ring replaces the own box shadow of a focused tile or button; this is the intent.",
+    "F12 (A2-F4) reduced to nit F14: the forbidden verdict reads status 200 or 403 with a self-test mutant for status 500; the 404 verdict needs chrome_brand_pairs >= 1 with a mutant (self-test 79 of 79).",
+    "F13 (A2-F5) closed: packages/read-along/lib/highlight.ts:12 reads 7.09:1 and 4.92:1; grep for 'navy', 'game bar', and '8.6' in apps/storytime/app and packages/read-along finds only the two accurate remarks 'replaces the sprout crest' (frame.tsx:70, look.css:153). look.css:81 now says 'brown vignette', look.css:362 says 'amber badge with a brown check'. done-mark.tsx is in the diff.",
+    "Red tests have meaning: Red log line 425 shows exit=1 and tests_failed=2 (F-2b and C-F1b) at the code state before the Green fix; the Green log shows storytime 188 passed (22 files) and read-along 105 passed (9 files) after a564b0b5b; row 19 and the C-F1b case came with the fix commit pair 1204753b5 and a564b0b5b. The self-test grew from 74 to 79 mutants and ends 79 of 79 with selftest_missing_helpers=0.",
+    "Protected files unchanged: git diff 3480f904c509dc2d66fa827dba73df95b3768c65..HEAD --stat over packages/read-along/hooks, apps/storytime/lib/highlight-windows.ts, and apps/storytime/app/look/places prints nothing (AC-4.7).",
+    "Song rows are not caused by Phase 2b: the phase diff of song.tsx holds one changed line, the className of the play button ('min-h-12 rounded-xl border border-[#92400e] bg-[#fcd34d] px-4 text-[#92400e]'). The 9 FAIL rows of gate-r5.log (capture song x6, hero song x2, council r2 lyric line) all show active_line_index=0 with no console error, no broken picture, and no clipped text; the highlight code (hooks and highlight-windows.ts) is unchanged. They match the earlier rounds and route to Phase 3.",
+    "Gate-r5.log totals: 'Total: 102 checks (PASS=93, FAIL=9)'. Rows 15 to 19 all PASS. A5: the plan 2b.2 r4 text claims '79 of 79' and 'selftest_missing_helpers=0' and 'Tests 188 passed'; these match the Green log. I did not re-count them.",
+    "A3: the new counts use labeled integers (brand_focus_cases=, brand_banner_cases=, selftest_missing_helpers=). A4: row 19 fails closed on focused=0. A missing helper fails the self-test and the row. The only absence-as-proof check is the forbidden page (F14).",
+    "Callers: Frame and the CSS custom property are unchanged in contract; the r4 code diff holds look.css, done-mark.tsx (comment), and highlight.ts (comment) only. No exported symbol changed."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> 65b8325b045fbe3da1d7bae3281bad05f2f74366 (before and after the review)",
+    "git diff 4b9033cec..65b8325b0 -- apps/storytime/app packages apps/storytime/__tests__ measure/tracks (read)",
+    "git diff 3480f904c..HEAD --stat -- packages/read-along/hooks apps/storytime/lib/highlight-windows.ts apps/storytime/app/look/places -> empty",
+    "git diff 3480f904c..HEAD -- song.tsx -> one className line",
+    "grep of gate-r5.log for brand rows and FAIL rows (read)",
+    "heavy-run vitest call: not run, the shell denied the call"
+  ],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/review-a-p2b-r3-65b8325b0.json",
+    "measure/runs/storytime_look_20261107/review-a-p2b-r3-65b8325b0.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "medium"
+}

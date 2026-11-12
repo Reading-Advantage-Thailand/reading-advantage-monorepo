@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "status": "inconclusive",
+  "summary": "The second UX browser review run of Phase 3 (P3.8) of track storytime_look_20261107 ran at role_base_sha 583c9ce805d6d60f34d8f5788aaee69e6a09c74e, which is the current HEAD. The build of the app passed this time, because commit ff4a4b86d fixed the four type errors that stopped run 1. The browser then ran, and every protected page answered the sign-in page. The cause is the harness: browser.mjs gave the session cookie to the phone context before the sign-in filled it, so that context held no cookie. A diagnostic with curl shows the same build answers the protected page with HTTP 200, so the app is not at fault. The harness fix is applied and checked. The status is inconclusive, because no value of P3.8 exists. The review needs one more launch. No phone result is claimed.",
+  "blocking_findings": [
+    "F1 [Blocking, harness] ux-browser-review: the phone context of the harness held no session cookie, so every protected page of the seven weeks answered the sign-in page and no tap could run. The harness of the run folder called context.addCookies(cookies) before signInRow() filled the cookie array, so the call passed an empty list. The proxy of the app sends a request with no session cookie to the sign-in page, and the reader then renders no word, so the seven capture rows read signed_in=0 and the six tap rows time out on the selector [data-word]. The app is not at fault: a diagnostic of the same build signs in with curl, reads the session cookie from the jar, and gets HTTP 200 with the week page for the path /th/st/2/1. The fix is applied: the addCookies call now runs after signInRow(), and node --check on browser.mjs passes. The review needs one more launch of launch.sh. Log tail: logs/playwright.log line 5 'FAIL: week w01 capture console_errors=0 failed_requests=0 signed_in=0', line 25 'FAIL: w02 tap own clip the tap raises an error: TimeoutError: page.waitForSelector: Timeout 20000ms exceeded.', and line 78 'FAIL: taps checked taps_checked=0'. The run ended with exit code 1 at the line '=== Total: FAIL rows present ==='."
+  ],
+  "nonblocking_findings": [
+    "N1 [Note] ux-browser-review: the seven captures of this run are each 12619 bytes, well under the limit of 500 KB, and each shows the sign-in page of the Thai locale with an empty user field, so no account data of any other account sits in them. The captures do not show the week pages, so they prove nothing about the imported content.",
+    "N2 [Note] ux-browser-review: the app ties the pressed state of the mode buttons to a playing clip, so the aria-pressed of the My turn button reads false between the click on the button and the first clip. The harness reads that state once before the first clip and once after it, and the labeled value wNN_my_turn_pressed_after_clip carries the state that a child sees while the clip plays. This is the app behaviour and not a defect.",
+    "N3 [Note] ux-browser-review: the run folder held a stale accounts.csv with one seeded test row of a cancelled attempt, inside the repository. The run script now seeds the account in a new folder under /tmp/opencode, and the folder was removed before the launch of this run."
+  ],
+  "evidence": [
+    "Provenance: git rev-parse HEAD (exit 0) returned 583c9ce805d6d60f34d8f5788aaee69e6a09c74e, and the run script printed the same value as role_base_sha. The audited head is the current head.",
+    "git diff --stat 993dc3e7c..HEAD -- apps/storytime (exit 0) printed one file: apps/storytime/__tests__/look-adversarial-p3-switch.test.ts with 30 insertions and 3 deletions. No other app file moved since run 1.",
+    "review_draft_weeks=1: the run script printed the line at its start (measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/run.sh line 51), and the next start environment sets STORYTIME_REVIEW_DRAFT_WEEKS=1 (run.sh line 183).",
+    "review_draft_media=1: the run script printed the line at its start (run.sh line 52), and the next start environment sets STORYTIME_SHOW_DRAFT_MEDIA=1 (run.sh line 184). Both values stay in the local review environment of this run. This review did not read the deploy files, so it makes no claim about them.",
+    "The build passed this time: the run printed 'PASS: build'. The build log holds no error. Run 1 at 993dc3e7c failed the same step with four TS2345 errors in apps/storytime/__tests__/look-adversarial-p3-switch.test.ts at lines 91, 99, 107 and 110. The fix commit ff4a4b86d, 'test(look): type the adversarial week loader', changed that test file only, and commit 583c9ce80 recorded it in plan.md. The result of run 1 is measure/runs/storytime_look_20261107/ux-browser-p3-993dc3e7c.json.",
+    "The steps before the browser all passed: 'PASS: fixture made', 'PASS: database answers', 'PASS: migration twice', 'PASS: accounts', 'PASS: stand-in starts', 'PASS: build' and 'PASS: app answers on port 43755'.",
+    "The fixture: the run printed 'fixture: removed w02 books[0] (readalong) wordClips entry balls=l2/media/w02/words/wa-balls.mp3' and 'PASS: fixture made'. The file measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/removed-entry.json holds file l2/w02.json, bookIndex 0, bookKind readalong, key balls and value l2/media/w02/words/wa-balls.mp3. The own-clip tap of w02 uses another word.",
+    "The sign-in worked: logs/playwright.log line 1 reads session_cookies=1 and line 2 reads 'PASS: sign in session_cookies=1'. The server log logs/next-start.log holds the line 'storytime sign-in succeeded: role=family'.",
+    "console_errors and failed_requests for w01: logs/playwright.log lines 3 and 4 read w01_console_errors=0 and w01_failed_requests=0. The page under test was the sign-in page, so the two counts describe the sign-in page and not the week page.",
+    "console_errors and failed_requests for w02: logs/playwright.log lines 6 and 7 read w02_console_errors=0 and w02_failed_requests=0. The page under test was the sign-in page.",
+    "console_errors and failed_requests for w03: logs/playwright.log lines 9 and 10 read w03_console_errors=0 and w03_failed_requests=0. The page under test was the sign-in page.",
+    "console_errors and failed_requests for w04: logs/playwright.log lines 12 and 13 read w04_console_errors=0 and w04_failed_requests=0. The page under test was the sign-in page.",
+    "console_errors and failed_requests for w05: logs/playwright.log lines 15 and 16 read w05_console_errors=0 and w05_failed_requests=0. The page under test was the sign-in page.",
+    "console_errors and failed_requests for w06: logs/playwright.log lines 18 and 19 read w06_console_errors=0 and w06_failed_requests=0. The page under test was the sign-in page.",
+    "console_errors and failed_requests for w07: logs/playwright.log lines 21 and 22 read w07_console_errors=0 and w07_failed_requests=0. The page under test was the sign-in page.",
+    "tap_w02=missing (logs/playwright.log line 24), tap_w03=missing (line 37), tap_w04=missing (line 45), tap_w05=missing (line 53), tap_w06=missing (line 61) and tap_w07=missing (line 69). No word of any week was tapped, so the seven tap lines of P3.8 hold no value.",
+    "tap_w02_no_clip=missing (logs/playwright.log line 28) and tap_no_clip=missing (line 29). The no-clip tap of w02 names the removed word 'balls' after the fix of the harness, and it never ran.",
+    "taps_checked=0 (logs/playwright.log line 77). The floor of 7 of P3.8 was not measured, and line 78 reads 'FAIL: taps checked taps_checked=0'.",
+    "The row count: logs/playwright.log line 79 reads row_count=22, with 16 FAIL rows and 6 PASS rows. The PASS rows are the sign-in and the word coverage rows of w03 to w07, which pass on empty word lists.",
+    "The cause of the FAIL rows, first proof: the capture of w01 shows the sign-in page of the Thai locale with an empty user field (measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/captures/w01.jpg). The seven captures hold the same 12619 bytes each, so all seven show the same page.",
+    "The cause of the FAIL rows, second proof: a diagnostic against the same build and the same database pattern signs in with curl, reads the session cookie __Host-st_session from the jar, and gets HTTP 200 with no redirect for the path /th/st/2/1. The body holds the week page with the title of week 1 and the three part tiles, and it holds no sign-in form. The app accepts a fresh session cookie.",
+    "The cause of the FAIL rows, third proof: a probe of SYSTEM Chrome shows that Chrome stores the cookie __Host-st_session over http://localhost, and that copying the jar into a new context as it is keeps the cookie, which reads COOKIE_PRESENT. The browser and the copy of the cookie are not at fault.",
+    "The cause of the FAIL rows, the defect itself: browser.mjs called context.addCookies(cookies) before signInRow() filled the array, so the phone context received an empty list. The proxy of the app sends a request with no session cookie to the sign-in page, so every protected route of the seven weeks answered the sign-in page, the reader rendered no word, and the six tap rows timed out on the selector [data-word].",
+    "Harness fix 5, applied after the run: the addCookies call in browser.mjs now runs after signInRow(), and the check node --check on browser.mjs (exit 0) passes. The next launch of launch.sh uses the fixed harness.",
+    "Harness fix 1 of run 1: browser.mjs line 148 used the selector 'button[data-mode-button]:nth-of-type(2)', which matches no element, because the three mode buttons are the third, the fourth and the fifth button children of their parent in apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx lines 535 to 582. The fix uses page.locator('button[data-mode-button]').nth(1).click(), a trusted click.",
+    "Harness fix 2 of run 1: the two word taps used dispatchEvent of an untrusted MouseEvent, which gives no trusted event and no user activation. The fix uses page.locator('[data-word][tabindex]') with an exact text filter for the clip word, and page.locator('[data-word]:not([tabindex])') with the same filter for the word with no clip. Both use a real click.",
+    "Harness fix 3 of run 1: the no-clip tap of w02 now names the removed word. The harness reads the key of measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/removed-entry.json, which holds 'balls', and picks the word whose lower-case text equals that key.",
+    "Harness fix 4 of run 1: the line tapsChecked = 7 was hard-coded. The function weekTaps now returns the number of taps it made, and the harness sums the six own-clip taps of w02 to w07 and the one no-clip tap of w02.",
+    "Captures: ls -l measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/captures/ lists w01.jpg to w07.jpg, each 12619 bytes, so each is under the limit of 500 KB. Each holds the sign-in page and no account data, so the check that a capture shows only the seeded test account holds, and the check that a capture shows the week page does not.",
+    "Container: podman ps -a lists no container of this run. The two containers that it lists are old: one from 5 weeks ago and one from 45 hours ago.",
+    "This run uses a 2200 MB floor (PM decision 2026-11-09 22:1x), below the 3000 MB standard of the next build, with the heap cap of 2048 MB. The second line of the launch script reads export HEAVY_MIN_AVAIL_MB=2200 HEAVY_PREFLIGHT_WAIT_S=3600 NODE_OPTIONS=--max-old-space-size=2048, and the flag --next-build was not added. The build passed with that floor, so no memory pressure stopped the build.",
+    "Run r1 of this review used the model DeepSeek. It was stopped before it wrote a file, because DeepSeek wrote the P3 Red.",
+    "Run r2 of this review used the model Kimi. In its first attempt the shell guard rejected the env prefix, so heavy-run ran with its defaults of 1500 MB and 600 s. The run failed at the seeding of the account with output_inside_repo=1, before any build.",
+    "Run r2 of this review, second attempt: heavy-run waited 3600 s for 3000 MB and exited 75. The PM stopped a later wait.",
+    "The five history facts of the first brief are the four lines above and the removed entry of the fixture. The removed entry is file l2/w02.json, bookIndex 0, bookKind readalong, key balls, value l2/media/w02/words/wa-balls.mp3.",
+    "No phone result is claimed: the harness runs headless SYSTEM Chrome at an emulated viewport of 390x844, so no run of this review is a phone check (P3.8)."
+  ],
+  "commands": [
+    "git rev-parse HEAD (exit 0; 583c9ce805d6d60f34d8f5788aaee69e6a09c74e)",
+    "git diff --stat 993dc3e7c..HEAD -- apps/storytime (exit 0; one file, the phase 3 adversarial test file)",
+    "node --check measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/browser.mjs (exit 0; after the fifth harness fix)",
+    "bash measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/launch.sh (one run only; exit 1 at the end of the browser step with '=== Total: FAIL rows present ==='; the build passed; the 16 FAIL rows come from the harness cookie order)",
+    "ls -l measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/captures/ (seven files, each 12619 bytes)",
+    "ls -l measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/logs/ (accounts.log, build.log, migrate.log, next-start.log, playwright.log, stand-in.log)",
+    "podman ps -a (no container of this run)",
+    "bash measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/diagnose-session.sh (a scratch diagnostic, removed after the run; the sign-in answered 303 and the protected page answered HTTP 200 with the week body)"
+  ],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/browser.mjs (the fifth harness fix, the session cookie now after the sign-in)",
+    "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/launch.sh (the memory floor of 2200 MB)",
+    "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/logs/ (the run logs of the one run)",
+    "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/captures/ (the seven captures)",
+    "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/content-fixture/ (the fixture week files)",
+    "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/media-root/ (the seven week links)",
+    "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/removed-entry.json (the record of the removed clip entry)",
+    "measure/runs/storytime_look_20261107/ux-browser-p3-583c9ce80.json",
+    "measure/runs/storytime_look_20261107/ux-browser-p3-583c9ce80.log"
+  ],
+  "test_strategy_violations": [
+    "The browser review of P3.8 produced no value. The phone context held no session cookie, so the seven week pages were never opened, the seven captures show the sign-in page, the seven tap lines read missing, and taps_checked reads 0 against a floor of 7."
+  ],
+  "live_contract_violations": [
+    "No live contract of the child page was measured in the browser. The app itself answers the protected page with HTTP 200 for a fresh session cookie, as the curl diagnostic of the same build shows."
+  ],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_audit",
+  "confidence": "high",
+  "ux_applicability": "applicable",
+  "webbridge_status": "not_run",
+  "webbridge_evidence": [
+    "The webbridge browser panel was not used. The review used the prepared harness of the run folder (Playwright with SYSTEM Chrome), and the harness never opened a protected page because the phone context held no session cookie.",
+    "The only image evidence of this run is the seven captures of the run folder, and each capture shows the sign-in page of the Thai locale. No capture shows a week page, a reader page or a tap.",
+    "No accessibility snapshot and no interaction record of a child page exists for this run."
+  ]
+}

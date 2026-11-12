@@ -1,0 +1,24 @@
+Review C (UX and API contract), Phase 2b: Brand chrome. Audited HEAD 4eebabbb2e062a21a95644279a97842f68ad0999.
+
+Verdict: pass for the scope of Review C. No blocking item. Three nonblocking items: C-F1 [Major], C-F2 [Nit], C-F3 [Nit].
+The blockers of Review A (A-F1 and A-F2: gate rows 15, 17, 18) stand and are outside this verdict.
+
+C-F1 [Major] Focus ring: look.css:49-53 gold ring, 1.23 to 1 on amber, 1.70 to 1 on cream, 4.01 to 1 on brown. No test reads it. Proposal: FIX by Green (two-tone ring) with a Red source case, or ESCALATE if the gold ring is a brand choice.
+C-F2 [Nit] Pressed sound button fill #fbbf24 with a brown label is 4.25 to 1 (look.css:467-472). The gate reads fills, not contrast. Proposal: FIX by Green (use #fde68a).
+C-F3 [Nit] Teacher link flow has no live proof (gate-r2.log:123-124), and the Open the lesson link is about 40 px (week-view.tsx:170-176). Proposal: ESCALATE (does the 48 px floor cover teacher pages?).
+
+Checked with no finding: link, button, form, aria, and tap size in 16 screen files (class strings only); label is one visible copy; logo alt does not repeat the label; the title is English in both locales and the Thai label shows no clipped mark in r2-01 and r2-03; no route change.
+Not run: vitest, tsc, ESLint, browser, server. Scratch: none written under /tmp.
+
+MEASURE_AGENT_RESULT
+role: review-c
+status: complete
+track: storytime_look_20261107
+phase: Phase 2b: Brand chrome
+commits: none
+tests_run: none (audit only; no browser, build, or server; verified by diff reading, grep, the r2 captures, gate-r2.log, and a contrast computation)
+files_changed: measure/runs/storytime_look_20261107/review-c-p2b-4eebabbb2.json, measure/runs/storytime_look_20261107/review-c-p2b-4eebabbb2.log
+plan_updates: none
+known_failures: none in scope; Review A blockers A-F1 and A-F2 stand
+handoff: Verdict pass, retry_recommendation none. Route C-F1 to Green (FIX, or ESCALATE if the gold ring is a brand choice), C-F2 to Green (FIX), and C-F3 to the orchestrator (ESCALATE: is the 48 px floor valid for teacher pages). The phase does not clear until Red fixes the gate rows of Review A. Default for the open question in C-F3: the floor applies to child screens only, so C-F3 stays a Nit.
+END_MEASURE_AGENT_RESULT

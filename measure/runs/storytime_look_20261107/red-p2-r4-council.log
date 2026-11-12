@@ -1,0 +1,40 @@
+# measure-mid-red log — storytime_look_20261107 task 2.3f (council round 2)
+
+status: complete (Red)
+role_base_sha: a1d3bb741fa23e355590e35a5fb3d87c61562993
+phase_base_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+
+## Dirty tree classification (before edit)
+
+- Relevant / owned by another Red role (not touched): apps/storytime/__tests__/login-proxy.test.ts,
+  apps/storytime/__tests__/login-signin-handler.test.ts,
+  apps/storytime/__tests__/phase2b-browser-gate.sh.
+- Generated or ignorable: apps/*/next-env.d.ts, test-results/, .tmp/, .pnpm-store/.
+- Unrelated user work: all other listed paths. No unrelated file was staged.
+
+## Result
+
+- Item 1 data source: no completion record in the app (no database client, no fetch, no progress
+  table). The mark reads a per-device localStorage record `storytime:done`.
+- Item 2 is correct code: line 1 starts at 11.4 s, so 6 s of playback shows no line. The unit test
+  and gate row 13 pin no line before playback and the line after its start time.
+- Item 3 and item 4 fail at the base with named assertions.
+- The 2.3e `gap-x-` ban was narrowed to a wide-gap ban so the 0.25em gap is reachable.
+- Full browser gate not run by this role. Production edits: none.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: storytime_look_20261107
+phase: Phase 2: Look port of the picked option
+task: 2.3f
+phase_base_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha: a1d3bb741fa23e355590e35a5fb3d87c61562993
+head_sha: aec23d3e1
+commits: ce23fbf1c (plan task line), 58cf66d3f (tests: look-council-r2.test.tsx and the narrowed look-council-r1.test.tsx), a106ad819 (look-phase2-browser-gate.sh row 13), aec23d3e1 (plan 2.3f red evidence)
+tests: apps/storytime/__tests__/look-council-r2.test.tsx (9 cases, new); apps/storytime/__tests__/look-council-r1.test.tsx (narrowed decodable gap assertion; 8 cases)
+run: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-council-r2.test.tsx __tests__/look-council-r1.test.tsx'; exit=1; Test Files 1 failed | 1 passed (2); Tests 6 failed | 10 passed (16); load_errors=0
+gate: bash -n exit 0; --self-test exit 0, selftest_mutants_rejected=33 of 33, Total: 1 checks (PASS=1, FAIL=0)
+failing_assertions: R1 en.partDone=undefined; R1 missing done-mark.tsx; R1 three per-device writes absent (2:1:song, 2:1:decodable, 2:1:book); R3 no [data-action-chip] hook in en and th; R3 missing [data-action-chip] font-size, background-color, and color rules; R4 missing 0.25em word gap rule; R2 passes as a named characterization; the R3 falsification cases pass
+production_edits: none
+handoff: Green adds messages partDone (en Done, th "เสร็จแล้ว" with partDoneStatus "draft"), the done-mark client component, the three writers, the action chip hook and look.css rule, and the decodable word gap rule equal to or above 0.25em; then run the full look-phase2-browser-gate.sh, which now holds row 13. Task 2.4 stays [~]. Do not build the song pictograms (M-3), Sign out and home button, or the song hero height; Daniel holds them.
+END_MEASURE_AGENT_RESULT

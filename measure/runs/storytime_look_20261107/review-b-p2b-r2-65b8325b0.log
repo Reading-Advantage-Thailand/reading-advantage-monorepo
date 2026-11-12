@@ -1,0 +1,82 @@
+# Measure Review B — security — round 2
+
+Track: storytime_look_20261107. Phase: Phase 2b: Brand chrome.
+Phase base: 3480f904c509dc2d66fa827dba73df95b3768c65.
+Role base and audited HEAD: 65b8325b045fbe3da1d7bae3281bad05f2f74366.
+Audited HEAD is current: yes. `git status --porcelain` shows no change under
+apps/storytime, packages/read-along, or the track spec.
+Baseline (round 1): 4eebabbb2e062a21a95644279a97842f68ad0999, pass, no findings.
+This is a re-review. No earlier CONTEST item exists, so no finding is withdrawn or kept.
+
+## Scope
+
+`git diff --stat 4eebabbb2..65b8325b0` lists 16 files. The production code files are
+frame.tsx, done-mark.tsx, look.css, highlight.ts, and read-along-passage.tsx. The other
+files are tests, the Phase 2b browser gate script, plan.md, spec.md, and gate logs.
+The security surface is small: no route, handler, schema, migration, cookie, header,
+or dependency change enters the range. Security applicability: applicable.
+
+## Named security deltas
+
+1. frame.tsx (apps/storytime/app/[locale]/frame.tsx). The inline style now holds one
+   value only: `{ "--title-chars": title.length }`. The earlier `clamp()` template is
+   gone. The value is a number, so no week text can reach the style attribute. The
+   title is a React text child, so React escapes it. Result: pass.
+2. read-along (packages/read-along/lib/highlight.ts and read-along-passage.tsx). The
+   changes set HIGHLIGHT_CLASSES.currentWord arbitrary Tailwind color values and two
+   focus-visible class strings. The changes touch class strings only. No handler,
+   state, or data-flow change. Result: pass.
+3. look.css. The grep for `@import` returns no match. The grep for `http` returns no
+   match. Every `url()` value is a relative `look/places/*.webp` path, and one
+   background holds a pre-existing `data:image/svg+xml` value. No `@font-face` and no
+   font fetch enter the range. Result: pass.
+4. The gate script (apps/storytime/__tests__/look-phase2-browser-gate.sh). Line 74
+   makes TMP_DIR with `mktemp -d -t storytime-look-p2-XXXXXX`. FIXTURE is
+   `$TMP_DIR/content`. The fixture content is written only under TMP_DIR. Line 2780
+   writes accounts.csv into `$TMP_DIR/accounts`. `cleanup` removes TMP_DIR.
+   MEDIA_ROOT defaults to `~/Desktop/handoff/w01-storytime-app-package-r2` and stays
+   outside the repository. The database is an ephemeral podman Postgres container
+   with no volume. `make-accounts.ts` runs against that container. The teacher sign-in
+   prints only `teacher_session_cookies=<count>`. Line 2901 sets STORYTIME_TEACHER_ROUTES=1
+   and the other STORYTIME_* names in the next start process environment only. A grep
+   of apps/storytime returns 37 hits for the three names, and none of them is in
+   apps/storytime/Dockerfile or apps/storytime/cloudbuild.yaml. Result: pass.
+5. The sign-in and join pages. `git diff --name-only 4eebabbb2..65b8325b0` over
+   apps/storytime/app returns no sign-in, join, login, teacher, auth, or not-found
+   file. The pages are unchanged since round 1, so the round 1 checks still hold.
+   Result: pass.
+
+## Other checks
+
+The added test code holds no fetch, no http request, no `process.env` write, no
+`writeFileSync`, no `innerHTML`, no `__html`, no `dangerouslySetInnerHTML`, and no
+`eval` of user data. The one `spawnSync` call runs `git diff` with fixed arguments and
+a fixed `cwd`.
+
+The new self-test rows use literal control and mutant objects, so no external input can
+make a control pass. The helper-existence check runs `eval` on a fixed name list.
+
+A2 (consent-blind publish gate). The gate script sets `w01.approval.loops.status` to
+approved in the TMP_DIR fixture copy only. The shipped week file is untouched. No named
+school or person is published. The Storytime content model holds no consent artifact,
+and no artifact is needed. A2 does not apply.
+
+A6 (registry overstatement). measure/tracks.md holds the storytime_look_20261107 row
+with status text only. No security state reads "resolved". A6 does not apply.
+
+## Verdict
+
+Pass. No blocking finding and no nonblocking finding. The round 2 deltas are brand
+tones, class strings, and gate self-tests. Nothing in the range reaches a deploy file,
+a secret, a network call, or a tenant boundary.
+
+MEASURE_AGENT_RESULT
+status: pass
+findings: none
+blocking: 0
+nonblocking: 0
+retry_recommendation: none
+result_artifact: measure/runs/storytime_look_20261107/review-b-p2b-r2-65b8325b0.json
+audited_head_sha: 65b8325b045fbe3da1d7bae3281bad05f2f74366
+security_applicability: applicable
+END_MEASURE_AGENT_RESULT

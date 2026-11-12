@@ -1,0 +1,14 @@
+MEASURE_AGENT_RESULT
+role: phase_acceptance
+track: storytime_look_20261107
+phase: Phase 2: Look port of the picked option
+phase_base_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha: 4c34987ca774a5cd6323b4ce5d7bbb5a716797ee
+audited_head_sha: d90c4c24f7b94e37a6305b9d132419856f8d4469
+model_route: kimi-code-plan-cn/k3.1-pro#high
+status: fail
+verdict: FAIL
+summary: Closeout item 8 fails. The required Phase 2 build-graph update has no record, and graph.db lacks Frame, placeFor, frame.tsx, and places.ts. All other closeout items hold or have an accepted disposition. Green must update the graph for frame.tsx, places.ts, and layout.tsx. Acceptance must rerun at the resulting HEAD.
+retry_recommendation: route_to_green
+checkpoint_sha_proposed: none
+END_MEASURE_AGENT_RESULT

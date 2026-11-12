@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "status": "inconclusive",
+  "summary": "Provisional result. UX browser review of storytime_look_20261107 Phase 3 (week content r3 import) is in progress.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "Provisional: audit started, run script not yet executed."
+  ],
+  "commands": [],
+  "changed_files": [],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "low",
+  "ux_applicability": "pending",
+  "webbridge_status": "not_run",
+  "webbridge_evidence": []
+}

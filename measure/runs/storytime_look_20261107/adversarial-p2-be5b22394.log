@@ -1,0 +1,18 @@
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+track: storytime_look_20261107
+phase: Phase 2: Look port of the picked option
+phase_base_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha: dd66da7e33d7a0dccce5ffb50bf8a449beb0265c
+audited_head_sha: be5b22394398e0c0c7117a5e347674f64e9721dd
+commits: none yet (provisional)
+status: fail
+summary: The adversarial round of Phase 2 added 13 cases in two files. Eleven cases pass on the shipped tree. Two cases fail on real product defects. K2a: a rapid mode-switch storm shows the red sound-error alert while the narration plays, because reader.tsx lines 243-256 treat every rejected play() as a failure and a browser aborts the pending play with AbortError when the mode switch writes a new src. S4b: a one-page book never records its finish, because the done write at reader.tsx line 202 needs book.pages.length > 1. The two failing cases are the Red proof for Green in look-adversarial-p2-defects.test.tsx.
+mutants_rejected: 0 of 9
+retry_recommendation: route_to_green
+blocking_findings: 2
+K2a: apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx lines 243-256, the playAudio catch sets audioFailed for an AbortError. The decodable holds the isAbortError guard at decodable.tsx lines 244-274.
+S4b: apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx line 202, the done write needs book.pages.length > 1.
+nonblocking_findings: 3
+handoff: Green fixes reader.tsx for K2a and S4b. The browser gaps are the 60-character title at 320 x 568 and 568 x 320, and the forced-colors palette with the 200 percent text zoom.
+END_MEASURE_AGENT_RESULT

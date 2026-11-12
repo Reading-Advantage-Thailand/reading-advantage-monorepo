@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-c-ux-api",
+  "track": "storytime_look_20261107",
+  "phase": "Phase 2: Look port of the picked option",
+  "status": "pass",
+  "verdict": "pass",
+  "summary": "Delta review of the look commits be5b22394..c54b78ea4 finds no blocking finding. The abort guard changes no user-flow contract. The child still sees the red alert when a sound really fails in both the reader (reader.tsx line 602) and the decodable (decodable.tsx line 642), and a mode-switch storm shows no false alert. No flow loses a pressed-state reset, because both pressed marks follow media events (use-read-along.ts lines 74-88; decodable.tsx lines 515-522), and no flow loses a stop clear, because every playAudio caller runs resetMarks and clearStopTimer first. A one-page book now records its finish on its first view, and the week-page badge reads that record on mount, so the mark appears only after the child opens the book. The diff touches no route, no locale path, no API call, and no message key.",
+  "phase_base_sha": "08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca",
+  "role_base_sha": "c54b78ea494a4f31343b33a2511060dac533c052",
+  "audited_head_sha": "c54b78ea494a4f31343b33a2511060dac533c052",
+  "model_route": "nvidia/stepfun-ai/step-5-preview#high (substitute for kimi-for-coding, which is WAIT; the earlier Review C of this phase also ran on StepFun)",
+  "contract_applicability": "applicable",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N5 [Nit] the decodable keeps lastPage > 0 at apps/storytime/app/[locale]/st/[level]/[week]/decodable.tsx line 226, so a one-page decodable would never mark done; no shipped decodable has one page, so fix it only when such content arrives.",
+    "N6 [Nit] the parent speaker with no load-error message is out of Phase 2 scope, because Phase 2 is a look port; record it for a later task."
+  ],
+  "evidence": [
+    "git rev-parse HEAD exit 0 returns c54b78ea494a4f31343b33a2511060dac533c052; the audited head is current.",
+    "git log --oneline be5b22394..c54b78ea4 lists 5024a9fd9 (the fix), a4f4b67e9 and 433a613ae (tests), b6b8f6c3e and c54b78ea4 (measure docs), plus an unrelated sales track doc commit; only 5024a9fd9 touches app code.",
+    "git diff be5b22394..c54b78ea4 --stat shows changes only in apps/storytime/lib/is-abort-error.ts (new), reader.tsx, decodable.tsx, two test files, and measure docs: no route, no locale path, no API call, no message key.",
+    "apps/storytime/lib/is-abort-error.ts is a new shared helper that reports an AbortError DOMException.",
+    "apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx lines 246-256 set audioFailed and clear the stop timer for every rejection that is not an AbortError.",
+    "reader.tsx lines 200-205 write the finish when pageIndex reaches the last page; the comment names the one-page case.",
+    "reader.tsx line 602 renders the role=alert paragraph with the red text when audioFailed is true.",
+    "reader.tsx lines 302-308 (resetMarks) run clearStopTimer before playAudio at lines 325 and 352.",
+    "reader.tsx line 196 derives pressedMode from isPlaying, which packages/read-along/hooks/use-read-along.ts lines 74-88 set from the play, pause, and ended events.",
+    "apps/storytime/app/[locale]/st/[level]/[week]/decodable.tsx lines 246-262 keep setFailed and clearWholeStopTimer for a non-abort rejection; line 642 renders the alert.",
+    "decodable.tsx lines 515-522 set soundPlaying from the media events of the phoneme element, so an abort leaves no stuck pressed state.",
+    "decodable.tsx lines 455-470 clear or arm the whole-word stop before playElement, so an abort leaves no armed stop.",
+    "apps/storytime/lib/contracts/week.ts line 180 holds pages.min(1), so no zero-page book can write an empty done mark.",
+    "apps/storytime/app/[locale]/st/[level]/[week]/page.tsx line 442 renders the reader only on the book screen, and done-mark.tsx line 28 reads isPartDone on mount.",
+    "apps/storytime/lib/done.ts lines 29-34 write the per-device record and never throw on a blocked store.",
+    "apps/storytime/__tests__/look-adversarial-p2-defects.test.tsx lines 130-160: a mode-switch storm keeps one pressed button and shows no alert; lines 164-186 pin the one-page done record.",
+    "apps/storytime/__tests__/look-adversarial-p2.test.tsx line 496 (K2b) pins the alert on a genuine play failure, line 461 (K1) pins the clear pressed state after a clip error, and lines 593-621 (S3) pin the decodable alert."
+  ],
+  "commands": [
+    "git rev-parse HEAD (exit 0)",
+    "git log --oneline be5b22394..c54b78ea4 (exit 0)",
+    "git diff be5b22394..c54b78ea4 --stat (exit 0)",
+    "git diff be5b22394..c54b78ea4 on reader.tsx, decodable.tsx, and lib/is-abort-error.ts (exit 0)",
+    "read of reader.tsx, decodable.tsx, done.ts, done-mark.tsx, content.ts, contracts/week.ts, and use-read-along.ts",
+    "read of the two adversarial test files"
+  ],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/review-c-p2-c54b78ea4.json",
+    "measure/runs/storytime_look_20261107/review-c-p2-c54b78ea4.log"
+  ],
+  "security_violations": [],
+  "architecture_violations": [],
+  "test_violations": [],
+  "spec_violations": [],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "handoff": null
+}

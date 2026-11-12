@@ -1,0 +1,31 @@
+Strategy role log: storytime_look_20261107, Phase 1: Council fixes, role base eae128027.
+Model: claude-code/claude-sonnet-5-5.
+
+Scope: one bounded amendment of P1.4 closeout item 3. Nothing else changed.
+
+Changes in test-strategy.md (commit 06e51fba0, 2 lines added):
+- P1.4 closeout item 3: third amended exception for apps/storytime/__tests__/phase3-browser-gate.sh
+  (look commit 97569137d, Red r6 triage, orchestrator decision 2026-11-08). Reason: the look Phase 1
+  changes moved six rows of the login gate; the new rows weaken no assertion (red-p1-r6-triage.log);
+  look_out_of_scope_paths names the path and does not fail on it.
+- "Amended after the phase acceptance r2" line added at the top of the file (2026-11-08).
+
+Second commit (PM condition added to the same exception bullet; see git log for the SHA).
+
+Not changed: Phase 2 strategy (it comes after the Phase 1 checkpoint).
+Phase base: the orchestrator captures phase_base_sha unchanged from the earlier strategy flow; this
+amendment adds no new base. Commit 06e51fba0 is the strategy HEAD for this revision.
+
+Commit check: one file staged by name; header 91 characters or less than 100; no hash field added.
+
+MEASURE_AGENT_RESULT
+role: measure-strategy
+phase: Phase 1: Council fixes
+track: storytime_look_20261107
+status: complete
+retry_recommendation: none
+result: measure/tracks/storytime_look_20261107/test-strategy.md
+log: measure/runs/storytime_look_20261107/strategy-p1-r2-eae128027.log
+artifacts_written: yes
+handoff: "Commit 06e51fba0 adds the phase3-browser-gate.sh exception to closeout item 3 of P1.4 and one Amended line. Nothing else changed. The log file is untracked; the orchestrator commits it."
+END_MEASURE_AGENT_RESULT

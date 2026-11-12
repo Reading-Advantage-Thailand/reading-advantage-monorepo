@@ -1,0 +1,74 @@
+Review A (correctness and architecture) of Phase 3 of track storytime_look_20261107.
+
+Provenance
+- audited_head_sha: b9ba532bffad493c868e1e8ae2dc3e8d8007f044
+- phase_base_sha: 2655632aaff89ed8f0e45c3d910f915f04ea0ec9
+- role_base_sha: 5f05fd3534a808e406ae46ca6ca3fca3eef90e1d
+- The repository HEAD moved past the audited revision because other tracks commit in parallel. The audit covers the fixed revision b9ba532bf.
+
+Scope (test-strategy.md P3.7, row Review A)
+- The diff of the eight week files.
+- The source.json shape.
+- The receiver rule that covers all eight weeks.
+- The mediaOf clip entries.
+- The Red test of P3.2 (apps/storytime/__tests__/look-r3-import.test.ts).
+- The old-test edits under R-EDIT3.
+- The stop rule of Q37 (the w08 diff).
+- The K2 key rule and the .mp3 set (Q38) against the contract (lib/contracts/week.ts, M49).
+- The P3.9 allowed-paths check.
+
+Commands run and their exit codes
+- git rev-parse HEAD: exit 0, prints 5f05fd3534a808e406ae46ca6ca3fca3eef90e1d.
+- git rev-parse b9ba532bffad493c868e1e8ae2dc3e8d8007f044: exit 0, prints the audited head.
+- git log 2655632aa..b9ba532bf --format=%H --grep='track_id: storytime_look_20261107': exit 0, prints 11 commits, the same 11 named for the phase.
+- git show --name-only --format= for each of the 11 commits: exit 0. The paths are the eight week files, content/source.json, the new test file, eight old test files, and the track plan file. look_out_of_scope_paths=0.
+- git diff --name-only 2655632aa b9ba532bf -- apps/storytime/app apps/storytime/lib apps/storytime/scripts apps/storytime/proxy.ts: exit 0, empty output. No route, no cookie, no contract, and no receiver file changed in the range.
+- Deep leaf diff, node, of the received w01 at b9ba532bf against /home/daniebo/Desktop/handoff/w01-storytime-app-package-r4/l2/w01.json: exit 0. 5 differing subtrees, all scripts[0..4].share, holding 22 leaves.
+- Deep leaf diff, node, of the received w02 to w07 against their r3 packages: exit 0. 0 differing leaves in each of the six files.
+- Deep leaf diff, node, of the shipped w01 and w08 at 2655632aa against the received files at b9ba532bf: exit 0. The w01 diff holds books[0].audio.wordClips, books[1].audio.wordClips, focus.family.words[0..5].image.file, scripts[0..4].share, and song.videoLeadInSeconds. The w08 diff holds only scripts[0..4].share.
+- Clip count, node, over the eight received week files: exit 0. Entries 173 over w01 to w07, distinct keys per week 22, 23, 20, 24, 28, 22, 24, sum 163, distinct paths 163, w08 holds 0, every path ends in .mp3.
+- Share block scan, node, over the eight received week files: exit 0. 40 share blocks, 0 with a URL.
+- git show b9ba532bf:apps/storytime/content/source.json: exit 0. One commit 953f798ea309cc10abd5538c202e05ff31a2320d and eight files. The shape did not change.
+- heavy-run, foreground, vitest run --maxWorkers=1 __tests__/look-r3-import.test.ts: exit 0. Test Files 1 passed (1), Tests 8 passed (8), 1.43 s.
+- heavy-run, foreground, vitest run --maxWorkers=1 __tests__/phase2-contract.test.ts __tests__/release-weeks-readiness.test.ts __tests__/phase3-media-coverage.test.ts __tests__/phase3-loop-receiver.test.ts: exit 0. Test Files 4 passed (4), Tests 37 passed (37), 4.73 s. The first file parses every shipped week from w01 to w08 with the contract, the second holds the readiness rule, the third proves that mediaOf covers every media path of the eight weeks, the fourth holds the receiver guard.
+- heavy-run, foreground, vitest run --maxWorkers=1 on the eight R-EDIT3 old-test files: exit 0. Test Files 8 passed (8), Tests 103 passed (103), 17.77 s.
+- bash measure/doctor.sh: exit 1. Two PASS lines and the one known Nit line 'FAIL: measure/automation-supervisor.py not found'. No other FAIL line.
+
+Findings
+F1 blocking, evidence-label, measure/tracks/storytime_look_20261107/plan.md line 68. The plan states 24 differing leaf paths for w01 against the r4 package. The measured count is 22, and the plan's own list sums to 22 (4 + 4 + 4 + 6 + 4). The property the label supports holds. The count label is wrong. The w08 count of the same note, 20, is correct.
+F2 blocking, evidence-label, measure/tracks/storytime_look_20261107/plan.md line 69. The plan quotes clip_paths_total=163 as a label of the run of look-r3-import.test.ts. That label does not exist in the test. The path case R3 uses clip_paths_checked and counts the 173 entries. The distinct path count of 163 is asserted only under the label clip_keys_total of case R4. A checker that parses the test for clip_paths_total finds nothing. The safety property holds, because R3 checks all 173 entries and the run passes.
+F3 blocking, stale-strategy, measure/tracks/storytime_look_20261107/test-strategy.md line 802 and line 764. The closeout gate still requires weeks_equal=7 and clip_paths_checked=163. The Green evidence in plan.md line 68 records weeks_equal=6 under the PM decision of 2026-11-09. The strategy rows were never amended, so the closeout gate contradicts the recorded evidence.
+
+PM conditions, all verified at b9ba532bf
+- The share part of the w01 and w08 diff sits only inside scripts[].share.
+- meta.status is unchanged: published for w01 in the shipped file and in the received file, draft for w08 in both, and the w08 scripts array holds 5 scripts in both.
+- The contract parse holds: the 7 imported files parse in case R1 of the new test, and the w08 file parses in the case 'parses every shipped week from l2/w01 to l2/w08' of phase2-contract.test.ts.
+- The receiver rule covers all eight weeks, and source.json lists eight files.
+
+Review B (security), test-strategy.md line 821, stays 'no, with a stated condition'. None of its four trigger conditions holds. The contract, the receiver, the routes, and the cookie rules are unchanged in the range. Task 3.4 stays [b] deferred:daniel at plan.md line 70. The 40 share blocks add no URL, no script, and no external link. A block holds shots[].step, shots[].media as a kind such as video or photo, and caption.en and caption.th as text. The scriptSchema of lib/contracts/week.ts line 402 is a passthrough schema, so the share block is extra data and reaches no media URL. The condition list needs no new entry for the share blocks.
+
+Not findings
+- The Thai caption drafts of scripts[].share, per the PM decision of 2026-11-09.
+- The known doctor Nit.
+
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+track: storytime_look_20261107
+phase: "Phase 3: Week content r3 import"
+baseline_sha: 2655632aaff89ed8f0e45c3d910f915f04ea0ec9
+phase_base_sha: 2655632aaff89ed8f0e45c3d910f915f04ea0ec9
+role_base_sha: 5f05fd3534a808e406ae46ca6ca3fca3eef90e1d
+audited_head_sha: b9ba532bffad493c868e1e8ae2dc3e8d8007f044
+model_route: minimax-cn-coding-plan/MiniMax-M3.1-Flash
+status: fail
+confidence: high
+summary: Review A of the Phase 3 week content r3 import at b9ba532bffad493c868e1e8ae2dc3e8d8007f044. The import data is correct and the phase scope check passes with look_out_of_scope_paths=0. The source.json shape holds one commit, the full id of 953f798e, and eight files. The received w02 to w07 are leaf-identical to their r3 packages, and the received w01 differs from the r4 package only in the five scripts[].share blocks, which hold 22 leaves. The measured counts are 173 clip entries, 163 distinct keys, and 163 distinct paths, and every path ends in .mp3. The focused runs of the new test, of the contract, readiness, media coverage, and receiver gates, and of the eight edited old-test files all exit 0. The doctor shows only the known Nit line. Review B stays no, with a stated condition, because none of its four trigger conditions holds and the share blocks add no URL, no script, and no external link. Three blocking defects sit in plan.md lines 68 and 69 and in test-strategy.md lines 764 and 802. Each defect is in an evidence label or a strategy row, not in product code, so Green owns the fix.
+blocking_findings: F1 plan.md:68 the count label of 24 differing leaf paths of w01 against the r4 package must read 22; F2 plan.md:69 the label clip_paths_total=163 does not exist in look-r3-import.test.ts and the path case checks the 173 entries under clip_paths_checked; F3 test-strategy.md:802 and :764 the closeout gate still requires weeks_equal=7 and clip_paths_checked=163 while the Green evidence records weeks_equal=6 under the PM decision of 2026-11-09.
+nonblocking_findings: the K2 rule of the import accepts no hyphen separator and is narrower than the contract rule of lib/contracts/week.ts:114, so a later hyphenated key would parse with the contract and fail the import test.
+test_strategy_violations: F3 test-strategy.md:802 and :764; F2 test-strategy.md:790 requires a label clip_paths_total=163 that the test does not hold.
+live_contract_violations: none
+prod_wiring_violations: none
+route_parity_violations: none
+changed_files: none
+retry_recommendation: retry_implementation
+END_MEASURE_AGENT_RESULT

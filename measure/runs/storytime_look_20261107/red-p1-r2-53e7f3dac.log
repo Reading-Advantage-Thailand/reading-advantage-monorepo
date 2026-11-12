@@ -1,0 +1,80 @@
+Red round 2 log: storytime_look_20261107, Phase 1: Council fixes.
+Role: measure-mid-red. Model: opencode-go/deepseek-v4.1-flash.
+Phase base = 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6. Role base = 53e7f3dac12602585d6ab9c5b4142df650bd4291.
+Plan changed in a776187e2 (task 1.3 not held; new task 1.9); strategy changed in fdaf72553 (rows 1.3 and 1.9; helper pin lib/highlight-windows.ts).
+
+## Scope
+Tasks 1.3 and 1.9 only. Wrote apps/storytime/__tests__/look-song-playing.test.tsx (S1 to S7),
+edited apps/storytime/__tests__/phase3-song-ui.test.tsx line 50 (preload "metadata", with one
+line of reason), and wrote apps/storytime/__tests__/look-reader-highlight.test.tsx (H1 to H7,
+fake requestAnimationFrame and a controlled timeupdate clock at 4 phases). No production file,
+no login file, no helper.
+
+## One authoring defect, fixed once
+The first job showed `look-reader-highlight` with 0 tests: Vite failed to resolve the static
+`import("../lib/highlight-windows")` (load error). Fixed to `existsSync` first, then
+`await import(/* @vite-ignore */ modulePath)` with a string variable, as the strategy requires.
+One rerun confirmed the clean Red.
+
+## Final combined Red job
+Command:
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-song-playing.test.tsx __tests__/phase3-song-ui.test.tsx __tests__/look-reader-highlight.test.tsx'
+
+Result: exit=1; Tests 12 failed | 9 passed (21); Test Files 3 failed (3); Duration 9.12 s.
+Labeled counts: look_files=2; old_files=1; tests_failed=12; tests_passed=9; load_errors=0
+(no "Cannot find module", no "Failed to resolve import", no "ENOENT").
+
+Per file (pass/total):
+- look-song-playing.test.tsx 1/7: S1, S2, S3, S4, S6, S7 fail; S5 passes.
+  First messages: `the .song-stage must hold an inline background-image ... received ""` (S1);
+  `video preload must be "metadata", received "none"` (S3); `the poster must stay under the
+  video after the play event` (S4).
+- phase3-song-ui.test.tsx 6/7: the edited line 50 fails (`preload="metadata"` vs "none");
+  the other six cases pass.
+- look-reader-highlight.test.tsx 2/7: H1, H2, H3, H4, H6 fail; H5 and H7 pass.
+  First messages: `page 1 listen: lit words [0,1,3], expected [0,1,2,3]` (H1, phase 0);
+  `lit_frames_min=0` (H2); `page 1 slow: lit words [0,1,3]` (H3);
+  `Missing apps/storytime/lib/highlight-windows.ts` (H4); `replay_1=[0,1,3]` (H6).
+
+## Passing cases at the base, with the reason (A4)
+1. look-song-playing S5 "turns the button to Pause after play and keeps the video source":
+   named characterization; the label turns on `play`, and the poster attribute already holds.
+2. look-reader-highlight H5 "My turn keeps the original cut bounds":
+   named characterization; `wordCutBounds` already uses the original start (minus 0.03 s) and end.
+3. look-reader-highlight H7 "the loop stops on pause, ended, and unmount":
+   named characterization for pause and `ended`; no frame stays queued and no word stays lit
+   (the unmount cancel guard runs only when a frame loop existed; the base has none).
+4 to 9. phase3-song-ui.test.tsx: the six old cases (lyric lighting, phone and regular media,
+   audio fallback, lyric text, gesture text, no karaoke tile) are unchanged and pass.
+
+## Commits (branch master, no push)
+- a7c220ab5 test(storytime): add the song first-frame red test (task 1.3; holds
+  phase3-song-ui.test.tsx line 50 with the one-line reason in the body)
+- 95dade049 test(storytime): add the read-along highlight red test (task 1.9)
+- c3c41b40b docs(measure): record the look red round 2 evidence (plan.md alone)
+
+## Remaining work for Green
+1.3: song.tsx sets the `.song-stage` inline background to the poster (regular and phone), keeps
+`poster`/`playsInline`, and changes `preload` to "metadata"; phase3-song-ui must pass.
+1.9: add apps/storytime/lib/highlight-windows.ts (MIN_WORD_WINDOW_S = 0.12, highlightWindows),
+reuse the per-frame `useReadAlong` loop in the reader for the highlight, keep the stop logic in
+`onTimeUpdate`, and keep `wordCutBounds` on the original timings. The old `timeupdate`
+highlight tests (M20) stay green or are updated with a reason.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+phase: Phase 1: Council fixes
+track: storytime_look_20261107
+status: done
+retry_recommendation: none
+result: look-song-playing.test.tsx, phase3-song-ui.test.tsx line 50, look-reader-highlight.test.tsx
+log: measure/runs/storytime_look_20261107/red-p1-r2-53e7f3dac.log
+artifacts_written: yes
+baseline_sha: 53e7f3dac12602585d6ab9c5b4142df650bd4291
+head_sha: c3c41b40b
+dispositions: none
+tests: "combined Red exit=1; tests_failed=12 tests_passed=9 look_files=2 old_files=1 load_errors=0"
+commits: a7c220ab5, 95dade049, c3c41b40b
+files: apps/storytime/__tests__/look-song-playing.test.tsx, apps/storytime/__tests__/phase3-song-ui.test.tsx, apps/storytime/__tests__/look-reader-highlight.test.tsx, measure/tracks/storytime_look_20261107/plan.md
+handoff: "Round 2 Red is committed at c3c41b40b. The combined job exits 1 with 12 failed and 9 passed over 3 files; load_errors=0. look-song-playing 1/7 (S5 characterization), phase3-song-ui 6/7 (only the edited preload case fails), look-reader-highlight 2/7 (H5 and H7 characterizations). One authoring defect (a static import of the new helper) was fixed with existsSync plus a string-variable dynamic import; one rerun confirmed it. Green changes production files only: song.tsx (stage background, preload) and lib/highlight-windows.ts plus the reader highlight loop. Task 1.3 is not held; Daniel's phone record stays human evidence, not a gate. No question for the orchestrator."
+END_MEASURE_AGENT_RESULT

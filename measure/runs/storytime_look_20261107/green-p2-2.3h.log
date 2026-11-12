@@ -1,0 +1,15 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: storytime_look_20261107
+phase: Phase 2: Look port of the picked option
+task: 2.3h
+phase_base_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha: 6388eb064676a2e172901c05c72cb9de81bbe9ec
+head: 9fb4df8696eaf690005aeee3ffc11c4a57338b81
+model_route: nvidia/stepfun-ai/step-5-preview#high, the substitute for minimax-cn-coding-plan/MiniMax-M3.1-Flash (the ra-quota green pick after DeepSeek and Anthropic are excluded), because the MiniMax 5 h window sat at 75 percent. The Red model was deepseek/deepseek-flash#high.
+commits: 52f26abea (the code: apps/storytime/app/look.css alone), 9fb4df869 (the plan evidence of task 2.3h alone)
+status: green
+summary: The Red row 3 of look-phase2-browser-gate.sh failed with plaque_overflow_px=20 at 568x320 en and th and at 844x390 en and th. The cause was the fixed height and min-height of header[data-hero] > h1 inside @media (max-height: 500px) in apps/storytime/app/look.css. The fix makes the plaque grow with the wrapped title: height: auto with min-height: 40px kept. A one-line title still measures 40 px, so the shipped short titles (13 characters at most) look the same. The plaque is absolute, so it does not grow the hero band, and the crest is hidden in landscape. The Red command was not rerun: the Red made no production edit, so the tree at role_base_sha differs from HEAD only by this rule.
+tests: Gate 1 (heavy-run, foreground): HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && bash apps/storytime/__tests__/look-phase2-browser-gate.sh' exit 0, === Total: 86 checks (PASS=86, FAIL=0) ===; frame long title 60 characters PASS with 390x844_en plaque_overflow_px=0 clipped_text=0 plaque_h_px=222, and 568x320_en, 568x320_th, 844x390_en, 844x390_th all at plaque_overflow_px=0 clipped_text=0 with plaque_h_px=66 (was 40 with 20 px of overflow); captures=24; capture_rows=24; console_errors=0; every capture row holds tap_under_48=0 clipped_text=0 page_overflow=0 contrast_fail=0; the hero pins hold unchanged (song_stage_height_px=220, hero_band_height_px_phone=96, hero_band_height_px_tablet=120); the landscape hero band stays 64 px (the question rows at 844x390 read hero_band_height_px=64), so the plaque does not push the band. Gate 2 (the GREEN_TEST_COMMAND of test-strategy.md P1.4 with the look glob, heavy-run, foreground): exit 0, Test Files 90 passed (90), Tests 689 passed (689). No tsc gate and no ESLint gate: the change is CSS only. No old CSS artifact test pins the 40 px plaque height. No build-graph update: the change is not a structural TypeScript edit.
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,64 @@
+Strategy role log: storytime_look_20261107, Phase 1: Council fixes, role base d8e73fc6c.
+Model: claude-code/claude-sonnet-5-5.
+
+Measured at the base (heavy-run.sh, CI=true, --maxWorkers=1, foreground):
+- base_targeted_run: exit=0 test_files=59 tests_passed=452 tests_failed=0 tests_skipped=0 duration_s=95.76
+- release_adversarial_alone: exit=0 test_files=1 tests_passed=26 tests_failed=0
+- look_command_base: files=60 tests_passed=478 (sum of the two runs; Green verifies the sum)
+- tsc and ESLint at the base: not measured (cost); Green records them first.
+
+Findings that change the plan text:
+- Council finding 18 (word gap): the cause is the 44 px word box of tapTargetFloor with justify-center in
+  packages/read-along. The AC-1.9 checks of the spec all pass at the base, so Red adds one check that fails.
+- The plain full-stop check of AC-1.3 already holds in the DOM at the base (characterization case).
+- The Green glob of the login strategy misses release-adversarial.test.ts (26 tests). The look command uses release-*.
+- The login track committed its Red files during this role (50bd7e68e, 701e76f53). HEAD moved. Role base is unchanged.
+
+Files both tracks touch: page.tsx, decodable.tsx, reader.tsx, song.tsx, messages/en.json, messages/th.json,
+phase3-messages.test.ts (and proxy.ts by test reference). Merge order: login 2b first, look second.
+
+Questions (defaults applied, also in section 4 of the strategy):
+Q1 merge order and schedule risk; Q2 who holds the real phone for task 1.3; Q3 reader only for Next fill and page count;
+Q4 which reader audio button is pressed; Q5 gap fix keeps a 44 px hit area without a layout box; Q6 the browser script
+look-phase1-browser-gate.sh by the browser-check role; Q7 proxy case I3 for /icon.png; Q8 the new picture is an img in the
+document; Q9 Red edits the 4 old tests.
+
+Commit: 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6 (test-strategy.md only). The log path is in .gitignore (measure/runs/),
+like the spec-review logs, so the log stays untracked.
+Self-check: role-gate measure-strategy exit=0 "PASS: strategy gate passed" (run after the commit).
+
+Amendment 2026-11-07 (plan a776187e2), strategy commit message shortened to fit 100 characters:
+- Task 1.3 not held: Red file look-song-playing.test.tsx (cases S1 to S7, event `playing` ends the poster window) and the
+  old test phase3-song-ui.test.tsx line 50 (preload "metadata"). Daniel's phone record is human evidence, not a gate.
+- New task 1.9 / AC-1.11: look-reader-highlight.test.tsx (H1 to H7, 4 timeupdate phases, fake rAF clock, 7-frame floor,
+  pure helper apps/storytime/lib/highlight-windows.ts with MIN_WORD_WINDOW_S and highlightWindows).
+- Measured by light reads: w01 reader book 8 pages, 33 words, 3 near 120 ms; slow mode none under 120 ms; all five of
+  Daniel's sentences are on pages 1, 3, 4, 7, 8. Modeled (not the app): 250 ms cadence skips 4 listen words and 2 slow words.
+- Combined Red command: 14 files (9 look files, 5 old files). Green count: 60 + 9 = 69 files (80 with the login files).
+- No heavy job ran in the amendment. The base counts of the first entry stand.
+
+Amendment 2 2026-11-07 (plan ab4a3f344), light reads plus one foreground tsc job (heavy-run.sh):
+- tsc --noEmit at ab4a3f344: exit=1, 13 errors, all in 4 look test files (turn 7, not-found 3, feedback 2, highlight 1);
+  codes TS18048 x9, TS2352 x3, TS2532 x1. The Green 2b.4 count was 14. Rule R-TSC: Red fixes them first.
+- New task 1.10: look-word-clip-tap.test.tsx (C1 to C9, schema block, receiver block). Old tests of the sentence-audio cut:
+  rewrite 1 case (readalong-ui) and delete 8 (audio-seek-stop 4, adversarial-taps 3, r2-reject-order 1). H5 of
+  look-reader-highlight becomes H5b. Schema is .passthrough() so acceptance cases prove nothing: Red asserts rejection and defaults.
+  Receiver mediaOf has no clip entry: scope addition Q16 (scripts/receive-weeks.ts).
+- New task 1.11: look-song-line-offset.test.tsx (O1 to O6, schema block). Modeled from song.times: 15 lines, 45 points,
+  31 points wrong at lead-in 3.0 with the base rule, 8 gaps.
+- Combined Red: job 1 = 20 files (11 look, 9 old) must fail; job 2 = 8 guard files must pass.
+- Green count rule R-COUNT: 478 - old_cases_removed + new_tests; 71 files (82 with login files).
+- Phase 1 risk raised from medium to high. Questions Q16 to Q22 added (defaults applied).
+- Closeout items 11 (data check) and 12 (human live checks) wait for the Workbooks data (11-10) and the deploy word.
+
+MEASURE_AGENT_RESULT
+role: measure-strategy
+phase: Phase 1: Council fixes
+track: storytime_look_20261107
+status: complete
+retry_recommendation: none
+result: measure/tracks/storytime_look_20261107/test-strategy.md
+log: measure/runs/storytime_look_20261107/strategy-p1-d8e73fc6c.log
+artifacts_written: yes
+handoff: "Amended for ab4a3f344. 1.10 Red: look-word-clip-tap.test.tsx plus rewrites in 4 old files (8 cut cases deleted, 1 rewritten) and H5 to H5b; 1.11 Red: look-song-line-offset.test.tsx. Receiver mediaOf needs clip entries (Q16, scope addition). tsc has 13 errors in 4 look files: rule R-TSC, Red fixes first. Phase 1 risk is now high. Defaults Q16 to Q22 in section 4. Items 11 and 12 of the closeout wait for Workbooks data and the deploy word."
+END_MEASURE_AGENT_RESULT

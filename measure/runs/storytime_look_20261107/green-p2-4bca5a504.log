@@ -1,0 +1,26 @@
+Note: role measure-jr-green. Model claude-code/claude-sonnet-5-5#high (Anthropic). Red model deepseek/deepseek-flash#high. No coder was used.
+Round 1 built the six items (code commit 6dc89f6bb) and found Red defect C7 (look-council-r3.test.tsx line 484 regex). The Red fixed it in 82f767a08. Round 2 reran gate 1 and gate 2 with no production change, and marked 2.3g [x].
+Defaults taken: none beyond the task brief. The first pressed rule selector changed once (to [data-part="decodable"] section[aria-label] button[aria-pressed="true"]) because C3 read the first form as the idle rule. No Red edit.
+Paths outside the strategy list: apps/storytime/app/[locale]/st/[level]/[week]/speaker-button.tsx (new, client play button for the parent speaker); done-mark.tsx (already named by Review A); apps/storytime/__tests__/phase3-browser-gate.sh, two old rows under R-GATE2 (same row count, no weaker check): the "64 px speakers" row measures the speaker button ([data-speaker] > button), and the week all-controls row leaves the adult [data-parent-panel] out and probes the tile speaker button. Side effect of item 4 that the council did not ask for: look.css caps the decodable picture at 84 px high in landscape, so the tricky chips stay in the 390 px fold (max_bottom_px=386).
+Capture readiness: the apps/storytime tree is clean. The round 4 capture can run.
+Items: (1) song default state needed no app change. (2) done badge 32x32 gold with navy check, chevron hidden, label kept. (3) pressed sound rule. (4) 844x390 frames padding 14px with inset 2px (gap 12). (5) [data-page-count] cream pill, contrast 14.52. (6) speaker button, audio without controls.
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: storytime_look_20261107
+phase: Phase 2: Look port of the picked option
+task: 2.3g
+status: done
+phase_base_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha: 4bca5a504182dce57d7b6c449b50705f414d7bd4
+head_sha: be5b22394398e0c0c7117a5e347674f64e9721dd
+commits: 6dc89f6bb (code, 6 paths), be5b22394 (plan: 2.3g [x]); Red fix 82f767a08 is a Red commit between them
+gate: 1 look-council r3+r2+r1 vitest (heavy-run, after 82f767a08): exit=0; Test Files 3 passed (3); Tests 23 passed (23)
+gate: 2 P1.4 look glob vitest (heavy-run, after 82f767a08): exit=0; Test Files 88 passed (88); Tests 676 passed (676)
+gate: 3a look-phase2-browser-gate.sh (at 6dc89f6bb): exit=0; PASS=86 FAIL=0; row 14 six verdicts PASS (default song 6 cases active=0 filled=0; done badge w=32 h=32; pressed sound 2 cases; frame_content_gap_px_min=12; page_counter_contrast_min=14.52; duration_texts=0 native_controls=0)
+gate: 3b look-phase1-browser-gate.sh (at 6dc89f6bb): exit=0; PASS=13 FAIL=0
+gate: 3c phase3-browser-gate.sh (at 6dc89f6bb): exit=0; PASS=80 FAIL=0; shell PASS=5 FAIL=0; transferred_bytes_first_load=293506
+gate: 4 login targeted command (at 6dc89f6bb): exit=0; Test Files 76 passed (76); Tests 557 passed (557)
+gate: 5 tsc --noEmit (heavy-run, at 6dc89f6bb): exit=0; ESLint on done-mark.tsx, speaker-button.tsx, page.tsx, reader.tsx: exit=0
+tasks: 2.3g [x] (6dc89f6bb); 2.4 stays [~]
+handoff: For Review A. Scope of the audit: speaker-button.tsx (new); done-mark.tsx; page.tsx (data-speaker, data-parent-panel, Speaker without controls); reader.tsx (data-page-count); look.css (done badge, pressed rule, counter pill, speaker size, landscape frame padding and inset, landscape decodable picture cap of 84 px that the council did not ask for); phase3-browser-gate.sh, two rows under R-GATE2 (the speaker row measures the button; the week all-controls row leaves the adult [data-parent-panel] out). The strategy amendment must cover speaker-button.tsx and done-mark.tsx. No production file changed after 6dc89f6bb. The apps/storytime tree is clean. Held items 7, M-3, Sign out and home, song cover size, and tablet decodable layout are not built. The orchestrator runs the round 4 capture.
+END_MEASURE_AGENT_RESULT

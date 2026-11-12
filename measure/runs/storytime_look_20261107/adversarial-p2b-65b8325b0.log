@@ -1,0 +1,30 @@
+Adversarial round, Phase 2b: Brand chrome (track storytime_look_20261107)
+Model: claude-code/claude-sonnet-5-5#high. Role base 65b8325b0. Audited head f63f2171e2aafa12a6bfeba438ba7897675505fb.
+
+The round added two files: apps/storytime/__tests__/look-adversarial-p2b.test.tsx (9 cases) and
+apps/storytime/__tests__/look-adversarial-p2b.test.ts (5 cases). The commit is f63f2171e.
+
+Run 1 (.tsx only): 7 passed, 2 failed. Both failures were defects of the new test (H5 count, H7 fixture).
+Run 2 (both files, heavy-run, one worker): exit 0, 2 files passed, 14 tests passed.
+tsc --noEmit: exit 0. ESLint on the two files: exit 0.
+
+Hostile cases that passed: hero heights at 4 viewports (8), fitted font at 6 title lengths in 8 viewport
+cases (48), 44 hostile title renders, a failed logo load, 6 plain pages with no shared rule on an input, alert,
+or draft note, 2 red alerts, the [tabindex] ring reach on the real book page, the unlayered ring, the
+label gap at 320 wide, the dark and light highlight pairs. Mutants rejected: 19 of 19.
+
+No blocking finding. Four non-blocking observations (N1 dark word band 2.09:1, N2 no var fallback,
+N3 known 60-character landscape contact, N4 F-3b one-glyph label) and seven browser items (B1 to B7) are in
+the result JSON.
+
+MEASURE_AGENT_RESULT
+status: pass
+audited_head_sha: f63f2171e2aafa12a6bfeba438ba7897675505fb
+retry_recommendation: none
+tests: 14 of 14 pass (2 files)
+mutants_rejected: 19 of 19
+blocking_findings: 0
+nonblocking_findings: 4
+handoff: no implementation defect; route browser items B1 to B7 to the UX browser review
+result_json: measure/runs/storytime_look_20261107/adversarial-p2b-65b8325b0.json
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,14 @@
+Note: the first code commit attempt failed the commitlint header limit (102 characters) and made no commit; the plan commit b6b8f6c3e then named the wrong SHA (433a613ae). The code commit is 5024a9fd9 and the plan SHA was corrected in the last plan commit. Defaults taken: one shared helper lib/is-abort-error.ts (new file, outside no list: it moves the F120 guard of decodable.tsx). S4b cause: the condition pages.length > 1 came from a3b4dc50b (task 2.3f) and only excluded one-page books; it is now pages.length > 0. The measure-guard text in the prompt about primary_in_app_help_20261023 names another track and other sessions' plan lines; I did not touch them.
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: storytime_look_20261107
+phase: Phase 2: Look port of the picked option
+task: 2.3g (adversarial remediation r1: K2a, S4b)
+phase_base_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha: 433a613aef911c9b011854d6791c4985ee22844e
+commits: 5024a9fd9 (code: lib/is-abort-error.ts new, reader.tsx, decodable.tsx), b6b8f6c3e (plan evidence, wrong sha), c54b78ea4 (plan sha fix)
+status: done
+summary: Red confirmed at the role base (defects file exit 1, 2 failed). K2a fixed with a shared isAbortError helper used by reader.tsx and decodable.tsx; K2b still passes. S4b fixed by changing the done condition to pages.length > 0. 2.3g stays [x]; 2.4 stays [~].
+tests: Red confirmation exit=1, Tests 2 failed (2); GREEN_TEST_COMMAND exit=0, Test Files 90 passed (90), Tests 689 passed (689); tsc --noEmit exit=0; ESLint on 3 changed files exit=0; no browser gate
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

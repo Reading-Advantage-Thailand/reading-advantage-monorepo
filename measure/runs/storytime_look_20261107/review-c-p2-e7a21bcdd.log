@@ -1,0 +1,18 @@
+review C P2 provisional record
+phase_base_sha=08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha=e7a21bcdd527a3be4867a153f20c5040cae454c1
+audited_head_sha=e7a21bcdd527a3be4867a153f20c5040cae454c1
+status=inconclusive
+contract_applicability=applicable
+question: none
+MEASURE_AGENT_RESULT
+role: measure-review-c-ux-api
+track: storytime_look_20261107
+phase: Phase 2: Look port of the picked option
+audited_head_sha: e7a21bcdd527a3be4867a153f20c5040cae454c1
+status: inconclusive
+summary: Provisional record; contract review in progress.
+result_file: measure/runs/storytime_look_20261107/review-c-p2-e7a21bcdd.json
+retry_recommendation: none
+confidence: low
+END_MEASURE_AGENT_RESULT

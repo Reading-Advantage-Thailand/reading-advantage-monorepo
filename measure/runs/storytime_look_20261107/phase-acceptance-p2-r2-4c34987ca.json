@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "Phase 2 acceptance fails at d90c4c24f7b94e37a6305b9d132419856f8d4469. Closeout items 1 to 7 and 9 to 12 hold. Item 8 fails: the required Phase 2 build-graph update has no record, and root graph.db has no Frame or placeFor node and no new frame.tsx or places.ts path. The targeted suite passed 91 files and 694 tests. The guard suite passed 8 files and 60 tests. Type checking, ESLint, the aggregate quality gate, scope, and all detectors passed. The browser evidence remains valid because only test commit d90c4c24f followed the reviewed code. Green must update graph.db for the three new-export files and record the result. Acceptance must rerun at the resulting HEAD.",
+  "blocking_findings": [
+    "F1 [Blocker] phase-acceptance -> measure-jr-green: closeout item 8 fails. Strategy lines 553 and 599 require build-graph for frame.tsx, lib/look/places.ts, and layout.tsx. No green-p2-*.log records that update. `build-graph inspect ./graph.db Frame` found no Storytime Frame; `build-graph inspect ./graph.db placeFor` found no match. Searches for placeFor, frame.tsx, and places.ts returned no results. Run `build-graph update ./graph.db` with those three files and record the output. Do not claim item 8 before the graph contains the new exports."
+  ],
+  "nonblocking_findings": [
+    "N1 [Minor] phase-acceptance: UX F2 carries to Daniel's 2026-11-18 check. At 200 percent page zoom, the 195 CSS px layout is below the 320 CSS px reflow floor; ux-browser-p2-9fb4df869.json lines 7 and 29 record the measurements.",
+    "N2 [Minor] phase-acceptance: UX F3 carries to Daniel's check. Browser text-size settings do not enlarge the px-pinned look text; ux-browser-p2-9fb4df869.json lines 8 and 30 record the evidence.",
+    "N3 [Nit] phase-acceptance: UX F5 carries to Daniel's check. A long landscape title plaque touches the game bar chip, but hides no title text; ux-browser-p2-9fb4df869.json line 9 records the evidence.",
+    "N4 [Nit] phase-acceptance: UX F6 carries to Daniel's check. The 500 ms pressed-sound capture happens after the clip ends; the canonical pressed-state rows still pass; ux-browser-p2-9fb4df869.json line 10 records the evidence.",
+    "N5 [Nit] phase-acceptance: the Thai fixture is `สัปดาห์ที่ยาวและยาวที่สุดในโรงเรื่องของเราทั้งหมดในโลกใบนี้ๆ` at look-adversarial-p2.test.tsx line 414. The break between `โลกใบน` and `นี้ๆ` is between words, not inside a word; ux-browser-p2-9fb4df869.json line 28 confirms it.",
+    "N6 [Nit] phase-acceptance: the synchronous-throw branches of playAudio and playElement still lack a direct case. Adversarial r4 records this narrow coverage gap at adversarial-p2-9fb4df869.json line 20."
+  ],
+  "evidence": [
+    "Provenance: `git rev-parse HEAD d90c4c24f` returned 4c34987ca774a5cd6323b4ce5d7bbb5a716797ee and d90c4c24f7b94e37a6305b9d132419856f8d4469, exit 0. `git log --oneline 9fb4df869..HEAD -- apps/storytime packages/read-along` returned only d90c4c24f, exit 0. The two later HEAD commits belong to another track. The allowed test-only commit is d90c4c24f.",
+    "Prerequisites: the audit-result checker printed PASS and exited 0 for review-a-p2-9fb4df869, review-c-p2-9fb4df869, adversarial-p2-9fb4df869, and ux-browser-p2-9fb4df869. Review B is not applicable at test-strategy.md line 636. Review A and C cover the implementation through 9fb4df869. Adversarial r4 adds only d90c4c24f.",
+    "Item 1: the targeted look-glob Vitest command through heavy-run exited 0 with 91 files and 694 tests. The original 85 files and 653 tests grew by six files and 41 tests through the council, adversarial, and r4 additions. No test failed or skipped.",
+    "Item 1: the eight-file guard command through heavy-run exited 0 with 60 tests. Whole-app `tsc --noEmit` through heavy-run exited 0. ESLint through heavy-run covered 32 changed TypeScript files and exited 0 with 0 errors and 2 warnings. An initial malformed lint invocation exited 126; the corrected full invocation supplied every file to one ESLint process.",
+    "Item 1: the five detectors at test-strategy.md lines 563 to 567 exited 1, 1, 1, 1, and 1. These are the required no-hit results.",
+    "Item 2: the look-track log shows red_before_green=14 relationships: 692449618<96cd59b7a; 2b123bd3b, 3d53e2680, and 4ce9721cf<881a8f686; d2d63f026<96cd59b7a; 5a3e22832 and 1230f4644<6250afadd; 58cf66d3f and a106ad819<a3b4dc50b; abef8500e and 13a4db678<6dc89f6bb; a4f4b67e9 and 433a613ae<5024a9fd9; fca6d05ae<52f26abea. The glob listing confirms all 17 Phase 2 Red and adversarial files exist.",
+    "Item 3: the scope pipeline over look commits from phase base through d90c4c24f exited 0 with look_paths=60 and look_out_of_scope_paths=0. The two swept login files were excluded only by the recorded exception at test-strategy.md line 585. The shell tool rejected /tmp file creation, so the same pipeline used an in-memory path list. No temporary file remains.",
+    "Item 4: `phase1-quality-gates.sh` through heavy-run exited 0 with `=== Total: 2 checks (PASS=2, FAIL=0) ===`. Its inner Turbo run passed 22 of 22 tasks and 109 Storytime files with 807 tests.",
+    "Item 5: cited without rerun from ux-browser-p2-9fb4df869.json lines 17 and 18. J2 exited 0 with PASS=86, FAIL=0, captures=24, capture_rows=24, console_errors=0, song_stage_height_px=220, hero_band_height_px_phone=96, and hero_band_height_px_tablet=120. F1 is closed with zero plaque overflow and zero clipped text.",
+    "Item 6: cited without rerun from ux-browser-p2-9fb4df869.json line 25. J3 exited 0: look-phase1 passed 13 checks; phase3 passed 80 browser checks and 5 shell checks; phase2b passed 37 checks. No app code changed after 9fb4df869.",
+    "Item 7: N1, N2, N3/N4, and N6 have Red cases and Green commit 881a8f686 at plan.md lines 43 and 50. N5 is a recorded non-goal at test-strategy.md line 650. The current targeted suite includes and passes those cases.",
+    "Item 8: `git worktree list | wc -l` printed 8, matching the capture count. The build-graph half fails as finding F1 records. Root graph.db contains other Storytime nodes, so the missing Phase 2 nodes are not an app-wide indexing exclusion.",
+    "Item 9: the accepted PM disposition is explicit at test-strategy.md line 601 and plan.md line 53. Council round 3 scored 82.2, the PM stopped the loop, and no role claims 85.0. Task 2.4 stays [~] under this exception.",
+    "Item 10: all four prerequisite artifacts pass the checker. The phase heading has no checkpoint because this audit fails and this role does not write the checkpoint.",
+    "Item 11: plan.md line 45 records asset_origin_places=cover-art, asset_origin_pieces=workbooks, asset_origin_fonts=study, and svg_source=final. Green log green-p2-126189088.log lines 32 to 39 record the final SVG verification.",
+    "Item 12: plan.md line 56 keeps task 2.5 at `[b] deferred:daniel`. Daniel's 2026-11-18 look check remains the human gate. No phone result is claimed.",
+    "A5 holds: the plan's final PASS claims match the Green logs and the UX rerun, and the council text claims no 85.0 pass. A3, A4, A6, and A7 are not triggered because the scoped phase diff changes no contract-test framework, filters, or tracks registry. The aggregate and targeted suites contain no stale intentional-red failure.",
+    "Model route: kimi-code-plan-cn/k3.1-pro#high. The PM decision of 2026-11-09 records that Kimi wrote no Phase 2 Red or Green, so this audit is independent. The PM accepts Kimi's small pace overshoot for this critical-path gate. The stopped opencode/glm-5.3-flash-free run is void because GLM wrote a Phase 2 Green; phase-acceptance-p2-4c34987ca.* is void."
+  ],
+  "commands": [
+    "Targeted look-glob Vitest through heavy-run -> exit 0, 91 files, 694 tests",
+    "Eight-file guard Vitest through heavy-run -> exit 0, 8 files, 60 tests",
+    "Whole-app tsc --noEmit through heavy-run -> exit 0",
+    "ESLint on 32 changed TypeScript files through heavy-run -> exit 0, 0 errors, 2 warnings",
+    "phase1-quality-gates.sh through heavy-run -> exit 0, PASS=2, FAIL=0",
+    "Five rg detectors -> exit 1 for each required no-hit check",
+    "Scope pipeline -> exit 0, look_paths=60, look_out_of_scope_paths=0",
+    "git worktree list | wc -l -> 8, exit 0",
+    "build-graph inspect/search ./graph.db for Frame, placeFor, frame.tsx, and places.ts -> no new Phase 2 nodes",
+    "measure_interphase_checks.py audit-result on four prerequisites -> PASS and exit 0 for each"
+  ],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/phase-acceptance-p2-r2-4c34987ca.json",
+    "measure/runs/storytime_look_20261107/phase-acceptance-p2-r2-4c34987ca.log"
+  ],
+  "test_strategy_violations": [
+    "F1 [Blocker] phase-acceptance: closeout item 8 requires the Phase 2 build-graph update; no update record or new-export graph node exists."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "route_to_green",
+  "confidence": "high"
+}

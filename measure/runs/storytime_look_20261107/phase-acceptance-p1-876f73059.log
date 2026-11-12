@@ -1,0 +1,123 @@
+# Phase acceptance P1 rerun (r2) — storytime_look_20261107
+
+Audited head (role_base_sha): 876f730596f059c4523ce4e443595c5d43d8d757
+phase_base_sha: 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6 (green-p1-a620b096f.log line 5)
+Phase: "## Phase 1: Council fixes" (P1)
+Gate-only role. No plan, code, test, or registry file changed. No commit. The
+`[checkpoint: <sha>]` marker is left to the build session.
+
+Model substitution: the role table names claude-code/claude-opus-5-5[1m]#medium.
+The independence rules exclude Anthropic (look Green) and DeepSeek (look Red).
+`ra-quota pick acceptance` routed to volcengine-agent-plan/glm-5.3-flash#high.
+
+PM deviation (accepted, recorded): this acceptance runs ahead of the login 2b
+checkpoint (Q1). The look targeted command of P1.4 holds no login file. No
+login-* file and not make-accounts.test.ts failed in any run of this audit.
+
+## Prerequisite artifacts (closeout item 9)
+
+`measure_interphase_checks.py audit-result` for each file, exit 0 every time:
+- review-a-a6d696902.json (Review A, audited head a6d696902): PASS
+- review-c-a6d696902.json (Review C, audited head a6d696902): PASS
+- adversarial-413467c3a.json (33 cases in 5 files, audited head 413467c3a): PASS
+- ux-browser-2c5b3d73f.json (13 of 13, audited head 2c5b3d73f): PASS
+Review B: not applicable (strategy P1.6).
+
+Commits after each review head that touch a look path under the look track id:
+the 5 adversarial look-* test commits, 2c5b3d73f (look-phase1-browser-gate.sh),
+a4462fd56 (measure/), and 97569137d (phase3-browser-gate.sh — finding F1).
+
+## Closeout items
+
+1. Targeted command of P1.4 through heavy-run: exit 0; Test Files 75 passed (75);
+   Tests 568 passed (568); tests_failed=0; tests_skipped=0.
+   R-COUNT: 478 - 8 (old_cases_removed) + 65 (new_tests, the 11 look files) = 535,
+   plus 33 adversarial cases in the 5 look-adversarial files added after the Green
+   base bf69551a7 = 568 across files=75. The arithmetic matches.
+   tsc --noEmit in apps/storytime through heavy-run: exit 0.
+   ESLint (heavy-run) on the 37 look-commit .ts/.tsx files of apps/storytime
+   (phase3-adversarial-r2-reject-order.test.tsx was deleted by 6bd0ed1fe):
+   exit 0, 0 errors, 8 warnings (unused vars in look-adversarial-song,
+   look-word-clip-tap, phase3-adversarial-taps; firstWordOfPageOne left by Red).
+   ESLint on the 3 www files of the a776187e2 exception: exit 0, clean.
+   packages/read-along has no eslint config and no lint script; its changed file
+   is not linted (the same gap the Green evidence names).
+   Detectors (light, exit codes): toUpperCase/text-transform/uppercase=1,
+   "Decodable"=1, measure/tracks|ui-council|handoff/storytime on look-*=1,
+   cut names in reader.tsx=1, wordClips in week.ts=0, videoLeadInSeconds=0,
+   use-read-along in reader.tsx=0. All six hold.
+2. red_before_green=11. Each Red commit precedes its Green:
+   33d50d0f5<5ab3834bb (1.1); 5c79ff3df<0aa84d2a7 (1.2); a7c220ab5<716c14399 (1.3);
+   a205429e7<db8b093bb (1.4); 8593db69f<e0cb06b53+db8b093bb (1.5);
+   06d6c7365<5ab3834bb (1.6); 9fec320b3<5ab3834bb (1.7); 6913ead98<db8b093bb (1.8);
+   95dade049<db8b093bb (1.9); 6bd0ed1fe<db8b093bb (1.10); 379557b3c<716c14399 (1.11).
+   All 16 look test files exist.
+3. look_out_of_scope_paths=4 — FAILS.
+   - 3 www files of commit a776187e2: accepted PM exception, named, not failing.
+   - apps/storytime/__tests__/phase3-browser-gate.sh of commit 97569137d
+     ("update the phase 3 gate rows for look changes", +183/-46): unexcepted.
+     The merge table (strategy 2.2) and Q6 say look does not edit this file.
+     The only other record is login plan line 109, which uses 97569137d as a role
+     base and does not authorize the look edit. No strategy amendment covers it.
+     This is finding F1 (blocking).
+4. phase1-quality-gates.sh through heavy-run: "=== Total: 2 checks (PASS=2,
+   FAIL=0) ===". The inner turbo run held 22 of 22 tasks successful, 88 test
+   files, 653 tests, 0 failed. HOLDS.
+5. look-phase1-browser-gate.sh through heavy-run: exit 0; "=== Total: 13 checks
+   (PASS=13, FAIL=0) ==="; console_errors=0, failed_requests=0, row_count=5
+   (above 0); gap_max_delta_px=0; icon_status=200; poster_status=200. HOLDS.
+6. Plan task 1.3 is [x] and holds the human record phone_blank=no,
+   phone_model=not given. look-song-playing.test.tsx (7 tests) and
+   phase3-song-ui.test.tsx (7 tests) passed inside item 1. HOLDS.
+7. git worktree list | wc -l = 8, equal to the capture count. HOLDS (A16).
+8. build-graph record in green-p1-a620b096f.log line 46: "Updated 10 files
+   (107 -> 142 nodes, 164 -> 189 edges)". Not rerun here (graph.db is outside
+   the write scope). HOLDS.
+9. The four prerequisite artifacts pass the checker. HOLDS.
+
+Items 10 to 12 (the five-sentence live check, the w01 data check, and the clip
+and sync live lines) are human or data lines after the deploy word. They do not
+block the checkpoint, per the closeout text.
+
+## Anti-pattern spot checks
+
+- A5: the plan's PASS=N, FAIL=0 claims match the reruns of items 1, 4, and 5.
+- A3, A4, A6, A7: not triggered — the phase diff holds no framework surface
+  (no contract tests, no filters, no tracks registry).
+- No stale intentional-red test sits in an aggregate suite: the 75-file targeted
+  run and the 88-file turbo run both exit 0.
+- No plan/commit-SHA mismatch: every sha the plan notes cite appears in the
+  look-track log.
+
+## Concurrency
+
+git status --short -- apps/storytime packages/read-along was empty before every
+heavy run. git diff --stat 876f73059 HEAD -- apps/storytime packages/read-along
+was empty during the run. Another commit moved HEAD to eae128027 late in the run
+with no look-owned path changed, so the measurements stand at 876f73059.
+git diff --stat 18ec54538 876f73059 over the look paths names only
+apps/storytime/__tests__/make-accounts.test.ts (login commit c00e05a92).
+
+## Verdict
+
+FAIL. Items 1, 2, and 4 to 9 hold. Item 3 fails on finding F1. A PM decision is
+needed: amend closeout item 3 to record the exception for commit 97569137d, or
+reassign the commit to the login track. Acceptance reruns at the resulting HEAD.
+
+No CONTEST items arrived from a previous acceptance run (the first run stopped
+before its verdict), so there is nothing to withdraw or keep.
+
+Self-check: role-gate exit code is quoted at the end of this log.
+
+MEASURE_AGENT_RESULT
+role: phase-acceptance
+status: blocked
+track: storytime_look_20261107
+phase: Phase 1: Council fixes
+commits: none (gate-only role)
+tests_run: targeted P1.4 command exit 0 (75 files, 568 passed, 0 failed, 0 skipped); tsc exit 0; eslint exit 0 (0 errors, 8 warnings); quality gates PASS=2 FAIL=0; browser gate exit 0 (13 of 13, console_errors=0); 6 detectors hold; audit-result checker exit 0 on 4 artifacts
+files_changed: measure/runs/storytime_look_20261107/phase-acceptance-p1-876f73059.json, measure/runs/storytime_look_20261107/phase-acceptance-p1-876f73059.log
+plan_updates: none (gate-only role)
+known_failures: closeout item 3 fails — look_out_of_scope_paths=4, of which phase3-browser-gate.sh (look commit 97569137d) has no recorded exception; items 10 to 12 wait on the deploy word and do not block
+handoff: PM decision needed on F1. Question: is the look-track edit of apps/storytime/__tests__/phase3-browser-gate.sh in commit 97569137d accepted? Options: (a) amend closeout item 3 of test-strategy P1.4 to record the exception and rerun acceptance at the new HEAD (default); (b) reassign the commit or revert the edit under the login track. Items 1, 2, and 4 to 9 all hold at 876f73059, so a recorded amendment unblocks the checkpoint without new code work.
+END_MEASURE_AGENT_RESULT

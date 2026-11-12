@@ -1,0 +1,15 @@
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: storytime_look_20261107
+phase: Phase 2: Look port of the picked option
+task: 2.3g
+role_base_sha: 1b9463564c76e5e62287c8c53688f5b0179820bf
+commits: 82f767a08 (the C7 gate row regex)
+status: complete
+summary: The C7 row assertion in apps/storytime/__tests__/look-council-r3.test.tsx now accepts the double quote of the gate row() calls: /row\(["'`]?council r3/. Only that line changed. The gate and every production file stay unchanged. The test run at the role base 1b9463564 with the Green code in the tree exits 0: Test Files 1 passed (1), Tests 7 passed (7), tests_failed=0, tests_passed=7. C7 still fails for its named reason when row 14 is absent: C7 reads only the gate file, and at abef8500e (the Red proof run, gate at its base) it failed on the six missing verdict functions; that failure is recorded in measure/runs/storytime_look_20261107/red-p2-r5-council.log line 9. The regex change touches only the row-14 print check, not the verdict functions.
+red_command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-council-r3.test.tsx'
+red_exit: 0
+tests_failed: 0
+tests_passed: 7
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

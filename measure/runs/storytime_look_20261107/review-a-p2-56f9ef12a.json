@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "status": "inconclusive",
+  "summary": "Provisional. Review A of Phase 2 is in progress. phase_base_sha 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca, audited_head 56f9ef12ab1500f2b4eba9973be98ae510d21a4c.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [],
+  "commands": [],
+  "changed_files": [],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "low"
+}

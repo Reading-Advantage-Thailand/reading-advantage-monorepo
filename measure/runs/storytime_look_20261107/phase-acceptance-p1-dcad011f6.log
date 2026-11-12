@@ -1,0 +1,186 @@
+# Phase acceptance P1 rerun (r3) — storytime_look_20261107
+
+Audited head (role_base_sha): dcad011f65385362bc20183dce3e43486fc0a098
+r2 audited head: 876f730596f059c4523ce4e443595c5d43d8d757
+phase_base_sha: 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6 (green-p1-a620b096f.log line 5)
+Phase: "## Phase 1: Council fixes" (P1; plan.md line 17)
+Gate-only role. No code, test, plan, or registry file changed. No commit. The
+`[checkpoint: <sha>]` marker is left to the build session.
+
+Model substitution: the role table names claude-code/claude-opus-5-5[1m]#medium.
+The independence rules exclude Anthropic (look Green) and DeepSeek (look Red).
+The orchestrator routed this run to volcengine-agent-plan/glm-5.3-flash#high —
+the same substitution as r2. Recorded.
+
+This run is the re-review of r2 finding F1 (unexcepted look edit of
+`phase3-browser-gate.sh` in commit 97569137d).
+
+## Check 1 — tree identity
+
+`git rev-parse <rev>:<path>` for 876f73059 and dcad011f6 gives the same tree for
+all five paths:
+
+- apps/storytime: e052554999b5c4dbf4752772401be57460dca54f (SAME)
+- packages: 3ae526b17c174573de874102add11c9bcca616c3 (SAME)
+- pnpm-lock.yaml: d9fcc4da085fa9a2ae3261bb0e66d443fe51a260 (SAME)
+- package.json: ed38d492c475a200cec97cf52264101e55552f63 (SAME)
+- turbo.json: 9cc3411bf093eb45b1ac383d432875d1f1e41c22 (SAME)
+
+`git diff --stat 876f73059 dcad011f6 -- apps/storytime packages pnpm-lock.yaml
+package.json turbo.json` is empty. HEAD equals the audited head.
+
+`git status --short -- apps/storytime packages` shows one untracked file:
+`packages/db/scripts/seed-qa-users.ts` (track qa_browser_sweep_20260915, never
+committed). It is outside the look-owned paths and no check command of items 1,
+4, or 5 reads `packages/db/scripts/`, so it cannot change any measured value.
+The committed look-owned trees are identical, so identity holds with this
+recorded note.
+
+Therefore the r2 runs of items 1, 2, and 4 to 9 hold for this head; the counts
+are cited from the r2 log and JSON, not rerun: targeted P1.4 command exit 0
+(75 files, 568 passed, 0 failed, 0 skipped; R-COUNT 478-8+65=535 plus 33
+adversarial cases = 568), tsc exit 0, ESLint exit 0 (0 errors, 8 warnings),
+red_before_green=11, quality gates PASS=2 FAIL=0 (inner turbo 22 of 22 tasks,
+88 files, 653 tests, 0 failed), browser gate 13 of 13 with console_errors=0,
+worktrees 8, build-graph record present, and the four prerequisite artifacts
+pass the audit-result checker.
+
+## Check 2 — closeout item 3 with the new exception
+
+The look-track log at dcad011f6 holds 39 commits. The 2 commits after 876f73059
+(06e51fba0, dcad011f6) touch only `measure/`, so the non-measure file set is
+identical to r2.
+
+look_out_of_scope_paths=4, each with its exception:
+
+1. `apps/www-reading-advantage/src/__tests__/fixtures/storytime-page-expected.ts`
+   — accepted PM exception, commit a776187e2; the copy waits on branch
+   `storytime/www-signin-copy` (revert 67a5d1a47).
+2. `apps/www-reading-advantage/src/app/[locale]/(marketing)/products/storytime-advantage/page.tsx`
+   — same exception.
+3. `apps/www-reading-advantage/src/locales/pages/products/storytime-advantage.ts`
+   — same exception.
+4. `apps/storytime/__tests__/phase3-browser-gate.sh` — orchestrator exception
+   (2026-11-08), look commit 97569137d, gated by the PM condition, which holds
+   (check 3).
+
+Item 3 HOLDS.
+
+## Check 3 — the PM condition for the exception
+
+Counts (confirmed from the script text of both revisions):
+
+- checks_before=76, checks_after=76.
+- Static `runCheck` call sites: 38 before, 38 after (27 fixed plus 11 loop or
+  function sites).
+- Self-test cases: 18 before, 18 after, identical labels.
+- Loop lists identical on both sides: 2 measure-target viewports (with the 64 px
+  tile and speaker rows), 4 duplicate_ids screens, 2 player screens x 2
+  viewports, 2 landscape screens, 2 locales x 2 row-edge rows, 6 all_controls
+  invocations, 4 focus screens.
+- Reconciliation: 27 fixed + 18 self-tests + 6 + 4 + 4 + 2 + 2 + 2 + 6 + 4 = 76
+  executed rows on both sides.
+- The r6 live runs measured PASS=67, FAIL=9 of 76 rows before the commit and
+  PASS=73, FAIL=3 of 76 rows after (red-p1-r6-triage.log lines 13-14).
+
+Per-row comparison against the r6 triage table (six class S rows):
+
+1. Week 404 row (before helper lines 243-252, live row 1193-1200; after helper
+   263-297, live row 1312-1338): same or stronger. Keeps status 404, the
+   hydrated lang, and both texts of the new not-open view; the old text pair
+   still runs through the `/th/nowhere` self-test with the `old` variant; the
+   row adds the 48 px link assertion read from the loaded fixture.
+2. `tap_target_min_px_player`, book and decodable, 2 viewports = 4 rows (before
+   756-763; after 805-839): same or stronger with the accepted AC-1.9 word
+   exception. The 44 px floor stays on every control through the explicit
+   `CONTROL_FLOOR_SELECTOR`; the word exception is asserted as a bounded rule —
+   every word carries the pseudo hit area (`noHitArea=0`), the effective area
+   stays at least 10 x 36 px, and a book page with no words fails.
+3. `contrast_min_ratio_x100` hover row (before about 1063-1073; after
+   1140-1150): same or stronger. The 450 floor and the opaque-background
+   requirement stay; the row hovers a real target word and throws when the
+   fixture holds no target.
+4. `word_cut_overshoot_ms` (before 1157-1183) replaced by `word_clip_played`
+   (after 1246-1287): replaced, not weaker. AC-1.12 deleted the old behavior;
+   the new row asserts the AC-1.12 behavior: the tapped word plays its own clip
+   and the sentence audio sees `sentence_seeks=0` and `sentence_pauses=0`.
+5. `word_cut_early_ms` (before 1185-1191) replaced by `no_clip_word_target`
+   (after 1288-1310): replaced, not weaker. Asserts the AC-1.12 no-clip rule
+   (the word "I" has no tab stop and plays nothing) with the positive control
+   (a clip word keeps its -1 tab stop).
+6. Fixture `wordClips` injection (hunk at old line 99): fixture-only copy; the
+   shipped file stays untouched; not a check row.
+
+Sign-in helper change (before line 189, after line 213: the gate posts with the
+origin of its own request): it removes no check. It is the plumbing that lets
+the gate sign in under the login origin rule (`ownOriginOf` compares the Origin
+header to the Host origin); triage deviation 3 routes it to the login track.
+
+No check was removed and no assertion is weaker. The PM condition HOLDS.
+
+## Items 10 to 12
+
+The five-sentence live check, the w01 data check, and the clip and sync live
+lines wait on the deploy word and the Workbooks data. They do not block the
+checkpoint, per closeout items 10 to 12.
+
+## Anti-pattern spot checks
+
+Carried from r2 by tree identity: A5 holds (the plan's PASS=N, FAIL=0 claims
+match the reruns of items 1, 4, and 5; plan.md is unchanged since r2). A3, A4,
+A6, and A7 are not triggered — the phase diff holds no framework surface. No
+stale intentional-red test sits in an aggregate suite. No plan/commit-SHA
+mismatch found.
+
+## Concurrency
+
+`git status --short -- apps/storytime packages` shows only the untracked
+`packages/db/scripts/seed-qa-users.ts` of track qa_browser_sweep_20260915
+(recorded above). Other roles run now (per_app_cicd Review A, login Review B);
+both are read-only and touch no look-owned path in this audit's scope.
+
+## Verdict
+
+PASS. Items 1 to 9 hold. Item 3 holds with the recorded exceptions. The PM
+condition holds: checks_before=76, checks_after=76, no check removed, and every
+changed row is same or stronger, or replaced with the AC-1.12 behavior. Prior
+finding F1 is withdrawn: the exception is now recorded in test-strategy P1.4
+closeout item 3 (commits 06e51fba0 and dcad011f6).
+
+Phase 2 nonblocking items:
+
+- N1: the narrow "I" hit area (ux-browser F1) stays open for Phase 2 and the
+  look check of 2026-11-16 to 2026-11-18.
+- N2: the touch-visible clip-word hint (ux-browser F2) stays open for Phase 2.
+- N3: the clip stop on a mode switch (adversarial K5) stays open; the Phase 2
+  Red case is already planned in the strategy.
+- N4: K5 stays a Phase 2 note (ux-browser F5).
+- N5 (carried): the 250 ms lyric lag stays a known Q22 limit; record it in the
+  at-home release evidence.
+- N6 (carried): the English 404 link targets the Thai page; name it for the
+  at-home deploy gate.
+
+Re-review disposition: F1 withdrawn — the exception is now recorded (commits
+06e51fba0, dcad011f6) and the PM condition holds (check 3). Nothing to keep.
+
+Self-check: role-gate exit code is quoted at the end of this log.
+
+Role gate: `measure_interphase_checks.py role-gate ... --result-file
+phase-acceptance-p1-dcad011f6.json --log-file phase-acceptance-p1-dcad011f6.log`
+printed `PASS: phase-acceptance gate passed` and exited 0. (One earlier run of
+the checker failed with `retry_recommendation has an invalid value` because the
+JSON said `no_action`; the value is now `none`, and the rerun passed. No other
+change.)
+
+MEASURE_AGENT_RESULT
+role: phase-acceptance
+status: pass
+track: storytime_look_20261107
+phase: Phase 1: Council fixes
+commits: none (gate-only role)
+tests_run: no rerun needed — tree identity holds for apps/storytime, packages, pnpm-lock.yaml, package.json, turbo.json between 876f73059 and dcad011f6, so the r2 runs hold (targeted command 75 files, 568 passed, 0 failed; tsc 0; ESLint 0 errors, 8 warnings; red_before_green=11; quality gates PASS=2 FAIL=0; browser gate 13 of 13, console_errors=0; worktrees 8); item 3 recount: look_out_of_scope_paths=4, all excepted; PM condition: checks_before=76, checks_after=76, 6 rows compared, no check removed, no weaker assertion
+files_changed: measure/runs/storytime_look_20261107/phase-acceptance-p1-dcad011f6.json, measure/runs/storytime_look_20261107/phase-acceptance-p1-dcad011f6.log
+plan_updates: none (gate-only role)
+known_failures: none blocking; items 10 to 12 wait on the deploy word and the Workbooks data and do not block; Phase 2 nonblocking items N1 to N6 stay open
+handoff: none. The Phase 1 checkpoint can proceed: the build session writes the `[checkpoint: dcad011f65385362bc20183dce3e43486fc0a098]` marker. The www copy of a776187e2 still waits on branch storytime/www-signin-copy, and items 10 to 12 still need the deploy word and the Workbooks data.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,20 @@
+review-c round 2, track storytime_look_20261107, phase P2b
+HEAD 4b9033cec86ccf2cdf9a48702d39271943f17018 (equals audited head)
+timing diff (packages/read-along/hooks, apps/storytime/lib/highlight-windows.ts): 0 bytes
+verdict: fail (one blocking: C2-F1 focus ring box-shadow lost to cascade on buttons in main[data-place])
+nonblocking: C2-F2 band plaque font rule, C2-F3 landscape long-title label touch, C2-F4 comment 8.6 vs 7.09
+round 1: C-F1 open (changed form), C-F2 closed, C-F3 closed by decision
+no browser, build, or server ran
+
+MEASURE_AGENT_RESULT
+role: measure-review-c-ux-api
+status: complete
+track: storytime_look_20261107
+phase: Phase 2b: Brand chrome
+commits: none
+tests_run: none (no browser, build, or server ran; audit verdict fail)
+files_changed: measure/runs/storytime_look_20261107/review-c-p2b-r2-4b9033cec.json, measure/runs/storytime_look_20261107/review-c-p2b-r2-4b9033cec.log
+plan_updates: none
+known_failures: C2-F1 (blocking: focus ring box-shadow lost to button rules in main[data-place]); C2-F2, C2-F3, C2-F4 (nonblocking)
+handoff: retry_recommendation: retry_implementation. Green fixes C2-F1, C2-F2, and C2-F4. Red adds a gate row that reads the computed ring on a focused button and a tile. Review A r2 cross-checks C2-F2.
+END_MEASURE_AGENT_RESULT

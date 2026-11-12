@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Round 2 at head fe1c2bd11 (HEAD confirmed from .git refs; the shell tool was denied, so I read the three files at HEAD and compared them with the round 1 text). F1 to F7 and F9 are closed by the revision. F8 stays open for the strategy role and does not block. F10 is a new Major: D1 and AC-3.7 do not say whether a non-empty w08 diff stops the 7-week import or is only recorded. F11 and F12 are Nits. Verdict: pass.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F8 [Major] plan.md:63 / test-strategy.md:565: Open for the strategy role; the plan defers the Phase 3 review rows and the new media roots (w01 r4, w02 to w07 r3) to the strategy role before Red. Rationale: the strategy must add the Phase 3 section, the Review A row, and the new roots; this does not block the spec review.",
+    "F10 [Major] spec.md:119 D1 / plan.md:66 task 3.2 / spec.md:134 AC-3.7: The w08 rule records the diff and then says 'On any difference ... stop', but it does not say whether a non-empty w08 diff is one of those differences or only a recorded item. Rationale: w08 is outside the 7-week handoff, so one reading blocks the import and the other commits an at-home-owned w08 change; Green must choose.",
+    "F11 [Nit] spec.md:129 AC-3.3: 'an audio extension' names no set, and lib/contracts/week.ts:35-49 allows any extension. Rationale: the test can accept a non-audio file such as .txt, so name the allowed set (the clips are .mp3) or reuse a contract rule.",
+    "F12 [Nit] spec.md:71 / plan.md:4: The FR-2 option 1 row still says the gates pass 2026-11-17 and the plan header still says Phase 2 Green starts by 2026-11-12, while spec.md:123 D5 and plan.md:61 set the Phase 2 checkpoint at 2026-11-09 or 2026-11-10. Rationale: the old estimate can mislead the phase gate reader; mark it superseded."
+  ],
+  "evidence": [
+    "HEAD check: .git/HEAD line 1 is ref: refs/heads/master; .git/refs/heads/master line 1 is fe1c2bd118bec0fde34a8ad8eaac6f738414ab7a, equal to audited_head_sha.",
+    "F1 closed: spec.md:127 AC-3.1 says the test reads repository files only; spec.md:129 AC-3.3 says the test does not read the handoff folders; spec.md:130 AC-3.3a makes the path resolve a Green evidence command (clip_paths_checked=163 clip_paths_missing=0); plan.md:65 and plan.md:66 follow.",
+    "F2 closed: spec.md:119 D1 runs receive-weeks.ts at 953f798e for all eight weeks and stops if 953f798e does not hold the r4 content of w01; plan.md:61 and plan.md:66 record the same rule.",
+    "F3 closed: spec.md:119 D1 uses all eight weeks, so source.json keeps one commit and its shape; spec.md:134 AC-3.7 states this; plan.md:61 and plan.md:66; scripts/receive-weeks.ts:669-677 is the guard that the all-eight run avoids.",
+    "F4 closed: spec.md:123 D5 sets the Phase 2 checkpoint at 2026-11-09 or 2026-11-10 and Phase 3 at 2026-11-10 to 2026-11-12, before the 2026-11-14 18:00 capture; plan.md:61 records the dates.",
+    "F5 closed: spec.md:131 AC-3.4 reads the raw JSON, asserts w01 videoLeadInSeconds 3, and asserts w02 to w07 hold no song.video and no videoLeadInSeconds field; plan.md:65 records the same cases.",
+    "F6 closed: spec.md:132 AC-3.5 says the sum of the per-week distinct wordClips key counts is 163 and the test asserts the sum and each count; plan.md:65 lists 22, 23, 20, 24, 28, 22, 24.",
+    "F7 closed: metadata.json:11 names the Phase 3 checkpoint as the deploy dependency; spec.md:122 D4 says the same.",
+    "F8 open: plan.md:63 defers the Phase 3 review rows and the new media roots to the strategy role before Red; test-strategy.md:565 still allows only the Phase 1 media root. It does not block.",
+    "F9 closed: metadata.json:8 adds Phase 3 and the word clips to the description.",
+    "F10 fact: spec.md:119 D1 records the w08 diff against the shipped w08 and then says 'On any difference ... Green stops'; spec.md:134 AC-3.7 names the w08 diff in the Green evidence; plan.md:66 repeats the sequence.",
+    "F11 fact: spec.md:129 AC-3.3 requires 'an audio extension'; lib/contracts/week.ts:35-49 mediaPath accepts any extension.",
+    "F12 fact: spec.md:71 still gives the option 1 gate estimate 2026-11-17; plan.md:4 still says Phase 2 Green starts by 2026-11-12; spec.md:123 D5 and plan.md:61 give the new checkpoint 2026-11-09 or 2026-11-10.",
+    "references/contracts.md does not exist under ~/.agents/skills/measure/references/ or skills/measure/references/; this schema follows measure/runs/storytime_look_20261107/spec-review-518953523.json."
+  ],
+  "commands": [
+    "git diff 518953523 fe1c2bd11 -- measure/tracks/storytime_look_20261107: the shell tool was denied; read spec.md, plan.md, and metadata.json at HEAD fe1c2bd11 and compared them with the round 1 text.",
+    "read .git/HEAD (ref: refs/heads/master) and .git/refs/heads/master (fe1c2bd118bec0fde34a8ad8eaac6f738414ab7a).",
+    "read measure/runs/storytime_look_20261107/spec-review-518953523.json and .log for the round 1 findings and the field names.",
+    "read measure/tracks/storytime_look_20261107/test-strategy.md A9 and the Review A row.",
+    "read apps/storytime/scripts/receive-weeks.ts and apps/storytime/lib/contracts/week.ts."
+  ],
+  "changed_files": [],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "paraphrase": {
+    "proposes": "Phase 3 imports the Workbooks content at 953f798e for all eight weeks, so source.json keeps one commit. It tests the seven week files for the contract, K2 keys, safe relative clip paths, raw-JSON lead-in 3 for w01 and no lead-in for w02 to w07, and the 163 per-week key sum. A Green evidence command resolves the 163 clip paths in the handoff packages. The bucket upload stays deferred to Daniel.",
+    "current_system": "source.json pins one Workbooks commit, 82f8885, for w01 to w08, and content/l2 holds the week JSON. The shipped weeks hold no wordClips and no videoLeadInSeconds. lib/contracts/week.ts already accepts both fields. scripts/receive-weeks.ts resolves a commit and writes content/l2 plus source.json; its mediaOf already covers the word clips."
+  },
+  "role_base_sha": "518953523e8e109e5ca32dd71ea839c52585e527",
+  "audited_head_sha": "fe1c2bd118bec0fde34a8ad8eaac6f738414ab7a",
+  "round": 2
+}

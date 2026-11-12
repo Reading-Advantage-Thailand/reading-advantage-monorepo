@@ -1,0 +1,92 @@
+Red round 4 log: storytime_look_20261107, Phase 1: Council fixes.
+Role: measure-mid-red. Model: deepseek/deepseek-v4-pro.
+Phase base = 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6. Role base = 6fcfca324.
+Task: verify six claimed Red-test defects (D1 to D6), fix real ones, run the look Red files and
+the M28 old files, run tsc, commit tests, and add plan evidence.
+
+## Verdicts and fixes
+
+D1 (look-decodable-case, last assertion): REAL. It required `toUpperCase` to stay in
+`decodable.tsx`, which AC-1.3 and the P1.4 detector forbid. Change: the self-check now calls the
+detector on an in-test string (`const word = text.toUpperCase();`) and on a comment. Non-vacuity:
+the real source scan over `app` and `lib` stays, so a shipped `toUpperCase` or CSS `uppercase`
+still fails; the self-check proves the detector catches a call and ignores a comment.
+
+D2 (look-reader-highlight, H1): REAL. It asserted more than 100 frames for each single page run;
+page 4 has 89 frames. Change: removed the per-run frames detail; the whole-case
+`frames_run > 100` guard stays. Non-vacuity: H1 still fails if any page lights a skipped or
+out-of-order sequence at any of the four phases.
+
+D3 (look-word-clip-tap, C3): REAL. One mutated week was reused for 8 pages, so `pageBook` cut the
+week in place and pages 2 to 8 saw no words (the run stopped at `taps_checked=4`). The tail
+compared a clip map with itself. Change: a fresh `allClipsWeek()` per page, and the words are
+read from a pristine fixture. The mutant tail now builds real wrong maps (index, first letter,
+sentence) and asserts that the taps reject each. Non-vacuity: 33 taps on 8 pages still assert the
+exact clip of every word; the mutants fail on real differences (page 3 "sam" vs the index map,
+"mia" vs the first-letter map, every non-first word vs the sentence map).
+
+D4 (look-word-clip-tap, C7): REAL. The Thai half never re-installed the rejecting play mock, so a
+correct reader could not show the Thai alert. Change: re-install the `NotAllowedError` mock before
+the Thai My turn tap. Non-vacuity: the Thai case fails if the alert is absent or wrong; the English
+alert, the timer count, and the next-tap clip assertion stay.
+
+D5 (look-word-clip-tap, receiver): REAL. `walk_not_in_list` counted `approval.audio.source`
+(provenance text ending in "song.mp3"), which `mediaOf` must not list. Change: skip entries whose
+path starts with `approval.`. Non-vacuity: the case still fails if a clip is not listed
+(`listed_clips=12`) or if a non-approval media path is missing from `mediaOf`.
+
+D6 (phase3-audio-seek-stop): REAL. The F146 describe was empty after the r3 deletions, and vitest
+fails an empty suite with "No test found in suite". Change: removed the empty describe. Non-vacuity:
+the other 8 cases (metadata seek, page-end timer, decodable cuts, F140, F145, F153) still run.
+
+## Review of Green's test edits (kept; none weakens an assertion)
+- `lib/media/url` mocks in look-week-card-label, look-song-playing, phase3-song-ui,
+  look-reader-turn, look-feedback, phase3-loops-off: they supply
+  `https://storage.googleapis.com/storytime-app-media/<file>` for every file. The existing
+  `endsWith(<file>)` assertions keep their strength; the mock only restores the URL that the login
+  task 2b.6 moved to the signed map.
+- `lib/media/sign` and `lib/auth` mocks in look-week-card-label and phase3-loops-off: the page
+  signs the media and checks a session. The mocks return an empty signed map and a family account.
+  The file reads labels only, so no media assertion is weakened.
+- phase3-decodable-punct: `NEST` -> `nest` and `NEST.` -> `nest.` This is the AC-1.3 source case,
+  not a weakening.
+- phase3-loops-off and phase3-audio-seek-stop: one `fireEvent.load` on the second image after a
+  Next press, which the task 1.4 hold requires. The page-turn and seek assertions stay.
+- Note: phase3-decodable-punct and phase3-loops-off lie outside the allowed paths of closeout
+  item 3; the strategy owner should add them to that list.
+
+## Runs (through heavy-run, foreground)
+Look Red files and the M28 old files at the current HEAD: 14 files.
+Result: exit=0; tests_passed=85; tests_failed=0; test_files=14.
+Per file: look-app-icon 2, look-decodable-case 4, look-feedback 6, look-not-found 8,
+look-reader-gap 2, look-reader-highlight 7, look-reader-turn 6, look-song-line-offset 8,
+look-song-playing 7, look-week-card-label 3, look-word-clip-tap 12, phase3-adversarial-taps 2,
+phase3-audio-seek-stop 8, phase3-readalong-ui 10.
+
+App tsc: exit=0; look_tsc_errors=0; other_errors=0.
+
+## Commits (branch master, no push)
+- 7b896cf8d test(storytime): fix the look red test defects (track_id: storytime_look_20261107)
+- bf69551a7 docs(measure): record the look red round 4 evidence (track_id: storytime_look_20261107)
+
+The working tree also holds another track's uncommitted change to `apps/storytime/lib/media/sign.ts`;
+it was not staged and not touched. The plan markers were left as Green set them; only the task notes
+of 1.2, 1.9, and 1.10 gained the Red r4 evidence.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+phase: Phase 1: Council fixes
+track: storytime_look_20261107
+status: done
+retry_recommendation: none
+result: six claimed defects verified (all real) and fixed in the look Red tests
+log: measure/runs/storytime_look_20261107/red-p1-r4-6fcfca324.log
+artifacts_written: yes
+baseline_sha: 6fcfca324
+head_sha: bf69551a7
+dispositions: none
+tests: "look+M28 run exit=0: 85 passed, 0 failed, 14 files; tsc exit=0 look_tsc_errors=0 other_errors=0"
+commits: 7b896cf8d, bf69551a7
+files: apps/storytime/__tests__/look-decodable-case.test.tsx, apps/storytime/__tests__/look-reader-highlight.test.tsx, apps/storytime/__tests__/look-word-clip-tap.test.tsx, apps/storytime/__tests__/phase3-audio-seek-stop.test.tsx, measure/tracks/storytime_look_20261107/plan.md
+handoff: "All six claims are real test defects and are fixed. D1: the detector self-check no longer requires toUpperCase in production. D2: H1 asserts whole-case frames (page 4 has 89). D3: C3 uses a fresh week per page and real mutant maps; its first run showed taps_checked=4, now 33. D4: the Thai C7 half re-installs the rejecting play mock. D5: the receiver walk skips approval.* paths. D6: the empty F146 describe is removed. Green's media and auth mocks are kept; none weakens an assertion. phase3-decodable-punct and phase3-loops-off are outside closeout item 3; the strategy owner should add them. 85 of 85 look and M28 tests pass; tsc has look_tsc_errors=0 and no other error. Markers were not changed."
+END_MEASURE_AGENT_RESULT

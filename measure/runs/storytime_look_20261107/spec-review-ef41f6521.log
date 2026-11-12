@@ -1,0 +1,60 @@
+# Spec review log: storytime_look_20261107
+
+Round: 1
+Role: spec-review
+Phase: track setup
+Author model: claude-code/claude-sonnet-5-5
+Reviewer model: opencode-go/deepseek-v4.1-flash
+Role base SHA: ef41f6521e178987dd349ac8a6854bd4a413333d
+Audited head SHA: ef41f6521e178987dd349ac8a6854bd4a413333d
+Head at review: ef41f6521e178987dd349ac8a6854bd4a413333d
+Head moved during review: no
+Result JSON: measure/runs/storytime_look_20261107/spec-review-ef41f6521.json
+
+Verdict: fail. Blockers: F1, F2, F3, F4. Majors: F5 to F11. Nits: F12, F13.
+
+## What this track proposes
+
+Phase 1 fixes eleven UI council findings on the Storytime week pages. It replaces the 404 text with a week-not-open message and one button to the highest open week. It keeps the decodable case, shows a playing state, makes the reader turn pages together, changes the decodable label to "Read the words", removes one 404 sub-resource, and evens the word gaps. Phase 2 ports the look of the option that Daniel picks.
+
+## How the current system works, per this spec
+
+Four route files under `app/[locale]/st/[level]/[week]/` render the week home, the decodable, the reader, and the song. `loadVisibleWeek` gates a week, and the locale `not-found.tsx` renders a two-language 404. The decodable renders upper-case words and the reader turns pages instantly. The pages use a white background and grey-outline cards.
+
+## Findings
+
+- F1 [Blocker] plan.md 1.1 / spec AC-1.1: The not-found page gets no route params, and the plan names no way to read the level. Rationale: `app/[locale]/not-found.tsx` is a server component, and `__tests__/phase3-not-found.test.tsx:31` calls it with no arguments, so the implementer must choose a client hook, a new segment boundary, or a header read.
+- F2 [Blocker] plan.md 1.1 / spec AC-1.1: The spec says the target comes "by `loadVisibleWeek`", but that function needs a week number. Rationale: `lib/content.ts` holds no function that lists the open weeks of a level, so the helper name, file, and scan cost stay open choices.
+- F3 [Blocker] plan.md 1.1 / spec AC-1.1-1.2: The shared 404 also serves an unknown locale, an unparsable path, an absent week, and the disabled teacher routes. Rationale: the plan does not say what the page shows on those paths, and "the week is not open yet" is false on each of them.
+- F4 [Blocker] plan.md 1.5 / spec AC-1.6: "An active label" is new English and Thai copy with no message key and no value. Rationale: a Red test cannot assert an exact label, and this copy is a Daniel check.
+- F5 [Major] plan.md Phase 1: No task names its test file. Rationale: the repo keeps tests in `apps/storytime/__tests__/phase3-*.test.tsx`, so the implementer must pick a file for each Red test.
+- F6 [Major] plan.md 1.3 / spec AC-1.4: The planned Red test already passes. Rationale: `song.tsx:122` sets `poster`, no hiding style exists, and `phase3-song-ui.test.tsx:45-88` already asserts the poster; a video ignores `poster` during playback, so the test cannot prove the blank is gone.
+- F7 [Major] spec AC-1.9 / plan.md 1.8: The quoted sentence is page 2. Rationale: page 1 and the council finding 18 case are "Hello, I am Pat.", and the AC names no page, so the test can assert the wrong page.
+- F8 [Major] plan.md 1.2 / spec AC-1.3: The plan changes the case but names no existing test to update. Rationale: `phase3-adversarial-r2-pieces.test.tsx` hard-codes the upper case at lines 68-70, 99, 115, and 127, so Green breaks them.
+- F9 [Major] plan.md 1.1 / spec AC-1.1: The new Thai 404 draft breaks an existing rule. Rationale: `phase3-not-found.test.tsx:41-42` requires the Thai and English 404 values to be equal, and the plan names neither that test nor the rule.
+- F10 [Major] plan.md Phase 2 / spec §2: The route folder holds five files, and the list names four. Rationale: `questions.tsx` is the question screen inside the reader, and the plan leaves its look scope open.
+- F11 [Major] plan.md 1.7 / spec AC-1.8: The Red test needs a server, and no harness is named. Rationale: the app tests are jsdom unit tests, and the spec does not name the one 404 resource, so the failing URL is unknown.
+- F12 [Nit] spec §1 and metadata.json: "eight council findings" is 11. Rationale: Phase 1 covers findings 1, 2, 3, 5, 6, 7, 8, 9, 12, 13, and 18; the count does not change the build.
+- F13 [Nit] spec §2: "the English label of item 6" is ambiguous. Rationale: the label is council finding 2, and council finding 6 is the page indicator.
+
+## Notes
+
+- `references/contracts.md` does not exist under `~/.agents/skills/measure/references/` or `skills/measure/references/`; this schema follows the role brief.
+- HEAD equalled `audited_head_sha` at the start of the review; no move was observed.
+
+MEASURE_AGENT_RESULT
+role: spec-review
+phase: track setup
+track: storytime_look_20261107
+round: 1
+status: complete
+retry_recommendation: escalate_human
+result: measure/runs/storytime_look_20261107/spec-review-ef41f6521.json
+log: measure/runs/storytime_look_20261107/spec-review-ef41f6521.log
+artifacts_written: yes
+head_at_review: ef41f6521e178987dd349ac8a6854bd4a413333d
+head_moved: no
+verdict: fail
+blockers: F1, F2, F3, F4
+handoff: "Verdict fail. F1 to F4 are Blockers for the author: F1 the not-found page has no way to read the level; F2 no helper lists the open weeks; F3 the shared 404 paths keep no defined content; F4 the active label has no message key or copy. F5 to F11 are Majors; F12 and F13 are Nits. Each needs FIX or CONTEST."
+END_MEASURE_AGENT_RESULT

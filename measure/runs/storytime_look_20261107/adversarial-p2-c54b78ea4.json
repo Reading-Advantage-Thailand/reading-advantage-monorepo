@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "storytime_look_20261107",
+  "phase": "Phase 2: Look port of the picked option",
+  "status": "pass",
+  "verdict": "pass",
+  "summary": "Round r3 closes the r2 loop at the audited head c54b78ea494a4f31343b33a2511060dac533c052. Green fixed the two r2 defects in 5024a9fd9: a new shared helper lib/is-abort-error.ts, an AbortError return in both playAudio failure paths of reader.tsx, the done write with book.pages.length > 0, and the isAbortError import in decodable.tsx. The two committed adversarial files pass with no mutant (exit 0, 13 of 13). Five one-line mutants of the fix, one per scratch copy, were each rejected by a named case: M1 the AbortError return removed from the playAudio promise catch (K2a fails), M2 the page count put back to > 1 (S4b fails), M3 isAbortError always true (K2b fails: a real failure must still show the alert), M4 isAbortError always false (K2a and the decodable abort case S2 fail), and M5 the isAbortError call dropped from the decodable sound play path (S2 fails). No mutant survived, so this round adds no test file and commits no test code. The fix is wired and discriminated; no implementation defect remains open for Green.",
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "phase_base_sha": "08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca",
+  "role_base_sha": "c54b78ea494a4f31343b33a2511060dac533c052",
+  "audited_head_sha": "c54b78ea494a4f31343b33a2511060dac533c052",
+  "model_route": "nvidia/stepfun-ai/step-5-preview#high (substitute for round r2: r2 ran on minimax-cn-coding-plan/MiniMax-M3.1-Flash and stopped on the MiniMax Token Plan limit; Green is Anthropic and Red is DeepSeek, so both are excluded)",
+  "mutants_rejected": "5 of 5",
+  "commits": [],
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "A test gap, not routed: the synchronous-throw branches of playAudio in reader.tsx lines 256-259 and of playElement in decodable.tsx lines 260-265 hold the isAbortError guard, and no case makes play() throw in step, so those two branches carry no test. Every case settles the play promise instead. A later round can add a case that makes play throw an AbortError DOMException in step and expects no alert.",
+    "The r2 browser gaps stand for the UX browser review: no jsdom case measures the painted palette under a forced palette or the 200 percent text zoom, and a 60-character plaque title has no measurement at 320 x 568 or 568 x 320 (the landscape plaque holds a fixed height of 40 px at app/look.css lines 821-831)."
+  ],
+  "evidence": [
+    "git rev-parse HEAD at run start printed c54b78ea494a4f31343b33a2511060dac533c052 (exit 0). That is the role base and the audited head; the two are the same commit, so no look commit can sit between them.",
+    "lib/is-abort-error.ts lines 7-9 hold the guard, and reader.tsx line 21 and decodable.tsx line 15 import it. reader.tsx line 204 holds book.pages.length > 0; lines 243-259 hold the guard in the promise catch and in the sync catch.",
+    "Repository run of the two committed files at the audited head, no mutant (heavy-run, single job, /tmp/opencode/r3-repo.log): exit 0, Test Files 2 passed (2), Tests 13 passed (13). K2a and S4b pass, so the r2 defects are fixed.",
+    "M1 scratch copy /tmp/opencode/look-mutant-r3/m1, the mutant removes `if (isAbortError(error)) return;` from the playAudio promise catch only: exit 1, 1 failed and 12 passed. The failing case is K2a, with the assertion of look-adversarial-p2-defects.test.tsx line 159 (a mode switch must not show the sound error).",
+    "M2 scratch copy m2, the page count returns to book.pages.length > 1: exit 1, 1 failed and 12 passed. The failing case is S4b, with the assertion of look-adversarial-p2-defects.test.tsx line 182 (a one-page book must record its finish).",
+    "M3 scratch copy m3, isAbortError returns true for every value: exit 1, 1 failed and 12 passed. The failing case is K2b, with the assertion of look-adversarial-p2.test.tsx line 517 (a play that the browser refuses must show the alert). A real failure must still reach the alert, so the guard is not a blanket swallow.",
+    "M4 scratch copy m4, isAbortError returns false for every value: exit 1, 2 failed and 11 passed. The failing cases are K2a (line 159) and S2 (line 580, a tap storm must not show the sound error), which is the decodable abort case. K2b passes under M4 because a real failure still shows the alert with a dead guard.",
+    "M5 scratch copy m5, the decodable sound play path becomes `if (true) {`: exit 1, 1 failed and 12 passed. The failing case is S2, so the decodable sound path needs its own guard.",
+    "Harness correction, recorded for truth: a first heavy job printed repo exit 127 (the app folder holds no node_modules/.bin) and let M3 and M4 survive, because a symlinked module resolves its own imports back to the repository and so never loaded the mutated helper. The runner now runs the repository files with the repository vitest binary, and every scratch copy holds real file copies. The runs above are the corrected job.",
+    "Compact run lines of the whole job sit in /tmp/opencode/r3-results.txt; the free disk stayed above 7700 MB in every measured line (df -m /).",
+    "git status --porcelain apps/storytime printed nothing at the end, so the repository tree holds no mutant and no probe file. measure/runs/ is gitignored (.gitignore line 56), so both result files stay outside the index.",
+    "Not run by this role: the browser gates, a whole-app tsc, any network call, and any push."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> c54b78ea494a4f31343b33a2511060dac533c052, exit 0",
+    "heavy-run (one job): bash /tmp/opencode/run-mutations-r3.sh -> repository run exit 0 with 13 of 13 passed; M1 exit 1; M2 exit 1; M3 exit 1; M4 exit 1; M5 exit 1",
+    "heavy-run command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_MIN_FREE_DISK_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'bash /tmp/opencode/run-mutations-r3.sh'",
+    "each run: cd <directory> && CI=true <vitest binary> run --maxWorkers=1 __tests__/look-adversarial-p2.test.tsx __tests__/look-adversarial-p2-defects.test.tsx",
+    "rm -rf /tmp/opencode/look-mutant-r3 -> scratch_left=0; df -m / printed 10111 MB free"
+  ],
+  "changed_files": [],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "security_violations": [],
+  "architecture_violations": [],
+  "test_violations": [],
+  "spec_violations": [],
+  "handoff": {
+    "owner": "none",
+    "summary": "No implementation defect is open. All five mutants of the Phase 2 fix were rejected by the committed cases, and both adversarial files pass at the audited head.",
+    "verification": "The orchestrator runs role-gate --role adversarial-testing with PROJECT_TESTS equal to the full look glob through heavy-run.",
+    "mutants": [
+      { "id": "M1", "file": "apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx", "mutant": "the AbortError return removed from the playAudio promise catch", "killed_by": "K2a", "exit": 1 },
+      { "id": "M2", "file": "apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx", "mutant": "the done write condition returns to book.pages.length > 1", "killed_by": "S4b", "exit": 1 },
+      { "id": "M3", "file": "apps/storytime/lib/is-abort-error.ts", "mutant": "isAbortError returns true for every value", "killed_by": "K2b", "exit": 1 },
+      { "id": "M4", "file": "apps/storytime/lib/is-abort-error.ts", "mutant": "isAbortError returns false for every value", "killed_by": "K2a and S2", "exit": 1 },
+      { "id": "M5", "file": "apps/storytime/app/[locale]/st/[level]/[week]/decodable.tsx", "mutant": "the isAbortError call dropped on the sound play path", "killed_by": "S2", "exit": 1 }
+    ],
+    "scratch_left": 0
+  }
+}

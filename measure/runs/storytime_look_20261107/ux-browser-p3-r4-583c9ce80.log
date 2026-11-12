@@ -1,0 +1,10 @@
+MEASURE_AGENT_RESULT
+role=measure-ux-browser-review
+track=storytime_look_20261107
+phase=P3
+role_base_sha=583c9ce805d6d60f34d8f5788aaee69e6a09c74e
+model_route=kimi-code-plan-cn/kimi-for-coding#high
+status=pass
+result_file=measure/runs/storytime_look_20261107/ux-browser-p3-r4-583c9ce80.json
+handoff=P3.8 is proven in one launch. The seven week pages w01-w07 hold a capture each with console_errors=0 and failed_requests=0 (logs/playwright.log lines 3-23). Each week w02-w07 gives tap_wNN=own_clip with clip_requested=1 and selected=1 (lines 30, 45, 57, 69, 81, 93). The removed word 'balls' gives tap_w02_no_clip=no_clip_target (line 32). taps_checked=7, the floor of 7 holds (line 99). review_draft_weeks=1 and review_draft_media=1. The run reused the 22:55:40 build of the same HEAD with SKIP_BUILD=1. The cause of the run 3 tap failures is the harness: the clicks landed before React hydration, so no handler ran; the fix waits for network idle and the React fiber before the mode click, and every tap now passes with hydrated=1. No phone result is claimed. One wrapper defect: heavy-run.sh printed a syntax error at its line 1077 after run.sh exited 0, so the launch exited 2; the measured run was complete and clean before that, and the script belongs to the PM. The orchestrator can accept Phase 3. Correction: webbridge_evidence in the result JSON is now the object shape of contracts.md lines 49-60 (screenshots, accessibility_snapshots, interactions); every other key and value is unchanged.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: measure-strategy
+track: storytime_look_20261107
+phase: Phase 2: Look port of the picked option
+phase_base_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha: 7c11aa22c4e80f980a48736ac3bc64602f077b41
+model_route: minimax-cn-coding-plan/MiniMax-M3 (substitute for claude-opus-5-5; the Claude 7d window is at 76 %)
+commits: 1f4fd4def5812720ea40e21fe334e1d086e6a31b
+status: complete
+look_out_of_scope_paths: 0
+summary: One narrow amendment to measure/tracks/storytime_look_20261107/test-strategy.md. Closeout item 3 now allows the ten paths that the look commits of tasks 2.3e to 2.3g and of the adversarial round touched outside the old list, each with the task and the commit that added it. The phrase "the ten new look-* test files" is replaced by the glob apps/storytime/__tests__/look-* with the true count of 15 new look-* test files. A sentence records that the two login Red r12 files of commit d229f0a86 are a recorded shared-index sweep that belongs to storytime_at_home_release_20261106 and does not count against look_out_of_scope_paths. Closeout item 9 records the PM decision of council round 3 (Total 82.2, loop stopped, one capture run, no new council round) with its source, and claims no pass. An Amendment note at the top of the file gives the date 2026-11-09, the role base, and the cause. Nothing else changed. The scope command and its output: cd /home/daniebo/Desktop/reading-advantage-monorepo; for s in $(git log --format=%h --grep='track_id: storytime_look_20261107' 08e60c7959ff..HEAD); do git show --name-only --format= $s; done | sed '/^$/d' | sort -u > /tmp/look-paths.txt; grep -v -E '<allowed pattern>' /tmp/look-paths.txt | grep -v -E '^apps/storytime/__tests__/login-(return-path|signin-handler)\.test\.ts$' | wc -l. Output: 0. Measured facts: 51 look commits in 08e60c7959ff..HEAD, 56 distinct paths.
+handoff: "Commit 1f4fd4def5812720ea40e21fe334e1d086e6a31b holds test-strategy.md alone. The orchestrator keeps phase_base_sha at 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca; the amendment does not move it. The scope check now gives look_out_of_scope_paths=0. The phase acceptance records the PM decision of council round 3 (82.2, loop stopped) as the disposition of AC-2.4 and does not write a council score of 85.0 or more. The capture run is the UX browser review round 4 under measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/council-r4/. Daniel's look check (task 2.5, deferred:daniel) stays the human gate. No question blocks this amendment. This log file is under measure/runs/ and is git-ignored; it stays on disk."
+END_MEASURE_AGENT_RESULT

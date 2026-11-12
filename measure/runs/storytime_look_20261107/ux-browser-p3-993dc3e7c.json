@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "The UX browser review of Phase 3 (P3.8) of track storytime_look_20261107 ran at audited head 993dc3e7c085184ab6643399307230149a92723b. That head is the current head, and git diff 3d35c47fa..HEAD -- apps/storytime is empty, so the app code under review is the P3 code. The harness passed every step up to the production build: the fixture, the throwaway database, the migration, the account and the storage stand-in. The build failed at the TypeScript step with four errors in the phase 3 adversarial test file apps/storytime/__tests__/look-adversarial-p3-switch.test.ts. Next.js type-checks the app folder, so no app started and no browser ran. The run produced no capture, no console_errors value, no failed_requests value, no tap_wNN value and no taps_checked value. The status is fail. One blocking finding names the build break, and the fix belongs to the owner of the adversarial test file. No phone result is claimed.",
+  "blocking_findings": [
+    "F1 [Blocking] ux-browser-review: the app does not build at the audited head 993dc3e7c085184ab6643399307230149a92723b, so the browser review of P3.8 cannot run. The production build fails the TypeScript step with four TS2345 errors in apps/storytime/__tests__/look-adversarial-p3-switch.test.ts at lines 91, 99, 107 and 110: an argument of type 'Record<string, any>' is not assignable to a parameter of type 'WeekReadiness', because the property 'meta' is missing in 'Record<string, any>' but required in 'WeekReadiness'. The cause is the helper loadWeek of that test file, which returns Record<string, any> at line 28, while readinessBlocker of apps/storytime/lib/readiness.ts takes WeekReadiness, and WeekReadiness holds the required field meta: { status: string } at lib/readiness.ts line 35. The test file came in with commit 3d35c47fa, and git diff 3d35c47fa..HEAD -- apps/storytime is empty, so the break sits in the audited P3 code. The unit tests do not show it, because vitest does not type check; only the next build does. Fix: give the helper of the test file the type of a week, or cast the four call sites. Log lines: logs/build.log lines 7 to 15 end with 'Failed to type check.', and the run output ends with 'Exited with code 1'."
+  ],
+  "nonblocking_findings": [
+    "N1 [Note] ux-browser-review: the run folder held a stale accounts.csv with one seeded test row of a cancelled attempt, inside the repository. The run script now seeds the account in a new folder under /tmp/opencode. The stale folder and the two scratch inspector scripts of this review were removed before the launch, so the run folder holds no account data.",
+    "N2 [Note] ux-browser-review: the app ties the pressed state of the mode buttons to a playing clip, so the aria-pressed of the My turn button reads false between the click on the button and the first clip. The browser harness reads that state once before the first clip and once after it, and the labeled value wNN_my_turn_pressed_after_clip carries the state that a child sees while the clip plays. This is the app behaviour and not a defect."
+  ],
+  "evidence": [
+    "Provenance: git rev-parse HEAD (exit 0) returned 993dc3e7c085184ab6643399307230149a92723b at the start of the run and again after the run. The run script printed the same value as role_base_sha, so the audited head is the current head.",
+    "git diff --stat 3d35c47fa..HEAD -- apps/storytime (exit 0) printed no file, so no app file moved since the phase base 3d35c47fa.",
+    "review_draft_weeks=1: the run script printed the line at its start (measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/run.sh line 51), and the next start environment sets STORYTIME_REVIEW_DRAFT_WEEKS=1 (run.sh line 183).",
+    "review_draft_media=1: the run script printed the line at its start (run.sh line 52), and the next start environment sets STORYTIME_SHOW_DRAFT_MEDIA=1 (run.sh line 184). Both values stay in the local review environment of this run.",
+    "The fixture step printed 'fixture: removed w02 books[0] (readalong) wordClips entry balls=l2/media/w02/words/wa-balls.mp3' and 'PASS: fixture made'. The file measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/removed-entry.json holds file l2/w02.json, bookIndex 0, bookKind readalong, key balls and value l2/media/w02/words/wa-balls.mp3. The own-clip tap of w02 uses another word.",
+    "The steps before the build all passed: 'PASS: fixture made', 'PASS: database answers', 'PASS: migration twice', 'PASS: accounts' and 'PASS: stand-in starts'. The run stopped at the build with 'FAIL: build'.",
+    "The build break: logs/build.log lines 7 to 15 hold the four TS2345 errors of __tests__/look-adversarial-p3-switch.test.ts at lines 91, 99, 107 and 110, then the line 'Failed to type check.'. The run output ends with 'Exited with code 1'.",
+    "The exit code: the run script prints 'FAIL: build' and exits 1 on that path (run.sh line 173), so the launch ended with exit code 1. The cause is a type break and not a memory kill: the build compiled in 6.1 s and the log names no out-of-memory line.",
+    "console_errors and failed_requests: no value. The browser never ran, so no week page was opened. The harness prints wNN_console_errors and wNN_failed_requests for the seven week pages, and logs/playwright.log does not exist.",
+    "tap_wNN for w02 to w07: no value. The browser never ran, so no word of any week was tapped. The seven tap lines of P3.8 hold no value.",
+    "taps_checked: no value. The harness prints the line only after the six tap weeks, and the run stopped before that. The floor of 7 of P3.8 was not measured.",
+    "tap_w02=no_clip_target: no value. The no-clip tap of w02 names the removed word 'balls' after the fix of the harness, and the run stopped before the browser opened the reader.",
+    "Captures: ls -l measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/captures/ printed no file, so no capture exists. The limit of 500 KB per capture and the check that a capture shows only the seeded test account were not measured.",
+    "Container: podman ps printed only its header, so the throwaway Postgres container was removed by the cleanup trap of the run script.",
+    "Accounts: the accounts folder of the run folder was removed before the launch. The run script writes the card list in a new folder under /tmp/opencode (run.sh line 16), and the log of the seeding step holds no password (logs/accounts.log).",
+    "Harness fix 1 in the run folder: browser.mjs line 148 used the selector 'button[data-mode-button]:nth-of-type(2)', which matches no element, because the three mode buttons are the third, the fourth and the fifth button children of their parent in apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx lines 535 to 582. The click failed under its catch, the reader stayed in the idle mode, and every tap row of w02 to w07 would have failed. The fix uses page.locator('button[data-mode-button]').nth(1).click(), a trusted click.",
+    "Harness fix 2 in the run folder: the two word taps used dispatchEvent of an untrusted MouseEvent, which gives no trusted event and no user activation. The fix uses page.locator('[data-word][tabindex]') with an exact text filter for the clip word, and page.locator('[data-word]:not([tabindex])') with the same filter for the word with no clip. Both use a real click.",
+    "Harness fix 3 in the run folder: the no-clip tap of w02 now names the removed word. The harness reads the key of measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/removed-entry.json, which holds 'balls', and picks the word whose lower-case text equals that key.",
+    "Harness fix 4 in the run folder: the line tapsChecked = 7 was hard-coded. The function weekTaps now returns the number of taps it made, and the harness sums the six own-clip taps of w02 to w07 and the one no-clip tap of w02. The check node --check on browser.mjs (exit 0) passed after the four fixes.",
+    "Run r1 of this review used the model DeepSeek. It was stopped before it wrote a file, because DeepSeek wrote the P3 Red.",
+    "Run r2 of this review used the model Kimi. In its first attempt the shell guard rejected the env prefix, so heavy-run ran with its defaults of 1500 MB and 600 s. The run failed at the seeding of the account with output_inside_repo=1, before any build.",
+    "Run r2 of this review, second attempt: heavy-run waited 3600 s for 3000 MB and exited 75. The PM stopped a later wait.",
+    "This run uses a 2600 MB floor (PM decision 20:1x), below the 3000 MB standard of the next build, with the heap cap of 2048 MB. The second line of the launch script reads export HEAVY_MIN_AVAIL_MB=2600 HEAVY_PREFLIGHT_WAIT_S=3600 NODE_OPTIONS=--max-old-space-size=2048, and the flag --next-build was not added.",
+    "The media root of the run folder holds one link per week to the hand-off packages: w01 to w01-storytime-app-package-r4, and w02 to w07 to the r3 packages, as P3.8 requires. The run printed the seven links.",
+    "A scratch script in the run folder, removed before the launch, read the seven shipped week files. Every word of the readalong book of w01 to w07 holds a clip, so the only word with no clip in the seven weeks is the word 'balls' of the fixture week w02. The same script showed that every media path of the seven weeks exists under the media root of the run folder.",
+    "The production build of the app is broken at the audited head, and the P3.8 values of the browser review stay unproven until the build passes.",
+    "No phone result is claimed: the harness runs headless SYSTEM Chrome at an emulated viewport of 390x844, so no run of this review is a phone check (P3.8)."
+  ],
+  "commands": [
+    "git rev-parse HEAD (exit 0; 993dc3e7c085184ab6643399307230149a92723b, read twice)",
+    "git diff --stat 3d35c47fa..HEAD -- apps/storytime (exit 0; no file)",
+    "node --check measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/browser.mjs (exit 0; after the four harness fixes)",
+    "bash measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/launch.sh (one run only; exit 1 at the build step with 'FAIL: build'; the rows of the fixture, the database, the migration, the account and the stand-in all passed)",
+    "ls -l measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/captures/ (no file)",
+    "ls -l measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/logs/ (accounts.log, build.log, migrate.log, stand-in.log; no playwright.log)",
+    "podman ps (no container)"
+  ],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/browser.mjs (the four harness fixes)",
+    "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/launch.sh (the memory floor of 2600 MB)",
+    "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/logs/ (the run logs of the one run)",
+    "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/content-fixture/ (the fixture week files)",
+    "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/media-root/ (the seven week links)",
+    "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/removed-entry.json (the record of the removed clip entry)",
+    "measure/runs/storytime_look_20261107/ux-browser-p3-993dc3e7c.json",
+    "measure/runs/storytime_look_20261107/ux-browser-p3-993dc3e7c.log"
+  ],
+  "test_strategy_violations": [
+    "The browser review of P3.8 produced no value. The build of the app fails at the audited head, so the seven week captures, the seven tap lines and taps_checked do not exist."
+  ],
+  "live_contract_violations": [
+    "The app never reached a live contract at the audited head: the production build fails the TypeScript step with four TS2345 errors in apps/storytime/__tests__/look-adversarial-p3-switch.test.ts at lines 91, 99, 107 and 110 (logs/build.log lines 7 to 15)."
+  ],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_tests",
+  "confidence": "high",
+  "ux_applicability": "applicable",
+  "webbridge_status": "not_run",
+  "webbridge_evidence": [
+    "The webbridge browser panel was not used. The review used the prepared harness of the run folder (Playwright with SYSTEM Chrome), and the harness never opened a page because the app did not build.",
+    "No screenshot, no accessibility snapshot and no interaction record exists for this run: logs/playwright.log does not exist and the captures folder is empty.",
+    "The console error count and the failed request count of the seven week pages were never measured, so no value of P3.8 exists."
+  ]
+}

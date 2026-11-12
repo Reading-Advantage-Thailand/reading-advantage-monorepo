@@ -1,0 +1,24 @@
+Review A · P3 · storytime_look · r3 — remediation rem1 (task 3.7). Audited HEAD 48a851a989681aa7dd2018865a9b52b70f0ac7c2 equals the repository HEAD. The audit covers the three rem1 commits only: 83ff86879 (plan task 3.7 to in progress), a04837606 (the two test files), 48a851a98 (plan task 3.7 to [x] with evidence). Other commits in the phase range belong to other tracks and are out of scope.
+
+F781 (login-media-sign pin 42 to 70). I counted the shipped apps/storytime/content/l2/w01.json by hand, without running the walker, because the sandbox denied the node one-liner. A grep for strings that end in a media extension gives 108 lines; line 25 is the prose string approval.audio.source, which ends in "song.mp3" and which the walker excludes through the approval filter, so 107 non-approval media entries remain. Unique file values: 9 phoneme clips, 6 family pictures, 11 book-1 files, 12 book-1 word clips, 11 book-2 files, 10 book-2 word clips (wa-nan.mp3 repeats from book 1), 6 song-line pictures, 5 song files. Sum 70. The new pin toBe(70) at line 86 is proven. The file-only control: unique files whose field path ends in ".file" outside approval = 6 family + 10 book-1 + 10 book-2 + 6 song lines = 32; the pin toBe(32) at line 96 is proven, and 70 minus 32 gives the unsigned count 38 at line 99. All three are labeled assertions on computed sets, not digit-only text matches, so A3 does not apply.
+
+F782 (look-adversarial-p2b M4 pin). The test regex counts tabIndex occurrences per glob file. A grep over all of apps/storytime and all of packages/read-along finds exactly one production site outside the test itself: lesson-flow.tsx line 1008, tabIndex={-1}, count 1; and read-along-passage.tsx lines 111 and 170, count 2. The new toEqual list holds exactly these two entries in the order that sourceFiles() walks (apps/storytime/app first, then packages/read-along/components, then lib). The list stays strict, so a missing or extra site fails the check; the M5 self-test and the M4 positive control at line 391 stay in place.
+
+Strength and scope. The diff of a04837606 changes only the expected constants and the M4 list; every check stays an exact equality, no check became a range, and no comment weakened a rule. git show --stat confirms the three commits carry only plan.md and the two test files; no production file changed.
+
+Plan evidence. Plan.md line 90 names phase_base_sha, role_base_sha 2399d3075, the test commit a04837606, the two files, the count proof 108/70/32/38 (which matches this audit's independent count), and nine run items. The permitted heavy-run command at HEAD gave "Test Files 3 passed (3); Tests 18 passed (18)" with exit 0, which matches evidence item (2) exactly and rules out a false-claim text on that item. The base-run claim of item (1) matches the removed code of the diff: the old pin toBe(42) sat at line 84 and the old M4 list held one entry. I did not re-run the base run, the look glob, tsc, ESLint, the A9 detector, or the full app suite; those claims carry concrete outputs and are consistent with the diff, so I rate test_meaning 4, not 5. No vacuous-pass pattern exists: both changed checks fail on a missing or extra deliverable by construction.
+
+No CONTEST items were routed to this round, so no finding is withdrawn or kept. Findings: none, blocking or nonblocking.
+
+Question for the orchestrator (default applied, not a gate): none. The audit closed with the permitted command and no user input was needed.
+
+Command log: git rev-parse HEAD; git log and git show --stat over the three commits; git show of the pin diff; the one permitted heavy-run vitest command (3 files, 18 tests, exit 0); two grep-tool scans of w01.json and two tabIndex greps over apps/storytime and packages/read-along. Node execution and writes outside measure/runs were denied by the sandbox; the count proof stands on the manual enumeration above.
+
+MEASURE_AGENT_RESULT
+status: complete
+audited_head_sha: 48a851a989681aa7dd2018865a9b52b70f0ac7c2
+verdict: pass
+blocking_findings: none
+nonblocking_findings: none
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

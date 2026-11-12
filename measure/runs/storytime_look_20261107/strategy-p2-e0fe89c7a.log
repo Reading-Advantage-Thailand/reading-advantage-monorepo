@@ -1,0 +1,65 @@
+Strategy role log: storytime_look_20261107, Phase 2: Look port of the picked option, role base e0fe89c7a.
+Model: claude-code/claude-sonnet-5-5#high (from `ra-quota pick strategy`; the role table names
+claude-code/claude-opus-5-5[1m]#high, the same family; PM route order 2026-11-08: Sonnet, DeepSeek, Go).
+
+Provisional state (written before the strategy edit; the final block is at the end of this file).
+
+MEASURE_AGENT_RESULT
+role: measure-strategy
+phase: Phase 2: Look port of the picked option
+track: storytime_look_20261107
+status: partial
+retry_recommendation: none
+result: measure/tracks/storytime_look_20261107/test-strategy.md
+log: measure/runs/storytime_look_20261107/strategy-p2-e0fe89c7a.log
+artifacts_written: no
+handoff: "Provisional block. The strategy edit and the commit follow."
+END_MEASURE_AGENT_RESULT
+
+Final state. Commit 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca (2 files: test-strategy.md, plan.md).
+
+What changed in test-strategy.md:
+- Section P2 replaces the outline: P2.0 facts M29 to M40 and schedule, P2.1 Red command and expected
+  failure per file, P2.2 test content and broken copies, P2.3 Green gates and closeout items 1 to 12,
+  P2.4 browser gate rows, P2.5 fixtures and live proof, P2.6 review applicability, P2.7 the six
+  carried Phase 1 items, P2.8 anti-pattern coverage, P2.9 guardrails.
+- Section 2.2.2 (merge and edit rules for the shared files) added before section 3.
+- Questions Q23 to Q36 added with defaults. Header gains a "Phase 2 written" line.
+- plan.md: tasks 2.2a (carried Red cases), 2.2b (gate script), 2.3d (carried Green) added; the 2.4
+  line names look-phase2-browser-gate.sh. No existing line removed.
+
+Red command for task 2.2 (10 new files; expected exit 1, look_files=10, load_errors=0):
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-hero-fix.test.ts __tests__/look-plain-text.test.tsx __tests__/look-2d-sound.test.ts __tests__/look-reduced-motion.test.ts __tests__/look-assets.test.ts __tests__/look-frame.test.tsx __tests__/look-captures.test.ts __tests__/look-clip-mode-switch.test.tsx __tests__/look-not-found-locale.test.tsx __tests__/look-hit-and-hint.test.ts'
+
+phase_base_sha: not embedded. The task text set phase_base_sha = role_base_sha = e0fe89c7a. That SHA
+predates the strategy commit, so the role rule forbids it. The strategy (P2.0 "Base capture") tells the
+orchestrator to run git rev-parse HEAD after this commit and after the answers to Q23, Q24, and Q27.
+
+Findings from the read (for the orchestrator):
+1. M30: the Dockerfile runner copies .next/standalone and .next/static only. A public/ folder would not
+   reach the image, and next start (the gate) would hide it. Tests A6 and A9 of look-assets guard this.
+2. M31: the study line [data-word] { min-width: 48px } re-breaks AC-1.9 (even word gap). Test T4 bans it.
+3. M32: final cover pieces already exist in ~/Desktop/handoff/storytime-cover-pieces-svg (2026-11-07).
+   The final bar ratio is 644.8 : 52, not the stand-in 360 : 52. Test A4 of look-assets pins the ratio.
+4. M34 / Q23: a 220 px song stage can break the AC-8.2 phone ratio row of the at-home gate (562 +- 5).
+   The PM owns the contradiction; the default is R-GATE2 with the Phase 1 PM condition.
+5. Q27: AC-2.2 "targets under 48 px: 0" conflicts with AC-1.9 for read-along words. Default: bounded rule.
+6. P1.7 uses "A2" for stub-passing; the catalog A2 is the consent-blind publish gate. P2.8 uses the
+   catalog meaning. P1.7 was not changed.
+7. The guard hook text in the task ("measure-guard ... Primary In-App Help ... task 6.4") names another
+   track. This role works on storytime_look_20261107 as the orchestrator assigned. No edit touched
+   the other track.
+Not measured by this role: the Phase 2 base counts (quoted from acceptance r3: files=75, tests_passed=568),
+tsc, ESLint, and the browser gates. No heavy job ran. No hash or checksum field was added.
+
+MEASURE_AGENT_RESULT
+role: measure-strategy
+phase: Phase 2: Look port of the picked option
+track: storytime_look_20261107
+status: complete
+retry_recommendation: none
+result: measure/tracks/storytime_look_20261107/test-strategy.md
+log: measure/runs/storytime_look_20261107/strategy-p2-e0fe89c7a.log
+artifacts_written: yes
+handoff: "Commit 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca. Capture phase_base_sha with git rev-parse HEAD now, after the answers to Q23, Q24, Q27. Questions with defaults are Q23 to Q36 in section 4. The log file is git-ignored (measure/runs/); it stays on disk."
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,16 @@
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: storytime_look_20261107
+phase: Phase 2: Look port of the picked option
+task: 2.3h
+phase_base_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha: 85fc5b6fcf8cdd6e56ad460eb02f324de22ad7e6
+head: 6388eb064676a2e172901c05c72cb9de81bbe9ec
+commits: fca6d05ae (the gate script alone), 6388eb064 (the plan line alone)
+status: red
+summary: Row 3 of look-phase2-browser-gate.sh now measures the 60-character title at 390x844 (en), 568x320 (en, th), and 844x390 (en, th), as the Range text box against the plaque box. The Thai case sets the V1 60-character string as the plaque text. The row prints plaque_overflow_px and clipped_text for each case and passes only at 0 and 0. The self-test adds a fixed-height plaque fixture (a 40 px plaque box and a text box 20 px above it) and a clipped-text mutant: 52 of 52 mutants rejected, exit 0. The gate exits 1 with only the long-title row failing, at 568x320 en and th and at 844x390 en and th, all plaque_overflow_px=20. Every other row passes. Production edits: none. Red model deepseek/deepseek-flash#high; Green is planned on minimax-cn-coding-plan/MiniMax-M3.1-Flash.
+red_command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && bash apps/storytime/__tests__/look-phase2-browser-gate.sh'
+red_exit: 1
+failing_labels: === Total: 86 checks (PASS=85, FAIL=1) ===; FAIL: frame long title 60 characters cases=5 390x844_en plaque_overflow_px=0 clipped_text=0 title_chars=60 plaque_h_px=222 page_overflow=0 | 568x320_en plaque_overflow_px=20 clipped_text=0 title_chars=60 plaque_h_px=40 page_overflow=0 | 568x320_th plaque_overflow_px=20 clipped_text=0 title_chars=60 plaque_h_px=40 page_overflow=0 | 844x390_en plaque_overflow_px=20 clipped_text=0 title_chars=60 plaque_h_px=40 page_overflow=0 | 844x390_th plaque_overflow_px=20 clipped_text=0 title_chars=60 plaque_h_px=40 page_overflow=0
+retry_recommendation: Green lifts the fixed height and min-height of header[data-hero] > h1 inside @media (max-height: 500px) so the plaque grows with the wrapped title, then the gate must exit 0 with plaque_overflow_px=0 and clipped_text=0 for all five cases and the row count 86.
+END_MEASURE_AGENT_RESULT

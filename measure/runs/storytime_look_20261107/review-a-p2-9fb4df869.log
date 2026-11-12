@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: review-a
+track: storytime_look_20261107
+phase: "Phase 2: Look port of the picked option"
+phase_base_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha: d36d11da5b657e2c5e55b42331a06853ae70301a
+audited_head_sha: d36d11da5b657e2c5e55b42331a06853ae70301a
+model_route: minimax-cn-coding-plan/MiniMax-M3 (substitute for claude-opus-5-5; Anthropic held to 2026-11-10 15:22; this delta's Red is DeepSeek and its Green is StepFun)
+status: pass
+verdict: pass
+summary: Delta review of task 2.3h at the look head 9fb4df869. The delta is fca6d05ae (the gate script alone), 6388eb064 (the plan line alone), 52f26abea (look.css alone), 9fb4df869 (the plan evidence alone), plus the docs-only commits 1f4fd4def, 518953523, fe1c2bd11, 85fc5b6fc. Red: row 3 of look-phase2-browser-gate.sh now measures the 60-character title at 390x844 en, 568x320 en and th, and 844x390 en and th with a Range text box against the plaque box (plaqueOverflowPx and plaqueFitsVerdict at lines 318-329; measurePlaque at lines 810-833; the five cases at lines 858-898). The Thai string is 60 code points and byte-identical to the V1 string at look-adversarial-p2.test.tsx line 414. The self-test adds a fixed-height plaque fixture and a clipped-text mutant (lines 382-386) and asserts rejected === mutants.length (line 424), so the row is non-vacuous; it failed at the Red base with exit 1 and only that row failing, plaque_overflow_px=20 in the four landscape cases. Green: inside @media (max-height: 500px) the rule header[data-hero] > h1 (look.css line 824) changes height: 40px to height: auto and keeps min-height: 40px (line 828); the gate then reads plaque_overflow_px=0 and clipped_text=0 in all five cases with plaque_h_px=66, and the look glob reads 90 files and 689 tests. Geometry: the band is header[data-hero] with height 64px and margin-bottom 16px (look.css 801-805), and the plaque is position absolute with bottom: -16px (line 830), so it grows upward and covers no control or text below the band; it sits at right: 22px (line 826) while the game bar and the HUD label sit at the left. Short titles keep 40px because min-height: 40px stays. The gate edit touches no product code, and the docs-only commits touch only measure/ files and leave the Phase 2 text and closeout items unchanged. The PM exception stands: task 2.4 stays [~] at plan.md line 55.
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

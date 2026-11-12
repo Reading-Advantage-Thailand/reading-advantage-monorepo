@@ -1,0 +1,94 @@
+Red role log: storytime_look_20261107, Phase 1: Council fixes.
+Role: measure-mid-red. Model: opencode-go/deepseek-v4.1-flash.
+Phase base = role base = 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6.
+Track short id: storytime_look.
+
+## Scope
+Tasks 1.1, 1.2, 1.4, 1.5, 1.6, 1.7, and 1.8. Task 1.3 is HELD: its file depends on
+the person check (P1.3), so look-song-playing.test.tsx was not written. No gate script
+was written (Q6: Green writes look-phase1-browser-gate.sh).
+
+Dirty paths at the start were unrelated user work or generated/ignorable (other apps,
+packages/db, tmp folders). None was staged; no production file, no packages/read-along
+file, and no login-* file or helper was touched.
+
+## Combined Red job
+Command (single foreground heavy-run job, CI=true, --maxWorkers=1):
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-not-found.test.tsx __tests__/phase3-not-found.test.tsx __tests__/phase3-messages.test.ts __tests__/look-decodable-case.test.tsx __tests__/phase3-adversarial-r2-pieces.test.tsx __tests__/phase3-adversarial-r3-pieces.test.tsx __tests__/look-reader-turn.test.tsx __tests__/look-feedback.test.tsx __tests__/look-week-card-label.test.tsx __tests__/look-app-icon.test.ts __tests__/look-reader-gap.test.tsx'
+
+Result: exit=1; Test Files 11 failed (11); Tests 32 failed | 9 passed (41); Duration 21.92 s.
+Labeled counts: look_files=7; tests_failed=32; tests_passed=9; load_errors=0 (no "Cannot find module" and no "ENOENT").
+
+Per file (pass/total):
+- look-not-found.test.tsx 0/8 (missing not-found-view.tsx, highestOpenWeeks, parseStorytimePath)
+- phase3-not-found.test.tsx 0/1 (the four new keys are absent)
+- phase3-messages.test.ts 3/4 (the new-key parity case fails)
+- look-decodable-case.test.tsx 1/4 (source case dropped; detector finds toUpperCase)
+- phase3-adversarial-r2-pieces.test.tsx 0/2 (upper-case expectations removed)
+- phase3-adversarial-r3-pieces.test.tsx 0/3 (upper-case expectations removed)
+- look-reader-turn.test.tsx 1/6 (the page turns at once)
+- look-feedback.test.tsx 1/6 (no aria-pressed, no Playing, no fill, no count)
+- look-week-card-label.test.tsx 1/3 (English label "Decodable")
+- look-app-icon.test.ts 1/2 (Missing apps/storytime/app/icon.png)
+- look-reader-gap.test.tsx 1/2 (min-w-[44px] with justify-center)
+
+Every look failure is an assertion with a message. No failure is a load error.
+
+## Passing cases at the base, with the reason (A4)
+1. look-decodable-case.test.tsx "keeps the full stop in its word item and one tap button per word":
+   named characterization (fact M5); the stop already shares the flex item at the base.
+2. look-reader-turn.test.tsx "changes at once when the next page has no picture":
+   named characterization; a page with no picture cannot freeze on a load event.
+3. look-feedback.test.tsx "leaves no button pressed after a rejected play":
+   named characterization; the base already shows the alert and no pressed state.
+4. look-week-card-label.test.tsx "keeps the Thai decodable label as อ่านคำ":
+   named characterization; the Thai label does not change.
+5. look-app-icon.test.ts "keeps /icon.png out of the sign-in redirect for a stranger":
+   named characterization (fact M10); the file-path rule passes before any other rule.
+6. look-reader-gap.test.tsx "keeps the single-space text and no justify alignment on pages 1 and 2":
+   named characterization (fact M6); the three AC-1.9 spec checks already hold at the base.
+7. phase3-messages.test.ts "has no blank Thai strings and uses Sarabun for Thai app text": old case.
+8. phase3-messages.test.ts "has no Latin-only Thai string outside the P3.6 allow list": old case.
+9. phase3-messages.test.ts "self-test: the Latin-only detector flags a Latin-only value": old case.
+
+## Commits (branch master, no push)
+- 33d50d0f5 test(storytime): add the 404 week-not-open red test (task 1.1)
+- 5c79ff3df test(storytime): add the decodable case red test (task 1.2)
+- a205429e7 test(storytime): add the reader page turn red test (task 1.4)
+- 8593db69f test(storytime): add the feedback and Next red test (task 1.5)
+- 06d6c7365 test(storytime): add the week card label red test (task 1.6)
+- 9fec320b3 test(storytime): add the app icon red test (task 1.7)
+- 6913ead98 test(storytime): add the reader word gap red test (task 1.8)
+- d9a52fe68 docs(measure): record the look red evidence (plan.md alone)
+
+Each Red commit holds its look file and its old-test edits where the plan pairs them:
+1.1 holds phase3-not-found.test.tsx and phase3-messages.test.ts; 1.2 holds
+phase3-adversarial-r2-pieces.test.tsx and phase3-adversarial-r3-pieces.test.tsx.
+The old-file reasons: (1.1) the equal-value rule now also covers the four new keys and
+the Thai Latin-only rule exempts the two English keys; (1.2) expectedText, the button
+names, and the comma cases now keep the source case that AC-1.3 requires.
+
+## Remaining work for Green
+Production changes only: not-found.tsx + not-found-view.tsx + highestOpenWeeks +
+parseStorytimePath + 4 message keys (1.1); remove toUpperCase (1.2); hold the page turn
+(1.4); aria-pressed + Playing + filled Next + page count + playerPlaying key (1.5);
+tileDecodable "Read the words" (1.6); app/icon.png (1.7); remove the layout word box and
+keep a 44 px hit area (1.8). Task 1.3 waits for the person check.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+phase: Phase 1: Council fixes
+track: storytime_look_20261107
+status: done
+retry_recommendation: none
+result: 7 look Red files, 4 old-test edits, and plan evidence committed
+log: measure/runs/storytime_look_20261107/red-p1-4154e0ff2.log
+artifacts_written: yes
+baseline_sha: 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6
+head_sha: d9a52fe68
+dispositions: none
+tests: "combined Red exit=1; tests_failed=32 tests_passed=9 look_files=7 load_errors=0"
+commits: 33d50d0f5, 5c79ff3df, a205429e7, 8593db69f, 06d6c7365, 9fec320b3, 6913ead98, d9a52fe68
+files: apps/storytime/__tests__/look-{not-found,decodable-case,reader-turn,feedback,week-card-label,app-icon,reader-gap}.test.ts(x), apps/storytime/__tests__/phase3-{not-found.test.tsx,messages.test.ts,adversarial-r2-pieces.test.tsx,adversarial-r3-pieces.test.tsx}, measure/tracks/storytime_look_20261107/plan.md
+handoff: "Red is committed at d9a52fe68. The combined job exits 1 with 32 failed and 9 passed over 11 files; look_files=7 and load_errors=0. The 9 passing cases are the six named characterization cases (full stop M5, no-picture turn, rejected play, Thai label, proxy I3, AC-1.9 spec checks M6) plus three old phase3-messages cases. Every other case is an assertion failure with a message. Task 1.3 stays [ ]/held for the person check; look-song-playing.test.tsx was not written. Green changes production files only. Question with default: none needed; Q6 stands (Green writes look-phase1-browser-gate.sh) and Q9 stands (Red edited the 4 old tests)."
+END_MEASURE_AGENT_RESULT

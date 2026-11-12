@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "The fourth UX browser review run of Phase 3 (P3.8) of track storytime_look_20261107 ran at role_base_sha 583c9ce805d6d60f34d8f5788aaee69e6a09c74e, which is the current HEAD. One launch ran. The run reused the production build of 22:55:40 from the same HEAD (SKIP_BUILD=1, the diff of apps/storytime since 583c9ce80 is empty). All 22 rows pass. The seven week pages w01 to w07 each hold a capture with console_errors=0 and failed_requests=0. Each week w02 to w07 gives tap_wNN=own_clip: the clip of the tapped word is requested (clip_requested=1) and the word is selected (selected=1). The removed word 'balls' gives tap_w02_no_clip=no_clip_target. taps_checked=7, the floor of 7 holds. review_draft_weeks=1 and review_draft_media=1. The cause of the run 3 tap failures is the harness: the clicks of run 3 landed before React hydration, so no handler ran. The fix waits for network idle and for the React fiber on the mode button before the mode click. No phone result is claimed. A wrapper defect of heavy-run.sh printed a syntax error after run.sh exited 0; it did not touch the measured run.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 [Note] ux-browser-review: the wrapper heavy-run.sh printed 'line 1077: syntax error near unexpected token `fi'' after run.sh printed its final line '=== Total: 22 rows, all PASS ===' and exited 0, so the launch command exited 2. The run folder, the servers, the database container and the measurements were complete and clean at that point. The defect sits in /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh, which is outside the write scope of this review. The PM owns that script.",
+    "N2 [Note] ux-browser-review: the app ties the pressed state of the mode buttons to a playing clip (apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx line 196), so the aria-pressed of the My turn button reads false right after the mode click and true while the clip plays. The probes show wNN_my_turn_pressed=0 after the mode click and wNN_my_turn_pressed_after_clip=1 while the clip plays. This is the app behaviour and not a defect, and the pass rule does not use the pressed state.",
+    "N3 [Note] ux-browser-review: the word clip plays on a detached Audio element of the app (reader.tsx line 218 creates it), so the src of the DOM audio element stays empty (audio_srcs=[\"\"]) even when the clip plays. The clip request is proven by the network response of the signed mp3 URL, not by a DOM audio src."
+  ],
+  "evidence": [
+    "Provenance: git rev-parse HEAD (exit 0) returned 583c9ce805d6d60f34d8f5788aaee69e6a09c74e, and the launch printed the same value as role_base_sha. The audited head is the current head.",
+    "Build reuse: the launch printed '=== Build the production app (SKIP_BUILD=1) ===', 'build_id_mtime=2026-11-09 22:55:40.553939137 +0700', an empty 'git diff --stat 583c9ce80..HEAD -- apps/storytime' and 'PASS: reuse the build of 22:55:40'. The run did not build again. apps/storytime has not changed since the build of run 3.",
+    "review_draft_weeks=1: the run printed the line at its start, and the next start environment sets STORYTIME_REVIEW_DRAFT_WEEKS=1 (run.sh line 183).",
+    "review_draft_media=1: the run printed the line at its start, and the next start environment sets STORYTIME_SHOW_DRAFT_MEDIA=1 (run.sh line 184).",
+    "The fixture: the run printed 'fixture: removed w02 books[0] (readalong) wordClips entry balls=l2/media/w02/words/wa-balls.mp3' and 'PASS: fixture made'. The file measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/removed-entry.json holds file l2/w02.json, bookIndex 0, bookKind readalong, key balls and value l2/media/w02/words/wa-balls.mp3.",
+    "The sign-in worked: logs/playwright.log line 1 reads session_cookies=1 and line 2 reads 'PASS: sign in session_cookies=1'.",
+    "w01: logs/playwright.log lines 3-5 read w01_console_errors=0, w01_failed_requests=0 and 'PASS: week w01 capture console_errors=0 failed_requests=0 signed_in=1'.",
+    "w02: logs/playwright.log lines 6-8 read w02_console_errors=0, w02_failed_requests=0 and the capture PASS row.",
+    "w03: logs/playwright.log lines 9-11 read w03_console_errors=0, w03_failed_requests=0 and the capture PASS row.",
+    "w04: logs/playwright.log lines 12-14 read w04_console_errors=0, w04_failed_requests=0 and the capture PASS row.",
+    "w05: logs/playwright.log lines 15-17 read w05_console_errors=0, w05_failed_requests=0 and the capture PASS row.",
+    "w06: logs/playwright.log lines 18-20 read w06_console_errors=0, w06_failed_requests=0 and the capture PASS row.",
+    "w07: logs/playwright.log lines 21-23 read w07_console_errors=0, w07_failed_requests=0 and the capture PASS row.",
+    "tap_w02=own_clip: logs/playwright.log line 30, and line 31 reads 'PASS: w02 tap own clip word=\"How\" clip=wa-how.mp3 clip_requested=1 selected=1 my_turn_pressed=true hydrated=1 audio_failed=0 audio_srcs=[\"\"] console=[]'.",
+    "tap_w03=own_clip: logs/playwright.log line 45, detail on line 46 with clip_requested=1 selected=1 hydrated=1 audio_failed=0.",
+    "tap_w04=own_clip: logs/playwright.log line 57, detail on line 58 with clip_requested=1 selected=1 hydrated=1 audio_failed=0.",
+    "tap_w05=own_clip: logs/playwright.log line 69, detail on line 70 with clip_requested=1 selected=1 hydrated=1 audio_failed=0.",
+    "tap_w06=own_clip: logs/playwright.log line 81, detail on line 82 with clip_requested=1 selected=1 hydrated=1 audio_failed=0.",
+    "tap_w07=own_clip: logs/playwright.log line 93, detail on line 94 with clip_requested=1 selected=1 hydrated=1 audio_failed=0.",
+    "tap_w02_no_clip=no_clip_target: logs/playwright.log line 32 (and tap_no_clip on line 33), and line 34 reads 'PASS: w02 tap no clip target word=\"balls\" clip_requested=0 selected=0'. The no-clip tap names the removed word of the fixture.",
+    "taps_checked=7: logs/playwright.log line 99 reads taps_checked=7 and line 100 reads 'PASS: taps checked taps_checked=7'. The floor of 7 of P3.8 holds. The w02 page gave 2 taps (own clip and no clip) and each other week gave 1.",
+    "row_count=22: logs/playwright.log line 101, and the launch printed '=== Total: 22 rows, all PASS ===' before run.sh exited 0.",
+    "Hydration probe: logs/playwright.log lines 24, 39, 51, 63, 75 and 87 read wNN_hydrated=1 for w02 to w07. The harness waited for network idle and for the React fiber on the mode button before the mode click.",
+    "Mode button probe: logs/playwright.log lines 25, 40, 52, 64, 76 and 88 read wNN_mode_buttons=[\"อ่านให้ฟัง\",\"ตาฉัน\",\"ช้า ๆ\"], so the selector button[data-mode-button] nth(1) is the My turn button on every week.",
+    "Console probe: the own-clip rows read console=[] and the word coverage rows read console_errors=0 failed_requests=0 (lines 38, 50, 62, 74, 86, 98), so no page console message and no failed request exists on any tap page. audio_failed=0 on every own-clip row, so mediaUrl() never returned an empty string.",
+    "The my_turn_pressed semantics: logs/playwright.log lines 28, 43, 55, 67, 79 and 91 read wNN_my_turn_pressed=0 right after the mode click, and lines 29, 44, 56, 68, 80 and 92 read wNN_my_turn_pressed_after_clip=1 while the clip plays. This matches reader.tsx line 196 and is not a fault.",
+    "The cause of the run 3 tap failures: the harness. Run 3 (logs/playwright.log of 22:59, overwritten by this run) failed all six own-clip taps with clip_requested=0 selected=0 while the no-clip tap passed trivially, because a no-op click also fires no clip and selects no word. The only change to the tap path of browser.mjs between run 3 and run 4 is the added wait for network idle plus the wait for the React fiber (hydration) before the mode click, and this run passes every tap with hydrated=1. The app is not at fault: onWordTap (reader.tsx lines 362-396) returns silently only when the mode is not myTurn, when the word holds no clip, or when mediaUrl() returns an empty string, and the probes exclude all three (mode buttons work, clip_requested=1, audio_failed=0, no console error).",
+    "The keep-or-remove decision on the 23:06 edit of browser.mjs: the file kept the five harness fixes recorded in ux-browser-p3-583c9ce80.json and parsed clean (node --check, exit 0), so the edit stayed. The probes of this run were added on top of it.",
+    "History of the runs: run 1 ran at base 993dc3e7c and failed the build with four TS2345 errors in apps/storytime/__tests__/look-adversarial-p3-switch.test.ts; commit ff4a4b86d fixed them; result ux-browser-p3-993dc3e7c.json. Run 2 ran at base 583c9ce80 and every protected page answered the sign-in page, because the harness passed the session cookie before the sign-in filled it; result ux-browser-p3-583c9ce80.json. Run 3 ran at base 583c9ce80: the sign-in and the seven captures passed, the no-clip tap passed, and all six own-clip taps failed with clip_requested=0 selected=0 (taps_checked=1); the role then edited browser.mjs at 23:06 and ended with HTTP 400, and no result file exists for run 3. Run 4 is this run and passes.",
+    "Captures: ls -l measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/captures/ lists w01.jpg to w07.jpg, written at 23:20, each between 56840 and 57828 bytes, so each is under the limit of 500 KB. Two captures were read as images: w02.jpg shows the week page of สัปดาห์ 2 'How Many?' with the three part tiles, and w05.jpg shows สัปดาห์ 5 'I Have Two' with the same layout. Each capture shows the seeded test account only.",
+    "Cleanup: ps -eo pid,args holds no next start, no stand-in and no storytime-ux process, and podman ps -a lists no container of this run (only two old exited containers). The EXIT trap of run.sh cleaned the servers and the throwaway database.",
+    "No phone result is claimed: the harness runs headless SYSTEM Chrome at an emulated viewport of 390x844, so no run of this review is a phone check (P3.8)."
+  ],
+  "commands": [
+    "git rev-parse HEAD (exit 0; 583c9ce805d6d60f34d8f5788aaee69e6a09c74e)",
+    "node --check measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/browser.mjs (exit 0; after the probes, and before the launch)",
+    "bash -n measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/run.sh and bash -n launch.sh (exit 0)",
+    "bash measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/launch.sh (one launch only; SKIP_BUILD=1 reused the 22:55:40 build; run.sh printed '=== Total: 22 rows, all PASS ===' and exited 0; the wrapper heavy-run.sh then printed a syntax error at its line 1077 and the launch exited 2)",
+    "ls -l measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/captures/ (seven files of 23:20, each under 58 KB)",
+    "ls -l measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/logs/ (the run logs of 23:19-23:21; build.log stays the one of 22:55)",
+    "ps -eo pid,args and podman ps -a (no leftover process or container of this run)"
+  ],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/run.sh (the SKIP_BUILD switch: it reuses the build, prints the BUILD_ID mtime and the diff of apps/storytime since 583c9ce80)",
+    "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/launch.sh (the line export SKIP_BUILD=1; the other values stay: 2200 MB, 3600 s, heap 2048 MB, no --next-build)",
+    "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/browser.mjs (the probes: the hydration wait before the mode click, the mode button labels, the audio element sources after the mode click and after the tap, the audio-failed alert, and the page console messages in the tap detail)",
+    "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/logs/ (the run logs of launch 1 of run 4)",
+    "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/captures/ (the seven captures of 23:20)",
+    "measure/runs/storytime_look_20261107/ux-browser-p3-r4-583c9ce80.json",
+    "measure/runs/storytime_look_20261107/ux-browser-p3-r4-583c9ce80.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "ux_applicability": "applicable",
+  "webbridge_status": "not_run",
+  "webbridge_evidence": {
+    "screenshots": [
+      "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/captures/w01.jpg (56840 bytes)",
+      "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/captures/w02.jpg (57828 bytes)",
+      "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/captures/w03.jpg (56995 bytes)",
+      "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/captures/w04.jpg (57201 bytes)",
+      "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/captures/w05.jpg (57219 bytes)",
+      "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/captures/w06.jpg (57092 bytes)",
+      "measure/runs/storytime_look_20261107/ux-p3-3d35c47fa/captures/w07.jpg (57497 bytes)"
+    ],
+    "accessibility_snapshots": [],
+    "interactions": [
+      "w02 word=\"How\" result=own_clip (clip_requested=1 selected=1) logs/playwright.log line 31",
+      "w02 word=\"balls\" result=no_clip_target (clip_requested=0 selected=0) logs/playwright.log line 34",
+      "w03 word=\"It\" result=own_clip (clip_requested=1 selected=1) logs/playwright.log line 46",
+      "w04 word=\"This\" result=own_clip (clip_requested=1 selected=1) logs/playwright.log line 58",
+      "w05 word=\"I\" result=own_clip (clip_requested=1 selected=1) logs/playwright.log line 70",
+      "w06 word=\"I\" result=own_clip (clip_requested=1 selected=1) logs/playwright.log line 82",
+      "w07 word=\"Is\" result=own_clip (clip_requested=1 selected=1) logs/playwright.log line 94"
+    ]
+  }
+}

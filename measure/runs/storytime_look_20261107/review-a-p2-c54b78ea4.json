@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Delta review at c54b78ea494a4f31343b33a2511060dac533c052, which equals HEAD (git rev-parse HEAD, exit 0). This run audits only be5b22394..c54b78ea4 and supersedes the earlier pass at be5b22394. The audited delta is a4f4b67e9, 433a613ae, 5024a9fd9, b6b8f6c3e, c54b78ea4, and dd66da7e3, which is a look commit range only for the first five. K2a: the AbortError guard in playAudio returns early on an abort and still shows the alert for every other rejection, on the promise path and on the sync throw path. A mode switch clears the stop timer first through resetMarks, so the early return leaves no armed page stop. S4b: the condition book.pages.length > 0 writes the record for a one-page book on its first view, and a plain view of a multi-page book writes nothing, because pageIndex >= last is false on page 1. decodable.tsx keeps finding F120: it imports the shared helper, and the three play paths call it in the same positions. The two new files hold 11 passing cases and 2 failing cases with self-tested artifact checks and no presence-style check. One Nit: apps/storytime/lib/is-abort-error.ts is outside the Phase 2 allowed paths of test-strategy.md line 570; the amendment is queued for a strategy role. The PM exception stands: the orchestrator role-gate at 433a613ae printed FAIL: current phase still has 1 non-deferred incomplete tasks, which is task 2.4 at marker [~].",
+  "phase_base_sha": "08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca",
+  "role_base_sha": "c54b78ea494a4f31343b33a2511060dac533c052",
+  "audited_head_sha": "c54b78ea494a4f31343b33a2511060dac533c052",
+  "model_route": "nvidia/stepfun-ai/step-5-preview#high (substitute for claude-opus-5-5; the Phase 2 Green families Anthropic and DeepSeek and the Phase 2 Red families DeepSeek and MiniMax are excluded by the PM rule)",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "STRATEGY PATH (test-strategy.md line 570, the Phase 2 allowed-path list): apps/storytime/lib/is-abort-error.ts is a new file and no lib path sits on the list except apps/storytime/lib/look/places.ts, so the closeout item 3 count look_out_of_scope_paths would count it. The amendment is already queued for a strategy role before the phase acceptance, together with the nine paths of review-a-p2-be5b22394.json. This run records only the new path and does not repeat the earlier nine. Low."
+  ],
+  "notes": [
+    "PM exception (2026-11-09): the orchestrator role-gate at the role base printed FAIL: current phase still has 1 non-deferred incomplete tasks. That task is 2.4 at marker [~] in measure/tracks/storytime_look_20261107/plan.md line 54, and the plan keeps 2.4 open for the phase gates and the council score. This role records the exception and does not count it as a violation.",
+    "Model route note: the Phase 2 Green runs used claude-code/claude-sonnet-5-5 (Anthropic) and the adversarial Red used minimax-cn-coding-plan/MiniMax-M3.1-Flash, so both families are excluded by the PM rule. This role ran on nvidia/stepfun-ai/step-5-preview#high in place of claude-opus-5-5.",
+    "Gate evidence is quoted, not rerun. This role ran no vitest command, no tsc, and no browser gate. measure/runs/storytime_look_20261107/green-p2-adv-433a613ae.log line 12 records: Red confirmation exit=1, Tests 2 failed (2); GREEN_TEST_COMMAND exit=0, Test Files 90 passed (90), Tests 689 passed (689); tsc --noEmit exit=0; ESLint on 3 changed files exit=0; no browser gate.",
+    "Browser gate coverage: the delta changes no style rule and no layout, and the earlier round 3 gates quote PASS=86 with FAIL=0. The ok absence of a fresh browser run at 5024a9fd9 is a gap for task 2.4, which stays [~] and reruns the two gates at the final head."
+  ],
+  "evidence": [
+    "HEAD check: git rev-parse HEAD prints c54b78ea494a4f31343b33a2511060dac533c052 (exit 0). The value equals the role base and the audited head, and git log be5b22394..c54b78ea4 prints a4f4b67e9, 433a613ae, 5024a9fd9, b6b8f6c3e and c54b78ea4 (exit 0). Commit dd66da7e3 also lies in the range and it belongs to another track.",
+    "Out-of-scope sweep in the range: git diff be5b22394..c54b78ea4 --name-only prints seven paths, and only apps/storytime/.../sales_traffic_source_binding_20261108/plan.md is not a look path. git show dd66da7e3 -- apps/.../sales_traffic_source_binding_20261108/plan.md prints 8 changed lines in that plan, and its commit message names track_id: sales_traffic_source_binding_20261108. A second track commits into the shared index of this repository; this role records it and raises no finding.",
+    "AbortError guard, promise path: reader.tsx lines 250 to 254 hold result.catch((error: unknown) => { if (isAbortError(error)) return; setAudioFailed(true); clearStopTimer(); }). The early return carries the guard, so every other rejection still reaches setAudioFailed. The comment cites finding F120.",
+    "AbortError guard, sync throw path: reader.tsx lines 256 to 260 hold catch (error) { if (isAbortError(error)) return; setAudioFailed(true); clearStopTimer(); }. The sync throw and the promise rejection take the same branch, so neither path hides a real failure.",
+    "No armed page stop after the early return: startListen, startMyTurn and startSlow each call resetMarks first (reader.tsx lines 312, 328, 345), and resetMarks at lines 300 to 305 calls clearStopTimer. The only other stop timer, the pendingIndex hold, is a separate effect at lines 236 to 244. So a skipped clearStopTimer on an abort leaves no armed stop.",
+    "AbortError guard, shared helper: apps/storytime/lib/is-abort-error.ts lines 7 to 9 hold the same body that decodable.tsx held before this delta: typeof error === \"object\" && error !== null && (error as { name?: string }).name === \"AbortError\". git show 5024a9fd9 --stat prints one new lib file and two changed route files (exit 0), so one helper now serves both screens and no copy remains.",
+    "decodable.tsx keeps F120: decodable.tsx line 15 imports the helper, and lines 252, 262 and 380 call it inside playElement and playClip. The guard uses the same !isAbortError(error) shape as before, so an abort still shows no alert and no pressed state.",
+    "S4b condition: reader.tsx line 204 holds if (finished || (book.pages.length > 0 && pageIndex >= book.pages.length - 1)) markPartDone(doneKey);. A multi-page book writes nothing on page 1, because 1 >= 8 is false; the write runs when the reader reaches the last page or the end view.",
+    "One-page book: the same line writes on the first view of a one-page book, because 0 >= 0 is true. The S4b case asserts the exact record one_page_record={\"2:1:book\":true}, and it failed at the role base with one_page_record={}.",
+    "Idempotent write: markPartDone in lib/done.ts writes record[doneKey] = true, so a second write of the same key leaves the record unchanged. No double record is possible.",
+    "Defect proof at the role base: measure/runs/storytime_look_20261107/green-p2-adv-433a613ae.log line 12 records the Red confirmation at 433a613ae as exit=1 with Tests 2 failed (2). The two cases of look-adversarial-p2-defects.test.tsx line 130 and line 164 are K2a and S4b.",
+    "Passing file: adversarial-p2-be5b22394.json line 31 records the run of look-adversarial-p2.test.tsx as exit 0 with 11 passed (11), and its line 37 records mutants_rejected=9 of 9. The mutants cover the guard, the done condition, the clip error listener, the counter format, the hidden alert, the guard in the decodable button, the sound state clear, the audio lookup and the sr-only class.",
+    "No A4 vacuous pass in the two files: grep over both files for toBeTruthy, toBeDefined(), toExist and existsSync prints nothing (grep tool, no matches). The artifact checks V1, V2, A1 and C1 each read the style sheet, then apply a named mutant to the same text and require the violation count to rise above 0.",
+    "No A3 digit-only count: the count assertions of both files are labelled strings, for example pressed_states=${pressed.length}, plays=${plays.length - before} and one_page_record=${JSON.stringify(record)}. grep over both files for a bare-digit expectation prints no match (grep tool).",
+    "Plan line 53 evidence: measure/tracks/storytime_look_20261107/plan.md line 53 now names code commit 5024a9fd9 and role_base_sha 433a613aef911c9b011854d6791c4985ee22844e. git show c54b78ea4 prints one line of plan.md, and the sha change from 433a613ae to 5024a9fd9 is the only evidence text in that hunk.",
+    "No production edit outside Phase 2: git diff be5b22394..c54b78ea4 -- apps/storytime prints three production paths, reader.tsx, decodable.tsx and lib/is-abort-error.ts. No message file, no asset, no route and no gate script changed.",
+    "No conflict marker: grep over apps/storytime/app and apps/storytime/lib for the marker tokens prints nothing (grep tool, no matches).",
+    "Not run by this role: any vitest command, any tsc, any browser gate, and any push."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> c54b78ea494a4f31343b33a2511060dac533c052, exit 0",
+    "git log --oneline be5b22394..c54b78ea4 -> the five look commits plus dd66da7e3 of another track, exit 0",
+    "git diff --stat be5b22394..c54b78ea4 -> seven paths and 967 insertions, exit 0",
+    "git diff be5b22394..c54b78ea4 -- the three production files and plan.md -> the guard, the done condition, the helper and the plan line, exit 0",
+    "git show 5024a9fd9 --stat -> 3 files, exit 0",
+    "git show b6b8f6c3e -- plan.md and git show c54b78ea4 -- plan.md -> the wrong sha and the fix, exit 0",
+    "git show dd66da7e3 --stat -> one plan file of another track, exit 0",
+    "sed -n '565,580p' measure/tracks/storytime_look_20261107/test-strategy.md -> the allowed-path list of closeout item 3, exit 0",
+    "read of apps/storytime/lib/is-abort-error.ts, reader.tsx lines 196 to 260, decodable.tsx lines 240 to 300, lib/done.ts -> the guard, the done write and the record, exit 0",
+    "read of apps/storytime/__tests__/look-adversarial-p2.test.tsx and look-adversarial-p2-defects.test.tsx -> the case list and the assertions, exit 0",
+    "cat of measure/runs/storytime_look_20261107/green-p2-adv-433a613ae.log line 12 -> the quoted gate values, exit 0",
+    "grep tool over the two new test files for 'toBeTruthy|toBeDefined\\(\\)|toExist|existsSync' -> no matches",
+    "grep tool over the two new test files for a bare-digit count expectation -> no matches",
+    "grep tool over apps/storytime/app and apps/storytime/lib for conflict markers -> no matches"
+  ],
+  "changed_files": [
+    "apps/storytime/lib/is-abort-error.ts",
+    "apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx",
+    "apps/storytime/app/[locale]/st/[level]/[week]/decodable.tsx",
+    "apps/storytime/__tests__/look-adversarial-p2.test.tsx",
+    "apps/storytime/__tests__/look-adversarial-p2-defects.test.tsx",
+    "measure/tracks/storytime_look_20261107/plan.md"
+  ],
+  "security_violations": [],
+  "architecture_violations": [],
+  "test_violations": [],
+  "spec_violations": [],
+  "test_strategy_violations": [],
+  "confidence": "high",
+  "retry_recommendation": "none"
+}

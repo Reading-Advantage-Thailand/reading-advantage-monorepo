@@ -1,0 +1,28 @@
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: storytime_look_20261107
+phase: Phase 3: Week content r3 import
+task: 3.5
+phase_base_sha: 2655632aaff89ed8f0e45c3d910f915f04ea0ec9
+role_base_sha: 1e892c673972992d5846c49cc08a90d718bd2ac6
+model_route: deepseek/deepseek-flash#high (the Red family of P3; Green of task 3.6 runs on nvidia/stepfun-ai/step-5-preview#high)
+status: red-complete
+summary: The one new file apps/storytime/__tests__/look-draft-week-switch.test.ts holds cases (a) to (g), the added case (e2), the three mutant doubles, and the labeled-count check. Red r2 run: exit=1, look_files=1, load_errors=0, tests_failed=3, tests_passed=10, tests_skipped=0 (13 tests). Failing: case (b) with "the draft week st2/2 must be visible with STORYTIME_REVIEW_DRAFT_WEEKS=1, received null"; the log-line check with "the log must hold \"storytime week st2/2 shows a draft week (review switch)\", received \"storytime week st2/2 blocked: draft\""; case (e2) with "the draft week st2/2 with draft media must be visible with both review values, received null". Passing (characterization, A4): (a) the switch unset gives null and open[2]=null; (c) true, yes, 0, "", and " 1" each give null; (d) the missing-picture draft week gives null; (e) the draft week with audio not approved gives null without STORYTIME_SHOW_DRAFT_MEDIA, and a published clone with audio not approved is returned with STORYTIME_SHOW_DRAFT_MEDIA=1; (f) files_checked=25 and no tracked deploy file holds the name; (g) the scratch copy with the name added is caught. Mutants rejected=3: the loose value parser, the draft-week shortcut that skips the missing-picture rule, and the NEXT_PUBLIC_ reader. Labels: files_checked=25; draft_week_cases=6; mutants_rejected=3. ESLint on the new file exits 0; the A9 detector exits 1; worktrees=8. plan.md task 3.5 stays [~] for Green.
+commits: 0f3b731a1460ef771e16ec9724ff59bafe115f58 test(look): pin the draft week review switch (track_id: storytime_look_20261107); cc6cd30fdaa59e37f002478f4163345dd13d480e test(look): pin both review values on a draft week (track_id: storytime_look_20261107); d024f11c986feeaea33c1adda4707a35fdd31185 docs(measure): record the look switch red result (track_id: storytime_look_20261107); 960fbcd9baa2385bfda71e368f4a9720a044c2f5 docs(measure): record the look switch red r2 (track_id: storytime_look_20261107)
+head: 960fbcd9baa2385bfda71e368f4a9720a044c2f5
+red_command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-draft-week-switch.test.ts'
+exit: 1
+look_files: 1
+load_errors: 0
+tests_failed: 3
+tests_passed: 10
+tests_skipped: 0
+labels: files_checked=25; draft_week_cases=6; mutants_rejected=3
+failing_cases: (b) visible=null; (b) log="storytime week st2/2 blocked: draft"; (e2) visible=null
+files: apps/storytime/__tests__/look-draft-week-switch.test.ts
+eslint: exit 0, eslint_errors=0
+detector_a9: exit 1
+worktrees: 8
+remaining: Task 3.5 stays [~]. Task 3.6 Green adds DRAFT_WEEKS_ENV and showDraftWeeks() in lib/content.ts, then flips 3.5 to [x] after its gate. Green must make case (e2) pass: both review values open a draft week with draft media, and the shown log line appears.
+handoff: No question. The orchestrator decision added case (e2) before Green: the P3.8 local review environment sets STORYTIME_REVIEW_DRAFT_WEEKS=1 and STORYTIME_SHOW_DRAFT_MEDIA=1 on draft weeks, so e2 pins that both values open a draft week with draft media, open it in highestOpenWeeks(), and log the review-switch line. The published-clone half of case (e) is unchanged. The three mutant proofs and the deploy scan are in-test doubles. Green must not edit the Red test.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "status": "inconclusive",
+  "summary": "Provisional: provenance confirmed at e7a21bcdd527a3be4867a153f20c5040cae454c1; contract review in progress.",
+  "phase_base_sha": "08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca",
+  "role_base_sha": "e7a21bcdd527a3be4867a153f20c5040cae454c1",
+  "audited_head_sha": "e7a21bcdd527a3be4867a153f20c5040cae454c1",
+  "contract_applicability": "applicable",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD returned e7a21bcdd527a3be4867a153f20c5040cae454c1; audit head is current.",
+    "measure/runs/storytime_look_20261107/ux-p2-e7a21bcdd/council-r3/HEAD.txt holds e7a21bcdd527a3be4867a153f20c5040cae454c1."
+  ],
+  "commands": [],
+  "changed_files": [],
+  "security_violations": [],
+  "architecture_violations": [],
+  "test_violations": [],
+  "spec_violations": [],
+  "confidence": "low",
+  "retry_recommendation": "none"
+}

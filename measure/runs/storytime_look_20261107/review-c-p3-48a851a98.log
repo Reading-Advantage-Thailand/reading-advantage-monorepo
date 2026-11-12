@@ -1,0 +1,60 @@
+# Review C · P3 · storytime_look · r3 — rem1 (task 3.7)
+
+Route: opencode/glm-5.3-flash-free#high. Phase base 2655632aa. Role base 2399d3075 (from the plan
+evidence of task 3.7; it appears in git log between the phase base and HEAD). Audited HEAD
+48a851a98, current at the audit start. Commits of other tracks after the phase base are out of
+scope; the phase range holds 240 commits and only three belong to rem1.
+
+## What I checked
+
+1. **Commit scope.** `git show --stat` for 83ff86879, a04837606, and 48a851a98 lists only
+   `measure/tracks/storytime_look_20261107/plan.md` (twice, one line each) and the two test files
+   `apps/storytime/__tests__/login-media-sign.test.ts` and
+   `apps/storytime/__tests__/look-adversarial-p2b.test.ts`. No route, API, component, message, or
+   user-flow file changed. The rem1 claim holds.
+
+2. **F781 (signed media map of w01).** I reproduced the counts against the shipped week file
+   `apps/storytime/content/l2/w01.json` with the walker semantics of
+   `apps/storytime/scripts/receive-weeks.ts` (mediaPathsOf at line 192, MEDIA_EXTENSION at line 181)
+   and the approval-subtree filter of the test at lines 78 to 82. First pass gave 71 because my
+   python walk missed the filter; with the filter the result is expected=70, file_only=32,
+   unsigned=38, entries=108. The pins at login-media-sign.test.ts lines 86, 96, and 99 read 70, 32,
+   and 38 and match exactly. No check became a range, and the F7g control keeps its strength.
+
+3. **F782 (tab-stop pin).** `grep -rn tabIndex` over the `sourceFiles()` roots (apps/storytime/app,
+   packages/read-along/components, packages/read-along/lib) returns exactly two files:
+   lesson-flow.tsx line 1008 with one occurrence and read-along-passage.tsx lines 111 and 170 with
+   two. `tabIndexSites` counts occurrences per file, so the exact `toEqual` pin
+   `[lesson-flow.tsx:1, read-along-passage.tsx:2]` matches the sources. The allowed path is the
+   teacher end region: `role="region"`, `tabIndex={-1}`, `ref={endRef}`. `tabIndex={-1}` is a focus
+   target and takes no place in the tab order, so the M4 guard against a new tab stop keeps its
+   meaning for every other file.
+
+4. **Earlier result still holds.** review-c-p3-b9ba532bf.json was a pass with nonblocking F1, F2,
+   F3 and no blocking finding. At this HEAD: w02.json line 47 keeps `meta.status` draft (F1, and the
+   review switch of tasks 3.5/3.6, commit f438d09d7, is in place); reader.tsx line 370 still builds
+   the tap key with `toLowerCase` only (F2); no rem1 commit touches decodable.tsx or any week file,
+   so F3 stands. I carried all three into this result unchanged. No CONTEST items arrived, so no
+   finding is withdrawn and none carries a CONTEST note.
+
+5. **Contract applicability.** The rem1 diff holds no endpoint, route, error response, or
+   integration surface. Contract applicability is not_applicable for rem1; the audit is bound to
+   the three commit SHAs and the reproduced counts above.
+
+## Verdict
+
+Status pass, confidence high, no new findings, retry_recommendation none.
+
+MEASURE_AGENT_RESULT
+status: complete
+summary: The rem1 change updates two stale test pins and nothing else. Both new pin values reproduce against the shipped product at HEAD: the signed media map of w01 gives 70/32/38 and the tab-stop sources hold exactly the two pinned files. The earlier Review C result still holds. No blocking finding and no new finding.
+blocking_findings: []
+nonblocking_findings:
+  - "F1 [Major] carried from review-c-p3-b9ba532bf.json, still holds at HEAD 48a851a98: w02 to w07 keep meta.status draft and the review switch of tasks 3.5/3.6 opens draft weeks in the local review environment only."
+  - "F2 [Minor] carried from review-c-p3-b9ba532bf.json, still holds at HEAD 48a851a98: reader.tsx line 370 builds the tap key with toLowerCase only."
+  - "F3 [Minor] carried from review-c-p3-b9ba532bf.json, still holds at HEAD 48a851a98: the decodable book clip map of w01.json has no app reader."
+retry_recommendation: none
+confidence: high
+audited_head_sha: 48a851a989681aa7dd2018865a9b52b70f0ac7c2
+route: opencode/glm-5.3-flash-free#high
+END_MEASURE_AGENT_RESULT

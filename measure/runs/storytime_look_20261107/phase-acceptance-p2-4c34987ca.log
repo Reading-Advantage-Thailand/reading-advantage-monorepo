@@ -1,0 +1,14 @@
+MEASURE_AGENT_RESULT
+role: measure-phase-acceptance
+track: storytime_look_20261107
+phase: Phase 2: Look port of the picked option
+phase_base_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha: 4c34987ca774a5cd6323b4ce5d7bbb5a716797ee
+audited_head_sha: 4c34987ca774a5cd6323b4ce5d7bbb5a716797ee
+model_route: opencode/glm-5.3-flash-free#high. Route held void: GLM wrote a Phase 2 Green.
+status: aborted
+verdict: none
+summary: Stopped by the orchestrator at the PM route correction of 2026-11-09: a GLM acceptance is not independent, because GLM wrote a Phase 2 Green. Not a gate result.
+retry_recommendation: none
+checkpoint_sha_proposed:
+END_MEASURE_AGENT_RESULT

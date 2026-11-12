@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "The rem1 change updates two stale test pins and nothing else. Commits 83ff86879 and 48a851a98 touch only measure/tracks/storytime_look_20261107/plan.md, and commit a04837606 touches only the two test files apps/storytime/__tests__/login-media-sign.test.ts and apps/storytime/__tests__/look-adversarial-p2b.test.ts. No route, API, component, message, or user-flow file changed in the rem1 commits. Both new pin values reproduce against the shipped product at HEAD: the signed media map of w01 gives 70 distinct files with 32 file-only paths and 38 unsigned under the old pin, and the app sources hold exactly two files with tabIndex, so the exact-list pin still guards every other file. The earlier Review C result review-c-p3-b9ba532bf.json still holds at this HEAD with no contract surface changed.",
+  "contract_applicability": "not_applicable",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F1 [Major] carried from review-c-p3-b9ba532bf.json, still holds at HEAD 48a851a98: apps/storytime/content/l2/w02.json to w07.json keep meta.status draft, and the review switch STORYTIME_REVIEW_DRAFT_WEEKS=1 of tasks 3.5 and 3.6 (commit f438d09d7) opens draft weeks in the local review environment only. The rem1 commits changed no week file and no lib/content.ts, so the finding status is unchanged. | not a CONTEST item: carried for continuity",
+    "F2 [Minor] carried from review-c-p3-b9ba532bf.json, still holds at HEAD 48a851a98: apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx line 370 still builds the tap key with word.word.toLowerCase() only, so a curly apostrophe or outer punctuation in a later week would make a visible tap target whose key lookup misses. The rem1 commits changed no reader file. | not a CONTEST item: carried for continuity",
+    "F3 [Minor] carried from review-c-p3-b9ba532bf.json, still holds at HEAD 48a851a98: the decodable book of w01.json holds 11 clip keys and no app file reads that clip map, because apps/storytime/app/[locale]/st/[level]/[week]/decodable.tsx still cuts the sentence recording. The rem1 commits changed no decodable file and no week data. | not a CONTEST item: carried for continuity"
+  ],
+  "evidence": [
+    "git rev-parse HEAD returns 48a851a989681aa7dd2018865a9b52b70f0ac7c2, so the audited HEAD is current at the audit start.",
+    "git show --stat 83ff86879 lists one file, measure/tracks/storytime_look_20261107/plan.md, one insertion. git show --stat a04837606 lists exactly apps/storytime/__tests__/login-media-sign.test.ts (12 changed lines) and apps/storytime/__tests__/look-adversarial-p2b.test.ts (11 changed lines). git show --stat 48a851a98 lists one file, plan.md, one changed line. No route, API, component, message, or user-flow file appears in any rem1 commit.",
+    "F781 reproduced with python3 against apps/storytime/content/l2/w01.json through the walker semantics of apps/storytime/scripts/receive-weeks.ts line 192 (mediaPathsOf, MEDIA_EXTENSION at line 181, approval subtree excluded per login-media-sign.test.ts lines 78 to 82): expected=70, file_only=32, unsigned=38, entries=108. The three pin values at login-media-sign.test.ts lines 86, 96, and 99 (70, 32, 38) match the reproduced counts exactly, and no check became a range.",
+    "F782 reproduced with grep over the sourceFiles() roots of look-adversarial-p2b.test.ts line 210 (apps/storytime/app, packages/read-along/components, packages/read-along/lib): the only tabIndex hits are apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx line 1008 (one occurrence) and packages/read-along/components/read-along/read-along-passage.tsx lines 111 and 170 (two occurrences). tabIndexSites at look-adversarial-p2b.test.ts line 283 counts occurrences per file, so the exact pin [lesson-flow.tsx:1, read-along-passage.tsx:2] matches the sources. The list stays toEqual, so every other file still fails the check.",
+    "The one allowed path of F782 is the teacher end region at lesson-flow.tsx lines 1005 to 1015: role=\"region\", tabIndex={-1}, ref={endRef}, aria-label=\"The end of the lesson\". tabIndex={-1} is a focus target and takes no place in the tab order, so the M4 guard against a new tab stop keeps its meaning, and the pin message and the plan evidence name this reason.",
+    "The earlier Review C result review-c-p3-b9ba532bf.json had status pass with three nonblocking findings F1, F2, F3 and no blocking finding. All three still hold at this HEAD: w02.json line 47 keeps meta.status draft, reader.tsx line 370 keeps toLowerCase, and no rem1 commit touches decodable.tsx or any week file.",
+    "The role_base_sha 2399d3075888275c937cd98dc78dab5a9e664fd0 named in the plan evidence of task 3.7 appears in git log between the phase base 2655632aa and the audited HEAD, so the provenance chain is intact.",
+    "The 240 commits between the phase base and the audited HEAD include many other tracks (storytime_app_rebuild_20261025 Phase 4 and 5, primary_class_session_lifetime_20261111, sales_training_2027_20261015). Per the brief these are out of scope; the phase diff of this review is the three rem1 commits only."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> exit 0: 48a851a989681aa7dd2018865a9b52b70f0ac7c2, current",
+    "git show --stat --oneline 83ff86879 a04837606 48a851a98 -> exit 0: plan.md twice, the two test files once, no other file",
+    "git log --oneline 2655632aa..48a851a98 -> exit 0: 240 commits, the three rem1 commits at the top, 239 commits of other tracks out of scope",
+    "grep -n mediaPathsOf apps/storytime/scripts/receive-weeks.ts -> exit 0: walker at line 192, MEDIA_EXTENSION at line 181",
+    "grep -n tabIndex apps/storytime/app packages/read-along/components packages/read-along/lib -> exit 0: exactly two files, lesson-flow.tsx:1008 (1) and read-along-passage.tsx:111,170 (2)",
+    "sed -n 1000,1015p lesson-flow.tsx -> exit 0: the end region holds role=\"region\", tabIndex={-1}, ref={endRef}",
+    "python3 walk of apps/storytime/content/l2/w01.json with the receiver extension regex and the approval filter -> exit 0: expected=70, file_only=32, unsigned=38, entries=108",
+    "grep '\"status\"' apps/storytime/content/l2/w02.json -> exit 0: media entries approved, week meta.status draft at line 47",
+    "sed -n 366,371p reader.tsx -> exit 0: the tap key still builds with word.word.toLowerCase()",
+    "grep -n tabIndex -A6 look-adversarial-p2b.test.ts sourceFiles and tabIndexSites -> exit 0: the exact-list pin at the M4 case",
+    "read review-c-p3-b9ba532bf.json -> status pass, nonblocking F1, F2, F3, no blocking finding"
+  ],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/review-c-p3-48a851a98.json",
+    "measure/runs/storytime_look_20261107/review-c-p3-48a851a98.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "role": "measure-review-c-ux-api",
+  "track": "storytime_look_20261107",
+  "phase": "Phase 3: Week content r3 import",
+  "baseline_sha": "2655632aaff89ed8f0e45c3d910f915f04ea0ec9",
+  "role_base_sha": "2399d3075888275c937cd98dc78dab5a9e664fd0",
+  "audited_head_sha": "48a851a989681aa7dd2018865a9b52b70f0ac7c2",
+  "route": "opencode/glm-5.3-flash-free#high",
+  "ratings": [
+    {"axis": "correctness", "score": 5, "evidence": "Both pin values reproduce against the shipped product: the python3 walk gives 70/32/38 and the grep gives exactly the two pinned tabIndex files."},
+    {"axis": "test_meaning", "score": 4, "evidence": "The pins are exact values, not ranges, and the F7g control keeps 32 and 38; I verified values by reproduction, not by rerunning the suite, so the Green run log stays the plan evidence."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "git show --stat for the three rem1 commits lists only plan.md and the two named test files."},
+    {"axis": "evidence_quality", "score": 5, "evidence": "Every claim above has a command result or a file:line, including the reproduced counts and the tabIndex sites."}
+  ]
+}

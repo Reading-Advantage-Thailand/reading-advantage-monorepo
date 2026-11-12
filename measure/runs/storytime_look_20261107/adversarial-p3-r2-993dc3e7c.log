@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role=measure-adversarial-testing
+track=storytime_look_20261107
+phase=Phase 3
+role_base_sha=993dc3e7c085184ab6643399307230149a92723b
+model_route=minimax-cn-coding-plan/MiniMax-M3.1-Flash
+status=pass
+commits=ff4a4b86d3f3d608807e3f0b2272d06e18181111 (test file, type only); 583c9ce805d6d60f34d8f5788aaee69e6a09c74e (plan evidence, task 3.6 sub-bullet)
+commands=heavy-run vitest run --maxWorkers=1 (3 adversarial files) baseline exit=0, files=3, tests=65; heavy-run tsc --noEmit before the fix exit=2, four TS2345 errors at lines 91, 99, 107, 110; heavy-run tsc --noEmit after the fix exit=0; heavy-run vitest run --maxWorkers=1 (3 adversarial files) exit=0, files=3, tests=65; heavy-run eslint on the changed file exit=0; git diff -U0 count of changed expect lines=0; heavy-run vitest run __tests__/look-*.test.ts exit=0, files=13, tests=152; heavy-run vitest run __tests__/look-*.test.ts __tests__/look-*.test.tsx exit=0, files=37, tests=310; git commit of the test file exit=0 (ff4a4b86d); git commit of plan.md exit=0 (583c9ce80)
+result_file=measure/runs/storytime_look_20261107/adversarial-p3-r2-993dc3e7c.json
+handoff=The type break that the UX browser review of P3.8 found is fixed. The cause was the helper loadWeek in apps/storytime/__tests__/look-adversarial-p3-switch.test.ts, which returned Record<string, any> while readinessBlocker takes WeekReadiness with a required meta field. The helper now returns a loaded week type that extends WeekReadiness. The change is type only. No case, message, expected value, or expect line changed, and the test counts equal the counts before the change. All four checks pass: tsc exit 0, the three adversarial files exit 0 with 3 files and 65 tests, ESLint exit 0, and no changed expect line. The look glob also passes with 37 files and 310 tests. No production code changed. The next build was not run by this role, so the build check of the UX browser rerun stays open. The advisory gate of the round at 3d35c47fa ran no tsc, so a type break in a new test file reached the build. The written strategy asks no tsc of the adversarial role. The plan sub-bullet sits under task 3.6 and changed no task mark.
+END_MEASURE_AGENT_RESULT

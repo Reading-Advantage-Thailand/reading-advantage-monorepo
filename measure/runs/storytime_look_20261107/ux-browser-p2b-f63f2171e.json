@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "role": "measure-ux-browser-review",
+  "track": "storytime_look_20261107",
+  "phase": "Phase 2b: Brand chrome",
+  "status": "pass",
+  "summary": "One launch ran at HEAD f63f2171e after a fresh production build. FR-4 (a) to (f) hold on the week 1 home, the week 1 read-along page with a highlighted word, and the week 2 home, in th and en at 390x844: no game bar, one visible label (one copy in the accessibility snapshot), one 48 px logo, amber and brown chrome with 0 blue elements, the title at ratio 0.80 and centered, and a brown current word with white text at 7.09:1. Six browser items found real edge defects that no shipped title or default view reaches: B1 text zoom, B2 page zoom, B3 the 60-character title, B5 wide capitals, B6 the blocked logo, and the dark-scheme word edge. All six are non-blocking, and B4 (the shipped long titles) passes. Two items were not evaluated because of a harness defect: the label copy count (a script-text count error) and F14, the 403 page (the fixture left the loops part in draft, so the teacher route answered with the 404 view). No phone result is claimed.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 [B1] ux-browser-review: at text-only zoom 200 percent (label font 28 px) on 320x568, the centered label spans x 44.6 to 275.4 (th) and x 47.5 to 272.5 (en), so its left end sits under the logo (x 16 to 64, higher z-index). The overlap is 19.4 x 44 px (th) and 16.5 x 44 px (en) on the cover and the band variants (4 of 4 cases). The no-zoom control at the same viewport has overlap 0. The first letters of the label are hidden. Captures: b1-*-textzoom200-*.png. Route: Green may anchor the label to the right of the logo (for example left 72 px at every width) in a later change.",
+    "N2 [B2] ux-browser-review: at page zoom 200 percent of a 390 or 320 phone (195x422 and 160x284 CSS px) the landscape block fires on a portrait view (max-height 500 matches). The page overflows sideways by 60 to 139 px, the label ends 3.5 to 41.4 px beyond the hero (the label has left 72 px and no wrap), and the plaque overlaps the logo by 9.4 x 23 px at 195 and 32.6 x 21 px at 160, and the label by 101 x 8 px and 66 x 6 px. The 195 px capture also shows the part tiles in a multi-column grid and the heading pill on two lines. The width is under the 320 px reflow floor of WCAG 1.4.10. This review did not compare the base, so the page overflow may pre-date Phase 2b. Captures: b2-*.png.",
+    "N3 [B3] ux-browser-review: a 60-character title at 568x320 wraps to two lines (font 20 px, plaque x 2 to 546, y 23 to 75) and covers the logo by 48 x 33 px and the label by 128 to 131 x 18 px. The first words of the title (Pip and Nan) are hidden under the logo and the label. This confirms the known adversarial N3 and Review C C2-F3. No shipped title (6 to 13 characters) reaches it, and AC-4.6 asks for plaque_overflow_px=0 and clipped_text=0 only. Captures: b3-*.png.",
+    "N4 [B4 result] ux-browser-review: the two longest shipped titles (Is It a Ball?, Unit 1 Review) at 568x320 and 844x390 in th and en, on the cover and the band variants: 16 of 16 cases hold one line and overlap 0 with the logo and the label. The plaque top sits 8 px above the label bottom (y 33 against 41), and the two boxes are 154 px or more apart sideways. The adversarial model of 40 against 41 does not match the build (plaque top y 33, label bottom y 41). This item is a pass.",
+    "N5 [B5] ux-browser-review: a title of 13 wide capitals (WWWWWWWWWWWWW) at 320x568 overflows the plaque: the text is 31 px (cover) and 42 px (band) wider than the plaque, clipped_text=1, and the page scrolls sideways by 19 px (cover) and 30 px (band) in th and en (4 of 4 cases). The font fit assumes 0.68 em for each character, and a capital W is wider. No shipped title is all capitals. Hardening choice for a later change. Captures: b5-*.png.",
+    "N6 [B6] ux-browser-review: with the logo request blocked, the alt text Storytime Advantage shows inside the 48 x 48 px box and is cut to about Storyti. The alt ink is #3b1d0a, which measures 2.36:1 against the fallback hero green #2b6a3a. On the light sky of the place picture the text reads, so the real contrast depends on the art. It shows only if the logo file fails to load. Captures: b6-*.png.",
+    "N7 [B7 dark, adversarial N1] ux-browser-review: with a forced dark scheme the current word is amber #fcd34d with brown text at 4.92:1 (the AC-4.9 pair holds), and the band behind it is rgb(192,136,96). The edge of the word against its band measures 2.10:1, under the 3:1 of WCAG 1.4.11. The capture shows a legible word. The app has no dark theme of its own, so only an OS dark scheme shows it. Captures: b7-*-dark-scheme-current-word.png.",
+    "N8 [Review C C3-F1 accepted] ux-browser-review: keyboard focus on a read-along sentence shows the two-tone ring (outline 3px solid white, shadow 6px brown #92400e) in th and en, and the ring encloses the whole sentence. A focused clip word (tabindex -1; the word I, a 7 x 48 px box) shows the same ring. In the capture the ring edge sits about 1 to 3 px from the comma of Hello, and from the letter a of am: it touches no neighbor box (neighbor boxes inside the 6 px reach: 0), but the ring is tight on a one-letter word. Under the sentence ring a small notch shows below the word I, because the 48 px word box is taller than the 45 px sentence box. Both are cosmetic. Captures: b7-*-focus-sentence.png, b7-*-focus-clip-word.png.",
+    "N9 [F14 not evaluated] ux-browser-review: the Review A nit F14 (does the 403 page show its heading text) was not decided in a browser. The harness fixture kept the shipped w01, whose loops part is draft. The route /th/teacher/2/1 therefore answered the 404 view (status 404) for the family session and for the teacher session, so the forbidden view never rendered. The gate fixture approves the loops part, and gate row 18 at 65b8325b0 read status 200 for the 403 page. Static evidence only: apps/storytime/messages/en.json and th.json hold teacherForbiddenHeading (This page is for teachers; the Thai text หน้านี้สำหรับครู), and teacher/forbidden.tsx renders it in an h1 of text-2xl. The teacher week and the teacher day screens (screen 6) were not evaluated for the same cause. A fix is one fixture line and one more launch. The orchestrator decides; Review A proposed to defer F14 to Phase 3.",
+    "N10 [harness defect] ux-browser-review: six FR-4 rows print FAIL with the reason b: label copies=2 and nothing else. The count used body.textContent, and that text includes the RSC payload script of the page, which holds the label string once more. The accessibility snapshots show one paragraph with the label on each screen: grep -c finds Level 2 once in p1-en-390-week1-home, p1-en-390-week1-readalong, and p1-en-390-week2-home (the th files show the Thai label once). The FAIL rows are a harness count error, not an app defect. The AC-4.2 copy count belongs to look-brand-chrome.test.tsx and gate row 15.",
+    "N11 [observation] ux-browser-review: the 404 view renders a Thai heading with an English line in both locales (the en view at /en/st/2/9 shows the Thai heading and the English sentence This page is not here). This review did not check whether the mix is the intended bilingual design of not-found-view.tsx. The Phase 2b change to that view is class strings only."
+  ],
+  "evidence": [
+    "Server URL used: http://127.0.0.1:38199 (next start, own process group; database 127.0.0.1:36943; storage stand-in 127.0.0.1:38197; ports chosen by a free-port probe, not 3005 or 3099). All three stopped by the EXIT trap (cleanup_done printed). ps shows no ux-p2b, next-server, stand-in, or heavy-run process; ss shows no listener on the three ports; podman ps -a lists only the three old exited containers (reading-advantage-postgres, storytime-r9-diag, storytime-preview-daniel); the container of this run (storytime-ux-p2b-<pid>) was removed by podman rm -f in the trap; no /tmp item of this run is left (/tmp/ux-p2b-accounts.* removed by the trap).",
+    "Provenance: git rev-parse HEAD printed f63f2171e2aafa12a6bfeba438ba7897675505fb at the start and the run printed role_base_sha and git_head with the same value. During the review another track committed 2947b9e1e (track storytime_app_rebuild_20261025, one new test file apps/storytime/__tests__/phase4-lesson-flow.test.tsx, 402 added lines). git diff --stat f63f2171e..HEAD -- apps/storytime shows only that file, so no production file changed after the audited build and the audit stands.",
+    "Fresh build: the run printed PASS: build, build_id=6rXSx54enJrA9PXpP9Myx, build_id_mtime_epoch=1794327622 against launch_start_epoch=1794327551, and PASS: the build is newer than the launch start. SKIP_BUILD was not used.",
+    "Environment: shipped apps/storytime/content plus four added level 3 fixture weeks (l3/w05 a 60-character English title, l3/w06 a 60-character Thai title, l3/w07 WWWWWWWWWWWWW, l3/w08 Unit 1 Review), STORYTIME_REVIEW_DRAFT_WEEKS=1, STORYTIME_SHOW_DRAFT_MEDIA=1 (printed review_draft_weeks=1 review_draft_media=1), media root symlinks to w01 r4 and w02 to w07 r3, STORYTIME_GATE_MEDIA_ROOT=/home/daniebo/Desktop/handoff/w01-storytime-app-package-r4 exported (the harness uses its own media-root symlinks, which point to the same package). Accounts: staff-01 (family) and teacher-01 (teacher). Migration ran twice.",
+    "Stop rule: the monitor of run.sh stayed silent (logs/stop-rule.log does not exist). mem_available_kb_start=3638524. The launch exit was 0 and the heavy-run wrapper printed no syntax error.",
+    "Rows: 65 browser rows, 34 FAIL (logs/playwright.log). Reading of the 34: 6 harness label-copy rows (N10), 2 F14 rows (N9), 26 edge-case rows that confirm N1, N2, N3, N5, N6, N7 (B1 4, B2 8, B3 4, B5 4, B6 4, B7 dark 2 = 26; 6+2+26 = 34), so no FAIL row is an unexplained FR-4 defect. The 31 PASS rows are: the sign-in row (1), the two keyboard tab-order rows (2), the six other-screen rows (404 th and en, st fallback, sign-in, join, and the teacher week, which showed the 404 view; 6), the two B1 control rows (2), the 16 B4 rows (16), and the four B7 keyboard-ring rows (4).",
+    "FR-4 at 390x844 (th and en), measured values identical in both locales: (a) game_bars=0 (data-game-bar, progressbar, data-progress, data-band-icon, data-crest all 0) on the week 1 home, the week 1 read-along page, and the week 2 home. (b) label_count=1, visible, ariaHidden null, text equal to the locale string (Level 2 · Week 1 and ระดับ 2 · สัปดาห์ 1), font 14 px; the accessibility snapshots show one label paragraph per page. (c) logo_count=1, alt Storytime Advantage, loaded, logo_h_px=48, logo_title_overlap=0x0, logo_label_overlap=0x0. (d) plaque_bg=rgb(252, 211, 77) and plaque_color=rgb(146, 64, 14); blue=0 on every screen including border, shadow, and outline colors; chrome_contrast_min=4.92 (brown on amber) with 12 pairs on the home, 8 on the book; amber_bg and brown_bg counts 5 and 7 on the homes. (e) ratio=0.80 on the home (font 72 px, plaque 90 px), on the book (44 px, 55 px), and on the week 2 home (53.3 px, 66.6 px); text_align=center; vertical gaps 1/2, 1/1, and 0/1.6 px; horizontal gaps 16/16; center_off=0; one line. (f) the current word Hello has bg rgb(146, 64, 14) and color rgb(255, 255, 255), contrast 7.09:1, against the band rgb(254,230,133) at 5.70:1. page_overflow=0, small_taps=0, console_errors=0 on all six screens.",
+    "Keyboard: the first Tab stops on the week 1 home are the three part-tile links, the Song play button, and Sign out (5 stops in th and en). Each shows focus-visible with outline 3px solid rgb(255, 255, 255) and shadow 0 0 0 6px rgb(146, 64, 14). Tap size 358 x 100 px on the first link.",
+    "Screens 6 to 9 at 390x844: the 404 view (th and en), the /st fallback, sign-in, and join show blue=0, page_overflow=0, and chrome contrast 7.09:1 or more (14.78:1 on the 404 ink); the Sign out, sign-in, and join links and buttons are brown with white text. No game bar part on any of them.",
+    "Captures (ux-p2b-f63f2171e/captures/, PNG): p1-th-390-week1-home, p1-en-390-week1-home, p1-th-390-week1-readalong-highlight, p1-en-390-week1-readalong-highlight, p1-th-390-week2-home, p1-en-390-week2-home, p1-*-week1-home-first-tab-focus (2), p1-403-th/en-390, p1-404-th/en-390, p1-st-fallback-th-390, p1-sign-in-th-390, p1-join-th-390, p1-teacher-week-th-390 (the last three 403 and teacher files show the 404 view, N9), b1-* (6), b2-* (8), b3-* (4), b4-* (8), b5-* (4), b6-* (4), b7-* (6). The read captures p1-th-390-week1-home, p1-en-390-week1-home, p1-th-390-week1-readalong-highlight, p1-th-390-week2-home, b1-en-320x568-textzoom200-cover, b3-en-568x320-title60-cover, b5-en-320x568-WWWWWWWWWWWWW-cover, b6-en-390-logo-blocked-cover, b7-en-390-focus-clip-word, b7-en-390-dark-scheme-current-word, b7-en-390-focus-sentence, and b2-en-195x422-pagezoom200-cover were opened as images and match the measured values.",
+    "Accessibility snapshots (captures/*.aria.txt, Playwright ariaSnapshot): home en and th (37 lines: paragraph label, img Storytime Advantage, h1, region with h2, three links, parent region, Sign out button), read-along en and th (14 lines: label, logo, h1, sentence button, Previous page disabled, 1 / 8, Next page, Playing pressed, My turn, Slow, Sign out), week 2 home en and th, and the six other screens.",
+    "Not run: the Phase 2b gate (look-phase2-browser-gate.sh), the song rows (go to Phase 3, Q47), a phone, a second launch, any push. No production file, test, plan, or gate script was edited. git status --short apps/storytime printed nothing at the end of this review (an untracked phase4-lesson-flow.test.tsx of another track showed at the end of the run and is now committed in 2947b9e1e)."
+  ],
+  "commands": [
+    "git rev-parse HEAD (f63f2171e2aafa12a6bfeba438ba7897675505fb)",
+    "bash -n run.sh; bash -n launch.sh; node --check browser.mjs (exit 0)",
+    "HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=3000 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'bash measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/launch.sh' (one launch; exit 0; 65 rows; build fresh)",
+    "git diff --stat f63f2171e..HEAD -- apps/storytime (one new test file of another track)",
+    "ps -eo pid,args; ss -ltn; podman ps -a (no process, port, or container of this run)"
+  ],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/ (run.sh, launch.sh, browser.mjs, stand-in.mjs, content-fixture/, media-root/, logs/, captures/)",
+    "measure/runs/storytime_look_20261107/ux-browser-p2b-f63f2171e.json",
+    "measure/runs/storytime_look_20261107/ux-browser-p2b-f63f2171e.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "medium",
+  "phase_base_sha": "3480f904c509dc2d66fa827dba73df95b3768c65",
+  "role_base_sha": "f63f2171e2aafa12a6bfeba438ba7897675505fb",
+  "audited_head_sha": "f63f2171e2aafa12a6bfeba438ba7897675505fb",
+  "model_route": "claude-code/claude-sonnet-5-5#high",
+  "phone_result_claimed": false,
+  "ux_applicability": "applicable",
+  "webbridge_status": "not_run",
+  "webbridge_evidence": {
+    "screenshots": [
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/p1-th-390-week1-home.png",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/p1-en-390-week1-home.png",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/p1-th-390-week1-readalong-highlight.png",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/p1-en-390-week1-readalong-highlight.png",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/p1-th-390-week2-home.png",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/p1-en-390-week2-home.png",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/b1-en-320x568-textzoom200-cover.png",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/b2-en-195x422-pagezoom200-cover.png",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/b3-en-568x320-title60-cover.png",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/b5-en-320x568-WWWWWWWWWWWWW-cover.png",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/b6-en-390-logo-blocked-cover.png",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/b7-en-390-focus-sentence.png",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/b7-en-390-focus-clip-word.png",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/b7-en-390-dark-scheme-current-word.png",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/ (56 PNG files in all; the full list is in the evidence)"
+    ],
+    "accessibility_snapshots": [
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/p1-en-390-week1-home.aria.txt",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/p1-th-390-week1-home.aria.txt",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/p1-en-390-week1-readalong.aria.txt",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/p1-th-390-week1-readalong.aria.txt",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/p1-en-390-week2-home.aria.txt",
+      "measure/runs/storytime_look_20261107/ux-p2b-f63f2171e/captures/p1-th-390-week2-home.aria.txt"
+    ],
+    "interactions": [
+      "Sign in as staff-01 and teacher-01 through the sign-in form (logs/playwright.log line 1).",
+      "Read-along: click the Read it to me mode button, wait for aria-current on the word Hello (th and en, light and forced dark scheme).",
+      "Keyboard: Tab through the week 1 home (5 stops, th and en) and Tab to a read-along sentence, then focus a clip word, with the ring measured.",
+      "Route block of the logo request (B6); style injection of a 28 px label font (B1 text-only zoom); viewport emulation 195x422, 160x284, 320x568, 568x320, 844x390."
+    ]
+  }
+}

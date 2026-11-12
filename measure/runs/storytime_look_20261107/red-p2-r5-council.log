@@ -1,0 +1,15 @@
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: storytime_look_20261107
+phase: Phase 2: Look port of the picked option
+task: 2.3g
+role_base_sha: 29cee353148ae5d685508904667175269a59fbd7
+commits: d5301b5c5 (plan task line), abef8500e (look-council-r3.test.tsx, 7 cases), 13a4db678 (look-phase2-browser-gate.sh, row 14 and the shared verdicts), 5cc39cdcb (type fix of the week page import), 64564182d (plan red evidence), 4bca5a504 (plan type fix note)
+status: complete
+summary: The Red work is complete at HEAD 4bca5a504. The plan task line 2.3g is [~] with the six items, the two not-in-batch records, and the held list. The test file has 7 cases, one per item plus C7 for the gate verdicts. The gate holds row 14 with six sub-rows, six shared verdicts, and 14 new self-test mutants; bash -n exits 0 and the self-test exits 0 with selftest_mutants_rejected=48 of 48. The official Red run is at abef8500e with the gate at its base: exit=1, Test Files 1 failed (1), Tests 7 failed (7), tests_failed=7, tests_passed=0, load_errors=0; every case failed for its named reason. Cause found for item 1: the gate openScreen() activated line 1 before the default read (base line 529), so the default capture showed the forced line; the app starts at activeLine=-1 and currentTime 0 falls in no window (line 1 starts at 11.4 s). The gate now reads the default state first, and row 1 requires active_line_before_play=0 and filled_rows_before_play=0. At the final HEAD, case C1 passes because the gate fix is a Red-owned test artifact in this same batch; the Red proof is the run at abef8500e. No production file, message, or hash field changed. A whole-app tsc --noEmit ran once outside heavy-run before the new load rule; it exited 0, and I did not repeat it.
+red_command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-council-r3.test.tsx'
+red_exit: 1
+tests_failed: 7
+tests_passed: 0
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

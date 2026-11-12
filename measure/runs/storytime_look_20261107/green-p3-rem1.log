@@ -1,0 +1,253 @@
+=== Green P3 remediation rem1 evidence log (role measure-jr-green, model opencode/minimax-m3.1-flash-free#high) ===
+track: storytime_look_20261107
+phase: Phase 3: Week content r3 import
+task: 3.7 (rem1), the two stale test pins F781 and F782
+phase_base_sha=2655632aaff89ed8f0e45c3d910f915f04ea0ec9
+role_base_sha=2399d3075888275c937cd98dc78dab5a9e664fd0
+red_model_of_this_phase: deepseek/deepseek-flash#high (a different family from this Green)
+earlier_green_of_this_phase: nvidia/stepfun-ai/step-5-preview#high (a different family from this Green)
+
+The two findings come from the Storytime Phase 4 acceptance at
+measure/runs/storytime_app_rebuild_20261025/phase-acceptance-p4-c633a4446.json.
+Both name files of this track. This remediation changes two test files and the
+plan. It changes no production file.
+
+F781: apps/storytime/__tests__/login-media-sign.test.ts:84 pinned the signed
+media map of w01 at 42. The shipped week now holds 70 media entries. The
+change came from the content import of this phase, commit 345e02ba2.
+
+The proof of the count 70: the walker `mediaPathsOf` of
+apps/storytime/scripts/receive-weeks.ts reads the shipped file
+apps/storytime/content/l2/w01.json and gives the four numbers below. A second
+read of the same file with a plain JSON walk gives the same four numbers.
+media_entries_total=108
+signed_map_size_expected=70
+file_only_map_size=32
+old_pin_unsigned=38
+
+The pin now holds 70. No check became a range. The F7g positive control keeps
+its strength: the file-only map holds 32 of the 70, so 38 media paths stay
+unsigned under the old file-only pin.
+
+F782: apps/storytime/__tests__/look-adversarial-p2b.test.ts:339 pinned the tab
+stop sites to one entry. The list now sees a second site at
+apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx:1.
+That site is the `tabIndex={-1}` end region of commit f76d58624, at line 1008.
+The region is a focus target after a lesson ends. It takes no place in the tab
+order. The UX review of that region passed. The one exact path joined the
+allowed list. The list stays exact, so every other file still fails the check.
+
+=== the base run, the two files at the role base, heavy-run p1, foreground ===
+HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/login-media-sign.test.ts __tests__/look-adversarial-p2b.test.ts'
+
+ RUN  v4.1.8 /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime
+
+stdout | __tests__/login-media-sign.test.ts > login media sign (red) > signs every file of the week for the private bucket with a six-hour expiry
+signed_map_size_expected=70
+
+ ❯ __tests__/login-media-sign.test.ts (4 tests | 1 failed) 749ms
+     × signs every file of the week for the private bucket with a six-hour expiry 602ms
+ ❯ __tests__/look-adversarial-p2b.test.ts (5 tests | 1 failed) 244ms
+     × M4 the tab stops of the app sources are the two known read-along sites 42ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  __tests__/login-media-sign.test.ts > login media sign (red) > signs every file of the week for the private bucket with a six-hour expiry
+AssertionError: signed_map_size_expected: expected 70 to be 42 // Object.is equality
+
+- Expected
++ Received
+
+- 42
++ 70
+
+ ❯ __tests__/login-media-sign.test.ts:84:55
+     82|     );
+     83|     console.log(`signed_map_size_expected=${expected.size}`);
+     84|     expect(expected.size, "signed_map_size_expected").toBe(42);
+       |                                                       ^
+
+ FAIL  __tests__/look-adversarial-p2b.test.ts > adversarial brand chrome source cases of Phase 2b > M4 the tab stops of the app sources are the two known read-along sites
+AssertionError: the tab stop sites: expected [ …(2) ] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+  [
++   "apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx:1",
+    "packages/read-along/components/read-along/read-along-passage.tsx:2",
+  ]
+
+ ❯ __tests__/look-adversarial-p2b.test.ts:339:41
+    337|     // The ring rule names [tabindex]. A new tab stop on a container w…
+    338|     // the container, so a new site must pass a UX review before it jo…
+    339|     expect(sites, "the tab stop sites").toEqual(["packages/read-along/…
+       |                                         ^
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  2 failed | 16 passed (18)
+   Start at  18:41:18
+   Duration  10.77s (transform 1.04s, setup 0ms, import 1.65s, tests 3.05s, environment 4.68s)
+
+EXIT=1
+base_run: exit=1; files_failed=2; files_passed=1; files=3; tests_failed=2; tests_passed=16; tests=18
+
+=== the same command after the fix, heavy-run p1, foreground ===
+HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/login-media-sign.test.ts __tests__/look-adversarial-p2b.test.ts'
+
+ RUN  v4.1.8 /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime
+
+ Test Files  3 passed (3)
+      Tests  18 passed (18)
+   Start at  18:46:03
+   Duration  9.40s (transform 0.94s, setup 0ms, import 1.65s, tests 3.06s, environment 4.18s)
+
+EXIT=0
+fixed_run: exit=0; files=3; files_passed=3; tests=18; tests_passed=18; tests_failed=0
+
+=== the look glob of P3.4, the Green command of the look Phase 3 strategy, heavy-run p1, foreground ===
+HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/release-*.test.ts __tests__/phase1-*.test.ts __tests__/phase2-*.test.ts __tests__/phase3-*.test.ts __tests__/phase3-*.test.tsx __tests__/phase4-*.test.ts __tests__/phase4-*.test.tsx __tests__/look-*.test.ts __tests__/look-*.test.tsx'
+
+ Test Files  108 passed (108)
+      Tests  987 passed (987)
+   Start at  19:11:10
+   Duration  261.81s (transform 6.12s, setup 0ms, import 30.31s, tests 129.37s, environment 72.15s)
+
+EXIT=0
+look_glob: exit=0; files=108; files_passed=108; tests=987; tests_passed=987; tests_failed=0; tests_skipped=0
+
+=== the seven file gate: the four receiver files, the media coverage file, and the two new files ===
+HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase2-receive-commit.test.ts __tests__/phase2-receive-guards.test.ts __tests__/phase3-loop-receiver.test.ts __tests__/phase3-receiver-hardening.test.ts __tests__/phase3-media-coverage.test.ts __tests__/look-r3-import.test.ts __tests__/look-draft-week-switch.test.ts'
+
+ Test Files  7 passed (7)
+      Tests  85 passed (85)
+   Start at  19:17:12
+   Duration  8.82s (transform 359ms, setup 0ms, import 775ms, tests 6.61s, environment 1ms)
+
+EXIT=0
+seven_file_gate: exit=0; files=7; files_passed=7; tests=85; tests_passed=85; tests_failed=0
+
+=== the type gate, heavy-run p1, foreground ===
+HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && ../../node_modules/.bin/tsc --noEmit'
+
+EXIT=0
+tsc: exit=0; look_tsc_errors=0
+
+=== the lint gate on the two changed files, heavy-run p1, foreground ===
+HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && ../../node_modules/.bin/eslint __tests__/login-media-sign.test.ts __tests__/look-adversarial-p2b.test.ts'
+
+EXIT=0
+eslint: exit=0; eslint_errors=0
+
+=== the A9 detector of P3.4 (exit 1 means no hit) ===
+rg -n 'handoff|Desktop|measure/tracks|ui-council' apps/storytime/__tests__/look-r3-import.test.ts apps/storytime/__tests__/look-draft-week-switch.test.ts
+rg_leak_exit=1
+
+=== the graph update of the two changed files ===
+build-graph update ./graph.db apps/storytime/__tests__/login-media-sign.test.ts apps/storytime/__tests__/look-adversarial-p2b.test.ts
+Updated 2 files (0 → 41 nodes, 0 → 44 edges)
+EXIT=0
+note: the two test files held no node in the graph before the update. The graph file is git ignored, so no artifact enters a commit.
+
+=== the full app suite at the role base, heavy-run p1, foreground ===
+HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1'
+
+ ❯ __tests__/make-accounts.test.ts (25 tests | 1 failed) 9756ms
+     × fails closed on a name cell that starts with "=" 779ms
+
+ FAIL  __tests__/make-accounts.test.ts > the account script (AC-4.8) > fails closed on a name cell that starts with "="
+AssertionError: the repository holds no new file: expected ' M apps/activity-vinext-fixture/next-…' to be ' M apps/activity-vinext-fixture/next-…' // Object.is equality
+
+- Expected
++ Received
+
+@@ -1,11 +1,10 @@
+   M apps/activity-vinext-fixture/next-env.d.ts
+   M apps/marketing/next-env.d.ts
+   M apps/sales-advantage/scripts/curriculum-content-2027.test.ts
+   M apps/storytime/__tests__/login-media-sign.test.ts
+   M apps/storytime/__tests__/look-adversarial-p2b.test.ts
+- M  measure/tracks/primary_class_session_lifetime_20261111/plan.md
+   M measure/tracks/primary_in_app_help_20261023/plan.md
+   M measure/tracks/sales_training_2027_20261015/plan.md
+  ?? .agents/skills/game-mapping/
+  ?? .antigravitycli/
+  ?? .generated/
+
+ ❯ __tests__/make-accounts.test.ts:353:65
+    351|         "the script writes no card file",
+    352|         ).toBe(false);
+    353|       expect(gitStatus(), "the repository holds no new file").toBe(b…
+
+ Test Files  1 failed | 125 passed (126)
+      Tests  1 failed | 1099 passed (1100)
+   Start at  19:22:43
+   Duration  303.04s (transform 7.03s, setup 0ms, import 31.08s, tests 179.40s, environment 62.25s)
+
+EXIT=1
+full_app_suite: exit=1; files=126; files_failed=1; files_passed=125; tests=1100; tests_failed=1; tests_passed=1099
+the one failure is make-accounts.test.ts, whose case compares the git status before and after its own run. A parallel session committed measure/tracks/primary_class_session_lifetime_20261111/plan.md during the run, so the two lists differ by that one line. The two files of this task pass in this run.
+
+=== the make-accounts file alone at the same HEAD, heavy-run p1, foreground ===
+HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/make-accounts.test.ts'
+
+ RUN  v4.1.8 /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime
+
+ Test Files  1 passed (1)
+      Tests  25 passed (25)
+   Start at  19:49:26
+   Duration  13.13s (transform 887ms, setup 0ms, import 2.64s, tests 10.26s, environment 0ms)
+
+EXIT=0
+make_accounts: exit=0; files=1; files_passed=1; tests=25; tests_passed=25; tests_failed=0
+
+The orchestrator holds the Phase 5 base run at 6b8115e86. It ran the full
+Storytime test task through phase1-quality-gates.sh with these two pin edits
+in the working tree. It holds Test Files 126 passed, Tests 1100 passed, exit 0,
+and make-accounts.test.ts passed there. The one full suite failure of this role
+was the parallel commit race above, and no file of this track fails at that HEAD.
+
+=== the two commits ===
+the test commit: a04837606e53fd298cc00f6b33b4ec9115fa8992
+test(storytime): update the two stale look pins (track_id: storytime_look_20261107)
+  apps/storytime/__tests__/login-media-sign.test.ts
+  apps/storytime/__tests__/look-adversarial-p2b.test.ts
+
+the plan marker commit: 83ff86879cd0f6fa6b3f34f5a73b910f573c9069
+docs(measure): mark look task 3.7 in progress (track_id: storytime_look_20261107)
+  measure/tracks/storytime_look_20261107/plan.md
+
+the plan evidence commit: 48a851a989681aa7dd2018865a9b52b70f0ac7c2
+docs(measure): log the look rem1 pin evidence (track_id: storytime_look_20261107)
+  measure/tracks/storytime_look_20261107/plan.md
+
+MEASURE_AGENT_RESULT
+status: complete
+phase_base_sha: 2655632aaff89ed8f0e45c3d910f915f04ea0ec9
+role_base_sha: 2399d3075888275c937cd98dc78dab5a9e664fd0
+test_commit_sha: a04837606e53fd298cc00f6b33b4ec9115fa8992
+plan_commit_sha: 48a851a989681aa7dd2018865a9b52b70f0ac7c2
+green_head_sha: 48a851a989681aa7dd2018865a9b52b70f0ac7c2
+dispositions: F781=FIX; F782=FIX
+handoff:
+  Code: one commit, the two test files alone.
+  - a04837606e53fd298cc00f6b33b4ec9115fa8992 test(storytime): update the two stale look pins (track_id: storytime_look_20261107)
+  Plan: one commit, plan.md alone.
+  - 48a851a989681aa7dd2018865a9b52b70f0ac7c2 docs(measure): log the look rem1 pin evidence (track_id: storytime_look_20261107)
+  Gates (foreground, heavy-run p1; full output in this log):
+  1. the two files at the role base: exit 1; files 3; files_failed 2; tests 18; tests_failed 2; tests_passed 16.
+  2. the two files after the fix: exit 0; files 3; tests 18; tests_passed 18; tests_failed 0.
+  3. the look glob of P3.4: exit 0; files 108; tests 987; tests_passed 987; tests_failed 0; tests_skipped 0.
+  4. the seven file gate: exit 0; files 7; tests 85; tests_passed 85; tests_failed 0.
+  5. tsc --noEmit for apps/storytime: exit 0; look_tsc_errors 0.
+  6. ESLint on the two changed files: exit 0; eslint_errors 0.
+  7. the A9 detector of P3.4: exit 1 (no hit).
+  8. build-graph update on the two changed files: exit 0; 0 -> 41 nodes, 0 -> 44 edges.
+  9. the full app suite: exit 1; files 126; tests 1100; tests_failed 1; the one failure is make-accounts.test.ts, and it is the parallel commit race. The file alone: exit 0; files 1; tests 25; tests_passed 25. The Phase 5 base run at 6b8115e86 holds 126 files and 1100 tests passing, exit 0, with make-accounts.test.ts passing there.
+  Proof of 70: mediaPathsOf over the shipped apps/storytime/content/l2/w01.json gives media_entries_total 108, signed_map_size_expected 70, file_only_map_size 32, old_pin_unsigned 38. The cause is the content import commit 345e02ba2. The pin is the exact value 70, and the F7g control keeps its strength at 32 and 38.
+  The one allowed path of F782: commit f76d58624 gives the teacher end region tabIndex={-1} at apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx:1008. It is a focus target after a lesson ends and it takes no place in the tab order. The list stays exact, so every other file still fails.
+  Files: no new file. The two changed files are apps/storytime/__tests__/login-media-sign.test.ts and apps/storytime/__tests__/look-adversarial-p2b.test.ts. No production file changed, no week file changed, and no deploy file changed.
+  Tasks flipped to [x]: 3.7 only, with the evidence in measure/tracks/storytime_look_20261107/plan.md and the test commit a04837606e53fd298cc00f6b33b4ec9115fa8992.
+  Tasks flipped to [b]: none. Task 3.4 stays [b] deferred:daniel, and its state is unchanged.
+  Evidence log: measure/runs/storytime_look_20261107/green-p3-rem1.log
+END_MEASURE_AGENT_RESULT

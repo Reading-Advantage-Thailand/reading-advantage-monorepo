@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "storytime_look_20261107",
+  "phase": "Phase 1: Council fixes",
+  "status": "pass",
+  "summary": "Phase 1 is correct and matches the spec and the test strategy. The final targeted command re-run through heavy-run in the foreground gave exit 0 with 70 files and 535 tests passed (R-COUNT 478-8+65=535). No blocking finding. Four nonblocking findings: two needed old-test edits sit outside the allowed paths of closeout item 3; the word hit area is under 44 px for narrow words and waits for the browser review; the www files of the track-id grep come from the look author commit a776187e2 that swept in the staged www revert (67a5d1a47 is empty; the PM accepted the split audit trail); the reader Greens landed in one combined commit instead of plan order.",
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "phase_base_sha": "4154e0ff2659a2d7f856b488f78b4acc0f25bfe6",
+  "role_base_sha": "a6d696902a0f98064e8cab3624afa1def4a72cbe",
+  "audited_head_sha": "a6d696902a0f98064e8cab3624afa1def4a72cbe",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 (orchestrator decision, closeout item 3): the Green old-test edits of apps/storytime/__tests__/phase3-decodable-punct.test.tsx and apps/storytime/__tests__/phase3-loops-off.test.tsx sit outside the allowed paths, so look_out_of_scope_paths=2. Both edits are needed and neither weakens an assertion: decodable-punct reads the source case \"nest\" and \"nest.\" (AC-1.3), and loops-off sends the load event of the new picture after the press on Next (AC-1.5). The orchestrator should amend the allowed list; the edits should stay.",
+    "N2 (Green default Q-D; the browser review decides): the word hit area is a pseudo-element 0.25 rem wider on each side and 0.5 rem higher above and below, so a narrow word (\"I\") keeps a hit area under the 44 px floor that the Q5 default named. The gap fix needs this shape; the browser row tap_target_min_px_player measures it.",
+    "N3 (accepted by the PM on 2026-11-07): the track-id grep matches three www-reading-advantage files. Verified: the look author commit a776187e2 swept in the staged www revert, and the revert commit 67a5d1a47 is empty. The www copy waits on branch storytime/www-signin-copy for task 2b.10. No look path is affected.",
+    "N4 (observation): the reader Greens of tasks 1.4, 1.5, 1.8, 1.9, and 1.10 landed in one combined commit db8b093bb instead of one commit per task in plan order (strategy section 2.2 and Q20). The final state and the per-task gates of Green round 2 are consistent; no action needed."
+  ],
+  "evidence": [
+    "HEAD at the start of the run equaled audited_head_sha a6d696902. During the run HEAD moved to b6d9757f7, a docs(measure) commit of per_app_cicd_20261107 that touches only its own plan.md; no look path moved.",
+    "The four commits after the Green head 51ef687ec (9be261864, 2c7b8a6a9, 2d2b15cee, a6d696902) touch only scripts/ci/__tests__ files; no look path.",
+    "Final targeted command re-run through heavy-run in the foreground at a6d696902: exit 0; Test Files 70 passed (70); Tests 535 passed (535); 0 failed; 0 skipped. Matches R-COUNT 478-8+65=535 and the Green round 2 evidence (A5 holds).",
+    "highestOpenWeeks in lib/content.ts replicates the loadVisibleWeek rule (readiness gate plus the draft-media switch), writes no log, and reads the LEVEL_MAX times WEEK_MAX files once per level; the business logic stays out of the components.",
+    "parseStorytimePath accepts only /<known locale>/st/<level>/<week> with canonical numbers inside the contract bounds and writes no log; the 404 link is built from the locale prop and two integers, never from the path text.",
+    "The 404 split holds: not-found.tsx is a server component with no props that calls highestOpenWeeks; not-found-view.tsx starts with \"use client\" and imports neither node:fs nor lib/content; it reads messages/en.json (default Q-C).",
+    "The wordClips schema pins the key allowlist ^[a-z]+(['-][a-z]+)*$ with at most 40 characters and rejects inherited property names; the values use mediaPath; the default is {}; passthrough stays. videoLeadInSeconds is a number from 0 to 30 with default 0.",
+    "mediaOf of scripts/receive-weeks.ts lists each wordClips value once with kind word-clip; mediaPathsOf walks every string of the week, so the new wordClips paths are found; signWeekMedia signs every walked path outside approval.*, so every look view still gets its signed URLs.",
+    "reader.tsx holds no wordCutBounds, cutEnd, seekAndRun, or stopAtMediaEnd; a tap in My turn plays the clip on a separate Audio element with an Object.hasOwn lookup and makes no seek and no stop on the sentence audio.",
+    "The highlight reuses the unmodified package hook useReadAlong (one frame loop, no second loop); highlightWindows feeds only the highlight; the page stop keeps the recorded timings; onTimeUpdate still moves the highlight (default Q-G) and keeps the stop logic.",
+    "Green defaults verified in code: Q-A Next is disabled on the last page only when the reader has no tiles and no questions; Q-B only a press on Next holds the page (Previous and a swipe turn at once); Q-E icon.png comes from q-crest.svg (10215 bytes, named in the commit body); Q-F ReaderLabels.playing is optional with a locale default.",
+    "The Green test-setup edits (vi.mock of lib/media/url, lib/media/sign, and lib/auth in look-week-card-label, look-song-playing, phase3-song-ui, look-reader-turn, and look-feedback) add mocks only; no assertion line changed, so R-EDIT holds.",
+    "The Green old-test edits are each needed and none is weaker: phase3-decodable-punct expects the source case (AC-1.3); phase3-loops-off and phase3-audio-seek-stop send the load event of the new picture (AC-1.5). phase3-audio-seek-stop is inside the M28 allowed list; the other two are finding N1.",
+    "Every Red commit (33d50d0f5 to 379557b3c, plus the r4 fix 7b896cf8d) is an ancestor of the Green commits, so red_before_green holds; the r4 fix records D1 to D6; commit 6bd0ed1fe records old_cases_removed=8.",
+    "The working tree during the test run held one uncommitted login-track edit of apps/storytime/lib/media/sign.ts (a STORYTIME_STORAGE_ENDPOINT override); it touches no look behavior and no audited committed state.",
+    "tsc, ESLint, and the read-along package tests were not re-run (cost of heavy jobs); the Green round 2 log quotes tsc exit 0 with look_tsc_errors=0, ESLint exit 0, and 104 of 104 package tests passed."
+  ],
+  "commands": [
+    "git rev-parse HEAD (a6d696902 at start; b6d9757f7 after the run, docs-only commit of another track)",
+    "git log --format=%h --grep='track_id: storytime_look_20261107' 4154e0ff2..a6d696902 with git show --name-only per commit (scope check)",
+    "git diff 4154e0ff2..a6d696902 -- apps/storytime packages/read-along (full audit diff)",
+    "git show 0aa84d2a7 / db8b093bb / 5ab3834bb / 716c14399 / 6bd0ed1fe / 7b896cf8d (old-test and mock edits)",
+    "git show --stat a776187e2 67a5d1a47 (finding N3: the author commit swept the www revert; the revert is empty)",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/release-*.test.ts __tests__/phase1-*.test.ts __tests__/phase2-*.test.ts __tests__/phase3-*.test.ts __tests__/phase3-*.test.tsx __tests__/phase4-*.test.ts __tests__/phase4-*.test.tsx __tests__/look-*.test.ts __tests__/look-*.test.tsx' -> exit 0, 70 files, 535 passed"
+  ],
+  "changed_files": [],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": []
+}

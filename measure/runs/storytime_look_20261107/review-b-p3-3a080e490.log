@@ -1,0 +1,107 @@
+MEASURE_AGENT_RESULT
+status: pass
+role: measure-review-b-security
+track: storytime_look_20261107
+phase: Phase 3: Week content r3 import
+baseline_sha: 2655632aaff89ed8f0e45c3d910f915f04ea0ec9
+audited_head_sha: 3a080e490b067aeb0c41d1f23fd3122d53714794
+role_base_sha: 3a080e490b067aeb0c41d1f23fd3122d53714794 (git rev-parse HEAD at start; equals audited_head_sha)
+confidence: high
+retry_recommendation: none
+
+Scope: plan tasks 3.5 and 3.6 only (the draft week review switch).
+Audit only. No production code, test, plan, or registry edits. No commits.
+
+FINDINGS
+- Blocking: none.
+- Nonblocking:
+  F1 [Nonblocking] apps/storytime/__tests__/look-draft-week-switch.test.ts:204-218:
+  the deploy scan of case (f) does not read docs/runbooks/storytime-deploy.md,
+  the manual deploy runbook. Today the runbook sets no review name: its commands
+  carry no --set-env-vars (docs/runbooks/storytime-deploy.md:24-26, 51-52). A future
+  edit could add one there without a case (f) failure. Rationale: the scan covers
+  every tracked pipeline file that can set an env value; the runbook is a human path
+  outside the pipeline, and the PM accepted a test-only guard. Default: extend the
+  scan to the runbook in a later cleanup, or add STORYTIME_REVIEW_DRAFT_WEEKS to the
+  deploy-time service-environment check of the release track (storytime_at_home_release_20261106
+  plan task [b] 3.1 already reads the deployed revision environment for
+  STORYTIME_SHOW_DRAFT_MEDIA). Note: gcloud run deploy with no --set-env-vars preserves
+  a hand-set service env value across revisions, so a hand-set value would persist
+  silently; the deploy-time environment read is the right control, not an app runtime
+  guard.
+
+EVIDENCE (three parts of the assigned scope)
+1. The value parse. apps/storytime/lib/content.ts:39 exports DRAFT_WEEKS_ENV =
+   "STORYTIME_REVIEW_DRAFT_WEEKS"; lines 45-47 show showDraftWeeks() returning
+   process.env[DRAFT_WEEKS_ENV] === "1", true only for the exact value 1. The name is
+   server-side only, never a NEXT_PUBLIC_ name: a repo-wide grep under apps/ and
+   scripts/ finds the name only in lib/content.ts and the test file. No request input
+   (query, header, cookie, path) can set it: the function reads process.env and nothing
+   in the phase range writes process.env from a request. Client bundling check: the only
+   app-code importers of lib/content.ts are four server pages
+   (app/[locale]/teacher/[level]/[week]/[day]/page.tsx,
+   app/[locale]/teacher/[level]/[week]/page.tsx, app/[locale]/not-found.tsx,
+   app/[locale]/st/[level]/[week]/page.tsx); grep -L "use client" lists all four, so
+   none is a client component; no components/ file imports lib/content.ts;
+   look-not-found.test.tsx:424 pins the client view must not import lib/content.
+2. The published-rule fall-through. The phase diff of lib/content.ts shows: with the
+   switch on, loadVisibleWeek (content.ts:130-157) builds an in-memory judged copy with
+   meta.status forced to "published" and runs readinessBlocker(judged), so a missing
+   page picture still blocks and media that is not approved still needs showDraftMedia()
+   (lines 140-149); highestOpenWeeks (content.ts:179-186) applies the identical open
+   rule with no log; with the switch off, review is false and judged equals the loaded
+   week, which is byte-for-byte the old path. No other gate weakened: the phase range
+   touches only lib/content.ts under lib/; apps/storytime/lib/readiness.ts and
+   apps/storytime/lib/media/sign.ts are unchanged; the receipt pin and media signing
+   logic are untouched.
+3. The deploy-config test. Case (f) (look-draft-week-switch.test.ts:360-372) scans every
+   tracked deploy file that can set an env value for storytime: apps/storytime/cloudbuild.yaml
+   (the only cloudbuild under the app), the Dockerfile via **/Dockerfile*, tracked .env*
+   files via **/.env* (none exists for storytime), .github/workflows/*.yml (exactly three
+   files, all scanned), and the scripts/ci/apps.json storytime row. My hand check confirms
+   no Cloud Run service YAML or traffic file exists under apps/storytime (only
+   cloudbuild.yaml), the cloudbuild deploy step carries no --set-env-vars, the Dockerfile
+   sets no STORYTIME_ review value, and cd-apps.yml only submits the per-app cloudbuild
+   config. files_checked is asserted above 0 before the scan (line 363-366); the suite
+   printed files_checked=25. Case (g) (lines 374-392) is a real positive control: a
+   scratch copy of the real cloudbuild.yaml with "STORYTIME_REVIEW_DRAFT_WEEKS=1"
+   appended is caught by the same scan function.
+
+GATES RUN
+- heavy-run (the exact commanded form), three runs: exit 0 each; Test Files 1 passed (1);
+  Tests 13 passed (13). Labeled counts from the suite: files_checked=25,
+  draft_week_cases=6, mutants_rejected=3 (A4 floors 1/5/3 met).
+- A probe run with --disable-console-intercept made vitest select the whole suite
+  (111 files, 828 tests); the switch test still passed; the single failure was
+  login-media-sign.test.ts, a login-track Red file that fails by design (test-strategy
+  M2), because the Phase 3 import raised the w01 media count from 42 to 70. That pinned
+  expectation belongs to the login track's own Green; it is outside tasks 3.5/3.6.
+
+A2 / A6 CHECKS
+- A2 (consent-blind publish gate): not triggered. No test flips a draft to published and
+  nothing persists a status change; the switch judges an in-memory copy only; shipped
+  week files keep meta.status "draft" for w02 to w07.
+- A6 (registry overstatement): measure/tracks.md lines 73-74 record tasks 3.5 and 3.6
+  done with green evidence; the claimed adversarial test is green at the audited head,
+  so the registry does not outrun the implementation.
+
+PROVENANCE
+- HEAD at start: 3a080e490b067aeb0c41d1f23fd3122d53714794 (equals audited_head_sha).
+- HEAD at end: fb0bfb9492ac94c70bf004a72cafef081ac07db7 (parallel docs commit);
+  git diff 3a080e490..HEAD over apps/storytime, docs/runbooks/storytime-deploy.md,
+  .github/workflows, and scripts/ci/apps.json is empty, so all audited files match the
+  audited head.
+
+RUNTIME GUARD QUESTION (assigned scope)
+Default: no app runtime guard. The deploy pipeline has no --set-env-vars or
+--set-secrets path for the name, so it cannot introduce the value; only a human with
+gcloud access can set it by hand, which is the accepted hand path under the PM-approved
+test-only guard. The right control for the hand path is the deploy-time read of the
+deployed revision environment (release track plan task [b] 3.1), which should also name
+STORYTIME_REVIEW_DRAFT_WEEKS. A runtime guard becomes a finding only when a deploy file
+or pipeline step gains a concrete path to set the value; none exists at this head.
+
+Artifacts:
+- measure/runs/storytime_look_20261107/review-b-p3-3a080e490.json
+- measure/runs/storytime_look_20261107/review-b-p3-3a080e490.log
+END_MEASURE_AGENT_RESULT

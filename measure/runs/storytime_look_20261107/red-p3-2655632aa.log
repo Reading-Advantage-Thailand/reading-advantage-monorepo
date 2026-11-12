@@ -1,0 +1,16 @@
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: storytime_look_20261107
+phase: Phase 3: Week content r3 import
+task: 3.1
+phase_base_sha: 2655632aaff89ed8f0e45c3d910f915f04ea0ec9
+role_base_sha: 2655632aaff89ed8f0e45c3d910f915f04ea0ec9
+model_route: deepseek/deepseek-flash#high (Red family of Q40; Green runs on another family)
+status: red-complete
+summary: The one new file apps/storytime/__tests__/look-r3-import.test.ts holds R1 to R8. Red run: exit=1, look_files=1, load_errors=0, tests_failed=4, tests_passed=4, tests_skipped=0. Failing: R2 clip_keys_checked=0, R3 clip_paths_checked=0, R4 0 keys expected 163, R5a w01 lead-in absent expected 3. Passing (characterization, A4): R1 week_files=7, R5b w02-w07 audio-only with parsed default 0, R6 mutants_checked=14 and rejected 14/14 with the positive controls, R7 repository content folder only. Labels: clip_keys_total=0, clip_paths_total=0. P3.4 detector exits 1. Type check exit=0, look_tsc_errors=0. Worktrees=8. plan.md keeps the [ ] marker for Green.
+commits: c48ea065c test(look): add the r3 import red test (track_id: storytime_look_20261107); 803b724d6 docs(measure): record the look phase 3 red result (track_id: storytime_look_20261107)
+red_command: HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-r3-import.test.ts'
+exit: 1
+tests_failed: 4
+tests_passed: 4
+END_MEASURE_AGENT_RESULT

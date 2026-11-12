@@ -1,0 +1,23 @@
+MEASURE_AGENT_RESULT
+status: done
+role: measure-mid-red
+track: storytime_look_20261107
+phase: Phase 1: Council fixes
+phase_base_sha: 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6
+role_base_sha: a4462fd56c8ac12489f53ec5820e5333545ced2c
+head: 2c5b3d73fc637312d4db01ae4e1ce42c50c04a32
+commit: 2c5b3d73f test(storytime): add the look phase 1 browser gate (track_id: storytime_look_20261107)
+file: apps/storytime/__tests__/look-phase1-browser-gate.sh
+run: one heavy-run job, foreground, exit 0
+total: === Total: 13 checks (PASS=13, FAIL=0) ===
+rows:
+  row 1: PASS stranger_status=307 stranger_sign_in=1 week404_status_th=404 open_links_th=1 open_link_px_th=66 open_link_href_th=/th/st/2/1 open_link_click=1 week404_status_en=404 open_links_en=1 open_link_px_en=66 open_link_href_en=/th/st/2/1 level4_status=404 level4_old_text=1 level4_links=0
+  row 2: PASS icon_link_th=1 icon_link_en=1 home_status_th=200 home_status_en=200 icon_status=200 icon_content_type=image/png console_errors=0 failed_requests=0
+  row 3: PASS decodable_sentence="A nest." sentence_text_transform=none chips_text_transform=none chips=3 chip_words=a,and,can
+  row 4: PASS pages_measured=12 words_min=4 gap_pairs_min=3 gap_max_delta_px=0 next_bg_transparent=0 next_min_height=48 audio_bg_transparent=1 page_count_ok=1 page_overflow=0
+  row 5: PASS video_preload=metadata video_playsinline=1 video_poster=1 stage_background=1 poster_status=200 song_console_errors=0 video_played=0 phone_claim=0
+self_check: controls_ok=1 mutants_rejected=6 mutants_checked=6
+non_vacuity: row 2 fails at the base state before task 1.7: app/icon.png does not exist, the head holds no icon link, and /icon.png answers 404 (icon_status=404, icon_link_th=0, icon_link_en=0).
+app_finding: The English 404 page /en/st/2/2 renders the link to /th/st/2/1, not /en/st/2/1. The not-found boundary reads the locale with a fallback to the routing default. The strategy row accepts the Thai or the English highest open week, so the row passes and labels open_link_href_en=/th/st/2/1. This is a UX note for Review C, not a gate failure.
+handoff: none
+END_MEASURE_AGENT_RESULT

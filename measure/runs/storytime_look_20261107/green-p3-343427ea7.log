@@ -1,0 +1,90 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green (Measure Jr Green-phase subagent)
+track: storytime_look_20261107
+phase: Phase 3: Week content r3 import
+phase_base_sha: 2655632aaff89ed8f0e45c3d910f915f04ea0ec9
+role_base_sha: 343427ea70e555ba2e5bd209070c1b85e9ec9010
+model_route: nvidia/stepfun-ai/step-5-preview#high (substitute for the Pick green model minimax-cn-coding-plan/MiniMax-M3.1-Flash; the MiniMax 5 h window was at 72 %)
+red_model: deepseek/deepseek-flash#high (another family than the Green route)
+status: complete
+final_green_head: b9ba532bf
+summary: Green imported the r3 week packages and closed the phase gates. The receiver ran at
+  Workbooks 953f798e for w01 to w08 and exited 0. Seven weeks matched their handoff package JSON
+  by parsed deep equality; w01 matched except for the scripts[].share blocks, which the PM
+  decision of 2026-11-09 accepted. The import commit holds the nine allowed paths only. Six old
+  test cases broke on the import; Green edited each under R-EDIT3 with its reason. All gates of
+  P3.4 exit 0. Task 3.4 stays [b] deferred:daniel. No push, no deploy, and no bucket upload ran.
+commits:
+  075b9a801 docs(measure): mark look task 3.2 in progress (track_id: storytime_look_20261107)
+  345e02ba2 feat(content): import the storytime r3 week packages (track_id: storytime_look_20261107)
+  4efcc6a69 test(look): pin the 23 clip files of the imported w01 (track_id: storytime_look_20261107)
+  45b22909a test(look): pin the 14 clip files and four w01 tap targets (track_id: storytime_look_20261107)
+  fbf376f4b test(look): light the w01 lyric lines past the video lead-in (track_id: storytime_look_20261107)
+  4eca6b1fc test(look): move the release pin to the r3 take 953f798e (track_id: storytime_look_20261107)
+  2cacede6f test(look): type the shipped week with the week contract (track_id: storytime_look_20261107)
+  b9ba532bf docs(measure): record the look phase 3 green result (track_id: storytime_look_20261107)
+labeled results:
+  red_rerun_exit=1; red_rerun_files=1; red_rerun_tests_failed=4; red_rerun_tests_passed=4;
+  red_rerun_tests_skipped=0; red_rerun_load_errors=0 (the same four cases as the Red record)
+  receiver_command=node_modules/.bin/tsx apps/storytime/scripts/receive-weeks.ts --commit 953f798e --weeks 1-8 --level 2
+  receiver_exit=0
+  receiver_last_line=Wrote apps/storytime/content/source.json (record 8 weeks; this run 8 weeks, 501 media files, 0 missing pictures)
+  receiver_second_run_exit=0; second_run_diff_exit=0
+  weeks_in_record=8; weeks_in_run=8
+  weeks_compared=7; weeks_equal=6 (w02 to w07 are byte equal to their r3 packages)
+  week_w01_equal=false; w01_diff_fields=24; w01_diff_outside_share=0
+  clip_paths_checked=163; clip_paths_missing=0; clip_entries=173 (10 clip paths repeat in the two books of a week)
+  source_commit=953f798ea309cc10abd5538c202e05ff31a2320d (the full id of 953f798e); source_files=8
+  look_glob_exit=0; look_glob_files=92; look_glob_tests_passed=702; look_glob_tests_failed=0; look_glob_tests_skipped=0
+  R-COUNT-3: files = 91 at the Phase 2 checkpoint f1bcd1b7f + look-r3-import.test.ts = 92; tests = 694 at the role base + 8 - 0 = 702
+  (old_cases_removed_p3=0; new_tests_p3=8; the strategy line's 689 is a stale Phase 1 figure and the count is above it)
+  receiver_gate_exit=0; receiver_gate_files=4; receiver_gate_tests_passed=58; receiver_gate_tests_failed=0
+  media_coverage_exit=0; media_coverage_files=1; media_coverage_tests_passed=6; media_coverage_tests_failed=0
+  new_test_exit=0; new_test_files=1; new_test_tests_passed=8; new_test_tests_failed=0
+  week_files=7; clip_keys_total=163; clip_paths_total=163 (173 entries, 163 distinct paths)
+  tsc_exit=0; look_tsc_errors=0
+  eslint_exit=0; eslint_errors=0; eslint_warnings=2 (both at the role base: receivePath and NO_CLIP unused)
+  detector1_exit=1 (no handoff|Desktop|measure/tracks|ui-council hit in look-r3-import.test.ts)
+  detector2_exit=0 (wordClips in lib/contracts/week.ts); detector3_exit=0 (videoLeadInSeconds)
+  build_graph_update_exit=0; graph_db_git_ignored=yes
+  worktrees=8
+  content_files_committed=9; content_changed=0 after the second receiver run
+w01 share decision (PM, 2026-11-09, default A): the import commits the received w01 at 953f798e
+  with its scripts[].share blocks. The three conditions hold: (a) w01_diff_outside_share=0 and all
+  24 differing leaf paths against the r4 package sit inside scripts[].share — four paths for
+  scripts[0], scripts[1], and scripts[2] (shots.0.step, shots.0.media, caption.en, caption.th),
+  six for scripts[3] (two shots), and four for scripts[4]; (b) w01_status_same=true (published in
+  both) and w01_readiness_same=true (ready in both); (c) w01_contract_parse=ok, w01_clip_keys=23,
+  w01_clip_paths_same=true, w01_lead_in=3 in both. The r4 package of 2026-11-07 is stale by one
+  Workbooks commit, 1d29e893 content(storytime): parent-share moments of w01 to w08
+  (storytime_teaching_loops), in the chain 10d5fcfce4b35c30ed4c6c4cf3c901fe23ac918d to
+  953f798ea309cc10abd5538c202e05ff31a2320d.
+w08 share decision (PM, 2026-11-09, answers Q37 and Q41): the three conditions hold, so the
+  import commits w08 too — w08_diff_fields=20; w08_diff_outside_share=0 (every differing leaf path
+  is scripts[0..4].share.shots.0.step, scripts[0..4].share.shots.0.media,
+  scripts[0..4].share.caption.en, or scripts[0..4].share.caption.th); w08_status_same=true (draft
+  in both); w08_readiness_same=true (not ready in both); w08_contract_parse=ok.
+R-EDIT3 old-test edits, each proved by the first glob run and named with its reason:
+  4efcc6a69 look-word-clip-tap.test.tsx: listed_clips=23 (old 12) and listed_distinct_clips=23,
+  because the r3 take gives the decodable book 11 clips.
+  45b22909a look-adversarial-clips.test.tsx: decodable_clips_listed=14 (old 2), the 14 listed
+  files, and tap_targets=4 (old 0) with a per-tap own-clip check, because the r3 take gives the
+  read-along book 12 clips and page 1 then holds a tap target for each clipped word.
+  fbf376f4b phase3-song-ui.test.tsx: the 3 s videoLeadInSeconds joins the media clock, because the
+  imported w01 declares the lead-in and the lyric clock is the media clock less it.
+  4eca6b1fc phase3-loop-contract.test.ts and release-receipt-pin.test.ts: RELEASE_PIN moves from
+  82f88853615f2925d8f1c12b4571790305224178 to 953f798ea309cc10abd5538c202e05ff31a2320d, because
+  the import moved the source record.
+  2cacede6f phase3-reader-end.test.tsx, phase3-adversarial-r2-end-tiles.test.tsx, and
+  phase3-adversarial-r3-seek.test.tsx: the imported week is typed through weekSchema.parse,
+  because the imported wordClips broke their inferred types.
+  No case count falls in any file, and each edit keeps the strength of the assertion it replaces.
+at-home ownership (P3.9): the content files belong to storytime_at_home_release_20261106, whose
+  metadata.json owner_chain names the Monorepo orchestrator as the track owner. The orchestrator
+  was told before the import commit, and that track's Phase 3 deploy waits for this checkpoint.
+  Every share.caption.th text stays a draft until Daniel's Thai check of 2026-11-16.
+known Nit (not a Phase 3 item): bash measure/doctor.sh exits 1 on one check,
+  "measure/automation-supervisor.py not found". Commit 49d6aeaa4 removed that file, so the doctor
+  script names a deleted path. Recorded here for a later track; it blocks no Phase 3 gate.
+cleanup note: the temporary node compare script and its files under /tmp/opencode are deleted.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,51 @@
+Final acceptance fails. One blocking provenance finding remains.
+
+The look test gate passed 108 files and 987 tests. No test failed or skipped.
+The Storytime quality gate passed with PASS=2 and FAIL=0. Its full app tests passed 134 files and 1199 tests.
+Doctor exited 0. Steps 1 to 3 passed. Step 4 recorded the known architecture drift verdict.
+
+F861: closed. Commit 253900ced closes task 2.4 under the recorded PM decision. The council record confirms 82.2 and the stop rule.
+F862: closed. The phase5 test uses utf8. Both configured Storytime gates pass.
+F863: closed. This track owns no auxiliary worktree. Six auxiliary worktrees belong to other tracks.
+F864: closed. A fresh doctor run exited 0. The doctor repair has an accepted Phase 3 result.
+F865: open. The latest phase acceptance targets 48a851a98. No phase acceptance targets dispatch HEAD 0dd0cf13a or current HEAD 458b88705.
+F866: nonblocking. The PM accepted the independence deviation. Kimi wrote no Red or Green of this track.
+
+All 35 completed tasks have commit evidence. Tasks 2.5, 2b.5, and 3.4 stay deferred to Daniel.
+A5 found no false current claim. A6 found no adversarial-state overstatement. A9 found no archived track path in tests/*.sh.
+The exact track scan covered 165 commits and 138 paths. Recorded exceptions cover the swept files. No product hash mechanism was added.
+
+The audited HEAD was current at dispatch. Master advanced during the audit. The later commits did not change this track's implementation or documents.
+
+End-of-session branch list:
+- book-editions, measure/primary-book-editions: Owner Monorepo orchestrator. Plan: finish task 1.7, then merge or prune.
+- forge-filled-shelves, forge/filled-shelves-sync: Owner Monorepo orchestrator. Plan: confirm integration, then merge or prune.
+- monorepo-boundaries, chore/monorepo-boundaries: Owner Monorepo orchestrator. Plan: close its track, then merge or prune.
+- primary-build-info, primary/build-info: Owner Monorepo orchestrator through video_spec_20261029. Plan: merge or prune through that track.
+- sales-january-course, sales/january-course: Owner Monorepo orchestrator through sales_training_2027_20261015. Plan: finish the contract task, then merge or prune.
+- www-real-logos, www/real-logos: Owner Monorepo orchestrator. Plan: finish owner acceptance, then merge or prune.
+- codex/reading-advantage-refactor: Owner PM orchestrator. Plan: review, then merge or prune.
+- storytime/www-signin-copy: Owner Monorepo orchestrator through the at-home track. Plan: merge the accepted copy or prune.
+- Remote nondefault branches: Owner PM orchestrator. Plan: merge or prune each after its owning review. This session changed none.
+
+track_base_sha: 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6
+role_base_sha: 0dd0cf13a574bb3690fb42c332b65f8af0b1d89e
+audited_head_sha: 0dd0cf13a574bb3690fb42c332b65f8af0b1d89e
+retry_recommendation: retry_audit
+
+MEASURE_AGENT_RESULT
+role: final-acceptance
+status: complete
+track: storytime_look_20261107
+phase: track review
+commits: none
+tests_run: look glob exit 0 with 108 files and 987 tests; Storytime quality gate exit 0 with PASS=2 FAIL=0; doctor exit 0
+files_changed: measure/runs/storytime_look_20261107/final-acceptance-0dd0cf13a.json and .log
+plan_updates: none
+known_failures: F865; no phase acceptance targets the dispatch HEAD or later current HEAD
+handoff: obtain phase acceptance at current HEAD, then rerun final acceptance; F861 to F864 are closed; F866 stays nonblocking
+verdict: fail
+retry_recommendation: retry_audit
+result: measure/runs/storytime_look_20261107/final-acceptance-0dd0cf13a.json
+log: measure/runs/storytime_look_20261107/final-acceptance-0dd0cf13a.log
+END_MEASURE_AGENT_RESULT

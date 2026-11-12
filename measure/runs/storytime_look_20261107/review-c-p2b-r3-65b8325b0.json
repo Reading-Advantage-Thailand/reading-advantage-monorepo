@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "role": "review-c",
+  "track": "storytime_look_20261107",
+  "phase": "Phase 2b: Brand chrome",
+  "phase_base_sha": "3480f904c509dc2d66fa827dba73df95b3768c65",
+  "role_base_sha": "65b8325b045fbe3da1d7bae3281bad05f2f74366",
+  "baseline_sha": "4eebabbb2e062a21a95644279a97842f68ad0999",
+  "audited_head_sha": "65b8325b045fbe3da1d7bae3281bad05f2f74366",
+  "round": 3,
+  "contract_applicability": "applicable",
+  "ux_applicability": "applicable",
+  "webbridge_status": "not_run",
+  "webbridge_evidence": { "screenshots": [], "accessibility_snapshots": [], "interactions": [] },
+  "status": "pass",
+  "summary": "All round 2 findings are closed or accepted. C2-F1 is closed: the focus rule at look.css:44-48 now uses :is(a, button, [tabindex]):focus-visible with specificity (0,2,0) for the outline and an !important 6 px brown box-shadow, so no control rule can hide the ring. Gate row 19 reads the computed ring on a decodable word button, a mode button, a week tile link, and the sign-in button, and all four show the brown 6 px shadow and the 3 px white outline. C2-F2 is closed: every plaque rule (base, band, landscape) fits the font from var(--title-chars), with its own floor and cap. C2-F4 is closed: the comment now says 7.09:1 and 4.92:1. C2-F3 stays a nit that the orchestrator accepted. No route, label, href, form, or API response changed in the r4 range (only done-mark.tsx, a comment line). The captures show the logo, the label, the plaque, the tiles, and the highlight with no overlap. No new blocking defect.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "C2-F3 [Nit] review-c: A 60-character title at 844 x 390 can still touch the level and week label. look.css:783-786 fits the font to the 20 px floor, and the title wraps to two lines. The plaque then spans about y 30 to 80 and the label spans y 18 to 41 at x 72 to about 232. The overlap is the same stress case as in round 2. No shipped title (6 to 13 characters) reaches it. The orchestrator accepted this as a nit; I keep it listed and do not escalate it. Proposal: ACCEPT.",
+    "C3-F1 [Nit] review-c: The broad selector [tabindex] in look.css:44 also matches the read-along sentence (tabIndex 0) and the word (tabIndex -1) from read-along-passage.tsx:111 and :170. The !important brown shadow replaces the Tailwind ring and offset on those elements. The result is still a two-tone ring (white 3 px outline, brown 6 px), so the user sees a ring, and the 6 px shadow can touch a neighbor word. No gate row focuses a read-along word. Proposal: ACCEPT, or add one gate row for a focused read-along word in Phase 3."
+  ],
+  "evidence": [
+    "HEAD equals audited_head_sha 65b8325b045fbe3da1d7bae3281bad05f2f74366 (git rev-parse HEAD, at the start of the audit and at the end).",
+    "C2-F1 closed. look.css:44-48: :is(a, button, [tabindex]):focus-visible sets outline 3px solid #fff, outline-offset 0, box-shadow 0 0 0 6px var(--st-brown) !important. Specificity (0,2,0) beats main[data-place] button (0,1,2) for the outline, and !important wins the box-shadow over every control rule (tiles, mode buttons, sound button, decodable word button). The only !important in look.css is this one (grep). gate-r5.log lines 135-138: brand focus rows for the decodable word button, the mode button, the week tile link, and the sign_in button all PASS with box_shadow rgb(146, 64, 14) 0px 0px 0px 6px, outline_color rgb(255, 255, 255), outline_width_px 3. The outline paints above the shadow, so the visible ring is 3 px white then 3 px brown; brown on cream measures 6.81 to 1 and white on brown 7.09 to 1 (round 2 computation). The Red case C-F1b (look-brand-chrome.test.ts, new in 1204753b5) now compares specificity and order against every box-shadow rule.",
+    "C2-F2 closed. look.css:211-218: the band rule sets min-height 26px, bottom -28px, and font-size clamp(20px, calc((100cqi - 48px) / (var(--title-chars) * 0.68)), 44px). The landscape block (look.css:783-786) sets clamp(20px, ... 48px ..., 32px). The base rule keeps clamp(24px, ..., 72px). The Red case F-2b now filters every plaque rule and requires var(--title-chars) in each. gate-r5.log line 124: brand banner brand_banner_cases=32 (the eight titles now also on the band book page, gate script line 2478) PASS, long_title_overflow_px=0, long_title_clipped_text=0.",
+    "C2-F4 closed. highlight.ts:12 now reads 7.09:1 and 4.92:1.",
+    "C2-F3 open as an accepted nit (see nonblocking_findings). Round 2 estimate used a 64 px subtraction; r4 changed it to 48 px in the landscape block, which only enlarges the font at the floor edge and does not change the 60-character case.",
+    "User flows. git diff 4b9033cec..65b8325b0 -- apps/storytime/app changes only look.css and one comment line in done-mark.tsx. Frame.tsx, the child screens, the teacher pages, sign-in, join, 404, and the st fallback are untouched in the range; their routes, hrefs, forms, labels, and aria text keep their round 2 state. Phase diff 3480f904c..65b8325b0 touches apps/storytime/app tsx files only for class strings, the logo, and the label (frame.tsx, week-view.tsx, page.tsx files); no endpoint, action, or response shape appears in the diff.",
+    "FR-4 (a) to (e). (a) Game bar gone: gate row 15 PASS brand_chrome_cases=10, and no [data-game-bar] in look.css. (b) Label: label_copies_max=1, and the label shows in the captures at the top center. (c) Logo: logo at the top left in r4-01, r4-02, r4-03 at 48 px; tap_under_48=0 on the child rows. (d) Plaque: centered text, fitted font, banner_ratio 0.80 for all 32 cases. (e) Tones: brand tones PASS chrome_blue_computed=0, chrome_contrast_min=4.92, blue_text_or_ground=0. r4-02 shows the current word white on brown inside the pale amber band; r4-03 and r4-01 show brown tiles with amber edges and the amber plaque.",
+    "Row 18 (gate-r5.log lines 126-132): teacher week, teacher day, 403, 404, st fallback, sign_in, and join pass with status 200 (404 for the 404 view), console_errors 0 (1 for the 404 resource, expected), page_overflow 0. The teacher week row shows tap_under_48=5; the decision C-F3 says the 48 px floor covers the child screens only. The 403 row shows chrome_brand_pairs=0; the decision says the 403 link is not chrome.",
+    "Gate totals read from the orchestrator brief: 102 rows, PASS=93, FAIL=9, rows 15 to 19 PASS. The 9 FAIL rows are the song active-line rows (active_line_index=0) that route to the Phase 3 acceptance; I do not re-raise them.",
+    "Timing code. The r4 range changes no file in packages/read-along/hooks or apps/storytime/lib/highlight-windows.ts (diff stat lists only highlight.ts, a comment, in packages/read-along).",
+    "Round 1 findings: C-F1 closed (as C2-F1), C-F2 closed (round 2), C-F3 closed by decision.",
+    "Not run: vitest, tsc, ESLint, any browser, any server, any build. The browser evidence is the gate-r5.log run and the r4 captures that I read."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> 65b8325b045fbe3da1d7bae3281bad05f2f74366",
+    "git diff 4b9033cec..65b8325b0 -- apps/storytime/app packages/read-along/lib -> read",
+    "git diff 4b9033cec..65b8325b0 -- apps/storytime/__tests__/look-brand-chrome.test.ts -> read",
+    "grep outline, !important, focus in look.css; grep tabIndex in app and read-along components",
+    "read gate-r5.log lines 100-246 (brand rows); read captures r4-01, r4-02, r4-03"
+  ],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/review-c-p2b-r3-65b8325b0.json",
+    "measure/runs/storytime_look_20261107/review-c-p2b-r3-65b8325b0.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "medium"
+}

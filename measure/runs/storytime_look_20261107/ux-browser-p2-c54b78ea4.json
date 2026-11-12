@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "UX browser review of Phase 2 'Look port of the picked option' (storytime_look_20261107) at audited head c54b78ea4, which equals role_base_sha; git diff --stat c54b78ea4 HEAD over apps/storytime and packages/read-along printed nothing, so no phase file moved during the run. Three jobs ran. J1 (round-4 capture): all 24 capture rows PASS with console_errors=0, broken_pictures=0, tap_under_48=0, clipped_text=0, page_overflow=0 and contrast_fail=0, and the song rows read active_line_before_play=0 and filled_rows_before_play=0 in all six rows. J2 (canonical gate, unmodified): exit 0, '=== Total: 86 checks (PASS=86, FAIL=0) ===', captures=24, capture_rows=24, console_errors=0, song_stage_height_px=220, hero_band_height_px_phone=96, hero_band_height_px_tablet=120. J3 (closeout item 6): look-phase1 exit 0 with 13 checks, phase3 exit 0 with PASS=80 and shell PASS=5 and transferred_bytes_first_load=294641, phase2b exit 0 with 37 checks. All six items of task 2.3g hold on the measured rows. One blocking finding: the 60-character title overflows the plaque box by 20 CSS px at 568x320 in English and in Thai, and no canonical row covers it because gate row 3 measures the long title only at 390x844. Two nonblocking findings. No phone result is claimed: every run is headless Chrome at emulated viewports.",
+  "blocking_findings": [
+    "F1 [Major] ux-browser-review: the 60-character week title overflows the title plaque at 568x320 in English and in Thai. Measured in the app (J1, real route /en/st/3/6 and /th/st/3/6, the Thai string of adversarial case V1): plaque_overflow_px=20, overflow_top_px=20, overflow_bottom_px=0, clipped_text=0, title_chars=60, plaque_h_px=40, for en and for th. The same row at 320x568 reads plaque_overflow_px=0, clipped_text=0, plaque_h_px=272. The cause is the landscape rule of apps/storytime/app/look.css lines 821-831: inside @media (max-height: 500px) the rule header[data-hero] > h1 sets height: 40px and min-height: 40px, so the fixed plaque box cannot hold a wrapped 60-character title and the text leaves the box upward. The PNGs are measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/council-r4/extra/plaque-en-568x320.png and measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/council-r4/extra/plaque-th-568x320.png; in both the title text sits above the blue plaque and over the hero bar. Rationale: test-strategy.md P2.4 row 3 (line 587) requires that a 60-character title cause no overflow and no clipped text, and P2.6 line 613 names 568x320 as an adversarial viewport; the canonical gate row 3 measures the long title only at 390x844, so no canonical row fails on this, and the adversarial r2 record routed this exact browser measurement to the UX browser review. The longest shipped title of content/l2 is 13 characters ('Unit 1 Review' and 'Is It a Ball?'), and a J3 check with the real app/look.css reads plaque_overflow_px=0 for that title at 568x320, so the defect is latent for the shipped content and real for the 60-character title that row 3 names. Exit criterion: plaque_overflow_px=0 for the 60-character English and Thai title at 568x320, with the other rows of the gate unchanged. Owner: Green."
+  ],
+  "nonblocking_findings": [
+    "F2 [Minor] ux-browser-review: at the 200 percent page zoom of a 390 CSS px phone the layout viewport is 195 CSS px, below the 320 CSS px reflow floor of WCAG 1.4.10, so the horizontal overflow of that case is a note and not a defect. Measured (J1): page_overflow=104 (week), 72 (reader), 37 (song), 37 (decodable) at a 195x422 CSS px viewport, with clipped_text=0 on all four screens. Owner: none for this phase.",
+    "F3 [Minor] ux-browser-review: the app pins its type in px, so a browser text-size setting does not enlarge the look text. Measured (J1): the root font size at 32px (both the root font size rule and the CDP default font size command) leaves sentence_px=25 and plaque_px=28 or 36 unchanged, and every screen reads page_overflow=0 and clipped_text=0 under both. The two font-size emulations therefore measure nothing about the look type, and the page zoom of F2 is the only zoom case that scales it. Owner: none for this phase; record the finding for the look check of Daniel on 2026-11-18.",
+    "F4 [Nit] ux-browser-review: two defects of my own harness were found and corrected during J1, and both change a measured value. First, the first plaque metric read scrollHeight minus clientHeight of the plaque; it read 0 overflow at 568x320 while the PNG showed the Thai title leaving the plaque box, because the landscape rule fixes the plaque height at 40 px, so scrollHeight never passes clientHeight. The metric now measures the text box of a Range over the title against the box of the plaque, and it reads overflow_top_px=20. Second, the first two zoom emulations set the root font size and the browser default font size, and both left the type of the app unscaled because app/look.css sets every font size in px; those runs measured nothing, and the third emulation, the page zoom of 200 percent, is the one that scales the px type and produces the overflow of F2. Owner: none; this is the evidence record of the review."
+  ],
+  "evidence": [
+    "J1 round-4 capture: bash measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/tools/make-copy.sh then bash measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/tools/run-council.sh; heavy_run_exit=1; png_count=32; png_count_extra=18; the exit code 1 comes from the four extra rows of the copied gate (question, not_found, sign_in, join) that the copy stops before, and the copied gate reads '=== Total: 40 checks (PASS=36, FAIL=4) ==='; every one of the 24 capture rows printed PASS.",
+    "Item 1 of 2.3g holds: J2 row 'council r3 default song' reads default_song_cases=6 default_song_failures=0 active_line_before_play=0 filled_rows_before_play=0, and the six J1 song capture rows read active_line_before_play=0 filled_rows_before_play=0.",
+    "Item 2 of 2.3g holds: J2 row 'council r3 done badge' reads done_badge_cases=2 done_badge_failures=0 done_badge_w_px_min=32 done_badge_h_px_min=32; the J1 week state captures read done_marks_found=1 in th and in en.",
+    "Item 3 of 2.3g holds: J2 row 'council r3 pressed sound' reads pressed_sound_cases=2 pressed_sound_failures=0; the J1 decodable state captures read after_tap='Playing pressed=true' (en) and 'กำลังเล่น pressed=true' (th); the J1 forced-colors run reads pressed_visible=1 with pressed_label='Playing'.",
+    "Item 4 of 2.3g holds: J2 row 'council r3 frame padding' reads frame_padding_cases=2 frame_padding_failures=0 frame_content_gap_px_min=12.",
+    "Item 5 of 2.3g holds: J2 row 'council r3 page counter' reads page_counter_cases=2 page_counter_failures=0 page_counter_contrast_min=14.52.",
+    "Item 6 of 2.3g holds: J2 row 'council r3 parent duration' reads parent_duration_cases=2 parent_duration_failures=0 duration_texts=0 native_controls=0.",
+    "J2 canonical gate, unmodified: exit 0, '=== Total: 86 checks (PASS=86, FAIL=0) ===', captures=24, capture_rows=24, console_errors=0, contrast_pairs_checked=504, selftest_mutants_rejected=48 of 48; the hero rows read song_stage_height_px=220 (play_bottom_px=632, active_line_bottom_px=832.1), hero_band_height_px_phone=96 (arrows_bottom_px=823.1 on the decodable, 590.5 on the reader, audio_bottom_px=650.5 and 710.5, skip_bottom_px=558 on the question screen) and hero_band_height_px_tablet=120 (audio_bottom_px=694 and 754); zero FAIL rows.",
+    "J3 closeout item 6, one heavy-run job: look-phase1-browser-gate.sh exit 0 with '=== Total: 13 checks (PASS=13, FAIL=0) ==='; phase3-browser-gate.sh exit 0 with 'PASS=80, FAIL=0' and the shell summary 'PASS=5, FAIL=0' and transferred_bytes_first_load=294641; phase2b-browser-gate.sh exit 0 with '=== Total: 37 checks (PASS=37, FAIL=0) ==='. The three counts equal the base counts of closeout item 6.",
+    "The two R-GATE2 rows of 2.3g hold in the phase3 gate of J3: the speaker row reads tap_target_min_px_speakers_360x800=64 and tap_target_min_px_speakers_800x360=64 with both rows PASS, and the week all-controls row reads all_controls_visible_week=true (controls_found=3, controls_min=3, controls_outside=0, speakers_outside=0, max_bottom_px=279).",
+    "F1 measurement in the app (J1): STATE plaque_en_568x320 plaque_overflow_px=20 clipped_text=0 title_chars=60 plaque_h_px=40 overflow_top_px=20 overflow_bottom_px=0 crest_overlap_px2=0 and STATE plaque_th_568x320 plaque_overflow_px=20 clipped_text=0 title_chars=60 plaque_h_px=40 overflow_top_px=20; STATE plaque_en_320x568 plaque_overflow_px=0 clipped_text=0 title_chars=60 plaque_h_px=272 and STATE plaque_th_320x568 plaque_overflow_px=0 clipped_text=0 title_chars=60 plaque_h_px=272.",
+    "F1 cause in the shipped source: apps/storytime/app/look.css lines 821-831 hold the landscape rule header[data-hero] > h1 with height: 40px and min-height: 40px inside @media (max-height: 500px), against the base rule of lines 209-235 that uses width: fit-content, max-width: calc(100% - 24px) and min-height: 88px with no nowrap.",
+    "F1 scope in the shipped content: the longest title of content/l2 is 13 characters ('Unit 1 Review' in w08 and 'Is It a Ball?' in w07), and a J3 check that loads the real app/look.css over a copy of the markup of frame.tsx reads plaque_overflow_px=0 for that title at 320x568 and at 568x320, against 9 for the 60-character seed at 568x320. The landscape rule also governs 844x390, a study viewport, and the canonical gate row 3 measures the long title only at 390x844.",
+    "F2 measurement (J1, page zoom of 200 percent, a 195x422 CSS px viewport): page_overflow=104 (week), 72 (reader), 37 (song), 37 (decodable), clipped_text=0 on all four screens.",
+    "F3 measurement (J1): the root font size at 32px leaves sentence_px=25 and plaque_px=28 or 36 unchanged on every screen, and page_overflow=0 and clipped_text=0 everywhere; the CDP default font size command reads the same root_px=32px with the same unchanged sizes.",
+    "Forced colors (J1, the routed adversarial gap): forced_media=true on both screens; the decodable sound button stays visible with pressed_label='Playing' and the done badge stays visible with badge_stroke=rgb(0, 0, 0) and badge_stroke_width=3.4px.",
+    "PNG set: 32 in measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/council-r4/ (24 view captures and 8 state captures) and 24 in council-r4/extra/ (4 plaque captures, 2 forced-colors captures, 4 zoom200 captures, 4 zoom200-fontsize captures, 4 zoom200-page captures, and 6 shipped-title captures, of which the last 6 come from J3).",
+    "Provenance: git rev-parse HEAD returned 7c11aa22c4e80f980a48736ac3bc64602f077b41 at the start of the run; git diff --stat c54b78ea4 HEAD -- apps/storytime packages/read-along printed nothing, so the audited code head c54b78ea4 is still the code under review.",
+    "No phone result is claimed: every run is headless SYSTEM Chrome at emulated viewports, so no run is a phone check.",
+    "The review read the images of the state captures and of the extra captures. The forced-colors week capture shows the system palette (white cards, black text, no application blue), which confirms the forced-colors emulation was real and not a no-op; a separate probe read context_forced_bg=rgb(255, 255, 255) and page_forced_media=true. The page-zoom week capture shows the right edge of the For parents text and the net, nut and nose chips cut off at the 195 CSS px viewport, which matches page_overflow=104. The two 568x320 plaque captures show the 60-character title rendered above the blue plaque over the hero bar, which matches overflow_top_px=20."
+  ],
+  "commands": [
+    "bash measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/tools/j2-run.sh (exit 0; === Total: 86 checks (PASS=86, FAIL=0) ===)",
+    "bash measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/tools/j3-run.sh (exit 0; 13, 80 and 37 checks)",
+    "bash measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/tools/make-copy.sh then bash measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/tools/run-council.sh (heavy_run_exit=1; png_count=32; png_count_extra=18)",
+    "git rev-parse HEAD (exit 0; 7c11aa22c4e80f980a48736ac3bc64602f077b41)",
+    "git diff --stat c54b78ea4 HEAD -- apps/storytime packages/read-along (exit 0; empty)"
+  ],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/ux-browser-p2-c54b78ea4.json",
+    "measure/runs/storytime_look_20261107/ux-browser-p2-c54b78ea4.log",
+    "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/tools/make-copy.sh",
+    "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/tools/run-council.sh",
+    "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/tools/state-snippet.mjs",
+    "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/tools/j2-run.sh",
+    "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/tools/j3-run.sh",
+    "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/tools/shipped-title-check.mjs",
+    "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/tools/forced-colors-probe.mjs",
+    "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/logs/j2.log",
+    "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/logs/j3.log",
+    "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/capture-r4.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "route_to_green",
+  "confidence": "high",
+  "ux_applicability": "applicable",
+  "webbridge_status": "healthy",
+  "webbridge_evidence": {
+    "screenshots": [
+      "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/council-r4/extra/plaque-en-568x320.png",
+      "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/council-r4/extra/plaque-th-568x320.png",
+      "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/council-r4/extra/plaque-en-320x568.png",
+      "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/council-r4/extra/plaque-th-320x568.png",
+      "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/council-r4/extra/forced-week-390x844-en.png",
+      "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/council-r4/extra/forced-decodable-390x844-en.png",
+      "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/council-r4/extra/zoom200-page-week-390x844-en.png",
+      "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/council-r4/week-390x844-en-onepartdone.png",
+      "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/council-r4/decodable-390x844-en-played.png",
+      "measure/runs/storytime_look_20261107/ux-p2-c54b78ea4/council-r4/song-390x844-en-playing.png"
+    ],
+    "accessibility_snapshots": [],
+    "interactions": [
+      "Signed in as staff-01 through the sign-in form of the gate, then opened the four screens in English and Thai at 390x844, 1024x768 and 844x390 and read the computed state of each row.",
+      "Pressed the Read it to me button of the reader and read the marked word and the aria-pressed state.",
+      "Pressed Play on the song and waited for the real media clock to reach the first lyric line, then read the active line index.",
+      "Pressed Play the sound on the decodable and read the label and the aria-pressed state.",
+      "Finished the decodable part, returned to the week page and counted the visible Done marks.",
+      "Opened the level 3 week 6 route with the 60-character title at 320x568 and 568x320 and measured the title box against the plaque box.",
+      "Emulated the forced-colors palette on the week and the decodable screens and measured the pressed sound button and the done badge.",
+      "Applied the 200 percent text zoom in three ways and read the overflow and the clipped text of each screen."
+    ]
+  },
+  "phone_result_claimed": "no",
+  "phase_base_sha": "08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca",
+  "role_base_sha": "c54b78ea494a4f31343b33a2511060dac533c052",
+  "audited_head_sha": "c54b78ea494a4f31343b33a2511060dac533c052"
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "Round 1 at head 518953523 (HEAD confirmed from .git/HEAD and .git/refs/heads/master; the shell tool was denied). Verdict: fail, with four Blockers and five non-blocking findings. F1: the handoff test violates A9 and fails in CI. F2 and F3: D1 cannot import w01 r4 at 953f798e and cannot record two commits, because the receiver refuses a subset at a new commit. F4: the Phase 2 checkpoint date conflicts with the 11-12 import before the 11-14 capture. F5 to F9: AC-3.4 omits the audio-only 0 assertion, AC-3.5 mixes a union with a sum, metadata names the wrong checkpoint, and Phase 3 lacks a Review A row. The import fits the track and reuses the receiver and the contract.",
+  "blocking_findings": [
+    "F1 [Blocker] spec.md:129 AC-3.3 / plan.md:65 task 3.1: The look test reads ~/Desktop/handoff at run time, but test-strategy.md:61 A9 says tests read repo files only, and test-strategy.md:565 allows only the Phase 1 media root for the gate script. Rationale: the handoff folder is absent in CI, and AC-3.3 says the test skips no path, so the test fails in CI and the spec names no skip rule or repo fixture.",
+    "F2 [Blocker] spec.md:119 D1 / spec.md:130 AC-3.4: D1 reads w01 from Workbooks 953f798e, but spec.md:101 says 953f798e is the r3 source for w02-w07 and w01 is a separate r4 package, and AC-3.4 expects w01 3 from r4. Rationale: the spec does not name the w01 r4 commit, so Green cannot know which commit gives w01 its videoLeadInSeconds 3, and the fallback compares an r3 JSON that does not exist for w01.",
+    "F3 [Blocker] spec.md:119 D1 / plan.md:66 task 3.2 / spec.md:133 AC-3.7: The default run at 953f798e for w01-w07 leaves w08 on the old commit, but scripts/receive-weeks.ts:669-677 throws on a subset at a new commit, and content/source.json:3 holds one commit for all files. Rationale: the fallback trigger 'cannot read' or 'differs' does not cover this guard, 'differs' does not say byte or parsed compare, and AC-3.7 needs two commits in a record with no named two-commit shape.",
+    "F4 [Blocker] plan.md:59 / spec.md:123 D5: Phase 3 starts only after the Phase 2 checkpoint, but spec.md:71 puts the Phase 2 gates at 2026-11-17 and plan.md:4 puts the Phase 2 Green start at 2026-11-12, while the PM date for Phase 3 is 2026-11-12 before the 2026-11-14 18:00 capture. Rationale: the plan's own phase gate and date cannot both hold, so the orchestrator must decide whether to waive the gate."
+  ],
+  "nonblocking_findings": [
+    "F5 [Major] spec.md:130 AC-3.4: The test asserts the count of weeks with a video field is above 0 and w01 is 3, but it does not assert w02-w07 parsed videoLeadInSeconds is 0 after the PM decision. Rationale: lib/contracts/week.ts:270 defaults an absent field to 0, so the test cannot tell an absent field from an explicit 0, and a wrong nonzero value on an audio-only week passes.",
+    "F6 [Major] spec.md:131 AC-3.5: The distinct wordClips keys of the seven weeks total 163 reads as a union, but 163 is the sum of the per-week distinct counts in plan.md:65 (22, 23, 20, 24, 28, 22, 24). Rationale: a union of seven weeks is smaller than 163, so Red can compute the wrong total; the AC should say sum of the per-week distinct counts.",
+    "F7 [Major] metadata.json:11: depends_on says the at-home Phase 3 deploy waits for the Phase 1 checkpoint, but spec.md:122 and plan.md:59 say it waits for the Phase 3 checkpoint. Rationale: the orchestrator can release the at-home deploy before the import, and the 2026-11-14 18:00 capture then reads the old weeks.",
+    "F8 [Major] plan.md:63 / test-strategy.md:565: Phase 3 names no Review A row, and the strategy allows only the Phase 1 handoff media root, but task 3.2 changes the source.json shape and may edit receive-weeks.ts, and spec.md:134 reads a new handoff media root. Rationale: the source.json shape and the new roots go unreviewed, so the strategy must add a Phase 3 section, a Review A row, and the w01 r4 and w02-w07 r3 roots.",
+    "F9 [Nit] metadata.json:8: The description names Phase 1 and Phase 2 only, and the 2026-11-09 decision at line 25 adds Phase 3. Rationale: the track description understates the scope, but it does not change the build."
+  ],
+  "evidence": [
+    "HEAD check: .git/HEAD line 1 is ref: refs/heads/master; .git/refs/heads/master line 1 is 518953523e8e109e5ca32dd71ea839c52585e527, equal to audited_head_sha.",
+    "spec.md:129 AC-3.3 resolves every wordClips path to a file in its handoff package under ~/Desktop/handoff and says the test skips no path; plan.md:65 names apps/storytime/__tests__/look-r3-import.test.ts.",
+    "test-strategy.md:61 A9 says tests read repo files only; test-strategy.md:565 allows the gate script to read the Phase 1 media root handoff/w01-storytime-app-package-r2 only.",
+    "spec.md:101 says 953f798e is the r3 source for w02-w07 and w01 is a separate r4 package; spec.md:119 D1 runs the receiver at 953f798e for w01-w07; spec.md:130 AC-3.4 expects w01 3.",
+    "content/source.json:3 holds one commit (82f8885) for eight files; scripts/receive-weeks.ts:669-677 throws when a run at a new commit leaves a recorded week; scripts/receive-weeks.ts:787-791 writes one commit and the file list.",
+    "lib/contracts/week.ts:270 gives videoLeadInSeconds the default 0; lib/contracts/week.ts:131 gives wordClips the default {}.",
+    "spec.md:131 AC-3.5 states the distinct keys total 163; plan.md:65 lists the per-week counts 22, 23, 20, 24, 28, 22, 24.",
+    "plan.md:59 starts Phase 3 after the Phase 2 checkpoint; plan.md:4 says Phase 2 Green starts by 2026-11-12; spec.md:71 says the gates pass 2026-11-17; spec.md:123 D5 says the PM date is 2026-11-12 and the capture is 2026-11-14 18:00.",
+    "metadata.json:11 says the at-home Phase 3 deploy waits for the Phase 1 checkpoint; spec.md:122 D4 and plan.md:59 say it waits for the Phase 3 checkpoint.",
+    "plan.md:63 names only the spec review, the test strategy, and the phase acceptance; test-strategy.md:390 Review A row covers Phase 1 only; spec.md:134 AC-3.8 says local gates read the handoff media root.",
+    "handoff package w02-storytime-app-package-r3/l2/w02.json lines 971-991 and 1464-1469 hold 23 distinct wordClips keys; song at line 1473 holds no video and no videoLeadInSeconds.",
+    "references/contracts.md does not exist under ~/.agents/skills/measure/references/ or skills/measure/references/; this schema follows measure/runs/storytime_look_20261107/spec-review-ef41f6521.json."
+  ],
+  "commands": [
+    "git rev-parse HEAD: the shell tool was denied; read .git/HEAD (ref: refs/heads/master) and .git/refs/heads/master (518953523e8e109e5ca32dd71ea839c52585e527).",
+    "read ~/.agents/skills/measure/references/spec-review.md",
+    "read measure/tracks/storytime_look_20261107/spec.md, plan.md, metadata.json, test-strategy.md",
+    "read apps/storytime/content/source.json, apps/storytime/scripts/receive-weeks.ts, apps/storytime/lib/contracts/week.ts",
+    "read ~/Desktop/handoff/w01-storytime-app-package-r4 and w02-storytime-app-package-r3/l2/w02.json",
+    "read measure/runs/storytime_look_20261107/spec-review-ef41f6521.json for the result field names"
+  ],
+  "changed_files": [],
+  "test_strategy_violations": [
+    "A9: apps/storytime/__tests__/look-r3-import.test.ts reads ~/Desktop/handoff, while test-strategy.md:61 says tests read repo files only and test-strategy.md:565 allows only the Phase 1 media root for the gate script."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "escalate_human",
+  "confidence": "high",
+  "paraphrase": {
+    "proposes": "Phase 3 imports the Workbooks week packages w01 r4 and w02-w07 r3 into apps/storytime/content/l2 and records the source commits in source.json. It imports the word clips and song lead-in data, adds one import test, and keeps the clip files in the handoff packages for local gates. The media bucket upload is deferred to Daniel. The import is needed for the 2026-11-14 18:00 capture.",
+    "current_system": "source.json pins one Workbooks commit, 82f8885, for w01 to w08, and content/l2 holds the week JSON. The shipped week files hold no wordClips and no videoLeadInSeconds. lib/contracts/week.ts already accepts both fields. scripts/receive-weeks.ts resolves a Workbooks commit and writes content/l2 plus source.json, and its mediaOf list already covers the word clips."
+  },
+  "role_base_sha": "1f4fd4def5812720ea40e21fe334e1d086e6a31b",
+  "audited_head_sha": "518953523e8e109e5ca32dd71ea839c52585e527",
+  "round": 1
+}

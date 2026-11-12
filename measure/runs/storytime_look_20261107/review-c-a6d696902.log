@@ -1,0 +1,89 @@
+# Review C (UX/API) — storytime_look_20261107 Phase 1 — audited HEAD a6d696902
+
+Role: measure-review-c-ux-api (audit only; no implementation, test, plan, or registry edits; no commit).
+Track: storytime_look_20261107. Phase: `## Phase 1: Council fixes` (P1).
+phase_base_sha: 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6
+role_base_sha: 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6
+audited_head_sha: a6d696902a0f98064e8cab3624afa1def4a72cbe (HEAD current at start and at end; no move observed)
+
+## Applicability
+
+The Review C row of test-strategy P1.6 (line 370) says yes (required). The phase changes
+child-facing labels, button state, page-turn timing, the read-along highlight, a video attribute
+and background, a 404 view, and two content contracts (wordClips, videoLeadInSeconds). The audit
+is applicable. Scope: the phase diff `git diff 4154e0ff2..a6d696902 -- apps/storytime
+packages/read-along`, filtered to the track commits.
+
+## What was checked (each item of the Review C row)
+
+1. Child-facing labels: `tileDecodable` = "Read the words" (en) / "อ่านคำ" (th);
+   `playerPlaying` = "Playing" (en) / "กำลังเล่น" (th); the decodable default labels hold the same
+   two values. PASS.
+2. aria-pressed design: reader audio buttons and the decodable sound button carry
+   `aria-pressed` and swap the label to the playing label while pressed; at most one presses.
+   Spec AC-1.6 pins both. PASS.
+3. Page count "1 / N" with aria-live sits between the arrows in DOM order and tracks the shown
+   page. PASS.
+4. 48 px targets: Next (min-h-12, filled), the 404 link (min-h-12), the audio buttons (min-h-12).
+   PASS.
+5. Thai drafts: each new key holds a value in both message files; the equal-value rules hold
+   (verified by json load); key parity holds. The drafts wait for Daniel's sitting on
+   2026-11-16. PASS.
+6. Pinned exports: `highestOpenWeeks` (lib/content.ts), `parseStorytimePath`
+   (lib/route-parse.ts), `highlightWindows` + `MIN_WORD_WINDOW_S` = 0.12
+   (lib/highlight-windows.ts, borrowed time pushes the next word later). PASS.
+7. Tap affordance: a word with no clip has no tabindex, no cursor-pointer, and no onClick; a clip
+   word keeps all three in My turn (Q17 pin). PASS; visual-only affordance noted (F2).
+8. Audio error text for a failing clip: role=alert with the locale text; a rejected play and a
+   clip error both show it; no stuck state. PASS.
+9. Workbooks contract names: `books[].audio.wordClips` (key allowlist, mediaPath values, default
+   {}) and `song.videoLeadInSeconds` (0-30, default 0, video-only subtraction); mediaOf lists
+   clips with kind word-clip. PASS.
+10. Q22 residual: the lyric lines still light on timeupdate (up to ~250 ms late). Accepted per
+    Q22; recorded as F3.
+11. Green's user-facing defaults: Next disabled only at the last page with no tiles and no
+    questions; only Next holds the page (Previous and a swipe turn at once); the 404 client view
+    reads the shared values so the Thai 404 shows Thai. PASS. The short-word hit area under
+    44 px is the documented plan 1.8 trade-off; recorded as F1 for the browser review.
+
+## Gates read (no re-run; audit-only role)
+
+Green round 2 at 51ef687ec (green-p1-a620b096f.log): final targeted command exit 0,
+files=70, tests_passed=535, tests_failed=0, tests_skipped=0 (R-COUNT 478-8+65=535 matches);
+tsc exit 0 (look_tsc_errors=0); ESLint exit 0 (1 Red warning); packages/read-along 104/104;
+detectors as expected (cut names gone from reader.tsx; wordClips and videoLeadInSeconds present;
+use-read-along imported).
+
+## Findings
+
+Blocking: none.
+
+Non-blocking:
+- F1 [Major] reader word hit area under 44 px for short words (pseudo-element extends 0.25 rem
+  horizontally). Documented trade-off of plan 1.8; browser review to confirm "I" stays reachable
+  and no neighbour steals its tap.
+- F2 [Major] the tap affordance is pointer-only; on a touch device a child cannot see which words
+  have clips. Q17 pin met; propose a visual marker at Daniel's look check.
+- F3 [Minor] Q22 residual: song lyric lines still update on timeupdate (~250 ms lag). Accepted.
+- F4 [Minor] out-of-scope paths: phase3-decodable-punct.test.tsx and phase3-loops-off.test.tsx
+  (reasons in commit bodies) plus www copy in docs commit a776187e2; for the acceptance count.
+
+Verdict: PASS. Result JSON: measure/runs/storytime_look_20261107/review-c-a6d696902.json
+
+MEASURE_AGENT_RESULT
+role: measure-review-c-ux-api
+phase: Phase 1: Council fixes
+track: storytime_look_20261107
+status: pass
+retry_recommendation: none
+result: Phase 1 UX/API end-to-end contract holds at a6d696902. No blocking findings. Four non-blocking findings (F1 short-word hit area under 44 px for the browser review; F2 pointer-only tap affordance on touch devices for Daniel's look check; F3 accepted Q22 timeupdate lag residual; F4 out-of-scope path count for the acceptance role).
+log: measure/runs/storytime_look_20261107/review-c-a6d696902.log
+artifacts_written: yes
+baseline_sha: 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6
+head_sha: a6d696902a0f98064e8cab3624afa1def4a72cbe
+dispositions: none
+tests: "not run (audit-only review; Green gates at 51ef687ec read from measure/runs/storytime_look_20261107/green-p1-a620b096f.log: exit=0 files=70 tests_passed=535 tests_failed=0 tests_skipped=0; tsc exit 0 look_tsc_errors=0; eslint exit 0 (1 warning); read-along 104/104)"
+commits: "5ab3834bb, 0aa84d2a7, 716c14399, e0cb06b53, db8b093bb (production); 51ef687ec (plan markers)"
+files: "apps/storytime route files, not-found pair, lib/content.ts, lib/route-parse.ts, lib/highlight-windows.ts, lib/contracts/week.ts, lib/media/url.ts, scripts/receive-weeks.ts, messages/en.json, messages/th.json, app/icon.png, packages/read-along/components/read-along/read-along-passage.tsx, 11 look test files"
+handoff: "None. Route the browser-review items: measure the short-word hit area of 'I' (F1) and evaluate a visual tap marker (F2) at Daniel's look check. The acceptance role counts F4 in look_out_of_scope_paths."
+END_MEASURE_AGENT_RESULT

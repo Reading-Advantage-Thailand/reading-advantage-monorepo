@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Final acceptance passes. All configured gates pass. F861 through F865 are closed. F866 remains a recorded nonblocking routing deviation.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F866 [Nit] routing: The independence deviation remains recorded. Kimi wrote no Red or Green of this track. The PM accepted the deviation and the quota overshoot."
+  ],
+  "evidence": [
+    "track_base_sha=4154e0ff2659a2d7f856b488f78b4acc0f25bfe6. role_base_sha=b7180a7f4fa03413e96928e89bdcb7dcafce6cdd. audited_head_sha=b7180a7f4fa03413e96928e89bdcb7dcafce6cdd.",
+    "HEAD equalled the audited HEAD at dispatch and at completion. The audited HEAD is current.",
+    "F865 closed under the PM ruling. The path diff names only registry, related-plan, track-metadata, and track-plan documents. No implementation or test changed.",
+    "The later track commits are 253900ced and dc2766600. They changed only the plan and routing evidence. Other later commits belong to other tracks.",
+    "The path diff from r2 HEAD 0dd0cf13a to the audited HEAD is empty. I reused r2 evidence for unchanged items.",
+    "Exactly four passing phase-acceptance results exist: Phase 1 dcad011f6, Phase 2 f1bcd1b7f, Phase 2b cc48d29ee, and Phase 3 48a851a98.",
+    "Each recorded phase base is an ancestor of its accepted HEAD. Every accepted HEAD is an ancestor of current HEAD.",
+    "F861 closed: plan.md:55 marks task 2.4 [x]. Commit 253900ced records the PM decision that 82.2 meets AC-2.4.",
+    "F862 closed: apps/storytime/__tests__/phase5-measure-file.test.ts:252 uses encoding utf8. The current type gate passed.",
+    "F863 closed: this track owns no auxiliary worktree. Six auxiliary worktrees belong to other tracks.",
+    "F864 closed: the r2 doctor run exited 0. The ruling diff names no doctor path, so I did not rerun doctor.",
+    "PROJECT_TESTS exited 0 with 108 files and 987 tests. No test failed or skipped.",
+    "PROJECT_CHECKS exited 0 with no output.",
+    "PROJECT_LINT exited 0 with 0 errors and 28 warnings.",
+    "The plan has 35 completed tasks and three tasks deferred to Daniel. It has no pending or in-progress task.",
+    "Every completed task names a commit that resolves and precedes the audited HEAD.",
+    "A5 passed. The current 108-file and 987-test claim matches my gate run. The r2 review covers the unchanged historical claims.",
+    "A6 passed. The registry makes no adversarial-pass claim. Its stale next-step text understates progress. Closeout owns that update.",
+    "A9 passed. The tests/*.sh scan found zero references to an archived track document path.",
+    "The exact track scan covered 165 commits and 138 paths. The r2 evidence covers the recorded exceptions and hash scan.",
+    "Changed caller and contract evidence carries from r2 because the track path diff is empty. The current type and test gates passed.",
+    "I read the spec, plan, strategy, anti-patterns, memory, debt, routing blocks, phase results, reviewer results, and track history."
+  ],
+  "commands": [
+    "git rev-parse HEAD at dispatch and completion -> b7180a7f4fa03413e96928e89bdcb7dcafce6cdd.",
+    "git diff --name-only 48a851a98..b7180a7f4fa03413e96928e89bdcb7dcafce6cdd -- <track paths> -> measure/tracks.md; measure/tracks/storytime_at_home_release_20261106/plan.md; measure/tracks/storytime_look_20261107/metadata.json; measure/tracks/storytime_look_20261107/plan.md.",
+    "git diff --name-only 0dd0cf13a..b7180a7f4fa03413e96928e89bdcb7dcafce6cdd -- <track paths> -> no output; exit 0.",
+    "HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 heavy-run PROJECT_TESTS -> exit 0; Test Files 108 passed; Tests 987 passed.",
+    "HEAVY_PRIORITY=p1 heavy-run PROJECT_CHECKS -> exit 0; no output.",
+    "HEAVY_PRIORITY=p1 heavy-run PROJECT_LINT -> exit 0; 0 errors and 28 warnings.",
+    "git merge-base checks over the four accepted phases -> every base-to-head and head-to-current check exited 0.",
+    "python3 scan of plan task markers -> 35 [x], 3 [b], 0 [~], 0 [ ]; every completed line has an ancestor commit.",
+    "python3 scan of tests/*.sh for archived track document paths -> archived_track_references=0.",
+    "git worktree list -> master plus six auxiliary worktrees of other tracks.",
+    "git log track path scan -> 165 commits and 138 distinct paths.",
+    "bash measure/doctor.sh -> not rerun; r2 exit 0 carries because the ruling diff names no doctor path."
+  ],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/final-acceptance-b7180a7f4.json",
+    "measure/runs/storytime_look_20261107/final-acceptance-b7180a7f4.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "audited_head_sha": "b7180a7f4fa03413e96928e89bdcb7dcafce6cdd",
+  "route": "kimi-code-plan-cn/k3.1-pro#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "The gates cover the specified behavior, and plan.md:55 records PM acceptance of 82.2 against the original 85.0 goal."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "The Red logs record failing-first cases, and PROJECT_TESTS passed 108 files and 987 tests without a skip."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 4,
+      "evidence": "The exact scan found 138 paths, with the www and swept login exceptions recorded in test-strategy.md:576-588."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every task has commit proof, and the three current gates and final path diff have recorded results."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-a-a6d696902.json passed Phase 1 with caller evidence; my 108-file gate rechecks its behavior cases."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-c-a6d696902.json passed the Phase 1 contracts; the current type and test gates confirm its pinned call sites."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 4,
+      "evidence": "adversarial-413467c3a.json passed with five nonblocking items; the current look gate includes its adversarial files."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-a-p2-9fb4df869.json verifies the landscape plaque fix; the current look gate passes its artifact assertions."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-c-p2-9fb4df869.json finds no blocker and retains one Thai line-break note; the current gates pass."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 4,
+      "evidence": "adversarial-p2-9fb4df869.json rejects four mutants and retains two narrow gaps; its files pass in my look gate."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-a-p2b-r3-65b8325b0.json closes the gate-helper and focus-ring blockers; the current brand tests pass."
+    },
+    {
+      "reviewer_role": "review-b",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 5,
+      "evidence": "review-b-p2b-r2-65b8325b0.json checks the inert logo and fixture boundaries; the r2 source read found the same fixed alt text."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-c-p2b-r3-65b8325b0.json verifies the focus-ring cascade; the current brand tests pass with no skip."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 4,
+      "evidence": "adversarial-p2b-65b8325b0.json retains four accepted edge notes; both adversarial files pass in my look gate."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-a-p3-3a080e490.json closes three evidence-text blockers; plan.md:84-88 now holds the corrected counts."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "opencode/glm-5.3-flash-free#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "review-a-p3-48a851a98.json proves the exact rem1 pins; the current gates pass both changed files."
+    },
+    {
+      "reviewer_role": "review-b",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 5,
+      "evidence": "review-b-p3-3a080e490.json checks all three switch controls; the r2 read of content.ts:45 and :130-157 agrees."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-c-p3-3a080e490.json passes the draft-week contract; the current switch and adversarial tests pass."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "opencode/glm-5.3-flash-free#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "review-c-p3-48a851a98.json reproduces 70, 32, and 38; the current gates pass the rem1 files."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 3,
+      "evidence": "adversarial-p3-3a080e490.json passed 65 cases but missed four type errors later caught by ux-browser-p3-993dc3e7c.json."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 4,
+      "evidence": "adversarial-p3-r2-993dc3e7c.json records the type-only fix; my current type gate and 108-file test gate pass."
+    }
+  ],
+  "round": "r3",
+  "role": "final-acceptance",
+  "track": "storytime_look_20261107",
+  "phase": "track review",
+  "baseline_sha": "b7180a7f4fa03413e96928e89bdcb7dcafce6cdd",
+  "track_base_sha": "4154e0ff2659a2d7f856b488f78b4acc0f25bfe6",
+  "role_base_sha": "b7180a7f4fa03413e96928e89bdcb7dcafce6cdd"
+}

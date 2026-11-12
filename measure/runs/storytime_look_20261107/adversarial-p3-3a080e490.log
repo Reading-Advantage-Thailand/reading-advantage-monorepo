@@ -1,0 +1,22 @@
+MEASURE_AGENT_RESULT
+role=measure-adversarial-testing
+track=storytime_look_20261107
+phase=Phase 3
+status=pass
+audited_head=3a080e490b067aeb0c41d1f23fd3122d53714794
+phase_base_sha=2655632aaff89ed8f0e45c3d910f915f04ea0ec9
+role_base_sha=182ab9464068b613c41624bbf6ca3e4beaae9ddf
+commit=3d35c47fa1f6edcf4b8eeaa5c72db642b911ebb2
+summary=65 adversarial cases in three files pass: K2 edge keys and path traversal against the contract and the R3 rule, the review-switch value matrix with w02 and w08 closed, and the deploy-runbook scan. No production code changed.
+blocking_findings=
+nonblocking_findings=Review C F2 kept: the reader tap normalizer is toLowerCase() only; no shipped word triggers the divergence | Strategy M49 kept: the contract key rule takes a hyphen that the K2 rule forbids; the test pins the divergence
+evidence=runbook_files_checked=9 closes review B F1 at test level; clip_entries_checked=173 all K2 keys with R3 paths; the switch lifts only the draft blocker so w02 and w08 stay closed; first run failed on two test expectations corrected to strategy P3.11; diff audited head to role base is empty for app and track
+commands=heavy-run vitest run --maxWorkers=1 <3 files> exit=0 (65 passed); eslint on the 3 files exit=0; git commit exit=0 (3d35c47fa)
+changed_files=apps/storytime/__tests__/look-adversarial-p3-k2-paths.test.ts; apps/storytime/__tests__/look-adversarial-p3-switch.test.ts; apps/storytime/__tests__/look-adversarial-runbook-scan.test.ts
+test_strategy_violations=
+live_contract_violations=
+prod_wiring_violations=
+route_parity_violations=
+retry_recommendation=none
+confidence=high
+END_MEASURE_AGENT_RESULT

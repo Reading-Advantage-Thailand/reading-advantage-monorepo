@@ -1,0 +1,32 @@
+Green log, look Phase 2, task 2.3f (council round 2 fixes, final batch). Model claude-code/claude-sonnet-5-5#high.
+Red model: deepseek/deepseek-flash#high (a different family). No coder was used.
+Pre-fix result: the Red log red-p2-r4-council.log records exit 1, 6 failed. The first run in this role was after the fix: exit 0.
+Defaults taken (no question was asked):
+- Thai partDone is the draft "เสร็จแล้ว" with partDoneStatus "draft" (PM decision Q9).
+- phase3-messages.test.ts skips the Thai-only partDoneStatus key (Red R1 pins a Latin Thai value, the old test forbids it).
+- AC-5.3 failed at 301271 bytes. The 128x128 app/icon.png was re-encoded to 256 colors (10215 to 3261 bytes). The image re-encodes of path-p and meadow-p were reverted: the gate counts them as 128 bytes.
+- The decodable first word box grows to the left, so the measured box gap equals the visible gap and the 48 px tap box stays.
+Round 3 capture readiness: ready. The onepartdone state shows the Done mark (done_marks_found 0 before, 1 after). The song playing state shows the real active line (active_line_before_play=0; line 1 starts at 11.4 s; line 2 is active after the media clock reaches 15.14 s).
+Not built (Daniel holds them): the song action pictograms (M-3), Sign out and a home button on the child screens, the song hero height. Task 2.4 stays [~].
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: storytime_look_20261107
+phase: Phase 2: Look port of the picked option
+task: 2.3f
+status: done
+phase_base_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha: aec23d3e1214e3a3a32d6ab88d026857857fdf79
+head_sha: e7a21bcdd527a3be4867a153f20c5040cae454c1
+commits: a3b4dc50b43fd0f6a25278c22d0380afff28b766 (code); e7a21bcdd527a3be4867a153f20c5040cae454c1 (plan evidence)
+gate: CI=true vitest run --maxWorkers=1 __tests__/look-council-r2.test.tsx __tests__/look-council-r1.test.tsx (heavy-run) exit 0, 2 files, 16 tests
+gate: P1.4 look glob (heavy-run) exit 0, 87 files, 669 tests
+gate: bash apps/storytime/__tests__/look-phase2-browser-gate.sh exit 0, Total 80 PASS=80 FAIL=0, done_marks_found 0 then 1, active_line_before_play=0, chip_font_px_min=16, chip_contrast_min=12.19, word_gap_em_min=0.493, space_before_punct=0, captures=24
+gate: bash apps/storytime/__tests__/look-phase1-browser-gate.sh exit 0, PASS=13 FAIL=0
+gate: bash apps/storytime/__tests__/phase3-browser-gate.sh exit 0, decodable tap target min 48, transferred_bytes_first_load=293067
+gate: login targeted command of P2b.4 (heavy-run) exit 0, 76 files, 557 tests
+gate: tsc --noEmit (apps/storytime) exit 0
+gate: eslint on the changed TypeScript files exit 0
+tasks: 2.3f [x] (a3b4dc50b); 2.4 stays [~]
+handoff: Review A: check phase3-messages.test.ts (STATUS_KEYS) and app/icon.png (size only, 256 colors). Round 3 capture is ready. Daniel holds M-3 pictograms, Sign out/home button, song hero height.
+END_MEASURE_AGENT_RESULT

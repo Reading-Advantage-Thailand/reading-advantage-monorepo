@@ -1,0 +1,75 @@
+Phase acceptance, Phase 3 "Week content r3 import", track storytime_look_20261107.
+Route: claude-code/claude-fable-5-2[1m]#high. Date: 2026-11-11.
+phase_base_sha: 2655632aaff89ed8f0e45c3d910f915f04ea0ec9
+audited_head_sha: 48a851a989681aa7dd2018865a9b52b70f0ac7c2
+
+VERDICT: pass.
+
+1. The accepted HEAD
+The accepted HEAD is 48a851a98. HEAD was ebbeba254 at the start of this run and 8cf9bf196 at the end.
+Both later commits belong to storytime_app_rebuild_20261025.
+ebbeba254 changes the plan file of that track. 8cf9bf196 adds one new Red test file, phase5-measure-audio.test.ts.
+The new file matches no pattern of the look glob. The gate counts below are the counts of 48a851a98.
+
+2. The gates that I ran (heavy-run, HEAVY_PRIORITY=p1, foreground)
+- The look glob of P3.4: Test Files 108 passed (108); Tests 987 passed (987). The call returned no failure status.
+- The receiver gate of P3.4: gate_exit=0; Test Files 4 passed (4); Tests 58 passed (58).
+- One extra run of 11 s: the two rem1 files, the media coverage file, and the two new Phase 3 files.
+  gate_exit=0; Test Files 6 passed (6); Tests 45 passed (45).
+No gate returned exit 75, 124, or 77. I ran no browser gate.
+One untracked test file of another role sits in apps/storytime/__tests__ (phase5-measure-word-edges.test.ts).
+It matches no gate pattern, so it changed no result.
+
+3. Task markers
+3.1 [x] c48ea065c. 3.2 [x] 345e02ba2. 3.3 [x] with five test-edit commits. 3.4 [b] deferred:daniel.
+3.5 [x] 0f3b731a1 and cc6cd30fd. 3.6 [x] f438d09d7. 3.7 [x] a04837606.
+Each commit resolves, and each commit holds the files that the plan names.
+
+4. The acceptance criteria of spec FR-3
+AC-3.1 to AC-3.5 hold: the import test passes, and my own read gives 163 distinct keys and 173 clip entries.
+AC-3.3a holds: my resolve run prints clip_paths_checked=163 clip_paths_missing=0.
+AC-3.6 holds at the audited HEAD (see F842).
+AC-3.7 holds: source.json holds one commit, the full id of 953f798e, and eight files.
+AC-3.8 waits for Daniel (task 3.4).
+AC-3.9 holds: the switch reads the exact value 1, it sits in lib/content.ts only, and no deploy file sets the name.
+w01 is published. w02 to w07 stay draft until the Thai check of 2026-11-16.
+
+5. Reviews, adversarial round, and UX browser review
+The latest Review A, Review B, and Review C results pass. The rem1 re-reviews A and C target 48a851a98.
+Both adversarial results pass. The latest UX round (r4 at 583c9ce80) passes with 22 rows and taps_checked=7.
+No blocker is open. The Phase 3 product files did not change after the review heads.
+
+6. Hash lines and pin strength
+The 13 Phase 3 commits with a test or a product file add 0 hash lines.
+The rem1 pins stay exact: 70, 32, and 38 in login-media-sign.test.ts, and an exact two-entry list in look-adversarial-p2b.test.ts.
+
+7. Findings (all nonblocking)
+F841: the test strategy holds no row for task 3.7, and the P3.9 table does not name look-adversarial-p2b.test.ts. Default: accept.
+F842: the import commit did not update login-media-sign.test.ts, which AC-3.6 asks; the look glob cannot show that file. The pin is correct now. Default: accept.
+F843: the worktree count is 7 and the capture value is 8. The count fell, and no worktree of this track exists. Default: accept.
+F844: HEAD moved two times during the run through commits of another track. Default: the checkpoint names 48a851a98.
+
+8. Not rerun by me
+tsc, ESLint, the build-graph update, the full app suite, and the browser review. The rem1 Green log records exit 0 for tsc and ESLint.
+
+This role wrote no checkpoint marker, made no commit, and edited no code, test, or plan.
+
+MEASURE_AGENT_RESULT
+role: phase-acceptance
+track: storytime_look_20261107
+phase: P3 (Phase 3: Week content r3 import)
+status: complete
+verdict: pass
+audited_head_sha: 48a851a989681aa7dd2018865a9b52b70f0ac7c2
+allowed_later_commits: ebbeba254 (plan file of storytime_app_rebuild_20261025), 8cf9bf196 (one new test file of storytime_app_rebuild_20261025)
+blocking_findings: none
+nonblocking_findings: F841, F842, F843, F844
+gates_run_by_me: look glob 108 files and 987 of 987 tests; receiver gate exit 0 with 4 files and 58 of 58 tests; extra six-file run exit 0 with 45 of 45 tests
+gates_recorded_not_rerun: tsc, ESLint, build-graph update, full app suite, browser review r4
+deferred: task 3.4 (AC-3.8) deferred:daniel
+retry_recommendation: none
+confidence: high
+result_file: measure/runs/storytime_look_20261107/phase-acceptance-p3-48a851a98.json
+log_file: measure/runs/storytime_look_20261107/phase-acceptance-p3-48a851a98.log
+handoff: none; the orchestrator writes the checkpoint 48a851a98 to the Phase 3 heading
+END_MEASURE_AGENT_RESULT

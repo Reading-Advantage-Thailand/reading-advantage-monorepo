@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "storytime_look_20261107",
+  "phase": "Phase 2b: Brand chrome",
+  "status": "pass",
+  "verdict": "pass",
+  "summary": "The adversarial round of Phase 2b found no production defect that needs Green. The round added two test files, 14 cases, and all 14 pass at the audited head. The cases attack the viewports 320x568, 568x320, 1440x900, and the 200 percent zoom; the fitted plaque font at 0, 1, 6, 13, 60, and 200 characters; hostile titles; a missing logo file; the shared rules against a text input, the red alert, and the draft note; the 403 page and the /st fallback; the [tabindex] part of the focus ring; the focus ring against a control shadow; and the dark-mode current word. Six sheet mutants and 13 source mutants were rejected by the self-tests. Seven layout risks need a real browser and go to the UX browser review. Four non-blocking observations are recorded.",
+  "retry_recommendation": "none",
+  "confidence": "medium",
+  "phase_base_sha": "3480f904c509dc2d66fa827dba73df95b3768c65",
+  "role_base_sha": "65b8325b045fbe3da1d7bae3281bad05f2f74366",
+  "audited_head_sha": "f63f2171e2aafa12a6bfeba438ba7897675505fb",
+  "model_route": "claude-code/claude-sonnet-5-5#high",
+  "mutants_rejected": "19 of 19",
+  "commits": [
+    "f63f2171e2aafa12a6bfeba438ba7897675505fb"
+  ],
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 The dark-mode current word sits on a low-contrast band. Dark theme: amber #fcd34d word on the playing band (amber-800 at 60 percent over the cream card) measures 2.09:1 (packages/read-along/lib/highlight.ts, classes dark:bg-[#fcd34d] and dark:bg-amber-800/60). The AC-4.9 text pairs hold (brown on amber 4.92:1, ink on the dark band 5.09:1), so this is not a spec defect. The non-text edge between the word and its band is below 3:1 (WCAG 1.4.11). The app has no dark theme of its own, so only an OS dark scheme shows it. Route: UX browser review with a forced dark scheme capture; no Green work required.",
+    "N2 The three plaque font rules read var(--title-chars) with no fallback (app/look.css lines 198, 217, 784). If the property were missing, the declaration would be invalid at computed-value time and the font would fall to the inherited size, below the floors of 24, 20, and 20 px. The case is not reachable today: the frame writes a finite integer for every title tried (11 hostile titles, both locales, both variants). A hardening choice for a later change: var(--title-chars, 13).",
+    "N3 Known and accepted (Review C C2-F3): a 60-character title at 568x320 wraps to two lines, and the plaque box (about x 2 to 546, y 28 to 80) covers the logo box (x 16 to 64, y 8 to 56) and the label. Gate row 3 measures overflow and clipping for that fixture, not overlap with the logo, so no row proves the contact. No shipped title (6 to 13 characters) reaches it. A landscape plaque is also always about 1 px under the label bottom (plaque top y 40, label bottom y 41); a horizontal overlap needs a plaque wider than about 312 px (a title of 14 or more characters).",
+    "N4 Test weakness in an older case, not fixed here: F-3b of look-brand-chrome.test.ts models the label as one glyph wide, so it cannot catch a label and logo overlap. H8 of the new file adds a full-width model at 320 wide (gap 6.5 px in en, about 2 px in th for level 12 week 52, at 0.6 em per glyph). The Thai gap is thin, and a browser measure decides it."
+  ],
+  "evidence": [
+    "git rev-parse HEAD at the commit printed f63f2171e2aafa12a6bfeba438ba7897675505fb. The commit holds two files only: apps/storytime/__tests__/look-adversarial-p2b.test.ts and apps/storytime/__tests__/look-adversarial-p2b.test.tsx. Other commits on master during the round (d4ae91a6d strategy, 06f57fb43 architecture track) touch other paths and are not findings.",
+    "First run of the .tsx file (heavy-run, one worker): 7 passed, 2 failed. Both failures were defects of the new test, not of production: H5 guarded count (3 on the sign-in page plus 1 draft note is 4, not 5) and H7 (every word of page 1 had a clip, so no plain word existed). Both were fixed in the test only.",
+    "Final run of both files (heavy-run, --maxWorkers=1): exit 0, Test Files 2 passed (2), Tests 14 passed (14). Counts: hero_cases=8, font_cases=48, hostile titles 11 x 2 variants x 2 locales = 44 renders, plain pages 6, hostile elements 4, red alerts 2 (reader and decodable), tab stops read from the real book page (sentences and clip words, stray=0), tabindex source sites 2, mutants rejected 19 of 19 (H9: 6 sheet mutants; M5: 4 highlight, 4 ring, 5 source mutants).",
+    "tsc --noEmit in apps/storytime: exit 0. ESLint on the two new files: exit 0.",
+    "H1 (cascade engine on the real frame markup): hero height 280/96 at 320x568, 64/64 at 568x320, 340/120 at 1440x900, 64/64 at 160x284 (200 percent zoom of 320x568: the max-height 500 block fires on a portrait view). unreadable_selectors=0.",
+    "H2: for the base, band, and landscape rules the fitted font stays in [floor, cap] for 0 (CSS infinity pins the cap), 1 (cap), 6, 13, 60, and 200 (floor) characters at every viewport. Floors and caps: base 24/72, band 20/44, landscape 20/32. The header width model is min(viewport, 576), because of max-w-xl.",
+    "H3: the plaque holds each hostile title as text (empty, 1 char, 60 en, 60 th, 200 W, stacked Thai marks, RTL, ZWJ emoji, img onerror and script text, newline, quote-and-tag), with no child element and no script or onerror node. --title-chars equals title.length in every case.",
+    "H4: a dispatched error event on the logo leaves the markup byte-identical. The logo keeps alt Storytime Advantage, width and height 48, no inline handler, and the rule gives it an absolute 48 x 48 box at every viewport.",
+    "H5 and H6: over the real 403, /st fallback, sign-in (with the invalid alert), join (draft note), and 404 views (week and stranger), the only look.css rules that reach any element are main > a and the focus ring. No rule reaches a text input, the alert, or the draft note. On the real book and decodable pages, after an audio error, no rule reaches the red alert (text-red-700 stays).",
+    "H7: the [tabindex] part of the ring reaches only [data-sentence][role=button] (tabindex 0) and clip words [data-word] (tabindex -1). A word without a clip has no tabindex and is not reached. The ring shadow is important, so it replaces the package Tailwind ring (Review C C3-F1 confirmed as described; the nit is accepted).",
+    "M2 and M3: look.css holds no @layer and the Tailwind v4 entry is layered, so the unlayered ring beats the utilities. Only the ring sets an outline, and only the ring holds an important box-shadow. 30 app and read-along source files hold no inline shadow or outline and no important utility.",
+    "M1: light pair white on brown 7.09:1; dark pair brown on amber 4.92:1; ink on the light band 12.35:1; ink on the dark band 5.09:1; light word against the band 5.70:1; dark word against the band 2.09:1 (recorded, N1).",
+    "Not run by this role: the browser gates, a build, a server, any network call, a push. No production file, old test, gate script, or plan was edited. No production mutant was run (the rules forbid a production edit); the sheet and source mutants run in memory.",
+    "Scratch deleted: /tmp/p2b-scratch, /tmp/p2b-run1.log, /tmp/p2b-run2.log, /tmp/p2b-run3.log."
+  ],
+  "commands": [
+    "HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash heavy-run.sh -c 'cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-adversarial-p2b.test.tsx __tests__/look-adversarial-p2b.test.ts' -> exit 0, 14 of 14",
+    "heavy-run: cd apps/storytime && ../../node_modules/.bin/tsc --noEmit -> tsc_exit=0; eslint on the two files -> eslint_exit=0",
+    "git add on the two named paths; git commit -> f63f2171e2aafa12a6bfeba438ba7897675505fb"
+  ],
+  "changed_files": [
+    "apps/storytime/__tests__/look-adversarial-p2b.test.ts",
+    "apps/storytime/__tests__/look-adversarial-p2b.test.tsx"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "security_violations": [],
+  "architecture_violations": [],
+  "test_violations": [],
+  "spec_violations": [],
+  "handoff": {
+    "owner": "orchestrator",
+    "summary": "No implementation defect is open. Route the browser items below to the UX browser review. Any later implementation commit invalidates this result.",
+    "verification": "Run the two new files with the look glob through heavy-run. Expected: exit 0, 14 cases added.",
+    "ux_browser_items": [
+      "B1 Text-only zoom 200 percent at 320x568 (font x2): the centered label is about 288 px wide in the model, so its left end (x 16) sits under the logo (right edge x 64, higher z-index). Measure label box against logo box.",
+      "B2 Page zoom 200 percent of a 390 or 320 wide phone (195 or 160 CSS px, height under 500): the landscape block fires on a portrait view. The label has left 72 px and no wrap, so its right edge (about x 234) passes a 160 or 195 px hero. Measure page_overflow and the clipped label.",
+      "B3 60-character English and Thai title at 568x320: measure the overlap of the two-line plaque with the logo box and the label box (model: about x 16 to 64 and y 28 to 56). Row 3 does not measure it.",
+      "B4 Longest shipped titles (13 characters: Is It a Ball?, Unit 1 Review) at 568x320 and 844x390: measure plaque top against label bottom (model: 40 against 41 px).",
+      "B5 A wide-glyph title (13 capital letters, for example WWWWWWWWWWWWW) at 320x568 in the band and cover variants: the font fit assumes 0.68 em per character. Confirm one line or a wrap with overflow 0.",
+      "B6 Block the logo request (as the gate does for place images) and measure: the alt text takes the inherited ink #3b1d0a on the hero green #2b6a3a, about 2.4:1 in the model.",
+      "B7 Focus a read-along sentence and a clip word by keyboard: capture the 6 px brown ring on a 48 px word (neighbor contact, Review C C3-F1), and a forced dark scheme capture of the current word on its band (N1)."
+    ],
+    "scratch_left": 0
+  }
+}

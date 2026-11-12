@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "track_id": "storytime_look_20261107",
+  "role": "measure-closeout",
+  "status": "closed",
+  "completion_date": "2026-11-13",
+  "pre_closeout_head": "b7180a7f4fa03413e96928e89bdcb7dcafce6cdd",
+  "final_acceptance_audited_head_sha": "b7180a7f4fa03413e96928e89bdcb7dcafce6cdd",
+  "final_acceptance_head_equals_pre_closeout_head": true,
+  "track_base_sha": "4154e0ff2659a2d7f856b488f78b4acc0f25bfe6",
+  "lane": "full lane: spec reviews, three phases and phase 2b, one phase acceptance per phase, an adversarial set per phase, a UX browser review per phase, and a final acceptance (r1 fail at dc2766600, r2 fail at 0dd0cf13a on F865 only, r3 pass at b7180a7f4).",
+  "archive_path": "measure/archive/storytime_look_20261107",
+  "audits": [
+    {
+      "role": "phase-acceptance",
+      "phase": 1,
+      "result_file": "measure/runs/storytime_look_20261107/phase-acceptance-p1-dcad011f6.json",
+      "log_file": "measure/runs/storytime_look_20261107/phase-acceptance-p1-dcad011f6.log",
+      "audited_head_sha": "dcad011f6",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "phase-acceptance",
+      "phase": 2,
+      "result_file": "measure/runs/storytime_look_20261107/phase-acceptance-p2-r3-f1bcd1b7f.json",
+      "log_file": "measure/runs/storytime_look_20261107/phase-acceptance-p2-r3-f1bcd1b7f.log",
+      "audited_head_sha": "f1bcd1b7f",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "phase-acceptance",
+      "phase": "2b",
+      "result_file": "measure/runs/storytime_look_20261107/phase-acceptance-p2b-cc48d29ee.json",
+      "log_file": "measure/runs/storytime_look_20261107/phase-acceptance-p2b-cc48d29ee.log",
+      "audited_head_sha": "cc48d29ee",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "phase-acceptance",
+      "phase": 3,
+      "result_file": "measure/runs/storytime_look_20261107/phase-acceptance-p3-48a851a98.json",
+      "log_file": "measure/runs/storytime_look_20261107/phase-acceptance-p3-48a851a98.log",
+      "audited_head_sha": "48a851a989681aa7dd2018865a9b52b70f0ac7c2",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "final-acceptance",
+      "phase": "1 to 3",
+      "result_file": "measure/runs/storytime_look_20261107/final-acceptance-b7180a7f4.json",
+      "log_file": "measure/runs/storytime_look_20261107/final-acceptance-b7180a7f4.log",
+      "audited_head_sha": "b7180a7f4fa03413e96928e89bdcb7dcafce6cdd",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "adversarial-testing",
+      "phase": 1,
+      "result_file": "measure/runs/storytime_look_20261107/adversarial-413467c3a.json",
+      "log_file": "measure/runs/storytime_look_20261107/adversarial-413467c3a.log",
+      "audited_head_sha": "413467c3a",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "adversarial-testing",
+      "phase": 2,
+      "result_file": "measure/runs/storytime_look_20261107/adversarial-p2-9fb4df869.json",
+      "log_file": "measure/runs/storytime_look_20261107/adversarial-p2-9fb4df869.log",
+      "audited_head_sha": "9fb4df869",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "adversarial-testing",
+      "phase": "2b",
+      "result_file": "measure/runs/storytime_look_20261107/adversarial-p2b-65b8325b0.json",
+      "log_file": "measure/runs/storytime_look_20261107/adversarial-p2b-65b8325b0.log",
+      "audited_head_sha": "f63f2171e (file audited_head_sha)",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "adversarial-testing",
+      "phase": 3,
+      "result_file": "measure/runs/storytime_look_20261107/adversarial-p3-r2-993dc3e7c.json",
+      "log_file": "measure/runs/storytime_look_20261107/adversarial-p3-r2-993dc3e7c.log",
+      "audited_head_sha": "993dc3e7c",
+      "status": "pass",
+      "blocking_findings": 0
+    }
+  ],
+  "final_acceptance_rounds": [
+    {
+      "round": 1,
+      "file": "measure/runs/storytime_look_20261107/final-acceptance-dc2766600.json",
+      "status": "fail",
+      "note": "kept as history"
+    },
+    {
+      "round": 2,
+      "file": "measure/runs/storytime_look_20261107/final-acceptance-0dd0cf13a.json",
+      "status": "fail",
+      "note": "F865 only; kept as history"
+    },
+    {
+      "round": 3,
+      "file": "measure/runs/storytime_look_20261107/final-acceptance-b7180a7f4.json",
+      "status": "pass",
+      "note": "orchestrator gate passed: PASS: final-acceptance gate passed (PROJECT_TESTS 108 files and 987 tests, PROJECT_CHECKS, PROJECT_LINT 0 errors and 28 warnings; exit 0)"
+    }
+  ],
+  "pm_rulings": [
+    {
+      "finding": "F865",
+      "date": "2026-11-13 03:2x",
+      "text": "1. F865 and the \"current HEAD\" rule: your default is accepted as a PM ruling for all tracks from now on. A later commit counts as covered when it changes no path of the track under review, or only its plan and evidence files. The final acceptance role checks this with a path diff (audited HEAD..current HEAD, limited to the track paths) and records the command and its output.",
+      "effect": "closed in r3; the path diff 48a851a98..b7180a7f4 names only measure/tracks.md, the at-home plan, and the plan and metadata of this track; the diff 0dd0cf13a..b7180a7f4 is empty"
+    },
+    {
+      "finding": "F863",
+      "date": "2026-11-13 02:2x",
+      "text": "1. Storytime look F863: your default is accepted. A16 counts only the worktrees of the track under review. Report the 6 other worktrees (book-editions, forge-filled-shelves, monorepo-boundaries, primary-build-info, sales-january-course, www-real-logos) with owner and plan in your end-of-session branch list.",
+      "effect": "closed in r3: this track owns no worktree; the orchestrator reports the 6 other worktrees in its branch list"
+    }
+  ],
+  "gate_commands": [
+    "git rev-parse HEAD (b7180a7f4fa03413e96928e89bdcb7dcafce6cdd, exit 0)",
+    "git mv measure/tracks/storytime_look_20261107 measure/archive/storytime_look_20261107 (exit 0)",
+    "python3 over the plan task lines: 38 task lines = 35 [x], 3 [b], 0 [~], 0 [ ] (exit 0)",
+    "grep -nE '^\\s*- \\[[ ~]\\]' measure/archive/storytime_look_20261107/plan.md (no hit)",
+    "grep -nE 'PASS=[0-9]+.*FAIL=0|all checks pass' on the plan (hits on task lines 44 to 55: each hit quotes a dated gate run with its head; no stale or false claim; the final acceptance r3 recorded A5 pass against the current 108-file and 987-test gate)",
+    "grep -nE 'encryption.*resolved|completely fixed|fully solved|all (checks |tests )?pass' measure/tracks.md (no hit)",
+    "grep -nE 'measure/tracks/<id>/plan.md' tests/*.sh (only fixture paths in tests/orchestrator_marker_vocabulary_cases.sh, none for this track)",
+    "grep -rnE 'tracks/storytime_look_20261107' over apps/storytime/__tests__, apps/storytime/lib, apps/storytime/scripts, packages/backend/src, packages/db/src, scripts (no hit)",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track storytime_look_20261107 (run after the manifest: see the closeout log)"
+  ],
+  "deferred_tasks": [
+    {
+      "task": "2.5",
+      "plan_line": 56,
+      "marker": "[b]",
+      "owner": "daniel",
+      "subject": "Daniel's look check of the tagged build (AC-2.5).",
+      "relay": "The orchestrator reports it to the PM; the PM carries Daniel's item."
+    },
+    {
+      "task": "2b.5",
+      "plan_line": 71,
+      "marker": "[b]",
+      "owner": "daniel",
+      "subject": "Daniel's look check of the r2 captures (AC-4.8).",
+      "relay": "The orchestrator reports it to the PM; the PM carries Daniel's item."
+    },
+    {
+      "task": "3.4",
+      "plan_line": 86,
+      "marker": "[b]",
+      "owner": "daniel",
+      "subject": "Upload of the r3 clips to the media bucket (AC-3.8, D2). A production write.",
+      "relay": "The orchestrator reports it to the PM; the PM carries Daniel's item."
+    }
+  ],
+  "plan_state": {
+    "total_tasks": 38,
+    "done_tasks": 35,
+    "deferred_tasks": 3,
+    "in_progress_tasks": 0,
+    "space_marker_tasks": 0,
+    "phase_checkpoints": [
+      "dcad011f6",
+      "f1bcd1b7f",
+      "cc48d29ee",
+      "48a851a98"
+    ],
+    "note": "Every done task names a commit SHA (final acceptance r3 checked each against the ancestry of the audited HEAD). No deferred task is claimed done."
+  },
+  "retained_evidence": [
+    "measure/runs/storytime_look_20261107/ top-level files (about 1 MB; the .gitignore lists measure/runs/, so the closeout commit adds them with git add -f and an explicit path list): final acceptance r1 to r3 (json and log), the phase acceptance, adversarial, review-a/b/c, spec-review, strategy, red-*, green-* and ux-browser results, and this closeout.",
+    "measure/runs/storytime_look_20261107/final-acceptance-b7180a7f4.json and .log (the final acceptance verdict)",
+    "measure/runs/storytime_look_20261107/closeout-b7180a7f4.json and .log (this closeout)",
+    "measure/runs/storytime_look_20261107/ux-* sub-folders (277 png and 7 jpg captures, about 195 MB): kept on disk and NOT committed. A commit of 195 MB of images into the public repository cannot be undone once pushed; the orchestrator did not name them for commit or deletion. 7 files of the run folder were already tracked."
+  ],
+  "artifact_cleanup": "None. The orchestrator named no artifact for deletion. The whole run folder stays on disk. The ux-* capture folders stay untracked.",
+  "open_nits": [
+    "F866 [Nit] routing (final acceptance r3): the independence deviation. Kimi wrote no Red or Green of this track; the PM accepted the deviation and the quota overshoot (metadata deviation_notes).",
+    "Phase 1 N1 to N6 (phase-acceptance-p1-dcad011f6): 'I' hit area, touch-visible clip hint, clip stop on mode switch, 250 ms lyric lag (Q22 limit), English 404 link to the Thai page; the Phase 2 and Phase 3 work addressed several of them; the lyric lag and the 404 link stay for the at-home deploy gate.",
+    "Phase 2 N1 to N6 (phase-acceptance-p2-r3-f1bcd1b7f): 200 percent page zoom (195 CSS px below the 320 floor), px-pinned look text, long landscape plaque touches the game bar chip, pressed-sound capture timing, Thai line break fixture, playAudio/playElement synchronous-throw gap; carried to Daniel's look check (2.5, 2b.5).",
+    "Phase 2b NB1 to NB6 and carried Review A F14 and F15, Review C C2-F3 and C3-F1, adversarial N1 to N4, UX N1 to N4 (phase-acceptance-p2b-cc48d29ee): accepted nits; zoom items carried to Daniel's check of task 2b.5.",
+    "Phase 3 F841 to F844 (phase-acceptance-p3-48a851a98): test-strategy row for task 3.7, login-media-sign test update outside the look glob, worktree count 8 to 7, HEAD moved during the run; all nonblocking.",
+    "Adversarial p3 r2 (adversarial-p3-r2-993dc3e7c): the adversarial gate ran no tsc step; the reader tap normalizer is toLowerCase only; wordClipKey takes a hyphen that the K2 import gate forbids.",
+    "doctor: 'bash measure/doctor.sh' and the orchestrator invariants tests are known failures on other tracks and predate this track (the per_app_cicd archive recorded the same); the final acceptance r3 did not rerun doctor under the PM ruling; this closeout runs no test, build, or deploy.",
+    "Known gate failure, outside this track: 'pnpm architecture:check' exits 1 (the architecture_ci_input_pin_20261110 track owns the fix); this closeout did not run it."
+  ],
+  "anti_pattern_checks": {
+    "a5": "The plan text holds PASS=n, FAIL=0 strings on task lines 44 to 55. Each quotes a dated gate run at a named head; the final acceptance r3 checked the current 108-file and 987-test claim against its own gate run. No false claim found.",
+    "a6": "The registry entry makes no adversarial-pass claim beyond the recorded audits. The stale next-step text ('Phase 2 is next') was replaced by the archived status line (the final acceptance r3 asked for this update).",
+    "a9": "No test reads this track folder at run time. The scan of tests/*.sh and of apps/storytime, apps/storytime/scripts, packages, and scripts found no hardcoded plan path of this track. No test edit was needed."
+  },
+  "a9_comment_only_references": [
+    "Comments in apps/storytime source and tests name 'storytime_look_20261107' as a track id only (look.css, frame.tsx, places.ts, look-*.test.*), not a folder path. None was edited."
+  ],
+  "stale_links_outside_the_track": [
+    "measure/tracks/storytime_at_home_release_20261106/spec.md line 83: the relative link [storytime_look_20261107](../storytime_look_20261107/) breaks after the archive move. A later edit changes it to ../../archive/storytime_look_20261107/. The file belongs to another track, so the closeout did not edit it.",
+    "measure/tracks/storytime_at_home_release_20261106/plan.md names the track id in text only (lines 71, 86, 269, 292, 296); no relative link, no fix needed.",
+    "measure/tracks/storytime_app_rebuild_20261025/plan.md line 2039 names the path measure/tracks/storytime_look_20261107/plan.md as text in a code span, and test-strategy.md of that track names the track id only; the text path is now stale, no link breaks. Not edited."
+  ],
+  "registry": {
+    "file": "measure/tracks.md",
+    "section": "Archived Tracks",
+    "link": "./archive/storytime_look_20261107/",
+    "description_matches_metadata": true,
+    "note": "The entry left the active section and sits first under '## Archived Tracks'. The two Notes of the active entry (Daniel's quote of 2026-11-07 and the 2026-11-10 Phase 2b note) stay in it."
+  },
+  "metadata_updates": {
+    "file": "measure/archive/storytime_look_20261107/metadata.json",
+    "status": "done",
+    "completed": "2026-11-13",
+    "estimated_tasks": 38,
+    "actual_tasks": 38,
+    "description_unchanged": true
+  },
+  "lessons_learned_and_tech_debt": "No update. The two process lessons (a later commit covers a track when it changes only plan and evidence files; A16 counts only the worktrees of the track under review) are PM rulings recorded in this manifest; the PM owns their placement in measure/lessons-learned.md.",
+  "owner_gate": "Three human-gated tasks stay deferred with owner daniel: 2.5, 2b.5, 3.4. The orchestrator reports them to the PM. No live proof of the look is claimed as done.",
+  "retry_recommendation": "none"
+}

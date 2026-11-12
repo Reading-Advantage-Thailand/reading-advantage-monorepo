@@ -1,0 +1,77 @@
+# Spec review log: storytime_look_20261107 (round 2)
+
+Round: 2
+Role: spec-review
+Phase: track setup
+Author model: claude-code/claude-sonnet-5-5
+Reviewer model: opencode-go/deepseek-v4.1-flash
+Role base SHA: 309aa0a336eea71a77a5e630ae7674c57ad2ccf7
+Audited head SHA: 309aa0a336eea71a77a5e630ae7674c57ad2ccf7
+Head at review: 309aa0a336eea71a77a5e630ae7674c57ad2ccf7
+Head moved during review: no
+Result JSON: measure/runs/storytime_look_20261107/spec-review-309aa0a33.json
+
+Verdict: pass. No Blocker is open. F14, F15, and F16 are Majors; F17 and F18 are Nits.
+
+Round 1 fix commits: 5bded9cf8 (findings) and 309aa0a33 (look pick).
+
+## What this track proposes
+
+Phase 1 fixes eleven UI council findings on the Storytime week pages: the not-open 404 with a button to the highest open week, the decodable case, the song playing state, the reader page turn, the playing states and Next, the "Read the words" label, the favicon 404, and the even word gaps. Phase 2 ports option 1, Storybook Quest, with the hero fix that Daniel accepted on 2026-11-07.
+
+## How the current system works, per this spec
+
+The five route files under `app/[locale]/st/[level]/[week]/` render the week home, the decodable, the question screen, the reader, and the song. `loadVisibleWeek` gates a week, and the locale not-found view renders a two-language 404 from a server component with no props. The decodable renders upper-case words, the reader turns pages instantly, and the app holds no icon file.
+
+## Round 1 findings
+
+- F1 resolved: `not-found.tsx` stays a server component and renders `app/[locale]/not-found-view.tsx` (export `NotFoundView`, props `openWeeks` and `locale`), which reads `usePathname()` and calls `parseStorytimePath`. `i18n/routing.ts` sets `localePrefix: "always"`, so the hook gives `/th/st/2/2`.
+- F2 resolved: the spec pins `highestOpenWeeks(): Promise<Record<number, number | null>>` in `lib/content.ts`, with the key and null rules and the `LEVEL_MAX` and `WEEK_MAX` bounds.
+- F3 resolved: AC-1.2 lists the unknown locale, the unparsable paths, the empty level, the disabled teacher route, and the null pathname, with a case list greater than 5.
+- F4 resolved: `playerPlaying` is pinned as "Playing" in `en.json` and "กำลังเล่น" (draft) in `th.json`, with the same values as the decodable playing labels.
+- F5 resolved: each Phase 1 task names its test file in `apps/storytime/__tests__/`.
+- F6 resolved: task 1.3 and AC-1.4 assert `data-playing="true"` and an inline `background-image` with the poster URL, and state that the base has neither.
+- F7 resolved: AC-1.9 names page 1 ("Hello, I am Pat.") and page 2 ("Hello, I am May.").
+- F8 resolved for r2: task 1.2 and AC-1.10 name `phase3-adversarial-r2-pieces.test.tsx` lines 68-70, 99, 115, and 127. The r3 file stays unnamed (F14).
+- F9 resolved: task 1.1 updates `phase3-not-found.test.tsx` lines 41 and 42, and AC-1.10 keeps the equal-value rule and adds the four new keys.
+- F10 resolved: the spec and plan name the five route files, including `questions.tsx`, and Phase 1 states that `questions.tsx` stays unchanged.
+- F11 resolved: task 1.7 names `/favicon.ico` as the measured 404, adds `app/icon.png`, and AC-1.8 checks the PNG signature, 32 by 32 pixels, and 20 KB.
+- F12 resolved: the spec and `metadata.json` say eleven findings and list findings 1, 2, 3, 5, 6, 7, 8, 9, 12, 13, and 18.
+- F13 resolved: the spec and plan say the English label of the decodable card (council finding 2) is "Read the words".
+
+## Findings
+
+- F14 [Major] plan.md 1.2 / spec AC-1.10: The plan names `phase3-adversarial-r2-pieces.test.tsx` but not `phase3-adversarial-r3-pieces.test.tsx`, which hard-codes the same upper-case text at lines 43-44, 93, 99, 134, and 142. Rationale: Green breaks both files, so the suite stays red after the fix and the author must update r3 in the same commit.
+- F15 [Major] plan.md 1.1 / spec AC-1.10: The plan adds `notOpenEnglish` and `openWeekEnglish` with English values to `messages/th.json`, but `phase3-messages.test.ts` flags every Latin-only Thai value and its allow list holds only `notFoundEnglish`. Rationale: the pinned keys break that test unless the plan extends `ENGLISH_VALUE_KEYS`, and AC-1.10 says only that the test holds key parity.
+- F16 [Major] spec AC-1.2: The AC names `/th/st/9/1` as a level with no week file, but `LEVEL_MAX` is 4, so that path is an unparsable path and never reaches the `openWeeks` lookup. Rationale: the empty-level branch needs a parseable level with no file (3 or 4); the named case passes for a different reason and leaves the branch untested.
+- F17 [Nit] spec FR-2: The council source path uses the placeholder `<set>`, while the hero fix names `s1-storybook-quest/round-1.md`. Rationale: wording only; it does not change the build.
+- F18 [Nit] spec FR-2: The text still says "Daniel's pick is asked" and gives a default that "stands at 2026-11-10 12:00", while task 2.1 and AC-2.1 record the pick on 2026-11-07. Rationale: stale wording; the plan and AC-2.1 are clear.
+
+## Phase 2 new text check
+
+- Task 2.1 is `[x]` with Daniel's word "Acepted" and the date 2026-11-07.
+- Tasks 2.3a to 2.3c and AC-2.6 to AC-2.8 pin 220, 96, and 120 CSS px and give the ranges 220-240, 92-100, and 116-124. The author labels these as PM range and orchestrator tolerance; this round accepts them as defaults.
+- The asset plan gives Workbooks SVG pieces by 2026-11-11 with a stand-in fallback, five places from the cover art, and no cast cut-out.
+- `metadata.json` `estimated_tasks` is 16, and the plan holds 16 tasks.
+
+## Notes
+
+- `references/contracts.md` does not exist under `~/.agents/skills/measure/references/` or `skills/measure/references/`; this schema follows the valid result `measure/runs/per_app_cicd_20261107/spec-review-f1382b2c3.json`.
+- HEAD equalled `audited_head_sha` at the start of the review, and no move was observed.
+
+MEASURE_AGENT_RESULT
+role: spec-review
+phase: track setup
+track: storytime_look_20261107
+round: 2
+status: complete
+retry_recommendation: none
+result: measure/runs/storytime_look_20261107/spec-review-309aa0a33.json
+log: measure/runs/storytime_look_20261107/spec-review-309aa0a33.log
+artifacts_written: yes
+head_at_review: 309aa0a336eea71a77a5e630ae7674c57ad2ccf7
+head_moved: no
+verdict: pass
+blockers: none
+handoff: "Verdict pass; no Blocker is open. F1 to F13 are resolved. F14, F15, and F16 are Majors for the author: F14 add phase3-adversarial-r3-pieces.test.tsx to task 1.2 and AC-1.10; F15 extend ENGLISH_VALUE_KEYS in phase3-messages.test.ts for notOpenEnglish and openWeekEnglish; F16 use /th/st/3/1 (a parseable level with no file) in AC-1.2. F17 and F18 are Nits. The two hero tolerances are accepted as defaults per this round."
+END_MEASURE_AGENT_RESULT

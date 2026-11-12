@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: measure-ux-browser-review
+status: complete
+track: storytime_look_20261107
+phase: Phase 1: Council fixes
+commits: none
+tests_run: bash apps/storytime/__tests__/look-phase1-browser-gate.sh (exit 0; === Total: 13 checks (PASS=13, FAIL=0) ===); HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'bash /home/daniebo/Desktop/reading-advantage-monorepo/measure/runs/storytime_look_20261107/ux-p1/ux-p1-review.sh' (exit 0; the review rows printed their labeled values); python3 -m json.tool measure/runs/storytime_look_20261107/ux-browser-2c5b3d73f.json (exit 0)
+files_changed: measure/runs/storytime_look_20261107/ux-browser-2c5b3d73f.json, measure/runs/storytime_look_20261107/ux-browser-2c5b3d73f.log, measure/runs/storytime_look_20261107/ux-p1/ (the harness ux-p1-review.sh, 10 screenshots, 2 aria snapshots)
+plan_updates: none
+known_failures: none
+handoff: Verdict pass, no blocking finding. The phase gate passed 13 of 13 and my own Chrome run adds the labeled values. Four nonblocking findings for Green: F1 the word 'I' hit area (I_hit_w_px=13.27, I_hit_h_px=39 on the phone; 13.84 by 42 on the tablet and the phone landscape; I_effective_tap_w_px=10 to 11; the word stays reachable and the neighbour 'Hello' does not steal its tap); F2 the clip-word affordance works for a pointer only and the shipped w01 holds no clip (clip_words_on_page=0, words_with_tabindex=0), so Green adds a marker that stays visible on touch in Phase 2; F3 the 250 ms lyric lag is the accepted Q22 limit, no owner action in this phase; F4 the English 404 link points to /th/st/2/1 (notfound_en_link_href=/th/st/2/1, notfound_en_link_height_px=66) and the target shows the Thai tile labels, so Green builds the link from the locale of parseStorytimePath, and the orchestrator names F4 for the deploy gate of the at-home release. F5 (K5, the clip that keeps playing across a mode switch) stays a note for Phase 2. No phone result is claimed (headless Chrome at emulated viewports). Screenshots and aria snapshots are under measure/runs/storytime_look_20261107/ux-p1/. One fact for the next run of the harness: the base URL must be http://localhost:<port>, because a sign-in from http://127.0.0.1:<port> answers 403 from assertSameOrigin.
+END_MEASURE_AGENT_RESULT

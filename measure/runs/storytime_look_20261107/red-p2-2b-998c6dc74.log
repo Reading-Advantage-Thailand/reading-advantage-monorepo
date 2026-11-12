@@ -1,0 +1,47 @@
+Red run 2 of Phase 2, task 2.2b (the gate script look-phase2-browser-gate.sh).
+Role: measure-mid-red. Model: claude-code/claude-sonnet-5-5#high (Anthropic; Phase 2 Green is planned on GLM).
+phase_base_sha=08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha=998c6dc74e473827281eba1a47d8c678857a7ee5
+Both values resolve. Start HEAD: 998c6dc74.
+Dirty paths at the start (classified): apps/storytime/__tests__/phase2b-browser-gate.sh is login-owned user work (left alone);
+next-env.d.ts files and the untracked tmp, cache, and QA files are unrelated or generated (left alone).
+Note: the prompt carried a measure-guard line about track primary_in_app_help_20261023. That track is not this task. Ignored.
+
+Step 1: bash -n on the script (heavy-run): bash_n_exit=0.
+Step 2: look-captures.test.ts (heavy-run, vitest --maxWorkers=1): Test Files 1 passed, Tests 5 passed. The two file cases pass now.
+Step 3: --self-test (heavy-run): exit 0; selftest_mutants_rejected=9 of selftest_mutants_checked=9; Total: 1 checks (PASS=1, FAIL=0).
+Step 4: edge threshold calibration (one-off script in /tmp/opencode, heavy-run, read once):
+  good places q-grove 8.1, q-meadow 4.7, q-oak 6.7, q-path 11.6, q-trail 14.6 (max 14.6);
+  untrimmed A-front-a1-clean 7.4, A-reader-a2-clean 5.2, A-back-a1 8.3 (the 16 px strip mean does NOT separate the real untrimmed art);
+  synthetic solid 16 px strip on a good place: 162.5 to 185.7 (min 162.5). T=40. A line-by-line metric did not separate them either.
+Step 5: gate run 1 at the base (heavy-run): exit 1; found two gate defects and fixed them before the commit:
+  (a) a 404 page logged its own 404 answer as a console error: now ignored for the 404 page under test only;
+  (b) the contrast check read an oklab colour as white (ratio 1.00): now every colour goes through a canvas to rgba;
+  (c) the question screen did not show: the shipped w01 has a draft loops part; the fixture copy approves it (phase3 pattern).
+Step 6: gate run 2 at the base (heavy-run): gate_exit=1; captures=24; capture_rows=24; browser rows=63; Total: 73 checks (PASS=33, FAIL=40);
+  console_errors=0; contrast_pairs_checked=474; public_dir=absent; port_closed for both ports; no leftover process and no look-p2 container.
+  Look failures with labeled values: song_stage_height_px=608; hero_band_height_px_phone=0; hero_band_height_px_tablet=0; game_bars=0;
+  webp_files=0 svg_files=0 (woff2 files 8 are the Sarabun fonts); edge_files=0; clip_words_marked=0; word_hit_h_px_min=40;
+  motion_positive_control=0; motion_violations=5; not_found_link_en=/th/st/2/1; reader and decodable captures tap_under_48=4 and 3.
+  Passing at the base (characterization): reader gaps, plain text computed (elements_checked=50), join x2, 404 th and stranger, missing asset,
+  frame long title, the self-test row, week and song captures.
+Step 7: commits: d2d63f026 (the script alone), 12618908885 (plan evidence of 2.2b, [~]).
+Detectors: rg 'measure/tracks|ui-council|handoff/storytime' on the script: no hit. worktrees=8 (same as the base). No production file edited.
+No hash or checksum field added.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+phase: Phase 2: Look port of the picked option
+track: storytime_look_20261107
+status: complete
+baseline_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+head_sha: 12618908885c0dd766c4815d3b53a936b6be717e
+retry_recommendation: none
+result: Red done for task 2.2b; the gate script exits 1 at the base with 40 FAIL rows and labeled values
+log: measure/runs/storytime_look_20261107/red-p2-2b-998c6dc74.log
+commits: d2d63f02690e648df05d4e550ec50fa09a79fb43 (gate script), 12618908885c0dd766c4815d3b53a936b6be717e (plan evidence)
+tests: bash -n exit=0; look-captures.test.ts 5/5 pass; --self-test exit=0 (9 of 9 mutants rejected); gate run at base exit=1, rows=63, Total 73 checks (PASS=33, FAIL=40)
+files: apps/storytime/__tests__/look-phase2-browser-gate.sh; measure/tracks/storytime_look_20261107/plan.md
+artifacts_written: yes
+handoff: "Task 2.2b is [~]. Remaining failures at the base: 40 FAIL rows (hero, frame, assets, clip marker, hit area, reduced motion, N6 link, reader and decodable tap_under_48, question band). Notes for Green and the orchestrator (defaults used, no question asked): (1) The edge-glitch metric of P2.5 does not flag the untrimmed A-front art (7.4, inside the good range 4.7 to 14.6); it flags only a solid strip (min 162.5). T=40. Default: keep the strategy metric. (2) Row sign_in measures tap_under_48=1 (a 24 px link on the login-owned sign-in page) and the strategy sets 0; Green can only fix it with a token rule in globals/look.css. Default: keep the strategy rule; if Green cannot meet it without touching the sign-in page, the PM must decide. (3) The gate uses these hooks, which Green must provide: [data-hero=band] (92 to 100 phone, 116 to 124 tablet), [data-game-bar] (level and week numbers), [data-crest] (animated under no-preference), .song-stage[data-phone] (220 to 240), main h1 as the plaque, and 3 audio buttons with aria-pressed. (4) The tap rule exempts the sign-out form and the width of read-along words (Q27). (5) Run the script plain; it re-enters heavy-run itself. Q23 to Q36 stayed on defaults."
+END_MEASURE_AGENT_RESULT

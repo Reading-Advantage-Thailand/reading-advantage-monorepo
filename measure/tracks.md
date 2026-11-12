@@ -73,12 +73,6 @@ This file tracks all major tracks for the project.
   *Status: active, opened 2026-11-07; Phase 1 removed locally at ccb3ba4e7, accepted at e62a8eba7 [checkpoint], not deployed; Phase 2 is the next Primary deploy by the team (`deferred:daniel`) | Owner: Monorepo orchestrator | Parent: storytime_app_rebuild_20261025 (task 7.1, code part) | Phase 1 local commits 2026-11-07*
   *Note: Daniel 2026-11-07: "Are we back to the Storytime app inside Primary for a third time after I have originated that?" 25 files deleted, 9 edited in apps/primary-advantage. The bucket prefix gs://primary-app-storage/storytime/ stays untouched. No push and no deploy.*
 
-- [ ] **Track: Storytime look and council fixes** — *created 2026-11-07*
-  *Link: [./tracks/storytime_look_20261107/](./tracks/storytime_look_20261107/)*
-  *Status: active, opened 2026-11-07; Phase 1 (8 council fixes) has its checkpoint dcad011f6 (phase acceptance r3 passed on 2026-11-08); Phase 2 (the look port of option 1) is next | Owner: Monorepo orchestrator | Related: storytime_at_home_release_20261106 (its Phase 3 deploy waits for the Phase 1 checkpoint) | Phase 2 Green starts by 2026-11-12 for the 2026-11-20 release*
-  *Note: Daniel 2026-11-07 07:43 ICT: "We had agreed that we would have a theme or look developed in the same vein as our primary advantage program which uses our assets to create a unique and engaging experience for the students". Moved here from Phase 2c and 2d of the at-home plan. PM: M-3 stands, finding 10 dropped, label "Read the words".*
-  *Note 2026-11-10: Phase 2b adds Daniel's brand chrome rules: no game bar, the Storytime Advantage logo, amber and brown chrome, and a large centered banner title.*
-
 - [ ] **Track: Architecture CI input pin** — *created 2026-11-10*
   *Link: [./tracks/architecture_ci_input_pin_20261110/](./tracks/architecture_ci_input_pin_20261110/)*
   *Status: new, opened 2026-11-10; Phase 1 (Red, Green, refresh, phase check) target 2026-11-12 | Owner: Monorepo orchestrator | Amends the archived backend_architecture_enforcement_20260713 | Priority: TOP (CI is red on every push)*
@@ -680,6 +674,14 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 ---
 
 ## Archived Tracks
+
+- [x] **Track: Storytime look and council fixes** — *created 2026-11-07, archived 2026-11-13*
+  *Link: [./archive/storytime_look_20261107/](./archive/storytime_look_20261107/)*
+  *Fix eleven UI council findings on the Storytime week pages (Phase 1), then port the look of the option that Daniel picks from the look study (Phase 2), so that Storytime has a look in the vein of Primary Advantage. Phase 3 imports the Storytime app packages r3 (weeks 1 to 7) with the word clips and the song lead-in.*
+  *Status: done, opened 2026-11-07, archived 2026-11-13; phase checkpoints dcad011f6 (Phase 1), f1bcd1b7f (Phase 2), cc48d29ee (Phase 2b), and 48a851a98 (Phase 3), and the final acceptance r3 at b7180a7f4 passed | Owner: Monorepo orchestrator | Related: storytime_at_home_release_20261106 | 35 tasks done; tasks 2.5, 2b.5, and 3.4 stay deferred (`deferred:daniel`)*
+  *Note: Daniel 2026-11-07 07:43 ICT: "We had agreed that we would have a theme or look developed in the same vein as our primary advantage program which uses our assets to create a unique and engaging experience for the students". Moved here from Phase 2c and 2d of the at-home plan. PM: M-3 stands, finding 10 dropped, label "Read the words".*
+  *Note 2026-11-10: Phase 2b adds Daniel's brand chrome rules: no game bar, the Storytime Advantage logo, amber and brown chrome, and a large centered banner title.*
+  *Note 2026-11-13: The final acceptance r3 passed (audited head b7180a7f4). F865 and F863 closed under the PM rulings of 2026-11-13; F866 (the independence deviation) stays a nonblocking record. Three Daniel gates stay open after the archive: the look check of the tagged build (2.5), the look check of the r2 captures (2b.5), and the upload of the r3 clips to the media bucket (3.4). No deploy from this track.*
 
 - [x] **Track: Class sign-in session lifetime** — *created 2026-11-11, archived 2026-11-12*
   *Link: [./archive/primary_class_session_lifetime_20261111/](./archive/primary_class_session_lifetime_20261111/)*

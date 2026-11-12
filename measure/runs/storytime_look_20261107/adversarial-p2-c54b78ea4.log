@@ -1,0 +1,15 @@
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+track: storytime_look_20261107
+phase: Phase 2: Look port of the picked option
+phase_base_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha: c54b78ea494a4f31343b33a2511060dac533c052
+audited_head_sha: c54b78ea494a4f31343b33a2511060dac533c052
+model_route: nvidia/stepfun-ai/step-5-preview#high (substitute for round r2 on minimax-cn-coding-plan/MiniMax-M3.1-Flash, which stopped on the MiniMax Token Plan limit; Green is Anthropic and Red is DeepSeek, so both are excluded)
+commits: none (no mutant survived, so this round adds no test file)
+status: pass
+summary: Round r3 closes the r2 loop. Green fixed K2a and S4b in 5024a9fd9 with the shared helper lib/is-abort-error.ts, the AbortError return in both reader.tsx playAudio failure paths, the done write with book.pages.length > 0, and the isAbortError import in decodable.tsx. Both committed adversarial files pass at the audited head with no mutant (exit 0, 13 of 13). Five one-line mutants of the fix, one per scratch copy, were each killed by a named case: M1 (the promise-catch return removed) by K2a, M2 (the page count back to > 1) by S4b, M3 (isAbortError always true) by K2b, M4 (isAbortError always false) by K2a and S2, and M5 (the isAbortError call dropped on the decodable sound path) by S2. No survivor, so no new test file and no commit. Open only for a later round: the synchronous-throw branches of reader.tsx lines 256-259 and of decodable.tsx lines 260-265 hold the guard and no case makes play() throw in step.
+mutants_rejected: 5/5
+scratch_left: 0
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

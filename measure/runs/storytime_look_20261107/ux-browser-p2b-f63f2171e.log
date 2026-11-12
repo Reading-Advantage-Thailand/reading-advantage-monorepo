@@ -1,0 +1,60 @@
+UX browser review, Phase 2b "Brand chrome", track storytime_look_20261107
+phase_base_sha=3480f904c509dc2d66fa827dba73df95b3768c65
+role_base_sha=f63f2171e2aafa12a6bfeba438ba7897675505fb
+audited_head_sha=f63f2171e2aafa12a6bfeba438ba7897675505fb
+model_route=claude-code/claude-sonnet-5-5#high
+server_url=http://127.0.0.1:38199 (db 127.0.0.1:36943, stand-in 127.0.0.1:38197; all stopped)
+phone_result_claimed=false (headless system Chrome at emulated viewports)
+
+Launch: one heavy-run p1 launch of ux-p2b-f63f2171e/launch.sh, exit 0, fresh next build
+(build_id=6rXSx54enJrA9PXpP9Myx, newer than the launch start). Run log: ux-p2b-f63f2171e/logs/playwright.log.
+Rows: 65 browser rows, 34 FAIL, 31 PASS. Stop rule did not fire.
+
+FR-4 on three screens, th and en, 390x844 (all values the same in both locales):
+  (a) game bar parts = 0                                   hold
+  (b) label_count=1, visible, no aria-hidden, text exact    hold (ARIA snapshot: label once per page)
+        harness FAIL: label_copies=2 counted the RSC script text in body.textContent (N10)
+  (c) logo_count=1, alt "Storytime Advantage", 48 px, overlap 0 with title and label   hold
+  (d) plaque rgb(252,211,77) / rgb(146,64,14); blue=0; chrome contrast min 4.92          hold
+  (e) ratio 0.80 on home (72/90 px), book (44/55 px), week 2 (53.3/66.6 px); centered
+        (vertical gaps 1/2, 1/1, 0/1.6 px; horizontal 16/16; offset 0); one line          hold
+  (f) current word bg rgb(146,64,14), color white, 7.09:1 (band 5.70:1)                 hold
+  page_overflow=0, small_taps=0, console_errors=0 on all six screens.
+
+Adversarial browser items:
+  B1 text zoom 200 pct 320x568: label overlaps logo 16.5 to 19.4 x 44 px (4 of 4); control clean   finding N1
+  B2 page zoom 200 pct 195x422 and 160x284: overflow 60 to 139 px, label 3.5 to 41.4 px past hero,
+     plaque overlaps logo 9.4 x 23 and 32.6 x 21 px                                                  finding N2
+  B3 60-char title 568x320: plaque covers logo 48 x 33 px and label 128 to 131 x 18 px             finding N3 (known)
+  B4 shipped 13-char titles 568x320 and 844x390: 16 of 16 clear, plaque top 8 px above label bottom,
+     boxes 154 px or more apart sideways                                                              pass
+  B5 13 wide capitals 320x568: text 31 to 42 px wider than plaque, page overflow 19 to 30 px       finding N5
+  B6 logo blocked: alt text cut to about "Storyti" in 48 x 48 px; ink 2.36:1 on fallback green      finding N6
+  B7 keyboard ring: sentence and clip word show white 3 px outline + brown 6 px ring; neighbor gap
+     1 to 3 px on a one-letter word; small notch under the sentence ring                              accepted N8
+  B7 dark scheme: word amber/brown 4.92:1; edge against band 2.10:1                                   finding N7
+  C3-F1: see B7 keyboard ring.  F14: not evaluated (N9): the teacher route answered the 404 view
+  because the fixture left the w01 loops part in draft.
+
+Blocking findings: none. Non-blocking findings: N1 to N3, N5 to N9, N11 (N4 and N10 are a pass and a
+harness note). Details are in ux-browser-p2b-f63f2171e.json.
+
+Cleanup: no process, port, or container of this run is left (ps, ss, podman ps -a checked). No /tmp
+scratch is left. git status --short apps/storytime is empty. HEAD moved to 2947b9e1e during the review
+(another track, one new test file in apps/storytime); no production file changed after the audited build.
+
+MEASURE_AGENT_RESULT
+role=measure-ux-browser-review
+track=storytime_look_20261107
+phase=2b
+phase_base_sha=3480f904c509dc2d66fa827dba73df95b3768c65
+role_base_sha=f63f2171e2aafa12a6bfeba438ba7897675505fb
+audited_head_sha=f63f2171e2aafa12a6bfeba438ba7897675505fb
+model_route=claude-code/claude-sonnet-5-5#high
+status=pass
+retry_recommendation=none
+phone_result_claimed=false
+server_url=http://127.0.0.1:38199
+result_file=measure/runs/storytime_look_20261107/ux-browser-p2b-f63f2171e.json
+handoff=FR-4 (a) to (f) hold on the week 1 home, the week 1 read-along page, and the week 2 home in th and en at 390x844, with 0 blue elements and a brown current word at 7.09:1. No blocking finding. Six edge defects are non-blocking: label under the logo at 200 pct text zoom (N1), overflow and overlaps at 195 and 160 px page zoom (N2), a 60-character title covering the logo (N3), 13 wide capitals overflowing the plaque (N5), the blocked-logo alt text (N6), and a 2.10:1 word edge in the OS dark scheme (N7). Two items were not decided in a browser because of a harness defect: the label copy count (the accessibility snapshot shows one copy) and F14 (the fixture left the loops part in draft, so the 403 view never rendered; the teacher week and day were also not covered). One more launch with the loops part approved in the fixture would close F14. Default: do not launch again, because Review A proposed to defer F14 to Phase 3. HEAD moved to 2947b9e1e by a test-only commit of another track.
+END_MEASURE_AGENT_RESULT

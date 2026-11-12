@@ -1,0 +1,171 @@
+# Green log: Phase 1 Council fixes (storytime_look_20261107)
+
+Role: measure-jr-green. Model: claude-code/claude-sonnet-5-5#high (substitution for MiniMax, set by the orchestrator).
+Red model of this phase: deepseek/deepseek-flash#high. No coder was spawned.
+phase_base_sha: 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6
+role_base_sha: a620b096ff6e01eae0c65615f5bd313d290d9276
+Worktree HEAD at start: 26fdb2630e26ab6a2c5d40a76708d4bd378d8c4a (branch master, no push).
+Red tests are inside phase_base_sha..HEAD (git merge-base --is-ancestor: ancestor_ok).
+Final implementation HEAD: db8b093bb. Final plan-evidence HEAD: 6b4f8d74d. No push.
+
+## Status
+BLOCKED for tasks 1.2, 1.9, and 1.10 by defects in committed Red tests (Mid Red retry needed).
+DONE for tasks 1.1, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, and 1.11 (marked [x] in the plan).
+The Green code for all 11 tasks is committed. Every case of the Red files passes, except the 5 cases and 1 empty suite below.
+
+## Base measurements (before the first change)
+- phase3_browser_pass=37 (bash apps/storytime/__tests__/phase3-browser-gate.sh: PASS=37, FAIL=39, exit 1).
+  The gate script does not sign in. The login guard answers 307 to every page, so the reader rows fail at the base.
+  The final HEAD gave the same: PASS=37, FAIL=39, exit 1, and the lists of PASS and FAIL names are equal.
+- Strategy base: files=60 tests=478 (strategy facts M1 and M1a).
+
+## Gates at the final code HEAD db8b093bb
+1. Final targeted command (GREEN_TEST_COMMAND, heavy-run, foreground, JSON report):
+   exit=1; files=70 (66 passed, 4 failed); tests_passed=530; tests_failed=5; tests_skipped=0; tests_total=535.
+   R-COUNT: 478 - 8 (old_cases_removed) + 65 (new_tests: the 11 look files run alone gave 65) = 535. It matches.
+   File count: 60 old files - 1 (phase3-adversarial-r2-reject-order.test.tsx, removed by Red) + 11 look files = 70.
+   The 5 failed cases and the empty suite (all are Red defects, see the list below):
+   - look-decodable-case: "ships no upper-case transform in the app or lib source"
+   - look-reader-highlight: H1
+   - look-word-clip-tap: C3, C7, and "lists every clip file once with kind word-clip"
+   - phase3-audio-seek-stop: suite "a second word tap replaces the first cut stop (finding F146)" holds no test
+2. tsc --noEmit (app): exit 0; look_tsc_errors=0.
+3. ESLint on the changed .ts and .tsx files of the app: exit 0, 0 errors, 2 warnings
+   (phase3-audio-seek-stop firstWordOfPageOne unused, left by Red; the package file lies outside the app base path).
+4. packages/read-along tests: exit 0; 9 files; 104/104 passed.
+5. Detectors:
+   - rg 'toUpperCase|text-transform|\buppercase\b' apps/storytime/app apps/storytime/lib: exit 1 (expected 1)
+   - rg '"Decodable"' apps/storytime/messages: exit 1 (expected 1)
+   - rg 'measure/tracks|ui-council|handoff/storytime' apps/storytime/__tests__/look-*: exit 1 (expected 1)
+   - rg 'wordCutBounds|cutEnd|seekAndRun|stopAtMediaEnd' reader.tsx: exit 1 (expected 1)
+   - rg 'wordClips' lib/contracts/week.ts: exit 0 (expected 0)
+   - rg 'videoLeadInSeconds' song.tsx lib/contracts/week.ts: exit 0 (expected 0)
+   - rg 'use-read-along' reader.tsx: exit 0 (expected 0)
+6. questions.tsx: no look commit changes it. It differs from the phase base only by the login commit ac02b7c37.
+7. git worktree list | wc -l: 8 (equal to the base).
+8. build-graph update ./graph.db (heavy-run): "Updated 10 files (107 -> 142 nodes, 164 -> 189 edges)". graph.db is ignored by git.
+
+## Red-test defects (committed Red files, not edited; each one is unsatisfiable by any Green code)
+Each defect was proved with a throwaway copy of the test file in __tests__ (named zz-diag-*; deleted, never committed).
+In the copies, with only these defects fixed, every other case passed.
+- D1 look-decodable-case "ships no upper-case transform": its last assertion expects that decodable.tsx still contains
+  toUpperCase. The first assertion of the same case needs no toUpperCase in app or lib. The two contradict.
+- D2 look-reader-highlight H1: it asserts frames_run above 100 for each page run. Page 4 has 89 frames at 16 ms.
+  No reader can pass. With that one check removed, all 7 highlight cases passed (H1 to H7 incl. 4 phases, 33 words).
+- D3 look-word-clip-tap C3: renderPage calls pageBook on the same week object for 8 pages, so page 2 throws a TypeError in the
+  test. The last lines compare a clip map built by index with the map built by key, which are equal, and assert they differ.
+- D4 look-word-clip-tap C7: the Thai half re-renders after the test installed a resolving play mock. The rejecting mock is not
+  installed again, so no alert can show.
+- D5 look-word-clip-tap receiver block: walk_not_in_list counts approval.audio.source (a string that ends in a media extension).
+  phase3-media-coverage allows the approval, print, and benchmark paths. mediaOf must not list them.
+- D6 phase3-audio-seek-stop.test.tsx: the Red commit left the describe "a second word tap replaces the first cut stop (finding F146)"
+  with no test. Vitest reports "No test found in suite" and fails the file.
+Request to the orchestrator: a Mid Red retry that fixes D1 to D6, then a Green rerun of tasks 1.2, 1.9, and 1.10.
+Green expects no more code change: with D1 to D5 fixed in the copies, 12/12 clip cases and 7/7 highlight cases passed.
+
+## Test-setup edits caused by the login change (login commit ac02b7c37; no assertion line changed)
+Each edit was proved by a run before and after. A file that holds the login mock keeps its own mock.
+- look-week-card-label.test.tsx, case "renders the live week page with the new decodable card label": before: failed with
+  "the media base names no bucket"; after: 3/3. Edit: vi.mock("../lib/media/sign") with an empty signed map (as phase3-home-render).
+- look-song-playing.test.tsx, 7 cases (S1 to S7), and phase3-song-ui.test.tsx, 3 cases: before: 10 failed (empty src and poster);
+  after: 7/7 and 7/7. Edit: vi.mock("../lib/media/url") with one URL for every file (as phase3-decodable-ui).
+- look-reader-turn.test.tsx, 4 cases, and look-feedback.test.tsx, case "never runs the count ahead of the sentence":
+  before: failed ("the new picture must be an img", "the audio must use the book recording", "Unable to fire a load event");
+  after: 6/6 and 6/6. Edit: the same vi.mock("../lib/media/url").
+No helper look-render.tsx exists in the Red commits, so each file got its own mock.
+
+## Old-test edits by Green (a case that Green proved by a run that it must change; reason in the commit body)
+- phase3-decodable-punct.test.tsx (not in the list of AC-1.10): the word button and the group read "nest" and "nest."
+  because the page no longer upper-cases. Before: 1 failed; after: 1/1. The path is not in the allowed list of closeout item 3.
+- phase3-loops-off.test.tsx (not in the list of closeout item 3): after the first press on Next, the test sends the load event of the
+  new picture (AC-1.5 holds the old page). Before: failed "the reader must turn the page"; after: 9/9.
+- phase3-audio-seek-stop.test.tsx (case "defers the Listen page-start seek until the metadata loads"): the same load event.
+  Before: failed (seek target 0); after: the case passes (8/8 cases; the file still fails on D6 only).
+Two paths are outside the allowed list: phase3-decodable-punct.test.tsx and phase3-loops-off.test.tsx.
+The orchestrator may add them to the allowed list or order another route.
+
+## Decisions taken with a default (no question tool; the orchestrator may change them)
+- Q-A: Next is disabled on the last page only when the reader has no tiles and no questions (look-feedback needs a disabled Next at 8 / 8;
+  phase3-readalong-ui, phase3-reader-end, phase3-adversarial-r2-end-tiles, and phase3-question-screen need the end view). The real page always passes tiles.
+- Q-B: only a press on Next holds the page. Previous and a swipe turn at once (look-feedback and phase3-readalong-ui need that).
+- Q-C: the client 404 view imports the text from messages/en.json, because the locale layout has no client message provider.
+  The server component reads the locale with getLocale and falls back to the routing default.
+- Q-D: the word hit area is a pseudo-element that is 0.5 rem higher above and below and 0.25 rem wider on each side.
+  A short word keeps a hit area narrower than 44 px, so it cannot take the tap of a neighbour. The browser row tap_target_min_px_player
+  (phase3-browser-gate.sh) may measure the word box and report less than 44 px. The browser review decides.
+- Q-E: icon.png is the study crest q-crest.svg drawn at 128 px (10215 bytes). The commit body names the source file.
+- Q-F: ReaderLabels.playing is optional with a locale default, so the three old tests that build labels without it keep type-checking.
+- Q-G: the timeupdate event also moves the highlight (one more trigger of the same function), because phase3-readalong-ui lights a word
+  after one timeupdate with no frame. The frame loop of useReadAlong is the main driver.
+
+## Notes for the later roles
+- Other commits that came in during this role (login track): 0042cb462, 27fc15433. phase3-readalong-ui.test.tsx and
+  phase3-audio-seek-stop.test.tsx had uncommitted edits of another role at the start; the working tree state of these files was clean when
+  Green edited phase3-audio-seek-stop.test.tsx. login-media-sign.test.ts was committed by its role (ee7418443).
+- The working tree holds uncommitted edits of other roles that Green did not touch: phase4-week-view.test.tsx,
+  app/[locale]/teacher/[level]/[week]/page.tsx and week-view.tsx, and the next-env.d.ts files.
+- The git log grep for the track id also matches three www-reading-advantage files (revert commit 67a5d1a47 of the login track); they are not Green paths.
+- The browser rows (gap_max_delta_px, tap targets, head link of /icon.png, computed Next fill) and the live checks stay with the browser role.
+- Files added: apps/storytime/app/icon.png, app/[locale]/not-found-view.tsx, lib/highlight-windows.ts.
+- Thai values (notOpenThai, openWeekThai, playerPlaying) are drafts for 2026-11-16.
+
+## Commits (branch master, no push)
+- 5ab3834bb feat(storytime): add the not-open 404, card label, and icon (tasks 1.1, 1.6, 1.7)
+- 0aa84d2a7 fix(storytime): keep the source case in the decodable page (task 1.2)
+- 716c14399 feat(storytime): keep the song poster and offset the lyric lines (tasks 1.3, 1.11)
+- e0cb06b53 feat(storytime): show the playing state on the decodable sound (task 1.5, decodable)
+- db8b093bb feat(storytime): rework the reader turn, highlight, and clips (tasks 1.4, 1.5, 1.8, 1.9, 1.10)
+- 6b4f8d74d docs(measure): record the look green evidence (plan markers)
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+phase: Phase 1: Council fixes
+track: storytime_look_20261107
+status: blocked
+retry_recommendation: mid-red-retry
+result: tasks 1.1, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.11 done and marked [x]; tasks 1.2, 1.9, 1.10 implemented but blocked by Red-test defects D1 to D6
+log: measure/runs/storytime_look_20261107/green-p1-a620b096f.log
+artifacts_written: yes
+baseline_sha: a620b096ff6e01eae0c65615f5bd313d290d9276
+head_sha: 6b4f8d74daba31fa62cc635a06e01975f5b3f926
+dispositions: none
+tests: "final targeted command exit=1 files=70 tests_passed=530 tests_failed=5 tests_skipped=0 (R-COUNT 478-8+65=535); tsc exit 0 look_tsc_errors=0; eslint exit 0; read-along package 104/104; phase3_browser_pass=37 at base and at final HEAD (exit 1 both, login guard)"
+commits: 5ab3834bb, 0aa84d2a7, 716c14399, e0cb06b53, db8b093bb, 6b4f8d74d
+files: apps/storytime/app/icon.png, apps/storytime/app/[locale]/not-found.tsx, apps/storytime/app/[locale]/not-found-view.tsx, apps/storytime/app/[locale]/st/[level]/[week]/{page,decodable,reader,song}.tsx, apps/storytime/lib/{content,route-parse,highlight-windows}.ts, apps/storytime/lib/contracts/week.ts, apps/storytime/scripts/receive-weeks.ts, apps/storytime/messages/{en,th}.json, packages/read-along/components/read-along/read-along-passage.tsx, test setup edits (look-week-card-label, look-song-playing, phase3-song-ui, look-reader-turn, look-feedback), old-test edits (phase3-decodable-punct, phase3-loops-off, phase3-audio-seek-stop), measure/tracks/storytime_look_20261107/plan.md
+handoff: "Request a Mid Red retry for D1 to D6 (look-decodable-case last assertion; look-reader-highlight H1 per-run frames check; look-word-clip-tap C3, C7, receiver walk filter; empty describe in phase3-audio-seek-stop). Then rerun Green for 1.2, 1.9, 1.10: expect no code change. Plan markers: 1.1, 1.3 to 1.8, 1.11 are [x]; 1.2, 1.9, 1.10 are [~]. Out-of-scope paths (closeout item 3): phase3-decodable-punct.test.tsx, phase3-loops-off.test.tsx. New files: app/icon.png, not-found-view.tsx, lib/highlight-windows.ts. phase_base_sha 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6; Green HEAD 6b4f8d74d. The browser gate script was not changed; its base and final PASS count are equal (37)."
+END_MEASURE_AGENT_RESULT
+
+## Round 2 (after Look Red r4: 7b896cf8d and bf69551a7)
+role_base_sha for this round: bf69551a7838251f3be3312ac1e594a388f1542f. No test file and no production file changed.
+Uncommitted work of the login track in the tree (not touched, not staged): apps/storytime/lib/media/sign.ts. No gate failed because of it.
+Gates (heavy-run, foreground, one at a time):
+- Task 1.2: look-decodable-case, phase3-adversarial-r2-pieces, phase3-adversarial-r3-pieces, phase3-decodable-punct: exit 0, 4 files, 10 passed.
+- Task 1.9: look-reader-highlight + the six timeupdate files + phase3-readalong-ui: exit 0, 7 files, 42 passed. packages/read-along: exit 0, 9 files, 104/104.
+- Task 1.10: look-word-clip-tap + phase3-readalong-ui, phase3-audio-seek-stop, phase3-adversarial-taps, look-reader-highlight: exit 0, 5 files, 39 passed.
+  Guard run (8 files): exit 0, 102 passed. Detectors: cut names in reader.tsx exit 1 (expected 1); wordClips in week.ts exit 0 (expected 0);
+  use-read-along in reader.tsx exit 0 (expected 0); toUpperCase detector exit 1 (expected 1).
+- Final targeted command (GREEN_TEST_COMMAND): exit 0; files=70; tests_passed=535; tests_failed=0; tests_skipped=0.
+  R-COUNT: 478 - 8 (old_cases_removed) + 65 (new_tests, the 11 look files) = 535. It matches.
+- tsc --noEmit (app): exit 0, 0 errors (look_tsc_errors=0).
+- ESLint on the changed .ts and .tsx files: exit 0, 0 errors, 1 warning (firstWordOfPageOne unused in phase3-audio-seek-stop, left by Red).
+- Plan: tasks 1.2, 1.9, 1.10 are [x] (commit 51ef687ec). grep -nE '^- \[( |~)\] 1\.' plan.md prints nothing (exit 1).
+- phase3-browser-gate.sh was not rerun: no code changed since the round 1 run (PASS=37, FAIL=39, exit 1, equal to the base).
+- Open for the orchestrator: out-of-scope paths of closeout item 3 stay phase3-decodable-punct.test.tsx and phase3-loops-off.test.tsx.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+phase: Phase 1: Council fixes
+track: storytime_look_20261107
+status: done
+retry_recommendation: none
+result: tasks 1.2, 1.9, and 1.10 finished with no code change; all 11 Phase 1 tasks are [x]; final targeted command exit 0 with 535 passed, 0 failed, 0 skipped
+log: measure/runs/storytime_look_20261107/green-p1-a620b096f.log
+artifacts_written: yes
+baseline_sha: bf69551a7838251f3be3312ac1e594a388f1542f
+head_sha: 51ef687eceee659f05662a217bf5a3c4c0bf6f85
+dispositions: none
+tests: "final targeted command exit=0 files=70 tests_passed=535 tests_failed=0 tests_skipped=0 (R-COUNT 478-8+65=535); tsc exit 0; eslint exit 0 (1 warning); read-along package 104/104; guard run 102/102"
+commits: 51ef687ec
+files: measure/tracks/storytime_look_20261107/plan.md
+handoff: "Phase 1 Green is complete. Production commits of the phase: 5ab3834bb, 0aa84d2a7, 716c14399, e0cb06b53, db8b093bb (no production change in round 2). phase_base_sha 4154e0ff2659a2d7f856b488f78b4acc0f25bfe6; Green HEAD 51ef687ec. New files: app/icon.png, app/[locale]/not-found-view.tsx, lib/highlight-windows.ts. Out-of-scope paths of closeout item 3: phase3-decodable-punct.test.tsx and phase3-loops-off.test.tsx (Green old-test edits, reasons in the commit bodies). Browser rows and live checks (gap_max_delta_px, tap targets, /icon.png head link, computed Next fill, five sentences, clip taps, song sync) stay with the browser role and Daniel. phase3-browser-gate.sh base and final PASS count are equal (37, exit 1, login guard); a signed-in gate must come from the login track."
+END_MEASURE_AGENT_RESULT

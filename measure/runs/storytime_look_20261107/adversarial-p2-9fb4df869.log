@@ -1,0 +1,14 @@
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+track: storytime_look_20261107
+phase: Phase 2: Look port of the picked option
+phase_base_sha: 08e60c7959ff7e2a175b7a5fca9552a8fcfdb1ca
+role_base_sha: 607ebe251e93453e7ae02fd57bb942fa7217aed6
+audited_head_sha: 9fb4df8696eaf690005aeee3ffc11c4a57338b81
+commits: d90c4c24f (the new test file alone: apps/storytime/__tests__/look-adversarial-p2-r4.test.ts)
+status: pass
+summary: Round r4 covers task 2.3h. The new file apps/storytime/__tests__/look-adversarial-p2-r4.test.ts reads apps/storytime/app/look.css with the helper helpers/css-rules.ts and pins three facts inside @media (max-height: 500px): the plaque rule sets no definite height, the rule keeps min-height: 40px, and the plaque stays absolute and holds a bottom edge. Four self-test mutants of the shipped text in memory are each rejected by one named check: M1 (height: 40px) by P1, M2 (min-height removed) by P2, M3 (position: static) by P3, M4 (bottom removed) by P3. The heavy job passed with 3 files and 18 tests, and tsc and ESLint pass. The browser gate was not rerun: the Red run at head 6388eb064 (red-p2-2.3h.log, exit 1) shows the row frame long title 60 characters failing with plaque_overflow_px=20 at 568x320 en and th and at 844x390 en and th with plaque_h_px=40, and the Green run at head 9fb4df869 (green-p2-2.3h.log, exit 0) shows 86 checks with PASS=86 and FAIL=0 and the same row at plaque_overflow_px=0 with plaque_h_px=66. No implementation defect is open, so no work goes to Green. The file is an artifact test, so it proves the rule text and not the layout (test strategy P2.5).
+mutants_rejected: 4 of 4
+scratch_left: 0
+retry_recommendation: escalate_human
+END_MEASURE_AGENT_RESULT

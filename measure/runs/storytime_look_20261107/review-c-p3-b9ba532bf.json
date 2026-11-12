@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "The import keeps the child-facing contract. A tap in the reader plays the clip of that word, a word with no clip is not a tap target, the song of w01 keeps its lead-in of 3 s, and the songs of w02 to w07 stay audio-only with a lead-in of 0. The phase changed data only: the 11 phase commits touch the eight week files, source.json, nine test files and plan.md. The interface Thai drafts are unchanged, no teacher screen shows a clip key, and no share field of w01 or w08 reaches a child or a parent. Three findings stay open as nonblocking. F1 is now a planned task: the PM decided at 14:2x that w02 to w07 stay draft because Workbooks owns meta.status, and that look P3 gains the tasks 3.5 and 3.6 with a review-only switch STORYTIME_REVIEW_DRAFT_WEEKS=1 that opens draft weeks in the local review environment only. F2 is a latent gap in the tap normalizer. F3 is data that no screen plays.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F1 [Major] apps/storytime/content/l2/w02.json to w07.json: the six weeks hold meta.status draft, so apps/storytime/app/[locale]/st/[level]/[week]/page.tsx line 263 answers 404 for them, and apps/storytime/lib/readiness.ts line 95 blocks a week that is not published. Rationale: the phase changed no meta.status, so the import is clean. The PM decided at 14:2x that w02 to w07 stay draft because Workbooks owns meta.status, and that look P3 gains the tasks 3.5 and 3.6 with a review-only switch STORYTIME_REVIEW_DRAFT_WEEKS=1 that opens draft weeks in the local review environment only. The fact is therefore a planned task, not a blocker of this review. The clip files also stay outside the media bucket until task 3.4 runs, so the switch must also point the media base at the hand-off folder for the taps to sound.",
+    "F2 [Minor] apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx line 368: the tap normalizer is toLowerCase only, and it does not apply the K2 form that apps/storytime/__tests__/look-r3-import.test.ts lines 104 to 110 enforce on the keys. Rationale: a page word with a curly apostrophe or with trailing punctuation would be a visible tap target whose key lookup misses, because the key of the clip holds the straight apostrophe and no outer punctuation. The phase did not introduce this normalizer, and the reader code comes from Phase 1 task 1.10. A parsed scan of the seven imported week files returns 0 clip keys with an apostrophe, 0 timed words with a character outside a-z and 0 display words that fail to match their audio word, so no child sees a broken tap today. The gap appears when a later week adds such a word.",
+    "F3 [Minor] apps/storytime/content/l2/w01.json line 1330: the decodable book holds 11 clip keys, and no app file reads the clip map of the decodable book. Rationale: the decodable word tap still cuts the sentence recording at apps/storytime/app/[locale]/st/[level]/[week]/decodable.tsx line 501, so the vowel-link defect of the 'a nurse' pair stays on the decodable page. The phase introduced the data, and the decodable behaviour is pre-existing from Phase 1 and Phase 2. The decodable page sits outside the Phase 3 acceptance, so no phase gate fails."
+  ],
+  "evidence": [
+    "git rev-parse HEAD at the role start returned 5f05fd3534a808e406ae46ca6ca3fca3eef90e1d. The repository HEAD moved past the audited head because other tracks commit in parallel. The audit covers the fixed revision b9ba532bffad493c868e1e8ae2dc3e8d8007f044.",
+    "git diff --name-only b9ba532bf 5f05fd353 -- apps/storytime packages/read-along exits 0 with no output, so the working tree holds the same Storytime code and content as the audited head.",
+    "git show --name-only --format= for the 11 phase commits lists only apps/storytime/content/l2/w01.json to w08.json, apps/storytime/content/source.json, nine test files and measure/tracks/storytime_look_20261107/plan.md.",
+    "git diff --name-only 2655632aa b9ba532bf -- apps/storytime/messages apps/storytime/lib apps/storytime/app packages/read-along exits 0 with no output, so the phase changed no interface message, no contract and no route.",
+    "apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx line 194 reads the clip map of the book, line 368 builds the key with toLowerCase, line 369 guards the lookup with Object.hasOwn, line 370 builds the URL with mediaUrl and line 379 sets the source of the clip element.",
+    "apps/storytime/app/[locale]/st/[level]/[week]/reader.tsx line 530 passes wordIsTarget with the same normalizer as the tap, so the visible target and the played clip always agree.",
+    "apps/storytime/scripts/receive-weeks.ts line 102 lists every word clip value with kind word-clip, so the media list covers the imported clips.",
+    "apps/storytime/lib/media/sign.ts signs every media path of the week through mediaPathsOf, so the clip paths reach the browser as signed URLs.",
+    "packages/read-along/components/read-along/read-along-passage.tsx line 131 computes the target, line 160 adds the pointer cursor only for a target, and lines 169 and 170 add the click handler and the tab stop only for a target.",
+    "apps/storytime/app/[locale]/st/[level]/[week]/song.tsx line 90 reads the lead-in only for a week with a video, and line 113 subtracts it from the media clock.",
+    "apps/storytime/content/l2/w01.json holds song.videoLeadInSeconds 3 with song.video and song.videoPhone. The raw JSON of w02 to w07 holds no song.video, no song.videoPhone and no song.videoLeadInSeconds, and apps/storytime/lib/contracts/week.ts line 270 gives the default 0.",
+    "A parsed scan of the seven imported week files returns 0 clip keys with an apostrophe, 0 timed words with a character outside a-z, and 0 display words that fail to match their audio word.",
+    "A parsed scan of the seven imported week files returns 0 timed words without a clip in every book, so no word of w02 to w07 holds none.",
+    "apps/storytime/app/[locale]/teacher/[level]/[week]/week-view.tsx lines 104 to 111, 130 to 152 and 163 to 178 render the tricky words, the family words and the lesson titles. apps/storytime/app/[locale]/teacher/[level]/[week]/[day]/page.tsx line 87 renders the script title. No clip key is rendered on any screen.",
+    "apps/storytime/lib/contracts/week.ts lines 402 to 412 leave the script shape open, so the share block of w01 and w08 passes the parse. apps/storytime/scripts/receive-weeks.ts mediaOf reads no share field, and mediaPathsOf finds no media extension in a share caption. No app page renders a share field.",
+    "The meta.status of w02 to w07 is draft at the phase base and at the audited head, so the import changed no open state.",
+    "The read-along wordClips block starts at line 815 of w01.json, line 971 of w02.json, line 709 of w03.json, line 834 of w04.json, line 796 of w05.json, line 860 of w06.json and line 1003 of w07.json. Each cited clip key line sits inside that block, and each cited page sentence line sits inside the read-along book, which starts at line 223, 236, 209, 234, 227, 219 and 224 of the same files.",
+    "The focused test run through heavy-run exits 0 with Test Files 3 passed (3) and Tests 27 passed (27). The fixture case C4 of apps/storytime/__tests__/look-word-clip-tap.test.tsx line 320 proves that a word with no clip is not a tap target.",
+    "bash measure/doctor.sh exits 1 with the one known Nit line: FAIL: measure/automation-supervisor.py not found. No other FAIL line appears, so the doctor does not block the phase.",
+    "Review A holds the plan and strategy evidence defects of this phase. This review does not repeat them."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> exit 0: 5f05fd3534a808e406ae46ca6ca3fca3eef90e1d at the role start",
+    "git show --stat --oneline for the 11 phase commits -> exit 0: 9 content files, 9 test files, 1 plan file, no app code",
+    "git diff --name-only 2655632aa b9ba532bf -- apps/storytime packages/read-along -> exit 0: no output, the phase changed no app code, no contract and no message",
+    "git diff --name-only b9ba532bf 5f05fd353 -- apps/storytime packages/read-along -> exit 0: no output, the working tree holds the audited revision",
+    "git diff --name-only 2655632aa b9ba532bf -- apps/storytime/messages apps/storytime/lib apps/storytime/app packages/read-along -> exit 0: no output, the Thai interface drafts are unchanged",
+    "git show --name-only --format= for the 11 phase commits -> exit 0: only the week files, source.json, nine test files and plan.md",
+    "git show b9ba532bf:apps/storytime/content/l2/wNN.json parsed with python for the clip keys, the timed words, the song fields and the meta.status -> exit 0: 163 distinct keys, 0 keys with an apostrophe, 0 timed words without a clip, lead-in 3 for w01 and absent for w02 to w07",
+    "rg -n for the clip key lines and the page sentence lines in the seven week files -> exit 0: the line numbers of the tap word list",
+    "bash measure/doctor.sh -> exit 1: two PASS lines and the one known Nit line FAIL: measure/automation-supervisor.py not found",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/look-word-clip-tap.test.tsx __tests__/look-r3-import.test.ts __tests__/look-adversarial-clips.test.tsx' -> exit 0: Test Files 3 passed (3), Tests 27 passed (27), duration 7.79 s"
+  ],
+  "changed_files": [
+    "measure/runs/storytime_look_20261107/review-c-p3-b9ba532bf.json",
+    "measure/runs/storytime_look_20261107/review-c-p3-b9ba532bf.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "role": "measure-review-c-ux-api",
+  "track": "storytime_look_20261107",
+  "phase": "Phase 3: Week content r3 import",
+  "baseline_sha": "2655632aaff89ed8f0e45c3d910f915f04ea0ec9",
+  "audited_head_sha": "b9ba532bffad493c868e1e8ae2dc3e8d8007f044"
+}
