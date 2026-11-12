@@ -3561,7 +3561,7 @@ for every other track.
     The report also held the 8 combined stage 2 picture failures with the model that failed each.
     The list sits in `measure/runs/storytime_app_rebuild_20261025/stage-log-w01.md` under "The PM
     return list".
-- [x] 5.6 Review copy on a local server on the office network with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel (rule 6.5). Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5). Commit `a3ea15b91`. Daniel's look copy is a tagged no-traffic revision (PM 2026-11-12), deferred:daniel-deploy-word.
+- [x] 5.6 Agent-side review copy of rule 6.5 on a local server with the milestone week and local media files. The agent side opens, plays, and checks every part before the page goes to Daniel. Record the URL and the commit. The review copy sets `STORYTIME_SHOW_DRAFT_MEDIA=1`, so the draft parts show (spec FR-5). Commit `a3ea15b91`. Daniel's look copy is task 5.8.
   - Red evidence (tasks 5.6 and 5.7). Role base `81fbeae9035751211c5dc2ff6435f778c7aee68c`; phase
     base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The role ran on
     `minimax-cn-coding-plan/MiniMax-M3.1-Flash`. Test commit `016d899a2`.
@@ -3782,12 +3782,50 @@ for every other track.
     pictures, audio, and video with no media error, and stopped the copy in the same job
     (`port_closed=1`, `db_container_left=0`). The page holds the five items and the four controls,
     and one Send writes one JSON line. Task 5.7 is `[x]`.
+- [b] 5.8 Daniel's review copy: one tagged no-traffic revision of `storytime-app` with the milestone week, the draft media, and the teacher sign-in (PM decision of 2026-11-12, item 1). deferred:daniel-deploy-word
+  - The image is built from the exact commit that the P5 phase acceptance passes.
+  - The deploy uses the path of the 11-10 preview of task 2b.10 of `storytime_at_home_release_20261106`: `gcloud run deploy storytime-app --no-traffic`.
+  - The deploy carries `--add-cloudsql-instances` for the instance `reading-advantage:asia-southeast1:cloud-sql`, the three secrets as env (`STORYTIME_DATABASE_URL`, `STORYTIME_STORAGE_ACCESS_KEY`, `STORYTIME_STORAGE_SECRET_KEY`), and `STORYTIME_MEDIA_BASE=gs://storytime-app-media`.
+  - The deploy sets `STORYTIME_SHOW_DRAFT_MEDIA=1` and `STORYTIME_TEACHER_ROUTES=1`, and it takes its own tag: `st-review-` plus the first 8 characters of the commit. The traffic stays on the live revision.
+  - The tag and the service name stay within 46 characters. The tag holds 17 characters and the service name holds 13 (apps/storytime/cloudbuild.yaml lines 32 to 33).
+  - Before the deploy, upload the 28 new r4 media files to `gs://storytime-app-media` and check them file by file (count and size equal). Upload no other object. The 42 r2 objects stay unchanged.
+  - The 42 shared files are byte-equal in r2 and r4, so the upload adds 28 objects and overwrites none. The 28 new files sit in `l2/media/w01/family/` (6 pictures) and `l2/media/w01/words/` (22 word audio files).
+  - The repository week file `apps/storytime/content/l2/w01.json` equals the r4 week file plus five share-caption blocks. It names the same 70 media files.
+  - The teacher-app item uses the teacher account `tutor-01`. The orchestrator gives the account to Daniel through the PM. No password sits in any message or file of the repository. The password stays in `~/Desktop/storytime-accounts/`, and it is never printed.
+  - The accounts `staff-01` to `staff-05` hold the role `family`, so the teacher guard gives them the 403 page. The accounts `tutor-01` to `tutor-03` hold the role `teacher`.
+  - The checks after the deploy run by the orchestrator, read only:
+    - A teacher route signed out gives 307 to the sign-in page.
+    - Signed in as `tutor-01`, the week view and one lesson day give 200.
+    - The four student items give 200 with the draft media.
+    - The 28 new files load through signed URLs.
+    - The traffic shows the live revision unchanged.
+  - The next deploy that is meant for traffic removes both switches with `--remove-env-vars=STORYTIME_SHOW_DRAFT_MEDIA,STORYTIME_TEACHER_ROUTES`. Its check reads the env of the new revision and shows neither switch.
+  - Cloud Run copies the env of the newest revision into the next deploy. The cloudbuild.yaml deploy step sets no env, so the removal matters.
+  - The owner of the deploy and the checks is the orchestrator. Daniel's only gate is the push word.
+  - The 11-10 preview revision `storytime-app-00016-xus` does not change.
+  - PM decision of 2026-11-12, item 1, quoted word for word:
+    "1. Storytime F977 (how Daniel's five review items reach him): your default, with one change.
+    - The four student items: the standard live-review page (Pass, Fail, comment, Send); each item links
+    to the tagged no-traffic revision; STORYTIME_SHOW_DRAFT_MEDIA=1 on that tagged revision only. It
+    waits for Daniel's push word (asked at 20:00 today).
+    - The teacher-app item is NOT deferred. Use the same path as the 11-10 sign-in preview (tag
+    st-login-2b9a45a6, staff account, no traffic): the tagged revision gets the teacher sign-in on its
+    own tag. If that needs more than the settings task, tell me the extra work in one line. No
+    "deferred:daniel": his only gate here is the push word.
+    - Then the build session (spec 261, plan 5.6 header, task 6.1, one plan task for the
+    tagged-revision settings), a fresh Green session for the review-page text, and Review C r3 in a
+    fresh session. F979 closes as you say."
+  - Dispositions of the Review C r2 findings (`measure/runs/storytime_app_rebuild_20261025/review-c-p5-413bb5bb1.json`):
+    - F977 is answered by this task, the spec change, and a Green text fix of `apps/storytime/scripts/review/review-server.ts` lines 127 to 128. The page names no launcher and no password file.
+    - F978 is declined, because the launcher stays an agent-side tool and is not a Daniel path.
+    - F979 is closed, because the phones open the https tag URL and the review page stays English.
+    - F980 stays nonblocking, because task 6.1 reads the commit from task 5.8.
+  - Green text fix: the sign-in line of the teacher-app item says to sign in at `/th/sign-in` with the teacher account that the orchestrator gives. It names no launcher and no password file. The Red test `apps/storytime/__tests__/phase5-review-copy.test.ts` line 416 accepts any line that names `/th/sign-in`, so no Red change is needed.
 
 ## Phase 6: Daniel's milestone judgment
 
-- [b] 6.1 Daniel judges the five items on the review page, with the sound and touch checks on a real iPhone and a low-cost Android phone. A section without an answer is open. AC-12.1. deferred:daniel
-  - Answer read rule: the last line per `itemId` wins, and an item with no line is open. Each line
-    records the answer time and the review-copy commit.
+- [b] 6.1 Daniel judges the five items on the standard live-review page (Pass, Fail, comment, Send). The sound and touch checks run on a real iPhone and a low-cost Android phone. Each item links to the tag URL of task 5.8, and the real iPhone and the low-cost Android phone open the same https tag URL. A section without an answer is open. AC-12.1. deferred:daniel
+  - Answer read rule: the answers are the lines of the live-review submissions log; the last line per item wins; an item with no line is open; each line holds its time; the commit is the commit of task 5.8.
 - [ ] 6.2 Fix each finding from Daniel. Repeat stages 1 and 2 for each changed file. Put the changed items in a new page section.
 - [b] 6.3 Deploy the teacher app: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. The at-home deploy is task 3.11. deferred:pm
 - [b] 6.4 Move the traffic to the new revision. Then run the live check of every printed URL (AC-2.3). deferred:daniel

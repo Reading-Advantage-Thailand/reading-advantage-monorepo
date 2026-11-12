@@ -258,7 +258,7 @@ Acceptance:
 
 - A live review page shows five items. The items are the teacher app (week view and one lesson day), the at-home entry page, the read-along, the decodable, and the song.
 - Each item has Pass, Fail, a comment, and Send, as in Daniel's earlier review pages.
-- The review copy runs on a local server on the office network with the milestone week. It serves media from local files. The production bucket receives files only with a deploy, on Daniel's go.
+- Daniel's review copy is one tagged no-traffic revision of `storytime-app` (plan task 5.8). The agent-side check of rule 6.5 runs on a local copy before the page goes to Daniel. The production bucket receives files only with a deploy, on Daniel's go.
 - Sound and touch checks run on one real iPhone and one low-cost Android phone (rule 11.5). These are person checks.
 
 Acceptance:

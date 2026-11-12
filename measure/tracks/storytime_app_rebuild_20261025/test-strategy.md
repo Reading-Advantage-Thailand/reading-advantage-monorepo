@@ -1067,7 +1067,7 @@ A11 and A13 apply at the track closeout only.
 
 - Review A (`measure-review-a-correctness`): yes. The parse functions, the ledger order, and the rubric calibration are correctness claims that a loose test can miss.
 - Review B (`measure-review-b-security`): yes. The runner sends media to a model provider with an API key, and the run logs and the ledger must hold no key. The review checks the switch and the key handling.
-- Review C (`measure-review-c-ux-api`): yes. The review page is the interface for Daniel's judgment (FR-12). The five items, the four controls, and the Thai and English text are new surface.
+- Review C (`measure-review-c-ux-api`): yes. The review page is the interface for Daniel's judgment (FR-12). The five items, the four controls, and the page text in English with `lang="en"` are new surface (PM decision 2026-11-12, F979).
 - Adversarial (`measure-adversarial-testing`): yes. A broken copy, a renamed type, a missing file, a duplicated file, a very long file name, and a model answer with no time attack the gates.
 - UX browser (`measure-ux-browser-review`): yes. The agent side opens, plays, and checks each part on the review copy before the page goes to Daniel (rule 6.5). Viewports: the P3 and P4 sets. `PROJECT_DEV_URL` is the review copy.
 
