@@ -124,8 +124,8 @@ export function renderReviewPage(): string {
       .join("\n        ");
     const signIn =
       item.id === "teacher-app"
-        ? '        <p class="signin" data-review-signin>Sign in at /th/sign-in as the teacher ' +
-          "account teach-01. The launcher writes its password to the password file.</p>"
+        ? '        <p class="signin" data-review-signin>Sign in at /th/sign-in with the teacher ' +
+          "account that the orchestrator gives.</p>"
         : "";
     return [
       `<section class="item" data-review-item="${escapeHtml(item.id)}">`,
