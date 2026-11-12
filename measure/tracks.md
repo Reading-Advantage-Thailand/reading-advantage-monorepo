@@ -1668,7 +1668,7 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 
 - [ ] **Track: Doctor gate repair** — *created 2026-11-12*
   *Link: [./tracks/doctor_gate_repair_20261112/](./tracks/doctor_gate_repair_20261112/)*
-  *Status: new (spec and plan only; due 2026-11-14) | Chore, findings F411 and F421 of the PM decisions of 2026-11-12 | Owner chain: Daniel (owner; deploy gate) → Monorepo orchestrator (track owner) → PM orchestrator (decisions of 2026-11-12) | F411: the marker guard accepts the canonical pending marker `- [ ] ` and fails only a marker outside {` `, `~`, `x`, `b`} | F421: the doctor gate runs the architecture check in CI mode, records the verdict, and names the owner track architecture_ci_input_pin_20261110 | The pin refresh and the debt baseline stay with architecture_ci_input_pin_20261110 (tasks 1.4 and 1.4d) | Done when `bash measure/doctor.sh` exits 0 on master*
+  *Status: implemented (doctor gate green at 4d0b4e6b3; due 2026-11-14) | Chore, findings F411 and F421 of the PM decisions of 2026-11-12 | Owner chain: Daniel (owner; deploy gate) → Monorepo orchestrator (track owner) → PM orchestrator (decisions of 2026-11-12) | F411: the marker guard accepts the canonical pending marker `- [ ] ` and fails only a marker outside {` `, `~`, `x`, `b`} | F421: the doctor gate runs the architecture check in CI mode, records the verdict, and names the owner track architecture_ci_input_pin_20261110 | The pin refresh and the debt baseline stay with architecture_ci_input_pin_20261110 (tasks 1.4 and 1.4d) | Done when `bash measure/doctor.sh` exits 0 on master*
 
 - [ ] **Track: Master push readiness** — *created 2026-11-12*
   *Link: [./tracks/master_push_readiness_20261112/](./tracks/master_push_readiness_20261112/)*
