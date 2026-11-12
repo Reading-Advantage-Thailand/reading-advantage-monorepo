@@ -3820,7 +3820,7 @@ for every other track.
     - F978 is declined, because the launcher stays an agent-side tool and is not a Daniel path.
     - F979 is closed, because the phones open the https tag URL and the review page stays English.
     - F980 stays nonblocking, because task 6.1 reads the commit from task 5.8.
-  - Green text fix: the sign-in line of the teacher-app item says to sign in at `/th/sign-in` with the teacher account that the orchestrator gives. It names no launcher and no password file. The Red test `apps/storytime/__tests__/phase5-review-copy.test.ts` line 416 accepts any line that names `/th/sign-in`, so no Red change is needed.
+  - Green text fix: the sign-in line of the teacher-app item now says to sign in at `/th/sign-in` with the teacher account that the orchestrator gives. It names no launcher and no password file. The Red test `apps/storytime/__tests__/phase5-review-copy.test.ts` line 416 accepts any line that names `/th/sign-in`, so no Red change is needed. Green evidence: model DeepSeek V4.1 Flash 1017 (deepseek/deepseek-flash#high), role base `6a059f1a909ce58db31533a8c81a28db62626fc1`, code commit `215b27c21d4c246bafc76d30ddc2d93f2f43dd9c`; GREEN_TEST_COMMAND exited 0 with 7 test files passed and 61 tests passed; ESLint on `scripts/review/review-server.ts` exited 0; `tsc --noEmit` in `apps/storytime` exited 0; the upload list `measure/runs/storytime_app_rebuild_20261025/upload-r4-new-media-20261112.txt` holds 28 lines (line_count=28) and stays uncommitted.
 
 ## Phase 6: Daniel's milestone judgment
 
