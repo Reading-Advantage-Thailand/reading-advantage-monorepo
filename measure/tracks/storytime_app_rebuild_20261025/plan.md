@@ -3787,16 +3787,17 @@ for every other track.
   - The deploy uses the path of the 11-10 preview of task 2b.10 of `storytime_at_home_release_20261106`: `gcloud run deploy storytime-app --no-traffic`.
   - The deploy carries `--add-cloudsql-instances` for the instance `reading-advantage:asia-southeast1:cloud-sql`, the three secrets as env (`STORYTIME_DATABASE_URL`, `STORYTIME_STORAGE_ACCESS_KEY`, `STORYTIME_STORAGE_SECRET_KEY`), and `STORYTIME_MEDIA_BASE=gs://storytime-app-media`.
   - The deploy sets `STORYTIME_SHOW_DRAFT_MEDIA=1` and `STORYTIME_TEACHER_ROUTES=1`, and it takes its own tag: `st-review-` plus the first 8 characters of the commit. The traffic stays on the live revision.
-  - The tag and the service name stay within 46 characters. The tag holds 17 characters and the service name holds 13 (apps/storytime/cloudbuild.yaml lines 32 to 33).
+  - The tag and the service name stay within 46 characters. The tag holds 18 characters (`st-review-` is 10 plus 8 of the commit), and the service name holds 13. The total holds 31, inside the limit (apps/storytime/cloudbuild.yaml lines 32 to 33).
   - Before the deploy, upload the 28 new r4 media files to `gs://storytime-app-media` and check them file by file (count and size equal). Upload no other object. The 42 r2 objects stay unchanged.
   - The 42 shared files are byte-equal in r2 and r4, so the upload adds 28 objects and overwrites none. The 28 new files sit in `l2/media/w01/family/` (6 pictures) and `l2/media/w01/words/` (22 word audio files).
   - The repository week file `apps/storytime/content/l2/w01.json` equals the r4 week file plus five share-caption blocks. It names the same 70 media files.
-  - The teacher-app item uses the teacher account `tutor-01`. The orchestrator gives the account to Daniel through the PM. No password sits in any message or file of the repository. The password stays in `~/Desktop/storytime-accounts/`, and it is never printed.
+  - One `tutor-01` sign-in at `/th/sign-in` on the tag host opens all five items, because a teacher session passes the at-home sign-in check and the teacher guard. The session cookie is bound to the host, so Daniel's desktop browser, the real iPhone, and the low-cost Android phone each sign in once with `tutor-01`. The orchestrator gives the account name to Daniel through the PM, for all three devices. No password sits in any message, task, or file of the repository. The password stays in `~/Desktop/storytime-accounts/`, and it is never printed. The teacher cap holds 5 active sessions (`apps/storytime/lib/auth/session-policy.ts` line 22). The desktop, the two phones, and the orchestrator check use 4.
   - The accounts `staff-01` to `staff-05` hold the role `family`, so the teacher guard gives them the 403 page. The accounts `tutor-01` to `tutor-03` hold the role `teacher`.
-  - The checks after the deploy run by the orchestrator, read only:
-    - A teacher route signed out gives 307 to the sign-in page.
-    - Signed in as `tutor-01`, the week view and one lesson day give 200.
-    - The four student items give 200 with the draft media.
+  - The checks after the deploy run by the orchestrator: each check reads content only, and the `tutor-01` sign-in writes one session row and one audit row to the production storytime database. No other check writes.
+    - Signed out, a teacher route on the tag host gives 307 to the sign-in page. This check proves the session check only.
+    - Signed in as `tutor-01` on the tag host, the week view and one lesson day give 200. This check proves `STORYTIME_TEACHER_ROUTES=1`.
+    - Signed in as `tutor-01` on the tag host, the four student items give 200.
+    - A read of the env names of the new revision shows `STORYTIME_SHOW_DRAFT_MEDIA=1` and `STORYTIME_TEACHER_ROUTES=1`, and prints no secret value. This read is the proof of the draft switch, because the week marks only the loops as draft (F983). A 200 cannot show the switch.
     - The 28 new files load through signed URLs.
     - The traffic shows the live revision unchanged.
   - The next deploy that is meant for traffic removes both switches with `--remove-env-vars=STORYTIME_SHOW_DRAFT_MEDIA,STORYTIME_TEACHER_ROUTES`. Its check reads the env of the new revision and shows neither switch.
@@ -3821,11 +3822,18 @@ for every other track.
     - F979 is closed, because the phones open the https tag URL and the review page stays English.
     - F980 stays nonblocking, because task 6.1 reads the commit from task 5.8.
   - Green text fix: the sign-in line of the teacher-app item now says to sign in at `/th/sign-in` with the teacher account that the orchestrator gives. It names no launcher and no password file. The Red test `apps/storytime/__tests__/phase5-review-copy.test.ts` line 416 accepts any line that names `/th/sign-in`, so no Red change is needed. Green evidence: model DeepSeek V4.1 Flash 1017 (deepseek/deepseek-flash#high), role base `6a059f1a909ce58db31533a8c81a28db62626fc1`, code commit `215b27c21d4c246bafc76d30ddc2d93f2f43dd9c`; GREEN_TEST_COMMAND exited 0 with 7 test files passed and 61 tests passed; ESLint on `scripts/review/review-server.ts` exited 0; `tsc --noEmit` in `apps/storytime` exited 0; the upload list `measure/runs/storytime_app_rebuild_20261025/upload-r4-new-media-20261112.txt` holds 28 lines (line_count=28) and stays uncommitted.
+  - Remediation round r3 (Review C r3, `measure/runs/storytime_app_rebuild_20261025/review-c-p5-83fbafe99.json`):
+    - Red: add assertions to `apps/storytime/__tests__/phase5-review-copy.test.ts`. The review page holds one page-level sign-in note, an element with the attribute `data-review-signin-all`, outside every item block. Its text names `/th/sign-in` and says that one sign-in opens all five items. No sign-in text of the page names "launcher" or "password". The teacher-app item keeps its `data-review-signin` line. The new assertions fail at the base, because the page holds no page-level note.
+    - Green: add the page-level note to `renderReviewPage` in `apps/storytime/scripts/review/review-server.ts`. Change no other behavior.
+    - Then Review C r4 in a fresh session.
+    - The house live-review page of task 6.1 carries the same page-level sign-in sentence and the five item ids. This is the default, until the PM answers.
+    - Open PM question: the standard live-review page of task 6.1 is the house live-review page with its submissions log, owned by the PM session. The default is that answer, until the PM answers. `review-server.ts` stays the agent-side copy of rule 6.5.
+    - Dispositions: F986 is fixed by the sign-in path of this task (edits 2 and 3) and by the Red and Green steps. F987 is fixed by the checks text (edit 3). F988 is fixed by the tag length (edit 1). F989 part 1 goes to at-home task 3.1 (edit 6), and part 2 is fixed by the checks text (edit 3). F990 is fixed by the Red assertion and by the item ids of task 6.1 (edit 5).
 
 ## Phase 6: Daniel's milestone judgment
 
 - [b] 6.1 Daniel judges the five items on the standard live-review page (Pass, Fail, comment, Send). The sound and touch checks run on a real iPhone and a low-cost Android phone. Each item links to the tag URL of task 5.8, and the real iPhone and the low-cost Android phone open the same https tag URL. A section without an answer is open. AC-12.1. deferred:daniel
-  - Answer read rule: the answers are the lines of the live-review submissions log; the last line per item wins; an item with no line is open; each line holds its time; the commit is the commit of task 5.8.
+  - Answer read rule: the answers are the lines of the live-review submissions log; the last line per item wins; an item with no line is open; each line holds its time; the commit is the commit of task 5.8. The five item ids are `teacher-app`, `home-entry`, `read-along`, `decodable`, and `song`. The house live-review page uses these ids, so the last line per item reads one line set per id.
 - [ ] 6.2 Fix each finding from Daniel. Repeat stages 1 and 2 for each changed file. Put the changed items in a new page section.
 - [b] 6.3 Deploy the teacher app: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. The at-home deploy is task 3.11. deferred:pm
 - [b] 6.4 Move the traffic to the new revision. Then run the live check of every printed URL (AC-2.3). deferred:daniel
