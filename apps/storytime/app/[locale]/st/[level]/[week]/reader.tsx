@@ -5,6 +5,8 @@
  *
  * The server page loads and gates the week, then passes the read-along book and the translated
  * labels. The reader holds the audio element, the page turner, the modes, and the page-end stop.
+ * The end of the book leaves for the week home page, so the child sees the same start page again
+ * (Daniel's finding 1 of task 6.2).
  * The highlight follows each frame through the `useReadAlong` loop of the package. A tap on a word
  * in "My turn" plays the clip of that word from the week package; it never plays a slice of the
  * sentence recording. It never speaks with the phone voice (rule 10.5): every sound is a recorded
@@ -21,7 +23,13 @@ import { markPartDone } from "../../../../../lib/done";
 import { isAbortError } from "../../../../../lib/is-abort-error";
 import { highlightWindows } from "../../../../../lib/highlight-windows";
 import type { BookQuestion } from "../../../../../lib/questions";
-import { StorytimeQuestions, WeekTileLinks, type QuestionLabels, type QuestionTile } from "./questions";
+import {
+  StorytimeQuestions,
+  useAppPathname,
+  useAppRouter,
+  type QuestionLabels,
+  type QuestionTile,
+} from "./questions";
 
 /** The decodable part of the client reader (plan task 3.4, spec FR-7). */
 export { StorytimeDecodable } from "./decodable";
@@ -97,7 +105,8 @@ interface StorytimeReaderProps {
   labels: ReaderLabels;
   /** The questions of the read-along book; the screen shows when the page passes them. */
   questions?: BookQuestion[];
-  /** The three tiles of the week page, which the end of the question screen shows. */
+  /** The entry tiles of the week page; the end of the book leaves for the week home, so the reader
+   * shows no tile copy. */
   tiles?: QuestionTile[];
   /** The translated labels of the question screen. */
   questionLabels?: QuestionLabels;
@@ -107,6 +116,8 @@ interface StorytimeReaderProps {
   doneKey?: string;
   /** The screen that shows the player: the at-home phone and the class screen of the teacher. */
   playerMode?: "at-home" | "class-screen";
+  /** The path of the week home page; the end of the book leaves for it. */
+  weekHref?: string;
 }
 
 /** The Thai message of a failed sound, so the Thai page needs no Thai label from the caller. */
@@ -139,7 +150,8 @@ const PAGE_TURN_HOLD_MS = 3000;
  * until a word tap, then plays the clip of that word. "Slow" plays the real slow recording at a
  * normal rate. The arrows and a horizontal swipe move one page. A press on Next keeps the old
  * page until the new picture has loaded, so the sentence never shows over the wrong picture.
- * The audio stops at the last sentence of the page.
+ * The audio stops at the last sentence of the page. The end of the book leaves for the week home
+ * page, so the child sees the same start page again (Daniel's finding 1 of task 6.2).
  * @param props See `StorytimeReaderProps`.
  * @returns The book page, the controls, and the audio element.
  */
@@ -153,11 +165,13 @@ export function StorytimeReader({
   mediaUrls = {},
   doneKey,
   playerMode = "at-home",
+  weekHref,
 }: StorytimeReaderProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const clipRef = useRef<HTMLAudioElement | null>(null);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   const stopTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const leftRef = useRef(false);
   const [pageIndex, setPageIndex] = useState(0);
   // The page that waits for its picture after a press on Next; the shown page stays until then.
   const [pendingIndex, setPendingIndex] = useState<number | null>(null);
@@ -165,6 +179,10 @@ export function StorytimeReader({
   const [clipPlaying, setClipPlaying] = useState(false);
   const [audioFailed, setAudioFailed] = useState(false);
   const [finished, setFinished] = useState(false);
+  const router = useAppRouter();
+  const pathname = useAppPathname();
+  // The path of the week home page. The caller gives it; the path of the page is the fallback.
+  const weekHomeHref = weekHref ?? pathname;
 
   const pageNumber = pageIndex + 1;
   const normalSentences = useMemo(
@@ -201,7 +219,7 @@ export function StorytimeReader({
 
   useEffect(() => clearStopTimer, []);
 
-  // The book is done on this device when it reaches its last page or its end view. A one-page
+  // The book is done on this device when it reaches its last page or its end. A one-page
   // book reaches its last page on its first view; a longer book needs the last page itself.
   useEffect(() => {
     if (finished || (book.pages.length > 0 && pageIndex >= book.pages.length - 1)) markPartDone(doneKey);
@@ -419,7 +437,20 @@ export function StorytimeReader({
   }
 
   /**
-   * Moves to one page at once, or to the end view past the last page.
+   * Leaves for the week home page, so the child sees the same start page again (Daniel's finding 1
+   * of task 6.2). The done record is written before the leave, so the week page shows the Done
+   * mark. A page outside the app router has no router, so the reader stays where it is.
+   */
+  function leaveForWeekHome(): void {
+    if (leftRef.current) return;
+    if (!router || !weekHomeHref) return;
+    leftRef.current = true;
+    markPartDone(doneKey);
+    router.push(weekHomeHref);
+  }
+
+  /**
+   * Moves to one page at once, or to the end of the book past the last page.
    * @param next The next page index.
    */
   function goToPage(next: number): void {
@@ -430,6 +461,11 @@ export function StorytimeReader({
     if (next < 0) return;
     if (next >= book.pages.length) {
       setFinished(true);
+      // The book is done on this device before the leave, so the week page shows the Done mark.
+      markPartDone(doneKey);
+      // The question screen shows first when the book holds questions, so the screen leads the
+      // leave and the reader leaves only when the book holds no questions.
+      if (questions.length === 0 || !questionLabels) leaveForWeekHome();
       return;
     }
     setPageIndex(next);
@@ -483,7 +519,8 @@ export function StorytimeReader({
         const deltaX = touch.clientX - start.x;
         const deltaY = touch.clientY - start.y;
         if (Math.abs(deltaX) < SWIPE_MIN_PX || Math.abs(deltaX) <= Math.abs(deltaY)) return;
-        goToPage(deltaX < 0 ? pageIndex + 1 : pageIndex - 1);
+        // A swipe moves on from the page that waits for its picture, as the Next control does.
+        goToPage(deltaX < 0 ? (pendingIndex ?? pageIndex) + 1 : pageIndex - 1);
       }}
     >
       {finished && questions.length > 0 && questionLabels ? (
@@ -494,15 +531,15 @@ export function StorytimeReader({
           locale={locale}
           labels={questionLabels}
           mediaUrls={mediaUrls}
+          weekHref={weekHomeHref ?? undefined}
         />
       ) : finished ? (
-        // The end of the book always offers a way back: on a shipped week the loops part is
-        // draft, so no question screen exists and the old end left the child with no control
-        // (finding F149, UX1).
-        <div data-reader-end className="flex flex-col gap-4">
-          <p className="text-lg font-semibold">{labels.finished}</p>
-          {tiles.length > 0 ? <WeekTileLinks tiles={tiles} mediaUrls={mediaUrls} /> : null}
-        </div>
+        // The end of the book leaves for the week home page (Daniel's finding 1 of task 6.2), so
+        // the reader shows no end view with a copy of the week tiles. The line shows for the
+        // moment before the page changes.
+        <p data-reader-finished className="text-lg font-semibold">
+          {labels.finished}
+        </p>
       ) : (
         <>
           <div

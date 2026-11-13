@@ -448,6 +448,7 @@ export default async function StorytimeWeekPage({
               questionLabels={questionLabels}
               mediaUrls={mediaUrls}
               doneKey={doneKeyOf("book")}
+              weekHref={weekHref}
             />
           ) : (
             <WeekHomeLink href={weekHref} label={t("homeChoosePart")} />
@@ -469,6 +470,7 @@ export default async function StorytimeWeekPage({
                 nextPage: t("decNextPage"),
                 audioError: t("decAudioError"),
                 playing: t("playerPlaying"),
+                playSentence: t("decPlaySentence"),
               }}
             />
           ) : (

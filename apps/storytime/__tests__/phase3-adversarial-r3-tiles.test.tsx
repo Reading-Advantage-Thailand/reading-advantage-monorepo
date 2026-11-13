@@ -126,7 +126,7 @@ describe("Phase 3 adversarial week tile list", () => {
     );
   });
 
-  it("offers the end of the book only the tiles of the parts the week has", async () => {
+  it("offers the end of the book no copy of the week tiles", async () => {
     vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
     const week = bookOnlyWeek();
     const view = await renderWeek(week, "book");
@@ -134,15 +134,11 @@ describe("Phase 3 adversarial week tile list", () => {
     for (let index = 0; index < book.pages.length; index += 1) {
       fireEvent.click(screen.getByRole("button", { name: "en:playerNextPage" }));
     }
-    const end = view.container.querySelector<HTMLElement>("[data-reader-end]");
-    expect(end, "the reader must reach its end view").toBeTruthy();
+    const end = view.container.querySelector<HTMLElement>("[data-reader-finished]");
+    expect(end, "the reader must reach its end").toBeTruthy();
     expect(
       end!.querySelectorAll("a"),
-      "the end of a book-only week must offer its one tile (F242)",
-    ).toHaveLength(1);
-    expect(end!.querySelector("a"), "the tile must link to the read-along part").toHaveAttribute(
-      "href",
-      "?part=book",
-    );
+      "the end of the book must show no copy of the week tiles (finding 1 of task 6.2)",
+    ).toHaveLength(0);
   });
 });

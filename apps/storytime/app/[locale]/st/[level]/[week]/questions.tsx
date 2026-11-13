@@ -5,9 +5,10 @@
  *
  * The screen shows the picture of each distinct answer page one time. A right tap marks the picture
  * and moves to the next question. A wrong tap shows a gentle mark and stays, with no sound. The skip
- * control ends the screen. The end shows the three tiles of the week page.
+ * control ends the screen. The end of the screen leaves for the week home page, so the child sees
+ * the same start page again (Daniel's finding 1 of task 6.2).
  */
-import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { mediaUrl } from "../../../../../lib/media/url";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { questionChoices, type BookQuestion, type QuestionPage } from "../../../../../lib/questions";
@@ -15,7 +16,7 @@ import { questionChoices, type BookQuestion, type QuestionPage } from "../../../
 /** The time, in milliseconds, that a right mark shows before the screen moves on. */
 export const QUESTION_ADVANCE_MS = 900;
 
-/** One entry tile of the week page, as the end of the question screen shows it. */
+/** One entry tile of the week page, as the week page builds it. */
 export interface QuestionTile {
   /** The tile id. */
   id: string;
@@ -30,44 +31,29 @@ export interface QuestionTile {
 }
 
 /**
- * Renders the three entry tiles of the week page as links. The end of the question screen
- * and the end of the book share it, so a child always has a way back (finding F149).
- * @param props The tiles and the media base.
- * @returns The list of tile links.
+ * Gives the app router of the page, or null when the page runs outside the app router.
+ * A unit test renders the screen without the app router, so the screen must work without it.
+ * @returns The router of the page, or null.
  */
-export function WeekTileLinks({
-  tiles,
-  mediaUrls = {},
-}: {
-  tiles: QuestionTile[];
-  mediaUrls?: Record<string, string>;
-}) {
-  return (
-    <ul className="flex flex-col gap-3 [@media(max-height:500px)]:flex-row">
-      {tiles.map((tile) => (
-        <li key={tile.id} className="[@media(max-height:500px)]:flex-1">
-          <Link
-            href={tile.href}
-            className="flex min-h-16 items-center gap-3 rounded-2xl border border-[#92400e] p-3"
-          >
-            {tile.pictureFile ? (
-              <img
-                src={mediaUrl(mediaUrls, tile.pictureFile)}
-                alt={tile.pictureAlt}
-                loading="lazy"
-                decoding="async"
-                className="h-20 w-20 rounded-xl object-cover"
-              />
-            ) : null}
-            {/* The label comes from the message files, so its lang follows the locale (finding F135). */}
-            <span className="text-lg font-semibold">
-              {tile.label}
-            </span>
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
+export function useAppRouter(): ReturnType<typeof useRouter> | null {
+  try {
+    return useRouter();
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Gives the path of the page, or null when the page runs outside the app router.
+ * The path holds no query, so it is the week home path of the page.
+ * @returns The path of the page, or null.
+ */
+export function useAppPathname(): string | null {
+  try {
+    return usePathname();
+  } catch {
+    return null;
+  }
 }
 
 /** The translated labels of the question screen. */
@@ -88,7 +74,8 @@ interface StorytimeQuestionsProps {
   questions: BookQuestion[];
   /** The pages of the read-along book. */
   pages: QuestionPage[];
-  /** The three tiles of the week page. */
+  /** The entry tiles of the week page; the end of the screen leaves for the week home, so the
+   * screen shows no tile copy. */
   tiles: QuestionTile[];
   /** The page language. */
   locale: string;
@@ -96,6 +83,8 @@ interface StorytimeQuestionsProps {
   labels: QuestionLabels;
   /** The signed media URL of each file name; a file with no entry gets an empty URL. */
   mediaUrls?: Record<string, string>;
+  /** The path of the week home page; the end of the screen leaves for it. */
+  weekHref?: string;
 }
 
 /** One mark of a choice. */
@@ -112,17 +101,20 @@ type QuestionMark = "right" | "gentle";
 /**
  * Renders the question screen of the read-along (spec FR-13).
  * @param props See `StorytimeQuestionsProps`.
- * @returns The question, its picture choices, the skip control, or the end view.
+ * @returns The question, its picture choices, the skip control, or nothing after the end.
  */
 export function StorytimeQuestions({
   questions,
   pages,
-  tiles,
   locale,
   labels,
   mediaUrls = {},
+  weekHref,
 }: StorytimeQuestionsProps) {
   const choices = useMemo(() => questionChoices(questions, pages), [questions, pages]);
+  const router = useAppRouter();
+  const pathname = useAppPathname();
+  const weekHomeHref = weekHref ?? pathname;
   const [index, setIndex] = useState(0);
   const indexRef = useRef(0);
   const [marks, setMarks] = useState<Record<number, QuestionMark>>({});
@@ -152,7 +144,16 @@ export function StorytimeQuestions({
   );
 
   /**
-   * Ends the screen and shows the three tiles of the week page.
+   * Leaves for the week home page, so the child sees the same start page again (Daniel's finding 1
+   * of task 6.2). A page outside the app router has no router, so the screen stays where it is.
+   */
+  function leaveForWeekHome(): void {
+    if (!router || !weekHomeHref) return;
+    router.push(weekHomeHref);
+  }
+
+  /**
+   * Ends the screen and leaves for the week home page.
    */
   function endScreen(): void {
     if (endedRef.current) return;
@@ -160,6 +161,7 @@ export function StorytimeQuestions({
     endedRef.current = true;
     setMarks({});
     setEnded(true);
+    leaveForWeekHome();
   }
 
   /**
@@ -188,13 +190,9 @@ export function StorytimeQuestions({
     }, QUESTION_ADVANCE_MS);
   }
 
-  if (ended) {
-    return (
-      <section data-question-screen data-question-end className="flex flex-col gap-4">
-        <WeekTileLinks tiles={tiles} mediaUrls={mediaUrls} />
-      </section>
-    );
-  }
+  // The end of the screen leaves for the week home page, so the screen shows no tile copy of the
+  // week page (Daniel's finding 1 of task 6.2).
+  if (ended) return null;
 
   if (!question) return null;
 
