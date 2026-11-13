@@ -10,12 +10,21 @@ set -uo pipefail
 # The gate follows the signed-in pattern of look-phase1-browser-gate.sh: a throwaway Postgres, a
 # stand-in for the storage, one seeded account, the production build, and system Chrome.
 #
+# The PM correction of 2026-11-13: "On a phone in PORTRAIT play the approved 9:16 phone file
+# song-phone.mp4 at full screen width (about 390 x 693 at 390 x 844; cap the height at about 82 %
+# of the viewport so the Play control and the active lyric line stay reachable, lyrics under or
+# over the lower edge). In LANDSCAPE play the 16:9 file at full height. Desktop unchanged."
+#
 # Row 1: at 390x844 the video box of /th/st/2/1?part=song fills the width of the viewport
-#        (song_video_width_ratio of 0.95 or more).
-# Row 2: at 390x844 the video box has the 16:9 shape (song_video_aspect within 0.02 of 1.778).
+#        (song_video_width_ratio from 0.95 up to 1.00).
+# Row 2: at 390x844 the video box has the 9:16 shape (song_video_aspect within 0.02 of 0.5625),
+#        plays song-phone.mp4, and stays at 0.85 of the viewport height or less
+#        (song_video_height_ratio_portrait).
 # Row 3: at 844x390 the video box fills the height of the viewport (song_video_height_ratio from
 #        0.95 up to 1.00). The page has no fixed chrome, so the viewport height is the reference.
-# Row 4: the verdict self-check rejects the mutants (no vacuous rows).
+# Row 4: at 844x390 the video box has the 16:9 shape (song_video_aspect_landscape within 0.02 of
+#        1.778) and plays song.mp4.
+# Row 5: the verdict self-check rejects the wrong values (no vacuous rows).
 #
 # No row plays a recording. A headless run is not phone evidence.
 #
@@ -215,7 +224,7 @@ for _ in $(seq 1 90); do
 done
 if [ "$APP_UP" -eq 1 ]; then pass "The app answers on its port"; else fail "The app does not answer on its port"; fi
 
-echo "=== Run the rows 1 to 4 with SYSTEM Chrome ==="
+echo "=== Run the rows 1 to 5 with SYSTEM Chrome ==="
 cat > "$PLAYWRIGHT" <<'NODE'
 import fs from "node:fs";
 import { chromium, request as playwrightRequest } from "@playwright/test";
@@ -241,21 +250,35 @@ function row(number, ok, detail) {
 /** The verdict of row 1. */
 function widthVerdict(v) { return v.ready === true && v.widthRatio >= 0.95 && v.widthRatio <= 1.0001; }
 /** The verdict of row 2. */
-function aspectVerdict(v) { return v.ready === true && Math.abs(v.aspect - 16 / 9) <= 0.02; }
+function portraitShapeVerdict(v) {
+  return v.ready === true && Math.abs(v.aspect - 9 / 16) <= 0.02 && v.file === "song-phone.mp4" &&
+    v.heightRatio <= 0.85;
+}
 /** The verdict of row 3. */
 function heightVerdict(v) { return v.ready === true && v.heightRatio >= 0.95 && v.heightRatio <= 1.0001; }
+/** The verdict of row 4. */
+function landscapeShapeVerdict(v) {
+  return v.ready === true && Math.abs(v.aspect - 16 / 9) <= 0.02 && v.file === "song.mp4";
+}
 
 const goodControls = [
   widthVerdict({ ready: true, widthRatio: 1 }),
-  aspectVerdict({ ready: true, aspect: 16 / 9 }),
+  portraitShapeVerdict({ ready: true, aspect: 390 / 693, file: "song-phone.mp4", heightRatio: 0.82 }),
   heightVerdict({ ready: true, heightRatio: 0.97 }),
+  landscapeShapeVerdict({ ready: true, aspect: 16 / 9, file: "song.mp4" }),
 ];
 const mutants = [
   widthVerdict({ ready: true, widthRatio: 0.32 }) === false,
   widthVerdict({ ready: false, widthRatio: 1 }) === false,
-  aspectVerdict({ ready: true, aspect: 9 / 16 }) === false,
-  heightVerdict({ ready: true, heightRatio: 0.45 }) === false,
+  widthVerdict({ ready: true, widthRatio: 124 / 390 }) === false,
+  widthVerdict({ ready: true, widthRatio: 1.4 }) === false,
+  portraitShapeVerdict({ ready: true, aspect: 16 / 9, file: "song-phone.mp4", heightRatio: 0.82 }) === false,
+  portraitShapeVerdict({ ready: true, aspect: 390 / 693, file: "song.mp4", heightRatio: 0.82 }) === false,
+  portraitShapeVerdict({ ready: true, aspect: 390 / 693, file: "song-phone.mp4", heightRatio: 0.95 }) === false,
+  heightVerdict({ ready: true, heightRatio: 176 / 390 }) === false,
   heightVerdict({ ready: true, heightRatio: 1.4 }) === false,
+  landscapeShapeVerdict({ ready: true, aspect: 9 / 16, file: "song.mp4" }) === false,
+  landscapeShapeVerdict({ ready: true, aspect: 16 / 9, file: "song-phone.mp4" }) === false,
 ];
 
 if (!PASS) {
@@ -344,10 +367,14 @@ if (portrait) {
 }
 const widthRatio = portrait ? Number((portrait.videoW / portrait.viewW).toFixed(3)) : 0;
 const aspect = portrait && portrait.videoH > 0 ? Number((portrait.videoW / portrait.videoH).toFixed(3)) : 0;
+const heightRatioPortrait = portrait ? Number((portrait.videoH / portrait.viewH).toFixed(3)) : 0;
 emit("song_video_width_ratio", widthRatio);
 emit("song_video_aspect", aspect);
-row(1, widthVerdict({ ready: portrait ? portrait.ready : false, widthRatio }), `song_video_width_ratio=${widthRatio} at 390x844`);
-row(2, aspectVerdict({ ready: portrait ? portrait.ready : false, aspect }), `song_video_aspect=${aspect} at 390x844 (16:9 is 1.778)`);
+emit("song_video_height_ratio_portrait", heightRatioPortrait);
+const portraitReady = portrait ? portrait.ready : false;
+row(1, widthVerdict({ ready: portraitReady, widthRatio }), `song_video_width_ratio=${widthRatio} at 390x844`);
+row(2, portraitShapeVerdict({ ready: portraitReady, aspect, file: portrait ? portrait.src : "", heightRatio: heightRatioPortrait }),
+  `song_video_aspect=${aspect} (9:16 is 0.5625) song_video_file=${portrait ? portrait.src : ""} song_video_height_ratio_portrait=${heightRatioPortrait} at 390x844`);
 
 let landscape = null;
 try {
@@ -361,10 +388,15 @@ if (landscape) {
   emit("landscape_video_h_px", Math.round(landscape.videoH));
 }
 const heightRatio = landscape ? Number((landscape.videoH / landscape.viewH).toFixed(3)) : 0;
+const aspectLandscape = landscape && landscape.videoH > 0 ? Number((landscape.videoW / landscape.videoH).toFixed(3)) : 0;
 emit("song_video_height_ratio", heightRatio);
-row(3, heightVerdict({ ready: landscape ? landscape.ready : false, heightRatio }), `song_video_height_ratio=${heightRatio} at 844x390`);
+emit("song_video_aspect_landscape", aspectLandscape);
+const landscapeReady = landscape ? landscape.ready : false;
+row(3, heightVerdict({ ready: landscapeReady, heightRatio }), `song_video_height_ratio=${heightRatio} at 844x390`);
+row(4, landscapeShapeVerdict({ ready: landscapeReady, aspect: aspectLandscape, file: landscape ? landscape.src : "" }),
+  `song_video_aspect_landscape=${aspectLandscape} (16:9 is 1.778) song_video_file=${landscape ? landscape.src : ""} at 844x390`);
 
-row(4, goodControls.every(Boolean) && rejected === mutants.length, `verdict self-check mutants_rejected=${rejected} of ${mutants.length}`);
+row(5, goodControls.every(Boolean) && rejected === mutants.length, `verdict self-check mutants_rejected=${rejected} of ${mutants.length}`);
 console.log(`row_count=${rowCount}`);
 await browser.close();
 NODE
@@ -386,7 +418,7 @@ if [ "$ROWS" -gt 0 ]; then
 else
   fail "The browser rows did not run (rows=0)"
 fi
-if [ "$ROWS" -ne 4 ]; then fail "The browser rows must be 4, counted $ROWS"; fi
+if [ "$ROWS" -ne 5 ]; then fail "The browser rows must be 5, counted $ROWS"; fi
 
 echo "=== The requests of the stand-in for the storage ==="
 echo "standin_requests=$(grep -c '^REQ ' "$TMP_DIR/stand-in.log" 2>/dev/null || echo 0)"
