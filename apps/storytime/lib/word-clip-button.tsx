@@ -75,7 +75,7 @@ export function WordClipButton({
     <button
       type="button"
       onClick={() => play?.(file)}
-      className={`min-h-11 ${className ?? ""}`.trim()}
+      className={`min-h-11 min-w-11 ${className ?? ""}`.trim()}
       lang="en"
     >
       {children}

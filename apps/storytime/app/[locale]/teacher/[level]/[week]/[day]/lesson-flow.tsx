@@ -982,7 +982,7 @@ export function TeacherLessonFlow({
                         key={pieceIndex}
                         type="button"
                         onClick={() => playClip(mediaUrl(mediaUrls, clip))}
-                        className="min-h-11 rounded underline decoration-dotted underline-offset-2"
+                        className="min-h-11 min-w-11 rounded underline decoration-dotted underline-offset-2"
                         lang={wordLang}
                       >
                         {piece.word}

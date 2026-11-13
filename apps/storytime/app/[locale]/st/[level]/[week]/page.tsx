@@ -286,7 +286,9 @@ export default async function StorytimeWeekPage({
   const decodableBook = week.books.find((entry) => entry.kind === "decodable");
 
   const home = week.home;
-  const parentLine = home?.line ? home.line.th.trim() : "";
+  const parentLine = home?.line
+    ? (locale === "th" ? home.line.th : (home.line.en ?? "")).trim()
+    : "";
   const homeWords = home?.words ?? [];
   const frame = week.focus.frame?.trim() ?? "";
   const activityText = home?.activity ? home.activity[locale === "th" ? "th" : "en"].trim() : "";
@@ -376,7 +378,7 @@ export default async function StorytimeWeekPage({
               {t("homeParentHeading")}
             </h2>
             {parentLine ? (
-              <p className="leading-7" lang="th">
+              <p className="leading-7" lang={locale === "th" ? "th" : "en"}>
                 {parentLine}
               </p>
             ) : null}

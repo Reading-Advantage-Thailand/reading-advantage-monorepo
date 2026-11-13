@@ -899,6 +899,16 @@ main[data-place] button[data-play-mark] {
   box-shadow: 0 0 0 4px var(--st-brown), 0 6px 0 4px rgba(58, 24, 4, 0.35);
 }
 
+/* The press of the mark (task 6.2, round 4, finding B1): the house :active rule sets
+ * `translate: 0 3px`, and that replaces the centring translate of the mark, so a mouse press
+ * slides the mark about 70 px off the pointer and the release lands on the video. The pressed
+ * state keeps the centring translate, so the centre does not move, and the press shows in the
+ * drop shadow instead. */
+main[data-place] button[data-play-mark]:active:not(:disabled) {
+  translate: -50% -50%;
+  box-shadow: 0 0 0 4px var(--st-brown), 0 3px 0 4px rgba(58, 24, 4, 0.35);
+}
+
 /* ---- A landscape screen below 500 px of height: the song video fills the height of the
  * viewport (task 6.2, finding 3), so the child sees the whole song frame. The play control
  * sits beside the video, so every child control still ends inside the fold (findings F280 and
