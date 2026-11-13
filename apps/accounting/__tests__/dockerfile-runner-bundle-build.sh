@@ -41,13 +41,20 @@ fi
 
 echo "=== build the runner-bundle stage ==="
 START="$(date +%s)"
-docker build --layers=false -f apps/accounting/Dockerfile --target runner-bundle -t "$TAG" . >"$BUILD_LOG" 2>&1
+# pnpm 11 reads the env names pnpm_config_* (checked with `pnpm config get`; it ignores
+# npm_config_*). The long fetch values keep `pnpm install` alive on a slow registry link.
+docker build --layers=false \
+  --env pnpm_config_fetch_timeout=600000 \
+  --env pnpm_config_fetch_retries=5 \
+  --env pnpm_config_fetch_retry_mintimeout=20000 \
+  --env pnpm_config_fetch_retry_maxtimeout=120000 \
+  -f apps/accounting/Dockerfile --target runner-bundle -t "$TAG" . >"$BUILD_LOG" 2>&1
 BUILD_EXIT=$?
 END="$(date +%s)"
 tail -n 40 "$BUILD_LOG"
 echo "runner_bundle_build_exit=${BUILD_EXIT}"
 echo "runner_bundle_build_seconds=$((END - START))"
-ERROR_LINE="$(grep -m1 -E 'Could not resolve|ERROR' "$BUILD_LOG" || true)"
+ERROR_LINE="$(grep -m1 -E 'Could not resolve|ERROR|Error:|TimeoutError' "$BUILD_LOG" || true)"
 echo "runner_bundle_error_line=${ERROR_LINE:-none}"
 
 echo "=== the bundle file is in the image ==="
