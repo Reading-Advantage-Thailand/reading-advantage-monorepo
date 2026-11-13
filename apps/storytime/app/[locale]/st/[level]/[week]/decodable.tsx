@@ -5,7 +5,9 @@
  *
  * The sounds page shows the element, its graphemes, and its sound; a tap plays the recorded bank
  * clip. A tap on a decodable word asks `blendPlanForWord` how the word plays. A blend word plays
- * its graphemes from the phoneme bank in reading order, then its own word clip. Every other word
+ * its graphemes from the phoneme bank in reading order, then its own word clip. A blend word with
+ * an unsigned grapheme clip plays its own clip at once, with no empty source (finding B1 of task
+ * 6.2, round 5). Every other word
  * plays its own word clip. A word with no clip stays plain text, because a tap never plays a time
  * range of a longer file (Daniel's finding 2, 2026-11-13). A tricky word with no clip of the
  * book plays the clip of the week map `focus.trickyWordClips` (task 6.2, round 3). A page with a
@@ -368,16 +370,21 @@ export function StorytimeDecodable({
 
   /**
    * Plays the grapheme clips of a blend word one at a time in reading order, then the own
-   * word clip after the last clip ends (spec FR-7, finding F120).
+   * word clip after the last clip ends (spec FR-7, finding F120). A grapheme clip with no
+   * signed URL (a key that the map holds with no value, or holds not at all) stops the
+   * lead-in: the word then plays its own clip at once, so no element plays an empty source
+   * (finding B1 of task 6.2, round 5).
    * @param graphemes The graphemes of the word, in reading order.
    * @param file The own clip file of the word, played after the last clip ends.
-   * @returns `true` when every grapheme has a bank clip and the sequence started.
+   * @returns `true` when every grapheme has a bank clip with a signed URL and the sequence
+   * started; `false` when a clip is missing or unsigned, so the caller plays the own clip.
    */
   function playBlend(graphemes: string[], file: string | undefined): boolean {
     const files: string[] = [];
     for (const grapheme of graphemes) {
       const bankFile = CLIP_BY_GRAPHEME.get(grapheme);
       if (!bankFile) return false;
+      if (mediaUrl(mediaUrls, bankFile) === "") return false;
       files.push(bankFile);
     }
     const generation = stopBlendSequence();
