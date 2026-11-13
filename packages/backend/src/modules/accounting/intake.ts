@@ -61,17 +61,24 @@ const DRIVE_FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
 const PDF_MIME_TYPE = "application/pdf";
 
 /**
- * The five subfolder names of `Accounting` that hold the accountant year files
- * (spec section 9b). The walk matches each name exactly, and the folder ids
- * come from the listing of the root at run time.
+ * The five full subfolder names that hold the accountant year files (PM
+ * decision 2026-11-14 04:2x, task 10.12). The walk matches each name exactly
+ * with no prefix match, and the folder ids come from the listing of the root
+ * and the parent at run time.
  */
 export const YEAR_FILE_FOLDER_NAMES = [
-  "Fwd: เอกสารปี 2567",
-  "Fwd: เอกสารปี 2568",
-  "2568-1",
-  "2568-2",
-  "2568-3",
+  "Fwd: เอกสารปี 2567 (Fwd: Document from 2024)",
+  "Fwd: เอกสารปี 2568 (Fwd: Document from 2025)",
+  "Fwd: เอกสารปี 2568-1 (Fwd: Document Year 2025-1)",
+  "Fwd: เอกสารปี 2568-2 (Fwd: Document Year 2025-2)",
+  "Fwd: เอกสารปี 2568-3 (Fwd: Document Year 2025-3)",
 ] as const;
+
+/**
+ * The one parent folder inside `Accounting` that holds the year-file folders
+ * (PM decision 2026-11-14 04:2x). The walk requires it, and the poll skips it.
+ */
+export const YEAR_FILE_PARENT_FOLDER_NAME = "เอกสารบัญชีรายปี";
 
 /** Name rule `YYYY-MM_<document-type>_<counterparty>.<ext>` (spec section 5.7). */
 const NAMED_FILE_PATTERN =
@@ -515,13 +522,13 @@ export class AccountingYearFileFolderError extends Error {
   /** Why the walk stopped. */
   readonly reason: "folder-missing" | "folder-duplicate";
 
-  /** Subfolder name of `YEAR_FILE_FOLDER_NAMES` that caused the stop. */
+  /** Folder name of `YEAR_FILE_FOLDER_NAMES` or `YEAR_FILE_PARENT_FOLDER_NAME`. */
   readonly folderName: string;
 
   /**
    * Creates the safe walk error.
    * @param reason Why the walk stopped.
-   * @param folderName Subfolder name of the constant.
+   * @param folderName Folder name of the constants.
    */
   constructor(
     reason: "folder-missing" | "folder-duplicate",
@@ -529,8 +536,8 @@ export class AccountingYearFileFolderError extends Error {
   ) {
     super(
       reason === "folder-missing"
-        ? `The year-file folder "${folderName}" is not in the listing of the root`
-        : `The year-file folder name "${folderName}" is in the listing of the root more than once`,
+        ? `The year-file folder "${folderName}" is not in the listing of the root or the parent folder`
+        : `The year-file folder name "${folderName}" is in the listing of the root or the parent folder more than once`,
     );
     this.name = "AccountingYearFileFolderError";
     this.reason = reason;
@@ -1292,15 +1299,21 @@ async function readDocument(input: {
 }
 
 /**
- * Reads the folder tree of the year files: lists the root, picks the
- * subfolders whose exact names are in `YEAR_FILE_FOLDER_NAMES`, and lists the
- * PDFs directly inside each. The walk goes one level deep and reads nothing
- * else. Each folder id comes from the listing of the root and appears in no
- * output (spec section 9b, FR-29). The walk calls one read member only.
+ * Reads the folder tree of the year files: lists the root, then the one
+ * required parent folder `YEAR_FILE_PARENT_FOLDER_NAME`, then lists the PDFs
+ * directly inside each subfolder whose exact name is in
+ * `YEAR_FILE_FOLDER_NAMES`. The walk goes two levels deep and reads nothing
+ * else: a name of the constant may sit in the root or in the parent, and a
+ * name in both places, or twice in one place, stops the walk with
+ * `folder-duplicate`. A missing parent or a missing name stops the walk with
+ * `folder-missing` that names the folder. The match is exact: no prefix, no
+ * suffix, and no case tolerance. Each folder id comes from the listings and
+ * appears in no output (PM decision 2026-11-14 04:2x, FR-29). The walk calls
+ * one read member only.
  * @param input Root folder id and the read-only Drive port.
  * @returns The PDFs of the five subfolders, with the subfolder name.
- * @throws AccountingYearFileFolderError when a name of the constant is
- *   missing or appears twice in the listing.
+ * @throws AccountingYearFileFolderError when the parent folder or a name of
+ *   the constant is missing or appears more than once in the listings.
  * @throws AccountingSubmissionError when a listing is invalid.
  */
 export async function walkAccountingYearFiles(input: {
@@ -1310,11 +1323,33 @@ export async function walkAccountingYearFiles(input: {
   const root = parseDriveListing(
     await input.source.listFolderEntries({ folderId: input.folderId }),
   );
-  const folders = root.filter(
-    (entry) => entry.mimeType === DRIVE_FOLDER_MIME_TYPE,
+  const foldersOf = (entries: readonly AccountingDriveFile[]) =>
+    entries.filter((entry) => entry.mimeType === DRIVE_FOLDER_MIME_TYPE);
+  const findFolder = (entries: readonly AccountingDriveFile[], name: string) =>
+    foldersOf(entries).filter((folder) => folder.name === name);
+  const requireFolder = (
+    entries: readonly AccountingDriveFile[],
+    folderName: string,
+  ): { folderName: string; folderId: string } => {
+    const matches = findFolder(entries, folderName);
+    const [match] = matches;
+    if (match === undefined) {
+      throw new AccountingYearFileFolderError("folder-missing", folderName);
+    }
+    if (matches.length > 1) {
+      throw new AccountingYearFileFolderError("folder-duplicate", folderName);
+    }
+    return { folderName, folderId: match.id };
+  };
+
+  const parent = requireFolder(root, YEAR_FILE_PARENT_FOLDER_NAME);
+  const parentEntries = parseDriveListing(
+    await input.source.listFolderEntries({ folderId: parent.folderId }),
   );
   const subfolders = YEAR_FILE_FOLDER_NAMES.map((folderName) => {
-    const matches = folders.filter((folder) => folder.name === folderName);
+    const inRoot = findFolder(root, folderName);
+    const inParent = findFolder(parentEntries, folderName);
+    const matches = [...inRoot, ...inParent];
     const [match] = matches;
     if (match === undefined) {
       throw new AccountingYearFileFolderError("folder-missing", folderName);
@@ -1735,6 +1770,21 @@ export async function dryRunAccountingYearFiles(
       continue;
     }
     const body = await request.source.download({ fileId: file.id });
+    if (body.byteLength > ACCOUNTING_INTAKE_SIZE_LIMIT_BYTES) {
+      // F1001: the limit holds for the downloaded body, also when the
+      // declared size was under the limit. The file is listed and not parsed.
+      bodies.push(null);
+      drafts.push({
+        folderName: file.folderName,
+        byteLength: body.byteLength,
+        typeKey: "unmatched",
+        kind: "none",
+        period: "period-unreadable",
+        textLayer: "no",
+        factNames: [],
+      });
+      continue;
+    }
     bodies.push(body);
     const layer = await request.textLayer.read({
       companyId,

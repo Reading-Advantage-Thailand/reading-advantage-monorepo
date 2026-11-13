@@ -20,13 +20,17 @@ const PDFTOTEXT_PATH = "/usr/bin/pdftotext";
 /** Output limit of one `pdftotext` run: 64 MB of text. */
 const PDFTOTEXT_MAX_BUFFER_BYTES = 64 * 1024 * 1024;
 
+/** Per-file timeout of one `pdftotext` run: 120 seconds (Review B F1001). */
+const PDFTOTEXT_TIMEOUT_MS = 120_000;
+
 /** Company scope of the dry run. It writes no row, so the value is a label only. */
 const DRY_RUN_COMPANY_ID = "year-file-dry-run";
 
 /**
  * Builds the real text-layer port of the dry run. It pipes the PDF bytes to
- * `/usr/bin/pdftotext` on stdin through `execFile` with no shell, so no file
- * of the accountant is written to disk and no dependency is added (Q17).
+ * `/usr/bin/pdftotext` on stdin through `execFile` with no shell and a
+ * per-file timeout, so no file of the accountant is written to disk, no run
+ * hangs on a malformed PDF, and no dependency is added (Q17, F1001).
  * @returns The text-layer port.
  */
 export function createPdftotextLayer(): AccountingYearFileTextLayerPort {
@@ -42,7 +46,11 @@ export function createPdftotextLayer(): AccountingYearFileTextLayerPort {
         const child = execFile(
           PDFTOTEXT_PATH,
           ["-enc", "UTF-8", "-", "-"],
-          { encoding: "utf8", maxBuffer: PDFTOTEXT_MAX_BUFFER_BYTES },
+          {
+            encoding: "utf8",
+            maxBuffer: PDFTOTEXT_MAX_BUFFER_BYTES,
+            timeout: PDFTOTEXT_TIMEOUT_MS,
+          },
           (error, stdout) => {
             if (error !== null) {
               if ("code" in error && error.code === "ENOENT") {
