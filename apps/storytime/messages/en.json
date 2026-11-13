@@ -29,6 +29,7 @@
   "decPreviousPage": "Previous page",
   "decNextPage": "Next page",
   "decAudioError": "The sound could not be played.",
+  "decPlaySentence": "Play the whole sentence",
   "notFoundThai": "ไม่พบหน้านี้ กลับไปที่รหัส QR แล้วเลือกส่วนที่ต้องการ",
   "notFoundEnglish": "This page is not here. Go back to the QR code and choose a part.",
   "notOpenThai": "สัปดาห์นี้ยังไม่เปิด กลับมาใหม่เร็ว ๆ นี้",

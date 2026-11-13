@@ -100,6 +100,9 @@ export function mediaOf(week: StorytimeWeek): WeekMedia[] {
     add(book.audio.file, "book-audio", MEDIA_RULES.bookAudio);
     add(book.audio.slowFile, "book-audio-slow", MEDIA_RULES.bookAudio);
     for (const clip of Object.values(book.audio.wordClips ?? {})) add(clip, "word-clip", MEDIA_RULES.bookAudio);
+    for (const clip of Object.values(book.audio.sentenceClips ?? {})) {
+      add(clip, "sentence-clip", MEDIA_RULES.bookAudio);
+    }
     picture(
       book.cover,
       `books.${bookIndex}.cover`,

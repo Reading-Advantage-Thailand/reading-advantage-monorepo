@@ -209,7 +209,7 @@ describe("Phase 3 Storytime decodable UI", () => {
     expect(audio.getAttribute("src")).not.toContain("speechSynthesis");
   });
 
-  it("plays a shipped CVC word's clips one at a time in grapheme order, then the whole word", async () => {
+  it("plays a shipped CVC word's clips one at a time in grapheme order, then its own clip", async () => {
     const cvc = shippedWeeks.find((week) => week.meta.week === 3);
     expect(cvc, "shipped week 3 must be present").toBeDefined();
     const week = cvc!;
@@ -227,12 +227,14 @@ describe("Phase 3 Storytime decodable UI", () => {
     };
     expect(graphemes.every((grapheme) => g3ClipByGrapheme[grapheme])).toBe(true);
     const clipNames = graphemes.map((grapheme) => g3ClipByGrapheme[grapheme]);
-    const wholeFile = book!.audio!.file;
-    expect(wholeFile, "the shipped decodable must hold its book recording").toBeTruthy();
-    const wholeName = fileNameOf(wholeFile!);
+    // The word ends with its own clip, never with a cut of the book recording (finding 2 of
+    // task 6.2, 2026-11-13).
+    const ownClip = book!.audio!.wordClips[word!.toLowerCase()];
+    expect(ownClip, "the shipped decodable must hold an own clip of the word").toBeTruthy();
+    const ownName = fileNameOf(ownClip!);
     const expected: string[] = [];
     for (const name of clipNames) expected.push(`play ${name}`, "ended");
-    expected.push(`play ${wholeName}`);
+    expected.push(`play ${ownName}`);
     const media = installFakeMedia();
     try {
       const { audio, container } = await renderDecodable(week);
@@ -250,7 +252,7 @@ describe("Phase 3 Storytime decodable UI", () => {
           media.timeline(),
           index < graphemes.length
             ? `the clip ${index + 1} plays after the ended event of clip ${index}`
-            : "the whole word starts after the ended event of the last clip",
+            : "the own clip starts after the ended event of the last clip",
         ).toEqual(expected.slice(0, 2 * index + 1));
       }
       expect(screen.queryByRole("alert"), "an aborted play shows no error alert").toBeNull();
@@ -265,8 +267,6 @@ describe("Phase 3 Storytime decodable UI", () => {
     expect(cvc, "shipped week 3 must be present").toBeDefined();
     const week = cvc!;
     const book = week.books.find((entry) => entry.kind === "decodable");
-    const wholeFile = book!.audio!.file;
-    expect(wholeFile, "the shipped decodable must hold its book recording").toBeTruthy();
     const g3ClipByGrapheme: Record<string, string> = {
       p: "03-p.mp3",
       a: "26-a-short.mp3",
@@ -274,6 +274,10 @@ describe("Phase 3 Storytime decodable UI", () => {
     };
     const first = "pan";
     const second = "nan";
+    // The second word ends with its own clip, never with a cut of the book recording (finding 2
+    // of task 6.2, 2026-11-13).
+    const ownClip = book!.audio!.wordClips[second.toLowerCase()];
+    expect(ownClip, "the shipped decodable must hold an own clip of the word").toBeTruthy();
     const firstPlan = blendPlanForWord(first, week);
     const secondPlan = blendPlanForWord(second, week);
     expect(firstPlan.mode, "the first word must blend").toBe("blend");
@@ -287,7 +291,7 @@ describe("Phase 3 Storytime decodable UI", () => {
     ).toBe(true);
     const expected: string[] = [`play ${firstClip}`, `play ${secondClips[0]}`];
     for (const name of secondClips.slice(1)) expected.push("ended", `play ${name}`);
-    expected.push("ended", `play ${fileNameOf(wholeFile!)}`);
+    expected.push("ended", `play ${fileNameOf(ownClip!)}`);
     const media = installFakeMedia();
     try {
       const { container } = await renderDecodable(week);

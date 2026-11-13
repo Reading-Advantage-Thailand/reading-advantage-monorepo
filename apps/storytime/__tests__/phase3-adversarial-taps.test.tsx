@@ -117,54 +117,42 @@ function spanFor(container: HTMLElement, word: TimedWord): HTMLElement {
 }
 
 describe("Phase 3 adversarial rapid taps", () => {
-  it("three rapid decodable taps arm one whole-word stop", async () => {
+  it("three rapid decodable taps leave one clip playing and no stop timer", async () => {
     const pause = vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
-    vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
+    const play = vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
     const Decodable = await loadDecodable();
     const week3 = JSON.parse(readFileSync(resolve(appDir, "content/l2/w03.json"), "utf8")) as {
       books: Array<{
         kind: string;
-        audio?: { sentences: Array<{ words: TimedWord[] }> };
+        audio?: { wordClips?: Record<string, string> };
       }>;
     };
     const decodable = week3.books.find((entry) => entry.kind === "decodable")!;
-    const timing = decodable.audio?.sentences
-      ?.flatMap((sentence) => sentence.words)
-      .find((entry) => entry.word.toLowerCase() === "pan");
-    expect(timing, "the shipped w03 timing must hold the word pan").toBeTruthy();
-    const view = render(<Decodable week={week3 as never} locale="en" />);
+    // The own clip replaces the cut of the book recording (finding 2 of task 6.2, 2026-11-13),
+    // so a word tap arms no stop and pauses nothing.
+    const ownClip = decodable.audio?.wordClips?.pan;
+    expect(ownClip, "the shipped w03 must hold an own clip of the word pan").toBeTruthy();
+    const view = render(
+      <Decodable
+        week={week3 as never}
+        locale="en"
+        mediaUrls={{ [ownClip!]: `https://media.example/${ownClip}` }}
+      />,
+    );
     const phoneme = view.container.querySelectorAll("audio")[0];
     expect(phoneme, "the decodable must render its phoneme audio element").not.toBeNull();
     vi.useFakeTimers();
 
-    // Three taps with no clock between them: only the last blend generation
-    // reaches the whole-word play, and it replaces any earlier stop.
+    // Three taps with no clock between them: each tap starts its own clip, and the last
+    // blend generation owns the playback.
     fireEvent.click(screen.getByRole("button", { name: /^pan$/i }));
     fireEvent.click(screen.getByRole("button", { name: /^pan$/i }));
     fireEvent.click(screen.getByRole("button", { name: /^pan$/i }));
-    for (let index = 0; index < 3; index += 1) {
-      await act(async () => {
-        (phoneme as HTMLAudioElement).dispatchEvent(new Event("ended"));
-      });
-    }
-    const whole = view.container.querySelectorAll("audio")[1];
-    expect(whole, "the decodable must render its whole-word audio element").not.toBeNull();
-    act(() => (whole as HTMLAudioElement).dispatchEvent(new Event("loadedmetadata")));
-    expect(vi.getTimerCount(), "three rapid taps must leave one pending stop").toBe(1);
+    expect(play, "each tap starts its own clip").toHaveBeenCalledTimes(3);
+    expect(vi.getTimerCount(), "three rapid taps must leave no pending stop").toBe(0);
 
-    const cutMs = (timing!.end - timing!.start) * 1000;
-    expect(cutMs, "the whole-word cut must be longer than 40 ms").toBeGreaterThan(40);
-    act(() => {
-      (whole as HTMLAudioElement).currentTime = timing!.end - 0.04;
-    });
     act(() => vi.advanceTimersByTime(10_000));
-    expect(pause, "no stop may pause before the whole-word cut end").not.toHaveBeenCalled();
-
-    act(() => {
-      (whole as HTMLAudioElement).currentTime = timing!.end;
-    });
-    act(() => vi.advanceTimersByTime(10_000));
-    expect(pause, "the whole-word cut end must pause the audio").toHaveBeenCalledTimes(1);
+    expect(pause, "no stop may pause the word clip").not.toHaveBeenCalled();
   });
 });
 

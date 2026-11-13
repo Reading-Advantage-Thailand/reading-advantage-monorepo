@@ -123,52 +123,61 @@ describe("the audio stops at its end without a timeupdate (F123)", () => {
     expect(pause, "the page stop runs from the timer, not from a later timeupdate").toHaveBeenCalled();
   });
 
-  it("stops the decodable whole word by timer at its word-cut end", async () => {
+  it("plays the own clip of a decodable word and leaves no cut stop", async () => {
     const pause = vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
     vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
     const Decodable = await loadDecodable();
     const week3 = JSON.parse(readFileSync(resolve(appDir, "content/l2/w03.json"), "utf8")) as {
       books: Array<{
         kind: string;
-        audio?: { sentences: Array<{ words: Array<{ word: string; start: number; end: number }> }> };
+        audio?: { wordClips?: Record<string, string> };
       }>;
     };
     const decodable = week3.books.find((entry) => entry.kind === "decodable")!;
-    const timing = decodable.audio?.sentences
-      ?.flatMap((sentence) => sentence.words)
-      .find((entry) => entry.word.toLowerCase() === "pan");
-    expect(timing, "the shipped w03 timing must hold the word pan").toBeTruthy();
-    const view = render(<Decodable week={week3 as never} locale="en" />);
+    // The own clip of the word replaces the cut of the book recording (finding 2 of task 6.2,
+    // 2026-11-13), so the decodable holds no cut end and no stop timer.
+    const ownClip = decodable.audio?.wordClips?.pan;
+    expect(ownClip, "the shipped w03 must hold an own clip of the word pan").toBeTruthy();
+    const view = render(
+      <Decodable
+        week={week3 as never}
+        locale="en"
+        mediaUrls={{ [ownClip!]: `https://media.example/${ownClip}` }}
+      />,
+    );
     const phoneme = view.container.querySelectorAll("audio")[0];
     expect(phoneme, "the decodable must render its phoneme audio element").not.toBeNull();
     vi.useFakeTimers();
     fireEvent.click(screen.getByRole("button", { name: /^pan$/i }));
-    // F120: the whole word starts only after the phoneme element ends the last grapheme clip,
-    // so the test fires the three clip ends of "pan" before it arms the cut stop.
+    // F120: the own clip starts only after the phoneme element ends the last grapheme clip,
+    // so the test fires the three clip ends of "pan" before it reads the clip element.
     for (let index = 0; index < 3; index += 1) {
       await act(async () => {
         (phoneme as HTMLAudioElement).dispatchEvent(new Event("ended"));
       });
     }
-    const whole = view.container.querySelectorAll("audio")[1];
-    expect(whole, "the decodable must render its whole-word audio element").not.toBeNull();
-    act(() => (whole as HTMLAudioElement).dispatchEvent(new Event("loadedmetadata")));
-    // F140: the media clock reaches the cut end when the timer fires.
-    act(() => {
-      (whole as HTMLAudioElement).currentTime = timing!.end;
-    });
-    act(() => vi.advanceTimersByTime((timing!.end - timing!.start) * 1000 + 5));
-    expect(pause, "the whole-word cut stop runs from the timer").toHaveBeenCalled();
+    const word = view.container.querySelectorAll("audio")[1];
+    expect(word, "the decodable must render its word-clip audio element").not.toBeNull();
+    expect(
+      (word as HTMLAudioElement).src,
+      "the own clip plays after the last grapheme clip",
+    ).toContain(ownClip!);
+    act(() => vi.advanceTimersByTime(10_000));
+    expect(pause, "a word clip must not pause at a cut end").not.toHaveBeenCalled();
+    expect(vi.getTimerCount(), "a word clip must leave no stop timer").toBe(0);
   });
 
-  it("pauses the whole word only when the media clock reaches the cut end (finding F140)", async () => {
+  it("keeps the own clip playing past the old word-cut end (finding 2 of task 6.2)", async () => {
     const pause = vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
     vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
     const Decodable = await loadDecodable();
     const week3 = JSON.parse(readFileSync(resolve(appDir, "content/l2/w03.json"), "utf8")) as {
       books: Array<{
         kind: string;
-        audio?: { sentences: Array<{ words: Array<{ word: string; start: number; end: number }> }> };
+        audio?: {
+          sentences: Array<{ words: Array<{ word: string; start: number; end: number }> }>;
+          wordClips?: Record<string, string>;
+        };
       }>;
     };
     const decodable = week3.books.find((entry) => entry.kind === "decodable")!;
@@ -176,10 +185,15 @@ describe("the audio stops at its end without a timeupdate (F123)", () => {
       ?.flatMap((sentence) => sentence.words)
       .find((entry) => entry.word.toLowerCase() === "pan");
     expect(timing, "the shipped w03 timing must hold the word pan").toBeTruthy();
-    const cutMs = (timing!.end - timing!.start) * 1000;
-    const latencyMs = 48;
-    expect(cutMs, "the pre-play delay must sit well inside the cut").toBeGreaterThan(200);
-    const view = render(<Decodable week={week3 as never} locale="en" />);
+    const ownClip = decodable.audio?.wordClips?.pan;
+    expect(ownClip, "the shipped w03 must hold an own clip of the word pan").toBeTruthy();
+    const view = render(
+      <Decodable
+        week={week3 as never}
+        locale="en"
+        mediaUrls={{ [ownClip!]: `https://media.example/${ownClip}` }}
+      />,
+    );
     const phoneme = view.container.querySelectorAll("audio")[0];
     expect(phoneme, "the decodable must render its phoneme audio element").not.toBeNull();
     vi.useFakeTimers();
@@ -189,19 +203,14 @@ describe("the audio stops at its end without a timeupdate (F123)", () => {
         (phoneme as HTMLAudioElement).dispatchEvent(new Event("ended"));
       });
     }
-    const whole = view.container.querySelectorAll("audio")[1];
-    expect(whole, "the decodable must render its whole-word audio element").not.toBeNull();
-    act(() => (whole as HTMLAudioElement).dispatchEvent(new Event("loadedmetadata")));
+    const word = view.container.querySelectorAll("audio")[1];
+    expect(word, "the decodable must render its word-clip audio element").not.toBeNull();
+    // The media clock reaches the old cut end of the word: the own clip keeps playing.
     act(() => {
-      (whole as HTMLAudioElement).currentTime = timing!.start + (cutMs - latencyMs) / 1000;
+      (word as HTMLAudioElement).currentTime = timing!.end;
     });
-    act(() => vi.advanceTimersByTime(cutMs));
-    expect(pause, "the whole-word stop must not pause below the cut end").not.toHaveBeenCalled();
-    act(() => {
-      (whole as HTMLAudioElement).currentTime = timing!.end;
-    });
-    act(() => vi.advanceTimersByTime(latencyMs + 5));
-    expect(pause, "the whole-word stop pauses when the media clock reaches the cut end").toHaveBeenCalled();
+    act(() => vi.advanceTimersByTime(10_000));
+    expect(pause, "the own clip must not pause at the old cut end").not.toHaveBeenCalled();
   });
 });
 

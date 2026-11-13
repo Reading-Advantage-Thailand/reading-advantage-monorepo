@@ -4,17 +4,18 @@
  * The decodable part of a Storytime week (plan task 3.4, spec FR-7).
  *
  * The sounds page shows the element, its graphemes, and its sound; a tap plays the recorded bank
- * clip. A tap on a decodable word asks `blendPlanForWord` how the word plays. A blend word plays its
- * graphemes from the phoneme bank in reading order, then the whole word from the book recording. A
- * tricky word and every word of a sound book play whole. The component never uses the phone voice
- * (rule 10.5): every sound is a recorded file.
+ * clip. A tap on a decodable word asks `blendPlanForWord` how the word plays. A blend word plays
+ * its graphemes from the phoneme bank in reading order, then its own word clip. Every other word
+ * plays its own word clip. A word with no clip stays plain text, because a tap never plays a time
+ * range of a longer file (Daniel's finding 2, 2026-11-13). A page with a sentence clip shows a
+ * button that plays the whole sentence clip. The component never uses the phone voice (rule 10.5):
+ * every sound is a recorded file.
  */
 import { mediaUrl } from "../../../../../lib/media/url";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { markPartDone } from "../../../../../lib/done";
 import { isAbortError } from "../../../../../lib/is-abort-error";
 import { blendPlanForWord } from "../../../../../lib/blend";
-import { seekAndRun, stopAtMediaEnd } from "../../../../../lib/audio-seek";
 import type { StorytimeBook, StorytimeWeek } from "../../../../../lib/contracts/week";
 import { PHONEME_BANK, PHONEME_BANK_COUNT } from "../../../../../lib/phoneme-bank";
 
@@ -38,6 +39,8 @@ interface DecodableLabels {
   audioError: string;
   /** The label of the sound button while its sound plays. */
   playing: string;
+  /** The label of the button that plays the whole sentence clip of the page. */
+  playSentence: string;
 }
 
 /** The props of the decodable part. */
@@ -75,6 +78,7 @@ function labelsFor(locale: string, labels?: Partial<DecodableLabels>): Decodable
         nextPage: "หน้าต่อไป",
         audioError: "เล่นเสียงไม่ได้",
         playing: "กำลังเล่น",
+        playSentence: "เล่นประโยคทั้งประโยค",
       }
     : {
         soundOfWeek: "Sound of the week",
@@ -84,6 +88,7 @@ function labelsFor(locale: string, labels?: Partial<DecodableLabels>): Decodable
         nextPage: "Next page",
         audioError: "The sound could not be played.",
         playing: "Playing",
+        playSentence: "Play the whole sentence",
       };
   return { ...defaults, ...labels };
 }
@@ -99,14 +104,6 @@ const CLIP_BY_GRAPHEME = new Map<string, string>();
 for (const clip of PHONEME_BANK) {
   if (!CLIP_BY_GRAPHEME.has(clip.grapheme)) CLIP_BY_GRAPHEME.set(clip.grapheme, clip.file);
 }
-
-/**
- * Builds the URL of one recorded file.
- * @param base The media base URL.
- * @param file The file, relative to the base.
- * @returns The URL, with one slash between the base and the file.
- */
-
 
 /**
  * Reports whether a token of the page text is a word.
@@ -201,15 +198,8 @@ export function StorytimeDecodable({
   playerMode = "at-home",
 }: StorytimeDecodableProps) {
   const phonemeRef = useRef<HTMLAudioElement | null>(null);
-  const wholeRef = useRef<HTMLAudioElement | null>(null);
-  const wholeEndRef = useRef<number | null>(null);
-  const wholeStopRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // F140: cancels the pending media-clock stop of the whole-word cut; `clearWholeStopTimer`
-  // runs it.
-  const wholeStopCancelRef = useRef<(() => void) | null>(null);
-  // F241: drops a stop arm queued on `loadedmetadata`; `clearWholeStopTimer` runs it too, so a
-  // rejected play cannot arm a stop for playback that never starts.
-  const wholeSeekCancelRef = useRef<(() => void) | null>(null);
+  const wordRef = useRef<HTMLAudioElement | null>(null);
+  const sentenceRef = useRef<HTMLAudioElement | null>(null);
   const blendGenerationRef = useRef(0);
   // True while the "Play the sound" button owns the phoneme element; a blend word clears it.
   const soundOwnerRef = useRef(false);
@@ -252,20 +242,11 @@ export function StorytimeDecodable({
       const result = target.play();
       if (result && typeof result.catch === "function") {
         result.catch((error: unknown) => {
-          if (!isAbortError(error)) {
-            setFailed(true);
-            // A rejected play fires no media event, so the rejection also cancels the
-            // pending whole-word stop; playback that never starts must not keep a stop
-            // armed (finding F147).
-            clearWholeStopTimer();
-          }
+          if (!isAbortError(error)) setFailed(true);
         });
       }
     } catch (error) {
-      if (!isAbortError(error)) {
-        setFailed(true);
-        clearWholeStopTimer();
-      }
+      if (!isAbortError(error)) setFailed(true);
     }
   }
 
@@ -297,15 +278,11 @@ export function StorytimeDecodable({
         if (result && typeof result.catch === "function") {
           result.catch((error: unknown) => {
             stop();
-            // A rejected clip fires no media event; the whole-word stop has nothing to wait
-            // for, so the rejection cancels it too (finding F147).
-            clearWholeStopTimer();
             rejectClip(error);
           });
         }
       } catch (error) {
         stop();
-        clearWholeStopTimer();
         rejectClip(error);
       }
     });
@@ -341,8 +318,40 @@ export function StorytimeDecodable({
   }
 
   /**
-   * Plays the grapheme clips of a blend word one at a time in reading order, then the whole
-   * word after the last clip ends (spec FR-7, finding F120).
+   * Gives the own clip file of one word. A word with no clip has no file, so the word stays
+   * plain text and never plays a time range of the book recording (finding 2 of task 6.2).
+   * @param word The word from the page or the tricky-word list.
+   * @returns The clip file, or undefined when the word has no clip.
+   */
+  function wordClipOf(word: string): string | undefined {
+    const clips = decodable?.audio?.wordClips ?? {};
+    const key = word.toLowerCase();
+    if (!Object.hasOwn(clips, key)) return undefined;
+    return clips[key];
+  }
+
+  /**
+   * Plays the own clip of one word from its start. The clip is a whole file, so the playback
+   * needs no stop and no seek (finding 2 of task 6.2).
+   * @param word The word from the page or the tricky-word list.
+   */
+  function playWordClip(word: string): void {
+    const file = wordClipOf(word);
+    const target = wordRef.current;
+    if (!file || !target) return;
+    const url = mediaUrl(mediaUrls, file);
+    if (url === "") {
+      setFailed(true);
+      return;
+    }
+    target.src = url;
+    playElement(target);
+    setFailed(false);
+  }
+
+  /**
+   * Plays the grapheme clips of a blend word one at a time in reading order, then the own
+   * word clip after the last clip ends (spec FR-7, finding F120).
    * @param graphemes The graphemes of the word, in reading order.
    * @param word The whole word, played after the last clip ends.
    * @returns `true` when every grapheme has a bank clip and the sequence started.
@@ -362,8 +371,8 @@ export function StorytimeDecodable({
 
   /**
    * Runs one blend sequence: the phoneme element plays each clip, and the next clip starts
-   * when the element ends the previous one. The whole word starts after the last clip ends. A
-   * second word tap, a sounds-page tap, or a page turn raises the generation number and stops
+   * when the element ends the previous one. The own word clip starts after the last clip ends.
+   * A second word tap, a sounds-page tap, or a page turn raises the generation number and stops
    * this sequence; the abort of its pending play shows no error alert.
    * @param files The clip files, in reading order.
    * @param word The whole word.
@@ -385,126 +394,57 @@ export function StorytimeDecodable({
       }
     }
     if (blendGenerationRef.current !== generation) return;
-    playWhole(word);
+    playWordClip(word);
   }
 
   /**
-   * Finds the recorded time range of one word on a page.
-   * @param word The word from the page.
-   * @param pageNumber The 1-based page number.
-   * @returns The start and end seconds, or `null` when the timing has no such word.
+   * Plays the whole sentence clip of the current page from its start. The clip is a whole file,
+   * so the playback needs no stop and no seek (finding 2 of task 6.2).
    */
-  function wordBounds(word: string, pageNumber: number): { start: number; end: number } | null {
-    const sentences = decodable?.audio?.sentences ?? [];
-    const lower = word.toLowerCase();
-    const onPage = sentences.filter((sentence) => sentence.page === pageNumber);
-    for (const sentence of [...onPage, ...sentences]) {
-      const timing = sentence.words.find((entry) => entry.word.toLowerCase() === lower);
-      if (timing) return { start: timing.start, end: timing.end };
-    }
-    return null;
-  }
-
-  /** Clears the pending media-clock stop and the pending stop timer (findings F123, F140). */
-  function clearWholeStopTimer(): void {
-    if (wholeSeekCancelRef.current !== null) {
-      wholeSeekCancelRef.current();
-      wholeSeekCancelRef.current = null;
-    }
-    if (wholeStopCancelRef.current !== null) {
-      wholeStopCancelRef.current();
-      wholeStopCancelRef.current = null;
-    }
-    if (wholeStopRef.current !== null) {
-      clearTimeout(wholeStopRef.current);
-      wholeStopRef.current = null;
-    }
-  }
-
-  /**
-   * Arms the stop of the whole-word recording at its word-cut end. The stop follows the
-   * media clock: it re-arms while `currentTime` is still below the cut end, so output
-   * latency and a mid-word stall do not cut the end of the word (finding F140). The timer
-   * also keeps the stop off the `timeupdate` cadence of about 250 ms (finding F123).
-   * @param bounds The start and end of the word cut, in seconds.
-   */
-  function armWholeStop(bounds: { start: number; end: number }): void {
-    clearWholeStopTimer();
-    const target = wholeRef.current;
-    if (!target) return;
-    wholeStopCancelRef.current = stopAtMediaEnd(target, bounds.end, () => {
-      wholeEndRef.current = null;
-      wholeRef.current?.pause();
-    });
-  }
-
-  /**
-   * Plays one whole word from the book recording.
-   * @param word The word from the page or the tricky-word list.
-   */
-  function playWhole(word: string): void {
-    const file = decodable?.audio?.file;
-    const target = wholeRef.current;
-    if (!file || !target) {
+  function onSentenceTap(): void {
+    const file = sentenceClipOf(pageNumber);
+    const target = sentenceRef.current;
+    if (!file || !target) return;
+    const url = mediaUrl(mediaUrls, file);
+    if (url === "") {
       setFailed(true);
       return;
     }
-    const bounds = wordBounds(word, pageNumber);
-    const url = mediaUrl(mediaUrls, file);
-    // The imperative write is the only src write; see playPhoneme.
     target.src = url;
-    if (bounds) {
-      // The seek re-applies on loadedmetadata when the element has no metadata yet (finding
-      // F122). The cut stop follows the media clock, so the pause lands at the measured end
-      // even with output latency or a stall (finding F140). The queued arm of an earlier cut
-      // is dropped first, and a rejected play drops this one (findings F146, F241).
-      wholeSeekCancelRef.current?.();
-      wholeSeekCancelRef.current = seekAndRun(target, bounds.start, () => {
-        wholeSeekCancelRef.current = null;
-        armWholeStop(bounds);
-      });
-      wholeEndRef.current = bounds.end;
-    } else {
-      clearWholeStopTimer();
-      wholeEndRef.current = null;
-      target.currentTime = 0;
-    }
     playElement(target);
     setFailed(false);
   }
 
   /**
-   * Stops the whole-word recording at the end of its measured word cut.
+   * Gives the sentence clip file of one page.
+   * @param number The 1-based page number.
+   * @returns The clip file, or undefined when the page has no sentence clip.
    */
-  function onWholeTimeUpdate(): void {
-    const target = wholeRef.current;
-    const end = wholeEndRef.current;
-    if (!target || end === null) return;
-    if (target.currentTime >= end) {
-      target.pause();
-      clearWholeStopTimer();
-      wholeEndRef.current = null;
-    }
+  function sentenceClipOf(number: number): string | undefined {
+    const clips = decodable?.audio?.sentenceClips ?? {};
+    const key = String(number);
+    if (!Object.hasOwn(clips, key)) return undefined;
+    return clips[key];
   }
 
   useEffect(() => () => {
-    clearWholeStopTimer();
     stopBlendSequence();
   }, []);
 
   /**
-   * Plays one tapped word: a blend word plays its graphemes first and the whole word after the
-   * last clip ends; every other word plays whole at once (finding F120). When no clip bank
-   * covers the word, only the whole word plays, as before.
+   * Plays a tapped word: a blend word plays its graphemes first and its own clip after the
+   * last clip ends; every other word plays its own clip at once (finding F120). A word with no
+   * clip plays nothing, because the word is not a tap target.
    * @param word The word from the page or the tricky-word list.
    */
   function onWordTap(word: string): void {
     const plan = blendPlanForWord(word, week);
     if (plan.mode === "blend" && playBlend(plan.graphemes, word)) return;
-    playWhole(word);
+    playWordClip(word);
   }
 
   const labels = labelsFor(locale, labelOverrides);
+  const sentenceClip = sentenceClipOf(pageNumber);
 
   return (
     <div
@@ -524,9 +464,13 @@ export function StorytimeDecodable({
         }}
       />
       <audio
-        ref={wholeRef}
+        ref={wordRef}
         preload="none"
-        onTimeUpdate={onWholeTimeUpdate}
+        onError={() => setFailed(true)}
+      />
+      <audio
+        ref={sentenceRef}
+        preload="none"
         onError={() => setFailed(true)}
       />
       {element ? (
@@ -573,14 +517,18 @@ export function StorytimeDecodable({
             {sentencePieces(page.text).map((piece, index, pieces) =>
               piece.word ? (
                 <span key={index} className="inline-flex items-baseline">
-                  <button
-                    type="button"
-                    onClick={() => onWordTap(piece.word!)}
-                    style={wordBoxStyle(piece.word, index === pieces.findIndex((entry) => entry.word))}
-                    className="inline-flex min-h-[44px] items-center rounded hover:bg-[#fef3c7]"
-                  >
-                    {piece.word}
-                  </button>
+                  {wordClipOf(piece.word) ? (
+                    <button
+                      type="button"
+                      onClick={() => onWordTap(piece.word!)}
+                      style={wordBoxStyle(piece.word, index === pieces.findIndex((entry) => entry.word))}
+                      className="inline-flex min-h-[44px] items-center rounded hover:bg-[#fef3c7]"
+                    >
+                      {piece.word}
+                    </button>
+                  ) : (
+                    <span>{piece.word}</span>
+                  )}
                   {(piece.trailing ?? []).map((token, trailingIndex) => (
                     <span key={trailingIndex}>{token}</span>
                   ))}
@@ -621,6 +569,15 @@ export function StorytimeDecodable({
             →
           </button>
         </div>
+        {sentenceClip ? (
+          <button
+            type="button"
+            onClick={onSentenceTap}
+            className="min-h-12 self-start rounded-xl border border-[#92400e] px-4"
+          >
+            {labels.playSentence}
+          </button>
+        ) : null}
         {tricky.length > 0 ? (
           <section aria-label={labels.trickyWords} className="flex flex-col gap-2">
             <h2 className="text-lg font-semibold [@media(max-height:500px)]:text-sm" lang="en">
@@ -629,13 +586,19 @@ export function StorytimeDecodable({
             <ul className="flex flex-wrap gap-2">
               {tricky.map((word) => (
                 <li key={word}>
-                  <button
-                    type="button"
-                    onClick={() => onWordTap(word)}
-                    className="inline-flex min-h-12 min-w-[44px] items-center justify-center rounded-full border border-[#92400e] bg-[#fcd34d] px-4 text-[#92400e]"
-                  >
-                    {word}
-                  </button>
+                  {wordClipOf(word) ? (
+                    <button
+                      type="button"
+                      onClick={() => onWordTap(word)}
+                      className="inline-flex min-h-12 min-w-[44px] items-center justify-center rounded-full border border-[#92400e] bg-[#fcd34d] px-4 text-[#92400e]"
+                    >
+                      {word}
+                    </button>
+                  ) : (
+                    <span className="inline-flex min-h-12 min-w-[44px] items-center justify-center px-4">
+                      {word}
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>

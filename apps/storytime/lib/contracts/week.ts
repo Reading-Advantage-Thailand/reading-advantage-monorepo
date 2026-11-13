@@ -119,6 +119,16 @@ const wordClipKey = z
   .regex(/^[a-z]+(['-][a-z]+)*$/, { message: "a word clip key is a lower-case word" })
   .refine((key) => !(key in Object.prototype), { message: "a word clip key names no inherited property" });
 
+/**
+ * The key of a sentence clip map: the 1-based page number as a string.
+ *
+ * The key is an allowlist, so a key that names no page fails. A page number with a leading zero
+ * fails too, because the page number of the app holds no zero.
+ */
+const sentenceClipKey = z
+  .string()
+  .regex(/^[1-9][0-9]*$/, { message: "a sentence clip key is the page number of the clip" });
+
 /** The audio of a book: the narration, the real slow reading, and the clip of each word. */
 export const bookAudioSchema = z
   .object({
@@ -129,6 +139,13 @@ export const bookAudioSchema = z
     slowSentences: z.array(sentenceTimepointSchema).default([]),
     /** The lower-case word to the clip file of that word; a tap on a word plays its own clip. */
     wordClips: z.record(wordClipKey, mediaPath).default({}),
+    /**
+     * The page number to the whole clip of the sentence of that page.
+     *
+     * The clip is a whole file, so a sentence button plays it from its start (finding 2 of
+     * task 6.2). A page with no clip holds no key, and the page shows no button.
+     */
+    sentenceClips: z.record(sentenceClipKey, mediaPath).default({}),
   })
   .passthrough();
 

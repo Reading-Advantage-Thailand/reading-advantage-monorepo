@@ -25,13 +25,21 @@ afterEach(() => {
 
 /**
  * Builds a one-page decodable week that carries one page text.
+ *
+ * The week holds an own clip for every word of the text, because a word with no clip is plain
+ * text and holds no tap button (finding 2 of task 6.2, 2026-11-13).
  * @param text The hostile page text.
  * @returns The week fixture for the decodable component.
  */
 function weekWithText(text: string): StorytimeWeek {
+  const clips: Record<string, string> = {};
+  for (const match of text.matchAll(WORD_RE)) {
+    const word = match[0]!.toLowerCase();
+    if (!clips[word]) clips[word] = `words/${word}.mp3`;
+  }
   return {
     version: 1,
-    books: [{ kind: "decodable", pages: [{ text }] }],
+    books: [{ kind: "decodable", pages: [{ text }], audio: { wordClips: clips } }],
   } as unknown as StorytimeWeek;
 }
 

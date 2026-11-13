@@ -152,7 +152,7 @@ function fileNameOf(src: string): string {
 }
 
 describe("Phase 3 Storytime decodable media src writes", () => {
-  it("plays every clip of a blend word and the whole word when every src write aborts a pending play", async () => {
+  it("plays every clip of a blend word and the own clip when every src write aborts a pending play", async () => {
     const book = week3.books.find((entry) => entry.kind === "decodable");
     const word = (book?.soundsPage?.words ?? [])
       .find((candidate) => blendPlanForWord(candidate, week3).mode === "blend");
@@ -165,10 +165,14 @@ describe("Phase 3 Storytime decodable media src writes", () => {
       n: "04-n.mp3",
     };
     expect(graphemes.every((grapheme) => clipByGrapheme[grapheme])).toBe(true);
-    const wholeName = fileNameOf(book!.audio!.file!);
+    // The word ends with its own clip, never with a cut of the book recording (finding 2 of
+    // task 6.2, 2026-11-13).
+    const ownClip = book!.audio!.wordClips[word!.toLowerCase()];
+    expect(ownClip, "shipped week 3 must hold an own clip of the word").toBeTruthy();
+    const ownName = fileNameOf(ownClip!);
     const expected: string[] = [];
     for (const grapheme of graphemes) expected.push(`play ${clipByGrapheme[grapheme]}`, "ended");
-    expected.push(`play ${wholeName}`);
+    expected.push(`play ${ownName}`);
 
     const media = installStrictFakeMedia();
     try {
@@ -184,7 +188,7 @@ describe("Phase 3 Storytime decodable media src writes", () => {
           media.timeline(),
           index < graphemes.length
             ? `the clip ${index + 1} plays after the ended event of clip ${index}`
-            : "the whole word starts after the ended event of the last clip",
+            : "the own clip starts after the ended event of the last clip",
         ).toEqual(expected.slice(0, 2 * index + 1));
       }
       expect(screen.queryByRole("alert"), "an aborted play shows no error alert").toBeNull();
