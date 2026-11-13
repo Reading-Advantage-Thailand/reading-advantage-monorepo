@@ -21,7 +21,10 @@
 # the build) and runner_bundle_disk_use_after_kb (the drop of free disk after the cleanup).
 # Measured by earlier runs of this script before the cleanup existed: 3 runs (2 failed in
 # `pnpm install`, 1 stopped by heavy-run at 1800 s) left about 6 GB of dangling layers
-# (free disk 11 GB to 5.2 GB). Peak of one complete run: not measured yet.
+# (free disk 11 GB to 5.2 GB). A run killed by heavy-run at 1800 s, while `pnpm install` still
+# ran in the stage `deps`, held 4.67 GB in one build container (free disk 10.05 GB to 5.2 GB).
+# The build container stays when a build is killed, so the trap also removes the buildah working
+# containers that appeared during the build. Peak of one complete run: not measured yet.
 set -uo pipefail
 
 MIN_FREE_KB=$((9 * 1024 * 1024))
@@ -31,11 +34,16 @@ CONTAINER="accounting-runner-bundle-gate-$$"
 BUILD_LOG="$(mktemp -t accounting-runner-bundle-gate.XXXXXX.log)"
 
 SAMPLER_PID=""
+BEFORE_IDS="$(podman ps -a --external --format '{{.ID}} {{.Names}}' 2>/dev/null | awk '/working-container/ {print $1}' | sort)"
 PEAK_FILE="$(mktemp -t accounting-runner-bundle-gate-peak.XXXXXX)"
 
 cleanup() {
   [ -n "$SAMPLER_PID" ] && kill "$SAMPLER_PID" >/dev/null 2>&1
   docker rm -f "$CONTAINER" >/dev/null 2>&1 || true
+  AFTER_IDS="$(podman ps -a --external --format '{{.ID}} {{.Names}}' 2>/dev/null | awk '/working-container/ {print $1}' | sort)"
+  for ID in $(comm -13 <(echo "$BEFORE_IDS") <(echo "$AFTER_IDS")); do
+    podman rm -f "$ID" >/dev/null 2>&1 || true
+  done
   podman rmi -f "$TAG" >/dev/null 2>&1 || true
   podman builder prune -f >/dev/null 2>&1 || true
   if [ -n "${FREE_KB:-}" ]; then
