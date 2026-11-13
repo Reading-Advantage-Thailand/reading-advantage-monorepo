@@ -1024,6 +1024,9 @@ describe("the year-file history write (FR-28)", () => {
     ).toBe(1);
     const row = intakeRepository.rows[0] as FakeIntakeRow | undefined;
     expect(row, "the history mode must store the year-file row").toBeDefined();
+    if (row === undefined) {
+      throw new Error("the history mode must store the year-file row");
+    }
     expect(row?.isHistory, "a year file writes isHistory true").toBe(true);
     expect(row?.historySource, "a year file writes historySource document").toBe("document");
     expect(row?.status, "a year file writes status parsed").toBe("parsed");
@@ -1330,7 +1333,12 @@ describe("the year-file history write (FR-28)", () => {
     const intakeRepository = createFakeIntakeRepository();
     const submissionRepository = createFakeSubmissionRepository();
     const file = files[0] as FakeFile;
-    const submissionEvidence = await evidenceStore.port.put({
+    const putEvidence = evidenceStore.port.put as (input: {
+      readonly companyId: string;
+      readonly contentType: string;
+      readonly body: Uint8Array;
+    }) => Promise<{ readonly evidenceReference: string }>;
+    const submissionEvidence = await putEvidence({
       companyId: COMPANY_ID,
       contentType: PDF_MIME_TYPE,
       body: file.body,
