@@ -796,9 +796,10 @@ real sample" (PM-12). The workbook reader and the text-PDF reader serve all rows
 - **What the poll reads.** The poll reads the top level of `Accounting`. From
   2027 it also reads the subfolder named for the current year. The poll never
   reads the `2024` and `2025` folders, and it never reads a subfolder of an
-  earlier year. The poll never writes in Drive (PM-14).
+  earlier year. The poll also skips the five year-file folders and their one
+  named parent `เอกสารบัญชีรายปี` (section 9b). The poll never writes in Drive (PM-14).
 - **The customer folder (PM-14).** A sub-folder of `Accounting` whose name is not a
-  year and is not in `YEAR_FILE_FOLDER_NAMES` (section 9b) is a customer folder. Today it is `Boonyathat`, the folder of the one
+  year, is not in `YEAR_FILE_FOLDER_NAMES`, and is not `YEAR_FILE_PARENT_FOLDER_NAME` (section 9b) is a customer folder. Today it is `Boonyathat`, the folder of the one
   active school. The poll reads it, and its files are school invoices (revenue).
   A file in it needs no naming rule, and its month comes from the document. The
   app reads it and never writes into it (open item Q22).
@@ -952,13 +953,22 @@ monthly close.
 five new subfolders. The scan found 118 PDF files, about 39 MB. This spec names a
 subfolder by its name and writes no Drive id (the repository is public).
 
-| Subfolder name | Files | What the PM scan saw |
-|---|---|---|
-| `Fwd: เอกสารปี 2567` | 9 | general ledger of 31.12.67, PND.1, PND.3, PND.50 receipt, and others |
-| `Fwd: เอกสารปี 2568` | 35 | PND.53 monthly form, attachment, and receipt |
-| `2568-1` | 10 | signed financial statement of year end 2568, สบช.3, PND.50 form and receipt |
-| `2568-2` | 38 | PND.1 monthly forms and PND.1A |
-| `2568-3` | 26 | PND.3 monthly forms |
+**The real layout (read only listing of 2026-11-14, plan tasks 10.7 and 10.12).**
+The short names of the 2026-11-13 scan were the names of that scan. The folders
+were renamed and moved before 2026-11-14. Four of the five folders now sit
+inside one parent folder, `เอกสารบัญชีรายปี` (0 PDF files, 4 subfolders). The
+parent is a direct child of the root. The listing found 118 PDF files in the five
+folders, the same total as the scan. The code constant `YEAR_FILE_FOLDER_NAMES`
+holds the five exact full names of the table. The code constant
+`YEAR_FILE_PARENT_FOLDER_NAME` holds the name of the one parent.
+
+| Subfolder name | Place | Files | What the PM scan saw |
+|---|---|---|---|
+| `Fwd: เอกสารปี 2567 (Fwd: Document from 2024)` | root | 9 | general ledger of 31.12.67, PND.1, PND.3, PND.50 receipt, and others |
+| `Fwd: เอกสารปี 2568 (Fwd: Document from 2025)` | inside `เอกสารบัญชีรายปี` | 35 | PND.53 monthly form, attachment, and receipt |
+| `Fwd: เอกสารปี 2568-1 (Fwd: Document Year 2025-1)` | inside `เอกสารบัญชีรายปี` | 10 | signed financial statement of year end 2568, สบช.3, PND.50 form and receipt |
+| `Fwd: เอกสารปี 2568-2 (Fwd: Document Year 2025-2)` | inside `เอกสารบัญชีรายปี` | 38 | PND.1 monthly forms and PND.1A |
+| `Fwd: เอกสารปี 2568-3 (Fwd: Document Year 2025-3)` | inside `เอกสารบัญชีรายปี` | 26 | PND.3 monthly forms |
 
 The folder names show no month. A subfolder name is never a source of a month
 or a type. The years in the names are Buddhist Era (BE). The app converts BE to
@@ -1037,26 +1047,37 @@ filter. This reading is DECIDED (Q28, PM, 2026-11-13 13:25).
 
 **The subfolder walk.** Today the poll reads the top level of `Accounting`, the
 customer folders, and, from 2027, the subfolder of the current year (section 9).
+The walk is two levels deep through the one named parent (DECIDED, section 14.9).
 The poll of the root does not change: it reads the same files, with the same
 naming rule. Two things change.
 
-1. A new walk reads the five subfolders. The walk is one input of the one
+1. A new walk reads the five year-file folders. The walk is one input of the one
    `intakeDriveDocument` history mode, not a second intake function. It reads the
-   direct children of the root. It picks the subfolders whose exact names are in
-   the code constant `YEAR_FILE_FOLDER_NAMES` (the five names of the table). It
-   reads the PDF files directly inside each. It does not go deeper than one
-   level. The walk is one function. The import and the dry-run both call it, so
+   direct children of the root. It picks the folders whose exact full names are
+   in the code constant `YEAR_FILE_FOLDER_NAMES` (the five full names of the
+   table). It also picks the one folder whose exact name is
+   `YEAR_FILE_PARENT_FOLDER_NAME` (`เอกสารบัญชีรายปี`), and it reads the direct
+   children of that parent, with the same exact-name pick. The match is exact
+   only: no prefix match and no partial match. The walk reads the PDF files
+   directly inside each of the five folders. It reads no PDF directly inside the
+   parent. It does not go deeper than these two levels. The walk enforces the
+   20 MB limit (section 9, "Size limit") on the downloaded body of each file, not only on the
+   size that the listing states. The text-layer read of each file has a per-file
+   timeout (Review B finding F1001, plan task 10.13). The walk is one function. The import and the dry-run both call it, so
    no second walk exists. It resolves each folder id at run time by listing the root, so no
    folder id enters the repository, a test, a log line, or a report. A listed
-   subfolder that is not in the constant is skipped. A name in the constant that
-   the listing does not find is an error that stops the walk.
+   folder that is not in the constant is skipped. A name in the constant that
+   the listing does not find, at its place (the root or the parent), is an error
+   that stops the walk.
 2. The customer-folder rule of section 9 ("a sub-folder whose name is not a year
-   is a customer folder") would read the five new subfolders as customer folders.
-   It would parse their PDFs as school invoices. The rule therefore skips every
-   name in `YEAR_FILE_FOLDER_NAMES`. This is the only change in the poll, and it
-   only removes the five names from its reach. A test pins it. This change is
+   is a customer folder") would read the five year-file folders and the parent as
+   customer folders. It would parse their PDFs as school invoices. The rule
+   therefore skips every name in `YEAR_FILE_FOLDER_NAMES` and the name
+   `YEAR_FILE_PARENT_FOLDER_NAME`. This is the only change in the poll, and it
+   only removes six names from its reach. A test pins it. This change is
    DECIDED (Q29, PM, 2026-11-13 13:25: "Q29 the poll skips the 5 subfolder names:
-   accepted").
+   accepted"). The PM order of 2026-11-14 adds the parent to the skip list
+   (section 14.9).
 
 The Drive port stays read only (PM-14). The walk writes nothing in Drive.
 
@@ -1065,9 +1086,12 @@ the same ports and the same walk function as the import, and no write. It writes
 database, makes no call to the evidence store, and makes no model call for a text
 PDF. A PDF with no text layer is listed in the report. It goes to Vertex only in
 the production import, under the A-52 rule for scans that is already approved.
-The dry-run calls no model. The report has, for each file:
+The dry-run calls no model. The dry-run uses the same walk, so it has the same
+limits: the 20 MB limit on the downloaded body and the per-file timeout of the
+text-layer read (F1001). A file above the limit, or a file that times out, is
+listed with a visible reason and stops nothing else. The report has, for each file:
 
-- a serial `file-NNN`, the subfolder name, and the byte length;
+- a serial `file-NNN`, the full folder name, and the byte length;
 - the type key or `unmatched`;
 - the filing kind and the period, or `period-unreadable`;
 - the text layer: `yes` or `no`;
@@ -1076,7 +1100,7 @@ The dry-run calls no model. The report has, for each file:
   run (byte length first, then the byte-equality rule of section 5.4, applied in
   memory; the dry-run calls no evidence store).
 
-The report ends with the counts: files by subfolder, by type, by period, with a
+The report ends with the counts: files by folder, by type, by period, with a
 text layer, without a text layer, unmatched, and duplicate groups. The report
 holds no amount, no tax id, no payee, no person name, no file name, and no Drive
 id. It goes to `measure/runs/accounting_drive_intake_20261109/` outside git. The
@@ -1405,18 +1429,22 @@ and the dry-run list the same files.
   `duplicate_of_intake_document_id`, and with no approve or reject action. No hash field, no checksum column, and no manifest is
   added.
 - **FR-29.** The subfolder walk is one input of the one `intakeDriveDocument`
-  history mode. It reads the PDF files directly inside each subfolder whose exact
-  name is in the code constant `YEAR_FILE_FOLDER_NAMES`, resolves each folder id
-  at run time from the listing of the root, goes one level deep only, and writes
-  nothing in Drive. The import and `dryRunAccountingYearFiles` call this one walk
-  function. A name in the constant that the listing does not find stops
+  history mode. It reads the PDF files directly inside each of the five folders
+  whose exact full name is in the code constant `YEAR_FILE_FOLDER_NAMES`. One of
+  the five sits at the root. Four sit inside the one parent whose exact name is
+  `YEAR_FILE_PARENT_FOLDER_NAME`. The walk resolves each folder id at run time
+  from the listing of the root and of the parent, goes two levels deep only, uses
+  exact name match only (no prefix match), reads no PDF directly inside the
+  parent, and writes nothing in Drive. It enforces the 20 MB limit on the
+  downloaded body, and the text-layer read has a per-file timeout (F1001). The import and `dryRunAccountingYearFiles` call this one walk
+  function. A name in the constant that the listing does not find at its place stops
   the walk with a safe error. The customer-folder rule of the poll skips every
-  name in the constant. The poll of the root otherwise reads the same files with
+  name in the constant and the parent name. The poll of the root otherwise reads the same files with
   the same naming rule. No Drive id enters the repository, a test, a log line, or
   a report.
 - **FR-30.** `dryRunAccountingYearFiles` calls the walk of FR-29, lists the year
   files, and writes the
-  report of section 9b: a serial, the subfolder name, the byte length, the type
+  report of section 9b: a serial, the full folder name, the byte length, the type
   key or `unmatched`, the filing kind, the period, the text layer, the fact names,
   and the duplicate group (an in-memory byte compare: byte length first, then the
   byte-equality rule of section 5.4), then the counts. It writes the report to
@@ -1648,13 +1676,18 @@ Each criterion has an automated test that can falsify it.
     9b table with amounts in satang. Given a text with no readable period, then
     the file is `unmatched` for the reason `period-unreadable`, and no row is
     written (section 9b, FR-28).
-49. Given a fake root listing with the five named subfolders, a customer folder,
-    and an unnamed subfolder, when the year-file walk runs, then it reads the PDFs
-    directly inside the five subfolders only, it reads nothing deeper, and it
-    writes nothing in Drive. Given a listing without one of the five names, then
-    the walk stops with a safe error. Given the same listing, when the poll runs,
-    then it reads the root and the customer folder as before and reads none of
-    the five subfolders (FR-29).
+49. Given a fake root listing with the one root year-file folder, the parent
+    folder with four year-file folders inside it, a customer folder, an unnamed
+    folder, and a folder with a name that only starts like a full name, when the
+    year-file walk runs, then it reads the PDFs directly inside the five folders
+    only, it reads no PDF directly inside the parent, it reads nothing deeper, it
+    matches no prefix, and it writes nothing in Drive. Given a listing without one
+    of the five names at its place, then the walk stops with a safe error. Given
+    a file whose downloaded body is above 20 MB, or a text-layer read that passes
+    the timeout, then the file is listed with a visible reason (F1001). Given the
+    same listing, when the poll runs, then it reads the root and the customer
+    folder as before and reads none of the five folders and not the parent
+    (FR-29).
 50. Given a fake run of the year-file dry-run, when the test reads the database
     fake, the evidence store fake, the model fake, the report, and the log lines,
     then the database and the evidence store have no call, a text PDF causes no
@@ -1688,7 +1721,8 @@ Each criterion has an automated test that can falsify it.
   names the source (`deferred:pm`).
 - A posting, a tax computation, or a reconciliation from the year-file amounts.
   The year-end view is read only (section 9b).
-- Files deeper than one level of a year-file subfolder, and any file in the
+- Files deeper than the two levels of the year-file walk, any PDF directly inside the
+  parent `เอกสารบัญชีรายปี`, and any file in the
   folders `2024` and `2025` (DECIDED, Q30, PM, 2026-11-13 13:25).
 - The double-entry ledger, the chart of accounts, VAT, withholding tax, and the
   tax invoices. `accounting_app_foundation_20260820` owns them.
@@ -2409,6 +2443,33 @@ rest is deferred:pm."
 "later phase" bullet of section 13, and the `deferred:pm` start of the old
 Phase 10. The poll of the root and the 2026 voucher history do not change. No
 other decision of section 14 changes.
+
+### 14.9 PM order of 2026-11-14 (the real folder layout) (DECIDED)
+
+The read-only listing of 2026-11-14 (plan tasks 10.7 and 10.12) found the real
+layout of the year-file folders. The root `Accounting` holds these direct
+children: the folder `Fwd: เอกสารปี 2567 (Fwd: Document from 2024)` (9 PDF
+files), the parent folder `เอกสารบัญชีรายปี` (0 PDF files, 4 subfolders), the
+customer folder, `2024`, `2025`, and root PDF files. Inside `เอกสารบัญชีรายปี`
+are four folders: `Fwd: เอกสารปี 2568 (Fwd: Document from 2025)` (35),
+`Fwd: เอกสารปี 2568-1 (Fwd: Document Year 2025-1)` (10),
+`Fwd: เอกสารปี 2568-2 (Fwd: Document Year 2025-2)` (38), and
+`Fwd: เอกสารปี 2568-3 (Fwd: Document Year 2025-3)` (26). The total is 118 PDF
+files, equal to the old table. The short names of section 9b were the names of
+the 2026-11-13 scan.
+
+The PM decided on 2026-11-14 04:2x, quoted exactly: "A-52 year-file folders: your
+default: the five exact full names, a two-level walk through the one named parent
+เอกสารบัญชีรายปี, PDFs only directly inside the five, AND the parent in the poll
+skip list. No prefix match."
+
+- **Effect.** Section 9b, FR-29, FR-30, and criterion 49 follow this decision. The
+  constant `YEAR_FILE_PARENT_FOLDER_NAME` holds the parent name. Q29 and Q30 keep
+  their quotes. The Q29 skip list grows from five names to five names and the
+  parent. Q30 does not change.
+- **F1001 (Review B, plan task 10.13).** The walk enforces the 20 MB limit on the
+  downloaded body, and the text-layer read has a per-file timeout. The dry-run
+  uses the same walk, so it has the same limits.
 
 ## 15. Deferred tasks
 
