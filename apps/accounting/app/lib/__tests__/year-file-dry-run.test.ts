@@ -73,14 +73,21 @@ const FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
 /** MIME type of every fake year file. */
 const PDF_MIME_TYPE = "application/pdf";
 
-/** The five names of spec section 9b, in the order of the table. */
+/**
+ * The five full names of the real layout, in the order of the table (PM
+ * 2026-11-14 04:2x, task 10.12). Position 0 sits directly in the root; the
+ * positions 1 to 4 sit inside the parent folder.
+ */
 const EXPECTED_FOLDER_NAMES = [
-  "Fwd: เอกสารปี 2567",
-  "Fwd: เอกสารปี 2568",
-  "2568-1",
-  "2568-2",
-  "2568-3",
+  "Fwd: เอกสารปี 2567 (Fwd: Document from 2024)",
+  "Fwd: เอกสารปี 2568 (Fwd: Document from 2025)",
+  "Fwd: เอกสารปี 2568-1 (Fwd: Document Year 2025-1)",
+  "Fwd: เอกสารปี 2568-2 (Fwd: Document Year 2025-2)",
+  "Fwd: เอกสารปี 2568-3 (Fwd: Document Year 2025-3)",
 ] as const;
+
+/** The one parent folder that holds the four 2568 folders. */
+const EXPECTED_PARENT_FOLDER_NAME = "เอกสารบัญชีรายปี";
 
 /** The session actor of the dry run. */
 const ACTOR = {
@@ -212,6 +219,9 @@ console.log(`named_subfolders=${NAMED_SUBFOLDERS}`);
 const NAMED_FOLDER_IDS = EXPECTED_FOLDER_NAMES.map(
   (_name, index) => `fake-drive-folder-${index + 1}`,
 );
+
+/** The id of the parent folder of the fake listing. */
+const PARENT_FOLDER_ID = "fake-drive-folder-80";
 
 /** The sentinel tokens of the banned-value scans (P10.5). */
 const AMOUNT_SENTINELS = ["1,234.56", "7,890.12", "100.00"] as const;
@@ -427,8 +437,38 @@ function makeFile(index: number, text: string): FakeFile {
 }
 
 /**
- * Builds the dry-run fake Drive: the five named subfolders with the fixture
- * files of `DRY_RUN_FILES`.
+ * Builds the folder map of the real layout: the first named folder and the
+ * parent folder in the root, and the four 2568 folders inside the parent.
+ * @param entriesOfFolder The entries inside each named folder, by position.
+ * @returns The folder map.
+ */
+function buildLayoutMap(
+  entriesOfFolder: (index: number) => readonly FakeEntry[],
+): Map<string, readonly FakeEntry[]> {
+  const named: FakeEntry[] = EXPECTED_FOLDER_NAMES.map((name, index) => ({
+    id: NAMED_FOLDER_IDS[index] ?? "",
+    name,
+    mimeType: FOLDER_MIME_TYPE,
+  }));
+  const entriesByFolder = new Map<string, readonly FakeEntry[]>();
+  entriesByFolder.set(ROOT_FOLDER_ID, [
+    ...named.slice(0, 1),
+    {
+      id: PARENT_FOLDER_ID,
+      name: EXPECTED_PARENT_FOLDER_NAME,
+      mimeType: FOLDER_MIME_TYPE,
+    },
+  ]);
+  entriesByFolder.set(PARENT_FOLDER_ID, named.slice(1));
+  for (const [index, folderId] of NAMED_FOLDER_IDS.entries()) {
+    entriesByFolder.set(folderId, entriesOfFolder(index));
+  }
+  return entriesByFolder;
+}
+
+/**
+ * Builds the dry-run fake Drive in the real layout: the five named folders
+ * with the fixture files of `DRY_RUN_FILES`.
  * @returns The folder map and the files.
  */
 function buildDryRunDrive(): {
@@ -436,19 +476,9 @@ function buildDryRunDrive(): {
   readonly files: readonly FakeFile[];
 } {
   const files = DRY_RUN_FILES.map((spec) => makeFile(spec.index, spec.text));
-  const rootEntries: FakeEntry[] = EXPECTED_FOLDER_NAMES.map((name, index) => ({
-    id: NAMED_FOLDER_IDS[index] ?? "",
-    name,
-    mimeType: FOLDER_MIME_TYPE,
-  }));
-  const entriesByFolder = new Map<string, readonly FakeEntry[]>();
-  entriesByFolder.set(ROOT_FOLDER_ID, rootEntries);
-  for (const [index, folderId] of NAMED_FOLDER_IDS.entries()) {
-    entriesByFolder.set(
-      folderId,
-      files.filter((_file, fileIndex) => DRY_RUN_FILES[fileIndex]?.folder === index),
-    );
-  }
+  const entriesByFolder = buildLayoutMap((index) =>
+    files.filter((_file, fileIndex) => DRY_RUN_FILES[fileIndex]?.folder === index),
+  );
   return { entriesByFolder, files };
 }
 
@@ -1034,9 +1064,13 @@ describe("the dry-run report rows (FR-30)", () => {
       "walk_calls=1: the dry-run must call the one walk function, which lists the root once (FR-29)",
     ).toBe(1);
     expect(
+      run.drive.calls.listFolderEntries.filter((id) => id === PARENT_FOLDER_ID),
+      "the one walk lists the parent folder once to find the four 2568 folders",
+    ).toHaveLength(1);
+    expect(
       run.drive.calls.listFolderEntries,
-      "the dry-run must read the root and the five named subfolders through the one walk",
-    ).toHaveLength(NAMED_SUBFOLDERS + 1);
+      "the dry-run must read the root, the parent, and the five named folders through the one walk",
+    ).toHaveLength(NAMED_SUBFOLDERS + 2);
     for (const folderId of NAMED_FOLDER_IDS) {
       expect(
         run.drive.calls.listFolderEntries.filter((id) => id === folderId),
@@ -1176,6 +1210,91 @@ describe("the dry-run is deterministic and writes the report where the caller as
       hits,
       "A9: the test uses temp folders and holds no default report folder string; the default is a runner argument of task 10.7, not a test fact",
     ).toEqual([]);
+  });
+});
+
+describe("the dry-run enforces the size limit on the downloaded body (Review B F1001)", () => {
+  it("lists a downloaded body above the limit as unmatched with no text layer and does not parse it when the declared size was under the limit (oversize_body_text_layer_reads=0)", async () => {
+    const dryRun = await requireDryRun();
+    const module = await loadIntakeModule();
+    const limit = module["ACCOUNTING_INTAKE_SIZE_LIMIT_BYTES"];
+    expect(
+      typeof limit,
+      "the module must export ACCOUNTING_INTAKE_SIZE_LIMIT_BYTES",
+    ).toBe("number");
+    if (dryRun === undefined || typeof limit !== "number") return;
+    const small = makeFile(1, PND1_MONTH1_TEXT);
+    const big: FakeFile = {
+      id: "fake-drive-2",
+      name: "fake-file-2.pdf",
+      mimeType: PDF_MIME_TYPE,
+      byteSize: 100,
+      body: Buffer.alloc(limit + 1, 0x41),
+    };
+    const entriesByFolder = buildLayoutMap((index) =>
+      index === 0 ? [small] : index === 1 ? [big] : [],
+    );
+    const drive = createFakeDrive(entriesByFolder, [small, big]);
+    const textLayerBodies: number[] = [];
+    const tempDir = mkdtempSync(join(tmpdir(), "accounting-dry-run-"));
+    TEMP_DIRS.push(tempDir);
+    const captured = captureLogLines();
+    let result: Record<string, unknown>;
+    try {
+      result = await dryRun({
+        actor: ACTOR,
+        folderId: ROOT_FOLDER_ID,
+        source: drive.source,
+        textLayer: {
+          /** Records the length of each body that reaches the text layer. */
+          async read(input: {
+            readonly body: Uint8Array;
+          }): Promise<{ readonly text: string | null }> {
+            textLayerBodies.push(input.body.byteLength);
+            return { text: Buffer.from(input.body).toString("utf8") };
+          },
+        },
+        evidenceStore: createFakeEvidenceStore().port,
+        intakeRepository: createFakeIntakeRepository().port,
+        submissionRepository: createFakeSubmissionRepository().port,
+        localReader: createFakeLocalReader(),
+        extraction: createFailingExtraction().port,
+        reportDir: tempDir,
+      });
+    } finally {
+      captured.restore();
+    }
+    const report = String(result.report);
+    const rows = parseReportRows(report);
+    console.log(`oversize_body_text_layer_reads=${textLayerBodies.filter((n) => n > limit).length}`);
+    expect(rows, "the report lists both files").toHaveLength(2);
+    expect(
+      drive.calls.download,
+      "the oversize file must reach the download step: its declared size is under the limit",
+    ).toContain(big.id);
+    expect(
+      textLayerBodies.filter((length) => length > limit),
+      "oversize_body_text_layer_reads=0: a body above the limit must not reach the text layer",
+    ).toEqual([]);
+    expect(
+      textLayerBodies,
+      "the normal file still reaches the text layer once",
+    ).toHaveLength(1);
+    const bigRow = rows[1] ?? "";
+    expect(readField(bigRow, "type="), "the oversize file is listed unmatched").toBe("unmatched");
+    expect(readField(bigRow, "text-layer="), "the oversize file is listed with no text layer").toBe("no");
+    expect(
+      readField(bigRow, "bytes="),
+      "the listed byte length is the length of the downloaded body",
+    ).toBe(String(limit + 1));
+    expect(readField(bigRow, "duplicate-group="), "the oversize file is in no duplicate group").toBe("0");
+    expect(
+      readField(rows[0] ?? "", "text-layer="),
+      "the normal file keeps its text layer",
+    ).toBe("yes");
+    expect(requireCountValue(report, "without a text layer")).toBe(1);
+    expect(requireCountValue(report, "with a text layer")).toBe(1);
+    expect(requireCountValue(report, "unmatched")).toBe(1);
   });
 });
 

@@ -11,7 +11,9 @@
  *
  * The contract this file pins for the Green task 10.4:
  *
- *   YEAR_FILE_FOLDER_NAMES  // the five names of spec section 9b, exact
+ *   YEAR_FILE_FOLDER_NAMES  // the five FULL names of spec section 9b, exact
+ *   YEAR_FILE_PARENT_FOLDER_NAME  // the one parent folder `เอกสารบัญชีรายปี`
+ *                                 // (task 10.12, PM 2026-11-14 04:2x)
  *
  *   walkAccountingYearFiles(input: {
  *     folderId: string;
@@ -20,7 +22,9 @@
  *   }): Promise<readonly {
  *     id: string; name: string; mimeType: string;
  *     byteSize?: number; folderName: string;
- *   }[]>                                     // one walk, one level deep
+ *   }[]>                                     // one walk, two levels: the root,
+ *                                            // and the one named parent folder;
+ *                                            // PDFs only directly inside the five
  *
  *   intakeDriveDocument({
  *     mode: "history",                       // the one intake function
@@ -64,14 +68,21 @@ const FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
 /** MIME type of every fake year file. */
 const PDF_MIME_TYPE = "application/pdf";
 
-/** The five names of spec section 9b, in the order of the table. */
+/**
+ * The five full names of the real layout, in the order of the table (PM
+ * 2026-11-14 04:2x, task 10.12). Position 0 sits directly in the root; the
+ * positions 1 to 4 sit inside the parent folder.
+ */
 const EXPECTED_FOLDER_NAMES = [
-  "Fwd: เอกสารปี 2567",
-  "Fwd: เอกสารปี 2568",
-  "2568-1",
-  "2568-2",
-  "2568-3",
+  "Fwd: เอกสารปี 2567 (Fwd: Document from 2024)",
+  "Fwd: เอกสารปี 2568 (Fwd: Document from 2025)",
+  "Fwd: เอกสารปี 2568-1 (Fwd: Document Year 2025-1)",
+  "Fwd: เอกสารปี 2568-2 (Fwd: Document Year 2025-2)",
+  "Fwd: เอกสารปี 2568-3 (Fwd: Document Year 2025-3)",
 ] as const;
+
+/** The one parent folder that holds the four 2568 folders. */
+const EXPECTED_PARENT_FOLDER_NAME = "เอกสารบัญชีรายปี";
 
 /** The session actor of the intake run. */
 const ACTOR = {
@@ -125,6 +136,14 @@ console.log(`named_subfolders=${NAMED_SUBFOLDERS}`);
 const NAMED_FOLDER_IDS = EXPECTED_FOLDER_NAMES.map(
   (_name, index) => `fake-drive-folder-${index + 1}`,
 );
+/** The id of the parent folder of the fake listing. */
+const PARENT_FOLDER_ID = "fake-drive-folder-80";
+/** The id of the `2024` folder of the fake listing. */
+const YEAR_2024_FOLDER_ID = "fake-drive-folder-94";
+/** The id of the `2025` folder of the fake listing. */
+const YEAR_2025_FOLDER_ID = "fake-drive-folder-95";
+/** The id of the unnamed folder inside the parent of the fake listing. */
+const PARENT_UNNAMED_FOLDER_ID = "fake-drive-folder-96";
 /** The id of the customer folder of the fake listing. */
 const CUSTOMER_FOLDER_ID = "fake-drive-folder-90";
 /** The id of the unnamed subfolder of the fake listing. */
@@ -337,34 +356,55 @@ function makeFile(index: number, text: string, nameOverride?: string): FakeFile 
 }
 
 /**
- * Builds the full main listing: the five named subfolders with one PDF each,
- * a customer folder, an unnamed subfolder, a lookalike, and a nested folder.
+ * Builds the folder listings of the real layout: position 0 in the root, the
+ * parent folder in the root, and the positions 1 to 4 inside the parent.
+ * @param filesByFolderIndex The entries inside each named folder, by position.
+ * @param rootExtra Extra entries of the root.
+ * @param parentExtra Extra entries of the parent.
+ * @returns The folder map.
+ */
+function buildLayoutMap(
+  filesByFolderIndex: ReadonlyMap<number, readonly FakeEntry[]>,
+  rootExtra: readonly FakeEntry[] = [],
+  parentExtra: readonly FakeEntry[] = [],
+): Map<string, readonly FakeEntry[]> {
+  const named: FakeEntry[] = EXPECTED_FOLDER_NAMES.map((name, index) => ({
+    id: NAMED_FOLDER_IDS[index] ?? "",
+    name,
+    mimeType: FOLDER_MIME_TYPE,
+  }));
+  const entriesByFolder = new Map<string, readonly FakeEntry[]>();
+  entriesByFolder.set(ROOT_FOLDER_ID, [
+    ...named.slice(0, 1),
+    {
+      id: PARENT_FOLDER_ID,
+      name: EXPECTED_PARENT_FOLDER_NAME,
+      mimeType: FOLDER_MIME_TYPE,
+    },
+    ...rootExtra,
+  ]);
+  entriesByFolder.set(PARENT_FOLDER_ID, [...named.slice(1), ...parentExtra]);
+  for (const [index, folderId] of NAMED_FOLDER_IDS.entries()) {
+    entriesByFolder.set(folderId, filesByFolderIndex.get(index) ?? []);
+  }
+  return entriesByFolder;
+}
+
+/**
+ * Builds the full main listing in the real layout: the five named folders
+ * with PDFs, the parent with its own PDF and an unnamed folder, the customer
+ * folder, an unnamed folder, a lookalike, the `2024` and `2025` folders, a PDF
+ * in the root, and a nested folder inside one of the five.
+ * @param counts How many PDFs each named folder holds, by position.
  * @returns The folder map, the files, and the folder id list.
  */
-function buildMainDrive(): {
+function buildMainDrive(counts: readonly number[] = [1, 1, 1, 1, 1]): {
   readonly entriesByFolder: ReadonlyMap<string, readonly FakeEntry[]>;
   readonly files: readonly FakeFile[];
 } {
-  const files = EXPECTED_FOLDER_NAMES.map((_name, index) =>
-    makeFile(index + 1, `${PND1_TEXT}\n#${index + 1}`),
-  );
-  const rootEntries: FakeEntry[] = [
-    ...EXPECTED_FOLDER_NAMES.map((name, index) => ({
-      id: NAMED_FOLDER_IDS[index] ?? "",
-      name,
-      mimeType: FOLDER_MIME_TYPE,
-    })),
-    { id: CUSTOMER_FOLDER_ID, name: "Boonyathat", mimeType: FOLDER_MIME_TYPE },
-    { id: UNNAMED_FOLDER_ID, name: "unnamed-subfolder", mimeType: FOLDER_MIME_TYPE },
-    {
-      id: LOOKALIKE_FOLDER_ID,
-      name: `${EXPECTED_FOLDER_NAMES[0]} `,
-      mimeType: FOLDER_MIME_TYPE,
-    },
-  ];
-  const entriesByFolder = new Map<string, readonly FakeEntry[]>();
-  entriesByFolder.set(ROOT_FOLDER_ID, rootEntries);
-  for (const [index, folderId] of NAMED_FOLDER_IDS.entries()) {
+  const files: FakeFile[] = [];
+  const filesByFolderIndex = new Map<number, FakeEntry[]>();
+  for (const [index, count] of counts.entries()) {
     const entries: FakeEntry[] = [];
     if (index === 0) {
       entries.push({ id: DEEPER_FOLDER_ID, name: "nested", mimeType: FOLDER_MIME_TYPE });
@@ -377,10 +417,42 @@ function buildMainDrive(): {
         byteSize: 10,
       });
     }
-    const file = files[index];
-    if (file !== undefined) entries.push(file);
-    entriesByFolder.set(folderId, entries);
+    for (let copy = 0; copy < count; copy += 1) {
+      const file = makeFile(files.length + 1, `${PND1_TEXT}\n#${files.length + 1}`);
+      files.push(file);
+      entries.push(file);
+    }
+    filesByFolderIndex.set(index, entries);
   }
+  const entriesByFolder = buildLayoutMap(
+    filesByFolderIndex,
+    [
+      { id: CUSTOMER_FOLDER_ID, name: "Boonyathat", mimeType: FOLDER_MIME_TYPE },
+      { id: UNNAMED_FOLDER_ID, name: "unnamed-subfolder", mimeType: FOLDER_MIME_TYPE },
+      {
+        id: LOOKALIKE_FOLDER_ID,
+        name: `${EXPECTED_FOLDER_NAMES[0]} `,
+        mimeType: FOLDER_MIME_TYPE,
+      },
+      { id: YEAR_2024_FOLDER_ID, name: "2024", mimeType: FOLDER_MIME_TYPE },
+      { id: YEAR_2025_FOLDER_ID, name: "2025", mimeType: FOLDER_MIME_TYPE },
+      {
+        id: "fake-drive-56",
+        name: "fake-file-56.pdf",
+        mimeType: PDF_MIME_TYPE,
+        byteSize: 10,
+      },
+    ],
+    [
+      {
+        id: "fake-drive-53",
+        name: "fake-file-53.pdf",
+        mimeType: PDF_MIME_TYPE,
+        byteSize: 10,
+      },
+      { id: PARENT_UNNAMED_FOLDER_ID, name: "unnamed-in-parent", mimeType: FOLDER_MIME_TYPE },
+    ],
+  );
   entriesByFolder.set(DEEPER_FOLDER_ID, [
     {
       id: "fake-drive-51",
@@ -397,11 +469,28 @@ function buildMainDrive(): {
       byteSize: 10,
     },
   ]);
+  entriesByFolder.set(YEAR_2024_FOLDER_ID, [
+    {
+      id: "fake-drive-54",
+      name: "fake-file-54.pdf",
+      mimeType: PDF_MIME_TYPE,
+      byteSize: 10,
+    },
+  ]);
+  entriesByFolder.set(YEAR_2025_FOLDER_ID, [
+    {
+      id: "fake-drive-55",
+      name: "fake-file-55.pdf",
+      mimeType: PDF_MIME_TYPE,
+      byteSize: 10,
+    },
+  ]);
   return { entriesByFolder, files };
 }
 
 /**
- * Builds the history listing with one PDF in one named subfolder.
+ * Builds the history listing in the real layout with one PDF in the first
+ * named folder.
  * @param text Text of the file.
  * @param fileIndex Serial of the file.
  * @returns The folder map and the files.
@@ -414,17 +503,10 @@ function buildSingleDrive(
   readonly files: readonly FakeFile[];
 } {
   const file = makeFile(fileIndex, text);
-  const rootEntries: FakeEntry[] = EXPECTED_FOLDER_NAMES.map((name, index) => ({
-    id: NAMED_FOLDER_IDS[index] ?? "",
-    name,
-    mimeType: FOLDER_MIME_TYPE,
-  }));
-  const entriesByFolder = new Map<string, readonly FakeEntry[]>();
-  entriesByFolder.set(ROOT_FOLDER_ID, rootEntries);
-  for (const [index, folderId] of NAMED_FOLDER_IDS.entries()) {
-    entriesByFolder.set(folderId, index === 0 ? [file] : []);
-  }
-  return { entriesByFolder, files: [file] };
+  return {
+    entriesByFolder: buildLayoutMap(new Map([[0, [file]]])),
+    files: [file],
+  };
 }
 
 /** One fake evidence store with its stored byte map. */
@@ -794,11 +876,57 @@ function collectStrings(value: unknown, found: string[] = []): string[] {
   return found;
 }
 
+/** The shape of the safe walk error that these rows read. */
+interface WalkError extends Error {
+  readonly reason?: string;
+  readonly folderName?: string;
+}
+
+/**
+ * Runs the walk over one fake Drive and returns the error that stops it.
+ * @param walk The one walk function.
+ * @param drive The fake Drive port.
+ * @returns The thrown error, or undefined when the walk did not stop.
+ */
+async function catchWalkError(
+  walk: (input: Record<string, unknown>) => Promise<unknown>,
+  drive: FakeDrive,
+): Promise<WalkError | undefined> {
+  try {
+    await walk({ folderId: ROOT_FOLDER_ID, source: drive.source });
+  } catch (caught) {
+    return caught instanceof Error ? (caught as WalkError) : new Error(String(caught));
+  }
+  return undefined;
+}
+
 describe("the year-file subfolder walk (FR-29)", () => {
-  it("exports YEAR_FILE_FOLDER_NAMES with the five names of spec section 9b", async () => {
+  it("exports YEAR_FILE_FOLDER_NAMES with the five full names of the real layout (full_folder_names=5)", async () => {
     const names = await requireExport("YEAR_FILE_FOLDER_NAMES");
     expect(Array.isArray(names), "YEAR_FILE_FOLDER_NAMES must be an array").toBe(true);
-    expect([...(names as readonly string[])]).toEqual([...EXPECTED_FOLDER_NAMES]);
+    const list = [...(names as readonly string[])];
+    console.log(`full_folder_names=${list.length}`);
+    expect(
+      list,
+      "full_folder_names=5: the constant holds the five exact full names, with the bracket suffix (PM 2026-11-14 04:2x)",
+    ).toEqual([...EXPECTED_FOLDER_NAMES]);
+    for (const name of list) {
+      expect(name, `the name "${name}" must be NFC text`).toBe(name.normalize("NFC"));
+    }
+    expect(
+      list.filter((name) => /^(?:2568-\d|Fwd: เอกสารปี 256[78])$/u.test(name)),
+      "no short name may remain in the constant (no prefix match, PM 2026-11-14 04:2x)",
+    ).toEqual([]);
+  });
+
+  it("exports YEAR_FILE_PARENT_FOLDER_NAME with the one parent folder (parent_folder_names=1)", async () => {
+    const parent = await requireExport("YEAR_FILE_PARENT_FOLDER_NAME");
+    console.log(`parent_folder_names=${typeof parent === "string" ? 1 : 0}`);
+    expect(
+      parent,
+      "YEAR_FILE_PARENT_FOLDER_NAME must be the exact NFC string of the one parent folder",
+    ).toBe(EXPECTED_PARENT_FOLDER_NAME);
+    expect(parent).toBe(String(parent).normalize("NFC"));
   });
 
   it("exports one walk function and keeps one intake function (walk_functions=1, intake_functions=1)", async () => {
@@ -820,7 +948,7 @@ describe("the year-file subfolder walk (FR-29)", () => {
     ).toEqual(["intakeDriveDocument"]);
   });
 
-  it("reads the PDFs directly inside the five named subfolders only (subfolders_read=5)", async () => {
+  it("reads the PDFs directly inside the five named folders through the parent only (subfolders_read=5, parent_reads=1)", async () => {
     const walk = await requireWalk();
     if (walk === undefined) return;
     const { entriesByFolder, files } = buildMainDrive();
@@ -846,6 +974,8 @@ describe("the year-file subfolder walk (FR-29)", () => {
     const namedReads = readFolders.filter((folderId) =>
       NAMED_FOLDER_IDS.includes(folderId),
     );
+    const parentReads = readFolders.filter((folderId) => folderId === PARENT_FOLDER_ID);
+    console.log(`parent_reads=${parentReads.length}`);
     console.log(`subfolders_read=${namedReads.length}`);
     console.log(
       `deeper_list_calls=${readFolders.filter((folderId) => folderId === DEEPER_FOLDER_ID).length}`,
@@ -858,9 +988,23 @@ describe("the year-file subfolder walk (FR-29)", () => {
     );
     expect(namedReads.length, "subfolders_read=5").toBe(NAMED_SUBFOLDERS);
     expect(
+      parentReads.length,
+      "parent_reads=1: the walk lists the one named parent folder once to find the four 2568 folders",
+    ).toBe(1);
+    expect(
       readFolders,
-      "the walk must read the root and the five named subfolders only",
-    ).toHaveLength(NAMED_SUBFOLDERS + 1);
+      "the walk must read the root, the parent, and the five named folders only (7 listings)",
+    ).toHaveLength(NAMED_SUBFOLDERS + 2);
+    for (const [label, folderId] of [
+      ["2024", YEAR_2024_FOLDER_ID],
+      ["2025", YEAR_2025_FOLDER_ID],
+      ["unnamed folder inside the parent", PARENT_UNNAMED_FOLDER_ID],
+    ] as const) {
+      expect(
+        readFolders,
+        `the walk must not read the ${label} folder`,
+      ).not.toContain(folderId);
+    }
     expect(
       readFolders,
       "deeper_list_calls=0: the walk must not read a folder two levels deep",
@@ -888,6 +1032,38 @@ describe("the year-file subfolder walk (FR-29)", () => {
       value.includes("fake-file-50"),
     );
     expect(nonPdf, "the walk must not return a non-PDF file").toEqual([]);
+    const strays = collectStrings(result).filter((value) =>
+      /fake-file-(?:52|53|54|55|56)\b/u.test(value),
+    );
+    console.log(`stray_files_returned=${strays.length}`);
+    expect(
+      strays,
+      "stray_files_returned=0: nothing from the parent's own files, the customer folder, 2024, 2025, or the root PDFs",
+    ).toEqual([]);
+  });
+
+  it("returns the right PDF count for each of the five folders (files_per_folder=2,3,1,2,1)", async () => {
+    const walk = await requireWalk();
+    if (walk === undefined) return;
+    const counts = [2, 3, 1, 2, 1];
+    const { entriesByFolder, files } = buildMainDrive(counts);
+    const drive = createFakeDrive(entriesByFolder, files);
+    const result = (await walk({
+      folderId: ROOT_FOLDER_ID,
+      source: drive.source,
+    })) as readonly Record<string, unknown>[];
+    expect(Array.isArray(result), "the walk must return an array of files").toBe(true);
+    const perFolder = EXPECTED_FOLDER_NAMES.map(
+      (name) => result.filter((file) => file.folderName === name).length,
+    );
+    console.log(`files_per_folder=${perFolder.join(",")}`);
+    expect(
+      perFolder,
+      "files_per_folder=2,3,1,2,1: each folder returns exactly the PDFs directly inside it",
+    ).toEqual(counts);
+    expect(result.length, "the walk returns 9 files in all and none from another place").toBe(
+      counts.reduce((total, count) => total + count, 0),
+    );
   });
 
   it("keeps every folder id out of the walk output (folder_id_output_hits=0)", async () => {
@@ -900,10 +1076,13 @@ describe("the year-file subfolder walk (FR-29)", () => {
     const folderIds = [
       ROOT_FOLDER_ID,
       ...NAMED_FOLDER_IDS,
+      PARENT_FOLDER_ID,
       CUSTOMER_FOLDER_ID,
       UNNAMED_FOLDER_ID,
       LOOKALIKE_FOLDER_ID,
       DEEPER_FOLDER_ID,
+      YEAR_2024_FOLDER_ID,
+      YEAR_2025_FOLDER_ID,
     ];
     const hits = output.filter((value) =>
       folderIds.some((folderId) => value.includes(folderId)),
@@ -924,54 +1103,198 @@ describe("the year-file subfolder walk (FR-29)", () => {
     if (walk === undefined) return;
     const { entriesByFolder, files } = buildMainDrive();
     const withoutOne = new Map(entriesByFolder);
-    const rootEntries = (withoutOne.get(ROOT_FOLDER_ID) ?? []).filter(
-      (entry) => entry.name !== "2568-2",
+    const parentEntries = (withoutOne.get(PARENT_FOLDER_ID) ?? []).filter(
+      (entry) => entry.name !== EXPECTED_FOLDER_NAMES[3],
     );
-    withoutOne.set(ROOT_FOLDER_ID, rootEntries);
+    withoutOne.set(PARENT_FOLDER_ID, parentEntries);
     const drive = createFakeDrive(withoutOne, files);
-    let error: unknown;
-    try {
-      await walk({ folderId: ROOT_FOLDER_ID, source: drive.source });
-    } catch (caught) {
-      error = caught;
-    }
+    const error = await catchWalkError(walk, drive);
     expect(error, "a missing name of YEAR_FILE_FOLDER_NAMES must stop the walk").toBeDefined();
+    expect(error?.reason, "a missing name stops with the reason folder-missing").toBe(
+      "folder-missing",
+    );
     const message = error instanceof Error ? error.message : String(error);
-    expect(message, "the safe error must name the missing subfolder").toContain("2568-2");
+    expect(message, "the safe error must name the missing folder").toContain(
+      EXPECTED_FOLDER_NAMES[3],
+    );
     expect(
       message,
       "the safe error must hold no Drive id",
     ).not.toMatch(/fake-drive/u);
   });
 
-  it("stops with the same safe error when two subfolders hold one name (duplicate_name_rows=1)", async () => {
+  it("stops with the same safe error when two folders of the parent hold one name (duplicate_name_rows=1)", async () => {
     const walk = await requireWalk();
     if (walk === undefined) return;
     const { entriesByFolder, files } = buildMainDrive();
     const withDuplicate = new Map(entriesByFolder);
-    const rootEntries = [
-      ...(withDuplicate.get(ROOT_FOLDER_ID) ?? []),
+    withDuplicate.set(PARENT_FOLDER_ID, [
+      ...(withDuplicate.get(PARENT_FOLDER_ID) ?? []),
       {
         id: "fake-drive-folder-4b",
-        name: "2568-1",
+        name: EXPECTED_FOLDER_NAMES[2],
         mimeType: FOLDER_MIME_TYPE,
       },
-    ];
-    withDuplicate.set(ROOT_FOLDER_ID, rootEntries);
+    ]);
     const drive = createFakeDrive(withDuplicate, files);
-    let error: unknown;
-    try {
-      await walk({ folderId: ROOT_FOLDER_ID, source: drive.source });
-    } catch (caught) {
-      error = caught;
-    }
+    const error = await catchWalkError(walk, drive);
     expect(error, "a duplicate name of YEAR_FILE_FOLDER_NAMES must stop the walk (Q20)").toBeDefined();
+    expect(error?.reason, "a duplicate name stops with the reason folder-duplicate").toBe(
+      "folder-duplicate",
+    );
     const message = error instanceof Error ? error.message : String(error);
-    expect(message, "the safe error must name the duplicated subfolder").toContain("2568-1");
+    expect(message, "the safe error must name the duplicated folder").toContain(
+      EXPECTED_FOLDER_NAMES[2],
+    );
     expect(message, "the safe error must hold no Drive id").not.toMatch(/fake-drive/u);
   });
 
-  it("reads none of the five subfolders in the poll (poll_year_file_folder_reads=0)", async () => {
+  it("stops with folder-duplicate when one name is in both the root and the parent (name_in_both_places=1)", async () => {
+    const walk = await requireWalk();
+    if (walk === undefined) return;
+    const { entriesByFolder, files } = buildMainDrive();
+    const withBoth = new Map(entriesByFolder);
+    withBoth.set(ROOT_FOLDER_ID, [
+      ...(withBoth.get(ROOT_FOLDER_ID) ?? []),
+      {
+        id: "fake-drive-folder-4c",
+        name: EXPECTED_FOLDER_NAMES[3],
+        mimeType: FOLDER_MIME_TYPE,
+      },
+    ]);
+    const drive = createFakeDrive(withBoth, files);
+    const error = await catchWalkError(walk, drive);
+    console.log(`name_in_both_places=${error === undefined ? 0 : 1}`);
+    expect(
+      error,
+      "name_in_both_places=1: a name in the root and in the parent is a duplicate (pinned rule of task 10.12)",
+    ).toBeDefined();
+    expect(error?.reason).toBe("folder-duplicate");
+    const message = error instanceof Error ? error.message : String(error);
+    expect(message).toContain(EXPECTED_FOLDER_NAMES[3]);
+    expect(message).not.toMatch(/fake-drive/u);
+  });
+
+  it("takes a name from the root when it is not in the parent: the place of a name is not required (name_in_other_place=ok)", async () => {
+    const walk = await requireWalk();
+    if (walk === undefined) return;
+    const { entriesByFolder, files } = buildMainDrive();
+    const moved = new Map(entriesByFolder);
+    const parentEntries = moved.get(PARENT_FOLDER_ID) ?? [];
+    const movedEntry = parentEntries.find((entry) => entry.name === EXPECTED_FOLDER_NAMES[4]);
+    expect(movedEntry, "the fixture must hold the folder to move").toBeDefined();
+    if (movedEntry === undefined) return;
+    moved.set(
+      PARENT_FOLDER_ID,
+      parentEntries.filter((entry) => entry.id !== movedEntry.id),
+    );
+    moved.set(ROOT_FOLDER_ID, [...(moved.get(ROOT_FOLDER_ID) ?? []), movedEntry]);
+    const drive = createFakeDrive(moved, files);
+    const result = (await walk({
+      folderId: ROOT_FOLDER_ID,
+      source: drive.source,
+    })) as readonly Record<string, unknown>[];
+    const names = [...new Set(result.map((file) => file.folderName))].sort();
+    console.log(`name_in_other_place=${names.length}`);
+    expect(
+      names,
+      "the walk takes each name from the root or the parent: all five folders are read",
+    ).toEqual([...EXPECTED_FOLDER_NAMES].sort());
+  });
+
+  it("stops with folder-missing when the parent folder is absent (parent_missing_rows=1)", async () => {
+    const walk = await requireWalk();
+    if (walk === undefined) return;
+    const { entriesByFolder, files } = buildMainDrive();
+    const withoutParent = new Map(entriesByFolder);
+    withoutParent.set(
+      ROOT_FOLDER_ID,
+      (withoutParent.get(ROOT_FOLDER_ID) ?? []).filter(
+        (entry) => entry.name !== EXPECTED_PARENT_FOLDER_NAME,
+      ),
+    );
+    const drive = createFakeDrive(withoutParent, files);
+    const error = await catchWalkError(walk, drive);
+    expect(error, "a missing parent folder must stop the walk (pinned rule of task 10.12)").toBeDefined();
+    expect(error?.reason).toBe("folder-missing");
+    const message = error instanceof Error ? error.message : String(error);
+    expect(message, "the safe error must name the missing parent folder").toContain(
+      EXPECTED_PARENT_FOLDER_NAME,
+    );
+    expect(message).not.toMatch(/fake-drive/u);
+  });
+
+  it("stops with folder-duplicate when the root holds the parent folder twice (parent_duplicate_rows=1)", async () => {
+    const walk = await requireWalk();
+    if (walk === undefined) return;
+    const { entriesByFolder, files } = buildMainDrive();
+    const withTwo = new Map(entriesByFolder);
+    withTwo.set(ROOT_FOLDER_ID, [
+      ...(withTwo.get(ROOT_FOLDER_ID) ?? []),
+      {
+        id: "fake-drive-folder-81",
+        name: EXPECTED_PARENT_FOLDER_NAME,
+        mimeType: FOLDER_MIME_TYPE,
+      },
+    ]);
+    const drive = createFakeDrive(withTwo, files);
+    const error = await catchWalkError(walk, drive);
+    expect(error, "a second parent folder must stop the walk").toBeDefined();
+    expect(error?.reason).toBe("folder-duplicate");
+    const message = error instanceof Error ? error.message : String(error);
+    expect(message).toContain(EXPECTED_PARENT_FOLDER_NAME);
+    expect(message).not.toMatch(/fake-drive/u);
+  });
+
+  const NEAR_NAMES: readonly (readonly [string, string])[] = [
+    ["the name without its bracket suffix", "Fwd: เอกสารปี 2568-1"],
+    ["the old short name", "2568-1"],
+    [
+      "the expected name plus a suffix (the expected name is a prefix)",
+      `${EXPECTED_FOLDER_NAMES[2]} copy`,
+    ],
+    [
+      "a truncated expected name (the listed name is a prefix)",
+      "Fwd: เอกสารปี 2568-1 (Fwd: Document",
+    ],
+    [
+      "the right text in lower case",
+      EXPECTED_FOLDER_NAMES[2].toLowerCase(),
+    ],
+  ];
+  console.log(`near_name_rows=${NEAR_NAMES.length}`);
+  for (const [label, nearName] of NEAR_NAMES) {
+    it(`does not match ${label} (exact match only, no prefix match)`, async () => {
+      const walk = await requireWalk();
+      if (walk === undefined) return;
+      const { entriesByFolder, files } = buildMainDrive();
+      const swapped = new Map(entriesByFolder);
+      swapped.set(
+        PARENT_FOLDER_ID,
+        (swapped.get(PARENT_FOLDER_ID) ?? []).map((entry) =>
+          entry.name === EXPECTED_FOLDER_NAMES[2] ? { ...entry, name: nearName } : entry,
+        ),
+      );
+      const drive = createFakeDrive(swapped, files);
+      const error = await catchWalkError(walk, drive);
+      expect(
+        error,
+        `a folder named by ${label} must not match; the walk must stop with the safe error`,
+      ).toBeDefined();
+      expect(error?.reason).toBe("folder-missing");
+      const message = error instanceof Error ? error.message : String(error);
+      expect(message, "the safe error names the exact missing name").toContain(
+        EXPECTED_FOLDER_NAMES[2],
+      );
+      expect(message).not.toMatch(/fake-drive/u);
+      expect(
+        drive.calls.listFolderEntries,
+        "the near-name folder must never be read",
+      ).not.toContain(NAMED_FOLDER_IDS[2]);
+    });
+  }
+
+  it("reads none of the five folders, the parent, or anything inside them in the poll (poll_year_file_folder_reads=0)", async () => {
     const intake = await requireIntake();
     if (intake === undefined) return;
     const { entriesByFolder, files } = buildMainDrive();
@@ -987,16 +1310,29 @@ describe("the year-file subfolder walk (FR-29)", () => {
         submissionRepository,
       }),
     );
-    const yearFolderReads = drive.calls.listFolderEntries.filter((folderId) =>
-      NAMED_FOLDER_IDS.includes(folderId),
+    const skippedIds = [...NAMED_FOLDER_IDS, PARENT_FOLDER_ID];
+    const reads = [...drive.calls.list, ...drive.calls.listFolderEntries].filter((folderId) =>
+      skippedIds.includes(folderId),
     );
-    console.log(`poll_year_file_folder_reads=${yearFolderReads.length}`);
+    console.log(`poll_year_file_folder_reads=${reads.length}`);
     expect(
-      yearFolderReads,
-      "poll_year_file_folder_reads=0: the poll reads the root files and the customer folder as before (Q16, Q29)",
+      reads,
+      "poll_year_file_folder_reads=0: the poll of the real-layout root reads none of the five folders and not the parent (Q29)",
     ).toEqual([]);
-    expect(drive.calls.list, "the poll must list the root once").toEqual([ROOT_FOLDER_ID]);
-    expect(result, "the poll must read the root files and the customer folder as before").toBeDefined();
+    const yearFileIds = files.map((file) => file.id);
+    expect(
+      drive.calls.download.filter((fileId) => yearFileIds.includes(fileId)),
+      "the poll must download nothing from inside the five folders",
+    ).toEqual([]);
+    expect(
+      intakeRepository.rows.filter((row) => yearFileIds.includes(row.driveFileId)),
+      "the poll must write no intake row for a file inside the five folders",
+    ).toEqual([]);
+    expect(
+      drive.calls.list,
+      "the poll lists the root as before and no customer folder",
+    ).toEqual([ROOT_FOLDER_ID]);
+    expect(result, "the poll must read the root files as before").toBeDefined();
   });
 });
 
@@ -1130,16 +1466,7 @@ describe("the year-file history write (FR-28)", () => {
     if (intake === undefined) return;
     const first = makeFile(1, PND1_TEXT);
     const second = makeFile(2, PND1_TEXT);
-    const rootEntries: FakeEntry[] = EXPECTED_FOLDER_NAMES.map((name, index) => ({
-      id: NAMED_FOLDER_IDS[index] ?? "",
-      name,
-      mimeType: FOLDER_MIME_TYPE,
-    }));
-    const entriesByFolder = new Map<string, readonly FakeEntry[]>();
-    entriesByFolder.set(ROOT_FOLDER_ID, rootEntries);
-    for (const [index, folderId] of NAMED_FOLDER_IDS.entries()) {
-      entriesByFolder.set(folderId, index === 0 ? [first, second] : []);
-    }
+    const entriesByFolder = buildLayoutMap(new Map([[0, [first, second]]]));
     const drive = createFakeDrive(entriesByFolder, [first, second]);
     const evidenceStore = createFakeEvidenceStore();
     const intakeRepository = createFakeIntakeRepository();
@@ -1184,16 +1511,7 @@ describe("the year-file history write (FR-28)", () => {
     if (intake === undefined) return;
     const first = makeFile(1, PND1_TEXT);
     const second = makeFile(2, PND1_TEXT);
-    const rootEntries: FakeEntry[] = EXPECTED_FOLDER_NAMES.map((name, index) => ({
-      id: NAMED_FOLDER_IDS[index] ?? "",
-      name,
-      mimeType: FOLDER_MIME_TYPE,
-    }));
-    const entriesByFolder = new Map<string, readonly FakeEntry[]>();
-    entriesByFolder.set(ROOT_FOLDER_ID, rootEntries);
-    for (const [index, folderId] of NAMED_FOLDER_IDS.entries()) {
-      entriesByFolder.set(folderId, index === 0 ? [first, second] : []);
-    }
+    const entriesByFolder = buildLayoutMap(new Map([[0, [first, second]]]));
     const drive = createFakeDrive(entriesByFolder, [first, second]);
     const evidenceStore = createFakeEvidenceStore();
     const intakeRepository = createFakeIntakeRepository();
@@ -1405,6 +1723,64 @@ describe("the year-file history write (FR-28)", () => {
       entry?.reason,
       "the listed file names the reason period-unreadable",
     ).toBe("period-unreadable");
+  });
+});
+
+describe("the size limit holds for the downloaded body (Review B F1001)", () => {
+  it("lists a downloaded body above the limit and does not parse it when the declared size was under the limit (oversize_body_rows_written=0)", async () => {
+    const intake = await requireIntake();
+    const module = await loadIntakeModule();
+    const limit = module["ACCOUNTING_INTAKE_SIZE_LIMIT_BYTES"];
+    expect(
+      typeof limit,
+      "the module must export ACCOUNTING_INTAKE_SIZE_LIMIT_BYTES",
+    ).toBe("number");
+    if (intake === undefined || typeof limit !== "number") return;
+    const body = Buffer.alloc(limit + 1, 0x41);
+    const file: FakeFile = {
+      id: "fake-drive-1",
+      name: "fake-file-1.pdf",
+      mimeType: PDF_MIME_TYPE,
+      byteSize: 100,
+      body,
+    };
+    const drive = createFakeDrive(buildLayoutMap(new Map([[0, [file]]])), [file]);
+    const evidenceStore = createFakeEvidenceStore();
+    const intakeRepository = createFakeIntakeRepository();
+    const submissionRepository = createFakeSubmissionRepository();
+    const textLayerCalls = { value: 0 };
+    const request = {
+      ...buildHistoryRequest({ drive, evidenceStore, intakeRepository, submissionRepository }),
+      textLayer: {
+        /** Records one read; no oversize body may reach it. */
+        async read(): Promise<{ readonly text: string | null }> {
+          textLayerCalls.value += 1;
+          return { text: PND1_TEXT };
+        },
+      },
+    };
+    const result = await intake(request);
+    console.log(`oversize_body_text_layer_reads=${textLayerCalls.value}`);
+    console.log(`oversize_body_rows_written=${intakeRepository.rows.length}`);
+    expect(
+      drive.calls.download,
+      "the fixture file must reach the download step: its declared size is under the limit",
+    ).toEqual([file.id]);
+    expect(
+      textLayerCalls.value,
+      "oversize_body_text_layer_reads=0: a body above the limit is not parsed",
+    ).toBe(0);
+    expect(
+      intakeRepository.rows,
+      "oversize_body_rows_written=0: a body above the limit writes no row",
+    ).toEqual([]);
+    const unmatched = result.unmatched as readonly Record<string, unknown>[];
+    expect(unmatched, "the oversize file must be listed").toHaveLength(1);
+    expect(unmatched[0]?.reason).toBe("file-too-large");
+    expect(
+      unmatched[0]?.byteSize,
+      "the listed byte length is the length of the downloaded body",
+    ).toBe(limit + 1);
   });
 });
 

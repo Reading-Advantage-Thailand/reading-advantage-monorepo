@@ -74,3 +74,57 @@ describe("the Drive query of the intake listing (Review B r2 F309)", () => {
     );
   });
 });
+
+/** Folder MIME type of the fake listing. */
+const FOLDER_MIME = "application/vnd.google-apps.folder";
+
+describe("the poll listing skips the year-file folders and the parent (Q29, task 10.12)", () => {
+  it("lists the real-layout root and enters none of the five folders or the parent (poll_year_file_folder_queries=0)", async () => {
+    const yearFolderIds = [
+      "fake-yf-1",
+      "fake-yf-2",
+      "fake-yf-3",
+      "fake-yf-4",
+      "fake-yf-5",
+      "fake-yf-parent",
+    ];
+    const queries: string[] = [];
+    const drive = {
+      files: {
+        list: async (params: { readonly q?: string }) => {
+          queries.push(params.q ?? "");
+          if (!(params.q ?? "").startsWith("'fake-root' ")) {
+            return { data: { files: [] } };
+          }
+          return {
+            data: {
+              files: [
+                { id: "fake-yf-1", name: "fake-name-1", mimeType: FOLDER_MIME },
+                { id: "fake-yf-parent", name: "fake-name-parent", mimeType: FOLDER_MIME },
+                { id: "fake-customer", name: "fake-customer", mimeType: FOLDER_MIME },
+                { id: "fake-2024", name: "2024", mimeType: FOLDER_MIME },
+                { id: "fake-2025", name: "2025", mimeType: FOLDER_MIME },
+                { id: "fake-root-file", name: "fake-root-file.pdf", mimeType: "application/pdf", size: "10" },
+              ],
+            },
+          };
+        },
+      },
+    } as unknown as drive_v3.Drive;
+    const source = await createDriveDocumentSource({ drive });
+    const listed = await source.list({ folderId: "fake-root" });
+    const yearFolderQueries = queries.filter((query) =>
+      yearFolderIds.some((id) => query.includes(`'${id}'`)),
+    );
+    console.log(`poll_year_file_folder_queries=${yearFolderQueries.length}`);
+    expect(queries.length, "the poll lists the root at least once (A4)").toBeGreaterThanOrEqual(1);
+    expect(
+      yearFolderQueries,
+      "poll_year_file_folder_queries=0: the poll never lists a year-file folder or the parent (Q29)",
+    ).toEqual([]);
+    expect(
+      listed.map((file) => file.id),
+      "the poll returns the root files only, with no folder",
+    ).toEqual(["fake-root-file"]);
+  });
+});
