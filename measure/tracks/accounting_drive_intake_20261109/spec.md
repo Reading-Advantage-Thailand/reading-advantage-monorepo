@@ -130,7 +130,7 @@ The folder holds:
 - school sales invoices.
 
 **The first load scope (PM decision PM-5, 2026-11-09).** The first load covers
-January to October 2026 only. The year files of 2024 and 2025 came later (section 9b). The
+January to October 2026 only. The load of the year files of 2024 and 2025 follows the first load (section 9b). The
 PM runs its own script on this machine on 2026-11-10 at 15:22 and sends a
 structure report by 2026-11-11 (PM-7). The report holds the document types, the
 fields, and the sample shapes. The report holds no real amount. The PM script
@@ -362,7 +362,9 @@ This section defines no hash. It defines the Drive file id and the byte compare 
 it catches a copy of one document under a new Drive file name or id (for example
 a byte-identical Google invoice that carries a new date in its file name). The
 decision adds no hash field, no checksum column, and no manifest. The month of a
-document comes from the document, not from the file name (section 9a).
+document comes from the document, not from the file name (section 9a). The PM of
+2026-11-13 13:25 wrote: "Q28 no hash, Drive file id + byte compare
+(sameEvidenceBytes): accepted; my 'hash' wording is withdrawn."
 
 ### 5.2 The data-out gate
 
@@ -444,7 +446,11 @@ match, or at the cap.
 - **The match target (Review A P3 F302).** A pass 1 match names its own
   submission id. A pass 2 match names `submissionId ?? duplicateOfSubmissionId`
   of the intake row. A pass 2 row that holds neither id (a failed row) is skipped
-  before the byte compare, and the scan continues. A third byte-equal copy of one
+  before the byte compare, and the scan continues. One exception exists: a
+  year-file row (status `parsed`, `submission_id` null, no duplicate id) stays a
+  candidate for a year-file lookup, and its match names the row itself through
+  `duplicate_of_intake_document_id` (section 9b, FR-28). A voucher lookup still
+  skips that row. A third byte-equal copy of one
   document is therefore a duplicate of the first submission, and no copy becomes
   a second submission.
 - **Past the cap.** Pass 1 stops at the cap. Pass 2 has no cap, because the size
@@ -904,6 +910,7 @@ column, and no manifest is added. The PM wrote "file hash"; the Drive file id
 plus the byte compare gives the same guarantee, and the AGENTS.md hashing policy
 forbids a new hash field. This is an open note in section 14.3. The PM decision of
 2026-11-11 (PM-11) says "content hash" and holds the same reading (section 5.1).
+The PM of 2026-11-13 13:25 accepted this reading (Q28) and withdrew the word "hash".
 
 **The history marker.** A history row carries `is_history = true` and a
 `history_source` of `document`, `drive-folder`, or `drive-modified-date`. The value
@@ -961,7 +968,8 @@ CE with CE = BE - 543 (2567 is 2024, 2568 is 2025).
 parser that matches the file text, never from the file name. Every amount is an
 integer in satang (minor units) or null when the text layer gives none. No fact
 is a payee name, a person name, a tax id, or an account number: the table holds
-only the facts below. Open item Q27 lets the fake fixtures refine each list.
+only the facts below. Q27 is DECIDED (PM, 2026-11-13 13:25: "Q27 accepted"): the fake
+fixtures refine each list.
 
 | Document | Type key | Parser | Facts (besides the common facts) |
 |---|---|---|---|
@@ -1008,15 +1016,21 @@ classified `EXEMPT` in `packages/domain/src/tenant-registry.ts`.
 checksum column, and no manifest (AGENTS.md hashing policy; section 5.1, PM-11).
 The file identity is the Drive file id. The duplicate check is the byte compare
 `sameEvidenceBytes` (section 5.5), with the stored `evidence_byte_size` as the
-filter. This reading is open item Q28.
+filter. This reading is DECIDED (Q28, PM, 2026-11-13 13:25).
 
 - A year file is never compared with a submission. Pass 1 of section 5.5 is not
   used for a year file, because no year file is a submission.
 - A year file takes pass 2 only: the intake rows with the same byte length, then
   `sameEvidenceBytes`. A pass 2 row that names no submission is still a candidate
-  when it is a year-file row (FR-28).
+  when it is a year-file row (FR-28). This is the year-file exception that
+  section 5.5 records.
 - A byte-equal second file writes one intake row with `status = duplicate` and
   `duplicate_of_intake_document_id` set (FR-28). It writes no facts row.
+- **The display of a year-file duplicate row.** The row has no submission id. The
+  intake list shows the label `duplicate` and no link to a submission. It shows
+  the serial position of the first row as plain text through
+  `duplicate_of_intake_document_id`, and it renders no approve or reject action.
+  A voucher duplicate keeps the link of section 5.5.
 - A voucher candidate does not match a year-file row. Section 5.5 already skips a
   pass 2 row that names no submission, so no voucher becomes a duplicate of a
   year file.
@@ -1028,24 +1042,26 @@ naming rule. Two things change.
 
 1. A new walk reads the five subfolders. The walk is one input of the one
    `intakeDriveDocument` history mode, not a second intake function. It reads the
-   direct children of the root, picks the subfolders whose exact names are in the
-   code constant `YEAR_FILE_FOLDER_NAMES` (the five names of the table), and
+   direct children of the root. It picks the subfolders whose exact names are in
+   the code constant `YEAR_FILE_FOLDER_NAMES` (the five names of the table). It
    reads the PDF files directly inside each. It does not go deeper than one
-   level. It resolves each folder id at run time by listing the root, so no
+   level. The walk is one function. The import and the dry-run both call it, so
+   no second walk exists. It resolves each folder id at run time by listing the root, so no
    folder id enters the repository, a test, a log line, or a report. A listed
    subfolder that is not in the constant is skipped. A name in the constant that
    the listing does not find is an error that stops the walk.
 2. The customer-folder rule of section 9 ("a sub-folder whose name is not a year
-   is a customer folder") would read the five new subfolders as customer folders
-   and parse their PDFs as school invoices. The rule therefore skips every name
-   in `YEAR_FILE_FOLDER_NAMES`. This is the only change in the poll, and it only
-   removes the five names from its reach. A test pins it. This change is open
-   item Q29.
+   is a customer folder") would read the five new subfolders as customer folders.
+   It would parse their PDFs as school invoices. The rule therefore skips every
+   name in `YEAR_FILE_FOLDER_NAMES`. This is the only change in the poll, and it
+   only removes the five names from its reach. A test pins it. This change is
+   DECIDED (Q29, PM, 2026-11-13 13:25: "Q29 the poll skips the 5 subfolder names:
+   accepted").
 
 The Drive port stays read only (PM-14). The walk writes nothing in Drive.
 
 **The dry-run structure report.** The dry-run runs first, on this machine, with
-the same ports as the import and no write. It writes no row in the accounting
+the same ports and the same walk function as the import, and no write. It writes no row in the accounting
 database, makes no call to the evidence store, and makes no model call for a text
 PDF. A PDF with no text layer is listed in the report. It goes to Vertex only in
 the production import, under the A-52 rule for scans that is already approved.
@@ -1057,7 +1073,8 @@ The dry-run calls no model. The report has, for each file:
 - the text layer: `yes` or `no`;
 - the fact names that the parser read (names only, no value);
 - the duplicate group number, from an in-memory byte compare of the files of the
-  run (byte length first, then `sameEvidenceBytes`).
+  run (byte length first, then the byte-equality rule of section 5.4, applied in
+  memory; the dry-run calls no evidence store).
 
 The report ends with the counts: files by subfolder, by type, by period, with a
 text layer, without a text layer, unmatched, and duplicate groups. The report
@@ -1070,15 +1087,19 @@ of the report is 2026-11-14 18:00. The summary goes to the PM.
 end", at `apps/accounting/app/filings/page.tsx`. It groups the facts rows by tax
 year and by form type. Each row shows the period, the filing kind, the facts
 that exist, the history marker (section 9a), and a link to the private evidence
-through the same guarded read as the intake list. The roles that read the
-monthly close report (`canReadMonthlyClose`) read the view. The view has no
-edit, no approve, no reject, and no delete control.
+through the same guarded read as the intake list. The view has no close, so it
+does not call `canReadMonthlyClose`, which needs a close object. It uses a new
+check, `canReadYearFiles(actor)`: the OWNER and the ACCOUNTANT read the view (the
+permission `accounting:monthly-close:read` for any close). The CEO is refused,
+because the CEO reads locked closes and approved items only, and a year file is
+neither. The view has no edit, no approve, no reject, and no delete control.
 
 **The production import.** It runs with the history import phase, after the
 accounting deploy, on Daniel's word (`deferred:daniel`, plan task 10.10). The
 dry-run report goes to the PM first. The import runs the same `history` mode
-with the year-file walk, and it uses only the files that the dry-run lists as
-matched with a readable period.
+with the year-file walk. It uses only the files that the dry-run lists as
+matched with a readable period. This rests on the one walk function: the import
+and the dry-run list the same files.
 
 ## 10. Functional requirements
 
@@ -1371,28 +1392,34 @@ matched with a readable period.
   section 9b table, each an integer in satang or a date or an integer count; no
   payee, no person name, no tax id, no account number, no hash). The table is
   classified `EXEMPT` in `packages/domain/src/tenant-registry.ts`. The intake
-  table gains `duplicate_of_intake_document_id` uuid null, and the intake
-  contract accepts `status = duplicate` with either `duplicate_of_submission_id`
-  or `duplicate_of_intake_document_id`, and with neither or both it fails. The
+  table gains `duplicate_of_intake_document_id` uuid null. The intake contract
+  accepts `status = duplicate` with exactly one of `duplicate_of_submission_id`
+  and `duplicate_of_intake_document_id`. With neither or both, it fails. The
   migration also adds the seven new type keys to the `document_type` check. A
   year-file row has `submission_id` null, `is_history = true`, and
   `history_source = document`. A year file creates no submission, no audit row of
   action `submit`, and no close row. The duplicate check of a year file runs pass
-  2 only (section 9b). No hash field, no checksum column, and no manifest is
+  2 only (section 9b). A year-file row stays a pass 2 candidate, although it names
+  no submission (section 5.5). The intake list shows a year-file duplicate row with
+  the label `duplicate`, no submission link, and the first row as plain text through
+  `duplicate_of_intake_document_id`, and with no approve or reject action. No hash field, no checksum column, and no manifest is
   added.
 - **FR-29.** The subfolder walk is one input of the one `intakeDriveDocument`
   history mode. It reads the PDF files directly inside each subfolder whose exact
   name is in the code constant `YEAR_FILE_FOLDER_NAMES`, resolves each folder id
   at run time from the listing of the root, goes one level deep only, and writes
-  nothing in Drive. A name in the constant that the listing does not find stops
+  nothing in Drive. The import and `dryRunAccountingYearFiles` call this one walk
+  function. A name in the constant that the listing does not find stops
   the walk with a safe error. The customer-folder rule of the poll skips every
   name in the constant. The poll of the root otherwise reads the same files with
   the same naming rule. No Drive id enters the repository, a test, a log line, or
   a report.
-- **FR-30.** `dryRunAccountingYearFiles` lists the year files and writes the
+- **FR-30.** `dryRunAccountingYearFiles` calls the walk of FR-29, lists the year
+  files, and writes the
   report of section 9b: a serial, the subfolder name, the byte length, the type
   key or `unmatched`, the filing kind, the period, the text layer, the fact names,
-  and the duplicate group, then the counts. It writes the report to
+  and the duplicate group (an in-memory byte compare: byte length first, then the
+  byte-equality rule of section 5.4), then the counts. It writes the report to
   `measure/runs/accounting_drive_intake_20261109/` outside git and one count log
   line per subfolder and type. It writes no database row, calls no evidence store,
   and calls no model for a text PDF. A PDF with no text layer is listed and is not
@@ -1401,7 +1428,8 @@ matched with a readable period.
 - **FR-31.** The view "Filings and year end" at `apps/accounting/app/filings` is
   read only. It shows the facts rows by tax year and form type with the history
   marker and a link to the private evidence, and it has no edit, approve, reject,
-  or delete control. The roles of `canReadMonthlyClose` read it. The production
+  or delete control. The check `canReadYearFiles(actor)` gates it: the OWNER and
+  the ACCOUNTANT read it, and the CEO and every other role are refused. The production
   write of the year files runs only after the deploy, on Daniel's word
   (`deferred:daniel`).
 
@@ -1640,12 +1668,14 @@ Each criterion has an automated test that can falsify it.
     set, and no facts row. Given a voucher candidate with the bytes of a year
     file, then it does not become a duplicate of the year file. Given a year
     file, then the code adds no submission row, no audit row of action `submit`,
-    no close row, and no hash field (FR-28).
-52. Given facts rows of two tax years, when a CEO or an ACCOUNTANT opens the view
-    "Filings and year end", then it lists the rows by tax year and form type with
-    the history marker and shows no edit, approve, reject, or delete control.
-    Given a role that cannot read the monthly close report, then the view returns
-    a refusal (FR-31).
+    no close row, and no hash field (FR-28). Given the intake list with a
+    year-file duplicate row, then it shows the label `duplicate`, no submission
+    link, the first row as plain text, and no approve or reject action.
+52. Given facts rows of two tax years, when an OWNER or an ACCOUNTANT opens the
+    view "Filings and year end", then it lists the rows by tax year and form type
+    with the history marker and shows no edit, approve, reject, or delete control.
+    Given a CEO, a STAFF, or a CONTRACTOR, then the view returns a refusal
+    (FR-31, `canReadYearFiles`).
 
 ## 13. Out of scope
 
@@ -1659,7 +1689,7 @@ Each criterion has an automated test that can falsify it.
 - A posting, a tax computation, or a reconciliation from the year-file amounts.
   The year-end view is read only (section 9b).
 - Files deeper than one level of a year-file subfolder, and any file in the
-  folders `2024` and `2025` (open item Q30).
+  folders `2024` and `2025` (DECIDED, Q30, PM, 2026-11-13 13:25).
 - The double-entry ledger, the chart of accounts, VAT, withholding tax, and the
   tax invoices. `accounting_app_foundation_20260820` owns them.
 - A new Cloud SQL instance. The accounting database stays on the shared instance
@@ -2072,6 +2102,7 @@ stops for no item in this list.
   manifest. This track therefore adds none (PM-7). If the PM still wants a hash,
   the change needs a new PM answer and a stop under the hashing policy. The PM
   decision of 2026-11-11 (PM-11) says "content hash" and gets the same reading.
+  The PM of 2026-11-13 13:25 accepted the same reading for the year files (Q28).
 - **Q14. How does the parser read the date forms? (G6)**
   Default: one reader for each form of section 8, note 5. A Buddhist Era year
   converts to a Gregorian year by subtracting 543. A date that no reader can read
@@ -2338,7 +2369,14 @@ PM-22 replaces the pass 1 source of section 5.5 and the member
 `listRecentWithEvidence` of section 5.8. PM-23 adds one `deferred:pm` IAM setup
 item. No other decision of section 14 changes.
 
-### 14.8 PM order of 2026-11-13 (the year files) (DECIDED, with open items)
+### 14.8 PM order of 2026-11-13 (the year files) (DECIDED)
+
+The PM answered on 2026-11-13 13:25, quoted exactly: "Q28 no hash, Drive file id +
+byte compare (sameEvidenceBytes): accepted; my 'hash' wording is withdrawn. Q29 the
+poll skips the 5 subfolder names: accepted. Q30 old 2024/2025 folders not read:
+accepted. Q27 accepted. Task 10.10 is deferred:daniel only for his deploy word; the
+rest is deferred:pm."
+
 
 - **PM-24 (the year files for 2024 and 2025). DECIDED (PM, 2026-11-13).** The
   owner order (Tasks, 2026-11-13 12:33) is quoted in section 9b. The PM added
@@ -2347,21 +2385,23 @@ item. No other decision of section 14 changes.
   import runs with the history import phase after the accounting deploy, on
   Daniel's word (`deferred:daniel`). The order of work: after the Storytime 15:00
   link. Sections 9b, FR-28 to FR-31, criteria 48 to 52, plan Phase 10. The
-  `deferred:pm` start gate of the old Phase 10 is removed.
-- **Q27. Which facts does each year-file type hold?** Default: the lists of the
+  `deferred:pm` start gate of the old Phase 10 is removed. Task 10.10 is
+  `deferred:daniel` for Daniel's deploy word only; the rest of it is
+  `deferred:pm` (PM, 2026-11-13 13:25).
+- **Q27. Which facts does each year-file type hold? DECIDED (PM, 2026-11-13 13:25).** Default: the lists of the
   section 9b table. The fake fixtures of Red task 10.1 refine a list, and a
   change of a list needs no new decision when it only adds or removes a fact of
   the same kind.
-- **Q28. The PM order says "file hash" and "duplicates by hash".** Default: no
+- **Q28. The PM order says "file hash" and "duplicates by hash". DECIDED (PM, 2026-11-13 13:25).** Default: no
   hash. The file identity is the Drive file id, and the duplicate check is the byte
   compare `sameEvidenceBytes` with `evidence_byte_size` as the filter. The reason
   is AGENTS.md "Hashing and Provenance Policy", spec section 5.1, and the PM-11
   precedent.
-- **Q29. The poll change.** Default: the customer-folder rule skips the five names
+- **Q29. The poll change. DECIDED (PM, 2026-11-13 13:25).** Default: the customer-folder rule skips the five names
   of `YEAR_FILE_FOLDER_NAMES`. Without it the poll reads the five subfolders as
   customer folders (school invoices). The PM order says the poll of the root stays
   unchanged; this skip is the one needed exception and it removes reach only.
-- **Q30. The old folders `2024` and `2025`.** Default: the walk does not read
+- **Q30. The old folders `2024` and `2025`. DECIDED (PM, 2026-11-13 13:25).** Default: the walk does not read
   them. The PM scan names five subfolders only. If those two folders hold year
   files, the PM adds their names to the constant and the walk reads them.
 
@@ -2386,5 +2426,5 @@ other decision of section 14 changes.
 | The bank statement password in Secret Manager | `deferred:daniel` | Daniel enters it once at setup, at deploy time (PM-13); the spec holds no value |
 | The production history write for January to October 2026 | `deferred:daniel` | The dry-run report goes to Daniel first; the write runs on his word |
 | Known limit: a submission typed by hand in the app has no intake row, so pass 2 of the content-duplicate lookup does not cover it; pass 1 reads the newest 500 submissions of the company and covers it there; a hand-made submission older than the newest 500 submissions is not found | stated limit (D-33, PM-22) | A backfill of the hand-made submissions is out of scope; the intake table is new and starts full |
-| The production import of the year files for 2024 and 2025 | `deferred:daniel` | The dry-run report goes to the PM first; the import runs after the deploy, on Daniel's word (PM-24, plan task 10.10) |
+| The production import of the year files for 2024 and 2025 | `deferred:daniel` for Daniel's deploy word only; the rest is `deferred:pm` | The dry-run report goes to the PM first; the import runs after the deploy, on Daniel's word (PM-24, PM answer of 2026-11-13 13:25, plan task 10.10) |
 | The deploy and the traffic move | `deferred:daniel` | Daniel's word |
