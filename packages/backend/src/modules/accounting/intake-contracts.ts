@@ -42,7 +42,79 @@ export const accountingDriveFileIdSchema = z
 /** Validated Drive file id of one intake document. */
 export type AccountingDriveFileId = z.infer<typeof accountingDriveFileIdSchema>;
 
-/** Document type of one intake file (spec section 6). */
+/** The eight year-file type keys of the spec section 9b table. */
+export const accountingYearFileTypeKeySchema = z.enum([
+  "wht-filing-pnd1",
+  "wht-filing-pnd1a",
+  "wht-filing-pnd3",
+  "wht-filing-pnd53",
+  "corporate-tax-pnd50",
+  "year-end-financial-statement",
+  "general-ledger",
+  "dbd-filing-sbor3",
+]);
+
+/** Validated year-file type key. */
+export type AccountingYearFileTypeKey = z.infer<
+  typeof accountingYearFileTypeKeySchema
+>;
+
+/** The four filing kinds of a year file (spec section 9b). */
+export const accountingYearFileFilingKindSchema = z.enum([
+  "form",
+  "attachment",
+  "receipt",
+  "statement",
+]);
+
+/** Validated year-file filing kind. */
+export type AccountingYearFileFilingKind = z.infer<
+  typeof accountingYearFileFilingKindSchema
+>;
+
+/** ISO calendar date in `YYYY-MM-DD` form. */
+const isoDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/u);
+
+/** Amount in satang (minor units): an integer, negative for a loss. */
+const satangSchema = z.number().int().nullable();
+
+/** Count of items: a non-negative integer. */
+const countSchema = z.number().int().nonnegative().nullable();
+
+/**
+ * Allow-list of the facts a year file keeps (spec section 9b). Each key is
+ * optional, and a fact the text does not give is null. The object is strict, so
+ * a payee name, a person name, a tax id, or an account number has no key to
+ * enter by. Every amount is an integer in satang.
+ */
+export const yearFileFactsSchema = z.strictObject({
+  payeeCount: countSchema.optional(),
+  totalPaid: satangSchema.optional(),
+  totalTaxWithheld: satangSchema.optional(),
+  surcharge: satangSchema.optional(),
+  totalRemitted: satangSchema.optional(),
+  accountingPeriodStart: isoDateSchema.nullable().optional(),
+  accountingPeriodEnd: isoDateSchema.nullable().optional(),
+  netProfitOrLoss: satangSchema.optional(),
+  taxPayable: satangSchema.optional(),
+  taxPaid: satangSchema.optional(),
+  statementDate: isoDateSchema.nullable().optional(),
+  totalAssets: satangSchema.optional(),
+  totalLiabilities: satangSchema.optional(),
+  totalEquity: satangSchema.optional(),
+  totalRevenue: satangSchema.optional(),
+  periodStart: isoDateSchema.nullable().optional(),
+  periodEnd: isoDateSchema.nullable().optional(),
+  lineCount: countSchema.optional(),
+  totalDebit: satangSchema.optional(),
+  totalCredit: satangSchema.optional(),
+  fiscalYear: z.number().int().nullable().optional(),
+});
+
+/** Validated facts of one year file. */
+export type AccountingYearFileFacts = z.infer<typeof yearFileFactsSchema>;
+
+/** Document type of one intake file (spec section 6 and the section 9b year files). */
 export const accountingIntakeDocumentTypeSchema = z.enum([
   "receipt",
   "tax-invoice",
@@ -52,6 +124,7 @@ export const accountingIntakeDocumentTypeSchema = z.enum([
   "payment-voucher-sheet",
   "cloud-invoice",
   "openai-invoice",
+  ...accountingYearFileTypeKeySchema.options,
 ]);
 
 /** Validated intake document type. */
@@ -189,6 +262,7 @@ const accountingIntakeDocumentShape = {
   status: accountingIntakeStatusSchema,
   submissionId: z.string().uuid().nullable(),
   duplicateOfSubmissionId: z.string().uuid().nullable(),
+  duplicateOfIntakeDocumentId: z.string().uuid().nullable().optional(),
   evidenceReference: privateEvidenceReferenceSchema.nullable(),
   extraction: accountingExtractionSchema.nullable(),
   failureReason: z.string().min(1).max(1024).nullable(),
@@ -203,9 +277,10 @@ const accountingIntakeDocumentShape = {
 } satisfies z.ZodRawShape;
 
 /**
- * Applies the cross-field rules of FR-3: a duplicate names the submission it
- * duplicates, a failed row carries its reason, and the history marker and its
- * source are present or absent together.
+ * Applies the cross-field rules of FR-3 and FR-28: a duplicate names exactly one
+ * target, either the submission or the intake document it duplicates; a failed
+ * row carries its reason; and the history marker and its source are present or
+ * absent together.
  * @param document Candidate intake document.
  * @param context Zod refinement context that collects the issues.
  */
@@ -213,18 +288,25 @@ function addIntakeDocumentIssues(
   document: {
     readonly status: string;
     readonly duplicateOfSubmissionId: string | null;
+    readonly duplicateOfIntakeDocumentId?: string | null | undefined;
     readonly failureReason: string | null;
     readonly isHistory: boolean;
     readonly historySource: string | null;
   },
   context: z.RefinementCtx,
 ): void {
-  if (document.status === "duplicate" && document.duplicateOfSubmissionId === null) {
-    context.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ["duplicateOfSubmissionId"],
-      message: "A duplicate intake row names the submission it duplicates",
-    });
+  if (document.status === "duplicate") {
+    const targetCount =
+      (document.duplicateOfSubmissionId === null ? 0 : 1) +
+      (document.duplicateOfIntakeDocumentId == null ? 0 : 1);
+    if (targetCount !== 1) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["duplicateOfSubmissionId"],
+        message:
+          "A duplicate intake row names exactly one of the submission and the intake document it duplicates",
+      });
+    }
   }
   if (document.status === "failed" && document.failureReason === null) {
     context.addIssue({
