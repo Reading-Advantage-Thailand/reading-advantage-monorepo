@@ -952,20 +952,33 @@ try {
     console.log(`landscape_controls_visible_question=${ok} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}, sections=${JSON.stringify(info.sections)})`);
     return { ok, detail: `control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}` };
   });
-  await runCheck('landscape_controls_visible on the end of the book at 844x390', async () => {
-    if (!page) throw new Error('Browser page is unavailable');
-    await page.goto(`${base}/th/st/2/4?part=book`, { waitUntil: 'networkidle' });
-    let reached = false;
+  // The end of the read-along book leaves for the week home page (Daniel's finding 1 of task
+  // 6.2). The old end view showed a copy of the week tiles, so the child came back to a ghost
+  // start page that was different to the first start page. The helper follows the book to its end
+  // and checks the new end: the URL holds no `part` and the week tiles show.
+  const reachWeekHomeAfterBook = async (locale) => {
+    await page.goto(`${base}/${locale}/st/2/4?part=book`, { waitUntil: 'networkidle' });
+    const nextLabel = locale === 'th' ? 'หน้าถัดไป' : 'Next page';
+    let home = false;
     for (let i = 0; i < 12; i += 1) {
-      if (await page.locator('[data-reader-end]').count()) { reached = true; break; }
-      const next = page.locator('button[aria-label="หน้าถัดไป"]');
+      if (!new URL(page.url()).searchParams.has('part')) { home = true; break; }
+      const next = page.locator(`button[aria-label="${nextLabel}"]`);
       if (!(await next.count()) || !(await next.isEnabled())) break;
       await next.click();
-      await page.waitForTimeout(120);
+      await page.waitForTimeout(150);
     }
-    if (!reached) reached = Boolean(await page.locator('[data-reader-end]').count());
-    if (!reached) throw new Error('the end of the book did not render');
-    const info = await controlBottomAtLandscape(page, '[data-reader-end] a');
+    if (!home) {
+      await page.waitForTimeout(300);
+      home = !new URL(page.url()).searchParams.has('part');
+    }
+    if (!home) throw new Error('the end of the book did not leave for the week home page');
+    const tiles = await page.locator('[data-week-tiles] a').count();
+    if (tiles < 3) throw new Error(`the week home page must show its tiles, found ${tiles}`);
+  };
+  await runCheck('landscape_controls_visible on the week home after the book end at 844x390', async () => {
+    if (!page) throw new Error('Browser page is unavailable');
+    await reachWeekHomeAfterBook('th');
+    const info = await controlBottomAtLandscape(page, '[data-week-tiles] a');
     const ok = info.count >= 3 && info.bottom > 0 && info.bottom <= info.viewport;
     console.log(`landscape_controls_visible_endofbook=${ok} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}, sections=${JSON.stringify(info.sections)})`);
     return { ok, detail: `control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}` };
@@ -974,7 +987,7 @@ try {
   // landscape_controls_visible on the week page tiles at 844x390 (finding F310, the F150
   // class): the entry tiles kept a column on the old layout, so the song tile ended below the
   // 390 px viewport and the child needed a scroll to reach it. The list uses the same
-  // landscape row as the end of the book (F282), so all tiles stay inside the viewport.
+  // landscape row as the old end view (F282), so all tiles stay inside the viewport.
   await runCheck('landscape_controls_visible on the week page at 844x390', async () => {
     if (!page) throw new Error('Browser page is unavailable');
     await page.goto(`${base}/th/st/2/1`, { waitUntil: 'networkidle' });
@@ -985,29 +998,15 @@ try {
   });
 
   // The landscape tile rows hold a horizontal-fit rule (finding F320): every tile of the
-  // end-of-book row and of the week page row must end at or inside the right viewport edge at
-  // 844x390, in both locales, or a child must scroll sideways to reach a link. The
-  // bottom-edge rows cannot catch a sideways overflow, and the Thai labels of the fixture fit,
+  // week home row after the book end and of the week page row must end at or inside the right
+  // viewport edge at 844x390, in both locales, or a child must scroll sideways to reach a link.
+  // The bottom-edge rows cannot catch a sideways overflow, and the Thai labels of the fixture fit,
   // so the English route is measured too.
-  const reachEndOfBook = async (locale) => {
-    await page.goto(`${base}/${locale}/st/2/4?part=book`, { waitUntil: 'networkidle' });
-    const nextLabel = locale === 'th' ? 'หน้าถัดไป' : 'Next page';
-    let reached = false;
-    for (let i = 0; i < 12; i += 1) {
-      if (await page.locator('[data-reader-end]').count()) { reached = true; break; }
-      const next = page.locator(`button[aria-label="${nextLabel}"]`);
-      if (!(await next.count()) || !(await next.isEnabled())) break;
-      await next.click();
-      await page.waitForTimeout(120);
-    }
-    if (!reached) reached = Boolean(await page.locator('[data-reader-end]').count());
-    if (!reached) throw new Error('the end of the book did not render');
-  };
   for (const locale of ['th', 'en']) {
-    await runCheck(`landscape_row_right_edge on the end of the book at 844x390 (${locale})`, async () => {
+    await runCheck(`landscape_row_right_edge on the week home after the book end at 844x390 (${locale})`, async () => {
       if (!page) throw new Error('Browser page is unavailable');
-      await reachEndOfBook(locale);
-      const info = await controlRightAtLandscape(page, '[data-reader-end] a');
+      await reachWeekHomeAfterBook(locale);
+      const info = await controlRightAtLandscape(page, '[data-week-tiles] a');
       const ok = info.count >= 3 && info.right > 0 && info.right <= info.viewport;
       console.log(`landscape_row_right_edge_endofbook_${locale}=${ok} (control_right_px=${info.right}, controls_found=${info.count}, viewport_width_px=${info.viewport})`);
       return { ok, detail: `control_right_px=${info.right}, controls_found=${info.count}, viewport_width_px=${info.viewport}` };
@@ -1062,9 +1061,12 @@ try {
   await allControlsCheck('reader', async () => {
     await page.goto(`${base}/th/st/2/1?part=book`, { waitUntil: 'networkidle' });
   }, 9);
+  // The end of the book is the week home page (Daniel's finding 1 of task 6.2), so this row
+  // measures the child controls of that page. The sign-out form and the parent panel leave the
+  // count, as the week page row does.
   await allControlsCheck('endofbook', async () => {
-    await reachEndOfBook('th');
-  }, 3);
+    await reachWeekHomeAfterBook('th');
+  }, 3, '[data-week-tiles] [data-speaker] > button', `${SIGN_OUT_FORM}, [data-parent-panel]`);
   const openDecodable = async () => {
     await page.goto(`${base}/th/st/2/1?part=decodable`, { waitUntil: 'networkidle' });
   };
