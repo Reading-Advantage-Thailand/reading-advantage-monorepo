@@ -55,6 +55,17 @@ function toBytes(data: ArrayBuffer | Uint8Array): Uint8Array {
 }
 
 /**
+ * Escapes one folder id for the Drive query language. A backslash is escaped
+ * first and a single quote second, so the query keeps one balanced string
+ * (Review B r2 F309).
+ * @param folderId Trusted folder id of the intake folder.
+ * @returns The escaped folder id.
+ */
+function escapeDriveQueryValue(folderId: string): string {
+  return folderId.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+}
+
+/**
  * Lists one Drive folder, following the page token to the end.
  * @param drive Authenticated Drive client.
  * @param folderId Folder id to list.
@@ -68,7 +79,7 @@ async function listFolderEntries(
   let pageToken: string | undefined;
   do {
     const response = await drive.files.list({
-      q: `'${folderId}' in parents and trashed = false`,
+      q: `'${escapeDriveQueryValue(folderId)}' in parents and trashed = false`,
       fields: "nextPageToken, files(id, name, mimeType, size, modifiedTime)",
       pageSize: 1000,
       supportsAllDrives: true,

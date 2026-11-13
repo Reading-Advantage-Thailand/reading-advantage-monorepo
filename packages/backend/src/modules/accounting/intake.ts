@@ -644,6 +644,28 @@ function safeFailureReason(): string {
 }
 
 /**
+ * Fixed review reasons one read failure may keep in `failure_reason`. The list
+ * is closed: a message outside it falls back to `safeFailureReason()`, so no
+ * error text, Drive id, or amount enters the row (Review A r2 F402).
+ */
+const REVIEW_FAILURE_REASONS: ReadonlySet<string> = new Set([
+  "review: the local read returned no draft",
+  "review: the workbook needs a manual read",
+  "review: the model read returned no draft",
+]);
+
+/**
+ * Returns the fixed review reason of one read failure when its message is one
+ * of the allow-listed reasons.
+ * @param error Error thrown by the document read path.
+ * @returns The fixed review reason, or undefined for every other error.
+ */
+function reviewFailureReason(error: unknown): string | undefined {
+  if (!(error instanceof Error)) return undefined;
+  return REVIEW_FAILURE_REASONS.has(error.message) ? error.message : undefined;
+}
+
+/**
  * Polls the Drive intake folder once and writes the intake rows and the
  * submissions of the new files. The Drive file id is the idempotency key. A
  * content duplicate writes one intake row and no submission. A file that fails
@@ -926,7 +948,7 @@ async function processFile(input: {
     await request.intakeRepository.markFailed({
       scope,
       id: inserted.id,
-      failureReason: safeFailureReason(),
+      failureReason: reviewFailureReason(error) ?? safeFailureReason(),
     });
     return "failed";
   }
