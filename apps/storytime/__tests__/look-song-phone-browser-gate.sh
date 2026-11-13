@@ -32,6 +32,18 @@ set -uo pipefail
 #        label passes the left or the right edge of the button (0 when it fits). The browser
 #        check measured the Thai label 6 px past the border and "Play" 17 px past it.
 #
+# Row 8 and row 9 (round 4, finding B1 of the UX browser check r2 of a690cb30): at 1440x900 a
+#        real mouse click on the play mark does nothing. The UX words: "The song stayed paused,
+#        with ct at 0.99 before and after. ... The rule `main[data-place] button:active:not(:disabled)
+#        { translate: 0 3px }` replaces the centring translate of the mark. While the button is
+#        down, the mark moves from x=672, y=497 to x=720, y=548. The release lands on the video, so
+#        no handler runs." The jsdom rows of p6-r3-song-poster-tap.test.tsx cannot see CSS.
+#        Row 8: the centre of the mark box between mouse down and mouse up stays within 1 px of
+#        its centre before the press (`play_mark_press_shift_px`, the UX check measured 70 px).
+#        Row 9: a mouse press (down, then up at the same point) on the centre of the mark starts
+#        the song: `play_mark_click_plays` is 1 when the video is not paused and its currentTime
+#        advanced after the click (`play_mark_click_advance_s`).
+#
 # No row plays a recording. A headless run is not phone evidence.
 #
 # The whole script (Postgres, build, server, Playwright) runs inside one heavy-run job. Without
@@ -230,7 +242,7 @@ for _ in $(seq 1 90); do
 done
 if [ "$APP_UP" -eq 1 ]; then pass "The app answers on its port"; else fail "The app does not answer on its port"; fi
 
-echo "=== Run the rows 1 to 7 with SYSTEM Chrome ==="
+echo "=== Run the rows 1 to 9 with SYSTEM Chrome ==="
 cat > "$PLAYWRIGHT" <<'NODE'
 import fs from "node:fs";
 import { chromium, request as playwrightRequest } from "@playwright/test";
@@ -271,7 +283,19 @@ function landscapeShapeVerdict(v) {
   return v.ready === true && Math.abs(v.aspect - 16 / 9) <= 0.02 && v.file === "song.mp4";
 }
 
+/** The verdict of row 8: the mark stays within 1 px of its centre while the mouse is down. */
+function pressShiftVerdict(v) {
+  return v.ready === true && v.found === true && v.shift >= 0 && v.shift <= 1;
+}
+/** The verdict of row 9: a mouse click on the mark starts the song and the time advances. */
+function clickPlaysVerdict(v) {
+  return v.ready === true && v.found === true && v.paused === false && v.advance > 0.2;
+}
+
 const goodControls = [
+  pressShiftVerdict({ ready: true, found: true, shift: 0 }),
+  pressShiftVerdict({ ready: true, found: true, shift: 0.8 }),
+  clickPlaysVerdict({ ready: true, found: true, paused: false, advance: 1.2 }),
   widthVerdict({ ready: true, widthRatio: 1 }),
   portraitShapeVerdict({ ready: true, aspect: 390 / 693, file: "song-phone.mp4", heightRatio: 0.82 }),
   heightVerdict({ ready: true, heightRatio: 0.97 }),
@@ -295,6 +319,15 @@ const mutants = [
   labelFitsVerdict({ ready: true, textLength: 10, overflow: 6 }) === false,
   labelFitsVerdict({ ready: false, textLength: 4, overflow: 0 }) === false,
   labelFitsVerdict({ ready: true, textLength: 0, overflow: 0 }) === false,
+  pressShiftVerdict({ ready: true, found: true, shift: Math.hypot(48, 51) }) === false,
+  pressShiftVerdict({ ready: true, found: true, shift: 3 }) === false,
+  pressShiftVerdict({ ready: true, found: true, shift: -1 }) === false,
+  pressShiftVerdict({ ready: true, found: false, shift: 0 }) === false,
+  pressShiftVerdict({ ready: false, found: true, shift: 0 }) === false,
+  clickPlaysVerdict({ ready: true, found: true, paused: true, advance: 1.2 }) === false,
+  clickPlaysVerdict({ ready: true, found: true, paused: false, advance: 0 }) === false,
+  clickPlaysVerdict({ ready: true, found: false, paused: false, advance: 1.2 }) === false,
+  clickPlaysVerdict({ ready: false, found: true, paused: false, advance: 1.2 }) === false,
 ];
 
 if (!PASS) {
@@ -373,6 +406,57 @@ async function measureSong(page, width, height, locale = "th") {
   });
 }
 
+/**
+ * Presses the play mark with a real mouse at one viewport (down, measure, then up at the same
+ * point) and reads the state of the song after the release.
+ * @param page The Playwright page of the signed-in session.
+ * @param width The viewport width in CSS px.
+ * @param height The viewport height in CSS px.
+ * @returns The shift of the mark centre while the mouse is down, and the state after the click.
+ */
+async function pressPlayMark(page, width, height) {
+  await page.setViewportSize({ width, height });
+  await page.goto(`${base}/th/st/2/1?part=song`, { waitUntil: "load" });
+  await page.waitForSelector(".song-stage video", { timeout: 20000 });
+  await page.waitForFunction(
+    () => { const v = document.querySelector(".song-stage video"); return v !== null && v.readyState >= 1; },
+    undefined,
+    { timeout: 15000 },
+  ).catch(() => {});
+  await page.waitForTimeout(800);
+  const centreOf = () => page.evaluate(() => {
+    const mark = document.querySelector("[data-play-mark]");
+    if (!mark) return null;
+    const box = mark.getBoundingClientRect();
+    return { x: box.left + box.width / 2, y: box.top + box.height / 2 };
+  });
+  const state = () => page.evaluate(() => {
+    const video = document.querySelector(".song-stage video");
+    return video ? { paused: video.paused, time: video.currentTime, ready: video.readyState >= 1 } : null;
+  });
+  const before = await centreOf();
+  const start = await state();
+  if (!before || !start) return { found: false, ready: start ? start.ready : false, shift: -1, paused: true, advance: 0 };
+  await page.mouse.move(before.x, before.y);
+  await page.mouse.down();
+  await page.waitForTimeout(100);
+  const during = await centreOf();
+  await page.mouse.up();
+  await page.waitForTimeout(1500);
+  const after = await state();
+  return {
+    found: true,
+    ready: start.ready,
+    shift: during ? Math.hypot(during.x - before.x, during.y - before.y) : -1,
+    paused: after ? after.paused : true,
+    advance: after ? after.time - start.time : 0,
+    x: Math.round(before.x),
+    y: Math.round(before.y),
+    duringX: during ? Math.round(during.x) : -1,
+    duringY: during ? Math.round(during.y) : -1,
+  };
+}
+
 const rejected = mutants.filter(Boolean).length;
 emit("controls_ok", goodControls.every(Boolean) ? 1 : 0);
 emit("mutants_rejected", rejected);
@@ -440,6 +524,24 @@ for (const locale of ["th", "en"]) {
   row(locale === "th" ? 6 : 7, labelFitsVerdict({ ready: shot ? shot.labelOverflow >= 0 : false, textLength, overflow }),
     `play_label_overflow_px_${locale}=${overflow} label_text_length=${textLength} at 844x390 (/${locale})`);
 }
+let pressed = null;
+try {
+  pressed = await pressPlayMark(page, 1440, 900);
+} catch (error) {
+  console.log(`play_mark_error=${String(error).slice(0, 160)}`);
+}
+const press = pressed ?? { found: false, ready: false, shift: -1, paused: true, advance: 0 };
+const pressShift = Number(press.shift.toFixed(1));
+const clickAdvance = Number(press.advance.toFixed(2));
+emit("play_mark_centre_before", `${press.x ?? -1},${press.y ?? -1}`);
+emit("play_mark_centre_down", `${press.duringX ?? -1},${press.duringY ?? -1}`);
+emit("play_mark_press_shift_px", pressShift);
+emit("play_mark_click_advance_s", clickAdvance);
+emit("play_mark_click_plays", clickPlaysVerdict(press) ? 1 : 0);
+row(8, pressShiftVerdict({ ready: press.ready, found: press.found, shift: pressShift }),
+  `play_mark_press_shift_px=${pressShift} at 1440x900 (within 1 px wanted)`);
+row(9, clickPlaysVerdict({ ready: press.ready, found: press.found, paused: press.paused, advance: clickAdvance }),
+  `play_mark_click_plays=${clickPlaysVerdict(press) ? 1 : 0} paused=${press.paused} play_mark_click_advance_s=${clickAdvance} at 1440x900`);
 console.log(`row_count=${rowCount}`);
 await browser.close();
 NODE
@@ -461,7 +563,7 @@ if [ "$ROWS" -gt 0 ]; then
 else
   fail "The browser rows did not run (rows=0)"
 fi
-if [ "$ROWS" -ne 7 ]; then fail "The browser rows must be 7, counted $ROWS"; fi
+if [ "$ROWS" -ne 9 ]; then fail "The browser rows must be 9, counted $ROWS"; fi
 
 echo "=== The requests of the stand-in for the storage ==="
 echo "standin_requests=$(grep -c '^REQ ' "$TMP_DIR/stand-in.log" 2>/dev/null || echo 0)"
