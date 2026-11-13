@@ -237,13 +237,15 @@ export function StorytimeSong({
           // play label, so a screen reader reads the same word as the button. The class screen
           // keeps its own Play button beside the video, so the mark would be a second play
           // control there; the mark belongs to the at-home phone, where the button sits under
-          // the video.
+          // the video. Round 6, finding N2: the mark sits above the title band of the poster
+          // (the picture area between the logo and the title), so the title stays readable;
+          // `app/look.css` owns the place and the size of the mark.
           <button
             type="button"
             data-play-mark
             aria-label={labels.play}
             onClick={onPlayMarkTap}
-            className="absolute left-1/2 top-1/2 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#fcd34d] text-5xl text-[#92400e] shadow-lg"
+            className="absolute flex items-center justify-center rounded-full bg-[#fcd34d] text-[#92400e] shadow-lg"
           >
             &#9654;
           </button>

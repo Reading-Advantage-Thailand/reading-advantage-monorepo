@@ -884,12 +884,20 @@ main[data-place] button:active:not(:disabled) {
 /* The play mark of the song poster (task 6.2, round 3): a big amber disc with the play
  * triangle, so a child sees the mark on the poster before the song starts. The mark sits over
  * the video, and the house button style would make it a small brown plaque, so the rule sets
- * the size, the fill, and the ring of the mark. */
+ * the size, the fill, and the ring of the mark.
+ * Round 6, finding N2 (PM 2026-11-14): the centred mark covered the title of the poster. The
+ * mark now sits above the title band, in the picture area between the logo and the title: the
+ * bottom edge of the box rests at 38 percent of the video box from the top (`bottom: 62%`), and
+ * the box stays 60 px, so the title is readable at 390x844, 844x390, and 1440x900. The box
+ * shadows paint 4 px past the ring and 6 px more down, so the box keeps more than 10 px of air
+ * over the band top (the poster title is 43 percent from the top on the wide poster and 41
+ * percent on the phone poster). The mark keeps the horizontal centring through
+ * `translate: -50% 0`, so the house press rule cannot slide it. */
 main[data-place] button[data-play-mark] {
-  min-width: 96px;
-  min-height: 96px;
+  min-width: 60px;
+  min-height: 60px;
   padding: 0;
-  font-size: 48px;
+  font-size: 30px;
   line-height: 1;
   color: var(--st-brown);
   text-shadow: none;
@@ -897,15 +905,19 @@ main[data-place] button[data-play-mark] {
   border: 4px solid #fff;
   border-radius: 999px;
   box-shadow: 0 0 0 4px var(--st-brown), 0 6px 0 4px rgba(58, 24, 4, 0.35);
+  left: 50%;
+  bottom: 62%;
+  translate: -50% 0;
 }
 
 /* The press of the mark (task 6.2, round 4, finding B1): the house :active rule sets
- * `translate: 0 3px`, and that replaces the centring translate of the mark, so a mouse press
- * slides the mark about 70 px off the pointer and the release lands on the video. The pressed
- * state keeps the centring translate, so the centre does not move, and the press shows in the
- * drop shadow instead. */
+ * `translate: 0 3px`, and that would replace the own translate of the mark, so a mouse press
+ * moves the mark off the pointer and the release lands on the video. The pressed state keeps
+ * the translate of the mark, so the centre does not move, and the press shows in the drop
+ * shadow instead. Round 6: the translate is now `-50% 0`, in step with the place above the
+ * title band. */
 main[data-place] button[data-play-mark]:active:not(:disabled) {
-  translate: -50% -50%;
+  translate: -50% 0;
   box-shadow: 0 0 0 4px var(--st-brown), 0 3px 0 4px rgba(58, 24, 4, 0.35);
 }
 
