@@ -8,6 +8,9 @@
 # the stage `runner-bundle` starts FROM the stage `deps`. The stage `deps` has no package
 # `dist` folder. Only the stage `builder` runs `pnpm turbo run build --filter=accounting`.
 #
+# MANUAL CHECK, not a gate on this machine: one run needs more than 1800 s (the p2 heavy-run cap)
+# and about 4.7 GB of disk. The CD build of the accounting image is the integration proof.
+#
 # Run it from the repository root, through heavy-run on this machine:
 #   HEAVY_PRIORITY=p2 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh \
 #     -c 'bash apps/accounting/__tests__/dockerfile-runner-bundle-build.sh'
