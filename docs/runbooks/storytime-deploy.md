@@ -46,7 +46,32 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
    Phase 3. From Phase 3 on, the printed path answers 200. Daniel reads the check result and
    gives the go for the traffic step.
 
-4. Move the traffic to the new revision. Only Daniel's go starts a traffic move:
+4. Move the traffic to the new revision. Only Daniel's go starts a traffic move. Before the
+   traffic move, run the live traffic guard from the monorepo root. The guard reads the
+   environment of the target revision and of the service with read-only describe commands,
+   and it fails while a review switch is still set. A guard failure stops the step:
+
+   ```
+   node_modules/.bin/tsx apps/storytime/scripts/review/live-traffic-guard.ts --revision storytime-app-<revision>
+   ```
+
+   Exit 0 means the target revision and the service hold no review switch. Exit 1 names the
+   switch that is still set. Do not move the traffic after exit 1. Clear the switch from the
+   service template first (the removal line below), or give the traffic move up.
+
+   The build sets no environment flag, so every new revision takes the environment of the
+   service template. While the template still holds a review switch, a live deploy must remove
+   it. Print the removal argument:
+
+   ```
+   node_modules/.bin/tsx apps/storytime/scripts/review/live-traffic-guard.ts --print-remove-arg
+   ```
+
+   The printed text is the whole `--remove-env-vars` argument with the review switch names.
+   A live deploy that clears the template adds that text to the env-removal command of the
+   teacher flag section above, the same way: the live revision image pinned with its digest,
+   no traffic, and a new tag. Then check the tag URL of that revision, and only Daniel's go
+   starts the traffic move:
 
    ```
    gcloud run services update-traffic storytime-app --project primary-advantage --region asia-southeast1 --to-revisions=storytime-app-<revision>=100
