@@ -322,13 +322,14 @@ function createFakeDrive(
  * Builds one fake file with the bytes of one text.
  * @param index Serial of the file.
  * @param text Text to encode.
+ * @param nameOverride Optional Drive name; the default follows the fixture rule.
  * @returns The fake file.
  */
-function makeFile(index: number, text: string): FakeFile {
+function makeFile(index: number, text: string, nameOverride?: string): FakeFile {
   const body = Buffer.from(text, "utf8");
   return {
     id: `fake-drive-${index}`,
-    name: `fake-file-${index}.pdf`,
+    name: nameOverride ?? `fake-file-${index}.pdf`,
     mimeType: PDF_MIME_TYPE,
     byteSize: body.byteLength,
     body,
@@ -1175,6 +1176,84 @@ describe("the year-file history write (FR-28)", () => {
     ).toHaveLength(1);
   });
 
+  it("keeps a parsed year-file row a pass 2 candidate, a byte-equal year file matches it, and a voucher lookup skips it (year_file_pass2_candidate=1)", async () => {
+    const intake = await requireIntake();
+    if (intake === undefined) return;
+    const first = makeFile(1, PND1_TEXT);
+    const second = makeFile(2, PND1_TEXT);
+    const rootEntries: FakeEntry[] = EXPECTED_FOLDER_NAMES.map((name, index) => ({
+      id: NAMED_FOLDER_IDS[index] ?? "",
+      name,
+      mimeType: FOLDER_MIME_TYPE,
+    }));
+    const entriesByFolder = new Map<string, readonly FakeEntry[]>();
+    entriesByFolder.set(ROOT_FOLDER_ID, rootEntries);
+    for (const [index, folderId] of NAMED_FOLDER_IDS.entries()) {
+      entriesByFolder.set(folderId, index === 0 ? [first, second] : []);
+    }
+    const drive = createFakeDrive(entriesByFolder, [first, second]);
+    const evidenceStore = createFakeEvidenceStore();
+    const intakeRepository = createFakeIntakeRepository();
+    const submissionRepository = createFakeSubmissionRepository();
+    await intake(
+      buildHistoryRequest({
+        drive,
+        evidenceStore,
+        intakeRepository,
+        submissionRepository,
+      }),
+    );
+
+    const firstRow = intakeRepository.rows.find((row) => row.status === "parsed");
+    expect(firstRow, "the first year file writes a parsed row").toBeDefined();
+    expect(
+      firstRow?.submissionId,
+      "year_file_pass2_candidate=1: the parsed year-file row names no submission and stays a pass 2 candidate (spec section 5.5)",
+    ).toBeNull();
+
+    const duplicateRow = intakeRepository.rows.find(
+      (row) => row.status === "duplicate",
+    );
+    expect(
+      duplicateRow?.duplicateOfIntakeDocumentId,
+      "a first byte-equal year file matches the year-file row through duplicate_of_intake_document_id",
+    ).toBe(firstRow?.id);
+    const yearFileMatches = intakeRepository.rows.filter(
+      (row) => row.duplicateOfIntakeDocumentId === firstRow?.id,
+    );
+    console.log(`year_file_pass2_matches=${yearFileMatches.length}`);
+    expect(yearFileMatches.length, "one byte-equal year file gives one match").toBe(1);
+
+    const voucher = makeFile(70, PND1_TEXT, "2026-01_receipt_fake-70.pdf");
+    const pollDrive = createFakeDrive(
+      new Map([[ROOT_FOLDER_ID, [voucher]]]),
+      [voucher],
+    );
+    await intake(
+      buildPollRequest({
+        drive: pollDrive,
+        evidenceStore,
+        intakeRepository,
+        submissionRepository,
+      }),
+    );
+    const voucherRow = intakeRepository.rows.find(
+      (row) => row.driveFileId === voucher.id,
+    );
+    expect(
+      voucherRow,
+      "the voucher candidate must write its own intake row (spec sections 5.5 and 5.7)",
+    ).toBeDefined();
+    expect(
+      voucherRow?.status,
+      "a voucher lookup still skips the year-file row: the voucher row is not a duplicate",
+    ).not.toBe("duplicate");
+    expect(
+      voucherRow?.duplicateOfIntakeDocumentId,
+      "a voucher lookup still skips the year-file row: it names no year-file row",
+    ).toBeNull();
+  });
+
   it("does not match a voucher candidate to a year file (voucher_to_year_file_matches=0)", async () => {
     const intake = await requireIntake();
     if (intake === undefined) return;
@@ -1202,7 +1281,9 @@ describe("the year-file history write (FR-28)", () => {
       "the year file is parsed before the voucher run",
     ).toBe("parsed");
 
-    const voucher = makeFile(70, yearFileText);
+    // A voucher candidate must pass the file-name rule of spec section 5.7,
+    // or the poll skips it before pass 2 and the row proves nothing.
+    const voucher = makeFile(70, yearFileText, "2026-01_receipt_fake-70.pdf");
     const pollDrive = createFakeDrive(
       new Map([[ROOT_FOLDER_ID, [voucher]]]),
       [voucher],
@@ -1218,8 +1299,12 @@ describe("the year-file history write (FR-28)", () => {
     const voucherRow = intakeRepository.rows.find(
       (row) => row.driveFileId === voucher.id,
     );
+    expect(
+      voucherRow,
+      "the voucher candidate must write its own intake row (spec sections 5.5 and 5.7)",
+    ).toBeDefined();
     const matches = intakeRepository.rows.filter(
-      (row) => row.duplicateOfIntakeDocumentId === yearRow.id,
+      (row) => row.duplicateOfIntakeDocumentId === yearRow?.id,
     );
     console.log(`voucher_to_year_file_matches=${matches.length}`);
     expect(
@@ -1228,8 +1313,12 @@ describe("the year-file history write (FR-28)", () => {
     ).toEqual([]);
     expect(
       voucherRow?.status,
-      "the voucher candidate writes a parsed row, not a duplicate",
-    ).toBe("parsed");
+      "the voucher row must not be a duplicate of the year-file row",
+    ).not.toBe("duplicate");
+    expect(
+      voucherRow?.duplicateOfIntakeDocumentId,
+      "the voucher row names no year-file row as its duplicate target",
+    ).toBeNull();
   });
 
   it("does not match a year file to a submission (year_file_to_submission_matches=0)", async () => {
