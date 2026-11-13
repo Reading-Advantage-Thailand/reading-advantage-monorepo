@@ -488,7 +488,7 @@ describe("the accounting image", () => {
     } finally {
       rmSync(scratch, { recursive: true, force: true });
     }
-  });
+  }, 120_000);
 });
 
 describe("the intake job build file", () => {

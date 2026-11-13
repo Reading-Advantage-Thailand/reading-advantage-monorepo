@@ -134,6 +134,10 @@ const ACCEPTANCE_ROWS = [
   "marks the row failed with a review reason for a read result with no draft field (F310)",
   "stores a native Google Sheet with the .xlsx MIME type and a PDF with the PDF type (F312)",
   "passes the actor company scope to every mark and bump call (Review B F304)",
+  "keeps the exact review reason of an .xlsx workbook and a Google Sheet whose local read needs the model (F402)",
+  "keeps the exact review reason of a local text read with no draft (F402)",
+  "keeps the exact review reason of a model read with no draft (F402)",
+  "writes the generic failure reason and no error text for an error that is not a fixed review reason (F402)",
 ] as const;
 
 console.log(`acceptance_rows=${ACCEPTANCE_ROWS.length}`);
@@ -2063,6 +2067,120 @@ describe("the Drive intake poll", () => {
       const row = fakes.intakeRepository.rows[0];
       expect(row?.status, item.label).toBe("failed");
       expect(row?.failureReason ?? "", item.label).toMatch(/^review:/u);
+    }
+  });
+
+  it("keeps the exact review reason of an .xlsx workbook and a Google Sheet whose local read needs the model (F402)", async () => {
+    const cases = [
+      {
+        label: "xlsx workbook",
+        mimeType:
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      },
+      {
+        label: "Google Sheet",
+        mimeType: "application/vnd.google-apps.spreadsheet",
+      },
+    ] as const;
+    for (const item of cases) {
+      const file = makeFile({
+        id: `fake-f402-${item.label.replace(" ", "-")}-id`,
+        name: "2026-11_cloud-invoice_Test Counterparty.xlsx",
+        mimeType: item.mimeType,
+        bodyText: `PK ${item.label} workbook bytes`,
+      });
+      const fakes: PollFakes = {
+        ...createPollFakes([file]),
+        localReader: createRecordingPort({}, () => localNeedsModelResult()),
+      };
+
+      await runPoll(fakes);
+
+      expect(fakes.intakeRepository.rows.length, item.label).toBe(1);
+      const row = fakes.intakeRepository.rows[0];
+      expect(row?.status, item.label).toBe("failed");
+      expect(row?.failureReason, item.label).toBe(
+        "review: the workbook needs a manual read",
+      );
+    }
+  });
+
+  it("keeps the exact review reason of a local text read with no draft (F402)", async () => {
+    const file = makeFile({
+      id: "fake-f402-local-no-draft-id",
+      name: "2026-11_cloud-invoice_Test Counterparty.pdf",
+      mimeType: "application/pdf",
+      bodyText: "%PDF-1.4 local no draft",
+    });
+    const fakes: PollFakes = {
+      ...createPollFakes([file]),
+      localReader: createRecordingPort({}, () => ({
+        ...FAKE_DRAFT,
+        kind: "text",
+      })),
+    };
+
+    await runPoll(fakes);
+
+    expect(fakes.intakeRepository.rows.length).toBe(1);
+    const row = fakes.intakeRepository.rows[0];
+    expect(row?.status).toBe("failed");
+    expect(row?.failureReason).toBe("review: the local read returned no draft");
+  });
+
+  it("keeps the exact review reason of a model read with no draft (F402)", async () => {
+    const file = makeFile({
+      id: "fake-f402-model-no-draft-id",
+      name: "2026-11_receipt_Test Counterparty.jpg",
+      mimeType: "image/jpeg",
+      bodyText: "\xFF\xD8\xFF model no draft",
+    });
+    const fakes: PollFakes = {
+      ...createPollFakes([file]),
+      extraction: createRecordingPort({}, () => ({
+        ...FAKE_DRAFT,
+        kind: "model",
+        outcome: "model",
+      })),
+    };
+
+    await runPoll(fakes);
+
+    expect(fakes.intakeRepository.rows.length).toBe(1);
+    const row = fakes.intakeRepository.rows[0];
+    expect(row?.status).toBe("failed");
+    expect(row?.failureReason).toBe("review: the model read returned no draft");
+  });
+
+  it("writes the generic failure reason and no error text for an error that is not a fixed review reason (F402)", async () => {
+    const generic = "review: the document read failed";
+    const messages = [
+      "the reader broke on folder fake-folder-id-0001",
+      "review: the reader broke on folder fake-folder-id-0001",
+    ];
+    for (const message of messages) {
+      const file = makeFile({
+        id: "fake-f402-other-error-id",
+        name: "2026-11_cloud-invoice_Test Counterparty.pdf",
+        mimeType: "application/pdf",
+        bodyText: "%PDF-1.4 other error",
+      });
+      const fakes: PollFakes = {
+        ...createPollFakes([file]),
+        localReader: createRecordingPort({}, () => {
+          throw new Error(message);
+        }),
+      };
+
+      await runPoll(fakes);
+
+      expect(fakes.intakeRepository.rows.length, message).toBe(1);
+      const row = fakes.intakeRepository.rows[0];
+      expect(row?.status, message).toBe("failed");
+      expect(row?.failureReason, message).toBe(generic);
+      expect(row?.failureReason ?? "", message).not.toContain(
+        "fake-folder-id-0001",
+      );
     }
   });
 
