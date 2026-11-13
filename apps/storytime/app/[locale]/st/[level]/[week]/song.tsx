@@ -231,10 +231,13 @@ export function StorytimeSong({
             onEnded={onEnded}
           />
         )}
-        {hasVideo && !playing ? (
+        {hasVideo && !playing && !classScreen ? (
           // The play mark of the poster (task 6.2, round 3): the mark shows while the song is
           // paused or ended, and it is gone while the song plays. The name of the mark is the
-          // play label, so a screen reader reads the same word as the button.
+          // play label, so a screen reader reads the same word as the button. The class screen
+          // keeps its own Play button beside the video, so the mark would be a second play
+          // control there; the mark belongs to the at-home phone, where the button sits under
+          // the video.
           <button
             type="button"
             data-play-mark

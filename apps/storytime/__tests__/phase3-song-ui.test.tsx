@@ -52,12 +52,14 @@ describe("Phase 3 Storytime song UI", () => {
   it("shows the shipped poster first and plays no sound before a tap", async () => {
     const play = vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
     const week = cloneWeek();
-    const { media } = await renderSong(week);
+    const { media, container } = await renderSong(week);
     expect(media).toHaveAttribute("poster", expect.stringContaining(week.song!.poster!));
     // PM decision 2026-11-07 (plan task 1.3): the song video warms its metadata, so iOS shows a frame.
     expect(media).toHaveAttribute("preload", "metadata");
     expect(play).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByRole("button", { name: /play/i }));
+    // Task 6.2, round 3: the song holds a play mark over the poster, and the mark carries the
+    // play label as its name. The row taps the Play button of the part, not the mark.
+    fireEvent.click(container.querySelector<HTMLButtonElement>(".song-part > button")!);
     expect(play).toHaveBeenCalledTimes(1);
     expect(media).toHaveAttribute("src", expect.stringContaining(week.song!.video!));
   });

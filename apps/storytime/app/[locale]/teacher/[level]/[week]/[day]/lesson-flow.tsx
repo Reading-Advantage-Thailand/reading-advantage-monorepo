@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState, type RefObject } from "react";
 import type { StorytimeWeek } from "../../../../../../lib/contracts/week";
 import { loopsApproved } from "../../../../../../lib/loops";
-import { LanguageRuns } from "../../../../../../lib/teacher-lang";
+import { LanguageRuns, langOf } from "../../../../../../lib/teacher-lang";
 import { loopPanelsShow, loopsShow, stepTimeMinutes } from "../../../../../../lib/teacher-loops";
 import {
   shareShotsAt,
@@ -961,17 +961,19 @@ export function TeacherLessonFlow({
                 >
                   {wordPieces(text).map((piece, pieceIndex) => {
                     if (!piece.word) {
+                      const pieceLang = langOf(piece.text ?? "");
                       return (
-                        <span key={pieceIndex}>
-                          <LanguageRuns text={piece.text ?? ""} lang={lang} />
+                        <span key={pieceIndex} lang={pieceLang}>
+                          <LanguageRuns text={piece.text ?? ""} lang={pieceLang ?? lang} />
                         </span>
                       );
                     }
+                    const wordLang = langOf(piece.word);
                     const clip = clipOfWord(week.opening?.wordClips, piece.word);
                     if (!clip) {
                       return (
-                        <span key={pieceIndex}>
-                          <LanguageRuns text={piece.word} lang={lang} />
+                        <span key={pieceIndex} lang={wordLang}>
+                          {piece.word}
                         </span>
                       );
                     }
@@ -981,7 +983,7 @@ export function TeacherLessonFlow({
                         type="button"
                         onClick={() => playClip(mediaUrl(mediaUrls, clip))}
                         className="rounded underline decoration-dotted underline-offset-2"
-                        lang={lang}
+                        lang={wordLang}
                       >
                         {piece.word}
                       </button>
