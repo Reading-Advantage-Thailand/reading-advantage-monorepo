@@ -138,7 +138,16 @@
             "file": "l2/media/w07/family/teddy.jpg"
           }
         }
-      ]
+      ],
+      "wordClips": {
+        "ball": "l2/media/w07/words/wa-ball.mp3",
+        "car": "l2/media/w07/words/wa-car.mp3",
+        "doll": "l2/media/w07/words/wa-doll.mp3",
+        "drum": "l2/media/w07/words/wa-drum.mp3",
+        "kite": "l2/media/w07/words/wa-kite.mp3",
+        "teddy": "l2/media/w07/words/wa-teddy.mp3",
+        "train": "l2/media/w07/words/wa-train.mp3"
+      }
     },
     "wordWall": [
       "an",
@@ -159,7 +168,12 @@
       "pot",
       "Tom",
       "Mom"
-    ]
+    ],
+    "trickyWordClips": {
+      "from": "l2/media/w07/words/wa-from.mp3",
+      "run": "l2/media/w07/words/wa-run.mp3",
+      "up": "l2/media/w07/words/wa-up.mp3"
+    }
   },
   "opening": {
     "pa": [
@@ -217,7 +231,18 @@
         "phonemes/daniel/29-o-short.mp3",
         "phonemes/daniel/06-d.mp3"
       ]
-    ]
+    ],
+    "wordClips": {
+      "hop": "l2/media/w07/words/wa-hop.mp3",
+      "hot": "l2/media/w07/words/wa-hot.mp3",
+      "mop": "l2/media/w07/words/wa-mop.mp3",
+      "nod": "l2/media/w07/words/wa-nod.mp3",
+      "octopus": "l2/media/w07/words/wa-octopus.mp3",
+      "ox": "l2/media/w07/words/wa-ox.mp3",
+      "pot": "l2/media/w07/words/wa-pot.mp3",
+      "sock": "l2/media/w07/words/wa-sock.mp3",
+      "top": "l2/media/w07/words/wa-top.mp3"
+    }
   },
   "books": [
     {
@@ -1717,7 +1742,41 @@
           "the": "l2/media/w07/words/wa-the.mp3",
           "tom": "l2/media/w07/words/wa-tom.mp3",
           "top": "l2/media/w07/words/wa-top.mp3"
-        }
+        },
+        "sentenceClips": [
+          {
+            "sentence": "Tom can see a top.",
+            "file": "l2/media/w07/sentences/b1-s01.mp3"
+          },
+          {
+            "sentence": "Tom can get the top.",
+            "file": "l2/media/w07/sentences/b1-s02.mp3"
+          },
+          {
+            "sentence": "The top on a mat.",
+            "file": "l2/media/w07/sentences/b1-s03.mp3"
+          },
+          {
+            "sentence": "The top on a pot!",
+            "file": "l2/media/w07/sentences/b1-s04.mp3"
+          },
+          {
+            "sentence": "The top is on Mom!",
+            "file": "l2/media/w07/sentences/b1-s05.mp3"
+          },
+          {
+            "sentence": "Run, Tom, run!",
+            "file": "l2/media/w07/sentences/b1-s06.mp3"
+          },
+          {
+            "sentence": "Can Tom see the top?",
+            "file": "l2/media/w07/sentences/b1-s07.mp3"
+          },
+          {
+            "sentence": "The top is on Pip!",
+            "file": "l2/media/w07/sentences/b1-s08.mp3"
+          }
+        ]
       }
     }
   ],

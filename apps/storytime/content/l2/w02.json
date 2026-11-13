@@ -166,12 +166,29 @@
           }
         }
       ],
-      "max": 10
+      "max": 10,
+      "wordClips": {
+        "eight": "l2/media/w02/words/wa-eight.mp3",
+        "five": "l2/media/w02/words/wa-five.mp3",
+        "four": "l2/media/w02/words/wa-four.mp3",
+        "nine": "l2/media/w02/words/wa-nine.mp3",
+        "one": "l2/media/w02/words/wa-one.mp3",
+        "seven": "l2/media/w02/words/wa-seven.mp3",
+        "six": "l2/media/w02/words/wa-six.mp3",
+        "ten": "l2/media/w02/words/wa-ten.mp3",
+        "three": "l2/media/w02/words/wa-three.mp3",
+        "two": "l2/media/w02/words/wa-two.mp3"
+      }
     },
     "wordWall": [
       "an",
       "Nan"
-    ]
+    ],
+    "trickyWordClips": {
+      "i": "l2/media/w02/words/wa-i.mp3",
+      "in": "l2/media/w02/words/wa-in.mp3",
+      "on": "l2/media/w02/words/wa-on.mp3"
+    }
   },
   "opening": {
     "pa": [
@@ -229,7 +246,17 @@
         "phonemes/daniel/26-a-short.mp3",
         "phonemes/daniel/03-p.mp3"
       ]
-    ]
+    ],
+    "wordClips": {
+      "ant": "l2/media/w02/words/wa-ant.mp3",
+      "apple": "l2/media/w02/words/wa-apple.mp3",
+      "bag": "l2/media/w02/words/wa-bag.mp3",
+      "cat": "l2/media/w02/words/wa-cat.mp3",
+      "fan": "l2/media/w02/words/wa-fan.mp3",
+      "hat": "l2/media/w02/words/wa-hat.mp3",
+      "man": "l2/media/w02/words/wa-man.mp3",
+      "nap": "l2/media/w02/words/wa-nap.mp3"
+    }
   },
   "books": [
     {
@@ -1466,7 +1493,41 @@
           "can": "l2/media/w02/words/wa-can.mp3",
           "i": "l2/media/w02/words/wa-i.mp3",
           "nan": "l2/media/w02/words/wa-nan.mp3"
-        }
+        },
+        "sentenceClips": [
+          {
+            "sentence": "Nan can.",
+            "file": "l2/media/w02/sentences/b1-s01.mp3"
+          },
+          {
+            "sentence": "Can I?",
+            "file": "l2/media/w02/sentences/b1-s02.mp3"
+          },
+          {
+            "sentence": "I can!",
+            "file": "l2/media/w02/sentences/b1-s03.mp3"
+          },
+          {
+            "sentence": "Nan can.",
+            "file": "l2/media/w02/sentences/b1-s04.mp3"
+          },
+          {
+            "sentence": "Can I?",
+            "file": "l2/media/w02/sentences/b1-s05.mp3"
+          },
+          {
+            "sentence": "I can!",
+            "file": "l2/media/w02/sentences/b1-s06.mp3"
+          },
+          {
+            "sentence": "Can Nan?",
+            "file": "l2/media/w02/sentences/b1-s07.mp3"
+          },
+          {
+            "sentence": "Nan and I can!",
+            "file": "l2/media/w02/sentences/b1-s08.mp3"
+          }
+        ]
       }
     }
   ],

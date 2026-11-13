@@ -137,14 +137,27 @@
             "file": "l2/media/w03/family/purple.jpg"
           }
         }
-      ]
+      ],
+      "wordClips": {
+        "blue": "l2/media/w03/words/wa-blue.mp3",
+        "green": "l2/media/w03/words/wa-green.mp3",
+        "orange": "l2/media/w03/words/wa-orange.mp3",
+        "pink": "l2/media/w03/words/wa-pink.mp3",
+        "purple": "l2/media/w03/words/wa-purple.mp3",
+        "red": "l2/media/w03/words/wa-red.mp3",
+        "yellow": "l2/media/w03/words/wa-yellow.mp3"
+      }
     },
     "wordWall": [
       "an",
       "Nan",
       "pan",
       "nap"
-    ]
+    ],
+    "trickyWordClips": {
+      "get": "l2/media/w03/words/wa-get.mp3",
+      "the": "l2/media/w03/words/wa-the.mp3"
+    }
   },
   "opening": {
     "pa": [
@@ -202,7 +215,18 @@
         "phonemes/daniel/26-a-short.mp3",
         "phonemes/daniel/03-p.mp3"
       ]
-    ]
+    ],
+    "wordClips": {
+      "cap": "l2/media/w03/words/wa-cap.mp3",
+      "cup": "l2/media/w03/words/wa-cup.mp3",
+      "map": "l2/media/w03/words/wa-map.mp3",
+      "nap": "l2/media/w03/words/wa-nap.mp3",
+      "pan": "l2/media/w03/words/wa-pan.mp3",
+      "pear": "l2/media/w03/words/wa-pear.mp3",
+      "pen": "l2/media/w03/words/wa-pen.mp3",
+      "pig": "l2/media/w03/words/wa-pig.mp3",
+      "top": "l2/media/w03/words/wa-top.mp3"
+    }
   },
   "books": [
     {
@@ -1417,7 +1441,41 @@
           "on": "l2/media/w03/words/wa-on.mp3",
           "pan": "l2/media/w03/words/wa-pan.mp3",
           "the": "l2/media/w03/words/wa-the.mp3"
-        }
+        },
+        "sentenceClips": [
+          {
+            "sentence": "Nan can get a pan.",
+            "file": "l2/media/w03/sentences/b1-s01.mp3"
+          },
+          {
+            "sentence": "I can get a pan.",
+            "file": "l2/media/w03/sentences/b1-s02.mp3"
+          },
+          {
+            "sentence": "A pan in a pan.",
+            "file": "l2/media/w03/sentences/b1-s03.mp3"
+          },
+          {
+            "sentence": "A pan on a pan.",
+            "file": "l2/media/w03/sentences/b1-s04.mp3"
+          },
+          {
+            "sentence": "A pan on Nan!",
+            "file": "l2/media/w03/sentences/b1-s05.mp3"
+          },
+          {
+            "sentence": "Can I get the pan?",
+            "file": "l2/media/w03/sentences/b1-s06.mp3"
+          },
+          {
+            "sentence": "I can get the pan!",
+            "file": "l2/media/w03/sentences/b1-s07.mp3"
+          },
+          {
+            "sentence": "A nap in the pan!",
+            "file": "l2/media/w03/sentences/b1-s08.mp3"
+          }
+        ]
       }
     }
   ],

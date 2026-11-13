@@ -138,7 +138,16 @@
             "file": "l2/media/w06/family/horse.jpg"
           }
         }
-      ]
+      ],
+      "wordClips": {
+        "bird": "l2/media/w06/words/wa-bird.mp3",
+        "cat": "l2/media/w06/words/wa-cat.mp3",
+        "dog": "l2/media/w06/words/wa-dog.mp3",
+        "duck": "l2/media/w06/words/wa-duck.mp3",
+        "fish": "l2/media/w06/words/wa-fish.mp3",
+        "frog": "l2/media/w06/words/wa-frog.mp3",
+        "horse": "l2/media/w06/words/wa-horse.mp3"
+      }
     },
     "wordWall": [
       "an",
@@ -154,7 +163,12 @@
       "mat",
       "tap",
       "Pat"
-    ]
+    ],
+    "trickyWordClips": {
+      "he": "l2/media/w06/words/wa-he.mp3",
+      "put": "l2/media/w06/words/wa-put.mp3",
+      "see": "l2/media/w06/words/wa-see.mp3"
+    }
   },
   "opening": {
     "pa": [
@@ -212,7 +226,17 @@
         "phonemes/daniel/26-a-short.mp3",
         "phonemes/daniel/02-t.mp3"
       ]
-    ]
+    ],
+    "wordClips": {
+      "cat": "l2/media/w06/words/wa-cat.mp3",
+      "hat": "l2/media/w06/words/wa-hat.mp3",
+      "mat": "l2/media/w06/words/wa-mat.mp3",
+      "sat": "l2/media/w06/words/wa-sat.mp3",
+      "tap": "l2/media/w06/words/wa-tap.mp3",
+      "ten": "l2/media/w06/words/wa-ten.mp3",
+      "tiger": "l2/media/w06/words/wa-tiger.mp3",
+      "top": "l2/media/w06/words/wa-top.mp3"
+    }
   },
   "books": [
     {
@@ -1544,7 +1568,41 @@
           "see": "l2/media/w06/words/wa-see.mp3",
           "tap": "l2/media/w06/words/wa-tap.mp3",
           "the": "l2/media/w06/words/wa-the.mp3"
-        }
+        },
+        "sentenceClips": [
+          {
+            "sentence": "Pat sat on a mat.",
+            "file": "l2/media/w06/sentences/b1-s01.mp3"
+          },
+          {
+            "sentence": "Sam sat on a mat.",
+            "file": "l2/media/w06/sentences/b1-s02.mp3"
+          },
+          {
+            "sentence": "Tap, tap, tap!",
+            "file": "l2/media/w06/sentences/b1-s03.mp3"
+          },
+          {
+            "sentence": "Pat can see a map.",
+            "file": "l2/media/w06/sentences/b1-s04.mp3"
+          },
+          {
+            "sentence": "Sam can see a pan.",
+            "file": "l2/media/w06/sentences/b1-s05.mp3"
+          },
+          {
+            "sentence": "Tap, tap, tap!",
+            "file": "l2/media/w06/sentences/b1-s06.mp3"
+          },
+          {
+            "sentence": "He can see Pip!",
+            "file": "l2/media/w06/sentences/b1-s07.mp3"
+          },
+          {
+            "sentence": "Pip sat on the mat!",
+            "file": "l2/media/w06/sentences/b1-s08.mp3"
+          }
+        ]
       }
     }
   ],

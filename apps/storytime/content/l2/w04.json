@@ -158,7 +158,16 @@
             "file": "l2/media/w04/family/family.jpg"
           }
         }
-      ]
+      ],
+      "wordClips": {
+        "brother": "l2/media/w04/words/wa-brother.mp3",
+        "dad": "l2/media/w04/words/wa-dad.mp3",
+        "family": "l2/media/w04/words/wa-family.mp3",
+        "grandma": "l2/media/w04/words/wa-grandma.mp3",
+        "grandpa": "l2/media/w04/words/wa-grandpa.mp3",
+        "mom": "l2/media/w04/words/wa-mom.mp3",
+        "sister": "l2/media/w04/words/wa-sister.mp3"
+      }
     },
     "wordWall": [
       "an",
@@ -169,7 +178,11 @@
       "man",
       "map",
       "Pam"
-    ]
+    ],
+    "trickyWordClips": {
+      "is": "l2/media/w04/words/wa-is.mp3",
+      "this": "l2/media/w04/words/wa-this.mp3"
+    }
   },
   "opening": {
     "pa": [
@@ -227,7 +240,18 @@
         "phonemes/daniel/26-a-short.mp3",
         "phonemes/daniel/05-m.mp3"
       ]
-    ]
+    ],
+    "wordClips": {
+      "arm": "l2/media/w04/words/wa-arm.mp3",
+      "ham": "l2/media/w04/words/wa-ham.mp3",
+      "jam": "l2/media/w04/words/wa-jam.mp3",
+      "man": "l2/media/w04/words/wa-man.mp3",
+      "mango": "l2/media/w04/words/wa-mango.mp3",
+      "map": "l2/media/w04/words/wa-map.mp3",
+      "milk": "l2/media/w04/words/wa-milk.mp3",
+      "mop": "l2/media/w04/words/wa-mop.mp3",
+      "pam": "l2/media/w04/words/wa-pam.mp3"
+    }
   },
   "books": [
     {
@@ -1475,7 +1499,41 @@
           "pan": "l2/media/w04/words/wa-pan.mp3",
           "the": "l2/media/w04/words/wa-the.mp3",
           "this": "l2/media/w04/words/wa-this.mp3"
-        }
+        },
+        "sentenceClips": [
+          {
+            "sentence": "This is Pam.",
+            "file": "l2/media/w04/sentences/b1-s01.mp3"
+          },
+          {
+            "sentence": "Pam can nap.",
+            "file": "l2/media/w04/sentences/b1-s02.mp3"
+          },
+          {
+            "sentence": "Pam is in a pan.",
+            "file": "l2/media/w04/sentences/b1-s03.mp3"
+          },
+          {
+            "sentence": "Pam is on a map.",
+            "file": "l2/media/w04/sentences/b1-s04.mp3"
+          },
+          {
+            "sentence": "Pam is on a man!",
+            "file": "l2/media/w04/sentences/b1-s05.mp3"
+          },
+          {
+            "sentence": "Is this Pam?",
+            "file": "l2/media/w04/sentences/b1-s06.mp3"
+          },
+          {
+            "sentence": "This is the man!",
+            "file": "l2/media/w04/sentences/b1-s07.mp3"
+          },
+          {
+            "sentence": "Nan and Pam nap.",
+            "file": "l2/media/w04/sentences/b1-s08.mp3"
+          }
+        ]
       }
     }
   ],

@@ -150,7 +150,16 @@
             "file": "l2/media/w05/family/feet.jpg"
           }
         }
-      ]
+      ],
+      "wordClips": {
+        "arms": "l2/media/w05/words/wa-arms.mp3",
+        "ears": "l2/media/w05/words/wa-ears.mp3",
+        "eyes": "l2/media/w05/words/wa-eyes.mp3",
+        "feet": "l2/media/w05/words/wa-feet.mp3",
+        "hands": "l2/media/w05/words/wa-hands.mp3",
+        "legs": "l2/media/w05/words/wa-legs.mp3",
+        "nose": "l2/media/w05/words/wa-nose.mp3"
+      }
     },
     "wordWall": [
       "an",
@@ -162,7 +171,12 @@
       "map",
       "Pam",
       "Sam"
-    ]
+    ],
+    "trickyWordClips": {
+      "off": "l2/media/w05/words/wa-off.mp3",
+      "saw": "l2/media/w05/words/wa-saw.mp3",
+      "with": "l2/media/w05/words/wa-with.mp3"
+    }
   },
   "opening": {
     "pa": [
@@ -220,7 +234,16 @@
         "phonemes/daniel/29-o-short.mp3",
         "phonemes/daniel/08-c-k.mp3"
       ]
-    ]
+    ],
+    "wordClips": {
+      "bus": "l2/media/w05/words/wa-bus.mp3",
+      "dress": "l2/media/w05/words/wa-dress.mp3",
+      "sad": "l2/media/w05/words/wa-sad.mp3",
+      "sam": "l2/media/w05/words/wa-sam.mp3",
+      "sit": "l2/media/w05/words/wa-sit.mp3",
+      "sock": "l2/media/w05/words/wa-sock.mp3",
+      "sun": "l2/media/w05/words/wa-sun.mp3"
+    }
   },
   "books": [
     {
@@ -1462,7 +1485,41 @@
           "sam": "l2/media/w05/words/wa-sam.mp3",
           "saw": "l2/media/w05/words/wa-saw.mp3",
           "with": "l2/media/w05/words/wa-with.mp3"
-        }
+        },
+        "sentenceClips": [
+          {
+            "sentence": "Sam saw Pam.",
+            "file": "l2/media/w05/sentences/b1-s01.mp3"
+          },
+          {
+            "sentence": "Sam can get Pam.",
+            "file": "l2/media/w05/sentences/b1-s02.mp3"
+          },
+          {
+            "sentence": "Sam is with Pam.",
+            "file": "l2/media/w05/sentences/b1-s03.mp3"
+          },
+          {
+            "sentence": "Pam is in a pan!",
+            "file": "l2/media/w05/sentences/b1-s04.mp3"
+          },
+          {
+            "sentence": "Pam is on a map!",
+            "file": "l2/media/w05/sentences/b1-s05.mp3"
+          },
+          {
+            "sentence": "Pam is on Sam!",
+            "file": "l2/media/w05/sentences/b1-s06.mp3"
+          },
+          {
+            "sentence": "Pam is off Sam!",
+            "file": "l2/media/w05/sentences/b1-s07.mp3"
+          },
+          {
+            "sentence": "Sam, Nan, and Pam nap.",
+            "file": "l2/media/w05/sentences/b1-s08.mp3"
+          }
+        ]
       }
     }
   ],

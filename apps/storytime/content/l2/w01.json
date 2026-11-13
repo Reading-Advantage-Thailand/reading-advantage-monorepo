@@ -156,9 +156,22 @@
             "file": "l2/media/w01/family/teacher.jpg"
           }
         }
-      ]
+      ],
+      "wordClips": {
+        "boy": "l2/media/w01/words/wa-boy.mp3",
+        "friend": "l2/media/w01/words/wa-friend.mp3",
+        "girl": "l2/media/w01/words/wa-girl.mp3",
+        "goodbye": "l2/media/w01/words/wa-goodbye.mp3",
+        "hello": "l2/media/w01/words/wa-hello.mp3",
+        "teacher": "l2/media/w01/words/wa-teacher.mp3"
+      }
     },
-    "wordWall": []
+    "wordWall": [],
+    "trickyWordClips": {
+      "a": "l2/media/w01/words/wa-a.mp3",
+      "and": "l2/media/w01/words/wa-and.mp3",
+      "can": "l2/media/w01/words/wa-can.mp3"
+    }
   },
   "opening": {
     "pa": [
@@ -216,7 +229,17 @@
         "phonemes/daniel/26-a-short.mp3",
         "phonemes/daniel/04-n.mp3"
       ]
-    ]
+    ],
+    "wordClips": {
+      "fan": "l2/media/w01/words/wa-fan.mp3",
+      "hen": "l2/media/w01/words/wa-hen.mp3",
+      "nest": "l2/media/w01/words/wa-nest.mp3",
+      "net": "l2/media/w01/words/wa-net.mp3",
+      "nose": "l2/media/w01/words/wa-nose.mp3",
+      "nut": "l2/media/w01/words/wa-nut.mp3",
+      "pen": "l2/media/w01/words/wa-pen.mp3",
+      "sun": "l2/media/w01/words/wa-sun.mp3"
+    }
   },
   "books": [
     {
@@ -1339,7 +1362,41 @@
           "nose": "l2/media/w01/words/wa-nose.mp3",
           "nurse": "l2/media/w01/words/wa-nurse.mp3",
           "nut": "l2/media/w01/words/wa-nut.mp3"
-        }
+        },
+        "sentenceClips": [
+          {
+            "sentence": "A nest.",
+            "file": "l2/media/w01/sentences/b1-s01.mp3"
+          },
+          {
+            "sentence": "A net.",
+            "file": "l2/media/w01/sentences/b1-s02.mp3"
+          },
+          {
+            "sentence": "A nut.",
+            "file": "l2/media/w01/sentences/b1-s03.mp3"
+          },
+          {
+            "sentence": "A nose.",
+            "file": "l2/media/w01/sentences/b1-s04.mp3"
+          },
+          {
+            "sentence": "A neck.",
+            "file": "l2/media/w01/sentences/b1-s05.mp3"
+          },
+          {
+            "sentence": "A nurse.",
+            "file": "l2/media/w01/sentences/b1-s06.mp3"
+          },
+          {
+            "sentence": "A nest and a nut.",
+            "file": "l2/media/w01/sentences/b1-s07.mp3"
+          },
+          {
+            "sentence": "Nan can nod!",
+            "file": "l2/media/w01/sentences/b1-s08.mp3"
+          }
+        ]
       }
     }
   ],
