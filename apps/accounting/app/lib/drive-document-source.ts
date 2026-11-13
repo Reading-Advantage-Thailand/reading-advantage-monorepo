@@ -7,7 +7,7 @@
  * Application Default Credentials on the Cloud Run runtime service account and
  * holds no key file.
  */
-import type { drive_v3 } from "googleapis";
+import type { Auth, drive_v3 } from "googleapis";
 
 import type {
   AccountingDriveFile,
@@ -111,34 +111,42 @@ async function listFolderEntries(
 }
 
 /**
- * Builds the authenticated Drive client on Application Default Credentials.
- * The `googleapis` package loads on first use, so a module that imports this
- * adapter and reads the folder id pays no provider import cost (D-27).
+ * Builds the authenticated Drive client. It uses the given auth client, or
+ * Application Default Credentials when none is given. The `googleapis`
+ * package loads on first use, so a module that imports this adapter and reads
+ * the folder id pays no provider import cost (D-27).
+ * @param auth Optional auth client, such as an impersonated client of the dry run.
  * @returns The authenticated Drive client.
  */
-async function createDriveClient(): Promise<drive_v3.Drive> {
+async function createDriveClient(
+  auth?: Auth.OAuth2Client,
+): Promise<drive_v3.Drive> {
   const { google } = await import("googleapis");
   return google.drive({
     version: "v3",
-    auth: new google.auth.GoogleAuth({
-      scopes: ["https://www.googleapis.com/auth/drive.readonly"],
-    }),
+    auth:
+      auth ??
+      new google.auth.GoogleAuth({
+        scopes: ["https://www.googleapis.com/auth/drive.readonly"],
+      }),
   });
 }
 
 /**
  * Builds the read-only Drive port of the intake poll and the year-file walk.
- * @param input Optional injected Drive client and clock year; tests and the
- *   runner leave them absent.
+ * @param input Optional injected Drive client or auth client; tests and the
+ *   Cloud Run runtime leave them absent. The year-file dry run gives an
+ *   impersonated auth client.
  * @returns The Drive port.
  */
 export function createDriveDocumentSource(input?: {
   readonly drive?: drive_v3.Drive;
+  readonly auth?: Auth.OAuth2Client;
 }): Promise<AccountingYearFileSourcePort> {
   const drivePromise =
     input?.drive !== undefined
       ? Promise.resolve(input.drive)
-      : createDriveClient();
+      : createDriveClient(input?.auth);
   return drivePromise.then((drive) => ({
     /**
      * Lists the top level of the intake folder and, from 2027, the subfolder

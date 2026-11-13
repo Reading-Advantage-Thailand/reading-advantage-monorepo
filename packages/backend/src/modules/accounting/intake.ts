@@ -1,4 +1,6 @@
 import { randomUUID } from "node:crypto";
+import { mkdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 
 import { z } from "zod";
 
@@ -1591,6 +1593,238 @@ async function findYearFileDuplicate(input: {
     if (same) return row.id;
   }
   return undefined;
+}
+
+/** Request of one year-file dry run (spec section 9b, FR-30). */
+export type AccountingYearFileDryRunRequest = Omit<
+  AccountingIntakeHistoryRequest,
+  "mode" | "evidenceStore" | "intakeRepository"
+> &
+  Partial<
+    Pick<
+      AccountingIntakeHistoryRequest,
+      "evidenceStore" | "intakeRepository"
+    >
+  > & {
+    /** Folder that receives the report file; the runner gives it as an argument. */
+    readonly reportDir: string;
+  };
+
+/** Result of one year-file dry run. */
+export interface AccountingYearFileDryRunResult {
+  /** Path of the report file inside `reportDir`. */
+  readonly reportPath: string;
+  /** Text of the report; it holds no amount, tax id, payee, name, or Drive id. */
+  readonly report: string;
+}
+
+/** The marker line that opens every dry-run report. */
+const DRY_RUN_ANONYMIZED_MARKER =
+  "anonymized: no amount, no tax id, no payee, no file name, no Drive id";
+
+/** One listed file of the dry-run report; no field is a name or an id. */
+interface DryRunRow {
+  readonly folderName: string;
+  readonly byteLength: number;
+  readonly typeKey: string;
+  readonly kind: string;
+  readonly period: string;
+  readonly textLayer: "yes" | "no";
+  readonly factNames: readonly string[];
+  readonly duplicateGroup: number;
+}
+
+/**
+ * Counts the values of one list, in order of first appearance.
+ * @param values The values to count.
+ * @returns The map of value to count.
+ */
+function countByValue(values: readonly string[]): Map<string, number> {
+  const counts = new Map<string, number>();
+  for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
+  return counts;
+}
+
+/**
+ * Renders one keyed count line of the report.
+ * @param label The label after `count `.
+ * @param counts The keyed counts.
+ * @returns The count line.
+ */
+function renderKeyedCount(
+  label: string,
+  counts: ReadonlyMap<string, number>,
+): string {
+  const entries = [...counts].map(([name, count]) => `${name}=${count}`);
+  return `count ${label}: ${entries.join("; ")}`;
+}
+
+/**
+ * Gives a duplicate group number to each file by an in-memory byte compare:
+ * byte length first, then byte equality (spec section 5.4). A file with no
+ * byte-equal partner gets 0. The compare calls no evidence store.
+ * @param bodies The file bytes, or null for a file that was not read.
+ * @returns The group number of each file, in the order of the input.
+ */
+function assignDuplicateGroups(
+  bodies: readonly (Uint8Array | null)[],
+): number[] {
+  const groups: number[] = bodies.map(() => 0);
+  let groupCount = 0;
+  const members = new Map<number, number[]>();
+  bodies.forEach((body, index) => {
+    if (body === null) return;
+    const sameSize = members.get(body.byteLength) ?? [];
+    const partner = sameSize.find((other) => {
+      const otherBody = bodies[other];
+      return (
+        otherBody !== null &&
+        otherBody !== undefined &&
+        Buffer.from(otherBody).equals(body)
+      );
+    });
+    if (partner !== undefined) {
+      if (groups[partner] === 0) {
+        groupCount += 1;
+        groups[partner] = groupCount;
+      }
+      groups[index] = groups[partner] ?? 0;
+    }
+    sameSize.push(index);
+    members.set(body.byteLength, sameSize);
+  });
+  return groups;
+}
+
+/**
+ * Runs the year-file dry run: calls the one walk, parses each PDF on this
+ * machine, and writes the anonymized structure report and one count log line
+ * for each subfolder and type. It writes no database row, calls no evidence
+ * store, and calls no model. A PDF with no text layer is listed `no`.
+ * @param request The ports of the history request and the report folder.
+ * @returns The report path and the report text.
+ * @throws AccountingYearFileFolderError when a name of the constant is
+ *   missing or duplicated, and AccountingSubmissionError for an invalid listing.
+ */
+export async function dryRunAccountingYearFiles(
+  request: AccountingYearFileDryRunRequest,
+): Promise<AccountingYearFileDryRunResult> {
+  const files = await walkAccountingYearFiles({
+    folderId: request.folderId,
+    source: request.source,
+  });
+  const companyId = request.actor.companyId;
+  const bodies: (Uint8Array | null)[] = [];
+  const drafts: Omit<DryRunRow, "duplicateGroup">[] = [];
+
+  for (const file of files) {
+    if (
+      file.byteSize !== undefined &&
+      file.byteSize > ACCOUNTING_INTAKE_SIZE_LIMIT_BYTES
+    ) {
+      bodies.push(null);
+      drafts.push({
+        folderName: file.folderName,
+        byteLength: file.byteSize,
+        typeKey: "unmatched",
+        kind: "none",
+        period: "period-unreadable",
+        textLayer: "no",
+        factNames: [],
+      });
+      continue;
+    }
+    const body = await request.source.download({ fileId: file.id });
+    bodies.push(body);
+    const layer = await request.textLayer.read({
+      companyId,
+      mimeType: file.mimeType,
+      body,
+    });
+    const parse =
+      layer.text === null ? undefined : parseYearFile({ text: layer.text });
+    const readable =
+      parse !== undefined &&
+      parse.status === "parsed" &&
+      parse.typeKey !== null &&
+      parse.periodStart !== null &&
+      parse.periodEnd !== null;
+    drafts.push({
+      folderName: file.folderName,
+      byteLength: body.byteLength,
+      typeKey: readable ? parse.typeKey : "unmatched",
+      kind: readable ? (parse.filingKind ?? "none") : "none",
+      period: readable
+        ? `${parse.periodStart}..${parse.periodEnd}`
+        : "period-unreadable",
+      textLayer: layer.text === null ? "no" : "yes",
+      factNames:
+        readable && parse.facts !== null
+          ? Object.entries(parse.facts)
+              .filter(([, value]) => value !== undefined && value !== null)
+              .map(([name]) => name)
+          : [],
+    });
+  }
+
+  const groups = assignDuplicateGroups(bodies);
+  const rows: DryRunRow[] = drafts.map((draft, index) => ({
+    ...draft,
+    duplicateGroup: groups[index] ?? 0,
+  }));
+
+  const bySubfolder = new Map<string, number>(
+    YEAR_FILE_FOLDER_NAMES.map((name) => [name, 0]),
+  );
+  for (const [name, count] of countByValue(rows.map((row) => row.folderName))) {
+    bySubfolder.set(name, count);
+  }
+  const byType = countByValue(rows.map((row) => row.typeKey));
+  const byPeriod = countByValue(rows.map((row) => row.period));
+  const withTextLayer = rows.filter((row) => row.textLayer === "yes").length;
+  const unmatchedCount = rows.filter((row) => row.typeKey === "unmatched").length;
+
+  const lines = [
+    DRY_RUN_ANONYMIZED_MARKER,
+    "year-file dry-run structure report",
+    ...rows.map(
+      (row, index) =>
+        [
+          `file-${String(index + 1).padStart(3, "0")}`,
+          `folder=${row.folderName}`,
+          `bytes=${row.byteLength}`,
+          `type=${row.typeKey}`,
+          `kind=${row.kind}`,
+          `period=${row.period}`,
+          `text-layer=${row.textLayer}`,
+          `facts=${row.factNames.length === 0 ? "none" : row.factNames.join(",")}`,
+          `duplicate-group=${row.duplicateGroup}`,
+        ].join(" | "),
+    ),
+    renderKeyedCount("by subfolder", bySubfolder),
+    renderKeyedCount("by type", byType),
+    renderKeyedCount("by period", byPeriod),
+    `count with a text layer: ${withTextLayer}`,
+    `count without a text layer: ${rows.length - withTextLayer}`,
+    `count unmatched: ${unmatchedCount}`,
+    `count duplicate groups: ${new Set(groups.filter((group) => group > 0)).size}`,
+  ];
+  const report = `${lines.join("\n")}\n`;
+
+  for (const [name, files] of bySubfolder) {
+    logIntakeLine({ event: "dry_run_count", scope: "subfolder", name, files });
+  }
+  for (const [name, count] of byType) {
+    logIntakeLine({ event: "dry_run_count", scope: "type", name, count });
+  }
+
+  await mkdir(request.reportDir, { recursive: true });
+  const reportPath = join(
+    request.reportDir,
+    `year-files-dry-run-${new Date().toISOString().slice(0, 10)}.md`,
+  );
+  await writeFile(reportPath, report, "utf8");
+  return { reportPath, report };
 }
 
 /**
