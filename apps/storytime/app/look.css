@@ -866,14 +866,11 @@ main[data-place] button:active:not(:disabled) {
     padding-inline: 10px;
   }
   /* The decodable of a short screen (task 6.2, round 3): the page arrows, the sentence button,
-   * and the tricky words share one row, and every control must end inside the fold. The gaps and
-   * the paddings of the part shrink, and the labels of the row keep a slimmer padding and a
-   * smaller font, so the arrows and the tricky words stay on one line. */
+   * and the tricky words share one row, and every control must end inside the fold. The gap of
+   * the part shrinks, and the labels of the row keep a slimmer padding and a smaller font, so
+   * the arrows and the tricky words stay on one line. */
   [data-part="decodable"] > div {
     gap: 8px;
-  }
-  [data-part="decodable"] > div > section[aria-label] {
-    padding: 8px;
   }
   [data-part="decodable"] > div > div > button,
   [data-part="decodable"] > div > div > div > button,
@@ -881,9 +878,6 @@ main[data-place] button:active:not(:disabled) {
     min-width: 44px;
     padding-inline: 8px;
     font-size: 16px;
-  }
-  [data-part="decodable"] div > section[aria-label]:last-child {
-    padding: 8px;
   }
 }
 
