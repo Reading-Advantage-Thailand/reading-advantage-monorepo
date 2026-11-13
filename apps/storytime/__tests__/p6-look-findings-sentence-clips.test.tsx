@@ -27,6 +27,13 @@ const SENTENCE_LABEL = "Play the whole sentence";
 /** The sentence clip map of a book audio; the base type has no such field yet. */
 type SentenceAudio = { sentenceClips?: Record<string, string> };
 
+/** A copy of the shipped w01 with no sentence clips: the shipped week now holds the real ones. */
+function bareRaw(): unknown {
+  const data = structuredClone(raw()) as { books: Array<{ kind: string; audio: Record<string, unknown> }> };
+  delete data.books.find((book) => book.kind === "decodable")!.audio.sentenceClips;
+  return data;
+}
+
 /** Parses the shipped w01 with a sentence clip map put into its decodable audio. */
 function parseWith(map: unknown): StorytimeWeek {
   const data = structuredClone(raw()) as { books: Array<{ kind: string; audio: Record<string, unknown> }> };
@@ -40,7 +47,7 @@ const clipsOf = (week: StorytimeWeek) =>
 
 describe("the contract of sentenceClips (finding 2b)", () => {
   it("defaults to an empty map on a week with no sentence clips", () => {
-    expect(clipsOf(weekSchema.parse(raw()))).toEqual({});
+    expect(clipsOf(weekSchema.parse(bareRaw()))).toEqual({});
   });
 
   it("accepts a page number mapped to a media file and keeps it", () => {
@@ -177,7 +184,7 @@ describe("the sentence button of the decodable (finding 2b)", () => {
   });
 
   it("shows no sentence button on a week with no sentence clips", async () => {
-    await renderDecodable(weekSchema.parse(raw()));
+    await renderDecodable(weekSchema.parse(bareRaw()));
     for (let index = 0; index < 7; index += 1) {
       expect(sentenceButtons(), `page ${index + 1}`).toHaveLength(0);
       fireEvent.click(screen.getByRole("button", { name: "Next page" }));
