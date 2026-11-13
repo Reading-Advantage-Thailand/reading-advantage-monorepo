@@ -227,7 +227,7 @@ produced six dangling references in this repository (lessons-learned 2026-06-07)
 - Phase 3 Green: 62d65ae
 - Phase 4 docs and doctor: 7798b93
 
-## Pre-traffic fix: the scheduler token in the build log (F602)
+## Phase 5: Pre-traffic fix: the scheduler token in the build log (F602)
 
 - [~] Task: F602. The scheduler script prints the job resource, which holds the `Authorization= Bearer <token>` header, into the Cloud Build log of the traffic build. Change the script so that it prints no header: suppress the command output (for example `--format=none` or `--quiet` on the update and create calls), and pass the token by stdin or a file, not on the command line. Add a test that fails when the script prints the header or puts the token on the command line. This is a hard precondition of the first codecamp traffic move (master_push_readiness_20261112 task 1.9). No codecamp traffic move runs before this task is done.
 
