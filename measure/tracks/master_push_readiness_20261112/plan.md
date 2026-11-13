@@ -59,8 +59,14 @@ Blast radius: `apps/codecamp-advantage/cloudbuild.yaml`, `apps/codecamp-advantag
   - Command log: (empty until the grant runs)
   - PM decision of 2026-11-13 (02:2x), quoted word for word: "2. A-55 Q1 grant scope: accepted. Grant roles/cloudscheduler.admin on project reading-advantage to the CI deploy service account only, at task 1.7. Log the exact command and the member in the track. The grant also covers the A-52 scheduler step; record that in A-52 too."
   - The member is the Cloud Build service account of project `reading-advantage`, the account that runs the build steps. A-52 task 9.3b records the same grant (commit `12acd275f`).
-- [b] 1.8 deferred:daniel-push — after Daniel's push word, the next `cd-apps` run ends in `success` for codecamp-advantage. Record the run id.
+- [x] 1.8 deferred:daniel-push — after Daniel's push word, the next `cd-apps` run ends in `success` for codecamp-advantage. Record the run id. Done at PUSH_SHA `8bcce8c84d7a868dffa706930a4a3354d554a1e4` (automated).
+  - Push evidence (2026-11-13): Daniel's word "Push", relayed by the PM (Tasks R0xBX3ZNN05uLVdQSHZJMg, 2026-11-13 09:09). `git push origin 8bcce8c84d7a868dffa706930a4a3354d554a1e4:refs/heads/master` exited 0 at 2026-11-13T02:47:49Z (`cd11410e6..8bcce8c84`, fast-forward).
+  - cd-apps run `43354641728`: the job "Build and deploy codecamp-advantage" (job 131653899479, Cloud Build `a4cfb333-de61-4329-a190-37a1491e9162`) ended in `success`. New revision `codecamp-advantage-00017-bov`, 0 %, tag `sso-candidate`. `codecamp-advantage-00010-ts6` keeps 100 %.
+  - The run conclusion is `failure`, because the accounting job failed at build step 0 (`docker build`, Cloud Build `56421307-2abb-48f1-af64-2bab3bc989a7`). The accounting failure is outside this task. No retry.
+  - Deploy list: `measure/runs/master_push_readiness_20261112/deploy-list-20261113.md`.
 - [b] 1.9 Push check (read-only, before the deploy word list goes to Daniel): A-52 Phase 3 is accepted, and `grep -n 'gcloud scheduler' apps/*/cloudbuild.yaml` and the scripts those push files run print no line, or each line is named on the deploy word list with its IAM grant. Review A of A-52 Phase 3 holds this risk as finding F301. deferred:push-list — it runs when the deploy word list is prepared, after A-52 Phase 3 is accepted.
+  - Push check at PUSH_SHA `8bcce8c84d7a868dffa706930a4a3354d554a1e4` (2026-11-13, automated): `grep -n 'gcloud scheduler' apps/*/cloudbuild.yaml` exited 1 and printed no line. The scripts that the push files run (`apps/accounting/scripts/capture-accounting-cloud-run-tag.sh`, `apps/marketing/scripts/capture-marketing-cloud-run-release.sh`, `apps/accounting/scripts/verify-accounting-release.ts`, `apps/marketing/scripts/verify-marketing-release.ts`) hold no `scheduler` text. `rg -n 'gcloud run jobs|gcloud scheduler' apps/accounting/cloudbuild.yaml` and `rg -n 'gcloud scheduler|configure-review-worker-scheduler' apps/codecamp-advantage/cloudbuild.yaml` each exited 1. push_scheduler_lines=0.
+  - The task stays open: A-52 Phase 3 is not accepted. Its plan shows task 3.13 as `[~]` and no Phase 3 checkpoint.
 
 ### Phase 1 acceptance note, 2026-11-13
 
