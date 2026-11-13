@@ -44,6 +44,25 @@ set -uo pipefail
 #        the song: `play_mark_click_plays` is 1 when the video is not paused and its currentTime
 #        advanced after the click (`play_mark_click_advance_s`).
 #
+# Rows 10 to 16 (round 6, finding N2 of the PM, 2026-11-14): "N2 FIX NOW, Storytime first: the play
+#        mark must not cover the song title (move the mark below the title or onto the picture
+#        area; title fully readable at 390×844, 844×390, 1440×900)". The title is part of the poster
+#        image of the video, so a CSS test cannot see it; the rows compare pixels.
+#        Row 10, 11, 12: at 390x844, 844x390, and 1440x900 the band of the poster title (measured
+#        from the posters, see TITLE_BANDS below) is the same image with the mark shown and with
+#        the mark hidden (visibility hidden, no layout change): `mark_title_band_diff_px_<vp>` is
+#        0. The row needs a real band (band_px), title ink in the band (title_ink_px, so a missing
+#        poster does not pass), the mark found, and a hidden-versus-hidden noise of 0.
+#        Row 13: the mark stays a real target at all three viewports: at least 44 px on each side,
+#        inside the video box, visible, and the element at its centre is the mark
+#        (`mark_min_side_px_<vp>`). A mark that is hidden, or moved off the video, fails.
+#        Row 14: a touch tap on the mark centre starts the song at 390x844
+#        (`mark_tap_390x844_plays`, `mark_tap_390x844_advance_s`). The mouse press at 1440x900 is row 9.
+#        Row 15: the positive control of the band measure: a 20 px probe laid over the band centre
+#        changes at least 300 px (`mark_band_probe_diff_px_<vp>`), so a band row that sees 0 does
+#        see an object when one covers the band.
+#        Row 16: the verdict self-check of rows 10 to 15 rejects the wrong values.
+#
 # No row plays a recording. A headless run is not phone evidence.
 #
 # The whole script (Postgres, build, server, Playwright) runs inside one heavy-run job. Without
@@ -242,7 +261,7 @@ for _ in $(seq 1 90); do
 done
 if [ "$APP_UP" -eq 1 ]; then pass "The app answers on its port"; else fail "The app does not answer on its port"; fi
 
-echo "=== Run the rows 1 to 9 with SYSTEM Chrome ==="
+echo "=== Run the rows 1 to 16 with SYSTEM Chrome ==="
 cat > "$PLAYWRIGHT" <<'NODE'
 import fs from "node:fs";
 import { chromium, request as playwrightRequest } from "@playwright/test";
@@ -291,6 +310,48 @@ function pressShiftVerdict(v) {
 function clickPlaysVerdict(v) {
   return v.ready === true && v.found === true && v.paused === false && v.advance > 0.2;
 }
+
+/**
+ * The verdict of rows 10 to 12: the title band is the same with and without the mark, the band is
+ * real, the poster title ink is in it, and two shots of the same state are equal.
+ */
+function titleBandVerdict(v) {
+  return v.ready === true && v.found === true && v.noise === 0 && v.bandPx >= 5000 && v.ink >= 300 &&
+    v.diff === 0;
+}
+/** The verdict of row 13: the mark is a visible target of 44 px or more, inside the video box. */
+function markTargetVerdict(v) {
+  return v.ready === true && v.found === true && v.minSide >= 44 && v.insideVideo === true &&
+    v.visible === true && v.hit === true;
+}
+/** The verdict of row 14: a tap on the mark starts the song and the time advances. */
+function tapPlaysVerdict(v) {
+  return v.ready === true && v.found === true && v.paused === false && v.advance > 0.2;
+}
+/** The verdict of row 15: the band measure sees a probe laid over the band, with no noise. */
+function bandProbeVerdict(v) { return v.ready === true && v.noise === 0 && v.probe >= 300; }
+
+/**
+ * The title bands of the two posters, as fractions of the video box. They were measured on the
+ * pixels of the posters of week 1 (the only week with a video and a poster): the dark brown text
+ * pixels (red under 150, blue under 100), grouped in runs of rows, then 0.02 added on each side.
+ * Wide poster 1280x720 (844x390 and 1440x900): title "Hello, I Am Pip" at x 0.2562 to 0.7453,
+ * y 0.4556 to 0.5792. Phone poster 720x1280 (390x844): title "Hello, I Am" and "Pip" at x 0.1778
+ * to 0.8222, y 0.4375 to 0.5828 (the two lines).
+ */
+const TITLE_BANDS = {
+  wide: { x0: 0.23, x1: 0.77, y0: 0.43, y1: 0.60 },
+  phone: { x0: 0.15, x1: 0.85, y0: 0.41, y1: 0.61 },
+};
+/**
+ * The subtitle line ("Level 2 · Week 1 · Names and greetings") of the same posters, measured the
+ * same way. It is reported (`mark_subtitle_band_diff_px_<vp>`) and no row gates it: the PM words
+ * name the title.
+ */
+const SUBTITLE_BANDS = {
+  wide: { x0: 0.20, x1: 0.80, y0: 0.775, y1: 0.875 },
+  phone: { x0: 0.21, x1: 0.79, y0: 0.755, y1: 0.885 },
+};
 
 const goodControls = [
   pressShiftVerdict({ ready: true, found: true, shift: 0 }),
@@ -457,6 +518,215 @@ async function pressPlayMark(page, width, height) {
   };
 }
 
+/**
+ * Counts the pixels that differ between two PNG shots, and the title ink pixels of the second.
+ * The comparison runs on a blank page, so no page policy blocks the data URLs.
+ * @param scratch A blank Playwright page.
+ * @param a The first PNG buffer.
+ * @param b The second PNG buffer.
+ * @returns The differing pixel count (-1 on a size mismatch), the pixel total, and the ink count.
+ */
+async function comparePng(scratch, a, b) {
+  return scratch.evaluate(async ([a64, b64]) => {
+    const load = (data) => new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error("png decode"));
+      img.src = `data:image/png;base64,${data}`;
+    });
+    const read = (img) => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const g = canvas.getContext("2d");
+      g.drawImage(img, 0, 0);
+      return g.getImageData(0, 0, img.width, img.height).data;
+    };
+    const da = read(await load(a64));
+    const db = read(await load(b64));
+    if (da.length !== db.length) return { diff: -1, total: 0, ink: 0 };
+    let diff = 0;
+    let ink = 0;
+    for (let i = 0; i < da.length; i += 4) {
+      if (da[i] !== db[i] || da[i + 1] !== db[i + 1] || da[i + 2] !== db[i + 2]) diff += 1;
+      if (db[i] < 150 && db[i + 2] < 100) ink += 1;
+    }
+    return { diff, total: da.length / 4, ink };
+  }, [a.toString("base64"), b.toString("base64")]);
+}
+
+/**
+ * Measures the title band of the poster at one viewport: the band with the mark shown against the
+ * band with the mark hidden, the noise of two hidden shots, the probe control, and the box and
+ * state of the mark.
+ * @param page The Playwright page of the signed-in session.
+ * @param scratch A blank Playwright page for the pixel comparison.
+ * @param width The viewport width in CSS px.
+ * @param height The viewport height in CSS px.
+ * @param phoneExpected `true` when the viewport must show the phone pair.
+ * @returns The pixel counts, the band size, and the state of the mark.
+ */
+async function measureBands(page, scratch, width, height, phoneExpected) {
+  await page.setViewportSize({ width, height });
+  await page.goto(`${base}/th/st/2/1?part=song`, { waitUntil: "load" });
+  await page.waitForSelector(".song-stage video", { timeout: 20000 });
+  await page.waitForFunction(
+    () => { const v = document.querySelector(".song-stage video"); return v !== null && v.readyState >= 1; },
+    undefined,
+    { timeout: 15000 },
+  ).catch(() => {});
+  await page.waitForTimeout(800);
+  await page.evaluate(() => {
+    const video = document.querySelector(".song-stage video");
+    if (video) video.scrollIntoView({ block: "start" });
+  });
+  await page.waitForTimeout(300);
+  const geo = await page.evaluate(() => {
+    const stage = document.querySelector(".song-stage");
+    const video = document.querySelector(".song-stage video");
+    const mark = document.querySelector("[data-play-mark]");
+    if (!stage || !video) return null;
+    const v = video.getBoundingClientRect();
+    const out = {
+      ready: video.readyState >= 1,
+      phone: stage.getAttribute("data-phone"),
+      video: { x: v.left, y: v.top, w: v.width, h: v.height },
+      found: mark !== null,
+      mark: null,
+    };
+    if (mark) {
+      const m = mark.getBoundingClientRect();
+      const style = getComputedStyle(mark);
+      const hit = document.elementFromPoint(m.left + m.width / 2, m.top + m.height / 2);
+      out.mark = {
+        minSide: Math.min(m.width, m.height),
+        insideVideo: m.left >= v.left - 0.5 && m.right <= v.right + 0.5 &&
+          m.top >= v.top - 0.5 && m.bottom <= v.bottom + 0.5,
+        visible: style.visibility === "visible" && Number(style.opacity) >= 0.9 && m.width > 0,
+        hit: hit !== null && (hit === mark || mark.contains(hit)),
+      };
+    }
+    return out;
+  });
+  if (!geo) return null;
+  const v = geo.video;
+  const clipOf = (band) => ({
+    x: Math.round(v.x + band.x0 * v.w),
+    y: Math.round(v.y + band.y0 * v.h),
+    width: Math.round((band.x1 - band.x0) * v.w),
+    height: Math.round((band.y1 - band.y0) * v.h),
+  });
+  const kind = phoneExpected ? "phone" : "wide";
+  const titleClip = clipOf(TITLE_BANDS[kind]);
+  const subClip = clipOf(SUBTITLE_BANDS[kind]);
+  const shot = (clip) => page.screenshot({ clip, animations: "disabled", caret: "hide" });
+  const titleShown = await shot(titleClip);
+  const subShown = await shot(subClip);
+  await page.evaluate(() => {
+    for (const mark of document.querySelectorAll("[data-play-mark]")) mark.style.visibility = "hidden";
+  });
+  await page.waitForTimeout(150);
+  const titleHidden = await shot(titleClip);
+  const titleHiddenAgain = await shot(titleClip);
+  const subHidden = await shot(subClip);
+  const shownVsHidden = await comparePng(scratch, titleShown, titleHidden);
+  const noise = await comparePng(scratch, titleHidden, titleHiddenAgain);
+  const sub = await comparePng(scratch, subShown, subHidden);
+  await page.evaluate(({ x, y }) => {
+    const probe = document.createElement("div");
+    probe.style.cssText = `position:fixed;left:${x}px;top:${y}px;width:20px;height:20px;background:#0000ff;z-index:99999`;
+    document.body.appendChild(probe);
+  }, { x: titleClip.x + Math.round(titleClip.width / 2) - 10, y: titleClip.y + Math.round(titleClip.height / 2) - 10 });
+  await page.waitForTimeout(150);
+  const titleProbed = await shot(titleClip);
+  const probe = await comparePng(scratch, titleHidden, titleProbed);
+  return {
+    ready: geo.ready && geo.phone === (phoneExpected ? "true" : "false"),
+    found: geo.found,
+    diff: shownVsHidden.diff,
+    noise: noise.diff,
+    bandPx: shownVsHidden.total,
+    ink: shownVsHidden.ink,
+    probe: probe.diff,
+    subDiff: sub.diff,
+    clip: titleClip,
+    mark: geo.mark,
+  };
+}
+
+/**
+ * Taps the play mark with a touch at one viewport and reads the state of the song after the tap.
+ * @param touchPage The Playwright page of a touch context, signed in.
+ * @param width The viewport width in CSS px.
+ * @param height The viewport height in CSS px.
+ * @returns Whether the mark was found, and whether the song plays after the tap.
+ */
+async function tapPlayMark(touchPage, width, height) {
+  await touchPage.setViewportSize({ width, height });
+  await touchPage.goto(`${base}/th/st/2/1?part=song`, { waitUntil: "load" });
+  await touchPage.waitForSelector(".song-stage video", { timeout: 20000 });
+  await touchPage.waitForFunction(
+    () => { const v = document.querySelector(".song-stage video"); return v !== null && v.readyState >= 1; },
+    undefined,
+    { timeout: 15000 },
+  ).catch(() => {});
+  await touchPage.waitForTimeout(800);
+  await touchPage.evaluate(() => {
+    const mark = document.querySelector("[data-play-mark]");
+    if (mark) mark.scrollIntoView({ block: "center" });
+  });
+  await touchPage.waitForTimeout(300);
+  const centre = await touchPage.evaluate(() => {
+    const mark = document.querySelector("[data-play-mark]");
+    if (!mark) return null;
+    const box = mark.getBoundingClientRect();
+    return { x: box.left + box.width / 2, y: box.top + box.height / 2 };
+  });
+  const state = () => touchPage.evaluate(() => {
+    const video = document.querySelector(".song-stage video");
+    return video ? { paused: video.paused, time: video.currentTime, ready: video.readyState >= 1 } : null;
+  });
+  const start = await state();
+  if (!centre || !start) return { found: false, ready: start ? start.ready : false, paused: true, advance: 0 };
+  await touchPage.touchscreen.tap(centre.x, centre.y);
+  await touchPage.waitForTimeout(1500);
+  const after = await state();
+  return {
+    found: true,
+    ready: start.ready,
+    paused: after ? after.paused : true,
+    advance: after ? after.time - start.time : 0,
+  };
+}
+
+const newGood = [
+  titleBandVerdict({ ready: true, found: true, noise: 0, bandPx: 14000, ink: 1500, diff: 0 }),
+  markTargetVerdict({ ready: true, found: true, minSide: 44, insideVideo: true, visible: true, hit: true }),
+  tapPlaysVerdict({ ready: true, found: true, paused: false, advance: 1.2 }),
+  bandProbeVerdict({ ready: true, noise: 0, probe: 400 }),
+];
+const newMutants = [
+  titleBandVerdict({ ready: true, found: true, noise: 0, bandPx: 14000, ink: 1500, diff: 3200 }) === false,
+  titleBandVerdict({ ready: true, found: true, noise: 0, bandPx: 14000, ink: 1500, diff: 1 }) === false,
+  titleBandVerdict({ ready: true, found: true, noise: 7, bandPx: 14000, ink: 1500, diff: 0 }) === false,
+  titleBandVerdict({ ready: true, found: true, noise: 0, bandPx: 14000, ink: 0, diff: 0 }) === false,
+  titleBandVerdict({ ready: true, found: true, noise: 0, bandPx: 100, ink: 1500, diff: 0 }) === false,
+  titleBandVerdict({ ready: true, found: false, noise: 0, bandPx: 14000, ink: 1500, diff: 0 }) === false,
+  titleBandVerdict({ ready: false, found: true, noise: 0, bandPx: 14000, ink: 1500, diff: 0 }) === false,
+  titleBandVerdict({ ready: true, found: true, noise: -1, bandPx: 14000, ink: 1500, diff: 0 }) === false,
+  markTargetVerdict({ ready: true, found: true, minSide: 30, insideVideo: true, visible: true, hit: true }) === false,
+  markTargetVerdict({ ready: true, found: true, minSide: 96, insideVideo: false, visible: true, hit: true }) === false,
+  markTargetVerdict({ ready: true, found: true, minSide: 96, insideVideo: true, visible: false, hit: true }) === false,
+  markTargetVerdict({ ready: true, found: true, minSide: 96, insideVideo: true, visible: true, hit: false }) === false,
+  markTargetVerdict({ ready: true, found: false, minSide: 96, insideVideo: true, visible: true, hit: true }) === false,
+  tapPlaysVerdict({ ready: true, found: true, paused: true, advance: 1.2 }) === false,
+  tapPlaysVerdict({ ready: true, found: true, paused: false, advance: 0 }) === false,
+  tapPlaysVerdict({ ready: true, found: false, paused: false, advance: 1.2 }) === false,
+  bandProbeVerdict({ ready: true, noise: 0, probe: 0 }) === false,
+  bandProbeVerdict({ ready: true, noise: 4, probe: 400 }) === false,
+  bandProbeVerdict({ ready: false, noise: 0, probe: 400 }) === false,
+];
+
 const rejected = mutants.filter(Boolean).length;
 emit("controls_ok", goodControls.every(Boolean) ? 1 : 0);
 emit("mutants_rejected", rejected);
@@ -542,6 +812,70 @@ row(8, pressShiftVerdict({ ready: press.ready, found: press.found, shift: pressS
   `play_mark_press_shift_px=${pressShift} at 1440x900 (within 1 px wanted)`);
 row(9, clickPlaysVerdict({ ready: press.ready, found: press.found, paused: press.paused, advance: clickAdvance }),
   `play_mark_click_plays=${clickPlaysVerdict(press) ? 1 : 0} paused=${press.paused} play_mark_click_advance_s=${clickAdvance} at 1440x900`);
+// Rows 10 to 15 (round 6, finding N2): the play mark must not cover the poster title.
+const scratch = await context.newPage();
+await scratch.goto("about:blank");
+const bandViewports = [
+  { key: "390x844", w: 390, h: 844, phone: true, rowNumber: 10 },
+  { key: "844x390", w: 844, h: 390, phone: false, rowNumber: 11 },
+  { key: "1440x900", w: 1440, h: 900, phone: false, rowNumber: 12 },
+];
+const bandRuns = {};
+for (const vp of bandViewports) {
+  let measured = null;
+  try {
+    measured = await measureBands(page, scratch, vp.w, vp.h, vp.phone);
+  } catch (error) {
+    console.log(`mark_band_error_${vp.key}=${String(error).slice(0, 160)}`);
+  }
+  const m = measured ?? { ready: false, found: false, diff: -1, noise: -1, bandPx: 0, ink: 0, probe: -1, subDiff: -1, clip: null, mark: null };
+  bandRuns[vp.key] = m;
+  emit(`mark_title_band_diff_px_${vp.key}`, m.diff);
+  emit(`mark_title_band_noise_px_${vp.key}`, m.noise);
+  emit(`mark_title_band_px_${vp.key}`, m.bandPx);
+  emit(`mark_title_band_ink_px_${vp.key}`, m.ink);
+  emit(`mark_subtitle_band_diff_px_${vp.key}`, m.subDiff);
+  row(vp.rowNumber, titleBandVerdict(m),
+    `mark_title_band_diff_px=${m.diff} (0 wanted) noise_px=${m.noise} band_px=${m.bandPx} title_ink_px=${m.ink} mark_found=${m.found} at ${vp.key}`);
+}
+
+const targetOf = (m) => ({
+  ready: m.ready, found: m.found,
+  minSide: m.mark ? Math.round(m.mark.minSide) : -1,
+  insideVideo: m.mark ? m.mark.insideVideo : false,
+  visible: m.mark ? m.mark.visible : false,
+  hit: m.mark ? m.mark.hit : false,
+});
+const targets = bandViewports.map((vp) => ({ key: vp.key, ...targetOf(bandRuns[vp.key]) }));
+for (const t of targets) emit(`mark_min_side_px_${t.key}`, t.minSide);
+for (const t of targets) emit(`mark_inside_video_${t.key}`, t.insideVideo ? 1 : 0);
+row(13, targets.every((t) => markTargetVerdict(t)),
+  `mark_target ${targets.map((t) => `${t.key}: min_side_px=${t.minSide} inside_video=${t.insideVideo} visible=${t.visible} hit=${t.hit}`).join("; ")} (44 px or more, inside the video box)`);
+
+const touchContext = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true });
+const touchPage = await touchContext.newPage();
+let tapped = null;
+try {
+  await signIn(touchPage, "/th/st/2/1");
+  tapped = await tapPlayMark(touchPage, 390, 844);
+} catch (error) {
+  console.log(`mark_tap_error=${String(error).slice(0, 160)}`);
+}
+const tap = tapped ?? { found: false, ready: false, paused: true, advance: 0 };
+const tapAdvance = Number(tap.advance.toFixed(2));
+emit("mark_tap_390x844_advance_s", tapAdvance);
+emit("mark_tap_390x844_plays", tapPlaysVerdict({ ...tap, advance: tapAdvance }) ? 1 : 0);
+row(14, tapPlaysVerdict({ ...tap, advance: tapAdvance }),
+  `mark_tap_390x844_plays=${tapPlaysVerdict({ ...tap, advance: tapAdvance }) ? 1 : 0} paused=${tap.paused} mark_tap_390x844_advance_s=${tapAdvance} (touch tap on the mark centre)`);
+await touchContext.close();
+
+for (const vp of bandViewports) emit(`mark_band_probe_diff_px_${vp.key}`, bandRuns[vp.key].probe);
+row(15, bandViewports.every((vp) => bandProbeVerdict(bandRuns[vp.key])),
+  `mark_band_probe ${bandViewports.map((vp) => `${vp.key}: probe_diff_px=${bandRuns[vp.key].probe} noise_px=${bandRuns[vp.key].noise}`).join("; ")} (a 20 px probe over the band must change 300 px or more)`);
+
+const newRejected = newMutants.filter(Boolean).length;
+row(16, newGood.every(Boolean) && newRejected === newMutants.length,
+  `verdict self-check of rows 10 to 15 mutants_rejected=${newRejected} of ${newMutants.length}`);
 console.log(`row_count=${rowCount}`);
 await browser.close();
 NODE
@@ -563,7 +897,7 @@ if [ "$ROWS" -gt 0 ]; then
 else
   fail "The browser rows did not run (rows=0)"
 fi
-if [ "$ROWS" -ne 9 ]; then fail "The browser rows must be 9, counted $ROWS"; fi
+if [ "$ROWS" -ne 16 ]; then fail "The browser rows must be 16, counted $ROWS"; fi
 
 echo "=== The requests of the stand-in for the storage ==="
 echo "standin_requests=$(grep -c '^REQ ' "$TMP_DIR/stand-in.log" 2>/dev/null || echo 0)"
