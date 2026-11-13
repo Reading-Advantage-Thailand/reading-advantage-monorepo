@@ -960,7 +960,8 @@ inside one parent folder, `เอกสารบัญชีรายปี` (0 
 parent is a direct child of the root. The listing found 118 PDF files in the five
 folders, the same total as the scan. The code constant `YEAR_FILE_FOLDER_NAMES`
 holds the five exact full names of the table. The code constant
-`YEAR_FILE_PARENT_FOLDER_NAME` holds the name of the one parent.
+`YEAR_FILE_PARENT_FOLDER_NAME` holds the name of the one parent. The place column
+states the facts of 2026-11-14. It is not a rule for the walk: The place of a name is not required. The walk takes each of the five names from the root or from the parent. A name found in neither place stops the walk with `folder-missing`. A name found in both places, or twice in one place, stops the walk with `folder-duplicate`. A folder of the 2568 names in the root is read. The parent is required: a missing parent stops the walk with `folder-missing`, and a parent listed twice stops it with `folder-duplicate`. Both errors name the parent.
 
 | Subfolder name | Place | Files | What the PM scan saw |
 |---|---|---|---|
@@ -1066,9 +1067,13 @@ naming rule. Two things change.
    timeout (Review B finding F1001, plan task 10.13). The walk is one function. The import and the dry-run both call it, so
    no second walk exists. It resolves each folder id at run time by listing the root, so no
    folder id enters the repository, a test, a log line, or a report. A listed
-   folder that is not in the constant is skipped. A name in the constant that
-   the listing does not find, at its place (the root or the parent), is an error
-   that stops the walk.
+   folder that is not in the constant is skipped. The place of a name is not
+   required. The walk takes each name from the root or from the parent. A name
+   found in neither place stops the walk with `folder-missing`. A name found in
+   both places, or twice in one place, stops the walk with `folder-duplicate`.
+   The parent is required. A missing parent stops the walk with `folder-missing`.
+   A parent listed twice stops the walk with `folder-duplicate`. Both errors name
+   the parent.
 2. The customer-folder rule of section 9 ("a sub-folder whose name is not a year
    is a customer folder") would read the five year-file folders and the parent as
    customer folders. It would parse their PDFs as school invoices. The rule
@@ -1430,15 +1435,17 @@ and the dry-run list the same files.
   added.
 - **FR-29.** The subfolder walk is one input of the one `intakeDriveDocument`
   history mode. It reads the PDF files directly inside each of the five folders
-  whose exact full name is in the code constant `YEAR_FILE_FOLDER_NAMES`. One of
-  the five sits at the root. Four sit inside the one parent whose exact name is
-  `YEAR_FILE_PARENT_FOLDER_NAME`. The walk resolves each folder id at run time
+  whose exact full name is in the code constant `YEAR_FILE_FOLDER_NAMES`. The
+  walk takes each of the five names from the root or from the one parent whose
+  exact name is `YEAR_FILE_PARENT_FOLDER_NAME`. The walk resolves each folder id at run time
   from the listing of the root and of the parent, goes two levels deep only, uses
   exact name match only (no prefix match), reads no PDF directly inside the
   parent, and writes nothing in Drive. It enforces the 20 MB limit on the
   downloaded body, and the text-layer read has a per-file timeout (F1001). The import and `dryRunAccountingYearFiles` call this one walk
-  function. A name in the constant that the listing does not find at its place stops
-  the walk with a safe error. The customer-folder rule of the poll skips every
+  function. A name found in neither place stops the walk with `folder-missing`. A name
+  found in both places, or twice, stops it with `folder-duplicate`. The parent is
+  required: a missing parent stops the walk with `folder-missing`, and a parent
+  listed twice stops it with `folder-duplicate`, both naming the parent. The customer-folder rule of the poll skips every
   name in the constant and the parent name. The poll of the root otherwise reads the same files with
   the same naming rule. No Drive id enters the repository, a test, a log line, or
   a report.
@@ -1681,8 +1688,13 @@ Each criterion has an automated test that can falsify it.
     folder, and a folder with a name that only starts like a full name, when the
     year-file walk runs, then it reads the PDFs directly inside the five folders
     only, it reads no PDF directly inside the parent, it reads nothing deeper, it
-    matches no prefix, and it writes nothing in Drive. Given a listing without one
-    of the five names at its place, then the walk stops with a safe error. Given
+    matches no prefix, and it writes nothing in Drive. Given a listing with a 2568
+    folder in the root, then the walk reads it. Given a listing with one of the
+    five names in neither the root nor the parent, then the walk stops with
+    `folder-missing`. Given a name in both places, or twice, then the walk stops
+    with `folder-duplicate`. Given a listing with no parent, then the walk stops
+    with `folder-missing`, and given a parent listed twice, then it stops with
+    `folder-duplicate`, both naming the parent. Given
     a file whose downloaded body is above 20 MB, or a text-layer read that passes
     the timeout, then the file is listed with a visible reason (F1001). Given the
     same listing, when the poll runs, then it reads the root and the customer
