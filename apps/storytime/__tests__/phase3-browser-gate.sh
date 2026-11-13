@@ -764,11 +764,11 @@ try {
     await page.goto(`${base}/th/st/2/1?part=song`, { waitUntil: 'networkidle' });
     const value = await page.locator('.song-stage').evaluate(e => { const r=e.getBoundingClientRect(); return Math.round(r.width/r.height*1000); });
     console.log(`video_box_ratio_x1000_phone=${value}`);
-    // Look Phase 2 (Q23, R-GATE2): the cover card of AC-2.6 pins the phone song stage at
-    // 220 CSS px, so the 9:16 ratio row moves to the new measured shape. The stage spans the
-    // 328 px column at the 360 px viewport and stands 220 px high: 328/220 = 1491. Same
-    // tolerance (+-5), same row count, no weaker check; the height row below is unchanged.
-    return { ok: Math.abs(value-1491)<=5, detail: `video_box_ratio_x1000_phone=${value}` };
+    // Task 6.2, finding 3: the phone video fills the width of the screen in the 9:16 shape of
+    // the phone file, and the stage leaves the page padding on both sides. At the 360 px
+    // viewport the stage spans the 360 px screen and stands 640 px high: 360/640 = 563. Same
+    // tolerance (+-5), same row count, no weaker check; the height row below moves with it.
+    return { ok: Math.abs(value-563)<=5, detail: `video_box_ratio_x1000_phone=${value}` };
   });
   await runCheck('AC-8.2 phone video height', async () => {
     if (!page) throw new Error('Browser page is unavailable');
@@ -776,7 +776,10 @@ try {
     await page.goto(`${base}/th/st/2/1?part=song`, { waitUntil: 'networkidle' });
     const value = await page.locator('.song-stage').evaluate(e => Math.round(e.getBoundingClientRect().height/innerHeight*100));
     console.log(`video_box_height_pct_phone=${value}`);
-    return { ok: value<=75, detail: `video_box_height_pct_phone=${value}` };
+    // Task 6.2, finding 3: the height of the phone box stops at 82 percent of the viewport
+    // (the PM order), so the Play control and the active lyric line stay reachable. The
+    // measured value is 80 percent at the 360 x 800 viewport.
+    return { ok: value<=82, detail: `video_box_height_pct_phone=${value}` };
   });
   await runCheck('AC-8.2 laptop video box ratio', async () => {
     if (!page) throw new Error('Browser page is unavailable');
@@ -786,10 +789,10 @@ try {
     console.log(`video_box_ratio_x1000_laptop=${value}`);
     return { ok: Math.abs(value-1778)<=5, detail: `video_box_ratio_x1000_laptop=${value}` };
   });
-  // The song cap holds only in landscape below 500 px of height (finding F330): at a short
-  // portrait viewport the video keeps its full 9:16 box, so the orientation clause is load
-  // bearing. A deleted clause re-caps the box at 176 px here and this row fails.
-  await runCheck('song video is not capped at a short portrait viewport (390x400)', async () => {
+  // The landscape rule holds only in landscape below 500 px of height (finding F330): at a
+  // short portrait viewport the video keeps the portrait phone box, so the orientation clause
+  // is load bearing. A deleted clause gives the 711 px wide landscape box and this row fails.
+  await runCheck('the phone song video keeps the portrait box at a short portrait viewport (390x400)', async () => {
     if (!page) throw new Error('Browser page is unavailable');
     await page.setViewportSize({ width: 390, height: 400 });
     await page.goto(`${base}/th/st/2/1?part=song`, { waitUntil: 'networkidle' });
@@ -797,8 +800,11 @@ try {
       const r = e.getBoundingClientRect();
       return { height: Math.round(r.height), width: Math.round(r.width), ratio: Math.round(r.width / r.height * 1000) };
     });
-    console.log(`song_video_fullsize_short_portrait=${box.height > 177} (video_height_px=${box.height}, video_width_px=${box.width}, video_ratio_x1000=${box.ratio}, cap_px=176)`);
-    return { ok: box.height > 177, detail: `video_height_px=${box.height}, cap_px=176` };
+    // Task 6.2, finding 3: the portrait box is the full width of the screen and the height
+    // stops at 82 percent of the viewport, so 390 x 328 at the 390 x 400 viewport.
+    const ok = box.width <= 391 && box.height > 300;
+    console.log(`song_video_portrait_box_short_portrait=${ok} (video_height_px=${box.height}, video_width_px=${box.width}, video_ratio_x1000=${box.ratio}, cap_pct=82)`);
+    return { ok, detail: `video_height_px=${box.height}, video_width_px=${box.width}, cap_pct=82` };
   });
   // The P3.6 rows (findings F125, F121 live, F120 live, F123 live). Each row prints a labeled
   // value. Every rule that a synthetic page or value can exercise has a self-test in the

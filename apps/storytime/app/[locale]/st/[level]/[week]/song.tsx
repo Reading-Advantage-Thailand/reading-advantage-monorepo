@@ -54,7 +54,8 @@ interface StorytimeSongProps {
 
 /**
  * Picks the media files of the song for the screen that shows the player. The class screen is
- * 1920x1080, so it uses the regular pair and never the phone pair.
+ * 1920x1080, so it uses the regular pair and never the phone pair. A portrait phone uses the
+ * phone video and the phone poster; every other screen uses the regular pair.
  * @param song The song of the week.
  * @param phone `true` when the screen is a portrait phone.
  * @param classScreen `true` when the player shows on a class screen.
@@ -160,7 +161,7 @@ export function StorytimeSong({
 
   return (
     <div
-      className="flex flex-col gap-4"
+      className="song-part flex flex-col gap-4"
       data-mode={classScreen ? "class-screen" : undefined}
     >
       <div
@@ -178,12 +179,10 @@ export function StorytimeSong({
         }
       >
         {hasVideo ? (
-          // F280: a landscape screen below 500 px of height caps the stage so the play control
-          // stays inside the viewport; a short desktop window is landscape, so it gets the cap
-          // too (F350). The cap keeps the 16:9 shape. A portrait phone with a soft keyboard
-          // (short but not landscape) keeps the full-size box, and the measured phone 9:16 and
-          // laptop 16:9 boxes stay as they are. The important flags override the .song-stage
-          // video rule of globals.css.
+          // Task 6.2, finding 3: the box of the video follows the screen. A portrait phone uses
+          // the full width of the screen in the 9:16 shape of the phone file, and a landscape
+          // screen below 500 px of height uses the full height of the viewport (the rules sit in
+          // `app/look.css`). The class screen keeps the capped box of the lesson flow.
           <video
             ref={(node) => {
               mediaRef.current = node;
@@ -199,7 +198,6 @@ export function StorytimeSong({
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
             onEnded={onEnded}
-            className="[@media(max-height:500px)_and_(orientation:landscape)]:h-44! [@media(max-height:500px)_and_(orientation:landscape)]:w-auto!"
           />
         ) : (
           <audio

@@ -10,7 +10,7 @@ set -uo pipefail
 # Rows (each prints PASS: or FAIL: with labeled values):
 #   1 captures    SCREENS x VIEWPORTS x LOCALES (24): console_errors, broken_pictures, tap_under_48,
 #                 clipped_text, page_overflow, and contrast_fail are all 0.
-#   2 hero        song_stage_height_px 220 to 240, hero_band_height_px_phone 92 to 100,
+#   2 hero        song_stage_height_px 685 to 700, hero_band_height_px_phone 92 to 100,
 #                 hero_band_height_px_tablet 116 to 124, and the first-view rules.
 #   3 frame       the game bar shows the route level and week; the plaque holds the week title;
 #                 a 60-character title stays inside the plaque (Range text box against the plaque
@@ -466,7 +466,7 @@ const goodCapture = { console_errors: 0, broken_pictures: 0, tap_under_48: 0, cl
 const mutants = [
   countVerdict(23) === false,
   pinVerdict(172, 92, 100) === false,
-  pinVerdict(172, 220, 240) === false,
+  pinVerdict(650, 685, 700) === false,
   pinVerdict(Number.NaN, 92, 100) === false,
   rowsVerdict(0) === false,
   captureVerdict({ ...goodCapture, tap_under_48: 1 }) === false,
@@ -548,7 +548,7 @@ const mutants = [
   brandTeacherVerdict({ ...goodBrandTeacher, chrome_brand_pairs: 0 }) === false,
 ];
 const controls = [
-  countVerdict(24), pinVerdict(96, 92, 100), pinVerdict(230, 220, 240), pinVerdict(120, 116, 124),
+  countVerdict(24), pinVerdict(96, 92, 100), pinVerdict(692, 685, 700), pinVerdict(120, 116, 124),
   rowsVerdict(3), captureVerdict(goodCapture), edgeVerdict(10, 10),
   fontVerdict(2, 10), fontVerdict(2, 2),
   motionOffender("none", "none", "0.15s") === false,
@@ -944,6 +944,7 @@ async function firstView(page) {
       stage: height(document.querySelector(".song-stage")),
       play_bottom: bottom(document.querySelector(".song-stage ~ button")),
       line_bottom: bottom(document.querySelector('li[data-line-index="1"][aria-current="true"]')),
+      page_height: Math.round(document.documentElement.scrollHeight),
       arrows_found: (prev ? 1 : 0) + (next ? 1 : 0),
       arrows_bottom: Math.max(prev ? bottom(prev) : NONE, next ? bottom(next) : NONE),
       audio_found: audio.length,
@@ -959,12 +960,15 @@ await guarded("row 2 hero", async () => {
   const phoneContext = await makeContext(phone);
   for (const locale of LOCALES) {
     const page = await phoneContext.newPage();
-    // Song: the cover card is 220 to 240 px; Play and the active line sit in the first view.
+    // Song (task 6.2, finding 3): the phone video fills the width of the screen in the 9:16
+    // shape, so the stage is 685 to 700 px high at 390x844. The Play control and the active
+    // lyric line stay inside the page, so a scroll reaches them, and the lyrics may sit
+    // under the lower edge (PM order).
     const song = await openScreen(page, locale, "song");
     const s = await firstView(page);
     row(`hero song ${locale} 390x844`,
-      pinVerdict(s.stage, 220, 240) && s.play_bottom <= 844 && s.line_bottom <= 844 && song.activeLine === 1,
-      `song_stage_height_px=${s.stage} play_bottom_px=${s.play_bottom} active_line_bottom_px=${s.line_bottom} active_line_index=${song.activeLine}`);
+      pinVerdict(s.stage, 685, 700) && s.play_bottom <= s.page_height && s.line_bottom <= s.page_height && song.activeLine === 1,
+      `song_stage_height_px=${s.stage} play_bottom_px=${s.play_bottom} active_line_bottom_px=${s.line_bottom} page_height_px=${s.page_height} active_line_index=${song.activeLine}`);
     // Decodable: the band is 92 to 100 px; the arrows sit in the first view.
     await openScreen(page, locale, "decodable");
     const d = await firstView(page);
