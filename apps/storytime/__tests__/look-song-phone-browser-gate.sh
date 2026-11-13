@@ -25,6 +25,12 @@ set -uo pipefail
 # Row 4: at 844x390 the video box has the 16:9 shape (song_video_aspect_landscape within 0.02 of
 #        1.778) and plays song.mp4.
 # Row 5: the verdict self-check rejects the wrong values (no vacuous rows).
+# Row 6 and row 7 (round 3, N1 of the browser check of st-review-66661c61): at 844x390 the label of
+#        the song Play button fits inside its button, in Thai (/th) and in English (/en). The
+#        measure is the box of the label text (a range over the button contents) against the box
+#        of the button. `play_label_overflow_px_<locale>` is the largest distance by which the
+#        label passes the left or the right edge of the button (0 when it fits). The browser
+#        check measured the Thai label 6 px past the border and "Play" 17 px past it.
 #
 # No row plays a recording. A headless run is not phone evidence.
 #
@@ -224,7 +230,7 @@ for _ in $(seq 1 90); do
 done
 if [ "$APP_UP" -eq 1 ]; then pass "The app answers on its port"; else fail "The app does not answer on its port"; fi
 
-echo "=== Run the rows 1 to 5 with SYSTEM Chrome ==="
+echo "=== Run the rows 1 to 7 with SYSTEM Chrome ==="
 cat > "$PLAYWRIGHT" <<'NODE'
 import fs from "node:fs";
 import { chromium, request as playwrightRequest } from "@playwright/test";
@@ -256,6 +262,10 @@ function portraitShapeVerdict(v) {
 }
 /** The verdict of row 3. */
 function heightVerdict(v) { return v.ready === true && v.heightRatio >= 0.95 && v.heightRatio <= 1.0001; }
+/** The verdict of rows 6 and 7: the label text sits inside the button box (half a px of slack). */
+function labelFitsVerdict(v) {
+  return v.ready === true && v.textLength > 0 && v.overflow <= 0.5;
+}
 /** The verdict of row 4. */
 function landscapeShapeVerdict(v) {
   return v.ready === true && Math.abs(v.aspect - 16 / 9) <= 0.02 && v.file === "song.mp4";
@@ -266,6 +276,8 @@ const goodControls = [
   portraitShapeVerdict({ ready: true, aspect: 390 / 693, file: "song-phone.mp4", heightRatio: 0.82 }),
   heightVerdict({ ready: true, heightRatio: 0.97 }),
   landscapeShapeVerdict({ ready: true, aspect: 16 / 9, file: "song.mp4" }),
+  labelFitsVerdict({ ready: true, textLength: 4, overflow: 0 }),
+  labelFitsVerdict({ ready: true, textLength: 10, overflow: 0.4 }),
 ];
 const mutants = [
   widthVerdict({ ready: true, widthRatio: 0.32 }) === false,
@@ -279,6 +291,10 @@ const mutants = [
   heightVerdict({ ready: true, heightRatio: 1.4 }) === false,
   landscapeShapeVerdict({ ready: true, aspect: 9 / 16, file: "song.mp4" }) === false,
   landscapeShapeVerdict({ ready: true, aspect: 16 / 9, file: "song-phone.mp4" }) === false,
+  labelFitsVerdict({ ready: true, textLength: 4, overflow: 17 }) === false,
+  labelFitsVerdict({ ready: true, textLength: 10, overflow: 6 }) === false,
+  labelFitsVerdict({ ready: false, textLength: 4, overflow: 0 }) === false,
+  labelFitsVerdict({ ready: true, textLength: 0, overflow: 0 }) === false,
 ];
 
 if (!PASS) {
@@ -310,9 +326,9 @@ async function signIn(page, next = "/th/st/2/1") {
  * @param height The viewport height in CSS px.
  * @returns The box of the video, the viewport, and the ready flag.
  */
-async function measureSong(page, width, height) {
+async function measureSong(page, width, height, locale = "th") {
   await page.setViewportSize({ width, height });
-  await page.goto(`${base}/th/st/2/1?part=song`, { waitUntil: "load" });
+  await page.goto(`${base}/${locale}/st/2/1?part=song`, { waitUntil: "load" });
   await page.waitForSelector(".song-stage video", { timeout: 20000 });
   await page.waitForFunction(
     () => {
@@ -332,7 +348,20 @@ async function measureSong(page, width, height) {
     const video = document.querySelector(".song-stage video");
     const stage = document.querySelector(".song-stage");
     const box = video ? video.getBoundingClientRect() : { width: 0, height: 0 };
+    const button = document.querySelector(".song-part > button");
+    let overflow = -1;
+    let textLength = 0;
+    if (button) {
+      const range = document.createRange();
+      range.selectNodeContents(button);
+      const label = range.getBoundingClientRect();
+      const frame = button.getBoundingClientRect();
+      textLength = (button.textContent || "").trim().length;
+      overflow = Math.max(0, label.right - frame.right, frame.left - label.left);
+    }
     return {
+      labelOverflow: overflow,
+      labelTextLength: textLength,
       ready: video !== null && video.readyState >= 1,
       phone: stage ? stage.getAttribute("data-phone") : "",
       videoW: box.width,
@@ -397,6 +426,20 @@ row(4, landscapeShapeVerdict({ ready: landscapeReady, aspect: aspectLandscape, f
   `song_video_aspect_landscape=${aspectLandscape} (16:9 is 1.778) song_video_file=${landscape ? landscape.src : ""} at 844x390`);
 
 row(5, goodControls.every(Boolean) && rejected === mutants.length, `verdict self-check mutants_rejected=${rejected} of ${mutants.length}`);
+
+for (const locale of ["th", "en"]) {
+  let shot = null;
+  try {
+    shot = locale === "th" ? landscape : await measureSong(page, 844, 390, locale);
+  } catch (error) {
+    console.log(`label_${locale}_error=${String(error).slice(0, 160)}`);
+  }
+  const overflow = shot ? Number(shot.labelOverflow.toFixed(1)) : -1;
+  const textLength = shot ? shot.labelTextLength : 0;
+  emit(`play_label_overflow_px_${locale}`, overflow);
+  row(locale === "th" ? 6 : 7, labelFitsVerdict({ ready: shot ? shot.labelOverflow >= 0 : false, textLength, overflow }),
+    `play_label_overflow_px_${locale}=${overflow} label_text_length=${textLength} at 844x390 (/${locale})`);
+}
 console.log(`row_count=${rowCount}`);
 await browser.close();
 NODE
@@ -418,7 +461,7 @@ if [ "$ROWS" -gt 0 ]; then
 else
   fail "The browser rows did not run (rows=0)"
 fi
-if [ "$ROWS" -ne 5 ]; then fail "The browser rows must be 5, counted $ROWS"; fi
+if [ "$ROWS" -ne 7 ]; then fail "The browser rows must be 7, counted $ROWS"; fi
 
 echo "=== The requests of the stand-in for the storage ==="
 echo "standin_requests=$(grep -c '^REQ ' "$TMP_DIR/stand-in.log" 2>/dev/null || echo 0)"
