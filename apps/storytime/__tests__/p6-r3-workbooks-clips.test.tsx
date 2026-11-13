@@ -14,9 +14,14 @@
  * - `opening.wordClips`, `focus.family.wordClips`, and `focus.trickyWordClips` are each a map of
  *   the lower-case word to one whole clip file. The key and the path follow the rules of
  *   `books[].audio.wordClips`. Each map defaults to `{}`.
- * - `books[].audio.sentenceClips` stays as task 6.2 finding 2 built it (the page number to a clip
- *   file). Its button rows already pass in `p6-look-findings-sentence-clips.test.tsx`, so this
- *   file holds no copy of them.
+ * - ROUND 4 CORRECTION (the packages landed: w01 r5 and w02 to w07 r4). The three word maps hold
+ *   the inferred shape. `books[].audio.sentenceClips` does NOT: the real shape is an ARRAY of
+ *   `{ sentence, file }`, one entry per decodable page. The array rows live in
+ *   `p6-r4-handoff-shapes.test.tsx`. The three rows of this file that held the map form of
+ *   `sentenceClips` now hold the array form: "receives a package that holds the four maps ...",
+ *   "lists each clip of books[].audio.sentenceClips in the media list", and "leaves no clip path of
+ *   the four maps out of the media list". The map form stays valid input (the rows of
+ *   `p6-look-findings-sentence-clips.test.tsx` use it).
  * - The receiver lists each clip with the kind `word-clip` and the media rules of the other word
  *   clips.
  * - The opening routine of the teacher lesson flow shows its prompts as text. A word of a prompt
@@ -40,30 +45,49 @@ const raw = (): Record<string, any> => JSON.parse(sourceText);
 
 /** The clip maps of the fixture: the Workbooks fields of this round. */
 const OPENING = {
-  nose: "l2/media/w01/opening/wa-nose.mp3",
-  sun: "l2/media/w01/opening/wa-sun.mp3",
+  nose: "l2/media/w01/words/wa-nose.mp3",
+  sun: "l2/media/w01/words/wa-sun.mp3",
 };
 const FAMILY = {
-  hello: "l2/media/w01/family/wa-hello.mp3",
-  teacher: "l2/media/w01/family/wa-teacher.mp3",
+  hello: "l2/media/w01/words/wa-hello.mp3",
+  teacher: "l2/media/w01/words/wa-teacher.mp3",
 };
 const TRICKY = {
-  a: "l2/media/w01/tricky/wa-a.mp3",
-  can: "l2/media/w01/tricky/wa-can.mp3",
+  a: "l2/media/w01/words/wa-a.mp3",
+  can: "l2/media/w01/words/wa-can.mp3",
 };
-const SENTENCES = { "1": "l2/media/w01/sentences/s01.mp3" };
+/** The real shape of the w01 r5 package: one `{ sentence, file }` entry per decodable page. */
+const SENTENCES = [
+  { sentence: "A nest.", file: "l2/media/w01/sentences/b1-s01.mp3" },
+  { sentence: "A net.", file: "l2/media/w01/sentences/b1-s02.mp3" },
+  { sentence: "A nut.", file: "l2/media/w01/sentences/b1-s03.mp3" },
+  { sentence: "A nose.", file: "l2/media/w01/sentences/b1-s04.mp3" },
+  { sentence: "A neck.", file: "l2/media/w01/sentences/b1-s05.mp3" },
+  { sentence: "A nurse.", file: "l2/media/w01/sentences/b1-s06.mp3" },
+  { sentence: "A nest and a nut.", file: "l2/media/w01/sentences/b1-s07.mp3" },
+  { sentence: "Nan can nod!", file: "l2/media/w01/sentences/b1-s08.mp3" },
+];
 
-/** The week source with the four Workbooks clip maps put in. */
-function sourceWithClips(): Record<string, any> {
+/** The week source with the three Workbooks word maps put in (no sentence clips). */
+function sourceWithMaps(): Record<string, any> {
   const data = raw();
   data.opening.wordClips = { ...OPENING };
   data.focus.family.wordClips = { ...FAMILY };
   data.focus.trickyWordClips = { ...TRICKY };
-  data.books.find((book: { kind: string }) => book.kind === "decodable").audio.sentenceClips = { ...SENTENCES };
   return data;
 }
 
-const weekWithClips = (): StorytimeWeek => weekSchema.parse(sourceWithClips());
+/** The week source with the three word maps and the array of sentence clips of the real package. */
+function sourceWithClips(): Record<string, any> {
+  const data = sourceWithMaps();
+  data.books.find((book: { kind: string }) => book.kind === "decodable").audio.sentenceClips = SENTENCES.map((entry) => ({ ...entry }));
+  return data;
+}
+
+/** The week with the three word maps; the rows of the word maps never depend on the sentence clips. */
+const weekWithClips = (): StorytimeWeek => weekSchema.parse(sourceWithMaps());
+/** The week with the three word maps and the array of sentence clips. */
+const weekWithSentences = (): StorytimeWeek => weekSchema.parse(sourceWithClips());
 
 /** One of the three new maps, as the contract parses it. */
 type Maps = { opening?: { wordClips?: unknown }; focus: { trickyWordClips?: unknown; family?: { wordClips?: unknown } } };
@@ -112,33 +136,50 @@ describe("the contract of the three new clip maps", () => {
 
 describe("the receiving step with the four clip maps", () => {
   const source = { level: 2, week: 1, source: "l2/w01.json", text: JSON.stringify(sourceWithClips()) };
+  const mapsSource = { level: 2, week: 1, source: "l2/w01.json", text: JSON.stringify(sourceWithMaps()) };
+
+  /** Receives one package; a refusal is an assertion failure that names the refusal. */
+  function receiveOne(file: typeof source) {
+    try {
+      return receiveWeeks([file])[0]!;
+    } catch (error) {
+      expect((error as Error).message, "the receiver accepts the package").toBe("");
+      throw error;
+    }
+  }
 
   it("receives a package that holds the four maps and keeps each map in the written content", () => {
-    const [received] = receiveWeeks([source]);
+    const received = receiveOne(source);
     const written = JSON.parse(received!.contents) as Record<string, any>;
     expect(written.opening.wordClips).toEqual(OPENING);
     expect(written.focus.family.wordClips).toEqual(FAMILY);
     expect(written.focus.trickyWordClips).toEqual(TRICKY);
     const decodable = written.books.find((book: { kind: string }) => book.kind === "decodable");
-    expect(decodable.audio.sentenceClips).toEqual(SENTENCES);
+    expect(decodable.audio.sentenceClips, "the source text stays unchanged").toEqual(SENTENCES);
   });
 
   it.each([
     ["opening.wordClips", Object.values(OPENING), "word-clip"],
     ["focus.family.wordClips", Object.values(FAMILY), "word-clip"],
     ["focus.trickyWordClips", Object.values(TRICKY), "word-clip"],
-    ["books[].audio.sentenceClips", Object.values(SENTENCES), "sentence-clip"],
+    ["books[].audio.sentenceClips", SENTENCES.map((entry) => entry.file), "sentence-clip"],
   ])("lists each clip of %s in the media list", (_place, files, kind) => {
-    const [received] = receiveWeeks([source]);
+    const received = receiveOne(kind === "sentence-clip" ? source : mapsSource);
     for (const file of files) {
-      const entry = received!.media.find((item) => item.file === file);
+      const entry = received.media.find((item) => item.file === file);
       expect(entry, `the media list holds ${file}`).toBeDefined();
       expect(entry!.kind).toBe(kind);
     }
   });
 
   it("leaves no clip path of the four maps out of the media list", () => {
-    const week = weekWithClips();
+    let week: StorytimeWeek;
+    try {
+      week = weekWithSentences();
+    } catch (error) {
+      expect((error as Error).message, "the contract accepts the package").toBe("");
+      throw error;
+    }
     const listed = new Set(mediaOf(week).map((entry) => entry.file));
     // Only the four clip maps count: the walk also finds `approval.audio.source`, an old path that
     // the media list never held, and that is outside this round.
@@ -226,11 +267,11 @@ async function expectWholeClip(file: string, count = 1): Promise<void> {
 describe("the tricky words of the child decodable part with focus.trickyWordClips", () => {
   /** A week where `and` has a tricky clip and no book clip, and `can` has neither. */
   function trickyWeek(): StorytimeWeek {
-    const data = sourceWithClips();
+    const data = sourceWithMaps();
     const decodable = data.books.find((book: { kind: string }) => book.kind === "decodable");
     delete decodable.audio.wordClips.and;
     delete decodable.audio.wordClips.can;
-    data.focus.trickyWordClips = { and: "l2/media/w01/tricky/wa-and.mp3" };
+    data.focus.trickyWordClips = { and: "l2/media/w01/words/wa-and.mp3" };
     return weekSchema.parse(data);
   }
 
@@ -246,7 +287,7 @@ describe("the tricky words of the child decodable part with focus.trickyWordClip
     const buttons = tricky.queryAllByRole("button", { name: "and" });
     expect(buttons, "one button named and").toHaveLength(1);
     fireEvent.click(buttons[0]!);
-    await expectWholeClip("l2/media/w01/tricky/wa-and.mp3");
+    await expectWholeClip("l2/media/w01/words/wa-and.mp3");
   });
 
   it("keeps a tricky word with no clip anywhere as plain text", async () => {
