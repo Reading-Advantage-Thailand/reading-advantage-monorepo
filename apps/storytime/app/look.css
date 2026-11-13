@@ -863,6 +863,16 @@ main[data-place] button:active:not(:disabled) {
   [data-part="decodable"] div > section[aria-label]:last-child button {
     min-height: 48px;
     font-size: 20px;
+    padding-inline: 10px;
+  }
+  /* The sentence button and the tricky words share one row with the page arrows, and the row
+   * must end inside the fold (task 6.2, round 3: the received weeks hold the sentence clips, so
+   * the sentence button shows on the phone). The sentence button keeps a slimmer padding and a
+   * smaller font on a short screen, so the tricky words stay on one line and the row ends
+   * inside the fold. */
+  [data-part="decodable"] > div > div > button {
+    padding-inline: 8px;
+    font-size: 16px;
   }
 }
 

@@ -21,8 +21,14 @@ const app = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const contentDirectory = resolve(app, "content");
 const weekDirectory = resolve(contentDirectory, "l2");
 
-/** The pin of the at-home release of 2026-11-20, after the r3 take of 2026-11-09 (task 3.2). */
-const RELEASE_PIN = "953f798ea309cc10abd5538c202e05ff31a2320d";
+/**
+ * The pin of the at-home release of 2026-11-20, after the r3 take of 2026-11-09 (task 3.2).
+ *
+ * Task 6.2, round 3: the received week packages of 2026-11-13 (the Workbooks commit
+ * fa47ca23bef49008be2494ea948e8aebb9b638d4) hold the three word clip maps and the sentence
+ * clips, so the source record names that commit now.
+ */
+const RELEASE_PIN = "fa47ca23bef49008be2494ea948e8aebb9b638d4";
 
 /** The eight week files that the source record lists, in the order of the week. */
 const EXPECTED_FILES = [

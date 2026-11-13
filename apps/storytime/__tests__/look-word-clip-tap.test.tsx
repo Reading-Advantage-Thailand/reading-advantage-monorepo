@@ -562,15 +562,18 @@ describe("Task 1.10 receiver block (Q16)", () => {
     // The r3 take of 2026-11-09 (plan task 3.2) gives the decodable book 11 clips, so the week
     // of this fixture holds 23 clip files: the 12 reader words and the 11 decodable clips.
     // The old pin was listed_clips=12, when only the read-along book held clips (R-EDIT3).
+    // Task 6.2, round 3: the received week holds the three Workbooks word maps (the opening
+    // routine, the family words, and the tricky words), so the fixture holds 10 more clip files
+    // and the pin is 33.
     expect(
       `listed_clips=${clips.length}`,
-      `mediaOf must list the 23 clip files, listed ${clips.length}`,
-    ).toBe("listed_clips=23");
+      `mediaOf must list the 33 clip files, listed ${clips.length}`,
+    ).toBe("listed_clips=33");
     const listed = new Set(list.map((entry) => entry.file));
     expect(
       `listed_distinct_clips=${new Set(clips.map((entry) => entry.file)).size}`,
       "every clip file must be listed once",
-    ).toBe("listed_distinct_clips=23");
+    ).toBe("listed_distinct_clips=33");
     // The login pin excludes the paths under `approval.`: they are provenance, not media.
     const missing = receiver
       .mediaPathsOf(parsed)

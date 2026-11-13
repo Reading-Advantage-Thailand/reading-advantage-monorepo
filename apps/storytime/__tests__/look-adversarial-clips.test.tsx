@@ -322,14 +322,17 @@ describe("adversarial word clips (K1-K7)", () => {
     // The r3 take of 2026-11-09 (plan task 3.2) gives the read-along book 12 clips, so the week
     // of this fixture holds 14 clip files: the 12 read-along clips and the 2 decodable clips.
     // The old pin was decodable_clips_listed=2, when only the decodable book held clips (R-EDIT3).
+    // Task 6.2, round 3: the received week holds the three Workbooks word maps (the opening
+    // routine, the family words, and the tricky words), so the fixture holds 15 more clip files
+    // and the pin is 29.
     expect(
       `decodable_clips_listed=${clips.length}`,
       `the receiver must list every clip file with kind word-clip, listed ${clips.length}`,
-    ).toBe("decodable_clips_listed=14");
+    ).toBe("decodable_clips_listed=29");
     expect(
       `listed_distinct_clips=${new Set(clips.map((entry) => entry.file)).size}`,
       "every clip file must be listed once",
-    ).toBe("listed_distinct_clips=14");
+    ).toBe("listed_distinct_clips=29");
     expect(clips.map((entry) => entry.file).sort(), "the listed files must hold both decodable clips").toEqual([
       "l2/media/w01/words/wa-am.mp3",
       "l2/media/w01/words/wa-ben.mp3",

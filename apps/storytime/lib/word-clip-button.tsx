@@ -72,7 +72,12 @@ export function WordClipButton({
 }) {
   const play = useContext(ClipPlayerContext);
   return (
-    <button type="button" onClick={() => play?.(file)} className={className} lang="en">
+    <button
+      type="button"
+      onClick={() => play?.(file)}
+      className={`min-h-11 ${className ?? ""}`.trim()}
+      lang="en"
+    >
       {children}
     </button>
   );

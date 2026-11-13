@@ -28,8 +28,14 @@ const PREVIOUS_PIN = "cf30bb2eee55806bf8830b3a3e69e4f6044847e6";
 /** The A-42 draft pin that task 3.8 received. */
 const A_42_PIN = "cad0307cad31a3131dc3a06e9e773537a1a6219b";
 
-/** The pin of the release of 2026-11-20, after the r3 take of 2026-11-09 (plan task 3.2). */
-const RELEASE_PIN = "953f798ea309cc10abd5538c202e05ff31a2320d";
+/**
+ * The pin of the release of 2026-11-20, after the r3 take of 2026-11-09 (plan task 3.2).
+ *
+ * Task 6.2, round 3: the received week packages of 2026-11-13 (the Workbooks commit
+ * fa47ca23bef49008be2494ea948e8aebb9b638d4) hold the three word clip maps and the sentence
+ * clips, so the source record names that commit now.
+ */
+const RELEASE_PIN = "fa47ca23bef49008be2494ea948e8aebb9b638d4";
 
 /** A week as plain JSON, for a broken copy. */
 type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
