@@ -206,6 +206,7 @@ import {
   accountingMonthlyCloseAuditEvents,
   accountingSubmissions,
   accountingSubmissionAuditEvents,
+  accountingYearFileFacts,
 } from "@reading-advantage/db/accounting/schema";
 import {
   storytimeAccounts,
@@ -273,6 +274,8 @@ register(accountingIntakeDocuments, "EXEMPT");
 register(accountingMonthlyCloses, "EXEMPT");
 register(accountingMonthlyCloseAuditEvents, "EXEMPT");
 register(accountingIntakeLeases, "EXEMPT");
+// A year-file facts row is reached through its intake row and holds no scope column.
+register(accountingYearFileFacts, "EXEMPT");
 // Storytime families are not company accounts: the dedicated storytime
 // database is single-tenant and no school scopes these rows.
 register(storytimeAccounts, "EXEMPT");

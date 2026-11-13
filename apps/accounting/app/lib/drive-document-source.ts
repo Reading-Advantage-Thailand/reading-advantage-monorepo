@@ -1,8 +1,8 @@
 /**
  * Google Drive adapter of the intake poll (FR-11, spec section 5).
  *
- * The adapter is read-only: it lists the intake folder, downloads the bytes of
- * a binary file, and exports a native Google Sheet as an `.xlsx` workbook. It
+ * The adapter is read-only: it lists the intake folder and, for the year-file
+ * walk, one folder at a time, downloads the bytes of a binary file, and exports a native Google Sheet as an `.xlsx` workbook. It
  * holds no create, update, delete, or copy call. It authenticates with
  * Application Default Credentials on the Cloud Run runtime service account and
  * holds no key file.
@@ -10,8 +10,8 @@
 import type { drive_v3 } from "googleapis";
 
 import type {
-  AccountingDocumentSourcePort,
   AccountingDriveFile,
+  AccountingYearFileSourcePort,
 } from "@reading-advantage/backend/accounting";
 
 /** MIME type of an `.xlsx` workbook. */
@@ -127,14 +127,14 @@ async function createDriveClient(): Promise<drive_v3.Drive> {
 }
 
 /**
- * Builds the read-only Drive port of the intake poll.
+ * Builds the read-only Drive port of the intake poll and the year-file walk.
  * @param input Optional injected Drive client and clock year; tests and the
  *   runner leave them absent.
  * @returns The Drive port.
  */
 export function createDriveDocumentSource(input?: {
   readonly drive?: drive_v3.Drive;
-}): Promise<AccountingDocumentSourcePort> {
+}): Promise<AccountingYearFileSourcePort> {
   const drivePromise =
     input?.drive !== undefined
       ? Promise.resolve(input.drive)
@@ -175,6 +175,28 @@ export function createDriveDocumentSource(input?: {
             ? {}
             : { modifiedTime: entry.modifiedTime }),
         }));
+    },
+
+    /**
+     * Lists the entries directly inside one folder, folders included. The
+     * year-file walk calls it for the root and for each named subfolder; it
+     * reads one level and writes nothing (spec section 9b).
+     * @param request Folder id of the folder to list.
+     * @returns The files and folders of the listing.
+     */
+    async listFolderEntries(request: {
+      readonly folderId: string;
+    }): Promise<readonly AccountingDriveFile[]> {
+      const entries = await listFolderEntries(drive, request.folderId);
+      return entries.map((entry) => ({
+        id: entry.id,
+        name: entry.name,
+        mimeType: entry.mimeType,
+        ...(entry.byteSize === undefined ? {} : { byteSize: entry.byteSize }),
+        ...(entry.modifiedTime === undefined
+          ? {}
+          : { modifiedTime: entry.modifiedTime }),
+      }));
     },
 
     /**

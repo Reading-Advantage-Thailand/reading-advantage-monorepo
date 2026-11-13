@@ -12,7 +12,12 @@ import {
   type AccountingEvidenceStore,
   type AccountingIntakeDocument,
   type AccountingIntakeDocumentType,
+  type AccountingIntakeHistorySource,
+  type AccountingYearFileFacts,
+  type AccountingYearFileFilingKind,
+  type AccountingYearFileTypeKey,
 } from "./intake-contracts.js";
+import { parseYearFile } from "./year-file-parsers.js";
 import {
   AccountingSubmissionError,
   submitAccountingSubmissionWithOutcome,
@@ -46,6 +51,25 @@ const ACCEPTED_INTAKE_MIME_TYPES: ReadonlySet<string> = new Set([
   GOOGLE_SHEET_MIME_TYPE,
   XLSX_MIME_TYPE,
 ]);
+
+/** MIME type of a Drive folder. */
+const DRIVE_FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
+
+/** MIME type of a year file: the accountant PDFs of spec section 9b. */
+const PDF_MIME_TYPE = "application/pdf";
+
+/**
+ * The five subfolder names of `Accounting` that hold the accountant year files
+ * (spec section 9b). The walk matches each name exactly, and the folder ids
+ * come from the listing of the root at run time.
+ */
+export const YEAR_FILE_FOLDER_NAMES = [
+  "Fwd: เอกสารปี 2567",
+  "Fwd: เอกสารปี 2568",
+  "2568-1",
+  "2568-2",
+  "2568-3",
+] as const;
 
 /** Name rule `YYYY-MM_<document-type>_<counterparty>.<ext>` (spec section 5.7). */
 const NAMED_FILE_PATTERN =
@@ -109,6 +133,50 @@ export interface AccountingDocumentSourcePort {
   export(input: {
     readonly fileId: string;
   }): Promise<Uint8Array>;
+}
+
+/**
+ * Read-only Drive port of the year-file walk. It adds one read member to the
+ * poll port, so the poll fakes stay unchanged and Drive stays read only.
+ */
+export interface AccountingYearFileSourcePort
+  extends AccountingDocumentSourcePort {
+  /**
+   * Lists the entries directly inside one folder, folders included.
+   * @param input Folder id of the folder to list.
+   * @returns The files and folders of the listing, one level only.
+   */
+  listFolderEntries(input: {
+    readonly folderId: string;
+  }): Promise<readonly AccountingDriveFile[]>;
+}
+
+/** One PDF that the walk found inside a named subfolder. */
+export interface AccountingYearFile {
+  /** Drive file id; it is the idempotency key. */
+  readonly id: string;
+  /** Drive file name. */
+  readonly name: string;
+  /** Declared MIME type of the file. */
+  readonly mimeType: string;
+  /** Declared byte size of the file, when the listing gives one. */
+  readonly byteSize?: number;
+  /** Name of the subfolder that holds the file; never a folder id. */
+  readonly folderName: string;
+}
+
+/** Text layer reader port of the year-file import. */
+export interface AccountingYearFileTextLayerPort {
+  /**
+   * Reads the text layer of one PDF on this machine.
+   * @param input Company scope, MIME type, and file bytes.
+   * @returns The text, or null when the PDF has no text layer.
+   */
+  read(input: {
+    readonly companyId: string;
+    readonly mimeType: string;
+    readonly body: Uint8Array;
+  }): Promise<{ readonly text: string | null }>;
 }
 
 /** One extracted draft value the readers return. */
@@ -295,6 +363,67 @@ export interface AccountingIntakeDocumentRepository {
   }): Promise<AccountingIntakeDocument | undefined>;
 }
 
+/** One stored row of `accounting_year_file_facts` (FR-28). */
+export interface AccountingYearFileFactsRecord {
+  /** Intake row of the year file. */
+  readonly intakeDocumentId: string;
+  /** Year-file type key. */
+  readonly formType: AccountingYearFileTypeKey;
+  /** Filing kind of the file. */
+  readonly filingKind: AccountingYearFileFilingKind;
+  /** Period kind of the filing. */
+  readonly periodKind: "month" | "year";
+  /** First day of the period in `YYYY-MM-DD` form. */
+  readonly periodStart: string;
+  /** Last day of the period in `YYYY-MM-DD` form. */
+  readonly periodEnd: string;
+  /** Tax year in CE. */
+  readonly taxYear: number;
+  /** Facts that the parser read from the text. */
+  readonly facts: AccountingYearFileFacts;
+}
+
+/**
+ * Persistence boundary of the year-file import. It extends the poll port, so
+ * the poll fakes stay unchanged (FR-28).
+ */
+export interface AccountingYearFileIntakeRepository
+  extends AccountingIntakeDocumentRepository {
+  /**
+   * Marks one row a byte duplicate of an earlier year-file row.
+   * @param input Company scope, row id, earlier row id, and the reason.
+   * @returns The updated row, or undefined when no row matched.
+   */
+  markDuplicateOfIntakeDocument(input: {
+    readonly scope: Readonly<FinanceOperationScope>;
+    readonly id: string;
+    readonly duplicateOfIntakeDocumentId: string;
+    readonly failureReason: string;
+  }): Promise<AccountingIntakeDocument | undefined>;
+
+  /**
+   * Marks one year-file row parsed. The row keeps no submission id.
+   * @param input Company scope, row id, and the extraction marker.
+   * @returns The updated row, or undefined when no row matched.
+   */
+  markYearFileParsed(input: {
+    readonly scope: Readonly<FinanceOperationScope>;
+    readonly id: string;
+    readonly extraction: "local-text" | "model";
+  }): Promise<AccountingIntakeDocument | undefined>;
+
+  /**
+   * Persists the facts row of one year file.
+   * @param input Company scope and the facts row.
+   * @returns The stored facts row.
+   */
+  insertYearFileFacts(
+    input: AccountingYearFileFactsRecord & {
+      readonly scope: Readonly<FinanceOperationScope>;
+    },
+  ): Promise<AccountingYearFileFactsRecord>;
+}
+
 /** Counts of one intake poll run. */
 export interface AccountingIntakePollResult {
   /** Number of files the poll read and processed. */
@@ -313,7 +442,7 @@ export interface AccountingIntakePollResult {
 export interface AccountingIntakeDriveDocumentRequest {
   /** Session actor of the poll; the company scope comes from it. */
   readonly actor: AccountingActor;
-  /** Poll mode; the history mode arrives in task 8.2. */
+  /** Poll mode; the `history` mode has its own request. */
   readonly mode: "poll";
   /** Drive folder id of the intake folder. */
   readonly folderId: string;
@@ -331,6 +460,80 @@ export interface AccountingIntakeDriveDocumentRequest {
   readonly extraction: AccountingDocumentExtractionPort;
   /** Optional cap override of the first duplicate pass. */
   readonly duplicateScanCap?: number;
+}
+
+/** Request of one year-file history run (spec section 9b, FR-29). */
+export interface AccountingIntakeHistoryRequest {
+  /** Session actor of the run; the company scope comes from it. */
+  readonly actor: AccountingActor;
+  /** History mode; the year-file walk is its input. */
+  readonly mode: "history";
+  /** Drive folder id of the `Accounting` root. */
+  readonly folderId: string;
+  /** Read-only Drive port with the folder-listing member. */
+  readonly source: AccountingYearFileSourcePort;
+  /** Text layer reader of the year-file PDFs. */
+  readonly textLayer: AccountingYearFileTextLayerPort;
+  /** Evidence store port of spec section 5.4. */
+  readonly evidenceStore: AccountingEvidenceStore;
+  /** Intake row repository with the year-file members. */
+  readonly intakeRepository: AccountingYearFileIntakeRepository;
+}
+
+/** A year file that wrote no row, with the reason. */
+export interface AccountingYearFileUnmatched {
+  /** Name of the subfolder that holds the file. */
+  readonly folderName: string;
+  /** Byte length of the file, when known. */
+  readonly byteSize: number | null;
+  /** Why the file wrote no row. */
+  readonly reason:
+    | "period-unreadable"
+    | "type-unmatched"
+    | "no-text-layer"
+    | "file-too-large";
+}
+
+/** Counts of one year-file history run. */
+export interface AccountingIntakeHistoryResult {
+  /** Number of PDFs the walk found. */
+  readonly files: number;
+  /** Number of year-file rows written with their facts. */
+  readonly parsed: number;
+  /** Number of byte-duplicate rows written. */
+  readonly duplicates: number;
+  /** Number of files that a row already held. */
+  readonly replayed: number;
+  /** Files that wrote no row. */
+  readonly unmatched: readonly AccountingYearFileUnmatched[];
+}
+
+/** Error of the year-file walk; the message names the folder and no Drive id. */
+export class AccountingYearFileFolderError extends Error {
+  /** Why the walk stopped. */
+  readonly reason: "folder-missing" | "folder-duplicate";
+
+  /** Subfolder name of `YEAR_FILE_FOLDER_NAMES` that caused the stop. */
+  readonly folderName: string;
+
+  /**
+   * Creates the safe walk error.
+   * @param reason Why the walk stopped.
+   * @param folderName Subfolder name of the constant.
+   */
+  constructor(
+    reason: "folder-missing" | "folder-duplicate",
+    folderName: string,
+  ) {
+    super(
+      reason === "folder-missing"
+        ? `The year-file folder "${folderName}" is not in the listing of the root`
+        : `The year-file folder name "${folderName}" is in the listing of the root more than once`,
+    );
+    this.name = "AccountingYearFileFolderError";
+    this.reason = reason;
+    this.folderName = folderName;
+  }
 }
 
 /** One lease row of `accounting_intake_leases` (FR-6). */
@@ -545,6 +748,7 @@ function buildIntakeRow(input: {
   readonly evidenceByteSize: number | null;
   readonly submissionId: string | null;
   readonly extraction: "human" | "local-text" | "model" | null;
+  readonly historySource?: AccountingIntakeHistorySource;
 }): AccountingIntakeDocumentDraft {
   const now = new Date().toISOString();
   const draft = {
@@ -561,8 +765,8 @@ function buildIntakeRow(input: {
     failureCount: 0,
     sightingCount: 1,
     evidenceByteSize: input.evidenceByteSize,
-    isHistory: false,
-    historySource: null,
+    isHistory: input.historySource !== undefined,
+    historySource: input.historySource ?? null,
     firstSeenAt: now,
     lastSeenAt: now,
     scopeCompanyId: input.companyId,
@@ -678,7 +882,26 @@ function reviewFailureReason(error: unknown): string | undefined {
  */
 export async function intakeDriveDocument(
   request: AccountingIntakeDriveDocumentRequest,
-): Promise<AccountingIntakePollResult> {
+): Promise<AccountingIntakePollResult>;
+/**
+ * Runs the `history` mode over the year-file walk (spec section 9b, FR-28).
+ * Each PDF writes one intake row and one facts row and no submission. A byte
+ * duplicate of an earlier year file writes one duplicate row and no facts row.
+ * @param request History request with the actor, the ports, and the root id.
+ * @returns The counts of the run and the files that wrote no row.
+ * @throws AccountingYearFileFolderError when a name of the constant is
+ *   missing or duplicated, and AccountingSubmissionError for an invalid
+ *   listing or a file id that changed its bytes.
+ */
+export async function intakeDriveDocument(
+  request: AccountingIntakeHistoryRequest,
+): Promise<AccountingIntakeHistoryResult>;
+export async function intakeDriveDocument(
+  request:
+    | AccountingIntakeDriveDocumentRequest
+    | AccountingIntakeHistoryRequest,
+): Promise<AccountingIntakePollResult | AccountingIntakeHistoryResult> {
+  if (request.mode === "history") return runYearFileHistory(request);
   const scope: Readonly<FinanceOperationScope> = {
     companyId: request.actor.companyId,
   };
@@ -741,6 +964,55 @@ export async function intakeDriveDocument(
 }
 
 /**
+ * Handles a file id that an intake row already holds. The bytes must equal the
+ * stored bytes; the row then gets one more sighting and no new row is written.
+ * @param input Ports, scope, file, and the existing row.
+ * @returns The `replayed` status.
+ * @throws AccountingSubmissionError when the file id changed its bytes.
+ */
+async function replaySeenFile(input: {
+  readonly source: AccountingDocumentSourcePort;
+  readonly evidenceStore: AccountingEvidenceStore;
+  readonly intakeRepository: AccountingIntakeDocumentRepository;
+  readonly scope: Readonly<FinanceOperationScope>;
+  readonly companyId: string;
+  readonly file: AccountingDriveFile;
+  readonly existing: AccountingIntakeDocument;
+}): Promise<"replayed"> {
+  const { source, evidenceStore, intakeRepository, scope, companyId, file } =
+    input;
+  const existing = input.existing;
+  const body = await fetchDocumentBytes(source, file);
+  if (existing.evidenceReference === null) {
+    await intakeRepository.bumpSighting({
+      scope,
+      id: existing.id,
+      sightingCount: existing.sightingCount + 1,
+      lastSeenAt: new Date().toISOString(),
+    });
+    return "replayed";
+  }
+  const stored = await evidenceStore.put({
+    companyId,
+    contentType: intakeContentType(file.mimeType),
+    body,
+  });
+  const same = await evidenceStore.sameEvidenceBytes({
+    companyId,
+    leftEvidenceReference: stored.evidenceReference,
+    rightEvidenceReference: existing.evidenceReference,
+  });
+  if (!same) throw new AccountingSubmissionError("conflict");
+  await intakeRepository.bumpSighting({
+    scope,
+    id: existing.id,
+    sightingCount: existing.sightingCount + 1,
+    lastSeenAt: new Date().toISOString(),
+  });
+  return "replayed";
+}
+
+/**
  * Processes one accepted file of the listing.
  * @param input The poll request, scope, file, month, type, and scan cap.
  * @returns The final status of the file.
@@ -761,34 +1033,15 @@ async function processFile(input: {
   });
 
   if (existing !== undefined) {
-    const body = await fetchDocumentBytes(request.source, file);
-    if (existing.evidenceReference === null) {
-      await request.intakeRepository.bumpSighting({
-        scope,
-        id: existing.id,
-        sightingCount: existing.sightingCount + 1,
-        lastSeenAt: new Date().toISOString(),
-      });
-      return "replayed";
-    }
-    const stored = await request.evidenceStore.put({
-      companyId,
-      contentType: intakeContentType(file.mimeType),
-      body,
-    });
-    const same = await request.evidenceStore.sameEvidenceBytes({
-      companyId,
-      leftEvidenceReference: stored.evidenceReference,
-      rightEvidenceReference: existing.evidenceReference,
-    });
-    if (!same) throw new AccountingSubmissionError("conflict");
-    await request.intakeRepository.bumpSighting({
+    return replaySeenFile({
+      source: request.source,
+      evidenceStore: request.evidenceStore,
+      intakeRepository: request.intakeRepository,
       scope,
-      id: existing.id,
-      sightingCount: existing.sightingCount + 1,
-      lastSeenAt: new Date().toISOString(),
+      companyId,
+      file,
+      existing,
     });
-    return "replayed";
   }
 
   if (
@@ -1034,6 +1287,310 @@ async function readDocument(input: {
     throw new Error("review: the model read returned no draft");
   }
   return { draft: model.draft, extraction: "model" };
+}
+
+/**
+ * Reads the folder tree of the year files: lists the root, picks the
+ * subfolders whose exact names are in `YEAR_FILE_FOLDER_NAMES`, and lists the
+ * PDFs directly inside each. The walk goes one level deep and reads nothing
+ * else. Each folder id comes from the listing of the root and appears in no
+ * output (spec section 9b, FR-29). The walk calls one read member only.
+ * @param input Root folder id and the read-only Drive port.
+ * @returns The PDFs of the five subfolders, with the subfolder name.
+ * @throws AccountingYearFileFolderError when a name of the constant is
+ *   missing or appears twice in the listing.
+ * @throws AccountingSubmissionError when a listing is invalid.
+ */
+export async function walkAccountingYearFiles(input: {
+  readonly folderId: string;
+  readonly source: Pick<AccountingYearFileSourcePort, "listFolderEntries">;
+}): Promise<readonly AccountingYearFile[]> {
+  const root = parseDriveListing(
+    await input.source.listFolderEntries({ folderId: input.folderId }),
+  );
+  const folders = root.filter(
+    (entry) => entry.mimeType === DRIVE_FOLDER_MIME_TYPE,
+  );
+  const subfolders = YEAR_FILE_FOLDER_NAMES.map((folderName) => {
+    const matches = folders.filter((folder) => folder.name === folderName);
+    const [match] = matches;
+    if (match === undefined) {
+      throw new AccountingYearFileFolderError("folder-missing", folderName);
+    }
+    if (matches.length > 1) {
+      throw new AccountingYearFileFolderError("folder-duplicate", folderName);
+    }
+    return { folderName, folderId: match.id };
+  });
+  const files: AccountingYearFile[] = [];
+  for (const subfolder of subfolders) {
+    const entries = parseDriveListing(
+      await input.source.listFolderEntries({ folderId: subfolder.folderId }),
+    );
+    for (const entry of entries) {
+      if (entry.mimeType.toLowerCase() !== PDF_MIME_TYPE) continue;
+      files.push({
+        id: entry.id,
+        name: entry.name,
+        mimeType: entry.mimeType,
+        ...(entry.byteSize === undefined ? {} : { byteSize: entry.byteSize }),
+        folderName: subfolder.folderName,
+      });
+    }
+  }
+  return files;
+}
+
+/**
+ * Validates one Drive listing against the listing contract.
+ * @param listing Raw listing of the Drive port.
+ * @returns The validated entries.
+ * @throws AccountingSubmissionError when the listing is invalid.
+ */
+function parseDriveListing(listing: unknown): AccountingDriveFile[] {
+  const parsedListing = driveFileListingSchema.safeParse(listing);
+  if (!parsedListing.success) {
+    throw new AccountingSubmissionError(
+      "invalid-input",
+      parsedListing.error.issues,
+    );
+  }
+  return parsedListing.data;
+}
+
+/**
+ * Runs the year-file history mode: walks the five subfolders and writes one
+ * intake row and one facts row for each readable PDF.
+ * @param request History request.
+ * @returns The counts of the run and the files that wrote no row.
+ */
+async function runYearFileHistory(
+  request: AccountingIntakeHistoryRequest,
+): Promise<AccountingIntakeHistoryResult> {
+  const scope: Readonly<FinanceOperationScope> = {
+    companyId: request.actor.companyId,
+  };
+  const files = await walkAccountingYearFiles({
+    folderId: request.folderId,
+    source: request.source,
+  });
+  const errors: unknown[] = [];
+  const unmatched: AccountingYearFileUnmatched[] = [];
+  let parsedCount = 0;
+  let duplicates = 0;
+  let replayed = 0;
+
+  for (const file of files) {
+    try {
+      const outcome = await processYearFile({ request, scope, file });
+      if (outcome.status === "unmatched") {
+        unmatched.push(outcome.entry);
+      } else if (outcome.status === "parsed") {
+        parsedCount += 1;
+      } else if (outcome.status === "duplicate") {
+        duplicates += 1;
+      } else {
+        replayed += 1;
+      }
+    } catch (error) {
+      errors.push(error);
+    }
+  }
+
+  logIntakeLine({
+    event: "intake_year_files",
+    files: files.length,
+    parsed: parsedCount,
+    duplicates,
+    replayed,
+    unmatched: unmatched.length,
+  });
+
+  if (errors.length > 0) throw errors[0];
+  return {
+    files: files.length,
+    parsed: parsedCount,
+    duplicates,
+    replayed,
+    unmatched,
+  };
+}
+
+/**
+ * Processes one year file. The Drive file id is the idempotency key. A file
+ * with no readable type, period, or text layer writes no row. A byte duplicate
+ * of an earlier year-file row writes one duplicate row and no facts row. The
+ * duplicate scan is pass 2 only: a year file is never compared with a
+ * submission, and a voucher is never compared with a year file (section 9b).
+ * @param input History request, company scope, and the file.
+ * @returns The outcome of the file.
+ */
+async function processYearFile(input: {
+  readonly request: AccountingIntakeHistoryRequest;
+  readonly scope: Readonly<FinanceOperationScope>;
+  readonly file: AccountingYearFile;
+}): Promise<
+  | { readonly status: "unmatched"; readonly entry: AccountingYearFileUnmatched }
+  | { readonly status: "parsed" | "duplicate" | "replayed" }
+> {
+  const { request, scope, file } = input;
+  const companyId = request.actor.companyId;
+  const unmatchedEntry = (
+    byteSize: number | null,
+    reason: AccountingYearFileUnmatched["reason"],
+  ) =>
+    ({
+      status: "unmatched",
+      entry: { folderName: file.folderName, byteSize, reason },
+    }) as const;
+
+  const existing = await request.intakeRepository.findByDriveFileId({
+    scope,
+    driveFileId: file.id,
+  });
+  if (existing !== undefined) {
+    await replaySeenFile({
+      source: request.source,
+      evidenceStore: request.evidenceStore,
+      intakeRepository: request.intakeRepository,
+      scope,
+      companyId,
+      file,
+      existing,
+    });
+    return { status: "replayed" };
+  }
+
+  if (
+    file.byteSize !== undefined &&
+    file.byteSize > ACCOUNTING_INTAKE_SIZE_LIMIT_BYTES
+  ) {
+    return unmatchedEntry(file.byteSize, "file-too-large");
+  }
+  const body = await request.source.download({ fileId: file.id });
+  if (body.byteLength > ACCOUNTING_INTAKE_SIZE_LIMIT_BYTES) {
+    return unmatchedEntry(body.byteLength, "file-too-large");
+  }
+  const layer = await request.textLayer.read({
+    companyId,
+    mimeType: file.mimeType,
+    body,
+  });
+  if (layer.text === null) return unmatchedEntry(body.byteLength, "no-text-layer");
+
+  // The type and the period come from the text; no name is passed to the parser.
+  const parse = parseYearFile({ text: layer.text });
+  if (
+    parse.status !== "parsed" ||
+    parse.typeKey === null ||
+    parse.filingKind === null ||
+    parse.periodKind === null ||
+    parse.periodStart === null ||
+    parse.periodEnd === null ||
+    parse.taxYear === null ||
+    parse.sourceMonth === null ||
+    parse.facts === null
+  ) {
+    return unmatchedEntry(
+      body.byteLength,
+      parse.unmatchedReason ?? "period-unreadable",
+    );
+  }
+
+  const stored = await request.evidenceStore.put({
+    companyId,
+    contentType: file.mimeType,
+    body,
+  });
+  const sameSize = await request.intakeRepository.findByEvidenceByteSize({
+    scope,
+    evidenceByteSize: body.byteLength,
+  });
+  const firstRowId = await findYearFileDuplicate({
+    evidenceStore: request.evidenceStore,
+    companyId,
+    candidateEvidenceReference: stored.evidenceReference,
+    rows: sameSize,
+  });
+  const row = buildIntakeRow({
+    companyId,
+    file,
+    folderId: request.folderId,
+    sourceMonth: parse.sourceMonth,
+    documentType: parse.typeKey,
+    evidenceReference: stored.evidenceReference,
+    evidenceByteSize: body.byteLength,
+    submissionId: null,
+    extraction: null,
+    historySource: "document",
+  });
+  const inserted = await request.intakeRepository.insert(row);
+
+  if (firstRowId !== undefined) {
+    await request.intakeRepository.markDuplicateOfIntakeDocument({
+      scope,
+      id: inserted.id,
+      duplicateOfIntakeDocumentId: firstRowId,
+      failureReason: "A content duplicate of an earlier year file",
+    });
+    return { status: "duplicate" };
+  }
+
+  // Facts first: a failed run leaves a pending row, never a parsed row with no facts.
+  await request.intakeRepository.insertYearFileFacts({
+    scope,
+    intakeDocumentId: inserted.id,
+    formType: parse.typeKey,
+    filingKind: parse.filingKind,
+    periodKind: parse.periodKind,
+    periodStart: parse.periodStart,
+    periodEnd: parse.periodEnd,
+    taxYear: parse.taxYear,
+    facts: parse.facts,
+  });
+  await request.intakeRepository.markYearFileParsed({
+    scope,
+    id: inserted.id,
+    extraction: "local-text",
+  });
+  logIntakeLine({
+    event: "intake_year_file",
+    documentType: parse.typeKey,
+    month: parse.sourceMonth,
+  });
+  return { status: "parsed" };
+}
+
+/**
+ * Finds the first byte-equal year-file row among the rows of one byte size.
+ * Only a parsed year-file row is a candidate; the comparison calls
+ * `sameEvidenceBytes` alone.
+ * @param input Evidence store, company scope, candidate reference, and rows.
+ * @returns The id of the first byte-equal year-file row, or undefined.
+ */
+async function findYearFileDuplicate(input: {
+  readonly evidenceStore: AccountingEvidenceStore;
+  readonly companyId: string;
+  readonly candidateEvidenceReference: string;
+  readonly rows: readonly AccountingIntakeDocument[];
+}): Promise<string | undefined> {
+  for (const row of input.rows) {
+    if (
+      !row.isHistory ||
+      row.historySource !== "document" ||
+      row.status !== "parsed" ||
+      row.evidenceReference === null
+    ) {
+      continue;
+    }
+    const same = await input.evidenceStore.sameEvidenceBytes({
+      companyId: input.companyId,
+      leftEvidenceReference: input.candidateEvidenceReference,
+      rightEvidenceReference: row.evidenceReference,
+    });
+    if (same) return row.id;
+  }
+  return undefined;
 }
 
 /**

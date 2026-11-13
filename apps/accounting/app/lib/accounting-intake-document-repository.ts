@@ -8,7 +8,8 @@ import {
   accountingIntakeDocumentSchema,
   type AccountingIntakeDocument,
   type AccountingIntakeDocumentDraft,
-  type AccountingIntakeDocumentRepository,
+  type AccountingYearFileFactsRecord,
+  type AccountingYearFileIntakeRepository,
 } from "@reading-advantage/backend/accounting";
 import type { FinanceOperationScope } from "@reading-advantage/backend/finance-operations";
 import { createAccountingRuntimeClient } from "@reading-advantage/db/accounting/runtime";
@@ -23,6 +24,7 @@ interface AccountingIntakeDocumentRow {
   readonly status: string;
   readonly submission_id: string | null;
   readonly duplicate_of_submission_id: string | null;
+  readonly duplicate_of_intake_document_id?: string | null;
   readonly evidence_reference: string | null;
   readonly extraction: string | null;
   readonly failure_reason: string | null;
@@ -60,6 +62,9 @@ function toIntakeDocument(
     status: row.status,
     submissionId: row.submission_id,
     duplicateOfSubmissionId: row.duplicate_of_submission_id,
+    ...(row.duplicate_of_intake_document_id == null
+      ? {}
+      : { duplicateOfIntakeDocumentId: row.duplicate_of_intake_document_id }),
     evidenceReference: row.evidence_reference,
     extraction: row.extraction,
     failureReason: row.failure_reason,
@@ -82,6 +87,25 @@ interface SubmissionEvidenceRow {
   readonly evidence_reference: string;
 }
 
+/** Raw `accounting_year_file_facts` row as postgres.js returns it. */
+interface YearFileFactsRow {
+  readonly intake_document_id: string;
+  readonly form_type: string;
+  readonly filing_kind: string;
+  readonly period_kind: string;
+  readonly period_start: Date | string;
+  readonly period_end: Date | string;
+  readonly tax_year: number;
+  readonly facts: AccountingYearFileFactsRecord["facts"];
+}
+
+/** Normalizes a `date` driver value to a `YYYY-MM-DD` string. */
+function toIsoDate(value: Date | string): string {
+  return typeof value === "string"
+    ? value.slice(0, 10)
+    : value.toISOString().slice(0, 10);
+}
+
 /**
  * Builds the Postgres intake repository over one client.
  * @param input The Accounting database client.
@@ -89,7 +113,7 @@ interface SubmissionEvidenceRow {
  */
 export function createAccountingIntakeDocumentRepository(input: {
   readonly sql: postgres.Sql;
-}): AccountingIntakeDocumentRepository {
+}): AccountingYearFileIntakeRepository {
   const database = input.sql;
 
   return {
@@ -312,6 +336,96 @@ export function createAccountingIntakeDocumentRepository(input: {
       const [row] = rows;
       return row === undefined ? undefined : toIntakeDocument(row);
     },
+
+    /**
+     * Marks one row a byte duplicate of an earlier year-file row. The update
+     * binds the company scope beside the row id.
+     * @param request Company scope, row id, earlier row id, and the reason.
+     * @returns The updated row, or undefined when no row matched.
+     */
+    async markDuplicateOfIntakeDocument(request: {
+      readonly scope: Readonly<FinanceOperationScope>;
+      readonly id: string;
+      readonly duplicateOfIntakeDocumentId: string;
+      readonly failureReason: string;
+    }): Promise<AccountingIntakeDocument | undefined> {
+      const rows = await database<AccountingIntakeDocumentRow[]>`
+        update accounting_intake_documents
+        set status = 'duplicate',
+            duplicate_of_intake_document_id = ${request.duplicateOfIntakeDocumentId},
+            failure_reason = ${request.failureReason}
+        where scope_company_id = ${request.scope.companyId}
+          and id = ${request.id}
+        returning *
+      `;
+      const [row] = rows;
+      return row === undefined ? undefined : toIntakeDocument(row);
+    },
+
+    /**
+     * Marks one year-file row parsed. The row keeps a null submission id. The
+     * update binds the company scope beside the row id.
+     * @param request Company scope, row id, and the extraction marker.
+     * @returns The updated row, or undefined when no row matched.
+     */
+    async markYearFileParsed(request: {
+      readonly scope: Readonly<FinanceOperationScope>;
+      readonly id: string;
+      readonly extraction: "local-text" | "model";
+    }): Promise<AccountingIntakeDocument | undefined> {
+      const rows = await database<AccountingIntakeDocumentRow[]>`
+        update accounting_intake_documents
+        set status = 'parsed',
+            extraction = ${request.extraction}
+        where scope_company_id = ${request.scope.companyId}
+          and id = ${request.id}
+        returning *
+      `;
+      const [row] = rows;
+      return row === undefined ? undefined : toIntakeDocument(row);
+    },
+
+    /**
+     * Persists the facts row of one year file. The insert reads the intake row
+     * inside the company scope, so a row id of another company writes nothing.
+     * @param request Company scope and the facts row.
+     * @returns The stored facts row.
+     * @throws When the intake row is not in the company scope.
+     */
+    async insertYearFileFacts(
+      request: AccountingYearFileFactsRecord & {
+        readonly scope: Readonly<FinanceOperationScope>;
+      },
+    ): Promise<AccountingYearFileFactsRecord> {
+      const rows = await database<YearFileFactsRow[]>`
+        insert into accounting_year_file_facts (
+          intake_document_id, form_type, filing_kind, period_kind,
+          period_start, period_end, tax_year, facts
+        )
+        select id, ${request.formType}, ${request.filingKind},
+          ${request.periodKind}, ${request.periodStart}::date,
+          ${request.periodEnd}::date, ${request.taxYear},
+          ${database.json(request.facts as Parameters<typeof database.json>[0])}
+        from accounting_intake_documents
+        where scope_company_id = ${request.scope.companyId}
+          and id = ${request.intakeDocumentId}
+        returning *
+      `;
+      const [row] = rows;
+      if (row === undefined) {
+        throw new Error("The year-file facts insert matched no intake row");
+      }
+      return {
+        intakeDocumentId: row.intake_document_id,
+        formType: request.formType,
+        filingKind: request.filingKind,
+        periodKind: request.periodKind,
+        periodStart: toIsoDate(row.period_start),
+        periodEnd: toIsoDate(row.period_end),
+        taxYear: row.tax_year,
+        facts: row.facts,
+      };
+    },
   };
 }
 
@@ -320,7 +434,7 @@ export function createAccountingIntakeDocumentRepository(input: {
  * @returns The intake document repository port.
  * @throws When the runtime URL or connection target is invalid.
  */
-export async function createAccountingIntakeRuntimeRepository(): Promise<AccountingIntakeDocumentRepository> {
+export async function createAccountingIntakeRuntimeRepository(): Promise<AccountingYearFileIntakeRepository> {
   const sql = await createAccountingRuntimeClient({
     databaseUrl: process.env.ACCOUNTING_DATABASE_URL ?? "",
   });

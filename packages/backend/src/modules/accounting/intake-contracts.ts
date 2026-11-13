@@ -155,10 +155,14 @@ export const accountingExtractionSchema = z.enum([
 /** Validated extraction marker. */
 export type AccountingExtraction = z.infer<typeof accountingExtractionSchema>;
 
-/** Source of the month of one history import row (spec section 9a). */
+/**
+ * Source of the month of one history import row (spec sections 9a and 9b). A
+ * year-file row reads its month from the document period: `document`.
+ */
 export const accountingIntakeHistorySourceSchema = z.enum([
   "drive-folder",
   "drive-modified-date",
+  "document",
 ]);
 
 /** Validated history source marker. */
