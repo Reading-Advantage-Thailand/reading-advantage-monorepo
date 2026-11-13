@@ -226,3 +226,11 @@ produced six dangling references in this repository (lessons-learned 2026-06-07)
 - Phase 2 Red: 71fe25a
 - Phase 3 Green: 62d65ae
 - Phase 4 docs and doctor: 7798b93
+
+## Pre-traffic fix: the scheduler token in the build log (F602)
+
+- [ ] Task: F602. The scheduler script prints the job resource, which holds the `Authorization= Bearer <token>` header, into the Cloud Build log of the traffic build. Change the script so that it prints no header: suppress the command output (for example `--format=none` or `--quiet` on the update and create calls), and pass the token by stdin or a file, not on the command line. Add a test that fails when the script prints the header or puts the token on the command line. This is a hard precondition of the first codecamp traffic move (master_push_readiness_20261112 task 1.9). No codecamp traffic move runs before this task is done.
+
+  PM decision of 2026-11-13 07:20: "F602 (Bearer token in the Cloud Build log): your default is accepted, and add this: it is a hard precondition in the task 1.9 deploy list, and the fix is a small task of its own before the first scheduler step runs in CI (print no header; pass the token by stdin or a file). No codecamp traffic move before it."
+
+  Found by Review B of master_push_readiness_20261112 Phase 1 (measure/runs/master_push_readiness_20261112/review-b-p1-b7180a7f4.json). The track is parked (Daniel, 2026-10-26); this task runs before the first codecamp traffic move, whatever the park state.
