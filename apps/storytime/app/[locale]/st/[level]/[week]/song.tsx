@@ -15,6 +15,11 @@
  * starts the song `videoLeadInSeconds` after the song audio, so the lyric lines light from the
  * video time minus that lead-in (AC-1.13); the audio-only fallback has no lead-in.
  *
+ * A tap on the video starts the song when it is paused and pauses it when it plays, so the child
+ * needs no scroll to reach the control on a phone. The play mark sits over the poster while the
+ * song is paused, and it is gone while the song plays (task 6.2, round 3). The Play button
+ * stays, and its label follows the state of the song.
+ *
  * The class screen of the teacher (plan task 4.5) caps the stage and bounds the lyric list, so
  * the open player fits the 1920x1080 and 1366x768 viewports with no page scroll. The lyric list
  * scrolls inside its bounded box. The at-home layout stays as it is.
@@ -143,6 +148,16 @@ export function StorytimeSong({
   }
 
   /**
+   * Starts the song from the play mark. The mark stops the tap, so one tap on the mark never
+   * starts and pauses the song in one gesture.
+   * @param event The tap on the mark.
+   */
+  function onPlayMarkTap(event: SyntheticEvent<HTMLButtonElement>): void {
+    event.stopPropagation();
+    togglePlayback();
+  }
+
+  /**
    * Marks the lyric line whose time interval holds the current playback time.
    * @param event The time update of the media element.
    */
@@ -165,7 +180,7 @@ export function StorytimeSong({
       data-mode={classScreen ? "class-screen" : undefined}
     >
       <div
-        className={classScreen ? "song-stage st-class-screen" : "song-stage"}
+        className={classScreen ? "song-stage st-class-screen relative" : "song-stage relative"}
         data-phone={phonePair ? "true" : "false"}
         style={
           poster && !framePlayed
@@ -183,6 +198,8 @@ export function StorytimeSong({
           // the full width of the screen in the 9:16 shape of the phone file, and a landscape
           // screen below 500 px of height uses the full height of the viewport (the rules sit in
           // `app/look.css`). The class screen keeps the capped box of the lesson flow.
+          // Task 6.2, round 3: a tap on the video starts the song when it is paused, and pauses it
+          // when it plays, so the child needs no scroll to reach the control.
           <video
             ref={(node) => {
               mediaRef.current = node;
@@ -193,6 +210,7 @@ export function StorytimeSong({
             playsInline
             aria-label={song.title}
             style={framePlayed ? undefined : { background: "transparent" }}
+            onClick={togglePlayback}
             onTimeUpdate={onTimeUpdate}
             onPlaying={() => setFramePlayed(true)}
             onPlay={() => setPlaying(true)}
@@ -213,6 +231,20 @@ export function StorytimeSong({
             onEnded={onEnded}
           />
         )}
+        {hasVideo && !playing ? (
+          // The play mark of the poster (task 6.2, round 3): the mark shows while the song is
+          // paused or ended, and it is gone while the song plays. The name of the mark is the
+          // play label, so a screen reader reads the same word as the button.
+          <button
+            type="button"
+            data-play-mark
+            aria-label={labels.play}
+            onClick={onPlayMarkTap}
+            className="absolute left-1/2 top-1/2 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#fcd34d] text-5xl text-[#92400e] shadow-lg"
+          >
+            &#9654;
+          </button>
+        ) : null}
       </div>
       <button
         type="button"

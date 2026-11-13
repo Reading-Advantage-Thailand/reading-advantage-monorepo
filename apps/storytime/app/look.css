@@ -866,6 +866,24 @@ main[data-place] button:active:not(:disabled) {
   }
 }
 
+/* The play mark of the song poster (task 6.2, round 3): a big amber disc with the play
+ * triangle, so a child sees the mark on the poster before the song starts. The mark sits over
+ * the video, and the house button style would make it a small brown plaque, so the rule sets
+ * the size, the fill, and the ring of the mark. */
+main[data-place] button[data-play-mark] {
+  min-width: 96px;
+  min-height: 96px;
+  padding: 0;
+  font-size: 48px;
+  line-height: 1;
+  color: var(--st-brown);
+  text-shadow: none;
+  background-color: var(--st-amber);
+  border: 4px solid #fff;
+  border-radius: 999px;
+  box-shadow: 0 0 0 4px var(--st-brown), 0 6px 0 4px rgba(58, 24, 4, 0.35);
+}
+
 /* ---- A landscape screen below 500 px of height: the song video fills the height of the
  * viewport (task 6.2, finding 3), so the child sees the whole song frame. The play control
  * sits beside the video, so every child control still ends inside the fold (findings F280 and
@@ -883,8 +901,16 @@ main[data-place] button:active:not(:disabled) {
   .song-part > .song-stage {
     grid-area: 1 / 1;
   }
-  .song-part > button {
+  /* The Play button (N1 of the browser check of 2026-11-13): the label of the button stays on
+   * one line, and the button takes the width of that line, so the label never passes the border
+   * of the button. The label of the Thai button is the longest one, and the smaller font keeps
+   * the button beside the video inside the fold. */
+  [data-part="song"] > div > button {
     grid-area: 1 / 2;
+    width: max-content;
+    white-space: nowrap;
+    padding-inline: 10px;
+    font-size: 20px;
   }
   .song-part > ol {
     grid-area: 2 / 1 / 3 / -1;

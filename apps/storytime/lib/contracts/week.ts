@@ -129,6 +129,33 @@ const sentenceClipKey = z
   .string()
   .regex(/^[1-9][0-9]*$/, { message: "a sentence clip key is the page number of the clip" });
 
+/**
+ * One entry of the array form of the sentence clips: the text of the sentence and the whole clip
+ * file of that sentence.
+ *
+ * The Workbooks package holds one entry per decodable page, with the sentence equal to the text
+ * of the page. The entry holds no page number, because the page follows from the sentence.
+ */
+export const sentenceClipEntrySchema = z
+  .object({
+    /** The text of the sentence, as it stands on the page. */
+    sentence: z.string().min(1),
+    /** The whole clip file of that sentence, relative to the content folder. */
+    file: mediaPath,
+  })
+  .passthrough();
+
+/**
+ * The sentence clips of a book: the map form (the page number to the clip file) or the array form
+ * (one `{ sentence, file }` entry per page).
+ *
+ * The map form stays valid, because the finding 2b rows use it. The array form is the shape of
+ * the Workbooks hand-off. The default is the empty map.
+ */
+const sentenceClipsSchema = z
+  .union([z.record(sentenceClipKey, mediaPath), z.array(sentenceClipEntrySchema)])
+  .default({});
+
 /** The audio of a book: the narration, the real slow reading, and the clip of each word. */
 export const bookAudioSchema = z
   .object({
@@ -140,12 +167,16 @@ export const bookAudioSchema = z
     /** The lower-case word to the clip file of that word; a tap on a word plays its own clip. */
     wordClips: z.record(wordClipKey, mediaPath).default({}),
     /**
-     * The page number to the whole clip of the sentence of that page.
+     * The whole clip of the sentence of a page.
      *
      * The clip is a whole file, so a sentence button plays it from its start (finding 2 of
-     * task 6.2). A page with no clip holds no key, and the page shows no button.
+     * task 6.2). A page with no clip holds no entry, and the page shows no button.
+     *
+     * The map form holds the page number to the clip file. The array form holds one
+     * `{ sentence, file }` entry per page, and the contract reads the page of every entry from
+     * the text of the page.
      */
-    sentenceClips: z.record(sentenceClipKey, mediaPath).default({}),
+    sentenceClips: sentenceClipsSchema,
   })
   .passthrough();
 
@@ -186,8 +217,8 @@ const bookQuestionsSchema = z
     message: "each question kind appears once",
   });
 
-/** One book of a week: the read-along and the decodable. */
-export const bookSchema = z
+/** One book of a week before the sentence clips are read: the read-along and the decodable. */
+const bookBodySchema = z
   .object({
     kind: z.enum(["readalong", "decodable"]),
     /** A decodable of a week before the first vowel: one picture word on each page. */
@@ -204,6 +235,96 @@ export const bookSchema = z
     questions: bookQuestionsSchema.optional(),
   })
   .passthrough();
+
+/** One book of a week with the sentence clips read: the read-along and the decodable. */
+export type StorytimeBookBody = z.infer<typeof bookBodySchema>;
+
+/**
+ * Matches the entries of the array form of the sentence clips to the pages of a book.
+ *
+ * A page takes the first entry, in array order and not yet taken by an earlier page, whose
+ * trimmed sentence equals the trimmed text of the page. A repeated sentence therefore takes its
+ * entries in order, and the order of the entries with different texts does not matter.
+ * @param entries The entries of the array form.
+ * @param pages The pages of the book.
+ * @returns The page number to clip file map, and the sentences that no page takes.
+ */
+function matchSentenceClips(
+  entries: Array<{ sentence: string; file: string }>,
+  pages: Array<{ text: string }>,
+): { clips: Record<string, string>; untaken: string[] } {
+  const clips: Record<string, string> = {};
+  const taken = new Set<number>();
+  pages.forEach((page, pageIndex) => {
+    const text = page.text.trim();
+    const index = entries.findIndex(
+      (entry, entryIndex) => !taken.has(entryIndex) && entry.sentence.trim() === text,
+    );
+    if (index < 0) return;
+    taken.add(index);
+    clips[String(pageIndex + 1)] = entries[index]!.file;
+  });
+  const untaken = entries
+    .filter((entry, index) => !taken.has(index))
+    .map((entry) => entry.sentence);
+  return { clips, untaken };
+}
+
+/**
+ * Reports the entries of the array form of the sentence clips that no page takes.
+ *
+ * An entry that no page takes is reported and not dropped, because a clip that no page shows is
+ * a clip that the app never plays (task 6.2, round 3).
+ * @param book The book of the week.
+ * @param ctx The refinement context.
+ */
+function checkSentenceClips(book: StorytimeBookBody, ctx: z.RefinementCtx): void {
+  const clips = book.audio.sentenceClips;
+  if (!Array.isArray(clips)) return;
+  const { untaken } = matchSentenceClips(clips, book.pages);
+  for (const sentence of untaken) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["audio", "sentenceClips"],
+      message: `no page of the book holds the sentence ${sentence}`,
+    });
+  }
+}
+
+/**
+ * The audio of a book whose sentence clips hold the page number to clip file map.
+ */
+export type StorytimeBookAudio = {
+  [K in keyof StorytimeBookBody["audio"]]: K extends "sentenceClips"
+    ? Record<string, string>
+    : StorytimeBookBody["audio"][K];
+};
+
+/**
+ * A book whose sentence clips hold the page number to clip file map.
+ */
+export type StorytimeBook = {
+  [K in keyof StorytimeBookBody]: K extends "audio" ? StorytimeBookAudio : StorytimeBookBody[K];
+};
+
+/**
+ * Reads the sentence clips of a book into the page number to clip file map.
+ *
+ * The map form stays as it is. The array form is matched to the pages of the book, so every
+ * page of the app holds the clip of its own sentence.
+ * @param book The book of the week.
+ * @returns The book with the sentence clips read.
+ */
+function readSentenceClips(book: StorytimeBookBody): StorytimeBook {
+  const clips = book.audio.sentenceClips;
+  const read = Array.isArray(clips)
+    ? matchSentenceClips(clips, book.pages).clips
+    : (clips as Record<string, string>);
+  return { ...book, audio: { ...book.audio, sentenceClips: read } };
+}
+
+/** One book of a week: the read-along and the decodable. */
+export const bookSchema = bookBodySchema.superRefine(checkSentenceClips).transform(readSentenceClips);
 
 /** The sound of the week and its action. */
 export const elementSchema = z
@@ -232,12 +353,21 @@ export const focusSchema = z
     element: elementSchema.optional(),
     paSkill: biText.optional(),
     trickyWords: z.array(z.string().min(1)).default([]),
+    /**
+     * The lower-case word to the whole clip file of that tricky word.
+     *
+     * The key is the lower-case word, so a week that writes the tricky word `I` holds the clip
+     * under the key `i`. A tricky word with no clip stays plain text.
+     */
+    trickyWordClips: z.record(wordClipKey, mediaPath).default({}),
     frame: z.string().optional(),
     family: z
       .object({
         name: biText.optional(),
         words: z.array(familyWordSchema).default([]),
         max: z.number().int().min(8).max(10).default(8),
+        /** The lower-case word to the whole clip file of that family word. */
+        wordClips: z.record(wordClipKey, mediaPath).default({}),
       })
       .passthrough()
       .optional(),
@@ -250,6 +380,8 @@ export const openingSchema = z
   .object({
     pa: z.array(biText).length(5),
     audio: z.array(z.array(mediaPath)).length(5).optional(),
+    /** The lower-case word to the whole clip file of that word of a prompt. */
+    wordClips: z.record(wordClipKey, mediaPath).default({}),
   })
   .passthrough();
 
@@ -916,9 +1048,6 @@ export const weekSchema = weekBodySchema.superRefine(checkWeek);
 
 /** One Storytime week. */
 export type StorytimeWeek = z.infer<typeof weekSchema>;
-
-/** One book of a week. */
-export type StorytimeBook = z.infer<typeof bookSchema>;
 
 /** One sentence of a book audio. */
 export type StorytimeSentence = z.infer<typeof sentenceTimepointSchema>;

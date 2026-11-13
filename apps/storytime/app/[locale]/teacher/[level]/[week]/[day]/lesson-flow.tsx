@@ -18,6 +18,9 @@ import {
   stepMediaOf,
   type StepMedia,
 } from "../../../../../../lib/teacher-media";
+import { mediaUrl } from "../../../../../../lib/media/url";
+import { clipOfWord } from "../../../../../../lib/word-clip";
+import { wordPieces } from "../../../../../../lib/word-pieces";
 import { StorytimeDecodable } from "../../../../st/[level]/[week]/decodable";
 import { StorytimeReader } from "../../../../st/[level]/[week]/reader";
 import { StorytimeSong } from "../../../../st/[level]/[week]/song";
@@ -947,15 +950,46 @@ export function TeacherLessonFlow({
             The opening routine
           </h2>
           <ol className="flex flex-col gap-2">
-            {openingPrompts.map((prompt, index) => (
-              <li
-                key={index}
-                className="rounded-2xl border border-[#92400e] p-4 text-lg"
-                lang={pickLang(prompt, thai)}
-              >
-                <LanguageRuns text={pick(prompt, thai)} lang={pickLang(prompt, thai)} />
-              </li>
-            ))}
+            {openingPrompts.map((prompt, index) => {
+              const lang = pickLang(prompt, thai);
+              const text = pick(prompt, thai);
+              return (
+                <li
+                  key={index}
+                  className="rounded-2xl border border-[#92400e] p-4 text-lg"
+                  lang={lang}
+                >
+                  {wordPieces(text).map((piece, pieceIndex) => {
+                    if (!piece.word) {
+                      return (
+                        <span key={pieceIndex}>
+                          <LanguageRuns text={piece.text ?? ""} lang={lang} />
+                        </span>
+                      );
+                    }
+                    const clip = clipOfWord(week.opening?.wordClips, piece.word);
+                    if (!clip) {
+                      return (
+                        <span key={pieceIndex}>
+                          <LanguageRuns text={piece.word} lang={lang} />
+                        </span>
+                      );
+                    }
+                    return (
+                      <button
+                        key={pieceIndex}
+                        type="button"
+                        onClick={() => playClip(mediaUrl(mediaUrls, clip))}
+                        className="rounded underline decoration-dotted underline-offset-2"
+                        lang={lang}
+                      >
+                        {piece.word}
+                      </button>
+                    );
+                  })}
+                </li>
+              );
+            })}
           </ol>
         </section>
       ) : null}
