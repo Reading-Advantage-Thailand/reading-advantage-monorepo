@@ -102,7 +102,13 @@ const PLACES: Array<[string, (data: Record<string, any>, map: unknown) => void]>
 
 describe("the contract of the three new clip maps", () => {
   it("defaults each map to an empty object on a week with none", () => {
-    const week = mapsOf(weekSchema.parse(raw()));
+    // The shipped w01 now holds the real maps, so the row strips the three maps from a copy and
+    // parses a week that holds none of them.
+    const bare = raw();
+    delete bare.opening.wordClips;
+    delete bare.focus.family.wordClips;
+    delete bare.focus.trickyWordClips;
+    const week = mapsOf(weekSchema.parse(bare));
     expect(week.opening?.wordClips, "opening.wordClips").toEqual({});
     expect(week.focus.family?.wordClips, "focus.family.wordClips").toEqual({});
     expect(week.focus.trickyWordClips, "focus.trickyWordClips").toEqual({});
