@@ -229,7 +229,7 @@ produced six dangling references in this repository (lessons-learned 2026-06-07)
 
 ## Phase 5: Pre-traffic fix: the scheduler token in the build log (F602)
 
-- [~] Task: F602. The scheduler script prints the job resource, which holds the `Authorization= Bearer <token>` header, into the Cloud Build log of the traffic build. Change the script so that it prints no header: suppress the command output (for example `--format=none` or `--quiet` on the update and create calls), and pass the token by stdin or a file, not on the command line. Add a test that fails when the script prints the header or puts the token on the command line. This is a hard precondition of the first codecamp traffic move (master_push_readiness_20261112 task 1.9). No codecamp traffic move runs before this task is done.
+- [x] Task: F602. The scheduler script prints the job resource, which holds the `Authorization= Bearer <token>` header, into the Cloud Build log of the traffic build. Change the script so that it prints no header: suppress the command output (for example `--format=none` or `--quiet` on the update and create calls), and pass the token by stdin or a file, not on the command line. Add a test that fails when the script prints the header or puts the token on the command line. This is a hard precondition of the first codecamp traffic move (master_push_readiness_20261112 task 1.9). No codecamp traffic move runs before this task is done.
 
   PM decision of 2026-11-13 07:20: "F602 (Bearer token in the Cloud Build log): your default is accepted, and add this: it is a hard precondition in the task 1.9 deploy list, and the fix is a small task of its own before the first scheduler step runs in CI (print no header; pass the token by stdin or a file). No codecamp traffic move before it."
 
@@ -240,5 +240,24 @@ produced six dangling references in this repository (lessons-learned 2026-06-07)
   - Passing rows at HEAD: (c) "runs the update branch and the create branch" (`scheduler_script_cases=2`) and (d1) "still gives the job the bearer header". Both rows guard against a fix that drops the header or breaks a branch.
   - Satisfiability check: a temporary copy of the test, pointed at a fixed script variant (flags file with `--format=none`), passed 5 of 5. The copy and the variant were removed. The Green role must apply the real fix to the script.
   - C2 (`review-worker-deployment-contract.test.ts` through the same prefix): exit 0, 7 of 7 pass.
+
+  Green evidence (2026-11-13, role jr-green, model opencode/minimax-m3.1-flash-free#high, phase base 76be270f4af0b6d3250ec1defac8769ff21943fb, role base 22b679a107cbd5933d41ffb4a36b99101b5842b2, code commit 00b9df3f427d7b7a205eaa7bd9bea79bde02202b):
+  - Changed file: `apps/codecamp-advantage/scripts/configure-review-worker-scheduler.sh`. No other file changed.
+  - The script now writes the header flag to a temp YAML flags file. The file comes from `mktemp` with mode 600. A `trap` on EXIT removes the file.
+  - The script passes the file with the gcloud global flag `--flags-file=<file>`. The token never enters a command line.
+  - The update and create calls now carry `--format=none`. The build log shows no header.
+  - The describe-then-update-or-create branch, `set -euo pipefail`, and every other flag stay unchanged. The comment about the required scheduler role stays.
+  - gcloud help finding (offline, help pages only, no project call, no network):
+    - `gcloud topic flags-file` says the `--flags-file=YAML_FILE` flag is available to all gcloud commands. Each `--flags-file` arg is replaced by its constituent flags. Flag values use YAML notation and YAML quoting rules.
+    - `gcloud scheduler jobs create http --help` lists `--headers=[KEY=VALUE,...]` and lists `--flags-file` among the gcloud wide flags.
+    - `gcloud scheduler jobs update http --help` lists `--update-headers=[KEY=VALUE,...]`.
+    - `gcloud topic formats` says the `none` format disables formatted output.
+    - The local SDK source confirms the method. The flags file loader parses the file and injects the flag with a dict value. The `ArgDict` parser accepts that dict.
+    - The method can work. No stop condition applies.
+  - Gates:
+    - `bash -n apps/codecamp-advantage/scripts/configure-review-worker-scheduler.sh` exit 0.
+    - Green command exit 0. The scheduler script test passed 5 of 5. The C2 deployment contract test passed 7 of 7.
+    - The C1 suite `CI=true pnpm exec vitest run scripts/ci` exit 0. Result: 211 of 211 pass in 13 files.
+  - The Red test file is unchanged. The Green role added no test file.
 
   Found by Review B of master_push_readiness_20261112 Phase 1 (measure/runs/master_push_readiness_20261112/review-b-p1-b7180a7f4.json). The track is parked (Daniel, 2026-10-26); this task runs before the first codecamp traffic move, whatever the park state.
