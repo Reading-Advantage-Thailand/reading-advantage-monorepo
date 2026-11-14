@@ -439,12 +439,14 @@ export function StorytimeReader({
   /**
    * Stops the audio at the end of the page and clears the current mark (task 7.6, finding F2).
    * The browser queues the `pause` event of the call after it; the hook ignores that late event
-   * after the reset, so no word stays lit with no voice.
+   * after the reset, so no word stays lit with no voice. The stop also leaves the play mode, so
+   * a late `timeupdate` at the paused time marks no word (task 7.9, finding F3 of Review A).
    */
   function stopAtPageEnd(): void {
     const element = audioRef.current;
     if (!element) return;
     element.pause();
+    setMode("idle");
     reset();
   }
 

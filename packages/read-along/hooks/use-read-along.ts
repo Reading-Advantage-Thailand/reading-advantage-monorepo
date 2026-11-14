@@ -98,7 +98,10 @@ export function useReadAlong({
     const onEnded = () => {
       stop();
       setIsPlaying(false);
-      select(NO_POSITION);
+      // Clear the position without `select`, so a reset at the media end keeps its suppression
+      // (task 7.9, finding F2 of Review A): the late `seeked` after that reset marks no word.
+      positionRef.current = NO_POSITION;
+      setPosition(NO_POSITION);
     };
 
     audio.addEventListener("play", onPlay);

@@ -16,3 +16,8 @@
 !/.pnpmfile.cjs
 **/node_modules
 **/.next
+**/.env
+**/.env.*
+**/*.pem
+**/*.key
+**/credentials*.json

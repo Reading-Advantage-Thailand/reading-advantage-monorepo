@@ -81,7 +81,13 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
    ```
 
 5. Rollback. Daniel gives the go for the rollback. A rollback is a traffic move to the previous
-   revision, not a new deploy:
+   revision, not a new deploy. Run the guard against the previous revision first:
+
+   ```
+   node_modules/.bin/tsx apps/storytime/scripts/review/live-traffic-guard.ts --revision <previous-revision>
+   ```
+
+   A guard failure stops the rollback. Do not move the traffic after exit 1.
 
    ```
    gcloud run services update-traffic storytime-app --project primary-advantage --region asia-southeast1 --to-revisions=<previous-revision>=100
