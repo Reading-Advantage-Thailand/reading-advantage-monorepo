@@ -4157,7 +4157,14 @@ for every other track.
 
 - [b] 6.3 Deploy the teacher app: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. The at-home deploy is task 3.11. deferred:pm
 - [b] 6.4 Move the traffic to the new revision. Then run the live check of every printed URL (AC-2.3). deferred:daniel
-- [ ] 6.5 Retro entry in `measure/lessons-learned.md`. Update the spec and the plan to the state at the milestone.
+- [x] 6.5 Retro entry in `measure/lessons-learned.md`. Update the spec and the plan to the state at the milestone. (this commit)
+  - State at the milestone (2026-11-15):
+    - Done: Phases 1 to 5 (checkpoints in the headings), task 6.2 in rounds 1 to 10, and every Phase 7 task (7.1 and 7.3 are `[b]`; 7.4 closed in `d2e9421ef`).
+    - Waits for Daniel: 6.1 (his milestone judgment) and 6.4 (the traffic move, then AC-2.3). Waits for the PM: 6.3 (the teacher app deploy).
+    - Waits for the release track: the AC-2.3 script proof runs after Daniel's deploy go, as step 4 of `storytime_at_home_release_20261106`.
+    - Live: `storytime-app-00011-dut` holds 100 percent of the traffic and is the rollback revision. The review revisions up to `storytime-app-00029-gip` hold 0 percent.
+    - Release 1 keeps the teacher routes off on the live service (tasks 7.7 and 7.8).
+    - Carried to the tech-debt list by the PM (2026-11-14 22:50): F4/C1003, N3, N4, B1003 (compare `URL.origin`; first fix after the release), B1004, and C1007. Source: the `review-a-p7-ea92780de`, `review-b-p7-ea92780de`, and `review-c-p7-ea92780de` logs in `measure/runs/storytime_app_rebuild_20261025/`. F1 (no Pause control) is out of scope.
 
 ## Phase 7: Primary boundary and printed-URL continuity
 
