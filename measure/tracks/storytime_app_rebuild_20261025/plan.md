@@ -4175,6 +4175,11 @@ for every other track.
   - Note (2026-10-27): the records that exist only on storytime/own-app are copied to docs/generation-rules-draft2.md and docs/void-build-carryover.md (rules draft 2 with rule 6.7, decisions S31 to S34, and the uncommitted speak.ts timer fix). Removal of the worktrees and the master-next delete wait for Daniel.
 - [ ] 7.4 Continuity watch: on 2026-11-15, request each printed path on the live domain. If a path does not answer with its week page, give Daniel the options. One option is the week page with only the passed parts. The deploy stays his gate.
   - The AC-2.3 script is `apps/storytime/scripts/checks/printed-urls-live.ts`. Its test is `apps/storytime/__tests__/phase7-printed-urls-live.test.ts`. The script is the one command for the 2026-11-15 run.
+  - Continuity watch run (2026-11-15 00:25 ICT, role build session; PM word of 2026-11-14 22:50). Live revision `storytime-app-00011-dut`. Traffic before and after: `storytime-app-00011-dut` 100 percent. No deploy, no traffic change, no password change, no new account.
+    - Run 1 (no cookie, `--revision storytime-app-00011-dut`, output `/tmp/opencode/st-74-run1.txt`): exit 1, last line `urls_checked=2 urls_rendered=0 urls_guarded=0 urls_failed=2`. Failed URLs: `/th/st/2/1?part=song` status=200 class=failed; `/th/st/2/1?part=book` status=200 class=failed.
+    - What the page is: a GET without a cookie gives a week page (the Hello! week, with the song video and the story) that has no `data-level-week` marker and no sign-in guard. The live revision is the older app: `/th/sign-in`, `/api/auth/sign-in`, `/api/auth/sign-out`, `/th`, `/th/st/2`, and `/th/st/1/1` all give 404.
+    - Sign-in: not attempted. The live revision has no sign-in route, so a card of staff-10 cannot sign in and a cookie cannot change the class. Run 2: not run. No cookie file was made. Sign-out: not needed.
+    - Result: the printed paths answer 200 with a week page on the live domain, but the script class is failed (marker absent, no guard). Task 7.4 stays open.
 
 ### Phase 7 remediation group r1 (7.2 UX finding F2 and the phase3-home-card drift, PM 2026-11-14 12:10)
 
