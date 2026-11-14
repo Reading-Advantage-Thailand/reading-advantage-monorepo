@@ -48,6 +48,8 @@
   "teacherForbiddenHeading": "หน้านี้สำหรับครู",
   "teacherForbiddenLine": "เข้าสู่ระบบด้วยบัญชีครูเพื่อเปิดหน้าบทเรียน",
   "teacherForbiddenLink": "เข้าสู่ระบบในชื่อครู",
+  "teacherChildViewLink": "เปิดหน้าเด็ก",
+  "stTeacherViewLink": "เปิดหน้าครู",
   "stFallbackHeading": "สแกนรหัสในหนังสือ",
   "stFallbackLine": "สแกนรหัสในหนังสือเพื่อเปิดสัปดาห์",
   "barLevel": "ระดับ {level}",

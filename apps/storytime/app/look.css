@@ -875,7 +875,9 @@ main[data-place] button:active:not(:disabled) {
   [data-part="decodable"] > div > div > button,
   [data-part="decodable"] > div > div > div > button,
   [data-part="decodable"] div > section[aria-label]:last-child button {
-    min-width: 44px;
+    /* 48 px, not 44 px: the capture rows hold a 48 px tap floor (`tap_under_48`), and the 44 px
+     * arrows failed 2 landscape capture rows (gate repair, task 6.2 round 7). */
+    min-width: 48px;
     padding-inline: 8px;
     font-size: 16px;
   }

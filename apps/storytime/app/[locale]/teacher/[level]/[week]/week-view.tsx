@@ -45,10 +45,13 @@ export function TeacherWeekView({
   week,
   locale,
   mediaUrls = {},
+  childViewLabel,
 }: {
   week: StorytimeWeek;
   locale: string;
   mediaUrls?: Record<string, string>;
+  /** The label of the link to the child page of the week; no label renders no link. */
+  childViewLabel?: string;
 }) {
   const element = week.focus.element;
   const paSkill = week.focus.paSkill;
@@ -71,6 +74,17 @@ export function TeacherWeekView({
             Level {level}, week {weekNumber}
           </p>
         </header>
+
+        {/* The link to the child page of the same week (plan task 6.2, round 7, PM point 2).
+            No label renders no link, so the view keeps its data-only shape. */}
+        {childViewLabel ? (
+          <Link
+            href={`/${locale}/st/${level}/${weekNumber}`}
+            className="inline-flex min-h-11 w-fit items-center rounded-xl border border-[#92400e] bg-[#fcd34d] px-4 py-2 font-semibold text-[#92400e]"
+          >
+            {childViewLabel}
+          </Link>
+        ) : null}
 
         {element ? (
           <section aria-label="The element of the week" className="flex flex-col gap-2">

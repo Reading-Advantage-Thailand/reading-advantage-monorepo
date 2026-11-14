@@ -135,6 +135,19 @@ export async function getCurrentUser(): Promise<StorytimeUser | null> {
 }
 
 /**
+ * Reads the role of one account by its username.
+ *
+ * The sign-in handler knows only the username of the form when it builds the landing, so it
+ * reads the role through the store, the same way `login` does.
+ * @param username The username of the account.
+ * @returns The role of the account, or `null` when the account does not exist.
+ */
+export async function roleOfUsername(username: string): Promise<StorytimeRole | null> {
+  const account = await getStore().findAccountByUsername(username);
+  return account?.role ?? null;
+}
+
+/**
  * Reads the signed-in user and sends a visitor without a session to the sign-in page.
  * @param returnPath The path the visitor came from.
  * @returns The signed-in user.

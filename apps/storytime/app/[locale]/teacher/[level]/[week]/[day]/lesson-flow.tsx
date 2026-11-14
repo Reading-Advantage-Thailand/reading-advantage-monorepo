@@ -269,6 +269,8 @@ export interface TeacherLessonFlowProps {
   locale: string;
   /** The signed media URL of each file name. */
   mediaUrls?: Record<string, string>;
+  /** The label of the link to the child page of the week; no label renders no link. */
+  childViewLabel?: string;
 }
 
 /**
@@ -793,6 +795,7 @@ export function TeacherLessonFlow({
   day,
   locale,
   mediaUrls = {},
+  childViewLabel,
 }: TeacherLessonFlowProps) {
   const [screen, setScreen] = useState(0);
   const [thai, setThai] = useState(false);
@@ -937,6 +940,16 @@ export function TeacherLessonFlow({
           >
             <span lang="en">Back to the week</span>
           </Link>
+          {/* The link to the child page of the same week (plan task 6.2, round 7, PM point 2).
+              No label renders no link. */}
+          {childViewLabel ? (
+            <Link
+              href={`/${locale}/st/${week.meta.level}/${week.meta.week}`}
+              className="inline-flex min-h-11 items-center rounded-xl border border-[#92400e] bg-[#fcd34d] px-4 py-2 font-semibold text-[#92400e]"
+            >
+              {childViewLabel}
+            </Link>
+          ) : null}
         </div>
       </header>
 

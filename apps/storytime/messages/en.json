@@ -48,6 +48,8 @@
   "teacherForbiddenHeading": "This page is for teachers",
   "teacherForbiddenLine": "Sign in with a teacher account to open the lesson page.",
   "teacherForbiddenLink": "Sign in as a teacher",
+  "teacherChildViewLink": "Open the child page",
+  "stTeacherViewLink": "Open the teacher page",
   "stFallbackHeading": "Scan the book code",
   "stFallbackLine": "Scan the code in the book to open the week.",
   "barLevel": "Level {level}",

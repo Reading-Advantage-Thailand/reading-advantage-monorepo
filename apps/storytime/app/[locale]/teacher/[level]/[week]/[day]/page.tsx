@@ -84,6 +84,8 @@ export default async function TeacherDayPage({
 
   // Every media URL of a page is a signed URL, so the route signs the media of the week and
   // hands the map to the lesson flow (plan task 4.4).
+  const translate = await getTranslations({ locale });
+  const t = (key: string) => translate(key);
   const mediaUrls = await signWeekMedia(loaded.week, {});
   return (
     <TeacherLessonFlow
@@ -91,6 +93,7 @@ export default async function TeacherDayPage({
       day={day}
       locale={locale}
       mediaUrls={mediaUrls}
+      childViewLabel={t("teacherChildViewLink")}
     />
   );
 }

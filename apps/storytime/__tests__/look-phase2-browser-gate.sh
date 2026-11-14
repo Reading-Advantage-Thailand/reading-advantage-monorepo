@@ -62,7 +62,7 @@ set -uo pipefail
 #                 and English on /en; each link opens its page; no page scrolls sideways.
 # No row plays a recording (M21). The song row sets currentTime and fires timeupdate (Q33).
 # A headless run is not phone evidence. The gate reads no file under ~/Desktop/handoff except the
-# Phase 1 media root (STORYTIME_GATE_MEDIA_ROOT, default handoff/w01-storytime-app-package-r2).
+# Phase 1 media root (STORYTIME_GATE_MEDIA_ROOT, default handoff/w01-storytime-app-package-r5).
 #
 # `--self-test` runs the verdict self-test only (no build, no database, no server).
 # The whole run (Postgres, build, server, Playwright) is one heavy-run job. Without --locked the
@@ -91,7 +91,7 @@ STORAGE_PGID=""
 STORAGE_PORT_RUN=""
 FIXTURE="$TMP_DIR/content"
 PLAYWRIGHT="$APP/.next/look-phase2-browser-gate-$$.mjs"
-MEDIA_ROOT="${STORYTIME_GATE_MEDIA_ROOT:-$HOME/Desktop/handoff/w01-storytime-app-package-r2}"
+MEDIA_ROOT="${STORYTIME_GATE_MEDIA_ROOT:-$HOME/Desktop/handoff/w01-storytime-app-package-r5}"
 
 # The capture matrix of AC-2.2: 4 screens x 3 viewports x 2 locales = 24 captures.
 SCREENS=(week reader song decodable)
@@ -799,7 +799,11 @@ const SONG_LINE_TIME = (() => {
   try {
     const week = JSON.parse(fs.readFileSync(`${fixtureDir}/l2/w01.json`, "utf8"));
     const times = week.song.times ?? [];
-    return times.length > 1 ? Number(times[1].startTime) + 0.01 : 12;
+    // The song component subtracts `videoLeadInSeconds` from currentTime (the video starts the
+    // song audio late), so the gate must add the lead-in to line 1. Gate repair, task 6.2
+    // round 7 (9 song rows failed with the plain startTime against the r5 fixture).
+    const leadIn = Number(week.song.videoLeadInSeconds) || 0;
+    return times.length > 1 ? Number(times[1].startTime) + leadIn + 0.01 : 12;
   } catch { return 12; }
 })();
 
