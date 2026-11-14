@@ -21,3 +21,14 @@
 **/*.pem
 **/*.key
 **/credentials*.json
+**/*.p12
+**/*.pfx
+**/service-account*.json
+**/*-key.json
+**/.npmrc
+**/.netrc
+**/.docker/
+**/id_rsa*
+**/id_ed25519*
+**/id_ecdsa*
+**/*.ppk
