@@ -296,15 +296,45 @@ function readPnd53RealMonth(text: string): MonthPeriod | null {
   return period;
 }
 
+/** Extra lines after the block end line that stay inside the month block. */
+const PND3_BLOCK_EXTRA_LINES = 2;
+
+/**
+ * Finds the end line of the PND.3 month block: the line that holds the
+ * `(12) {month}` entry, or, without one, the last line that holds a
+ * `({n}) {month}` entry.
+ * @param lines The document lines.
+ * @param start The zero-based index of the first block line.
+ * @returns The zero-based index of the block end line, or null when no month
+ *   entry follows the start.
+ */
+function pnd3MonthBlockEnd(
+  lines: readonly string[],
+  start: number,
+): number | null {
+  let lastEntry: number | null = null;
+  for (let index = start; index < lines.length; index += 1) {
+    const match = PND3_MONTH_ENTRY.exec(lines[index] ?? "");
+    if (match === null) continue;
+    lastEntry = index;
+    if (match[0].startsWith("(12)")) return index;
+  }
+  return lastEntry;
+}
+
 /**
  * Reads the period of the real PND.3 wording: the year from `พ.ศ. {yyyy}` on
  * the line after the `เดือนที่จ่ายเงินได้พึงประเมิน` label line, and the month
- * from the `({n}) {month}` entry that follows the single tick on its line. The
- * instruction line holds a quoted tick and is not a tick.
+ * from the `({n}) {month}` entry that follows the single tick on its line.
+ * The tick search stays inside the month block: the lines from the line after
+ * the year line to the `(12) {month}` entry line, or, without one, to the last
+ * `({n}) {month}` entry line, plus 2 more lines. Tick lines after the block
+ * never count. The instruction line holds a quoted tick and is not a tick.
  * @param text Normalized document text.
  * @returns The CE year and month, or null when the label is absent, the line
- *   after the label holds no year, the ticks are not exactly one, or the tick
- *   line holds no entry after the tick.
+ *   after the label holds no year, the block holds no month entry, the ticks
+ *   in the block are not exactly one, or the tick line holds no entry after
+ *   the tick.
  */
 function readPnd3RealMonth(text: string): MonthPeriod | null {
   const lines = text.split("\n");
@@ -313,8 +343,11 @@ function readPnd3RealMonth(text: string): MonthPeriod | null {
   const yearMatch = PND3_YEAR_LINE.exec(lines[labelIndex + 1] ?? "");
   const year = yearMatch === null ? null : toCommonEra(Number(yearMatch[1]));
   if (year === null) return null;
+  const firstBlockLine = labelIndex + 2;
+  const blockEnd = pnd3MonthBlockEnd(lines, firstBlockLine);
+  if (blockEnd === null) return null;
   const tickedLines = lines
-    .slice(labelIndex + 2)
+    .slice(firstBlockLine, blockEnd + 1 + PND3_BLOCK_EXTRA_LINES)
     .filter(
       (line) => line.includes(PND3_TICK) && !line.includes(PND3_INSTRUCTION_MARKER),
     );
