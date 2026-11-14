@@ -19,7 +19,9 @@ repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
 
 # A fresh folder under TMPDIR; the trap removes it on every exit path, also on a gcloud failure.
-work="$(mktemp -d)"
+# The folder is made absolute before the trap and the cd: with a relative TMPDIR the result of
+# `mktemp -d` is relative, and the trap would run from another folder after the cd.
+work="$(cd "$(mktemp -d)" && pwd -P)"
 trap 'rm -rf "$work"' EXIT
 
 git archive "$commit" | tar -x -C "$work"

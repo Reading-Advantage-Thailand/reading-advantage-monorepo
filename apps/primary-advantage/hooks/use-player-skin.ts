@@ -1,9 +1,9 @@
 "use client";
 /**
- * The Primary skin of the shared read-along player (task 7.2). The file name holds no
+ * The Primary skin of the shared read-along player (task 7.2): chrome and labels built in the app.
  *
  * The shared package holds no app design and no translation, so the host passes its own chrome
- * and its own labels through the `chrome` and `labels` props of `ReadAlongPlayer`. This hook file is
+ * and its own labels through the `chrome` and `labels` props of `ReadAlongPlayer`. This hook
  * builds both from the RPG chrome and the `Components` messages, so every Primary caller renders
  * the same player the Primary copy rendered.
  */
