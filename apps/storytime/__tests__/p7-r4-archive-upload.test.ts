@@ -210,7 +210,10 @@ interface Run {
  * @param options The commit argument, the stub exit code, and the folder to run from.
  * @returns What the stub recorded and how the script ended.
  */
-function runScript(fx: Fixture, options: { commit?: string; stubExit?: number; from?: string } = {}): Run {
+function runScript(
+  fx: Fixture,
+  options: { commit?: string; stubExit?: number; from?: string; tmpdir?: string } = {},
+): Run {
   const scriptText = readFileSync(resolve(repoRoot, SCRIPT_REL), "utf8");
   expect(scriptText, "the static guard: no absolute gcloud path in the script").not.toMatch(
     /\/[A-Za-z0-9._/-]*gcloud\b/,
@@ -220,7 +223,7 @@ function runScript(fx: Fixture, options: { commit?: string; stubExit?: number; f
     env: {
       PATH: `${fx.bin}:/usr/bin:/bin`,
       HOME: fx.base,
-      TMPDIR: fx.scratch,
+      TMPDIR: options.tmpdir ?? fx.scratch,
       CLOUDSDK_CONFIG: join(fx.base, "gcloud-config"),
       FAKE_GCLOUD_LOG: fx.log,
       FAKE_GCLOUD_EXIT: String(options.stubExit ?? 0),
@@ -357,6 +360,54 @@ describe("P7 r4 B996 to B999 root cause: the review submit uploads a git archive
     expect((code.match(/\bgcloud\s+builds\s+submit\b/g) ?? []).length, "exactly one live submit").toBe(1);
   });
 
+  /**
+   * Lists every folder of the temporary repository, as relative paths.
+   * @param fx The fixture.
+   * @returns The sorted folder paths.
+   */
+  function folders(fx: Fixture): string[] {
+    const out = spawnSync("find", [".", "-type", "d", "-not", "-path", "./.git", "-not", "-path", "./.git/*"], {
+      cwd: fx.repoDir,
+      encoding: "utf8",
+    }).stdout;
+    return out.split("\n").filter(Boolean).sort();
+  }
+
+  it("b1 a relative TMPDIR leaves no archive folder after a successful run (B1001)", () => {
+    // Finding B1001 of Review B: with a relative TMPDIR the `mktemp -d` result is relative, the
+    // script then changes folder, and the trap `rm -rf "$work"` runs from the new folder, so the
+    // archive folder stays. The TMPDIR is a folder name under the repository root, where the
+    // script first changes to.
+    const fx = fixture();
+    mkdirSync(join(fx.repoDir, "tmp-rel"));
+    const before = folders(fx);
+    const result = runScript(fx, { tmpdir: "tmp-rel" });
+    expect(result.status, `the script must exit 0: ${result.stderr}`).toBe(0);
+    expect(result.calls, "gcloud runs exactly once").toBe(1);
+    expect(
+      result.cwd.startsWith(`${realpathSync(join(fx.repoDir, "tmp-rel"))}/`),
+      `the submit must run from a folder under the relative TMPDIR, cwd=${result.cwd}`,
+    ).toBe(true);
+    expect(readdirSync(join(fx.repoDir, "tmp-rel")), "the relative TMPDIR must hold no folder").toEqual([]);
+    expect(folders(fx), "the repository must hold no new folder anywhere").toEqual(before);
+  });
+
+  it("b2 a relative TMPDIR leaves no archive folder after a failing gcloud (B1001)", () => {
+    const fx = fixture();
+    mkdirSync(join(fx.repoDir, "tmp-rel"));
+    const before = folders(fx);
+    const result = runScript(fx, { tmpdir: "tmp-rel", stubExit: 1 });
+    expect(result.calls, "gcloud runs exactly once").toBe(1);
+    expect(
+      result.cwd.startsWith(`${realpathSync(join(fx.repoDir, "tmp-rel"))}/`),
+      `the submit must run from a folder under the relative TMPDIR, cwd=${result.cwd}`,
+    ).toBe(true);
+    expect(result.status, "the script must exit non-zero when gcloud fails").not.toBe(0);
+    expect(result.status).not.toBeNull();
+    expect(readdirSync(join(fx.repoDir, "tmp-rel")), "the relative TMPDIR must hold no folder").toEqual([]);
+    expect(folders(fx), "the repository must hold no new folder anywhere").toEqual(before);
+  });
+
   it("c1 control: the stub records the untracked files when a script uploads the working tree", () => {
     const fx = fixture();
     const probe = join(fx.repoDir, "probe.sh");
@@ -392,7 +443,13 @@ describe("P7 r4 B996 to B999 root cause: the review submit uploads a git archive
       expect(existsSync(join(fx.repoDir, path)), `${path} must exist in the working tree`).toBe(true);
       expect(trackedFiles, `${path} must be untracked`).not.toContain(path);
     }
-    expect(counts.archive_runs, "the run counter starts at 0 here or higher (A4)").toBeGreaterThanOrEqual(0);
+  });
+
+  it("a8 the archive rows ran the script the expected number of times (floor, A4)", () => {
+    // Task 7.13 (finding N2 of Review A) replaced a `>= 0` assertion that could never fail. Rows a1
+    // to a6, b1, and b2 each make one real script run through `runScript`; a row that skips its run
+    // or a deleted row lowers the count.
+    expect(counts.archive_runs, "the number of real script runs in this describe").toBe(8);
   });
 });
 
