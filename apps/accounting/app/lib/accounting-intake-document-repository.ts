@@ -426,6 +426,39 @@ export function createAccountingIntakeDocumentRepository(input: {
         facts: row.facts,
       };
     },
+
+    /**
+     * Lists every year-file facts row of one company scope. The join binds
+     * each facts row to the intake rows of the company, so a facts row of
+     * another company never matches. The member reads only.
+     * @param scope Company scope of the listing.
+     * @returns The facts rows of the scope.
+     */
+    async listYearFileFactsByScope(
+      scope: Readonly<FinanceOperationScope>,
+    ): Promise<readonly AccountingYearFileFactsRecord[]> {
+      const rows = await database<YearFileFactsRow[]>`
+        select f.intake_document_id, f.form_type, f.filing_kind,
+          f.period_kind, f.period_start, f.period_end, f.tax_year, f.facts
+        from accounting_year_file_facts as f
+        join accounting_intake_documents as d
+          on d.id = f.intake_document_id
+        where d.scope_company_id = ${scope.companyId}
+        order by f.tax_year asc, f.form_type asc, f.intake_document_id asc
+      `;
+      return rows.map((row) => ({
+        intakeDocumentId: row.intake_document_id,
+        formType: row.form_type as AccountingYearFileFactsRecord["formType"],
+        filingKind:
+          row.filing_kind as AccountingYearFileFactsRecord["filingKind"],
+        periodKind:
+          row.period_kind as AccountingYearFileFactsRecord["periodKind"],
+        periodStart: toIsoDate(row.period_start),
+        periodEnd: toIsoDate(row.period_end),
+        taxYear: row.tax_year,
+        facts: row.facts,
+      }));
+    },
   };
 }
 

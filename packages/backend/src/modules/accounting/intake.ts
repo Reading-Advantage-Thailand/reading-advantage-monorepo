@@ -431,6 +431,16 @@ export interface AccountingYearFileIntakeRepository
       readonly scope: Readonly<FinanceOperationScope>;
     },
   ): Promise<AccountingYearFileFactsRecord>;
+
+  /**
+   * Lists every year-file facts row of one company scope. The read member of
+   * the year-end view (FR-31); it writes nothing.
+   * @param scope Company scope of the listing.
+   * @returns The facts rows bound to the intake rows of the scope.
+   */
+  listYearFileFactsByScope(
+    scope: Readonly<FinanceOperationScope>,
+  ): Promise<readonly AccountingYearFileFactsRecord[]>;
 }
 
 /** Counts of one intake poll run. */
