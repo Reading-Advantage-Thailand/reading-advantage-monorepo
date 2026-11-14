@@ -99,7 +99,14 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
 ## Facts
 
 - The service answers the printed paths `/<locale>/st/<level>/<week>` for the locales `th` and `en`.
-- The build needs no database and no secrets (milestone 1).
+- The build needs no database and no secrets: the Cloud Build build only runs the Docker build
+  (`apps/storytime/cloudbuild.yaml`, milestone 1), and every page that reads the account store or
+  the media signer renders at request time (`export const dynamic`). The runtime does: the service
+  needs the account store `STORYTIME_DATABASE_URL` (`apps/storytime/lib/auth/store.ts`), the
+  signer key pair `STORYTIME_STORAGE_ACCESS_KEY` and `STORYTIME_STORAGE_SECRET_KEY`, and the
+  private media bucket `STORYTIME_MEDIA_BASE=gs://storytime-app-media`
+  (`apps/storytime/lib/media/sign.ts`). Set the values through Secret Manager; this runbook holds
+  no secret value.
 - The image repository is `primary-advantage-repo`; the image name is `storytime-app`.
 
 ## The teacher routes flag (2026-11-11)
@@ -197,11 +204,18 @@ These facts come from the test deploy of 2026-11-07. The tag rule below is in th
   The archive held 154 files (about 3 MB): `package.json`, `pnpm-lock.yaml`,
   `pnpm-workspace.yaml`, `turbo.json`, `.pnpmfile.cjs`, `.dockerignore`, `apps/storytime`,
   `packages/config`, and `packages/read-along`.
-- The service needs the environment variable
-  `STORYTIME_MEDIA_BASE=https://storage.googleapis.com/primary-app-storage/storytime-app`.
-  It was set on 2026-11-07.
-- The media of the new app sit under `gs://primary-app-storage/storytime-app/`. They have public
-  read until the login phase.
+- The service needs the environment variable `STORYTIME_MEDIA_BASE=gs://storytime-app-media`.
+  The signer (`apps/storytime/lib/media/sign.ts`) accepts only this `gs://` base of the private
+  bucket `storytime-app-media`: a `https://` base, or a base of any other bucket, makes the
+  signing throw. The old test deploy of 2026-11-07 used the public base
+  `https://storage.googleapis.com/primary-app-storage/storytime-app`; the signer of the current
+  app rejects that form.
+- The service needs the signer key pair `STORYTIME_STORAGE_ACCESS_KEY` and
+  `STORYTIME_STORAGE_SECRET_KEY` (`apps/storytime/lib/media/sign.ts`). Never write the values in
+  this runbook.
+- The media sit in the private bucket `gs://storytime-app-media/` with no public read. Every
+  media URL is a signed URL that the server builds after the session check, so a stranger never
+  gets a URL.
 - The ingress was `internal`: every public address answered 404. The ingress is now `all`.
   The rollback is `--ingress=internal`.
 - The traffic must not move to `storytime-app-00008-tmb` (the rejected build) while the ingress
