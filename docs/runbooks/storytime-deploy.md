@@ -99,9 +99,13 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
 ## Facts
 
 - The service answers the printed paths `/<locale>/st/<level>/<week>` for the locales `th` and `en`.
-- The build needs no database and no secrets: the Cloud Build build only runs the Docker build
-  (`apps/storytime/cloudbuild.yaml`, milestone 1), and every page that reads the account store or
-  the media signer renders at request time (`export const dynamic`). The runtime does: the service
+- The Cloud Build build of `apps/storytime/cloudbuild.yaml` runs three steps: `build-image`
+  builds the image, `push-image` pushes it to `asia-southeast1-docker.pkg.dev/$PROJECT_ID/primary-advantage-repo`,
+  and `deploy-cloudrun` deploys a new revision of the `storytime-app` service in `asia-southeast1`
+  with `--no-traffic` and the revision tag `st-<the first 8 characters of BUILD_ID>`. The traffic
+  move stays a separate runbook step (step 4). The build needs no database and no secrets
+  (milestone 1): every page that reads the account store or the media signer renders at request
+  time (`export const dynamic`). The runtime does: the service
   needs the account store `STORYTIME_DATABASE_URL` (`apps/storytime/lib/auth/store.ts`), the
   signer key pair `STORYTIME_STORAGE_ACCESS_KEY` and `STORYTIME_STORAGE_SECRET_KEY`, and the
   private media bucket `STORYTIME_MEDIA_BASE=gs://storytime-app-media`
