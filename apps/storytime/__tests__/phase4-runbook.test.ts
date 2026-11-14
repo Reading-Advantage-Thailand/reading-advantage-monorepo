@@ -49,9 +49,17 @@ describe("Phase 4 runbook: the teacher routes flag command (F481, F491)", () => 
   });
 
   it("pins the live image, no traffic, and a tag on both flag commands (F491)", () => {
+    // Task 7.7: step 4 of the runbook also holds a `--remove-env-vars=` list with the three review
+    // switches (the release deploy). That line is no `gcloud run services update` command, so the
+    // filter counts the command lines only: the on and off commands of the teacher flag.
     const lines = text
       .split("\n")
-      .filter((entry) => /--(update|remove)-env-vars/.test(entry) && entry.includes(FLAG));
+      .filter(
+        (entry) =>
+          /--(update|remove)-env-vars/.test(entry) &&
+          entry.includes(FLAG) &&
+          /gcloud run services update/.test(entry),
+      );
     expect(
       lines.length,
       `flag_command_lines=${lines.length}: the runbook must hold the on and off commands`,
@@ -75,9 +83,16 @@ describe("Phase 4 runbook: the teacher routes flag command (F481, F491)", () => 
   });
 
   it("holds the removal command as the documented way back", () => {
+    // Task 7.7: the command line is the first `gcloud run services update` line that removes the
+    // flag; the `--remove-env-vars=` list of step 4 is no command line.
     const line = text
       .split("\n")
-      .find((entry) => entry.includes("--remove-env-vars") && entry.includes(FLAG));
+      .find(
+        (entry) =>
+          entry.includes("--remove-env-vars") &&
+          entry.includes(FLAG) &&
+          entry.includes("gcloud run services update"),
+      );
     expect(line, "the runbook must hold an --remove-env-vars command for the flag").toBeDefined();
     expect(line ?? "", "the removal command must name the service").toContain("storytime-app");
     expect(line ?? "", "the removal command must name the project").toContain(

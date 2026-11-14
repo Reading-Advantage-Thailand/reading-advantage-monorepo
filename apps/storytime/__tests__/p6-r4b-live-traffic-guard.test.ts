@@ -12,9 +12,10 @@
  * row (f)). The runbook calls the script before the traffic move of step 4.
  *
  * The contract that this file pins (module `apps/storytime/scripts/review/live-traffic-guard.ts`):
- * - `REVIEW_SWITCH_NAMES`: the names of the review switches that the guard covers. The default
- *   list holds `STORYTIME_REVIEW_DRAFT_WEEKS` and `STORYTIME_SHOW_DRAFT_MEDIA`. It does not hold
- *   `STORYTIME_TEACHER_ROUTES` (the PM may change the list; the orchestrator default stands).
+ * - `REVIEW_SWITCH_NAMES`: the names of the review switches that the guard covers. Changed in task
+ *   7.7 (PM 2026-11-14 15:20): the list holds `STORYTIME_REVIEW_DRAFT_WEEKS`,
+ *   `STORYTIME_SHOW_DRAFT_MEDIA`, and `STORYTIME_TEACHER_ROUTES`. The three review builds of the day
+ *   put all three on the service template, and the release deploy removes all three.
  * - `removeEnvVarsArg(names)`: the `--remove-env-vars=<A>,<B>` argument of the live deploy. It
  *   throws on an empty list.
  * - `envOfRevision(describeJson)` reads `spec.containers[0].env` of a revision, and
@@ -58,16 +59,18 @@ const DRAFT_WEEKS = "STORYTIME_REVIEW_DRAFT_WEEKS";
 const DRAFT_MEDIA = "STORYTIME_SHOW_DRAFT_MEDIA";
 const TEACHER_ROUTES = "STORYTIME_TEACHER_ROUTES";
 
-/** The env names that the guard message must never hold (they are not review switches). */
-const OTHER_NAMES = [
-  "NODE_ENV",
-  "NEXT_PUBLIC_STORAGE_BUCKET_NAME",
-  "STORYTIME_MEDIA_BASE",
-  TEACHER_ROUTES,
-];
+/**
+ * The env names that the guard message must never hold (they are not review switches). Task 7.7
+ * removed the teacher routes flag from this list: it is a review switch now.
+ */
+const OTHER_NAMES = ["NODE_ENV", "NEXT_PUBLIC_STORAGE_BUCKET_NAME", "STORYTIME_MEDIA_BASE"];
 
-/** The names that no runbook may hold (the old scans). */
-const RUNBOOK_BANNED = [DRAFT_WEEKS, DRAFT_MEDIA, "NEXT_PUBLIC_STORYTIME_REVIEW"];
+/**
+ * The names that no runbook may hold (the old scans). Task 7.7: the runbook names the review
+ * switches to remove and to compare them, so only the client-side look-alike stays banned here.
+ * The scan of look-adversarial-runbook-scan.test.ts bans a line that sets a draft switch.
+ */
+const RUNBOOK_BANNED = ["NEXT_PUBLIC_STORYTIME_REVIEW"];
 
 /** One env entry of a gcloud describe document. */
 interface EnvEntry {
@@ -205,14 +208,14 @@ const CASES: Case[] = [
     word: null,
   },
   {
-    id: "3b the teacher routes flag is not a review switch and passes",
+    id: "3b the teacher routes flag is a review switch and fails (task 7.7)",
     input: {
       revisionEnv: [...cleanEnv(), env(TEACHER_ROUTES, SECRET.teacher)],
       templateEnv: [...cleanEnv(), env(TEACHER_ROUTES, SECRET.teacher)],
     },
-    ok: true,
-    names: [],
-    word: null,
+    ok: false,
+    names: [TEACHER_ROUTES],
+    word: "revision",
   },
   {
     id: "3c two empty env lists pass",
@@ -232,7 +235,7 @@ const CASES: Case[] = [
       ],
     },
     ok: false,
-    names: [DRAFT_WEEKS, DRAFT_MEDIA],
+    names: [DRAFT_WEEKS, DRAFT_MEDIA, TEACHER_ROUTES],
     word: "revision",
   },
 ];
@@ -303,8 +306,8 @@ function judgeAll(guard: GuardFn): string[] {
   return CASES.map((item) => judgeCase(guard, item)).filter((text): text is string => text !== null);
 }
 
-/** The switch names of the reference guard and of the mutants. */
-const NAMES = [DRAFT_WEEKS, DRAFT_MEDIA];
+/** The switch names of the reference guard and of the mutants (task 7.7: three names). */
+const NAMES = [DRAFT_WEEKS, DRAFT_MEDIA, TEACHER_ROUTES];
 
 /**
  * Lists the switch names of one env.
@@ -361,6 +364,13 @@ const namesDumperMutant: GuardFn = (input) => {
 
 /** Mutant 6: a guard that never fails. */
 const alwaysPassMutant: GuardFn = () => ({ ok: true, message: "live traffic guard: pass" });
+
+/** Mutant 7: the guard of round 4b, which covers the two draft switches and not the teacher flag. */
+const twoSwitchMutant: GuardFn = ({ revisionEnv, templateEnv }) =>
+  referenceGuard({
+    revisionEnv: revisionEnv.filter((entry) => entry.name !== TEACHER_ROUTES),
+    templateEnv: templateEnv.filter((entry) => entry.name !== TEACHER_ROUTES),
+  });
 
 /** The loaded guard module, as far as the rows need it. */
 type GuardModule = Record<string, unknown>;
@@ -498,12 +508,11 @@ describe("P6 r4b rows 1 to 4: the guard function", () => {
 });
 
 describe("P6 r4b row 5: the switch list and the remove argument", () => {
-  it("lists exactly the two review switches and not the teacher routes flag", async () => {
+  it("lists exactly the three review switches, the teacher routes flag included (task 7.7)", async () => {
     const mod = await loadModule();
     const names = mod.REVIEW_SWITCH_NAMES;
     expect(Array.isArray(names), "REVIEW_SWITCH_NAMES must be an array").toBe(true);
-    expect([...(names as string[])].sort()).toEqual([DRAFT_MEDIA, DRAFT_WEEKS].sort());
-    expect(names as string[]).not.toContain(TEACHER_ROUTES);
+    expect([...(names as string[])].sort()).toEqual([DRAFT_MEDIA, DRAFT_WEEKS, TEACHER_ROUTES].sort());
   });
 
   it("builds the --remove-env-vars argument from the list", async () => {
@@ -632,10 +641,10 @@ describe("P6 r4b row 6: the runbook calls the guard before the traffic move", ()
     expect(block, "step 4 must name the removal flag").toContain("--remove-env-vars");
   });
 
-  it("still holds no review switch name (the old scans stay green)", () => {
+  it("still holds no client-side review name (the old scans stay green; task 7.7)", () => {
     const text = runbook();
     const hits = RUNBOOK_BANNED.filter((name) => text.includes(name));
-    expect(hits, "the runbook must hold no review switch name").toEqual([]);
+    expect(hits, "the runbook must hold no client-side review name").toEqual([]);
   });
 });
 
@@ -647,6 +656,7 @@ describe("P6 r4b row 7: the mutants that the rows reject", () => {
     ["a guard that treats an empty value as unset", emptyIgnoredMutant, "1c"],
     ["a guard that prints every env name", namesDumperMutant, "1"],
     ["a guard that never fails", alwaysPassMutant, "1"],
+    ["a guard of the two draft switches only (task 7.7)", twoSwitchMutant, "3b"],
   ];
   for (const [label, mutant, rowPrefix] of mutants) {
     it(`rejects ${label}`, () => {
