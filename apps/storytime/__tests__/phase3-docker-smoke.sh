@@ -195,7 +195,7 @@ cleanup() {
   for c in "$C1" "$C2" "$C3"; do
     [ -n "$c" ] && "${SMOKE_PODMAN[@]}" rm -f "$c" >/dev/null 2>&1
   done
-  podman rm -f "$DB_CONTAINER" >/dev/null 2>&1 || true
+  podman rm -f -v "$DB_CONTAINER" >/dev/null 2>&1 || true
   rm -rf "$TMP_DIR"
 }
 trap cleanup EXIT INT TERM

@@ -116,7 +116,7 @@ stop_group() {
 cleanup() {
   stop_group "$SERVER_PID" "$SERVER_PGID" "$SERVER_PORT"
   stop_group "$STORAGE_PID" "$STORAGE_PGID" "$STORAGE_PORT_RUN"
-  podman rm -f "$CONTAINER" >/dev/null 2>&1 || true
+  podman rm -f -v "$CONTAINER" >/dev/null 2>&1 || true
   rm -f "$PLAYWRIGHT"
   rm -rf "$TMP_DIR"
 }

@@ -85,7 +85,7 @@ stop_server_group() {
 
 cleanup() {
   stop_server_group
-  podman rm -f "$DB_CONTAINER" >/dev/null 2>&1 || true
+  podman rm -f -v "$DB_CONTAINER" >/dev/null 2>&1 || true
   rm -f "$PLAYWRIGHT"
   rm -rf "$TMP_DIR"
 }
