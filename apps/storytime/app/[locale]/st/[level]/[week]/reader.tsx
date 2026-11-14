@@ -431,9 +431,21 @@ export function StorytimeReader({
     // A browser fires timeupdate about every 250 ms, so the stop arms a timer inside the last
     // window and runs without the next timeupdate (finding F123).
     if (remaining > 0 && remaining <= PAGE_STOP_WINDOW_S && stopTimerRef.current === null) {
-      armStop(remaining * 1000, () => audioRef.current?.pause());
+      armStop(remaining * 1000, stopAtPageEnd);
     }
-    if (element.currentTime >= last.endTime) element.pause();
+    if (element.currentTime >= last.endTime) stopAtPageEnd();
+  }
+
+  /**
+   * Stops the audio at the end of the page and clears the current mark (task 7.6, finding F2).
+   * The browser queues the `pause` event of the call after it; the hook ignores that late event
+   * after the reset, so no word stays lit with no voice.
+   */
+  function stopAtPageEnd(): void {
+    const element = audioRef.current;
+    if (!element) return;
+    element.pause();
+    reset();
   }
 
   /**
