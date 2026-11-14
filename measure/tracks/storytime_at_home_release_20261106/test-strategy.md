@@ -5,6 +5,7 @@
 > **Scope:** Phase 1 in full. Phase 2b in full (section P2b, written 2026-11-07 at role base `1da5f7968`, text of `7cd1fc067`). Phases 2 and 3 as an outline (sections P2 and P3 below).
 > **Written:** 2026-11-06 at role base `6716a1546`. Model: claude-code/claude-sonnet-5-5 (PM rule: no Opus).
 > **Facts:** each "measured" fact below was read on 2026-11-06 at `6716a1546`. No heavy job ran. Red and Green must measure again.
+> **Amended:** 2026-11-14 at role base `a008631d9`. Model: claude-code/claude-sonnet-5-5. Item 4 of the Phase 3 "After the word" list now names the labels of `printed-urls-live.ts` (review C finding C1006). PM decision 2026-11-14 19:00.
 
 ## 1. Rules for every phase of this track
 
@@ -826,7 +827,7 @@ runs after the Phase 1 checkpoint and after the approved pin arrives (target 202
      of each folder against the bucket download, with the labeled count `bucket_files_ok=<n>`. It adds no new hash file.
   3. The environment of the deployed revision holds no `STORYTIME_SHOW_DRAFT_MEDIA` (AC-3.3). The record names the command (for example
      `gcloud run revisions describe … --format='value(spec.containers[0].env)'`) and the result `draft_switch_set=0`.
-  4. After Daniel moves the traffic: each printed URL of the published weeks answers 200 on the live domain (AC-3.4, `urls_ok=<n>`).
+  4. After Daniel moves the traffic: run `apps/storytime/scripts/checks/printed-urls-live.ts` once with one family session cookie in `STORYTIME_CHECK_COOKIE` (never printed). The check passes when `urls_rendered=<n>` equals `urls_checked=<n>`, `urls_failed=0`, and the exit code is 0 (AC-3.4).
 - **Server and client in one job:** a local `next start` check runs as one `HEAVY` job with `trap 'kill $SERVER_PID' EXIT`.
 - **Anti-patterns:** A1 and A8 (the gate is the structured marker, not prose), A3, A4 (a 404 check lists 7 weeks first), A5, A6 (the registry names a deploy
   state only after AC-3.1 and AC-3.4 pass, with the revision and Daniel's word), A16.
