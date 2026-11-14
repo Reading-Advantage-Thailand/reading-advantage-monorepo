@@ -79,7 +79,9 @@ export function useReadAlong({
       }
     };
     const tick = () => {
-      sync();
+      // After a reset, a frame that runs before the late `pause` event must not mark a word
+      // again (task 7.6, finding F2, green retry r2). The mark returns on `play` or `select`.
+      if (!suppressSyncRef.current) sync();
       frameRef.current = requestAnimationFrame(tick);
     };
     const onPlay = () => {
