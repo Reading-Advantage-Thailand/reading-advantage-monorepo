@@ -209,6 +209,136 @@ function readFilingMonth(
   return { year, month };
 }
 
+/** The header line of the real PND.1 period column. */
+const PND1_PERIOD_HEADER = "เดือน/ปีภาษี";
+
+/** Lines after the header of PND.1 that the period line may sit in. */
+const PND1_PERIOD_WINDOW = 7;
+
+/** Whole-line shape of the real PND.1 period line: month, slash, Buddhist year. */
+const PND1_PERIOD_LINE = /^(\d{1,2})\/(\d{4})$/;
+
+/** The header line of the real PND.53 payment table. */
+const PND53_PAYMENTS_HEADER = "วัน เดือน ปี ที่จ่าย";
+
+/** Whole-line shape of one real PND.53 payment date row: day, month, Buddhist year. */
+const PND53_DATE_ROW = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+
+/** The label line of the real PND.3 month list. */
+const PND3_PERIOD_LABEL = "เดือนที่จ่ายเงินได้พึงประเมิน";
+
+/** The tick character of the real PND.3 month list. */
+const PND3_TICK = "ü";
+
+/** The marker of the real PND.3 instruction line; its quoted tick is not a tick. */
+const PND3_INSTRUCTION_MARKER = "ให้ทำเครื่องหมาย";
+
+/** The Buddhist year line of the real PND.3 month list, right after the label. */
+const PND3_YEAR_LINE = /พ\.ศ\.[ \t]*(\d{4})/u;
+
+/** One month entry of the real PND.3 month list. */
+const PND3_MONTH_ENTRY = new RegExp(
+  `\\(\\d{1,2}\\)[ \\t]*(${MONTH_NAME_SOURCE})`,
+  "u",
+);
+
+/** One CE month period: the year and the month number. */
+type MonthPeriod = { readonly year: number; readonly month: number };
+
+/**
+ * Reads the period of the real PND.1 wording: the first whole `{m}/{yyyy}`
+ * line after the `เดือน/ปีภาษี` header line. A date line `{d}/{m}/{yyyy}` is
+ * not the period. The filing-date line never matches the whole-line shape.
+ * @param text Normalized document text.
+ * @returns The CE year and month, or null when the header is absent or the
+ *   period line sits outside the window after the header.
+ */
+function readPnd1RealMonth(text: string): MonthPeriod | null {
+  const lines = text.split("\n");
+  const headerIndex = lines.findIndex((line) => line.includes(PND1_PERIOD_HEADER));
+  if (headerIndex === -1) return null;
+  for (let offset = 1; offset <= PND1_PERIOD_WINDOW; offset += 1) {
+    const match = PND1_PERIOD_LINE.exec((lines[headerIndex + offset] ?? "").trim());
+    if (match === null) continue;
+    const month = Number(match[1]);
+    const year = toCommonEra(Number(match[2]));
+    if (month < 1 || month > 12 || year === null) continue;
+    return { year, month };
+  }
+  return null;
+}
+
+/**
+ * Reads the period of the real PND.53 wording: the payment date rows
+ * `{d}/{m}/{yyyy}` under the `วัน เดือน ปี ที่จ่าย` header line. Date rows
+ * before the header are ignored. All rows must share one month and one year.
+ * @param text Normalized document text.
+ * @returns The CE year and month, or null when the header is absent, no date
+ *   row follows it, or the rows hold two months or two years.
+ */
+function readPnd53RealMonth(text: string): MonthPeriod | null {
+  const lines = text.split("\n");
+  const headerIndex = lines.findIndex((line) => line.includes(PND53_PAYMENTS_HEADER));
+  if (headerIndex === -1) return null;
+  let period: MonthPeriod | null = null;
+  for (let index = headerIndex + 1; index < lines.length; index += 1) {
+    const match = PND53_DATE_ROW.exec((lines[index] ?? "").trim());
+    if (match === null) continue;
+    const month = Number(match[2]);
+    const year = toCommonEra(Number(match[3]));
+    if (month < 1 || month > 12 || year === null) continue;
+    if (period === null) {
+      period = { year, month };
+    } else if (period.year !== year || period.month !== month) {
+      return null;
+    }
+  }
+  return period;
+}
+
+/**
+ * Reads the period of the real PND.3 wording: the year from `พ.ศ. {yyyy}` on
+ * the line after the `เดือนที่จ่ายเงินได้พึงประเมิน` label line, and the month
+ * from the `({n}) {month}` entry that follows the single tick on its line. The
+ * instruction line holds a quoted tick and is not a tick.
+ * @param text Normalized document text.
+ * @returns The CE year and month, or null when the label is absent, the line
+ *   after the label holds no year, the ticks are not exactly one, or the tick
+ *   line holds no entry after the tick.
+ */
+function readPnd3RealMonth(text: string): MonthPeriod | null {
+  const lines = text.split("\n");
+  const labelIndex = lines.findIndex((line) => line.includes(PND3_PERIOD_LABEL));
+  if (labelIndex === -1) return null;
+  const yearMatch = PND3_YEAR_LINE.exec(lines[labelIndex + 1] ?? "");
+  const year = yearMatch === null ? null : toCommonEra(Number(yearMatch[1]));
+  if (year === null) return null;
+  const tickedLines = lines
+    .slice(labelIndex + 2)
+    .filter(
+      (line) => line.includes(PND3_TICK) && !line.includes(PND3_INSTRUCTION_MARKER),
+    );
+  if (tickedLines.length !== 1) return null;
+  const tickLine = tickedLines[0] ?? "";
+  const afterTick = tickLine.slice(tickLine.indexOf(PND3_TICK) + PND3_TICK.length);
+  const entry = PND3_MONTH_ENTRY.exec(afterTick);
+  const month = entry === null ? null : monthNumber(entry[1] ?? "");
+  if (month === null) return null;
+  return { year, month };
+}
+
+/**
+ * The real-wording period readers of the monthly filings, by type key. The old
+ * label read stays first; a real wording is the fallback of its type.
+ */
+const REAL_WORDING_MONTH_READERS: Partial<
+  Record<AccountingYearFileTypeKey, (text: string) => MonthPeriod | null>
+> = {
+  "wht-filing-pnd1": readPnd1RealMonth,
+  "wht-filing-pnd53": readPnd53RealMonth,
+  "wht-filing-pnd3": readPnd3RealMonth,
+};
+
 /**
  * Reads the year of an annual filing from a year label.
  * @param text Normalized document text.
@@ -353,12 +483,18 @@ export function readWhtFilingKind(text: string): AccountingYearFileFilingKind {
 }
 
 /**
- * Returns the month range of a monthly filing from the "ประจำเดือน" line.
+ * Returns the month range of a monthly filing: the old `ประจำเดือน` label
+ * first, then the real wording of the type.
  * @param text Normalized document text.
+ * @param typeKey The monthly withholding type key.
  * @returns The first-to-last-day range, or null when the month is unreadable.
  */
-function readMonthRange(text: string): DateRange | null {
-  const filingMonth = readFilingMonth(text);
+function readMonthRange(
+  text: string,
+  typeKey: AccountingYearFileTypeKey,
+): DateRange | null {
+  const filingMonth =
+    readFilingMonth(text) ?? REAL_WORDING_MONTH_READERS[typeKey]?.(text) ?? null;
   if (filingMonth === null) return null;
   const { year, month } = filingMonth;
   return {
@@ -401,7 +537,7 @@ export function parseMonthlyWhtFiling(
   text: string,
   typeKey: AccountingYearFileTypeKey,
 ): YearFileParseResult {
-  const range = readMonthRange(text);
+  const range = readMonthRange(text, typeKey);
   if (range === null) return unmatched("period-unreadable");
   return parsed({
     typeKey,

@@ -1871,10 +1871,25 @@ export async function dryRunAccountingYearFiles(
   await mkdir(request.reportDir, { recursive: true });
   const reportPath = join(
     request.reportDir,
-    `year-files-dry-run-${new Date().toISOString().slice(0, 10)}.md`,
+    `year-files-dry-run-${bangkokDate(new Date())}.md`,
   );
   await writeFile(reportPath, report, "utf8");
   return { reportPath, report };
+}
+
+/**
+ * Returns the Asia/Bangkok calendar date of one instant. The dry-run report
+ * name uses this date, so a run late in the Bangkok day names the next date.
+ * @param now The run instant.
+ * @returns The date as `YYYY-MM-DD` in Asia/Bangkok.
+ */
+function bangkokDate(now: Date): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Bangkok",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(now);
 }
 
 /**
