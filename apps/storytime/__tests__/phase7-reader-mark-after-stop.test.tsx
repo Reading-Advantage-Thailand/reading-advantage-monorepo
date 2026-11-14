@@ -222,6 +222,23 @@ describe("Task 7.5 word mark after a stop (finding F2)", () => {
     expect(litWord(clock.container), "the page-end stop must leave no marked word").toBeNull();
   });
 
+  it("R10 a late timeupdate after the page-end stop leaves no marked word", async () => {
+    // Task 7.9, finding F3 of Review A: `stopAtPageEnd` leaves the mode `listen` and `onTimeUpdate`
+    // has no guard, so a `timeupdate` that arrives after the stop marks the word at the paused
+    // time again, and the mark stays until the re-armed stop timer fires. The clock stays at 1.5 s,
+    // 0.206 s before the end of page 1, so the stop is the timer stop of the browser.
+    const clock = await renderReader();
+    await listenOnPageOne(clock, 1.5);
+    fireEvent.timeUpdate(clock.audio);
+    await settle(300);
+    expect(litWord(clock.container), "the timer stop must leave no marked word").toBeNull();
+    // The one `timeupdate` that a browser fires after a pause, at the paused time.
+    fireEvent.timeUpdate(clock.audio);
+    expect(litWord(clock.container), "a late timeupdate must not mark a word").toBeNull();
+    await settle(100);
+    expect(litWord(clock.container), "a late timeupdate must leave no mark after 100 ms").toBeNull();
+  });
+
   it("R4 the browser order after the switch to My turn leaves no marked word", async () => {
     events.delayMs = 20;
     events.timeUpdate = true;

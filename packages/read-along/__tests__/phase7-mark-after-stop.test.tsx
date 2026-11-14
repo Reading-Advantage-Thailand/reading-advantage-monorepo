@@ -156,6 +156,43 @@ describe("useReadAlong mark after a stop (task 7.5, finding F2)", () => {
     );
   });
 
+  it("S4 a reset at the media end leaves no mark when the late ended and seeked events arrive", () => {
+    // Task 7.9, finding F2 of Review A: `onEnded` calls `select(NO_POSITION)`, and `select`
+    // clears the suppression that `reset()` set, so a `seeked` that the browser queued after the
+    // reset at the media end marks a word at the time 0 again.
+    const { result } = setup();
+    act(() => void audio.dispatchEvent(new Event("play")));
+    setTime(2.9);
+    runFrame();
+    expect(result.current.position, "the voice must mark the last word first").toEqual({
+      sentenceIndex: 0,
+      wordIndex: 2,
+    });
+    // The host stops at the media end: the time goes to 0 and the host resets.
+    setTime(0);
+    act(() => result.current.reset());
+    expect(result.current.position).toEqual(NO_POSITION);
+    act(() => void audio.dispatchEvent(new Event("ended")));
+    expect(result.current.position, "the late ended event must leave no mark").toEqual(NO_POSITION);
+    act(() => void audio.dispatchEvent(new Event("seeked")));
+    expect(result.current.position, "the late seeked event after ended must leave no mark").toEqual(
+      NO_POSITION,
+    );
+    expect(result.current.isPlaying).toBe(false);
+  });
+
+  it("C4 a natural end with no reset clears the mark and stops the loop", () => {
+    const { result } = setup();
+    act(() => void audio.dispatchEvent(new Event("play")));
+    setTime(2.9);
+    runFrame();
+    expect(result.current.position).toEqual({ sentenceIndex: 0, wordIndex: 2 });
+    act(() => void audio.dispatchEvent(new Event("ended")));
+    expect(result.current.isPlaying).toBe(false);
+    expect(result.current.position).toEqual(NO_POSITION);
+    expect(frames.size, "the loop holds no pending frame after the end").toBe(0);
+  });
+
   it("C1 a plain pause keeps the mark on the paused word (Primary player behavior)", () => {
     const { result } = setup();
     act(() => void audio.dispatchEvent(new Event("play")));
