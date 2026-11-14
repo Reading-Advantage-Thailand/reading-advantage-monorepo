@@ -51,3 +51,15 @@ Open items from Phase 1. These items are not this capture task. Green or a follo
 - `lockup-thai-dark` and `lockup-thai-dark-inverse` have no consumer yet. Daniel approved the copy on 2026-10-08.
 - Stale raster names remain in `apps/www-reading-advantage/docs/pages/*.md` and in `todo.md`.
 - Old icon PNG files remain. The files are `favicon-16x16.png`, `favicon-32x32.png`, `apple-touch-icon.png`, `android-chrome-192x192.png`, and `android-chrome-512x512.png`. FR-3 names only the `.ico`.
+
+## Phase 3: Release integration
+- [x] Release branch `www/real-logos-release` on origin/master `8bcce8c84`, with the 18 track commits `8f849e390..78e7dd242` cherry-picked in order (2026-11-14)
+  - Conflicts: only commit `1e7948a8e` (now `faeaf2e36`) had conflicts, in 4 files.
+  - `products/primary-advantage/page.tsx` and `products/storytime-advantage/page.tsx`: master's new pages kept. These pages show no logo image, so they need no logo path.
+  - `src/components/products/b2b-solutions.tsx`: the Storytime card uses `siteLogos.storytime.square`, the same as the other products.
+  - `public/media/brand/logos/svg/storytime-advantage.svg`: the deletion was taken. No file refers to it.
+  - `public/storytime-advantage.svg` (added on master): the b2b card was its only reference. The file was removed, as the branch removed the other root placeholder logos.
+  - Master tests: no change was necessary. The hits for the old logo paths are absence lists (`OLD_REFERENCES`, `OLD_FILES`, `OLD_STOCK_REFERENCES`). `phase-3-group-b-types.test.ts` pins `vector/square/reading-advantage.svg` through `faeaf2e36`.
+  - Gates (each one heavy-run p2 job): `pnpm install --frozen-lockfile --prefer-offline` exit 0. vitest exit 0, 52 files, 2277 passed. `pnpm check-types` exit 0. `pnpm lint` exit 1: 146 errors, all in 31 minified `public/experience/assets/*.js` files. `pnpm build` exit 0.
+  - Captures: `next start -p 3123` and `e2e/real-logos-captures.spec.ts` in one job: server_check=200, CAPTURE_EXIT=0, 16 passed (16). The 4 favicon URLs return 200, 6507 bytes, magic `00 00 01 00`. No `<img>` returned 404. 10 PNGs changed; the math, reading, science, stem, and zhongwen captures are byte-identical.
+  - The machine had no Playwright browser. `playwright install chromium --only-shell` added `chromium_headless_shell-1228` for Playwright 1.61.0.
