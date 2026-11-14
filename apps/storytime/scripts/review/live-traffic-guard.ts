@@ -224,12 +224,73 @@ function describeJson(kind: "revision" | "service", name: string): JsonRead {
 }
 
 /**
- * Judges the two documents and prints the result.
+ * Checks the structure of one describe document. The check is a separate step of the guard: the
+ * lenient readers `envOfRevision` and `envOfService` turn a malformed document into `[]`, and an
+ * empty list looks clean, so `judge` rejects a malformed document before it reads the environment
+ * (B601, fail closed).
+ * @param doc The describe document.
+ * @param kind The document kind: `revision` or `service`.
+ * @returns The failure reason, or `null` when the structure is valid. The reason holds no
+ *   environment value, no `valueFrom` reference, and no file content.
+ */
+function structureReasonOf(doc: unknown, kind: "revision" | "service"): string | null {
+  const label = kind === "revision" ? "the revision describe document" : "the service describe document";
+  if (typeof doc !== "object" || doc === null || Array.isArray(doc)) {
+    return `live traffic guard: ${label} is not a JSON object`;
+  }
+  const spec = at(doc, "spec");
+  if (typeof spec !== "object" || spec === null || Array.isArray(spec)) {
+    return `live traffic guard: ${label} holds no spec object`;
+  }
+  const containers =
+    kind === "revision" ? at(spec, "containers") : at(spec, "template", "spec", "containers");
+  if (!Array.isArray(containers)) {
+    return `live traffic guard: ${label} holds no containers list`;
+  }
+  if (containers.length === 0) {
+    return `live traffic guard: ${label} holds no container`;
+  }
+  const container = containers[0];
+  if (typeof container !== "object" || container === null || Array.isArray(container)) {
+    return `live traffic guard: ${label} holds a first container that is not an object`;
+  }
+  const record = container as Record<string, unknown>;
+  if (record.env === undefined) return null;
+  if (!Array.isArray(record.env)) {
+    return `live traffic guard: ${label} holds a container whose env is not a list`;
+  }
+  for (const entry of record.env) {
+    if (typeof entry !== "object" || entry === null || Array.isArray(entry)) {
+      return `live traffic guard: ${label} holds an env entry that is not an object`;
+    }
+    if (typeof (entry as Record<string, unknown>).name !== "string") {
+      return `live traffic guard: ${label} holds an env entry whose name is not a string`;
+    }
+  }
+  return null;
+}
+
+/**
+ * Judges the two documents and prints the result. A malformed describe document fails closed:
+ * `judge` prints the structure reason of the first malformed document, prints no clean verdict,
+ * and exits 1, before it reads the environment or runs `checkLiveTrafficGuard`. The check covers
+ * the revision document and the service document, so the `--revision` gcloud form and the
+ * `--revision-json` form both fail closed.
  * @param revisionDoc The revision describe document.
  * @param serviceDoc The service describe document.
  * @returns The exit code: 0 on a pass, 1 on a fail.
  */
 function judge(revisionDoc: unknown, serviceDoc: unknown): number {
+  const revisionReason = structureReasonOf(revisionDoc, "revision");
+  if (revisionReason !== null) {
+    console.error(revisionReason);
+    return 1;
+  }
+  const serviceReason = structureReasonOf(serviceDoc, "service");
+  if (serviceReason !== null) {
+    console.error(serviceReason);
+    return 1;
+  }
   const result = checkLiveTrafficGuard({
     revisionEnv: envOfRevision(revisionDoc),
     templateEnv: envOfService(serviceDoc),
