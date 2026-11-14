@@ -4,8 +4,9 @@
  * 6.2, round 4b).
  *
  * PM decision, 2026-11-14: a live deploy (a traffic move) must fail while the service still
- * holds a review switch, and the live deploy uses `--remove-env-vars`. The review switches are
- * `STORYTIME_REVIEW_DRAFT_WEEKS` and `STORYTIME_SHOW_DRAFT_MEDIA`.
+ * holds a review switch, and the live deploy uses `--remove-env-vars`. PM decision, 2026-11-14
+ * (task 7.7): "Teacher routes off on live on 11-20: YES." The review switches are
+ * `STORYTIME_REVIEW_DRAFT_WEEKS`, `STORYTIME_SHOW_DRAFT_MEDIA`, and `STORYTIME_TEACHER_ROUTES`.
  *
  * The guard is a script, not a runbook line, because two older tests forbid the switch names in
  * the runbooks (`apps/storytime/__tests__/look-adversarial-runbook-scan.test.ts`) and in the
@@ -43,12 +44,14 @@ export interface GuardInput {
 }
 
 /**
- * The review switches that the guard covers. The PM may extend this list; the teacher routes
- * flag is not a review switch and stays outside it.
+ * The review switches that the guard covers. The PM may extend this list. The teacher routes
+ * flag joined it on 2026-11-14 (PM decision, task 7.7): a revision or a template that still
+ * holds it must not take the release traffic.
  */
 export const REVIEW_SWITCH_NAMES: readonly string[] = [
   "STORYTIME_REVIEW_DRAFT_WEEKS",
   "STORYTIME_SHOW_DRAFT_MEDIA",
+  "STORYTIME_TEACHER_ROUTES",
 ];
 
 /** The Google Cloud project of the Storytime service. */

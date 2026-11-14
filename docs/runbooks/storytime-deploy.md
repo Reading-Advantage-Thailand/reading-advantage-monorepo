@@ -67,8 +67,11 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
    node_modules/.bin/tsx apps/storytime/scripts/review/live-traffic-guard.ts --print-remove-arg
    ```
 
-   The printed text is the whole `--remove-env-vars` argument with the review switch names.
-   A live deploy that clears the template adds that text to the env-removal command of the
+   The printed text is the whole `--remove-env-vars` argument with the review switch names:
+   `--remove-env-vars=STORYTIME_REVIEW_DRAFT_WEEKS,STORYTIME_SHOW_DRAFT_MEDIA,STORYTIME_TEACHER_ROUTES`.
+   The argument removes only these three names, and it never adds a name: a variable that the
+   service does not set stays unset. A live deploy that clears the template adds that text to
+   the env-removal command of the
    teacher flag section above, the same way: the live revision image pinned with its digest,
    no traffic, and a new tag. Then check the tag URL of that revision, and only Daniel's go
    starts the traffic move:
@@ -157,7 +160,9 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
      gcloud run revisions describe <live revision> --project primary-advantage --region asia-southeast1 --format='value(spec.containers[0].env.name)'
      ```
 
-     The compare prints the variable names, not their values. Each command prints one line
+     The compare prints the variable names, not their values. The three review switches
+     `STORYTIME_REVIEW_DRAFT_WEEKS`, `STORYTIME_SHOW_DRAFT_MEDIA`, and
+     `STORYTIME_TEACHER_ROUTES` are absent on the live revision. Each command prints one line
      with the names separated by `;`. The names compare shows that no env name differs
      except `STORYTIME_TEACHER_ROUTES`. If another name differs, stop, give no traffic
      step, and report the difference to Daniel. The flag state shows only through the 200 or 404
