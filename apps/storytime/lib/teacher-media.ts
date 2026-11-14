@@ -8,9 +8,12 @@ import type { StorytimeWeek } from "./contracts/week";
  * starts with a fixed key and ends with `: "<title>"`, and that title names a media object of the
  * same week.
  *
- * The table holds two keys. The key `karaoke videos` opens the song of the week, and the key
- * `book audio` opens a book of the week. Every other entry opens nothing. The rule takes the
- * first matching entry of the list, and it never reads a step id.
+ * The table holds four keys. The key `karaoke videos` opens the song of the week, and the keys
+ * `book audio`, `big book or screen`, and `small books` open a book of the week. The kind comes
+ * from that book, so `small books` with a decodable title opens the decodable. The entry may end
+ * with one parenthetical note after the closing quote (for example ` (Sprout band)`); an entry
+ * with two quoted titles, or with two notes, opens nothing. Every other entry opens nothing. The
+ * rule takes the first matching entry of the list, and it never reads a step id.
  *
  * The rule lives in one function, so a later field of Workbooks changes this module and its test
  * rows in one commit.
@@ -41,11 +44,12 @@ type WeekSong = NonNullable<StorytimeWeek["song"]>;
 /** The key of the materials entry that opens the song. */
 const SONG_KEY = "karaoke videos";
 
-/** The key of the materials entry that opens a book. */
-const BOOK_KEY = "book audio";
+/** The key of the materials entry that opens a book, in every form that the week files use. */
+const BOOK_KEYS = ["book audio", "big book or screen", "small books"] as const;
 
-/** The pattern of the title at the end of a materials entry. */
-const TITLE_PATTERN = /: "([^"]*)"\s*$/;
+/** The pattern of the title at the end of a materials entry, with one optional parenthetical
+ * note after the closing quote. Two quoted titles, and two notes, match nothing. */
+const TITLE_PATTERN = /: "([^"]*)"\s*(?:\([^)]*\))?\s*$/;
 
 /**
  * Reads the title at the end of one materials entry.
@@ -97,16 +101,16 @@ function bookFiles(book: WeekBook): string[] {
  */
 export function stepMediaOf(step: LessonStep, week: StorytimeWeek): StepMedia | null {
   for (const entry of step.materials) {
+    const title = titleOf(entry);
+    if (title === null) continue;
     if (entry.startsWith(SONG_KEY)) {
-      const title = titleOf(entry);
       const song = week.song;
-      if (title === null || !song || song.title !== title) continue;
+      if (!song || song.title !== title) continue;
       return { kind: "song", title, files: songFiles(song) };
     }
-    if (entry.startsWith(BOOK_KEY)) {
-      const title = titleOf(entry);
-      if (title === null) continue;
-      const book = week.books.find((entry2) => entry2.title === title);
+    for (const key of BOOK_KEYS) {
+      if (!entry.startsWith(key)) continue;
+      const book = week.books.find((candidate) => candidate.title === title);
       if (!book) continue;
       return { kind: book.kind, title, files: bookFiles(book) };
     }

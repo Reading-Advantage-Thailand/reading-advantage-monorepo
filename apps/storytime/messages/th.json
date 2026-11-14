@@ -50,6 +50,7 @@
   "teacherForbiddenLink": "เข้าสู่ระบบในชื่อครู",
   "teacherChildViewLink": "เปิดหน้าเด็ก",
   "stTeacherViewLink": "เปิดหน้าครู",
+  "stDayLine": "วันที่ {day}",
   "stFallbackHeading": "สแกนรหัสในหนังสือ",
   "stFallbackLine": "สแกนรหัสในหนังสือเพื่อเปิดสัปดาห์",
   "barLevel": "ระดับ {level}",

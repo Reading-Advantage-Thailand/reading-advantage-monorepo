@@ -75,8 +75,9 @@ export function TeacherWeekView({
           </p>
         </header>
 
-        {/* The link to the child page of the same week (plan task 6.2, round 7, PM point 2).
-            No label renders no link, so the view keeps its data-only shape. */}
+        {/* The week-level link to the child page (plan task 6.2, rounds 7 and 10). It keeps the
+            week address with no day; the day buttons live in the lesson rows. No label renders
+            no link, so the view keeps its data-only shape. */}
         {childViewLabel ? (
           <Link
             href={`/${locale}/st/${level}/${weekNumber}`}
@@ -204,13 +205,26 @@ export function TeacherWeekView({
                 <span className="text-lg font-semibold" lang="en">
                   <LanguageRuns text={script.title.en} lang="en" />
                 </span>
-                <Link
-                  href={`/${locale}/teacher/${level}/${weekNumber}/${script.day}`}
-                  className="min-h-11 rounded-xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
-                  lang="en"
-                >
-                  Open the lesson
-                </Link>
+                <span className="flex items-center gap-2">
+                  {/* The child button of the day (plan task 6.2, round 10): it opens the child
+                      page at that day, so a tap does not always open day 1. No label renders no
+                      button. */}
+                  {childViewLabel ? (
+                    <Link
+                      href={`/${locale}/st/${level}/${weekNumber}?day=${script.day}`}
+                      className="inline-flex min-h-11 items-center rounded-xl border border-[#92400e] bg-[#fcd34d] px-4 py-2 font-semibold text-[#92400e]"
+                    >
+                      {childViewLabel}
+                    </Link>
+                  ) : null}
+                  <Link
+                    href={`/${locale}/teacher/${level}/${weekNumber}/${script.day}`}
+                    className="min-h-11 rounded-xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
+                    lang="en"
+                  >
+                    Open the lesson
+                  </Link>
+                </span>
               </li>
             ))}
           </ol>
