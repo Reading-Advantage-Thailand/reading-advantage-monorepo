@@ -12,8 +12,10 @@
  *
  * The script sends one GET per printed URL and never follows a redirect (`redirect: "manual"`), so
  * the server sees exactly one request per URL. It sends no body and no other request. The optional
- * environment variable `STORYTIME_CHECK_COOKIE` is sent as the `Cookie` header of every request;
- * the script never prints the value, and prints no error text that can hold it.
+ * environment variable `STORYTIME_CHECK_COOKIE` is sent as the `Cookie` header of a request only
+ * when the host of the requested URL equals the host of the base URL (`URL.host` compares host
+ * and port, so another port of the same address is another host; task 7.15, Review B B1002); the
+ * script never prints the value, and prints no error text that can hold it.
  *
  * The script classifies each answer:
  *   - `rendered`: status 200 and the body holds the week-page marker `data-level-week` (the
@@ -160,11 +162,13 @@ async function main(): Promise<void> {
     let status = 0;
     let urlClass: UrlClass = "failed";
     try {
-      // One GET per URL; the redirect is never followed, so the server sees one request.
+      // One GET per URL; the redirect is never followed, so the server sees one request. The
+      // cookie goes only to the host of the base URL, never to a cross-host printed URL.
+      const sameHost = new URL(target).host === new URL(baseUrl).host;
       const response = await fetch(target, {
         method: "GET",
         redirect: "manual",
-        headers: cookie === undefined ? {} : { Cookie: cookie },
+        headers: cookie === undefined || !sameHost ? {} : { Cookie: cookie },
       });
       status = response.status;
       // The body is read only for a 200, where the week marker decides the class.
