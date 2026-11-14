@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import type { ReadAlongSentence } from "../align";
+import type { ReadAlongSentence } from "@reading-advantage/read-along/lib/align";
 import { SEEK_EPSILON } from "@/lib/audio-highlight";
-import { findPosition, NO_POSITION, seekTimeForSentence, seekTimeForWord } from "../position";
+import { findPosition, NO_POSITION, seekTimeForSentence, seekTimeForWord } from "@reading-advantage/read-along/lib/position";
 
 const sentences: ReadAlongSentence[] = [
   {

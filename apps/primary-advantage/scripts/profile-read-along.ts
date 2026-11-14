@@ -9,7 +9,7 @@
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import postgres from "postgres";
-import { classifySentence, profileArticles, type ProfileSentence, type ProfileTag } from "../lib/read-along/profile";
+import { classifySentence, profileArticles, type ProfileSentence, type ProfileTag } from "@reading-advantage/read-along/lib/profile";
 
 const url = process.env.DATABASE_URL;
 if (!url) throw new Error("Set DATABASE_URL to the database copy to profile.");

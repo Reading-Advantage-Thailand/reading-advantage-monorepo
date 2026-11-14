@@ -3,9 +3,9 @@ import "@testing-library/jest-dom/vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { HIGHLIGHT_CLASSES } from "@/lib/audio-highlight";
-import type { ReadAlongSentence } from "@/lib/read-along/align";
-import { NO_POSITION } from "@/lib/read-along/position";
-import { ReadAlongPassage } from "../read-along-passage";
+import type { ReadAlongSentence } from "@reading-advantage/read-along/lib/align";
+import { NO_POSITION } from "@reading-advantage/read-along/lib/position";
+import { ReadAlongPassage } from "@reading-advantage/read-along/components/read-along/read-along-passage";
 import contraction from "@/lib/read-along/__tests__/fixtures/contraction.json";
 import curlyQuote from "@/lib/read-along/__tests__/fixtures/curly-quote.json";
 import audioDropped from "@/lib/read-along/__tests__/fixtures/audio-dropped.json";
@@ -24,7 +24,7 @@ describe("ReadAlongPassage", () => {
   it("lights the screen word that the audio word says, across a contraction and a quote", () => {
     // audio: It / says: / "Don't / run."  -> screen: It / says / Don't / run
     const { container } = render(
-      <ReadAlongPassage
+      <ReadAlongPassage highlightClasses={HIGHLIGHT_CLASSES}
         sentences={contraction as ReadAlongSentence[]}
         passage=""
         position={{ sentenceIndex: 0, wordIndex: 2 }}
@@ -37,7 +37,7 @@ describe("ReadAlongPassage", () => {
   it("lights the right word after a dropped audio word", () => {
     // audio: is / a / friend. -> screen: The ball is a friend.
     const { container } = render(
-      <ReadAlongPassage
+      <ReadAlongPassage highlightClasses={HIGHLIGHT_CLASSES}
         sentences={audioDropped as ReadAlongSentence[]}
         passage=""
         position={{ sentenceIndex: 0, wordIndex: 1 }}
@@ -49,7 +49,7 @@ describe("ReadAlongPassage", () => {
 
   it("keeps the band and the mark when the audio is paused (the position stays)", () => {
     const { container } = render(
-      <ReadAlongPassage
+      <ReadAlongPassage highlightClasses={HIGHLIGHT_CLASSES}
         sentences={curlyQuote as ReadAlongSentence[]}
         passage=""
         position={{ sentenceIndex: 0, wordIndex: 3 }}
@@ -62,7 +62,7 @@ describe("ReadAlongPassage", () => {
 
   it("shows no band and no mark when the read-along is off", () => {
     const { container } = render(
-      <ReadAlongPassage
+      <ReadAlongPassage highlightClasses={HIGHLIGHT_CLASSES}
         sentences={contraction as ReadAlongSentence[]}
         passage=""
         position={{ sentenceIndex: 0, wordIndex: 1 }}
@@ -76,7 +76,7 @@ describe("ReadAlongPassage", () => {
   it("shows the band only for a sentence with words: []", () => {
     const sentences = [{ ...contraction[0], words: [] }] as ReadAlongSentence[];
     const { container } = render(
-      <ReadAlongPassage sentences={sentences} passage="" position={{ sentenceIndex: 0, wordIndex: -1 }} active />,
+      <ReadAlongPassage highlightClasses={HIGHLIGHT_CLASSES} sentences={sentences} passage="" position={{ sentenceIndex: 0, wordIndex: -1 }} active />,
     );
     expect(container.querySelectorAll(`.${BAND}`)).toHaveLength(1);
     expect(markedWords(container)).toEqual([]);
@@ -90,7 +90,7 @@ describe("ReadAlongPassage", () => {
       words: [],
     }));
     const { container } = render(
-      <ReadAlongPassage sentences={sentences} passage="" position={NO_POSITION} active={false} />,
+      <ReadAlongPassage highlightClasses={HIGHLIGHT_CLASSES} sentences={sentences} passage="" position={NO_POSITION} active={false} />,
     );
     expect(container.querySelectorAll("p")).toHaveLength(3);
     const text = container.textContent ?? "";
@@ -100,7 +100,7 @@ describe("ReadAlongPassage", () => {
 
   it("renders the block media from the host", () => {
     render(
-      <ReadAlongPassage
+      <ReadAlongPassage highlightClasses={HIGHLIGHT_CLASSES}
         sentences={contraction as ReadAlongSentence[]}
         passage=""
         position={NO_POSITION}
@@ -113,7 +113,7 @@ describe("ReadAlongPassage", () => {
 
   it("falls back to the passage text when there are no sentences", () => {
     const { container } = render(
-      <ReadAlongPassage sentences={[]} passage="One. Two. Three. Four." position={NO_POSITION} active={false} />,
+      <ReadAlongPassage highlightClasses={HIGHLIGHT_CLASSES} sentences={[]} passage="One. Two. Three. Four." position={NO_POSITION} active={false} />,
     );
     expect(container.querySelectorAll("p")).toHaveLength(3);
   });
@@ -121,7 +121,7 @@ describe("ReadAlongPassage", () => {
   it("reports the audio word index of a tapped screen word", () => {
     const onWordTap = vi.fn();
     render(
-      <ReadAlongPassage
+      <ReadAlongPassage highlightClasses={HIGHLIGHT_CLASSES}
         sentences={audioDropped as ReadAlongSentence[]}
         passage=""
         position={NO_POSITION}
@@ -138,7 +138,7 @@ describe("ReadAlongPassage", () => {
   it("reports -1 when the sentence has no word timings", () => {
     const onWordTap = vi.fn();
     const sentences = [{ ...contraction[0], words: [] }] as ReadAlongSentence[];
-    render(<ReadAlongPassage sentences={sentences} passage="" position={NO_POSITION} active onWordTap={onWordTap} />);
+    render(<ReadAlongPassage highlightClasses={HIGHLIGHT_CLASSES} sentences={sentences} passage="" position={NO_POSITION} active onWordTap={onWordTap} />);
     fireEvent.click(screen.getByText("run"));
     expect(onWordTap).toHaveBeenCalledWith(0, -1);
   });
@@ -146,7 +146,7 @@ describe("ReadAlongPassage", () => {
   it("plays the sentence when the student taps the band outside a word", () => {
     const onWordTap = vi.fn();
     const { container } = render(
-      <ReadAlongPassage
+      <ReadAlongPassage highlightClasses={HIGHLIGHT_CLASSES}
         sentences={audioDropped as ReadAlongSentence[]}
         passage=""
         position={NO_POSITION}
@@ -162,7 +162,7 @@ describe("ReadAlongPassage", () => {
   it("calls the tap handler once for a word tap (the word does not bubble to the sentence)", () => {
     const onWordTap = vi.fn();
     render(
-      <ReadAlongPassage
+      <ReadAlongPassage highlightClasses={HIGHLIGHT_CLASSES}
         sentences={audioDropped as ReadAlongSentence[]}
         passage=""
         position={NO_POSITION}
@@ -177,7 +177,7 @@ describe("ReadAlongPassage", () => {
   it("makes each sentence one tab stop and plays it with Enter or Space", () => {
     const onWordTap = vi.fn();
     const { container } = render(
-      <ReadAlongPassage
+      <ReadAlongPassage highlightClasses={HIGHLIGHT_CLASSES}
         sentences={audioDropped as ReadAlongSentence[]}
         passage=""
         position={NO_POSITION}
@@ -197,7 +197,7 @@ describe("ReadAlongPassage", () => {
 
   it("has no tab stop and no button role when the read-along is off", () => {
     const { container } = render(
-      <ReadAlongPassage sentences={audioDropped as ReadAlongSentence[]} passage="" position={NO_POSITION} active={false} />,
+      <ReadAlongPassage highlightClasses={HIGHLIGHT_CLASSES} sentences={audioDropped as ReadAlongSentence[]} passage="" position={NO_POSITION} active={false} />,
     );
     expect(container.querySelectorAll("[tabindex]")).toHaveLength(0);
     expect(container.querySelectorAll("[role='button']")).toHaveLength(0);
@@ -206,7 +206,7 @@ describe("ReadAlongPassage", () => {
   it("does not play the sentence from a key press on the sentence menu", () => {
     const onWordTap = vi.fn();
     const { container } = render(
-      <ReadAlongPassage
+      <ReadAlongPassage highlightClasses={HIGHLIGHT_CLASSES}
         sentences={audioDropped as ReadAlongSentence[]}
         passage=""
         position={NO_POSITION}

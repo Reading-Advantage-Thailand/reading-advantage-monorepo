@@ -5,7 +5,9 @@
     "incremental": true,
     "plugins": [{ "name": "next" }],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@reading-advantage/read-along": ["../../packages/read-along/lib/index.ts"],
+      "@reading-advantage/read-along/*": ["../../packages/read-along/*"]
     }
   },
   "include": [

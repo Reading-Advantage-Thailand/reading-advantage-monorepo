@@ -52,6 +52,23 @@ export interface ReadAlongPassageProps {
    * no pointer cursor, no tab stop, and no tap. Without this function every word is a target.
    */
   wordIsTarget?: (audioWord: string) => boolean;
+  /**
+   * The highlight classes of the host: the sentence band, the hover word, and the current word.
+   * The default keeps the package classes. A host with its own highlight colors passes the three
+   * names of its own frame, so its pages keep their colors. The fields hold plain class strings,
+   * so a host constant with its own literal strings assigns.
+   */
+  highlightClasses?: ReadAlongHighlightClasses;
+}
+
+/** The three highlight class strings of the host frame. */
+export interface ReadAlongHighlightClasses {
+  /** The band of the sentence that the voice says. */
+  playingSentence: string;
+  /** A word under the pointer. */
+  hoverWord: string;
+  /** The word that the voice says now. */
+  currentWord: string;
 }
 
 interface SentenceViewProps {
@@ -70,6 +87,8 @@ interface SentenceViewProps {
   audioWords: string[];
   /** Tells whether the word with this audio text is a tap target; `undefined` means all are. */
   wordIsTarget?: (audioWord: string) => boolean;
+  /** The highlight classes of the host. */
+  highlight: ReadAlongHighlightClasses;
 }
 
 /**
@@ -92,6 +111,7 @@ const SentenceView = memo(function SentenceView({
   onWordTap,
   audioWords,
   wordIsTarget,
+  highlight,
 }: SentenceViewProps) {
   const interactive = active && !!onWordTap;
   return (
@@ -101,7 +121,7 @@ const SentenceView = memo(function SentenceView({
       aria-current={active && isCurrent ? "true" : undefined}
       className={cn(
         "font-article rounded px-0.5 text-lg transition-all duration-200 motion-reduce:transition-none md:text-xl",
-        active && isCurrent && HIGHLIGHT_CLASSES.playingSentence,
+        active && isCurrent && highlight.playingSentence,
         interactive &&
           "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#92400e] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffaf0]",
       )}
@@ -160,8 +180,8 @@ const SentenceView = memo(function SentenceView({
                 target && "cursor-pointer",
                 tapTargetFloor && HIT_AREA_CLASSES,
                 active && word.index === markedWord
-                  ? HIGHLIGHT_CLASSES.currentWord
-                  : target && HIGHLIGHT_CLASSES.hoverWord,
+                  ? highlight.currentWord
+                  : target && highlight.hoverWord,
                 interactive &&
                   target &&
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#92400e] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffaf0]",
@@ -196,7 +216,9 @@ export function ReadAlongPassage({
   renderSentenceMenu,
   tapTargetFloor,
   wordIsTarget,
+  highlightClasses,
 }: ReadAlongPassageProps): ReactNode {
+  const highlight = highlightClasses ?? HIGHLIGHT_CLASSES;
   const aligned = useMemo(
     () =>
       sentences.map((sentence) => {
@@ -243,6 +265,7 @@ export function ReadAlongPassage({
               onWordTap={onWordTap}
               audioWords={audioWords}
               wordIsTarget={wordIsTarget}
+              highlight={highlight}
             />
           );
           return (
