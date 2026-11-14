@@ -235,9 +235,9 @@ function readActorRole(request: unknown): string {
  * @returns The module namespace, or null when the page is missing.
  */
 async function loadFilingsPage(): Promise<Record<string, unknown> | null> {
-  const href = new URL("../page.tsx", import.meta.url).href;
+  const pageModulePath = "../page";
   try {
-    return (await import(/* @vite-ignore */ href)) as Record<string, unknown>;
+    return (await import(pageModulePath)) as Record<string, unknown>;
   } catch {
     return null;
   }
