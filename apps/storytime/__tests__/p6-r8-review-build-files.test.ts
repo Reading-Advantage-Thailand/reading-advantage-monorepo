@@ -11,8 +11,9 @@
  * The Green adds three files (the PM may change a name; the rows read the names from NEW_FILES):
  *   - `apps/storytime/review.gcloudignore`: the ignore file of a review upload.
  *   - `apps/storytime/cloudbuild-review.yaml`: the build and push steps of cloudbuild.yaml only.
- *   - `apps/storytime/scripts/review/submit-review-build.sh`: one `gcloud builds submit` from the
- *     repo root, with the ignore file and the review config.
+ *   - `apps/storytime/scripts/review/submit-review-build.sh`: one `gcloud builds submit` with the
+ *     ignore file and the review config. Task 7.11 (group r4) changed the source: a `git archive`
+ *     folder, not the working tree (row 2d).
  *
  * Every row reads files. No row calls the real gcloud or the network. The one run row puts a fake
  * `gcloud` first on PATH and an empty gcloud config folder, and it runs only after a static guard
@@ -22,6 +23,8 @@
  */
 import { execFileSync, spawnSync } from "node:child_process";
 import {
+  chmodSync,
+  copyFileSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
@@ -33,7 +36,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
 
 const app = resolve(import.meta.dirname, "..");
@@ -507,7 +510,11 @@ describe("row 2: the review submit script", () => {
     expect(text).not.toMatch(/--no-traffic|--tag=/);
   });
 
-  it("2d run with a fake gcloud: one call, from the repo root, with the pinned flags", () => {
+  it("2d run with a fake gcloud: one call, from the archive folder, with the pinned flags", () => {
+    // Task 7.11 (group r4) changed this row. It pinned the working-tree form: one submit from the
+    // repo root with `.` as the source. The script now submits a `git archive` folder, so the row
+    // runs a tracked copy of the three files in a temporary repository (a whole-monorepo archive
+    // would be heavy) and expects the call to run from a fresh folder, not from the repository.
     const text = readSoft(NEW_FILES.script);
     expect(text, `${NEW_FILES.script} must exist`).not.toBeNull();
     expect(text, "the static guard: no absolute gcloud path in the script").not.toMatch(
@@ -516,19 +523,46 @@ describe("row 2: the review submit script", () => {
     const dir = mkdtempSync(join(tmpdir(), "storytime-r8-submit-"));
     try {
       const bin = join(dir, "bin");
+      const scratch = join(dir, "tmp");
+      const repo = join(dir, "repo");
       const log = join(dir, "calls.log");
       mkdirSync(bin);
+      mkdirSync(scratch);
+      mkdirSync(repo);
+      const gitEnv = {
+        NODE_ENV: "test" as const,
+        PATH: "/usr/bin:/bin",
+        HOME: dir,
+        GIT_AUTHOR_NAME: "red",
+        GIT_AUTHOR_EMAIL: "red@example.invalid",
+        GIT_COMMITTER_NAME: "red",
+        GIT_COMMITTER_EMAIL: "red@example.invalid",
+        GIT_CONFIG_GLOBAL: "/dev/null",
+        GIT_CONFIG_NOSYSTEM: "1",
+      };
+      const git = (...args: string[]) =>
+        execFileSync("git", ["-c", "core.hooksPath=/dev/null", ...args], { cwd: repo, env: gitEnv });
+      git("init", "-q", "-b", "main");
+      for (const rel of Object.values(NEW_FILES)) {
+        mkdirSync(dirname(join(repo, rel)), { recursive: true });
+        copyFileSync(resolve(repoRoot, rel), join(repo, rel));
+      }
+      chmodSync(join(repo, NEW_FILES.script), 0o755);
+      writeFileSync(join(repo, "package.json"), "{}\n");
+      git("add", "-A");
+      git("commit", "-q", "-m", "fixture");
       writeFileSync(
         join(bin, "gcloud"),
-        '#!/bin/bash\n{ echo CALL; echo "CWD=$PWD"; for a in "$@"; do echo "ARG=$a"; done; } >> "$FAKE_GCLOUD_LOG"\nexit 0\n',
+        '#!/bin/bash\n{ echo CALL; echo "CWD=$(pwd -P)"; for a in "$@"; do echo "ARG=$a"; done; } >> "$FAKE_GCLOUD_LOG"\nexit 0\n',
         { mode: 0o755 },
       );
-      const run = spawnSync("bash", [resolve(repoRoot, NEW_FILES.script)], {
-        cwd: join(app, "scripts", "review"),
+      const run = spawnSync("bash", [join(repo, NEW_FILES.script)], {
+        cwd: join(repo, "apps", "storytime", "scripts", "review"),
         env: {
           NODE_ENV: "test",
           PATH: `${bin}:/usr/bin:/bin`,
           HOME: dir,
+          TMPDIR: scratch,
           CLOUDSDK_CONFIG: join(dir, "gcloud-config"),
           FAKE_GCLOUD_LOG: log,
         },
@@ -541,14 +575,17 @@ describe("row 2: the review submit script", () => {
       counts.submit_calls_in_run = calls;
       expect(calls, "exactly one gcloud call").toBe(1);
       const cwd = lines.find((line) => line.startsWith("CWD="))?.slice(4) ?? "";
-      expect(realpathSync(cwd), "the submit runs from the repo root").toBe(realpathSync(repoRoot));
+      expect(cwd.startsWith(`${realpathSync(scratch)}/`), `the submit runs from the archive folder: ${cwd}`).toBe(
+        true,
+      );
+      expect(cwd, "the submit does not run from the working tree").not.toBe(realpathSync(repo));
       const args = lines.filter((line) => line.startsWith("ARG=")).map((line) => line.slice(4));
       expect(args.slice(0, 2), "the call is builds submit").toEqual(["builds", "submit"]);
       expect(args).toContain(`--ignore-file=${NEW_FILES.ignore}`);
       expect(args).toContain(`--config=${NEW_FILES.config}`);
       expect(args).toContain("--project=primary-advantage");
       expect(args).toContain("--region=asia-southeast1");
-      expect(args, "the source is the repo root").toContain(".");
+      expect(args, "the source is the archive folder").toContain(".");
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
