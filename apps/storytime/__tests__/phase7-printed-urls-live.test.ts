@@ -4,6 +4,8 @@
 // The script is `apps/storytime/scripts/checks/printed-urls-live.ts`. This file is its contract.
 // Task 7.13 (group r5, Review C findings C1001 and C1002) changed the contract: the rows that
 // pinned the follow form and the all-week form are replaced (the plan lists them).
+// Task 7.15 (group r6, Review B finding B1002) pins the same-host rule of the check cookie: the
+// rows are listed in the plan under "Phase 7 remediation group r6".
 //
 // Contract of `printed-urls-live.ts`:
 //   - The script reads the week content of the app: the week files under `apps/storytime/content/l2`
@@ -25,7 +27,9 @@
 //       failed:   anything else (a 200 without the marker such as the sign-in page, a 404, a 5xx,
 //                 a redirect elsewhere or with another `next`, a network error).
 //   - The optional environment variable `STORYTIME_CHECK_COOKIE` is sent as the `Cookie` header of
-//     every request. The script never prints the value.
+//     a request only when the host of the requested URL equals the host of the base URL (task 7.15,
+//     Review B B1002; `URL.host` compares host and port, so an absolute printed URL on another
+//     port of 127.0.0.1 is another host and gets no cookie). The script never prints the value.
 //   - The script prints one line per URL: the URL, `status=<n>` (`000` for a network error), and
 //     `class=<rendered|guarded|failed>`. It prints the time of the run and the revision label. The
 //     last line is `urls_checked=<n> urls_rendered=<n> urls_guarded=<n> urls_failed=<n>`.
@@ -313,12 +317,26 @@ afterAll(() => {
   for (const folder of fakeFolders) rmSync(folder, { recursive: true, force: true });
 });
 
+/** One fake week of a fake content folder. */
+interface FakeWeek {
+  /** The status of the week. */
+  status: string;
+  /** The level of the week. */
+  level: number;
+  /** The week number. */
+  week: number;
+  /** The printed URL of the song; the default is the relative week path. */
+  songUrl?: string;
+  /** The printed URL of the read-along book; the default is the relative week path. */
+  readAlongUrl?: string;
+}
+
 /**
  * Writes a fake content folder with the named weeks.
- * @param weeks The status, level, and week of each fake week.
+ * @param weeks The status, level, week, and optional home URLs of each fake week.
  * @returns The path of the folder.
  */
-function fakeContent(weeks: Array<{ status: string; level: number; week: number }>): string {
+function fakeContent(weeks: FakeWeek[]): string {
   const folder = mkdtempSync(join(tmpdir(), "storytime-urls-content-"));
   fakeFolders.push(folder);
   weeks.forEach((entry, index) => {
@@ -328,7 +346,10 @@ function fakeContent(weeks: Array<{ status: string; level: number; week: number 
       join(folder, name),
       JSON.stringify({
         meta: { status: entry.status, level: entry.level, week: entry.week },
-        home: { songUrl: `${path}?part=song`, readAlongUrl: `${path}?part=book` },
+        home: {
+          songUrl: entry.songUrl ?? `${path}?part=song`,
+          readAlongUrl: entry.readAlongUrl ?? `${path}?part=book`,
+        },
       }),
     );
   });
@@ -486,6 +507,112 @@ describe("task 7.4 the AC-2.3 script of the printed URLs", () => {
     }
   });
 
+  it("sends no cookie to an absolute printed URL on another host and sends it to a relative URL of the same run (B1002)", async () => {
+    // URL.host compares host and port, so two fake servers on 127.0.0.1 with different ports
+    // are two hosts.
+    const other = await startFakeServer(() => ({ status: 200, body: weekPageBody() }));
+    const folder = fakeContent([
+      {
+        status: "published",
+        level: 9,
+        week: 1,
+        songUrl: "/th/st/9/1?part=song",
+        readAlongUrl: `${other.baseUrl}/th/st/9/1?part=book`,
+      },
+    ]);
+    const base = await startFakeServer(() => ({ status: 200, body: weekPageBody() }));
+    try {
+      const run = await runScript(base.baseUrl, "red-test-revision", {
+        cookie: FAKE_COOKIE,
+        contentFolder: folder,
+      });
+      expect(run.code, `the script exits ${run.code}\n${run.output}`).toBe(0);
+      expect(summaryCounts(run.output), run.output).toEqual({ checked: 2, rendered: 2, guarded: 0, failed: 0 });
+      expect(base.requests.length, "the base host gets one request (the relative URL)").toBe(1);
+      expect(base.requests[0].cookie, "the relative URL must carry the cookie").toBe(FAKE_COOKIE);
+      expect(other.requests.length, "the other host gets one request (the absolute URL)").toBe(1);
+      expect(
+        other.requests[0].cookie,
+        `the cross-host request must carry no cookie, got ${other.requests[0].cookie}`,
+      ).toBeUndefined();
+    } finally {
+      await base.stop();
+      await other.stop();
+    }
+  });
+
+  it("sends the cookie to an absolute printed URL on the same host as the base URL (B1002, characterization)", async () => {
+    const base = await startFakeServer(() => ({ status: 200, body: weekPageBody() }));
+    const folder = fakeContent([
+      {
+        status: "published",
+        level: 9,
+        week: 1,
+        songUrl: `${base.baseUrl}/th/st/9/1?part=song`,
+        readAlongUrl: "/th/st/9/1?part=book",
+      },
+    ]);
+    try {
+      const run = await runScript(base.baseUrl, "red-test-revision", {
+        cookie: FAKE_COOKIE,
+        contentFolder: folder,
+      });
+      expect(run.code, `the script exits ${run.code}\n${run.output}`).toBe(0);
+      expect(base.requests.length, "the base host gets both requests").toBe(2);
+      for (const request of base.requests) {
+        expect(request.cookie, `the same-host request ${request.url} must carry the cookie`).toBe(FAKE_COOKIE);
+      }
+    } finally {
+      await base.stop();
+    }
+  });
+
+  it("decides the cookie by a host comparison and prints no part of the cookie value in either case (B1002)", async () => {
+    const text = readFileSync(scriptPath, "utf-8");
+    expect(
+      text,
+      "the script must compare the host of the requested URL with the host of the base URL",
+    ).toMatch(/\.host\s*===/);
+    const other = await startFakeServer(() => ({ status: 200, body: weekPageBody() }));
+    const crossFolder = fakeContent([
+      {
+        status: "published",
+        level: 9,
+        week: 1,
+        songUrl: "/th/st/9/1?part=song",
+        readAlongUrl: `${other.baseUrl}/th/st/9/1?part=book`,
+      },
+    ]);
+    const sameFolder = fakeContent([
+      {
+        status: "published",
+        level: 9,
+        week: 1,
+        songUrl: "/th/st/9/1?part=song",
+        readAlongUrl: "/th/st/9/1?part=book",
+      },
+    ]);
+    const base = await startFakeServer(() => ({ status: 200, body: weekPageBody() }));
+    try {
+      const crossRun = await runScript(base.baseUrl, "red-test-revision", {
+        cookie: FAKE_COOKIE,
+        contentFolder: crossFolder,
+      });
+      const sameRun = await runScript(base.baseUrl, "red-test-revision", {
+        cookie: FAKE_COOKIE,
+        contentFolder: sameFolder,
+      });
+      for (const output of [crossRun.output, sameRun.output]) {
+        for (const part of [FAKE_COOKIE, "FAKESECRETVALUE", "9f3a1c", "storytime_session="]) {
+          expect(output, `the output holds a part of the cookie value: ${part}`).not.toContain(part);
+        }
+      }
+    } finally {
+      await base.stop();
+      await other.stop();
+    }
+  });
+
   it("classifies a 200 sign-in page for a week URL as failed and exits 1 (the C1002 regression)", async () => {
     const server = await startFakeServer(() => ({ status: 200, body: signInBody() }));
     try {
@@ -614,7 +741,7 @@ describe("task 7.4 the AC-2.3 script of the printed URLs", () => {
   });
 
   it("c2 floor: the rows made real script runs (A4)", () => {
-    // Twelve rows run the script once or more; two rows run it twice when they pass (14 runs).
-    expect(counts.script_runs, "the number of script runs in this file").toBeGreaterThanOrEqual(12);
+    // Sixteen rows run the script once or more; three rows run it twice when they pass (18 runs).
+    expect(counts.script_runs, "the number of script runs in this file").toBeGreaterThanOrEqual(16);
   });
 });
