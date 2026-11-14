@@ -630,7 +630,9 @@ describe("row 2: the teacher pages link to the child pages of the same week", ()
     });
 
     for (const day of [1, 2, 3, 4, 5]) {
-      it(`${locale}: the teacher day page ${day} holds the link to /${locale}/st/2/1`, async () => {
+      // Round 10 (PM 2026-11-14): the day page button opens that day's child lesson, so its
+      // address is the week address with `?day=<day>` (row of `p6-r10-child-day-link.test.tsx`).
+      it(`${locale}: the teacher day page ${day} holds the link to /${locale}/st/2/1?day=${day}`, async () => {
         const page = await teacherDayPage();
         startSession("teacher");
         const result = await renderPage(page, {
@@ -638,8 +640,8 @@ describe("row 2: the teacher pages link to the child pages of the same week", ()
         });
         expect("html" in result, "a teacher session renders the day").toBe(true);
         if (!("html" in result)) return;
-        const links = linksOf(result.html).filter((link) => link.href === `/${locale}/st/2/1`);
-        expect(links.length, "one link to the child page of the week").toBeGreaterThanOrEqual(1);
+        const links = linksOf(result.html).filter((link) => link.href === `/${locale}/st/2/1?day=${day}`);
+        expect(links.length, "one link to the child page of that day").toBeGreaterThanOrEqual(1);
         expect(links[0]?.text).toBe(MESSAGES[locale].teacherChildViewLink);
         counts.linkCases += 1;
       });

@@ -25,6 +25,10 @@ import { weekSchema, type StorytimeWeek } from "../lib/contracts/week";
  * All other entries open nothing. The rule never reads a step id. On the shipped w01 the rule
  * finds `media_steps=4` in the steps B3, B7, D6, and E2.
  *
+ * Round 10 (PM 2026-11-14) widens the table: the keys `big book or screen` and `small books` also
+ * open a book (see `p6-r10-child-day-link.test.tsx`), so the shipped w01 now finds
+ * `media_steps=12`. The rows below that pinned the four-step table carry that change.
+ *
  * Contract for Green:
  *
  * 1. `apps/storytime/lib/teacher-media.ts` exports `stepMediaOf(step, week)`. The step is one
@@ -436,7 +440,7 @@ function playerRegion(): HTMLElement {
 }
 
 describe("Phase 4 task 4.4: rule D1 on the shipped week", () => {
-  it("applies rule D1 to the shipped week: media_steps=4 in B3, B7, D6, and E2", async () => {
+  it("applies rule D1 to the shipped week: media_steps=12 (round 10 keys) in day order", async () => {
     const rule = await loadRule();
     const found: { id: string; day: number; media: StepMedia }[] = [];
     for (const day of DAYS) {
@@ -448,8 +452,8 @@ describe("Phase 4 task 4.4: rule D1 on the shipped week", () => {
 
     expect(
       found.length,
-      `media_steps=${found.length}: rule D1 must find the four media steps of w01`,
-    ).toBe(4);
+      `media_steps=${found.length}: rule D1 must find the twelve media steps of w01`,
+    ).toBe(12);
     expect(
       found.length,
       "media_steps must not be 0, or the detail below proves nothing (A4)",
@@ -457,23 +461,24 @@ describe("Phase 4 task 4.4: rule D1 on the shipped week", () => {
     expect(
       found.map((entry) => entry.id),
       `media_steps=${found.length}: the media steps of w01, in day order`,
-    ).toEqual(["B3", "B7", "D6", "E2"]);
+    ).toEqual(["B2", "B3", "B4", "B6", "B7", "C4", "C5", "C6", "D1", "D3", "D6", "E2"]);
 
     const days = found.map((entry) => entry.day);
     expect(days, "the media steps must come in day order").toEqual([...days].sort());
-    expect(found[0]!.media.kind, "B3 holds the book audio of the read-along book").toBe(
-      "readalong",
-    );
-    expect(found[0]!.media.title, "B3 names the read-along book").toBe("Hello!");
-    for (const entry of found.slice(1)) {
+    const b3 = found.find((entry) => entry.id === "B3")!;
+    expect(b3.media.kind, "B3 holds the book audio of the read-along book").toBe("readalong");
+    expect(b3.media.title, "B3 names the read-along book").toBe("Hello!");
+    for (const entry of found.filter((item) => ["B7", "D6", "E2"].includes(item.id))) {
       expect(entry.media.kind, `${entry.id} holds the karaoke videos of the song`).toBe("song");
       expect(entry.media.title, `${entry.id} names the song`).toBe(week.song!.title);
     }
 
+    // Round 10: the steps B2, C4 (and the other book keys) now open a book, so the no-media
+    // checks use steps that hold no media key at all.
     for (const [day, id] of [
       [1, "A1"],
-      [2, "B2"],
-      [3, "C4"],
+      [2, "B1"],
+      [3, "C3"],
       [5, "E4"],
     ] as const) {
       expect(
@@ -488,8 +493,8 @@ describe("Phase 4 task 4.4: rule D1 on the shipped week", () => {
     const shipped = mediaIdsOf(rule, week);
     expect(
       shipped.length,
-      `media_steps=${shipped.length}: the baseline of the clone cases must be the four shipped steps`,
-    ).toBe(4);
+      `media_steps=${shipped.length}: the baseline of the clone cases must be the twelve shipped steps`,
+    ).toBe(12);
 
     const renamedSong = structuredClone(week);
     expect(renamedSong.song, "the shipped week must hold the song").toBeDefined();
@@ -498,7 +503,7 @@ describe("Phase 4 task 4.4: rule D1 on the shipped week", () => {
     expect(
       noKaraoke,
       `media_steps=${noKaraoke.length}: a new song title must drop every karaoke step`,
-    ).toEqual(["B3"]);
+    ).toEqual(["B2", "B3", "B4", "B6", "C4", "C5", "C6", "D1", "D3"]);
 
     const renamedKey = structuredClone(week);
     const e2 = stepOf(renamedKey, 5, "E2");
@@ -509,7 +514,7 @@ describe("Phase 4 task 4.4: rule D1 on the shipped week", () => {
     expect(
       noE2,
       `media_steps=${noE2.length}: the key "karaoke clips" must drop E2 only`,
-    ).toEqual(["B3", "B7", "D6"]);
+    ).toEqual(["B2", "B3", "B4", "B6", "B7", "C4", "C5", "C6", "D1", "D3", "D6"]);
 
     const twoBooks = structuredClone(week);
     const b3 = stepOf(twoBooks, 2, "B3");
@@ -614,9 +619,10 @@ describe("Phase 4 task 4.4: the media step of the lesson flow", () => {
     ).toBe(1);
     positive.unmount();
 
+    // Round 10: B2 now opens the read-along (`big book or screen`), so the second step is B1.
     for (const [day, id] of [
       [1, "A1"],
-      [2, "B2"],
+      [2, "B1"],
     ] as const) {
       await renderAtStep(day, id);
       expect(

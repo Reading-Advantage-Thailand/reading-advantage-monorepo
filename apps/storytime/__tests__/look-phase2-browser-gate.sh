@@ -2872,7 +2872,8 @@ await guarded("teacher_entry rows", async () => {
           `child_link_found=${childOnWeek ? 1 : 0} text=${JSON.stringify(childOnWeek?.text ?? "")} min_side_px=${childOnWeek ? Math.min(childOnWeek.w, childOnWeek.h) : 0} visible=${childOnWeek?.visible ? 1 : 0}`);
 
         const day = await entryVisit(page, `/th/teacher/${ENTRY_WEEK}/1`);
-        const childOnDay = day.links.find((link) => link.href === `/th/st/${ENTRY_WEEK}`);
+        // Round 10 (PM 2026-11-14): the day page button opens that day, so day 1 holds ?day=1.
+        const childOnDay = day.links.find((link) => link.href === `/th/st/${ENTRY_WEEK}?day=1`);
         row(`teacher_entry child link on the teacher day th ${vp.text}`, day.status === 200 && entryLinkVerdict(childOnDay, true) && day.overflow === 0,
           `status=${day.status} child_link_found=${childOnDay ? 1 : 0} text=${JSON.stringify(childOnDay?.text ?? "")} page_overflow=${day.overflow}`);
 
