@@ -10,6 +10,18 @@
  * Rows R1 to R3 fail at the base with an assertion (a marked word where none is due). Rows C1 and
  * C2 are the named characterization rows: they pass at the base and keep the mark that follows the
  * voice on a new page, and the mark of a tapped word after a stop.
+ *
+ * Red retry r2 (the look check of the 7.6 Green failed on the review build): the stub can now
+ * send the real browser order after a host stop. `events.timeUpdate` makes every queued `pause`
+ * and `seeked` event follow with a `timeupdate` at the same time. `events.delayMs` delays the
+ * queued events by more than one frame (16 ms), so one animation frame of the read-along loop
+ * runs between the host call and the first late event. Rows R4 and R5 use the full browser order
+ * (a frame, then `pause` or `seeked`, then `timeupdate`). R9 is the slow-mode page turn in that
+ * order. R6 is the slow-mode page turn with the late `timeupdate` alone. R7 and R8 send the late
+ * `timeupdate` alone after the switch to My turn and after a page turn. R6 to R8 pass at the base:
+ * the reader state is `idle` or `myTurn` before the late `timeupdate` runs, so its handler marks
+ * nothing. The red cause is the frame of the read-along loop that runs before the late `pause`
+ * event: the loop sync is not guarded after `reset()`.
  */
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { readFileSync } from "node:fs";
@@ -59,6 +71,17 @@ async function loadReader() {
   }
 }
 
+/** The order of the events that the stub queues after a host call. */
+const events = { delayMs: 0, timeUpdate: false };
+
+/** Queues the events of a host call: the named event, and a `timeupdate` when the row asks. */
+function queueEvents(target: HTMLMediaElement, name: "pause" | "seeked"): void {
+  setTimeout(() => {
+    target.dispatchEvent(new Event(name));
+    if (events.timeUpdate) target.dispatchEvent(new Event("timeupdate"));
+  }, events.delayMs);
+}
+
 /** The clock and the audio element of one rendered reader. */
 interface Clock {
   /** The current playback time in seconds. */
@@ -88,7 +111,7 @@ async function renderReader(): Promise<Clock> {
     get: () => clock.value,
     set: (value: number) => {
       clock.value = Number(value);
-      setTimeout(() => audio!.dispatchEvent(new Event("seeked")), 0);
+      queueEvents(audio!, "seeked");
     },
   });
   Object.defineProperty(audio, "readyState", { configurable: true, get: () => 4 });
@@ -132,8 +155,29 @@ async function turnPage(clock: Clock): Promise<void> {
   expect(screen.getByText("2 / 8"), "the reader must show page 2").toBeDefined();
 }
 
+/**
+ * Plays page 1 in the slow mode, turns the page, and checks that no word is marked.
+ * @param timeUpdate True when each late event is followed by a `timeupdate`.
+ * @param delayMs The delay of the late events; 20 ms lets one frame run before them.
+ */
+async function slowTurn(timeUpdate: boolean, delayMs: number): Promise<void> {
+  events.timeUpdate = timeUpdate;
+  events.delayMs = delayMs;
+  const clock = await renderReader();
+  const first = readerBook().audio!.slowSentences!.find((sentence) => (sentence.page ?? 1) === 1)!;
+  press(labels.slow);
+  clock.value = first.startTime + 0.2;
+  await settle(32);
+  expect(litWord(clock.container), "the slow voice must mark a word before the turn").not.toBeNull();
+  await turnPage(clock);
+  await settle(1000);
+  expect(litWord(clock.container), "the slow-mode page turn must leave no marked word").toBeNull();
+}
+
 describe("Task 7.5 word mark after a stop (finding F2)", () => {
   beforeEach(() => {
+    events.delayMs = 0;
+    events.timeUpdate = false;
     vi.useFakeTimers({
       toFake: ["setTimeout", "clearTimeout", "requestAnimationFrame", "cancelAnimationFrame", "performance"],
     });
@@ -143,7 +187,7 @@ describe("Task 7.5 word mark after a stop (finding F2)", () => {
       return Promise.resolve();
     });
     vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(function (this: HTMLMediaElement) {
-      setTimeout(() => this.dispatchEvent(new Event("pause")), 0);
+      queueEvents(this, "pause");
     });
   });
 
@@ -176,6 +220,52 @@ describe("Task 7.5 word mark after a stop (finding F2)", () => {
     fireEvent.timeUpdate(clock.audio);
     await settle(50);
     expect(litWord(clock.container), "the page-end stop must leave no marked word").toBeNull();
+  });
+
+  it("R4 the browser order after the switch to My turn leaves no marked word", async () => {
+    events.delayMs = 20;
+    events.timeUpdate = true;
+    const clock = await renderReader();
+    await listenOnPageOne(clock, 0.5);
+    press(labels.myTurn);
+    await settle(1000);
+    expect(litWord(clock.container), "a frame before the late events must not mark a word").toBeNull();
+  });
+
+  it("R5 the browser order after a page turn leaves no mark on page 2", async () => {
+    events.delayMs = 20;
+    events.timeUpdate = true;
+    const clock = await renderReader();
+    await listenOnPageOne(clock, 0.5);
+    await turnPage(clock);
+    await settle(1000);
+    expect(litWord(clock.container), "no word of page 2 may be marked after the late events").toBeNull();
+  });
+
+  it("R6 the slow-mode page turn with a late timeupdate leaves no marked word (characterization)", async () => {
+    await slowTurn(true, 0);
+  });
+
+  it("R9 the browser order after a slow-mode page turn leaves no mark on page 2", async () => {
+    await slowTurn(true, 20);
+  });
+
+  it("R7 a late timeupdate alone leaves no mark after the switch to My turn (characterization)", async () => {
+    events.timeUpdate = true;
+    const clock = await renderReader();
+    await listenOnPageOne(clock, 0.5);
+    press(labels.myTurn);
+    await settle(1000);
+    expect(litWord(clock.container), "a timeupdate at the paused time must not mark a word").toBeNull();
+  });
+
+  it("R8 a late timeupdate alone leaves no mark on page 2 after a page turn (characterization)", async () => {
+    events.timeUpdate = true;
+    const clock = await renderReader();
+    await listenOnPageOne(clock, 0.5);
+    await turnPage(clock);
+    await settle(1000);
+    expect(litWord(clock.container), "no word of page 2 may be marked after the late events").toBeNull();
   });
 
   it("C1 the voice marks the words of the new page after a page turn", async () => {

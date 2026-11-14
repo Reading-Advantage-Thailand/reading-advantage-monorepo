@@ -7,6 +7,11 @@
  * time to 0 and has called `reset()`. The late events make the hook select the word at the paused
  * time again, so a word stays lit with no voice and survives a page turn.
  *
+ * Red retry r2 adds S3: the frame loop runs one frame between the host `reset()` and the late
+ * `pause` event (the look check of the 7.6 Green found `Hello` marked at the paused time). The
+ * hook has no `timeupdate` listener, so the hook has no timeupdate path to pin; the reader rows
+ * of apps/storytime cover that event.
+ *
  * Rows S1 and S2 fail at the base with an assertion (a marked word where none is due). Rows C1 to
  * C3 are the named characterization rows: they pass at the base and keep the shared hook as
  * Primary uses it (a plain pause keeps the mark on the paused word; a seek while paused moves the
@@ -127,6 +132,26 @@ describe("useReadAlong mark after a stop (task 7.5, finding F2)", () => {
     expect(result.current.position, "a page turn must leave no marked word").toEqual(NO_POSITION);
     lateStopEvents();
     expect(result.current.position, "a late event on the new page must leave no mark").toEqual(
+      NO_POSITION,
+    );
+  });
+
+  it("S3 a frame between the reset and the late pause event leaves no mark", () => {
+    const { result } = setup();
+    act(() => void audio.dispatchEvent(new Event("play")));
+    setTime(0.5);
+    runFrame();
+    expect(result.current.position, "the voice must mark the word first").toEqual({
+      sentenceIndex: 0,
+      wordIndex: 0,
+    });
+    // The host pauses and resets; the loop still holds its pending frame, which runs before the
+    // browser queues the `pause` event.
+    act(() => result.current.reset());
+    runFrame();
+    expect(result.current.position, "a frame after the reset must not mark a word").toEqual(NO_POSITION);
+    lateStopEvents();
+    expect(result.current.position, "the late events after the frame must leave no mark").toEqual(
       NO_POSITION,
     );
   });
