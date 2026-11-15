@@ -439,11 +439,11 @@ function collectCurriculumText(value: unknown): string[] {
 }
 
 /**
- * Builds the complete curriculum text surface used by claim validation.
+ * Lists every curriculum text field used by claim validation.
  * @param rows Complete deterministic curriculum graph.
- * @returns Module, lesson, scenario, rubric, and quiz text joined for review.
+ * @returns Module, lesson, scenario, rubric, and quiz text fields.
  */
-function curriculumClaimSurface(rows: CurriculumRows): string {
+function curriculumClaimFields(rows: CurriculumRows): string[] {
   return [
     ...rows.modules.flatMap((module) => [
       module.title,
@@ -468,7 +468,16 @@ function curriculumClaimSurface(rows: CurriculumRows): string {
       question.correctAnswer,
       question.explanation,
     ]),
-  ].join("\n");
+  ];
+}
+
+/**
+ * Builds the complete curriculum text surface used by claim validation.
+ * @param rows Complete deterministic curriculum graph.
+ * @returns Module, lesson, scenario, rubric, and quiz text joined for review.
+ */
+function curriculumClaimSurface(rows: CurriculumRows): string {
+  return curriculumClaimFields(rows).join("\n");
 }
 
 /**
@@ -485,28 +494,112 @@ function normalizeCurriculumClaim(value: string): string {
     .trim();
 }
 
-/** One claim statement and its line position in the graph text. */
+/** One planned-product mention inside a claim statement. */
+type PlannedMention = {
+  /** Planned products the mention names. */
+  products: string[];
+  /** Character offset where the mention starts. */
+  start: number;
+  /** Character offset where the mention ends. */
+  end: number;
+  /** Whether the mention uses the short product name. */
+  short: boolean;
+};
+
+/** One claim statement and the planned-product mentions it holds. */
 type ClaimStatement = {
   /** Normalized statement text. */
   text: string;
-  /** Whether the statement follows another statement on the same source line. */
-  sameLineAsPrevious: boolean;
+  /** Planned-product mentions in the statement, in text order. */
+  mentions: PlannedMention[];
 };
 
+/** One block of claim text: a paragraph or a list. */
+type ClaimBlock = {
+  /** The statements of the block, in text order. */
+  statements: ClaimStatement[];
+};
+
+/** Abbreviations whose period does not end a statement. */
+const claimAbbreviations = new Set([
+  "adv", "mr", "mrs", "ms", "dr", "st", "jr", "sr", "vs", "etc", "fig",
+  "approx", "inc", "ltd", "co", "vol", "ed", "e.g", "i.e",
+]);
+
 /**
- * Splits the complete graph text into independently evaluated claim statements.
- * @param allContent Complete curriculum text surface.
- * @returns Normalized non-empty statements with their line position.
+ * Splits one source line into claim statements.
+ * A period between digits and a period after a known abbreviation do not end a statement.
+ * @param line One source line of claim text.
+ * @returns Normalized non-empty statements.
  */
-function curriculumClaimStatements(allContent: string): ClaimStatement[] {
-  const statements: ClaimStatement[] = [];
-  for (const line of allContent.split("\n")) {
-    const parts = line.split(/[.!?;]+/).map(normalizeCurriculumClaim).filter(Boolean);
-    parts.forEach((part, index) => {
-      statements.push({ text: part, sameLineAsPrevious: index > 0 });
-    });
+function splitClaimStatements(line: string): string[] {
+  const parts: string[] = [];
+  let current = "";
+  const text = line.replace(/^\s*(?:[-*+]\s+|\d+[.)]\s+)/, "");
+  for (let index = 0; index < text.length; index++) {
+    const character = text[index]!;
+    if (character === "." || character === "!" || character === "?" || character === ";") {
+      const previous = text[index - 1] ?? "";
+      const next = text[index + 1] ?? "";
+      const betweenDigits = character === "." && /\d/.test(previous) && /\d/.test(next);
+      const word = /([A-Za-z.]+)$/.exec(current)?.[1]?.toLowerCase() ?? "";
+      if (!betweenDigits && !claimAbbreviations.has(word)) {
+        parts.push(current);
+        current = "";
+        continue;
+      }
+    }
+    current += character;
   }
-  return statements;
+  parts.push(current);
+  return parts.map(normalizeCurriculumClaim).filter(Boolean);
+}
+
+/**
+ * Lists the planned-product mentions of one statement.
+ * A full name ("Science Advantage") and a short name ("Science Adv.") both name a planned product.
+ * @param text Normalized statement text.
+ * @returns Planned-product mentions in text order.
+ */
+function plannedMentions(text: string): PlannedMention[] {
+  const mentions: PlannedMention[] = [];
+  const fullName =
+    /\b(?:science|math|zhongwen|storytime|stem)\b(?:[\s,]+(?:and|or)?\s*(?:science|math|zhongwen|storytime|stem)\b)*\s+advantage\b/g;
+  const shortName = /\b(?:science|math|zhongwen|storytime|stem)\s+adv\b/g;
+  const productWord = /\b(?:science|math|zhongwen|storytime|stem)\b/g;
+  for (const [pattern, short] of [[fullName, false], [shortName, true]] as const) {
+    for (const match of text.matchAll(pattern)) {
+      mentions.push({
+        products: [...(match[0].match(productWord) ?? [])],
+        start: match.index,
+        end: match.index + match[0].length,
+        short,
+      });
+    }
+  }
+  return mentions.sort((left, right) => left.start - right.start);
+}
+
+/**
+ * Splits the curriculum text into blocks of statements.
+ * A block is one field, one paragraph, or one list of consecutive lines.
+ * @param rows Complete deterministic curriculum graph.
+ * @returns Claim blocks with their statements.
+ */
+function curriculumClaimBlocks(rows: CurriculumRows): ClaimBlock[] {
+  const blocks: ClaimBlock[] = [];
+  for (const field of curriculumClaimFields(rows)) {
+    for (const paragraph of field.split(/\n\s*\n+/)) {
+      const statements: ClaimStatement[] = [];
+      for (const line of paragraph.split("\n")) {
+        for (const text of splitClaimStatements(line)) {
+          statements.push({ text, mentions: plannedMentions(text) });
+        }
+      }
+      if (statements.length > 0) blocks.push({ statements });
+    }
+  }
+  return blocks;
 }
 
 /**
@@ -516,77 +609,132 @@ function curriculumClaimStatements(allContent: string): ClaimStatement[] {
 const retiredManagedServiceCondition = /(?:1[\s-]*2|one or two) more schools/;
 
 /**
+ * The public dates of the scope doc Dates paragraph and the products each date licenses.
+ * May 2027 licenses the new editions (Primary Advantage Origins 3.2 and Quest 4),
+ * which are not planned products, so no planned product holds that date.
+ */
+const publicProductDates = Object.freeze([
+  { date: "2027 school year", products: ["science", "math", "zhongwen"] },
+  { date: "november 2026", products: ["storytime"] },
+  { date: "may 2027", products: [] },
+]);
+
+/**
  * Detects a product lifecycle statement that conflicts with the 2027 strategy.
- * Each public date binds to one product: May 2027 to the new-editions line,
- * the 2027 school year to Science, Math, and Zhongwen Advantage, and November
- * 2026 to Storytime Advantage. A planned line that states another product's
- * date fails, with any verb. Any other year or month on a planned line fails.
- * A not-negated live claim without a public date fails. A pronoun sentence
- * inherits the product of the planned-line sentence before it on the same
- * line. Tutor Advantage is not beta; CodeCamp Advantage is not coming; no
- * other product gets a launch year; the retired Managed Service condition is
- * banned.
- * @param statements Normalized curriculum claim statements with line position.
+ * Each public date binds to the products the scope doc licenses for it: the 2027
+ * school year to Science, Math, and Zhongwen Advantage, November 2026 to
+ * Storytime Advantage, and May 2027 to the new editions. A date binds to the
+ * planned product nearest to it in the statement, and a pronoun statement
+ * inherits the products of the statement before it in the block. A statement
+ * that names a planned product may hold only the public dates licensed for
+ * that product. Any other year or month fails. A not-negated live claim
+ * without a public date fails. Tutor Advantage is not beta; CodeCamp
+ * Advantage is not coming; no other product gets a launch year; the retired
+ * Managed Service condition is banned.
+ * @param blocks Claim blocks with their statements and planned-product mentions.
  * @returns Whether a statement gives a product a conflicting state or date.
  */
 function hasConflictingProductStatus(
-  statements: readonly ClaimStatement[],
+  blocks: readonly ClaimBlock[],
 ): boolean {
   const negated = /\b(?:no|not|never|without|don't|do not)\b/;
   const year = /\b20\d\d\b/;
-  const otherMonth =
-    /\b(?:january|february|march|april|june|july|august|september|october|november|december)\b/;
-  const plannedLine =
-    /\b(?:science|math|zhongwen|storytime|stem)\b(?:[\s,]+(?:and|or)?\s*(?:science|math|zhongwen|storytime|stem)\b)*\s+advantage\b/;
-  const plannedProduct = /\b(?:science|math|zhongwen|storytime|stem)\b/g;
-  const pronounStart = /^(?:it|this|they|these|those)\b/;
-  const newEditionsLine = /origins 3\.2|quest 4|may 2027 line/;
+  const leftoverYear = /\b20\d\d\b/g;
+  // The month list holds no "may": the word is a public date word and a common verb.
+  const leftoverMonth =
+    /\b(?:january|february|march|april|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sept|oct|nov|dec)\b/g;
+  // A full ISO date is a sourced internal fact, such as the Primary cutover date.
+  const isoDate = /\b20\d\d-\d\d-\d\d\b/g;
+  const pronounStart = /^(?:it|its|this|they|their|these|those|both|each|either|neither)\b/;
   const liveClaim =
     /\b(?:available|live|launch(?:es|ed|ing)?|release(?:s|d)?|beta|on sale|coming (?:soon|early|late|mid|in|next))\b/;
-  return statements.some((entry, index) => {
-    const statement = entry.text;
-    if (retiredManagedServiceCondition.test(statement)) {
-      return true;
-    }
-    const previous = index > 0 ? statements[index - 1] : undefined;
-    const carried = entry.sameLineAsPrevious && previous !== undefined &&
-      pronounStart.test(statement) && plannedLine.test(previous.text);
-    const isPlanned = plannedLine.test(statement) || carried;
-    if (isPlanned) {
-      const products = new Set([
-        ...statement.match(plannedProduct) ?? [],
-        ...(carried
-          ? previous!.text.match(plannedProduct) ?? []
-          : []),
-      ]);
-      let rest = statement;
-      if (["science", "math", "zhongwen"].some((p) => products.has(p))) {
-        rest = rest.replace(/2027 school year/g, " ");
-      }
-      if (products.has("storytime")) {
-        rest = rest.replace(/november 2026/g, " ");
-      }
-      if (newEditionsLine.test(statement)) {
-        rest = rest.replace(/may 2027/g, " ");
-      }
-      const holdsPublicDate = rest !== statement;
-      if (year.test(rest) || otherMonth.test(rest)) {
+  for (const block of blocks) {
+    let carried: string[] = [];
+    let carriedFullName = false;
+    for (const statement of block.statements) {
+      const text = statement.text;
+      if (retiredManagedServiceCondition.test(text)) {
         return true;
       }
-      if (!holdsPublicDate && !negated.test(statement) && liveClaim.test(statement)) {
+      if (text.includes("tutor advantage") && /\bbeta\b/.test(text)) {
+        return true;
+      }
+      if (text.includes("codecamp advantage") && /\bcoming\b/.test(text)) {
+        return true;
+      }
+      if (/\badvantage\b/.test(text) &&
+        /\b(?:launch(?:es|ed|ing)?|release(?:s|d)?)\b/.test(text) &&
+        year.test(text)) {
+        return true;
+      }
+      const pronoun: boolean = pronounStart.test(text);
+      const own: string[] = statement.mentions.flatMap((mention) => mention.products);
+      const products: string[] = [
+        ...new Set([...own, ...(pronoun ? carried : [])]),
+      ];
+      const fullName: boolean = statement.mentions.some((mention) => !mention.short) ||
+        (pronoun && carriedFullName);
+      carried = products;
+      carriedFullName = fullName;
+
+      let rest = text;
+      for (const entry of publicProductDates) {
+        rest = rest.split(entry.date).join(" ");
+      }
+      rest = rest.replace(isoDate, " ");
+      const years = rest.match(leftoverYear) ?? [];
+      const months = rest.match(leftoverMonth) ?? [];
+      // The full product name binds every date token; the short name binds the month dates.
+      if (products.length > 0 && years.length + months.length > 0) {
+        if (fullName || months.length > 0) {
+          return true;
+        }
+      }
+
+      for (const entry of publicProductDates) {
+        let at = text.indexOf(entry.date);
+        while (at !== -1) {
+          const start = at;
+          const end = at + entry.date.length;
+          const bound = new Set<string>(pronoun ? carried : []);
+          let before: string[] = [];
+          let after: string[] = [];
+          for (const mention of statement.mentions) {
+            if (mention.end <= start) {
+              before = mention.products;
+            } else if (mention.start >= end && after.length === 0) {
+              // Another public date between the date and the mention ends the binding.
+              const between = text.slice(end, mention.start);
+              const holdsOtherDate = publicProductDates.some((other) =>
+                between.includes(other.date));
+              if (!holdsOtherDate) {
+                after = mention.products;
+              }
+            }
+          }
+          // A mention after the date wins: the date names the product that follows it.
+          for (const product of after.length > 0 ? after : before) {
+            bound.add(product);
+          }
+          if ([...bound].some((product) => !entry.products.includes(product))) {
+            return true;
+          }
+          at = text.indexOf(entry.date, at + entry.date.length);
+        }
+      }
+
+      const holdsPublicDate = publicProductDates.some((entry) =>
+        text.includes(entry.date) &&
+        products.every((product) => entry.products.includes(product)));
+      if (fullName &&
+        !holdsPublicDate &&
+        !negated.test(text) &&
+        liveClaim.test(text)) {
         return true;
       }
     }
-    if (statement.includes("tutor advantage") && /\bbeta\b/.test(statement)) {
-      return true;
-    }
-    if (statement.includes("codecamp advantage") && /\bcoming\b/.test(statement)) {
-      return true;
-    }
-    return /\badvantage\b/.test(statement) &&
-      /\b(?:launch(?:es|ed|ing)?|release(?:s|d)?)\b/.test(statement) &&
-      year.test(statement);
-  });
+  }
+  return false;
 }
 
 /**
@@ -761,13 +909,13 @@ export function buildCurriculumAutomatedReview(
   }
 
   const allContent = curriculumClaimSurface(rows);
-  const statements = curriculumClaimStatements(allContent);
+  const blocks = curriculumClaimBlocks(rows);
   const unexpectedAdvantageName = [...allContent.matchAll(
     /\b((?!The Advantage\b)[A-Z][A-Za-z-]* Advantage)\b/g,
   )].some((match) => !allowedAdvantageNames.has(match[1]!.toLowerCase()));
-  const conflictingProductStatus = hasConflictingProductStatus(statements);
+  const conflictingProductStatus = hasConflictingProductStatus(blocks);
   const conflictingTierClaim = hasConflictingTierClaim(
-    statements.map((entry) => entry.text),
+    blocks.flatMap((block) => block.statements.map((entry) => entry.text)),
   );
   if (
     forbiddenCurriculumClaims.some((claim) =>
