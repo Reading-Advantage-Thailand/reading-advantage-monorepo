@@ -108,3 +108,20 @@ Track: `ci_green_master_20261115` (light lane).
   change is a test change, not a CI or lint config change.
 - **Follow-up task, deferred to a later owner:** cut the additions of the largest module
   first: `apps/primary-advantage`, 144 additions of the 337 in `debt-ledger.v1.json`.
+
+## CI round 3 (run 43686964616 on `a54b5741a`)
+
+- Round 2 push `6b67ebe7e` failed at the architecture step on a stale report pin:
+  concurrent www source commits changed the analyzer report after the rebase. The repo's
+  own `pin:refresh` regenerated the report hashes and the input snapshot; commit
+  `a54b5741a` holds the refresh. The local check then reaches `debt-change (files=6932,
+  findings=881, parseErrors=0)`, which is the known PC-4.
+- This is the second PC-2 occurrence: every master push that changes analyzer inputs can
+  stale the report pin before CI reads it. The refresh must run on the final pushed tree.
+
+## Follow-up (deferred to a later owner)
+
+- [ ] Cut the additions of the largest module first: `apps/primary-advantage`, 144 of the
+  337 additions in `packages/architecture-enforcement/src/config/baselines/debt-ledger.v1.json`.
+  The ledger holds the per-module counts and the full addition list. This task starts after
+  the PM decides the PC-4 baseline route. Owner: a later owner, not this track.

@@ -1689,14 +1689,15 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 
 - [ ] **Track: CI green on master** — *created 2026-11-15*
   *Link: [./tracks/ci_green_master_20261115/](./tracks/ci_green_master_20261115/)*
-  *Status: round 2 pushed at b4284d74b (CI run 43674983351): PC-1 www lint, PC-2 manifest
-  hashes, and PC-3 analyzer parse errors fixed and green in CI. PC-5 fixed on branch
-  ci/primary-lint at 39649dca8 (pushed to origin, merges with the next Primary deploy);
-  master keeps the 13 primary lint errors as the one allowed job failure. PC-4 is reported
-  and blocked: every baseline write route is closed by the Gate 1 v1 freeze and the v1-to-v2
-  mirror, and the Hashing and Provenance Policy forbids the acceptedSha256 route (strategy
-  doc Q11); the ledger is debt-ledger.v1.json. PC-6 is reported: the primary and storytime
-  page revamps broke the Oct-27 ink thresholds; a threshold or page decision belongs to the
-  www owner. Track stays open for the PM route decision on PC-4 and the www owner decision
-  on PC-6 | Chore, light lane, PM order 2026-11-15 | Run 43667794723 at 8d3cb8233 |
+  *Status: round 3 pushed at a54b5741a (CI run 43686964616): PC-1 www lint, PC-2 manifest
+  hashes (refreshed twice; concurrent pushes stale the report pin), and PC-3 analyzer parse
+  errors are green in CI. PC-5 fixed on branch ci/primary-lint at 39649dca8 (pushed to
+  origin, merges with the next Primary deploy); master keeps the 13 primary lint errors as
+  the one allowed job failure. PC-4 is the only remaining cause on master and is reported:
+  every baseline write route is closed by the Gate 1 v1 freeze and the v1-to-v2 mirror, and
+  the Hashing and Provenance Policy forbids the acceptedSha256 route (strategy doc Q11);
+  the ledger is debt-ledger.v1.json. PC-6 is reported: the primary and storytime page
+  revamps broke the Oct-27 ink thresholds; a threshold or page decision belongs to the www
+  owner. Track stays open for the PM route decision on PC-4 and the www owner decision on
+  PC-6 | Chore, light lane, PM order 2026-11-15 | Run 43667794723 at 8d3cb8233 |
   Done when ci.yml passes on master except the PC-5 job (2026-11-17)*
