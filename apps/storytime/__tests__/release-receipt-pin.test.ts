@@ -22,13 +22,14 @@ const contentDirectory = resolve(app, "content");
 const weekDirectory = resolve(contentDirectory, "l2");
 
 /**
- * The pin of the at-home release of 2026-11-20, after the r3 take of 2026-11-09 (task 3.2).
+ * The pin of the at-home release of 2026-11-20, after the approved A-42 pin of 2026-11-16
+ * (plan task 2.1).
  *
- * Task 6.2, round 3: the received week packages of 2026-11-13 (the Workbooks commit
- * fa47ca23bef49008be2494ea948e8aebb9b638d4) hold the three word clip maps and the sentence
- * clips, so the source record names that commit now.
+ * The approved pin of 2026-11-16 (the Workbooks commit 70278a9beb8ef7314d98df80e0462892a0ca5019)
+ * holds `approval.loops` approved in every week and the read-along sentence clips of w02 and w07,
+ * so the source record names that commit now.
  */
-const RELEASE_PIN = "fa47ca23bef49008be2494ea948e8aebb9b638d4";
+const RELEASE_PIN = "70278a9beb8ef7314d98df80e0462892a0ca5019";
 
 /** The eight week files that the source record lists, in the order of the week. */
 const EXPECTED_FILES = [

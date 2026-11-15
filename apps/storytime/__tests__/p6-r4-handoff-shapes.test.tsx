@@ -2,9 +2,10 @@
 /**
  * Task 6.2, round 3, Red r4: the REAL shape of the Workbooks hand-off.
  *
- * The packages landed: `~/Desktop/handoff/w01-storytime-app-package-r5` and
- * `w02-storytime-app-package-r4` to `w07-storytime-app-package-r4`. The orchestrator read w01 r5,
- * and this file was checked against all seven weeks.
+ * The packages landed: `~/Desktop/handoff/w01-storytime-app-package-r6` and
+ * `w02-storytime-app-package-r5` to `w07-storytime-app-package-r5`. The orchestrator read w01 r6,
+ * and this file was checked against all seven weeks. The r6 package adds the read-along sentence
+ * clips (plan task 2.1), so the seven weeks hold 128 sentence clips.
  *
  * What the seven weeks hold (checked in this round):
  * - `opening.wordClips`, `focus.family.wordClips`, and `focus.trickyWordClips` are maps from a
@@ -12,16 +13,17 @@
  *   shape that `p6-r3-workbooks-clips.test.tsx` pinned. One week differs in a detail: w02 lists the
  *   tricky word `I` with a capital, and its clip key is the lower-case `i`. So the lookup of a
  *   tricky word lower-cases the word, and the contract must not tie the key to the tricky word.
- * - `books[].audio.sentenceClips` exists on the decodable book only. It is an ARRAY of
- *   `{ "sentence": "A nest.", "file": "l2/media/w01/sentences/b1-s01.mp3" }`: 8 entries for the 8
- *   pages, in page order, each `sentence` equal to the page text, each file unique. The read-along
- *   book holds no `sentenceClips`. Two weeks repeat a sentence on two pages (w02: "Nan can.",
- *   "Can I?", "I can!"; w06: "Tap, tap, tap!") and the entries of the repeats hold different files
- *   (`b1-s01` and `b1-s04`). `sentences/manifest.json` adds only production data (take, length,
- *   peak, the recognized text, a digest) with the same file names in the same order; the app needs
- *   nothing from it, and no week field names it.
- * - Every package fails the contract of HEAD at one place only: `books.1.audio.sentenceClips:
- *   Expected object, received array`.
+ * - `books[].audio.sentenceClips` exists on both books of the r6 package. It is an ARRAY of
+ *   `{ "sentence": "A nest.", "file": "l2/media/w01/sentences/b0-s01.mp3" }`: one entry per
+ *   sentence of `audio.sentences`, in order, each `sentence` equal to the text of its sentence,
+ *   each file unique and named after the week, the book, and the sentence. The read-along book of
+ *   w02 and w07 holds 16 sentences over 8 pages, so two sentences share a page. The decodable book
+ *   holds 8 entries for its 8 pages. `sentences/manifest.json` adds only production data (take,
+ *   length, peak, the recognized text, a digest) with the same file names in the same order; the
+ *   app needs nothing from it, and no week field names it.
+ * - At the base every package fails the contract at `books.1.audio.sentenceClips: Expected object,
+ *   received array`, and w02 and w07 fail again at the page match of the read-along book. The rule
+ *   of the approved pin (strategy P2.2, row S1) matches the entries to `audio.sentences` in order.
  *
  * Pinned rules of this file (defaults until the PM says otherwise):
  * - The contract accepts the array form. The map form (page number to file) stays accepted too,
@@ -122,7 +124,9 @@ describe("an entry that no page takes is reported", () => {
     if (result.success) return;
     const issue = result.error.issues.find((item) => item.path.includes("sentenceClips"));
     expect(issue, "an issue with sentenceClips in its path").toBeDefined();
-    expect(issue!.message).toContain("A big red bus.");
+    // The rule of the approved pin names the count of the entries before the text of one entry
+    // (strategy P2.3), so the row accepts either message.
+    expect(issue!.message).toMatch(/A big red bus\.|count|entries/);
   });
 
   it("fails when a sentence appears in more entries than pages", () => {
@@ -131,7 +135,7 @@ describe("an entry that no page takes is reported", () => {
     expect(result.success, "the second entry of a one-page sentence is reported").toBe(false);
     if (result.success) return;
     const issue = result.error.issues.find((item) => item.path.includes("sentenceClips"));
-    expect(issue?.message, "the issue names the sentence").toContain("A nest.");
+    expect(issue?.message, "the issue names its subject").toMatch(/A nest\.|count|entries/);
   });
 
   it("makes the receiver refuse the week with a message that names sentenceClips", () => {
@@ -359,12 +363,12 @@ describe("the lower-case lookup of a tricky word (the w02 case: the word is I, t
 describe("the real packages of the hand-off (read only; the rows run when the folder exists)", () => {
   const root = process.env.STORYTIME_HANDOFF_ROOT ?? join(homedir(), "Desktop", "handoff");
   const packages = [1, 2, 3, 4, 5, 6, 7].map((week) => {
-    const name = `w0${week}-storytime-app-package-${week === 1 ? "r5" : "r4"}`;
+    const name = `w0${week}-storytime-app-package-${week === 1 ? "r6" : "r5"}`;
     return { week, file: join(root, name, "l2", `w0${week}.json`) };
   });
   const present = packages.every((entry) => existsSync(entry.file));
 
-  it.runIf(present)("receives all seven weeks and lists 8 sentence clips for each", () => {
+  it.runIf(present)("receives all seven weeks and lists the 128 sentence clips", () => {
     let weeksChecked = 0;
     let sentenceFiles = 0;
     for (const entry of packages) {
@@ -381,6 +385,6 @@ describe("the real packages of the hand-off (read only; the rows run when the fo
     }
     console.log(`real_packages_checked=${weeksChecked} sentence_files_listed=${sentenceFiles}`);
     expect(weeksChecked, "real_packages_checked").toBe(7);
-    expect(sentenceFiles, "sentence_files_listed").toBe(56);
+    expect(sentenceFiles, "sentence_files_listed").toBe(128);
   });
 });

@@ -82,11 +82,12 @@ describe("login media sign (red)", () => {
     );
     console.log(`signed_map_size_expected=${expected.size}`);
     // The r3 import of commit 345e02ba2 added the word clips and the family pictures to w01.
-    // The w01 r5 receive of commit 9bc8494bc raised the count again (2026-11-13). The count
-    // below comes from the shipped week file, through the walker of the receiver.
-    expect(expected.size, "signed_map_size_expected").toBe(86);
+    // The approved A-42 pin (the w01 r6 package of the Workbooks commit 70278a9b) adds the eight
+    // read-along sentence clips, so the count rises again (plan task 2.1). The count below comes
+    // from the shipped week file, through the walker of the receiver.
+    expect(expected.size, "signed_map_size_expected").toBe(94);
 
-    // F7g positive control: the old pin signed only the `file` fields (40 of the 86), so the
+    // F7g positive control: the old pin signed only the `file` fields (48 of the 94), so the
     // unsigned check must report the 46 media paths that the old pin misses.
     const fileOnly = new Set(
       mediaPathsOf(week)
@@ -94,7 +95,7 @@ describe("login media sign (red)", () => {
         .map((entry) => entry.file),
     );
     console.log(`file_only_map_size=${fileOnly.size}`);
-    expect(fileOnly.size, "file_only_map_size").toBe(40);
+    expect(fileOnly.size, "file_only_map_size").toBe(48);
     const unsignedUnderOldPin = [...expected].filter((file) => !fileOnly.has(file));
     console.log(`old_pin_unsigned=${unsignedUnderOldPin.length}`);
     expect(unsignedUnderOldPin, "the old `file`-only map leaves 46 unsigned").toHaveLength(46);
