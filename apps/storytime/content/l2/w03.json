@@ -8,9 +8,9 @@
     },
     "thai": {
       "status": "approved",
-      "date": "2026-11-05",
-      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines)",
-      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 80 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md)"
+      "date": "2026-11-15",
+      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines); \"Ok\" (2026-11-15 19:43 ICT; the 64 Thai rows of the Phase 14 change list)",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 80 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md); Google Tasks reply of Daniel, 2026-11-15 19:43 ICT, PM relay (THAI item: p14-change-list.md, 64 rows)"
     },
     "images": {
       "status": "approved",
@@ -28,7 +28,10 @@
       "status": "draft"
     },
     "loops": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-15",
+      "words": "Approved",
+      "source": "Google Tasks, PM item YVJYeDVt, subtask bnJWSW5yUDNOVllzLWpvcA"
     }
   },
   "version": 1,
@@ -60,8 +63,14 @@
       "audio": "phonemes/daniel/03-p.mp3"
     },
     "paSkill": {
-      "en": "the first sound /p/ and the last sound /p/; blend three sounds by ear",
-      "th": "ฟังเสียงแรกและเสียงสุดท้าย /p/ และฟังแล้วผสม 3 เสียงเป็นคำ"
+      "en": "the first sound /p/; blend three sounds by ear",
+      "th": "ฟังเสียงแรก /p/ และฟังแล้วผสม 3 เสียงเป็นคำ"
+    },
+    "paStage": {
+      "stage": 1,
+      "positions": [
+        "first"
+      ]
     },
     "trickyWords": [
       "the",
@@ -162,12 +171,12 @@
   "opening": {
     "pa": [
       {
-        "en": "\"Listen: pen. What is the first sound? /p/! Listen: cup. What is the last sound? /p/!\"",
-        "th": "\"ฟัง: pen เสียงแรกคือเสียงอะไร? /p/! ฟัง: cup เสียงสุดท้ายคือเสียงอะไร? /p/!\""
+        "en": "\"Listen: ant. What is the first sound? /a/! Listen: net. What is the first sound? Nnn!\"",
+        "th": "\"ฟัง: ant เสียงแรกคือเสียงอะไร? /a/! ฟัง: net เสียงแรกคือเสียงอะไร? Nnn!\""
       },
       {
-        "en": "\"Listen: pear. What is the first sound? /p/! Listen: map. What is the last sound? /p/!\"",
-        "th": "\"ฟัง: pear เสียงแรกคือเสียงอะไร? /p/! ฟัง: map เสียงสุดท้ายคือเสียงอะไร? /p/!\""
+        "en": "\"Listen: pen. What is the first sound? /p/! Listen: pear. What is the first sound? /p/!\"",
+        "th": "\"ฟัง: pen เสียงแรกคือเสียงอะไร? /p/! ฟัง: pear เสียงแรกคือเสียงอะไร? /p/!\""
       },
       {
         "en": "\"Listen: /p/ - /a/ - nnn. What is the word? Pan! Listen: /k/ - /a/ - /p/. What is the word? Cap!\"",
@@ -184,8 +193,8 @@
     ],
     "audio": [
       [
-        "phonemes/daniel/03-p.mp3",
-        "phonemes/daniel/03-p.mp3"
+        "phonemes/daniel/26-a-short.mp3",
+        "phonemes/daniel/04-n.mp3"
       ],
       [
         "phonemes/daniel/03-p.mp3",
@@ -217,10 +226,10 @@
       ]
     ],
     "wordClips": {
+      "ant": "l2/media/w03/words/wa-ant.mp3",
       "cap": "l2/media/w03/words/wa-cap.mp3",
-      "cup": "l2/media/w03/words/wa-cup.mp3",
-      "map": "l2/media/w03/words/wa-map.mp3",
       "nap": "l2/media/w03/words/wa-nap.mp3",
+      "net": "l2/media/w03/words/wa-net.mp3",
       "pan": "l2/media/w03/words/wa-pan.mp3",
       "pear": "l2/media/w03/words/wa-pear.mp3",
       "pen": "l2/media/w03/words/wa-pen.mp3",
@@ -741,7 +750,41 @@
           "purple": "l2/media/w03/words/wa-purple.mp3",
           "red": "l2/media/w03/words/wa-red.mp3",
           "yellow": "l2/media/w03/words/wa-yellow.mp3"
-        }
+        },
+        "sentenceClips": [
+          {
+            "sentence": "It is red.",
+            "file": "l2/media/w03/sentences/b0-s01.mp3"
+          },
+          {
+            "sentence": "It is blue.",
+            "file": "l2/media/w03/sentences/b0-s02.mp3"
+          },
+          {
+            "sentence": "It is yellow.",
+            "file": "l2/media/w03/sentences/b0-s03.mp3"
+          },
+          {
+            "sentence": "It is green.",
+            "file": "l2/media/w03/sentences/b0-s04.mp3"
+          },
+          {
+            "sentence": "It is orange.",
+            "file": "l2/media/w03/sentences/b0-s05.mp3"
+          },
+          {
+            "sentence": "It is pink.",
+            "file": "l2/media/w03/sentences/b0-s06.mp3"
+          },
+          {
+            "sentence": "It is purple.",
+            "file": "l2/media/w03/sentences/b0-s07.mp3"
+          },
+          {
+            "sentence": "It is Pip!",
+            "file": "l2/media/w03/sentences/b0-s08.mp3"
+          }
+        ]
       },
       "questions": [
         {
@@ -2201,14 +2244,14 @@
               "When the script says /p/, say the sound: a small puff of air, with no \"uh\" after it. When it says \"the letter p\", say the letter name \"pee\".",
               "Hold up one picture card at a time and say the word.",
               "Say the first sound two times with a small puff of air: /p/-/p/-pen. /p/ is a short sound: you cannot stretch it.",
-              "Mix the /p/ words with other words. Then say three words with /p/ at the end: cup, map, sheep. At the end of each word, open your lips with a small puff of air. A Thai final p, as in ชอบ, has no puff, and the class cannot hear it."
+              "Mix the /p/ words with other words."
             ],
             "teacherLanguage": [
               "\"Listen. /p/-/p/-pen. Pen.\"",
               "\"Is the first sound /p/? Thumbs up or thumbs down?\"",
               "\"Yes! Pen starts with /p/.\"",
               "\"Listen. Cat. Does cat start with /p/? No!\"",
-              "\"Now listen to the end. Cup. Cup. Is /p/ at the end? Yes!\""
+              "\"Listen. Pear. Does pear start with /p/? Yes!\""
             ],
             "studentActions": [
               "Children say each word after the teacher.",
@@ -2224,8 +2267,8 @@
             "th": "ใช้บัตรเพียง 4 ใบ (pen, pear, cat, sun) และพูดเสียงแรก 2 ครั้ง"
           },
           "harder": {
-            "en": "Say a word with /p/ at the end: \"Map.\" Children say the last sound: \"/p/!\"",
-            "th": "พูดคำที่มี /p/ อยู่ท้ายคำ: \"Map.\" เด็ก ๆ บอกเสียงสุดท้าย: \"/p/!\""
+            "en": "A child says the first sound alone: \"Pencil. /p/!\" Then the next child: \"Pineapple. /p/!\"",
+            "th": "เด็กบอกเสียงแรกด้วยตัวเองทีละคน: \"Pencil. /p/!\" แล้วเด็กคนต่อไป: \"Pineapple. /p/!\""
           },
           "group": {
             "en": "Pairs: you hold up a card; partner A says the word, and partner B shows the thumbs.",
@@ -2233,22 +2276,21 @@
           },
           "materials": [
             "sound picture cards: pen, pencil, pear, pineapple",
-            "picture cards: cat, sun, fish",
-            "picture cards: cup, map, sheep"
+            "picture cards: cat, sun, fish"
           ],
           "th": {
             "teacherActions": [
               "เมื่อบทพูดเขียนว่า /p/ ให้ออกเสียงแบบมีลมพ่นออกมาเล็กน้อย โดยไม่มี \"uh\" ตามหลัง เมื่อบทพูดเขียนว่า \"the letter p\" ให้พูดชื่อตัวอักษร \"pee\" (พี)",
               "ชูบัตรภาพทีละใบ แล้วพูดคำ",
               "พูดเสียงแรก 2 ครั้ง โดยมีลมพ่นออกมาเล็กน้อย: /p/-/p/-pen เสียง /p/ เป็นเสียงสั้น ลากเสียงให้ยาวไม่ได้",
-              "คละคำที่ขึ้นต้นด้วย /p/ กับคำอื่น จากนั้นพูดคำ 3 คำที่มี /p/ อยู่ท้ายคำ: cup, map, sheep ที่ท้ายแต่ละคำ ให้เปิดริมฝีปากโดยมีลมพ่นออกมาเล็กน้อย เพราะเสียงตัวสะกดแม่กบในภาษาไทย เช่นในคำว่า ชอบ ไม่มีลมพ่นออก และทั้งชั้นจะไม่ได้ยินเสียงนี้"
+              "คละคำที่ขึ้นต้นด้วย /p/ กับคำอื่น"
             ],
             "teacherLanguage": [
               "\"ฟัง /p/-/p/-pen pen\"",
               "\"เสียงแรกคือ /p/ ไหม? ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง?\"",
               "\"ใช่! Pen ขึ้นต้นด้วย /p/\"",
               "\"ฟัง cat คำว่า cat ขึ้นต้นด้วย /p/ ไหม? ไม่ใช่!\"",
-              "\"ทีนี้ฟังเสียงท้ายคำ Cup, cup มี /p/ อยู่ท้ายคำไหม? ใช่!\""
+              "\"ฟัง pear คำว่า pear ขึ้นต้นด้วย /p/ ไหม? ใช่!\""
             ],
             "studentActions": [
               "เด็ก ๆ พูดแต่ละคำตามครู",
@@ -2447,7 +2489,7 @@
             "teacherActions": [
               "First by ear: keep the picture cards cap, map, and sheep face down. Say the three sounds with a short stop between them, then say them fast. Show the picture after the class says the word.",
               "Then with letters: show the word card \"pan\". Put your finger under each letter and say its sound, then slide under the whole word.",
-              "Show the word card \"nap\". Hold nnn, and say /p/ at the end as a short puff.",
+              "Show the word card \"nap\". Hold nnn, and say /p/ as a short puff.",
               "Say the sounds, not the letter names: /k/ with no \"uh\" after it, a long mmm, a long shhh."
             ],
             "teacherLanguage": [
@@ -2486,7 +2528,7 @@
             "teacherActions": [
               "ขั้นแรกฝึกด้วยการฟัง: คว่ำบัตรภาพ cap, map และ sheep ไว้ พูด 3 เสียงโดยหยุดสั้น ๆ ระหว่างเสียง แล้วพูดเร็ว ๆ เปิดให้ดูภาพหลังจากทั้งชั้นพูดคำ",
               "จากนั้นฝึกด้วยตัวอักษร: ชูบัตรคำ \"pan\" วางนิ้วใต้ตัวอักษรทีละตัวและออกเสียงของตัวอักษรนั้น แล้วลากนิ้วผ่านใต้ทั้งคำ",
-              "ชูบัตรคำ \"nap\" ลากเสียง nnn ไว้ และออกเสียง /p/ ที่ท้ายคำเป็นลมพ่นออกสั้น ๆ",
+              "ชูบัตรคำ \"nap\" ลากเสียง nnn ไว้ และออกเสียง /p/ เป็นลมพ่นออกสั้น ๆ",
               "ออกเสียงของตัวอักษร ไม่ใช่ชื่อตัวอักษร: /k/ ไม่มี \"uh\" ตามหลัง ส่วน mmm และ shhh ลากเสียงยาว"
             ],
             "teacherLanguage": [
@@ -2609,8 +2651,8 @@
             "th": "อ่านเฉพาะคำใหม่ 2 คำพร้อมทั้งชั้น 2 ครั้ง"
           },
           "harder": {
-            "en": "A child reads one word on the wall alone, then says its last sound.",
-            "th": "เด็กคนหนึ่งอ่านคำ 1 คำบนผนังคำศัพท์ด้วยตัวเอง แล้วบอกเสียงสุดท้ายของคำนั้น"
+            "en": "A child reads one word on the wall alone, then says its first sound.",
+            "th": "เด็กคนหนึ่งอ่านคำ 1 คำบนผนังคำศัพท์ด้วยตัวเอง แล้วบอกเสียงแรกของคำนั้น"
           },
           "group": {
             "en": "Whole class: one child points, and the class reads.",
@@ -4047,19 +4089,19 @@
           "en": {
             "teacherActions": [
               "Part 1 (5 min): write \"It is ___.\" on the board. Show where the big letter and the full stop go.",
-              "Children trace \"It is red.\" in the book. Then they color the apple above it red.",
+              "Children color the apple red in the book. Then they trace \"It is red.\" below it.",
               "Stand-and-point break (at minute 5): all children stand up. Say a color; children point to something of that color in the room and say \"It is red!\" Do it three times, then sit down.",
               "Part 2 (5 min): children draw one thing in the second box and color it red, blue, or yellow. They find the color word under the box (red, blue, yellow) and trace it."
             ],
             "teacherLanguage": [
               "\"A big letter at the start. A full stop at the end.\"",
-              "\"Trace the words: It is red.\"",
               "\"Color the apple red.\"",
+              "\"Trace the words: It is red.\"",
               "\"Stand up! Point to something red. What color is it? It is red!\"",
               "\"Now draw something and color it. What color is it? Find the word and trace it.\""
             ],
             "studentActions": [
-              "Children trace the frame and color the apple.",
+              "Children color the apple and trace the frame.",
               "Children stand, point to a color, and say \"It is ___.\" in the break.",
               "Children draw one thing and color it, then find and trace the color word."
             ],
@@ -4087,19 +4129,19 @@
           "th": {
             "teacherActions": [
               "ส่วนที่ 1 (5 นาที): เขียน \"It is ___.\" บนกระดาน ชี้ให้ดูว่าตัวพิมพ์ใหญ่และจุด (full stop) อยู่ที่ไหน",
-              "เด็ก ๆ ลากเส้นตาม \"It is red.\" ในหนังสือ จากนั้นระบายสีแอปเปิลที่อยู่เหนือประโยคให้เป็นสีแดง",
+              "เด็ก ๆ ระบายสีแอปเปิลให้เป็นสีแดงในหนังสือ จากนั้นลากเส้นตาม \"It is red.\" ที่อยู่ใต้ภาพ",
               "พักยืนชี้ (เมื่อครบ 5 นาที): เด็กทุกคนยืนขึ้น ครูพูดชื่อสี 1 สี เด็ก ๆ ชี้ของที่มีสีนั้นในห้อง แล้วพูดว่า \"It is red!\" ทำ 3 รอบ แล้วนั่งลง",
               "ส่วนที่ 2 (5 นาที): เด็ก ๆ วาดสิ่งของ 1 อย่างในช่องที่สองและระบายสีแดง สีน้ำเงิน หรือสีเหลือง แล้วหาคำศัพท์สีใต้ช่องที่ตรงกับสีที่ระบาย (red, blue, yellow) และลากเส้นตามคำนั้น"
             ],
             "teacherLanguage": [
               "\"ใช้ตัวพิมพ์ใหญ่ที่ต้นประโยค ใส่จุดที่ท้ายประโยค\"",
-              "\"ลากเส้นตามคำ: It is red.\"",
               "\"ระบายสีแอปเปิลให้เป็นสีแดง\"",
+              "\"ลากเส้นตามคำ: It is red.\"",
               "\"Stand up! (ยืนขึ้น) Point to something red. (ชี้ของที่เป็นสีแดง) What color is it? It is red!\"",
               "\"ทีนี้วาดสิ่งของแล้วระบายสี What color is it? (สีอะไร) หาคำนั้นแล้วลากเส้นตาม\""
             ],
             "studentActions": [
-              "เด็ก ๆ ลากเส้นตามกรอบประโยค และระบายสีแอปเปิล",
+              "เด็ก ๆ ระบายสีแอปเปิลและลากเส้นตามกรอบประโยค",
               "เด็ก ๆ ยืน ชี้ของที่มีสีนั้น และพูดว่า \"It is ___.\" ในช่วงพัก",
               "เด็ก ๆ วาดสิ่งของ 1 อย่างและระบายสี แล้วหาคำศัพท์สีและลากเส้นตาม"
             ],
@@ -4235,14 +4277,15 @@
             "audio": "phonemes/daniel/26-a-short.mp3"
           },
           {
-            "kind": "tricky",
-            "text": "a",
-            "week": 1
+            "kind": "sound",
+            "text": "p",
+            "week": 3,
+            "audio": "phonemes/daniel/03-p.mp3"
           },
           {
             "kind": "tricky",
-            "text": "and",
-            "week": 1
+            "text": "the",
+            "week": 3
           },
           {
             "kind": "frame",
@@ -4608,14 +4651,15 @@
             "audio": "phonemes/daniel/04-n.mp3"
           },
           {
-            "kind": "tricky",
-            "text": "and",
-            "week": 1
+            "kind": "sound",
+            "text": "p",
+            "week": 3,
+            "audio": "phonemes/daniel/03-p.mp3"
           },
           {
             "kind": "tricky",
-            "text": "can",
-            "week": 1
+            "text": "get",
+            "week": 3
           },
           {
             "kind": "frame",
@@ -5028,8 +5072,7 @@
       "english.phonics.tricky.can",
       "english.phonics.pa.phoneme.blend-2-3",
       "english.phonics.pattern.cvc-short-a",
-      "english.phonics.pa.initial-sound.identify",
-      "english.phonics.pa.final-sound.identify"
+      "english.phonics.pa.initial-sound.identify"
     ]
   },
   "print": {

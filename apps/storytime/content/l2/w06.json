@@ -8,9 +8,9 @@
     },
     "thai": {
       "status": "approved",
-      "date": "2026-11-05",
-      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines)",
-      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 82 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md)"
+      "date": "2026-11-15",
+      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines); \"Ok\" (2026-11-15 19:43 ICT; the 64 Thai rows of the Phase 14 change list)",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 82 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md); Google Tasks reply of Daniel, 2026-11-15 19:43 ICT, PM relay (THAI item: p14-change-list.md, 64 rows)"
     },
     "images": {
       "status": "approved",
@@ -28,7 +28,10 @@
       "status": "draft"
     },
     "loops": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-15",
+      "words": "Approved",
+      "source": "Google Tasks, PM item YVJYeDVt, subtask bnJWSW5yUDNOVllzLWpvcA"
     }
   },
   "version": 1,
@@ -60,8 +63,14 @@
       "audio": "phonemes/daniel/02-t.mp3"
     },
     "paSkill": {
-      "en": "the first sound /t/ and the last sound /t/; blend three sounds by ear",
-      "th": "ฟังเสียงแรก /t/ และเสียงสุดท้าย /t/ และฟังแล้วผสม 3 เสียงเป็นคำ"
+      "en": "the first sound /t/; blend three sounds by ear",
+      "th": "ฟังเสียงแรก /t/ และฟังแล้วผสม 3 เสียงเป็นคำ"
+    },
+    "paStage": {
+      "stage": 1,
+      "positions": [
+        "first"
+      ]
     },
     "trickyWords": [
       "he",
@@ -173,12 +182,12 @@
   "opening": {
     "pa": [
       {
-        "en": "\"Listen: tiger. What is the first sound? /t/! Listen: cat. What is the last sound? /t/!\"",
-        "th": "\"ฟัง: tiger เสียงแรกคือเสียงอะไร? /t/! ฟัง: cat เสียงสุดท้ายคือเสียงอะไร? /t/!\""
+        "en": "\"Listen: see. What is the first sound? Sss! Listen: map. What is the first sound? Mmm!\"",
+        "th": "\"ฟัง: see เสียงแรกคือเสียงอะไร? Sss! ฟัง: map เสียงแรกคือเสียงอะไร? Mmm!\""
       },
       {
-        "en": "\"Listen: ten. What is the first sound? /t/! Listen: hat. What is the last sound? /t/!\"",
-        "th": "\"ฟัง: ten เสียงแรกคือเสียงอะไร? /t/! ฟัง: hat เสียงสุดท้ายคือเสียงอะไร? /t/!\""
+        "en": "\"Listen: tiger. What is the first sound? /t/! Listen: ten. What is the first sound? /t/!\"",
+        "th": "\"ฟัง: tiger เสียงแรกคือเสียงอะไร? /t/! ฟัง: ten เสียงแรกคือเสียงอะไร? /t/!\""
       },
       {
         "en": "\"Listen: /t/ - /a/ - /p/. What is the word? Tap! Listen: sss - /a/ - /t/. What is the word? Sat!\"",
@@ -195,8 +204,8 @@
     ],
     "audio": [
       [
-        "phonemes/daniel/02-t.mp3",
-        "phonemes/daniel/02-t.mp3"
+        "phonemes/daniel/01-s.mp3",
+        "phonemes/daniel/05-m.mp3"
       ],
       [
         "phonemes/daniel/02-t.mp3",
@@ -228,10 +237,11 @@
       ]
     ],
     "wordClips": {
-      "cat": "l2/media/w06/words/wa-cat.mp3",
       "hat": "l2/media/w06/words/wa-hat.mp3",
+      "map": "l2/media/w06/words/wa-map.mp3",
       "mat": "l2/media/w06/words/wa-mat.mp3",
       "sat": "l2/media/w06/words/wa-sat.mp3",
+      "see": "l2/media/w06/words/wa-see.mp3",
       "tap": "l2/media/w06/words/wa-tap.mp3",
       "ten": "l2/media/w06/words/wa-ten.mp3",
       "tiger": "l2/media/w06/words/wa-tiger.mp3",
@@ -894,7 +904,41 @@
           "i": "l2/media/w06/words/wa-i.mp3",
           "pip": "l2/media/w06/words/wa-pip.mp3",
           "see": "l2/media/w06/words/wa-see.mp3"
-        }
+        },
+        "sentenceClips": [
+          {
+            "sentence": "I can see a cat.",
+            "file": "l2/media/w06/sentences/b0-s01.mp3"
+          },
+          {
+            "sentence": "I can see a dog.",
+            "file": "l2/media/w06/sentences/b0-s02.mp3"
+          },
+          {
+            "sentence": "I can see a bird.",
+            "file": "l2/media/w06/sentences/b0-s03.mp3"
+          },
+          {
+            "sentence": "I can see a fish.",
+            "file": "l2/media/w06/sentences/b0-s04.mp3"
+          },
+          {
+            "sentence": "I can see a frog.",
+            "file": "l2/media/w06/sentences/b0-s05.mp3"
+          },
+          {
+            "sentence": "I can see a duck.",
+            "file": "l2/media/w06/sentences/b0-s06.mp3"
+          },
+          {
+            "sentence": "I can see a horse.",
+            "file": "l2/media/w06/sentences/b0-s07.mp3"
+          },
+          {
+            "sentence": "I can see Pip!",
+            "file": "l2/media/w06/sentences/b0-s08.mp3"
+          }
+        ]
       },
       "questions": [
         {
@@ -2391,15 +2435,14 @@
               "When the script says \"the letter t\", say the letter name \"tee\".",
               "Hold up one picture card at a time and say the word slowly.",
               "Say the first sound two times, short and quick: /t/, /t/, tiger.",
-              "Mix the /t/ words with other words. Then say three words with /t/ at the end: cat, hat, boat.",
-              "At the end of each word, let the tongue go with a small puff of air. A Thai final /t/, as in มด, has no puff, and the class cannot hear it."
+              "Mix the /t/ words with other words."
             ],
             "teacherLanguage": [
               "\"Listen. /t/, /t/, tiger. Tiger.\"",
               "\"Is the first sound /t/? Thumbs up or thumbs down?\"",
               "\"Yes! Tiger starts with /t/.\"",
               "\"Listen. Sun. Does sun start with /t/? No!\"",
-              "\"Now listen to the end. Cat. Is /t/ at the end? Yes!\""
+              "\"Listen. Table. Does table start with /t/? Yes!\""
             ],
             "studentActions": [
               "Children say each word after the teacher.",
@@ -2408,7 +2451,6 @@
             "watchFor": [
               "Children who say \"tuh\" or \"tor\": the sound is a short /t/, with no vowel after it.",
               "Children who say a Thai ต for /t/: an English /t/ at the start of a word has a small puff of air, close to the Thai ท.",
-              "Children who stop a word with no release at the end (\"ca\" for \"cat\"): let the tongue go with a small puff of air at the end.",
               "Children who copy a friend's thumbs: ask them alone with one more card."
             ]
           },
@@ -2417,8 +2459,8 @@
             "th": "ใช้บัตรเพียง 4 ใบ (tiger, ten, sun, dog) และพูดเสียงแรก 2 ครั้ง"
           },
           "harder": {
-            "en": "Say a word with /t/ at the end: \"Hat.\" Children say the last sound: \"/t/!\"",
-            "th": "พูดคำที่มี /t/ อยู่ท้ายคำ: \"Hat.\" (หมวก) เด็ก ๆ บอกเสียงสุดท้าย: \"/t/!\""
+            "en": "A child says the first sound alone: \"Tomato. /t/!\" Then the next child: \"Ten. /t/!\"",
+            "th": "เด็กบอกเสียงแรกด้วยตัวเองทีละคน: \"Tomato. /t/!\" แล้วเด็กคนต่อไป: \"Ten. /t/!\""
           },
           "group": {
             "en": "Pairs: you hold up a card; partner A says the word, and partner B shows the thumbs.",
@@ -2426,8 +2468,7 @@
           },
           "materials": [
             "sound picture cards: tiger, ten, table, tomato",
-            "picture cards: sun, dog, pen",
-            "picture cards: cat, hat, boat"
+            "picture cards: sun, dog, pen"
           ],
           "th": {
             "teacherActions": [
@@ -2435,15 +2476,14 @@
               "เมื่อบทพูดเขียนว่า \"the letter t\" ให้พูดชื่อตัวอักษร \"tee\" (ที)",
               "ชูบัตรภาพทีละใบ แล้วพูดคำช้า ๆ",
               "พูดเสียงแรก 2 ครั้ง สั้น ๆ และเร็ว ๆ: /t/, /t/, tiger",
-              "คละคำที่ขึ้นต้นด้วย /t/ กับคำอื่น จากนั้นพูดคำ 3 คำที่มี /t/ อยู่ท้ายคำ: cat, hat, boat",
-              "ที่ท้ายแต่ละคำ ให้ยกปลายลิ้นออกจากหลังฟันบน โดยมีลมพ่นออกมาเล็กน้อย เพราะเสียงตัวสะกดแม่กด (ต หรือ ด) ในภาษาไทย เช่นในคำว่า มด ปลายลิ้นแตะค้างไว้และไม่มีลมพ่นออก และทั้งชั้นจะไม่ได้ยินเสียงนี้"
+              "คละคำที่ขึ้นต้นด้วย /t/ กับคำอื่น"
             ],
             "teacherLanguage": [
               "\"ฟัง /t/, /t/, tiger, tiger (เสือ)\"",
               "\"เสียงแรกคือ /t/ ไหม? ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง?\"",
               "\"ใช่! Tiger ขึ้นต้นด้วย /t/\"",
               "\"ฟัง sun คำว่า sun ขึ้นต้นด้วย /t/ ไหม? ไม่ใช่!\"",
-              "\"ทีนี้ฟังเสียงท้ายคำ Cat มี /t/ อยู่ท้ายคำไหม? ใช่!\""
+              "\"ฟัง table คำว่า table ขึ้นต้นด้วย /t/ ไหม? ใช่!\""
             ],
             "studentActions": [
               "เด็ก ๆ พูดแต่ละคำตามครู",
@@ -2452,7 +2492,6 @@
             "watchFor": [
               "เด็กที่ออกเสียงเป็น \"tuh\" (เทอะ) หรือ \"tor\" (ทอ): เสียงที่ถูกคือ /t/ สั้น ๆ ไม่มีสระตามหลัง",
               "เด็กที่ออกเสียง /t/ เป็นเสียง ต ในภาษาไทย: เสียง /t/ ที่ต้นคำในภาษาอังกฤษมีลมพ่นออกมาเล็กน้อย ใกล้กับเสียง ท ในภาษาไทย",
-              "เด็กที่หยุดเสียงท้ายคำโดยปลายลิ้นแตะค้างไว้ (\"ca\" แทน \"cat\"): ให้ยกปลายลิ้นออกจากหลังฟันบน โดยมีลมพ่นออกมาเล็กน้อยที่ท้ายคำ",
               "เด็กที่ทำนิ้วโป้งตามเพื่อน: ให้เด็กคนนั้นตอบคนเดียวด้วยบัตรอีก 1 ใบ"
             ]
           },
@@ -2646,7 +2685,8 @@
               "Say the three sounds with a short stop between them, then say them fast. Show the picture after the class says the word.",
               "Then with letters: show the word cards \"sat\", \"mat\", and \"tap\". Put your finger under each letter and say its sound, then slide under the whole word.",
               "Show the word card \"Pat\". The big letter P at the start of a name says /p/, too.",
-              "Say the sounds, not the letter names: /k/ and /h/ with no \"uh\" after them, and a short /t/."
+              "Say the sounds, not the letter names: /k/ and /h/ with no \"uh\" after them, and a short /t/.",
+              "At the end of cat, hat, sat, mat, and Pat, let the tongue go with a small puff of air. A Thai final /t/, as in มด, has no puff, and the class cannot hear it."
             ],
             "teacherLanguage": [
               "\"Listen. /k/ - /a/ - /t/. What is the word? Cat!\"",
@@ -2661,7 +2701,8 @@
             ],
             "watchFor": [
               "Children who read \"tap\" and \"Pat\" the same way: point to the first letter and ask for its sound.",
-              "Children who say \"tuh - /a/ - /p/\": say /t/ as a short tap, with no \"uh\"."
+              "Children who say \"tuh - /a/ - /p/\": say /t/ as a short tap, with no \"uh\".",
+              "Children who stop a word with no release at the end (\"ca\" for \"cat\"): let the tongue go with a small puff of air at the end."
             ]
           },
           "easier": {
@@ -2686,7 +2727,8 @@
               "พูด 3 เสียงโดยหยุดสั้น ๆ ระหว่างเสียง แล้วพูดเร็ว ๆ เปิดให้ดูภาพหลังจากทั้งชั้นพูดคำ",
               "จากนั้นฝึกด้วยตัวอักษร: ชูบัตรคำ \"sat\", \"mat\" และ \"tap\" วางนิ้วใต้ตัวอักษรทีละตัวและออกเสียงของตัวอักษรนั้น แล้วลากนิ้วผ่านใต้ทั้งคำ",
               "ชูบัตรคำ \"Pat\" P ตัวพิมพ์ใหญ่ที่ต้นชื่อก็ออกเสียง /p/ เหมือนกัน",
-              "ออกเสียงของตัวอักษร ไม่ใช่ชื่อตัวอักษร: /k/ และ /h/ ไม่มี \"uh\" ตามหลัง และออกเสียง /t/ สั้น ๆ"
+              "ออกเสียงของตัวอักษร ไม่ใช่ชื่อตัวอักษร: /k/ และ /h/ ไม่มี \"uh\" ตามหลัง และออกเสียง /t/ สั้น ๆ",
+              "ที่ท้ายคำ cat, hat, sat, mat และ Pat ให้ยกปลายลิ้นออกจากหลังฟันบน โดยมีลมพ่นออกมาเล็กน้อย เพราะเสียงตัวสะกดแม่กด (ต หรือ ด) ในภาษาไทย เช่นในคำว่า มด ปลายลิ้นแตะค้างไว้และไม่มีลมพ่นออก และทั้งชั้นจะไม่ได้ยินเสียงนี้"
             ],
             "teacherLanguage": [
               "\"ฟัง /k/ - /a/ - /t/ คำนี้คือคำอะไร? Cat! (แมว)\"",
@@ -2701,7 +2743,8 @@
             ],
             "watchFor": [
               "เด็กที่อ่าน \"tap\" และ \"Pat\" เหมือนกัน: ชี้ที่ตัวอักษรตัวแรก แล้วถามว่าออกเสียงอะไร",
-              "เด็กที่อ่านเป็น \"tuh - /a/ - /p/\": ออกเสียง /t/ โดยแตะลิ้นสั้น ๆ ไม่มี \"uh\" ตามหลัง"
+              "เด็กที่อ่านเป็น \"tuh - /a/ - /p/\": ออกเสียง /t/ โดยแตะลิ้นสั้น ๆ ไม่มี \"uh\" ตามหลัง",
+              "เด็กที่หยุดเสียงท้ายคำโดยปลายลิ้นแตะค้างไว้ (\"ca\" แทน \"cat\"): ให้ยกปลายลิ้นออกจากหลังฟันบน โดยมีลมพ่นออกมาเล็กน้อยที่ท้ายคำ"
             ]
           },
           "blendDrill": {
@@ -2808,8 +2851,8 @@
             "th": "อ่านเฉพาะคำใหม่ 4 คำพร้อมทั้งชั้น 2 ครั้ง"
           },
           "harder": {
-            "en": "A child reads one word on the wall alone, then says its last sound.",
-            "th": "เด็กคนหนึ่งอ่านคำ 1 คำบนผนังคำศัพท์ด้วยตัวเอง แล้วบอกเสียงสุดท้ายของคำนั้น"
+            "en": "A child reads one word on the wall alone, then says its first sound.",
+            "th": "เด็กคนหนึ่งอ่านคำ 1 คำบนผนังคำศัพท์ด้วยตัวเอง แล้วบอกเสียงแรกของคำนั้น"
           },
           "group": {
             "en": "Whole class: one child points, and the class reads.",
@@ -4249,20 +4292,20 @@
           "en": {
             "teacherActions": [
               "Part 1 (5 min): write \"I can see a ___.\" on the board. Show where the big letter and the full stop go. \"I\" is always a big letter.",
-              "Children trace \"I can see a cat.\" in the book. Then they color the cat above it.",
+              "Children color the cat. Then they trace \"I can see a cat.\" below it.",
               "Stand-and-move break (at minute 5): all children stand up.",
               "Say an animal; the class makes its move (hop like a frog, flap like a bird) and says the frame with that animal (\"I can see a frog!\"). Do it three times, then sit down.",
               "Part 2 (5 min): in the second box, children draw a dog, a fish, or a bird. They find the word under the box (dog, fish, bird) and trace it."
             ],
             "teacherLanguage": [
               "\"A big letter I. A full stop at the end.\"",
-              "\"Trace the words: I can see a cat.\"",
               "\"Color the cat.\"",
+              "\"Trace the words: I can see a cat.\"",
               "\"Stand up! Hop like a frog! I can see a frog!\"",
               "\"Now draw a dog, a fish, or a bird. Find the word and trace it.\""
             ],
             "studentActions": [
-              "Children trace the frame and color the cat.",
+              "Children color the cat and trace the frame.",
               "Children stand, move like the animal, and say the frame in the break.",
               "Children draw a second animal, then find and trace the animal word."
             ],
@@ -4290,20 +4333,20 @@
           "th": {
             "teacherActions": [
               "ส่วนที่ 1 (5 นาที): เขียน \"I can see a ___.\" บนกระดาน ชี้ให้ดูว่าตัวพิมพ์ใหญ่และจุด (full stop) อยู่ที่ไหน \"I\" เป็นตัวพิมพ์ใหญ่เสมอ",
-              "เด็ก ๆ ลากเส้นตาม \"I can see a cat.\" ในหนังสือ จากนั้นระบายสีแมวที่อยู่เหนือประโยค",
+              "เด็ก ๆ ระบายสีแมว จากนั้นลากเส้นตาม \"I can see a cat.\" ที่อยู่ใต้ภาพแมว",
               "พักยืนขยับตัว (เมื่อครบ 5 นาที): เด็กทุกคนยืนขึ้น",
               "ครูพูดชื่อสัตว์ 1 ชนิด ทั้งชั้นทำท่าทางของสัตว์ตัวนั้น (กระโดดเหมือนกบ กระพือแขนเหมือนนก) และพูดกรอบประโยคกับสัตว์ตัวนั้น (เช่น \"I can see a frog!\" (ฉันมองเห็นกบ)) ทำ 3 ครั้ง แล้วนั่งลง",
               "ส่วนที่ 2 (5 นาที): ในช่องที่สอง เด็ก ๆ วาดสุนัข ปลา หรือนก แล้วหาคำใต้ช่องที่ตรงกับภาพ (dog, fish, bird) และลากเส้นตามคำนั้น"
             ],
             "teacherLanguage": [
               "\"I ตัวพิมพ์ใหญ่ ใส่จุดที่ท้ายประโยค\"",
-              "\"ลากเส้นตามคำ: I can see a cat.\"",
               "\"ระบายสีแมว\"",
+              "\"ลากเส้นตามคำ: I can see a cat.\"",
               "\"Stand up! (ยืนขึ้น) Hop like a frog! (กระโดดเหมือนกบ) I can see a frog! (ฉันมองเห็นกบ)\"",
               "\"ทีนี้วาดสุนัข ปลา หรือนก หาคำนั้นแล้วลากเส้นตาม\""
             ],
             "studentActions": [
-              "เด็ก ๆ ลากเส้นตามกรอบประโยค และระบายสีแมว",
+              "เด็ก ๆ ระบายสีแมวและลากเส้นตามกรอบประโยค",
               "เด็ก ๆ ยืน ทำท่าทางเหมือนสัตว์ และพูดกรอบประโยคในช่วงพัก",
               "เด็ก ๆ วาดสัตว์ตัวที่สอง แล้วหาคำศัพท์ชื่อสัตว์และลากเส้นตาม"
             ],
@@ -4439,14 +4482,15 @@
             "audio": "phonemes/daniel/05-m.mp3"
           },
           {
-            "kind": "tricky",
-            "text": "is",
-            "week": 4
+            "kind": "sound",
+            "text": "t",
+            "week": 6,
+            "audio": "phonemes/daniel/02-t.mp3"
           },
           {
             "kind": "tricky",
-            "text": "this",
-            "week": 4
+            "text": "he",
+            "week": 6
           },
           {
             "kind": "frame",
@@ -4494,7 +4538,7 @@
             "teacherActions": [
               "Show the four centers and the group signs. Send each group to its first center.",
               "Groups 1 and 2 start at the book corner and the letter cards; groups 3 and 4 at the picture sort and the karaoke corner.",
-              "Hold up each sound picture card and say the word with the class: tiger, ten, table, tomato. Then hold up cat, hat, and boat: /t/ is at the end."
+              "Hold up each sound picture card and say the word with the class: tiger, ten, table, tomato."
             ],
             "teacherLanguage": [
               "\"Group 1, go to the book corner. Group 2, the letter cards.\"",
@@ -4522,14 +4566,13 @@
           "materials": [
             "center cards",
             "group signs",
-            "sound picture cards: tiger, ten, table, tomato",
-            "picture cards: cat, hat, boat"
+            "sound picture cards: tiger, ten, table, tomato"
           ],
           "th": {
             "teacherActions": [
               "แนะนำมุมกิจกรรม 4 มุมและป้ายกลุ่ม ส่งแต่ละกลุ่มไปที่มุมกิจกรรมแรกของกลุ่ม",
               "กลุ่ม 1 และ 2 เริ่มที่มุมหนังสือและมุมบัตรตัวอักษร กลุ่ม 3 และ 4 เริ่มที่มุมแยกภาพและมุมคาราโอเกะ",
-              "ชูบัตรภาพประจำเสียงแต่ละใบ และพูดคำพร้อมทั้งชั้น: tiger, ten, table, tomato จากนั้นชูบัตรภาพ cat, hat และ boat: เสียง /t/ อยู่ท้ายคำ"
+              "ชูบัตรภาพประจำเสียงแต่ละใบ และพูดคำพร้อมทั้งชั้น: tiger, ten, table, tomato"
             ],
             "teacherLanguage": [
               "\"กลุ่ม 1 ไปที่มุมหนังสือ กลุ่ม 2 ไปมุมบัตรตัวอักษร\"",
@@ -4552,7 +4595,7 @@
           "minutes": 7,
           "en": {
             "teacherActions": [
-              "Groups work at their center. Picture sort: sort the picture cards into \"/t/ at the start or the end\" and \"no /t/\". Letter cards: build the words \"sat\" and \"tap\", and read them. Book corner: read the twelve books of weeks 1 to 6. Karaoke corner: sing with the karaoke videos on the tablet, with the sound low.",
+              "Groups work at their center. Picture sort: sort the picture cards into \"/t/ at the start\" and \"not /t/\". Letter cards: build the words \"sat\" and \"tap\", and read them. Book corner: read the twelve books of weeks 1 to 6. Karaoke corner: sing with the karaoke videos on the tablet, with the sound low.",
               "Sit at the reading-record table with the first two children on the record sheet list. Each child reads \"Tap, Tap!\"; mark the record sheet."
             ],
             "teacherLanguage": [
@@ -4580,9 +4623,8 @@
             "th": "4 กลุ่ม ครูอยู่กับเด็ก 2 คน"
           },
           "materials": [
-            "sorting mat: /t/ / no /t/",
+            "sorting mat: /t/ / not /t/",
             "sound picture cards: tiger, ten, table, tomato",
-            "picture cards: cat, hat, boat",
             "picture cards: sun, dog, pen",
             "workmats (class set)",
             "letter cards (class set): t, s, m, p, a, n",
@@ -4593,7 +4635,7 @@
           ],
           "th": {
             "teacherActions": [
-              "แต่ละกลุ่มทำกิจกรรมที่มุมของตัวเอง มุมแยกภาพ: แยกบัตรภาพเป็นกองที่มีเสียง /t/ ที่ต้นคำหรือท้ายคำ และกองที่ไม่มีเสียง /t/ มุมบัตรตัวอักษร: ต่อคำ \"sat\" และ \"tap\" แล้วอ่าน มุมหนังสือ: อ่านหนังสือ 12 เล่มของสัปดาห์ที่ 1 ถึง 6 มุมคาราโอเกะ: ร้องเพลงตามวิดีโอคาราโอเกะบนแท็บเล็ต โดยเปิดเสียงเบา",
+              "แต่ละกลุ่มทำกิจกรรมที่มุมของตัวเอง มุมแยกภาพ: แยกบัตรภาพเป็นกองที่ขึ้นต้นด้วย /t/ และกองที่ไม่ได้ขึ้นต้นด้วย /t/ มุมบัตรตัวอักษร: ต่อคำ \"sat\" และ \"tap\" แล้วอ่าน มุมหนังสือ: อ่านหนังสือ 12 เล่มของสัปดาห์ที่ 1 ถึง 6 มุมคาราโอเกะ: ร้องเพลงตามวิดีโอคาราโอเกะบนแท็บเล็ต โดยเปิดเสียงเบา",
               "นั่งที่โต๊ะบันทึกการอ่านกับเด็ก 2 คนแรกในรายชื่อของแบบบันทึกผล เด็กแต่ละคนอ่าน \"Tap, Tap!\" แล้วบันทึกในแบบบันทึกผล"
             ],
             "teacherLanguage": [
@@ -4811,9 +4853,9 @@
           },
           {
             "kind": "sound",
-            "text": "a",
-            "week": 2,
-            "audio": "phonemes/daniel/26-a-short.mp3"
+            "text": "t",
+            "week": 6,
+            "audio": "phonemes/daniel/02-t.mp3"
           },
           {
             "kind": "tricky",
@@ -4822,8 +4864,8 @@
           },
           {
             "kind": "tricky",
-            "text": "I",
-            "week": 2
+            "text": "put",
+            "week": 6
           },
           {
             "kind": "frame",
@@ -5337,7 +5379,6 @@
       "english.phonics.tricky.get",
       "english.phonics.pattern.cvc-short-a",
       "english.phonics.pa.initial-sound.identify",
-      "english.phonics.pa.final-sound.identify",
       "english.phonics.pa.phoneme.blend-2-3"
     ]
   },

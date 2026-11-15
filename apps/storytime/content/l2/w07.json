@@ -8,9 +8,9 @@
     },
     "thai": {
       "status": "approved",
-      "date": "2026-11-05",
-      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines)",
-      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 82 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md)"
+      "date": "2026-11-15",
+      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines); \"Ok\" (2026-11-15 19:43 ICT; the 64 Thai rows of the Phase 14 change list)",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 82 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md); Google Tasks reply of Daniel, 2026-11-15 19:43 ICT, PM relay (THAI item: p14-change-list.md, 64 rows)"
     },
     "images": {
       "status": "approved",
@@ -28,7 +28,10 @@
       "status": "draft"
     },
     "loops": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-15",
+      "words": "Approved",
+      "source": "Google Tasks, PM item YVJYeDVt, subtask bnJWSW5yUDNOVllzLWpvcA"
     }
   },
   "version": 1,
@@ -60,8 +63,14 @@
       "audio": "phonemes/daniel/29-o-short.mp3"
     },
     "paSkill": {
-      "en": "the first sound /o/ and the middle sound /o/; blend three sounds by ear",
-      "th": "ฟังเสียงแรก /o/ และเสียงกลาง /o/ และฟังแล้วผสม 3 เสียงเป็นคำ"
+      "en": "the first sound /o/; blend three sounds by ear",
+      "th": "ฟังเสียงแรก /o/ และฟังแล้วผสม 3 เสียงเป็นคำ"
+    },
+    "paStage": {
+      "stage": 1,
+      "positions": [
+        "first"
+      ]
     },
     "trickyWords": [
       "from",
@@ -178,12 +187,12 @@
   "opening": {
     "pa": [
       {
-        "en": "\"Listen: octopus. What is the first sound? /o/! Listen: pot. What is the middle sound? /o/!\"",
-        "th": "\"ฟัง: octopus เสียงแรกคือเสียงอะไร? /o/! ฟัง: pot เสียงกลางคำคือเสียงอะไร? /o/!\""
+        "en": "\"Listen: teddy. What is the first sound? /t/! Listen: see. What is the first sound? Sss!\"",
+        "th": "\"ฟัง: teddy เสียงแรกคือเสียงอะไร? /t/! ฟัง: see เสียงแรกคือเสียงอะไร? Sss!\""
       },
       {
-        "en": "\"Listen: ox. What is the first sound? /o/! Listen: sock. What is the middle sound? /o/!\"",
-        "th": "\"ฟัง: ox เสียงแรกคือเสียงอะไร? /o/! ฟัง: sock เสียงกลางคำคือเสียงอะไร? /o/!\""
+        "en": "\"Listen: octopus. What is the first sound? /o/! Listen: ox. What is the first sound? /o/!\"",
+        "th": "\"ฟัง: octopus เสียงแรกคือเสียงอะไร? /o/! ฟัง: ox เสียงแรกคือเสียงอะไร? /o/!\""
       },
       {
         "en": "\"Listen: /t/ - /o/ - /p/. What is the word? Top! Listen: /p/ - /o/ - /t/. What is the word? Pot!\"",
@@ -200,8 +209,8 @@
     ],
     "audio": [
       [
-        "phonemes/daniel/29-o-short.mp3",
-        "phonemes/daniel/29-o-short.mp3"
+        "phonemes/daniel/02-t.mp3",
+        "phonemes/daniel/01-s.mp3"
       ],
       [
         "phonemes/daniel/29-o-short.mp3",
@@ -240,7 +249,8 @@
       "octopus": "l2/media/w07/words/wa-octopus.mp3",
       "ox": "l2/media/w07/words/wa-ox.mp3",
       "pot": "l2/media/w07/words/wa-pot.mp3",
-      "sock": "l2/media/w07/words/wa-sock.mp3",
+      "see": "l2/media/w07/words/wa-see.mp3",
+      "teddy": "l2/media/w07/words/wa-teddy.mp3",
       "top": "l2/media/w07/words/wa-top.mp3"
     }
   },
@@ -1039,7 +1049,73 @@
           "teddy": "l2/media/w07/words/wa-teddy.mp3",
           "train": "l2/media/w07/words/wa-train.mp3",
           "yes": "l2/media/w07/words/wa-yes.mp3"
-        }
+        },
+        "sentenceClips": [
+          {
+            "sentence": "Is it a ball?",
+            "file": "l2/media/w07/sentences/b0-s01.mp3"
+          },
+          {
+            "sentence": "No!",
+            "file": "l2/media/w07/sentences/b0-s02.mp3"
+          },
+          {
+            "sentence": "Is it a doll?",
+            "file": "l2/media/w07/sentences/b0-s03.mp3"
+          },
+          {
+            "sentence": "No!",
+            "file": "l2/media/w07/sentences/b0-s04.mp3"
+          },
+          {
+            "sentence": "Is it a car?",
+            "file": "l2/media/w07/sentences/b0-s05.mp3"
+          },
+          {
+            "sentence": "No!",
+            "file": "l2/media/w07/sentences/b0-s06.mp3"
+          },
+          {
+            "sentence": "Is it a kite?",
+            "file": "l2/media/w07/sentences/b0-s07.mp3"
+          },
+          {
+            "sentence": "No!",
+            "file": "l2/media/w07/sentences/b0-s08.mp3"
+          },
+          {
+            "sentence": "Is it a drum?",
+            "file": "l2/media/w07/sentences/b0-s09.mp3"
+          },
+          {
+            "sentence": "No!",
+            "file": "l2/media/w07/sentences/b0-s10.mp3"
+          },
+          {
+            "sentence": "Is it a train?",
+            "file": "l2/media/w07/sentences/b0-s11.mp3"
+          },
+          {
+            "sentence": "No!",
+            "file": "l2/media/w07/sentences/b0-s12.mp3"
+          },
+          {
+            "sentence": "Is it a teddy?",
+            "file": "l2/media/w07/sentences/b0-s13.mp3"
+          },
+          {
+            "sentence": "No!",
+            "file": "l2/media/w07/sentences/b0-s14.mp3"
+          },
+          {
+            "sentence": "Is it Pip?",
+            "file": "l2/media/w07/sentences/b0-s15.mp3"
+          },
+          {
+            "sentence": "Yes!",
+            "file": "l2/media/w07/sentences/b0-s16.mp3"
+          }
+        ]
       },
       "questions": [
         {
@@ -1056,8 +1132,8 @@
         {
           "kind": "what",
           "ask": {
-            "en": "What is the first thing? Point to the picture.",
-            "th": "สิ่งแรกคืออะไร? ให้ชี้ที่ภาพ"
+            "en": "What is on page 1? Point and say it.",
+            "th": "หน้า 1 มีอะไร? ให้ชี้ที่ภาพแล้วพูดตามครู"
           },
           "answer": {
             "page": 1,
@@ -2594,14 +2670,14 @@
               "When the script says \"the letter o\", say the letter name \"oh\".",
               "Hold up one picture card at a time and say the word slowly.",
               "Say the first sound two times, short and quick: /o/, /o/, octopus. Keep the sound short.",
-              "Mix the /o/ words with other words. Then say three words with /o/ in the middle: pot, mop, sock."
+              "Mix the /o/ words with other words."
             ],
             "teacherLanguage": [
               "\"Listen. /o/, /o/, octopus. Octopus.\"",
               "\"Is the first sound /o/? Thumbs up or thumbs down?\"",
               "\"Yes! Octopus starts with /o/.\"",
               "\"Listen. Sun. Does sun start with /o/? No!\"",
-              "\"Now listen to the middle. /p/ - /o/ - /t/. Is /o/ in the middle? Yes!\""
+              "\"Listen. Ostrich. Does ostrich start with /o/? Yes!\""
             ],
             "studentActions": [
               "Children say each word after the teacher.",
@@ -2618,8 +2694,8 @@
             "th": "ใช้บัตรเพียง 4 ใบ (octopus, ox, sun, pen) และพูดเสียงแรก 2 ครั้ง"
           },
           "harder": {
-            "en": "Say a word with /o/ in the middle: \"Pot.\" Children say the middle sound: \"/o/!\"",
-            "th": "พูดคำที่มี /o/ อยู่กลางคำ: \"Pot.\" (หม้อ) เด็ก ๆ บอกเสียงกลาง: \"/o/!\""
+            "en": "A child says the first sound alone: \"Otter. /o/!\" Then the next child: \"Ox. /o/!\"",
+            "th": "เด็กบอกเสียงแรกด้วยตัวเองทีละคน: \"Otter. /o/!\" แล้วเด็กคนต่อไป: \"Ox. /o/!\""
           },
           "group": {
             "en": "Pairs: you hold up a card; partner A says the word, and partner B shows the thumbs.",
@@ -2627,8 +2703,7 @@
           },
           "materials": [
             "sound picture cards: octopus, ox, ostrich, otter",
-            "picture cards: sun, pen, cup",
-            "picture cards: pot, mop, sock"
+            "picture cards: sun, pen, cup"
           ],
           "th": {
             "teacherActions": [
@@ -2636,14 +2711,14 @@
               "เมื่อบทพูดเขียนว่า \"the letter o\" ให้พูดชื่อตัวอักษร \"oh\" (โอ)",
               "ชูบัตรภาพทีละใบ แล้วพูดคำช้า ๆ",
               "พูดเสียงแรก 2 ครั้ง สั้น ๆ และเร็ว ๆ: /o/, /o/, octopus ออกเสียงให้สั้น",
-              "คละคำที่ขึ้นต้นด้วย /o/ กับคำอื่น จากนั้นพูดคำ 3 คำที่มี /o/ อยู่กลางคำ: pot, mop, sock"
+              "คละคำที่ขึ้นต้นด้วย /o/ กับคำอื่น"
             ],
             "teacherLanguage": [
               "\"ฟัง /o/, /o/, octopus, octopus (ปลาหมึกยักษ์)\"",
               "\"เสียงแรกคือ /o/ ไหม? ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง?\"",
               "\"ใช่! Octopus ขึ้นต้นด้วย /o/\"",
               "\"ฟัง sun คำว่า sun ขึ้นต้นด้วย /o/ ไหม? ไม่ใช่!\"",
-              "\"ทีนี้ฟังเสียงกลางคำ /p/ - /o/ - /t/ มี /o/ อยู่ตรงกลางไหม? ใช่!\""
+              "\"ฟัง ostrich คำว่า ostrich ขึ้นต้นด้วย /o/ ไหม? ใช่!\""
             ],
             "studentActions": [
               "เด็ก ๆ พูดแต่ละคำตามครู",
@@ -3009,8 +3084,8 @@
             "th": "อ่านเฉพาะคำใหม่ 5 คำพร้อมทั้งชั้น 2 ครั้ง"
           },
           "harder": {
-            "en": "A child reads one word on the wall alone, then says its middle sound.",
-            "th": "เด็กคนหนึ่งอ่านคำ 1 คำบนผนังคำศัพท์ด้วยตัวเอง แล้วบอกเสียงกลางของคำนั้น"
+            "en": "A child reads one word on the wall alone, then says its first sound.",
+            "th": "เด็กคนหนึ่งอ่านคำ 1 คำบนผนังคำศัพท์ด้วยตัวเอง แล้วบอกเสียงแรกของคำนั้น"
           },
           "group": {
             "en": "Whole class: one child points, and the class reads.",
@@ -4449,20 +4524,20 @@
           "en": {
             "teacherActions": [
               "Part 1 (5 min): write \"Is it a ___?\" on the board. Show where the big letter and the question mark go.",
-              "Children trace \"Is it a ball?\" in the book. Then they color the ball above it.",
+              "Children color the ball. Then they trace \"Is it a ball?\" below it.",
               "Stand-and-move break (at minute 5): all children stand up.",
               "Mime one toy with no word (bounce a ball, fly a kite, beat a drum). The class asks \"Is it a ___?\" Say \"Yes!\" or \"No!\". Do three rounds, then sit down.",
               "Part 2 (5 min): in the second box, children draw a car, a kite, or a drum. They find the word under the box (car, kite, drum) and trace it."
             ],
             "teacherLanguage": [
               "\"A big letter I at the start. A question mark at the end.\"",
-              "\"Trace the words: Is it a ball?\"",
               "\"Color the ball.\"",
+              "\"Trace the words: Is it a ball?\"",
               "\"Stand up! Look at me! Ask: Is it a ...?\"",
               "\"Now draw a car, a kite, or a drum. Find the word and trace it.\""
             ],
             "studentActions": [
-              "Children trace the frame and color the ball.",
+              "Children color the ball and trace the frame.",
               "Children stand, copy the action, and ask the question in the break.",
               "Children draw a second toy, then find and trace the toy word."
             ],
@@ -4491,20 +4566,20 @@
           "th": {
             "teacherActions": [
               "ส่วนที่ 1 (5 นาที): เขียน \"Is it a ___?\" บนกระดาน ชี้ให้ดูว่าตัวพิมพ์ใหญ่และเครื่องหมายคำถาม (question mark) อยู่ที่ไหน",
-              "เด็ก ๆ ลากเส้นตาม \"Is it a ball?\" ในหนังสือ จากนั้นระบายสีลูกบอลที่อยู่เหนือประโยค",
+              "เด็ก ๆ ระบายสีลูกบอล จากนั้นลากเส้นตาม \"Is it a ball?\" ที่อยู่ใต้ภาพลูกบอล",
               "พักยืนขยับตัว (เมื่อครบ 5 นาที): เด็กทุกคนยืนขึ้น",
               "ครูทำท่าเล่นของเล่น 1 ชิ้นโดยไม่พูด (ตบลูกบอลให้เด้ง ชักว่าว ตีกลอง) ทั้งชั้นถามว่า \"Is it a ___?\" ครูตอบ \"Yes!\" หรือ \"No!\" ทำ 3 รอบ แล้วนั่งลง",
               "ส่วนที่ 2 (5 นาที): ในช่องที่สอง เด็ก ๆ วาดรถ ว่าว หรือกลอง แล้วหาคำใต้ช่องที่ตรงกับภาพ (car, kite, drum) และลากเส้นตามคำนั้น"
             ],
             "teacherLanguage": [
               "\"ตัวอักษร I ตัวพิมพ์ใหญ่ที่ต้นประโยค ใส่เครื่องหมายคำถามที่ท้ายประโยค\"",
-              "\"ลากเส้นตามคำ: Is it a ball? (เป็นลูกบอลใช่ไหม)\"",
               "\"ระบายสีลูกบอล\"",
+              "\"ลากเส้นตามคำ: Is it a ball? (เป็นลูกบอลใช่ไหม)\"",
               "\"Stand up! (ยืนขึ้น) Look at me! (ดูครู) ถามว่า: Is it a ...? (เป็น ... ใช่ไหม)\"",
               "\"ทีนี้วาดรถ ว่าว หรือกลอง หาคำนั้นแล้วลากเส้นตาม\""
             ],
             "studentActions": [
-              "เด็ก ๆ ลากเส้นตามกรอบประโยค และระบายสีลูกบอล",
+              "เด็ก ๆ ระบายสีลูกบอลและลากเส้นตามกรอบประโยค",
               "เด็ก ๆ ยืน ทำท่าตามครู และถามคำถามในช่วงพัก",
               "เด็ก ๆ วาดของเล่นชิ้นที่สอง แล้วหาคำศัพท์ชื่อของเล่นและลากเส้นตาม"
             ],
@@ -4641,14 +4716,15 @@
             "audio": "phonemes/daniel/01-s.mp3"
           },
           {
-            "kind": "tricky",
-            "text": "saw",
-            "week": 5
+            "kind": "sound",
+            "text": "o",
+            "week": 7,
+            "audio": "phonemes/daniel/29-o-short.mp3"
           },
           {
             "kind": "tricky",
-            "text": "off",
-            "week": 5
+            "text": "from",
+            "week": 7
           },
           {
             "kind": "frame",
@@ -4696,7 +4772,7 @@
             "teacherActions": [
               "Show the four centers and the group signs. Send each group to its first center.",
               "Groups 1 and 2 start at the picture sort and the book corner; groups 3 and 4 at the karaoke corner and the letter cards.",
-              "Hold up each sound picture card and say the word with the class: octopus, ox, ostrich, otter. Then hold up pot, mop, and sock: /o/ is in the middle."
+              "Hold up each sound picture card and say the word with the class: octopus, ox, ostrich, otter."
             ],
             "teacherLanguage": [
               "\"Group 1, go to the picture sort. Group 2, the book corner.\"",
@@ -4724,14 +4800,13 @@
           "materials": [
             "center cards",
             "group signs",
-            "sound picture cards: octopus, ox, ostrich, otter",
-            "picture cards: pot, mop, sock"
+            "sound picture cards: octopus, ox, ostrich, otter"
           ],
           "th": {
             "teacherActions": [
               "แนะนำมุมกิจกรรม 4 มุมและป้ายกลุ่ม ส่งแต่ละกลุ่มไปที่มุมกิจกรรมแรกของกลุ่ม",
               "กลุ่ม 1 และ 2 เริ่มที่มุมแยกภาพและมุมหนังสือ กลุ่ม 3 และ 4 เริ่มที่มุมคาราโอเกะและมุมบัตรตัวอักษร",
-              "ชูบัตรภาพประจำเสียงแต่ละใบ และพูดคำพร้อมทั้งชั้น: octopus, ox, ostrich, otter จากนั้นชูบัตรภาพ pot, mop และ sock: เสียง /o/ อยู่กลางคำ"
+              "ชูบัตรภาพประจำเสียงแต่ละใบ และพูดคำพร้อมทั้งชั้น: octopus, ox, ostrich, otter"
             ],
             "teacherLanguage": [
               "\"กลุ่ม 1 ไปมุมแยกภาพ กลุ่ม 2 ไปที่มุมหนังสือ\"",
@@ -4754,7 +4829,7 @@
           "minutes": 7,
           "en": {
             "teacherActions": [
-              "Groups work at their center. Picture sort: sort the picture cards into \"/o/ at the start or in the middle\" and \"no /o/\". Letter cards: build the words \"top\" and \"pot\", and read them. Book corner: read the fourteen books of weeks 1 to 7. Karaoke corner: sing with the karaoke videos on the tablet, with the sound low.",
+              "Groups work at their center. Picture sort: sort the picture cards into \"/o/ at the start\" and \"not /o/\". Letter cards: build the words \"top\" and \"pot\", and read them. Book corner: read the fourteen books of weeks 1 to 7. Karaoke corner: sing with the karaoke videos on the tablet, with the sound low.",
               "Sit at the reading-record table with the first two children on the record sheet list. Each child reads \"The Top\"; mark the record sheet."
             ],
             "teacherLanguage": [
@@ -4782,9 +4857,8 @@
             "th": "4 กลุ่ม ครูอยู่กับเด็ก 2 คน"
           },
           "materials": [
-            "sorting mat: /o/ / no /o/",
+            "sorting mat: /o/ / not /o/",
             "sound picture cards: octopus, ox, ostrich, otter",
-            "picture cards: pot, mop, sock",
             "picture cards: sun, pen, cup",
             "workmats (class set)",
             "letter cards (class set): o, t, s, m, p, a, n",
@@ -4795,7 +4869,7 @@
           ],
           "th": {
             "teacherActions": [
-              "แต่ละกลุ่มทำกิจกรรมที่มุมของตัวเอง มุมแยกภาพ: แยกบัตรภาพเป็นกองที่มีเสียง /o/ ที่ต้นคำหรือกลางคำ และกองที่ไม่มีเสียง /o/ มุมบัตรตัวอักษร: ต่อคำ \"top\" และ \"pot\" แล้วอ่าน มุมหนังสือ: อ่านหนังสือ 14 เล่มของสัปดาห์ที่ 1 ถึง 7 มุมคาราโอเกะ: ร้องเพลงตามวิดีโอคาราโอเกะบนแท็บเล็ต โดยเปิดเสียงเบา",
+              "แต่ละกลุ่มทำกิจกรรมที่มุมของตัวเอง มุมแยกภาพ: แยกบัตรภาพเป็นกองที่ขึ้นต้นด้วย /o/ และกองที่ไม่ได้ขึ้นต้นด้วย /o/ มุมบัตรตัวอักษร: ต่อคำ \"top\" และ \"pot\" แล้วอ่าน มุมหนังสือ: อ่านหนังสือ 14 เล่มของสัปดาห์ที่ 1 ถึง 7 มุมคาราโอเกะ: ร้องเพลงตามวิดีโอคาราโอเกะบนแท็บเล็ต โดยเปิดเสียงเบา",
               "นั่งที่โต๊ะบันทึกการอ่านกับเด็ก 2 คนแรกในรายชื่อของแบบบันทึกผล เด็กแต่ละคนอ่าน \"The Top\" แล้วบันทึกในแบบบันทึกผล"
             ],
             "teacherLanguage": [
@@ -5013,9 +5087,9 @@
           },
           {
             "kind": "sound",
-            "text": "p",
-            "week": 3,
-            "audio": "phonemes/daniel/03-p.mp3"
+            "text": "o",
+            "week": 7,
+            "audio": "phonemes/daniel/29-o-short.mp3"
           },
           {
             "kind": "tricky",
@@ -5024,8 +5098,8 @@
           },
           {
             "kind": "tricky",
-            "text": "with",
-            "week": 5
+            "text": "run",
+            "week": 7
           },
           {
             "kind": "frame",
@@ -5544,7 +5618,6 @@
       "english.phonics.tricky.this",
       "english.phonics.pattern.cvc-short-a",
       "english.phonics.pa.initial-sound.identify",
-      "english.phonics.pa.medial-vowel.identify",
       "english.phonics.pa.phoneme.blend-2-3"
     ]
   },

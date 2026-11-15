@@ -8,9 +8,9 @@
     },
     "thai": {
       "status": "approved",
-      "date": "2026-11-05",
-      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines)",
-      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 80 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md)"
+      "date": "2026-11-15",
+      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines); \"Ok\" (2026-11-15 19:43 ICT; the 64 Thai rows of the Phase 14 change list)",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 80 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md); Google Tasks reply of Daniel, 2026-11-15 19:43 ICT, PM relay (THAI item: p14-change-list.md, 64 rows)"
     },
     "images": {
       "status": "approved",
@@ -28,7 +28,10 @@
       "status": "draft"
     },
     "loops": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-15",
+      "words": "Approved",
+      "source": "Google Tasks, PM item YVJYeDVt, subtask bnJWSW5yUDNOVllzLWpvcA"
     }
   },
   "version": 1,
@@ -60,8 +63,14 @@
       "audio": "phonemes/daniel/05-m.mp3"
     },
     "paSkill": {
-      "en": "the first sound mmm and the last sound mmm; blend three sounds by ear",
-      "th": "ฟังเสียงแรกและเสียงสุดท้าย mmm และฟังแล้วผสม 3 เสียงเป็นคำ"
+      "en": "the first sound mmm; blend three sounds by ear",
+      "th": "ฟังเสียงแรก mmm และฟังแล้วผสม 3 เสียงเป็นคำ"
+    },
+    "paStage": {
+      "stage": 1,
+      "positions": [
+        "first"
+      ]
     },
     "trickyWords": [
       "is",
@@ -187,12 +196,12 @@
   "opening": {
     "pa": [
       {
-        "en": "\"Listen: milk. What is the first sound? Mmm! Listen: jam. What is the last sound? Mmm!\"",
-        "th": "\"ฟัง: milk เสียงแรกคือเสียงอะไร? Mmm! ฟัง: jam เสียงสุดท้ายคือเสียงอะไร? Mmm!\""
+        "en": "\"Listen: pan. What is the first sound? /p/! Listen: apple. What is the first sound? /a/!\"",
+        "th": "\"ฟัง: pan เสียงแรกคือเสียงอะไร? /p/! ฟัง: apple เสียงแรกคือเสียงอะไร? /a/!\""
       },
       {
-        "en": "\"Listen: mango. What is the first sound? Mmm! Listen: arm. What is the last sound? Mmm!\"",
-        "th": "\"ฟัง: mango เสียงแรกคือเสียงอะไร? Mmm! ฟัง: arm เสียงสุดท้ายคือเสียงอะไร? Mmm!\""
+        "en": "\"Listen: milk. What is the first sound? Mmm! Listen: mango. What is the first sound? Mmm!\"",
+        "th": "\"ฟัง: milk เสียงแรกคือเสียงอะไร? Mmm! ฟัง: mango เสียงแรกคือเสียงอะไร? Mmm!\""
       },
       {
         "en": "\"Listen: mmm - /a/ - nnn. What is the word? Man! Listen: mmm - /a/ - /p/. What is the word? Map!\"",
@@ -209,8 +218,8 @@
     ],
     "audio": [
       [
-        "phonemes/daniel/05-m.mp3",
-        "phonemes/daniel/05-m.mp3"
+        "phonemes/daniel/03-p.mp3",
+        "phonemes/daniel/26-a-short.mp3"
       ],
       [
         "phonemes/daniel/05-m.mp3",
@@ -242,7 +251,7 @@
       ]
     ],
     "wordClips": {
-      "arm": "l2/media/w04/words/wa-arm.mp3",
+      "apple": "l2/media/w04/words/wa-apple.mp3",
       "ham": "l2/media/w04/words/wa-ham.mp3",
       "jam": "l2/media/w04/words/wa-jam.mp3",
       "man": "l2/media/w04/words/wa-man.mp3",
@@ -250,7 +259,8 @@
       "map": "l2/media/w04/words/wa-map.mp3",
       "milk": "l2/media/w04/words/wa-milk.mp3",
       "mop": "l2/media/w04/words/wa-mop.mp3",
-      "pam": "l2/media/w04/words/wa-pam.mp3"
+      "pam": "l2/media/w04/words/wa-pam.mp3",
+      "pan": "l2/media/w04/words/wa-pan.mp3"
     }
   },
   "books": [
@@ -868,7 +878,41 @@
           "my": "l2/media/w04/words/wa-my.mp3",
           "pip": "l2/media/w04/words/wa-pip.mp3",
           "this": "l2/media/w04/words/wa-this.mp3"
-        }
+        },
+        "sentenceClips": [
+          {
+            "sentence": "This is my mom.",
+            "file": "l2/media/w04/sentences/b0-s01.mp3"
+          },
+          {
+            "sentence": "This is my dad.",
+            "file": "l2/media/w04/sentences/b0-s02.mp3"
+          },
+          {
+            "sentence": "This is my brother.",
+            "file": "l2/media/w04/sentences/b0-s03.mp3"
+          },
+          {
+            "sentence": "This is my grandma.",
+            "file": "l2/media/w04/sentences/b0-s04.mp3"
+          },
+          {
+            "sentence": "This is my grandpa.",
+            "file": "l2/media/w04/sentences/b0-s05.mp3"
+          },
+          {
+            "sentence": "This is my house.",
+            "file": "l2/media/w04/sentences/b0-s06.mp3"
+          },
+          {
+            "sentence": "This is my family.",
+            "file": "l2/media/w04/sentences/b0-s07.mp3"
+          },
+          {
+            "sentence": "This is my dog, Pip!",
+            "file": "l2/media/w04/sentences/b0-s08.mp3"
+          }
+        ]
       },
       "questions": [
         {
@@ -2242,7 +2286,7 @@
             "teacherActions": [
               "Hold up one picture card at a time and say the word slowly.",
               "Stretch the first sound: mmmonkey.",
-              "Mix the mmm words with other words. Then say three words with mmm at the end: arm, jam, ham.",
+              "Mix the mmm words with other words.",
               "When the script says mmm, say the sound: lips together, hum. When it says \"the letter m\", say the letter name \"em\"."
             ],
             "teacherLanguage": [
@@ -2250,7 +2294,7 @@
               "\"Is the first sound mmm? Thumbs up or thumbs down?\"",
               "\"Yes! Mmmonkey starts with mmm.\"",
               "\"Listen. Cat. Does cat start with mmm? No!\"",
-              "\"Now listen to the end. Jammm. Is mmm at the end? Yes!\""
+              "\"Listen. Mouse. Does mouse start with mmm? Yes!\""
             ],
             "studentActions": [
               "Children say each word after the teacher.",
@@ -2266,8 +2310,8 @@
             "th": "ใช้บัตรเพียง 4 ใบ (monkey, milk, cat, sun) และพูดเสียงแรก 2 ครั้ง"
           },
           "harder": {
-            "en": "Say a word with mmm at the end: \"Arm.\" Children say the last sound: \"Mmm!\"",
-            "th": "พูดคำที่มี mmm อยู่ท้ายคำ: \"Arm.\" (แขน) เด็ก ๆ บอกเสียงสุดท้าย: \"Mmm!\""
+            "en": "A child says the first sound alone: \"Mango. Mmm!\" Then the next child: \"Milk. Mmm!\"",
+            "th": "เด็กบอกเสียงแรกด้วยตัวเองทีละคน: \"Mango. Mmm!\" แล้วเด็กคนต่อไป: \"Milk. Mmm!\""
           },
           "group": {
             "en": "Pairs: you hold up a card; partner A says the word, and partner B shows the thumbs.",
@@ -2275,14 +2319,13 @@
           },
           "materials": [
             "sound picture cards: monkey, mouse, mango, milk",
-            "picture cards: cat, sun, fish",
-            "picture cards: arm, jam, ham"
+            "picture cards: cat, sun, fish"
           ],
           "th": {
             "teacherActions": [
               "ชูบัตรภาพทีละใบ แล้วพูดคำช้า ๆ",
               "ลากเสียงแรกให้ยาว: mmmonkey",
-              "คละคำที่ขึ้นต้นด้วย mmm กับคำอื่น จากนั้นพูดคำ 3 คำที่มี mmm อยู่ท้ายคำ: arm, jam, ham",
+              "คละคำที่ขึ้นต้นด้วย mmm กับคำอื่น",
               "เมื่อบทพูดเขียนว่า mmm ให้ออกเสียง: ประกบริมฝีปากเข้าหากัน แล้วฮัมเสียง เมื่อบทพูดเขียนว่า \"the letter m\" ให้พูดชื่อตัวอักษร \"em\" (เอ็ม)"
             ],
             "teacherLanguage": [
@@ -2290,7 +2333,7 @@
               "\"เสียงแรกคือ mmm ไหม? ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง?\"",
               "\"ใช่! Mmmonkey ขึ้นต้นด้วย mmm\"",
               "\"ฟัง cat คำว่า cat ขึ้นต้นด้วย mmm ไหม? ไม่ใช่!\"",
-              "\"ทีนี้ฟังเสียงท้ายคำ Jammm มี mmm อยู่ท้ายคำไหม? ใช่!\""
+              "\"ฟัง mouse คำว่า mouse ขึ้นต้นด้วย mmm ไหม? ใช่!\""
             ],
             "studentActions": [
               "เด็ก ๆ พูดแต่ละคำตามครู",
@@ -4083,19 +4126,19 @@
           "en": {
             "teacherActions": [
               "Part 1 (5 min): write \"This is my ___.\" on the board. Show where the big letter and the full stop go.",
-              "Children trace \"This is my\" in the book. Then they choose one word under the box (mom, dad, brother, sister, grandma, grandpa, family), trace it, and draw that person in the box.",
+              "Children trace \"This is my\" in the book. Then they draw one person in the first box, find that word under the boxes (mom, dad, brother, sister, grandma, grandpa, family), and trace it.",
               "Stand-and-sing break (at minute 5): all children stand up and sing the chorus with the gestures: \"Mom, Dad, my family! This is my family, my family and me!\" Then they sit down.",
               "Part 2 (5 min): in the second box, children draw one more person. They find the family word under the box (the same seven words) and trace it."
             ],
             "teacherLanguage": [
               "\"A big letter at the start. A full stop at the end.\"",
-              "\"Trace the words: This is my ... Now find your word and trace it.\"",
-              "\"Draw the person in the box.\"",
+              "\"Trace the words: This is my ...\"",
+              "\"Draw the person in the box. Now find your word and trace it.\"",
               "\"Stand up! Sing with me: Mom, Dad, my family!\"",
               "\"Now draw one more person. Who is it? Find the word and trace it.\""
             ],
             "studentActions": [
-              "Children trace the frame, choose a family word, and draw that person.",
+              "Children trace the frame, draw a person, and find and trace that family word.",
               "Children stand and sing the chorus with the gestures in the break.",
               "Children draw a second person, then find and trace the family word."
             ],
@@ -4123,19 +4166,19 @@
           "th": {
             "teacherActions": [
               "ส่วนที่ 1 (5 นาที): เขียน \"This is my ___.\" บนกระดาน ชี้ให้ดูว่าตัวพิมพ์ใหญ่และจุด (full stop) อยู่ที่ไหน",
-              "เด็ก ๆ ลากเส้นตาม \"This is my\" ในหนังสือ จากนั้นเลือกคำ 1 คำใต้ช่อง (mom, dad, brother, sister, grandma, grandpa, family) ลากเส้นตามคำนั้น และวาดภาพคนนั้นในช่อง",
+              "เด็ก ๆ ลากเส้นตาม \"This is my\" ในหนังสือ จากนั้นวาดคน 1 คนในช่องแรก แล้วหาคำของคนนั้นจากคำใต้ช่อง (mom, dad, brother, sister, grandma, grandpa, family) และลากเส้นตามคำนั้น",
               "พักยืนร้องเพลง (เมื่อครบ 5 นาที): เด็กทุกคนยืนขึ้น และร้องท่อนฮุก (chorus) พร้อมทำท่าประกอบเพลง: \"Mom, Dad, my family! This is my family, my family and me!\" แล้วนั่งลง",
               "ส่วนที่ 2 (5 นาที): เด็ก ๆ วาดคนเพิ่มอีก 1 คนในช่องที่สอง แล้วหาคำศัพท์ครอบครัวใต้ช่อง (คำ 7 คำชุดเดียวกัน) และลากเส้นตามคำนั้น"
             ],
             "teacherLanguage": [
               "\"ใช้ตัวพิมพ์ใหญ่ที่ต้นประโยค ใส่จุดที่ท้ายประโยค\"",
-              "\"ลากเส้นตามคำ: This is my ... ทีนี้หาคำของหนูแล้วลากเส้นตาม\"",
-              "\"วาดภาพคนนั้นในช่อง\"",
+              "\"ลากเส้นตามคำ: This is my ...\"",
+              "\"วาดภาพคนนั้นในช่อง ทีนี้หาคำของหนูแล้วลากเส้นตาม\"",
               "\"Stand up! (ยืนขึ้น) ร้องพร้อมครู: Mom, Dad, my family!\"",
               "\"ทีนี้วาดคนเพิ่มอีก 1 คน Who is it? (คนนี้คือใคร) หาคำนั้นแล้วลากเส้นตาม\""
             ],
             "studentActions": [
-              "เด็ก ๆ ลากเส้นตามกรอบประโยค เลือกคำศัพท์ครอบครัว และวาดภาพคนนั้น",
+              "เด็ก ๆ ลากเส้นตามกรอบประโยค วาดภาพคน และหาคำศัพท์ครอบครัวของคนนั้นแล้วลากเส้นตาม",
               "เด็ก ๆ ยืนและร้องท่อนฮุกพร้อมทำท่าประกอบเพลงในช่วงพัก",
               "เด็ก ๆ วาดคนที่สอง แล้วหาคำศัพท์ครอบครัวและลากเส้นตาม"
             ],
@@ -4271,14 +4314,15 @@
             "audio": "phonemes/daniel/03-p.mp3"
           },
           {
-            "kind": "tricky",
-            "text": "in",
-            "week": 2
+            "kind": "sound",
+            "text": "m",
+            "week": 4,
+            "audio": "phonemes/daniel/05-m.mp3"
           },
           {
             "kind": "tricky",
-            "text": "on",
-            "week": 2
+            "text": "is",
+            "week": 4
           },
           {
             "kind": "frame",
@@ -4638,14 +4682,14 @@
           },
           {
             "kind": "sound",
-            "text": "a",
-            "week": 2,
-            "audio": "phonemes/daniel/26-a-short.mp3"
+            "text": "m",
+            "week": 4,
+            "audio": "phonemes/daniel/05-m.mp3"
           },
           {
             "kind": "tricky",
-            "text": "on",
-            "week": 2
+            "text": "this",
+            "week": 4
           },
           {
             "kind": "tricky",
@@ -5036,7 +5080,6 @@
       "english.phonics.tricky.in",
       "english.phonics.tricky.on",
       "english.phonics.pa.initial-sound.identify",
-      "english.phonics.pa.final-sound.identify",
       "english.phonics.pa.phoneme.blend-2-3",
       "english.phonics.pattern.cvc-short-a"
     ]

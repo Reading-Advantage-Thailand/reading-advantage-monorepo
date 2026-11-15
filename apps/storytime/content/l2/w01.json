@@ -8,9 +8,9 @@
     },
     "thai": {
       "status": "approved",
-      "date": "2026-11-05",
-      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines)",
-      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 67 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md)"
+      "date": "2026-11-15",
+      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines); \"Ok\" (2026-11-15 19:43 ICT; the 64 Thai rows of the Phase 14 change list)",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 67 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md); Google Tasks reply of Daniel, 2026-11-15 19:43 ICT, PM relay (THAI item: p14-change-list.md, 64 rows)"
     },
     "images": {
       "status": "approved",
@@ -42,7 +42,10 @@
       "words": "The book seems fine."
     },
     "loops": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-15",
+      "words": "Approved",
+      "source": "Google Tasks, PM item YVJYeDVt, subtask bnJWSW5yUDNOVllzLWpvcA"
     }
   },
   "version": 1,
@@ -74,8 +77,14 @@
       "audio": "phonemes/daniel/04-n.mp3"
     },
     "paSkill": {
-      "en": "the first and last sound n; blend three sounds by ear",
-      "th": "ฟังเสียงแรกและเสียงสุดท้าย n และฟังแล้วผสม 3 เสียงเป็นคำ"
+      "en": "the first sound n; blend three sounds by ear",
+      "th": "ฟังเสียงแรก n และฟังแล้วผสม 3 เสียงเป็นคำ"
+    },
+    "paStage": {
+      "stage": 1,
+      "positions": [
+        "first"
+      ]
     },
     "trickyWords": [
       "a",
@@ -176,12 +185,12 @@
   "opening": {
     "pa": [
       {
-        "en": "\"Listen: nose. What is the first sound? Nnn! Listen: sun. What is the last sound? Nnn!\"",
-        "th": "\"ฟัง: nose เสียงแรกคือเสียงอะไร? Nnn! ฟัง: sun เสียงสุดท้ายคือเสียงอะไร? Nnn!\""
+        "en": "\"Listen: hello. Say it with me: hello! Listen: goodbye. Say it with me: goodbye!\"",
+        "th": "\"ฟัง: hello พูดพร้อมครู: hello! ฟัง: goodbye พูดพร้อมครู: goodbye!\""
       },
       {
-        "en": "\"Listen: nest. What is the first sound? Nnn! Listen: pen. What is the last sound? Nnn!\"",
-        "th": "\"ฟัง: nest เสียงแรกคือเสียงอะไร? Nnn! ฟัง: pen เสียงสุดท้ายคือเสียงอะไร? Nnn!\""
+        "en": "\"Listen: nest. What is the first sound? Nnn! Listen: nose. What is the first sound? Nnn!\"",
+        "th": "\"ฟัง: nest เสียงแรกคือเสียงอะไร? Nnn! ฟัง: nose เสียงแรกคือเสียงอะไร? Nnn!\""
       },
       {
         "en": "\"Listen: nnn - /e/ - /t/. What is the word? Net! Listen: /p/ - /e/ - nnn. What is the word? Pen!\"",
@@ -197,10 +206,7 @@
       }
     ],
     "audio": [
-      [
-        "phonemes/daniel/04-n.mp3",
-        "phonemes/daniel/04-n.mp3"
-      ],
+      [],
       [
         "phonemes/daniel/04-n.mp3",
         "phonemes/daniel/04-n.mp3"
@@ -232,6 +238,8 @@
     ],
     "wordClips": {
       "fan": "l2/media/w01/words/wa-fan.mp3",
+      "goodbye": "l2/media/w01/words/wa-goodbye.mp3",
+      "hello": "l2/media/w01/words/wa-hello.mp3",
       "hen": "l2/media/w01/words/wa-hen.mp3",
       "nest": "l2/media/w01/words/wa-nest.mp3",
       "net": "l2/media/w01/words/wa-net.mp3",
@@ -848,7 +856,41 @@
           "sam": "l2/media/w01/words/wa-sam.mp3",
           "teacher": "l2/media/w01/words/wa-teacher.mp3",
           "your": "l2/media/w01/words/wa-your.mp3"
-        }
+        },
+        "sentenceClips": [
+          {
+            "sentence": "Hello, I am Pat.",
+            "file": "l2/media/w01/sentences/b0-s01.mp3"
+          },
+          {
+            "sentence": "Hello, I am May.",
+            "file": "l2/media/w01/sentences/b0-s02.mp3"
+          },
+          {
+            "sentence": "Hello, I am Sam.",
+            "file": "l2/media/w01/sentences/b0-s03.mp3"
+          },
+          {
+            "sentence": "Hello, I am Mia.",
+            "file": "l2/media/w01/sentences/b0-s04.mp3"
+          },
+          {
+            "sentence": "Hello, I am Nan.",
+            "file": "l2/media/w01/sentences/b0-s05.mp3"
+          },
+          {
+            "sentence": "Hello, I am Ben.",
+            "file": "l2/media/w01/sentences/b0-s06.mp3"
+          },
+          {
+            "sentence": "Hello, I am your teacher.",
+            "file": "l2/media/w01/sentences/b0-s07.mp3"
+          },
+          {
+            "sentence": "Hello, I am Pip!",
+            "file": "l2/media/w01/sentences/b0-s08.mp3"
+          }
+        ]
       },
       "questions": [
         {
@@ -2224,8 +2266,8 @@
             "th": "ใช้บัตรเพียง 3 ใบ (nest, nose, cat) และพูดเสียงแรก 2 ครั้ง"
           },
           "harder": {
-            "en": "Ask about the last sound too: \"Sun. Does sun end with nnn?\"",
-            "th": "ถามเรื่องเสียงสุดท้ายด้วย: \"Sun. Does sun end with nnn?\" (sun ลงท้ายด้วย nnn ไหม)"
+            "en": "A child says the first sound alone: \"Net. Nnn!\" Then the next child: \"Nut. Nnn!\"",
+            "th": "เด็กบอกเสียงแรกด้วยตัวเองทีละคน: \"Net. Nnn!\" แล้วเด็กคนต่อไป: \"Nut. Nnn!\""
           },
           "group": {
             "en": "Pairs: you hold up a card; partner A says the word, and partner B shows the thumbs.",
@@ -3411,8 +3453,8 @@
             "th": "ใช้เฉพาะคำ nest และ cat คำละ 2 ครั้ง"
           },
           "harder": {
-            "en": "Add a word with n at the end (sun): children push the card into the last box.",
-            "th": "เพิ่มคำที่มี n อยู่ท้ายคำ (sun): เด็ก ๆ เลื่อนบัตรไปที่ช่องสุดท้าย"
+            "en": "Add two more words, nut and dog. Children push the card into the first box for nut only.",
+            "th": "เพิ่มอีก 2 คำ คือ nut และ dog เด็ก ๆ เลื่อนบัตรไปที่ช่องแรกเฉพาะคำ nut"
           },
           "group": {
             "en": "Pairs share one workmat and take turns to push the card.",
@@ -4738,7 +4780,6 @@
       "english.phonics.tricky.and",
       "english.phonics.tricky.can",
       "english.phonics.pa.initial-sound.identify",
-      "english.phonics.pa.final-sound.identify",
       "english.phonics.pa.phoneme.blend-2-3"
     ],
     "reviewed": []
