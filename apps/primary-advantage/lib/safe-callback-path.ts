@@ -2,8 +2,17 @@ import { routing } from "@/i18n/routing";
 
 const LOCALE_PREFIX = new RegExp(`^/(${routing.locales.join("|")})(?=/|$)`);
 
+/** True when the text holds a control character (0x00-0x1f or 0x7f). */
+const hasControlChar = (text: string): boolean => {
+  for (let index = 0; index < text.length; index += 1) {
+    const code = text.charCodeAt(index);
+    if (code <= 0x1f || code === 0x7f) return true;
+  }
+  return false;
+};
+
 /** True when the path is local: it starts with one slash and has no backslash or control character. */
-const isLocalPath = (path: string) => path.startsWith("/") && !path.startsWith("//") && !path.includes("\\") && !/[\u0000-\u001f\u007f]/.test(path);
+const isLocalPath = (path: string) => path.startsWith("/") && !path.startsWith("//") && !path.includes("\\") && !hasControlChar(path);
 
 /**
  * Keeps a callback only when it is a path on this site, without its locale.

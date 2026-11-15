@@ -1,8 +1,26 @@
 import { baseConfig, ignores } from "@reading-advantage/config/eslint";
 
 const eslintConfig = [
-  { ignores: [...ignores, "public/"] },
+  {
+    ignores: [
+      ...ignores,
+      "public/",
+      // Built legacy service-worker fixture: minified browser code on purpose.
+      "tests/pwa/fixtures/",
+    ],
+  },
   ...baseConfig,
+  {
+    // The PWA fixture server runs in Node, so the Node globals are defined here.
+    files: ["tests/pwa/**/*.mjs"],
+    languageOptions: {
+      globals: {
+        console: "readonly",
+        process: "readonly",
+        URL: "readonly",
+      },
+    },
+  },
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
     rules: {
