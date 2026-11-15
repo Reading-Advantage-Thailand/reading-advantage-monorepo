@@ -684,7 +684,7 @@ same style. Every draft carries the extraction marker of section 5.3. Plan tasks
 | Document type (report name) | Parser | Contract | Source format | Read path (PM-4, D-13) | Fields (from the report) |
 |---|---|---|---|---|---|
 | payment voucher, workbook (`payment_voucher_xlsx`) | `parsePaymentVoucherSheet` | `paymentVoucherDraftSchema` | `.xlsx` workbook, 3 or 4 voucher worksheets and 1 guide worksheet | local; never Vertex | company name, form title, voucherNo, date, payee, paymentRef, netAmount, lines (docDate, docNo, description, amount), note, subtotal, deductionLabel, deductionRate, deductionAmount, netTotal (cells in note 3) |
-| payment voucher, payslip print (`payment_voucher_pdf`) | `parsePaymentVoucherPdf` | `paymentVoucherDraftSchema` | text PDF, 1 page for each payee | local; Vertex if no text layer | the same fields as the workbook. The PDF has no formula, so it shows the final numbers |
+| payment voucher, payslip print (`payment_voucher_pdf`) | `parsePaymentVoucherPdf` | `paymentVoucherDraftSchema` | text PDF; one payee on each page; a print can hold several pages. PM decision 2026-11-15: one draft for each page | local; Vertex if no text layer | the same fields as the workbook. The PDF has no formula, so it shows the final numbers |
 | Google Cloud and Workspace tax invoice (`cloud_tax_invoice`) | `parseCloudInvoice` | `cloudInvoiceDraftSchema` | text PDF, 2 pages (summary, line detail) | local; Vertex if no text layer (D-13) | invoiceNumber, gstRegNo, billTo, service, invoiceDate, billingId, periodStart, periodEnd, currency, subtotal, gstRate, gst, total. Workspace adds domain and a line (subscription, interval, quantity, amount). Cloud adds accountId and a line (description, amount) |
 | Google Cloud and Workspace payment receipt (`cloud_payment_receipt`) | `parseCloudPaymentReceipt` | `cloudPaymentReceiptDraftSchema` | text PDF, 1 page (browser print, short text layer) | local; Vertex if no text layer | documentTitle, paymentDate, amount, paymentNumber, paymentId (Cloud only), paidBy, paidTo, service, taxIdentificationNo, billingId, paymentMethod |
 | Google Cloud statement (`cloud_statement`) | `parseCloudStatement` | `cloudStatementDraftSchema` | text PDF, 2 pages | local; Vertex if no text layer | documentTitle, to, service, cloudAccountId, paymentsAccountId, paymentsProfileId, statementIssueDate, periodStart, periodEnd, startingBalance, totalNewActivity, totalPaymentsReceived, endingBalance, and the table PAYMENTS RECEIVED (date, description, amount) |
@@ -694,8 +694,8 @@ same style. Every draft carries the extraction marker of section 5.3. Plan tasks
 | school invoice, sheet (`school_invoice_sheet`) | `parseSchoolInvoiceSheet` | `schoolInvoiceDraftSchema` | Google Sheet, 4 tabs (`Receipt Term 1`, `ใบแจ้งหนี้`, `Term 1`, `Term 2`) | exported as `.xlsx`, then local; never Vertex (Q21) | documentTitle, invoiceNo or receiptNo, date, quotationRef, due, issuer block (company names, tax id, branch, contact), customerName, customerAddress, customerTaxId, students, lines (seq, description, unitPrice, quantity, total), subtotal, discounts (label, amount; one or two), netTotal (digits), netTotalInWords (Thai and English), payment block (bank, branch, accountName, accountNo), delivery block, vatNote, terms |
 | school invoice, PDF (`school_invoice_pdf`) | `parseSchoolInvoicePdf` | `schoolInvoiceDraftSchema` | text PDF, 1 page | local; Vertex if no text layer | the same fields as the sheet |
 | receipt (no real sample) | `parseReceipt` | `receiptDraftSchema` | PDF, JPEG, PNG | local text PDF; Vertex for a non-text PDF, a JPEG, and a PNG | no field list in the report (open item Q24) |
-| OpenAI invoice (no real sample) | `parseOpenAiInvoice` | `openAiInvoiceDraftSchema` | text PDF | local; Vertex if no text layer (D-13) | no field list in the report (open item Q24) |
-| withholding tax certificate (no real sample) | `parseWithholdingCertificate` | `withholdingCertificateDraftSchema` | text PDF | local; Vertex if no text layer | no field list in the report (open item Q24) |
+| OpenAI invoice (no real sample) | `parseOpenAiInvoice` | `openAiInvoiceDraftSchema` | text PDF (assumed format; no sample) | local; Vertex if no text layer (D-13) | no field list in the report (open item Q24) |
+| withholding tax certificate (no real sample) | `parseWithholdingCertificate` | `withholdingCertificateDraftSchema` | text PDF (assumed format; no sample) | local; Vertex if no text layer | no field list in the report (open item Q24) |
 
 The last three rows are synthetic: their fixtures are fake and each is marked "no
 real sample" (PM-12). The workbook reader and the text-PDF reader serve all rows.
@@ -730,11 +730,13 @@ real sample" (PM-12). The workbook reader and the text-PDF reader serve all rows
    social security); deductionRate H27 (0.03 or 0.05); deductionAmount I27;
    netTotal I28. The payment-method boxes are a drawing, so the reader cannot read
    which box is marked. The 4 signature labels hold no value. One variant has
-   several hourly-task lines and no salary line. A payee can have one allowance
-   line. The voucher number has two accepted forms (PM-10): `PV69/M-NNN`, where M
-   is the month number (January to August), and `PV69MM-NNN`, where MM is the
-   month in two digits (October). A gap in the number series is allowed (number
-   002 never appears), and the monthly close lists it (section 7).
+   several hourly-task lines and no salary line (the report fixture
+   `payment_voucher_xlsx_variant_hours.json`, a February file). A payee can have
+   one allowance line. The voucher number has two accepted forms (PM-10):
+   `PV69/M-NNN`, where M is the month number (January to August), and
+   `PV69MM-NNN`, where MM is the month in two digits (October). A gap in the
+   number series is allowed (number 002 never appears), and the monthly close
+   lists it (section 7).
 4. **The review list (PM-9).** The review list is the set of intake rows with
    status `failed` and a `failure_reason` that starts with `review:`. A file goes
    on the review list, and it writes no submission, in these cases: a required
@@ -814,9 +816,11 @@ real sample" (PM-12). The workbook reader and the text-PDF reader serve all rows
   amount in the name. Example: `2026-11_tax-invoice_google-cloud.pdf`.
 - **A voucher file name.** `ใบสำคัญจ่าย YYYY-MM.xlsx`. The name has one space
   after the Thai word, a four-digit year, a two-digit month from 01 to 12, and the
-  extension `.xlsx`. The month of that name is `YYYY-MM`. The name sets no
-  document type. The type comes from the MIME type and the worksheet layout
-  (PM-16, 2026-11-12).
+  extension `.xlsx`. The month key comes from the file name, except a voucher
+  whose date or number shows another month than its file name; that file goes on
+  the review list (report G4: the file name is the safer month key). The name
+  sets no document type. The type comes from the MIME type and the worksheet
+  layout (PM-16, 2026-11-12).
 - **Accepted types.** PDF, JPEG, PNG, the `.xlsx` workbook, and the school invoice
   Google Sheet. The document types are those of section 6: payment voucher
   (workbook or payslip PDF), Google Cloud and Workspace tax invoice, payment
@@ -828,9 +832,10 @@ real sample" (PM-12). The workbook reader and the text-PDF reader serve all rows
   skips the guide worksheet.
 - **The review list.** Some files need a person. The intake list marks them with
   the reason `review:`. They are: a workbook with no stored formula result, a
-  voucher whose date or number shows another month than the file name, a bank
-  statement that the app cannot open, and a PDF that Google Sheets made. The app
-  does not guess and writes no submission for them.
+  voucher whose date or number shows another month than the file name, a date that
+  the reader cannot read, a bank statement that the app cannot open, and a PDF
+  that Google Sheets made. The app does not guess and writes no submission for
+  them.
 - **The bank statement password.** Daniel enters the password once, at setup, into
   Secret Manager (`deferred:daniel`). The app opens the PDF in memory and stores
   no decrypted copy. You do not handle the password.
