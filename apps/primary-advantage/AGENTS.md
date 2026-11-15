@@ -1,19 +1,5 @@
 # AGENTS.md — primary-advantage
 
-## Contents
-
-- [Stack](#stack)
-- [Database Access](#database-access)
-  - [Importing the client](#importing-the-client)
-  - [Schema layout](#schema-layout)
-  - [Migrations](#migrations)
-  - [Query patterns](#query-patterns)
-- [Forbidden Patterns](#forbidden-patterns)
-- [Project Layout](#project-layout)
-- [Testing](#testing)
-- [Migration History](#migration-history)
-
-
 Instructions for AI coding agents working on the `primary-advantage` Next.js app.
 
 This app is part of the Reading Advantage monorepo. The monorepo root
@@ -26,10 +12,7 @@ notes.
 
 ## Stack
 
-- Next.js 16.2.9 (App Router)
-- React 19.2.7
-- TypeScript 5.9.x
-- Tailwind CSS v4
+- Next.js (App Router), React, TypeScript, Tailwind CSS v4 (versions: `package.json`)
 - shadcn/ui (Radix primitives in `components/ui/`)
 - next-intl for i18n
 - **Drizzle ORM** (replaces Prisma — see Migration History below)
@@ -39,9 +22,7 @@ notes.
 ## Database Access
 
 This app uses **Drizzle ORM** via the shared `@reading-advantage/db` package.
-**Do not** use Prisma, `@prisma/client`, or a local `lib/prisma.ts` — they have
-been fully removed (Phase 8, track
-`primary_advantage_drizzle_migration_20260526`).
+Prisma is removed (see "Forbidden Patterns").
 
 ### Importing the client
 
@@ -106,7 +87,7 @@ for row types over hand-rolled interfaces.
 
 ## Forbidden Patterns
 
-The following Prisma-era patterns are gone and must not be re-introduced:
+Phase 8 of track `primary_advantage_drizzle_migration_20260526` removed Prisma. Do not re-introduce these patterns:
 
 - `import { prisma } from "@/lib/prisma"` — `lib/prisma.ts` has been deleted.
 - `import { PrismaClient, Prisma } from "@prisma/client"` — `@prisma/client` is
@@ -138,18 +119,14 @@ apps/primary-advantage/
   proxy.ts        # Next.js proxy/middleware entrypoint
 ```
 
-`server/` and `server/utils/genaretors/` contain backend code that has been
-migrated to Drizzle; the directories are still in use and must not be deleted.
+`server/` contains backend code that was migrated to Drizzle. The directory is in use. Do not delete it.
 
 ---
 
 ## Testing
 
 - `pnpm --filter primary-advantage test` — Vitest unit tests.
-- Tests mock the DB layer with `vi.fn()`; do not hit a real Postgres from unit
-  tests.
-- Multi-tenant queries must filter on `users.schoolId` (or join through it) for
-  every read/write — see the root AGENTS.md multi-tenancy section.
+- Unit tests and multi-tenant queries follow the root AGENTS.md sections "Testing" and "Multi-Tenancy".
 
 ---
 
