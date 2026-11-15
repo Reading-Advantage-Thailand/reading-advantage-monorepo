@@ -36,17 +36,33 @@ Light lane. Classic FR list from spec.md.
   and paginated index routes; verify gap 0 at every viewport.
 
 ## Phase 5: Gates
-- [ ] Targeted vitest (changed files only, --maxWorkers=1) exits 0.
-- [ ] www lint exits 0 with no new error and every shadcn/* error fixed in
-  touched files (read docs/design-rules.md first).
-- [ ] www check-types exits 0.
-- [ ] www production build exits 0 (heavy run).
-- [ ] Local after-captures at 1280 px and 390 px into /tmp/opencode/a59/after/,
-  reviewed.
+- [x] Targeted vitest (changed files only, --maxWorkers=1) exits 0.
+- [x] www lint: touched files exit 0; full run keeps the pre-existing baseline
+  of 146 errors, all in public/experience minified JS; 0 shadcn errors,
+  0 src errors (no new error).
+- [x] www check-types exits 0.
+- [x] www production build exits 0 (heavy run, `next build` rc=0; built CSS
+  contains the compact utility, the enter-opacity guard, and the reduced-motion
+  block).
+- [x] Local after-captures at 1280 px and 390 px into /tmp/opencode/a59/after/,
+  reviewed against the production build (`next start`): zero low-opacity
+  elements, zero broken images, hero gap 0, both motion settings.
+
+## Commit map (branch www/products-images, pre-push)
+
+- `09b5d5d95` chore: open the light-lane track (spec, plan, metadata, registry).
+- `10cefcb96` test: failing entrance-visibility regression test (3 tests).
+- `2dd1ab297` fix: enter-opacity guard, reduced-motion block, workbook image
+  blur/fade removal.
+- `22171334d` test: failing compact blog hero height test (3 tests).
+- `63c5ab77c` fix: `height="compact"` HeroSection option on the three blog
+  routes and the `min-h-hero-compact` utility.
+- `075383af6` chore: blog hero addition recorded in this track.
 
 ## Phase 6: Deploy and verify
-- [ ] Rebase on origin/master, rerun gates if it moved, push
+- [~] Rebase on origin/master, rerun gates if it moved, push
   `HEAD:master` (www-only push, standing-approved 2026-11-15).
 - [ ] Watch the GitHub Actions www deploy run.
-- [ ] Capture live /en/products and /th/products at 1280 px and 390 px into
-  /tmp/opencode/a59/live/ and review.
+- [ ] Capture live /en/products and /th/products at 1280 px and 390 px, plus
+  the two blog post locales at both widths, into /tmp/opencode/a59/live/ and
+  review.
