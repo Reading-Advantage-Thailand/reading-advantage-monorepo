@@ -722,3 +722,130 @@ describe("S2 adversarial round 4 - the r4 date fix against carry, set, and split
     });
   }
 });
+
+// Round 5 (r3): the Green r7/r8 design (per-block dates, nearest-product
+// binding, pronoun carry in the block, ISO days kept on planned lines).
+// F7 pins the Review A r3 fix. F8 to F12 attack the nearest binding and the
+// block-local carry. F13 and F14 record product-free date text the guard
+// lets through by design.
+describe("S2 adversarial round 5 - the r3 nearest-binding and block-carry attacks", () => {
+  /** Appends lines to the same paragraph, so a list stays one block. */
+  function withListBlock(extra: string): Rows {
+    const clone = mapStrings(rows, (text) => text);
+    const target = [...clone.lessons].reverse().find((row) => row.type === "theory");
+    if (!target) throw new Error("no theory lesson in the graph");
+    target.content = `${target.content}\n${extra}`;
+    return clone;
+  }
+
+  // Controls: behavior the r7/r8 fix must keep.
+  it.each([
+    // A union mention still licenses nothing for STEM.
+    "Science Advantage and STEM Advantage start in the 2027 school year.",
+    // A same-block pronoun carry with a wrong date still fails.
+    "Storytime Advantage is part of the K-6 offer.\nIt goes live in December 2026.",
+  ])("still rejects: %s", (probe) => {
+    expect(graphText.includes(probe), "the probe is already in the real graph").toBe(false);
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status/,
+    );
+  });
+
+  it("still accepts a licensed date before its product", () => {
+    const probe = "In the 2027 school year, Science Advantage starts.";
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).not.toThrow();
+  });
+
+  // F7 pins: an ISO day on a planned line is an exact day, and criterion 8
+  // bans it. The Review A r3 fix keeps the ISO token on planned lines.
+  it.each([
+    "Storytime Advantage delivers on 2026-12-01.",
+    "Science Advantage delivers on 2026-12-01.",
+  ])("F7 still rejects an ISO day on a planned line: %s", (probe) => {
+    expect(graphText.includes(probe), "the probe is already in the real graph").toBe(false);
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status/,
+    );
+  });
+
+  it("F7 still rejects a carried ISO day", () => {
+    const probe = "Storytime Advantage is planned. It ships on 2026-12-01.";
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status/,
+    );
+  });
+
+  // F8 [Blocker]: a date between two products binds only the product after
+  // it. The unlicensed product before the date escapes the binding.
+  it.each([
+    "STEM Advantage in the 2027 school year and Science Advantage start soon.",
+    "STEM Advantage joins Science Advantage in the 2027 school year.",
+  ])("F8 rejects a date that follows an unlicensed product: %s", (probe) => {
+    expect(graphText.includes(probe), "the probe is already in the real graph").toBe(false);
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status/,
+    );
+  });
+
+  // F9 [Blocker]: a date before any product binds only the first mention
+  // after it. A later unlicensed product in the same statement escapes it.
+  it("F9 rejects a licensed date with an unlicensed product later in the statement", () => {
+    const probe = "In the 2027 school year Science Advantage starts with STEM Advantage.";
+    expect(graphText.includes(probe), "the probe is already in the real graph").toBe(false);
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status/,
+    );
+  });
+
+  // F10 [Blocker]: with three products the date binds only the nearest
+  // mention before it. Earlier unlicensed products escape the binding.
+  it("F10 rejects a licensed date with earlier unlicensed products in the statement", () => {
+    const probe =
+      "STEM Advantage, Science Advantage, and Math Advantage start in the 2027 school year.";
+    expect(graphText.includes(probe), "the probe is already in the real graph").toBe(false);
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status/,
+    );
+  });
+
+  // F11 [Blocker]: the carry resets at a blank line. A pronoun in the next
+  // paragraph reads as the planned product, but the guard sees no product.
+  it("F11 rejects a wrong date carried across a blank line", () => {
+    const probe = "Storytime Advantage is part of the K-6 offer.\n\nIt goes live in December 2026.";
+    expect(graphText.includes(probe), "the probe is already in the real graph").toBe(false);
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status/,
+    );
+  });
+
+  // F12 [Blocker]: in a list the date binds only the nearest mention. An
+  // unlicensed product next to the licensed one escapes the binding.
+  it.each([
+    "- STEM Advantage and Science Advantage are aimed at the 2027 school year.",
+    "- STEM Advantage joins Science Advantage in the 2027 school year.",
+  ])("F12 rejects a list date next to an unlicensed product: %s", (probe) => {
+    expect(() => buildCurriculumAutomatedReview(withListBlock(probe))).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status/,
+    );
+  });
+
+  // F13 [Nit]: an ISO day in a statement with no product is an internal fact
+  // by design, even when the next statement names a planned product.
+  it.fails("F13 rejects a product-free ISO day before a pronoun statement", () => {
+    const mutated = withExtraParagraph("The launch is on 2026-12-01. It ships soon for Storytime Advantage.");
+    expect(() => buildCurriculumAutomatedReview(mutated)).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID/,
+    );
+  });
+
+  // F14 [Nit]: a public date in a product-free statement binds to no product
+  // by design, even when the next statement names planned products.
+  it.fails("F14 rejects a product-free public date before a planned statement", () => {
+    const mutated = withExtraParagraph(
+      "In the 2027 school year there is progress. Science Advantage and STEM Advantage are planned.",
+    );
+    expect(() => buildCurriculumAutomatedReview(mutated)).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID/,
+    );
+  });
+});
