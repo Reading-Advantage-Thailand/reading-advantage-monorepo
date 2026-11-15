@@ -100,6 +100,11 @@ Revised by: opencode-go/deepseek-v4.1-flash (spec review r1 fixes)
     timed out at 5000 ms. The photo e2e steps in that job were skipped. No file of this track
     touches that test.
   - PM page check pending.
+  - Green r4 (W-23 pin regression): `bbe4c3561` pins `pnpm/action-setup` to
+    `b906affcce14559ad1aafd4ab0e942779e9f58b1` (`# v4`, the v4 tag commit of
+    2026-11-15) in `cd-www-reading-advantage.yml`. Gates: `cd-workflows.test.mjs`
+    38/38 (W-23 pass), full `scripts/ci/__tests__/` 211/211, `affected-apps.mjs`
+    `[]`. All exit 0.
 
 ## Test strategy
 
