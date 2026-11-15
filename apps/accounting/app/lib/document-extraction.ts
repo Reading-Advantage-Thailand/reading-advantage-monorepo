@@ -107,9 +107,19 @@ export interface DocumentExtractionAdapter {
 const SETTLED_CURRENCIES = ["THB", "USD", "JPY"] as const;
 
 /**
+ * Currency values a model read returns: a settled currency, or the empty
+ * string for a field the model cannot read (spec section 5.3). The money
+ * pair key stays on `SETTLED_CURRENCIES`: a pair without a currency is not
+ * a money value, so the pair key still rejects the empty string.
+ */
+const MODEL_CURRENCIES = [...SETTLED_CURRENCIES, ""] as const;
+
+/**
  * Draft schema of one model read. It holds every key of
  * `AccountingIntakeDraft`, and each key is optional, so a partial read still
  * parses. The model result must pass this schema before the read returns it.
+ * The flat `currency` key accepts the empty string the prompt orders for an
+ * unreadable field, so one unreadable field keeps the whole draft.
  */
 const extractionDraftSchema = z.object({
   kind: z.string().optional(),
@@ -118,7 +128,7 @@ const extractionDraftSchema = z.object({
   category: z.string().optional(),
   description: z.string().optional(),
   amountMinor: z.string().optional(),
-  currency: z.enum(SETTLED_CURRENCIES).optional(),
+  currency: z.enum(MODEL_CURRENCIES).optional(),
   money: z
     .object({
       amountMinor: z.string(),
