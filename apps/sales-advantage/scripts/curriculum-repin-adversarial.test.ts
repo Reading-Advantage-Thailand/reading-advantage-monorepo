@@ -13,7 +13,7 @@ import {
 import { buildStaticSalesCurriculumRows } from "./static-seed";
 import { curriculumGraphDigest } from "./verify-sales-curriculum";
 
-// Adversarial cases for the S2 re-pin to advantage-pr 7eff8c10 (track
+// Adversarial cases for the S2 re-pin to advantage-pr 609f962e (track
 // sales_training_2027_20261015). The attack surface is a claim guard that
 // passes after a new line lands while an old claim survives elsewhere. The
 // cases mutate a copy of the real graph and call the real production guard,
@@ -22,7 +22,7 @@ import { curriculumGraphDigest } from "./verify-sales-curriculum";
 // normalized families and independent oracles so a changed dash or case does
 // not hide an old claim.
 
-const PIN = "7eff8c106c7265b41d584c4ea997d65ea30dadfb";
+const PIN = "609f962e6577e6a4c468dafb758d0cce81526b53";
 const PIN_REPO = join(homedir(), "Desktop", "advantage-pr");
 const rows = buildStaticSalesCurriculumRows();
 type Rows = typeof rows;
@@ -34,8 +34,8 @@ const MANAGED_LINE =
 const GUARDED_CLAIMS = [
   "- **Live:** Primary Advantage, Tutor Advantage, and CodeCamp Advantage (adult bootcamp).",
   "- **Reading Advantage:** not offered to schools now; its books are now in Tutor Advantage classes.",
-  "- **Science, Math, and Zhongwen Advantage (Q-PR-24):** each is its own app, built from the Primary Advantage base app. Show them at the visit. No date.",
-  "- **K–6 offer, no date:** Storytime Advantage for Anuban 2 to P2 is part of the K–6 offer shown at the visits.",
+  "- **Each its own app, built from the Primary Advantage base app, aimed at primary schools in the 2027 school year:** Science, Math, and Zhongwen Advantage. Show them at the visit. Give no other date.",
+  "- **K–6 offer:** Storytime Advantage for Anuban 2 to P2 is part of the K–6 offer shown at the visits. It goes live in November 2026; give no exact day.",
   "- **Planned, no date:** STEM Advantage.",
   "Do not give a date for any of these lines.",
   "| **App-Only** | Digital platform access | ~1,000 THB/student/year |",
@@ -133,9 +133,32 @@ describe("S2 adversarial - the production claim guard against a surviving old cl
   });
 
   it("rejects a planned program given a year", () => {
-    const mutated = withExtraParagraph("Science Advantage launches in 2027.");
+    const mutated = withExtraParagraph("Science Advantage launches in 2028.");
     expect(() => buildCurriculumAutomatedReview(mutated)).toThrow(
       /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID/,
+    );
+  });
+
+  // Open item O3: the guard allows exactly the three public dates of the scope
+  // doc Dates paragraph, and it keeps every other year and month banned.
+  it.each([
+    "Science Advantage is aimed at primary schools in the 2027 school year.",
+    "Math Advantage is aimed at primary schools in the 2027 school year.",
+    "Zhongwen Advantage is aimed at primary schools in the 2027 school year.",
+    "Storytime Advantage goes live in November 2026; give no exact day.",
+  ])("accepts a planned line with exactly one public date: %s", (probe) => {
+    const mutated = withExtraParagraph(probe);
+    expect(() => buildCurriculumAutomatedReview(mutated)).not.toThrow();
+  });
+
+  it.each([
+    "Science Advantage is aimed at primary schools in the 2028 school year.",
+    "Storytime Advantage goes live in November 2027.",
+    "Storytime Advantage goes live in December 2026.",
+  ])("rejects a planned line with another date: %s", (probe) => {
+    const mutated = withExtraParagraph(probe);
+    expect(() => buildCurriculumAutomatedReview(mutated)).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status/,
     );
   });
 
@@ -292,7 +315,7 @@ const candidate = JSON.parse(readFileSync(candidatePath, "utf8")) as {
 };
 
 describe("S2 adversarial - the release candidate binds the seed and the pin", () => {
-  it("names the 7eff8c10 pin and the document list in guard order", () => {
+  it("names the 609f962e pin and the document list in guard order", () => {
     expect(candidate.source.commit).toBe(PIN);
     expect(candidate.source.documents.map((document) => document.path)).toEqual([
       ...CURRICULUM_SOURCE_PATHS,
