@@ -174,7 +174,7 @@ export default async function Home({
                     className="w-full h-auto"
                   />
                 </div>
-                <figure className="mt-4 ml-4 w-2/5 sm:w-1/3 lg:absolute lg:mt-0 lg:ml-0 lg:-bottom-8 lg:-left-6 overflow-hidden rounded-2xl border border-site-border bg-white shadow-float">
+                <figure className="mx-auto mt-4 w-3/4 max-w-sm lg:absolute lg:mx-0 lg:mt-0 lg:w-1/3 lg:max-w-none lg:-bottom-8 lg:-left-6 overflow-hidden rounded-2xl border border-site-border bg-white shadow-float">
                   <MasteryAdvantageGraph className="w-full h-auto" labels={graphLabels} pauseControl />
                   <figcaption className="sr-only">{t("v2.hero.graphLabel")}</figcaption>
                 </figure>
