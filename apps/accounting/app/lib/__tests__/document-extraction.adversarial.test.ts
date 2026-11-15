@@ -1,4 +1,4 @@
-// @vitest environment node
+// @vitest-environment node
 /**
  * Adversarial rows for the extraction adapter of the track
  * `accounting_drive_intake_20261109` (Phase 4).
@@ -7,7 +7,7 @@
  * It covers the strategy items of `test-strategy.md` Phase 4: a model value
  * outside the schema, an empty model value, a hostile document value, and a
  * provider that is not vertex. It also carries the B411 rows of
- * `measure/runs/accounting_drive_intake_20261109/review-b-p4-7a8933fd8.json`:
+ * the review B run log for phase 4:
  * the prompt tells the model to return an empty string for every field it
  * cannot read. Fix b87840c3f accepts `""` on the flat currency key. The two
  * X411 rows pass now. New boundary rows pin the fix edge.

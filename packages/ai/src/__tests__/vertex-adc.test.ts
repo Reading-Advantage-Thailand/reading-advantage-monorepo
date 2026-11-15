@@ -2,8 +2,8 @@
  * Phase 4 Red-phase tests for the Vertex Application Default Credentials path.
  *
  * Track `accounting_drive_intake_20261109` (A-52), phase 4, task 4.1.
- * Strategy: `measure/tracks/accounting_drive_intake_20261109/test-strategy.md`
- * section "P4: The Vertex route and the extraction adapter" (labeled floor
+ * Strategy: the track test strategy, section
+ * "P4: The Vertex route and the extraction adapter" (labeled floor
  * `adc_cases>=4`, mutants, fixtures).
  *
  * What this file pins:
