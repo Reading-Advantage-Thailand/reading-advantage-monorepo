@@ -274,7 +274,7 @@ export default function HeroSection({
 
             {/* Legacy Floating Image (fallback) */}
             {!productLogo && floatingImage && (
-              <div className="hidden xl:block lg:col-span-5 z-10">
+              <div className="lg:col-span-5 z-10">
                 <div className="relative rounded-4xl overflow-hidden shadow-2xl">
                   <Image
                     src={floatingImage.src}

@@ -15,6 +15,8 @@ import {
 import { getScopedI18n } from "@/locales/server";
 import { siteLogos } from "@/lib/site-assets";
 import { ArrowRight } from "lucide-react";
+import ProductPicture from "@/components/products/product-picture";
+import { productPictures, type ProductPictureFile } from "@/lib/product-pictures";
 
 type ProductKey =
   | "primaryAdvantage"
@@ -26,8 +28,14 @@ type ProductKey =
   | "storytimeAdvantage"
   | "codecampAdvantage";
 
+type PictureAltKey =
+  | "products.readingAdvantage.imageAlt"
+  | "products.primaryAdvantage.imageAlt"
+  | "products.storytimeAdvantage.imageAlt";
+
 interface ProductConfig {
   key: ProductKey;
+  picture?: { file: ProductPictureFile; altKey: PictureAltKey };
   href: string;
   bgColor: string;
   logo?: string;
@@ -56,6 +64,10 @@ const FEATURE_INDEXES = [0, 1, 2, 3] as const;
 const productConfigs: ProductConfigList = [
   {
     key: "readingAdvantage",
+    picture: {
+      file: productPictures.readingCover,
+      altKey: "products.readingAdvantage.imageAlt",
+    },
     href: "/products/reading-advantage",
     bgColor: "from-sky-50 to-sky-100",
     logo: siteLogos.reading.square,
@@ -68,6 +80,10 @@ const productConfigs: ProductConfigList = [
   },
   {
     key: "primaryAdvantage",
+    picture: {
+      file: productPictures.primaryLesson,
+      altKey: "products.primaryAdvantage.imageAlt",
+    },
     href: "/products/primary-advantage",
     bgColor: "from-sky-50 to-sky-100",
     logo: siteLogos.primary.square,
@@ -112,6 +128,10 @@ const productConfigs: ProductConfigList = [
   },
   {
     key: "storytimeAdvantage",
+    picture: {
+      file: productPictures.storytimeSound,
+      altKey: "products.storytimeAdvantage.imageAlt",
+    },
     href: "/products/storytime-advantage",
     bgColor: "from-amber-50 to-amber-100",
     logo: siteLogos.storytime.square,
@@ -157,6 +177,7 @@ export default async function B2BSolutions() {
       t(`products.${config.key}.features.${featureIndex}`),
     );
     const gradeRange = t(`products.${config.key}.gradeRange`);
+    const imageAlt = config.picture ? t(config.picture.altKey) : undefined;
 
     const badgeLabel = config.badgeKey
       ? t(config.badgeKey)
@@ -172,6 +193,7 @@ export default async function B2BSolutions() {
       features,
       gradeRange,
       badgeLabel,
+      imageAlt,
     };
   });
 
@@ -197,6 +219,7 @@ export default async function B2BSolutions() {
             return (
               <Fragment key={product.key}>
                 <div
+                  data-testid={`product-block-${product.key}`}
                   className={`${
                     product.layout === "feature"
                       ? "col-span-full lg:col-span-2"
@@ -254,6 +277,15 @@ export default async function B2BSolutions() {
                         </span>
                       )}
                     </div>
+
+                    {product.picture && product.imageAlt && (
+                      <div className="relative z-10 mb-6">
+                        <ProductPicture
+                          picture={product.picture.file}
+                          alt={product.imageAlt}
+                        />
+                      </div>
+                    )}
 
                     {/* Content */}
                     <div className="mb-4 relative z-10">

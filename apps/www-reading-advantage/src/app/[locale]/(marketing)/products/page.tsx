@@ -2,6 +2,8 @@ import B2BSolutions from "@/components/products/b2b-solutions";
 import B2CSolutions from "@/components/products/b2c-solutions";
 import TutorAdvantage from "@/components/products/tutor-advantage";
 import HeroSection from "@/components/marketing/hero-section";
+import ProductPicture from "@/components/products/product-picture";
+import { productPictures } from "@/lib/product-pictures";
 import { buildMarketingMetadata } from "@/lib/seo";
 import { getScopedI18n } from "@/locales/server";
 import type { Metadata } from "next";
@@ -49,6 +51,8 @@ export default async function ProductsPage() {
       gradeRange: t("gradeBands.storytime.gradeRange"),
       description: t("gradeBands.storytime.description"),
       ctaLabel: t("gradeBands.storytime.ctaLabel"),
+      picture: productPictures.storytimeCard,
+      imageAlt: t("gradeBands.storytime.imageAlt"),
     },
     {
       key: "primary",
@@ -60,6 +64,8 @@ export default async function ProductsPage() {
       gradeRange: t("gradeBands.primary.gradeRange"),
       description: t("gradeBands.primary.description"),
       ctaLabel: t("gradeBands.primary.ctaLabel"),
+      picture: productPictures.primaryCover,
+      imageAlt: t("gradeBands.primary.imageAlt"),
     },
     {
       key: "reading",
@@ -71,6 +77,8 @@ export default async function ProductsPage() {
       gradeRange: t("gradeBands.reading.gradeRange"),
       description: t("gradeBands.reading.description"),
       ctaLabel: t("gradeBands.reading.ctaLabel"),
+      picture: productPictures.readingCover,
+      imageAlt: t("gradeBands.reading.imageAlt"),
     },
     {
       key: "tutor",
@@ -82,6 +90,8 @@ export default async function ProductsPage() {
       gradeRange: t("gradeBands.tutor.gradeRange"),
       description: t("gradeBands.tutor.description"),
       ctaLabel: t("gradeBands.tutor.ctaLabel"),
+      picture: productPictures.tutorFlashcard,
+      imageAlt: t("gradeBands.tutor.imageAlt"),
     },
   ];
 
@@ -116,6 +126,7 @@ export default async function ProductsPage() {
             {gradeBands.map((band, index) => (
               <div
                 key={band.key}
+                data-testid={`program-card-${band.key}`}
                 className="group h-full animate-in fade-in slide-in-from-bottom-8 duration-700"
                 style={{ "--delay": `${index * 150}ms` }}
               >
@@ -127,6 +138,10 @@ export default async function ProductsPage() {
                     className={`w-16 h-16 ${band.badgeColor} rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}
                   >
                     <band.icon className="w-8 h-8 text-white" strokeWidth={2} />
+                  </div>
+
+                  <div className="mb-6">
+                    <ProductPicture picture={band.picture} alt={band.imageAlt} />
                   </div>
 
                   {/* Grade range badge */}
