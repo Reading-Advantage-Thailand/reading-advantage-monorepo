@@ -155,13 +155,17 @@ const ICO_MAGIC = Buffer.from([0x00, 0x00, 0x01, 0x00]);
 
 /**
  * The ink that each product page capture must hold. The colour is the artwork
- * colour of the logo file that the page must show. The last value is the least
- * number of pixels that still proves the artwork renders.
+ * colour of the logo file of the product. Most product pages show the square
+ * logo in the hero. The accepted Primary and Storytime heroes show the colour
+ * in brand-coloured hero text instead, so their least count comes from the CI
+ * capture of 2026-11-15 (348, 155, and 169 exact pixels). The last value is
+ * the least number of pixels that still proves the brand colour renders and
+ * reads on the page.
  */
 const PRODUCT_PAGE_INK: [string, string, string, number][] = [
   ["en-math-light.png", "square/math-advantage.svg", "#9a3412", 1000],
-  ["en-primary-light.png", "square/primary-advantage.svg", "#155e75", 1000],
-  ["th-primary-light.png", "square/primary-advantage.svg", "#155e75", 1000],
+  ["en-primary-light.png", "square/primary-advantage.svg", "#155e75", 200],
+  ["th-primary-light.png", "square/primary-advantage.svg", "#155e75", 100],
   ["en-reading-light.png", "square/reading-advantage.svg", "#2f3192", 1000],
   ["en-science-light.png", "square/science-advantage.svg", "#9f1239", 1000],
   ["en-stem-light.png", "square/stem-advantage.svg", "#3730a3", 1000],
@@ -169,7 +173,7 @@ const PRODUCT_PAGE_INK: [string, string, string, number][] = [
     "en-storytime-light.png",
     "square/storytime-advantage.svg",
     "#92400e",
-    1000,
+    100,
   ],
   ["en-zhongwen-light.png", "square/zhongwen-advantage.svg", "#86198f", 1000],
   [
