@@ -485,16 +485,28 @@ function normalizeCurriculumClaim(value: string): string {
     .trim();
 }
 
+/** One claim statement and its line position in the graph text. */
+type ClaimStatement = {
+  /** Normalized statement text. */
+  text: string;
+  /** Whether the statement follows another statement on the same source line. */
+  sameLineAsPrevious: boolean;
+};
+
 /**
  * Splits the complete graph text into independently evaluated claim statements.
  * @param allContent Complete curriculum text surface.
- * @returns Normalized non-empty statements.
+ * @returns Normalized non-empty statements with their line position.
  */
-function curriculumClaimStatements(allContent: string): string[] {
-  return allContent
-    .split(/[\n.!?;]+/)
-    .map(normalizeCurriculumClaim)
-    .filter(Boolean);
+function curriculumClaimStatements(allContent: string): ClaimStatement[] {
+  const statements: ClaimStatement[] = [];
+  for (const line of allContent.split("\n")) {
+    const parts = line.split(/[.!?;]+/).map(normalizeCurriculumClaim).filter(Boolean);
+    parts.forEach((part, index) => {
+      statements.push({ text: part, sameLineAsPrevious: index > 0 });
+    });
+  }
+  return statements;
 }
 
 /**
@@ -505,32 +517,58 @@ const retiredManagedServiceCondition = /(?:1[\s-]*2|one or two) more schools/;
 
 /**
  * Detects a product lifecycle statement that conflicts with the 2027 strategy.
- * Planned lines (Science, Math, Zhongwen, Storytime, STEM) may state only the
- * three public dates of the scope doc Dates paragraph: the May 2027 line, the
- * 2027 school year, and November 2026. Any other year or month, and any
- * not-negated live claim without a public date, conflicts. Tutor Advantage is
- * not beta; CodeCamp Advantage is not coming; no other product gets a launch
- * year; and the retired Managed Service condition is banned.
- * @param statements Normalized curriculum claim statements.
+ * Each public date binds to one product: May 2027 to the new-editions line,
+ * the 2027 school year to Science, Math, and Zhongwen Advantage, and November
+ * 2026 to Storytime Advantage. A planned line that states another product's
+ * date fails, with any verb. Any other year or month on a planned line fails.
+ * A not-negated live claim without a public date fails. A pronoun sentence
+ * inherits the product of the planned-line sentence before it on the same
+ * line. Tutor Advantage is not beta; CodeCamp Advantage is not coming; no
+ * other product gets a launch year; the retired Managed Service condition is
+ * banned.
+ * @param statements Normalized curriculum claim statements with line position.
  * @returns Whether a statement gives a product a conflicting state or date.
  */
-function hasConflictingProductStatus(statements: readonly string[]): boolean {
+function hasConflictingProductStatus(
+  statements: readonly ClaimStatement[],
+): boolean {
   const negated = /\b(?:no|not|never|without|don't|do not)\b/;
   const year = /\b20\d\d\b/;
   const otherMonth =
     /\b(?:january|february|march|april|june|july|august|september|october|november|december)\b/;
-  const publicDate = /(?:may 2027|2027 school year|november 2026)/g;
+  const plannedLine =
+    /\b(?:science|math|zhongwen|storytime|stem)\b(?:[\s,]+(?:and|or)?\s*(?:science|math|zhongwen|storytime|stem)\b)*\s+advantage\b/;
+  const plannedProduct = /\b(?:science|math|zhongwen|storytime|stem)\b/g;
+  const pronounStart = /^(?:it|this|they|these|those)\b/;
+  const newEditionsLine = /origins 3\.2|quest 4|may 2027 line/;
   const liveClaim =
     /\b(?:available|live|launch(?:es|ed|ing)?|release(?:s|d)?|beta|on sale|coming (?:soon|early|late|mid|in|next))\b/;
-  return statements.some((statement) => {
+  return statements.some((entry, index) => {
+    const statement = entry.text;
     if (retiredManagedServiceCondition.test(statement)) {
       return true;
     }
-    const plannedLine =
-      /\b(?:science|math|zhongwen|storytime|stem)\b(?:[\s,]+(?:and|or)?\s*(?:science|math|zhongwen|storytime|stem)\b)*\s+advantage\b/
-        .test(statement);
-    if (plannedLine) {
-      const rest = statement.replace(publicDate, " ");
+    const previous = index > 0 ? statements[index - 1] : undefined;
+    const carried = entry.sameLineAsPrevious && previous !== undefined &&
+      pronounStart.test(statement) && plannedLine.test(previous.text);
+    const isPlanned = plannedLine.test(statement) || carried;
+    if (isPlanned) {
+      const products = new Set([
+        ...statement.match(plannedProduct) ?? [],
+        ...(carried
+          ? previous!.text.match(plannedProduct) ?? []
+          : []),
+      ]);
+      let rest = statement;
+      if (["science", "math", "zhongwen"].some((p) => products.has(p))) {
+        rest = rest.replace(/2027 school year/g, " ");
+      }
+      if (products.has("storytime")) {
+        rest = rest.replace(/november 2026/g, " ");
+      }
+      if (newEditionsLine.test(statement)) {
+        rest = rest.replace(/may 2027/g, " ");
+      }
       const holdsPublicDate = rest !== statement;
       if (year.test(rest) || otherMonth.test(rest)) {
         return true;
@@ -728,7 +766,9 @@ export function buildCurriculumAutomatedReview(
     /\b((?!The Advantage\b)[A-Z][A-Za-z-]* Advantage)\b/g,
   )].some((match) => !allowedAdvantageNames.has(match[1]!.toLowerCase()));
   const conflictingProductStatus = hasConflictingProductStatus(statements);
-  const conflictingTierClaim = hasConflictingTierClaim(statements);
+  const conflictingTierClaim = hasConflictingTierClaim(
+    statements.map((entry) => entry.text),
+  );
   if (
     forbiddenCurriculumClaims.some((claim) =>
       allContent.toLowerCase().includes(claim.toLowerCase())
