@@ -4236,6 +4236,8 @@ for every other track.
     - Playback, word tap, restart, slow mode, and the colour rgb(146,64,14) still work, 0 console errors.
     - The r1 build (st-review-df3ee481) failed B1 and B2 (ux-browser-p7-df3ee4819.json).
     - Result measure/runs/storytime_app_rebuild_20261025/ux-browser-p7-e97c4aef5.json; captures ux-p7-r4/*.png.
+  - Daniel's look of 7.6 r2 (2026-11-15 19:59 ICT, PM relay): approval.look PASS on st-review-e97c4aef (commit e97c4aef5, revision storytime-app-00027-rut). Owner words: "UI is fine". This is a look pass only, not a traffic word; the live switch stays a Daniel gate (deferred:daniel). The next look copy carries the sound rule content from Workbooks.
+  - Password change (PM order, counts only, 2026-11-15; the reason: the passwords were in a Tasks note): `staff-01` and `tutor-01` rotated through the Cloud SQL Auth Proxy with the app's Argon2id code and the store, the same method as review copy rounds 5 to 7; old password fails 2 of 2, new password verifies 2 of 2, `password_rotated` audit rows added 2 (total 5, before 3), CSV rows changed 2 (the card file `sign-in-cards.csv`), other rows changed 0, `accounts.csv` holds no password column and stays unchanged, file modes 600. Existing sessions stay valid; only new sign-ins need the new password. No traffic change, no deploy, no other account. No sign-in on the live URL; scratch script and proxy removed.
    - Decision F1 (PM 2026-11-14 12:10, exact words: 'F1 default (three modes, no Pause) accepted.'): the reader keeps its three modes and gets no Pause control; a second tap restarts the narration.
 
 ### Phase 7 remediation group r2 (release 1 review switches, PM 2026-11-14 15:20)
