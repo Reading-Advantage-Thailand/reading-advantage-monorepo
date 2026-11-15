@@ -4,25 +4,11 @@
 
 > **Deviation note:** This file documents app-specific deviations from the monorepo `AGENTS.md`. For shared conventions (auth, packages, CI), see the monorepo root.
 
-> **Dependency deviation:** Dependencies use `^` (caret) ranges for flexibility (56 `^`-ranged deps, grandfathered). The `pnpm-lock.yaml` is the authoritative source of truth at install time — pnpm's default behavior is `save-exact=false`, so `^` ranges are the current behavior. Strict pinning is deferred to a follow-up track.
+> **Dependency deviation:** Dependencies use `^` (caret) ranges for flexibility (20 `^`-ranged deps, grandfathered). The `pnpm-lock.yaml` is the authoritative source of truth at install time — pnpm's default behavior is `save-exact=false`, so `^` ranges are the current behavior. Strict pinning is deferred to a follow-up track.
 
 ## Measure Workflow
 
-All development runs through the **Measure** spec-driven development framework exclusively. At the start of every session:
-
-1. Load the `measure` skill
-2. Read `measure/index.md` to understand the project context
-3. Follow the workflow defined in `measure/workflow.md`
-
-Key reference files:
-- `measure/tracks.md` — Active work registry
-- `measure/tracks/<track_id>/plan.md` — Task checklist
-- `measure/product.md` — Product vision
-- `measure/tech-stack.md` — Technology choices
-- `measure/lessons-learned.md` — Project memory
-- `measure/tech-debt.md` — Known shortcuts
-
-Never start significant work without an active track. Always update `measure/tracks.md` and the current track's `plan.md` before and after work.
+The root `AGENTS.md` section "Measure Workflow" applies to this app. Follow it.
 
 
 ## Project Structure & Module Organization
@@ -75,7 +61,7 @@ Resolution order (see `lib/test/resolve-test-database-url.ts`):
 
 ## Commit & Pull Request Guidelines
 
-Follow Conventional Commits (`feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `test:`) to keep history machine-readable. Keep commits scoped to a single concern and include context about affected modules. The Measure skill manages commit workflow during implementation (including git notes for auditability), so follow its conventions when working within a track. Pull requests should describe functional changes, list test commands executed, and attach screenshots or screen recordings for UI updates. Flag any schema or environment changes in the PR summary so reviewers can coordinate migrations.
+Commit style and the `track_id` rule: see the root `AGENTS.md` section "Commit Style". Include context about affected modules. The Measure skill manages commit workflow during implementation, so follow its conventions inside a track. Pull requests should describe functional changes, list test commands executed, and attach screenshots or screen recordings for UI updates. Flag any schema or environment changes in the PR summary so reviewers can coordinate migrations.
 
 ## Environment & Security Tips
 
@@ -91,8 +77,7 @@ Duplicate `.env.example` into `.env.local` before development and populate crede
 
 ## AI Collaboration Guidelines
 
-- Default to the Measure spec-driven workflow. Use `/measure` to create tracks, implement tasks, check status, or revert work.
-- Reference track specs in `measure/tracks/` before starting implementation and document requirement updates directly in those specs.
+- Reference track specs in `measure/tracks/` before you start implementation. Document requirement updates directly in those specs.
 - Use GitHub issues and pull requests for coordination; Measure tracks complement issues rather than replacing them.
 - When delegating to AI tooling, include the relevant spec excerpt, acceptance criteria, and test expectations so work stays aligned with the track's plan.
 
