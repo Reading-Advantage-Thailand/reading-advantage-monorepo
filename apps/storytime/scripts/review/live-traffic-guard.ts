@@ -15,9 +15,10 @@
  * `update-traffic` command, and holds no switch name.
  *
  * The command line reads only the describe documents: two `--format=json` outputs of read-only
- * `gcloud describe` commands, or the two JSON files that hold them. The output names only the
- * switch names that it found. It never prints an environment value or a `valueFrom` reference.
- * The script runs no write command and moves no traffic.
+ * `gcloud describe` commands, or the two JSON files that hold them. The guard judges every
+ * container of a describe document, so a review switch in a second container blocks the traffic
+ * move. The output names only the switch names that it found. It never prints an environment
+ * value or a `valueFrom` reference. The script runs no write command and moves no traffic.
  */
 import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
@@ -101,13 +102,25 @@ function envListOf(container: unknown): GuardEnvEntry[] {
 }
 
 /**
- * Reads the first container of a containers list.
+ * Reads the first container of a containers list. The Phase 7 rows pin this reader to the first
+ * container, so the guard reads every container through `envOfEveryContainer` instead.
  * @param containers The containers value, or anything else.
  * @returns The environment entries of the first container.
  */
 function envOfContainers(containers: unknown): GuardEnvEntry[] {
   if (!Array.isArray(containers) || containers.length === 0) return [];
   return envListOf(containers[0]);
+}
+
+/**
+ * Reads every container of a containers list.
+ * @param containers The containers value, or anything else.
+ * @returns The environment entries of every container, in document order. A missing or invalid
+ *   list gives `[]`.
+ */
+function envOfEveryContainer(containers: unknown): GuardEnvEntry[] {
+  if (!Array.isArray(containers)) return [];
+  return (containers as unknown[]).flatMap((container) => envListOf(container));
 }
 
 /**
@@ -126,6 +139,15 @@ function at(value: unknown, ...keys: string[]): unknown {
 }
 
 /**
+ * Reads the containers list of a service describe document.
+ * @param doc The `--format=json` output of `gcloud run services describe`.
+ * @returns The containers value of the template, or undefined when the path is missing.
+ */
+function serviceContainersOf(doc: unknown): unknown {
+  return at(doc, "spec", "template", "spec", "containers");
+}
+
+/**
  * Reads the environment of a revision describe document.
  * @param doc The `--format=json` output of `gcloud run revisions describe`.
  * @returns The environment entries of the first container. A missing environment gives `[]`.
@@ -141,19 +163,40 @@ export function envOfRevision(doc: unknown): GuardEnvEntry[] {
  *   environment gives `[]`.
  */
 export function envOfService(doc: unknown): GuardEnvEntry[] {
-  return envOfContainers(at(doc, "spec", "template", "spec", "containers"));
+  return envOfContainers(serviceContainersOf(doc));
+}
+
+/**
+ * Reads the environment of every container of a revision describe document.
+ * @param doc The `--format=json` output of `gcloud run revisions describe`.
+ * @returns The environment entries of every container, in document order. A missing environment
+ *   gives `[]`.
+ */
+export function envOfRevisionContainers(doc: unknown): GuardEnvEntry[] {
+  return envOfEveryContainer(at(doc, "spec", "containers"));
+}
+
+/**
+ * Reads the environment of every container of a service describe document.
+ * @param doc The `--format=json` output of `gcloud run services describe`.
+ * @returns The environment entries of every container of the template, in document order. A
+ *   missing environment gives `[]`.
+ */
+export function envOfServiceContainers(doc: unknown): GuardEnvEntry[] {
+  return envOfEveryContainer(serviceContainersOf(doc));
 }
 
 /**
  * Lists the switch names that one environment list holds.
  * @param entries The environment entries.
- * @returns The switch names, in entry order. Any value, an empty value, or a `valueFrom`
- *   counts as a hit.
+ * @returns The switch names, in entry order, each name once. Any value, an empty value, or a
+ *   `valueFrom` counts as a hit.
  */
 function hitsOf(entries: GuardEnvEntry[]): string[] {
-  return entries
+  const names = entries
     .filter((entry) => REVIEW_SWITCH_NAMES.includes(entry.name))
     .map((entry) => entry.name);
+  return [...new Set(names)];
 }
 
 /**
@@ -227,7 +270,8 @@ function describeJson(kind: "revision" | "service", name: string): JsonRead {
  * Checks the structure of one describe document. The check is a separate step of the guard: the
  * lenient readers `envOfRevision` and `envOfService` turn a malformed document into `[]`, and an
  * empty list looks clean, so `judge` rejects a malformed document before it reads the environment
- * (B601, fail closed).
+ * (B601, fail closed). The check reads every container, so a malformed second container fails
+ * closed too (F1).
  * @param doc The describe document.
  * @param kind The document kind: `revision` or `service`.
  * @returns The failure reason, or `null` when the structure is valid. The reason holds no
@@ -250,21 +294,23 @@ function structureReasonOf(doc: unknown, kind: "revision" | "service"): string |
   if (containers.length === 0) {
     return `live traffic guard: ${label} holds no container`;
   }
-  const container = containers[0];
-  if (typeof container !== "object" || container === null || Array.isArray(container)) {
-    return `live traffic guard: ${label} holds a first container that is not an object`;
-  }
-  const record = container as Record<string, unknown>;
-  if (record.env === undefined) return null;
-  if (!Array.isArray(record.env)) {
-    return `live traffic guard: ${label} holds a container whose env is not a list`;
-  }
-  for (const entry of record.env) {
-    if (typeof entry !== "object" || entry === null || Array.isArray(entry)) {
-      return `live traffic guard: ${label} holds an env entry that is not an object`;
+  for (const [index, container] of (containers as unknown[]).entries()) {
+    const position = index + 1;
+    if (typeof container !== "object" || container === null || Array.isArray(container)) {
+      return `live traffic guard: ${label} holds container ${position} that is not an object`;
     }
-    if (typeof (entry as Record<string, unknown>).name !== "string") {
-      return `live traffic guard: ${label} holds an env entry whose name is not a string`;
+    const record = container as Record<string, unknown>;
+    if (record.env === undefined) continue;
+    if (!Array.isArray(record.env)) {
+      return `live traffic guard: ${label} holds container ${position} whose env is not a list`;
+    }
+    for (const entry of record.env) {
+      if (typeof entry !== "object" || entry === null || Array.isArray(entry)) {
+        return `live traffic guard: ${label} holds container ${position} with an env entry that is not an object`;
+      }
+      if (typeof (entry as Record<string, unknown>).name !== "string") {
+        return `live traffic guard: ${label} holds container ${position} with an env entry whose name is not a string`;
+      }
     }
   }
   return null;
@@ -275,7 +321,8 @@ function structureReasonOf(doc: unknown, kind: "revision" | "service"): string |
  * `judge` prints the structure reason of the first malformed document, prints no clean verdict,
  * and exits 1, before it reads the environment or runs `checkLiveTrafficGuard`. The check covers
  * the revision document and the service document, so the `--revision` gcloud form and the
- * `--revision-json` form both fail closed.
+ * `--revision-json` form both fail closed. The check reads every container of both documents, so
+ * a review switch in a second container blocks the traffic move (F1).
  * @param revisionDoc The revision describe document.
  * @param serviceDoc The service describe document.
  * @returns The exit code: 0 on a pass, 1 on a fail.
@@ -292,8 +339,8 @@ function judge(revisionDoc: unknown, serviceDoc: unknown): number {
     return 1;
   }
   const result = checkLiveTrafficGuard({
-    revisionEnv: envOfRevision(revisionDoc),
-    templateEnv: envOfService(serviceDoc),
+    revisionEnv: envOfRevisionContainers(revisionDoc),
+    templateEnv: envOfServiceContainers(serviceDoc),
   });
   console.log(result.message);
   return result.ok ? 0 : 1;
