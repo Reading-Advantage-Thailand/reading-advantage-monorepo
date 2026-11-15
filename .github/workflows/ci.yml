@@ -145,6 +145,12 @@ jobs:
       - name: CI selector tests
         run: CI=true pnpm exec vitest run scripts/ci
 
+      # Track shadcn_lint_ratchet_20261115: the @shadcn/lint warning count and the count of
+      # local shadcn component copies compare with scripts/ci/shadcn-ratchet-baseline.json.
+      # The step fails the job only when a count goes up. The findings stay at warn level.
+      - name: Shadcn lint ratchet
+        run: node scripts/ci/shadcn-ratchet.mjs
+
       - name: Config drift check
         run: pnpm config-drift
 
