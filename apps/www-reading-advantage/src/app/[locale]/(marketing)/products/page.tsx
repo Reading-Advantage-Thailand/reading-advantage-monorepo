@@ -103,6 +103,7 @@ export default async function ProductsPage() {
         }}
         height="medium"
         alignment="left"
+        textColor="dark"
       />
 
       {/* Grade Bands - Enhanced cards with warm themes */}
