@@ -39,6 +39,18 @@ Each week of Storytime Advantage holds one letter sound, one song, and two books
 
 Then comes the decodable book. It uses only the sounds and words already taught. The page does not ask a five-year-old to guess her way through an unfamiliar pattern.
 
+```figure
+src: /blog/a-five-year-old-reads-by-herself-reader-themed.png
+alt: A read-along book page on a tablet: a boy named Pat waves in a classroom, with the line "Hello, I am Pat."
+caption: The class hears the read-along first, meeting the story together.
+```
+
+```figure
+src: /blog/a-five-year-old-reads-by-herself-decodable-themed.png
+alt: A decodable book page on a tablet, with the sound "n" and a girl who points at a nest with eggs
+caption: The decodable book keeps every word within the sounds and words already learned.
+```
+
 The sound itself stays pure: “nnn,” never the letter name “en.” The song gives the children English they can sing together. The decodable gives them a place to use the sound for themselves.
 
 ```youtube
