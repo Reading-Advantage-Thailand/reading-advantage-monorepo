@@ -21,7 +21,7 @@ export default function ProductPicture({ picture, alt }: ProductPictureProps) {
       sizes={picture.portrait ? "12rem" : "(min-width: 1024px) 25vw, 100vw"}
       className={
         picture.portrait
-          ? "mx-auto h-64 w-auto rounded-lg shadow-md"
+          ? "mx-auto h-auto w-full max-w-48 rounded-lg shadow-md"
           : "h-auto w-full rounded-xl shadow-md"
       }
     />

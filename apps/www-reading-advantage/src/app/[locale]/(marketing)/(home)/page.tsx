@@ -164,7 +164,7 @@ export default async function Home({
             </div>
 
             <div className="lg:col-span-6">
-              <div className="relative pb-10 sm:pb-0">
+              <div className="relative">
                 <div className="overflow-hidden rounded-3xl border border-site-border bg-white shadow-panel">
                   <SiteImageView
                     image={siteImages.workbookTabletCutaway}
@@ -174,7 +174,7 @@ export default async function Home({
                     className="w-full h-auto"
                   />
                 </div>
-                <figure className="absolute -bottom-0 left-4 w-2/5 sm:w-1/3 sm:-bottom-8 sm:-left-6 overflow-hidden rounded-2xl border border-site-border bg-white shadow-float">
+                <figure className="mt-4 ml-4 w-2/5 sm:w-1/3 lg:absolute lg:mt-0 lg:ml-0 lg:-bottom-8 lg:-left-6 overflow-hidden rounded-2xl border border-site-border bg-white shadow-float">
                   <MasteryAdvantageGraph className="w-full h-auto" labels={graphLabels} pauseControl />
                   <figcaption className="sr-only">{t("v2.hero.graphLabel")}</figcaption>
                 </figure>
