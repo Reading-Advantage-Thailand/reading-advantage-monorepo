@@ -153,6 +153,12 @@ jobs:
           CI=true pnpm exec vitest run
           packages/architecture-enforcement/src/__tests__/archive-evidence-path-compatibility.test.ts
 
+      # services/worker and packages/sales-knowledge map workspace imports to dist/*.d.ts in their
+      # tsconfig paths, and the analyzer resolves those targets only when the files exist. Build the
+      # two target packages first so the check does not report MODULE_RESOLUTION_ERROR parse errors.
+      - name: Build architecture check inputs
+        run: pnpm turbo run build --filter=@reading-advantage/backend --filter=@reading-advantage/knowledge-space-core
+
       - name: Architecture boundary check
         run: pnpm architecture:check --skip-input-snapshot-pin
 
