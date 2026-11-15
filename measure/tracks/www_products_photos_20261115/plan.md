@@ -50,7 +50,20 @@ Revised by: opencode-go/deepseek-v4.1-flash (spec review r1 fixes)
     `AssertionError: expected [ 'div.hidden' ] to deeply equal []`. The e2e pre-fix run was skipped to
     keep the run cost down. The unit test proves the hero regression. The product-picture case fails
     at HEAD for the Tutor section.
-- [~] 1.2 Green: fix what is still wrong (AC-4). The draft in the commit `8193625ca` stays. Done: `b09e21f32`.
+- [x] 1.2 Green: fix what is still wrong (AC-4). The draft in the commit `8193625ca` stays. Done: `b09e21f32`, `428b557dc`.
+
+  **Green r3.** Implementation commit `428b557dc`. Role base `02a77d0d0`.
+  - Home Mastery card: below `lg` the card is centered under the photo (`mx-auto w-3/4 max-w-sm`).
+    From `lg` the corner placement stays (`lg:absolute lg:w-1/3`).
+  - Gate (heavy-run, `next build`, `next start -p 3141` with `timeout 600`,
+    `playwright test e2e/photos.spec.ts --reporter=dot --retries=0`): exit 0, all cases pass.
+    Log: `measure/runs/www_products_photos_20261115/green-p1-r3-gate.log`.
+  - Vitest on four touched www test files, `tsc --noEmit`, and `eslint` on the touched file: exit 0.
+    Log: `measure/runs/www_products_photos_20261115/green-p1-r3-checks.log`.
+  - Captures of `/en` at 390, 980, 1024, and 1280 px were read by the Green session
+    (`/tmp/opencode/a62-green-r3/`, not committed).
+  - `apps/www-reading-advantage/test-results/.last-run.json` is tracked in git by mistake. Round
+    output dirtied it; it was restored. It stays tracked in this round.
 
   Implementation commit `b09e21f32`. Role base `5f197fd99`; phase base `40419d4bc`.
   - Report-results card: the picture sits above the text in a flow layout, with no overlay. The
