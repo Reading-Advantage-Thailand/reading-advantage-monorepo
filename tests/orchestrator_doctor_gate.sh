@@ -2,10 +2,9 @@
 # Cases for the doctor gate: the behavior of measure/doctor.sh and the gate
 # record of the track.
 # Part A runs a copy of measure/doctor.sh in a temporary root. The root holds
-# three stub guard scripts and a stub tsx at node_modules/.bin/tsx. The step 4
-# command changes into packages/architecture-enforcement, so the stub tsx
-# models the real call path of the CLI. No pnpm layer sits between the stub
-# and the gate.
+# three stub guard scripts and a stub pnpm at bin/pnpm. The step 4 command is
+# the bare root command `pnpm architecture:check`, so the stub models the real
+# call path of the CLI. No real pnpm layer sits between the stub and the gate.
 # Part B reads the gate record of the track through the track_dir_resolve
 # helper, so the record stays readable after the archive move.
 # Every case removes its own temporary root. No fixture enters the repository.
@@ -16,7 +15,7 @@ DOCTOR_SRC="$ROOT/measure/doctor.sh"
 TRACK_ID="doctor_gate_repair_20261112"
 PART_A_FLOOR=19
 RECORD_LINES_FLOOR=8
-TSX_ARGV="src/architecture-check-cli.ts --skip-input-snapshot-pin"
+TSX_ARGV="architecture:check"
 CLI_COMMAND="(cd packages/architecture-enforcement && ../../node_modules/.bin/tsx src/architecture-check-cli.ts --skip-input-snapshot-pin)"
 DRIFT_LINE="Architecture check failed: V2 reconciliation manifest is invalid: Analyzer report hashes do not match current byte-identical reports"
 OTHER_LINE="Architecture check failed: another failure"
@@ -86,15 +85,16 @@ write_all_guards() {
   write_stub_guard "orchestrator_review_execution_truthfulness.sh" "$guard_code"
 }
 
-# write_stub_tsx: the stub tsx sits at the path of the real step 4 command.
-# It logs its argv in tsx.log at the root of the scratch tree and exits with
+# write_stub_tsx: the stub stands in for the root `pnpm architecture:check`
+# command of step 4 and sits on the scratch PATH at bin/pnpm. It logs its
+# argv in tsx.log at the root of the scratch tree and exits with
 # the code that the case sets. It prints the case message on stderr when the
 # case sets one, and the case stdout message when the case sets one. The real
 # CLI writes the verdict line to stdout and the error line to stderr.
 write_stub_tsx() {
   local tsx_code="$1"
-  local tsx_path="$tmp_root/node_modules/.bin/tsx"
-  mkdir -p "$tmp_root/node_modules/.bin"
+  local tsx_path="$tmp_root/bin/pnpm"
+  mkdir -p "$tmp_root/bin"
   {
     cat <<EOF
 #!/usr/bin/env bash
@@ -111,15 +111,15 @@ EOF
   chmod +x "$tsx_path"
 }
 
-# reset_tsx: remove the stub tsx and its log, and clear both case messages.
+# reset_tsx: remove the stub command and its log, and clear both case messages.
 reset_tsx() {
-  rm -rf "$tmp_root/node_modules" "$tmp_root/tsx.log"
+  rm -rf "$tmp_root/node_modules" "$tmp_root/bin/pnpm" "$tmp_root/tsx.log"
   unset DOCTOR_GATE_TSX_MESSAGE
   unset DOCTOR_GATE_TSX_STDOUT
 }
 
 # run_gate: run the copy of doctor.sh in the scratch root. The PATH holds no
-# pnpm and no tsx outside the scratch tree, so no real tool runs.
+# real pnpm and no real tsx outside the scratch tree, so no real tool runs.
 run_gate() {
   gate_output="$(cd "$tmp_root" && PATH="$tmp_root/bin:/usr/bin:/bin" bash measure/doctor.sh 2>&1)"
   gate_rc=$?
@@ -127,7 +127,7 @@ run_gate() {
 
 # tsx_is_absent: the scratch tree holds no step 4 tool.
 tsx_is_absent() {
-  if [ -x "$tmp_root/node_modules/.bin/tsx" ]; then
+  if [ -x "$tmp_root/bin/pnpm" ]; then
     return 1
   fi
   return 0
@@ -506,6 +506,24 @@ case_drift_match_requires_whole_line() {
   fi
 }
 
+# Case drift_line_with_pnpm_exit_1_gate_exits_0: the root command runs under
+# pnpm, which turns a CLI exit 2 into exit 1. The stub exits 1 and prints the
+# known drift line as a whole line. The gate records the known drift and
+# exits 0.
+case_drift_line_with_pnpm_exit_1_gate_exits_0() {
+  write_all_guards 0
+  write_stub_tsx 1
+  export DOCTOR_GATE_TSX_MESSAGE="$DRIFT_LINE"
+  run_gate
+  if [ "$gate_rc" -ne 0 ]; then
+    case_fail_reason="expected gate exit 0, got exit ${gate_rc}"
+    return
+  fi
+  if ! output_has 'ARCHITECTURE: step 4 exits 1; the known manifest drift is owned by architecture_ci_input_pin_20261110'; then
+    case_fail_reason="the known drift ARCHITECTURE line is missing"
+  fi
+}
+
 # ---------------------------------------------------------------------------
 # Adversarial cases (Phase 3, the exit 1 verdict rule)
 # ---------------------------------------------------------------------------
@@ -577,29 +595,20 @@ case_tsx_exit_1_no_verdict_gate_exits_1() {
   assert_tool_failure_lines 'ARCHITECTURE: step 4 exits 1; this is a tool failure, not a boundary verdict'
 }
 
-# Case step4_cd_fails_gate_exits_1: the m-cd case. The stub tsx exists and
-# prints a whole verdict line on stdout. The case removes the packages
-# directory, so the cd of the step 4 command fails. The case asserts
-# arch_dir_absent=1 before the run and tsx_calls=0 after the run.
-case_step4_cd_fails_gate_exits_1() {
+# Case step4_pnpm_error_gate_exits_1: the workspace failure case. The stub
+# command exists and exits 1 with a plain error line, so the run holds no
+# verdict line and no known drift line. The case asserts one call and the
+# tool failure lines.
+case_step4_pnpm_error_gate_exits_1() {
   write_all_guards 0
   reset_tsx
   write_stub_tsx 1
-  export DOCTOR_GATE_TSX_STDOUT="$VERDICT_LINE"
-  rm -rf "$tmp_root/packages"
-  local arch_dir_absent=0
-  if [ ! -d "$tmp_root/packages/architecture-enforcement" ]; then
-    arch_dir_absent=1
-  fi
-  if [ "$arch_dir_absent" -ne 1 ]; then
-    case_fail_reason="arch_dir_absent=${arch_dir_absent} expected=1"
-    return
-  fi
+  export DOCTOR_GATE_TSX_STDOUT="pnpm: workspace failure"
   run_gate
   local calls
   calls="$(tsx_call_count)"
-  if [ "$calls" -ne 0 ]; then
-    case_fail_reason="tsx_calls=${calls} expected=0"
+  if [ "$calls" -ne 1 ]; then
+    case_fail_reason="tsx_calls=${calls} expected=1"
     return
   fi
   assert_tool_failure_lines 'ARCHITECTURE: step 4 exits 1; this is a tool failure, not a boundary verdict'
@@ -1121,8 +1130,9 @@ run_part_a() {
   run_case architecture_line_shows_code
   run_case no_write_in_root
   run_case drift_match_requires_whole_line
+  run_case drift_line_with_pnpm_exit_1_gate_exits_0
   run_case tsx_exit_1_no_verdict_gate_exits_1
-  run_case step4_cd_fails_gate_exits_1
+  run_case step4_pnpm_error_gate_exits_1
   run_case tsx_exit_1_verdict_line_gate_exits_0
   run_case tsx_exit_1_verdict_in_longer_line_gate_exits_1
   run_case tsx_exit_1_malformed_verdict_gate_exits_1
