@@ -1686,3 +1686,7 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 - [x] **Track: www blog rich post format** — *created 2026-11-15, completed 2026-11-15*
   *Link: [./tracks/www_blog_rich_format_20261115/](./tracks/www_blog_rich_format_20261115/)*
   *Status: completed (pushed 6e5f78fc4, www deploy run 43657768544 success) | Feature, light lane, PM task A-61 | Inline images, YouTube, short video, galleries, pull quotes, callouts, and a draft flag for www blog posts; www-only push*
+
+- [ ] **Track: CI green on master** — *created 2026-11-15*
+  *Link: [./tracks/ci_green_master_20261115/](./tracks/ci_green_master_20261115/)*
+  *Status: in progress | Chore, light lane, PM order 2026-11-15 | Make CI on master green: ignore the built game bundles in the www lint (PC-1) and refresh the stale architecture-check v2 manifest pins (PC-2); run 43667794723 at 8d3cb8233 | Done when ci.yml passes on master (2026-11-17)*
