@@ -49,6 +49,11 @@ This file tracks all major tracks for the project.
   *Status: active, light lane; post 2026-11-15 (`a-five-year-old-reads-by-herself`) live; one task per post; the track stays open for later daily posts | Owner: Monorepo orchestrator | PM task A-61 follow-up*
   *Note: PR's daily posts in en and th, written from `apps/www-reading-advantage/docs/blog-post-format.md` (track `www_blog_rich_format_20261115`). www-only push is standing-approved (Daniel 2026-11-15).*
 
+- [~] **Track: shadcn lint ratchet** — *created 2026-11-15*
+  *Link: [./tracks/shadcn_lint_ratchet_20261115/](./tracks/shadcn_lint_ratchet_20261115/)*
+  *Status: active, light lane; CI gate for the `@shadcn/lint` warning count and the local shadcn copy count, before 2026-11-20 | Owner: Monorepo orchestrator | PM order A-32 step 1*
+  *Note: the gate compares both counts with `scripts/ci/shadcn-ratchet-baseline.json` and fails only when a count goes up. Fixing the findings and moving the copies into `packages/ui` is out of this track.*
+
 - [x] **Track: Primary class code: six hours** — *created 2026-11-12*
   *Link: [./tracks/primary_class_code_six_hours_20261112/](./tracks/primary_class_code_six_hours_20261112/)*
   *Status: complete; six-hour codes and automatic latest routing live, isolated production QA fixture created, actual Class sign-in screenshot captured (13:30 to19:30 Bangkok).*
