@@ -581,3 +581,144 @@ describe("S2 adversarial round 3 - the release candidate resists tampering", () 
     ).rejects.toThrow("SALES_CURRICULUM_APPROVAL_EVIDENCE_MISMATCH");
   });
 });
+
+// Round 4 (r2): the Green r4 fix (e10d08a94) binds each public date to its
+// product and lets a pronoun sentence carry the products of the planned-line
+// sentence before it on the same line. The cases attack the seams of that
+// fix: the carry stops at a line break, the pronoun list is short, the
+// product set of a statement is a union, the May 2027 strip keys on a
+// new-editions mention instead of a product, and a period inside a line
+// orphans the date. Every probe holds a date the pinned sources do not allow
+// for the named product (scope doc §7 criterion 8). Failing cases stay
+// failing for Green; `it.fails` cases record weaknesses that are not blocking.
+describe("S2 adversarial round 4 - the r4 date fix against carry, set, and split attacks", () => {
+  // Controls: behavior the fix must keep. Rejects.
+  it.each([
+    // A carried pronoun with a date that fits none of the carried products.
+    "Storytime Advantage and STEM Advantage are planned. They start in the 2027 school year.",
+    // Normalization covers case; a wrong year on a lowercase full name fails.
+    "science advantage launches in 2028.",
+    // A launch verb with any year fails through the global rule, even when the
+    // statement also mentions a new edition.
+    "Science Advantage and Primary Advantage Quest 4 launch in May 2027.",
+    // The Origins 3.2 form of the same attack fails today; the sentence split
+    // breaks "3.2", so the May 2027 strip never fires and the year check
+    // rejects it. The assertion must hold whatever mechanism Green keeps.
+    "Primary Advantage Origins 3.2 and Storytime Advantage reach schools in May 2027.",
+    // The carried pronoun list covers "this" and "these".
+    "Storytime Advantage is planned. This goes live in December 2026.",
+    "Science Advantage is planned. These launch in 2028.",
+  ])("still rejects: %s", (probe) => {
+    expect(graphText.includes(probe), "the probe is already in the real graph").toBe(false);
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status/,
+    );
+  });
+
+  // Controls: legitimate lines the fix must not over-block. Accepts.
+  it.each([
+    // The canonical S/M/Z form, reworded, keeps the 2027 school year.
+    "Science, Math, and Zhongwen Advantage are aimed at primary schools in the 2027 school year.",
+    // The real editions line (already in the graph) keeps May 2027.
+    "Primary Advantage Origins 3.2 and Primary Advantage Quest 4 reach schools in May 2027.",
+    // A pronoun carry with the right date passes.
+    "Storytime Advantage is part of the K-6 offer. It goes live in November 2026; give no exact day.",
+  ])("still accepts: %s", (probe) => {
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).not.toThrow();
+  });
+
+  // F1 [Blocker]: the pronoun carry of the fix works only on the same source
+  // line (`sameLineAsPrevious`). A line break or a list item ends it, and the
+  // Markdown of the graph wraps and lists lines freely.
+  it.each([
+    "Storytime Advantage is part of the K-6 offer.\nIt goes live in December 2026.",
+    "- Storytime Advantage is part of the K-6 offer.\n- It goes live in December 2026.",
+  ])("F1 rejects a pronoun date carried across a line break: %s", (probe) => {
+    expect(graphText.includes(probe), "the probe is already in the real graph").toBe(false);
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status/,
+    );
+  });
+
+  // F2 [Blocker]: the carry starts only on it|this|they|these|those. The
+  // possessive and the quantity openers (Its, Their, Both, Each) carry the
+  // same reference and escape it.
+  it.each([
+    "Storytime Advantage is planned. Its launch is December 2026.",
+    "Storytime Advantage is planned. Their launch window is December 2026.",
+    "Science Advantage and Math Advantage are planned. Both launch in 2028.",
+    "Science Advantage is planned. Each launches in 2027.",
+  ])("F2 rejects a pronoun date with a non-carried opener: %s", (probe) => {
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status/,
+    );
+  });
+
+  // F3 [Blocker]: the product set of a statement is a union. One product
+  // licensed for a date licenses it for every planned product in the same
+  // statement, named together or carried in by a pronoun.
+  it.each([
+    // STEM has no public date ("Planned, no date"), but the sentence names
+    // Science, so the 2027 school year strip fires for the whole statement.
+    "Science and STEM Advantage start in the 2027 school year.",
+    // Science rides on the Storytime date in the same statement.
+    "Storytime and Science Advantage go live in November 2026.",
+    // The carry inherits the union of the previous sentence: the date fits
+    // Storytime but not STEM, and the guard cannot tell them apart.
+    "STEM Advantage and Storytime Advantage are planned. It goes live in November 2026.",
+    "Storytime Advantage and STEM Advantage are planned together. They launch in November 2026.",
+  ])("F3 rejects a date licensed by another product of the same statement: %s", (probe) => {
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status/,
+    );
+  });
+
+  // F4 [Blocker]: the May 2027 strip keys on a new-editions mention in the
+  // statement (origins 3.2|quest 4|may 2027 line), not on a product. Any
+  // planned product in the same statement inherits the editions date. The
+  // "origins 3.2" alternative is also dead code: the sentence split breaks
+  // "3.2" before the matcher runs (the E1 control above rejects through the
+  // year check, not through the binding).
+  it.each([
+    "Storytime Advantage and Primary Advantage Quest 4 reach schools in May 2027.",
+    "Science Advantage and Primary Advantage Quest 4 are aimed at May 2027.",
+    "STEM Advantage and Primary Advantage Quest 4 are aimed at May 2027.",
+    "The May 2027 line covers Storytime Advantage.",
+  ])("F4 rejects May 2027 on a planned line that only mentions a new edition: %s", (probe) => {
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status/,
+    );
+  });
+
+  // F5 [Blocker]: a period inside the line ends the statement early and
+  // orphans the date from the product. A decimal number or an abbreviation is
+  // enough; the orphan fragment holds no product name and no "advantage", so
+  // no rule sees it.
+  it.each([
+    "Storytime Advantage ships after version 3.2 in December 2026.",
+    "Science Advantage ships after version 3.2 in 2028.",
+    "Storytime Adv. goes live in December 2026.",
+  ])("F5 rejects a date orphaned by a period inside the line: %s", (probe) => {
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID/,
+    );
+  });
+
+  // F6 [Nit]: the planned-line match needs the full "X Advantage" name, so a
+  // short name escapes it. Lowercase full names are covered by normalization
+  // (the reject control above). A fix needs a product-name policy, because
+  // bare "science" and "math" are also generic words. `it.fails` records the
+  // weakness: each case passes while it exists and fails when it is fixed.
+  for (const probe of [
+    "Storytime goes live in December 2026.",
+    "Science launches in 2028.",
+    "Science Adv. It launches in 2028.",
+  ]) {
+    it.fails(`F6 rejects a short-name product date: ${JSON.stringify(probe)}`, () => {
+      const mutated = withExtraParagraph(probe);
+      expect(() => buildCurriculumAutomatedReview(mutated)).toThrow(
+        /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID/,
+      );
+    });
+  }
+});
