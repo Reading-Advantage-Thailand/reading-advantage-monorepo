@@ -1689,4 +1689,10 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 
 - [ ] **Track: CI green on master** — *created 2026-11-15*
   *Link: [./tracks/ci_green_master_20261115/](./tracks/ci_green_master_20261115/)*
-  *Status: in progress | Chore, light lane, PM order 2026-11-15 | Make CI on master green: ignore the built game bundles in the www lint (PC-1) and refresh the stale architecture-check v2 manifest pins (PC-2); run 43667794723 at 8d3cb8233 | Done when ci.yml passes on master (2026-11-17)*
+  *Status: round 1 pushed at b4284d74b (CI run 43674983351): PC-1 www lint, PC-2 manifest
+  hashes, and PC-3 analyzer parse errors fixed and green in CI; still red on PC-4 (architecture
+  debt-change, 337 additions past the 2026-07-16 baselines) and PC-6 (3 real-logos capture
+  tests red since the ec573d635 Phase 3 re-record); PC-5 (primary-advantage lint, 13 errors)
+  waits behind PC-4 in the main job; PC-4, PC-5, and PC-6 are outside the light-lane fix rule,
+  so the track stays open for the PM decision | Chore, light lane, PM order 2026-11-15 |
+  Run 43667794723 at 8d3cb8233 | Done when ci.yml passes on master (2026-11-17)*

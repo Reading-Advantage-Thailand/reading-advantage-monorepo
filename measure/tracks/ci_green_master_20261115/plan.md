@@ -45,3 +45,16 @@ Track: `ci_green_master_20261115` (light lane).
 - `pnpm lint --concurrency=2` (root): exit 1, `primary-advantage#lint`, 13 errors.
 - Affected-app selector for the push: `["www-reading-advantage"]`; cd-apps matrix excludes
   www and selects no other app, so only the standing-approved www deploy triggers.
+
+## CI round 1 (run 43674983351 on `b4284d74b`, result: failure)
+
+- Fixed and verified in CI: www lint, www build, www check-types pass; the architecture check
+  reaches the analysis with `parseErrors=0` and the manifest validation passes.
+- PC-4 remains in the main job: `architecture check: debt-change (files=6931, findings=881,
+  parseErrors=0)`. Not a CI or lint config fix; a PM decision on the architecture debt.
+- PC-6 remains in the www job: 3 pixel assertions in `real-logos-captures-adversarial.test.ts`
+  (en-storytime-light 88 px of #92400e, th-primary-light 148 px, en-primary-light 267 px,
+  threshold 1000). The same 3 failed in run 43667794723 before this track. The Phase 3
+  re-record at `ec573d635` lost the ink: the cd155425b captures held 46577, 21083, and 21082
+  pixels. Needs a capture re-record or a product check; not a CI or lint config fix.
+- PC-5 waits behind PC-4: root `pnpm lint` fails on `primary-advantage#lint` (13 errors).
