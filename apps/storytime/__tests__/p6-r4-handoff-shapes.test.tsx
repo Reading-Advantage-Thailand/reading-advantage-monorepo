@@ -157,7 +157,15 @@ describe("the receiving step with the array form", () => {
       expect((error as Error).message, "the receiver accepts the w01 r5 shape").toBe("");
     }
     const listed = media.filter((item) => item.kind === "sentence-clip").map((item) => item.file);
-    expect(listed.sort()).toEqual(W01_SENTENCES.map((entry) => entry.file).sort());
+    // The approved pin ships the eight read-along clips of w01 (strategy P2, row M7). This row
+    // replaces the decodable clips only, so the media list of the week holds both books.
+    const readalongBook = raw().books.find((book: { kind: string }) => book.kind === "readalong");
+    const readalong = (readalongBook?.audio?.sentenceClips ?? []).map(
+      (entry: { file: string }) => entry.file,
+    );
+    expect(listed.sort()).toEqual(
+      [...readalong, ...W01_SENTENCES.map((entry) => entry.file)].sort(),
+    );
   });
 
   it("keeps the source text unchanged in the written content", () => {

@@ -134,8 +134,12 @@ describe("Phase 3 adversarial week tile list", () => {
     for (let index = 0; index < book.pages.length; index += 1) {
       fireEvent.click(screen.getByRole("button", { name: "en:playerNextPage" }));
     }
-    const end = view.container.querySelector<HTMLElement>("[data-reader-finished]");
+    const end =
+      view.container.querySelector<HTMLElement>("[data-reader-finished]") ??
+      view.container.querySelector<HTMLElement>("[data-question-screen]");
     expect(end, "the reader must reach its end").toBeTruthy();
+    // The approved pin approves the loops of w01, so the read-along holds its question screen
+    // (spec FR-13). The end of the book is that screen, and it holds no copy of the week tiles.
     expect(
       end!.querySelectorAll("a"),
       "the end of the book must show no copy of the week tiles (finding 1 of task 6.2)",

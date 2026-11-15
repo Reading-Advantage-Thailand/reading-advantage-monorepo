@@ -75,7 +75,7 @@ describe("Phase 3 week readiness", () => {
     expect(receiver).toMatch(/isWeekReady/);
   });
 
-  it("holds the shipped w01 ready and keeps the routines hidden", async () => {
+  it("holds the shipped w01 ready and holds its approved loops", async () => {
     const week = JSON.parse(readFileSync(shippedPath, "utf8"));
     const lib = resolve(app, "lib/readiness.ts");
     const readiness = await import(/* @vite-ignore */ new URL(`file://${lib}`).href);
@@ -89,11 +89,11 @@ describe("Phase 3 week readiness", () => {
     ).toBe(true);
     expect(
       week.approval.loops.status,
-      "The loops part of the shipped w01 is not draft after the approval take of 2026-11-04",
-    ).toBe("draft");
+      "The loops part of the shipped w01 is not approved after the approved pin of 2026-11-16",
+    ).toBe("approved");
     expect(
       loopsApproved(week),
-      "The routines of the shipped w01 show while the loops part is draft",
-    ).toBe(false);
+      "The loops of the shipped w01 are not approved after the approved pin of 2026-11-16",
+    ).toBe(true);
   });
 });

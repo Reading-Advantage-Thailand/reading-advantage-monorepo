@@ -197,6 +197,21 @@ function approvedClone(source: StorytimeWeek = week): WeekWithShare {
   return copy;
 }
 
+/**
+ * Deep-clones the shipped week and sets its loops part to draft (the approved pin ships an
+ * approved part, so the draft week is a clone), then checks the contract.
+ * @returns The draft clone.
+ */
+function draftClone(): WeekWithShare {
+  const copy = structuredClone(week) as WeekWithShare;
+  copy.approval = { ...(copy.approval ?? {}), loops: { status: "draft" } };
+  expect(
+    weekSchema.safeParse(copy).success,
+    "the draft clone must pass weekSchema before it renders (A4)",
+  ).toBe(true);
+  return copy;
+}
+
 /** Loads the week contract module and reports a missing module as an assertion. */
 async function loadWeekContract(): Promise<Record<string, unknown>> {
   const modulePath = "../lib/contracts/week";
@@ -557,7 +572,7 @@ describe("Phase 4 share moment (task 4.6a, rule D23)", () => {
     let shown = 0;
     let consent = 0;
     for (const day of DAYS) {
-      await walkDay(day, week, ({ container }) => {
+      await walkDay(day, draftClone(), ({ container }) => {
         screens += 1;
         shown += momentNodes(container).length;
         if ((container.textContent ?? "").includes(line.en)) consent += 1;
@@ -777,7 +792,7 @@ describe("Phase 4 share moment (task 4.6a, rule D23)", () => {
 
     let hidden = 0;
     for (const day of DAYS) {
-      await walkDay(day, week, ({ container }) => {
+      await walkDay(day, draftClone(), ({ container }) => {
         const text = container.textContent ?? "";
         if (text.includes(line.en) || text.includes(line.th)) hidden += 1;
       });
