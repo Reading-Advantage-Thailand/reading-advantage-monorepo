@@ -90,7 +90,7 @@ jobs:
       # the deploy. A "CD needs CI" link would stop every www deploy, because ci.yml is
       # red on master for an unrelated cause (the architecture check).
       - name: Set Up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
         with:
           standalone: true
 
