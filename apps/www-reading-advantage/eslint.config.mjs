@@ -2,7 +2,16 @@ import { baseConfig, ignores } from "@reading-advantage/config/eslint";
 import { plugin as shadcn } from "@shadcn/lint";
 
 const eslintConfig = [
-  { ignores: [...ignores, "scripts/", "e2e/", "revideo/"] },
+  {
+    ignores: [
+      ...ignores,
+      "scripts/",
+      "e2e/",
+      "revideo/",
+      // Built, minified game bundles (tracked build artifacts, not source).
+      "public/experience/assets/",
+    ],
+  },
   ...baseConfig,
   {
     rules: {
