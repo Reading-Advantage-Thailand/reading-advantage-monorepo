@@ -13,7 +13,7 @@ import remarkGfm from "remark-gfm";
 import remarkHtml from "remark-html";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import { renderBlogBlock } from "@/lib/blog-blocks";
+import { isBlogBlock, renderBlogBlock } from "@/lib/blog-blocks";
 import { postsDirectory, renderBlogMarkdown } from "@/lib/blog";
 
 const IMAGE = "/blog/the-forgetting-curve.webp";
@@ -208,6 +208,7 @@ describe("plain Markdown", () => {
       .then(String);
 
   it("renders every existing post the same as the old pipeline", async () => {
+    const blockFence = /^```(\w+)$/m;
     let checked = 0;
     for (const locale of ["en", "th"] as const) {
       for (const file of fs.readdirSync(postsDirectory(locale))) {
@@ -215,6 +216,9 @@ describe("plain Markdown", () => {
           fs.readFileSync(path.join(postsDirectory(locale), file), "utf8"),
         );
         if (data.draft === true) continue;
+        // A post with a rich block is outside the plain-Markdown invariant.
+        const block = content.match(blockFence);
+        if (block && isBlogBlock(block[1])) continue;
         expect(await renderBlogMarkdown(content, locale), file).toBe(await baseline(content));
         checked++;
       }
