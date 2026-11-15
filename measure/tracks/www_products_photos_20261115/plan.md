@@ -6,14 +6,38 @@ Revised by: opencode-go/deepseek-v4.1-flash (spec review r1 fixes)
 
 ## Phase 1: Photo checks, then the remaining fixes
 
-- [ ] 1.1 Red: write the AC-1 e2e, the AC-2 unit test, and the AC-3 wiring. The wiring has two parts:
+- [x] 1.1 Red: write the AC-1 e2e, the AC-2 unit test, and the AC-3 wiring. The wiring has two parts:
   the steps of the `ci.yml` job `affected` for `www-reading-advantage`, and the steps of
   `cd-www-reading-advantage.yml` before the deploy step. Prove each test by a failing run at
   `8193625ca^` (hero, product photos) and a failing run at HEAD for what is still wrong (the covered
   photo, the Tutor section, the squeezed pictures at 1024 px, the home hero). The wiring fails on
   current code, because the e2e that it runs fails there. Commit the tests and the failing runs
   before any Green change.
-- [ ] 1.2 Green: fix what is still wrong (AC-4). The draft in the commit `8193625ca` stays.
+
+  Commit `4c48a8b12` holds the tests, the two workflows, and the AC-1 rule text. Evidence is in
+  `measure/runs/www_products_photos_20261115/red-p1-40419d4bc.log`.
+
+  - Tests: `apps/www-reading-advantage/e2e/photos.spec.ts` (56 cases) and the new case in
+    `src/components/marketing/hero-section.test.tsx`.
+  - Run at HEAD `40419d4bc` through `heavy-run.sh`: `pnpm exec next build` exit 0;
+    `next start -p 3123` answered 200; `playwright test e2e/photos.spec.ts` exit 1.
+  - Failing cases at HEAD, by name:
+    - `home en 390 px` and `home th 390 px`: `workbook-tablet-cutaway-800.webp` is 40 percent
+      covered. The photo passes at 980, 1024, and 1280 px. (Spec evidence line corrected to 40.)
+    - `/products` photo cases at 390, 980, 1024, and 1280 px, en and th: `blended-learning.png` is
+      100 percent covered.
+    - `/products` block cases at 390, 980, and 1280 px, en and th: the Tutor section shows no photo.
+    - `/products` block cases at 1024 px, en and th: the Tutor section shows no photo, and
+      `primary-origins-2-cover.webp`, `reading-origins-2-cover.webp`, and `tutor-flashcard.webp`
+      break the 5 percent aspect rule (deviation 15.2, 15.2, and 22.2 percent).
+  - `/services/blended-learning` passes at all four widths: its hero is a HeroSection floating image
+    with no overlay. The covered instance of the same file sits on `/products` and fails there.
+  - Unit test at HEAD: passes, because the hero fix is in `8193625ca`.
+  - Pre-fix proof at `8193625ca^` (`705a9ad60`) in a temporary worktree: the hero unit test fails with
+    `AssertionError: expected [ 'div.hidden' ] to deeply equal []`. The e2e pre-fix run was skipped to
+    keep the run cost down. The unit test proves the hero regression. The product-picture case fails
+    at HEAD for the Tutor section.
+- [~] 1.2 Green: fix what is still wrong (AC-4). The draft in the commit `8193625ca` stays.
 - [ ] 1.3 Review and live render check at 390, 980, 1024, and 1280 px, en and th. Look at each
   capture. Every photo shows at least 85 percent.
 - [ ] 1.4 Push to www master (standing approval), watch the www CD run, and run the PM page check
@@ -21,7 +45,7 @@ Revised by: opencode-go/deepseek-v4.1-flash (spec review r1 fixes)
 
 ## Test strategy
 
-- Unit (AC-2): `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd apps/www-reading-advantage && pnpm exec vitest run src/components/marketing/hero-section.test.tsx src/__tests__/products-page-pictures.red.test.tsx --maxWorkers=1'`.
+- Unit (AC-2): `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd apps/www-reading-advantage && pnpm exec vitest run src/components/marketing/hero-section.test.tsx --maxWorkers=1'`.
 - E2E (AC-1), Red and Green: build the app, start it, and run the spec against it, all through
   heavy-run.sh:
   `bash .../heavy-run.sh -c 'cd apps/www-reading-advantage && pnpm exec next build && (pnpm exec next start -p 3123 & sleep 8; BASE_URL=http://localhost:3123 pnpm exec playwright test e2e/photos.spec.ts)'`.
@@ -48,8 +72,9 @@ Revised by: opencode-go/deepseek-v4.1-flash (spec review r1 fixes)
   `BASE_URL=http://localhost:3123 pnpm --filter www-reading-advantage exec playwright test e2e/photos.spec.ts`.
 - AC-3 plan, part (b): add the same Chrome install and e2e steps to the `deploy` job of
   `cd-www-reading-advantage.yml`, before "Submit Cloud Build". Build the app in that job. Start the
-  build with `next start -p 3123` or `node .next/standalone/server.js` on port 3123. Run the spec.
-  A failing e2e stops the deploy. Daniel gets no link until task 1.4 passes.
+  build with `next start -p 3123`. Run the spec. A failing e2e stops the deploy. Daniel gets no link
+  until task 1.4 passes. (spec review r2, F5: the standalone `server.js` option needs a copy of
+  `public/` and `.next/static`, so the wiring names `next start -p 3123` only.)
 
 ## Facts to check in Red
 
