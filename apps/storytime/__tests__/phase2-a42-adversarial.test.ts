@@ -32,7 +32,6 @@ import { isWeekReady, readinessBlocker } from "../lib/readiness";
 
 const app = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const contentDirectory = resolve(app, "content");
-const weekDirectory = resolve(contentDirectory, "l2");
 
 /** The hand-off root of the Workbooks packages. */
 const handoffRoot = process.env.STORYTIME_HANDOFF_ROOT ?? join(homedir(), "Desktop", "handoff");
@@ -82,15 +81,6 @@ function tempFolder(label: string): string {
  */
 function folderOf(week: number): string {
   return `w0${week}-storytime-app-package-${week === 1 ? "r6" : "r5"}`;
-}
-
-/**
- * Reads a shipped week file.
- * @param week The week of the level.
- * @returns The week as plain JSON.
- */
-function readShippedWeek(week: number): Json {
-  return JSON.parse(readFileSync(resolve(weekDirectory, `w0${week}.json`), "utf8")) as Json;
 }
 
 /**
@@ -289,7 +279,7 @@ describe("A4 a clip file that the week lists but the folder lacks", () => {
   function clipManifestLines(folder: string): string[] {
     const lines = readFileSync(join(folder, "MANIFEST.txt"), "utf8").split("\n");
     return lines.filter(
-      (line) => /^[0-9a-f]{64}  /.test(line) && /\/sentences\/[^/]+\.mp3$/.test(line),
+      (line) => /^[0-9a-f]{64} {2}/.test(line) && /\/sentences\/[^/]+\.mp3$/.test(line),
     );
   }
 
@@ -302,7 +292,7 @@ describe("A4 a clip file that the week lists but the folder lacks", () => {
       const manifest = new Set(
         readFileSync(join(folder, "MANIFEST.txt"), "utf8")
           .split("\n")
-          .filter((line) => /^[0-9a-f]{64}  /.test(line))
+          .filter((line) => /^[0-9a-f]{64} {2}/.test(line))
           .map((line) => line.slice(66).trim()),
       );
       for (const book of readFolderWeek(week).books as Json[]) {
