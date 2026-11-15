@@ -8,6 +8,11 @@ Track: `www_daily_blog_posts_20261115` (light lane). One task per post.
   hand-off manifest, write the en and th posts, copy the four images to `public/blog/`, run the
   gates (blog tests, www build, local render captures), push, watch the www CD, and capture the
   live pages. `a6641da7e`.
+- [~] 1.3 Post `she-chooses-the-words-she-keeps`, 2026-11-18 (PM task A-62, PREPARE only; the
+  orchestrator pushes on 2026-11-18 because `blog.ts` has no date gate): verify the hand-off
+  manifest, copy the en and th posts and the two images, run the gates (five blog vitest files, www
+  build, local render captures at 1280 and 390, en and th). Third commit on
+  `www/daily-posts-1116-1117`. No push from this session.
 - [x] 1.2 Fault: the reading time ignored the prose inside rich blocks and Thai script, so the daily
   post showed 4 min in en and 1 min in th. `calculateReadingTime` now counts figure captions,
   callout titles and text, and pull quotes, skips block keys, paths, alt text, and screen-reader
