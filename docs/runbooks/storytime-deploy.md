@@ -48,8 +48,8 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
 
 4. Move the traffic to the new revision. Only Daniel's go starts a traffic move. Before the
    traffic move, run the live traffic guard from the monorepo root. The guard reads the
-   environment of the target revision and of the service with read-only describe commands,
-   and it fails while a review switch is still set. A guard failure stops the step:
+   environment of every container of the target revision and of the service with read-only
+   describe commands. It fails while a review switch is still set. A guard failure stops the step:
 
    ```
    node_modules/.bin/tsx apps/storytime/scripts/review/live-traffic-guard.ts --revision storytime-app-<revision>
@@ -173,14 +173,14 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
      revision:
 
      ```
-     gcloud run revisions describe <new revision> --project primary-advantage --region asia-southeast1 --format='value(spec.containers[0].env.name)'
-     gcloud run revisions describe <live revision> --project primary-advantage --region asia-southeast1 --format='value(spec.containers[0].env.name)'
+     gcloud run revisions describe <new revision> --project primary-advantage --region asia-southeast1 --format='value(spec.containers[*].env.name)'
+     gcloud run revisions describe <live revision> --project primary-advantage --region asia-southeast1 --format='value(spec.containers[*].env.name)'
      ```
 
      The compare prints the variable names, not their values. The three review switches
      `STORYTIME_REVIEW_DRAFT_WEEKS`, `STORYTIME_SHOW_DRAFT_MEDIA`, and
      `STORYTIME_TEACHER_ROUTES` are absent on the live revision. Each command prints one line
-     with the names separated by `;`. The names compare shows that no env name differs
+     with the names of every container separated by `;`. The names compare shows that no env name differs
      except `STORYTIME_TEACHER_ROUTES`. If another name differs, stop, give no traffic
      step, and report the difference to Daniel. The flag state shows only through the 200 or 404
      check of `/th/teacher/2/1` on the tag URL; no command prints a value, so no secret
