@@ -271,21 +271,6 @@ function matchSentenceClips(
 }
 
 /**
- * The clip file of one sentence of a book (Workbooks decision L7).
- *
- * The path names the level, the week, the book, and the sentence:
- * `l<level>/media/w<nn>/sentences/b<book>-s<jj>.mp3`.
- * @param level The level of the week.
- * @param week The week of the level.
- * @param book The zero-based index of the book in the week.
- * @param sentence The one-based index of the sentence in the book.
- * @returns The path of the clip file, relative to the content folder.
- */
-function sentenceClipPath(level: number, week: number, book: number, sentence: number): string {
-  return `l${level}/media/w${String(week).padStart(2, "0")}/sentences/b${book}-s${String(sentence).padStart(2, "0")}.mp3`;
-}
-
-/**
  * Reports the faults of the array form of the sentence clips of a book.
  *
  * The array form holds the clips of the sentences of the book, and the rule depends on the kind
@@ -1040,34 +1025,74 @@ function checkLoops(week: z.infer<typeof weekBodySchema>, ctx: z.RefinementCtx):
 }
 
 /**
+ * The name of a sentence clip of a book (Workbooks decision L7).
+ *
+ * The path names the level, the week, the book, and the sentence:
+ * `l<level>/media/w<nn>/sentences/b<book>-s<jj>.mp3`. The rule holds the book index and the
+ * sentence number of the path. The level and the week of the path are read as names, because the
+ * receiver and the loader own the week of a file, and a copy of a week at another place stays a
+ * week of the app.
+ */
+const SENTENCE_CLIP_PATH = /^l\d+\/media\/w\d{2}\/sentences\/b(\d+)-s(\d+)\.mp3$/;
+
+/**
  * Reports the clip files of the array form that name no sentence of their own book.
  *
- * The clip file of a sentence names the level, the week, the book, and the sentence (Workbooks
- * decision L7): `l<level>/media/w<nn>/sentences/b<book>-s<jj>.mp3`. The file of an entry must
- * name a sentence of its own book whose text the entry holds, so the clip of another book and
- * the clip of another sentence fail.
+ * The file of an entry must name a sentence of its own book, and the text of the entry must be
+ * the text of that sentence. The clip of another book and the clip of another sentence fail, so
+ * the app never plays a clip of another sentence (Workbooks decision L9).
  * @param week The parsed week.
  * @param ctx The refinement context.
  */
 function checkSentenceClipPaths(week: z.infer<typeof weekBodySchema>, ctx: z.RefinementCtx): void {
-  const level = week.meta.level;
-  const number = week.meta.week;
   week.books.forEach((book, bookIndex) => {
     const clips = book.audio.sentenceClips;
     if (!Array.isArray(clips)) return;
     const sentences = book.audio.sentences.map((sentence) => sentence.sentence.trim());
     clips.forEach((entry, index) => {
       const text = entry.sentence.trim();
-      const named = sentences.some(
-        (sentence, at) =>
-          sentence === text && sentenceClipPath(level, number, bookIndex, at + 1) === entry.file,
-      );
-      if (named) return;
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["books", bookIndex, "audio", "sentenceClips", index, "file"],
-        message: `the clip file ${entry.file} names no sentence of the book that holds the sentence ${text}`,
-      });
+      const path = ["books", bookIndex, "audio", "sentenceClips", index, "file"];
+      const match = SENTENCE_CLIP_PATH.exec(entry.file);
+      if (!match) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path,
+          message: `the clip file ${entry.file} names no sentence of a book`,
+        });
+        return;
+      }
+      if (Number(match[1]) !== bookIndex) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path,
+          message: `the clip file ${entry.file} names the book ${match[1]} and not the book ${bookIndex}`,
+        });
+        return;
+      }
+      const sentence = Number(match[2]);
+      if (sentence < 1 || sentence > sentences.length) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path,
+          message: `the clip file ${entry.file} names no sentence of the book that holds ${sentences.length} sentences`,
+        });
+        return;
+      }
+      if (book.kind === "readalong" && sentence !== index + 1) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path,
+          message: `the clip file ${entry.file} names the sentence ${sentence} and not the sentence ${index + 1} of the narration`,
+        });
+        return;
+      }
+      if (sentences[sentence - 1] !== text) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path,
+          message: `the clip file ${entry.file} names the sentence ${sentence} and not the sentence that holds the text ${text}`,
+        });
+      }
     });
   });
 }
