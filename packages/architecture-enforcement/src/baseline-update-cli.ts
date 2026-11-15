@@ -7,6 +7,7 @@ import {
   serializeArchitectureCheckReport,
 } from "./architecture-check.js";
 import { updateArchitectureBaselines } from "./baseline-update.js";
+import type { ArchitecturePolicyVersion } from "./policy-selection.js";
 
 /** Supported baseline update output representations. */
 export type BaselineUpdateOutputFormat = "human" | "json";
@@ -19,6 +20,8 @@ export interface BaselineUpdateCliOptions {
   format: BaselineUpdateOutputFormat;
   /** Exact repository root supplied or discovered for the command. */
   repoRoot: string;
+  /** Optional explicit architecture policy. */
+  policyVersion?: ArchitecturePolicyVersion;
   /** Optional accountable owner for genuinely new debt. */
   owner?: string;
   /** Optional reviewed rationale paired with the accountable owner. */
@@ -66,6 +69,7 @@ export function parseBaselineUpdateArguments(
   let acknowledge = false;
   let format: BaselineUpdateOutputFormat = "human";
   let repoRoot: string | undefined;
+  let policyVersion: ArchitecturePolicyVersion | undefined;
   let owner: string | undefined;
   let rationale: string | undefined;
   for (let index = 0; index < args.length; index += 1) {
@@ -75,6 +79,7 @@ export function parseBaselineUpdateArguments(
     } else if (
       argument === "--format" ||
       argument === "--repo-root" ||
+      argument === "--policy" ||
       argument === "--owner" ||
       argument === "--rationale"
     ) {
@@ -87,6 +92,11 @@ export function parseBaselineUpdateArguments(
         format = value;
       } else if (argument === "--repo-root") {
         repoRoot = value;
+      } else if (argument === "--policy") {
+        if (value !== "v1" && value !== "v2") {
+          throw new Error("--policy must be v1 or v2");
+        }
+        policyVersion = value;
       } else if (argument === "--owner") {
         owner = value;
       } else {
@@ -106,6 +116,7 @@ export function parseBaselineUpdateArguments(
     acknowledge,
     format,
     repoRoot: repoRoot ?? discoverRepositoryRoot(cwd),
+    ...(policyVersion ? { policyVersion } : {}),
     ...(owner ? { owner } : {}),
     ...(rationale ? { rationale } : {}),
   };
@@ -132,6 +143,7 @@ export async function runArchitectureBaselineUpdateCli(
   )({
     repoRoot: options.repoRoot,
     acknowledge: options.acknowledge,
+    ...(options.policyVersion ? { policyVersion: options.policyVersion } : {}),
     ...(options.owner && options.rationale
       ? {
           newDebtMetadata: {
