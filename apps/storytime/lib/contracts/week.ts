@@ -271,16 +271,84 @@ function matchSentenceClips(
 }
 
 /**
- * Reports the entries of the array form of the sentence clips that no page takes.
+ * The clip file of one sentence of a book (Workbooks decision L7).
  *
- * An entry that no page takes is reported and not dropped, because a clip that no page shows is
- * a clip that the app never plays (task 6.2, round 3).
+ * The path names the level, the week, the book, and the sentence:
+ * `l<level>/media/w<nn>/sentences/b<book>-s<jj>.mp3`.
+ * @param level The level of the week.
+ * @param week The week of the level.
+ * @param book The zero-based index of the book in the week.
+ * @param sentence The one-based index of the sentence in the book.
+ * @returns The path of the clip file, relative to the content folder.
+ */
+function sentenceClipPath(level: number, week: number, book: number, sentence: number): string {
+  return `l${level}/media/w${String(week).padStart(2, "0")}/sentences/b${book}-s${String(sentence).padStart(2, "0")}.mp3`;
+}
+
+/**
+ * Reports the faults of the array form of the sentence clips of a book.
+ *
+ * The array form holds the clips of the sentences of the book, and the rule depends on the kind
+ * of the book.
+ *
+ * The read-along book holds the clips of its narration: one entry per sentence of
+ * `audio.sentences`, in the order of the sentences, and the entry of a sentence holds the text of
+ * that sentence (Workbooks decision L9). A read-along page may hold two sentences, so the page
+ * cannot name the clip of a sentence, and the narration names it.
+ *
+ * The decodable book holds the clips of its pages: each page takes the first entry, in array
+ * order and not yet taken by an earlier page, whose trimmed sentence equals the trimmed text of
+ * the page (finding 2b). A decodable page shows one sentence, and a page may hold no clip. An
+ * entry that no page takes is reported and not dropped, because a clip that no page shows is a
+ * clip that the app never plays (task 6.2, round 3).
+ *
+ * The clip files of a book are unique, so one file plays one sentence.
  * @param book The book of the week.
  * @param ctx The refinement context.
  */
 function checkSentenceClips(book: StorytimeBookBody, ctx: z.RefinementCtx): void {
   const clips = book.audio.sentenceClips;
   if (!Array.isArray(clips)) return;
+  const sentences = book.audio.sentences;
+  const files = new Set<string>();
+  for (const entry of clips) {
+    if (files.has(entry.file)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["audio", "sentenceClips"],
+        message: `the clip file ${entry.file} is named twice`,
+      });
+    }
+    files.add(entry.file);
+  }
+  if (book.kind === "readalong") {
+    if (clips.length !== sentences.length) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["audio", "sentenceClips"],
+        message: `the sentence clips hold ${clips.length} entries and the narration holds ${sentences.length} sentences`,
+      });
+      return;
+    }
+    clips.forEach((entry, index) => {
+      const text = entry.sentence.trim();
+      const spoken = sentences[index]!.sentence.trim();
+      if (text === spoken) return;
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["audio", "sentenceClips", index, "sentence"],
+        message: `the sentence clip ${index + 1} holds the sentence ${text} and the narration holds the sentence ${spoken}`,
+      });
+    });
+    return;
+  }
+  if (clips.length > sentences.length) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["audio", "sentenceClips"],
+      message: `the sentence clips hold ${clips.length} entries and the narration holds ${sentences.length} sentences`,
+    });
+  }
   const { untaken } = matchSentenceClips(clips, book.pages);
   for (const sentence of untaken) {
     ctx.addIssue({
@@ -308,23 +376,27 @@ export type StorytimeBook = {
 };
 
 /**
- * Reads the sentence clips of a book into the page number to clip file map.
+ * Reads the sentence clips of a book into its map.
  *
- * The map form stays as it is. The array form is matched to the pages of the book, so every
- * page of the app holds the clip of its own sentence.
+ * The map form stays as it is. The array form of a decodable book holds the page number to the
+ * clip file, because a decodable page shows one sentence and the page names it. The array form
+ * of a read-along book holds the one-based sentence number to the clip file, because a read-along
+ * page may hold two sentences and the page cannot name the clip of a sentence.
  * @param book The book of the week.
  * @returns The book with the sentence clips read.
  */
 function readSentenceClips(book: StorytimeBookBody): StorytimeBook {
   const clips = book.audio.sentenceClips;
   const read = Array.isArray(clips)
-    ? matchSentenceClips(clips, book.pages).clips
+    ? book.kind === "readalong"
+      ? Object.fromEntries(clips.map((entry, index) => [String(index + 1), entry.file]))
+      : matchSentenceClips(clips, book.pages).clips
     : (clips as Record<string, string>);
   return { ...book, audio: { ...book.audio, sentenceClips: read } };
 }
 
 /** One book of a week: the read-along and the decodable. */
-export const bookSchema = bookBodySchema.superRefine(checkSentenceClips).transform(readSentenceClips);
+export const bookSchema = bookBodySchema.superRefine(checkSentenceClips);
 
 /** The sound of the week and its action. */
 export const elementSchema = z
@@ -968,6 +1040,39 @@ function checkLoops(week: z.infer<typeof weekBodySchema>, ctx: z.RefinementCtx):
 }
 
 /**
+ * Reports the clip files of the array form that name no sentence of their own book.
+ *
+ * The clip file of a sentence names the level, the week, the book, and the sentence (Workbooks
+ * decision L7): `l<level>/media/w<nn>/sentences/b<book>-s<jj>.mp3`. The file of an entry must
+ * name a sentence of its own book whose text the entry holds, so the clip of another book and
+ * the clip of another sentence fail.
+ * @param week The parsed week.
+ * @param ctx The refinement context.
+ */
+function checkSentenceClipPaths(week: z.infer<typeof weekBodySchema>, ctx: z.RefinementCtx): void {
+  const level = week.meta.level;
+  const number = week.meta.week;
+  week.books.forEach((book, bookIndex) => {
+    const clips = book.audio.sentenceClips;
+    if (!Array.isArray(clips)) return;
+    const sentences = book.audio.sentences.map((sentence) => sentence.sentence.trim());
+    clips.forEach((entry, index) => {
+      const text = entry.sentence.trim();
+      const named = sentences.some(
+        (sentence, at) =>
+          sentence === text && sentenceClipPath(level, number, bookIndex, at + 1) === entry.file,
+      );
+      if (named) return;
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["books", bookIndex, "audio", "sentenceClips", index, "file"],
+        message: `the clip file ${entry.file} names no sentence of the book that holds the sentence ${text}`,
+      });
+    });
+  });
+}
+
+/**
  * Applies the rules that a published week must meet, and the time order that every week must meet.
  * @param week The parsed week.
  * @param ctx The refinement context.
@@ -977,6 +1082,7 @@ function checkWeek(week: z.infer<typeof weekBodySchema>, ctx: z.RefinementCtx): 
     checkTiming(book.audio.sentences, ["books", bookIndex, "audio", "sentences"], ctx);
     checkTiming(book.audio.slowSentences, ["books", bookIndex, "audio", "slowSentences"], ctx);
   });
+  checkSentenceClipPaths(week, ctx);
   if (week.song) checkTiming(week.song.times, ["song", "times"], ctx);
   const key = `st${week.meta.level}/${week.meta.week}`;
   if (week.meta.key !== key) {
@@ -1043,8 +1149,21 @@ const weekBodySchema = z
   })
   .passthrough();
 
+/**
+ * Reads the sentence clips of every book of a week into its map.
+ *
+ * The map form of a book stays as it is. The array form of a decodable book holds the page number
+ * to the clip file, and the array form of a read-along book holds the one-based sentence number
+ * to the clip file.
+ * @param week The parsed week.
+ * @returns The week with the sentence clips of every book read.
+ */
+function readWeekClips(week: z.infer<typeof weekBodySchema>) {
+  return { ...week, books: week.books.map(readSentenceClips) };
+}
+
 /** The contract of one Storytime week, version 1 (spec FR-3). */
-export const weekSchema = weekBodySchema.superRefine(checkWeek);
+export const weekSchema = weekBodySchema.superRefine(checkWeek).transform(readWeekClips);
 
 /** One Storytime week. */
 export type StorytimeWeek = z.infer<typeof weekSchema>;
