@@ -86,6 +86,41 @@ const PNG_BYTES = new Uint8Array([
 const SHEET_BYTES = new TextEncoder().encode("fake sheet export bytes");
 /** Banned provider tokens of the route detector (A7: a fixed token list). */
 const BANNED_PROVIDER_TOKENS = ["openrouter", "aliyun", "qwen", "openai"];
+/**
+ * The six draft keys the backend `toSubmissionInput` needs, named in the
+ * schema and in the prompt of every model read (Review A A401).
+ */
+const INTAKE_DRAFT_KEYS = [
+  "payee",
+  "amountMinor",
+  "currency",
+  "kind",
+  "category",
+  "description",
+] as const;
+/** Currencies the business settles; the contract enum of the draft. */
+const SETTLED_CURRENCIES = ["THB", "USD", "JPY"] as const;
+/** Config keys the ADC route must never pass to the client builder. */
+const FORBIDDEN_CLIENT_CONFIG_KEYS = [
+  "credentials",
+  "clientEmail",
+  "privateKey",
+  "googleAuthOptions",
+] as const;
+
+/**
+ * Spy of the real `createAIClient` export. It stands in for the default client
+ * path of the adapter, which every other row bypasses with `createClient`.
+ */
+const aiClientBuild = vi.hoisted(() => ({ spy: vi.fn() }));
+
+vi.mock("@reading-advantage/ai", async (importOriginal) => {
+  const actual = await importOriginal<Record<string, unknown>>();
+  return {
+    ...actual,
+    createAIClient: (config: unknown) => aiClientBuild.spy(config),
+  };
+});
 
 /** One recorded call of the fake client. */
 interface FakeCall {
@@ -93,6 +128,10 @@ interface FakeCall {
   readonly method: "generateObject" | "generateObjectFromMedia";
   /** Model id the adapter passed, when any. */
   readonly model: string | null;
+  /** Schema the adapter passed. */
+  readonly schema: unknown;
+  /** Prompt the adapter passed. */
+  readonly prompt: string;
   /** Document bytes of a media call, when any. */
   readonly mediaBuffer: Uint8Array | null;
   /** MIME type of a media call, when any. */
@@ -157,6 +196,8 @@ class FakeVertexClient extends MockProvider {
     this.recorded.push({
       method: "generateObject",
       model: input.model ?? null,
+      schema: input.schema,
+      prompt: input.prompt,
       mediaBuffer: null,
       mediaMimeType: null,
     });
@@ -174,6 +215,8 @@ class FakeVertexClient extends MockProvider {
     this.recorded.push({
       method: "generateObjectFromMedia",
       model: input.model ?? null,
+      schema: input.schema,
+      prompt: input.prompt,
       mediaBuffer: new Uint8Array(input.media.buffer),
       mediaMimeType: input.media.mimeType,
     });
@@ -189,6 +232,20 @@ const routeCounts = {
   modelPaths: 0,
   /** Provider route cases of the phase. */
   providerRouteCases: 0,
+};
+
+/** Counters of the model draft contract rows (Review A A401, A402, B401). */
+const draftContractCounts = {
+  /** Draft keys the schema and the prompt named. */
+  schemaKeys: 0,
+  /** Contract cases of the draft schema. */
+  contractCases: 0,
+  /** Out-of-schema adversarial cases. */
+  adversarialRows: 0,
+  /** Default client route cases. */
+  defaultRouteRows: 0,
+  /** Blank or absent model id cases. */
+  blankModelIdCases: 0,
 };
 
 /** Model calls the fakes served. */
@@ -342,9 +399,43 @@ function buildAdapter(
   return { adapter, client, configs, localCalls: local.calls };
 }
 
+/**
+ * Reads the property names a Zod object schema declares.
+ * @param schema Schema the adapter passed to the client.
+ * @returns The declared key names, or an empty list for a non-object schema.
+ */
+function readDeclaredKeys(schema: unknown): string[] {
+  if (schema === null || typeof schema !== "object") {
+    return [];
+  }
+  const shape = (schema as { readonly shape?: unknown }).shape;
+  if (shape === null || typeof shape !== "object") {
+    return [];
+  }
+  return Object.keys(shape as Record<string, unknown>);
+}
+
+/**
+ * Returns the `safeParse` member of a schema.
+ * @param schema Schema the adapter passed to the client.
+ * @returns The parse function, bound to the schema.
+ * @throws When the schema holds no `safeParse` member.
+ */
+function requireSafeParse(
+  schema: unknown,
+): (input: unknown) => { readonly success: boolean } {
+  const parse = (schema as { readonly safeParse?: unknown } | null)?.safeParse;
+  expect(typeof parse, "schema_safe_parse").toBe("function");
+  if (typeof parse !== "function") {
+    throw new Error("The model schema holds no safeParse member");
+  }
+  return (parse as (input: unknown) => { readonly success: boolean }).bind(
+    schema,
+  );
+}
+
 /** Factory resolved by the row that needs it. */
 let loadedFactory: CreateDocumentExtraction | null = null;
-
 /**
  * Returns the factory of a row, after the row loaded the module.
  * @returns The factory of the adapter module.
@@ -563,6 +654,176 @@ describe("document extraction adapter", () => {
     routeCounts.providerRouteCases += 1;
   });
 
+  it("names the intake draft keys in the model schema and in the prompt", async () => {
+    await loadForRow();
+    const build = buildAdapter({
+      payee: "Fake Vendor",
+      amountMinor: "10000",
+      currency: "THB",
+    });
+
+    await build.adapter.readDocument({
+      companyId: COMPANY_ID,
+      mimeType: PNG_MIME,
+      body: PNG_BYTES,
+    });
+
+    expect(build.client.recorded.length, "model_paths client calls").toBe(1);
+    const call = build.client.recorded[0];
+    expect(call, "model_call_recorded").toBeDefined();
+    if (call === undefined) {
+      return;
+    }
+    const declared = readDeclaredKeys(call.schema);
+    const prompt = call.prompt.toLowerCase();
+    for (const key of INTAKE_DRAFT_KEYS) {
+      expect(declared, `draft_schema_key:${key}`).toContain(key);
+      expect(prompt, `draft_prompt_key:${key}`).toContain(key.toLowerCase());
+    }
+    expect(declared.length, "draft_schema_keys").toBeGreaterThanOrEqual(
+      INTAKE_DRAFT_KEYS.length,
+    );
+    draftContractCounts.schemaKeys = INTAKE_DRAFT_KEYS.length;
+    fakeModelCalls += build.client.recorded.length;
+  });
+
+  it("accepts the draft keys and rejects a wrong-type amount and currency", async () => {
+    await loadForRow();
+    const build = buildAdapter({ payee: "Fake Vendor" });
+
+    await build.adapter.readDocument({
+      companyId: COMPANY_ID,
+      mimeType: PNG_MIME,
+      body: PNG_BYTES,
+    });
+
+    const call = build.client.recorded[0];
+    expect(call, "model_call_recorded").toBeDefined();
+    if (call === undefined) {
+      return;
+    }
+    const parse = requireSafeParse(call.schema);
+
+    const valid = parse({
+      kind: "expense",
+      payee: "Fake Vendor",
+      category: "supplies",
+      description: "fake row",
+      amountMinor: "10000",
+      currency: "THB",
+    });
+    expect(valid.success, "valid_draft_parses").toBe(true);
+    draftContractCounts.contractCases += 1;
+
+    expect(parse({}).success, "empty_draft_parses").toBe(true);
+    draftContractCounts.contractCases += 1;
+
+    expect(parse({ amountMinor: 10000 }).success, "number_amount_rejected").toBe(
+      false,
+    );
+    expect(parse({ amountMinor: null }).success, "null_amount_rejected").toBe(
+      false,
+    );
+    expect(parse({ currency: "XYZ" }).success, "unknown_currency_rejected").toBe(
+      false,
+    );
+    draftContractCounts.contractCases += 3;
+
+    for (const currency of SETTLED_CURRENCIES) {
+      const parsed = parse({ amountMinor: "10000", currency });
+      expect(parsed.success, `settled_currency:${currency}`).toBe(true);
+    }
+    fakeModelCalls += build.client.recorded.length;
+  });
+
+  it("does not mark a model draft that falls outside the schema", async () => {
+    await loadForRow();
+    const build = buildAdapter({ payee: 42, amountMinor: 42 });
+
+    const read = build.adapter.readDocument({
+      companyId: COMPANY_ID,
+      mimeType: PNG_MIME,
+      body: PNG_BYTES,
+    });
+    const outcome = await read.then(
+      (value) => ({ ok: true as const, value }),
+      (error: unknown) => ({ ok: false as const, error }),
+    );
+
+    expect(build.client.recorded.length, "out_of_schema_client_calls").toBe(1);
+    expect(outcome.ok, "out_of_schema_draft_rejected").toBe(false);
+    if (outcome.ok === false) {
+      expect(outcome.error, "out_of_schema_error").toBeInstanceOf(Error);
+    }
+    draftContractCounts.adversarialRows += 1;
+    fakeModelCalls += build.client.recorded.length;
+  });
+
+  it("builds the default client from the vertex route with no credentials", async () => {
+    await loadForRow();
+    const client = new FakeVertexClient({ payee: "Fake Vendor" });
+    aiClientBuild.spy.mockReset();
+    aiClientBuild.spy.mockReturnValue(client);
+    const factory = requireFactoryForRows();
+    const local = createFakeLocalReader({ kind: "needs-model" });
+    const adapter = factory({ localReader: local.port });
+
+    await adapter.readDocument({
+      companyId: COMPANY_ID,
+      mimeType: PNG_MIME,
+      body: PNG_BYTES,
+    });
+
+    expect(aiClientBuild.spy, "default_client_builds").toHaveBeenCalledTimes(1);
+    const calls = aiClientBuild.spy.mock.calls as unknown[][];
+    const config = (calls[0]?.[0] ?? {}) as Readonly<Record<string, unknown>>;
+    expect(config["provider"], "default_provider_route").toBe("vertex");
+    expect(config["project"], "default_project").toBe(FAKE_PROJECT_ID);
+    expect(config["location"], "default_location").toBe(FAKE_LOCATION);
+    for (const key of FORBIDDEN_CLIENT_CONFIG_KEYS) {
+      expect(Object.keys(config), `forbidden_config_key:${key}`).not.toContain(
+        key,
+      );
+    }
+    expect(client.recorded.length, "default_client_calls").toBe(1);
+    draftContractCounts.defaultRouteRows += 1;
+    fakeModelCalls += client.recorded.length;
+  });
+
+  it("throws on a blank or absent model id before any model call", async () => {
+    await loadForRow();
+    const build = buildAdapter({ payee: "Fake Vendor" });
+    try {
+      vi.stubEnv("ACCOUNTING_EXTRACTION_MODEL", "   ");
+      await expect(
+        build.adapter.readDocument({
+          companyId: COMPANY_ID,
+          mimeType: PNG_MIME,
+          body: PNG_BYTES,
+        }),
+      ).rejects.toThrow(/extraction model id is not configured/u);
+      expect(build.client.recorded.length, "blank_model_id_client_calls").toBe(
+        0,
+      );
+      draftContractCounts.blankModelIdCases += 1;
+
+      vi.stubEnv("ACCOUNTING_EXTRACTION_MODEL", undefined);
+      await expect(
+        build.adapter.readDocument({
+          companyId: COMPANY_ID,
+          mimeType: JPEG_MIME,
+          body: JPEG_BYTES,
+        }),
+      ).rejects.toThrow(/extraction model id is not configured/u);
+      expect(build.client.recorded.length, "absent_model_id_client_calls").toBe(
+        0,
+      );
+      draftContractCounts.blankModelIdCases += 1;
+    } finally {
+      vi.stubEnv("ACCOUNTING_EXTRACTION_MODEL", FAKE_MODEL_ID);
+    }
+  });
+
   it("serves every model call with the fake provider", async () => {
     expect(routeCounts.localPaths, "local_paths").toBe(2);
     expect(routeCounts.modelPaths, "model_paths").toBe(3);
@@ -571,11 +832,31 @@ describe("document extraction adapter", () => {
       "provider_route_cases",
     ).toBeGreaterThanOrEqual(6);
     expect(fakeModelCalls).toBeGreaterThanOrEqual(routeCounts.modelPaths);
+    expect(
+      draftContractCounts.schemaKeys,
+      "draft_schema_keys",
+    ).toBeGreaterThanOrEqual(INTAKE_DRAFT_KEYS.length);
+    expect(
+      draftContractCounts.contractCases,
+      "draft_contract_cases",
+    ).toBeGreaterThanOrEqual(5);
+    expect(
+      draftContractCounts.adversarialRows,
+      "adversarial_rows",
+    ).toBeGreaterThanOrEqual(1);
+    expect(
+      draftContractCounts.defaultRouteRows,
+      "default_route_rows",
+    ).toBeGreaterThanOrEqual(1);
+    expect(
+      draftContractCounts.blankModelIdCases,
+      "blank_model_id_cases",
+    ).toBeGreaterThanOrEqual(2);
 
     const realModelCalls = networkCalls.length;
     // eslint-disable-next-line no-console -- the log carries the labeled counts
     console.log(
-      `=== document-extraction labels === local_paths=${routeCounts.localPaths} model_paths=${routeCounts.modelPaths} provider_route_cases=${routeCounts.providerRouteCases} real_model_calls=${realModelCalls} fake_model_calls=${fakeModelCalls}`,
+      `=== document-extraction labels === local_paths=${routeCounts.localPaths} model_paths=${routeCounts.modelPaths} provider_route_cases=${routeCounts.providerRouteCases} real_model_calls=${realModelCalls} fake_model_calls=${fakeModelCalls} draft_schema_keys=${draftContractCounts.schemaKeys} draft_contract_cases=${draftContractCounts.contractCases} adversarial_rows=${draftContractCounts.adversarialRows} default_route_rows=${draftContractCounts.defaultRouteRows} blank_model_id_cases=${draftContractCounts.blankModelIdCases}`,
     );
     expect(realModelCalls, "real_model_calls").toBe(0);
     expect(fakeFetch, "network stub").not.toHaveBeenCalled();
