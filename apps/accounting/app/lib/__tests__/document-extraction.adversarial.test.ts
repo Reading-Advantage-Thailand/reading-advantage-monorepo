@@ -9,13 +9,14 @@
  * provider that is not vertex. It also carries the B411 rows of
  * `measure/runs/accounting_drive_intake_20261109/review-b-p4-7a8933fd8.json`:
  * the prompt tells the model to return an empty string for every field it
- * cannot read, but the currency enum (`THB`, `USD`, `JPY`) rejects `""`.
+ * cannot read. Fix b87840c3f accepts `""` on the flat currency key. The two
+ * X411 rows pass now. New boundary rows pin the fix edge.
  *
  * Expected behavior (spec section 5.3): "A value the model cannot read on an
  * image stays empty." Expected behavior (plan task 4.3): "a value the model
- * returns empty stays empty". Two rows of this file fail on the currency
- * enum and stay failing. They are marked `KNOWN DEFECT X411`. No row calls a
- * real model, opens the network, or reads a credential.
+ * returns empty stays empty". Only `""` counts as empty. The money pair key
+ * keeps the settled enum. No row calls a real model, opens the network, or
+ * reads a credential.
  */
 
 import {
@@ -166,13 +167,13 @@ describe("document extraction adversarial rows", () => {
     adversarialCounts.emptyRows += 1;
   });
 
-  it("X411 KNOWN DEFECT: keeps an empty currency with extraction model", async () => {
+  it("X411 fixed: keeps an empty currency with extraction model", async () => {
     // Spec section 5.3: a value the model cannot read stays empty. Plan task
     // 4.3: a value the model returns empty stays empty. The prompt tells the
     // model to return "" for every unreadable field, so an unreadable
     // currency arrives as "". This row expects the draft to resolve with
-    // extraction "model" and currency "". It fails: the currency enum
-    // rejects "" and the read throws with no draft. See Review B r2 B411.
+    // extraction "model" and currency "". Fix b87840c3f accepts "" on the
+    // flat key. See Review B r2 B411.
     const { adapter, client } = buildModelOnlyAdapter({
       payee: "Fake Vendor",
       amountMinor: "10000",
@@ -191,11 +192,11 @@ describe("document extraction adversarial rows", () => {
     adversarialCounts.emptyRows += 1;
   });
 
-  it("X411 KNOWN DEFECT: keeps an all-empty draft with extraction model", async () => {
+  it("X411 fixed: keeps an all-empty draft with extraction model", async () => {
     // The prompt asks for an empty string for every field the model cannot
     // read. A blank image therefore arrives as all empty strings. This row
     // expects the draft to resolve with extraction "model" and every value
-    // empty. It fails on the currency enum for the same X411 cause.
+    // empty. Fix b87840c3f accepts "" on the flat currency key.
     const { adapter, client } = buildModelOnlyAdapter({
       kind: "",
       payee: "",
@@ -261,6 +262,152 @@ describe("document extraction adversarial rows", () => {
     }
     fakeModelCalls += client.recorded.length;
     adversarialCounts.outOfSchemaRows += 1;
+  });
+
+  it("rejects a whitespace-only model currency", async () => {
+    // Spec 5.3 counts only "" as empty. Plan 4.3 keeps "" empty.
+    // Spaces are not "" and not settled. The read must fail.
+    const { adapter, client } = buildModelOnlyAdapter({
+      payee: "Fake Vendor",
+      amountMinor: "10000",
+      currency: "   ",
+    });
+
+    const outcome = await adapter
+      .readDocument({ companyId: COMPANY_ID, mimeType: PNG_MIME, body: PNG_BYTES })
+      .then(
+        (value) => ({ ok: true as const, value }),
+        (error: unknown) => ({ ok: false as const, error }),
+      );
+
+    expect(client.recorded.length, "out_of_schema_client_calls").toBe(1);
+    expect(outcome.ok, "whitespace_currency_rejected").toBe(false);
+    if (outcome.ok === false) {
+      expect(outcome.error, "out_of_schema_error").toBeInstanceOf(Error);
+    }
+    fakeModelCalls += client.recorded.length;
+    adversarialCounts.outOfSchemaRows += 1;
+  });
+
+  it("rejects a lower-case model currency", async () => {
+    // The enum holds upper-case codes only. Plan 4.3 keeps "" empty.
+    // Lower-case "thb" is not "" and not settled. The read must fail.
+    const { adapter, client } = buildModelOnlyAdapter({
+      payee: "Fake Vendor",
+      amountMinor: "10000",
+      currency: "thb",
+    });
+
+    const outcome = await adapter
+      .readDocument({ companyId: COMPANY_ID, mimeType: PNG_MIME, body: PNG_BYTES })
+      .then(
+        (value) => ({ ok: true as const, value }),
+        (error: unknown) => ({ ok: false as const, error }),
+      );
+
+    expect(client.recorded.length, "out_of_schema_client_calls").toBe(1);
+    expect(outcome.ok, "lowercase_currency_rejected").toBe(false);
+    if (outcome.ok === false) {
+      expect(outcome.error, "out_of_schema_error").toBeInstanceOf(Error);
+    }
+    fakeModelCalls += client.recorded.length;
+    adversarialCounts.outOfSchemaRows += 1;
+  });
+
+  it("rejects a model currency with a leading space", async () => {
+    // The enum needs an exact match. Plan 4.3 keeps "" empty.
+    // " THB" is not "" and not settled. The read must fail.
+    const { adapter, client } = buildModelOnlyAdapter({
+      payee: "Fake Vendor",
+      amountMinor: "10000",
+      currency: " THB",
+    });
+
+    const outcome = await adapter
+      .readDocument({ companyId: COMPANY_ID, mimeType: PNG_MIME, body: PNG_BYTES })
+      .then(
+        (value) => ({ ok: true as const, value }),
+        (error: unknown) => ({ ok: false as const, error }),
+      );
+
+    expect(client.recorded.length, "out_of_schema_client_calls").toBe(1);
+    expect(outcome.ok, "spaced_currency_rejected").toBe(false);
+    if (outcome.ok === false) {
+      expect(outcome.error, "out_of_schema_error").toBeInstanceOf(Error);
+    }
+    fakeModelCalls += client.recorded.length;
+    adversarialCounts.outOfSchemaRows += 1;
+  });
+
+  it("rejects a great-length model currency", async () => {
+    // A long string is not "" and not settled. The read must fail.
+    // Spec 5.3 leaves it empty only as "". Plan 4.3 keeps "" empty.
+    const longCurrency = "THB".repeat(200);
+    const { adapter, client } = buildModelOnlyAdapter({
+      payee: "Fake Vendor",
+      amountMinor: "10000",
+      currency: longCurrency,
+    });
+
+    const outcome = await adapter
+      .readDocument({ companyId: COMPANY_ID, mimeType: PNG_MIME, body: PNG_BYTES })
+      .then(
+        (value) => ({ ok: true as const, value }),
+        (error: unknown) => ({ ok: false as const, error }),
+      );
+
+    expect(client.recorded.length, "out_of_schema_client_calls").toBe(1);
+    expect(outcome.ok, "long_currency_rejected").toBe(false);
+    if (outcome.ok === false) {
+      expect(outcome.error, "out_of_schema_error").toBeInstanceOf(Error);
+    }
+    fakeModelCalls += client.recorded.length;
+    adversarialCounts.outOfSchemaRows += 1;
+  });
+
+  it("keeps an empty amountMinor with a valid currency", async () => {
+    // Spec 5.3: an unreadable value stays empty. Plan 4.3: it stays empty.
+    // An empty amountMinor with currency THB must resolve as model.
+    const { adapter, client } = buildModelOnlyAdapter({
+      payee: "Fake Vendor",
+      amountMinor: "",
+      currency: "THB",
+    });
+
+    const result = await adapter.readDocument({
+      companyId: COMPANY_ID,
+      mimeType: PNG_MIME,
+      body: PNG_BYTES,
+    });
+
+    expect(result.extraction).toBe("model");
+    expect(result.draft["amountMinor"]).toBe("");
+    expect(result.draft["currency"]).toBe("THB");
+    fakeModelCalls += client.recorded.length;
+    adversarialCounts.emptyRows += 1;
+  });
+
+  it("keeps a flat currency with a different money pair currency", async () => {
+    // Both keys are valid enums here. The schema holds both keys.
+    // The backend prefers the pair. The adapter must resolve both.
+    const { adapter, client } = buildModelOnlyAdapter({
+      payee: "Fake Vendor",
+      amountMinor: "10000",
+      currency: "THB",
+      money: { amountMinor: "10000", currency: "USD" },
+    });
+
+    const result = await adapter.readDocument({
+      companyId: COMPANY_ID,
+      mimeType: PNG_MIME,
+      body: PNG_BYTES,
+    });
+
+    expect(result.extraction).toBe("model");
+    expect(result.draft["currency"]).toBe("THB");
+    expect(result.draft["money"]).toEqual({ amountMinor: "10000", currency: "USD" });
+    fakeModelCalls += client.recorded.length;
+    adversarialCounts.emptyRows += 1;
   });
 
   it("passes a hostile payee value through verbatim with no file access", async () => {
