@@ -25,6 +25,14 @@ scope here.
 `{ plugin as shadcn }` and six rules. The gate runs it through the ESLint programmatic API at warn
 level.
 
+`apps/www-reading-advantage` already uses the package at `0.2.0` in its own ESLint config. The root
+`package.json` adds `^0.2.5` for the gate. The lockfile keeps both versions, so the www rules and
+their results do not change.
+
+The gate imports `eslint` and `@typescript-eslint/parser` from the root store. pnpm hoists both
+through its default `public-hoist-pattern`. A missing module makes the gate exit 2 with a message,
+not pass with a zero count.
+
 ## Ratchet rule
 
 ### Lint warnings

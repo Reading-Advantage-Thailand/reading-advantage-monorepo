@@ -48,11 +48,11 @@ Author model: opencode-go/deepseek-v4.1-flash
     `local copies went up: baseline 36, current 37, delta +1`, exit 1. The file is removed.
   - After the remove: exit 0, 36 copies.
   - Selector: `node scripts/ci/affected-apps.mjs --base 3de3846cff9211bf7b0baab1e7907d6a4ff6a610
-    --head ff0faf7abf8b40842cd7c5e2cb4e861efe2c8d4c`, exit 0.
+    --head 2128d192d57525d7a285d2b16d06399de4aad711`, exit 0.
     Output: `["accounting","accounts","codecamp-advantage","marketing","primary-advantage",
     "reading-advantage","sales-advantage","storytime","workbooks","www-reading-advantage"]`.
     The lockfile change reaches most rows, so the orchestrator does not push this branch under the
-    PM rule.
+    PM rule. The commits after that head change measure files only, so the list does not move.
   - Full `CI=true pnpm exec vitest run scripts/ci`: 223 of 224 pass. The one failure is
     `W-23 every CD workflow action uses a pinned commit SHA` in `cd-workflows.test.mjs`. It reads
     `cd-www-reading-advantage.yml`, which holds `pnpm/action-setup@v4` at line 93. This track does
