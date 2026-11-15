@@ -234,8 +234,8 @@ const forbiddenCurriculumClaims = [
 const canonicalProductListClaims = Object.freeze([
   "- **Live:** Primary Advantage, Tutor Advantage, and CodeCamp Advantage (adult bootcamp).",
   "- **Reading Advantage:** not offered to schools now; its books are now in Tutor Advantage classes.",
-  "- **Science, Math, and Zhongwen Advantage (Q-PR-24):** each is its own app, built from the Primary Advantage base app. Show them at the visit. No date.",
-  "- **K–6 offer, no date:** Storytime Advantage for Anuban 2 to P2 is part of the K–6 offer shown at the visits.",
+  "- **Each its own app, built from the Primary Advantage base app, aimed at primary schools in the 2027 school year:** Science, Math, and Zhongwen Advantage. Show them at the visit. Give no other date.",
+  "- **K–6 offer:** Storytime Advantage for Anuban 2 to P2 is part of the K–6 offer shown at the visits. It goes live in November 2026; give no exact day.",
   "- **Planned, no date:** STEM Advantage.",
   "Do not give a date for any of these lines.",
 ]);
@@ -505,16 +505,23 @@ const retiredManagedServiceCondition = /(?:1[\s-]*2|one or two) more schools/;
 
 /**
  * Detects a product lifecycle statement that conflicts with the 2027 strategy.
- * Planned lines (Science, Math, Zhongwen, Storytime, STEM) have no date and are
- * not live; Tutor Advantage is not beta; CodeCamp Advantage is not coming; no
- * product gets a launch year; and the retired Managed Service condition is
- * banned.
+ * Planned lines (Science, Math, Zhongwen, Storytime, STEM) may state only the
+ * three public dates of the scope doc Dates paragraph: the May 2027 line, the
+ * 2027 school year, and November 2026. Any other year or month, and any
+ * not-negated live claim without a public date, conflicts. Tutor Advantage is
+ * not beta; CodeCamp Advantage is not coming; no other product gets a launch
+ * year; and the retired Managed Service condition is banned.
  * @param statements Normalized curriculum claim statements.
  * @returns Whether a statement gives a product a conflicting state or date.
  */
 function hasConflictingProductStatus(statements: readonly string[]): boolean {
   const negated = /\b(?:no|not|never|without|don't|do not)\b/;
   const year = /\b20\d\d\b/;
+  const otherMonth =
+    /\b(?:january|february|march|april|june|july|august|september|october|november|december)\b/;
+  const publicDate = /(?:may 2027|2027 school year|november 2026)/g;
+  const liveClaim =
+    /\b(?:available|live|launch(?:es|ed|ing)?|release(?:s|d)?|beta|on sale|coming (?:soon|early|late|mid|in|next))\b/;
   return statements.some((statement) => {
     if (retiredManagedServiceCondition.test(statement)) {
       return true;
@@ -522,15 +529,15 @@ function hasConflictingProductStatus(statements: readonly string[]): boolean {
     const plannedLine =
       /\b(?:science|math|zhongwen|storytime|stem)\b(?:[\s,]+(?:and|or)?\s*(?:science|math|zhongwen|storytime|stem)\b)*\s+advantage\b/
         .test(statement);
-    if (
-      plannedLine &&
-      (year.test(statement) || (
-        !negated.test(statement) &&
-        /\b(?:available|live|launch(?:es|ed|ing)?|release(?:s|d)?|beta|on sale|coming (?:soon|early|late|mid|in|next))\b/
-          .test(statement)
-      ))
-    ) {
-      return true;
+    if (plannedLine) {
+      const rest = statement.replace(publicDate, " ");
+      const holdsPublicDate = rest !== statement;
+      if (year.test(rest) || otherMonth.test(rest)) {
+        return true;
+      }
+      if (!holdsPublicDate && !negated.test(statement) && liveClaim.test(statement)) {
+        return true;
+      }
     }
     if (statement.includes("tutor advantage") && /\bbeta\b/.test(statement)) {
       return true;
