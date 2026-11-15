@@ -9,7 +9,7 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import GithubSlugger from "github-slugger";
 import { BlogPost, BlogListItem } from "@/types/blog";
-import { remarkBlogBlocks } from "@/lib/blog-blocks";
+import { isBlogBlock, remarkBlogBlocks } from "@/lib/blog-blocks";
 
 const postsBaseDirectory = path.join(
   process.cwd(),
@@ -315,8 +315,53 @@ export const getAllPosts = getAllBlogPosts;
 
 export function calculateReadingTime(content: string): number {
   const wordsPerMinute = 200;
-  const words = content.trim().split(/\s+/).length;
-  return Math.ceil(words / wordsPerMinute);
+  const text = readableBlogText(content);
+  // Thai writes many words without spaces, so count Thai characters. Six characters
+  // are about one Thai word, counting the vowel and tone marks.
+  const thaiCharacters = (text.match(/[\u0E00-\u0E7F]/g) ?? []).length;
+  const latinWords = text
+    .replace(/[\u0E00-\u0E7F]/g, " ")
+    .split(/\s+/)
+    .map((token) => token.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, ""))
+    .filter((token) => token.length > 0).length;
+  const words = latinWords + Math.ceil(thaiCharacters / 6);
+  return Math.max(1, Math.ceil(words / wordsPerMinute));
+}
+
+/** Block keys whose values are not prose, per block type. */
+const NON_PROSE_BLOCK_KEYS: Record<string, Set<string>> = {
+  figure: new Set(["src", "alt"]),
+  youtube: new Set(["id", "title"]),
+  video: new Set(["src", "poster", "title"]),
+  gallery: new Set(["image"]),
+  pullquote: new Set(),
+  callout: new Set(["type"]),
+};
+
+/**
+ * Keeps the text a reader reads and drops rich block keys, paths, alt text, and labels.
+ * Figure captions, callout titles, pull quotes, and callouts stay in the text.
+ * @param content The Markdown body of a post.
+ * @returns The readable text, with code fences and non-prose block lines removed.
+ */
+function readableBlogText(content: string): string {
+  const kept: string[] = [];
+  let block: string | null = null;
+  for (const line of content.split("\n")) {
+    const fence = line.match(/^\s*```\s*([\w-]*)\s*$/);
+    if (fence) {
+      block = block === null && isBlogBlock(fence[1]) ? fence[1] : null;
+      continue;
+    }
+    if (block === null) {
+      kept.push(line);
+      continue;
+    }
+    const pair = line.match(/^\s*([A-Za-z][\w-]*)\s*:\s*(.*)$/);
+    if (!pair) continue;
+    if (!NON_PROSE_BLOCK_KEYS[block].has(pair[1].toLowerCase())) kept.push(pair[2]);
+  }
+  return kept.join("\n");
 }
 
 export interface PaginatedPosts {

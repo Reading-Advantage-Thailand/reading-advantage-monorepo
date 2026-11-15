@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   calculateReadingTime,
+  getBlogPost,
   getPaginatedPosts,
   extractHeadings,
   getRelatedPosts,
@@ -20,6 +21,54 @@ describe("calculateReadingTime", () => {
     const words = Array(1000).fill("word").join(" ");
     const result = calculateReadingTime(words);
     expect(result).toBe(5);
+  });
+
+  it("counts a figure caption and ignores its keys, path, and alt text", () => {
+    const content = [
+      Array(180).fill("word").join(" "),
+      "",
+      "```figure",
+      "src: /blog/example.webp",
+      `alt: ${Array(400).fill("alt").join(" ")}`,
+      `caption: ${Array(20).fill("caption").join(" ")}`,
+      "```",
+    ].join("\n");
+    // 180 prose words plus 20 caption words make 200, so the result is 1.
+    expect(calculateReadingTime(content)).toBe(1);
+  });
+
+  it("counts pull quote and callout text", () => {
+    const content = [
+      Array(190).fill("word").join(" "),
+      "```pullquote",
+      `text: ${Array(6).fill("quote").join(" ")}`,
+      "cite: A teacher",
+      "```",
+      "```callout",
+      "type: tip",
+      `text: ${Array(4).fill("note").join(" ")}`,
+      "```",
+    ].join("\n");
+    // 190 prose + 6 quote + 2 cite + 4 note = 202 words.
+    expect(calculateReadingTime(content)).toBe(2);
+  });
+
+  it("keeps the reading time of a plain 550-word post", () => {
+    const words = Array(550).fill("word").join(" ");
+    expect(calculateReadingTime(words)).toBe(3);
+  });
+
+  it("counts Thai script that has no spaces between words", () => {
+    const thai = Array(300).fill("แมวกินปลา").join("");
+    // 3000 Thai characters are about 500 words, so the result is 3.
+    expect(calculateReadingTime(thai)).toBe(3);
+  });
+
+  it("gives the daily post a realistic reading time in en and th", async () => {
+    const en = await getBlogPost("a-five-year-old-reads-by-herself", "en");
+    const th = await getBlogPost("a-five-year-old-reads-by-herself", "th");
+    expect(en?.readingTime).toBe(3);
+    expect(th?.readingTime).toBe(3);
   });
 
   it("handles empty string", () => {

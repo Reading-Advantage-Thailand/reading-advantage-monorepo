@@ -8,6 +8,10 @@ Track: `www_daily_blog_posts_20261115` (light lane). One task per post.
   hand-off manifest, write the en and th posts, copy the four images to `public/blog/`, run the
   gates (blog tests, www build, local render captures), push, watch the www CD, and capture the
   live pages. `a6641da7e`.
+- [x] 1.2 Fault: the reading time ignored the prose inside rich blocks and Thai script, so the daily
+  post showed 4 min in en and 1 min in th. `calculateReadingTime` now counts figure captions,
+  callout titles and text, and pull quotes, skips block keys, paths, alt text, and screen-reader
+  titles, and counts Thai characters without spaces. Red tests first, then green.
 
 ## Gate record (2026-11-15)
 
