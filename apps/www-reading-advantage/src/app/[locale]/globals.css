@@ -581,6 +581,24 @@ main {
   animation-delay: var(--delay);
 }
 
+/*
+ * Entrance utilities (tw-animate-css) start at opacity 0. Marketing content,
+ * including product images, must stay visible while the slide and zoom motion
+ * plays (A-59). Unlayered rules win over the layered fade-in utility.
+ */
+.animate-in {
+  --tw-enter-opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-in {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+  }
+}
+
 @utility parallax-bg {
   transform: translateY(var(--parallax-y, 0px)) scale(1.1);
 }

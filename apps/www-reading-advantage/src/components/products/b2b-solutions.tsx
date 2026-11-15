@@ -322,7 +322,7 @@ export default async function B2BSolutions() {
                           alt="Blended learning approach"
                           fill
                           sizes="(min-width: 1024px) 25vw, 100vw"
-                          className="object-cover opacity-75 blur-sm"
+                          className="object-cover"
                         />
                       </div>
                       <div className="absolute inset-0 z-10 bg-gradient-to-br from-white/40 to-white/20" />
