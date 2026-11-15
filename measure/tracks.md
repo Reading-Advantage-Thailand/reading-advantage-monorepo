@@ -46,7 +46,7 @@ This file tracks all major tracks for the project.
 
 - [~] **Track: www daily blog posts of PR** — *created 2026-11-15*
   *Link: [./tracks/www_daily_blog_posts_20261115/](./tracks/www_daily_blog_posts_20261115/)*
-  *Status: active, light lane; one task per post; the track stays open for later daily posts | Owner: Monorepo orchestrator | PM task A-61 follow-up*
+  *Status: active, light lane; post 2026-11-15 (`a-five-year-old-reads-by-herself`) live; one task per post; the track stays open for later daily posts | Owner: Monorepo orchestrator | PM task A-61 follow-up*
   *Note: PR's daily posts in en and th, written from `apps/www-reading-advantage/docs/blog-post-format.md` (track `www_blog_rich_format_20261115`). www-only push is standing-approved (Daniel 2026-11-15).*
 
 - [x] **Track: Primary class code: six hours** — *created 2026-11-12*
