@@ -849,3 +849,59 @@ describe("S2 adversarial round 5 - the r3 nearest-binding and block-carry attack
     );
   });
 });
+
+// Round 6 (r4): the Green r9 change (every product of a dated statement holds
+// a license for its nearest date; a block-opening pronoun carries the block
+// before it). The F8 to F12 rows above pass now and stay unchanged. F15
+// records the remaining gap: a trailing public date that binds to no mention
+// escapes every check.
+describe("S2 adversarial round 6 - the r4 nearest-date and block-back-carry probes", () => {
+  // Controls: the r9 behavior this round must keep. Each rejects.
+  it.each([
+    // A tie binds both dates, so the unlicensed one fails the statement.
+    "November 2026 plus Science Advantage plus the 2027 school year.",
+    // A date in a parenthesis still binds its nearest product.
+    "(November 2026) Science Advantage is aimed at the 2027 school year.",
+    // A three-product union still licenses nothing for Storytime.
+    "Science, Math, and Storytime Advantage start in the 2027 school year.",
+    // The May 2027 line still licenses no planned product.
+    "STEM Advantage and Primary Advantage Quest 4 are aimed at May 2027.",
+    // A block-opening pronoun carries the paragraph before the list.
+    "Storytime Advantage is part of the K-6 offer.\n\n- It goes live in December 2026.",
+    // A block-opening pronoun carries the list before the paragraph.
+    "- Science Advantage is aimed at the 2027 school year.\n\nIt launches in 2028.",
+  ])("still rejects: %s", (probe) => {
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status/,
+    );
+  });
+
+  // Controls: legitimate lines the r9 fix must not over-block. Each accepts.
+  it.each([
+    // Two licensed dates in two statements of one line.
+    "Science Advantage is aimed at the 2027 school year; Storytime Advantage goes live in November 2026.",
+    // A product word in a parenthesis changes no binding.
+    "Science Advantage (planned) is aimed at the 2027 school year.",
+  ])("still accepts: %s", (probe) => {
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).not.toThrow();
+  });
+
+  // F15 [Blocker, time-boxed]: a second public date in the same statement
+  // binds to no mention when the product sits nearer the first date. No
+  // check sees the extra date, so a wrong date for a planned product passes.
+  // The time box keeps Green off this fix: each case is it.fails with its
+  // reason, and the finding routes to a tech-debt row.
+  for (const probe of [
+    "Science Advantage is aimed at the 2027 school year and November 2026.",
+    "Storytime Advantage goes live in November 2026 and the 2027 school year.",
+    "Math Advantage is planned for the 2027 school year and November 2026.",
+    "Science Advantage is aimed at the 2027 school year, November 2026, and May 2027.",
+  ]) {
+    it.fails(`F15 rejects a trailing date with no bound mention: ${JSON.stringify(probe)}`, () => {
+      const mutated = withExtraParagraph(probe);
+      expect(() => buildCurriculumAutomatedReview(mutated)).toThrow(
+        /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID/,
+      );
+    });
+  }
+});
