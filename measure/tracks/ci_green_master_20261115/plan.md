@@ -58,3 +58,53 @@ Track: `ci_green_master_20261115` (light lane).
   re-record at `ec573d635` lost the ink: the cd155425b captures held 46577, 21083, and 21082
   pixels. Needs a capture re-record or a product check; not a CI or lint config fix.
 - PC-5 waits behind PC-4: root `pnpm lint` fails on `primary-advantage#lint` (13 errors).
+
+## PM decisions of 2026-11-15 and the round-2 outcome
+
+- **Ledger.** `packages/architecture-enforcement/src/config/baselines/debt-ledger.v1.json`
+  sits beside the v1 baselines. It holds `totalAdditions: 337`, `countsByModule`, and the
+  full addition list. Largest module: `apps/primary-advantage` with 144 additions.
+- **Ratchet.** The check already ratchets through `compareArchitectureDebt` in
+  `packages/architecture-enforcement/src/ratchet.ts`: any addition returns `new-debt` and
+  exit 1, tested by `ratchet.test.ts` and `ratchet.red.test.ts`. The live check fails today
+  with `new-debt (additions=337)`, which proves the ratchet from the current baseline. No
+  new ratchet code was added, because the existing mechanism already fails on an increase.
+- **PC-4 re-baseline: stopped by the repo's own freeze, reported to the PM.** The PM order
+  was "re-baseline now with the repo's own baseline command". The command exists
+  (`pnpm architecture:baseline:update`) but every write route is closed by design:
+  1. Policy v1 baselines are frozen. `writeArchitectureBaselines` rejects the v1 paths, and
+     `V1_ARTIFACT_BINDINGS` in `v1-validation.ts` pins their bytes. Every policy selection
+     re-checks those bytes as Gate 1.
+  2. Policy v2 baselines must mirror v1 entries. `validateArtifactFamilySync` throws
+     `database v2 baseline entries differ from v1` when they move apart.
+  3. The four-file `architecture:reconcile` route fails at HEAD with
+     `Reconciliation exact exception already exists: AI_PROVIDER_BOUNDARY
+     packages/ai/src/__tests__/phase-11-sdk-v2-call-shape.test.ts`. Its exact-set
+     assertion also cannot hold while removals and renames exist.
+  4. The repo's own strategy doc asks this question as Q11
+     (`measure/tracks/architecture_ci_input_pin_20261110/test-strategy.md`): route (c),
+     changing `acceptedSha256`, is a source and hash change, and the Hashing and
+     Provenance Policy forbids it. The doc advises routes (a) and (b) and holds task 1.4d.
+  A v2 write path with a test was implemented, run, and reverted (`a50dc2173`,
+  `a3474aee5`, reverted by `d05b252fd`, `f3db21376`) because it broke the v1-to-v2 mirror
+  and made the whole check fail. No hash was added or widened.
+- **PC-5: fixed on branch `ci/primary-lint`, commit `39649dca8`, pushed to origin.** The
+  branch merges with the next Primary deploy; a master push would deploy Primary, and that
+  deploy belongs to the team. Gates on the branch: primary lint 0 errors, check-types exit
+  0, the rehearsal test and the safe-callback-path tests pass. The branch fixes 11 errors
+  with eslint config entries (legacy service-worker fixture ignore, PWA fixture server
+  Node globals), 1 error with an identical charCode loop in `lib/safe-callback-path.ts`,
+  and 1 error by naming the lesson card mock component. Master keeps the 13 errors as a
+  known failure of the main CI job until the branch merges.
+- **PC-6: diagnosed, not fixed, reported.** The primary page revamp (merged `7db52a49d`,
+  2026-11-03) and the storytime page revamp (2026-11-03/04) changed the product page
+  logos. The Oct-27 ink threshold of 1000 exact-color pixels predates them. Evidence: the
+  old primary capture held 21082 exact and 52360 tolerant pixels of `#155e75`; the current
+  page holds 267 exact and 20273 tolerant. The old storytime capture held 46577 exact and
+  69368 tolerant of `#92400e`; the current page holds 88 exact and 3635 tolerant. A full
+  re-record on 2026-11-15 reproduced the same three counts, so the environment is not the
+  cause, and it broke the tutor pair test by timing (0 differing pixels), so the re-record
+  was reverted. The threshold or the page design needs a www owner decision; a threshold
+  change is a test change, not a CI or lint config change.
+- **Follow-up task, deferred to a later owner:** cut the additions of the largest module
+  first: `apps/primary-advantage`, 144 additions of the 337 in `debt-ledger.v1.json`.
