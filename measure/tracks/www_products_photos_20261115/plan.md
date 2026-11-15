@@ -6,7 +6,7 @@ Revised by: opencode-go/deepseek-v4.1-flash (spec review r1 fixes)
 
 ## Phase 1: Photo checks, then the remaining fixes
 
-- [x] 1.1 Red: write the AC-1 e2e, the AC-2 unit test, and the AC-3 wiring. The wiring has two parts:
+- [x] 1.1 Red: write the AC-1 e2e, the AC-2 unit test, and the AC-3 wiring. The wiring has two parts: Done: `4c48a8b12`.
   the steps of the `ci.yml` job `affected` for `www-reading-advantage`, and the steps of
   `cd-www-reading-advantage.yml` before the deploy step. Prove each test by a failing run at
   `8193625ca^` (hero, product photos) and a failing run at HEAD for what is still wrong (the covered
@@ -37,7 +37,7 @@ Revised by: opencode-go/deepseek-v4.1-flash (spec review r1 fixes)
     `AssertionError: expected [ 'div.hidden' ] to deeply equal []`. The e2e pre-fix run was skipped to
     keep the run cost down. The unit test proves the hero regression. The product-picture case fails
     at HEAD for the Tutor section.
-- [x] 1.2 Green: fix what is still wrong (AC-4). The draft in the commit `8193625ca` stays.
+- [x] 1.2 Green: fix what is still wrong (AC-4). The draft in the commit `8193625ca` stays. Done: `b09e21f32`.
 
   Implementation commit `b09e21f32`. Role base `5f197fd99`; phase base `40419d4bc`.
   - Report-results card: the picture sits above the text in a flow layout, with no overlay. The
@@ -56,9 +56,9 @@ Revised by: opencode-go/deepseek-v4.1-flash (spec review r1 fixes)
     Captures are in `/tmp/opencode/a62-green/` (not committed).
   - Note: a stale `next start` from the Red run held port 3123 and served the old build in the
     first two gate runs. The Green gate run named above ran on a free port against the final tree.
-- [ ] 1.3 Review and live render check at 390, 980, 1024, and 1280 px, en and th. Look at each
+- [b] 1.3 Review and live render check at 390, 980, 1024, and 1280 px, en and th. Look at each — deferred:orchestrator-review-and-push
   capture. Every photo shows at least 85 percent.
-- [ ] 1.4 Push to www master (standing approval), watch the www CD run, and run the PM page check
+- [b] 1.4 Push to www master (standing approval), watch the www CD run, and run the PM page check — deferred:orchestrator-review-and-push
   (`scripts/jobs/page-check`) before Daniel gets the link.
 
 ## Test strategy
