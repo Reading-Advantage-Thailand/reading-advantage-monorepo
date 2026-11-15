@@ -17,7 +17,7 @@ Track: `www_blog_rich_format_20261115` (light lane).
 - [x] 1.5 Capture the sample post at 1280 px and 390 px and fix what looks wrong. Captures in
   `/tmp/opencode/a61/` (not in the repository). Horizontal overflow 0 px at both widths. The
   full-page capture does not paint the YouTube iframe; a viewport capture shows the player.
-- [~] 1.6 Run the gates (vitest files, lint, type check, production build), push to master, watch
+- [x] 1.6 Run the gates (vitest files, lint, type check, production build), push to master, watch
   the www deploy, and capture one live post at 1280 px and 390 px.
 
 ## Gate record (2026-11-15, head `ad8f8408d`)
@@ -29,3 +29,13 @@ Track: `www_blog_rich_format_20261115` (light lane).
   `public/experience/assets/` (tracked before this track). The touched files: 0 errors.
 - `pnpm --filter www-reading-advantage build` through heavy-run: exit 0.
 - `next start` check: the draft URL gives 404 in en and th; the list and page 2 do not name it.
+
+## Deploy record (2026-11-15)
+
+- Pushed `6e5f78fc4` to master. GitHub Actions run 43657768544 (CD — www-reading-advantage):
+  success.
+- CI run 43657768588: failure from causes that existed before this track (the lint errors in
+  `public/experience/assets/` and the architecture-check report hashes). CI also failed on
+  `ec573d635`.
+- Live: the draft URL gives 404 in en and th; `/en/blog` does not name it. The existing post
+  `/en/blog/the-forgetting-curve` renders at 1280 px and 390 px with 0 px horizontal overflow.
