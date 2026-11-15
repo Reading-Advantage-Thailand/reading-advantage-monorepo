@@ -82,10 +82,24 @@ Revised by: opencode-go/deepseek-v4.1-flash (spec review r1 fixes)
     Captures are in `/tmp/opencode/a62-green/` (not committed).
   - Note: a stale `next start` from the Red run held port 3123 and served the old build in the
     first two gate runs. The Green gate run named above ran on a free port against the final tree.
-- [b] 1.3 Review and live render check at 390, 980, 1024, and 1280 px, en and th. Look at each — deferred:orchestrator-review-and-push
+- [x] 1.3 Review and live render check at 390, 980, 1024, and 1280 px, en and th. Look at each — Done: `ac1e54efd`.
   capture. Every photo shows at least 85 percent.
-- [b] 1.4 Push to www master (standing approval), watch the www CD run, and run the PM page check — deferred:orchestrator-review-and-push
+  - Live check 2026-11-15 on https://www.reading-advantage.com after the deploy (14:06:58Z):
+    `/en/products` and `/th/products`, 4 widths, 80 photo rows, all pass: visible share 100
+    percent, text overlap 0 percent, every naturalWidth > 0. Captures and `live-table.json` are in
+    `~/Desktop/handoff/products-page-2026-11-15/after2/` (not committed). The home pages `/en`
+    and `/th` also ran: the `texture-warm` background (text sits on it by design) and the
+    `workbook-tablet-cutaway` photo at 1024 and 1280 px (84 percent visible) fall outside the
+    products limit. They go to the PM.
+- [x] 1.4 Push to www master (standing approval), watch the www CD run, and run the PM page check — Done: `ac1e54efd`.
   (`scripts/jobs/page-check`) before Daniel gets the link.
+  - Pushed `ac1e54efd` to master. CD run 43721191756: success in 15m25s. The photo e2e step
+    passed 56 of 56 before the deploy. CD apps run 43721191661: success.
+  - CI run 43721191676: "Check www-reading-advantage" failed in the unit-test step. The test
+    `src/lib/blog-blocks.test.ts` "renders every existing post the same as the old pipeline"
+    timed out at 5000 ms. The photo e2e steps in that job were skipped. No file of this track
+    touches that test.
+  - PM page check pending.
 
 ## Test strategy
 
