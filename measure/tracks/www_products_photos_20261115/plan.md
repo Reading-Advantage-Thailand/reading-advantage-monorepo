@@ -6,13 +6,14 @@ Revised by: opencode-go/deepseek-v4.1-flash (spec review r1 fixes)
 
 ## Phase 1: Photo checks, then the remaining fixes
 
-- [x] 1.1 Red: write the AC-1 e2e, the AC-2 unit test, and the AC-3 wiring. The wiring has two parts: Done: `4c48a8b12`.
+- [x] 1.1 Red: write the AC-1 e2e, the AC-2 unit test, and the AC-3 wiring. The wiring has two parts:
   the steps of the `ci.yml` job `affected` for `www-reading-advantage`, and the steps of
-  `cd-www-reading-advantage.yml` before the deploy step. Prove each test by a failing run at
-  `8193625ca^` (hero, product photos) and a failing run at HEAD for what is still wrong (the covered
-  photo, the Tutor section, the squeezed pictures at 1024 px, the home hero). The wiring fails on
-  current code, because the e2e that it runs fails there. Commit the tests and the failing runs
-  before any Green change.
+  `cd-www-reading-advantage.yml` before the deploy step. The proof is a failing e2e run at HEAD for
+  what is still wrong (the covered photo, the Tutor section, the squeezed pictures at 1024 px, the
+  home hero) and a failing hero unit test at `8193625ca^`. The pre-fix e2e run was skipped to keep
+  the run cost down, so the hero unit test is the pre-fix proof. The wiring fails on current code,
+  because the e2e that it runs fails there. Commit the tests and the failing runs before any Green
+  change. Commit `4c48a8b12`.
 
   Commit `4c48a8b12` holds the tests, the two workflows, and the AC-1 rule text. Evidence is in
   `measure/runs/www_products_photos_20261115/red-p1-40419d4bc.log`.
@@ -33,11 +34,23 @@ Revised by: opencode-go/deepseek-v4.1-flash (spec review r1 fixes)
   - `/services/blended-learning` passes at all four widths: its hero is a HeroSection floating image
     with no overlay. The covered instance of the same file sits on `/products` and fails there.
   - Unit test at HEAD: passes, because the hero fix is in `8193625ca`.
+  **Remediation r3 (Review A r1, dispositions R1=FIX F1=FIX F2=FIX F3=FIX).** Commit `415d172be`
+  adds the 10 percent text-overlap rule, the aspect and short-side rule for every
+  `/images/products/` picture and the report-results file, the broken-image rule, the two-signal
+  badge rule, and the home Mastery card rule for 390 px. This sub-line also corrects the proof line
+  above: the pre-fix e2e run was skipped.
+  - Command: `pnpm exec next start -p 3131`, then
+    `BASE_URL=http://localhost:3131 pnpm exec playwright test e2e/photos.spec.ts --reporter=list
+    --workers=2 --retries=0`, through `heavy-run.sh`. Exit 1.
+  - Failing cases: `home en 390 px` and `home th 390 px`. The Mastery card sits 23 percent from the
+    viewport centre and is 40 percent of the photo width. Every other case passes, so the Green
+    fixes meet the new 10 percent text rule.
+  - Evidence: `measure/runs/www_products_photos_20261115/red-p1-r3-d43334ba6.log`.
   - Pre-fix proof at `8193625ca^` (`705a9ad60`) in a temporary worktree: the hero unit test fails with
     `AssertionError: expected [ 'div.hidden' ] to deeply equal []`. The e2e pre-fix run was skipped to
     keep the run cost down. The unit test proves the hero regression. The product-picture case fails
     at HEAD for the Tutor section.
-- [x] 1.2 Green: fix what is still wrong (AC-4). The draft in the commit `8193625ca` stays. Done: `b09e21f32`.
+- [~] 1.2 Green: fix what is still wrong (AC-4). The draft in the commit `8193625ca` stays. Done: `b09e21f32`.
 
   Implementation commit `b09e21f32`. Role base `5f197fd99`; phase base `40419d4bc`.
   - Report-results card: the picture sits above the text in a flow layout, with no overlay. The
