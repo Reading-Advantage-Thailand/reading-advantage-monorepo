@@ -1,5 +1,4 @@
 import { createHash } from "node:crypto";
-import { resolve } from "node:path";
 import {
   checkArchitectureRepository,
   readArchitectureBaselines,
@@ -30,7 +29,6 @@ import {
 import { compareStableStrings } from "./stable-order.js";
 import { V1_ARTIFACT_BINDINGS } from "./v1-validation.js";
 import { V2_RECONCILIATION_DESTINATION_PATHS } from "./policy-write-guard.js";
-import { computeV2ManifestReviewSubjectSha256 } from "./v2-manifest-validation.js";
 
 /** Review metadata required to accept newly introduced architecture debt. */
 export interface NewDebtReviewMetadata {
@@ -228,22 +226,14 @@ function baselineSourceHash(baseline: ArchitectureBaseline): string {
     .digest("hex");
 }
 
-/** Computes the UTF-8 SHA-256 of exact text bytes. */
-function textSha256(value: string): string {
-  return createHash("sha256").update(value, "utf8").digest("hex");
-}
-
 /**
  * Replaces both baselines through the shared locked repository transaction.
- * When the configured baselines are the v2 reconciliation destinations, the same
- * transaction also rewrites the v2 manifest so its artifact hashes and review
- * subject stay bound to the new baseline bytes.
  * @param repoRoot Absolute repository root containing configured baselines.
  * @param config Validated policy containing distinct baseline paths.
  * @param currentBaselines Exact baselines from which replacements were derived.
  * @param baselines Complete database and provider replacements.
  * @param fileOperations Filesystem adapter used for staging and rollback.
- * @returns A promise resolved only after all replacements complete.
+ * @returns A promise resolved only after both replacements complete.
  * @throws When staging, replacement, cleanup, or rollback fails.
  */
 async function writeArchitectureBaselines(
@@ -263,73 +253,16 @@ async function writeArchitectureBaselines(
       );
     }
   }
-  const domains = ["database", "provider"] as const;
-  const v2Destinations = new Set<string>(V2_RECONCILIATION_DESTINATION_PATHS);
-  const targetsAnyV2 =
-    v2Destinations.has(config.baselineFiles.database) ||
-    v2Destinations.has(config.baselineFiles.provider);
-  const targetsV2Pair =
-    config.baselineFiles.database === V2_RECONCILIATION_DESTINATION_PATHS[2] &&
-    config.baselineFiles.provider === V2_RECONCILIATION_DESTINATION_PATHS[3];
-  if (targetsAnyV2 && !targetsV2Pair) {
-    const domain = v2Destinations.has(config.baselineFiles.database)
-      ? "database"
-      : "provider";
-    throw new Error(
-      `Architecture ${domain} baseline writes require the complete four-file reconciliation transaction`,
-    );
-  }
-  const serialized: Record<(typeof domains)[number], string> = {
-    database: serializeBaseline(baselines.database),
-    provider: serializeBaseline(baselines.provider),
-  };
-  const writesV2Manifest = targetsV2Pair;
-  const replacements: {
-    id: string;
-    repositoryPath: string;
-    contents: string;
-  }[] = domains.map((domain) => ({
-    id: `${domain}-baseline`,
-    repositoryPath: config.baselineFiles[domain],
-    contents: serialized[domain],
-  }));
-  let manifestBytes: string | undefined;
-  if (writesV2Manifest) {
-    const manifestPath = V2_RECONCILIATION_DESTINATION_PATHS[0];
-    manifestBytes = await fileOperations.readFile(
-      resolve(repoRoot, manifestPath),
-    );
-    const manifest = JSON.parse(manifestBytes) as Record<string, unknown>;
-    const v2Artifacts = manifest.v2Artifacts;
-    if (!Array.isArray(v2Artifacts)) {
-      throw new Error("v2 reconciliation manifest has no v2Artifacts list");
-    }
-    manifest.v2Artifacts = (
-      v2Artifacts as { path: string; sha256: string }[]
-    ).map((reference) => {
-      if (reference.path === config.baselineFiles.database) {
-        return { ...reference, sha256: textSha256(serialized.database) };
-      }
-      if (reference.path === config.baselineFiles.provider) {
-        return { ...reference, sha256: textSha256(serialized.provider) };
-      }
-      return reference;
-    });
-    manifest.reviewSubjectSha256 = computeV2ManifestReviewSubjectSha256(
-      manifest,
-    );
-    replacements.push({
-      id: "reconciliation-manifest",
-      repositoryPath: manifestPath,
-      contents: `${JSON.stringify(manifest, null, 2)}\n`,
-    });
-  }
   const plan = await previewRepositoryFileTransaction({
     repoRoot,
-    replacements,
+    replacements: (["database", "provider"] as const).map((domain) => ({
+      id: `${domain}-baseline`,
+      repositoryPath: config.baselineFiles[domain],
+      contents: serializeBaseline(baselines[domain]),
+    })),
     fileOperations,
   });
-  for (const [index, domain] of domains.entries()) {
+  for (const [index, domain] of (["database", "provider"] as const).entries()) {
     if (
       plan.replacements[index]?.beforeHash !==
       baselineSourceHash(currentBaselines[domain])
@@ -339,24 +272,12 @@ async function writeArchitectureBaselines(
       );
     }
   }
-  if (
-    manifestBytes !== undefined &&
-    plan.replacements[2]?.beforeHash !== textSha256(manifestBytes)
-  ) {
-    throw new Error(
-      "v2 reconciliation manifest changed after analysis; rerun the update preview",
-    );
-  }
   const outcome = await applyRepositoryFileTransaction({
     plan,
     acknowledge: true,
     expectedPlanHash: plan.planHash,
     fileOperations,
-    validate: (replacement, contents) => {
-      if (replacement.id === "reconciliation-manifest") {
-        JSON.parse(contents);
-        return;
-      }
+    validate: (_replacement, contents) => {
       architectureBaselineSchema.parse(JSON.parse(contents));
     },
   });
@@ -368,6 +289,26 @@ async function writeArchitectureBaselines(
   }
 }
 
+/** Rejects direct baseline updates that target any v2 reconciliation destination. */
+function assertDirectBaselineUpdatePaths(
+  config: ArchitectureConfig | undefined,
+): void {
+  const configuredPaths = config?.baselineFiles;
+  if (!configuredPaths) return;
+  const v2Destinations = new Set(V2_RECONCILIATION_DESTINATION_PATHS);
+  for (const [domain, path] of Object.entries(configuredPaths)) {
+    if (
+      v2Destinations.has(
+        path as (typeof V2_RECONCILIATION_DESTINATION_PATHS)[number],
+      )
+    ) {
+      throw new Error(
+        `Architecture ${domain} baseline writes require the complete four-file reconciliation transaction`,
+      );
+    }
+  }
+}
+
 /**
  * Runs preview-first baseline update behavior and writes only after acknowledgement.
  * @param options Checker inputs, acknowledgement, and optional new-debt metadata.
@@ -376,11 +317,17 @@ async function writeArchitectureBaselines(
 export async function updateArchitectureBaselines(
   options: UpdateArchitectureBaselinesOptions,
 ): Promise<ArchitectureBaselineUpdateResult> {
+  assertDirectBaselineUpdatePaths(options.config);
   const selectedPolicy = options.config
     ? undefined
     : selectArchitecturePolicy(options.policyVersion, options.repoRoot, {
         validateCurrentState: false,
       });
+  if (selectedPolicy?.policyVersion === "v2") {
+    throw new Error(
+      "Policy v2 baseline writes require the complete four-file reconciliation transaction",
+    );
+  }
   const report = await checkArchitectureRepository({
     ...options,
     ...(selectedPolicy ? { policyVersion: selectedPolicy.policyVersion } : {}),

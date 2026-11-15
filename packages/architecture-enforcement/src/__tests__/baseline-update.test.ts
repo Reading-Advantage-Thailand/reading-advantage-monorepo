@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import {
   mkdir,
   mkdtemp,
@@ -28,8 +27,6 @@ import {
   RepositoryFileTransactionFailure,
 } from "../policy-update-transaction.js";
 import { V2_RECONCILIATION_DESTINATION_PATHS } from "../policy-write-guard.js";
-import { compareArchitectureDebt } from "../ratchet.js";
-import { computeV2ManifestReviewSubjectSha256 } from "../v2-manifest-validation.js";
 
 const hash = (character: string): string => character.repeat(64);
 const fixtureRoots: string[] = [];
@@ -380,115 +377,6 @@ describe("explicit architecture baseline updates", () => {
         },
       }),
     ).rejects.toThrow(/protected v1 artifacts/i);
-  });
-
-  it("writes the v2 baselines and rebinds the manifest hashes and review subject", async () => {
-    const v2Config = architectureConfigSchema.parse({
-      ...config,
-      baselineFiles: {
-        database: V2_RECONCILIATION_DESTINATION_PATHS[2],
-        provider: V2_RECONCILIATION_DESTINATION_PATHS[3],
-      },
-    });
-    const repoRoot = await mkdtemp(join(tmpdir(), "architecture-v2-update-"));
-    fixtureRoots.push(repoRoot);
-    const sourcePath = "apps/sample.ts";
-    const databasePath = resolve(repoRoot, v2Config.baselineFiles.database);
-    const providerPath = resolve(repoRoot, v2Config.baselineFiles.provider);
-    const manifestPath = resolve(
-      repoRoot,
-      V2_RECONCILIATION_DESTINATION_PATHS[0],
-    );
-    const sha = (value: string): string =>
-      createHash("sha256").update(value, "utf8").digest("hex");
-    const databaseOriginal = `${JSON.stringify(baseline("database", []), null, 2)}\n`;
-    const providerOriginal = `${JSON.stringify(baseline("provider", []), null, 2)}\n`;
-    const manifest = {
-      schemaVersion: 2,
-      v2Artifacts: [
-        {
-          path: "packages/architecture-enforcement/src/config/ownership-map.v2.json",
-          sha256: hash("o"),
-        },
-        { path: v2Config.baselineFiles.database, sha256: sha(databaseOriginal) },
-        { path: v2Config.baselineFiles.provider, sha256: sha(providerOriginal) },
-      ],
-      reviewSubjectSha256: "",
-    };
-    manifest.reviewSubjectSha256 = computeV2ManifestReviewSubjectSha256(
-      manifest,
-    );
-    await mkdir(resolve(repoRoot, "apps"), { recursive: true });
-    await mkdir(resolve(databasePath, ".."), { recursive: true });
-    await mkdir(resolve(manifestPath, ".."), { recursive: true });
-    await Promise.all([
-      writeFile(
-        resolve(repoRoot, sourcePath),
-        'import OpenAI from "openai";\nvoid OpenAI;\n',
-        "utf8",
-      ),
-      writeFile(databasePath, databaseOriginal, "utf8"),
-      writeFile(providerPath, providerOriginal, "utf8"),
-      writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8"),
-    ]);
-
-    const result = await updateArchitectureBaselines({
-      repoRoot,
-      config: v2Config,
-      sourcePaths: [sourcePath],
-      workspaceTargets: new Map<string, string>(),
-      acknowledge: true,
-      newDebtMetadata: {
-        owner: "pm-orchestrator",
-        rationale:
-          "Reviewed debt accepted for the ci green baseline of 2026-11-15.",
-      },
-    });
-
-    expect(result.wroteBaselines).toBe(true);
-    const databaseWritten = await readFile(databasePath, "utf8");
-    const providerWritten = await readFile(providerPath, "utf8");
-    const manifestWritten = JSON.parse(
-      await readFile(manifestPath, "utf8"),
-    ) as Record<string, unknown>;
-    const databaseEntries = (
-      JSON.parse(databaseWritten) as { entries: unknown[] }
-    ).entries;
-    const providerEntries = (
-      JSON.parse(providerWritten) as { entries: unknown[] }
-    ).entries;
-    // The openai import is provider debt, so the provider baseline absorbs it.
-    expect(databaseEntries).toHaveLength(0);
-    expect(providerEntries).toHaveLength(1);
-    // The manifest artifact hashes match the new baseline bytes.
-    const artifacts = manifestWritten.v2Artifacts as { sha256: string }[];
-    expect(artifacts[0]?.sha256).toBe(hash("o"));
-    expect(artifacts[1]?.sha256).toBe(sha(databaseWritten));
-    expect(artifacts[2]?.sha256).toBe(sha(providerWritten));
-    // The review subject matches the protected manifest fields.
-    expect(manifestWritten.reviewSubjectSha256).toBe(
-      computeV2ManifestReviewSubjectSha256(manifestWritten),
-    );
-    // Ratchet from the new baseline: current findings are clean, one more fails.
-    const writtenBaselines = {
-      database: JSON.parse(databaseWritten) as ArchitectureBaseline,
-      provider: JSON.parse(providerWritten) as ArchitectureBaseline,
-    };
-    expect(
-      compareArchitectureDebt({
-        baselines: writtenBaselines,
-        findings: result.report.findings,
-      }).status,
-    ).toBe("clean");
-    expect(
-      compareArchitectureDebt({
-        baselines: writtenBaselines,
-        findings: [
-          ...result.report.findings,
-          finding({ semanticKey: hash("b"), instanceKey: hash("2") }),
-        ],
-      }).status,
-    ).toBe("new-debt");
   });
 
   it.each(V2_RECONCILIATION_DESTINATION_PATHS)(

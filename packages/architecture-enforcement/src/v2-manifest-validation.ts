@@ -199,23 +199,6 @@ function isSha256(value: unknown): value is string {
   );
 }
 
-/**
- * Computes the review subject over the protected manifest fields.
- * @param manifest Parsed v2 reconciliation manifest.
- * @returns Lowercase SHA-256 digest of the canonical protected fields.
- */
-export function computeV2ManifestReviewSubjectSha256(
-  manifest: Record<string, unknown>,
-): string {
-  const {
-    reviews: _reviews,
-    acceptance: _acceptance,
-    reviewSubjectSha256: _subject,
-    ...protectedFields
-  } = manifest;
-  return sha256Text(canonicalJson(protectedFields));
-}
-
 /** Tests whether a repository-relative path is exact and traversal-free. */
 function isExactPath(value: unknown): value is string {
   return (
@@ -643,9 +626,14 @@ function validateManifestShapeSync(
   }
   validateArtifactFamilySync(repoRoot, manifest);
 
+  const {
+    reviews: _reviews,
+    acceptance: _acceptance,
+    reviewSubjectSha256: _subject,
+    ...protectedFields
+  } = manifest;
   if (
-    computeV2ManifestReviewSubjectSha256(manifest as Record<string, unknown>) !==
-    manifest.reviewSubjectSha256
+    sha256Text(canonicalJson(protectedFields)) !== manifest.reviewSubjectSha256
   ) {
     throw new Error("Review subject does not match protected manifest fields");
   }
