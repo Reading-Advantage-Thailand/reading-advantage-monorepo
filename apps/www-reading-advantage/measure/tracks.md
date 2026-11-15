@@ -4,9 +4,9 @@ This file tracks all major tracks for project. Each track has its own detailed p
 
 ---
 
-## [~] Track: www Products Images Faded or Blurred
+## [x] Track: www Products Images Faded or Blurred
 
-**Status:** In progress 2026-11-15
+**Status:** Completed 2026-11-15 (pushed 11aa5068a, www deploy run 43666163019 success; earlier deploy run 43663295522 success at ea0bda240)
 
 **Type:** bug (light lane) | **Estimated Tasks:** 7
 

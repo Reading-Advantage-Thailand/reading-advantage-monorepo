@@ -1,10 +1,10 @@
 {
   "track_id": "www_products_images_20261115",
   "type": "bug",
-  "status": "in_progress",
+  "status": "completed",
   "lane": "light",
   "created_at": "2026-11-15T06:30:00Z",
-  "updated_at": "2026-11-15T08:35:00Z",
+  "updated_at": "2026-11-15T10:00:00Z",
   "description": "Product page images and cards render stuck faded or blurred. Find the render-state cause, cover it with a failing test, and fix it with content visible under both motion settings.",
   "estimated_tasks": 7,
   "actual_tasks": null,
