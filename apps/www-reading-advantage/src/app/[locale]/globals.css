@@ -560,6 +560,11 @@ main {
   min-height: 50vh;
 }
 
+/* Imageless heroes (blog posts) size to their content instead of 70vh. */
+@utility min-h-hero-compact {
+  min-height: auto;
+}
+
 @utility max-h-graph {
   max-height: 68vh;
 }

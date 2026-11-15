@@ -167,7 +167,7 @@ async function BlogPost(props: Props) {
           href: "/blog",
           variant: "primary",
         }}
-        height="medium"
+        height="compact"
       />
       <article className="container mx-auto px-4 py-8">
         <BlogBreadcrumbs postTitle={post.title} />

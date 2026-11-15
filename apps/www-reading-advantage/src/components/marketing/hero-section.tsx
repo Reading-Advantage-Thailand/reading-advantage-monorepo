@@ -32,7 +32,7 @@ export interface HeroProps {
     src: string;
     alt: string;
   };
-  height?: "tall" | "medium";
+  height?: "tall" | "medium" | "compact";
   alignment?: "left" | "center";
   textColor?: "light" | "dark";
   customGradient?: string;
@@ -64,7 +64,9 @@ const getBadgeVariantStyles = (
 };
 
 const getHeightStyles = (height: NonNullable<HeroProps["height"]>): string => {
-  return height === "tall" ? "min-h-[85vh]" : "min-h-hero";
+  if (height === "tall") return "min-h-[85vh]";
+  if (height === "compact") return "min-h-hero-compact";
+  return "min-h-hero";
 };
 
 export default function HeroSection({
