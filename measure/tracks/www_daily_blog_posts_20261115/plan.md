@@ -8,11 +8,11 @@ Track: `www_daily_blog_posts_20261115` (light lane). One task per post.
   hand-off manifest, write the en and th posts, copy the four images to `public/blog/`, run the
   gates (blog tests, www build, local render captures), push, watch the www CD, and capture the
   live pages. `a6641da7e`.
-- [~] 1.3 Post `she-chooses-the-words-she-keeps`, 2026-11-18 (PM task A-62, PREPARE only; the
+- [x] 1.3 Post `she-chooses-the-words-she-keeps`, 2026-11-18 (PM task A-62, PREPARE only; the
   orchestrator pushes on 2026-11-18 because `blog.ts` has no date gate): verify the hand-off
   manifest, copy the en and th posts and the two images, run the gates (five blog vitest files, www
   build, local render captures at 1280 and 390, en and th). Third commit on
-  `www/daily-posts-1116-1117`. No push from this session.
+  `www/daily-posts-1116-1117`. No push from this session. `73daa201f`.
 - [x] 1.2 Fault: the reading time ignored the prose inside rich blocks and Thai script, so the daily
   post showed 4 min in en and 1 min in th. `calculateReadingTime` now counts figure captions,
   callout titles and text, and pull quotes, skips block keys, paths, alt text, and screen-reader
@@ -47,3 +47,22 @@ Track: `www_daily_blog_posts_20261115` (light lane). One task per post.
 - Reading-time fix `81363a133`: CD run 43676629418 success. Live: en shows "3 min read", th shows
   "3 นาทีในการอ่าน". The blog list also shows "3 min read".
 - Frontmatter `readingTime` still wins over the calculated value; the daily post sets none.
+
+## Gate record (2026-11-15, 2026-11-18 post, head `73daa201f`, PREPARE only, no push)
+
+- Hand-off `~/Desktop/handoff/blog/2026-11-18/MANIFEST.txt`: `sha256sum -c` gives 6 of 6 lines OK.
+- Bytes: `post.md` and `post.th.md` match the hand-off posts with `cmp`. The two images in
+  `public/blog/` give the manifest sha256. Frontmatter date is `2026-11-18` in en and th.
+- Five blog vitest files (`blog`, `blog-blocks`, `blog-draft`, `blog-posts-validation`,
+  `blog-locale`, `--maxWorkers=1`) through heavy-run: exit 0, 1668 tests.
+- `pnpm --filter www-reading-advantage build` through heavy-run: exit 0.
+- Local render (`next start` of that build, port 3417) at 1280 px and 390 px, en and th: HTTP 200,
+  8 images load (naturalWidth above 0), the cover image and both figure images show, no image
+  under a text box (0 overlaps), reading time "3 min read" en and "3 นาทีในการอ่าน" th,
+  horizontal overflow 0 px. Captures and `checks.json` in `/tmp/opencode/daily-post-1118/`.
+- `node scripts/ci/affected-apps.mjs --base fe891bc3e --head 73daa201f` gives
+  `["www-reading-advantage"]`, exit 0.
+- Embed note: the video `c7799Fx9vrU` is a vertical YouTube Short, so the 16:9 frame letterboxes it
+  with a blurred fill. The recording shows the Thai student home on the English page too. The
+  `2026-11-18-my-words.webp` figure is a 1279x300 banner crop, so at 390 px its app text is small.
+- Open: the orchestrator pushes `73daa201f` on 2026-11-18 and captures the live pages.
