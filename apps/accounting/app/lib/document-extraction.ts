@@ -103,18 +103,55 @@ export interface DocumentExtractionAdapter {
   ) => Promise<AccountingDocumentExtractionResult>;
 }
 
-/**
- * Draft schema of one model read. The draft shape is a passthrough object
- * here: the parsers of Phase 6 own the per-type validation.
- */
-const extractionDraftSchema = z
-  .object({})
-  .passthrough() as z.ZodType<AccountingIntakeDraft>;
+/** Currencies the business settles; the draft contract enum. */
+const SETTLED_CURRENCIES = ["THB", "USD", "JPY"] as const;
 
-/** Prompt of one model read. The model returns the fields it can read. */
+/**
+ * Draft schema of one model read. It holds every key of
+ * `AccountingIntakeDraft`, and each key is optional, so a partial read still
+ * parses. The model result must pass this schema before the read returns it.
+ */
+const extractionDraftSchema = z.object({
+  kind: z.string().optional(),
+  payee: z.string().optional(),
+  payeeName: z.string().optional(),
+  category: z.string().optional(),
+  description: z.string().optional(),
+  amountMinor: z.string().optional(),
+  currency: z.enum(SETTLED_CURRENCIES).optional(),
+  money: z
+    .object({
+      amountMinor: z.string(),
+      currency: z.enum(SETTLED_CURRENCIES),
+    })
+    .optional(),
+}) as z.ZodType<AccountingIntakeDraft>;
+
+/**
+ * Prompt of one model read. It names the six keys the intake draft uses, so
+ * the model returns the fields the submission input reads.
+ */
 const EXTRACTION_PROMPT =
   "Read the document image or PDF and return the expense or payment fields " +
-  "you can read. Return an empty string for every field you cannot read.";
+  "you can read. Name the keys kind, payee, amountMinor, currency, category, " +
+  "description. Return an empty string for every field you cannot read.";
+
+/**
+ * Validates one model result against the draft schema.
+ * @param result Structured result the model returned.
+ * @returns The validated draft.
+ * @throws When the result falls outside the schema. The message carries no
+ *   document text and no model value.
+ */
+function toValidatedDraft(result: unknown): AccountingIntakeDraft {
+  const parsed = extractionDraftSchema.safeParse(result);
+  if (!parsed.success) {
+    throw new Error(
+      "The extraction model result does not match the draft schema",
+    );
+  }
+  return parsed.data;
+}
 
 /**
  * Reads the model id of one model read from the environment.
@@ -173,7 +210,8 @@ export function createDocumentExtraction(
    * Reads one document through the model route.
    * @param input Company scope, MIME type, and file bytes.
    * @returns The model draft.
-   * @throws When the model id is not configured or the client build fails.
+   * @throws When the model id is not configured, the client build fails, or
+   *   the model result falls outside the draft schema.
    */
   async function readThroughModel(
     input: DocumentExtractionReadRequest,
@@ -181,13 +219,13 @@ export function createDocumentExtraction(
     if (client === null) {
       client = resolveModelClient(options);
     }
-    const draft = await client.generateObjectFromMedia({
+    const result = await client.generateObjectFromMedia({
       schema: extractionDraftSchema,
       prompt: EXTRACTION_PROMPT,
       media: { buffer: toMediaBuffer(input.body), mimeType: input.mimeType },
       model: readExtractionModelId(),
     });
-    return { draft };
+    return { draft: toValidatedDraft(result) };
   }
 
   return {
