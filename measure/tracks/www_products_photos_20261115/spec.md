@@ -2,6 +2,7 @@
 
 Track: `www_products_photos_20261115` (light lane, bug).
 Author model: claude-code/claude-sonnet-5-5
+Revised by: opencode-go/deepseek-v4.1-flash (spec review r1 fixes)
 
 ## Owner words (Daniel, 2026-11-15)
 
@@ -48,15 +49,29 @@ A picture comes out of a live page only when its replacement goes in the same pu
 - **AC-1 (Playwright e2e).** For every www marketing page with a hero image and for `/products`, in
   en and th, at 390, 980, 1024, and 1280 px: each photo is loaded (`complete`, `naturalWidth > 0`),
   visible, and at most 30 percent covered. A photo is a raster image that is not an SVG, a logo,
-  an icon, or the QR code, rendered at least 120 x 120 px. A decorative image (empty alt) is not a
-  photo. The cover test uses a 5 x 5 `document.elementFromPoint` grid with `pointer-events:auto`
-  forced on every element. The image or its own wrapper must be the top element. The hero photo
-  shows at every width. `/products` shows at least one product photo in each built product block
-  (Storytime, Primary, Reading, Tutor).
+  an icon, or the QR code, with a rendered short side of at least 100 px. A decorative image
+  (empty alt) is not a photo. The cover test uses a 5 x 5 `document.elementFromPoint` grid with
+  `pointer-events:auto` forced on every element. The image or its own wrapper must be the top
+  element. The hero photo shows at every width. `/products` shows at least one product photo in
+  each built product block (Storytime, Primary, Reading, Tutor).
+  Each product picture of `/products` also keeps its natural aspect ratio within 5 percent and a
+  rendered short side of at least 100 px at the four widths. This assertion catches a squeezed or
+  a shrunk card, which the cover test alone does not catch.
+  The four widths stay. 980 px is a phone in desktop view. 1024 px is the `lg` breakpoint where the
+  squeezed program cards appear.
 - **AC-2 (unit test).** For `HeroSection`, the `floatingImage` container and its ancestors have no
   `hidden` class at any breakpoint.
-- **AC-3 (CI).** The e2e runs in the www CI job, so a push that breaks it turns the job red. The plan
-  names the job, the server, and Chrome.
+- **AC-3 (CI and CD).** The e2e runs at two points:
+  - (a) In the `ci.yml` job `affected`, when the matrix id is `www-reading-advantage`. A push that
+    breaks it turns that job red.
+  - (b) In `.github/workflows/cd-www-reading-advantage.yml`, before the deploy step, against the app
+    built in that job. The job starts the app with `next start -p 3123` or
+    `node .next/standalone/server.js` on port 3123. Chrome comes from
+    `playwright install --with-deps chromium`. A failing e2e stops the deploy.
+
+  Point (b) exists because `ci.yml` is red on master for an unrelated cause, the architecture check.
+  A "CD needs CI" link would stop every www deploy for that cause. The PM page check of task 1.4
+  stays the human gate before Daniel gets the link.
 - **AC-4 (Green).** Fix only what is still wrong at HEAD:
   - no text box covers more than a small corner of any photo: "See How We Report Results" goes
     beside the picture from the `lg` breakpoint and under it below that breakpoint; check every
@@ -64,9 +79,12 @@ A picture comes out of a live page only when its replacement goes in the same pu
   - the Tutor section gets one real picture;
   - the pictures at 1024 px keep their proportion and a usable size;
   - one real product picture stays in each built product block and program card, from the CURRENT.md
-    sets: Storytime `app-2026-11-15` cropped to the picture card; Primary `parity-run2-2026-10-19`
-    or a printed cover; the Reading Origins 2 cover; Tutor `dev-2026-10-15` as its README allows;
-    CodeCamp only if CURRENT.md lists a screen; Science, Math, Zhongwen, and STEM keep logo tiles;
+    sets: Storytime `app-2026-11-15` cropped to the picture card; Primary program card
+    `public/images/products/primary-lesson-intro.webp` and Primary product block
+    `public/images/products/primary-origins-2-cover.webp` (the files of `8193625ca`); the Reading
+    Origins 2 cover `public/images/products/reading-origins-2-cover.webp`; Tutor `dev-2026-10-15`
+    as its README allows, `public/images/products/tutor-flashcard.webp`; CodeCamp only if CURRENT.md
+    lists a screen; Science, Math, Zhongwen, and STEM keep logo tiles;
   - no child face in any new picture; the files come from `~/Desktop/handoff/products-images-2026-11-15/`.
 
 ## Out of scope

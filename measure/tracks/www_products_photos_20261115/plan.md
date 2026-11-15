@@ -2,15 +2,18 @@
 
 Track: `www_products_photos_20261115` (light lane).
 Author model: claude-code/claude-sonnet-5-5
+Revised by: opencode-go/deepseek-v4.1-flash (spec review r1 fixes)
 
 ## Phase 1: Photo checks, then the remaining fixes
 
-- [ ] 1.1 Red: write the AC-1 e2e, the AC-2 unit test, and the AC-3 CI step. Prove each test by a
-  failing run at `8193625ca^` (hero, product photos) and a failing run at HEAD for what is still
-  wrong (the covered photo, the Tutor section, the squeezed pictures at 1024 px, the home hero).
-  Commit the tests and the failing runs before any Green change.
-- [ ] 1.2 Green: fix what is still wrong (AC-4) and add the CI wiring support that Red needs
-  (a `next start` step and the Chrome install). The draft in the commit `8193625ca` stays.
+- [ ] 1.1 Red: write the AC-1 e2e, the AC-2 unit test, and the AC-3 wiring. The wiring has two parts:
+  the steps of the `ci.yml` job `affected` for `www-reading-advantage`, and the steps of
+  `cd-www-reading-advantage.yml` before the deploy step. Prove each test by a failing run at
+  `8193625ca^` (hero, product photos) and a failing run at HEAD for what is still wrong (the covered
+  photo, the Tutor section, the squeezed pictures at 1024 px, the home hero). The wiring fails on
+  current code, because the e2e that it runs fails there. Commit the tests and the failing runs
+  before any Green change.
+- [ ] 1.2 Green: fix what is still wrong (AC-4). The draft in the commit `8193625ca` stays.
 - [ ] 1.3 Review and live render check at 390, 980, 1024, and 1280 px, en and th. Look at each
   capture. Every photo shows at least 85 percent.
 - [ ] 1.4 Push to www master (standing approval), watch the www CD run, and run the PM page check
@@ -34,11 +37,19 @@ Author model: claude-code/claude-sonnet-5-5
 - The job that checks a www push is `ci.yml`, job `affected` ("Check www-reading-advantage"). It
   runs `pnpm turbo run build lint check-types test --filter=www-reading-advantage...`. The job
   `Build, Lint, and Test` does not test www.
-- The www CD workflow does not wait for CI. A red CI run does not stop a deploy.
-- AC-3 plan: add steps to the `affected` job, only when the matrix id is `www-reading-advantage`:
-  install Chrome, start `next start -p 3123` in the background after the build, wait for the port,
-  and run `BASE_URL=http://localhost:3123 pnpm --filter www-reading-advantage exec playwright test e2e/photos.spec.ts`.
-  Task 1.2 decides whether the check also runs before the CD deploy.
+- The www CD workflow (`cd-www-reading-advantage.yml`) does not wait for CI: the `deploy` job needs
+  only `select`. A red CI run does not stop a deploy. `ci.yml` is red on master for an unrelated
+  cause, the architecture check, so a "CD needs CI" link would stop every www deploy. The e2e gate
+  goes into the CD job itself.
+- AC-3 plan, part (a): add steps to the `affected` job, only when the matrix id is
+  `www-reading-advantage`: install Chrome with
+  `playwright install --with-deps chromium`, start `next start -p 3123` in the background after the
+  build, wait for the port, and run
+  `BASE_URL=http://localhost:3123 pnpm --filter www-reading-advantage exec playwright test e2e/photos.spec.ts`.
+- AC-3 plan, part (b): add the same Chrome install and e2e steps to the `deploy` job of
+  `cd-www-reading-advantage.yml`, before "Submit Cloud Build". Build the app in that job. Start the
+  build with `next start -p 3123` or `node .next/standalone/server.js` on port 3123. Run the spec.
+  A failing e2e stops the deploy. Daniel gets no link until task 1.4 passes.
 
 ## Facts to check in Red
 
