@@ -37,7 +37,25 @@ Revised by: opencode-go/deepseek-v4.1-flash (spec review r1 fixes)
     `AssertionError: expected [ 'div.hidden' ] to deeply equal []`. The e2e pre-fix run was skipped to
     keep the run cost down. The unit test proves the hero regression. The product-picture case fails
     at HEAD for the Tutor section.
-- [~] 1.2 Green: fix what is still wrong (AC-4). The draft in the commit `8193625ca` stays.
+- [x] 1.2 Green: fix what is still wrong (AC-4). The draft in the commit `8193625ca` stays.
+
+  Implementation commit `b09e21f32`. Role base `5f197fd99`; phase base `40419d4bc`.
+  - Report-results card: the picture sits above the text in a flow layout, with no overlay. The
+    card stays stacked at every width, because the grid cell is one third wide at `lg` (deviation
+    from "beside the picture from `lg`"; no text covers the photo).
+  - Tutor section: `tutor-flashcard.webp` through `ProductPicture`, with a localized alt in en,
+    th, and zh (`imageAlt`).
+  - Portrait pictures: `w-full max-w-48 h-auto`, so the natural ratio holds.
+  - Home hero: the Mastery card sits under the photo below `lg` and overlaps a corner from `lg`.
+  - Green gate (heavy-run, `next build`, `next start -p 3123`, `playwright test e2e/photos.spec.ts`):
+    exit 0. Log: `measure/runs/www_products_photos_20261115/green-p1-5f197fd99-gate.log`.
+  - Vitest on the touched www tests, `tsc --noEmit`, and `eslint` on the touched files: exit 0.
+    Log: `measure/runs/www_products_photos_20261115/green-p1-5f197fd99-checks.log`.
+  - Captures at 390, 980, 1024, and 1280 px of `/en/products`, `/th/products`, and `/en` were
+    read by the Green session: no text sits on a photo and no picture looks squeezed.
+    Captures are in `/tmp/opencode/a62-green/` (not committed).
+  - Note: a stale `next start` from the Red run held port 3123 and served the old build in the
+    first two gate runs. The Green gate run named above ran on a free port against the final tree.
 - [ ] 1.3 Review and live render check at 390, 980, 1024, and 1280 px, en and th. Look at each
   capture. Every photo shows at least 85 percent.
 - [ ] 1.4 Push to www master (standing approval), watch the www CD run, and run the PM page check
