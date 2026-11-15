@@ -6,7 +6,7 @@ Revised by: opencode-go/deepseek-v4.1-flash (spec review r1 fixes)
 
 ## Phase 1: Photo checks, then the remaining fixes
 
-- [x] 1.1 Red: write the AC-1 e2e, the AC-2 unit test, and the AC-3 wiring. The wiring has two parts:
+- [x] 1.1 Red: write the AC-1 e2e, the AC-2 unit test, and the AC-3 wiring. The wiring has two parts: Done: `4c48a8b12`, `415d172be`.
   the steps of the `ci.yml` job `affected` for `www-reading-advantage`, and the steps of
   `cd-www-reading-advantage.yml` before the deploy step. The proof is a failing e2e run at HEAD for
   what is still wrong (the covered photo, the Tutor section, the squeezed pictures at 1024 px, the
