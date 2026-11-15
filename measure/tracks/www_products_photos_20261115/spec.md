@@ -70,7 +70,12 @@ A picture comes out of a live page only when its replacement goes in the same pu
   an icon, or the QR code, with a rendered short side of at least 100 px. A decorative image
   (empty alt) is not a photo. The cover test uses a 5 x 5 `document.elementFromPoint` grid with
   `pointer-events:auto` forced on every element. The image or its own wrapper must be the top
-  element. The hero photo shows at every width. `/products` shows at least one product photo in
+  element. A text rule measures the union of the bounding boxes of the visible text boxes that
+  paint over the photo. That union covers at most 10 percent of the photo area. A text box is an
+  element with non-empty own text. The rule skips the photo's own ancestors and a figcaption that
+  sits below the photo. The photo report prints the text share. An image in a page main element
+  with an empty src or no `currentSrc` fails the test. It is not skipped, because that was the
+  original bug. The hero photo shows at every width. `/products` shows at least one product photo in
   each built product block (Storytime, Primary, Reading, Tutor).
   Each product picture of `/products` also keeps its natural aspect ratio within 5 percent and a
   rendered short side of at least 100 px at the four widths. This assertion catches a squeezed or
@@ -81,10 +86,15 @@ A picture comes out of a live page only when its replacement goes in the same pu
   **Exclusion rule (the test skips an image only by one of these rules):**
   - Decorative: the alt is empty, the image carries `aria-hidden="true"`, or an ancestor carries
     `aria-hidden="true"`. The home `texture-warm` background (alt empty) is the only such image.
-  - Logo or icon: the file ends in `.svg`, the file sits under `/media/brand/`, or the alt names a
-    logo, an icon, or a QR code.
+  - Logo or icon: the file ends in `.svg`; the file sits under `/media/brand/`; or the file name
+    starts with `qr`, `logo`, or `icon` and the alt names a logo, an icon, or a QR code. Both
+    signals are needed, so a photo named `icon-guide.png` still counts.
   - Thumbnail: the rendered short side is below 100 px. This rule applies to the cover test only,
     not to the product picture assertion, which fails a shrunk picture.
+
+  **Home Mastery card:** on `/` at 390 px the Mastery card sits under the photo. Its centre falls
+  within 10 percent of the viewport centre, or its width is at least 90 percent of the photo
+  width. A card beside the photo fails.
 
   **Page set:** the six www marketing pages whose hero shows a content photo: `/`, `/products`,
   `/services/blended-learning`, `/services/managed-service`, `/pricing`, and `/about`.

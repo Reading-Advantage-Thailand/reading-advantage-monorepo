@@ -121,14 +121,26 @@ interface MeasuredPhoto extends PagePhoto {
   covered: number;
   measuredPoints: number;
   coverageError: string | null;
+  textOverlapShare: number;
+  textOverlapLabels: string[];
 }
+/** The share of the photo area that visible text boxes may cover (task 1.1, R1). */
+const MAX_TEXT_OVERLAP_PERCENT = 10;
+
+/**
+ * Product picture files that sit in a product area but live outside `/images/products/`.
+ * The report-results card of `/products` shows this file (b2b-solutions.tsx).
+ */
+const PRODUCT_EXTRA_PICTURE_FILES = ["/images/blended-learning.png"];
 
 /**
  * Marks every photo on the current page so later steps can find it again.
  * @param page The Playwright page.
- * @returns The photo descriptions, in DOM order.
+ * @returns The photo descriptions and the broken images of the page main content.
  */
-async function markPhotos(page: Page): Promise<PagePhoto[]> {
+async function markPhotos(
+  page: Page,
+): Promise<{ photos: PagePhoto[]; brokenImages: string[] }> {
   await page.addStyleTag({
     content: `
       *, *::before, *::after {
@@ -151,14 +163,30 @@ async function markPhotos(page: Page): Promise<PagePhoto[]> {
       if (img.closest('[aria-hidden="true"]') !== null) return false;
       if (/\.svg(\?|#|$)/i.test(src)) return false;
       if (/\/media\/brand\//.test(src)) return false;
-      if (/\b(qr|logo|icon)\b/i.test(alt)) return false;
-      if (/\/(qr|logo|icon)[^/]*\./i.test(src)) return false;
+      // A badge file needs both signals: a file name that starts with qr, logo, or
+      // icon, and an alt that names a logo, an icon, or a QR code.
+      const fileName = src.split("/").pop() ?? "";
+      const startsWithBadge = /^(qr|logo|icon)([-_.]|$)/i.test(fileName);
+      const altNamesBadge = /\b(qr|logo|icon)\b/i.test(alt);
+      if (startsWithBadge && altNamesBadge) return false;
       return true;
     };
 
     const tutorSection = Array.from(document.querySelectorAll("section")).find(
       (section) => section.querySelector(tutorLogoSelector) !== null,
     );
+
+    // An image in the page main content with no src never loads, and a reader sees
+    // nothing. That was the original bug, so it fails the test and is not skipped.
+    const brokenImages: string[] = [];
+    for (const img of Array.from(document.querySelectorAll<HTMLImageElement>("main img"))) {
+      const src = img.currentSrc || img.src || "";
+      if (src !== "") continue;
+      const alt = (img.getAttribute("alt") ?? "").trim();
+      brokenImages.push(
+        `an image in the main content has no src (alt="${alt}", class="${img.getAttribute("class") ?? ""}")`,
+      );
+    }
 
     const photos: PagePhoto[] = [];
     let index = 0;
@@ -184,23 +212,12 @@ async function markPhotos(page: Page): Promise<PagePhoto[]> {
         inTutorSection: tutorSection?.contains(img) ?? false,
       });
     }
-    return photos;
+    return { photos, brokenImages };
   }, TUTOR_SECTION_LOGO_SELECTOR);
 }
 
-/**
- * The measured state of one photo: load, final box, and covered share.
- * @param loaded True when the browser decoded the file.
- * @param visible True when the photo shows at this width.
- * @param width The rendered width in CSS pixels.
- * @param height The rendered height in CSS pixels.
- * @param naturalWidth The file width in pixels.
- * @param naturalHeight The file height in pixels.
- * @param covered The grid points where the photo is not the top element.
- * @param measuredPoints The grid points that could be measured.
- * @param coverageError A reason when the grid could not run.
- */
-interface PhotoMeasurement {
+/** The measured state of one photo. */
+type PhotoMeasurement = {
   loaded: boolean;
   visible: boolean;
   width: number;
@@ -210,13 +227,15 @@ interface PhotoMeasurement {
   covered: number;
   measuredPoints: number;
   coverageError: string | null;
-}
+  textOverlapShare: number;
+  textOverlapLabels: string[];
+};
 
 /**
  * Scrolls one photo into view, waits for it to load, and measures its coverage.
  * @param page The Playwright page.
  * @param mark The `data-photo-check` mark of the photo.
- * @returns The load state, the final box, and the covered point count.
+ * @returns The load state, the final box, the covered point count, and the text share.
  */
 async function measurePhoto(page: Page, mark: string): Promise<PhotoMeasurement> {
   const state = await page.evaluate(async (photoMark) => {
@@ -269,6 +288,8 @@ async function measurePhoto(page: Page, mark: string): Promise<PhotoMeasurement>
       covered: 0,
       measuredPoints: 0,
       coverageError: "not rendered",
+      textOverlapShare: 0,
+      textOverlapLabels: [],
     };
   }
 
@@ -369,6 +390,8 @@ async function measurePhoto(page: Page, mark: string): Promise<PhotoMeasurement>
     { photoMark: mark, grid: GRID },
   );
 
+  const text = await measureTextOverlap(page, mark);
+
   return {
     ...box,
     loaded: state.loaded,
@@ -376,21 +399,138 @@ async function measurePhoto(page: Page, mark: string): Promise<PhotoMeasurement>
     covered: coverage.covered,
     measuredPoints: coverage.measured,
     coverageError: coverage.error,
+    textOverlapShare: text.share,
+    textOverlapLabels: text.labels,
   };
+}
+
+/**
+ * Measures the share of the photo area that visible text boxes cover.
+ *
+ * A text box is an element with non-empty own text. The measure skips the photo's
+ * own ancestors and a figcaption that sits below the photo. The share is the area
+ * of the union of the clipped text boxes, over the visible photo area.
+ *
+ * @param page The Playwright page.
+ * @param mark The `data-photo-check` mark of the photo.
+ * @returns The union share and up to three labels of the boxes that overlap.
+ */
+async function measureTextOverlap(
+  page: Page,
+  mark: string,
+): Promise<{ share: number; labels: string[] }> {
+  return page.evaluate((photoMark) => {
+    const img = document.querySelector(
+      `[data-photo-check="${photoMark}"]`,
+    ) as HTMLImageElement | null;
+    if (img === null) return { share: 0, labels: [] as string[] };
+
+    const rect = img.getBoundingClientRect();
+    let left = rect.left;
+    let top = rect.top;
+    let right = rect.right;
+    let bottom = rect.bottom;
+    let ancestor = img.parentElement;
+    while (ancestor !== null && ancestor !== document.documentElement) {
+      const style = getComputedStyle(ancestor);
+      const ancestorBox = ancestor.getBoundingClientRect();
+      if (style.overflowX !== "visible") {
+        left = Math.max(left, ancestorBox.left);
+        right = Math.min(right, ancestorBox.right);
+      }
+      if (style.overflowY !== "visible") {
+        top = Math.max(top, ancestorBox.top);
+        bottom = Math.min(bottom, ancestorBox.bottom);
+      }
+      ancestor = ancestor.parentElement;
+    }
+    const box = {
+      left,
+      top,
+      right,
+      bottom,
+      width: Math.max(0, right - left),
+      height: Math.max(0, bottom - top),
+    };
+    if (box.width <= 0 || box.height <= 0) return { share: 0, labels: [] as string[] };
+
+    const hasOwnText = (element: Element): boolean => {
+      for (const node of Array.from(element.childNodes)) {
+        if (node.nodeType === Node.TEXT_NODE && (node.textContent ?? "").trim() !== "") {
+          return true;
+        }
+      }
+      return false;
+    };
+
+    const boxes: { left: number; top: number; right: number; bottom: number }[] = [];
+    const labels: string[] = [];
+    for (const element of Array.from(document.body.querySelectorAll("*"))) {
+      if (!hasOwnText(element)) continue;
+      if (element === img || element.contains(img)) continue;
+      if (!element.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })) continue;
+      const elementBox = element.getBoundingClientRect();
+      if (elementBox.width <= 0 || elementBox.height <= 0) continue;
+      const caption = element.closest("figcaption");
+      if (caption !== null && caption.getBoundingClientRect().top >= box.bottom) continue;
+      const clipLeft = Math.max(elementBox.left, box.left);
+      const clipTop = Math.max(elementBox.top, box.top);
+      const clipRight = Math.min(elementBox.right, box.right);
+      const clipBottom = Math.min(elementBox.bottom, box.bottom);
+      if (clipRight <= clipLeft || clipBottom <= clipTop) continue;
+      boxes.push({ left: clipLeft, top: clipTop, right: clipRight, bottom: clipBottom });
+      if (labels.length < 3) {
+        const own = Array.from(element.childNodes)
+          .filter((node) => node.nodeType === Node.TEXT_NODE)
+          .map((node) => (node.textContent ?? "").trim())
+          .filter((text) => text !== "")
+          .join(" ");
+        labels.push(
+          `${element.tagName.toLowerCase()} "${own.slice(0, 24)}" ${Math.round(elementBox.width)}x${Math.round(elementBox.height)}`,
+        );
+      }
+    }
+    if (boxes.length === 0) return { share: 0, labels: [] as string[] };
+
+    const xs = Array.from(new Set(boxes.flatMap((item) => [item.left, item.right]))).sort(
+      (a, b) => a - b,
+    );
+    const ys = Array.from(new Set(boxes.flatMap((item) => [item.top, item.bottom]))).sort(
+      (a, b) => a - b,
+    );
+    let area = 0;
+    for (let i = 0; i < xs.length - 1; i += 1) {
+      for (let j = 0; j < ys.length - 1; j += 1) {
+        const centreX = (xs[i] + xs[i + 1]) / 2;
+        const centreY = (ys[j] + ys[j + 1]) / 2;
+        const inside = boxes.some(
+          (item) =>
+            centreX > item.left &&
+            centreX < item.right &&
+            centreY > item.top &&
+            centreY < item.bottom,
+        );
+        if (inside) area += (xs[i + 1] - xs[i]) * (ys[j + 1] - ys[j]);
+      }
+    }
+    return { share: area / (box.width * box.height), labels };
+  }, mark);
 }
 
 /**
  * Measures every photo of the current page.
  * @param page The Playwright page.
- * @returns The photos with their load state, final box, and coverage.
+ * @returns The measured photos and the broken images of the page main content.
  */
-async function measureAllPhotos(page: Page): Promise<MeasuredPhoto[]> {
-  const photos = await markPhotos(page);
+async function measurePagePhotos(
+  page: Page,
+): Promise<{ photos: MeasuredPhoto[]; brokenImages: string[] }> {
+  const { photos, brokenImages } = await markPhotos(page);
   const measured: MeasuredPhoto[] = [];
   for (const photo of photos) {
     measured.push({ ...photo, ...(await measurePhoto(page, photo.mark)) });
   }
-  return measured;
+  return { photos: measured, brokenImages };
 }
 
 /**
@@ -416,26 +556,9 @@ function label(photo: MeasuredPhoto): string {
 }
 
 /**
- * Opens one page at one locale and width.
- * @param page The Playwright page.
- * @param locale The locale prefix.
- * @param target The page target.
- * @returns Nothing.
- */
-async function openPage(
-  page: Page,
-  locale: (typeof LOCALES)[number],
-  target: PhotoTarget,
-): Promise<void> {
-  const suffix = target.path === "/" ? "" : target.path;
-  const response = await page.goto(`/${locale}${suffix}`, { waitUntil: "load" });
-  expect.soft(response?.status(), `status of /${locale}${suffix}`).toBe(200);
-}
-
-/**
  * Formats one measured photo as a single report line.
  * @param photo The measured photo.
- * @returns The file, the natural size, the rendered size, the state, and the covered share.
+ * @returns The file, the sizes, the state, the covered share, and the text share.
  */
 function photoRow(photo: MeasuredPhoto): string {
   const covered =
@@ -449,8 +572,12 @@ function photoRow(photo: MeasuredPhoto): string {
     `loaded=${photo.loaded}`,
     `visible=${photo.visible}`,
     `covered=${covered}`,
+    `textOverlap=${(photo.textOverlapShare * 100).toFixed(0)}%`,
   ];
   if (photo.coverageError !== null) parts.push(`coverageError=${photo.coverageError}`);
+  if (photo.textOverlapLabels.length > 0) {
+    parts.push(`textBoxes=[${photo.textOverlapLabels.join("; ")}]`);
+  }
   if (photo.blockTestId !== null) parts.push(`block=${photo.blockTestId}`);
   if (photo.inTutorSection) parts.push("tutor-section");
   return parts.join(" ");
@@ -484,6 +611,104 @@ async function reportProblems(
   });
 }
 
+/**
+ * Builds the load, cover, and text problems of a page.
+ * @param photos Every measured photo of the page.
+ * @param counted The photos that count at this width.
+ * @returns The named problems.
+ */
+function photoProblems(photos: MeasuredPhoto[], counted: MeasuredPhoto[]): string[] {
+  const problems: string[] = [];
+  for (const photo of photos) {
+    if (!photo.visible) {
+      problems.push(`${label(photo)} is not visible at this width`);
+      continue;
+    }
+    if (!photo.loaded) {
+      problems.push(`${label(photo)} is not loaded`);
+    }
+  }
+  for (const photo of counted) {
+    if (photo.coverageError !== null) {
+      problems.push(`${label(photo)} could not be measured: ${photo.coverageError}`);
+      continue;
+    }
+    const percent = (photo.covered / photo.measuredPoints) * 100;
+    if (percent > MAX_COVERED_PERCENT) {
+      problems.push(
+        `${label(photo)} is ${percent.toFixed(0)} percent covered (max ${MAX_COVERED_PERCENT})`,
+      );
+    }
+    const textPercent = photo.textOverlapShare * 100;
+    if (textPercent > MAX_TEXT_OVERLAP_PERCENT) {
+      problems.push(
+        `${label(photo)} is ${textPercent.toFixed(0)} percent covered by text (max ${MAX_TEXT_OVERLAP_PERCENT}): ${photo.textOverlapLabels.join("; ")}`,
+      );
+    }
+  }
+  return problems;
+}
+
+/**
+ * Opens one page at one locale and width.
+ * @param page The Playwright page.
+ * @param locale The locale prefix.
+ * @param target The page target.
+ * @returns Nothing.
+ */
+async function openPage(
+  page: Page,
+  locale: (typeof LOCALES)[number],
+  target: PhotoTarget,
+): Promise<void> {
+  const suffix = target.path === "/" ? "" : target.path;
+  const response = await page.goto(`/${locale}${suffix}`, { waitUntil: "load" });
+  expect.soft(response?.status(), `status of /${locale}${suffix}`).toBe(200);
+}
+
+/**
+ * Checks that the home Mastery card sits under the photo at 390 px.
+ *
+ * The card is centred (its centre within 10 percent of the viewport centre) or it
+ * is full width (at least 90 percent of the photo width).
+ *
+ * @param page The Playwright page.
+ * @param counted The photos that count at this width.
+ * @returns The named problems.
+ */
+async function masteryCardProblems(
+  page: Page,
+  counted: MeasuredPhoto[],
+): Promise<string[]> {
+  const problems: string[] = [];
+  const card = page.locator("figure").first();
+  const cards = await page.locator("figure").count();
+  if (cards === 0) {
+    problems.push("the home Mastery card is missing (no figure element)");
+    return problems;
+  }
+  const cardBox = await card.boundingBox();
+  const photo = counted.find((item) => item.src.includes("workbook-tablet-cutaway"));
+  if (cardBox === null) {
+    problems.push("the home Mastery card has no box");
+    return problems;
+  }
+  if (photo === undefined) {
+    problems.push("the home hero photo does not count at 390 px");
+    return problems;
+  }
+  const viewportWidth = page.viewportSize()?.width ?? 390;
+  const centreDelta =
+    Math.abs(cardBox.x + cardBox.width / 2 - viewportWidth / 2) / viewportWidth;
+  const widthShare = cardBox.width / photo.width;
+  if (centreDelta > 0.1 && widthShare < 0.9) {
+    problems.push(
+      `the home Mastery card sits ${(centreDelta * 100).toFixed(0)} percent from the viewport centre and is ${(widthShare * 100).toFixed(0)} percent of the photo width (centred or 90 percent width required)`,
+    );
+  }
+  return problems;
+}
+
 test.describe("www marketing photos", () => {
   for (const width of WIDTHS) {
     test.describe(`${width} px`, () => {
@@ -494,35 +719,14 @@ test.describe("www marketing photos", () => {
           test(`${target.name} ${locale}: photos load, show, and stay uncovered`, async ({
             page,
           }, testInfo) => {
-            test.setTimeout(120_000);
+            test.setTimeout(150_000);
             await openPage(page, locale, target);
-            const photos = await measureAllPhotos(page);
+            const { photos, brokenImages } = await measurePagePhotos(page);
             const counted = photos.filter(isPhotoSize);
-            const problems: string[] = [];
+            const problems = [...brokenImages, ...photoProblems(photos, counted)];
 
-            for (const photo of photos) {
-              if (!photo.visible) {
-                problems.push(`${label(photo)} is not visible at this width`);
-                continue;
-              }
-              if (!photo.loaded) {
-                problems.push(`${label(photo)} is not loaded`);
-              }
-            }
-
-            for (const photo of counted) {
-              if (photo.coverageError !== null) {
-                problems.push(
-                  `${label(photo)} could not be measured: ${photo.coverageError}`,
-                );
-                continue;
-              }
-              const percent = (photo.covered / photo.measuredPoints) * 100;
-              if (percent > MAX_COVERED_PERCENT) {
-                problems.push(
-                  `${label(photo)} is ${percent.toFixed(0)} percent covered (max ${MAX_COVERED_PERCENT})`,
-                );
-              }
+            if (photos.length === 0) {
+              problems.push("the page shows no photo at all");
             }
 
             if (target.heroSrc !== undefined) {
@@ -531,6 +735,10 @@ test.describe("www marketing photos", () => {
               if (hero.length === 0) {
                 problems.push(`the hero photo ${heroSrc} does not show at this width`);
               }
+            }
+
+            if (target.name === "home" && width === 390) {
+              problems.push(...(await masteryCardProblems(page, counted)));
             }
 
             if (problems.length > 0) {
@@ -558,11 +766,11 @@ test.describe("www products photos", () => {
         test(`products ${locale}: one photo in each program card and product block`, async ({
           page,
         }, testInfo) => {
-          test.setTimeout(120_000);
+          test.setTimeout(150_000);
           await openPage(page, locale, { name: "products", path: "/products" });
-          const photos = await measureAllPhotos(page);
+          const { photos, brokenImages } = await measurePagePhotos(page);
           const counted = photos.filter(isPhotoSize);
-          const problems: string[] = [];
+          const problems = [...brokenImages, ...photoProblems(photos, counted)];
 
           for (const card of PROGRAM_CARDS) {
             const cardPhotos = counted.filter(
@@ -588,8 +796,15 @@ test.describe("www products photos", () => {
           }
 
           const productPictures = photos.filter(
-            (photo) => photo.blockTestId !== null && photo.loaded,
+            (photo) =>
+              photo.loaded &&
+              (photo.blockTestId !== null ||
+                photo.src.includes("/images/products/") ||
+                PRODUCT_EXTRA_PICTURE_FILES.some((file) => photo.src.includes(file))),
           );
+          if (productPictures.length === 0) {
+            problems.push("the products page shows no product picture");
+          }
           for (const photo of productPictures) {
             const naturalAspect =
               photo.naturalWidth > 0 && photo.naturalHeight > 0
