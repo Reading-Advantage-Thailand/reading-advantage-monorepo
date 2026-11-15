@@ -9,9 +9,7 @@ Generate high-quality theme music and soundtracks for Reading Advantage educatio
 
 ## Context
 
-The `apps/advantage-games` app contains ~30 educational browser games with fantasy/RPG themes (dragons, wizards, castles, potions, etc.). The current audio in `public/sounds/` consists of basic 8-bit style SFX (cash-register, angry-grunt, success, etc.) and lacks proper thematic background music.
-
-This skill helps you generate cinematic, high-quality instrumental music tailored to each game's theme using MiniMax's music generation API via the `mmx` CLI.
+The `apps/advantage-games` app contains educational browser games with fantasy/RPG themes (dragons, wizards, castles, potions, etc.). The audio in `public/sounds/` is mostly basic SFX. This skill generates instrumental music for each game's theme with the `mmx` CLI.
 
 ## Prerequisites
 
@@ -100,7 +98,7 @@ mmx music generate \
 
 ### 3. Ensure Sufficient Length
 
-The user's anime example was only 25 seconds because lyrics were too short. To generate longer tracks:
+Short lyrics produce short tracks (25 seconds in one early test). To generate longer tracks:
 
 - **Instrumental tracks**: The AI will generate appropriate length based on the structure. Use full song structures to get 1.5-3 minute tracks.
 - **With lyrics**: You MUST provide substantial lyrics (max 3500 chars). Use multiple verses, choruses, bridge. Follow this template for minimum length:
@@ -197,52 +195,7 @@ mmx music generate \
 ```bash
 mmx music generate \
   --prompt "Grand adventure theme song for an educational fantasy RPG game, inspiring and heroic" \
-  --lyrics "[Intro]
-Welcome to a world of wonder
-Where knowledge is your greatest power
-
-[Verse 1]
-In the halls of ancient castles tall
-Where dragons soar and heroes call
-Every word you learn becomes a spell
-To conquer fears and break the darkest well
-Read the runes and solve the mystery
-Write your own legendary history
-
-[Chorus]
-Reading Advantage, open up your mind
-Adventure waits for those who seek to find
-Through every chapter, every quest, every rhyme
-You're growing stronger one word at a time
-
-[Verse 2]
-From the village green to the wizard's tower
-Learning grows like a magical flower
-Battle orcs with verbs and potions too
-Collect the orbs of knowledge shining through
-Meet the magicians of grammar and prose
-As your understanding blooms and grows
-
-[Chorus]
-Reading Advantage, open up your mind
-Adventure waits for those who seek to find
-Through every chapter, every quest, every rhyme
-You're growing stronger one word at a time
-
-[Bridge]
-Choose your adventure, pick your path
-With every sentence, feel the aftermath
-Of wisdom gained and skills renewed
-Your reading power is your attitude
-
-[Chorus]
-Reading Advantage, open up your mind
-Adventure waits for those who seek to find
-Through every chapter, every quest, every rhyme
-You're growing stronger one word at a time
-
-[Outro]
-Your adventure begins now..." \
+  --lyrics "<full lyrics that follow the template in step 3>" \
   --genre "orchestral pop" \
   --mood "inspiring, adventurous, uplifting" \
   --instruments "orchestral strings, piano, drums, choir" \
@@ -257,10 +210,5 @@ Your adventure begins now..." \
 
 ## Important Notes
 
-- **Lyrics length**: The user's first attempt generated only 25 seconds because lyrics were too short. Always use the full template above for lyric tracks.
-- **Instrumental preferred**: For background gameplay music, instrumental is usually better (no lyrics to distract from reading).
-- **File sizes**: If output is unexpectedly small, the generation may have partially failed. Check the file and retry with a simpler prompt.
-- **Model choice**: Use `music-2.6` (recommended). Only use `music-2.6-free` or `music-2.5+` if specifically requested.
-- **Overwriting**: Confirm with user before overwriting existing audio files.
-- **Batch generation**: You can generate multiple tracks in sequence. Consider generating a consistent "sound pack" for related games (e.g., all castle games share orchestral brass elements).
-- **Game integration**: After generating, remind the user to update game components to use the new audio files via the `useSound` hook or direct Audio API.
+- **Overwriting**: Confirm with the user before you overwrite existing audio files.
+- **Batch generation**: You can generate multiple tracks in sequence. Consider a consistent "sound pack" for related games (for example, all castle games share orchestral brass elements).

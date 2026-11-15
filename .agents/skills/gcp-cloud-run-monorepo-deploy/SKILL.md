@@ -54,21 +54,9 @@ Keep app-specific configuration isolated:
 19. Verify the browser flow with Kimi WebBridge or a real browser.
 20. Update the deployment track with evidence and remaining open tasks.
 
-## Important Commands
+## Commands
 
-Start with the runbook’s variable block, then use these exact command families:
-
-```bash
-gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com secretmanager.googleapis.com sqladmin.googleapis.com sql-component.googleapis.com iam.googleapis.com compute.googleapis.com --project="$APP_PROJECT"
-gcloud artifacts repositories create "$AR_REPO" --repository-format=docker --location="$REGION" --project="$APP_PROJECT"
-gcloud iam service-accounts create "${SERVICE}-cloud-run" --project="$APP_PROJECT"
-gcloud sql databases create "$DB_NAME" --instance="$SQL_INSTANCE" --project="$SQL_PROJECT"
-gcloud builds submit --project="$APP_PROJECT" --config="apps/${SERVICE}/cloudbuild.yaml" .
-gcloud run jobs execute "${SERVICE}-db-migrate" --project="$APP_PROJECT" --region="$REGION" --wait
-gcloud beta run domain-mappings create --service="$SERVICE" --domain="$DOMAIN" --region="$REGION" --project="$APP_PROJECT"
-```
-
-Use the runbook for the full IAM, secrets, migration image, bootstrap admin, DNS, and smoke-test commands.
+Start with the runbook's variable block. The runbook has every command (APIs, Artifact Registry, service account, database, Cloud Build, migration job, domain mapping, IAM, secrets, DNS, smoke tests). Do not copy commands into this file.
 
 ## GCP Cloud SQL Socket Gotcha
 

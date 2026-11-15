@@ -18,8 +18,7 @@ description: |
 
 # Reading Advantage Monorepo — QA/QC Testing Skill
 
-A battle-tested QA workflow for the reading-advantage monorepo. Based on
-real testing sessions across all apps in the workspace.
+A QA workflow for the reading-advantage monorepo, based on real testing sessions.
 
 ## Prerequisites
 
@@ -32,22 +31,6 @@ Before starting QA:
    `http://127.0.0.1:10086` (or use Playwright/CDP directly)
 5. **Test accounts**: You may need to create test admin/intern accounts
 
-## Quick Start
-
-```bash
-# 1. Start database
-pnpm db:start
-
-# 2. Start dev server for the app under test
-cd apps/codecamp-advantage && pnpm dev
-
-# 3. Create test accounts (if needed)
-# See "Test Account Setup" section below
-
-# 4. Run QA workflow (this skill)
-# Follow the checklist below systematically
-```
-
 ## Test Account Setup
 
 ### Option A: Direct Database Insert (Fastest)
@@ -55,13 +38,13 @@ cd apps/codecamp-advantage && pnpm dev
 For creating test users when auth is down or you need specific roles:
 
 ```typescript
-// Hash password with bcrypt
-import bcrypt from "bcryptjs";
-const hash = await bcrypt.hash("TestPass123", 10);
+// Hash the password with the app's own function (Argon2id)
+import { hashPassword } from "@reading-advantage/auth/password";
+const hash = await hashPassword("TestPass123");
 
 // Insert user + account directly
 // Required: display_username is NOT NULL
-// Provider: 'credential', password = bcrypt hash
+// Provider: 'credential', password = the hash
 ```
 
 **Example SQL:**
@@ -70,7 +53,7 @@ INSERT INTO users (id, username, display_username, name, email, role, school_id,
 VALUES (gen_random_uuid(), 'testadmin', 'testadmin', 'Test Admin', 'test@example.com', 'ADMIN', null, now(), now());
 
 INSERT INTO accounts (id, user_id, provider_id, password, created_at, updated_at)
-VALUES (gen_random_uuid(), '<user-id>', 'credential', '$2a$10$...hash...', now(), now());
+VALUES (gen_random_uuid(), '<user-id>', 'credential', '<hash from hashPassword>', now(), now());
 ```
 
 ### Option B: Via Admin Panel
@@ -112,7 +95,7 @@ fetch("/api/trpc/codecamp.submitQuiz", {
 - [ ] Role badge displays correctly in header
 
 **Common Issues:**
-- Password hash mismatch (bcrypt version mismatch)
+- Password hash mismatch (hash not made with `hashPassword`)
 - Missing `display_username` causing insert failures
 - Session token not persisting (check cookie domain/path)
 
@@ -226,7 +209,7 @@ Add ARIA attributes to progress bar containers:
 - [ ] Progress updates on dashboard after completion
 - [ ] Quiz retaking works (score updates, `completed_at` preserved)
 
-**CRITICAL BUG PATTERN — Quiz Progress Save:**
+**Known bug pattern — Quiz Progress Save:**
 
 If quiz scoring works (returns 100%) but database insert fails with
 `completed_at` format error, the Date object is being passed incorrectly
@@ -261,7 +244,7 @@ sql`COALESCE(${table.completedAt}, ${nowIso})`
 - [ ] Lesson-scoped chat works (context from current lesson)
 - [ ] Rate limiting works (30 req/min)
 
-**CRITICAL BUG PATTERN — Chat Not Responding:**
+**Known bug pattern — Chat Not Responding:**
 
 If chat returns "Sorry, I'm having trouble responding right now":
 
@@ -343,10 +326,7 @@ FROM codecamp_user_progress;
 DELETE FROM users WHERE username LIKE 'qatest%';
 ```
 
-**Note:** There are 3 databases in the Docker container:
-- `reading_advantage`
-- `primary_advantage`
-- `codecamp_advantage`
+**Note:** `docker/init-db.sh` creates the local databases (for example `reading_advantage`, `primary_advantage`, `codecamp_advantage`).
 
 ## Running Tests
 
@@ -517,18 +497,4 @@ Use this structure for QA session reports:
 
 ## Archiving QA Tracks
 
-When using the Measure framework:
-
-1. Create track in `measure/tracks/<track-id>/`
-2. Write `spec.md`, `plan.md`, `metadata.json`
-3. Register in `measure/tracks.md`
-4. Save QA report as `qa-report.md` in track directory
-5. Update metadata with actual results and fix status
-6. Mark track as `completed` when done
-
-## Version History
-
-- **v1.0** (2026-05-17) — Initial version based on codecamp-advantage QA session.
-  Covers: Date format bug, chat API key rotation, locked module UX,
-  progress bar ARIA, PR form verification, test account creation,
-  dev server troubleshooting, browser automation patterns.
+Save the QA report as `qa-report.md` in the Measure track directory. Follow `measure/workflow.md` for track registration and closeout.

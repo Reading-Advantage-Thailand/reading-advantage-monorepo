@@ -1,66 +1,5 @@
 # AGENTS.md — Reading Advantage Monorepo
 
-## Contents
-
-- [Ponytail Rules](#ponytail-rules)
-- [Hashing and Provenance Policy](#hashing-and-provenance-policy)
-- [Core Architecture Decisions](#core-architecture-decisions)
-- [Primary Stack](#primary-stack)
-  - [Frontend](#frontend)
-  - [Backend](#backend)
-  - [Storage](#storage)
-  - [AI](#ai)
-  - [Infrastructure](#infrastructure)
-- [Version Policy](#version-policy)
-- [Monorepo Structure](#monorepo-structure)
-  - [One program, one app, one container](#one-program-one-app-one-container)
-  - [Clean up after a merge](#clean-up-after-a-merge)
-- [Package Responsibilities](#package-responsibilities)
-  - [Database Package](#database-package)
-  - [Backend Package](#backend-package)
-- [Backend-as-Code Model](#backend-as-code-model)
-- [Backend Function Pattern](#backend-function-pattern)
-- [Authentication vs Authorization](#authentication-vs-authorization)
-- [Backend Function Requirements](#backend-function-requirements)
-- [Contracts and Validation](#contracts-and-validation)
-- [tRPC Policy](#trpc-policy)
-- [Database](#database)
-  - [Local Setup](#local-setup)
-  - [Multi-Tenancy](#multi-tenancy)
-- [Authentication](#authentication)
-  - [Auth Philosophy](#auth-philosophy)
-  - [Auth Adapter](#auth-adapter)
-  - [Authentication Requirements](#authentication-requirements)
-  - [Features Not Included by Default](#features-not-included-by-default)
-  - [Current Auth State](#current-auth-state)
-- [Permissions](#permissions)
-- [Storage](#storage-1)
-- [AI](#ai-1)
-- [Jobs and Workers](#jobs-and-workers)
-- [Route Handlers vs API Services](#route-handlers-vs-api-services)
-- [Observability](#observability)
-  - [Logging](#logging)
-  - [Audit Logs](#audit-logs)
-- [Migrations](#migrations)
-- [Testing](#testing)
-  - [Project-Specific Testing](#project-specific-testing)
-- [Deployment](#deployment)
-- [Provider Neutrality Rule](#provider-neutrality-rule)
-- [Agent Guidance](#agent-guidance)
-- [Architectural Goal](#architectural-goal)
-- [Measure Workflow](#measure-workflow)
-  - [Quotes of owner words](#quotes-of-owner-words)
-- [Documentation Standards](#documentation-standards)
-  - [JSDoc for All Functions](#jsdoc-for-all-functions)
-- [Build & Test](#build--test)
-- [Known Issues](#known-issues)
-- [Commit Style](#commit-style)
-- [Codebase Graph](#codebase-graph)
-  - [Quickstart](#quickstart)
-  - [Agent Rules](#agent-rules)
-  - [One-liners](#one-liners)
-
-
 Instructions for AI coding agents working in this repository.
 
 This document uses a provider-neutral, backend-as-code architecture optimized for Next.js, TypeScript, AI coding agents, and long-term portability.
@@ -104,7 +43,8 @@ The codebase should be: agent-readable, declarative, strongly typed, contract-dr
 Application  →  Backend Module  →  Internal Interface  →  Provider Adapter  →  Provider
 ```
 
-Avoid direct coupling to provider SDKs.
+Avoid direct coupling to provider SDKs. Provider-specific code belongs behind adapters. This rule applies
+to: AI, storage, authentication implementations, queues, email, search, analytics, billing.
 
 ---
 
@@ -112,34 +52,11 @@ Avoid direct coupling to provider SDKs.
 
 Use the following defaults unless a project-specific specification explicitly overrides them.
 
-### Frontend
-
-- Next.js
-- React
-- TypeScript
-- Tailwind CSS
-- shadcn/ui
-
-### Backend
-
-- PostgreSQL
-- Drizzle ORM
-- Zod
-- Docker
-
-### Storage
-
-- S3-compatible object storage
-
-### AI
-
-- Internal AI adapter layer
-- Vercel AI SDK may be used behind the adapter
-
-### Infrastructure
-
-- Docker deployment target
-- Cloud Run, Fly.io, Railway, Kubernetes, or equivalent container platforms
+- **Frontend**: Next.js, React, TypeScript, Tailwind CSS, shadcn/ui
+- **Backend**: PostgreSQL, Drizzle ORM, Zod, Docker
+- **Storage**: S3-compatible object storage
+- **AI**: Internal AI adapter layer. The Vercel AI SDK may be used behind the adapter.
+- **Infrastructure**: Docker deployment target on Cloud Run, Fly.io, Railway, Kubernetes, or an equivalent container platform
 
 ---
 
@@ -175,12 +92,12 @@ Target structure:
   /api
 ```
 
-Current package layout (migrating toward target):
+Core packages (migrating toward the target; `packages/` has the full list):
 
 | Package | Purpose | Depends on |
 |---------|---------|------------|
 | `@reading-advantage/db` | Drizzle schema, client | — |
-| `@reading-advantage/auth` | Roles, permissions, JWT (migrating to adapter pattern) | db |
+| `@reading-advantage/auth` | Roles, permissions, sessions, password hashing (migrating to adapter pattern) | db |
 | `@reading-advantage/domain` | Business logic functions | db, auth, types |
 | `@reading-advantage/api` | tRPC routers | db, auth, domain, types |
 | `@reading-advantage/webhooks` | Hono external HTTP | db, domain |
@@ -252,8 +169,6 @@ Business logic must not live inside `/packages/db`.
 - Workflows
 
 Backend modules may import database definitions from `/packages/db`.
-
-Business logic belongs in `/packages/backend`.
 
 ---
 
@@ -401,7 +316,7 @@ TypeScript types should be inferred from Zod schemas whenever possible.
 
 Runtime validation is required at all external boundaries. Do not rely solely on TypeScript types.
 
-Every backend operation must define input schema and output schema using Zod. No external input should enter the system without validation.
+No external input should enter the system without validation.
 
 ---
 
@@ -411,15 +326,7 @@ tRPC may be used as an internal transport adapter. tRPC is not the domain model.
 
 Core backend functions must exist independently of tRPC.
 
-Backend functionality should remain adaptable to:
-
-- Direct server calls
-- HTTP APIs
-- tRPC
-- Workers
-- CLI tools
-- OpenAPI
-- JSON Schema generation
+Backend functionality must stay callable from every transport listed in "Backend Function Requirements". It must also stay adaptable to OpenAPI and JSON Schema generation.
 
 Use Zod contracts first. Treat tRPC as optional infrastructure.
 
@@ -435,7 +342,7 @@ Database access should be centralized. Do not allow arbitrary SQL access from UI
 
 ### Local Setup
 
-- **Local**: Docker Postgres on port 5432, 3 databases (`reading_advantage`, `primary_advantage`, `science_advantage`)
+- **Local**: Docker Postgres on port 5432. `docker/init-db.sh` creates the databases.
 - **Schema**: `packages/db/src/schema/` — organized by domain (users, classrooms, content, progress)
 - **Migrations**: `packages/db/drizzle/` — generated by `drizzle-kit generate`
 - **Start DB**: `pnpm db:start`
@@ -515,7 +422,7 @@ Do not introduce OAuth, social login, magic links, passwordless login, account l
 
 ### Current Auth State
 
-The codebase currently has `@reading-advantage/auth` providing roles, permissions, and JWT. Some apps still use Firebase Auth. This is being migrated toward the adapter pattern described above.
+`@reading-advantage/auth` provides roles, permissions, PostgreSQL-backed sessions (`src/session.ts`), and password hashing. Apps are migrating toward the adapter pattern described above.
 
 ---
 
@@ -698,63 +605,21 @@ Avoid relying exclusively on Playwright or UI testing.
 
 ## Deployment
 
-Docker is the standard deployment target.
-
-Applications should be deployable to:
-
-- Google Cloud Run
-- Fly.io
-- Railway
-- Kubernetes
-- Docker hosts
-- Equivalent container environments
+Docker is the standard deployment target. Applications must stay deployable to any container environment listed under "Primary Stack".
 
 Avoid depending on platform-specific features in core architecture. Platform optimizations are allowed only when they have portable fallbacks.
 
 ---
 
-## Provider Neutrality Rule
-
-Provider-specific code belongs behind adapters.
-
-Preferred:
-
-```
-Application → Backend Module → Internal Interface → Provider Adapter → Provider
-```
-
-Avoid:
-
-```
-Application → Provider SDK
-```
-
-This rule applies to: AI, storage, authentication implementations, queues, email, search, analytics, billing.
-
----
-
 ## Agent Guidance
 
-When modifying the system:
+When you modify the system:
 
 1. Locate the owning backend module first.
-2. Update contracts before implementing logic.
-3. Keep business logic in `/packages/backend`.
-4. Keep UI layers thin.
-5. Keep Route Handlers thin.
-6. Keep Server Actions thin.
-7. Do not bypass adapters.
-8. Do not introduce framework lock-in without approval.
-9. Prefer portable infrastructure.
-10. Prefer explicit contracts.
-11. Add tests alongside backend changes.
-12. Preserve transport independence.
-
----
-
-## Architectural Goal
-
-The objective is to capture the developer experience of backend-as-code systems while retaining complete infrastructure portability.
+2. Update contracts before you implement logic.
+3. Keep UI layers, Route Handlers, and Server Actions thin.
+4. Do not bypass adapters.
+5. Do not introduce framework lock-in without approval.
 
 ---
 
@@ -774,7 +639,7 @@ Key files:
 - `measure/lessons-learned.md` — Project memory
 - `measure/tech-debt.md` — Known shortcuts
 
-Never start significant work without an active track.
+Never start significant work without an active track. Update `measure/tracks.md` and the current track's `plan.md` before and after work.
 
 ### Quotes of owner words
 
@@ -849,12 +714,11 @@ Run for a single package: `pnpm turbo run build --filter=@reading-advantage/db`
 ## Known Issues
 
 See `measure/tech-debt.md` for the full list. Key items:
-- Primary-advantage has 49 pre-existing ESLint errors
-- Mixed Jest/Vitest test runners (being normalized)
-- Some apps still use Prisma (migrating to Drizzle gradually)
-- Firebase Auth still in reading-advantage (being migrated to adapter pattern)
-- `@reading-advantage/auth` uses JWT (migrating to session-based auth adapter)
-- 294 legacy API routes across reading-advantage, primary-advantage, and science-advantage (not yet using domain functions)
+- Lint error counts: see `measure/tech-debt.md`. Do not copy counts into this file.
+- Mixed Jest/Vitest test runners (`advantage-games` and `reading-advantage` use Jest)
+- `@reading-advantage/auth` is migrating to the session-based auth adapter
+- `apps/reading-advantage/package.json` still lists `firebase-admin`. No runtime code imports Firebase.
+- Most API routes in reading-advantage, primary-advantage, and science-advantage do not use domain functions yet. Reading has 4 of 218 routes. Primary has 29 of 104. Science has 24 of 29.
 
 ---
 
@@ -888,23 +752,8 @@ build-graph update ./graph.db src/file1.ts src/file2.ts
 
 ### Agent Rules
 
-| Rule | When |
-|------|------|
-| Query before grep | Before searching for "what uses X", run `build-graph callers ./graph.db X` or `build-graph deps ./graph.db X` |
-| Inspect exports before editing | Before modifying an exported function/class/schema, run `build-graph inspect ./graph.db SymbolName` to see blast radius |
-| Filter by package | In monorepos, add `--from-package=P` or `--to-package=P` to `deps` / `callers` to narrow scope |
-| Update after structural edits | After changing signatures, imports, exports, schemas, or JSX, run `build-graph update ./graph.db <files>` so the next agent has fresh context |
-| Skip for internal-only changes | Pure variable renames inside a private function do not need a graph update |
+- Before you search for "what uses X", run `build-graph callers ./graph.db X` or `build-graph deps ./graph.db X`. In a monorepo, add `--from-package=P` or `--to-package=P`.
+- Before you change an exported function, class, or schema, run `build-graph inspect ./graph.db SymbolName` to see the blast radius.
+- After you change signatures, imports, exports, schemas, or JSX, run `build-graph update ./graph.db <files>`. A private rename inside one function needs no update.
 
-### One-liners
-
-```bash
-build-graph search ./graph.db keyword           # fuzzy node search
-build-graph callers ./graph.db fnName           # who calls this
-build-graph deps ./graph.db Module --downstream # what Module depends on
-build-graph path ./graph.db A.ts B.ts           # shortest path
-build-graph stats ./graph.db                    # dashboard
-build-graph inspect ./graph.db SymbolName       # full profile
-```
-
-For full docs, read the skill: `~/.claude/skills/build-graph/SKILL.md`
+For all commands (`search`, `path`, `stats`, and others), read the skill: `~/.claude/skills/build-graph/SKILL.md`

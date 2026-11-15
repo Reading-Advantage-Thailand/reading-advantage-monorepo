@@ -1,31 +1,14 @@
-# CLAUDE.md
+# AGENTS.md — marketing and PR documents
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
-## Contents
-
-- [Repository Overview](#repository-overview)
-- [Repository Purpose](#repository-purpose)
-- [Key Documents](#key-documents)
-- [Product Structure](#product-structure)
-- [Evidence-Based Messaging](#evidence-based-messaging)
-- [Strategic Positioning](#strategic-positioning)
-- [Working with Marketing Documents](#working-with-marketing-documents)
-- [Document Formats and Standards](#document-formats-and-standards)
-- [Key Strategic Principles](#key-strategic-principles)
-- [Success Metrics](#success-metrics)
-- [File Naming Conventions](#file-naming-conventions)
-- [Distribution and Collaboration](#distribution-and-collaboration)
-- [Important Terminology](#important-terminology)
-- [Contact and Approval Process](#contact-and-approval-process)
+Guidance for AI agents that work on the documents in this folder.
 
 ## Repository Overview
 
-This is a **marketing and PR documentation repository** for Reading Advantage and Primary Advantage, AI-powered extensive reading platforms targeting private Thai schools. This repository contains strategic marketing documents, not code.
+This folder holds the **marketing and PR documents** for Reading Advantage and Primary Advantage, AI-powered extensive reading platforms for private Thai schools. It holds strategic marketing documents, not code.
 
 ## Repository Purpose
 
-The repository serves as the central location for:
+This folder is the central location for:
 - Marketing strategy and messaging frameworks
 - PR campaign planning and materials
 - Sales enablement documentation
@@ -50,7 +33,7 @@ The repository serves as the central location for:
 ### `distributor-launch-kit.md`
 **Risk-reversal sales tools** for partners. Includes scripts for the "Peace of Mind" pitch and battle cards for handling common objections (Teacher skill, software adoption, cost).
 
-### `blended-learning-observation-form-quarterly.md`
+### `supporting-docs/blended-learning-observation-form-quarterly.md`
 **Quality Assurance tool** used both internally and as a sales asset. Provides the "Secret Weapon" proof that our system ensures instructional fidelity regardless of teacher background.
 
 ### `implementation-playbook.md`
@@ -85,7 +68,7 @@ The repository serves as the central location for:
 
 ### What "Blended Learning" Means
 
-**IMPORTANT:** In reading instruction, "blended learning" means **physical materials + digital platform** (like RAZ-Kids). It does NOT mean "AI instruction + human teacher."
+In reading instruction, "blended learning" means **physical materials + digital platform** (like RAZ-Kids). It does NOT mean "AI instruction + human teacher."
 
 **Our Blended Learning model (5 periods/week):**
 | Periods | Activity | Materials | Purpose |
@@ -120,7 +103,7 @@ The workbooks don't need to prove they're more effective than extensive reading 
 
 ### The Aka 2019 Standard
 
-**CRITICAL: All outcome claims must use this research-based language. Do NOT use "40% improvement" or similar percentage claims.**
+**All outcome claims must use this research-based language. Do not use "40% improvement" or similar percentage claims.**
 
 **Approved evidence language:**
 > A controlled one-year study (Aka, 2019) found that extensive reading instruction (2 hours/week) outperformed grammar instruction on reading test scores. On the post-test reading section (0-100 scale), the extensive reading group scored higher (61.78 vs 52.29; ~+9.5 points).
@@ -163,7 +146,7 @@ All external-facing content must align with the messaging framework in `marketin
 - QA/QC (scripted lessons, Big 4 protocol, fidelity audits)
 
 **What to Avoid:**
-- Specific percentage improvement claims (e.g., "40% improvement")
+- Specific percentage improvement claims (see "The Aka 2019 Standard")
 - Specific school counts or student numbers (until significantly grown)
 - "Leading platform" or "industry leader" claims without proof
 - Any inflated metrics or aspirational statistics presented as current reality
@@ -203,42 +186,11 @@ When developing new materials (presentations, brochures, social media, etc.):
 
 ---
 
-## Document Formats and Standards
-
-### Markdown Structure
-- Use clear heading hierarchy (H1 for title, H2 for major sections, H3 for subsections)
-- Include horizontal rules (`---`) between major sections for visual separation
-- Use bulleted lists for features/benefits, numbered lists for sequential steps
-- Include tables for pricing, metrics, or comparative information
-- Use blockquotes or callout formatting for critical warnings or notes
-
-### Checklist Format
-For implementation documents:
-- Use `- [ ]` for uncompleted tasks
-- Use `- [x]` for completed tasks (when updating status)
-- Group related tasks under clear headings
-- Assign priority levels (Critical, High, Medium, Low)
-- Include estimated timelines
-- Add verification checklist before finalization
-
-### Strategic Document Format
-For planning documents (like marketing-foundation-document.md):
-- Start with Executive Summary
-- Include Table of Contents for documents >10 pages
-- Separate "Current State" from "Future Vision"
-- Provide specific, measurable success metrics
-- Include implementation roadmap with phases/timeline
-- Add budget allocation guidance
-- Conclude with approval process and next steps
-
----
-
 ## Key Strategic Principles
 
 ### Credibility First
 All new materials must:
-- Be radically honest about current scale
-- Focus on technology innovation and research-backed outcomes (Aka 2019)
+- Be radically honest about current scale (see "Core Pillars")
 - Position as innovative partner, not established market leader
 - Use case studies and specific results over broad claims
 
@@ -296,15 +248,7 @@ When creating new documents in this repository:
 - **Leadership:** Reviews strategic direction and budget allocation
 
 ### External Use
-Materials in this repository may be adapted for:
-- Sales presentations and demos
-- Partner/distributor training
-- Media and PR outreach
-- Conference presentations
-- Social media content
-- Email marketing campaigns
-
-Always ensure external materials maintain messaging consistency and credibility standards.
+Teams may adapt these materials for sales, partner training, media, conferences, social media, and email. Always ensure external materials maintain messaging consistency and credibility standards.
 
 ---
 
@@ -324,10 +268,9 @@ Always ensure external materials maintain messaging consistency and credibility 
 
 ## Contact and Approval Process
 
-Before finalizing major materials:
-1. Verify alignment with `marketing-foundation-document.md` messaging
-2. Review for credibility (no inflated claims, no percentage improvement promises)
-3. Ensure all outcome claims use Aka 2019 evidence language
-4. Confirm budget allocation if applicable
-5. Get stakeholder approval for external distribution
-6. Update version history and date in document header
+Before you finalize major materials:
+1. Verify alignment with `marketing-foundation-document.md` messaging.
+2. Review for credibility. Use the Aka 2019 evidence language for all outcome claims. Do not use inflated claims or percentage improvement promises.
+3. Confirm budget allocation if applicable.
+4. Get stakeholder approval for external distribution.
+5. Update version history and date in the document header.
