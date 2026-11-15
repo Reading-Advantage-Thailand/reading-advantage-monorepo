@@ -643,7 +643,7 @@ function hasConflictingProductStatus(
   // The month list holds no "may": the word is a public date word and a common verb.
   const leftoverMonth =
     /\b(?:january|february|march|april|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sept|oct|nov|dec)\b/g;
-  // A full ISO date is a sourced internal fact, such as the Primary cutover date.
+  // A full ISO date is a date claim unless no planned product is named.
   const isoDate = /\b20\d\d-\d\d-\d\d\b/g;
   const pronounStart = /^(?:it|its|this|they|their|these|those|both|each|either|neither)\b/;
   const liveClaim =
@@ -681,7 +681,11 @@ function hasConflictingProductStatus(
       for (const entry of publicProductDates) {
         rest = rest.split(entry.date).join(" ");
       }
-      rest = rest.replace(isoDate, " ");
+      // An ISO date is an internal fact only where no planned product is named.
+      // On a planned line an ISO date is an exact day, and criterion 8 bans it.
+      if (products.length === 0) {
+        rest = rest.replace(isoDate, " ");
+      }
       const years = rest.match(leftoverYear) ?? [];
       const months = rest.match(leftoverMonth) ?? [];
       // The full product name binds every date token; the short name binds the month dates.
