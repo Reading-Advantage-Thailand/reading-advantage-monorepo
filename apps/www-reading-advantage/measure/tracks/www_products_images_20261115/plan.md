@@ -27,6 +27,14 @@ Light lane. Classic FR list from spec.md.
   pages, blended-learning, in both motion settings (summary.json, zero
   low-opacity elements, zero broken images).
 
+## Phase 4b: Blog hero empty band (PM addition, 2026-11-15)
+- [x] Capture live blog post routes at 1280 px and 390 px; prove zero
+  animations and zero hidden elements; measure the 70vh min-height gap
+  (up to 259 px desktop, 94 px mobile; 431 to 491 px on the blog index).
+- [x] Add a red test for a compact hero utility and its blog route usage.
+- [x] Add `height="compact"` to HeroSection and use it on the post, index,
+  and paginated index routes; verify gap 0 at every viewport.
+
 ## Phase 5: Gates
 - [ ] Targeted vitest (changed files only, --maxWorkers=1) exits 0.
 - [ ] www lint exits 0 with no new error and every shadcn/* error fixed in
