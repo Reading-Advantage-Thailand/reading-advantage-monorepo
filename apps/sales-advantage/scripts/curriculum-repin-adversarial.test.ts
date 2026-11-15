@@ -4,9 +4,11 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import {
+  assertCurriculumReleaseReady,
   buildCurriculumAutomatedReview,
   CURRICULUM_SOURCE_PATHS,
 } from "./curriculum-release";
@@ -290,15 +292,20 @@ function pinnedText(path: string): string {
 
 /** Reads one pinned document as raw bytes from the advantage-pr repository (read only). */
 function pinnedBytes(path: string): Buffer {
-  return execFileSync("git", ["-C", PIN_REPO, "show", `${PIN}:${path}`], {
+  return pinnedBytesAt(PIN, path);
+}
+
+/** Reads one document as raw bytes at one commit of the advantage-pr repository (read only). */
+function pinnedBytesAt(commit: string, path: string): Buffer {
+  return execFileSync("git", ["-C", PIN_REPO, "show", `${commit}:${path}`], {
     maxBuffer: 4 * 1024 * 1024,
   });
 }
 
-/** True when the pin is readable in the local advantage-pr clone. */
-function pinReadable(): boolean {
+/** True when one commit is readable in the local advantage-pr clone; defaults to the pin. */
+function pinReadable(commit: string = PIN): boolean {
   try {
-    execFileSync("git", ["-C", PIN_REPO, "cat-file", "-e", `${PIN}^{commit}`], {
+    execFileSync("git", ["-C", PIN_REPO, "cat-file", "-e", `${commit}^{commit}`], {
       stdio: "ignore",
     });
     return true;
@@ -311,7 +318,7 @@ const candidatePath = new URL("../curriculum/release-candidate.json", import.met
 const candidate = JSON.parse(readFileSync(candidatePath, "utf8")) as {
   graphSha256: string;
   source: { commit: string; documents: Array<{ path: string; sha256: string }> };
-  approval: { status: string };
+  approval: { status: string } & Record<string, unknown>;
 };
 
 describe("S2 adversarial - the release candidate binds the seed and the pin", () => {
@@ -341,4 +348,236 @@ describe("S2 adversarial - the release candidate binds the seed and the pin", ()
       }
     },
   );
+});
+
+// Round 3: the 609f962e re-pin. Open item O3 lets a planned line state only
+// the three public dates of the scope doc Dates paragraph, and the scope doc
+// §7 criterion 8 binds each date to its product: the May 2027 line (the new
+// editions), the 2027 school year (Science, Math, and Zhongwen Advantage),
+// and November 2026 (Storytime Advantage). The probes attack the guard with
+// other spellings, other products, and other sentence positions.
+
+/** The previous pin, whose wording the 609f962e re-pin retired. */
+const PREVIOUS_PIN = "7eff8c106c7265b41d584c4ea997d65ea30dadfb";
+
+/** The old 7eff8c10 date answer that the re-pin retired. */
+const OLD_WORDING_7EFF8C10 = "Give no date (Q-PR-24)";
+
+/** The new date guidance of the 609f962e seed. */
+const NEW_DATE_GUIDANCE = "Name the 2027 school year; give no other date";
+
+/** The monorepo root, for the approval-evidence gate of assertCurriculumReleaseReady. */
+const WORKSPACE_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
+
+describe("S2 adversarial round 3 - the O3 date guard against date smuggling", () => {
+  // Each probe holds a date the pinned sources do not allow for the named
+  // product, in a spelling or a position that must not bypass the guard.
+  it.each([
+    // An abbreviated spelling of the Storytime date stays banned: the
+    // whitelist holds only the exact public spellings.
+    "Storytime Advantage goes live in Nov 2026.",
+    // "2027-28" still holds the banned year token 2027 outside the whitelist.
+    "Science Advantage is aimed at the 2027-28 school year.",
+    // A live verb with a date form outside the whitelist fails.
+    "Storytime Advantage launches in SY2027.",
+    // A bare year with a live verb fails.
+    "Science Advantage is live in 2027.",
+    // A bare month with a live verb fails through the live-claim rule; "may"
+    // is outside the month list of the guard.
+    "Science Advantage launches in May.",
+    // Mixed case and extra spaces do not bypass the normalized guard.
+    "SCIENCE   Advantage   Launches  in   NOVEMBER   2027.",
+    // The launch-verb form of the cross-product November 2026 claim fails
+    // through the global launch-plus-year rule on the unstripped statement.
+    "Science Advantage launches in November 2026.",
+  ])("rejects a planned-line date the sources do not allow: %s", (probe) => {
+    expect(graphText.includes(probe), "the probe is already in the real graph").toBe(false);
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status/,
+    );
+  });
+
+  it("accepts the exact Storytime public date with mixed case and extra spaces", () => {
+    const probe = "Storytime   Advantage goes live in   November   2026.";
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).not.toThrow();
+  });
+
+  // Defect D1: the guard strips the three public dates from any planned line,
+  // product-agnostic, so a planned line accepts the date of another product.
+  // The pinned sources bind each date to its product (scope doc §7 criterion
+  // 8), and STEM Advantage has no public date at all ("Planned, no date").
+  // These cases stay failing for Green; the guard accepts every probe.
+  it.each([
+    "Storytime Advantage is aimed at primary schools in the 2027 school year.",
+    "STEM Advantage is aimed at the 2027 school year.",
+    "Storytime Advantage goes live in May 2027.",
+    "Science Advantage goes live in november 2026.",
+  ])("rejects a public date moved to another product: %s", (probe) => {
+    expect(graphText.includes(probe), "the probe is already in the real graph").toBe(false);
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status/,
+    );
+  });
+
+  // Defect D2: the guard splits statements on sentence ends, so a second
+  // sentence without the product name escapes the planned-line check and the
+  // Advantage-wide launch-plus-year rule. These cases stay failing for Green;
+  // the guard accepts every probe.
+  it.each([
+    "Storytime Advantage is part of the K-6 offer. It goes live in December 2026.",
+    "Science Advantage is aimed at primary schools. It launches in 2028.",
+  ])("rejects a wrong date in a second sentence of the same line: %s", (probe) => {
+    expect(() => buildCurriculumAutomatedReview(withExtraParagraph(probe))).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID/,
+    );
+  });
+
+  // Known weaknesses of the year and month matchers, not blocking. `it.fails`
+  // records them: each case passes while the weakness exists and fails when
+  // the matcher is fixed.
+  it.fails("rejects a bare month without a live verb (Review A F3)", () => {
+    const mutated = withExtraParagraph("The Science Advantage app is planned for May.");
+    expect(() => buildCurriculumAutomatedReview(mutated)).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID/,
+    );
+  });
+
+  it.fails("rejects a SY2027 date form without a live verb", () => {
+    const mutated = withExtraParagraph("Storytime Advantage is planned for SY2027.");
+    expect(() => buildCurriculumAutomatedReview(mutated)).toThrow(
+      /SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID/,
+    );
+  });
+});
+
+describe("S2 adversarial round 3 - a seed line restored to the 7eff8c10 wording", () => {
+  it.skipIf(!pinReadable(PREVIOUS_PIN) || !pinReadable())(
+    "the old wording exists at 7eff8c10 and is gone from every source at 609f962e",
+    () => {
+      const oldDemoScripts = pinnedBytesAt(
+        PREVIOUS_PIN,
+        "09-sales-enablement/demo-scripts.md",
+      ).toString("utf8");
+      expect(oldDemoScripts).toContain(OLD_WORDING_7EFF8C10);
+      for (const path of CURRICULUM_SOURCE_PATHS) {
+        expect(pinnedText(path), path).not.toContain(OLD_WORDING_7EFF8C10);
+      }
+    },
+  );
+
+  it("a restored old wording fails the release binding through the graph digest", () => {
+    expect(graphText.split(NEW_DATE_GUIDANCE).length - 1).toBeGreaterThanOrEqual(1);
+    expect(graphText).not.toContain(OLD_WORDING_7EFF8C10);
+    const restored = mapStrings(rows, (text) =>
+      text.split(NEW_DATE_GUIDANCE).join(OLD_WORDING_7EFF8C10));
+    // The claim guard is not the layer that catches a restore: the old wording
+    // holds no banned claim, so the text checks still pass. The defense is the
+    // candidate binding and the content rows of curriculum-content-2027.test.ts.
+    expect(() => buildCurriculumAutomatedReview(restored)).not.toThrow();
+    expect(curriculumGraphDigest(restored)).not.toBe(candidate.graphSha256);
+    expect(curriculumGraphDigest(rows)).toBe(candidate.graphSha256);
+  });
+});
+
+describe("S2 adversarial round 3 - the release candidate resists tampering", () => {
+  it("the real candidate cannot pass the release gate while approval waits", async () => {
+    await expect(
+      assertCurriculumReleaseReady(candidate, rows, { workspaceRoot: WORKSPACE_ROOT }),
+    ).rejects.toThrow("SALES_CURRICULUM_HUMAN_APPROVAL_REQUIRED");
+  });
+
+  // A source commit in any form but the exact 40-character lowercase pin
+  // fails the manifest schema before any other check runs.
+  it.each(["609f962e", PIN.toUpperCase(), `${PIN}0`])(
+    "rejects a source commit that is not the exact pin: %s",
+    async (commit) => {
+      const tampered = mapStrings(candidate, (text) => text);
+      tampered.source.commit = commit;
+      await expect(
+        assertCurriculumReleaseReady(tampered, rows, { workspaceRoot: WORKSPACE_ROOT }),
+      ).rejects.toMatchObject({ name: "ZodError" });
+    },
+  );
+
+  it("rejects an approval status outside the schema", async () => {
+    const tampered = mapStrings(candidate, (text) => text);
+    tampered.approval = { ...tampered.approval, status: "reviewed" };
+    await expect(
+      assertCurriculumReleaseReady(tampered, rows, { workspaceRoot: WORKSPACE_ROOT }),
+    ).rejects.toMatchObject({ name: "ZodError" });
+  });
+
+  it.skipIf(!pinReadable())("a changed document sha256 breaks the pin binding", () => {
+    const tampered = mapStrings(candidate, (text) => text);
+    const target = tampered.source.documents[0]!;
+    target.sha256 = (target.sha256.startsWith("a") ? "b" : "a") + target.sha256.slice(1);
+    // The surgical change breaks exactly one document; the other 19 still
+    // match the pinned bytes, so the mismatch cannot be vacuous.
+    const mismatches = tampered.source.documents.filter(
+      (document) =>
+        createHash("sha256").update(pinnedBytes(document.path)).digest("hex") !==
+        document.sha256,
+    );
+    expect(mismatches.map((document) => document.path)).toEqual([
+      candidate.source.documents[0]!.path,
+    ]);
+  });
+
+  it.skipIf(!pinReadable(PREVIOUS_PIN))(
+    "the recorded document hashes do not validate against the old 7eff8c10 pin",
+    () => {
+      // A candidate with source.commit other than 609f962e fails: the recorded
+      // hashes bind the documents of the new pin, and every document that
+      // changed between the pins hashes differently at the old pin.
+      const stale = candidate.source.documents.filter(
+        (document) =>
+          createHash("sha256").update(pinnedBytesAt(PREVIOUS_PIN, document.path)).digest("hex") !==
+          document.sha256,
+      );
+      expect(stale.length).toBeGreaterThan(0);
+      expect(stale.map((document) => document.path)).toContain(
+        "09-sales-enablement/sales-training-scope-2027.md",
+      );
+    },
+  );
+
+  it("a self-declared approval without the reviewer trust anchor fails", async () => {
+    const tampered = mapStrings(candidate, (text) => text);
+    tampered.approval = {
+      status: "approved",
+      reviewer: "adversary",
+      reviewedAt: "2026-11-15T00:00:00.000Z",
+      evidenceRef: "measure/tracks/sales_advantage_golive_20260701/curriculum-approval.json",
+      evidenceSha256: "0".repeat(64),
+      checks: { pedagogy: true, sourceTraceability: true, honestClaims: true, roleplayRubrics: true },
+    };
+    await expect(
+      assertCurriculumReleaseReady(tampered, rows, { workspaceRoot: WORKSPACE_ROOT }),
+    ).rejects.toThrow("SALES_CURRICULUM_APPROVAL_TRUST_ANCHOR_REQUIRED");
+  });
+
+  it("the old golive approval cannot bless the re-pinned candidate", async () => {
+    const evidenceRef =
+      "measure/tracks/sales_advantage_golive_20260701/curriculum-approval.json";
+    const evidenceSha256 = createHash("sha256")
+      .update(readFileSync(join(WORKSPACE_ROOT, evidenceRef)))
+      .digest("hex");
+    const tampered = mapStrings(candidate, (text) => text);
+    tampered.approval = {
+      status: "approved",
+      reviewer: "adversary",
+      reviewedAt: "2026-11-15T00:00:00.000Z",
+      evidenceRef,
+      evidenceSha256,
+      checks: { pedagogy: true, sourceTraceability: true, honestClaims: true, roleplayRubrics: true },
+    };
+    // The evidence is real and its hash matches, but it binds the old graph
+    // and the old source commit, so the re-pinned candidate is rejected.
+    await expect(
+      assertCurriculumReleaseReady(tampered, rows, {
+        workspaceRoot: WORKSPACE_ROOT,
+        approvalSha256: evidenceSha256,
+      }),
+    ).rejects.toThrow("SALES_CURRICULUM_APPROVAL_EVIDENCE_MISMATCH");
+  });
 });
