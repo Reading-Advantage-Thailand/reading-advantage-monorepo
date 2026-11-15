@@ -11,7 +11,15 @@ Track: `www_daily_blog_posts_20261115` (light lane). One task per post.
 - [x] 1.2 Fault: the reading time ignored the prose inside rich blocks and Thai script, so the daily
   post showed 4 min in en and 1 min in th. `calculateReadingTime` now counts figure captions,
   callout titles and text, and pull quotes, skips block keys, paths, alt text, and screen-reader
-  titles, and counts Thai characters without spaces. Red tests first, then green.
+  titles, and counts Thai characters without spaces. `81363a133`. Red tests first, then green.
+
+## Gate record (2026-11-15, reading-time fault, head `81363a133`)
+
+- Targeted vitest (`blog`, `blog-blocks`, `blog-draft`, `blog-posts-validation`, `blog-locale`,
+  `--maxWorkers=1`): exit 0, 1581 tests.
+- `tsc --noEmit` in the www app: exit 0.
+- `eslint src/lib/blog.ts src/lib/blog.test.ts`: exit 0.
+- `pnpm --filter www-reading-advantage build` through heavy-run: exit 0.
 
 ## Gate record (2026-11-15)
 
@@ -31,3 +39,6 @@ Track: `www_daily_blog_posts_20261115` (light lane). One task per post.
 - Live: `/en/blog/a-five-year-old-reads-by-herself` and `/th/blog/a-five-year-old-reads-by-herself`
   give HTTP 200. At 1280 px and 390 px every image loads (naturalWidth above 0), the YouTube iframe
   shows, and horizontal overflow is 0 px. Captures in `/tmp/opencode/a61-post/live/`.
+- Reading-time fix `81363a133`: CD run 43676629418 success. Live: en shows "3 min read", th shows
+  "3 นาทีในการอ่าน". The blog list also shows "3 min read".
+- Frontmatter `readingTime` still wins over the calculated value; the daily post sets none.
