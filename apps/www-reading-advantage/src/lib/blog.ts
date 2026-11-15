@@ -9,6 +9,7 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import GithubSlugger from "github-slugger";
 import { BlogPost, BlogListItem } from "@/types/blog";
+import { remarkBlogBlocks } from "@/lib/blog-blocks";
 
 const postsBaseDirectory = path.join(
   process.cwd(),
@@ -88,6 +89,25 @@ function markdownSlugs(locale: SupportedLocale): Set<string> {
   }
 }
 
+/**
+ * Checks whether draft posts show. Drafts show everywhere except in production.
+ * @returns True outside a production build or server.
+ */
+function showDrafts(): boolean {
+  return process.env.NODE_ENV !== "production";
+}
+
+function postFilePath(slug: string, locale: SupportedLocale): string | null {
+  const localePath = path.join(postsDirectory(locale), `${slug}.md`);
+  if (fs.existsSync(localePath)) return localePath;
+  const enPath = path.join(postsDirectory("en"), `${slug}.md`);
+  return locale !== "en" && fs.existsSync(enPath) ? enPath : null;
+}
+
+function isDraftFile(fullPath: string): boolean {
+  return matter(fs.readFileSync(fullPath, "utf8")).data.draft === true;
+}
+
 function allBlogSlugs(locale: SupportedLocale): string[] {
   const resolvedLocale = normalizeBlogLocale(locale);
   const allSlugs = markdownSlugs("en");
@@ -98,7 +118,10 @@ function allBlogSlugs(locale: SupportedLocale): string[] {
     }
   }
 
-  return [...allSlugs];
+  if (showDrafts()) return [...allSlugs];
+  return [...allSlugs].filter(
+    (slug) => !isDraftFile(postFilePath(slug, resolvedLocale) as string),
+  );
 }
 
 interface BlogFrontmatter {
@@ -110,6 +133,7 @@ interface BlogFrontmatter {
   readingTime?: number;
   coverImage?: string;
   product?: string;
+  draft: boolean;
 }
 
 function validateFrontmatter(data: unknown): BlogFrontmatter {
@@ -143,7 +167,30 @@ function validateFrontmatter(data: unknown): BlogFrontmatter {
     readingTime: typeof d.readingTime === "number" ? d.readingTime : undefined,
     coverImage: typeof d.coverImage === "string" ? d.coverImage : undefined,
     product: typeof d.product === "string" ? d.product : undefined,
+    draft: d.draft === true,
   };
+}
+
+/**
+ * Renders the Markdown body of a post to HTML, with the rich blocks of docs/blog-post-format.md.
+ * @param markdown The post body without frontmatter.
+ * @param locale The post locale, for the callout labels.
+ * @returns The HTML of the body.
+ * @throws When a rich block is not valid.
+ */
+export async function renderBlogMarkdown(
+  markdown: string,
+  locale: SupportedLocale = "en",
+): Promise<string> {
+  const processedContent = await unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkBlogBlocks({ locale }))
+    .use(remarkHtml, { sanitize: false })
+    .use(rehypeSlug)
+    .use(rehypeAutolinkHeadings)
+    .process(markdown);
+  return processedContent.toString();
 }
 
 async function parseBlogFile(
@@ -154,15 +201,8 @@ async function parseBlogFile(
   const { data, content } = matter(fileContents);
 
   const frontmatter = validateFrontmatter(data);
-  const processedContent = await unified()
-    .use(remarkParse)
-    .use(remarkGfm)
-    .use(remarkHtml, { sanitize: false })
-    .use(rehypeSlug)
-    .use(rehypeAutolinkHeadings)
-    .process(content);
-
-  const htmlContent = processedContent.toString();
+  const locale = normalizeBlogLocale(path.basename(path.dirname(fullPath)));
+  const htmlContent = await renderBlogMarkdown(content, locale);
   const readingTime = frontmatter.readingTime ?? calculateReadingTime(content);
 
   return {
@@ -177,6 +217,7 @@ async function parseBlogFile(
     readingTime,
     coverImage: frontmatter.coverImage,
     product: frontmatter.product,
+    draft: frontmatter.draft,
   };
 }
 
@@ -210,17 +251,12 @@ export async function getBlogPost(
   if (!isSafeBlogSlug(slug)) return null;
 
   const resolvedLocale = normalizeBlogLocale(locale);
+  const fullPath = postFilePath(slug, resolvedLocale);
+  if (!fullPath) return null;
 
   try {
-    const localePath = path.join(postsDirectory(resolvedLocale), `${slug}.md`);
-    try {
-      fs.readFileSync(localePath);
-      return await parseCachedBlogFile(localePath, slug);
-    } catch {
-      if (resolvedLocale === "en") return null;
-      const enPath = path.join(postsDirectory("en"), `${slug}.md`);
-      return await parseCachedBlogFile(enPath, slug);
-    }
+    const post = await parseCachedBlogFile(fullPath, slug);
+    return post.draft && !showDrafts() ? null : post;
   } catch (error) {
     console.error(`Error getting blog post ${slug}:`, error);
     return null;

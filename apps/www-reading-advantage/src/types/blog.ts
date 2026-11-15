@@ -10,6 +10,8 @@ export interface BlogPost {
   readingTime: number;
   coverImage?: string;
   product?: string;
+  /** True when the post is a draft that shows only outside production. */
+  draft?: boolean;
 }
 
 // Instead of using Omit, explicitly define the interface
