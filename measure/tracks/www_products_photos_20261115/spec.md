@@ -40,6 +40,24 @@ The captures and the table are in `~/Desktop/handoff/products-page-2026-11-15/af
 - The home page hero photo (`workbook-tablet-cutaway`) shows 60 percent at 390 px and 76 percent at
   980 px, because a dark card covers a corner.
 
+## Red evidence at `40419d4bc` (e2e run, 2026-11-15)
+
+The run log is `measure/runs/www_products_photos_20261115/red-p1-40419d4bc.log`.
+
+- The home hero photo is 40 percent covered at 390 px (356 x 200). It passes at 980, 1024, and
+  1280 px. This line corrects the live-check line above: the live check read 60 percent at 390 px
+  and 76 percent at 980 px, and the e2e reads 40 percent at 390 px and no failure above 390 px.
+- `blended-learning.png` is 100 percent covered at the four widths on `/products`.
+- The Tutor section shows no photo at the four widths.
+- At 1024 px, `primary-origins-2-cover.webp` and `reading-origins-2-cover.webp` render 160 x 256
+  (deviation 15.2 percent), and `tutor-flashcard.webp` renders 160 x 256 (deviation 22.2 percent).
+
+## Follow-up (out of this track)
+
+The hero of `/products/reading-advantage` shows a photo file under a 90 percent gradient tint, so a
+reader sees a tint and not the photo. The page stays out of AC-1 (page set in AC-1). The PM decides
+later whether a design task takes it.
+
 ## Owner rule
 
 A picture comes out of a live page only when its replacement goes in the same push.
@@ -59,14 +77,28 @@ A picture comes out of a live page only when its replacement goes in the same pu
   a shrunk card, which the cover test alone does not catch.
   The four widths stay. 980 px is a phone in desktop view. 1024 px is the `lg` breakpoint where the
   squeezed program cards appear.
+
+  **Exclusion rule (the test skips an image only by one of these rules):**
+  - Decorative: the alt is empty, the image carries `aria-hidden="true"`, or an ancestor carries
+    `aria-hidden="true"`. The home `texture-warm` background (alt empty) is the only such image.
+  - Logo or icon: the file ends in `.svg`, the file sits under `/media/brand/`, or the alt names a
+    logo, an icon, or a QR code.
+  - Thumbnail: the rendered short side is below 100 px. This rule applies to the cover test only,
+    not to the product picture assertion, which fails a shrunk picture.
+
+  **Page set:** the six www marketing pages whose hero shows a content photo: `/`, `/products`,
+  `/services/blended-learning`, `/services/managed-service`, `/pricing`, and `/about`.
+  `/products/reading-advantage` stays out of the set. Its hero shows a product logo and a
+  full-bleed background file (alt "Student engaging with digital reading platform") under a
+  90 percent gradient tint. That file is a section tint, not a content photo. A fix for it is a
+  design change, and AC-4 does not cover a design change.
 - **AC-2 (unit test).** For `HeroSection`, the `floatingImage` container and its ancestors have no
   `hidden` class at any breakpoint.
 - **AC-3 (CI and CD).** The e2e runs at two points:
   - (a) In the `ci.yml` job `affected`, when the matrix id is `www-reading-advantage`. A push that
     breaks it turns that job red.
   - (b) In `.github/workflows/cd-www-reading-advantage.yml`, before the deploy step, against the app
-    built in that job. The job starts the app with `next start -p 3123` or
-    `node .next/standalone/server.js` on port 3123. Chrome comes from
+    built in that job. The job starts the app with `next start -p 3123`. Chrome comes from
     `playwright install --with-deps chromium`. A failing e2e stops the deploy.
 
   Point (b) exists because `ci.yml` is red on master for an unrelated cause, the architecture check.

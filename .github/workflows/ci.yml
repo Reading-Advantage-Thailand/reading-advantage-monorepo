@@ -280,3 +280,27 @@ jobs:
         env:
           COMPANY_IDENTITY_TEST_POSTGRES_CONTAINER: ${{ job.services.postgres.id }}
         run: pnpm turbo run build lint check-types test --filter=${{ matrix.id }}...
+
+      # Track www_products_photos_20261115 (AC-3a): the photo e2e runs against the
+      # app built above, so a push that hides or covers a www photo turns this job red.
+      - name: Install Chrome for the www photo e2e
+        if: matrix.id == 'www-reading-advantage'
+        run: pnpm --filter www-reading-advantage exec playwright install --with-deps chromium
+
+      - name: Start the www app for the photo e2e
+        if: matrix.id == 'www-reading-advantage'
+        working-directory: apps/www-reading-advantage
+        run: |
+          pnpm exec next start -p 3123 > /tmp/www-next-start.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            if curl --silent --fail --output /dev/null http://localhost:3123/en; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/www-next-start.log
+          exit 1
+
+      - name: Run the www photo e2e
+        if: matrix.id == 'www-reading-advantage'
+        run: BASE_URL=http://localhost:3123 pnpm --filter www-reading-advantage exec playwright test e2e/photos.spec.ts

@@ -85,6 +85,46 @@ jobs:
       - name: Checkout Repository 📂
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
+      # Track www_products_photos_20261115 (AC-3b): the photo e2e runs against the app
+      # built here, before the deploy step, so a photo that a reader cannot see stops
+      # the deploy. A "CD needs CI" link would stop every www deploy, because ci.yml is
+      # red on master for an unrelated cause (the architecture check).
+      - name: Set Up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          standalone: true
+
+      - name: Set Up Node for the photo e2e
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build the www app for the photo e2e
+        run: pnpm turbo run build --filter=www-reading-advantage...
+
+      - name: Install Chrome for the www photo e2e
+        run: pnpm --filter www-reading-advantage exec playwright install --with-deps chromium
+
+      - name: Start the www app for the photo e2e
+        working-directory: apps/www-reading-advantage
+        run: |
+          pnpm exec next start -p 3123 > /tmp/www-next-start.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            if curl --silent --fail --output /dev/null http://localhost:3123/en; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/www-next-start.log
+          exit 1
+
+      - name: Run the www photo e2e
+        run: BASE_URL=http://localhost:3123 pnpm --filter www-reading-advantage exec playwright test e2e/photos.spec.ts
+
       - id: "auth"
         name: Authenticate with Google Cloud 🔑
         uses: google-github-actions/auth@c200f3691d83b41bf9bbd8638997a462592937ed # v2.1.13
