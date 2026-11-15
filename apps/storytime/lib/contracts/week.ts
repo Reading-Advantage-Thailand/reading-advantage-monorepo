@@ -1045,6 +1045,7 @@ const SENTENCE_CLIP_PATH = /^l\d+\/media\/w\d{2}\/sentences\/b(\d+)-s(\d+)\.mp3$
  * @param ctx The refinement context.
  */
 function checkSentenceClipPaths(week: z.infer<typeof weekBodySchema>, ctx: z.RefinementCtx): void {
+  const kinds = week.books.map((book) => book.kind);
   week.books.forEach((book, bookIndex) => {
     const clips = book.audio.sentenceClips;
     if (!Array.isArray(clips)) return;
@@ -1061,11 +1062,12 @@ function checkSentenceClipPaths(week: z.infer<typeof weekBodySchema>, ctx: z.Ref
         });
         return;
       }
-      if (Number(match[1]) !== bookIndex) {
+      const named = Number(match[1]);
+      if (named >= kinds.length || kinds[named] !== book.kind) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path,
-          message: `the clip file ${entry.file} names the book ${match[1]} and not the book ${bookIndex}`,
+          message: `the clip file ${entry.file} names no ${book.kind} book of the week`,
         });
         return;
       }
