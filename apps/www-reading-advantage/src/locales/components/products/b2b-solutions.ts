@@ -44,18 +44,18 @@ export const en = {
         },
         scienceAdvantage: {
             title: "Science Advantage",
-            badge: "On our roadmap",
+            badge: "For the 2027 school year",
             gradeRange: "Science book line, built but not released",
             features: {
                 0: "Built as a printed workbook with a digital twin",
                 1: "Planned to mix reading investigations and interactive explorations",
                 2: "Planned to build on the Mastery Advantage knowledge graph",
-                3: "No release date has been set",
+                3: "Planned for Thai primary schools in the 2027 school year",
             },
         },
         mathAdvantage: {
             title: "Math Advantage",
-            badge: "On our roadmap",
+            badge: "For the 2027 school year",
             gradeRange: "Math book line, planned",
             features: {
                 0: "Planned printed workbook with a digital twin",
@@ -66,13 +66,13 @@ export const en = {
         },
         zhongwenAdvantage: {
             title: "Zhongwen Advantage",
-            badge: "On our roadmap",
+            badge: "For the 2027 school year",
             gradeRange: "Chinese book line, planned",
             features: {
                 0: "Planned leveled narrative and informational reading for Chinese learners",
                 1: "Planned bilingual scaffolds such as pinyin, tone audio, and English summaries",
                 2: "Planned to build on the Mastery Advantage knowledge graph",
-                3: "No release date has been set",
+                3: "Planned for Thai primary schools in the 2027 school year",
             },
         },
         storytimeAdvantage: {
@@ -146,18 +146,18 @@ export const th = {
         },
         scienceAdvantage: {
             title: "Science Advantage",
-            badge: "อยู่ในแผนงาน",
+            badge: "สำหรับปีการศึกษา 2570",
             gradeRange: "ชุดหนังสือวิทยาศาสตร์ สร้างเสร็จแล้วแต่ยังไม่เปิดตัว",
             features: {
                 0: "สร้างเป็นแบบฝึกหัดเล่มพิมพ์พร้อมเวอร์ชันดิจิทัล",
                 1: "วางแผนผสานการสืบค้นผ่านการอ่านและกิจกรรมโต้ตอบ",
                 2: "วางแผนให้ต่อยอดบนกราฟความรู้ Mastery Advantage",
-                3: "ยังไม่มีกำหนดวันเปิดตัว",
+                3: "มีแผนเปิดให้โรงเรียนประถมไทยใช้ในปีการศึกษา 2570",
             },
         },
         mathAdvantage: {
             title: "Math Advantage",
-            badge: "อยู่ในแผนงาน",
+            badge: "สำหรับปีการศึกษา 2570",
             gradeRange: "ชุดหนังสือคณิตศาสตร์ วางแผนไว้",
             features: {
                 0: "วางแผนแบบฝึกหัดเล่มพิมพ์พร้อมเวอร์ชันดิจิทัล",
@@ -168,13 +168,13 @@ export const th = {
         },
         zhongwenAdvantage: {
             title: "Zhongwen Advantage",
-            badge: "อยู่ในแผนงาน",
+            badge: "สำหรับปีการศึกษา 2570",
             gradeRange: "ชุดหนังสือภาษาจีน วางแผนไว้",
             features: {
                 0: "วางแผนบทอ่านแบ่งระดับทั้งเรื่องเล่าและข้อมูลสำหรับผู้เรียนภาษาจีน",
                 1: "วางแผนสื่อเสริมสองภาษา เช่น พินอิน เสียงวรรณยุกต์ และสรุปภาษาอังกฤษ",
                 2: "วางแผนให้ต่อยอดบนกราฟความรู้ Mastery Advantage",
-                3: "ยังไม่มีกำหนดวันเปิดตัว",
+                3: "มีแผนเปิดให้โรงเรียนประถมไทยใช้ในปีการศึกษา 2570",
             },
         },
         storytimeAdvantage: {
