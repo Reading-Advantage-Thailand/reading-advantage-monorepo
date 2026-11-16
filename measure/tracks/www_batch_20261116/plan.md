@@ -145,6 +145,11 @@
   - Red: 2 failed and 53 passed of 55 for the notify rows; 2 failed of 2 for the SVG
     rows. Logs: `red-p3b-meta-cta-svg.log` and `red-p3c-svg.log`.
     Green: 55 of 55, exit 0. Log: `green-p3b-meta-cta-svg.log`.
+  - Gates on the two commits, each through `heavy-run.sh`: the www suite 60 files and
+    2466 tests, exit 0; `tsc --noEmit`, exit 0; ESLint on the four TS files, exit 0;
+    `next build`, exit 0; `scripts/ci/__tests__/` 14 files and 226 tests, exit 0.
+    Logs: `gate-p3-*.log`. The branch rebased onto `origin/master` `6d2ed28cc`.
+  - The selector prints `["www-reading-advantage"]` for the two code commits.
 
 ## Findings for the look
 
