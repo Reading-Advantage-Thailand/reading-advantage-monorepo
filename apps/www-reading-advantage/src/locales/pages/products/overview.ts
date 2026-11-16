@@ -7,7 +7,7 @@ export const en = {
         storytime: {
             title: "Storytime Advantage",
             gradeRange: "English for Anuban 2 to P2",
-            description: "Storytime Advantage is an English program for kindergarten and early primary. Each week has one sound, one song, and two books, and every lesson is printed in full for the class teacher. The first unit is being prepared.",
+            description: "Storytime Advantage is an English program for kindergarten and early primary. Each week has one sound, one song, and two books, and every lesson is printed in full for the class teacher. The first unit launches on 30 November 2026.",
             ctaLabel: "Explore Storytime",
             imageAlt: "Storytime Advantage reader page: the drawn character Pat waves hello in a classroom",
         },
@@ -47,7 +47,7 @@ export const th = {
         storytime: {
             title: "Storytime Advantage",
             gradeRange: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2",
-            description: "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษสำหรับชั้นอนุบาลและประถมต้น ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ทุกคาบมีแผนการสอนครบ กำลังจัดเตรียมหน่วยการเรียนรู้แรก",
+            description: "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษสำหรับชั้นอนุบาลและประถมต้น ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ทุกคาบมีแผนการสอนครบ หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569",
             ctaLabel: "สำรวจ Storytime",
             imageAlt: "หน้าหนังสืออ่านของ Storytime Advantage: ตัวการ์ตูน Pat โบกมือทักทายในห้องเรียน",
         },

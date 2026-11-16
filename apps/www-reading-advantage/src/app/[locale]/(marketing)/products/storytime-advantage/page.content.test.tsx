@@ -200,7 +200,7 @@ describe("Storytime Advantage content", () => {
     expect([...allCopy, homeStatus].every((value) => typeof value === "string")).toBe(true);
     for (const value of allCopy as string[]) expect(findUnapprovedClaimTerms(value)).toEqual([]);
     expect(findUnapprovedClaimTerms(homeStatus as string)).toEqual([]);
-    expect(findClaimTerms(staticNavigation ?? "")).toEqual([]);
+    expect(findUnapprovedClaimTerms(staticNavigation ?? "")).toEqual([]);
     expect(cardCopy.join("\n")).not.toMatch(/roadmap|planned|แผนงาน|วางแผน|路线图|规划中/i);
     expect(navigation).not.toMatch(/roadmap|planned|แผนงาน|วางแผน|路线图|规划中/i);
     expect(home).not.toMatch(/Storytime Advantage.{0,80}(?:roadmap|planned|แผนงาน|วางแผน|路线图|规划中)/i);

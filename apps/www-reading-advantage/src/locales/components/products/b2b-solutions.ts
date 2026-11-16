@@ -77,7 +77,7 @@ export const en = {
         },
         storytimeAdvantage: {
             title: "Storytime Advantage",
-            badge: "First unit being prepared",
+            badge: "Launches 30 November 2026",
             gradeRange: "English program for Anuban 2 to P2",
             imageAlt: "Storytime Advantage sound page for the letter n, with a drawn girl pointing at a bird's nest",
             features: {
@@ -179,7 +179,7 @@ export const th = {
         },
         storytimeAdvantage: {
             title: "Storytime Advantage",
-            badge: "กำลังจัดเตรียมหน่วยแรก",
+            badge: "เปิดตัววันที่ 30 พฤศจิกายน 2569",
             gradeRange: "หลักสูตรภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2",
             imageAlt: "หน้าเสียงตัว n ของ Storytime Advantage พร้อมภาพวาดเด็กหญิงชี้ไปที่รังนก",
             features: {

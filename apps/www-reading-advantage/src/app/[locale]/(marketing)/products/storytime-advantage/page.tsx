@@ -62,6 +62,9 @@ export default async function StorytimeAdvantage({
             <p className="max-w-2xl text-lg leading-relaxed text-amber-50">
               {t("hero.description")}
             </p>
+            <p className="mt-4 max-w-2xl text-base font-semibold leading-relaxed text-amber-100">
+              {t("hero.launchNote")}
+            </p>
           </div>
           <div className="lg:col-span-6">
             <Image

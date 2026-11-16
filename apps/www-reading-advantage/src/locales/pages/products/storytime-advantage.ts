@@ -2,14 +2,15 @@ export const en = {
   metadata: {
     title: "Storytime Advantage - English for Anuban 2 to P2 | Reading Advantage Thailand",
     description:
-      "Storytime Advantage is an English program for Anuban 2 to P2: one sound, one song, and two books each week. The first unit is being prepared, with a printed student book and QR-linked digital parts.",
+      "Storytime Advantage is an English program for Anuban 2 to P2: one sound, one song, and two books each week. The first unit launches on 30 November 2026, with the Storytime Advantage, Level 2, Unit 1 student book and QR-linked digital parts.",
   },
   hero: {
     title: "Stories, Songs, and First Sounds",
     subtitle: "English for Anuban 2 to P2 (ages 4 to 8)",
     description:
-      "Storytime Advantage is an English program for kindergarten and early primary. Each week has one sound, one song, and two books, and every lesson is printed in full for the class teacher. The first unit is being prepared.",
-    comingSoon: "In Preparation",
+      "Storytime Advantage is an English program for kindergarten and early primary. Each week has one sound, one song, and two books, and every lesson is printed in full for the class teacher. The first unit launches on 30 November 2026.",
+    launchNote: "Storytime Advantage launches on 30 November 2026.",
+    comingSoon: "Launches 30 November 2026",
   },
   heroAlt: "Pip in a Storytime Advantage week 1 story picture",
   adaptiveEngine: {
@@ -108,7 +109,7 @@ export const en = {
   },
   cta: {
     heading: "Interested in Storytime Advantage?",
-    description: "The first unit is being prepared. Contact us to discuss Storytime Advantage.",
+    description: "The first unit launches on 30 November 2026. Contact us to discuss Storytime Advantage.",
     buttons: { joinWaitlist: "Contact Us", learnMore: "Learn More" },
   },
   eyebrows: {
@@ -135,14 +136,15 @@ export const th = {
   metadata: {
     title: "Storytime Advantage - ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 | Reading Advantage Thailand",
     description:
-      "Storytime Advantage คือหลักสูตรภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม กำลังจัดเตรียมหน่วยการเรียนรู้แรก พร้อมหนังสือนักเรียนฉบับพิมพ์และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด",
+      "Storytime Advantage คือหลักสูตรภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569 พร้อมหนังสือนักเรียน Storytime Advantage, Level 2, Unit 1 และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด",
   },
   hero: {
     title: "นิทาน เพลง และเสียงแรกของภาษาอังกฤษ",
     subtitle: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 (อายุประมาณ 4 ถึง 8 ปี)",
     description:
-      "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษสำหรับชั้นอนุบาลและประถมต้น ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ทุกคาบมีแผนการสอนครบ กำลังจัดเตรียมหน่วยการเรียนรู้แรก พร้อมหนังสือนักเรียนฉบับพิมพ์และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด",
-    comingSoon: "กำลังจัดเตรียม",
+      "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษสำหรับชั้นอนุบาลและประถมต้น ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ทุกคาบมีแผนการสอนครบ หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569 พร้อมหนังสือนักเรียนฉบับพิมพ์และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด",
+    launchNote: "Storytime Advantage เปิดตัววันที่ 30 พฤศจิกายน 2569",
+    comingSoon: "เปิดตัววันที่ 30 พฤศจิกายน 2569",
   },
   heroAlt: "Pip ในภาพประกอบเรื่องประจำสัปดาห์ที่ 1 ของ Storytime Advantage",
   adaptiveEngine: {
@@ -209,7 +211,7 @@ export const th = {
   },
   cta: {
     heading: "สนใจ Storytime Advantage ไหม",
-    description: "กำลังจัดเตรียมหน่วยการเรียนรู้แรก ติดต่อเราเพื่อพูดคุยเกี่ยวกับ Storytime Advantage",
+    description: "หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569 ติดต่อเราเพื่อพูดคุยเกี่ยวกับ Storytime Advantage",
     buttons: { joinWaitlist: "ติดต่อเรา", learnMore: "ดูข้อมูลเพิ่มเติม" },
   },
   eyebrows: {
