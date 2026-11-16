@@ -89,6 +89,26 @@
 - [x] 1.7 Report. The track files, each changed key with old and new text, the commit list,
   the gate exit codes, the capture paths, the selector output, and the facts changed.
 
+## Phase 2: PM decision of 2026-11-16 on the home roadmap note
+
+- [x] 2.1 PM decision 2026-11-16: delete only the second sentence "We give no dates."
+  from the home section "ON OUR ROADMAP", and delete its Thai sentence. Keep "These
+  product lines are planned." and its Thai first sentence word for word. A deletion
+  only. Test: AC-1, AC-2.
+
+  - Key `pages.home.v2.products.roadmapNote` in `src/locales/pages/home.ts`.
+    en: `These product lines are planned. We give no dates.` →
+    `These product lines are planned.`
+    th: `สายผลิตภัณฑ์เหล่านี้อยู่ในแผน เรายังไม่กำหนดวันที่` →
+    `สายผลิตภัณฑ์เหล่านี้อยู่ในแผน`
+    The Thai space after `แผน` is the sentence boundary, so the edit ran.
+  - zh stays as it is: `这些产品线在计划中，我们不给出日期。`
+  - Red first: 2 failed and 37 passed of 39, exit 1. Log:
+    `measure/runs/www_batch_20261116/red-p2-roadmap.log`.
+  - Green: 39 of 39, exit 0. Log: `.../green-p2-roadmap.log`.
+  - This batch pushes to `origin/master` under the standing approval for www-only
+    pushes. The Phase 1 line "No push" holds for Phase 1 only.
+
 ## Findings for the look
 
 - Place 10 repeats the date sentence of place 2 in the hero. The change list requires both
@@ -98,7 +118,8 @@
 - The Storytime card on `/` moves to the tag "Launches 30 November 2026" but stays in the
   roadmap group, under "These product lines are planned. We give no dates." The roadmap
   note is place 4 of the row of 2026-11-12, which waits for the Thai check. The group
-  heading and the note stay out of this batch.
+  heading and the note stay out of this batch. Phase 2.1 supersedes the note part: the PM
+  decision of 2026-11-16 deletes the second sentence.
 
 ## Out of scope
 

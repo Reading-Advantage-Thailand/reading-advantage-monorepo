@@ -191,6 +191,29 @@ describe("www batch 2026-11-16, row B", () => {
   });
 });
 
+/**
+ * PM decision 2026-11-16: the home roadmap note keeps the plan sentence and drops the
+ * no-dates sentence. These product lines are planned.
+ */
+const ROADMAP_NOTE = {
+  key: "pages.home.v2.products.roadmapNote",
+  en: "These product lines are planned.",
+  th: "สายผลิตภัณฑ์เหล่านี้อยู่ในแผน",
+  removed: { en: "We give no dates.", th: "เรายังไม่กำหนดวันที่" },
+} as const;
+
+describe("www batch 2026-11-16, home roadmap note (PM decision)", () => {
+  it("holds the kept first sentence word for word in en and th", () => {
+    expect(read("en", ROADMAP_NOTE.key)).toBe(ROADMAP_NOTE.en);
+    expect(read("th", ROADMAP_NOTE.key)).toBe(ROADMAP_NOTE.th);
+  });
+
+  it("holds no deleted no-dates sentence in en and th", () => {
+    expect(read("en", ROADMAP_NOTE.key)).not.toContain(ROADMAP_NOTE.removed.en);
+    expect(read("th", ROADMAP_NOTE.key)).not.toContain(ROADMAP_NOTE.removed.th);
+  });
+});
+
 /** The stapler row of 2026-11-05 (TH-184): the teacher holds the stapler. */
 const STAPLER = {
   key: "pages.products.storytimeAdvantage.keyFeatures.features.0.points.0",
