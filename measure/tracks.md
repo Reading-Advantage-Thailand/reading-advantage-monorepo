@@ -44,6 +44,11 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
+- [~] **Track: www: GSE out of customer copy** — *created 2026-11-16*
+  *Link: [./tracks/www_gse_guard_20261116/](./tracks/www_gse_guard_20261116/)*
+  *Status: active, light lane; opened 2026-11-16; Reading mockups fixed; guard test added; the blog post waits for the PM | Owner: Monorepo orchestrator | PM final-check gate 2026-11-16*
+  *Note: PM decision 2026-11-16: "GSE leaves all customer copy (CEFR only)". The Reading mockups lose their three GSE labels. `no-gse-in-customer-copy.test.ts` blocks GSE, Global Scale of English, Pearson, and YLE in customer copy. The blog post `the-advantage-engine-kst-srs` (en and th) stays on the PENDING list for the PM. www-only push is standing-approved.*
+
 - [~] **Track: www daily blog posts of PR** — *created 2026-11-15*
   *Link: [./tracks/www_daily_blog_posts_20261115/](./tracks/www_daily_blog_posts_20261115/)*
   *Status: active, light lane; post 2026-11-15 (`a-five-year-old-reads-by-herself`) live; one task per post; the track stays open for later daily posts | Owner: Monorepo orchestrator | PM task A-61 follow-up*

@@ -1,0 +1,46 @@
+{
+  "track_id": "www_gse_guard_20261116",
+  "type": "chore",
+  "status": "active",
+  "created": "2026-11-16",
+  "created_at": "2026-11-16T00:00:00Z",
+  "updated_at": "2026-11-16T00:00:00Z",
+  "completed": null,
+  "priority": "high",
+  "description": "Remove the GSE labels from the two Reading Advantage marketing mockups and add a vitest guard that blocks GSE, Global Scale of English, Pearson, and YLE in www customer copy. The blog post the-advantage-engine-kst-srs stays unchanged and sits on an explicit PENDING list for the PM decision.",
+  "owner_chain": [
+    "Daniel (owner; page-check; push gate)",
+    "Monorepo orchestrator (track owner: sweep, guard test, SVG fix, gates, live check)",
+    "PM orchestrator (final-check gate; decides each PENDING entry)"
+  ],
+  "requested_by": "PM final-check gate 2026-11-16, quoted word for word: \"GSE leaves all customer copy (CEFR only)\"",
+  "pm_decision": "PM decision 2026-11-16, final-check gate: GSE leaves all customer copy; CEFR only.",
+  "sources": [
+    "apps/www-reading-advantage/public/marketing/ra-marketing-reading-advantage.svg at origin/master 9a9ae9aea",
+    "apps/www-reading-advantage/public/marketing/ra-marketing-reading-advantage-th.svg at origin/master 9a9ae9aea",
+    "measure/tracks/www_copy_truth_pass_20261002/spec.md (public copy names CEFR only)",
+    "measure/tracks/www_asset_pipeline_20261002/spec.md (no GSE, Pearson, or YLE text in any asset)"
+  ],
+  "pending_inputs": [
+    "PM decision on the en and th blog post the-advantage-engine-kst-srs, line 24: remove GSE there or keep it. The guard lists both hits as PENDING."
+  ],
+  "branch": "www/gse-guard",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/www-gse-guard",
+  "captures_dir": "/home/daniebo/Desktop/handoff/www-gse-2026-11-16/live/",
+  "locales": ["en", "th"],
+  "constraints": [
+    "This track opens as track files only. The guard test comes before the mockup fix.",
+    "The blog post the-advantage-engine-kst-srs stays unchanged in en and th.",
+    "The Science mockups stay unchanged. Another session owns them.",
+    "No new text enters either Reading mockup. Only the three GSE labels and their comments go.",
+    "Pathspec commits only. No git add -A, no git commit -a, no stash, no reset.",
+    "The main checkout stays untouched. All work runs in the worktree.",
+    "Every heavy command runs through /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<command>'.",
+    "Commit headers stay at 100 characters or less and carry (track_id: www_gse_guard_20261116).",
+    "Test commit and fix commit stay separate.",
+    "graph.db is never committed.",
+    "Monorepo never writes in /home/daniebo/Desktop/advantage-pr."
+  ],
+  "estimated_tasks": 6,
+  "deviation_notes": "Opened 2026-11-16 by the Monorepo build session as track files only. The lane is the light lane (PM 2026-11-03, rule 3). The Science mockups already held no GSE at origin/master 9a9ae9aea, because commit 7843d864b removed the labels before this track opened."
+}
