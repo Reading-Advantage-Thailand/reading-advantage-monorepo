@@ -4342,6 +4342,8 @@ for every other track.
 
 ## Phase 8: Release 1 (deferred until Daniel decides S17)
 
+Scope note (Daniel, Tasks, 2026-11-16 07:34 ICT): "We are not doing Chinese support for Storytime". The app ships Thai and English only. No zh locale, zh row (the Z16 to Z18 sign-in lines), or zh test is in scope; none is in the app at 7b0ec07ab, so the 11-20 switch is unchanged. Follow-up after the release: drop the Chinese sentence from the JSDoc of apps/storytime/lib/join-copy.ts.
+
 - [b] 8.1 Daniel confirms or cuts the release-1 scope (S17) after milestone 1. deferred:pm
 - [b] 8.2 Weeks 2 to 8 at the standard of the passed milestone week: media through the production side, stages 1 and 2, and Daniel's pass for each batch. Weeks 2 to 7 also wait for S26. deferred:daniel
 - [b] 8.3 Karaoke cuts and the karaoke tile, if Daniel decides S28 for release 1. deferred:pm
