@@ -24,6 +24,8 @@ import {
   SONG_POSTERS,
   STORYTIME_IMAGES,
   findClaimTerms,
+  findUnapprovedClaimTerms,
+  APPROVED_DATES,
   type ClaimTermName,
   type ExpectedCopy,
 } from "@/__tests__/fixtures/storytime-page-expected";
@@ -172,7 +174,7 @@ describe("Storytime Advantage content", () => {
     expect(overview.description).toBe(expected.description);
     expect(overview.ctaLabel).toBe(expected.ctaLabel);
     expect(findClaimTerms(overview.gradeRange)).toEqual([]);
-    expect(findClaimTerms(overview.description)).toEqual([]);
+    expect(findUnapprovedClaimTerms(overview.description)).toEqual([]);
   });
 
   it.each(["en", "th", "zh"] as const)("uses the exact Storytime label handoff copy in %s", (locale) => {
@@ -196,8 +198,8 @@ describe("Storytime Advantage content", () => {
     expect(home).toBe(expected.home);
     expect(homeStatus).toBe(expected.badge);
     expect([...allCopy, homeStatus].every((value) => typeof value === "string")).toBe(true);
-    for (const value of allCopy as string[]) expect(findClaimTerms(value)).toEqual([]);
-    expect(findClaimTerms(homeStatus as string)).toEqual([]);
+    for (const value of allCopy as string[]) expect(findUnapprovedClaimTerms(value)).toEqual([]);
+    expect(findUnapprovedClaimTerms(homeStatus as string)).toEqual([]);
     expect(findClaimTerms(staticNavigation ?? "")).toEqual([]);
     expect(cardCopy.join("\n")).not.toMatch(/roadmap|planned|แผนงาน|วางแผน|路线图|规划中/i);
     expect(navigation).not.toMatch(/roadmap|planned|แผนงาน|วางแผน|路线图|规划中/i);
@@ -259,7 +261,7 @@ describe("Storytime Advantage content", () => {
     const pageText = [...textNodes(document.body), ...images.map((image) => image.alt)].join("\n");
     expect(findBannedCopy(pageText)).toEqual([]);
     for (const reference of OLD_STOCK_REFERENCES) expect(document.body.innerHTML).not.toContain(reference);
-    expect(findClaimTerms(pageText)).toEqual([]);
+    expect(findUnapprovedClaimTerms(pageText)).toEqual([]);
     expect(findOldRoadmapCopy(pageText)).toEqual([]);
     expect(findOldRoadmapCopy(stringLeaves(scope).join("\n"))).toEqual([]);
   });
@@ -270,7 +272,7 @@ describe("Storytime Advantage content", () => {
     const metadata = await generateMetadata({ params: Promise.resolve({ locale }) });
     expect({ title: metadata.title, description: metadata.description }).toEqual(expected);
     const metaText = [metadata.title, metadata.description].filter((value) => typeof value === "string").join("\n");
-    expect(findClaimTerms(metaText)).toEqual([]);
+    expect(findUnapprovedClaimTerms(metaText)).toEqual([]);
     expect(findOldRoadmapCopy(metaText)).toEqual([]);
   });
 
@@ -318,6 +320,19 @@ describe("Storytime Advantage content", () => {
 
   it("control: the claims scanner passes the allowed words and durations", () => {
     for (const text of ALLOWED_TERMS) expect(findClaimTerms(text), text).toEqual([]);
+  });
+
+  it("control: the claims scanner clears only the one approved public date", () => {
+    expect(findClaimTerms(APPROVED_DATES.en)).toEqual(["year", "English month"]);
+    expect(findClaimTerms(APPROVED_DATES.th)).toEqual([]);
+    expect(findUnapprovedClaimTerms(`The first unit launches on ${APPROVED_DATES.en}.`)).toEqual([]);
+    expect(findUnapprovedClaimTerms(`เปิดตัววันที่ ${APPROVED_DATES.th}`)).toEqual([]);
+    expect(findUnapprovedClaimTerms("The first unit launches on 30 November 2027.")).toContain("year");
+    expect(findUnapprovedClaimTerms("The first unit launches on 30 December 2026.")).toContain("English month");
+    expect(findUnapprovedClaimTerms("The first unit launches in 2026.")).toContain("year");
+    expect(findUnapprovedClaimTerms("The first unit launches in November.")).toContain("English month");
+    expect(findUnapprovedClaimTerms("เปิดตัววันที่ 30 ธันวาคม 2569")).toEqual([]);
+    expect(findUnapprovedClaimTerms("เปิดตัว พ.ศ. 2569")).toContain("พ.ศ.");
   });
 
   it("control: the old roadmap check covers the spec section 5 keys and flags each old string", () => {

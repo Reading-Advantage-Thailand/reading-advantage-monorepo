@@ -25,12 +25,12 @@ export const EXPECTED_META = {
   en: {
     title: "Storytime Advantage - English for Anuban 2 to P2 | Reading Advantage Thailand",
     description:
-      "Storytime Advantage is an English program for Anuban 2 to P2: one sound, one song, and two books each week. The first unit is being prepared, with a printed student book and QR-linked digital parts.",
+      "Storytime Advantage is an English program for Anuban 2 to P2: one sound, one song, and two books each week. The first unit launches on 30 November 2026, with the Storytime Advantage, Level 2, Unit 1 student book and QR-linked digital parts.",
   },
   th: {
     title: "Storytime Advantage - ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 | Reading Advantage Thailand",
     description:
-      "Storytime Advantage คือหลักสูตรภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม กำลังจัดเตรียมหน่วยการเรียนรู้แรก พร้อมหนังสือนักเรียนฉบับพิมพ์และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด",
+      "Storytime Advantage คือหลักสูตรภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569 พร้อมหนังสือนักเรียน Storytime Advantage, Level 2, Unit 1 และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด",
   },
 } as const;
 
@@ -47,7 +47,7 @@ export const EXPECTED_AUX_COPY = {
 
 export const LABEL_COPY = {
   en: {
-    badge: "First unit being prepared",
+    badge: "Launches 30 November 2026",
     gradeRange: "English program for Anuban 2 to P2",
     features: [
       "One sound, one song, and two books each week",
@@ -55,11 +55,11 @@ export const LABEL_COPY = {
       "A Storytime Advantage student book with small readers inside",
       "QR links open the song and books",
     ],
-    navigation: "English for Anuban 2 to P2; the first unit is being prepared",
-    home: "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. Science, Math, Zhongwen, and STEM Advantage are on our roadmap, with no dates. The first Storytime Advantage unit is being prepared.",
+    navigation: "English for Anuban 2 to P2; the first unit launches on 30 November 2026",
+    home: "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. Science, Math, Zhongwen, and STEM Advantage are on our roadmap. The first Storytime Advantage unit launches on 30 November 2026.",
   },
   th: {
-    badge: "กำลังจัดเตรียมหน่วยแรก",
+    badge: "เปิดตัววันที่ 30 พฤศจิกายน 2569",
     gradeRange: "หลักสูตรภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2",
     features: [
       "หนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มต่อสัปดาห์",
@@ -67,8 +67,8 @@ export const LABEL_COPY = {
       "หนังสือนักเรียน Storytime Advantage พร้อมหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน",
       "คิวอาร์โค้ดเปิดเพลงและหนังสือ",
     ],
-    navigation: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 กำลังจัดเตรียมหน่วยการเรียนรู้แรก",
-    home: "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก Science, Math, Zhongwen และ STEM Advantage อยู่ในแผนงาน ยังไม่มีกำหนดวันเปิดตัว กำลังจัดเตรียมหน่วยการเรียนรู้แรกของ Storytime Advantage",
+    navigation: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569",
+    home: "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก Science, Math, Zhongwen และ STEM Advantage อยู่ในแผนงาน หน่วยการเรียนรู้แรกของ Storytime Advantage เปิดตัววันที่ 30 พฤศจิกายน 2569",
   },
   zh: {
     badge: "首个单元准备中",
@@ -87,12 +87,12 @@ export const LABEL_COPY = {
 export const OVERVIEW_LABEL_COPY = {
   en: {
     gradeRange: "English for Anuban 2 to P2",
-    description: "Storytime Advantage is an English program for kindergarten and early primary. Each week has one sound, one song, and two books, and every lesson is printed in full for the class teacher. The first unit is being prepared.",
+    description: "Storytime Advantage is an English program for kindergarten and early primary. Each week has one sound, one song, and two books, and every lesson is printed in full for the class teacher. The first unit launches on 30 November 2026.",
     ctaLabel: "Explore Storytime",
   },
   th: {
     gradeRange: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2",
-    description: "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษสำหรับชั้นอนุบาลและประถมต้น ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ทุกคาบมีแผนการสอนครบ กำลังจัดเตรียมหน่วยการเรียนรู้แรก",
+    description: "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษสำหรับชั้นอนุบาลและประถมต้น ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ทุกคาบมีแผนการสอนครบ หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569",
     ctaLabel: "สำรวจ Storytime",
   },
   zh: {
@@ -153,10 +153,11 @@ export interface ExpectedCopy {
  */
 export const PAGE_COPY: Readonly<Record<(typeof CONTAINER_IDS)[number], readonly ExpectedCopy[]>> = {
   "st-hero": [
-    { key: "hero.comingSoon", en: "In Preparation", th: "กำลังจัดเตรียม" },
+    { key: "hero.comingSoon", en: "Launches 30 November 2026", th: "เปิดตัววันที่ 30 พฤศจิกายน 2569" },
     { key: "hero.title", en: "Stories, Songs, and First Sounds", th: "นิทาน เพลง และเสียงแรกของภาษาอังกฤษ" },
     { key: "hero.subtitle", en: "English for Anuban 2 to P2 (ages 4 to 8)", th: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 (อายุประมาณ 4 ถึง 8 ปี)" },
-    { key: "hero.description", en: "Storytime Advantage is an English program for kindergarten and early primary. Each week has one sound, one song, and two books, and every lesson is printed in full for the class teacher. The first unit is being prepared.", th: "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษสำหรับชั้นอนุบาลและประถมต้น ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ทุกคาบมีแผนการสอนครบ กำลังจัดเตรียมหน่วยการเรียนรู้แรก พร้อมหนังสือนักเรียนฉบับพิมพ์และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด" },
+    { key: "hero.description", en: "Storytime Advantage is an English program for kindergarten and early primary. Each week has one sound, one song, and two books, and every lesson is printed in full for the class teacher. The first unit launches on 30 November 2026.", th: "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษสำหรับชั้นอนุบาลและประถมต้น ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ทุกคาบมีแผนการสอนครบ หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569 พร้อมหนังสือนักเรียนฉบับพิมพ์และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด" },
+    { key: "hero.launchNote", en: "Storytime Advantage launches on 30 November 2026.", th: "Storytime Advantage เปิดตัววันที่ 30 พฤศจิกายน 2569" },
   ],
   "st-section-1": [
     { key: "adaptiveEngine.eyebrow", en: "Mastery Advantage", th: "Mastery Advantage" },
@@ -216,7 +217,7 @@ export const PAGE_COPY: Readonly<Record<(typeof CONTAINER_IDS)[number], readonly
   ],
   "st-cta": [
     { key: "cta.heading", en: "Interested in Storytime Advantage?", th: "สนใจ Storytime Advantage ไหม" },
-    { key: "cta.description", en: "The first unit is being prepared. Contact us to discuss Storytime Advantage.", th: "กำลังจัดเตรียมหน่วยการเรียนรู้แรก ติดต่อเราเพื่อพูดคุยเกี่ยวกับ Storytime Advantage" },
+    { key: "cta.description", en: "The first unit launches on 30 November 2026. Contact us to discuss Storytime Advantage.", th: "หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569 ติดต่อเราเพื่อพูดคุยเกี่ยวกับ Storytime Advantage" },
     { key: "cta.buttons.joinWaitlist", en: "Contact Us", th: "ติดต่อเรา", href: "/contact" },
     { key: "cta.buttons.learnMore", en: "Learn More", th: "ดูข้อมูลเพิ่มเติม", href: "/contact" },
   ],
@@ -341,4 +342,23 @@ export type ClaimTermName = (typeof CLAIM_TERMS)[number]["name"];
  */
 export function findClaimTerms(text: string): ClaimTermName[] {
   return CLAIM_TERMS.filter(({ pattern }) => pattern.test(text)).map(({ name }) => name);
+}
+
+/**
+ * The one approved public date of the batch of 2026-11-16 (Daniel, Google Tasks, 2026-11-16 05:07 ICT).
+ * Every other date stays a claim hit.
+ */
+export const APPROVED_DATES = {
+  en: "30 November 2026",
+  th: "30 พฤศจิกายน 2569",
+} as const;
+
+/**
+ * Finds the claim terms of a text after it clears the approved public date.
+ * @param text The text to scan.
+ * @returns The names of the term classes that the text still holds, in scanner order.
+ */
+export function findUnapprovedClaimTerms(text: string): ClaimTermName[] {
+  const cleared = text.split(APPROVED_DATES.en).join("").split(APPROVED_DATES.th).join("");
+  return findClaimTerms(cleared);
 }
