@@ -2,9 +2,10 @@
   "track_id": "www_batch_20261116",
   "type": "chore",
   "lane": "light",
-  "status": "in_progress",
+  "status": "done",
   "created_at": "2026-11-16T00:00:00Z",
   "updated_at": "2026-11-16T00:00:00Z",
+  "completed": "2026-11-16",
   "description": "Build the READY rows of the www change list batch of 2026-11-16: row A puts the 2027 school year on the Science, Math, and Zhongwen Advantage cards and changes the two limit features; row B says that the Storytime Advantage first unit launches on 30 November 2026 as interim copy. The stapler row of 2026-11-05 (TH-184) goes in one separate last commit.",
   "source": "~/Desktop/handoff/pr-www-batch-2026-11-16/ (batch v1.2, change list v1.39); MANIFEST.txt sha256sum -c OK; origin/master ad461d105",
   "branch": "www/batch-1116",
@@ -18,5 +19,5 @@
     "Every heavy command runs through heavy-run.sh.",
     "Do not push. The orchestrator pushes."
   ],
-  "deviation_notes": "Opened 2026-11-16 by the Monorepo build session on the direction of the Monorepo orchestrator."
+  "deviation_notes": "Opened 2026-11-16 by the Monorepo build session on the direction of the Monorepo orchestrator. Closed 2026-11-16 by a Build session. The detail-page rows and the Science GSE labels wait for the PM re-check. The look of the six detail pages stays with the PM and Daniel."
 }

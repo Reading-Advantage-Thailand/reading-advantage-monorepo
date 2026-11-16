@@ -17,8 +17,9 @@
 
 ## Phase 1: Rows A and B, then the stapler row
 
-- [x] 1.1 Red: extend the Storytime page content test and its fixture for row B places 1
-  to 10, and add a locale test for rows A and B. Test: AC-1, AC-3, AC-4.
+- [x] 1.1 Red: the locale tests for rows A and B. Done: `de1952539`. Test: AC-1, AC-3, AC-4.
+
+  Also extend the Storytime page test and its fixture for row B places 1 to 10.
 
   - `src/__tests__/fixtures/storytime-page-expected.ts`: the new en and th strings of the
     ten places, `hero.launchNote`, and the approved-date allowance
@@ -33,28 +34,30 @@
   - The static English header line takes the same approved-date allowance in the Green
     task, because the header carries the new date too.
 
-- [x] 1.2 Green, row A: the three cards and the two limit features in
-  `src/locales/components/products/b2b-solutions.ts`, en and th. Test: AC-1, AC-2.
+- [x] 1.2 Green, row A: the three cards and the two limit features. Done: `5bd954557`.
+  Test: AC-1, AC-2.
 
+  - The file is `src/locales/components/products/b2b-solutions.ts`, en and th.
   - `For the 2027 school year` on the Science, Math, and Zhongwen badges.
   - `Planned for Thai primary schools in the 2027 school year` on the Science and Zhongwen
     limit features. The Math card has no limit feature. STEM keeps `On our roadmap`.
   - The row A cases of the new locale test pass. The zh lines do not change.
 
-- [x] 1.3 Green, row B: the ten places in
-  `src/locales/pages/products/storytime-advantage.ts`, `src/locales/pages/home.ts`,
-  `src/locales/pages/products/overview.ts`,
-  `src/locales/components/common/navigation.ts`, and
-  `src/locales/components/products/b2b-solutions.ts`, en and th. `src/config/navigation.ts`
-  follows place 5. Test: AC-1, AC-3.
+- [x] 1.3 Green, row B: the ten places. Done: `d6c32b479`. Test: AC-1, AC-3.
 
+  The places sit in five locale files, and `src/config/navigation.ts` follows place 5.
+
+  - The locale files are `src/locales/pages/products/storytime-advantage.ts`,
+    `src/locales/pages/home.ts`, `src/locales/pages/products/overview.ts`,
+    `src/locales/components/common/navigation.ts`, and
+    `src/locales/components/products/b2b-solutions.ts`, en and th.
   - Place 10 renders as the new hero note under the description. The string stays word for
     word.
   - The new locale test and the Storytime page content test pass: 83 of 83.
   - The zh Storytime page shows the English lines through the `...en` spread. No zh file
     changes.
 
-- [x] 1.4 Gates. Test: AC-5, AC-6.
+- [x] 1.4 Gates. Done: `d6c32b479`. Test: AC-5, AC-6.
 
   - The full www vitest suite: 60 files, 2448 tests, exit 0.
     Log: `measure/runs/www_batch_20261116/gate-vitest-full.log`.
@@ -76,25 +79,31 @@
   - Grep of the www app for the eight old lines of rows A, B, and the stapler row: no live
     occurrence outside tests.
 
-- [x] 1.5 Selector check. `node scripts/ci/affected-apps.mjs --base <base> --head HEAD`
-  prints `[]` for the track-only commit and `["www-reading-advantage"]` for each code
-  commit. Test: AC-7.
+- [x] 1.5 Selector check. Done: `d6c32b479`. Test: AC-7.
 
-- [x] 1.6 Stapler row of 2026-11-05 (TH-184), one separate last commit. Test: AC-1.
+  `node scripts/ci/affected-apps.mjs --base <base> --head HEAD` prints `[]` for the track-only
+  commit and `["www-reading-advantage"]` for each code commit.
+
+- [x] 1.6 Stapler row of 2026-11-05 (TH-184), one separate last commit. Done: `ba9e71831`.
+  Test: AC-1.
 
   - The test line and the en and th copy change. Failing run first: exit 1, 5 failed and
     80 passed of 85. Log: `.../red-p1-stapler.log`. Then the copy, and 85 of 85 pass.
   - The commit stands alone, so the orchestrator can drop it.
 
-- [x] 1.7 Report. The track files, each changed key with old and new text, the commit list,
-  the gate exit codes, the capture paths, the selector output, and the facts changed.
+- [x] 1.7 Report. Done: `9a9ae9aea`.
+
+  The track files, each changed key with old and new text, the commit list, the gate exit
+  codes, the capture paths, the selector output, and the facts changed.
 
 ## Phase 2: PM decision of 2026-11-16 on the home roadmap note
 
-- [x] 2.1 PM decision 2026-11-16: delete only the second sentence "We give no dates."
-  from the home section "ON OUR ROADMAP", and delete its Thai sentence. Keep "These
-  product lines are planned." and its Thai first sentence word for word. A deletion
-  only. Test: AC-1, AC-2.
+- [x] 2.1 PM decision 2026-11-16: delete "We give no dates.". Done: `e502b81f0`.
+  Test: AC-1, AC-2.
+
+  The deletion covers the second sentence of the home roadmap note and its Thai sentence.
+  Keep "These product lines are planned." and its Thai first sentence word for word. A
+  deletion only.
 
   - Key `pages.home.v2.products.roadmapNote` in `src/locales/pages/home.ts`.
     en: `These product lines are planned. We give no dates.` →
@@ -110,10 +119,13 @@
     pushes. The Phase 1 line "No push" holds for Phase 1 only.
 
 ## Phase 3: PM decision of 2026-11-16 on the product detail pages
-- [x] 3.1 PM decision 2026-11-16: on the Science, Math, and Zhongwen product detail
-  pages, delete only the sentence "It has no release date." and its Thai sentence. Delete
-  also the named form "<Product> has no release date." with its Thai sentence. A deletion
-  only, with no new words and no new Thai. The zh text does not change. Test: AC-1, AC-2.
+- [x] 3.1 PM decision 2026-11-16: delete the no-release-date sentence. Done: `e7710f4df`.
+  Test: AC-1, AC-2.
+
+  The deletion covers "It has no release date." and its Thai sentence on the Science, Math,
+  and Zhongwen detail pages. It covers also the named form "<Product> has no release date."
+  with its Thai sentence. A deletion only, with no new words and no new Thai. The zh text
+  does not change.
 
   - Places: `src/locales/pages/products/math-advantage.ts` (hero 5, cta 74, th 97 and
     166), `science-advantage.ts` (cta 125, waitlist 165, th 307 and 347), and
@@ -126,8 +138,10 @@
   - This commit pushes to `origin/master` under the standing approval for www-only
     pushes.
 
-- [x] 3.2 PM additions of 2026-11-16: the meta tags, the notify line, and the GSE
-  labels. Test: AC-1, AC-2.
+- [x] 3.2 PM additions of 2026-11-16: meta, notify, GSE. Done: `7843d864b`, `9a9ae9aea`.
+  Test: AC-1, AC-2.
+
+  The additions are the three meta tags, the notify line, and the Science GSE labels.
 
   - A. The meta description, `og:description`, and `twitter:description` of the three
     pages read `hero.description` through `buildMarketingMetadata`. The 3.1 deletion
@@ -168,3 +182,42 @@
 - The rows that are not READY.
 - The zh lines Z19 to Z28.
 - Push and deploy.
+
+## Closeout
+
+Closed 2026-11-16 as a light-lane chore. A Build session ran the closeout on the order of the
+Monorepo orchestrator. Every task of Phase 1, Phase 2, and Phase 3 is `[x]`. No task is open.
+
+The work sits on `origin/master` in the range `146a2cd15..9a9ae9aea`.
+
+| Commit | Work |
+| --- | --- |
+| `de1952539` | The locale tests for rows A and B |
+| `5bd954557` | Row A: the 2027 school year on three cards |
+| `d6c32b479` | Row B: the Storytime launch on 30 November 2026 |
+| `ba9e71831` | The stapler row of 2026-11-05 (TH-184) |
+| `e502b81f0` | The home roadmap note loses the no-dates sentence |
+| `e7710f4df` | The three detail pages lose the no-release-date sentence |
+| `7843d864b` | The notify line and the Science GSE labels |
+| `9a9ae9aea` | The gate record of the detail-page work |
+
+CI proof: CD runs 43798094094 and 43806994592 on `origin/master` passed.
+
+PM page-check: rows A and B PASSED on 2026-11-16. The captures sit in
+`~/Desktop/handoff/page-check/20261116-1121/`. The detail-page rows and the Science GSE labels
+wait for the PM re-check.
+
+Orchestrator live check 2026-11-16, at the six detail URLs (en and th of Science, Math, and
+Zhongwen):
+
+- Each URL returned HTTP 200.
+- The visible text, the meta description, `og:description`, and `twitter:description` hold no
+  "It has no release date." and no Thai sentence.
+- The same four places hold no `GSE`.
+- The notify line reads "<Product> is on our roadmap. We will keep your email for news.".
+
+The Science, Math, and Zhongwen detail pages stay under the PM re-check. The look of the six
+pages stays with the PM and Daniel.
+
+Archive path: `measure/archive/www_batch_20261116/`.
+
