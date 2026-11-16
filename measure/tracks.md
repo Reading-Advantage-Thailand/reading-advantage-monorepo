@@ -44,11 +44,6 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
-- [~] **Track: www STEM Advantage release-date line** — *created 2026-11-16*
-  *Link: [./tracks/www_stem_date_line_20261116/](./tracks/www_stem_date_line_20261116/)*
-  *Status: active, light lane; six deletions in the en and th STEM page strings | Owner: Monorepo orchestrator | PM decision 2026-11-16*
-  *Note: "STEM keeps no date and the page says nothing about one. No new copy." Deletions only; the zh lines stay; no other page.*
-
 - [~] **Track: www daily blog posts of PR** — *created 2026-11-15*
   *Link: [./tracks/www_daily_blog_posts_20261115/](./tracks/www_daily_blog_posts_20261115/)*
   *Status: active, light lane; post 2026-11-15 (`a-five-year-old-reads-by-herself`) live; one task per post; the track stays open for later daily posts | Owner: Monorepo orchestrator | PM task A-61 follow-up*
@@ -1294,6 +1289,12 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
   *Remove the GSE labels from the two Reading Advantage marketing mockups and add a vitest guard that blocks GSE, Global Scale of English, Pearson, and YLE in www customer copy. The blog post the-advantage-engine-kst-srs stays unchanged and sits on an explicit PENDING list for the PM decision.*
   *Status: done, opened 2026-11-16, archived 2026-11-16; 8 tasks done, no deferred task | Owner: Monorepo orchestrator | PM final-check gate 2026-11-16 | The work is in `9f7a75b01`, `51ddd4aef`, `3b4bda109`, and `0c7d3485a` on `origin/master`. CD run 43808443454 passed. The live page `/products/reading-advantage` in en and th returned HTTP 200 and holds no `GSE`. The PM runs the page-check.*
   *Note: PM decision 2026-11-16: "GSE leaves all customer copy (CEFR only)". The Reading mockups lose their three GSE labels. `no-gse-in-customer-copy.test.ts` blocks GSE, Global Scale of English, Pearson, and YLE in customer copy. The pending list holds one item: the blog post `the-advantage-engine-kst-srs` in en and th, line 24. The PR sends the CEFR sentence.*
+
+- [x] **Track: www STEM Advantage release-date line** — *created 2026-11-16, archived 2026-11-16*
+  *Link: [./archive/www_stem_date_line_20261116/](./archive/www_stem_date_line_20261116/)*
+  *Delete the release-date text from the STEM Advantage page in en and th at six places. Deletions only, no new copy. The zh lines stay as they are.*
+  *Status: done, opened 2026-11-16, archived 2026-11-16; 6 tasks done, no deferred task | Owner: Monorepo orchestrator | PM decision 2026-11-16 | The work is in `f6055a4aa`, `bae6053da`, and `8aeb92028` on `origin/master`. CD run 43816539480 passed. The live en and th pages returned HTTP 200 and hold no release or launch date text.*
+  *Note: "STEM keeps no date and the page says nothing about one. No new copy." The zh lines keep `暂无发布日期` and stay as they are. No other page changes. `www-stem-date-line.locale.test.ts` holds the six kept strings word for word.*
 
 - [x] **Track: www Primary Advantage page revamp** — *created 2026-10-30*
   *Link: [./archive/www_primary_page_revamp_20261030/](./archive/www_primary_page_revamp_20261030/)*

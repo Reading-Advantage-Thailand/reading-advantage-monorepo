@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "track_id": "www_stem_date_line_20261116",
+  "status": "closed",
+  "completion_date": "2026-11-16",
+  "pre_closeout_head": "8aeb920287e0570f8ad71757ad833ea9b82e60e9",
+  "lane": "light lane, chore. The metadata lane is light, so the closeout gate does not require the final acceptance. This track ran no spec review, no review rounds, and no acceptance. The PM decision of 2026-11-16 asked for the deletion only.",
+  "acceptance": {
+    "phase": "none; the light lane ran no phase acceptance",
+    "final": "none; the light lane ran no final acceptance",
+    "audited_head_sha": "8aeb920287e0570f8ad71757ad833ea9b82e60e9",
+    "status": "not required",
+    "note": "The audited head is the tip of origin/master before this closeout."
+  },
+  "audits": {
+    "spec_review": "none; light lane",
+    "review_a": "none; light lane",
+    "adversarial": "none; light lane",
+    "ci_run": "CD run 43816539480 on 8aeb92028 passed. The steps \"Run the www photo e2e\" and \"Deploy to Cloud Run 🚀\" succeeded."
+  },
+  "commands": [
+    "git fetch origin; git worktree add /home/daniebo/Desktop/rama-worktrees/www-stem-1116 -b www/stem-1116 origin/master (a7ba202cd)",
+    "cd apps/www-reading-advantage && pnpm exec vitest run src/__tests__/www-stem-date-line.locale.test.ts --silent=true (Red: exit 1, 9 failed of 11; Green: exit 0, 11 of 11)",
+    "cd apps/www-reading-advantage && pnpm exec vitest run --silent=true (exit 0, 62 files, 2481 tests)",
+    "cd apps/www-reading-advantage && pnpm exec tsc --noEmit (exit 0)",
+    "cd apps/www-reading-advantage && pnpm exec eslint src/locales/pages/products/stem-advantage.ts src/__tests__/www-stem-date-line.locale.test.ts (exit 0)",
+    "cd apps/www-reading-advantage && pnpm exec next build (exit 0)",
+    "npx vitest run scripts/ci/__tests__/ (exit 0, 14 files, 226 tests)",
+    "node scripts/ci/affected-apps.mjs --base a7ba202cdee96d1f115680f3fff0a0c73da5a3d5 --head 8aeb920287e0570f8ad71757ad833ea9b82e60e9 ([\"www-reading-advantage\"])",
+    "git push origin HEAD:master (a7ba202cd..8aeb92028)",
+    "gh run watch 43816539480 --exit-status (exit 0)",
+    "curl https://www.reading-advantage.com/en/products/stem-advantage and /th/products/stem-advantage (HTTP 200; no date phrase in the visible text or the description, og:description, and twitter:description tags)",
+    "git worktree add /home/daniebo/Desktop/rama-worktrees/www-stem-closeout -b chore/www-stem-closeout origin/master (8aeb92028)",
+    "git mv measure/tracks/www_stem_date_line_20261116 measure/archive/www_stem_date_line_20261116 (exit 0)",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track www_stem_date_line_20261116",
+    "node scripts/ci/affected-apps.mjs --base 8aeb920287e0570f8ad71757ad833ea9b82e60e9 --head <closeout HEAD>"
+  ],
+  "retained_evidence": [
+    "CD run 43816539480 on 8aeb92028 (GitHub, outside the repository)",
+    "Live pages /en/products/stem-advantage and /th/products/stem-advantage on 2026-11-16",
+    "apps/www-reading-advantage/src/__tests__/www-stem-date-line.locale.test.ts",
+    "measure/archive/www_stem_date_line_20261116/plan.md, section Closeout",
+    "measure/archive/www_stem_date_line_20261116/automation-supervisor-closeout-manifest.json"
+  ],
+  "findings_recorded_in_tech_debt": [],
+  "archive_path": "measure/archive/www_stem_date_line_20261116",
+  "test_reference_audit": "No test or fixture pins the old STEM text. A grep for the three removed en phrases and the removed th phrase finds the new test only. The Storytime fixture holds the same phrases for the Storytime page and stays unchanged.",
+  "artifact_cleanup": "None. The track made no bulky artifact. The two worktrees and their branches are removed after the closeout push.",
+  "owner_gate": "None. The PM decision of 2026-11-16 is the instruction, and the www-only push is standing-approved (Daniel 2026-11-15).",
+  "deviation": "This closeout ran in a Build session, not the measure-closeout subagent. The track ran no final acceptance, so the provenance-bound audited head rule does not apply."
+}

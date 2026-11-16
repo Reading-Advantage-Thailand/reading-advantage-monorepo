@@ -24,7 +24,7 @@ Author model: opencode-go/deepseek-v4.1-flash
 
   Run: same command. Result: exit 0, 11 of 11 pass.
 
-- [x] 1.3 Fix a test or fixture that pins the old text. Done: no change needed.
+- [x] 1.3 Fix a test or fixture that pins the old text. Done: no file changed; the grep at `8aeb92028` finds the new test only. The line below holds the detail.
 
   `grep -rn "No launch date\|with no release date\|It has no release date"` over
   `apps/www-reading-advantage` finds the new test only. The Storytime fixture
@@ -33,7 +33,7 @@ Author model: opencode-go/deepseek-v4.1-flash
   `app/[locale]/(marketing)/products/stem-advantage/page.tsx` finds no date text. The navigation
   description and the b2b card also hold no date text.
 
-- [x] 1.4 Run the five gates and record the selector output. Done.
+- [x] 1.4 Run the five gates and record the selector output. Done at `8aeb92028`.
 
   - www vitest suite: exit 0, 62 files and 2481 tests pass.
   - `tsc --noEmit`: exit 0, no output.
@@ -43,8 +43,22 @@ Author model: opencode-go/deepseek-v4.1-flash
   - Selector: `node scripts/ci/affected-apps.mjs --base a7ba202cd --head <HEAD>` prints
     `["www-reading-advantage"]`.
 
-- [ ] 1.5 Push to master and check the CD run and the live pages.
+- [x] 1.5 Push to master and check the CD run and the live pages. Done: `8aeb92028`.
+
+  `origin/master` did not move, so no rebase was needed. The push took `master` from `a7ba202cd` to
+  `8aeb92028`. The selector on the pushed head prints `["www-reading-advantage"]`.
+
+  CD run 43816539480 on `8aeb92028` passed. The steps "Run the www photo e2e" and
+  "Deploy to Cloud Run 🚀" succeeded.
+
+  Live check at 06:30 UTC on 2026-11-16: `/en/products/stem-advantage` HTTP 200 and
+  `/th/products/stem-advantage` HTTP 200. The visible text holds no `release date`, `launch date`,
+  `no date`, `กำหนดวัน`, or `วันเปิดตัว` phrase. The description, og:description, and
+  twitter:description tags hold none either. The zh page keeps `暂无发布日期` and is untouched.
 
 ## Closeout
 
-Pending.
+- [x] C.1 Move the track to `measure/archive/www_stem_date_line_20261116` and record the closeout. Done: the pre-closeout head is `8aeb92028`; this commit holds the move.
+
+  The closeout checker passes with an INFO line for the light lane: no final acceptance is
+  required. The selector on the closeout head prints `[]`. The closeout commits to `master`.
