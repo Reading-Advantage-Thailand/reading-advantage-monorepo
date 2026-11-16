@@ -10,8 +10,9 @@ PM order A-32 (orchestrator default): the root `@shadcn/lint` devDependency and 
 lockfile change. The plugin resolves from a folder named by `SHADCN_LINT_DIR`, which CI creates with
 an isolated `npm install` in `RUNNER_TEMP`.
 
-- [x] 2.1 Rebase onto `origin/master` and remove the root devDependency and every
-  `pnpm-lock.yaml` change. `git diff origin/master...HEAD -- pnpm-lock.yaml package.json` is empty.
+- [x] 2.1 Rebase onto `origin/master` and remove the root devDependency and the lockfile change. Done: `896662ca6`.
+
+  `git diff origin/master...HEAD -- pnpm-lock.yaml package.json` is empty.
 
   Rebase onto `ad461d1057d30ee39b553616cf6183a689ba3621`. One conflict, in `measure/tracks.md`:
   `origin/master` archived the www products photos track, so its active row is dropped and the
@@ -21,15 +22,19 @@ an isolated `npm install` in `RUNNER_TEMP`.
 
   Proof: `git diff origin/master...HEAD -- pnpm-lock.yaml package.json` prints 0 lines.
 
-- [x] 2.2 Red: add the rows "the gate exits 2 when `SHADCN_LINT_DIR` is not set" and "the gate exits
-  2 when the folder holds no plugin". Done: `8faf07d4f`.
+- [x] 2.2 Red: add the two rows for the missing plugin exit. Done: `8faf07d4f`.
+
+  The rows: "the gate exits 2 when `SHADCN_LINT_DIR` is not set" and "the gate exits 2 when the
+  folder holds no plugin".
 
   Run: `CI=true pnpm exec vitest run scripts/ci/__tests__/shadcn-ratchet.test.mjs`. Exit 1.
   Result: 2 failed, 13 passed. Both new rows read `expected +0 to be 2`, because the script still
   loaded the plugin from the workspace store.
 
-- [x] 2.3 Green: `scripts/ci/shadcn-ratchet.mjs` resolves `@shadcn/lint` from `SHADCN_LINT_DIR` and
-  exits 2 with a clear message when the plugin is missing. Done: `56b5f391c`.
+- [x] 2.3 Green: the gate loads the plugin from `SHADCN_LINT_DIR`. Done: `56b5f391c`.
+
+  `scripts/ci/shadcn-ratchet.mjs` resolves `@shadcn/lint` from `SHADCN_LINT_DIR` and exits 2 with a
+  clear message when the plugin is missing.
 
   - New exports `resolvePluginEntry(env)` and `loadShadcnPlugin(env)`. A missing variable, a missing
     folder, or a missing plugin throws `RatchetError`, and `main()` turns it into exit 2. The message
@@ -42,8 +47,10 @@ an isolated `npm install` in `RUNNER_TEMP`.
     @shadcn/lint ...`. `SHADCN_LINT_DIR=/tmp/opencode/nothing-here`: exit 2, `SHADCN_LINT_DIR is not
     a folder ...`.
 
-- [x] 2.4 Wire the isolated install into `.github/workflows/ci.yml` as the step
-  `Install shadcn lint plugin`, and give the gate step `SHADCN_LINT_DIR`. Done: `56b5f391c`.
+- [x] 2.4 Wire the isolated install into the CI workflow. Done: `56b5f391c`.
+
+  The step `Install shadcn lint plugin` sits in `.github/workflows/ci.yml`, and the gate step takes
+  `SHADCN_LINT_DIR`.
 
   The install step runs `npm install --prefix "$RUNNER_TEMP/shadcn-lint" @shadcn/lint@0.2.5
   --no-save --ignore-scripts`. The gate step sets `SHADCN_LINT_DIR: ${{ runner.temp }}/shadcn-lint`.
@@ -51,7 +58,7 @@ an isolated `npm install` in `RUNNER_TEMP`.
   selector tests | Install shadcn lint plugin | Shadcn lint ratchet | Config drift check ...`. No
   other workflow change.
 
-- [x] 2.5 Update `spec.md` for the resolution path and run the gates. Record the selector output.
+- [x] 2.5 Update `spec.md` for the resolution path and run the gates. Record the selector output. Done: `a713c2c62`.
 
   - Test file: exit 0, 15 of 15 pass.
   - Script on the tree with the temp install: exit 0. `lint warnings 241 equals the baseline 241`,
@@ -69,8 +76,7 @@ an isolated `npm install` in `RUNNER_TEMP`.
 
 ## Phase 1: The ratchet gate, test first
 
-- [x] 1.1 Red: write `scripts/ci/__tests__/shadcn-ratchet.test.mjs` for the comparison logic.
-  Done: `27bbeb1fe`, rebased as `896662ca6`.
+- [x] 1.1 Red: write `scripts/ci/__tests__/shadcn-ratchet.test.mjs` for the comparison logic. Done: `27bbeb1fe`, rebased as `896662ca6`.
 
   Run: `CI=true pnpm exec vitest run scripts/ci/__tests__/shadcn-ratchet.test.mjs`. Exit 1.
   Failure: `Error: Cannot find module '../shadcn-ratchet.mjs'`, 0 tests ran. The file holds 13
@@ -79,9 +85,10 @@ an isolated `npm install` in `RUNNER_TEMP`.
   count, a fractional count, a baseline that is not an object, a kebab name, a copy count on a
   fixture tree, and a missing scope folder.
 
-- [x] 1.2 Green: write `scripts/ci/shadcn-ratchet.mjs` and
-  `scripts/ci/shadcn-ratchet-baseline.json`. Done: `d5436af53`, rebased as `b27cbe1f7` with the
-  devDependency and the lockfile hunks removed.
+- [x] 1.2 Green: write the gate script and the baseline. Done: `b27cbe1f7` (original `d5436af53`).
+
+  The files are `scripts/ci/shadcn-ratchet.mjs` and `scripts/ci/shadcn-ratchet-baseline.json`. The
+  rebase removed the devDependency and the lockfile hunks.
 
   - Test file: `CI=true pnpm exec vitest run scripts/ci/__tests__/shadcn-ratchet.test.mjs`,
     exit 0, 13 of 13 pass.
@@ -95,13 +102,13 @@ an isolated `npm install` in `RUNNER_TEMP`.
   - The Tailwind worker budget is 5000 ms through `SHADCN_LINT_TAILWIND_TIMEOUT`. The run takes about
     11 s. The count is 241 at an 8 s, 20 s, 60 s, and 120 s budget, so the budget does not move it.
 
-- [x] 1.3 Wire the gate into `.github/workflows/ci.yml`, job `packages`, as the step
-  `Shadcn lint ratchet`. Done: `ff0faf7ab`, rebased as `fd1d7684d`.
+- [x] 1.3 Wire the gate into CI. Done: `fd1d7684d` (original `ff0faf7ab`).
 
-  The step runs `node scripts/ci/shadcn-ratchet.mjs` after `CI selector tests`. The YAML parses with
-  the `yaml` package. No other workflow change. Phase 2 adds the install step and the env var.
+  The step is `Shadcn lint ratchet` in `.github/workflows/ci.yml`, job `packages`. It runs
+  `node scripts/ci/shadcn-ratchet.mjs` after `CI selector tests`. The YAML parses with the `yaml`
+  package. No other workflow change. Phase 2 adds the install step and the env var.
 
-- [x] 1.4 Gates. Done.
+- [x] 1.4 Gates. Done: `b434776db`.
 
   - Test file: exit 0, 13 of 13 pass.
   - Script on the tree: exit 0. `lint warnings 241 equals the baseline 241`, `local copies 36 equals
@@ -123,3 +130,16 @@ an isolated `npm install` in `RUNNER_TEMP`.
 - A local developer run needs `SHADCN_LINT_DIR`. Without it the gate exits 2 on purpose.
 - The gate writes no file. A lowered baseline is a manual edit of
   `scripts/ci/shadcn-ratchet-baseline.json`.
+
+## Closeout
+
+Closed 2026-11-16 as a light-lane chore. Every task in Phase 1 and Phase 2 is `[x]`, and the code
+sits on `origin/master` at `a713c2c62` and earlier.
+
+CI proof: run 43798094179 on `e502b81f0`, job "Build, Lint, and Test". The step
+"Install shadcn lint plugin" passed and the step "Shadcn lint ratchet" passed. The job failed later
+at the step "Architecture boundary check". That step is PC-4, another session owns it, and it sits
+outside this track.
+
+Out of this track: fixing the 241 findings and moving the 36 local copies into `packages/ui`. PM
+order A-32 covers that work in a later step.

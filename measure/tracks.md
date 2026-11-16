@@ -49,11 +49,6 @@ This file tracks all major tracks for the project.
   *Status: active, light lane; post 2026-11-15 (`a-five-year-old-reads-by-herself`) live; one task per post; the track stays open for later daily posts | Owner: Monorepo orchestrator | PM task A-61 follow-up*
   *Note: PR's daily posts in en and th, written from `apps/www-reading-advantage/docs/blog-post-format.md` (track `www_blog_rich_format_20261115`). www-only push is standing-approved (Daniel 2026-11-15).*
 
-- [~] **Track: shadcn lint ratchet** — *created 2026-11-15*
-  *Link: [./tracks/shadcn_lint_ratchet_20261115/](./tracks/shadcn_lint_ratchet_20261115/)*
-  *Status: active, light lane; CI gate for the `@shadcn/lint` warning count and the local shadcn copy count, before 2026-11-20 | Owner: Monorepo orchestrator | PM order A-32 step 1*
-  *Note: the gate compares both counts with `scripts/ci/shadcn-ratchet-baseline.json` and fails only when a count goes up. Fixing the findings and moving the copies into `packages/ui` is out of this track.*
-
 - [x] **Track: Primary class code: six hours** — *created 2026-11-12*
   *Link: [./tracks/primary_class_code_six_hours_20261112/](./tracks/primary_class_code_six_hours_20261112/)*
   *Status: complete; six-hour codes and automatic latest routing live, isolated production QA fixture created, actual Class sign-in screenshot captured (13:30 to19:30 Bangkok).*
@@ -1307,6 +1302,12 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
   *The www products page showed one hidden hero photo and no product pictures. Find the root cause, pin it with Playwright and unit tests that check what a reader sees at 390, 980, 1024, and 1280 px, and fix what is still wrong.*
   *Status: done, opened 2026-11-15, archived 2026-11-16; the Phase 1 acceptance is 23c29d89a and the final acceptance at 23c29d89a passed on 2026-11-16 | Owner: Monorepo orchestrator | PM assignment A-62 | Priority: P1 | 4 tasks done; no deferred task | AC-3a waits on the `blog-blocks.test.ts` timeout in ci_green_master_20261115*
   *Note: Daniel passed the look of the live page with "Ok" in Tasks at 2026-11-16 07:38 ICT, relayed by the PM. The PM page-check passed 2026-11-16 06:15 (`~/Desktop/handoff/page-check/20261116-0615/`). The report-results card stays stacked at every width, against AC-4; no text covers the photo. The track report and the closeout manifest sit in the archive folder.*
+
+- [x] **Track: shadcn lint ratchet** — *created 2026-11-15, archived 2026-11-16*
+  *Link: [./archive/shadcn_lint_ratchet_20261115/](./archive/shadcn_lint_ratchet_20261115/)*
+  *Add a CI ratchet for @shadcn/lint warnings on the app components/ui folders and for the count of local shadcn component copies. Both counts compare with a committed baseline and fail only when a count goes up. Step 1 of PM order A-32.*
+  *Status: done, opened 2026-11-15, archived 2026-11-16; 9 tasks done, no deferred task | Owner: Monorepo orchestrator | PM order A-32 step 1 | The gate counts the four `@shadcn/lint` rules that do not read the Tailwind theme. CI run 43798094179 on `e502b81f0` passed the steps "Install shadcn lint plugin" and "Shadcn lint ratchet"; that job failed later on "Architecture boundary check", which is PC-4 and another session.*
+  *Note: the gate compares both counts with `scripts/ci/shadcn-ratchet-baseline.json` and fails only when a count goes up. Fixing the findings and moving the copies into `packages/ui` is out of this track.*
 
 - [x] **Track: Update Science Advantage Product Page** *Link: [./archive/www_science_product_update_20260517/](./archive/www_science_product_update_20260517/)*
   Update marketing page from "Coming 2025" to reflect actual implemented features: student dashboards, teacher intervention alerts, AI recommendations, NGSS-aligned curriculum. Add real screenshots and role-based CTAs. *Status: COMPLETE — Page updated with Early Access badge, student features (join classes, interactive lessons, progress tracking, AI recommendations), teacher features (intervention alerts, class analytics, student progress, assignments), and platform features. All 7 tests passing, lint clean. Commit: 1c384a1*
