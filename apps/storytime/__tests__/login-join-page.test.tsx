@@ -122,10 +122,15 @@ describe("login join page (red)", () => {
   it("answers with no session, writes no cookie, and renders both locales", async () => {
     expect(existsSync(JOIN_PAGE), MISSING).toBe(true);
     const page = await joinPage();
+    const copy = (await import("../lib/join-copy.js")) as {
+      JOIN_COPY: { en: { heading: string }; th: { heading: string } };
+    };
     for (const locale of ["th", "en"] as const) {
       nav.reset();
       const html = await render(page, { params: Promise.resolve({ locale }) });
-      expect(html, `${locale} renders`).toContain(`${locale}:`);
+      // Pin-bound row F7: the approved page renders no draft marker, so no mocked translation key stays in the HTML.
+      expect(html, `${locale} renders its heading`).toContain(copy.JOIN_COPY[locale].heading);
+      expect(html, `${locale} holds no translation key`).not.toContain("joinDraftMarker");
       expect(nav.redirectCalls, `${locale} makes no redirect`).toHaveLength(0);
       expect(nav.notFoundCalls, `${locale} is not a 404`).toBe(0);
     }
