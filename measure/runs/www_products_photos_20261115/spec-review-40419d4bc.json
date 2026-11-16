@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "role": "measure-spec-review",
+  "track_id": "www_products_photos_20261115",
+  "phase": "track setup",
+  "audited_head_sha": "40419d4bc1f3a712f295acd7a6fc8939c8b6d69a",
+  "route": "kimi-code-plan-cn/kimi-for-coding#high",
+  "round": "r2",
+  "verdict": "pass",
+  "status": "pass",
+  "summary": "The revision closes all four round 1 findings. AC-3 now gates the deploy (e2e in the ci.yml affected job and in cd-www-reading-advantage.yml before the deploy step), states why a CD-needs-CI link is wrong, and keeps the PM page check as the human gate. AC-1 now uses a 100 px short side plus a per-picture aspect assertion, so a squeezed or shrunk card cannot escape. The four widths keep their reasons, and AC-4 names one file per slot. One new Nit: AC-3(b) and the plan offer \"next start -p 3123 or node .next/standalone/server.js\"; the standalone option needs a copy of public/ and .next/static that the plan does not name. The extra next build in the deploy job (4 to 6 minutes) is a recorded trade-off, not a finding.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F5 [Nit] spec.md AC-3(b) and plan.md Runner facts part (b): the start command is an open \"or\" — \"next start -p 3123 or node .next/standalone/server.js\". Rationale: the standalone output does not include public/ or .next/static, so the server.js option needs a copy step the plan does not name, and a naive pick fails the e2e for a reason Red did not choose. The app builds standalone output (next.config.ts line 17), so both options work, but only next start needs no extra step. Name next start -p 3123 as the command and drop the alternative."
+  ],
+  "evidence": [
+    "HEAD is 40419d4bc1f3a712f295acd7a6fc8939c8b6d69a and equals audited_head_sha. The revision commit is 40419d4bc; it changes only the track spec.md and plan.md.",
+    "F1 withdrawn: AC-3 now has part (a) (e2e in the ci.yml affected job when the matrix id is www-reading-advantage) and part (b) (e2e in cd-www-reading-advantage.yml before the deploy step, built in that job, a failing e2e stops the deploy). AC-3 states the reason (ci.yml is red on master for the architecture check, so a CD-needs-CI link would stop every www deploy) and the plan (Runner facts part (b), task 1.1) names the job, the build, the port 3123, Chrome via playwright install --with-deps chromium, and the spec path e2e/photos.spec.ts. No gate decision is left to task 1.2 any more; task 1.2 only covers AC-4.",
+    "F2 withdrawn: AC-1 now defines a photo with a rendered short side of at least 100 px (the Storytime card picture at 160 x 108 now counts), and adds an assertion that each product picture of /products keeps its natural aspect ratio within 5 percent and a short side of at least 100 px at the four widths. A squeezed 160 x 256 or shrunk 160 x 108 card now fails the e2e.",
+    "F3 withdrawn: AC-1 now says the four widths stay and gives the reason (980 px is a phone in desktop view; 1024 px is the lg breakpoint where the squeezed program cards appear).",
+    "F4 withdrawn: AC-4 now names one file per slot (primary-lesson-intro.webp for the program card, primary-origins-2-cover.webp for the product block, reading-origins-2-cover.webp, tutor-flashcard.webp).",
+    "Reviser open point (extra next build in the deploy job, 4 to 6 minutes): not a finding. The plan records the build in the deploy job as part (b), the cost is CI minutes only, the failure direction is safe (a red e2e stops the deploy), and the orchestrator default accepts it.",
+    "Zero-decision recheck: the only leftover choice is the start command \"or\" in AC-3(b), which is F5. Everything else is named: files, port, Chrome install, spec path, widths with reasons, one asset file per slot.",
+    "Zoom-out recheck: the revision adds no feature, no optimization, and no new scope; the home hero stays in scope for the same reason as round 1.",
+    "apps/www-reading-advantage/next.config.ts line 17 sets output: 'standalone', so both start commands can work; only next start needs no copy step (basis of F5)."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "read: measure/tracks/www_products_photos_20261115/spec.md, plan.md (revised)",
+    "grep: apps/www-reading-advantage/next.config.ts for output/standalone"
+  ],
+  "changed_files": [
+    "measure/runs/www_products_photos_20261115/spec-review-40419d4bc.json",
+    "measure/runs/www_products_photos_20261115/spec-review-40419d4bc.log"
+  ],
+  "retry_recommendation": "none",
+  "handoff": "Verdict pass. All four round 1 findings are closed. One new Nit (F5): name next start -p 3123 as the CD start command and drop the standalone server.js alternative, because the standalone output needs a copy of public/ and .next/static that the plan does not name. The extra next build in the deploy job is a recorded trade-off and not a finding. No owner question remains.",
+  "confidence": "high",
+  "paraphrase": {
+    "proposes": "The track restores real photos on the www products page at every viewport width and stops a repeat with tests. It fixes what is still wrong at HEAD: the text box that covers the blended-learning photo, the missing Tutor section picture, the squeezed pictures at 1024 px, and the covered home hero. It adds a Playwright e2e (each photo loaded, visible, at most 30 percent covered, with a 100 px short side and a 5 percent aspect assertion, at 390, 980, 1024, and 1280 px, in en and th), a HeroSection unit test, and it runs the e2e twice: in the ci.yml affected job and in the www CD workflow before the deploy step, so a failing e2e stops the deploy.",
+    "current_system": "Commit 8193625ca already removed the hidden xl:block wrapper from the products hero and added 8 product pictures, and those load at all four widths. The services/blended-learning photo stays covered by the See How We Report Results overlay, the Tutor section has no picture, and the home hero photo is 40 percent covered at 390 px. The ci.yml affected job builds, lints, type-checks, and tests www-reading-advantage but runs no e2e; the www CD deploys on push and needs only its own select job. The ci.yml job Build, Lint, and Test is red on master for an unrelated architecture-check cause, so the e2e gate goes into the CD job itself rather than a CD-needs-CI link."
+  }
+}

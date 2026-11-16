@@ -1,0 +1,125 @@
+# Review A report — www_products_photos_20261115, Phase 1
+
+Track: `www_products_photos_20261115`, phase "Phase 1: Photo checks, then the remaining fixes".
+Role: measure-review-a (correctness and architecture).
+Route: opencode-go/mimo-v2.6-flash.
+Worktree: `/home/daniebo/Desktop/rama-worktrees/www-products-a62`.
+`git rev-parse HEAD` = `d43334ba6e2d5d1b481441d314b3ac4c0fe589d9`, which equals `audited_head_sha`.
+The tree was clean at audit start. I audited `40419d4bc..d43334ba6` only.
+
+## What the work does
+
+Commit `4c48a8b12` adds the e2e, the hero unit case, and both workflow wirings.
+Commit `b09e21f32` fixes the covered photo, the Tutor section, the squeezed portraits, and the home hero.
+Two later commits record evidence. Tests were committed before the Green fix.
+
+## What I verified
+
+1. e2e meaning (AC-1). 56 cases cover 6 pages, 4 widths, 2 locales, plus 8 product-block cases.
+   Missing hero, card, block, and Tutor photos each push a problem, so no check passes on a missing
+   deliverable. Coverage walks a 5 x 5 `elementFromPoint` grid with `pointer-events` forced, scrolls
+   per row, waits for load, and reports `measured==0` as an error.
+   A text box can never count as the wrapper, because a wrapper must contain the img, hold no text,
+   and hold one img.
+2. Missing-deliverable fixtures. `playwright test e2e/no-such-file.spec.ts` printed
+   `Error: No tests found.` and exited 1. The full suite with no server failed 56 tests and
+   exited 1. A dead server and a missing spec both fail the gate.
+3. CI and CD wiring (AC-3). In `ci.yml`, the Chrome install, `next start -p 3123` with a 60 x 2 s
+   port wait, and the e2e all carry `if: matrix.id == 'www-reading-advantage'` and run after the
+   build. In `cd-www-reading-advantage.yml`, no deploy step sits before the e2e; auth, gcloud, and
+   Submit Cloud Build follow it, so a failing e2e stops the deploy.
+   `cd-www-reading-advantage.yml` is the only www deploy path, because `cd-apps.yml` excludes
+   `www-reading-advantage`.
+   The Chrome install and the `pnpm --filter ... exec` form match `capture-real-logos.yml`.
+   The background server does not block the job.
+4. Red and Green evidence. `/tmp/opencode/a62-head-e2e2.log` line 624 reads `18 failed`, `38 passed`,
+   which matches the Red claim. The gate log reads `56 passed` and `EXIT=0`. The checks log reads
+   19 files and 323 tests with `EXIT=0`, `TSC=0`, `ESLINT=0`. Plan claims match these exits (A5).
+5. AC-4 fixes. The report-results card now places the photo above the text with no overlay.
+   The Tutor section shows `tutor-flashcard.webp` through `ProductPicture`, with `imageAlt` in en,
+   th, and zh. Portrait pictures use `h-auto w-full max-w-48`.
+   The home Mastery card sits under the photo below `lg` and overlaps a corner from `lg`.
+6. Tutor set rules. The source file is `student-mobile/22-live-p02-flashcards.png`. It is not a
+   price screen, not an admin screen, shows no stats strip, no faces, and no dev class names.
+   It obeys the README use rules.
+7. Regressions. `hero-section.tsx` does not change in this diff. `ProductPicture` is used only on
+   `/products`. The home page change is local to that page.
+   I ran `vitest run src/components/marketing/hero-section.test.tsx --maxWorkers=1` (7 passed),
+   `vitest run src/__tests__/products-page-pictures.red.test.tsx --maxWorkers=1` (19 passed),
+   `tsc --noEmit` (0), and `eslint` on the six touched files (0).
+
+## Findings
+
+- F1 (medium, nonblocking). The AC-1 aspect and short-side assertion skips two product pictures.
+  `photos.spec.ts:590-613` keeps only photos with a `program-card-*` or `product-block-*` ancestor.
+  The Tutor picture (`tutor-advantage.tsx:71-76`) and the report-results picture
+  (`b2b-solutions.tsx:351-358`) have no such ancestor. A future squeeze of the Tutor picture would
+  pass the gate. Both use ratio-preserving `h-auto w-full` today, and the same portrait class is
+  aspect-checked in the three program cards. Fix by adding a testid or by extending the loop to
+  `/images/products/` sources.
+- F2 (low, nonblocking). The exclusion code skips two extra cases. `photos.spec.ts:147` skips an
+  empty `src`, and `photos.spec.ts:155` skips a path segment that starts with `qr`, `logo`, or
+  `icon`. A real photo named `icon-guide.png` would escape every check. Spec AC-1 allows only the
+  listed rules.
+- F3 (low, nonblocking). Plan task 1.1 keeps a stale proof line. The checked-off text claims a
+  failing run at `8193625ca^` for hero and product photos, while the body of the same task says the
+  pre-fix e2e was skipped. The Red evidence at HEAD is real, and the hero unit test fails at
+  `8193625ca^`.
+
+## Accepted deviation
+
+The "See How We Report Results" card stays stacked at every width. Spec AC-4 asked for a
+side-by-side layout from `lg`. The grid is `md:grid-cols-2 lg:grid-cols-3`
+(`b2b-solutions.tsx:216`), so the cell is one third wide at `lg`, and a side-by-side layout would
+shrink the photo. The stacked card keeps text off the photo, which is the owner complaint. The plan
+records the deviation. I accept it.
+
+## Side effect of this review
+
+My run of the e2e without a server changed the tracked file
+`apps/www-reading-advantage/test-results/.last-run.json` from `"status": "passed"` to
+`"status": "failed"` and cleared untracked `test-results/` directories. Shell writes are denied for
+this role. Restore the file with:
+
+`git -C /home/daniebo/Desktop/rama-worktrees/www-products-a62 checkout -- apps/www-reading-advantage/test-results/.last-run.json`
+
+## Verdict
+
+The work and the gate pass. Three nonblocking findings stay open.
+
+```
+MEASURE_AGENT_RESULT
+role: measure-review-a
+track_id: www_products_photos_20261115
+phase: "Phase 1: Photo checks, then the remaining fixes"
+task: "Phase 1 review"
+status: pass
+phase_base_sha: 40419d4bc1f3a712f295acd7a6fc8939c8b6d69a
+role_base_sha: 5f197fd9938f34f852c1dbbb5fc2bded3280d834
+audited_head_sha: d43334ba6e2d5d1b481441d314b3ac4c0fe589d9
+route: opencode-go/mimo-v2.6-flash
+verdict: pass
+retry_recommendation: none
+findings:
+  - F1 medium nonblocking: the AC-1 aspect and short-side assertion skips the Tutor picture and the report-results picture, because photos.spec.ts:590 keeps only photos with a program-card or product-block ancestor.
+  - F2 low nonblocking: photos.spec.ts:147 and photos.spec.ts:155 skip two cases beyond the spec exclusion list, so a real photo named icon-guide.png would escape every check.
+  - F3 low nonblocking: plan task 1.1 keeps a stale proof line that claims a failing run at 8193625ca^ for hero and product photos, while the body says the pre-fix e2e was skipped.
+accepted_deviations:
+  - D1: the See How We Report Results card stays stacked at every width. The grid cell is one third wide at lg, and the stacked card keeps text off the photo.
+side_effects:
+  - test-results/.last-run.json changed from passed to failed by this review run; restore with git checkout -- apps/www-reading-advantage/test-results/.last-run.json
+commands:
+  - git rev-parse HEAD -> d43334ba6e2d5d1b481441d314b3ac4c0fe589d9
+  - vitest run hero-section.test.tsx --maxWorkers=1 -> 7 passed
+  - vitest run products-page-pictures.red.test.tsx --maxWorkers=1 -> 19 passed
+  - tsc --noEmit -> 0
+  - eslint on the six touched files -> 0
+  - playwright test e2e/no-such-file.spec.ts -> exit 1 (No tests found)
+  - playwright test e2e/photos.spec.ts with no server -> 56 failed, exit 1
+artifacts:
+  - measure/runs/www_products_photos_20261115/review-a-p1-d43334ba6.json
+  - measure/runs/www_products_photos_20261115/review-a-p1-d43334ba6.log
+END_MEASURE_AGENT_RESULT
+```
+
+RESULT: PASS

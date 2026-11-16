@@ -1,0 +1,37 @@
+MEASURE_AGENT_RESULT
+role: green
+track: www_products_photos_20261115
+phase: Phase 1: Photo checks, then the remaining fixes
+task: 1.2
+status: complete
+phase_base_sha: 40419d4bc1f3a712f295acd7a6fc8939c8b6d69a
+role_base_sha: 5f197fd9938f34f852c1dbbb5fc2bded3280d834
+implementation_commit: b09e21f32d1dfbfb7445843570029d5c28a4bf92
+final_green_head: d43334ba6e2d5d1b481441d314b3ac4c0fe589d9
+tasks_done: 1.2 [x] (implementation commit b09e21f32)
+tasks_deferred: none
+red_command_before: playwright test e2e/photos.spec.ts at 5f197fd99: 18 failed (/tmp/opencode/a62-head-e2e2.log; red-p1-40419d4bc.log)
+green_command: heavy-run.sh --next-build -c 'next build && next start -p 3123 && playwright test e2e/photos.spec.ts --reporter=dot'
+green_exit: 0 (log: measure/runs/www_products_photos_20261115/green-p1-5f197fd99-gate.log)
+other_gates: vitest (touched www tests), tsc --noEmit, eslint on touched files: exit 0 (log: green-p1-5f197fd99-checks.log)
+files_changed:
+  - apps/www-reading-advantage/src/components/products/b2b-solutions.tsx
+  - apps/www-reading-advantage/src/components/products/product-picture.tsx
+  - apps/www-reading-advantage/src/components/products/tutor-advantage.tsx
+  - apps/www-reading-advantage/src/locales/components/products/tutor-advantage.ts
+  - apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.tsx
+new_files: none (the logs above and this file are evidence)
+red_tests_edited: none; workflow wiring edited: none
+handoff: >
+  Review the five changed files. The "See How We Report Results" card now stacks the photo above the
+  text at every width. The spec asks for "beside from lg"; the grid cell is one third wide at lg, so
+  a side-by-side layout would give a narrow photo. Default: keep it stacked. The photo
+  blended-learning.png is an existing file (it shows students from behind and the side); the Tutor
+  picture is the existing tutor-flashcard.webp (no new file, no hash field). The home Mastery card
+  overlaps the hero photo only from lg. A stale next-server from the Red run held port 3123 and
+  served the old build in two earlier gate runs; those runs are not evidence. Pre-existing MISSING_MESSAGE
+  noise for pages.blendedLearning.levels.levels.3 and .4 appears in the server log; it is out of scope.
+  Not done: pushing (task 1.4), live render check (task 1.3).
+dispositions: none
+END_MEASURE_AGENT_RESULT
+RESULT: PASS

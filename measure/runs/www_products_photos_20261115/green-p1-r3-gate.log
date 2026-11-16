@@ -1,0 +1,137 @@
+▲ Next.js 16.4.1 (Turbopack)
+✓ Running next.config.ts took 37ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1859ms
+  Running TypeScript ...
+  Finished TypeScript in 3.2s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/17) ...
+  Generating static pages using 11 workers (4/17) 
+  Generating static pages using 11 workers (8/17) 
+  Generating static pages using 11 workers (12/17) 
+✓ Generating static pages using 11 workers (17/17) in 798ms
+Turbopack build encountered 3 warnings:
+./apps/www-reading-advantage/src/lib/blog-blocks.ts:145:8
+Warning: Dynamic filesystem access causes tracing of the whole project
+  143 |   if (!pattern.test(value)) fail(name, `the ${key} "${value}" is not a valid /blog/ file ...
+  144 |   const file = path.join(options.publicRoot ?? path.join(process.cwd(), "public"), value);
+> 145 |   if (!fs.existsSync(file)) fail(name, `the ${key} file "${value}" does not exist in publ...
+      |        ^^^^^^^^^^^^^^^^^^^
+  146 |   if (fs.statSync(file).size > maxMb * MB) fail(name, `the ${key} file "${value}" is larg...
+  147 |   return value;
+  148 | }
+
+Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+This can slow down deployments or lead to failures when size limits are exceeded.
+To resolve this, you can
+- make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+- only use them in development, or
+- opt out by adding an ignore comment to the highlighted call: fs.existsSync(/*turbopackIgnore: true*/ ...), or
+- remove them.
+
+Import trace:
+  Server Component:
+    ./apps/www-reading-advantage/src/lib/blog-blocks.ts
+    ./apps/www-reading-advantage/src/lib/blog.ts
+    ./apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/page/[page]/page.tsx
+
+
+./apps/www-reading-advantage/src/lib/blog-blocks.ts:146:7
+Warning: Dynamic filesystem access causes tracing of the whole project
+  144 |   const file = path.join(options.publicRoot ?? path.join(process.cwd(), "public"), value);
+  145 |   if (!fs.existsSync(file)) fail(name, `the ${key} file "${value}" does not exist in publ...
+> 146 |   if (fs.statSync(file).size > maxMb * MB) fail(name, `the ${key} file "${value}" is larg...
+      |       ^^^^^^^^^^^^^^^^^
+  147 |   return value;
+  148 | }
+  149 |
+
+Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+This can slow down deployments or lead to failures when size limits are exceeded.
+To resolve this, you can
+- make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+- only use them in development, or
+- opt out by adding an ignore comment to the highlighted call: fs.statSync(/*turbopackIgnore: true*/ ...), or
+- remove them.
+
+Import trace:
+  Server Component:
+    ./apps/www-reading-advantage/src/lib/blog-blocks.ts
+    ./apps/www-reading-advantage/src/lib/blog.ts
+    ./apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/page/[page]/page.tsx
+
+
+./apps/www-reading-advantage/src/lib/blog-blocks.ts:144:16
+Warning: Dynamic filesystem access causes tracing of the whole project
+  142 | ... {
+  143 | ...ttern.test(value)) fail(name, `the ${key} "${value}" is not a valid /blog/ file path`);
+> 144 | ...ile = path.join(options.publicRoot ?? path.join(process.cwd(), "public"), value);
+      |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  145 | ....existsSync(file)) fail(name, `the ${key} file "${value}" does not exist in public/`);
+  146 | ...statSync(file).size > maxMb * MB) fail(name, `the ${key} file "${value}" is larger tha...
+  147 | ...value;
+
+Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+This can slow down deployments or lead to failures when size limits are exceeded.
+To resolve this, you can
+- make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+- only use them in development, or
+- opt out by adding an ignore comment to the highlighted call: path.join(/*turbopackIgnore: true*/ ...), or
+- remove them.
+
+Import trace:
+  Server Component:
+    ./apps/www-reading-advantage/src/lib/blog-blocks.ts
+    ./apps/www-reading-advantage/src/lib/blog.ts
+    ./apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/page/[page]/page.tsx
+
+
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /_not-found
+├ ƒ /[locale]
+├ ƒ /[locale]/about
+├ ƒ /[locale]/blog
+├ ƒ /[locale]/blog/[slug]
+├ ƒ /[locale]/blog/page/[page]
+├ ƒ /[locale]/case-studies
+├ ƒ /[locale]/contact
+├ ƒ /[locale]/features
+├ ƒ /[locale]/mastery-advantage
+├ ƒ /[locale]/pricing
+├ ƒ /[locale]/products
+├ ƒ /[locale]/products/codecamp-advantage
+├ ƒ /[locale]/products/math-advantage
+├ ƒ /[locale]/products/primary-advantage
+├ ƒ /[locale]/products/reading-advantage
+├ ƒ /[locale]/products/science-advantage
+├ ƒ /[locale]/products/stem-advantage
+├ ƒ /[locale]/products/storytime-advantage
+├ ƒ /[locale]/products/tutor-advantage
+├ ƒ /[locale]/products/zhongwen-advantage
+├ ƒ /[locale]/services
+├ ƒ /[locale]/services/blended-learning
+└ ƒ /[locale]/services/managed-service
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+▲ Next.js 16.4.1
+- Local:         http://localhost:3141
+- Network:       http://192.168.31.176:3141
+✓ Ready in 105ms
+✓ Running next.config.ts took 40ms
+⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+
+Running 56 tests using 1 worker
+············
+  56 passed (1.4m)
+EXIT=0

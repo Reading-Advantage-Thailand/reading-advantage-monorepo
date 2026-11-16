@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "track_id": "www_products_photos_20261115",
+  "status": "closed",
+  "completion_date": "2026-11-16",
+  "pre_closeout_head": "23c29d89acc30ca5515c4cf1b57d74bcc9104287",
+  "lane": "light lane, bug. The metadata lane is light, so the closeout gate does not require the final acceptance. The final acceptance ran and passed anyway: 0 blocking findings, 10 nonblocking findings.",
+  "acceptance": {
+    "phase": "pass at 23c29d89acc30ca5515c4cf1b57d74bcc9104287; measure/runs/www_products_photos_20261115/phase-acceptance-p1-23c29d89a.json, 6 nonblocking findings, role-gate rerun PASS",
+    "final": "pass at 23c29d89acc30ca5515c4cf1b57d74bcc9104287; measure/runs/www_products_photos_20261115/final-acceptance-23c29d89a.json, verdict pass, 0 blocking findings, 10 nonblocking findings",
+    "audited_head_sha": "23c29d89acc30ca5515c4cf1b57d74bcc9104287",
+    "status": "pass",
+    "note": "The audited head equals the pre-closeout HEAD, which is the tip of origin/master. The worktree checkout fe891bc3e reached that head by a fast-forward merge before the closeout edits. No commit existed after the audited tip."
+  },
+  "audits": {
+    "spec_review": "r1 756471bd5 fail, 1 blocking finding; r2 40419d4bc pass, 0 blocking findings. The r1 blocking finding was closed and superseded.",
+    "review_a": "r1 d43334ba6 pass, 0 blocking findings; r2 ac1e54efd pass, 0 blocking findings. Both rounds ran on opencode-go/mimo-v2.6-flash, which measure/orchestration-models.md bars for this staffing; this stays a staffing note for the orchestrator (final-acceptance F6).",
+    "adversarial": "not dispatched; the plan Test strategy did not require a round, so the live check and the PM page-check carry the browser proof",
+    "phase_acceptance": "pass at 23c29d89a",
+    "final_acceptance": "pass at 23c29d89a; the re-verified claims are the 56-case AC-1 e2e, the 38/38 W-23 pin replay, the CD run 43721191756, and the blog-blocks timeout that blocks AC-3a",
+    "look_check": "pass; Daniel answered \"Ok\" in Tasks on 2026-11-16 at 07:38 ICT, relayed by the PM",
+    "pm_page_check": "pass on 2026-11-16 at 06:15; ~/Desktop/handoff/page-check/20261116-0615/",
+    "cd_deploy": "success; GitHub run 43721191756 at ac1e54efd finished in 15m25s, and the photo e2e step passed 56 of 56 before the deploy",
+    "ci_run": "failure at 23c29d89a in run 43771969916. The step \"Architecture boundary check\" failed, and the www matrix job was skipped because no app is affected. Track ci_green_master_20261115 owns the architecture step."
+  },
+  "commands": [
+    "git rev-parse HEAD; git status --porcelain (fe891bc3e, clean)",
+    "git merge --ff-only 23c29d89acc30ca5515c4cf1b57d74bcc9104287 (fast-forward, exit 0; HEAD becomes 23c29d89a)",
+    "grep -rn www_products_photos_20261115 tests/ (no output; no test references this track)",
+    "grep -rln track_dir_resolve tests/ (tests/orchestrator_marker_vocabulary.sh, tests/codecamp_pr_release_approval_provenance.sh, tests/orchestrator_doctor_gate.sh)",
+    "bash tests/orchestrator_marker_vocabulary.sh --track www_products_photos_20261115 (PASS, exit 0; 1 plan checked)",
+    "git mv measure/tracks/www_products_photos_20261115 measure/archive/www_products_photos_20261115 (exit 0)",
+    "bash measure/doctor.sh (exit 1; the catalog, marker vocabulary, and review-truthfulness steps pass; the architecture step fails on the V2 reconciliation manifest hash, external, owner ci_green_master_20261115)",
+    "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track www_products_photos_20261115",
+    "node scripts/ci/affected-apps.mjs --base 23c29d89acc30ca5515c4cf1b57d74bcc9104287 --head HEAD"
+  ],
+  "retained_evidence": [
+    "measure/runs/www_products_photos_20261115/final-acceptance-23c29d89a.json and final-acceptance-23c29d89a.log",
+    "measure/runs/www_products_photos_20261115/phase-acceptance-p1-23c29d89a.json and phase-acceptance-p1-23c29d89a.log",
+    "measure/runs/www_products_photos_20261115/closeout-23c29d89a.log and closeout-23c29d89a.json",
+    "measure/runs/www_products_photos_20261115/green-p1-r3-gate.log and green-p1-5f197fd99-gate.log (56 passed, EXIT=0)",
+    "measure/runs/www_products_photos_20261115/red-p1-40419d4bc.log (18 failed, 38 passed) and red-p1-r3-d43334ba6.log (2 failed, 54 passed)",
+    "measure/runs/www_products_photos_20261115/spec-review-40419d4bc.json, review-a-p1-d43334ba6.json, review-a-p1-r2-ac1e54efd.json",
+    "PM page-check PASS 2026-11-16 06:15: ~/Desktop/handoff/page-check/20261116-0615/ (outside the repository)",
+    "Daniel look check: \"Ok\", Tasks, 2026-11-16 07:38 ICT, relayed by the PM (no artifact in the repository)",
+    "Live check at 8193625ca: ~/Desktop/handoff/products-page-2026-11-15/after/ (outside the repository)"
+  ],
+  "findings_recorded_in_tech_debt": [],
+  "archive_path": "measure/archive/www_products_photos_20261115",
+  "test_reference_audit": "No test references this track. A scan of tests/ found no match for www_products_photos_20261115 and no hardcoded measure/tracks/<id>/plan.md path for it. tests/orchestrator_marker_vocabulary.sh, tests/codecamp_pr_release_approval_provenance.sh, and tests/orchestrator_doctor_gate.sh define track_dir_resolve() and check the archive first. The only remaining mention is a comment in apps/www-reading-advantage/e2e/photos.spec.ts, which names the track by id and holds no path. No test update was required, so A9 stays clear.",
+  "artifact_cleanup": "None. The orchestrator named no bulky artifact for deletion. The run folder holds logs and JSON only. The capture folders under /tmp/opencode/ and ~/Desktop/handoff/ stay on disk and untracked.",
+  "owner_gate": "The four tasks are complete. Daniel's look gate passed with \"Ok\" on 2026-11-16. The orchestrator holds the push; this track pushed nothing after ac1e54efd and bbe4c3561. Two items wait outside this track: the AC-3a dormancy and the doctor architecture step, both routed to ci_green_master_20261115.",
+  "deviation": "AC-4 asks for the report-results text beside the picture from lg. The card stays stacked at every width, because the grid cell is one third wide at lg. No text covers the photo, and the AC-1 cover and text rules pass at all four widths. AC-3a is wired and correct but dormant: the earlier unit test step fails on src/lib/blog-blocks.test.ts:210 with a 5000 ms timeout on every www push. The Green r4 log died with the deleted worktree www-w23-pin; the final acceptance re-verified its 38/38 claim by a W-23 regex replay."
+}

@@ -99,7 +99,8 @@ Revised by: opencode-go/deepseek-v4.1-flash (spec review r1 fixes)
     `src/lib/blog-blocks.test.ts` "renders every existing post the same as the old pipeline"
     timed out at 5000 ms. The photo e2e steps in that job were skipped. No file of this track
     touches that test.
-  - PM page check pending.
+  - PM page-check PASS 2026-11-16 06:15 (`~/Desktop/handoff/page-check/20261116-0615/`).
+  - Daniel passed the look: "Ok", Tasks, 2026-11-16 07:38 ICT (PM relay).
   - Green r4 (W-23 pin regression): `bbe4c3561` pins `pnpm/action-setup` to
     `b906affcce14559ad1aafd4ab0e942779e9f58b1` (`# v4`, the v4 tag commit of
     2026-11-15) in `cd-www-reading-advantage.yml`. Gates: `cd-workflows.test.mjs`
