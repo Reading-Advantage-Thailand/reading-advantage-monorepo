@@ -190,3 +190,27 @@ describe("www batch 2026-11-16, row B", () => {
     }
   });
 });
+
+/** The stapler row of 2026-11-05 (TH-184): the teacher holds the stapler. */
+const STAPLER = {
+  key: "pages.products.storytimeAdvantage.keyFeatures.features.0.points.0",
+  en: "One A4 Storytime Advantage, Level 2, Unit 1, Student Book for weeks 1 to 8. Small reader books sit inside it. Children tear them out and fold them. The teacher staples them.",
+  th: "หนังสือนักเรียน Storytime Advantage, Level 2, Unit 1, Student Book ขนาด A4 หนึ่งเล่ม สำหรับสัปดาห์ที่ 1 ถึง 8 มีหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน เด็กฉีกออกและพับ ครูเป็นคนเย็บหนังสือฝึกอ่านเล่มเล็ก",
+  old: {
+    en: "Children tear them out, fold them, and staple them. No scissors are needed.",
+    th: "เด็กฉีกออก พับ และเย็บเล่มย่อยแต่ละเล่มได้โดยไม่ต้องใช้กรรไกร",
+  },
+} as const;
+
+describe("www stapler row of 2026-11-05 (TH-184)", () => {
+  it("holds the new en and th line and no old line", () => {
+    expect(read("en", STAPLER.key)).toBe(STAPLER.en);
+    expect(read("th", STAPLER.key)).toBe(STAPLER.th);
+    expect(read("en", STAPLER.key)).not.toContain(STAPLER.old.en);
+    expect(read("th", STAPLER.key)).not.toContain(STAPLER.old.th);
+  });
+
+  it("shows the English line on the zh page through the spread", () => {
+    expect(read("zh", STAPLER.key)).toBe(STAPLER.en);
+  });
+});

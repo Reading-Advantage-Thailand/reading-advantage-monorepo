@@ -168,7 +168,7 @@ export const PAGE_COPY: Readonly<Record<(typeof CONTAINER_IDS)[number], readonly
     { key: "eyebrows.keyFeatures", en: "WHAT IS IN THE PROGRAM", th: "สิ่งที่มีในหลักสูตร" },
     { key: "keyFeatures.heading", en: "What Is in the First Unit", th: "สิ่งที่มีในหน่วยแรก" },
     { key: "keyFeatures.features.0.title", en: "In Print", th: "ฉบับพิมพ์" },
-    { key: "keyFeatures.features.0.points.0", en: "One A4 Storytime Advantage, Level 2, Unit 1, Student Book for weeks 1 to 8. Small reader books sit inside it. Children tear them out, fold them, and staple them. No scissors are needed.", th: "หนังสือนักเรียน Storytime Advantage, Level 2, Unit 1, Student Book ขนาด A4 หนึ่งเล่ม สำหรับสัปดาห์ที่ 1 ถึง 8 มีหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน เด็กฉีกออก พับ และเย็บเล่มย่อยแต่ละเล่มได้โดยไม่ต้องใช้กรรไกร" },
+    { key: "keyFeatures.features.0.points.0", en: "One A4 Storytime Advantage, Level 2, Unit 1, Student Book for weeks 1 to 8. Small reader books sit inside it. Children tear them out and fold them. The teacher staples them.", th: "หนังสือนักเรียน Storytime Advantage, Level 2, Unit 1, Student Book ขนาด A4 หนึ่งเล่ม สำหรับสัปดาห์ที่ 1 ถึง 8 มีหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน เด็กฉีกออกและพับ ครูเป็นคนเย็บหนังสือฝึกอ่านเล่มเล็ก" },
     { key: "keyFeatures.features.0.points.1", en: "A Thai-only teacher book, with five lesson scripts a week", th: "คู่มือครูภาษาไทย พร้อมแผนการสอนสัปดาห์ละ 5 คาบ" },
     { key: "keyFeatures.features.0.points.2", en: "Color reader files for the teacher to print on A3 and lead the class", th: "ไฟล์หนังสือฝึกอ่านสีสำหรับครูพิมพ์ลงกระดาษ A3 เพื่อใช้สอนในชั้นเรียน" },
     { key: "keyFeatures.features.0.points.3", en: "A review strip for each day", th: "แถบทบทวนประจำวัน" },

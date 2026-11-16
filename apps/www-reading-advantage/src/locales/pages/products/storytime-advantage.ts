@@ -26,7 +26,7 @@ export const en = {
       {
         title: "In Print",
         points: [
-          "One A4 Storytime Advantage, Level 2, Unit 1, Student Book for weeks 1 to 8. Small reader books sit inside it. Children tear them out, fold them, and staple them. No scissors are needed.",
+          "One A4 Storytime Advantage, Level 2, Unit 1, Student Book for weeks 1 to 8. Small reader books sit inside it. Children tear them out and fold them. The teacher staples them.",
           "A Thai-only teacher book, with five lesson scripts a week",
           "Color reader files for the teacher to print on A3 and lead the class",
           "A review strip for each day",
@@ -160,7 +160,7 @@ export const th = {
       {
         title: "ฉบับพิมพ์",
         points: [
-          "หนังสือนักเรียน Storytime Advantage, Level 2, Unit 1, Student Book ขนาด A4 หนึ่งเล่ม สำหรับสัปดาห์ที่ 1 ถึง 8 มีหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน เด็กฉีกออก พับ และเย็บเล่มย่อยแต่ละเล่มได้โดยไม่ต้องใช้กรรไกร",
+          "หนังสือนักเรียน Storytime Advantage, Level 2, Unit 1, Student Book ขนาด A4 หนึ่งเล่ม สำหรับสัปดาห์ที่ 1 ถึง 8 มีหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน เด็กฉีกออกและพับ ครูเป็นคนเย็บหนังสือฝึกอ่านเล่มเล็ก",
           "คู่มือครูภาษาไทย พร้อมแผนการสอนสัปดาห์ละ 5 คาบ",
           "ไฟล์หนังสือฝึกอ่านสีสำหรับครูพิมพ์ลงกระดาษ A3 เพื่อใช้สอนในชั้นเรียน",
           "แถบทบทวนประจำวัน",
