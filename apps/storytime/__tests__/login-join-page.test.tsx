@@ -2,9 +2,9 @@
  * The "How to join" page (AC-4.5, test strategy P2b.7, task 2b.2).
  *
  * The page is public and short. It answers with no session, writes no cookie, and holds no week
- * content and no media URL. The copy file holds `status: "draft"` and the page shows a visible
- * draft marker until the PR copy and Daniel's Thai check are recorded (AC-4.10). The sign-in page
- * links to it.
+ * content and no media URL. The copy file holds `status: "approved"` and the page shows no draft
+ * marker (task 3.0, PM order 2026-11-16; the hand-off rows live in
+ * `phase3-join-copy-approved.test.ts`). The sign-in page links to it.
  *
  * At the base the first assertion fails on `Missing apps/storytime/app/[locale]/join/page.tsx`.
  * The page is loaded only after that assertion, so no case fails with a load error.
@@ -145,14 +145,15 @@ describe("login join page (red)", () => {
     expect(mediaUrls(planted), "the positive control finds a planted media URL").toHaveLength(1);
   });
 
-  it("marks the copy as draft and shows a visible draft marker", async () => {
+  // Pin-bound row (parent strategy F7): task 3.0 moves the status to "approved", so the old draft pin contradicts its own copy.
+  it("marks the copy as approved and shows no draft marker", async () => {
     expect(existsSync(JOIN_PAGE), MISSING).toBe(true);
     expect(existsSync(JOIN_COPY), "Missing apps/storytime/lib/join-copy.ts").toBe(true);
     const copy = (await import("../lib/join-copy.js")) as { JOIN_COPY: { status: string } };
-    expect(copy.JOIN_COPY.status, "the copy status").toBe("draft");
+    expect(copy.JOIN_COPY.status, "the copy status").toBe("approved");
     const page = await joinPage();
     const html = await render(page, { params: Promise.resolve({ locale: "th" }) });
-    expect(html, "a visible draft marker").toContain("data-draft");
+    expect(html, "no draft marker").not.toContain("data-draft");
   });
 
   it("links from the sign-in page to the join page", async () => {
