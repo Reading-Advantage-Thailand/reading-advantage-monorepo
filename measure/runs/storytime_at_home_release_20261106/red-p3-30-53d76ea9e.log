@@ -1,0 +1,128 @@
+# Red run log: storytime_at_home_release_20261106, Phase 3, task 3.0
+
+role: measure-mid-red
+track: storytime_at_home_release_20261106
+phase: Phase 3: At-home deploy
+phase_base_sha: 53d76ea9ee6856fa3d617bf46b8e49487b2dc39c
+role_base_sha: 53d76ea9ee6856fa3d617bf46b8e49487b2dc39c
+model: opencode-go/deepseek-v4.1-flash (route substitution; the planned Green family is Muse)
+date: 2026-11-16
+
+Both base values resolve. `git rev-parse 53d76ea9ee6856fa3d617bf46b8e49487b2dc39c` prints the
+full value, and HEAD was `53d76ea9e` at the start. The heading of Phase 2 carries
+`[checkpoint: 7b0ec07ab]`, so a `[~]` task in Phase 3 is allowed.
+
+## Dirty paths at the start (`git status --short`)
+
+| Path | Class | Action |
+|---|---|---|
+| `apps/accounting/next-env.d.ts`, `apps/activity-vinext-fixture/next-env.d.ts`, `apps/marketing/next-env.d.ts` | generated / ignorable | not staged |
+| `measure/tracks/primary_in_app_help_20261023/plan.md` | unrelated user work | not staged |
+| `.agents/skills/game-mapping/`, `.antigravitycli/`, `.generated/`, `.opencode/goals/state.json.sessions/`, `.pnpm-store/`, `.qa-tmp/`, `.reasonix/`, `.tmp/`, `.tmp-playwright/`, `apps/advantage-games/test-results/`, `test-results/` | generated / ignorable | left alone |
+| `apps/primary-advantage/cloudbuild-backfill.yaml`, `apps/primary-advantage/scripts/seed-qa-users.ts`, `packages/db/scripts/seed-qa-users.ts`, `apps/science-advantage/lib/ci-gates/wave5-phase-8-de-prisma.test.ts`, `div.absolute.top-4.right-4.z-10`, `docs/deployment/tutor-switch-brief.md`, `listGameLearningContent`, `probe-tmp.mjs`, `t/` | unrelated user work | left alone |
+
+Each commit of this run uses a pathspec. No push.
+
+## Task 3.0 order and source
+
+PM order, 2026-11-16: the approved "How to join" copy goes into `apps/storytime/lib/join-copy.ts`
+and ships with the 11-20 Phase 3 deploy. The source is
+`~/Desktop/handoff/storytime-join-page-copy-2026-11-16/app-join-page-copy.md`.
+
+- `sha256sum app-join-page-copy.md` prints
+  `981cc4551a624e9a40e0acd952f8d9ac5cf2af3c88af13a82f3bdfd584ffb467  app-join-page-copy.md`.
+  `sha256sum -c MANIFEST.txt` in that folder exits 0 (MANIFEST OK).
+- The version line reads `**Version:** 0.3`. The MANIFEST line names source commit `93662024`.
+- Daniel checked the Thai TH-171 to TH-176 (Google Tasks, 2026-11-16 07:36 ICT). No zh copy:
+  Daniel, Google Tasks, 2026-11-16 07:34 ICT, "We are not doing Chinese support for Storytime".
+
+## Red rows
+
+File: `apps/storytime/__tests__/phase3-join-copy-approved.test.ts` (new). The file parses table (a)
+of the hand-off, so the words are compared byte for byte and are not typed a second time.
+
+| Row | Contract | At the base |
+|---|---|---|
+| hand-off identity | the file exists, sha256 equals the pin, the version line is 0.3, table (a) holds 6 rows with a known label and non-empty cells | PASS |
+| English | each of the 6 English cells equals `JOIN_COPY.en` | PASS |
+| Thai | each of the 6 Thai cells equals `JOIN_COPY.th` | PASS |
+| order | the keys of `en` and `th` follow the table order | PASS |
+| status | `JOIN_COPY.status === "approved"` | FAIL (`draft`) |
+| version | `JOIN_COPY.version` names 0.3 and drops 0.1 | FAIL (`0.1`) |
+| no zh | no `zh` key; `joinCopy("zh")` equals the English | PASS |
+| marker | the th and en HTML holds the heading and no `data-draft` and no `joinDraftMarker` text | FAIL (the th HTML holds `data-draft`) |
+
+The 5 passing rows hold the match on purpose: the English and the Thai did not change since v0.1,
+so the copy file already carries the v0.3 words. The task is not satisfied at the base, because the
+status, the version, and the marker are the deliverable.
+
+## Edited old row
+
+- `apps/storytime/__tests__/login-join-page.test.tsx`, the case "marks the copy as draft and shows a
+  visible draft marker" (now "marks the copy as approved and shows no draft marker"). Reason (one
+  line, in the file): the pin-bound row F7 of the parent strategy; task 3.0 moves the status to
+  "approved", so the old draft pin contradicts its own copy. The file JSDoc follows the same change.
+
+## RED_TEST_COMMAND
+
+```
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm --filter storytime exec vitest run --maxWorkers=1 --reporter=dot --silent=true __tests__/phase3-join-copy-approved.test.ts __tests__/login-join-page.test.tsx'
+```
+
+Exit: 1. `Test Files 2 failed (2)`, `Tests 4 failed | 8 passed (12)`, duration 1.08 s. The output
+holds no `ENOENT`, no `Cannot find`, no `SyntaxError`, no skipped test, and no todo test. Every
+failure is an assertion.
+
+The 4 failed cases:
+
+1. `login-join-page.test.tsx` > "marks the copy as approved and shows no draft marker": expected
+   `'draft'` to be `'approved'`.
+2. `phase3-join-copy-approved.test.ts` > "marks the copy approved": expected `'draft'` to be
+   `'approved'`.
+3. `phase3-join-copy-approved.test.ts` > "names hand-off 0.3 and drops 0.1": expected `'0.1'` to
+   match `/0\.3/`.
+4. `phase3-join-copy-approved.test.ts` > "shows no draft marker when the status is approved": the th
+   HTML holds `<p data-draft="true" ...>th:joinDraftMarker</p>`.
+
+Run counts: `PASS=8 FAIL=4 TOTAL=12 FILES=2`. The parser row passed with `handoff_rows=6`.
+
+## Gates
+
+- ESLint on `__tests__/phase3-join-copy-approved.test.ts` and `__tests__/login-join-page.test.tsx`:
+  exit 0, no output.
+- `pnpm exec tsc --noEmit -p .` in `apps/storytime`: exit 0, no output. No error needs Green.
+
+## Commits
+
+- `ffad3ae78f7df65c6370e35238183e607436c774` — `test(storytime): pin the approved how-to-join copy
+  (track_id: storytime_at_home_release_20261106)`. 3 paths: the new test file, the edited
+  `login-join-page.test.tsx`, and the task 3.0 line with the Red evidence line in `plan.md`. Subject
+  length 97. The plan line was amended into this commit after the version row split.
+- The `docs(storytime)` commit holds this log and the plan evidence line.
+
+## Green hand-off
+
+Green changes `apps/storytime/lib/join-copy.ts` only: `status: "approved"`, a `version` that names
+0.3, and the JSDoc rewrite of the two sentences that claim `draft` and a Chinese check (A5). The
+copy lines stay byte for byte as they are. Then run the command above and expect exit 0 with 12
+passed.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+baseline_sha: 53d76ea9ee6856fa3d617bf46b8e49487b2dc39c
+role_base_sha: 53d76ea9ee6856fa3d617bf46b8e49487b2dc39c
+track: storytime_at_home_release_20261106
+phase: Phase 3: At-home deploy
+resulting_head: ffad3ae78f7df65c6370e35238183e607436c774 (test commit), then the docs commit that holds this log; HEAD before that commit is ffad3ae78f7df65c6370e35238183e607436c774
+commits: ffad3ae78f7df65c6370e35238183e607436c774 (tests and the plan task line), plus the docs commit for this log and the plan evidence line
+tests_run: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm --filter storytime exec vitest run --maxWorkers=1 --reporter=dot --silent=true __tests__/phase3-join-copy-approved.test.ts __tests__/login-join-page.test.tsx', exit 1, files=2 failed_tests=4 passed_tests=8 total_tests=12; ESLint exit 0; tsc --noEmit -p . exit 0
+files_changed: apps/storytime/__tests__/phase3-join-copy-approved.test.ts (new), apps/storytime/__tests__/login-join-page.test.tsx, measure/tracks/storytime_at_home_release_20261106/plan.md, measure/runs/storytime_at_home_release_20261106/red-p3-30-53d76ea9e.log
+plan_updates: 3.0 [~] with the Red evidence line; the Phase 3 scope note now sends the JSDoc rewrite to task 3.0 (A5)
+known_failures: the status row in both files ('draft' against 'approved'), the version row ('0.1' against 0.3), and the th draft-marker row ('data-draft' present); all 3 are the intended Red state
+handoff: Green edits apps/storytime/lib/join-copy.ts only (status, version, JSDoc). The 5 text rows already pass at the base; do not weaken them. The test reads ~/Desktop/handoff/storytime-join-page-copy-2026-11-16/app-join-page-copy.md and pins its sha256, so keep that folder until the 11-20 deploy.
+dispositions: none
+blocked: none
+END_MEASURE_AGENT_RESULT
+
+RESULT: PASS
