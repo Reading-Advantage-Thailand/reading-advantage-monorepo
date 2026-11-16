@@ -214,6 +214,70 @@ describe("www batch 2026-11-16, home roadmap note (PM decision)", () => {
   });
 });
 
+/**
+ * PM decision 2026-11-16: the Science, Math, and Zhongwen detail pages drop only the
+ * no-release-date sentence in en and th. The exact line proves the kept text word for word.
+ */
+const DETAIL_NO_DATE = [
+  {
+    key: "pages.products.mathAdvantage.hero.description",
+    en: "Math Advantage is on our product roadmap. It is a planned math book line with a printed workbook and a digital twin, tagged to the Mastery Advantage knowledge graph.",
+    th: "แมธแอดแวนเทจอยู่ในแผนงานผลิตภัณฑ์ของเรา เป็นชุดหนังสือคณิตศาสตร์ที่วางแผนไว้ มีแบบฝึกหัดเล่มพิมพ์และเวอร์ชันดิจิทัล เชื่อมกับกราฟความรู้ Mastery Advantage",
+    removed: { en: "It has no release date.", th: "ยังไม่มีกำหนดวันเปิดตัว" },
+  },
+  {
+    key: "pages.products.mathAdvantage.cta.description",
+    en: "Math Advantage is on our roadmap. Tell us what you need.",
+    th: "แมธแอดแวนเทจอยู่ในแผนงานของเรา บอกเราว่าคุณต้องการอะไร",
+    removed: { en: "It has no release date.", th: "ยังไม่มีกำหนดวันเปิดตัว" },
+  },
+  {
+    key: "pages.products.scienceAdvantage.cta.description",
+    en: "Science Advantage is on our roadmap. Contact us to tell us what you need.",
+    th: "Science Advantage อยู่ในแผนงานของเรา ติดต่อเราเพื่อบอกสิ่งที่คุณต้องการ",
+    removed: { en: "It has no release date.", th: "และยังไม่มีกำหนดวันเปิดตัว" },
+  },
+  {
+    key: "pages.products.scienceAdvantage.waitlist.description",
+    en: "We will keep your email for news.",
+    th: "เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
+    removed: { en: "Science Advantage has no release date.", th: "Science Advantage ยังไม่มีกำหนดวันเปิดตัว" },
+  },
+  {
+    key: "pages.products.zhongwenAdvantage.hero.description",
+    en: "Zhongwen Advantage is on our roadmap. It is planned as a workbook line tagged to the Mastery Advantage knowledge graph.",
+    th: "Zhongwen Advantage อยู่ในแผนงานของเรา วางแผนเป็นชุดแบบฝึกหัดที่เชื่อมกับกราฟความรู้ Mastery Advantage",
+    removed: { en: "It has no release date.", th: "และยังไม่มีกำหนดวันเปิดตัว" },
+  },
+  {
+    key: "pages.products.zhongwenAdvantage.waitlist.description",
+    en: "We will keep your email for news.",
+    th: "เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
+    removed: { en: "Zhongwen Advantage has no release date.", th: "Zhongwen Advantage ยังไม่มีกำหนดวันเปิดตัว" },
+  },
+] as const;
+
+describe("www batch 2026-11-16, product detail pages (PM decision)", () => {
+  it.each(DETAIL_NO_DATE)("holds the kept en and th line at $key", ({ key, en: enLine, th: thLine }) => {
+    expect(read("en", key)).toBe(enLine);
+    expect(read("th", key)).toBe(thLine);
+  });
+
+  it.each(DETAIL_NO_DATE)("holds no no-release-date sentence at $key", ({ key, removed }) => {
+    expect(read("en", key)).not.toContain(removed.en);
+    expect(read("th", key)).not.toContain(removed.th);
+  });
+
+  it("leaves the zh lines of the three detail pages as they are", () => {
+    expect(read("zh", "pages.products.mathAdvantage.hero.description")).toContain("暂无发布日期");
+    expect(read("zh", "pages.products.mathAdvantage.cta.description")).toContain("暂无发布日期");
+    expect(read("zh", "pages.products.scienceAdvantage.cta.description")).toContain("暂无发布日期");
+    expect(read("zh", "pages.products.scienceAdvantage.waitlist.description")).toContain("暂无发布日期");
+    expect(read("zh", "pages.products.zhongwenAdvantage.hero.description")).toContain("暂无发布日期");
+    expect(read("zh", "pages.products.zhongwenAdvantage.waitlist.description")).toContain("暂无发布日期");
+  });
+});
+
 /** The stapler row of 2026-11-05 (TH-184): the teacher holds the stapler. */
 const STAPLER = {
   key: "pages.products.storytimeAdvantage.keyFeatures.features.0.points.0",

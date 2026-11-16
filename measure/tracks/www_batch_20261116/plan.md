@@ -109,6 +109,24 @@
   - This batch pushes to `origin/master` under the standing approval for www-only
     pushes. The Phase 1 line "No push" holds for Phase 1 only.
 
+## Phase 3: PM decision of 2026-11-16 on the product detail pages
+
+- [x] 3.1 PM decision 2026-11-16: on the Science, Math, and Zhongwen product detail
+  pages, delete only the sentence "It has no release date." and its Thai sentence. Delete
+  also the named form "<Product> has no release date." with its Thai sentence. A deletion
+  only, with no new words and no new Thai. The zh text does not change. Test: AC-1, AC-2.
+
+  - Places: `src/locales/pages/products/math-advantage.ts` (hero 5, cta 74, th 97 and
+    166), `science-advantage.ts` (cta 125, waitlist 165, th 307 and 347), and
+    `zhongwen-advantage.ts` (hero 6, waitlist 54, th 74 and 122).
+  - The Thai clause ` และยังไม่มีกำหนดวันเปิดตัว` takes its leading `และ` and the joining
+    space. No double space and no trailing space remain.
+  - Red first, then Green in `src/__tests__/www-batch-20261116.locale.test.ts`.
+    Red: 12 failed and 40 passed of 52, exit 1. Log: `red-p3-detail.log`.
+    Green: 52 of 52, exit 0. Log: `green-p3-detail.log`.
+  - This commit pushes to `origin/master` under the standing approval for www-only
+    pushes.
+
 ## Findings for the look
 
 - Place 10 repeats the date sentence of place 2 in the hero. The change list requires both

@@ -2,7 +2,7 @@ export const en = {
     hero: {
         title: "Math Advantage",
         subtitle: "On Our Roadmap · Planned",
-        description: "Math Advantage is on our product roadmap. It is a planned math book line with a printed workbook and a digital twin, tagged to the Mastery Advantage knowledge graph. It has no release date.",
+        description: "Math Advantage is on our product roadmap. It is a planned math book line with a printed workbook and a digital twin, tagged to the Mastery Advantage knowledge graph.",
         comingSoon: "On Our Roadmap",
     },
     heroAlt: "Interactive digital math learning environment",
@@ -71,7 +71,7 @@ export const en = {
     },
     cta: {
         heading: "Interested in Math Advantage?",
-        description: "Math Advantage is on our roadmap. It has no release date. Tell us what you need.",
+        description: "Math Advantage is on our roadmap. Tell us what you need.",
         button: "Tell Us You Are Interested",
         contactUs: "Contact Us",
     },
@@ -94,7 +94,7 @@ export const th = {
     hero: {
         title: "แมธแอดแวนเทจ",
         subtitle: "อยู่ในแผนงานของเรา · กำลังวางแผน",
-        description: "แมธแอดแวนเทจอยู่ในแผนงานผลิตภัณฑ์ของเรา เป็นชุดหนังสือคณิตศาสตร์ที่วางแผนไว้ มีแบบฝึกหัดเล่มพิมพ์และเวอร์ชันดิจิทัล เชื่อมกับกราฟความรู้ Mastery Advantage ยังไม่มีกำหนดวันเปิดตัว",
+        description: "แมธแอดแวนเทจอยู่ในแผนงานผลิตภัณฑ์ของเรา เป็นชุดหนังสือคณิตศาสตร์ที่วางแผนไว้ มีแบบฝึกหัดเล่มพิมพ์และเวอร์ชันดิจิทัล เชื่อมกับกราฟความรู้ Mastery Advantage",
         comingSoon: "อยู่ในแผนงาน",
     },
     heroAlt: "สภาพแวดล้อมการเรียนรู้คณิตศาสตร์ดิจิทัลแบบโต้ตอบ",
@@ -163,7 +163,7 @@ export const th = {
     },
     cta: {
         heading: "สนใจ Math Advantage หรือไม่?",
-        description: "แมธแอดแวนเทจอยู่ในแผนงานของเรา ยังไม่มีกำหนดวันเปิดตัว บอกเราว่าคุณต้องการอะไร",
+        description: "แมธแอดแวนเทจอยู่ในแผนงานของเรา บอกเราว่าคุณต้องการอะไร",
         button: "บอกเราว่าคุณสนใจ",
         contactUs: "ติดต่อเรา",
     },
