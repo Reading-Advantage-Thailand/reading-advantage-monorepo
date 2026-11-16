@@ -1283,6 +1283,11 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
   *Status: active, standing (no end date); Phase 0 open | Priority: MEDIUM | Requested by Daniel 2026-10-26 (tracks page, row E8)*
   *Note: PR keeps one www change list in its repository. Each Monday the PM orchestrator sends the new entries to Monorepo. This standing track builds them weekly. It replaces the two archived July www tracks.*
 
+- [~] **Track: www Monday batch 2026-11-16, rows A and B** — *created 2026-11-16*
+  *Link: [./tracks/www_batch_20261116/](./tracks/www_batch_20261116/)*
+  *Status: in progress; branch `www/batch-1116` from `origin/master` `ad461d105` | Owner: Monorepo orchestrator | Source: batch v1.2, change list v1.39*
+  *Row A puts the 2027 school year on the Science, Math, and Zhongwen Advantage cards of `/products` and changes the two limit features. Row B says that the Storytime Advantage first unit launches on 30 November 2026, as interim copy until the launch day. The stapler row of 2026-11-05 (TH-184) goes in one separate last commit, so the orchestrator can drop it. The en and th copy comes from the change list, word for word; Daniel checked the Thai on 2026-11-16. No zh change: the zh lines Z19 to Z28 are machine drafts. No push; the orchestrator pushes.*
+
 - [x] **Track: www Primary Advantage page revamp** — *created 2026-10-30*
   *Link: [./archive/www_primary_page_revamp_20261030/](./archive/www_primary_page_revamp_20261030/)*
   *Status: implementation accepted and archived 2026-11-03 at 5e719505257c6f7390d28c15a0dc7d09da15e643; final acceptance passed. Daniel approved Thai and v2 captures. Local-master merge, push, and deploy remain with Daniel under deferred:daniel-deploy. Carried findings are listed in tech-debt.md.*
