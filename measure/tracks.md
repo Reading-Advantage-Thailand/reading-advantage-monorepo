@@ -44,11 +44,6 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
-- [~] **Track: www: GSE out of customer copy** — *created 2026-11-16*
-  *Link: [./tracks/www_gse_guard_20261116/](./tracks/www_gse_guard_20261116/)*
-  *Status: active, light lane; opened 2026-11-16; Reading mockups fixed; guard test added; the blog post waits for the PM | Owner: Monorepo orchestrator | PM final-check gate 2026-11-16*
-  *Note: PM decision 2026-11-16: "GSE leaves all customer copy (CEFR only)". The Reading mockups lose their three GSE labels. `no-gse-in-customer-copy.test.ts` blocks GSE, Global Scale of English, Pearson, and YLE in customer copy. The blog post `the-advantage-engine-kst-srs` (en and th) stays on the PENDING list for the PM. www-only push is standing-approved.*
-
 - [~] **Track: www daily blog posts of PR** — *created 2026-11-15*
   *Link: [./tracks/www_daily_blog_posts_20261115/](./tracks/www_daily_blog_posts_20261115/)*
   *Status: active, light lane; post 2026-11-15 (`a-five-year-old-reads-by-herself`) live; one task per post; the track stays open for later daily posts | Owner: Monorepo orchestrator | PM task A-61 follow-up*
@@ -1287,6 +1282,12 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
   *Link: [./tracks/www_batch_20261116/](./tracks/www_batch_20261116/)*
   *Status: in progress; branch `www/batch-1116` from `origin/master` `ad461d105` | Owner: Monorepo orchestrator | Source: batch v1.2, change list v1.39*
   *Row A puts the 2027 school year on the Science, Math, and Zhongwen Advantage cards of `/products` and changes the two limit features. Row B says that the Storytime Advantage first unit launches on 30 November 2026, as interim copy until the launch day. The stapler row of 2026-11-05 (TH-184) goes in one separate last commit, so the orchestrator can drop it. The en and th copy comes from the change list, word for word; Daniel checked the Thai on 2026-11-16. No zh change: the zh lines Z19 to Z28 are machine drafts. No push; the orchestrator pushes.*
+
+- [x] **Track: www: GSE out of customer copy** — *created 2026-11-16, archived 2026-11-16*
+  *Link: [./archive/www_gse_guard_20261116/](./archive/www_gse_guard_20261116/)*
+  *Remove the GSE labels from the two Reading Advantage marketing mockups and add a vitest guard that blocks GSE, Global Scale of English, Pearson, and YLE in www customer copy. The blog post the-advantage-engine-kst-srs stays unchanged and sits on an explicit PENDING list for the PM decision.*
+  *Status: done, opened 2026-11-16, archived 2026-11-16; 8 tasks done, no deferred task | Owner: Monorepo orchestrator | PM final-check gate 2026-11-16 | The work is in `9f7a75b01`, `51ddd4aef`, `3b4bda109`, and `0c7d3485a` on `origin/master`. CD run 43808443454 passed. The live page `/products/reading-advantage` in en and th returned HTTP 200 and holds no `GSE`. The PM runs the page-check.*
+  *Note: PM decision 2026-11-16: "GSE leaves all customer copy (CEFR only)". The Reading mockups lose their three GSE labels. `no-gse-in-customer-copy.test.ts` blocks GSE, Global Scale of English, Pearson, and YLE in customer copy. The pending list holds one item: the blog post `the-advantage-engine-kst-srs` in en and th, line 24. The PR sends the CEFR sentence.*
 
 - [x] **Track: www Primary Advantage page revamp** — *created 2026-10-30*
   *Link: [./archive/www_primary_page_revamp_20261030/](./archive/www_primary_page_revamp_20261030/)*
