@@ -162,7 +162,7 @@ export const en = {
   },
   waitlist: {
     heading: "Tell Us You Are Interested",
-    description: "We will keep your email for news.",
+    description: "Science Advantage is on our roadmap. We will keep your email for news.",
     form: {
       placeholder: "Enter your email",
       button: "Send",
@@ -344,7 +344,7 @@ export const th = {
   },
   waitlist: {
     heading: "บอกเราว่าคุณสนใจ",
-    description: "เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
+    description: "Science Advantage อยู่ในแผนงานของเรา เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
     form: {
       placeholder: "กรอกอีเมลของคุณ",
       button: "บอกเราว่าคุณสนใจ",

@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import en from "@/locales/en";
 import th from "@/locales/th";
 import zh from "@/locales/zh";
 import { navigation as staticNavigation } from "@/config/navigation";
+import { buildMarketingMetadata } from "@/lib/seo";
 
 type Dict = Record<string, unknown>;
 
@@ -239,8 +242,8 @@ const DETAIL_NO_DATE = [
   },
   {
     key: "pages.products.scienceAdvantage.waitlist.description",
-    en: "We will keep your email for news.",
-    th: "เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
+    en: "Science Advantage is on our roadmap. We will keep your email for news.",
+    th: "Science Advantage อยู่ในแผนงานของเรา เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
     removed: { en: "Science Advantage has no release date.", th: "Science Advantage ยังไม่มีกำหนดวันเปิดตัว" },
   },
   {
@@ -251,8 +254,8 @@ const DETAIL_NO_DATE = [
   },
   {
     key: "pages.products.zhongwenAdvantage.waitlist.description",
-    en: "We will keep your email for news.",
-    th: "เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
+    en: "Zhongwen Advantage is on our roadmap. We will keep your email for news.",
+    th: "Zhongwen Advantage อยู่ในแผนงานของเรา เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
     removed: { en: "Zhongwen Advantage has no release date.", th: "Zhongwen Advantage ยังไม่มีกำหนดวันเปิดตัว" },
   },
 ] as const;
@@ -276,6 +279,35 @@ describe("www batch 2026-11-16, product detail pages (PM decision)", () => {
     expect(read("zh", "pages.products.zhongwenAdvantage.hero.description")).toContain("暂无发布日期");
     expect(read("zh", "pages.products.zhongwenAdvantage.waitlist.description")).toContain("暂无发布日期");
   });
+
+  it("keeps the sentence out of the meta, og, and twitter descriptions", () => {
+    const pages = [
+      { path: "/products/math-advantage", key: "pages.products.mathAdvantage.hero.description" },
+      { path: "/products/science-advantage", key: "pages.products.scienceAdvantage.hero.description" },
+      { path: "/products/zhongwen-advantage", key: "pages.products.zhongwenAdvantage.hero.description" },
+    ];
+    const removed = { en: "It has no release date.", th: "ยังไม่มีกำหนดวันเปิดตัว" };
+    for (const page of pages) {
+      for (const locale of ["en", "th"] as const) {
+        const description = read(locale, page.key) ?? "";
+        const metadata = buildMarketingMetadata({ description, locale, path: page.path, title: "Title" });
+        expect(metadata.description).toBe(description);
+        expect(metadata.description).not.toContain(removed[locale]);
+        expect(metadata.openGraph?.description).not.toContain(removed[locale]);
+        expect(metadata.twitter?.description).not.toContain(removed[locale]);
+      }
+    }
+  });
+});
+
+describe("www batch 2026-11-16, the science mockup SVGs", () => {
+  it.each(["ra-marketing-science-advantage.svg", "ra-marketing-science-advantage-th.svg"])(
+    "holds no GSE label in %s",
+    (name) => {
+      const svg = readFileSync(resolve(process.cwd(), "public/marketing", name), "utf8");
+      expect(svg).not.toContain("GSE");
+    },
+  );
 });
 
 /** The stapler row of 2026-11-05 (TH-184): the teacher holds the stapler. */

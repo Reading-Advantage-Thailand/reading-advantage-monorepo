@@ -51,7 +51,7 @@ export const en = {
   waitlist: {
     joinWaitlist: "Tell Us You Are Interested",
     description:
-      "We will keep your email for news.",
+      "Zhongwen Advantage is on our roadmap. We will keep your email for news.",
     emailPlaceholder: "Enter your email",
     subscribe: "Send",
   },
@@ -119,7 +119,7 @@ export const th = {
   waitlist: {
     joinWaitlist: "บอกเราว่าคุณสนใจ",
     description:
-      "เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
+      "Zhongwen Advantage อยู่ในแผนงานของเรา เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
     emailPlaceholder: "ป้อนอีเมลของคุณ",
     subscribe: "ส่ง",
   },

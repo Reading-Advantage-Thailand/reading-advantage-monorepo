@@ -110,7 +110,6 @@
     pushes. The Phase 1 line "No push" holds for Phase 1 only.
 
 ## Phase 3: PM decision of 2026-11-16 on the product detail pages
-
 - [x] 3.1 PM decision 2026-11-16: on the Science, Math, and Zhongwen product detail
   pages, delete only the sentence "It has no release date." and its Thai sentence. Delete
   also the named form "<Product> has no release date." with its Thai sentence. A deletion
@@ -126,6 +125,26 @@
     Green: 52 of 52, exit 0. Log: `green-p3-detail.log`.
   - This commit pushes to `origin/master` under the standing approval for www-only
     pushes.
+
+- [x] 3.2 PM additions of 2026-11-16: the meta tags, the notify line, and the GSE
+  labels. Test: AC-1, AC-2.
+
+  - A. The meta description, `og:description`, and `twitter:description` of the three
+    pages read `hero.description` through `buildMarketingMetadata`. The 3.1 deletion
+    covers all three tags. The locale test builds the three tags for en and th and finds
+    no deleted sentence in any of them.
+  - B. The notify line takes the roadmap sentence, because the exact Thai exists on the
+    same page. Science en: `Science Advantage is on our roadmap. We will keep your email
+    for news.`; th: `Science Advantage อยู่ในแผนงานของเรา เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว`.
+    Zhongwen en and th follow the same rule. Math has no notify line.
+  - C. The two science mockup SVGs hold no `GSE` label. Removed the `<text>` elements
+    `GSE 48`, `GSE 52`, `GSE 50`, and `GSE 54` and the number in the three XML comments.
+    `ra-marketing-reading-advantage*.svg` and the blog posts stay as they are.
+  - D. The live check captures the 1280 science mockup in en and th. The Photosynthesis
+    node keeps its title and has no GSE label.
+  - Red: 2 failed and 53 passed of 55 for the notify rows; 2 failed of 2 for the SVG
+    rows. Logs: `red-p3b-meta-cta-svg.log` and `red-p3c-svg.log`.
+    Green: 55 of 55, exit 0. Log: `green-p3b-meta-cta-svg.log`.
 
 ## Findings for the look
 
