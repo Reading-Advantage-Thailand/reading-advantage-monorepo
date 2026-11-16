@@ -10,8 +10,10 @@
  * is a gate of the script itself (AC-2 and AC-3 in the spec), not a unit test.
  */
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   compareCounts,
@@ -20,6 +22,12 @@ import {
   pascalCase,
   RatchetError,
 } from "../shadcn-ratchet.mjs";
+
+/** The repository root, three folders above this test file. */
+const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
+
+/** The gate script, relative to the repository root. */
+const SCRIPT = join(REPO_ROOT, "scripts/ci/shadcn-ratchet.mjs");
 
 const scratch = [];
 
@@ -179,5 +187,32 @@ describe("compareCounts", () => {
     });
     expect(result.exitCode).toBe(0);
     expect(result.lines.join("\n")).not.toMatch(/copy file list changed/i);
+  });
+});
+
+describe("the plugin resolution path", () => {
+  it("exits 2 and names SHADCN_LINT_DIR when the variable is not set", () => {
+    const env = { ...process.env };
+    delete env.SHADCN_LINT_DIR;
+
+    const result = spawnSync(process.execPath, [SCRIPT], { cwd: REPO_ROOT, env, encoding: "utf8" });
+
+    expect(result.status).toBe(2);
+    expect(`${result.stdout}${result.stderr}`).toMatch(/SHADCN_LINT_DIR/);
+  });
+
+  it("exits 2 and names the plugin when the folder holds no plugin", () => {
+    const empty = makeScratch();
+
+    const result = spawnSync(process.execPath, [SCRIPT], {
+      cwd: REPO_ROOT,
+      env: { ...process.env, SHADCN_LINT_DIR: empty },
+      encoding: "utf8",
+    });
+
+    expect(result.status).toBe(2);
+    const text = `${result.stdout}${result.stderr}`;
+    expect(text).toMatch(/@shadcn\/lint/);
+    expect(text).toMatch(/SHADCN_LINT_DIR|not installed/i);
   });
 });
