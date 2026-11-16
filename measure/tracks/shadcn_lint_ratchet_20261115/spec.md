@@ -20,14 +20,25 @@ scope here.
 
 ## Package check
 
-`npm view @shadcn/lint version` returns `0.2.5` on 2026-11-16. The package installs with
-`pnpm install`. The package is an ESLint plugin, not a standalone command. It exports
-`{ plugin as shadcn }` and six rules. The gate runs it through the ESLint programmatic API at warn
-level.
+`npm view @shadcn/lint version` returns `0.2.5` on 2026-11-16. The package is an ESLint plugin, not
+a standalone command. It exports `{ plugin as shadcn }` and six rules. The gate runs it through the
+ESLint programmatic API at warn level.
 
-`apps/www-reading-advantage` already uses the package at `0.2.0` in its own ESLint config. The root
-`package.json` adds `^0.2.5` for the gate. The lockfile keeps both versions, so the www rules and
-their results do not change.
+The plugin stays out of the workspace. A root devDependency writes `pnpm-lock.yaml`, and the
+affected-app selector then prints 10 app rows for a scripts-only change. The PM push rule allows a
+push only when the selector prints `[]` or only www. So the gate loads the plugin from a folder:
+
+- `SHADCN_LINT_DIR` names the folder. The script resolves `@shadcn/lint` inside it.
+- CI installs the folder with an isolated command outside the repository:
+  `npm install --prefix "$RUNNER_TEMP/shadcn-lint" @shadcn/lint@0.2.5 --no-save --ignore-scripts`.
+- A local run sets the same variable to a temp install:
+  `npm install --prefix /tmp/shadcn-lint @shadcn/lint@0.2.5 --no-save --ignore-scripts`, then
+  `SHADCN_LINT_DIR=/tmp/shadcn-lint node scripts/ci/shadcn-ratchet.mjs`.
+- `package.json` and `pnpm-lock.yaml` do not change. The version is pinned by exact number in the
+  CI install command and in `scripts/ci/shadcn-ratchet.mjs`.
+
+`apps/www-reading-advantage` keeps its own `@shadcn/lint` at `0.2.0` in its own ESLint config. This
+track does not change it.
 
 The gate imports `eslint` and `@typescript-eslint/parser` from the root store. pnpm hoists both
 through its default `public-hoist-pattern`. A missing module makes the gate exit 2 with a message,
@@ -88,16 +99,20 @@ limit is specific to those two apps.
   count and asks the author to lower the baseline.
 - Exit 1: at least one count is higher than the baseline. The message names the count, the baseline
   value, the current value, and the delta.
-- Exit 2: the gate cannot measure. Cases: a missing or unreadable baseline, a missing ESLint or
-  `@shadcn/lint` module, an ESLint crash, or a scope folder that does not exist. A silent zero is
+- Exit 2: the gate cannot measure. Cases: a missing or unreadable baseline, `SHADCN_LINT_DIR` not
+  set, no plugin in that folder, a missing ESLint parser module, an ESLint crash, or a scope folder
+  that does not exist. The message names the variable and the install command. A silent zero is
   not allowed, because a broken gate must not pass.
 - The gate prints one line per count and the note lines. It writes no file.
 
 ## CI wiring
 
 - File: `.github/workflows/ci.yml`, job `packages`.
-- Step: `Shadcn lint ratchet`, after `Install dependencies` and after the `CI selector tests` step.
-- The step runs `node scripts/ci/shadcn-ratchet.mjs`.
+- Step `Install shadcn lint plugin`, after `CI selector tests`: it installs `@shadcn/lint@0.2.5` in
+  `$RUNNER_TEMP/shadcn-lint` with `npm install --no-save --ignore-scripts`. The folder is outside the
+  repository, so no workspace file changes.
+- Step `Shadcn lint ratchet`, after the install step: it sets `SHADCN_LINT_DIR` to
+  `${{ runner.temp }}/shadcn-lint` and runs `node scripts/ci/shadcn-ratchet.mjs`.
 - The step fails the job when a count goes up. The lint findings themselves do not fail the job,
   because the rules run at warn level and the gate reads only the counts.
 - No other workflow change.
@@ -122,3 +137,5 @@ limit is specific to those two apps.
 - AC-4: `.github/workflows/ci.yml` runs the gate in the `packages` job, and the YAML stays valid.
 - AC-5: `node scripts/ci/affected-apps.mjs --base origin/master --head HEAD` output is recorded in
   the plan.
+- AC-6: `git diff origin/master...HEAD -- pnpm-lock.yaml package.json` is empty, and the gate exits 2
+  with a clear message when `SHADCN_LINT_DIR` is unset or holds no plugin.
