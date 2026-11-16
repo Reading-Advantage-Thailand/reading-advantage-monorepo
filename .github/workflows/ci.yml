@@ -147,8 +147,15 @@ jobs:
 
       # Track shadcn_lint_ratchet_20261115: the @shadcn/lint warning count and the count of
       # local shadcn component copies compare with scripts/ci/shadcn-ratchet-baseline.json.
-      # The step fails the job only when a count goes up. The findings stay at warn level.
+      # The plugin installs into a temporary folder, so package.json and pnpm-lock.yaml stay
+      # unchanged and the affected-app list does not grow. The step fails the job only when a
+      # count goes up. The findings stay at warn level.
+      - name: Install shadcn lint plugin
+        run: npm install --prefix "$RUNNER_TEMP/shadcn-lint" @shadcn/lint@0.2.5 --no-save --ignore-scripts
+
       - name: Shadcn lint ratchet
+        env:
+          SHADCN_LINT_DIR: ${{ runner.temp }}/shadcn-lint
         run: node scripts/ci/shadcn-ratchet.mjs
 
       - name: Config drift check

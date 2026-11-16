@@ -19,9 +19,17 @@
  * Exit 2: the gate cannot measure, for example a missing module or a bad baseline.
  *
  * The script reads the tree and writes no file. It uses Node built-ins, ESLint as a
- * library, `@shadcn/lint`, and `@typescript-eslint/parser`.
+ * library, and `@typescript-eslint/parser`. The `@shadcn/lint` plugin stays out of the
+ * workspace: the script loads it from the folder named by `SHADCN_LINT_DIR`. CI installs
+ * that folder with an isolated `npm install`. A local run sets the same variable:
+ *
+ *   npm install --prefix /tmp/shadcn-lint @shadcn/lint@0.2.5 --no-save --ignore-scripts
+ *   SHADCN_LINT_DIR=/tmp/shadcn-lint node scripts/ci/shadcn-ratchet.mjs
+ *
+ * A missing variable or a missing plugin exits 2, because the gate cannot measure.
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
+import { createRequire } from "node:module";
 import { join, posix, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -65,6 +73,18 @@ const SETTINGS = {
 
 /** The source pattern that the gate gives to ESLint inside a scope folder. */
 const SOURCE_PATTERN = "**/*.{ts,tsx}";
+
+/** The plugin name that the gate loads. */
+const PLUGIN_NAME = "@shadcn/lint";
+
+/** The plugin version that CI installs, pinned by exact number. */
+const PLUGIN_VERSION = "0.2.5";
+
+/** The env var that names the folder that holds the plugin install. */
+const PLUGIN_ENV = "SHADCN_LINT_DIR";
+
+/** The command that installs the plugin in a folder outside the workspace. */
+const PLUGIN_INSTALL = `npm install --prefix <folder> ${PLUGIN_NAME}@${PLUGIN_VERSION} --no-save --ignore-scripts`;
 
 /** A failure that means the gate cannot measure. It maps to exit 2. */
 export class RatchetError extends Error {
@@ -163,9 +183,66 @@ export function countLocalCopies(options = {}) {
 }
 
 /**
+ * Resolve the `@shadcn/lint` entry file from the folder named by `SHADCN_LINT_DIR`.
+ *
+ * @param {Record<string, string | undefined>} [env] The environment to read.
+ * @returns {string} The absolute path of the plugin entry file.
+ * @throws {RatchetError} When the variable is unset, the folder is missing, or the plugin is absent.
+ */
+export function resolvePluginEntry(env = process.env) {
+  const value = env[PLUGIN_ENV];
+  if (!value) {
+    throw new RatchetError(
+      `${PLUGIN_ENV} is not set, so the gate cannot load ${PLUGIN_NAME}. ` +
+        `Install the plugin outside the workspace: ${PLUGIN_INSTALL}. ` +
+        `Then set ${PLUGIN_ENV} to that folder.`,
+    );
+  }
+  const folder = resolve(value);
+  if (!isDirectory(folder)) {
+    throw new RatchetError(
+      `${PLUGIN_ENV} is not a folder: ${folder}. Install the plugin: ${PLUGIN_INSTALL}.`,
+    );
+  }
+  const require = createRequire(join(folder, "package.json"));
+  try {
+    return require.resolve(PLUGIN_NAME);
+  } catch {
+    throw new RatchetError(
+      `${PLUGIN_NAME} is not installed in ${PLUGIN_ENV} folder ${folder}. ` +
+        `Install the plugin: ${PLUGIN_INSTALL}.`,
+    );
+  }
+}
+
+/**
+ * Load the `@shadcn/lint` plugin object from the folder named by `SHADCN_LINT_DIR`.
+ *
+ * @param {Record<string, string | undefined>} [env] The environment to read.
+ * @returns {Promise<Record<string, unknown>>} The plugin object.
+ * @throws {RatchetError} When the entry does not resolve, does not load, or holds no plugin export.
+ */
+export async function loadShadcnPlugin(env = process.env) {
+  const entry = resolvePluginEntry(env);
+  let module;
+  try {
+    module = await import(pathToFileURL(entry).href);
+  } catch (error) {
+    throw new RatchetError(
+      `${PLUGIN_NAME} did not load from ${entry}: ${oneLine(error?.message ?? error)}`,
+    );
+  }
+  const plugin = module.plugin ?? module.default?.plugin;
+  if (!plugin) {
+    throw new RatchetError(`${PLUGIN_NAME} at ${entry} holds no plugin export`);
+  }
+  return plugin;
+}
+
+/**
  * Count the messages that the shadcn rules report on the app `components/ui` folders.
  *
- * @param {{ root?: string, scopes?: string[] }} [options] The tree to read.
+ * @param {{ root?: string, scopes?: string[], env?: Record<string, string | undefined> }} [options] The tree to read.
  * @returns {Promise<{ lintWarnings: number, files: number }>} The message count and the number of files with a message.
  * @throws {RatchetError} When a scope folder is missing, a module does not load, or ESLint fails.
  */
@@ -184,17 +261,15 @@ export async function countLintWarnings(options = {}) {
   // without the theme. A short budget keeps CI fast and the count the same.
   process.env.SHADCN_LINT_TAILWIND_TIMEOUT ??= "5000";
 
-  const [eslintModule, shadcnModule, parserModule] = await Promise.all([
+  const [eslintModule, parserModule, shadcn] = await Promise.all([
     loadModule("eslint", root),
-    loadModule("@shadcn/lint", root),
     loadModule("@typescript-eslint/parser", root),
+    loadShadcnPlugin(options.env ?? process.env),
   ]);
 
   const { ESLint } = eslintModule;
-  const shadcn = shadcnModule.plugin ?? shadcnModule.default?.plugin;
   const parser = parserModule.default ?? parserModule;
   if (typeof ESLint !== "function") throw new RatchetError("the eslint module holds no ESLint class");
-  if (!shadcn) throw new RatchetError("the @shadcn/lint module holds no plugin export");
 
   const rules = Object.fromEntries(RULES.map((rule) => [`shadcn/${rule}`, "warn"]));
   let results;
