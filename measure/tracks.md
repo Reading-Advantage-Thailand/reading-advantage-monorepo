@@ -44,6 +44,11 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
+- [ ] **Track: www Tutor Advantage follow-ups (picture and copy)** — *created 2026-11-18*
+  *Link: [./tracks/www_tutor_followups_20261118/](./tracks/www_tutor_followups_20261118/)*
+  *Status: new, opened 2026-11-18; Phase 1 waits on the PR alt gate | Owner: Monorepo orchestrator | PM order 2026-11-18 (Daniel answer, Google Tasks `LU1FRkk2`) | Follows `www_tutor_calculator_20261117`, closed at `80ac554b4`*
+  *Note: The become-a-tutor block takes the new 16:9 classroom picture `tutor-advantage-teach-class.webp`. The PM accepted D-1 on 2026-11-18, and the image box changes from `aspect-4/3` to `aspect-video`. Phase 2 ships `calc.result.needsOwnStudents`, the leg-total label, the `graph.caption` v0.6 text, and the Thai Reedy sentence, each after its PR fact gate. One www-only fast-forward push follows the PM page check. Three questions stay open: the file variant and the child count in the alt, the caption fact gate, and the alt fact gate.*
+
 - [~] **Track: www daily blog posts of PR** — *created 2026-11-15*
   *Link: [./tracks/www_daily_blog_posts_20261115/](./tracks/www_daily_blog_posts_20261115/)*
   *Status: active, light lane; post 2026-11-15 (`a-five-year-old-reads-by-herself`) live; one task per post; the track stays open for later daily posts | Owner: Monorepo orchestrator | PM task A-61 follow-up*

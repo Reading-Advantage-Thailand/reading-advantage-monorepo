@@ -1,0 +1,30 @@
+{
+  "track_id": "www_tutor_followups_20261118",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-11-18T00:00:00Z",
+  "updated_at": "2026-11-18T00:00:00Z",
+  "description": "Close the four copy items and the picture item that stayed open after the www Tutor Advantage calculator track. The become-a-tutor block takes a new 16:9 classroom picture and changes its image box from aspect-4/3 to aspect-video. Phase 2 ships the PR v0.5 and v0.6 copy, each item after its fact gate. One www-only fast-forward push follows the PM page check.",
+  "author_model": "opencode-go/deepseek-v4.1-flash",
+  "depends_on": "www_tutor_calculator_20261117 (closed at 80ac554b4)",
+  "owner_chain": [
+    "Daniel (owner; deploy gate)",
+    "Monorepo orchestrator (track owner)",
+    "PM orchestrator (order of 2026-11-18)"
+  ],
+  "decisions": [
+    "PM, 2026-11-18: D-1 is accepted, not pending. PM words: \"My 4:3 order was wrong; all five faces matter more.\" The block keeps the full 16:9 frame and only the image class changes.",
+    "PM, 2026-11-18: the alt text stays owed by PR. The picture task waits on the PR alt text and its fact gate.",
+    "Parent closeout, 2026-11-18: one www-only fast-forward push follows the PM page check; no deploy command runs from the session."
+  ],
+  "constraints": [
+    "www-only change: apps/www-reading-advantage and the measure records",
+    "No hash or checksum field (AGENTS.md hashing policy); the SHA256SUMS check result is evidence only",
+    "No crop of the source picture",
+    "No deploy command and no Cloud Run change",
+    "The zh values equal the en values until the contracted Chinese speaker delivers"
+  ],
+  "estimated_tasks": 17,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

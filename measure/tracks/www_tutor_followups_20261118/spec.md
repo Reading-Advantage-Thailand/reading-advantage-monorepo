@@ -1,0 +1,492 @@
+# Spec: www Tutor Advantage follow-ups (picture and copy)
+
+Track: `www_tutor_followups_20261118` (standard lane: three phases).
+Author model: opencode-go/deepseek-v4.1-flash.
+Source: PM order 2026-11-18 for the Monorepo www lane (orchestrator session
+`ses_e1653aa5cffeDR7OhMeOx59iEZ`). Owner words: Daniel, Google Tasks `LU1FRkk2`, 2026-11-18.
+Page: `apps/www-reading-advantage` `/products/tutor-advantage` in en, th, and zh.
+Parent: the archived track `measure/archive/www_tutor_calculator_20261117/`.
+
+## 1. Order and source
+
+The parent track closed at `80ac554b4` and left five items open (parent spec section 10, parent
+plan section "Answers owed to PR"). Each item goes in the next www push. This track closes four
+copy items and the picture item.
+
+Sources, read at authoring time (2026-11-18):
+
+1. Parent spec D-19 and section 10.
+2. Parent plan, section "Answers owed to PR".
+3. PR handoff `/home/daniebo/Desktop/advantage-pr/11-content/www-tutor-advantage-calculator-handoff.md`,
+   version 0.8, 2026-11-18. Sections 6, 6.1, 7, 8.4, 8.5, and 8.6.
+4. The picture handoff `/home/daniebo/Desktop/handoff/a63-become-a-tutor/`. It holds
+   `2026-11-13-tutor-advantage-img1-1920x1080.jpg` and `SHA256SUMS`.
+5. The live page at `af78cfb43`, the parent closeout, and the parent push of `af78cfb43`.
+
+### 1.1 The picture check
+
+The command `sha256sum -c SHA256SUMS` exits 0 in the picture folder on 2026-11-18. The output
+line for the source file reads `OK`. The result is evidence in this spec and in the plan.
+
+The track adds no hash field to `metadata.json` and no checksum to the spec. The repository
+records content by the delivered file and by Git. AGENTS.md "Hashing and Provenance Policy"
+applies.
+
+### 1.2 The sources of the strings
+
+This spec holds every new string. Section 5 holds the exact text. The implementation reads no
+file outside the repository. The tests read no file outside the repository and compute no hash.
+
+## 2. The three phases
+
+| Phase | Delivers | Dependency |
+|---|---|---|
+| 1 | The new `#become-a-tutor` picture, its 16:9 box, its alt text, and the page check | The PR alt text and its fact gate |
+| 2 | Four PR copy items: `needsOwnStudents`, the leg-total label, `graph.caption`, and the Thai Reedy line | The fact gate of each item |
+| 3 | The full www gates, one www-only fast-forward push, the CD watch, and the live checks | The PM page check |
+
+Page order does not change. The picture stays in the block `id="become-a-tutor"`.
+
+## 3. Decisions
+
+### D-1 The picture keeps the full 16:9 frame
+
+PM decision, 2026-11-18, accepted and not pending. PM words:
+"My 4:3 order was wrong; all five faces matter more."
+
+The block keeps the full frame of the source file. The image box changes from `aspect-4/3` to
+`aspect-video`. No crop ships.
+
+Reason: the source is 1920 by 1080. The PM measurement gives a face span of x=185 to x=1895,
+which is 1710 px. A 4:3 frame at 1080 px height is 1440 px wide. The face span is wider than
+1440 px.
+
+A second reading of the delivered file gives a face span of about x=185 to about x=1855, which
+is 1670 px. The second reading uses a 100 px grid over the file. Both spans are wider than
+1440 px. The crop cannot keep every face and the book.
+
+The book sits at about x=565 to x=810. The book stays inside either span.
+
+The delivered file shows four faces: one tutor and three children. The PM words and this order
+say five faces. PR handoff section 8.6 names "four schoolchildren". The file may be a variant
+other than Daniel's chosen picture. Open question Q1 covers the file and the count. Neither
+question changes D-1.
+
+### D-2 The block gets its own picture entry
+
+The block uses a new picture entry, `tutorTeachClass`, in
+`apps/www-reading-advantage/src/lib/product-pictures.ts`.
+
+The hero keeps `productPictures.tutorSession` and the file `/images/tutor-advantage-hero.jpg` at
+1024 by 1024. Parent D-19 said the hero and the become-a-tutor block share one file. That part of
+D-19 is superseded.
+
+### D-3 The new file
+
+The new file is `apps/www-reading-advantage/public/images/tutor-advantage-teach-class.webp`. It
+is a webp at 1920 by 1080, quality 85, method 6.
+
+A probe conversion of the source with the recipe of section 4.2 gives 190,298 bytes. The gate
+limit is 300 KB. The hero file is about 300 KB and the Reedy file is 940 KB, so 190 KB is in
+range.
+
+The conversion tool is the Python library Pillow. `cwebp`, `magick`, and `convert` are not
+installed on this machine. Pillow reports webp support, and it reads and writes the file.
+
+### D-4 The alt key keeps its name
+
+The key stays `tutorRole.alt` in all three locale blocks. Its value changes with the new picture.
+
+The current value describes the old picture: a tutor and a child with a tablet. That sentence is
+false for the new picture. The new picture cannot ship with the old alt.
+
+The en and th values come from PR handoff section 8.6. The zh value equals en, as for every other
+alt of the page. Section 5.5 holds the candidate text.
+
+The alt task waits on two conditions. First, PR delivers the alt text. Second, the PR fact gate
+for the alt runs and passes. The PM says the alt is still owed. The file at the path holds
+version 0.8 with a candidate. Open questions Q1 and Q3 cover the count and the gate.
+
+### D-5 `needsOwnStudents` is a fourth explain state
+
+`explainVariant` returns one of four states after Phase 2:
+
+| State | Condition |
+|---|---|
+| `zero` | The network volume is 0 |
+| `needsOwnStudents` | The own volume is 0 and at least one leg has students |
+| `ownOnly` | No leg payout |
+| `withLegs` | A leg payout |
+
+Today the second case returns `zero`. The `zero` line reads "Add students to see a month." That
+line hides the settlement rule: the code pays 0 to a tutor with legs and no own students. Parent
+D-18 records the rule.
+
+The key sits at `calculator.explain.needsOwnStudents`. PR writes `calc.result.needsOwnStudents`.
+The page and the component render the explain slot as `copy.explain[variant]`
+(`src/components/marketing/tutor-commission-calculator.tsx:472`). The `results` object holds row
+labels only. The key path follows the existing block. The words do not change.
+
+### D-6 The caption and the label change in three locales
+
+`graph.caption` and `graph.legCommissionBar` change in en, th, and zh. The zh values equal the en
+values, per parent D-10.
+
+### D-7 The Thai Reedy line changes alone
+
+The Thai sentence replaces `platformFeatures.features[2].description` in the th block only. The
+en and zh values stay. The live Thai line is a fragment with no verb, as PR handoff section 8.5
+records. Daniel checks the Thai on the live page after the push.
+
+### D-8 Each copy item ships only after its fact gate
+
+PR handoff section 7 holds the gate lines. The state at authoring time:
+
+| Item | Gate state |
+|---|---|
+| `needsOwnStudents` | PASS, 2026-11-17 |
+| `graph.legCommissionBar` | PASS, 2026-11-18 |
+| Thai Reedy line | PASS, 2026-11-18 |
+| `graph.caption` | No gate line |
+| `tutorRole.alt` | No gate line |
+
+Section 8 maps each item to its gate. Open questions Q2 and Q3 cover the two missing lines.
+
+### D-9 The push follows the PM page check
+
+The PM runs a page check at 390, 980, and 1280 px. The push comes after a PASS. The push is one
+www-only fast-forward from `origin/master`. No deploy command runs from the session. Daniel owns
+the deploy gate.
+
+### D-10 The zh result line takes the PR zh draft
+
+The zh block takes the zh text of section 5.1 for `calculator.explain.needsOwnStudents`. PR
+supplies the line, and the PM asked for all three locales. The line equals the PR draft until the
+contracted Chinese speaker checks it. The code comment marks it `draft`.
+
+Every other new zh value in this track equals en (D-6).
+
+## 4. Phase 1: the become-a-tutor picture
+
+### 4.1 The source
+
+| Item | Value |
+|---|---|
+| Path | `/home/daniebo/Desktop/handoff/a63-become-a-tutor/2026-11-13-tutor-advantage-img1-1920x1080.jpg` |
+| Size | 1920 by 1080 |
+| Format | JPEG, RGB, baseline |
+| Check | `sha256sum -c SHA256SUMS` exit 0 |
+| Subject | One tutor and three children at a table. One child holds the Primary Advantage Origins 2 workbook. One child holds a phone with the student app. |
+
+### 4.2 The command
+
+The conversion runs once, from the source path, and writes the repo file:
+
+```bash
+python3 - <<'PY'
+from PIL import Image
+src = "/home/daniebo/Desktop/handoff/a63-become-a-tutor/2026-11-13-tutor-advantage-img1-1920x1080.jpg"
+out = "apps/www-reading-advantage/public/images/tutor-advantage-teach-class.webp"
+im = Image.open(src).convert("RGB")
+im.save(out, "WEBP", quality=85, method=6)
+PY
+```
+
+The check command prints the size and the byte count:
+
+```bash
+python3 -c "from PIL import Image; import os; p='apps/www-reading-advantage/public/images/tutor-advantage-teach-class.webp'; im=Image.open(p); print(im.size, im.format, os.path.getsize(p))"
+```
+
+### 4.3 The page
+
+The block sits at `src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx:324..336`.
+Line 334 holds the class string.
+
+| Line | Now | After |
+|---|---|---|
+| 329 | `src={productPictures.tutorSession.src}` | `src={productPictures.tutorTeachClass.src}` |
+| 331 | `width={productPictures.tutorSession.width}` | `width={productPictures.tutorTeachClass.width}` |
+| 332 | `height={productPictures.tutorSession.height}` | `height={productPictures.tutorTeachClass.height}` |
+| 334 | `className="aspect-4/3 w-full object-cover"` | `className="aspect-video w-full object-cover"` |
+
+The alt line 330 stays `alt={t("tutorRole.alt")}`. The `sizes` line stays.
+
+The manifest gains one entry after `tutorSession` in `src/lib/product-pictures.ts:56..61`:
+
+```ts
+/** The classroom picture of the become-a-tutor block (spec D-2). */
+tutorTeachClass: {
+  src: "/images/tutor-advantage-teach-class.webp",
+  width: 1920,
+  height: 1080,
+  portrait: false,
+},
+```
+
+The hero at line 195 keeps `productPictures.tutorSession`.
+
+### 4.4 The alt
+
+The locale key is `tutorRole.alt`. The current lines are en 153, th 490, zh 827. The value changes
+in all three.
+
+### 4.5 The tests
+
+File `src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx`.
+
+1. The case "AC-22: the become-a-tutor block" (lines 243..254) changes its file and its alt. It
+   pins `/images/tutor-advantage-teach-class.webp` and `text(locale, "tutorRole.alt")`.
+2. A new map holds the block file per locale. The three locales share one file.
+3. A new case reads the webp header of the delivered file. It asserts 1920 by 1080. It reuses
+   `webpSize`, as the Origins 3.1 case does at lines 322..336.
+4. A new case asserts the class of the block image holds `aspect-video` and does not hold
+   `aspect-4/3`. The case reads the rendered `img` class list.
+5. The hero case and the three book cases stay as they are. The hero file stays
+   `/images/tutor-advantage-hero.jpg`.
+6. The banned-file case stays as it is.
+
+Full cases run for en, th, and zh, as the file does today.
+
+### 4.6 The order of the Phase 1 tasks
+
+Task 1.0 is a gate. No Phase 1 code task starts before task 1.0 passes. The new picture cannot
+ship with the old alt (D-4), and the test of task 1.1 pins the PR alt.
+
+## 5. Phase 2: the PR copy
+
+Each item in this section is one task with its own fact gate. Section 8 records the gate.
+
+### 5.1 `calc.result.needsOwnStudents`
+
+The key is `calculator.explain.needsOwnStudents` (D-5). PR calls it `calc.result.needsOwnStudents`.
+
+English:
+
+> Your own class unlocks your network commission. Add at least one personal student this month, and your legs count toward your payout.
+
+Thai (draft; Daniel checks on the built page):
+
+> คลาสของคุณเองปลดล็อกค่าคอมมิชชันจากเครือข่าย เพิ่มนักเรียนในคลาสของคุณเองอย่างน้อย 1 คนในเดือนนี้ สายของคุณก็นับเข้ายอดจ่ายของคุณ
+
+zh (draft; the contracted Chinese speaker checks it):
+
+> 您自己的班级是解锁网络佣金的关键。本月只要有至少一名您自己的学员，您各团队的业绩就会计入您的结算。
+
+The zh block takes this line in zh (D-10). PR says the Monorepo may ship the zh line or the English
+line until the Chinese speaker checks it. Decision: the zh block takes the zh line, because PR
+supplies it and the PM asked for all three locales. The line stays a draft in the code comment.
+
+Behaviour: the line shows when the own students are 0 and at least one leg has students. The net
+payout is 0 in that state. The `zero` line shows only when the network volume is 0.
+
+### 5.2 `graph.legCommissionBar`
+
+| Locale | Text |
+|---|---|
+| en | Commission of all legs |
+| th | ค่าคอมมิชชันของทุกสาย |
+| zh | Commission of all legs |
+
+The current en and zh value is "Commission of each leg". The current th value is
+"ค่าคอมมิชชันของแต่ละสาย".
+
+### 5.3 `graph.caption`
+
+English:
+
+> Each leg has its own bar: the volume it brings and the commission it earns on its own. Your payout is your rate on the whole volume, minus the commissions of the legs.
+
+Thai:
+
+> แต่ละสายมีแท่งของตัวเอง: ยอดที่สายนั้นพามา และค่าคอมมิชชันที่สายนั้นได้เอง ยอดจ่ายของคุณคืออัตราของคุณคูณกับยอดรวมทั้งเครือข่าย ลบด้วยค่าคอมมิชชันของทุกสาย
+
+zh equals en.
+
+The current lines start "Each bar is one leg:" in en and zh, and "แท่งแต่ละแท่งคือหนึ่งสาย:" in th.
+Only the first clause changes.
+
+### 5.4 The Thai Reedy line
+
+The key is `platformFeatures.features[2].description` in the th block.
+
+| Column | Text |
+|---|---|
+| Live Thai | การฝึกพูดกับ Reedy สำหรับนักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่ และในบทเรียนที่เรียนจบแล้ว |
+| English (unchanged) | Reedy voice practice is open to students with an active class package, on lessons they finished. |
+| New Thai | การฝึกพูดกับ Reedy เปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ยังใช้งานอยู่ใช้ได้ ในบทเรียนที่เรียนจบแล้ว |
+
+The zh line stays as it is. The zh line reads
+"Reedy 口语练习面向持有有效课程包的学生，用于已完成的课程。".
+
+The test `src/__tests__/www-tutor-reedy-claim.test.tsx` pins the line at `PAGE_REEDY.th`
+(lines 97..101). The constant changes to the new Thai.
+
+### 5.5 The alt candidate (`tutorRole.alt`)
+
+The text below is the PR v0.8 candidate. It is not authority until its fact gate passes (D-4).
+
+| Key | English | Thai |
+|---|---|---|
+| `tutorRole.alt` | A tutor with four schoolchildren in a classroom; one holds the Primary Advantage Origins 2 workbook, another the student app on a phone. | ติวเตอร์กับเด็กประถมสี่คนในห้องเรียนที่สว่าง คนหนึ่งถือเวิร์กบุ๊ก Primary Advantage Origins 2 อีกคนถือโทรศัพท์ที่เปิดแอปนักเรียน |
+
+zh equals en.
+
+Open question Q1: the delivered file shows three children. The candidate says four.
+
+### 5.6 The tests of Phase 2
+
+| Test file | Change |
+|---|---|
+| `src/__tests__/www-tutor-calculator.locale.test.ts` | The `CALC_EN`, `CALC_TH` fixtures gain `explain.needsOwnStudents` and hold the new caption and label. `CALC_EN` is also the zh expectation. |
+| `src/lib/tutor-commission.adversarial.test.ts` | The case at line 384 expects `needsOwnStudents`, not `zero`. The case at line 553 keeps `zero` for a zero volume. |
+| `src/components/marketing/tutor-commission-calculator.test.tsx` | A new case types own students 0 and one leg with students. It asserts the `needsOwnStudents` line in en and th. The `zero` cases at lines 137, 384, 399, and 415 stay for the zero-volume state. |
+| `src/components/marketing/tutor-commission-calculator.adversarial.test.tsx` | The case at line 253 keeps `zero` for a zero volume. A new case asserts the payout is 0 and the line is `needsOwnStudents` for legs without own students. |
+| `src/__tests__/www-tutor-reedy-claim.test.tsx` | `PAGE_REEDY.th` takes the new Thai. |
+
+The locale test deep-equals the whole `calculator` block in en, th, and zh. Every added key and
+every changed value appears there first, as a failing test.
+
+## 6. Phase 3: gates, push, and live checks
+
+### 6.1 The gate commands
+
+| Gate | Command | Pass |
+|---|---|---|
+| www suite | `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1'` | exit 0 |
+| types | `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` | exit 0 |
+| lint | `pnpm --filter www-reading-advantage lint` | exit 0, no `shadcn/*` error in a touched file |
+| build | `pnpm --filter www-reading-advantage build` | exit 0 |
+| downline scan | `rg -n -i "downline\|ดาวน์ไลน์" apps/www-reading-advantage/src --glob '!**/*.test.*'` | exit 1, no output |
+| affected apps | `node scripts/ci/affected-apps.mjs --base 80ac554b426551e5749f0e2cd500cbbf0eb93530 --head <HEAD 40 hex>` | lists www-reading-advantage only |
+
+The base commit is `80ac554b426551e5749f0e2cd500cbbf0eb93530` (the branch point on
+`origin/master`). The head is the full 40-character commit id. The script rejects a short id.
+
+### 6.2 The page check
+
+The PM checks `#become-a-tutor` and the calculator at 390, 980, and 1280 px, in en and th.
+
+The session prepares the evidence before it asks for the check:
+
+1. Build the app: `pnpm --filter www-reading-advantage build`.
+2. Start it: `pnpm --filter www-reading-advantage start` on port 3107.
+3. Capture the block at the three widths in en and th.
+4. Write the captures and a `checks.json` to `measure/runs/www_tutor_followups_20261118/`.
+5. Send the folder path to the PM.
+
+The PM owns the PASS. No push runs before the PASS.
+
+### 6.3 The push
+
+One fast-forward push of the track commits to `origin/master`. The changed paths are
+`apps/www-reading-advantage/**` and `measure/**` only.
+
+The push needs Daniel's standing approval, which the parent track recorded (Daniel, 2026-11-15).
+No deploy command runs from the session. Cloud Build starts from the CD workflow.
+
+### 6.4 The live checks
+
+The session reads the service URL:
+
+```bash
+gcloud run services describe www-reading-advantage --platform managed \
+  --region asia-southeast1 --format='value(status.url)'
+```
+
+Then it checks the three pages:
+
+1. `/en/products/tutor-advantage`
+2. `/th/products/tutor-advantage`
+3. `/zh/products/tutor-advantage`
+
+Each page must answer HTTP 200. Each page must hold `tutor-advantage-teach-class.webp` and the
+new caption text. No page may hold `downline`, `ดาวน์ไลน์`, or "Tutor Advantage only".
+
+The CD run id and its result go in the ledger at closeout.
+
+## 7. Out of scope
+
+- A crop of the picture at any ratio.
+- A second picture, a new hero, or a change to the hero file.
+- A zh translation written in this session. The zh values are the PR values or the en values.
+- A change to the gallery, the presets, the rate curve, or the tax rule.
+- A change to another page, another locale file, or another app.
+- A framework upgrade, a dependency change, or a lockfile change.
+- A hash or checksum field.
+- A deploy command, a Cloud Run change, or a public date.
+
+## 8. Gates and their state
+
+| Item | Gate | State at authoring | Task |
+|---|---|---|---|
+| The picture file and the 16:9 box | PM D-1 accepted 2026-11-18 | Accepted | 1.2, 1.3 |
+| `tutorRole.alt` | PR text plus PR fact gate | PR text candidate in v0.8; no fact gate line | 1.0 |
+| `needsOwnStudents` | PR fact gate | PASS 2026-11-17 | 2.2 |
+| `graph.legCommissionBar` | PR fact gate | PASS 2026-11-18 | 2.3 |
+| `graph.caption` | PR fact gate | No gate line | 2.4 |
+| Thai Reedy line | PR fact gate | PASS 2026-11-18 | 2.5 |
+| The push | PM page check | Pending | 3.2, 3.3 |
+
+## 9. Acceptance criteria
+
+**AC-1.** The block `#become-a-tutor` shows `/images/tutor-advantage-teach-class.webp` in en, th,
+and zh. The hero shows `/images/tutor-advantage-hero.jpg` in all three.
+
+**AC-2.** The image box of the block uses `aspect-video`. It does not use `aspect-4/3`. The file
+is 1920 by 1080, so the box and the file share one ratio and the picture shows no crop.
+
+**AC-3.** The block alt equals `tutorRole.alt` of the locale. The value is the PR alt text of
+section 5.5. The th value is the Thai text of section 5.5. The zh value equals en.
+
+**AC-4.** The delivered file is a webp of 1920 by 1080. Its size is at or below 300 KB. The test
+reads the header and computes no hash.
+
+**AC-5.** A tutor with 0 own students and at least one leg with students sees
+`calculator.explain.needsOwnStudents` and a net payout of 0. A tutor with 0 volume sees
+`calculator.explain.zero`.
+
+**AC-6.** `graph.caption` equals the text of section 5.3 in en and th. The zh value equals en.
+
+**AC-7.** `graph.legCommissionBar` equals "Commission of all legs" in en and zh, and
+"ค่าคอมมิชชันของทุกสาย" in th.
+
+**AC-8.** `platformFeatures.features[2].description` in th equals the New Thai of section 5.4. The
+en and zh values stay as they are.
+
+**AC-9.** Every gate command of section 6.1 passes. The www suite runs with `--maxWorkers=1`
+through heavy-run.
+
+**AC-10.** The PM page check passes at 390, 980, and 1280 px. The captures sit in
+`measure/runs/www_tutor_followups_20261118/`.
+
+**AC-11.** The push is one fast-forward to `origin/master`. It touches only
+`apps/www-reading-advantage/**` and `measure/**`.
+
+**AC-12.** The three live pages answer HTTP 200 and hold the new strings. The CD run succeeds.
+
+**AC-13.** No test reads a file outside the repository. No test computes a hash. `metadata.json`
+holds no hash field. `git status` is clean at closeout.
+
+## 10. Open questions
+
+**Q1. The face count and the file variant.** The delivered file shows four faces: one tutor and
+three children. The PM words say five faces. PR handoff section 8.6 says "four schoolchildren".
+The file may be a variant other than Daniel's chosen picture. Confirm the file and the count
+before task 1.2. This question blocks task 1.0.
+
+**Q2. The `graph.caption` fact gate.** PR handoff section 7 holds no fact gate line for the v0.6
+caption. Does PR add a gate line, or does the PM accept the text without one? This question
+blocks task 2.4.
+
+**Q3. The alt delivery and its gate.** PR handoff v0.8 section 8.6 holds en and th alt text. The
+PM says the alt is still owed. Is v0.8 the delivered text? When does its fact gate run? This
+question blocks task 1.0.
+
+Q1 and Q3 share one gate task. The PM answer closes both, or the PR answer does.
+
+## 11. The closeout
+
+Task C.1 moves the track to `measure/archive/www_tutor_followups_20261118`, updates the registry
+row, and records the closeout. The row names the commit range, the gate output, the page-check
+folder, the CD run, and the questions that stay open.
