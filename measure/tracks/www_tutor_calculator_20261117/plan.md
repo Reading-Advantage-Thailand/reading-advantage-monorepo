@@ -329,7 +329,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
     price, no error state, no student face. The header, the subtitle, the dropdown, and the
     progress card show no class name.
 
-- [ ] 2.2 Add the gallery section and its copy. Test: AC-10, AC-13.
+- [x] 2.2 Add the gallery section and its copy. Test: AC-10, AC-13.
 
   Add the `screens` block to en, th, and zh (spec 6.3, after `tutorRole` and before
   `calculator`). Render the section in `page.tsx` with `SectionHeader`, three `ProductPicture`
@@ -340,7 +340,36 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   The page test asserts three cards, the caption and alt of each slot, and the order
   `tutorRole` then `tutor-screens` then `tutor-calculator` then `commitments`.
 
-  Done: the locale test holds the nine new strings, and the page test passes.
+  Done: e583e21b31b6a73c2d1e8ba1aa65ddc0053bd3d7. `phase_base_sha`
+  d279b870341c067c33fc884ae8863b5428487c17; `role_base_sha`
+  29ffa35423fc8131cc099d5b0462ebc286e13ae7.
+
+  Red: exit 1. Command:
+  `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+  www-reading-advantage exec vitest run "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx"
+  src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --silent=true'`. Evidence:
+  `Test Files 2 failed (2)`, `Tests 8 failed | 26 passed (34)`. The `screens` block is absent, so
+  `en.screens` is `undefined` and the leaf count is 0. The `tutor-screens` section is absent, so
+  both page cases see a null node.
+
+  Green: exit 0. The same command reports `Test Files 2 passed (2)` and `Tests 34 passed (34)`
+  (page 8, locale 26). `pnpm turbo run check-types --filter=www-reading-advantage` exits 0.
+  `pnpm --filter www-reading-advantage lint` exits 0 with no output, so no `shadcn/*` error is in
+  a touched file. `git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json` exits 0.
+  Evidence files: `measure/runs/www_tutor_calculator_20261117/green-2.2-e583e21b3.json` and
+  `.log`.
+
+  Deviation (leaf count): the role brief says "the 12 new leaf strings". Spec 6.3 and this task
+  hold nine: eyebrow, heading, description, and caption plus alt for each of three items. The
+  test pins nine and asserts the count, so an invented string fails.
+
+  Deviation (page test copy): `src/test/setup.ts` mocks `getScopedI18n` to return
+  `<scope>.<key>`. The page test therefore asserts the per-slot key path of each card's `alt`
+  and caption. The locale test pins the literal en and th strings. No existing case was
+  weakened.
+
+  Note (build-graph): skipped under the PM load watch. No export, signature, or import edge
+  changed.
 
 - [ ] 2.3 Change the two live lines. Test: AC-6.
 
