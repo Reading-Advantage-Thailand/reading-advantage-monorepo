@@ -693,7 +693,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   src/lib/tutor-commission.test.ts src/lib/tutor-commission.adversarial.test.ts --reporter=dot
   --silent=true --maxWorkers=1` exits 0. The eleven-file gate of task 3.1 exits 0.
 
-- [~] 3.5a Red: pin the settlement eligibility rule. Test: AC-21.
+- [x] 3.5a Red: pin the settlement eligibility rule. Test: AC-21.
 
   The settlement service pays 0 to a tutor with no personal volume and at least one child
   (spec D-18). The module test pins 0 payout before tax, 0 tax, and 0 net for 0 personal
@@ -701,6 +701,14 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   commissions. It pins the `zero` variant. The component test renders 0 personal students with
   one leg of 3 students, in en and th, and reads a net payout of 0 and the `explain.zero` line.
   The existing cases stay unchanged; a tutor with personal students keeps the preset figures.
+
+  Done: a48aa764d. Red command:
+  `cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts src/components/marketing/tutor-commission-calculator.test.tsx --reporter=dot --maxWorkers=1`.
+  Exit 1. Every failure is an AC-21 assertion: the 810 payout before tax, the `withLegs`
+  variant, the 24.30 tax row, and the missing `explain.zero` line in en and th. No failure is
+  an import, syntax, or fixture error. The other cases pass.
+  `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0. Full output:
+  `measure/runs/www_tutor_calculator_20261117/red-p3-3.5a-vitest.txt`.
 
 - [ ] 3.5b Green: pay 0 to a tutor with legs and no personal students. Test: AC-21.
 
