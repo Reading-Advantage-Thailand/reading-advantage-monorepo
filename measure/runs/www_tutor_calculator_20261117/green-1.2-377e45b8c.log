@@ -1,0 +1,97 @@
+=== Measure Green 1.2 evidence: www_tutor_calculator_20261117 ===
+
+Role: Measure Green, task 1.2 only.
+Route: opencode-go/deepseek-v4.1-flash.
+Substitution record: `ra-quota pick green` returns opencode-go/hy4-flash-free, which is the
+Red model family of this task, so it is excluded. This is the next allowed non-Red route.
+
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+role_base_sha:  21e23c2f2410288306112edb8a69dc9106e9df03
+
+Scope confirmation
+  git status --short before editing: clean.
+  The Red commit 7eb6991fc85fbd0e833a193e35101ddd2b172915 is inside
+  phase_base_sha..role_base_sha (git log 8862cf14c..HEAD shows it). Confirmed.
+  The Red test file was not edited. Only the module file was added as production code.
+
+Work done
+  Wrote apps/www-reading-advantage/src/lib/tutor-commission.ts with the exact API of spec 5.2:
+  - constants CLASS_PRICE_DEFAULT = 3000, TAX_RATE = 0.03, LEG_STUDENTS_DEFAULT = 3;
+  - types NetworkInput, LegResult, NetworkResult;
+  - commissionRate(volume): 0 at V <= 0; 0.4 + V/200000 below 20000; else
+    (0.5 * (1 - 0.3 ** (1 + ln(V/20000)/ln(5)))) / 0.7;
+  - BigInt satang rule of D-3: gvSatang = round(baht * 100), rateUnits = round(rate * 1e9),
+    flatSatang = rateUnits * gvSatang / 1e9 truncated, tax = payoutSatang * 3 / 100 truncated;
+  - one level of legs (D-1, D-4): each leg payout is rate(legVolume) * legVolume, and the tutor
+    payout is max(0, gross - sum of the leg payouts); leg satang are kept exact and summed,
+    never round-tripped through a baht Number;
+  - payoutAfterDeduction(gross, paidBelow) with the zero floor;
+  - explainVariant returning "zero" | "ownOnly" | "withDownline";
+  - resizeLegs keeping entries, appending LEG_STUDENTS_DEFAULT, and dropping the rest;
+  - NETWORK_PRESETS with the three inputs of D-2 at price 3000;
+  - negative and non-finite inputs clamp to 0; counts become whole numbers of 0 or more;
+  - JSDoc on every export.
+
+Green command
+  bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts --reporter=dot --silent=true'
+  exit code: 0
+
+Captured output (verbatim)
+  RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage
+
+  ······················
+
+   Test Files  1 passed (1)
+        Tests  22 passed (22)
+     Start at  08:02:50
+     Duration  667ms (transform 36ms, setup 62ms, import 20ms, tests 8ms, environment 424ms)
+
+Types command
+  pnpm turbo run check-types --filter=www-reading-advantage
+  exit code: 0
+  www-reading-advantage:check-types: $ tsc --noEmit
+  Tasks: 1 successful, 1 total
+
+Flipped to [x]
+  Task 1.2, with Done: 377e45b8c87d13adf1f1b3365829581cb60964b1.
+
+Flipped to [b]
+  None.
+
+New files
+  apps/www-reading-advantage/src/lib/tutor-commission.ts
+
+Commits
+  377e45b8c87d13adf1f1b3365829581cb60964b1
+  feat(www): add pure tutor commission module (track_id: www_tutor_calculator_20261117)
+
+Final Green HEAD
+  The module commit is 377e45b8c87d13adf1f1b3365829581cb60964b1. This evidence file and the
+  plan line ship in a separate plan-evidence commit, whose SHA is reported in the
+  MEASURE_AGENT_RESULT handoff from the subagent result.
+
+--- MEASURE_AGENT_RESULT ---
+role: measure-green
+status: pass
+track: www_tutor_calculator_20261117
+phase: 1
+task: 1.2
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+role_base_sha: 21e23c2f2410288306112edb8a69dc9106e9df03
+module_commit: 377e45b8c87d13adf1f1b3365829581cb60964b1
+red_test_unchanged: true
+green_command_exit: 0
+green_tests: "Test Files 1 passed (1); Tests 22 passed (22)"
+types_command_exit: 0
+tasks_flipped_x: ["1.2 Done 377e45b8c87d13adf1f1b3365829581cb60964b1"]
+tasks_flipped_b: []
+new_files: ["apps/www-reading-advantage/src/lib/tutor-commission.ts"]
+questions: []
+handoff:
+  The module satisfies the committed Red contract with no test edit. Task 1.2 is done.
+  The only new file is the module. The next task is 1.3 Red (locale keys), which is out of
+  scope for this Green role. The plan-evidence commit carries plan.md and the two run files
+  green-1.2-377e45b8c.json and green-1.2-377e45b8c.log.
+END_MEASURE_AGENT_RESULT

@@ -1,10 +1,11 @@
 {
   "track_id": "www_tutor_calculator_20261117",
   "type": "feature",
-  "status": "in_progress",
+  "status": "done",
   "created_at": "2026-11-17T00:00:00Z",
   "updated_at": "2026-11-18T00:00:00Z",
   "opened": "2026-11-17",
+  "completed": "2026-11-18",
   "description": "Add two sections to the www Tutor Advantage page. The first is a commission calculator with a payout graph and three example presets. The second is a gallery of five student app screens. The zh block holds the English lines until the contracted Chinese speaker delivers. One www-only push follows the PM page-check.",
   "author_model": "opencode-go/deepseek-v4.1-flash",
   "depends_on": "none",
@@ -19,7 +20,8 @@
     "PM, 2026-11-17: the 11 % upscale of the phone screens at 1280 px is accepted",
     "PM, 2026-11-17: a draft copy never ships; PR delivers the final copy first",
     "PM, 2026-11-17: the PM drops the network and earnings captions; the gallery holds three cards",
-    "PM, 2026-11-17: one www-only push follows the PM page-check; no deploy command runs from the session"
+    "PM, 2026-11-17: one www-only push follows the PM page-check; no deploy command runs from the session",
+    "Closeout, 2026-11-18: supersedes the 2026-11-17 entry above; Phase 3 ships five student screens (040, 002, 004, 052, 064), so the gallery holds five cards"
   ],
   "dates": {
     "due": "2026-11-21",
@@ -37,6 +39,6 @@
     "The zh block holds the English lines until the contracted Chinese speaker delivers"
   ],
   "estimated_tasks": 36,
-  "actual_tasks": 35,
-  "deviation_notes": "The plan holds 36 tasks; 35 are complete and task C.1, the closeout, stays open for the closeout role. The Phase 2 copy tasks 2.7 to 2.9 ran before the page-check tasks 2.5 and 2.6, so the plan lists them out of order."
+  "actual_tasks": 36,
+  "deviation_notes": "The plan holds 36 tasks, all complete at closeout on 2026-11-18. The Phase 2 copy tasks 2.7 to 2.9 ran before the page-check tasks 2.5 and 2.6, so the plan lists them out of order."
 }

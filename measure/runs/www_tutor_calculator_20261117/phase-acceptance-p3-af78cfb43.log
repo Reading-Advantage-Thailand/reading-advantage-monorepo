@@ -1,0 +1,84 @@
+# Phase acceptance log: www_tutor_calculator_20261117, Phase 3, HEAD af78cfb43
+
+Accepted HEAD (immutable): af78cfb4380b9b482fe86132c30dfbbfbebef81d.
+`git rev-parse HEAD` returns the same SHA before and after the gates. The worktree
+is clean after the runs (only git-ignored `measure/runs/` writes).
+
+## Delta since prior acceptance 9fc1292b9
+
+- PM page-check finding PM-1 (delete the false Reedy-only claim): Red e0637db22 and
+  28a621ce4; Green 0a0797355 and retry 5ca39dcfa. Spec D-21, AC-24; plan 3.6c, 3.6d.
+- No-ff merge af78cfb43 of origin/master 5211596e4 (the 2026-11-18 blog post only).
+
+## Prerequisite results
+
+- review-a-p3-r3-af78cfb43.json: PASS, audited_head_sha = HEAD. Agreed.
+- review-c-p3-r3-af78cfb43.json: PASS, audited_head_sha = HEAD. Agreed.
+- Review B: not applicable (deletion-only copy change plus a blog merge; no input
+  handling, data, or dependency change). Agreed.
+- Prior acceptance phase-acceptance-p3-9fc1292b9.json covers all commits to 9fc1292b9.
+  The commits between that HEAD and this HEAD that touch implementation are exactly
+  the PM-1 deletion Greens the r3 reviews judged; the rest are tests and
+  measure/runs records, plus the blog merge.
+
+## Routed r3 nits: accept or reject
+
+- A-P3-r3-1 (spec D-21/AC-24 lag): ACCEPT deferral to the closeout record.
+- A-P3-r3-2 (plan cites the retry-overwritten Red file): ACCEPT no fix; both runs
+  stay in red-p3-3.6c-9fc1292b9.log:42 and green-p3-3.6d-fe1cb8b26.log.
+- A-P3-r3-3 (th phrase without a verb): ACCEPT keep; deletion-only PM order, and
+  Daniel checks the Thai on the live page.
+- C-P3-r3-1 (deletions beyond handoff line 362): ACCEPT keep; no shipped string is
+  false and the PM accepted the deletions.
+- C-P3-r3-2 (record lag plus a stale rule in another track): ACCEPT deferral to the
+  closeout record.
+
+## Gates run at the accepted HEAD (exit codes)
+
+1. Full www suite through heavy-run:
+   `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c
+   'pnpm --filter www-reading-advantage test -- --maxWorkers=1'`
+   First run exit 143 (kernel OOM killer, MemoryMax 3G). Single re-run exit 0:
+   Test Files 77 passed (77), Tests 2827 passed (2827).
+2. `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` Exit 0.
+3. `pnpm --filter www-reading-advantage lint` Exit 0, no output.
+4. `rg -n -i 'downline|ดาวน์ไลน์' apps/www-reading-advantage/src
+   --glob '!**/*.test.*'` Exit 1, no output.
+5. Build through heavy-run: first run exit 1 on the Next.js security-reminder nudge
+   after the route table prints. Single re-run exit 0 with the nudge as a warning.
+   The route table holds `/[locale]/products/tutor-advantage`.
+6. `node scripts/ci/affected-apps.mjs --base $(git rev-parse origin/master)
+   --head $(git rev-parse HEAD)` Exit 0, prints `["www-reading-advantage"]`.
+   `git diff --name-only origin/master..HEAD` lists only
+   `apps/www-reading-advantage/**` and `measure/**` paths.
+7. Spot A5 check: the 3.6d seven-file vitest command exits 0 with Test Files 7
+   passed (7) and Tests 105 passed (105), which matches the plan claim.
+
+## AC coverage
+
+- AC-17 through AC-23: unchanged since the prior acceptance and still green inside
+  the 2827-test suite pass at this HEAD.
+- AC-24: verified by the 7-file gate (exit 0, 105 tests). The test failed first,
+  reads the imported dictionaries and the rendered page, and probes each pattern.
+  No case reads production source as text and no case computes a hash.
+- AC-11/AC-12/AC-16 (commands): verified by gates 1-6 above.
+- Every Phase 3 task through 3.6d is [x] with a Done SHA. Tasks 3.7 (this
+  acceptance) and 3.8 (www-only push after the PM page-check) stay open by design.
+
+## Verdict
+
+PASS. No blocking findings. The five r3 nits are nonblocking and accepted with
+the orchestrator dispositions above.
+
+MEASURE_AGENT_RESULT
+role: measure-phase-acceptance
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+commits: e0637db22, 0a0797355, 28a621ce4, 5ca39dcfa, af78cfb43
+tests_run: www suite exit 0 (77 files, 2827 tests) after one OOM 143 retry; tsc exit 0; lint exit 0; downline rg exit 1 no output; build exit 0 after one security-nudge exit 1 retry; affected-apps ["www-reading-advantage"]; 7-file AC-24 gate exit 0 (105 tests)
+files_changed: tutor-advantage page.tsx, pages and components tutor-advantage locales, www-tutor-reedy-claim.test.tsx, track spec.md and plan.md, 2026-11-18 blog post via origin/master merge
+plan_updates: none (gate-only role; plan tasks 3.6c and 3.6d already record the delta SHAs)
+known_failures: none
+handoff: PASS at af78cfb43. All five r3 nits accepted (A-P3-r3-1 defer closeout, A-P3-r3-2 no fix, A-P3-r3-3 keep, C-P3-r3-1 keep, C-P3-r3-2 defer closeout). Next: task 3.8 www-only push after the PM page-check, then the closeout record carrying the two deferred spec/plan-lag nits.
+END_MEASURE_AGENT_RESULT

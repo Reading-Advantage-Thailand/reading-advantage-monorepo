@@ -1,0 +1,108 @@
+Measure adversarial testing — Phase 1 re-verify after remediation (round 2)
+Role: measure-adversarial-testing
+Track: www_tutor_calculator_20261117
+Route: opencode-go/hy4-flash-free#high (substitution: free deepseek route hit the OpenCode free usage limit)
+
+PROVENANCE
+- Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator (branch feat/a63-tutor-calculator)
+- Clean HEAD: d279b870341c067c33fc884ae8863b5428487c17
+- phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+- role_base_sha: 418b4e7cb4f3f46260a80b67e4699739210d9922
+- pre_adversarial_head_sha / audited_head_sha: d279b870341c067c33fc884ae8863b5428487c17
+- The audited head includes implementation daa77805d and plan-evidence commit d279b8703.
+  d279b8703 touches measure/ only, so no product or test file changed after daa77805d.
+
+1. DIFF REVIEW (git diff 418b4e7cb..d279b8703)
+Changed files: only apps/www-reading-advantage/src/lib/tutor-commission.ts and
+measure/tracks/www_tutor_calculator_20261117/plan.md. Zero .test files changed.
+
+The fix closes round-1 finding F1:
+- toSatang (tutor-commission.ts:95-99): added `const satang = baht * 100;
+  if (!Number.isFinite(satang)) return 0n;` before the existing
+  `BigInt(Math.round(satang))`. BigInt(Infinity) can no longer throw.
+- calculateNetwork (lines 150, 154, 171): ownVolume, each leg volume, and
+  networkVolume are wrapped in clampNonNegative, which already returned a finite
+  positive value unchanged.
+- Line 62 JSDoc corrected: preTax is shown as the tutor's payout row (round-1 N1).
+
+Judgement:
+- Closes A6: yes. The formerly red case (adversarial test lines 434-466) is green.
+- Changes no normal input: yes. Every new clamp is identity on finite positive
+  values; the 79-test gate keeps all exact pins (preset 2 = 1265569 satang, 1032
+  = 418.12, 1e9 = 71422027600 satang, 30000 = 1668193 satang).
+- Masks no real value: yes. The guard returns 0n only when the satang product is
+  non-finite, where no finite money amount exists. Finite large values survive
+  (probe D: 1e8 preserved; probe E: values above MAX_SAFE_INTEGER preserved).
+- Truncation rule unchanged: yes. Math.round-to-satang and the integer
+  (rateUnits*gvSatang)/RATE_SCALE truncation are untouched.
+
+2. GATE (one heavy job, from the worktree)
+Command:
+  bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c \
+  'pnpm --filter www-reading-advantage exec vitest run
+   src/lib/tutor-commission.adversarial.test.ts
+   src/components/marketing/tutor-commission-calculator.adversarial.test.ts
+   src/lib/tutor-commission.test.ts
+   src/components/marketing/tutor-commission-calculator.test.tsx
+   --reporter=dot --silent=true'
+Result: Test Files 4 passed (4); Tests 79 passed (79); exit 0. Matches Green's report.
+Note: a first invocation from the workspace root found no adversarial files
+("No test files found, exiting with code 0"); the gate was rerun from the worktree,
+which is the correct checkout, and produced the counts above.
+
+3. CLAMP-GAP PROBES (scratch, /tmp/opencode/adv-p1-r2/probe.mjs)
+Nine probes; TOTAL FAILURES 0. Numbers are the module's returned baht values.
+- A  leg-only overflow, own finite (1e308,1,[2]): own 1e308, leg volume 0, gross 0. PASS
+- A2 leg-only overflow, own zero (1e308,0,[2]): all volumes 0, gross 0. PASS
+- B  sum overflow, parts finite (1e308,1,[1,1]): each leg 1e308, sum Infinity
+   clamped to network 0, gross 0; money finite. PASS
+- C  -0 (-0,-0,[-0]): no -0 in any money field, network 0. PASS
+- D  tiny price x huge finite count (1e-300 x 1e308): volume 1e8 preserved,
+   not masked, gross 71391935.8. PASS
+- D2 tiny price x huge count overflow (100 x 1e308): volume 0, gross 0. PASS
+- E  satang just under MAX_SAFE_INTEGER: value preserved, exact BigInt, no throw. PASS
+- E2 satang above MAX_SAFE but finite (1e14): value preserved, gross finite. PASS
+- E3 satang product overflow (2e306): own 2e306, gross 0 via guard. PASS
+No real gap found, so no test file was added. The probes are scratch, not committed.
+
+4. MUTANTS (14 from round 1)
+Eight module mutants rebuilt from the NEW module and rerun with driver.mjs. Each
+still emits the round-1 wrong value that an unchanged test pins against:
+  M1 p2 gross 1265570 (pin 1265569); M2 gross1032 41813 (pin 41812);
+  M2b scale30000 1668195 (pin 1668193); M3 p2 payout 885898 (pin 464569);
+  M5 p3 legs 2403000 (pin 1201500); M6 payoutAfterDeduction(100,150) = -50 (pin 0);
+  M9 resizeLegs([],1) = [0] (pin [3]); M_tax_float GV3 tax 4 satang (pin 3).
+The other six (M4, M7, M8, M14, M15, M_conservation_float_sum) mutate code the
+fix did not touch, and their tests are unchanged. All 14 still die.
+
+5. VERDICT
+PASS. No blocking finding, no nonblocking finding, no new test. Fix closes A6,
+changes no normal input, masks no real value, and leaves the D-3 truncation rule
+where it was. retry_recommendation: none.
+
+6. RERUN RULE
+Phase 1 is local and unpushed (spec D-13). Any later implementation commit
+invalidates this result and requires the phase 1 adversarial gate to rerun.
+
+MEASURE_AGENT_RESULT
+task: adversarial-p1
+track: www_tutor_calculator_20261117
+phase: 1
+round: r2
+role: measure-adversarial-testing
+route: opencode-go/hy4-flash-free#high
+verdict: PASS
+status: pass
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+role_base_sha: 418b4e7cb4f3f46260a80b67e4699739210d9922
+pre_adversarial_head_sha: d279b870341c067c33fc884ae8863b5428487c17
+audited_head_sha: d279b870341c067c33fc884ae8863b5428487c17
+commit_sha: d279b870341c067c33fc884ae8863b5428487c17
+result_file: measure/runs/www_tutor_calculator_20261117/adversarial-p1-r2-daa77805d.json
+tests: gate 4 files / 79 tests passed, exit 0; clamp probes 9/9 pass; no test added
+mutants: 14 still die (8 rebuilt from new module and measured, 6 unchanged by construction)
+blocking_findings: 0
+nonblocking_findings: 0
+retry_recommendation: none
+handoff: PASS. Fix at daa77805d closes A6 with no normal-input change, no masked value, and the D-3 truncation rule intact. No gap found; no test added. No question for the PM.
+END_MEASURE_AGENT_RESULT

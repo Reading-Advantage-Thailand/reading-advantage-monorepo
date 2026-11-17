@@ -1,0 +1,60 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage
+
+ ❯ src/components/marketing/zz-f1-probe.adversarial.test.tsx (2 tests | 2 failed) 54ms
+     × F1: price 4.35 with 100 students is exactly 435 baht and must print as 435 42ms
+     × F2: a volume of 1e21 baht must not print in exponent notation 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/marketing/zz-f1-probe.adversarial.test.tsx > F1 and F2: volume display (spec D-3 display rule) > F1: price 4.35 with 100 students is exactly 435 baht and must print as 435
+AssertionError: expected [ '435.00', '435.00' ] to deeply equal [ '435', '435' ]
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[32m-   "435",[39m
+[32m-   "435",[39m
+[31m+   "435.00",[39m
+[31m+   "435.00",[39m
+[2m  ][22m
+
+ ❯ src/components/marketing/zz-f1-probe.adversarial.test.tsx:34:23
+     32|     fireEvent.change(field(copy.inputs.price), { target: { value: "4.3…
+     33|     fireEvent.change(field(copy.inputs.ownStudents), { target: { value…
+     34|     expect(volumes()).toEqual(["435", "435"]);
+       |                       ^
+     35|   });
+     36|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/marketing/zz-f1-probe.adversarial.test.tsx > F1 and F2: volume display (spec D-3 display rule) > F2: a volume of 1e21 baht must not print in exponent notation
+AssertionError: expected '1e+21' not to match /e\+/i
+
+[32m- Expected:[39m
+/e\+/i
+
+[31m+ Received:[39m
+"1e+21"
+
+ ❯ src/components/marketing/zz-f1-probe.adversarial.test.tsx:41:30
+     39|     fireEvent.change(field(copy.inputs.price), { target: { value: "1e2…
+     40|     fireEvent.change(field(copy.inputs.ownStudents), { target: { value…
+     41|     expect(volumes()[0]).not.toMatch(/e\+/i);
+       |                              ^
+     42|   });
+     43| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  00:09:44
+   Duration  806ms (transform 68ms, setup 65ms, import 105ms, tests 54ms, environment 424ms)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run src/components/marketing/zz-f1-probe.adversarial.test.tsx '--reporter=default' '--maxWorkers=1'

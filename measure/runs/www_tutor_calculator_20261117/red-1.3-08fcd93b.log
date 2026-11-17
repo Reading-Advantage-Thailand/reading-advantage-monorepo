@@ -1,0 +1,323 @@
+=== Measure Red 1.3 evidence: www_tutor_calculator_20261117 ===
+
+Base values
+  phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+  role_base_sha:  545a43a798cfa9dd35de54e8efc8aec6ceb36ada
+  Both values resolve in the worktree. HEAD at role start equals role_base_sha.
+
+Working tree before edits
+  Clean. No dirty paths to classify.
+
+Red command
+  bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --silent=true'
+  exit code: 1
+
+Captured output (verbatim)
+  RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage
+
+  xxxx···x·xxx··xx··
+
+  ⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+   FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 1. the calculator block exists > exists in en, th, and zh
+  AssertionError: expected undefined to be defined
+   ❯ src/__tests__/www-tutor-calculator.locale.test.ts:292:33
+      290| describe("1. the calculator block exists", () => {
+      291|   it("exists in en, th, and zh", () => {
+      292|     expect(DICTS.en.calculator).toBeDefined();
+         |                                 ^
+      293|     expect(DICTS.th.calculator).toBeDefined();
+      294|     expect(DICTS.zh.calculator).toBeDefined();
+
+  ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+   FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 2. en and th copy pinned word for word (AC-5) > holds all 34 string leaves in en
+  AssertionError: expected +0 to be 34 // Object.is equality
+
+  - Expected
+  + Received
+
+  - 34
+  + 0
+
+   ❯ src/__tests__/www-tutor-calculator.locale.test.ts:301:40
+      299|   it("holds all 34 string leaves in en", () => {
+      300|     const leaves = stringLeaves(block("en"));
+      301|     expect(Object.keys(leaves).length).toBe(PINS.length);
+         |                                        ^
+      302|     for (const pin of PINS) {
+      303|       expect(leaves[pin.path.join(".")]).toBe(pin.en);
+
+  ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+   FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 2. en and th copy pinned word for word (AC-5) > holds all 34 string leaves in th
+  AssertionError: expected +0 to be 34 // Object.is equality
+
+  - Expected
+  + Received
+
+  - 34
+  + 0
+
+   ❯ src/__tests__/www-tutor-calculator.locale.test.ts:309:40
+      307|   it("holds all 34 string leaves in th", () => {
+      308|     const leaves = stringLeaves(block("th"));
+      309|     expect(Object.keys(leaves).length).toBe(PINS.length);
+         |                                        ^
+      310|     for (const pin of PINS) {
+      311|       expect(leaves[pin.path.join(".")]).toBe(pin.th);
+
+  ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+   FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 3. key order and structure (AC-5) > keeps the spec 5.4 key order in en, th, and zh
+  AssertionError: expected [] to deeply equal [ 'eyebrow', 'heading', …(10) ]
+
+  - Expected
+  + Received
+
+  - [
+  -   "eyebrow",
+  -   "heading",
+  -   "description",
+  -   "volumeNote",
+  -   "rateNote",
+  -   "payoutNote",
+  -   "inputs",
+  -   "results",
+  -   "explain",
+  -   "chart",
+  -   "presets",
+  -   "disclaimer",
+  - ]
+  + []
+
+   ❯ src/__tests__/www-tutor-calculator.locale.test.ts:319:42
+      317|   it("keeps the spec 5.4 key order in en, th, and zh", () => {
+      318|     for (const locale of LOCALES) {
+      319|       expect(Object.keys(block(locale))).toEqual([...KEY_ORDER]);
+         |                                          ^
+      320|     }
+      321|   });
+
+  ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+   FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 4. zh holds the English lines (D-10) > equals en at every pinned key path
+  AssertionError: expected undefined to be 'THE COMMISSION CALCULATOR' // Object.is equality
+
+  - Expected:
+  "THE COMMISSION CALCULATOR"
+
+  + Received:
+  undefined
+
+   ❯ src/__tests__/www-tutor-calculator.locale.test.ts:353:43
+      351|   it("equals en at every pinned key path", () => {
+      352|     for (const pin of PINS) {
+      353|       expect(read(block("zh"), pin.path)).toBe(pin.en);
+         |                                           ^
+      354|     }
+      355|   });
+
+  ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+   FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 5. preset 3 draft of D-2a > pins the en draft name, setup, and result
+  AssertionError: expected undefined to be 'A small team, three legs' // Object.is equality
+
+  - Expected:
+  "A small team, three legs"
+
+  + Received:
+  undefined
+
+   ❯ src/__tests__/www-tutor-calculator.locale.test.ts:364:57
+      362| describe("5. preset 3 draft of D-2a", () => {
+      363|   it("pins the en draft name, setup, and result", () => {
+      364|     expect(read(block("en"), ["presets", "2", "name"])).toBe("A small …
+         |                                                         ^
+      365|     expect(read(block("en"), ["presets", "2", "setup"])).toBe(
+      366|       "Two own students, and three direct tutors with three students e…
+
+  ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+   FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 5. preset 3 draft of D-2a > pins the th draft name, setup, and result
+  AssertionError: expected undefined to be 'ทีมเล็ก สามสายงาน' // Object.is equality
+
+  - Expected:
+  "ทีมเล็ก สามสายงาน"
+
+  + Received:
+  undefined
+
+   ❯ src/__tests__/www-tutor-calculator.locale.test.ts:374:57
+      372|
+      373|   it("pins the th draft name, setup, and result", () => {
+      374|     expect(read(block("th"), ["presets", "2", "name"])).toBe("ทีมเล็ก …
+         |                                                         ^
+      375|     expect(read(block("th"), ["presets", "2", "setup"])).toBe(
+      376|       "นักเรียนของตัวเองสองคน และติวเตอร์ชั้นแรกสามคนที่มีนักเรียนคนละสามคน",
+
+  ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+   FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 5. preset 3 draft of D-2a > pins the three chart draft labels in en and th
+  AssertionError: expected undefined to be 'Leg' // Object.is equality
+
+  - Expected:
+  "Leg"
+
+  + Received:
+  undefined
+
+   ❯ src/__tests__/www-tutor-calculator.locale.test.ts:389:49
+      387|       ["volume", "Volume", "ยอดรวม"],
+      388|     ] as const) {
+      389|       expect(read(block("en"), ["chart", key])).toBe(enValue);
+         |                                                 ^
+      390|       expect(read(block("th"), ["chart", key])).toBe(thValue);
+      391|     }
+
+  ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+   FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 7. price default of 3,000 (AC-8) > keeps 3,000 in the en price note
+  AssertionError: expected undefined to be 'Default: 3,000 baht. The price adapts…' // Object.is equality
+
+  - Expected:
+  "Default: 3,000 baht. The price adapts to the market."
+
+  + Received:
+  undefined
+
+   ❯ src/__tests__/www-tutor-calculator.locale.test.ts:413:19
+      411|   it("keeps 3,000 in the en price note", () => {
+      412|     const value = read(block("en"), ["inputs", "priceNote"]);
+      413|     expect(value).toBe("Default: 3,000 baht. The price adapts to the m…
+         |                   ^
+      414|     expect(typeof value === "string" && value.includes("3,000")).toBe(…
+      415|   });
+
+  ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+   FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 7. price default of 3,000 (AC-8) > keeps 3,000 in the th price note
+  AssertionError: expected undefined to be 'ค่าเริ่มต้น 3,000 บาท ราคาปรับตามตลาด' // Object.is equality
+
+  - Expected:
+  "ค่าเริ่มต้น 3,000 บาท ราคาปรับตามตลาด"
+
+  + Received:
+  undefined
+
+   ❯ src/__tests__/www-tutor-calculator.locale.test.ts:419:19
+      417|   it("keeps 3,000 in the th price note", () => {
+      418|     const value = read(block("th"), ["inputs", "priceNote"]);
+      419|     expect(value).toBe("ค่าเริ่มต้น 3,000 บาท ราคาปรับตามตลาด");
+         |                   ^
+      420|     expect(typeof value === "string" && value.includes("3,000")).toBe(…
+      421|   });
+
+  ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+   Test Files  1 failed (1)
+        Tests  10 failed | 8 passed (18)
+     Start at  08:08:09
+     Duration  698ms (transform 50ms, setup 60ms, import 36ms, tests 13ms, environment 422ms)
+
+  undefined
+  /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage:
+  [ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run src/__tests__/www-tutor-calculator.locale.test.ts '--reporter=dot' '--silent=true'
+
+Failure reason
+  The `calculator` block is absent from all three dictionaries in
+  apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts.
+  DICTS.en.calculator is undefined. The copy pins, key order, zh identity,
+  D-2a draft, chart labels, and price notes therefore fail on undefined.
+  This is the intended Red state for task 1.3.
+
+Failing test names
+  1. 1. the calculator block exists > exists in en, th, and zh
+  2. 2. en and th copy pinned word for word (AC-5) > holds all 34 string leaves in en
+  3. 2. en and th copy pinned word for word (AC-5) > holds all 34 string leaves in th
+  4. 3. key order and structure (AC-5) > keeps the spec 5.4 key order in en, th, and zh
+  5. 4. zh holds the English lines (D-10) > equals en at every pinned key path
+  6. 5. preset 3 draft of D-2a > pins the en draft name, setup, and result
+  7. 5. preset 3 draft of D-2a > pins the th draft name, setup, and result
+  8. 5. preset 3 draft of D-2a > pins the three chart draft labels in en and th
+  9. 7. price default of 3,000 (AC-8) > keeps 3,000 in the en price note
+  10. 7. price default of 3,000 (AC-8) > keeps 3,000 in the th price note
+
+Passing cases and their status at Red
+  The following eight cases pass. Four are positive controls that inject a probe and
+  prove the check can fail: dropped keys, superseded figures, D-16 claims, and the
+  key-order helper. Four are vacuous at Red because both sides are empty: key-path
+  parity, the zh leaf-map equality, the figure absence scan, and the D-16 absence scan.
+
+Contracts pinned
+  AC-5: all 34 section 5.4 string leaves in en and th, the 12-key order, and the three absent second-level keys.
+  AC-7: D-2a preset 3 draft in en and th, the three chart labels, and no superseded figure.
+  AC-8: the 3,000 baht default in both price notes and a D-16 scan with a positive control per token.
+  D-10: zh equals en at every pinned path and across the whole leaf map.
+
+Files changed in this role
+  apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts (new, 437 lines)
+  measure/tracks/www_tutor_calculator_20261117/plan.md (task 1.3 marked [x] with Done sha)
+  measure/runs/www_tutor_calculator_20261117/red-1.3-08fcd93b.json (this run)
+  measure/runs/www_tutor_calculator_20261117/red-1.3-08fcd93b.log (this log)
+
+Remaining failure handed to Green
+  Add the calculator block to en, th, and zh in
+  apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts, after
+  tutorRole and before faq, with the spec 5.4 copy, the D-2a preset 3 draft, the
+  chart labels, and English text in zh. The ten failing cases then pass.
+
+Question for the orchestrator
+  Spec 5.4 prints (draft) on the th chart labels and preset 3 name and setup, while
+  D-2a prints those values without the suffix. This test treats (draft) as an
+  annotation and pins the D-2a text. Shall Green keep the suffix out of the values?
+
+MEASURE_AGENT_RESULT
+{
+  "role": "measure-mid-red",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "task": "1.3",
+  "baseline_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "545a43a798cfa9dd35de54e8efc8aec6ceb36ada",
+  "resulting_head": "1a32da5b2a38c8e60ff9d6509786b8521a3ce988",
+  "verdict": "pass",
+  "commits": [
+    "08fcd93b039f53d26447a9ec8590c17264397ec3 test(www-reading-advantage): pin calculator locale copy (track_id: www_tutor_calculator_20261117)",
+    "1a32da5b2a38c8e60ff9d6509786b8521a3ce988 docs(measure): record red 1.3 evidence (track_id: www_tutor_calculator_20261117)"
+  ],
+  "tests": {
+    "file": "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "authored_case_count": 18,
+    "red_exit_code": 1,
+    "test_files": "Test Files 1 failed (1)",
+    "tests_line": "Tests 10 failed | 8 passed (18)"
+  },
+  "files": [
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md",
+    "measure/runs/www_tutor_calculator_20261117/red-1.3-08fcd93b.json",
+    "measure/runs/www_tutor_calculator_20261117/red-1.3-08fcd93b.log"
+  ],
+  "failure_reason": "The calculator block is absent from the en, th, and zh dictionaries; DICTS.en.calculator is undefined, so 10 copy, order, identity, draft, chart, and price assertions fail.",
+  "failing_test_names": [
+    "1. the calculator block exists > exists in en, th, and zh",
+    "2. en and th copy pinned word for word (AC-5) > holds all 34 string leaves in en",
+    "2. en and th copy pinned word for word (AC-5) > holds all 34 string leaves in th",
+    "3. key order and structure (AC-5) > keeps the spec 5.4 key order in en, th, and zh",
+    "4. zh holds the English lines (D-10) > equals en at every pinned key path",
+    "5. preset 3 draft of D-2a > pins the en draft name, setup, and result",
+    "5. preset 3 draft of D-2a > pins the th draft name, setup, and result",
+    "5. preset 3 draft of D-2a > pins the three chart draft labels in en and th",
+    "7. price default of 3,000 (AC-8) > keeps 3,000 in the en price note",
+    "7. price default of 3,000 (AC-8) > keeps 3,000 in the th price note"
+  ],
+  "remaining_failures": [
+    "Add the calculator block to en, th, and zh in src/locales/pages/products/tutor-advantage.ts so the 10 failing cases pass."
+  ],
+  "questions": [
+    "The th (draft) markers in spec 5.4 conflict with the D-2a th values; this test pins the D-2a text without the suffix. Confirm for Green."
+  ]
+}
+RESULT: PASS

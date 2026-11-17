@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "role": "closeout",
+  "track_id": "www_tutor_calculator_20261117",
+  "closeout_date": "2026-11-18",
+  "final_acceptance": {
+    "status": "pass",
+    "audited_head_sha": "3dbe8a4f87f96774caa44d0b5563287bb620e73c",
+    "result_file": "measure/runs/www_tutor_calculator_20261117/final-acceptance-3dbe8a4f8.json",
+    "summary": "PASS at 3dbe8a4f8. Three phases accepted, final code gates hold, the record fixes match the code and the plan, and task C.1 (this closeout) was the only open task."
+  },
+  "plan_tasks": {
+    "total": 36,
+    "complete": 36,
+    "blocked": 0,
+    "deferred": 0
+  },
+  "phase_summary": {
+    "phase_1": { "acceptance": "2026-11-17", "result": "phase-accept-p1-d279b8703.json", "status": "complete" },
+    "phase_2": { "acceptance": "2026-11-17", "result": "phase-accept-p2-r2-94af2c15b.json", "status": "complete" },
+    "phase_3": { "acceptance": "2026-11-18", "result": "phase-acceptance-p3-3dbe8a4f8.json", "status": "complete" }
+  },
+  "gates": [
+    { "name": "PROJECT_TESTS", "status": "pass", "summary": "heavy-run.sh www test: 77 files, 2827 tests, exit 0 (run at 789511cb1; no apps/ path changed since)." },
+    { "name": "PROJECT_LINT", "status": "pass", "summary": "exit 0." },
+    { "name": "BUILD", "status": "pass", "summary": "first run exit 1 on the Next.js security-reminder nudge, re-run exit 0." },
+    { "name": "TSC_SPOT_CHECK", "status": "pass", "summary": "pnpm --filter www-reading-advantage exec tsc --noEmit -p . exits 0 at HEAD." },
+    { "name": "CD_WWW", "status": "pass", "summary": "runs 44053703983 (a726b2be2) and 44142775630 (af78cfb43) completed with success." },
+    { "name": "MEASURE_DOCTOR", "status": "bounded_exception", "summary": "steps 1 to 3 pass; the architecture step fails the analyzer input snapshot pin, owner architecture_ci_input_pin_20261110, a pre-existing open item and not a closeout blocker." }
+  ],
+  "provenance": {
+    "track_base_sha": "ff028a7105ccd5de0c3e9534dd8536b7667e22de",
+    "pushed_range_ending_sha": "af78cfb4380b9b482fe86132c30dfbbfbebef81d",
+    "pushed_range_note": "The commit range ending at af78cfb43 is pushed to origin/master; HEAD 3dbe8a4f8 and the closeout commits are measure-only records.",
+    "phase_acceptance_shas": [
+      "d279b8703",
+      "94af2c15b",
+      "9fc1292b9",
+      "af78cfb43",
+      "3dbe8a4f8"
+    ],
+    "closeout_commit_sha": "recorded in the follow-up record commit"
+  },
+  "commands": [
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track www_tutor_calculator_20261117 -> exit 0 after the record commit",
+    "rg A5 (plan false-claim) -> exit 1, no hit",
+    "rg A6 (registry overstatement) -> exit 1, no hit",
+    "rg www_tutor_calculator tests/ -> exit 1, no reference, so the archive move breaks no test path (A9)",
+    "rg -n '^(- \\[[ ~]\\]|- \\[b\\])' on plan.md after C.1 -> only C.1, then none after closeout"
+  ],
+  "evidence_retained": [
+    "measure/runs/www_tutor_calculator_20261117/*.json and *.log committed with the archive move (audit item D-8)",
+    "*.txt run outputs under 200 KB committed with the archive move",
+    "measure/runs/www_tutor_calculator_20261117/final-acceptance-3dbe8a4f8.json (passing final acceptance)",
+    "closeout-3dbe8a4f8.json and closeout-3dbe8a4f8.log (this closeout)"
+  ],
+  "artifact_cleanup": {
+    "deleted": [],
+    "note": "The orchestrator identified no bulky run artifact for deletion. PNG capture folders and *.mjs scratch scripts stay untracked under measure/runs/; .gitignore:56 ignores measure/runs/, so the committed evidence uses git add -f."
+  },
+  "anti_pattern_audit": {
+    "A5_false_claim_text": "pass - rg over plan.md exits 1, no hit",
+    "A6_registry_overstatement": "pass - rg over measure/tracks.md exits 1; the row states gate counts, owners, and open items without overstatement",
+    "A9_archived_track_references": "pass - rg www_tutor_calculator tests/ exits 1, no test hardcodes the active track path"
+  },
+  "open_items_for_next_www_push": [
+    "calc.result.needsOwnStudents, after its PR fact gate",
+    "a better graph.legCommissionBar label",
+    "the PR v0.6 graph.caption rewording",
+    "the th Reedy feature sentence",
+    "Daniel's picture for the become-a-tutor block"
+  ],
+  "changed_files": [
+    "measure/tracks.md",
+    "measure/archive/www_tutor_calculator_20261117/",
+    "measure/runs/www_tutor_calculator_20261117/"
+  ]
+}

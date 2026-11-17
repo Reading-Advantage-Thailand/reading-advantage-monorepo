@@ -1,0 +1,71 @@
+Measure Mid Red · Phase 1 remediation 1 · track www_tutor_calculator_20261117
+Restart after watchdog interruption; the interrupted attempt's two uncommitted test files were kept.
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+baseline_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+role_base_sha: 4e32f7c76710f0647aa712b74d55dc8618bc8076
+
+Review A at audited head 10dcf42a8d88c90f8e02debae761196ef40f2ccd returned
+CHANGES_REQUIRED (artifact review-a-p1-10dcf42a8.json). F1 was a blocker on AC-9
+component coverage; F2 was a nit on clamp pins.
+
+F1 — four AC-9 cases present in the component test:
+1. "removes one input row and one graph row when the count drops from 3 to 2" —
+   legStudentInputs and legRows drop 3 to 2, networkGV 27,000 to 18,000,
+   downline 12,015 to 8,010. This kills mutant M14 (keep leg rows after a drop).
+2. "shows four input rows and four graph rows at a count of 4" — four inputs,
+   four graph rows, fourth leg at 3 students; networkGV 36,000, gross 20,744.54,
+   downline 16,020.
+3. "shows every preset 1 figure, its text, and only one pressed preset" —
+   preset index 1 networkGV 24,000, gross 12,655.69, downline 8,010, tax 139.37,
+   figures 4,645.69 and 4,506.32, setup and result text, single aria-pressed state.
+4. "shows the preset 2 setup and result text" — preset index 2 setup and result text.
+
+F2 — five clamp pins present in the module test:
+1. returns rate 0 for NaN and Infinity volume (commissionRate).
+2. clamps Infinity inputs to finite, non-negative, conservation-safe money;
+   added in this role because the brief requires each clamp category to produce
+   conservation-safe output through calculateNetwork and expectSafeMoney.
+3. returns all-zero money for a NaN price.
+4. clamps a NaN leg entry to zero students.
+5. clamps a negative price and a negative student count to zero.
+
+The four-leg downline 16,020 was recomputed from the module: four legs of 3
+students at the 3,000 price give 9,000 per leg; rate(9,000) = 0.445 truncates to
+4,005 satang per leg; four legs give 16,020. Gross 20,744.54 is the value the
+interrupted attempt pinned and the passing targeted run confirms it.
+
+Targeted command (run from the worktree):
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx src/lib/tutor-commission.test.ts --reporter=dot --silent=true'
+Exit code: 0
+Test Files  2 passed (2)
+Tests  41 passed (41)
+Breakdown: component 14 cases (10 original + 4 F1), module 27 cases (22 original + 5 F2).
+
+Build-graph: skipped. PM load watch: scope graph work to the app or skip. No
+whole-repo scan was run; the plan line records the note.
+
+Commit (explicit pathspecs only):
+64465455f7052cf3e01c3cfcaafc81da648f5f94  test(www): close review A gaps in tutor calculator (track_id: www_tutor_calculator_20261117)
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: pass
+track: www_tutor_calculator_20261117
+phase: Phase 1
+task: 1.8 (Review A F1/F2 remediation)
+baseline_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+role_base_sha: 4e32f7c76710f0647aa712b74d55dc8618bc8076
+resulting_head: 64465455f7052cf3e01c3cfcaafc81da648f5f94
+commits: 64465455f7052cf3e01c3cfcaafc81da648f5f94 (test files and plan line)
+tests_run: targeted component + module vitest, exit 0 (Test Files 2 passed (2); Tests 41 passed (41))
+test_count: 41 passed (component 14, module 27)
+files_changed: apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx; apps/www-reading-advantage/src/lib/tutor-commission.test.ts; measure/tracks/www_tutor_calculator_20261117/plan.md; measure/runs/www_tutor_calculator_20261117/red-remediation-1-64465455f.json; measure/runs/www_tutor_calculator_20261117/red-remediation-1-64465455f.log
+plan_updates: one Red remediation line added under task 1.8 with the audited head, both base shas, the command, the counts, and the build-graph skip note; task 1.8 marker stays [x]; no disposition line
+known_failures: none
+questions: none
+build_graph: skipped under PM load watch; no whole-repo scan
+handoff: Review A F1 and F2 are closed by the four AC-9 component cases and five F2 clamp pins; the targeted run passes 41 of 41 tests; no product source was edited; no deploy and no push.
+END_MEASURE_AGENT_RESULT

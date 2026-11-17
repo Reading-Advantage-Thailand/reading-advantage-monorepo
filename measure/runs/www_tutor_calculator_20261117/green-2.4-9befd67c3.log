@@ -1,0 +1,165 @@
+MEASURE GREEN — PHASE 2 GATE RUN (task 2.4)
+Track: www_tutor_calculator_20261117
+Phase: 2
+Task: 2.4 (gate run only; no product code change)
+Date: 2026-11-17
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+Route: opencode-go/deepseek-v4.1-flash
+  (substitution record: ra-quota pick green returns opencode-go/hy4-flash-free, the Red family
+  of this track, so it is excluded)
+
+BASES AND RANGE
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha:  9befd67c3ab8df69dbed087b24a882f6189b444c
+gate HEAD:      9befd67c3ab8df69dbed087b24a882f6189b444c
+Range d279b8703..HEAD holds:
+  320fc2fa1 feat(www): add the three blurred tutor screens
+  29ffa3542 docs(measure): record green 2.1 asset evidence
+  e583e21b3 feat(www): add the tutor screens gallery and its copy
+  9314f07de docs(measure): record green 2.2 gallery evidence
+  0a7ff97e5 feat(www): update the two tutor income lines
+  9befd67c3 docs(measure): record green 2.3 locale evidence
+The committed Phase 2 Red change is inside this range. git status --short was empty before the
+first edit.
+
+GATE 1 — WWW TEST SUITE
+Command: bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test --reporter=dot --silent=true'
+Exit: 0
+Evidence:
+  RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage
+  Test Files  68 passed (68)
+       Tests  2602 passed (2602)
+    Duration  58.54s (transform 1.08s, setup 2.67s, import 6.04s, tests 18.38s, environment 25.45s)
+
+GATE 2 — TYPES
+Command: pnpm turbo run check-types --filter=www-reading-advantage
+Exit: 0
+Evidence:
+  www-reading-advantage:check-types: cache hit, replaying logs abb77ec39e8968b7
+  www-reading-advantage:check-types: $ tsc --noEmit
+  Tasks:    1 successful, 1 total
+
+A cache hit alone does not prove a real type check, so the same command was forced:
+Command: pnpm turbo run check-types --filter=www-reading-advantage --force
+Exit: 0
+Evidence:
+  www-reading-advantage:check-types: cache bypass, force executing abb77ec39e8968b7
+  www-reading-advantage:check-types: $ tsc --noEmit
+  Tasks:    1 successful, 1 total
+  Time:    4.169s
+
+GATE 3 — LINT
+Command: pnpm --filter www-reading-advantage lint
+Exit: 0
+Evidence:
+  $ eslint .
+  (no further output)
+The run holds zero lint messages, so it holds no shadcn/* error in a file this track touched,
+and none anywhere in the app.
+
+GATE 4 — SHADCN RATCHET BASELINE
+Command: git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json
+Exit: 0
+Evidence: no diff. The baseline still reads "lintWarnings": 241, "copies": 36.
+
+GATE 5 — BUILD
+Command: bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage build'
+Attempt 1 exit: 1
+Evidence attempt 1: the route table printed, including
+  ƒ /[locale]/products/tutor-advantage
+then:
+  > Build error occurred
+  Error [SecurityFatalError]: Your version of Next.js is affected by a known security vulnerability.
+  This command stopped to show the upgrade recommendation. Retry the same command to continue the original task.
+  ...
+  [ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] www-reading-advantage@0.1.0 build: `next build`
+  Exit status 1
+
+Same command retried.
+Attempt 2 exit: 0
+Evidence attempt 2: the route table printed again, then:
+  ⚠ Your version of Next.js is affected by a known security vulnerability. This command is continuing after the upgrade reminder.
+
+This is the known Next.js security-advisory nudge: exit 1 once, exit 0 on the retry. Both
+attempts print the route table, so the build output is produced on each.
+
+GATE 6 — APP SELECTOR
+First the literal form of the plan and spec:
+Command: node scripts/ci/affected-apps.mjs --base ff028a710 --head 9befd67c3ab8df69dbed087b24a882f6189b444c
+Exit: 2
+Evidence: affected-apps: --base must be a 40-character lowercase hex commit id
+
+The script accepts only a 40-hex id. git rev-parse ff028a710 prints
+ff028a7105ccd5de0c3e9534dd8536b7667e22de (chore(measure): close out the STEM date-line track).
+The gate ran again with that resolved base:
+Command: node scripts/ci/affected-apps.mjs --base ff028a7105ccd5de0c3e9534dd8536b7667e22de --head 9befd67c3ab8df69dbed087b24a882f6189b444c
+Exit: 0
+Output: ["www-reading-advantage"]
+
+NOT RUN
+bash measure/doctor.sh — excluded by the brief: a pre-existing architecture snapshot hash
+mismatch fails it, and no file in this track touches that check.
+build-graph scan — excluded by the brief: no export, signature, or import edge changed.
+
+TEST COUNT
+68 test files, 2602 tests, all passing. Phase 1 recorded 2533 tests across 65 files on
+4c4153b04. Phase 2 adds 69 tests across 3 files.
+
+PLAN EVIDENCE COMMIT
+e2439b438511046b58ec8f3e734e655706c2ab8c
+docs(measure): record phase 2 gate evidence (track_id: www_tutor_calculator_20261117)
+Subject length 85 characters. Files: measure/tracks/www_tutor_calculator_20261117/plan.md only.
+
+TASK MARKERS
+[x] 2.4 Done: gates on HEAD 9befd67c3, every command exit 0; five exit codes 0, 0, 0, 0, 0
+      (build 1 then 0); selector exit 0 with ["www-reading-advantage"].
+No task flipped to [b] in this task. Task 2.5 stays [b] at the PM page-check, which the PM owns.
+
+FILES ADDED
+None in the repository. Two run files under measure/runs (gitignored):
+  measure/runs/www_tutor_calculator_20261117/green-2.4-9befd67c3.json
+  measure/runs/www_tutor_calculator_20261117/green-2.4-9befd67c3.log
+
+FINAL GREEN HEAD
+e2439b438511046b58ec8f3e734e655706c2ab8c
+git status --short: clean
+
+MEASURE_AGENT_RESULT
+status: pass
+verdict: pass
+track: www_tutor_calculator_20261117
+phase: 2
+task: 2.4
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha: 9befd67c3ab8df69dbed087b24a882f6189b444c
+implementation_commit: none (task 2.4 changes no product code)
+plan_evidence_commit: e2439b438511046b58ec8f3e734e655706c2ab8c
+final_head: e2439b438511046b58ec8f3e734e655706c2ab8c
+tasks_done:
+  - 2.4
+gates:
+  www_test_suite: pass (exit 0, 68 files, 2602 tests)
+  types: pass (exit 0; forced rerun exit 0)
+  lint: pass (exit 0, no output, no shadcn/* error)
+  shadcn_ratchet: pass (exit 0, baseline unchanged at 241 warnings, 36 copies)
+  build: pass on retry (attempt 1 exit 1 on the Next.js nudge, attempt 2 exit 0)
+  app_selector: pass (exit 0, ["www-reading-advantage"])
+files_changed:
+  - measure/tracks/www_tutor_calculator_20261117/plan.md
+handoff: |
+  Task 2.4 is complete on HEAD 9befd67c3. The five Phase 2 gates and the app selector all
+  pass, and the plan records every exit code, the test count, and the selector output.
+  Reviewers scope: the plan text of task 2.4 only. No product file, no test file, and no
+  locale file changed in this task.
+  Two points for the orchestrator:
+  1. The plan and spec print the selector base as the short id ff028a710. The script accepts
+     only 40 hex, so that form exits 2. The resolved id ff028a7105ccd5de0c3e9534dd8536b7667e22de
+     exits 0 and prints ["www-reading-advantage"]. The plan records the deviation.
+  2. The Next.js build nudge asks once for a permission decision on an upgrade. This session
+     ran no upgrade and no deploy.
+  Next after review: task 2.5, the PM page-check at 390, 980, and 1280 px. It stays [b] and
+  belongs to the PM, with Daniel on the Thai. Task 2.6 and closeout C.1 follow it.
+questions:
+  - "Would you like the Next.js 'security' upgrade run in the background in a separate Git worktree? Command: next upgrade --agent=security --internal-nudge-id=a8759afa-436e-4810-bf7b-f0b90573e99c"
+END_MEASURE_AGENT_RESULT

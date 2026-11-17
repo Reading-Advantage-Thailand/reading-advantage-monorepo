@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-c-ux-api",
+  "round": "r2",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)",
+  "baseline_sha": "6c22d6284dd47deeab35105c036bc549c67557aa",
+  "phase_base_sha": "81df01cf2e7c2954f4a2de1aaee593913a00bc75",
+  "role_base_sha": "6c22d6284dd47deeab35105c036bc549c67557aa",
+  "audited_head_sha": "f85f63cf3ccfc1f03a62b63739b9144296df62a3",
+  "audited_head_is_head": true,
+  "diff_range": "6c22d6284dd47deeab35105c036bc549c67557aa..f85f63cf3ccfc1f03a62b63739b9144296df62a3",
+  "phase_diff_range": "81df01cf2e7c2954f4a2de1aaee593913a00bc75..f85f63cf3ccfc1f03a62b63739b9144296df62a3",
+  "contract_applicability": "applicable: the delta changes the tutor-advantage route page (key wiring and hero image), the calculator component (graph bars, leg-count field), the picture component, the spec, and four test files, so the copy, key, image, and user-flow contracts all move again.",
+  "status": "pass",
+  "summary": "Pass. Round 1 findings C-P3-1 to C-P3-4 and A-P3-1 are fixed on f85f63cf3. The page passes { n: '{n}' } for graph.legBar, and the real use-intl 4.13.0 returns 'Leg {n}', 'สาย {n}', and 'Leg {n}' with no error. The own bar shows the own students' volume. The bars follow PR section 3 line 123 and the 11 graph keys of section 6. 57 of 57 calculator and screens keys are used and none is missing. Vitest passes (12 files, 180 tests) and eslint exits 0. Three new nits, none blocking.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "C-P3-r2-1 [Nit] review-c: apps/www-reading-advantage/src/components/products/product-picture.tsx:25 gives each non-portrait picture the hint '(min-width: 1024px) 25vw, 100vw'. Phase 3 moved two pictures onto this hint, and both fill a larger part of the row. The hero column is lg:col-span-6 (page.tsx:192, picture at :194), about 44 to 45 percent of the viewport at 1024 to 1280 px. The Reedy column is lg:col-span-5 (page.tsx:289, picture at :291), about 34 to 37 percent. The phase base set 50vw for the hero and 40vw for Reedy (git show 81df01cf2, page.tsx lines 182 and 286). At lg and wider, the browser now picks a candidate about half as wide as the slot, so both pictures can look soft. The preload that priority adds carries the same hint. Found by code reading, git show of the phase base, and layout arithmetic from the class list, not in a browser. Fix: add an optional sizes prop to ProductPicture, and pass 50vw at lg for the hero and 40vw at lg for Reedy. These lines did not change in the remediation.",
+    "C-P3-r2-2 [Nit] review-c: apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx:434-436 shows graph.legCommissionBar ('Commission of each leg', PR section 6) beside result.legPayouts, the sum of all legs. At preset 2 this row reads 8,010, while each leg row shows 4,005 (:399). The adversarial test pins the sum (tutor-commission-calculator.adversarial.test.tsx:350 and :363). With 2 or more legs the label says each leg and the figure is the total. The results card already names the same sum 'Leg commissions' (:214). Owner: the PR copy owner and the spec owner. Options: label this total with results.legCommissions, or use legCommissionBar for the per-leg figure. The remediation did not change these lines. Found by code reading and the pinned test values, not in a browser.",
+    "C-P3-r2-3 [Nit] review-c: apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx:76 checks only that a value exists (values[name] == null). A page call with { n: '1' } passes this test, but each leg row would then read 'Leg 1', because the component finds no '{n}' to replace (tutor-commission-calculator.tsx:393). Design rule 11 asks for the literal { n: '{n}' }. Add an assertion that the value for calculator.graph.legBar equals { n: '{n}' }. Found by code reading of the test, not by a mutation run."
+  ],
+  "evidence": [
+    "HEAD check: git rev-parse HEAD = f85f63cf3ccfc1f03a62b63739b9144296df62a3, equal to audited_head_sha. git status --short printed nothing. The delta 6c22d6284..f85f63cf3 holds 9 files: page.tsx, tutor-commission-calculator.tsx, product-picture.tsx, four test files, spec.md, plan.md. No locale file changed.",
+    "C-P3-1 fixed: page.tsx:116 is key('calculator.graph.legBar', { n: '{n}' }). The key helper type at page.tsx:64 now takes an optional values object. Real use-intl 4.13.0 createTranslator with node --conditions=development: the bare call still returns the key path and reports 1 error in en, th, and zh (round 1 failure reproduced). The page call returns 'Leg {n}', 'สาย {n}', and 'Leg {n}' and adds no error. Without the development condition, both calls return the same strings. legBar is still the only placeholder string (locale file lines 197, 535, 875 unchanged).",
+    "C-P3-1 test: page.placeholders.test.tsx runs 3 cases (en, th, zh). Each case uses a translator that resolves the real dictionary and records a placeholder with no value. Each case also requires that calculator.graph.legBar was examined. red-p3-3.6a-vitest.txt shows en, th, and zh failing with 'calculator.graph.legBar: {n}' before the fix. The 3 cases pass now.",
+    "C-P3-2 fixed: spec.md D-9 items 2 to 4 now use graph.legBar, graph.ownBar, the volume share, and the three totals. The section 5.3 props block now equals the component type (inputs 7 keys, results 7, explain 3, graph 11). A grep finds no chart.legPayout, chart.legVolume, or chart.yourPayout. directTutors, studentsPerDirect, and downline remain only in removal statements (spec.md lines 335, 604-605, 757, 789). D-20 and AC-23 are consistent with the code.",
+    "C-P3-3 fixed: tutor-commission-calculator.tsx:163-171 skips the resize when the field text is empty. readLegCount (:186-187) uses the row count for Add leg (:191) and Remove leg (:196) while the field is empty. The test 'keeps the leg rows and the typed students when the field is cleared' passes. It types 5 and 7 in two rows, clears the count field, expects 2 rows, types 2, and expects 5 and 7 back. The old code gave 3 and 3 (round 1 module run: resizeLegs([5,7],0) gives [], then resizeLegs([],2) gives [3,3]).",
+    "C-P3-4 fixed: product-picture.tsx:8 adds an optional priority prop, and :23-24 pass priority and loading='eager'. page.tsx:194-198 sets priority for the hero. Next 16.4.1 get-img-props.js:306-313 throws only for priority with loading='lazy' and for preload with priority, so this pair is legal. Next 16.4.1 drops the loading attribute for priority alone, so the explicit eager value is needed for the test. The test 'AC-23: the hero image is the eager largest image' passes. The old lazy hero fails it.",
+    "A-P3-1 fixed: tutor-commission-calculator.tsx:415 shows result.ownVolume under graph.ownBar (12,000 for preset 1; 6,000 for presets 2 and 3, as pinned by 3 component tests). The bar widths at :405 and :421 use shareOfNetwork, so the own bar and the leg bars sum to 100 percent (adversarial test: 9000/24000 twice plus 6000/24000 for preset 2; 12000/42000 three times plus 6000/42000 for preset 3). The totals keep gross, leg commissions, and net: 12,655.69, 8,010, 4,506.32 and 24,833.45, 16,560, 8,025.25. The pre-tax figures 8,273.45 and 4,645.69 no longer show on screen.",
+    "PR section 3 line 123 parity: each leg row shows a bar, the leg volume (:396), and the leg commission (:399). The own students show as one bar (:413-421). The gross, the leg commissions, and the payout after leg commissions and 3 percent tax show as totals (:428-442). Spec D-9 and D-20 record the totals under the bars. Judgement: accepted, no finding.",
+    "Graph keys of PR section 6: the dictionary holds the 11 keys title, caption, ownBar, legBar, grossBar, legCommissionBar, netBar, axisBaht, rateTitle, rateAxis, ratePoint, in the PR order. The page passes all 11 (page.tsx:112-123). The component reads all 11.",
+    "Key parity by node run: 230 leaf keys in en, th, and zh with the same keys in the same order. page.tsx references 190 keys (84 static, 20 indexed patterns expanded over the dictionary). None is missing in any locale. All 57 calculator and screens leaves are referenced. The component reads all 35 non-preset calculator leaves (explain.* through copy.explain[variant] at :472). Presets: 3 entries, 3 mapped. Screens: 5 entries, 5 pictures.",
+    "Lint: pnpm --filter www-reading-advantage exec eslint on page.tsx, page.images.test.tsx, page.placeholders.test.tsx, tutor-commission-calculator.tsx, its two test files, product-picture.tsx, tutor-commission.ts, product-pictures.ts, and the locale file: eslint-exit=0 (the shadcn rules are errors). scripts/ci/shadcn-ratchet-baseline.json is not in the delta (AC-12).",
+    "Tests: heavy-run vitest on products/tutor-advantage/page, tutor-commission, www-tutor-calculator.locale, and tutor-screens with --maxWorkers=1: 12 files, 180 tests passed. Round 1 had 11 files and 172 tests. The delta adds 1 file and 8 tests (3 placeholders, 1 hero, 3 own bar, 1 leg count).",
+    "Rule 8 and rule 11 of docs/design-rules.md: no second image component was added. Placeholders now pass as values. Both rules hold.",
+    "Known open copy item, no finding: calc.result.needsOwnStudents is still not shipped (PM decision). B-P3-1 (no cap on the leg count) stays no-fix. Neither item changed in the delta.",
+    "Limits: no browser, no server, no build. The 390 px capture, the visual check, and the real hero paint belong to the UX browser role. C-P3-r2-1 and C-P3-r2-3 rest on code reading. One earlier shell call was rejected by the role guard because I wrote a stray redirection. I re-ran it without the redirection."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git status --short; git log --oneline 6c22d6284..f85f63cf3; git diff --stat 6c22d6284..f85f63cf3 (9 files)",
+    "git diff 6c22d6284..f85f63cf3 (page.tsx, tutor-commission-calculator.tsx, product-picture.tsx, spec.md, the four test files)",
+    "node --conditions=development --input-type=module -e (use-intl 4.13.0 createTranslator on en, th, zh; bare call and { n: '{n}' } call): bare call = 1 error each; page call = 'Leg {n}' with no added error",
+    "node --input-type=module -e (same check without the development condition): both calls return the placeholder string, no error",
+    "node --input-type=module -e (locale leaf parity, page.tsx key references, expansion of indexed keys, unused and missing keys, component copy.* reads): 230 leaves, 190 referenced, 0 missing, 0 unused of 57",
+    "git show 81df01cf2:page.tsx (phase base hero and Reedy sizes: 50vw and 40vw); grep of get-img-props.js in node_modules/next 16.4.1",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run products/tutor-advantage/page tutor-commission www-tutor-calculator.locale tutor-screens --maxWorkers=1 --reporter=dot; echo vitest-exit=$?': 12 files, 180 tests passed, vitest-exit=0",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec eslint <10 touched files>; echo eslint-exit=$?': eslint-exit=0",
+    "grep -n for line numbers in page.tsx, tutor-commission-calculator.tsx, product-picture.tsx, page.placeholders.test.tsx, spec.md"
+  ],
+  "changed_files": [],
+  "files_audited": [
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.adversarial.test.tsx",
+    "apps/www-reading-advantage/src/components/products/product-picture.tsx",
+    "apps/www-reading-advantage/src/lib/product-pictures.ts",
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+    "apps/www-reading-advantage/docs/design-rules.md",
+    "measure/tracks/www_tutor_calculator_20261117/spec.md",
+    "/home/daniebo/Desktop/advantage-pr/11-content/www-tutor-advantage-calculator-handoff.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "claude-code/claude-sonnet-5-5#max",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "page.tsx:116 passes { n: '{n}' } and the real use-intl 4.13.0 run returns 'Leg {n}' in en, th, and zh with no error, but product-picture.tsx:25 keeps a 25vw hint for the hero and Reedy."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "Each fix has a failing-first test (red-p3-3.6a-vitest.txt shows the placeholder cases failing before the fix), but page.placeholders.test.tsx:76 does not pin the literal '{n}'."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --stat 6c22d6284..f85f63cf3 lists 9 files, all in the remediation: three source files, four tests, spec.md, and plan.md."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "heavy-run vitest (12 files, 180 tests, exit 0), eslint exit 0, and a use-intl development run back each fix, but I ran no browser for the hero and sizes judgement."
+    }
+  ]
+}

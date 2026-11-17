@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Round 2 spec re-review of www_tutor_calculator_20261117 at HEAD 6c47d7fe49398ac91b3703e47b15249d226294cf (previous round fb6bf7c0d). The fix commit closes all six round 1 findings: the manifest test now has a named file in plan 2.1 and AC-13 (F1, Blocker, closed), the slot-2 alt is marked as a draft in both the en and the th entries with a new D-15a decision, open question 7, and plan 'Answers owed to PR' item 4 (F2, closed), the three design-rule citations now resolve to the shadcn/no-inline-styles row and review-checklist items 7 and 8 of apps/www-reading-advantage/docs/design-rules.md (F3, closed), the conservation check is pinned in integer satang with figures that D-3 reproduces exactly (F4, closed), the brief-match claim is qualified to whole baht (F5, closed), and the quoted phase number is 8/18 (F6, closed as written). The money check, the new satang equalities, the D-3 reviewed-result line, and the D-15a / AC-13 interaction all pass a regression pass. Nothing blocks Red. One new Nit: the evidence quote's label word is not the screen's own label.",
+  "paraphrase": {
+    "proposes": "The track adds two sections to the www Tutor Advantage page in en, th, and zh. Phase 1 builds a pure satang-exact commission module, a client calculator with three example presets, a one-level leg payout graph, and a decorative rate curve. Phase 2 adds a gallery of three blurred screenshots from the delivered set and replaces the two 'We do not publish income figures' live lines with copy that points at the calculator examples. The zh block takes the English lines until the contracted Chinese speaker delivers. No push happens before the PM page-check, and no deploy command runs.",
+    "current_system": "The page is a server component that reads copy with getScopedI18n from a locale file with en, th, and zh blocks. Its sections are hero, process, tutorRole, commitments, and faq; tutorRole.points[3] and faq.items[5].answer still say no income figures are published. A productPictures manifest and the ProductPicture and SectionHeader components already exist for other pages. The commission truth lives in the finance-mlm-service formula; this track re-implements it as a display-only pure module in the www app, with the rate curve and the 3% withholding tax."
+  },
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F7 [Nit] spec.md 6.3 line 594: the evidence note quotes student-mobile/002 as showing \"ขั้นที่ 8/18\". The screen's own label reads \"บันทึก 8/18\" (record 8/18), and \"18 ด้านล่าง\" sits under the field. The corrected number 8/18 is right and the caption still fits; only the quoted word is not the screen's. Rationale: the note is the evidence for the caption fit, so the quote should match the screen; wording only, nothing the implementer builds."
+  ],
+  "evidence": [
+    "F1 closed: plan 2.1 Files now lists `src/lib/__tests__/tutor-screens.test.ts` (plan line 151), the Done line names it with its assertions (lines 170-174), and AC-13 names the same path (spec line 679). The directory apps/www-reading-advantage/src/lib/__tests__ exists with sibling tests (phase-w3-claims.test.ts, site-assets.test.ts), so the location is real. The three statements agree on the file and on what it asserts (three keys in slot order, src/width/height/portrait, file existence under public/).",
+    "F2 closed: new D-15a (spec lines 292-300) states the alt names the tutor app while student-mobile/002 is a student-app screen, keeps PR's wording, and marks it a draft. The draft mark appears in both entries: the en code comment `// alt draft, see D-15a` (line 572) and the Thai table row `... (draft, D-15a)` (line 588). Open question 7 (lines 707-708) and plan 'Answers owed to PR' item 4 (lines 232-233) route it to PR. No contradiction with 6.3 or AC-13: AC-13's 'the copy's alt text' is the pinned draft string, and D-15a says the locale test pins it as it stands.",
+    "F3 closed: all three citations now resolve in apps/www-reading-advantage/docs/design-rules.md. D-9 cites the `shadcn/no-inline-styles` table row (line 13), which allows an inline style that sets a CSS custom property or a run-time value. D-11 cites item 7 of the review checklist (line 24), which requires alt text on non-decorative images. 6.3 cites item 8 (line 25), which requires the shared parts and forbids a second image or heading component. A grep finds no remaining bare 'design rule n' citation in either file.",
+    "F4 closed: AC-3 (spec lines 654-657) and plan 1.1 item 4 (lines 39-41) now pin the conservation check in integer satang with 801,000 + 464,569 = 1,265,569 and 1,201,500 + 669,444 = 1,870,944, and note that a baht-Number sum fails in float.",
+    "F5 closed: spec line 143 now reads 'Every money figure in the brief matches this table to the whole baht.'",
+    "F6 closed as written: spec line 594 now quotes 8/18; the image shows 8/18. The residual label-word mismatch is new finding F7 (Nit).",
+    "Regression pass, money (recomputed with the D-3 algorithm, rate scale 1e9, truncation): six check rates reproduce to four decimals (40.5000, 42.5000, 45.0000, 50.0000, 55.6065, 60.6315); asymptote 71.4286%; rate at 1e9 = 71.422028% < 71.43%. Preset 1: gross 5,520.00, tax 165.60, net 5,354.40. Preset 2: rate 52.7321%, gross 12,655.69, legs 8,010.00, payout 4,645.69, tax 139.37, net 4,506.32. Preset 3: rate 56.6953%, gross 18,709.44, legs 12,015.00, payout 6,694.44, tax 200.83, net 6,493.61. All match D-2.",
+    "Regression pass, new satang equalities: the module produces exactly leg payouts 801,000 + payout 464,569 = gross 1,265,569 for preset 2 and 1,201,500 + 669,444 = 1,870,944 for preset 3, so the figures in AC-3 and plan 1.1 are values D-2 produces. The clause 'A baht-Number sum fails here in float' is true: 8010 + 4645.69 !== 12655.69.",
+    "Regression pass, D-3 reviewed-result line: the new guard sentence (spec lines 172-174) states preset 2 gross 12,655.69, payout 4,645.69, net 4,506.32 and names 12,655.70 / 4,645.70 / 4,506.33 as the rejected raw-float rounding. Both statements match D-2 and the recomputation; no contradiction. The rejected figures appear nowhere as accepted values.",
+    "Regression pass, plan coherence: task 2.1's Files, Done, and AC-13 agree on the manifest test file; 'Answers owed to PR' gained item 4 without disturbing items 1-3; the Out of scope list, the gates, and the phase tables are unchanged and still consistent.",
+    "Repo truth: apps/www-reading-advantage/docs/design-rules.md exists (34 lines) with the cited row and checklist items; src/lib/__tests__ exists. Commit 6c47d7fe4 touches only the two track files (git show --stat).",
+    "Screen check: the image student-mobile/002-screen.png shows the lesson 'The Library Map' at 8/18 with an 18-part progress bar and '18 ด้านล่าง'; the number supports the '18 phases' caption fit, the label word is บันทึก (F7)."
+  ],
+  "commands": [
+    "git rev-parse HEAD (6c47d7fe49398ac91b3703e47b15249d226294cf, equals audited_head_sha)",
+    "git show 6c47d7fe4 --stat and the full diff (only spec.md and plan.md of the track)",
+    "read of the changed passages in context in spec.md (708 lines) and plan.md (251 lines)",
+    "grep for 'design rule', 'tutor-screens.test', the phase quote, and the rejected float figures across both files",
+    "read of apps/www-reading-advantage/docs/design-rules.md (all 34 lines) and ls of src/lib/__tests__",
+    "money recheck in Code Mode with exact Number integer arithmetic (all D-3 products under 2^53): six rates, asymptote, rate at 1e9, three presets to the satang, the two conservation sums, and the baht float counterexample",
+    "image read of ~/Desktop/handoff/a63-tutor-www-calculator/screens/student-mobile/002-screen.png"
+  ],
+  "changed_files": [
+    "measure/runs/www_tutor_calculator_20261117/spec-review-6c47d7fe.json",
+    "measure/runs/www_tutor_calculator_20261117/spec-review-6c47d7fe.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

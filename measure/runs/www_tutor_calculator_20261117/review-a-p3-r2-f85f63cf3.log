@@ -1,0 +1,34 @@
+Review A (correctness and architecture), Phase 3, round 2, track www_tutor_calculator_20261117.
+Route: claude-code/claude-opus-5-5[1m]#high
+audited_head_sha f85f63cf3ccfc1f03a62b63739b9144296df62a3. HEAD matches.
+phase_base_sha 81df01cf2e7c2954f4a2de1aaee593913a00bc75. role_base_sha 6c22d6284dd47deeab35105c036bc549c67557aa.
+Scope: git diff 6c22d6284..f85f63cf3 (5 commits, 9 files), with a check of shared code.
+
+Verdict: PASS. No blocker. Two nits. Result JSON: review-a-p3-r2-f85f63cf3.json.
+
+Round-1 items:
+- A-P3-1 closed. graph.ownBar shows the own volume (12,000, 6,000, 6,000). The bars are shares
+  of the network volume and add up to 100%. One test per preset failed first.
+- A-P3-3 closed. D-9, section 5.3, AC-10, and AC-13 use the section 6 names.
+- A-P3-4 closed. The hero has priority and loading="eager". Next 16.4.1 leaves loading
+  undefined with priority alone (get-img-props.js:236, 446).
+- A-P3-5 closed. Task 3.6 names the gate head and the record commit.
+- C-P3-1 closed. page.tsx:116 passes { n: "{n}" }, the form of design rule 11.
+- C-P3-3 closed. An empty leg-count field keeps the rows and the typed students.
+
+Weakening check:
+- a03605b02 replaces two pre-tax presence pins with the graph net total and a pre-tax absence
+  check. D-20 and spec.md:469 say the pre-tax figure is not displayed. This is not a weakening.
+- The adversarial bar-sum case now pins each bar as a volume share and adds the three totals.
+- D-20 quotes PR handoff line 123 word for word.
+
+Runs at HEAD:
+- 7 gate files: Test Files 7 passed (7), Tests 102 passed (102). This equals the plan claim.
+- 10 files: Test Files 10 passed (10), Tests 180 passed (180).
+- tsc --noEmit: exit 0.
+
+Findings:
+- A-P3-r2-1 [Nit] readLegCount (tutor-commission-calculator.tsx:185-197) has no test. No test
+  clicks the add or remove leg buttons.
+- A-P3-r2-2 [Nit] spec.md:111, 264-265, and 468 keep the names "downline deduction" and "three
+  chart labels".

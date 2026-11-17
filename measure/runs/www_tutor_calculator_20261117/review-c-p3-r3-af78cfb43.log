@@ -1,0 +1,61 @@
+Review C (UX and API end-to-end contract), phase 3, round 3
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+phase_base_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+role_base_sha: 9fc1292b914bb4a67bac3c8fa48e7a68762f3c0b
+audited_head_sha: af78cfb4380b9b482fe86132c30dfbbfbebef81d
+audited head is current HEAD: yes (git rev-parse HEAD, checked at start and at end)
+result file: measure/runs/www_tutor_calculator_20261117/review-c-p3-r3-af78cfb43.json
+route: claude-code/claude-sonnet-5-5#max
+
+Scope
+The delta is git diff 9fc1292b9..af78cfb43. It deletes the false Reedy-only claim from the two tutor-advantage
+locale files, sets reedyKeys to [0, 1, 2] in page.tsx:80, adds the AC-24 test, updates spec.md and plan.md,
+and merges origin/master (the 2026-11-18 blog post). The merge commit changes no path itself.
+No routed finding and no CONTEST item came with the brief.
+
+Checks and results
+1. Key wiring holds. Check script CHECK 1 (git show of both revisions):
+   base 9fc1292b9: 230 leaves per locale, reedyBlock.points 4/4/4, reedyKeys [0,1,2,3].
+   head af78cfb43: 229 leaves per locale, same keys in the same order, reedyBlock.points 3/3/3, reedyKeys [0,1,2].
+   Missing keys: none in en, th, or zh. Unused leaves: 40 at the base and 40 at the head, identical lists.
+   The delta creates no unused key and no missing key.
+2. The platform card renders from its caller. products/page.tsx:3 imports it and :182 renders it.
+   The card reads 13 keys. All 13 are non-empty in en, th, and zh. The card locale has 13 leaves per locale
+   with the same order and none unused. The delta edits only features.2.description in three locales.
+   No test renders the card with real copy (products-page-pictures.red.test.tsx:19 mocks it).
+3. The rendered Reedy block shows 3 bullets in en, th, and zh.
+   www-tutor-reedy-claim.test.tsx, 17 of 17 pass, including the three bullet cases.
+   The real use-intl library renders points 0 to 2 with 0 errors and reports points.3 as missing.
+   The three bullets, the FAQ answer, and both descriptions hold 0 ICU special characters.
+4. No layout class change. git diff -U0 over src shows no changed line with className, class=, or cn(.
+   The only page.tsx change is the reedyKeys line. The card and the picture component are not in the delta.
+5. Tests and lint. Vitest with --maxWorkers=1: 11 files, 149 tests passed. eslint on the 4 touched files: exit 0.
+
+Findings
+Blocking: none.
+Nonblocking:
+C-P3-r3-1 [Nit] review-c: the FAQ answer and the card delete more than PR handoff line 362 orders.
+  The FAQ answer loses the true "not in Reading Advantage" half. The test pattern at line 42 forbids the PR text.
+  No shipped string is false. Owner: the PR copy owner and the spec owner. Two options are in the JSON.
+C-P3-r3-2 [Nit] review-c: the D-21 and AC-24 records lag the delta (six patterns versus eight, the FAQ answers,
+  a stale plan citation) and the old rule 7 of www_copy_truth_pass_20261002 still says Reedy is Tutor-only.
+Round 2 nits C-P3-r2-1, C-P3-r2-2, and C-P3-r2-3 are not in this delta and stay open as round 2 recorded them.
+
+Limits
+No browser, no server, no build, and no tsc run in this review. The visual check of the 3-bullet block belongs
+to the UX browser role. The shell guard rejected three inline node calls. I moved the checks into
+review-c-p3-r3-af78cfb43-check.mjs and ran that file from the repo root.
+
+MEASURE_AGENT_RESULT
+role: measure-review-c-ux-api
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+commits: none
+tests_run: heavy-run.sh pnpm --filter www-reading-advantage exec vitest run www-tutor-reedy-claim products/tutor-advantage/page www-tutor-calculator.locale tutor-screens products-page-pictures --maxWorkers=1: pass (11 files, 149 tests); vitest run www-tutor-reedy-claim --reporter=verbose: pass (17 tests); eslint on page.tsx, both locale files, and www-tutor-reedy-claim.test.tsx: pass (exit 0); node measure/runs/www_tutor_calculator_20261117/review-c-p3-r3-af78cfb43-check.mjs: pass (key wiring and real use-intl checks)
+files_changed: measure/runs/www_tutor_calculator_20261117/review-c-p3-r3-af78cfb43.json, measure/runs/www_tutor_calculator_20261117/review-c-p3-r3-af78cfb43.log, measure/runs/www_tutor_calculator_20261117/review-c-p3-r3-af78cfb43-check.mjs
+plan_updates: none
+known_failures: none
+handoff: Pass at af78cfb43 with no blocking finding. Two nits go to the PR copy owner and the spec owner. C-P3-r3-1 needs a copy decision: keep the whole-sentence deletion in the FAQ answer and the card (record it in handoff section 8.4 and in D-21), or restore the true Reading Advantage half by deletion only and narrow the test pattern at www-tutor-reedy-claim.test.tsx:42. C-P3-r3-2 is a record update in spec.md D-21 and AC-24, the plan.md 3.6c citation, and the old rule 7. The orchestrator may DECLINE either nit. The UX browser role keeps the visual check of the 3-bullet Reedy block. The round 2 nits stay open.
+END_MEASURE_AGENT_RESULT

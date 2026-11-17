@@ -1,0 +1,250 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage
+
+xxxxxxxxxxxx···xxxx·······································································
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 16 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx > AC-22: the hero image > en: shows the hero file with the hero alt
+AssertionError: en hero file: expected [ …(3) ] to include '/images/tutor-advantage-hero.jpg'
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx:190:56
+    188|       const expected = HERO[locale];
+    189|       const picture = contentImage(heroBlock());
+    190|       expect(fileRefs(picture), `${locale} hero file`).toContain(expec…
+       |                                                        ^
+    191|       expect(picture.getAttribute("alt"), `${locale} hero alt`).toBe(e…
+    192|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx > AC-22: the hero image > th: shows the hero file with the hero alt
+AssertionError: th hero file: expected [ …(3) ] to include '/images/tutor-advantage-hero.jpg'
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx:190:56
+    188|       const expected = HERO[locale];
+    189|       const picture = contentImage(heroBlock());
+    190|       expect(fileRefs(picture), `${locale} hero file`).toContain(expec…
+       |                                                        ^
+    191|       expect(picture.getAttribute("alt"), `${locale} hero alt`).toBe(e…
+    192|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/16]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx > AC-22: the hero image > zh: shows the hero file with the hero alt
+AssertionError: zh hero file: expected [ …(3) ] to include '/images/tutor-advantage-hero.jpg'
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx:190:56
+    188|       const expected = HERO[locale];
+    189|       const picture = contentImage(heroBlock());
+    190|       expect(fileRefs(picture), `${locale} hero file`).toContain(expec…
+       |                                                        ^
+    191|       expect(picture.getAttribute("alt"), `${locale} hero alt`).toBe(e…
+    192|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/16]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx > AC-22: the three book covers > en: shows each cover in the books order with its alt
+AssertionError: en card 1 file: expected [ …(3) ] to include '/images/products/primary-origins-2-co…'
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx:209:71
+    207|         );
+    208|         const picture = contentImage(card);
+    209|         expect(fileRefs(picture), `${locale} card ${index + 1} file`).…
+       |                                                                       ^
+    210|         expect(picture.getAttribute("alt"), `${locale} card ${index + …
+    211|           bookAlt(locale, expected.name),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/16]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx > AC-22: the three book covers > th: shows each cover in the books order with its alt
+AssertionError: th card 1 file: expected [ …(3) ] to include '/images/products/primary-origins-2-co…'
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx:209:71
+    207|         );
+    208|         const picture = contentImage(card);
+    209|         expect(fileRefs(picture), `${locale} card ${index + 1} file`).…
+       |                                                                       ^
+    210|         expect(picture.getAttribute("alt"), `${locale} card ${index + …
+    211|           bookAlt(locale, expected.name),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/16]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx > AC-22: the three book covers > zh: shows each cover in the books order with its alt
+AssertionError: zh card 1 file: expected [ …(3) ] to include '/images/products/primary-origins-2-co…'
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx:209:71
+    207|         );
+    208|         const picture = contentImage(card);
+    209|         expect(fileRefs(picture), `${locale} card ${index + 1} file`).…
+       |                                                                       ^
+    210|         expect(picture.getAttribute("alt"), `${locale} card ${index + …
+    211|           bookAlt(locale, expected.name),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/16]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx > AC-22: the Reedy block > en: shows the Reedy preview with the approved alt
+AssertionError: en Reedy file: expected [ …(3) ] to include '/images/primary-advantage/reedy-previ…'
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx:224:57
+    222|       const expected = REEDY[locale];
+    223|       const picture = contentImage(blockByHeading(text(locale, "reedyB…
+    224|       expect(fileRefs(picture), `${locale} Reedy file`).toContain(expe…
+       |                                                         ^
+    225|       expect(picture.getAttribute("alt"), `${locale} Reedy alt`).toBe(…
+    226|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/16]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx > AC-22: the Reedy block > th: shows the Reedy preview with the approved alt
+AssertionError: th Reedy file: expected [ …(3) ] to include '/images/primary-advantage/reedy-previ…'
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx:224:57
+    222|       const expected = REEDY[locale];
+    223|       const picture = contentImage(blockByHeading(text(locale, "reedyB…
+    224|       expect(fileRefs(picture), `${locale} Reedy file`).toContain(expe…
+       |                                                         ^
+    225|       expect(picture.getAttribute("alt"), `${locale} Reedy alt`).toBe(…
+    226|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/16]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx > AC-22: the Reedy block > zh: shows the Reedy preview with the approved alt
+AssertionError: zh Reedy file: expected [ …(3) ] to include '/images/primary-advantage/reedy-previ…'
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx:224:57
+    222|       const expected = REEDY[locale];
+    223|       const picture = contentImage(blockByHeading(text(locale, "reedyB…
+    224|       expect(fileRefs(picture), `${locale} Reedy file`).toContain(expe…
+       |                                                         ^
+    225|       expect(picture.getAttribute("alt"), `${locale} Reedy alt`).toBe(…
+    226|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/16]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx > AC-22: the become-a-tutor block > en: shows the hero file with the hero alt
+AssertionError: en tutor file: expected [ …(3) ] to include '/images/tutor-advantage-hero.jpg'
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx:237:57
+    235|       expect(block, `${locale} become-a-tutor block`).toBeInTheDocumen…
+    236|       const picture = contentImage(block!);
+    237|       expect(fileRefs(picture), `${locale} tutor file`).toContain(HERO…
+       |                                                         ^
+    238|       expect(picture.getAttribute("alt"), `${locale} tutor alt`).toBe(…
+    239|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/16]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx > AC-22: the become-a-tutor block > th: shows the hero file with the hero alt
+AssertionError: th tutor file: expected [ …(3) ] to include '/images/tutor-advantage-hero.jpg'
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx:237:57
+    235|       expect(block, `${locale} become-a-tutor block`).toBeInTheDocumen…
+    236|       const picture = contentImage(block!);
+    237|       expect(fileRefs(picture), `${locale} tutor file`).toContain(HERO…
+       |                                                         ^
+    238|       expect(picture.getAttribute("alt"), `${locale} tutor alt`).toBe(…
+    239|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/16]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx > AC-22: the become-a-tutor block > zh: shows the hero file with the hero alt
+AssertionError: zh tutor file: expected [ …(3) ] to include '/images/tutor-advantage-hero.jpg'
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx:237:57
+    235|       expect(block, `${locale} become-a-tutor block`).toBeInTheDocumen…
+    236|       const picture = contentImage(block!);
+    237|       expect(fileRefs(picture), `${locale} tutor file`).toContain(HERO…
+       |                                                         ^
+    238|       expect(picture.getAttribute("alt"), `${locale} tutor alt`).toBe(…
+    239|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/16]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx > AC-22: no block shows a banned image > en: shows no classroom, primary-book, chibi, or tutor-question file
+AssertionError: en must not show /media/images/classroom/: expected [ …(6) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "/media/images/classroom/classroom-small-group-1600.webp",[39m
+[31m+   "/media/images/classroom/classroom-small-group-800.webp",[39m
+[31m+   "/media/images/classroom/classroom-small-group-1600.webp",[39m
+[31m+   "/media/images/classroom/classroom-students-app-1600.webp",[39m
+[31m+   "/media/images/classroom/classroom-students-app-800.webp",[39m
+[31m+   "/media/images/classroom/classroom-students-app-1600.webp",[39m
+[31m+ ][39m
+
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx:270:59
+    268|       for (const banned of BANNED) {
+    269|         const hits = refs.filter((ref) => ref.startsWith(banned));
+    270|         expect(hits, `${locale} must not show ${banned}`).toEqual([]);
+       |                                                           ^
+    271|       }
+    272|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/16]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx > AC-22: no block shows a banned image > th: shows no classroom, primary-book, chibi, or tutor-question file
+AssertionError: th must not show /media/images/classroom/: expected [ …(6) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "/media/images/classroom/classroom-small-group-1600.webp",[39m
+[31m+   "/media/images/classroom/classroom-small-group-800.webp",[39m
+[31m+   "/media/images/classroom/classroom-small-group-1600.webp",[39m
+[31m+   "/media/images/classroom/classroom-students-app-1600.webp",[39m
+[31m+   "/media/images/classroom/classroom-students-app-800.webp",[39m
+[31m+   "/media/images/classroom/classroom-students-app-1600.webp",[39m
+[31m+ ][39m
+
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx:270:59
+    268|       for (const banned of BANNED) {
+    269|         const hits = refs.filter((ref) => ref.startsWith(banned));
+    270|         expect(hits, `${locale} must not show ${banned}`).toEqual([]);
+       |                                                           ^
+    271|       }
+    272|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/16]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx > AC-22: no block shows a banned image > zh: shows no classroom, primary-book, chibi, or tutor-question file
+AssertionError: zh must not show /media/images/classroom/: expected [ …(6) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "/media/images/classroom/classroom-small-group-1600.webp",[39m
+[31m+   "/media/images/classroom/classroom-small-group-800.webp",[39m
+[31m+   "/media/images/classroom/classroom-small-group-1600.webp",[39m
+[31m+   "/media/images/classroom/classroom-students-app-1600.webp",[39m
+[31m+   "/media/images/classroom/classroom-students-app-800.webp",[39m
+[31m+   "/media/images/classroom/classroom-students-app-1600.webp",[39m
+[31m+ ][39m
+
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx:270:59
+    268|       for (const banned of BANNED) {
+    269|         const hits = refs.filter((ref) => ref.startsWith(banned));
+    270|         expect(hits, `${locale} must not show ${banned}`).toEqual([]);
+       |                                                           ^
+    271|       }
+    272|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/16]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx > AC-22: the Origins 3.1 cover file > is a 480 by 651 webp under public/images/products
+AssertionError: missing /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage/public/images/products/primary-origins-3-1-cover.webp: expected null not to be null
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx:319:42
+    317|     );
+    318|     const bytes = existsSync(file) ? readFileSync(file) : null;
+    319|     expect(bytes, `missing ${file}`).not.toBeNull();
+       |                                          ^
+    320|     if (bytes === null) return;
+    321|     expect(webpSize(bytes)).toEqual({ width: 480, height: 651 });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/16]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  16 failed | 74 passed (90)
+   Start at  21:47:25
+   Duration  4.46s (transform 141ms, setup 187ms, import 403ms, tests 1.66s, environment 1.76s)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run src/lib/tutor-commission.adversarial.test.ts src/lib/tutor-commission.test.ts 'src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx' 'src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx' '--reporter=dot' '--maxWorkers=1'

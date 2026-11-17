@@ -1,0 +1,86 @@
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: www_tutor_calculator_20261117
+phase: 2
+task: 2.7
+verdict: PASS
+baseline_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha: 96887abe595b7d17927787521c3bc8edcb2ed440
+resulting_head: 6c2d67161f9f86ee371901a3abf0648fb37341c6
+commits: d91e6c52780603158b2fa912bf4898a3255e3929 (Red tests and plan bullet), 6c2d67161f9f86ee371901a3abf0648fb37341c6 (plan evidence path)
+commit_subject: test(www): pin v0.4 s8 copy Red (track_id: www_tutor_calculator_20261117)
+note: measure/runs is gitignored; the two evidence files are local artifacts, as in prior tasks of this track.
+authority: PR handoff v0.4 section 8, advantage-pr commit c97ec996
+
+RED COMMAND
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts src/lib/tutor-commission.adversarial.test.ts src/components/marketing/tutor-commission-calculator.test.tsx src/components/marketing/tutor-commission-calculator.adversarial.test.tsx src/__tests__/www-tutor-calculator.locale.test.ts src/__tests__/www-tutor-screens-copy.adversarial.test.ts src/lib/__tests__/tutor-screens.test.ts src/lib/__tests__/tutor-screens.adversarial.test.ts "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx" --reporter=dot --silent=true'
+exit_code: 1
+Test Files  6 failed | 4 passed (10)
+Tests  25 failed | 115 passed (140)
+unrelated_failures: 0
+
+FAILING NAMES (25)
+1.  src/__tests__/www-tutor-calculator.locale.test.ts > 2. en and th copy pinned word for word (AC-5) > holds all 34 string leaves in en
+2.  src/__tests__/www-tutor-calculator.locale.test.ts > 2. en and th copy pinned word for word (AC-5) > holds all 34 string leaves in th
+3.  src/__tests__/www-tutor-calculator.locale.test.ts > 4. zh holds the English lines (D-10) > equals en at every pinned key path
+4.  src/__tests__/www-tutor-calculator.locale.test.ts > 5. preset 3 final copy of handoff v0.4 section 8 > pins the en name, setup, and result
+5.  src/__tests__/www-tutor-calculator.locale.test.ts > 5. preset 3 final copy of handoff v0.4 section 8 > pins the th name, setup, and result
+6.  src/__tests__/www-tutor-calculator.locale.test.ts > 5. preset 3 final copy of handoff v0.4 section 8 > pins the three chart final labels in en and th
+7.  src/__tests__/www-tutor-calculator.locale.test.ts > 10. screens copy pinned word for word (AC-10, spec 6.3) > holds all nine string leaves in en
+8.  src/__tests__/www-tutor-calculator.locale.test.ts > 10. screens copy pinned word for word (AC-10, spec 6.3) > holds all nine string leaves in th
+9.  src/__tests__/www-tutor-calculator.locale.test.ts > 10. screens copy pinned word for word (AC-10, spec 6.3) > keeps the zh values equal to the en values (D-10)
+10. src/lib/tutor-commission.test.ts > 3. presets 2 and 3 to the satang > preset 3: three legs of 12,000 baht at 5,520 baht each
+11. src/lib/tutor-commission.test.ts > 4. conservation in integer satang > preset 3: 1,656,000 + 827,345 = 2,483,345
+12. src/components/marketing/tutor-commission-calculator.adversarial.test.tsx > Adversarial: leg count > a decimal leg count keeps whole rows and whole students
+13. src/components/marketing/tutor-commission-calculator.adversarial.test.tsx > Adversarial: an edit clears the preset example > a leg-student edit clears the example and the live figures follow
+14. src/components/marketing/tutor-commission-calculator.adversarial.test.tsx > Adversarial: display of D-3 > preset 3 reconciles in satang and shows no third decimal
+15. src/components/marketing/tutor-commission-calculator.adversarial.test.tsx > Adversarial: display of D-3 > the rate row shows one decimal at most, never a raw rate
+16. src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator leg rows > grows from 0 to 3 legs, one student row per leg, each new leg at 3
+17. src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator leg rows > removes one input row and one graph row when the count drops from 3 to 2
+18. src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator leg rows > shows four input rows and four graph rows at a count of 4
+19. src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator presets > shows the preset 3 figures and three leg rows of four students in the graph
+20. src/lib/__tests__/tutor-screens.adversarial.test.ts > tutorScreens adversarial controls > ADV-M1 declared pixel size equals the real webp header size
+21. src/lib/__tests__/tutor-screens.adversarial.test.ts > tutorScreens adversarial controls > ADV-M2 no two slots share one src
+22. src/lib/__tests__/tutor-screens.adversarial.test.ts > tutorScreens adversarial controls > ADV-M3 every src stays under the prefix without traversal and is at most 1 MB
+23. src/lib/__tests__/tutor-screens.adversarial.test.ts > tutorScreens adversarial controls > ADV-M4 slot order is fixed and every portrait flag is false
+24. src/lib/__tests__/tutor-screens.test.ts > tutor screens manifest > holds the three slots in gallery order
+25. src/lib/__tests__/tutor-screens.test.ts > tutor screens manifest > shortAnswer holds the delivered path and size
+
+Every failure reads a replaced key, copy line, figure, or preset input. No failure has an unrelated cause.
+
+CHART KEY MAP (old to new, by role in tutor-commission-calculator.tsx)
+chart.leg    -> chart.legPayout  | leg row label  | en "Leg commission" | th "ค่าคอมมิชชันของสาย"
+chart.volume -> chart.legVolume  | leg row volume | en "Leg volume"     | th "ยอดรวมของสาย"
+chart.you    -> chart.yourPayout | tutor payout row | en "Your payout"  | th "ยอดจ่ายของคุณ"
+
+RECOMPUTED PRESET 3 (calculateNetwork called with price 3000, personalStudents 2, studentsPerLeg [4,4,4])
+own volume 6,000; network volume 42,000; rate 59.1273% shown as 59.1%; gross 24,833.45;
+three legs of 12,000 at 5,520 each; leg total 16,560; payout before tax 8,273.45;
+tax 248.20; net 8,025.25. Display strings pinned: 42,000 / 59.1% / 24,833.45 / 16,560 / 8,273.45 / 248.20 / 8,025.25.
+
+LITERAL SWEEP — CHANGED
+- src/__tests__/www-tutor-calculator.locale.test.ts: three chart keys and labels, preset 3 name/setup/result, gallery slots 1 and 2 captions and alts.
+- src/components/marketing/tutor-commission-calculator.test.tsx: legRows key, preset 3 figures, three rows of four students, first-paint absence figures.
+- src/components/marketing/tutor-commission-calculator.adversarial.test.tsx: legRows key, edited preset 3 figures, preset 3 rate and satang reconciliation, raw-rate absence regex.
+- src/lib/tutor-commission.test.ts: preset 3 input, legs, money, satang conservation.
+- src/lib/__tests__/tutor-screens.test.ts: manifest key lessonPhases to shortAnswer.
+- src/lib/__tests__/tutor-screens.adversarial.test.ts: SLOTS key lessonPhases to shortAnswer.
+
+LITERAL SWEEP — LEFT, WITH REASON
+- src/locales/pages/products/tutor-advantage.ts lines 161, 163, 205, 534, 820, 822, 865: product locale file; Green applies the new copy.
+- src/components/marketing/tutor-commission-calculator.tsx lines 323, 326, 343: product component; Green renames chart props.
+- src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx lines 104-106, 117: product page; Green renames key paths and the manifest slot.
+- src/lib/product-pictures.ts line 69: product manifest; Green renames the slot to shortAnswer.
+- src/components/marketing/tutor-commission-calculator.test.tsx line 168 (12,015): not a preset-3 pin. Manual three legs of three students at price 3,000 and zero own students still yields 12,015.
+- measure/tracks/www_tutor_calculator_20261117/spec.md and test-strategy.md: historical narrative; no test reads these paths.
+
+FILES COMMITTED
+apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts
+apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.adversarial.test.tsx
+apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx
+apps/www-reading-advantage/src/lib/__tests__/tutor-screens.adversarial.test.ts
+apps/www-reading-advantage/src/lib/__tests__/tutor-screens.test.ts
+apps/www-reading-advantage/src/lib/tutor-commission.test.ts
+measure/tracks/www_tutor_calculator_20261117/plan.md
+
+RESULT: PASS

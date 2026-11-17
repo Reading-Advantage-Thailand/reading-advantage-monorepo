@@ -1,0 +1,134 @@
+# Green records log: www_tutor_calculator_20261117 (7e9724069)
+
+Role: Measure Green, documentation remediation only. No product code and no test code.
+Route: minimax-cn-coding-plan/MiniMax-M3.1-Flash.
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+role_base_sha: 7e9724069a0f013967fd22bc7bd6e2b341b7462c
+Branch: feat/a63-tutor-calculator
+
+Verdict: pass.
+
+## Commit
+
+`81df01cf2e7c2954f4a2de1aaee593913a00bc75`
+`docs(measure): align a-63 records with the shipped copy (track_id: www_tutor_calculator_20261117)`
+
+Four files:
+
+- `measure/tracks.md`
+- `measure/tracks/www_tutor_calculator_20261117/metadata.json` (new)
+- `measure/tracks/www_tutor_calculator_20261117/spec.md`
+- `measure/tracks/www_tutor_calculator_20261117/test-strategy.md`
+
+The subject of the brief was 101 characters. The commitlint rule `header-max-length` rejects
+it, so the subject drops the word `the` and stays at 97 characters.
+
+`git status --short` after the commit prints nothing. The tree is clean.
+
+## Gates
+
+1. `node -e "JSON.parse(require('fs').readFileSync('measure/tracks/www_tutor_calculator_20261117/metadata.json','utf8'))"` — exit 0.
+2. `git diff --check` — exit 0.
+
+No build, no test run, no push, no doctor, no build-graph.
+
+## Authority
+
+The shipped code and its tests are the authority:
+
+- `apps/www-reading-advantage/src/lib/tutor-commission.ts`
+- `apps/www-reading-advantage/src/lib/tutor-commission.test.ts`
+- `apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx`
+- `apps/www-reading-advantage/src/lib/__tests__/tutor-screens.test.ts`
+- `apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts`
+- `apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts`
+- `~/Desktop/handoff/a63-tutor-www-calculator/www-tutor-advantage-calculator-handoff.md`, section 8
+
+## Shipped preset 3
+
+Input: price 3,000, two own students, three legs of four students.
+
+| Field | Value |
+|---|---|
+| Own GV | 6,000 |
+| Network GV | 42,000 |
+| Rate | 59.1273 % |
+| Gross | 24,833.45 |
+| Leg payouts | 16,560.00 |
+| Payout before tax | 8,273.45 |
+| Withholding tax | 248.20 |
+| Net | 8,025.25 |
+| Conservation in satang | 1,656,000 + 827,345 = 2,483,345 |
+
+The handoff v0.4 file quotes gross 24,833.46 and net 8,025.26. The shipped module truncates to
+the satang under D-3, so the module values are the record values.
+
+## Records changed
+
+### `measure/tracks.md`
+
+The row keeps `- [ ]`. The Status line names the Phase 1 acceptance `d279b8703`, the Phase 2
+acceptance round 2 `94af2c15b`, the PM page-check PASS with F-1 fixed `6c0cf5de6`, the www-only
+push `a726b2be2` to origin/master, the CD run 44053703983 success, the live en, th, and zh
+pages of 2026-11-17, and the final acceptance and closeout next. The Owner, A-63, and Due
+2026-11-21 fields stay.
+
+The Note line names the PR handoff v0.4 section 8 copy of task 2.7, the three gallery cards
+070, 002, and 062, the key `shortAnswer` that replaces `lessonPhases`, and the PM drop of the
+network and earnings captions.
+
+### `spec.md`
+
+- The preset table holds the shipped preset 3 column.
+- The D-2 narrative names the one level and the three legs of four students.
+- D-2a is resolved by PR v0.4, task 2.7. It holds the final en and th copy of the three keys.
+- D-9 names the shipped chart keys `chart.legVolume`, `chart.legPayout`, and `chart.yourPayout`.
+- D-15a is resolved by PR v0.4. It holds the shipped alt text and the key `shortAnswer`.
+- The 5.3 props type holds the shipped `chart` and `graph` blocks.
+- The 5.4 en block and the 5.4 Thai table hold the shipped calculator copy.
+- The 6.2 manifest table names `tutorScreens.shortAnswer`.
+- The 6.3 screens block and the 6.3 Thai table hold the shipped copy.
+- AC-3 holds the shipped conservation sums.
+- AC-7 holds the PR v0.4 copy and the three chart labels, and keeps the absent figures
+  `5,884`, `5,707`, `22,714`, and `9,889`.
+- D-6 names the module default of 3 students for a new leg.
+- The seven open questions are marked resolved. They are not deleted.
+
+### `test-strategy.md`
+
+- Line 17 (R3): the preset 3 conservation sum.
+- Line 49: the preset 3 fingerprint.
+- Line 78: the preset 3 strings of the component test.
+- Line 81: the manifest key `shortAnswer`.
+- Line 122 (M4): the preset 3 leg payout of 5,520.00.
+- Line 259: the PM accepted the 11 % upscale of the phone screens.
+
+### `measure/tracks/www_tutor_calculator_20261117/metadata.json`
+
+New file in the shape of `measure/tracks/architecture_ci_input_pin_20261110/metadata.json`. The
+type is feature, the status is in_progress, the creation date is 2026-11-17, and the author
+model is opencode-go/deepseek-v4.1-flash. The file holds the owner chain, the six PM decisions,
+the constraints, and 20 estimated against 19 actual tasks. It holds no hash or checksum field.
+
+## Grep report
+
+Command: `grep -n "lessonPhases\|6,493.61" measure/tracks/www_tutor_calculator_20261117/spec.md measure/tracks/www_tutor_calculator_20261117/test-strategy.md`, exit 0.
+
+| File | Line | Text | Why it stays |
+|---|---|---|---|
+| `spec.md` | 115 | `18,709.44` | D-1 history note. It names the rejected direct-net variant, which paid level two twice. |
+| `spec.md` | 292 | `lessonPhases` | D-15a history note. It names the copy v0.1 alt text that PR v0.4 replaced. |
+| `spec.md` | 601 | `lessonPhases` | Section 6.3 history note. It names the copy file alt text that PR v0.4 replaced. |
+| `spec.md` | 675 | `6,493.61 / 12,015` | AC-7 note. It records that the shipped locale test does not check the superseded one-level draft figures, so the spec claims no such check. |
+
+`test-strategy.md` has no hit.
+
+The shipped locale test checks only `5,884`, `5,707`, `22,714`, and `9,889` as absent figures.
+The spec keeps that list and claims no more.
+
+## Residuals
+
+- `plan.md` still lists four answered items under `Answers owed to PR`. The plan file is outside
+  the four-file scope of this run, so the closeout role updates it.
+- `test-strategy.md` section 9 still lists Q1 to Q4 as open for the PM. Their documented
+  defaults are the shipped behaviour, so no code follows from them.

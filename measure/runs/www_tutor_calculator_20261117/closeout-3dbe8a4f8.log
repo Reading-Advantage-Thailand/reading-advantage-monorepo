@@ -1,0 +1,7 @@
+Closeout run for www_tutor_calculator_20261117 at HEAD 3dbe8a4f87f96774caa44d0b5563287bb620e73c.
+Provenance: final-acceptance-3dbe8a4f8.json audited_head_sha equals the pre-closeout HEAD.
+Draft written before the archive move; finalized after the closeout commits.
+
+MEASURE_AGENT_RESULT
+{"role": "measure-closeout", "track": "www_tutor_calculator_20261117", "status": "draft", "summary": "in progress", "commits": [], "closeout_checker_exit": "pending"}
+END_MEASURE_AGENT_RESULT

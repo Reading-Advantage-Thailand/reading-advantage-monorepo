@@ -1,0 +1,52 @@
+{
+  "role": "measure-mid-red",
+  "correction": true,
+  "track": "www_tutor_calculator_20261117",
+  "phase": 2,
+  "task": "2.7 (correction: preset 3 net pin reads the hero figure)",
+  "verdict": "PASS",
+  "verdict_note": "Refined from PROVISIONAL_PASS after the two-file targeted run returned exit 0 with Test Files 2 passed (2) and Tests 29 passed (29).",
+  "baseline_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "phase_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "role_base_sha": "6c2d67161f9f86ee371901a3abf0648fb37341c6",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "resulting_head": "079e33f9ead2f91d4ab8a422871caee2abbacc40",
+  "commits": [
+    "07a22294e46824e0a3be4ebdacfde1a4405c2ff4",
+    "079e33f9ead2f91d4ab8a422871caee2abbacc40"
+  ],
+  "commit_subjects": [
+    "test(www): pin preset 3 net as hero figure (track_id: www_tutor_calculator_20261117)",
+    "docs(measure): record red 2.7 fix evidence (track_id: www_tutor_calculator_20261117)"
+  ],
+  "defect": "At line 216 the pin used resultValue(copy.results.net), which resolves the hero label to the result card and returns the first dd (own volume 6,000). The net is the hero under the net label, not a breakdown row, and the committed adversarial pin fixes the breakdown at exactly six dd values.",
+  "fix": "Added a heroValue() helper that reads the paragraph directly under the net label, and replaced the one assertion with expect(heroValue()).toBe(\"8,025.25\"). No net dd added; the adversarial file is unchanged; no other case changed.",
+  "meaning_held": "The net figure 8,025.25 is visible as the hero of the result card.",
+  "test_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx src/components/marketing/tutor-commission-calculator.adversarial.test.tsx --reporter=dot --silent=true'",
+  "exit_code": 0,
+  "test_files": { "passed": 2, "failed": 0, "total": 2 },
+  "tests": { "passed": 29, "failed": 0, "total": 29 },
+  "five_uncommitted_green_files_left_untouched": [
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx",
+    "apps/www-reading-advantage/src/lib/product-pictures.ts",
+    "apps/www-reading-advantage/src/lib/tutor-commission.ts",
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts"
+  ],
+  "committed_files": [
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md"
+  ],
+  "constraints_held": [
+    "No net dd added",
+    "Adversarial file unchanged",
+    "No other case changed",
+    "Five uncommitted Green product files untouched and unstaged",
+    "Pathspec commits only",
+    "No deploy and no push",
+    "No question tool and no disposition line"
+  ],
+  "known_failures": [],
+  "questions": []
+}

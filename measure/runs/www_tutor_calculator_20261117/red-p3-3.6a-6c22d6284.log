@@ -1,0 +1,136 @@
+# Red log: Phase 3 task 3.6a (review round 1 remediation)
+
+Role: measure-mid-red. Model: opencode-go/deepseek-v4.1-flash.
+Track: `www_tutor_calculator_20261117`.
+Phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation).
+`phase_base_sha`: 81df01cf2e7c2954f4a2de1aaee593913a00bc75.
+`role_base_sha`: 6c22d6284dd47deeab35105c036bc549c67557aa (HEAD at start).
+Routes in: `review-a-p3-6c22d6284.json`, `review-c-p3-6c22d6284.json`.
+
+## Work
+
+Routed findings and dispositions:
+
+- A-P3-1 FIX: the `graph.ownBar` row shows the own students' volume; `graph.netBar` keeps the net.
+- C-P3-1 FIX: the page supplies the `{n}` value for `calculator.graph.legBar`.
+- C-P3-3 FIX: a cleared leg-count field keeps the leg rows and the typed students.
+- A-P3-4 FIX: the hero image loads eagerly.
+- A-P3-3 FIX: the spec text of D-9, section 5.3, AC-10, and AC-13; new D-20 and AC-23.
+
+Test changes:
+
+1. `tutor-commission-calculator.test.tsx` adds three cases, one own-bar assertion per preset
+   (12,000, 6,000, 6,000), and one case for the cleared leg-count field (5 and 7 kept, then 2
+   restores them).
+2. `tutor-commission-calculator.adversarial.test.tsx` replaces the "add up to the whole gross"
+   case with "the own bar and the leg bars add up to the whole network volume", and keeps the
+   gross, leg-commission, and net totals.
+3. New `page.placeholders.test.tsx` records every message that holds a `{placeholder}` with no
+   value, in en, th, and zh, and proves the legBar string was examined.
+4. `page.images.test.tsx` adds one case: the hero img is `loading="eager"` or
+   `fetchpriority="high"`.
+
+No production file changed. No test reads production source as text. No test computes a hash.
+
+## Red run
+
+Command:
+
+```
+cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx src/components/marketing/tutor-commission-calculator.adversarial.test.tsx "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx" --reporter=dot --maxWorkers=1
+```
+
+Result: exit 1. `Test Files 4 failed | 1 passed (5)`, `Tests 9 failed | 66 passed (75)`.
+Full output: `measure/runs/www_tutor_calculator_20261117/red-p3-3.6a-vitest.txt`.
+
+The nine failures, all AC-23 assertions:
+
+1. adversarial: the own bar and the leg bars add up to the whole network volume (31.6458 against 37.5).
+2. component: preset 1 own bar shows `5,520`, expected `12,000`.
+3. component: preset 2 own bar shows `4,645.69`, expected `6,000`.
+4. component: preset 3 own bar shows `8,273.45`, expected `6,000`.
+5. component: the cleared leg-count field drops the 2 leg rows (0 rows, expected 2).
+6. page.images: the hero img has `loading=lazy` and no `fetchpriority`, expected eager or high.
+7. page.placeholders en: `calculator.graph.legBar: {n}` has no value.
+8. page.placeholders th: `calculator.graph.legBar: {n}` has no value.
+9. page.placeholders zh: `calculator.graph.legBar: {n}` has no value.
+
+No failure is an import, syntax, or fixture error. `pnpm --filter www-reading-advantage exec
+tsc --noEmit -p .` exits 0 at this tree.
+
+## Spec and plan
+
+- D-9 now names the `graph.*` labels and the network-volume bars.
+- Section 5.3 props and layout items 4 and 6 use the PR section 6 keys.
+- AC-10 says five cards. AC-13 names the gallery entries without a count.
+- New D-20 quotes PR handoff section 3 and records the own-bar decision.
+- New AC-23 covers items 1 to 4.
+- Plan tasks 3.6a and 3.6b sit after 3.6.
+
+## Commits
+
+- `8aa9002ad` `test(www): pin review round 1 findings of the tutor page (track_id: www_tutor_calculator_20261117)`.
+  This commit holds the four test files, spec.md, and plan.md. Its header has 98 characters,
+  because the prescribed 102-character header exceeds the commitlint 100-character limit.
+- `24dbaa050` `docs(measure): record red p3 task 3.6a (track_id: www_tutor_calculator_20261117)`.
+
+Resulting HEAD: `24dbaa0506b292c24d5966a41df0ee4d555d590e`. The working tree is clean.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+baseline_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+role_base_sha: 6c22d6284dd47deeab35105c036bc549c67557aa
+resulting_head: 24dbaa0506b292c24d5966a41df0ee4d555d590e
+commits: 8aa9002ad, 24dbaa050
+tests_run: pnpm --filter www-reading-advantage exec vitest run <four named files plus page.placeholders.test.tsx> --reporter=dot --maxWorkers=1 -> exit 1, Test Files 4 failed | 1 passed (5), Tests 9 failed | 66 passed (75); pnpm exec tsc --noEmit -p . -> exit 0
+files_changed: src/components/marketing/tutor-commission-calculator.test.tsx; src/components/marketing/tutor-commission-calculator.adversarial.test.tsx; src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx; src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx (new); measure/tracks/www_tutor_calculator_20261117/spec.md; measure/tracks/www_tutor_calculator_20261117/plan.md
+plan_updates: tasks 3.6a [x] with Done 8aa9002ad and the Red evidence, and 3.6b [ ] with the Green scope; spec D-9, section 5.3, AC-10, AC-13 fixed; D-20 and AC-23 added
+known_failures: adversarial own-bar-and-leg-bars sum; component own bar preset 1, 2, 3; component cleared leg-count field; page.images hero eager; page.placeholders en, th, zh missing {n} value
+handoff: Green task 3.6b makes the own bar read the own volume, the bar lengths shares of the network volume, page.tsx pass { n: "{n}" } for graph.legBar, a cleared leg-count field keep the rows, and ProductPicture take priority for the hero. Re-run the Red command and expect exit 0.
+dispositions: A-P3-1=FIX; C-P3-1=FIX; C-P3-3=FIX; A-P3-4=FIX; A-P3-3=FIX
+END_MEASURE_AGENT_RESULT
+
+## RETRY F5
+
+The orchestrator routed a missed defect. Two committed assertions still required the payout before
+tax on screen: `hasFigure("8,273.45")` in the preset 3 case and `hasFigure("4,645.69")` in the
+preset 2 case. Spec D-20 and spec line 469 say the pre-tax figure has no row.
+
+Change, in `src/components/marketing/tutor-commission-calculator.test.tsx` only:
+
+- preset 3: the graph `netBar` row must read 8,025.25, and `8,273.45` must not show.
+- preset 2: the graph `netBar` row must read 4,506.32, and `4,645.69` must not show.
+
+A `graphTotalValue()` helper reads the graph total rows. No other assertion, no production file, and
+no `plan.md` line changed. The Green `[~]` on 3.6b stays unstaged.
+
+Red run, the same five-file command of task 3.6a with `--maxWorkers=1`: exit 1,
+`Test Files 4 failed | 1 passed (5)`, `Tests 11 failed | 64 passed (75)`. The two added failures
+are the `hasFigure` assertions above. Every failure is an AC-23 assertion. No failure is an
+import, syntax, or fixture error. `pnpm --filter www-reading-advantage exec tsc --noEmit -p .`
+exits 0. Output appended to
+`measure/runs/www_tutor_calculator_20261117/red-p3-3.6a-vitest.txt` under "RETRY F5".
+
+Commit: `a03605b02` `test(www): stop pinning the pre-tax figure on screen (track_id: www_tutor_calculator_20261117)`.
+Resulting HEAD: `a03605b020300703ed9bfc2f493e197c733d847a`. The working tree holds one modified
+file, `measure/tracks/www_tutor_calculator_20261117/plan.md`, which is the Green `[~]` on 3.6b.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+baseline_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+role_base_sha: 6c22d6284dd47deeab35105c036bc549c67557aa
+resulting_head: a03605b020300703ed9bfc2f493e197c733d847a
+commits: 8aa9002ad, 24dbaa050, a03605b02
+tests_run: pnpm --filter www-reading-advantage exec vitest run <five named files> --reporter=dot --maxWorkers=1 -> exit 1, Test Files 4 failed | 1 passed (5), Tests 11 failed | 64 passed (75); pnpm exec tsc --noEmit -p . -> exit 0
+files_changed: retry F5 changed only src/components/marketing/tutor-commission-calculator.test.tsx (two pre-tax assertions replaced with the graph netBar value and the absence of the pre-tax figure)
+plan_updates: none in retry F5; the plan file keeps the Green [~] on 3.6b unstaged
+known_failures: adversarial own-bar-and-leg-bars sum; component own bar preset 1, 2, 3; component cleared leg-count field; component preset 3 netBar plus no pre-tax figure; component preset 2 netBar plus no pre-tax figure; page.images hero eager; page.placeholders en, th, zh missing {n} value
+handoff: Green task 3.6b must make no screen show the payout before tax, and the graph netBar row must read the net. Re-run the same five-file command and expect exit 0.
+dispositions: A-P3-1=FIX; C-P3-1=FIX; C-P3-3=FIX; A-P3-4=FIX; A-P3-3=FIX
+END_MEASURE_AGENT_RESULT

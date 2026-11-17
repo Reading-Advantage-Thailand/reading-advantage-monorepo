@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "role": "measure-green",
+  "verdict": "PASS",
+  "verdict_basis": "Confirmed after the single plan commit: one file changed, worktree clean, explicit pathspec.",
+  "kind": "record-only plan evidence",
+  "product_change": false,
+  "track": "www_tutor_calculator_20261117",
+  "phase": "2",
+  "tasks": [
+    "2.5",
+    "2.6"
+  ],
+  "phase_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "role_base_sha": "a726b2be2b3771934e2d518f21b42f91d6882fc8",
+  "gate_head": "a726b2be2b3771934e2d518f21b42f91d6882fc8",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/deepseek-v4.1-flash (substitution record: `ra-quota pick green` returned opencode/deepseek-v4.1-flash-free#high, which failed to start with \"Free usage limit reached\", so this allowed Go route of the same family is used)",
+  "worktree_clean_before_edit": true,
+  "phase_range_check": {
+    "phase_base_is_ancestor_of_head": true,
+    "commits_in_range": 21,
+    "committed_red_change_in_range": "6c0cf5de6 fix(www): label the tutor rate curve card (track_id: www_tutor_calculator_20261117)",
+    "note": "No Red test was edited in this run. The run changed no product file and no test."
+  },
+  "tasks_flipped": {
+    "2.5": {
+      "from": "[b]",
+      "to": "[x]",
+      "evidence": {
+        "verdict": "PASS",
+        "report": "~/Desktop/handoff/page-check/a63-20261117-1500/report.md",
+        "report_verdict_line": "Verdict: PASS with one fix (F-1). After F-1, the PM checks the rate-curve card again, then task 2.6 (www-only push) may run.",
+        "f1_fix_commit": "6c0cf5de65ea092a28bf1246dff8a6fb57df7ce4",
+        "f1_recheck": "PASS in report section \"Recheck F-1 (worktree 6c0cf5de6)\"",
+        "closed_by": "the PM, in writing, 2026-11-17"
+      }
+    },
+    "2.6": {
+      "from": "[~]",
+      "to": "[x]",
+      "evidence": {
+        "branch_head": "a726b2be2b3771934e2d518f21b42f91d6882fc8",
+        "origin_master_at_push": "a726b2be2b3771934e2d518f21b42f91d6882fc8",
+        "push_kind": "fast-forward from 59821e80b",
+        "force": false,
+        "tags": false,
+        "range_apps": "apps/www-reading-advantage and measure/ only",
+        "cd_workflow": "CD — www-reading-advantage",
+        "cd_run": "44053703983",
+        "cd_conclusion": "success",
+        "cd_url": "https://github.com/Reading-Advantage-Thailand/reading-advantage-monorepo/actions/runs/44053703983",
+        "live_http": [
+          {
+            "url": "/en/products/tutor-advantage",
+            "status": 200,
+            "evidence": "\"Your rate for the network volume\""
+          },
+          {
+            "url": "/th/products/tutor-advantage",
+            "status": 200,
+            "evidence": "\"อัตราของคุณตามยอดรวมของเครือข่าย\""
+          },
+          {
+            "url": "/zh/products/tutor-advantage",
+            "status": 200,
+            "evidence": "English lines (D-10)"
+          },
+          {
+            "url": "/blog/nobody-interrupts-her-while-she-reads",
+            "status": 307,
+            "redirect_to": "/en/blog/nobody-interrupts-her-while-she-reads",
+            "final_status": 200
+          }
+        ]
+      }
+    }
+  },
+  "tasks_deferred": {},
+  "gates_run_this_session": [],
+  "gate_note": "Record-only brief: the orchestrator verified the PM PASS, the push, the CD run, and the live HTTP statuses today and instructed this session not to re-derive them and not to run gates. No test, no build, no doctor.sh, no build-graph scan, no server, no push, and no deploy ran here.",
+  "files_added": [
+    "measure/runs/www_tutor_calculator_20261117/green-record-2.5-2.6-a726b2be2.json",
+    "measure/runs/www_tutor_calculator_20261117/green-record-2.5-2.6-a726b2be2.log"
+  ],
+  "files_modified": [
+    "measure/tracks/www_tutor_calculator_20261117/plan.md"
+  ],
+  "files_added_note": "measure/runs/ is gitignored (.gitignore line 56), so the two result files are not committed.",
+  "commits": [
+    "7e9724069a0f013967fd22bc7bd6e2b341b7462c"
+  ],
+  "plan_evidence_commit": "7e9724069a0f013967fd22bc7bd6e2b341b7462c",
+  "final_head": "7e9724069a0f013967fd22bc7bd6e2b341b7462c",
+  "final_worktree_clean": true,
+  "constraints_held": [
+    "Only the plan file changed in the commit",
+    "No product code, no test, no build, no push, no deploy, no server",
+    "No doctor.sh and no build-graph scan",
+    "apps/*/next-env.d.ts never staged",
+    "Explicit pathspec commit of the one plan file",
+    "No disposition line and no question tool"
+  ],
+  "open_items": [
+    "Closeout task C.1 (archive move, registry row, closeout record) is not part of this run and stays with the closeout steward."
+  ],
+  "questions": [],
+  "commit_subject": "docs(measure): close tasks 2.5 and 2.6 (track_id: www_tutor_calculator_20261117)",
+  "commit_scope": {
+    "files": [
+      "measure/tracks/www_tutor_calculator_20261117/plan.md"
+    ],
+    "insertions": 25,
+    "deletions": 2,
+    "note": "Record-only task: the plan file is the whole change, so this one commit is the plan-evidence commit."
+  }
+}

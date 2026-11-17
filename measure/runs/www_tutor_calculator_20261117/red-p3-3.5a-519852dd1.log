@@ -1,0 +1,136 @@
+Red role evidence: track www_tutor_calculator_20261117, Phase 3, task 3.5a
+Route: opencode-go/deepseek-v4.1-flash
+Repo: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator, branch feat/a63-tutor-calculator
+phase_base_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75 (resolved)
+role_base_sha: 519852dd11ec524a847010c06296d0b186f630ac (resolved; full SHA of 519852dd1)
+final_head: eccc7c2a6dfd48383ca3bca61392e901928f3104
+
+Working tree before edits: clean (git status --short printed nothing). No generated or unrelated
+dirty path was present.
+
+== Finding F3 and the pinned contract ==
+
+Settlement code, read-only:
+/home/daniebo/Desktop/tutor-advantage/services/finance-mlm-service/src/services/settlementService.ts
+lines 536-548:
+  let payoutForMe = calculatePayoutMinor(node.groupVolumeMinor, myRate) - childPayouts;
+  if (payoutForMe < 0n) payoutForMe = 0n;
+  if (node.personalVolumeMinor === 0n && children.length > 0) {
+    node.eligibilityStatus = "INELIGIBLE_NO_PV";
+    payoutForMe = 0n;
+  }
+
+The www module paid 810 baht before tax, 24.30 baht of tax, and 785.70 baht of net for 0 personal
+students and two legs of 3 students. That breaks the page claim "The calculator uses the same
+formula as our settlement system."
+
+Spec: decision D-18 and AC-21 added. One naming note: spec D-17 already exists as "PR section 6
+is the only string authority (Phase 3)", and AC-7, AC-17, AC-18, spec 5.4, and plan task 3.3
+cite it. This run added the settlement decision as D-18 instead of D-17, so no existing
+reference breaks. AC-21 keeps the requested id.
+
+== Tests added (no existing assertion weakened) ==
+
+apps/www-reading-advantage/src/lib/tutor-commission.test.ts, describe 11:
+  - 0 personal students, legs [3, 3]: preTax 0, tax 0, net 0, explainVariant "zero"; volume
+    18,000, rate 49.0000, gross 8,820, legPayouts 8,010 stay.
+  - 0 personal students, legs [3]: preTax 0, tax 0, net 0, "zero"; volume 9,000, rate 44.5000,
+    gross 4,005, legPayouts 4,005, one leg row stay.
+  - 0 personal students, legs [0]: volume 0, rate 0, gross 0, "zero" (a leg with 0 students
+    still counts, as children.length > 0 does).
+  - 0 personal students, no legs: unchanged zero case.
+  - preset 2 (2 personal students): 4,645.69 / 139.37 / 4,506.32 and "withLegs" stay.
+
+apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx,
+describe "settlement eligibility":
+  - en, 0 own students and one leg of 3: network 9,000, leg commissions 4,005, tax 0, net 0,
+    the explain.zero line present and explain.withLegs absent.
+  - en, 0 own students and two legs of 3: network 18,000, leg commissions 8,010, tax 0,
+    net 0, explain.zero present.
+  - th, 0 own students and one leg of 3: net 0 and the Thai explain.zero line.
+The only edit to existing lines is the import: `en` became `en, th`.
+
+== Red run ==
+
+cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && \
+pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts \
+src/components/marketing/tutor-commission-calculator.test.tsx --reporter=dot --maxWorkers=1
+
+Exit 1. Test Files 2 failed (2); Tests 5 failed | 47 passed (52).
+Every failure is an AC-21 assertion:
+  1. module: expected 810 to be +0 (payout before tax, two legs).
+  2. module: expected 'withLegs' to be 'zero' (one leg).
+  3. component en, one leg: no element with the explain.zero line was found.
+  4. component en, two legs: expected '24.30' to be '0' (tax row).
+  5. component th, one leg: no element with the Thai explain.zero line was found.
+No failure is an import, syntax, or fixture error.
+
+Note for the orchestrator: the mandated render of 0 own students and one leg of 3 already shows
+net 0 at HEAD, because the gross 4,005 equals the single leg payout. That case fails at HEAD on
+the explain.zero line only. The two-leg render case adds the net 0 and tax 0 falsifier, because
+its HEAD net is 785.70.
+
+Full output: measure/runs/www_tutor_calculator_20261117/red-p3-3.5a-vitest.txt
+
+== Types ==
+
+pnpm --filter www-reading-advantage exec tsc --noEmit -p .  -> exit 0.
+
+== Commits (pathspecs only) ==
+
+a48aa764db15ae64a55ca99c92dfe05cf23d4d9d
+  test(www): pin zero payout for legs without own students (track_id: www_tutor_calculator_20261117)
+  paths: src/lib/tutor-commission.test.ts, src/components/marketing/tutor-commission-calculator.test.tsx,
+  measure/tracks/www_tutor_calculator_20261117/spec.md, measure/tracks/www_tutor_calculator_20261117/plan.md
+eccc7c2a6dfd48383ca3bca61392e901928f3104
+  docs(measure): record red p3 task 3.5a (track_id: www_tutor_calculator_20261117)
+  paths: measure/tracks/www_tutor_calculator_20261117/plan.md
+
+No production file was edited. No push, no deploy, no add -A, no commit -a, no stash, no reset,
+no rebase.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: www_tutor_calculator_20261117
+phase: "Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)"
+task: 3.5a
+baseline_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+phase_base_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+role_base_sha: 519852dd11ec524a847010c06296d0b186f630ac
+final_head: eccc7c2a6dfd48383ca3bca61392e901928f3104
+commits:
+- a48aa764db15ae64a55ca99c92dfe05cf23d4d9d test(www): pin zero payout for legs without own students (track_id: www_tutor_calculator_20261117)
+- eccc7c2a6dfd48383ca3bca61392e901928f3104 docs(measure): record red p3 task 3.5a (track_id: www_tutor_calculator_20261117)
+tests_run:
+- command: "cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts src/components/marketing/tutor-commission-calculator.test.tsx --reporter=dot --maxWorkers=1"
+  exit_code: 1
+  result: "Test Files 2 failed (2); Tests 5 failed | 47 passed (52); all 5 failures are AC-21 assertions"
+  output: measure/runs/www_tutor_calculator_20261117/red-p3-3.5a-vitest.txt
+- command: "pnpm --filter www-reading-advantage exec tsc --noEmit -p ."
+  exit_code: 0
+files_changed:
+- apps/www-reading-advantage/src/lib/tutor-commission.test.ts (describe 11 added)
+- apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx (th import and one describe added)
+- measure/tracks/www_tutor_calculator_20261117/spec.md (D-18 and AC-21 added)
+- measure/tracks/www_tutor_calculator_20261117/plan.md (3.5a [x] with Red evidence; 3.5b [ ] added)
+plan_updates: "3.5a is [x] with Done a48aa764d, the exact Red command, exit 1, and the log path. 3.5b is [ ] with the settlement rule and AC-21. No other marker moved."
+known_failures: "The five Red failures are the expected AC-21 signals, not defects: payout before tax 810 should be 0; the variant should be zero; the tax row 24.30 should be 0; the explain.zero line is absent in en and th."
+handoff: |
+  Task 3.5a is Red-complete. Green (3.5b) applies the settlement rule in
+  apps/www-reading-advantage/src/lib/tutor-commission.ts only: when the clamped personal
+  student count is 0 and the leg count is 1 or more, set payout before tax, tax, and net to 0,
+  and make explainVariant return "zero" for that input. Keep network volume, rate, gross, and
+  leg commissions. Keep the three presets and the own-only case as they are. Do not edit the
+  Red test files.
+
+  Naming note: the brief asked for decision D-17, but spec D-17 already exists as "PR section 6
+  is the only string authority (Phase 3)", cited by AC-7, AC-17, AC-18, spec 5.4, and plan task
+  3.3. This run added the settlement decision as D-18 to avoid renumbering those references.
+  AC-21 uses the requested id.
+
+  Evidence note: the mandated rendered case (0 own students, one leg of 3) already shows net 0
+  at HEAD, so it fails at HEAD on the explain.zero line only. The added two-leg rendered case
+  fails on net 0 and tax 0. No locale key was added; the default line is explain.zero.
+questions: none
+END_MEASURE_AGENT_RESULT

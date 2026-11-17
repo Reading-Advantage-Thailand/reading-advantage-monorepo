@@ -1,0 +1,110 @@
+Final acceptance, track www_tutor_calculator_20261117
+Audited HEAD: 3dbe8a4f87f96774caa44d0b5563287bb620e73c (unchanged from the start to the end of the run)
+Route: claude-code/claude-sonnet-5-5#max
+Verdict: PASS. No blocker remains. Finding F1 of the run at 789511cb1 is closed.
+
+## F1 is closed
+
+The run at 789511cb1 failed because the latest phase-acceptance result audited af78cfb43, and the later
+commit 789511cb1 changed spec.md. The spec.md file is not a plan file or an evidence file.
+The new delta result phase-acceptance-p3-3dbe8a4f8.json audits 3dbe8a4f8, and 3dbe8a4f8 is HEAD.
+Command: git diff --name-only 3dbe8a4f87f96774caa44d0b5563287bb620e73c HEAD
+Output: none, exit 0. My audited HEAD and the latest result audited HEAD both equal HEAD.
+So no later commit exists, and the coverage rule needs no path check.
+
+## The delta since the run at 789511cb1
+
+Command: git diff --name-only 789511cb1e24ae8244316bb684a088998c1a5a67 HEAD
+Output:
+  measure/tracks/www_tutor_calculator_20261117/metadata.json
+  measure/tracks/www_tutor_calculator_20261117/plan.md
+  measure/tracks/www_tutor_calculator_20261117/spec.md
+The count of apps/ paths in that diff is 0. The shortstat is 3 files changed, 52 insertions(+), 29 deletions(-).
+The only commit in that range is 3dbe8a4f8. No code and no test changed, so the code gates of the run at
+789511cb1 still hold.
+
+## Phase results
+
+Every phase result has status pass. Every baseline is an ancestor of its audited HEAD.
+Every audited HEAD is an ancestor of HEAD.
+  P1  phase-accept-p1-d279b8703.json        phase base 8862cf14c, head d279b8703
+  P2  phase-accept-p2-96887abe5.json        phase base d279b8703, head 96887abe5
+  P2  phase-accept-p2-r2-94af2c15b.json     phase base d279b8703, head 94af2c15b
+  P3  phase-acceptance-p3-9fc1292b9.json    baseline 81df01cf2, head 9fc1292b9
+  P3  phase-acceptance-p3-af78cfb43.json    baseline 9fc1292b9, head af78cfb43
+  P3  phase-acceptance-p3-3dbe8a4f8.json    baseline af78cfb43, head 3dbe8a4f8 (HEAD), 0 findings
+Finding F8 records that P2 has two passing results and P3 has three.
+
+## Gates (command and exit code)
+
+1. PROJECT_CHECKS spot check at HEAD: pnpm --filter www-reading-advantage exec tsc --noEmit -p .   Exit 0.
+2. Cited from the run at 789511cb1 (code unchanged):
+   PROJECT_TESTS through heavy-run.sh: Test Files 77 passed (77), Tests 2827 passed (2827), exit 0.
+   PROJECT_LINT: exit 0.
+   Build: first run exit 1 (the Next.js security-reminder nudge), re-run exit 0.
+   affected-apps: ["www-reading-advantage"], exit 0. Ratchet diff: exit 0. Downline scan: exit 1, no hit.
+   Independent check script: exit 0, 20,660 inputs, 0 mismatches.
+3. Live URLs: curl -sIL https://www.reading-advantage.com/{en,th,zh}/products/tutor-advantage   HTTP/2 200 for each.
+4. Deploy: origin/master = af78cfb43. CD run 44142775630 is completed and success at af78cfb43.
+   CD run 44053703983 is completed and success at a726b2be2. HEAD 3dbe8a4f8 is not pushed.
+5. bash measure/doctor.sh   Exit 1 at the architecture step (finding F7). Steps 1 to 3 pass.
+
+## The records of 3dbe8a4f8 match the code and the artifacts
+
+- metadata.json is valid JSON. It says five student app screens, 36 estimated tasks, and 35 actual tasks.
+  The plan holds 36 tasks, and 35 are done.
+- spec.md says three phases, retitles D-15, and rewords section 10 questions 2, 3, and 4.
+  The tutor-advantage locale module has no studentHome key. The only hits under src are studentHomeThai
+  keys of the Primary page.
+- plan.md lines 987 to 1010 list four answered items and five open items. The commit d91e6c527 resolves.
+  The PR handoff file holds the Thai Reedy sentence of section 8.5.
+- Findings F3, F5, and F6 of the earlier run are closed.
+- Finding F4 stays: measure/tracks.md line 55 still says three cards (070, 002, 062). Closeout task C.1 owns it.
+- New nit F10: metadata.json line 21 keeps the dated PM entry that says the gallery holds three cards.
+
+## Closeout readiness
+
+- Plan tasks: 36, with 35 marked [x]. Each of the 35 has a Done SHA that is an ancestor of HEAD. C.1 is open (F2).
+- A5: no claim in plan.md. A6: no overstatement in tracks.md, but the track note is stale (F4).
+  A9: no reference to the track in tests/.
+- doctor.sh exits 1: the analyzer input pin was stale before this track began (F7).
+  The brief lists this failure as a known open item and not a blocker.
+
+## PM audit rows (copy, gallery, tax, source-text tests, D-8)
+
+All five rows stay resolved. Copy = PR v0.4 section 6. Gallery = five student screens (040, 002, 004, 052, 064).
+Tax rounds half up as taxService.ts:4. The source-text-read tests no longer read source.
+The D-8 evidence files are git-ignored by design: .gitignore:56 ignores measure/runs/, and only four run files
+are tracked.
+
+## Nonblocking findings
+
+F2 role-gate counts C.1. F4 registry row is stale. F7 doctor pin. F8 more than one passing phase result for
+P2 and P3. F9 four open reviewer nits. F10 dated three-card entry in metadata.json. The full text is in the
+result JSON.
+
+MEASURE_AGENT_RESULT
+role: measure-final-acceptance
+status: complete
+track: www_tutor_calculator_20261117
+phase: track review
+commits: none
+tests_run: tsc exit 0 at HEAD (spot check); cited from 789511cb1 with no apps/ change since: www suite via heavy-run exit 0 (77 files, 2827 tests), lint exit 0, build exit 1 (Next.js security-reminder nudge) then exit 0 on one re-run, affected-apps ["www-reading-advantage"] exit 0, ratchet diff exit 0, downline scan exit 1 no hit, independent check script exit 0 (20,660 inputs, 0 mismatches); curl en, th, zh HTTP 200; doctor.sh exit 1 (pre-existing architecture pin)
+files_changed: measure/runs/www_tutor_calculator_20261117/final-acceptance-3dbe8a4f8.json, final-acceptance-3dbe8a4f8.log
+plan_updates: none (gate-only role)
+known_failures: none blocking; nonblocking: doctor.sh exit 1 (F7), role-gate counts open task C.1 (F2), registry row stale (F4)
+handoff: PASS at 3dbe8a4f8. F1 is closed and the records are true. Route to measure-closeout. Task C.1 must update the registry row in measure/tracks.md (F4): five cards 040, 002, 004, 052, 064, Phase 3, push af78cfb43, CD run 44142775630, and the five open items for the PM next www push. Closeout can append a superseding decision to metadata.json line 21 (F10). The doctor.sh failure comes from the stale architecture pin owned by architecture_ci_input_pin_20261110 (F7).
+END_MEASURE_AGENT_RESULT
+
+## Role-gate output (run after the files above existed; HEAD stayed 3dbe8a4f8)
+
+Command: env PROJECT_TESTS='pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts --maxWorkers=1' PROJECT_CHECKS='pnpm --filter www-reading-advantage exec tsc --noEmit -p .' PROJECT_LINT='pnpm --filter www-reading-advantage lint' python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py role-gate --repo . --role final-acceptance --track www_tutor_calculator_20261117 --phase "track review" --baseline 81df01cf2e7c2954f4a2de1aaee593913a00bc75 --result-file measure/runs/www_tutor_calculator_20261117/final-acceptance-3dbe8a4f8.json --log-file measure/runs/www_tutor_calculator_20261117/final-acceptance-3dbe8a4f8.log
+
+Output, exit code 1:
+FAIL: track still has 1 non-deferred incomplete tasks
+
+Reading of the output: the gate printed no line about the audit status, the result block, or the finding
+dispositions. It printed no failure line for the three configured gate commands (PROJECT_LINT, PROJECT_CHECKS,
+PROJECT_TESTS). The only failure line is task C.1, the closeout move (finding F2). Task C.1 runs after this
+acceptance. After the gate, HEAD is 3dbe8a4f87f96774caa44d0b5563287bb620e73c and git status --porcelain
+prints no line.

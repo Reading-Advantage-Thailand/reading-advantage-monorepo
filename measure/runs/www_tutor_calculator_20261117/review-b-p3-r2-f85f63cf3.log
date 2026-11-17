@@ -1,0 +1,36 @@
+Review B (security and data handling), Phase 3 round 2, track www_tutor_calculator_20261117.
+Route: opencode-go/muse-spark-1.3-contributor#high
+phase_base_sha 81df01cf2e7c2954f4a2de1aaee593913a00bc75, role_base_sha 6c22d6284dd47deeab35105c036bc549c67557aa, audited_head_sha f85f63cf3ccfc1f03a62b63739b9144296df62a3. HEAD matches.
+Provisional verdict: review in progress.
+
+Completed verification of the delta 6c22d6284..f85f63cf3.
+HEAD: git rev-parse HEAD returns f85f63cf3ccfc1f03a62b63739b9144296df62a3; git status --porcelain is empty.
+Role diff files: page.tsx, tutor-commission-calculator.tsx, product-picture.tsx, two updated test files, one new placeholder test file, page.images test, plan.md, spec.md.
+
+Checks run:
+- Read tutor-commission-calculator.tsx:108-111 (readNumber finite guard), 147-151 (shareOfNetwork clamp), 163-197 (empty leg-count keeps rows, readLegCount fallback, add/remove legs).
+- Read page.tsx:116 ({ n: "{n}" } literal) and 194-198 (hero priority); read product-picture.tsx:4-24 (priority plus loading eager).
+- Verified leg index is numeric-only: leg: index + 1 (tutor-commission.ts:159), substituted via String(leg.leg) at calculator.tsx:393; locale legBar Leg {n} in en/th/zh.
+- XSS grep over page, calculator, and product-picture: no dangerouslySetInnerHTML, innerHTML, fetch, XHR, next/script, searchParam, cookies, headers. Clean.
+- Secrets/URL grep over the role diff: only the placeholder-regex comment; no key, token, password, or URL. package.json and lockfile diffs empty.
+- A2 not applicable (no draft-to-published flip, static marketing page). A6 not applicable (tracks.md claims only phase acceptance, PM check, push, CD, live locales; no security state as resolved).
+- Not applicable with reason: auth/z, tenant and organization scoping, persistence, migration safety (no backend, session, DB, or TenantDB touch).
+- Targeted vitest (--maxWorkers=1), outputs read from tool results:
+  1. calculator component plus lib suites: 4 files, 95 tests, all pass.
+  2. page.placeholders plus page.images suites: 2 files, 23 tests, all pass.
+- Re-review: no CONTEST or ESCALATE items routed in this round; B-P3-1 and B-P3-2 stand accepted as no-fix per the brief, so no kept or withdrawn entries.
+
+Findings: none blocking, none nonblocking. Verdict: pass.
+
+MEASURE_AGENT_RESULT
+role: measure-review-b-security
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+commits: f85f63cf3
+tests_run: pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx src/components/marketing/tutor-commission-calculator.adversarial.test.tsx src/lib/tutor-commission.test.ts src/lib/tutor-commission.adversarial.test.ts --reporter=dot --maxWorkers=1 --silent=true (4 files, 95 tests, pass); pnpm --filter www-reading-advantage exec vitest run src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx --reporter=dot --maxWorkers=1 --silent=true (2 files, 23 tests, pass)
+files_changed: none (audit-only)
+plan_updates: none (audit-only)
+known_failures: none
+handoff: PASS. The delta's security-relevant changes (empty leg-count handling, literal {n} placeholder with numeric-only substitution, eager hero image) are safe; XSS, secret, and dependency probes are clean. No CONTEST or ESCALATE items routed or kept. No product decision needed.
+END_MEASURE_AGENT_RESULT

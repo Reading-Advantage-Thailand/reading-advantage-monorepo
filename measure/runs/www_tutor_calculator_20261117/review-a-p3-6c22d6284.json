@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)",
+  "baseline_sha": "81df01cf2e7c2954f4a2de1aaee593913a00bc75",
+  "phase_base_sha": "81df01cf2e7c2954f4a2de1aaee593913a00bc75",
+  "role_base_sha": "81df01cf2e7c2954f4a2de1aaee593913a00bc75",
+  "audited_head_sha": "6c22d6284dd47deeab35105c036bc549c67557aa",
+  "status": "fail",
+  "summary": "The module equals settlement: truncated gross, half-up tax, and the D-18 zero payout. The locale blocks equal PR section 6 in en, th, and zh. The five gallery slots and the six D-19 page images are correct, and the 12 targeted test files pass (194 tests). One blocker stays: the graph row labelled graph.ownBar 'Your own students' shows the tutor's payout before tax (4,645.69 in preset 2, own volume 6,000). That misattributes a money figure against PR section 3. The fix needs a decision, because spec D-9 and a committed adversarial pin still require the bars to add up to the gross.",
+  "blocking_findings": [
+    "A-P3-1 [Blocker] review-a: The graph row labelled graph.ownBar ('Your own students' / 'นักเรียนในคลาสของคุณเอง') shows result.preTax, the tutor's payout before tax after the leg commissions (apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx:403-415). In preset 2 the row reads 'Your own students 4,645.69', but the own volume is 6,000 and 4,645.69 is the rate on the whole network volume minus the leg commissions. PR handoff section 3 line 123 says the graph 'shows the tutor's own students as one bar, the gross at the tutor's rate, and the payout after the leg commissions and the 3% tax'. PR section 8.1 line 307 maps the old tutor payout row (chart.yourPayout) to graph.netBar, not to ownBar. Judgment on open item (a): reject. The fix needs a decision: spec D-9 (spec.md:238-256) still names the chart.* keys and says the bars add up to the gross, and the committed adversarial case 'the graph bars add up to the whole gross' (tutor-commission-calculator.adversarial.test.tsx:328-344) pins the third bar to preTax/gross. Disposition proposal: ESCALATE for the graph decision; after the decision, Red changes D-9 and the pin, and Green changes the own row."
+  ],
+  "nonblocking_findings": [
+    "A-P3-2 [Nit] review-a: PR handoff v0.5 (advantage-pr commit cac30349, 2026-11-17 20:55 +0700, before the audited head at 22:28) delivers calc.result.needsOwnStudents in en, th, and zh (handoff section 3 line 132-134 and section 6.1 lines 263-274); its fact gate is 'pending' (handoff line 291). At this head, 0 personal students with legs shows gross 4,005, leg commissions 4,005, net 0, and explain.zero 'Add students to see a month.' (tutor-commission-calculator.test.tsx settlement eligibility cases). Judgment on open item (c): the head follows spec D-18 (spec.md:356-360), so no Green defect; the D-18 condition 'until PR supplies a dedicated line' is now met except the fact gate. Disposition proposal: ESCALATE to the PM for the ship decision and a spec change of D-18.",
+    "A-P3-3 [Nit] review-a: spec.md keeps text that D-17 removes. D-9 items 3-4 (spec.md:245-252) name chart.legPayout, chart.legVolume, and chart.yourPayout; section 5.3 items 4 and 6 (spec.md:504-508) name studentsPerDirect, downline, and the identity 'gross - downline - tax = net'; AC-10 (spec.md:744-746) still says three gallery cards, and AC-13 (spec.md:750) says three manifest entries, against AC-19 (five). Owner: the user or a build session. Disposition proposal: FIX in spec.md together with the A-P3-1 decision.",
+    "A-P3-4 [Nit] review-a: The hero image lost the priority hint (page.tsx:193, ProductPicture has no priority prop, product-picture.tsx:14-28). The plan 3.5d rationale says 'next.config.ts sets images.unoptimized: true, so one file ships either way', but priority controls eager loading and the preload of the largest image, not the file count, so the hero image now loads lazily. Disposition proposal: FIX (pass priority for the hero) or DECLINE with a recorded reason.",
+    "A-P3-5 [Nit] review-a: Plan task 3.6 records 'Done: be506e211ec9f18d16bd9e21c607dd08afc52678', whose subject is 'docs(measure): record green p3 task 3.5d'. The gate run of 3.6 happened at that head, and commit 6c22d6284 records it. The SHA names the gate head, not the commit that records the task. Disposition proposal: FIX in the next plan record, or DECLINE."
+  ],
+  "evidence": [
+    "HEAD check: git rev-parse HEAD = 6c22d6284dd47deeab35105c036bc549c67557aa = audited_head_sha.",
+    "Settlement match: tutor-commission.ts:176 truncates the gross with BigInt division as commissionService.ts:67-71 calculatePayoutMinor; tutor-commission.ts:185 computes (preTax*3n+50n)/100n as taxService.ts:4; tutor-commission.ts:180-184 sets preTax 0 when the clamped personal count is 0 and the leg count is 1 or more, as settlementService.ts:536-548, after the floor at 0.",
+    "D-18 edge: a 0-student leg counts as a child in the module; for 0 personal students the only case where all legs have 0 students gives network volume 0 and gross 0, so the result equals settlement either way.",
+    "explainVariant (tutor-commission.ts:207-212): ownVolume 0 with legs gives zero; ownVolume 0 with personal students 1 or more happens only at price 0, where networkVolume 0 already gives zero.",
+    "Locale: a python check found all 57 en strings of PR section 6 in the locale file and every Thai string of PR sections 2 and 3 except the v0.5 needsOwnStudents line; the locale file holds 0 hits of downline, Downline, ดาวน์ไลน์, directTutors, studentsPerDirect, withDownline, 'chart:', v0.1, v0.2, secondLevel.",
+    "Locale test www-tutor-calculator.locale.test.ts:361-409 deep-equals calculator and screens in en, th, and zh (zh = en), with key order and leaf-path checks and positive controls for the removed keys.",
+    "Gallery: product-pictures.ts tutorScreens holds guidedWriting 040, shortAnswer 002, feedback 004, selfReflection 052, classRecord 064; PIL reads 520x1125 for all five; the folder holds only these five webp files; 064 shows the demo tutor name and no class name or price (viewed).",
+    "D-19: PIL reads tutor-advantage-hero.jpg 1024x1024, reedy-preview.webp 1280x912, and primary-origins-3-1-cover.webp 480x651; the new cover shows 'Primary Advantage Origins 3.1' (viewed); the en, th, and zh alts in the locale diff equal D-19 items 1-4.",
+    "page.images.test.tsx renders the page with the real dictionaries and asserts file and alt per block in 3 locales, the banned prefixes, and the cover header size; its readFileSync reads only the webp bytes, not source.",
+    "8edb5ff97 soundness: the conservation helper keeps legs + preTax = gross and the half-up tax for eligible inputs, and for ineligible inputs asserts preTax 0, tax 0, net 0, legs <= gross, and leg rows = deduction. legs <= gross holds because each leg rate is at most the network rate and each truncation goes down. The change follows D-18; it is not a weakened assertion.",
+    "The three source-text reads were replaced by rendered checks (calculator adversarial 'every rendered figure is ASCII' and 'hostile locale copy'); no new test reads production source or computes a hash.",
+    "Callers: explainVariant has one caller (tutor-commission-calculator.tsx:140); tutorScreens has one caller (page.tsx:131-137); the removed keys studentHome and classList have no www caller outside primary-advantage's own unrelated keys; tsc exit 0 at be506e211 per gates file, and be506e211..6c22d6284 changes only plan.md.",
+    "Open item (b) accepted: PR section 3 Results table has seven keys and no payout-before-tax key; the result rows (tutor-commission-calculator.tsx:203-209) use exactly those keys.",
+    "Open item (d) accepted: design-rules.md:25 rule 8 forbids a second image component, and none was added; nine sibling product pages import next/image directly; SiteImageView needs 800w and 1600w files that this photo does not have.",
+    "Plan truth: every Done SHA in plan.md resolves and is an ancestor of HEAD; 3.1=8d8f1c01c test-only, 3.2-3.5=032abe9f4 product-only, 3.5a=a48aa764d test-only, 3.5b=a6434d513 module-only, 3.5c=84df0eb89 test-only, 3.5d=9647b32c6 product-only; see A-P3-5 for 3.6.",
+    "A5 check: green-p3-3.6-gates.txt shows at be506e211 gate 1 'Test Files 11 passed (11)', 'Tests 189 passed (189)', gate 1b 5 passed, www suite 'Test Files 72 passed (72)' 'Tests 2681 passed (2681)', tsc 0, lint 0, rg exit 1, build retry exit 0, selector ['www-reading-advantage']; the file also records the honest earlier failure at a6434d513 (3 failed) that 8edb5ff97 resolved.",
+    "A4 check: the first-paint 'no downline' case (page.test.tsx:173-176) has no presence check of its own, but the preset case in the same describe (page.test.tsx:178-189) fails when the calculator is missing, so the suite does not pass on a missing deliverable.",
+    "Reviewer test run at HEAD: 12 targeted files, 'Test Files 12 passed (12)', 'Tests 194 passed (194)'.",
+    "Process note: the reviewer's one vitest command used '2>&1 | tail -15', which is a shell redirection that the role rules forbid; the result was not changed by it."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git log --oneline 81df01cf2..6c22d6284",
+    "git diff 81df01cf2..6c22d6284 (product files, tests, plan.md, locale file)",
+    "sed/grep of finance-mlm-service taxService.ts:1-15, settlementService.ts:520-560, commissionService.ts:67-71",
+    "python3 -I locale-versus-PR string check (read-only)",
+    "pnpm --filter www-reading-advantage exec vitest run <12 targeted files> --reporter=dot --maxWorkers=1 -> exit 0, Test Files 12 passed (12), Tests 194 passed (194)",
+    "python3 -I PIL size check of the ten image files",
+    "git merge-base --is-ancestor <each plan Done SHA> HEAD",
+    "rg callers of explainVariant and tutorScreens in apps/www-reading-advantage/src"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/public/images/products/primary-origins-3-1-cover.webp",
+    "apps/www-reading-advantage/public/images/products/tutor-advantage/student-mobile/004-screen.webp",
+    "apps/www-reading-advantage/public/images/products/tutor-advantage/student-mobile/040-screen.webp",
+    "apps/www-reading-advantage/public/images/products/tutor-advantage/student-mobile/052-screen.webp",
+    "apps/www-reading-advantage/public/images/products/tutor-advantage/student-mobile/064-screen.webp",
+    "apps/www-reading-advantage/public/images/products/tutor-advantage/student-mobile/070-screen.webp (deleted)",
+    "apps/www-reading-advantage/public/images/products/tutor-advantage/tutor-desktop/062-screen.webp (deleted)",
+    "apps/www-reading-advantage/scripts/blur-tutor-screens.py",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-screens-copy.adversarial.test.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.adversarial.test.tsx",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx",
+    "apps/www-reading-advantage/src/lib/__tests__/tutor-screens.adversarial.test.ts",
+    "apps/www-reading-advantage/src/lib/__tests__/tutor-screens.test.ts",
+    "apps/www-reading-advantage/src/lib/product-pictures.ts",
+    "apps/www-reading-advantage/src/lib/tutor-commission.adversarial.test.ts",
+    "apps/www-reading-advantage/src/lib/tutor-commission.test.ts",
+    "apps/www-reading-advantage/src/lib/tutor-commission.ts",
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md",
+    "measure/tracks/www_tutor_calculator_20261117/spec.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "escalate_human",
+  "confidence": "high",
+  "route": "claude-code/claude-opus-5-5[1m]#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "The module matches settlement (tutor-commission.ts:176-186), but the graph row at tutor-commission-calculator.tsx:403-415 labels the payout before tax as 'Your own students'."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "Tests render the real dictionaries and pin settlement figures (tutor-commission.test.ts section 11, page.images.test.tsx), but no test pins what the ownBar row shows."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 4,
+      "evidence": "The diff holds only the planned files; the hero lost its priority hint as a side change (page.tsx:193)."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "green-p3-3.6-gates.txt records every gate with its exit code and the earlier failure; plan task 3.6 names the gate head be506e211 instead of the record commit."
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+Phase 3 acceptance at HEAD 9fc1292b914bb4a67bac3c8fa48e7a68762f3c0b (short 9fc1292b9).
+Phase base: 81df01cf2e7c2954f4a2de1aaee593913a00bc75.
+
+Prerequisites: review-a/b/c-p3-r2-f85f63cf3.json all PASS at f85f63cf3ccfc1f03a62b63739b9144296df62a3. Adversarial-p3-f85f63cf3.json PASS at f85f63cf3 with commit 9fc1292b9. Diff f85f63cf3..HEAD holds only three test files, so results still apply.
+
+Gates at the accepted HEAD with exit codes:
+1. heavy-run suite: first run exit 143 (OOM killer), retry exit 0 (Test Files 76 passed, Tests 2781 passed).
+2. tsc --noEmit: exit 0.
+3. lint: exit 0.
+4. rg downline scan: exit 1 with no output.
+5. heavy-run build: first run exit 1 (Next.js security reminder), retry exit 0.
+6. affected-apps: exit 0 with ["www-reading-advantage"].
+
+Tasks 3.1 through 3.6b are [x] with SHAs. Tasks 3.7 and 3.8 stay open as required.
+AC-17 through AC-23 each hold against a test or review that can fail.
+A5 holds (no false claim). A3, A4, A6, A7 hold or are not applicable to this product-only diff.
+Build output stays in place for the UX recapture.
+
+MEASURE_AGENT_RESULT
+role: measure-phase-acceptance
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+commits: 9fc1292b9
+tests_run: suite retry exit 0 (76 files, 2781 tests); tsc exit 0; lint exit 0; rg exit 1 no output; build exit 1 then retry exit 0; affected-apps exit 0 ["www-reading-advantage"]
+files_changed: measure/runs/www_tutor_calculator_20261117/phase-acceptance-p3-9fc1292b9.json and .log
+plan_updates: none (gate-only role)
+known_failures: none blocking; deferred: A-P3-2, A-P3-r2-2; accepted no-fix: B-P3-1, B-P3-2, C-P3-r2-1; PR copy question: C-P3-r2-2; declined display-only: adversarial F1, F2
+handoff: Phase 3 PASS at 9fc1292b9; test-only commits f85f63cf3..HEAD named in result; UX recapture runs after acceptance for the PM; task 3.8 push follows the PM page check
+END_MEASURE_AGENT_RESULT

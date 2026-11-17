@@ -1,0 +1,311 @@
+# Green P3 task 3.6b — www_tutor_calculator_20261117
+
+- Role: measure-jr-green (session "Green · P3 T3.6b · www_tutor_calculator")
+- Route: opencode-go/mimo-v2.6-flash
+- Phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+- Task: 3.6b Green: fix the review findings of round 1. Test: AC-23.
+- phase_base_sha: 24dbaa0506b292c24d5966a41df0ee4d555d590e (HEAD at start, clean tree)
+- Red commit: 8aa9002ad7d5718727eb0443fcfcab5aa0e3f2f9 (inside 24dbaa05..HEAD, ancestor check passed)
+- Red model: opencode-go/deepseek-v4.1-flash. No coder sub-delegation ran.
+- No routed findings in the brief.
+
+## 1. Red rerun before implementation
+
+Command (targeted Red command of the brief):
+
+    cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx src/components/marketing/tutor-commission-calculator.adversarial.test.tsx "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx" src/__tests__/products-page-pictures.red.test.tsx --reporter=dot --maxWorkers=1
+
+Result: exit 1. 9 failed, 93 passed (102). The failures were all AC-23 assertions:
+own bar preset 1, own bar preset 2, own bar preset 3, bar-sum case, cleared leg count,
+the eager hero, and the missing `{n}` value in en, th, and zh.
+
+## 2. Implementation written (production files only, no test edited)
+
+Files touched:
+
+1. `apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx`
+   - `shareOfGross` became `shareOfNetwork`; the divisor is `result.networkVolume`.
+   - Leg bars use `shareOfNetwork(leg.volume)`; the own bar uses `result.ownVolume`.
+   - The own bar value under `graph.ownBar` is `formatMoney(result.ownVolume)`.
+   - `onLegCountChange` skips the resize when the field is empty, so the leg rows
+     and the typed students stay. A number still resizes. `resizeLegs` keeps the
+     earlier typed values when the count grows again.
+   - `readLegCount` keeps the add/remove buttons from wiping rows while the field
+     is empty.
+2. `apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx`
+   - `key` widened to `(k: string, values?: Record<string, unknown>) => string`.
+   - `legBar: key("calculator.graph.legBar", { n: "{n}" })` (design rule 11).
+   - The hero `ProductPicture` gets `priority`.
+3. `apps/www-reading-advantage/src/components/products/product-picture.tsx`
+   - Optional `priority?: boolean` prop passed to `next/image`.
+   - Next 16.4.1 omits the `loading` attribute when `priority` is set
+     (`get-img-props.js` line 236 and 446: `isLazy` false leaves `loading` undefined).
+     The hero also needs `loading="eager"` to satisfy AC-23 in the DOM.
+     With `priority` plus `loading="eager"`, the AC-23 hero case passed.
+
+The full implementation diff is appended at the end of this log.
+
+## 3. Gate results with the implementation in place
+
+- Targeted vitest command: exit 1. 100 passed, 2 failed (102).
+  Output: `/tmp/opencode/green-3.6b-vitest.txt`.
+- `pnpm --filter www-reading-advantage exec tsc --noEmit -p .`: exit 0.
+- `pnpm --filter www-reading-advantage lint`: exit 0.
+
+## 4. Blocker: two committed tests pin the pre-tax payout that D-20 removed
+
+The 2 remaining failures are:
+
+- `apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx:234`
+  `expect(hasFigure("8,273.45")).toBe(true);`
+- `apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx:306`
+  `expect(hasFigure("4,645.69")).toBe(true);`
+
+Both figures are the payout before tax (gross minus leg commissions) for preset 3
+and preset 2. They appeared only in the `graph.ownBar` row, which showed
+`result.preTax` before this task.
+
+The spec forbids that display:
+
+- spec.md D-20: "The payout before tax has no row in the graph."
+- spec.md line 469: `preTax: number;         // baht, satang; not displayed`
+- AC-23 lists the own bar, the bar shares, the three graph totals, the `{n}`
+  value, the cleared leg count, and the eager hero. It does not ask for the
+  pre-tax payout.
+
+So a correct implementation must drop the pre-tax figure, and these two
+assertions then fail. They came from commit `64465455f` ("close review A gaps"),
+which pinned the old own-bar display. The Red commit `8aa9002ad` did not update
+them when D-20 reversed the display.
+
+No correct production change makes them pass without showing the pre-tax payout,
+which the spec bans. Editing them is not allowed for Green.
+
+## 5. Stop and state of the tree
+
+Green stopped without a commit, as the brief requires. The three production
+files were reverted to `phase_base_sha`, so a Mid Red retry sees the Red suite
+unchanged. `git status --short` shows only:
+
+    M measure/tracks/www_tutor_calculator_20261117/plan.md
+
+That file holds the `[~]` marker of task 3.6b and is not committed.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: blocked
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+commits: none
+tests_run: targeted vitest command exit 1 before the fix (9 failed, 93 passed); with the full fix exit 1 (2 failed, 100 passed); tsc --noEmit exit 0; lint exit 0
+files_changed: none committed; plan.md marked [~] only (uncommitted)
+plan_updates: 3.6b set to [~]; no [x] and no plan-evidence commit, because the gate did not pass
+known_failures: apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx:234 expects hasFigure("8,273.45") and :306 expects hasFigure("4,645.69"); both are the pre-tax payout that spec D-20 and spec line 469 say is not displayed
+handoff: Two committed tests block a spec-correct change. file:line = tutor-commission-calculator.test.tsx:234 and tutor-commission-calculator.test.tsx:306. They require the pre-tax payout on screen, while spec D-20 ("The payout before tax has no row in the graph"), spec line 469 ("preTax ... not displayed") and AC-23 forbid it. Request a Mid Red retry to update or remove those two assertions, or a user decision that reverses D-20. The rest of AC-23 is implementable: the written fix took the suite to 100/102 with tsc and lint at exit 0. The diff is appended below. Note for the next Green: Next 16.4.1 drops the loading attribute when next/image gets priority alone, so ProductPicture must also pass loading="eager" for AC-23. phase_base_sha 24dbaa0506b292c24d5966a41df0ee4d555d590e; final HEAD 24dbaa0506b292c24d5966a41df0ee4d555d590e (no commit).
+END_MEASURE_AGENT_RESULT
+
+## Appendix: implementation diff (reverted, kept for the next Green)
+
+diff --git a/apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx b/apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx
+index 989ae19dd..bba0971f8 100644
+--- a/apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx
++++ b/apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx
+@@ -60,7 +60,8 @@ export default async function TutorAdvantage({
+   await params;
+   const t = await getScopedI18n("pages.products.tutorAdvantage");
+   // Indexed keys are built at run time, so the typed key union does not apply.
+-  const key = t as unknown as (k: string) => string;
++  // A value object lets rule 11 pass a literal placeholder for the client to fill.
++  const key = t as unknown as (k: string, values?: Record<string, unknown>) => string;
+ 
+   const phases = Array.from({ length: PHASE_COUNT }, (_, i) => ({
+     title: key(`classTour.phases.${i}.title`),
+@@ -112,7 +113,7 @@ export default async function TutorAdvantage({
+       title: key("calculator.graph.title"),
+       caption: key("calculator.graph.caption"),
+       ownBar: key("calculator.graph.ownBar"),
+-      legBar: key("calculator.graph.legBar"),
++      legBar: key("calculator.graph.legBar", { n: "{n}" }),
+       grossBar: key("calculator.graph.grossBar"),
+       legCommissionBar: key("calculator.graph.legCommissionBar"),
+       netBar: key("calculator.graph.netBar"),
+@@ -190,7 +191,11 @@ export default async function TutorAdvantage({
+           </div>
+           <div className="lg:col-span-6">
+             <div className="overflow-hidden rounded-4xl border border-white/20 shadow-2xl">
+-              <ProductPicture picture={productPictures.tutorSession} alt={t("heroExtra.imageAlt")} />
++              <ProductPicture
++                picture={productPictures.tutorSession}
++                alt={t("heroExtra.imageAlt")}
++                priority
++              />
+             </div>
+           </div>
+         </div>
+diff --git a/apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx b/apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx
+index 8305d95f0..4a2211a39 100644
+--- a/apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx
++++ b/apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx
+@@ -144,10 +144,10 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
+   const markerX = (markerVolume / CURVE_MAX_VOLUME) * 100;
+   const markerY = CURVE_HEIGHT * (1 - commissionRate(markerVolume) / CURVE_MAX_RATE);
+ 
+-  /** Returns a row's share of the gross, for the bar width of spec D-9. */
+-  const shareOfGross = (amount: number) => {
+-    if (result.gross <= 0) return 0;
+-    return Math.min(100, Math.max(0, (amount / result.gross) * 100));
++  /** Returns a row's share of the network volume, for the bar width of spec D-9 and D-20. */
++  const shareOfNetwork = (amount: number) => {
++    if (result.networkVolume <= 0) return 0;
++    return Math.min(100, Math.max(0, (amount / result.networkVolume) * 100));
+   };
+ 
+   const onPriceChange = (event: ChangeEvent<HTMLInputElement>) => {
+@@ -163,7 +163,10 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
+   const onLegCountChange = (event: ChangeEvent<HTMLInputElement>) => {
+     const text = event.target.value;
+     setLegCountText(text);
+-    setLegTexts(resizeLegs(legTexts.map(readNumber), readNumber(text)).map(String));
++    // An empty field keeps the leg rows and their typed students (AC-23).
++    if (text.trim() !== "") {
++      setLegTexts(resizeLegs(legTexts.map(readNumber), readNumber(text)).map(String));
++    }
+     setPresetIndex(null);
+   };
+ 
+@@ -179,14 +182,18 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
+     setPresetIndex(null);
+   };
+ 
++  /** Reads the leg-count field, or the row count while the field is empty (AC-23). */
++  const readLegCount = () =>
++    legCountText.trim() === "" ? legTexts.length : readNumber(legCountText);
++
+   /** Adds one leg, at the default student count (spec 5.3 item 4). */
+   const addLeg = () => {
+-    setLegCount(readNumber(legCountText) + 1);
++    setLegCount(readLegCount() + 1);
+   };
+ 
+   /** Removes the last leg and keeps the rest (spec 5.3 item 4). */
+   const removeLeg = () => {
+-    setLegCount(Math.max(0, readNumber(legCountText) - 1));
++    setLegCount(Math.max(0, readLegCount() - 1));
+   };
+ 
+   /** Applies a preset input; the price resets to 3,000 baht (spec D-5). */
+@@ -395,7 +402,7 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
+                   <div className="mt-1 h-2 overflow-hidden rounded-full bg-emerald-100">
+                     <div
+                       className="bar-width h-full rounded-full bg-emerald-600"
+-                      style={{ "--bar-width": `${shareOfGross(leg.payout)}%` }}
++                      style={{ "--bar-width": `${shareOfNetwork(leg.volume)}%` }}
+                     />
+                   </div>
+                 </div>
+@@ -405,13 +412,13 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
+                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm">
+                   <span className="font-medium text-site-navy">{copy.graph.ownBar}</span>
+                   <span className="ml-auto font-semibold tabular-nums text-emerald-900">
+-                    {formatMoney(result.preTax)}
++                    {formatMoney(result.ownVolume)}
+                   </span>
+                 </div>
+                 <div className="mt-1 h-2 overflow-hidden rounded-full bg-emerald-100">
+                   <div
+                     className="bar-width h-full rounded-full bg-emerald-900"
+-                    style={{ "--bar-width": `${shareOfGross(result.preTax)}%` }}
++                    style={{ "--bar-width": `${shareOfNetwork(result.ownVolume)}%` }}
+                   />
+                 </div>
+               </div>
+diff --git a/apps/www-reading-advantage/src/components/products/product-picture.tsx b/apps/www-reading-advantage/src/components/products/product-picture.tsx
+index 2445f0804..2e0819c90 100644
+--- a/apps/www-reading-advantage/src/components/products/product-picture.tsx
++++ b/apps/www-reading-advantage/src/components/products/product-picture.tsx
+@@ -4,20 +4,24 @@ import type { ProductPictureFile } from "@/lib/product-pictures";
+ interface ProductPictureProps {
+   picture: ProductPictureFile;
+   alt: string;
++  /** Loads the picture eagerly for the largest above-the-fold image. */
++  priority?: boolean;
+ }
+ 
+ /**
+  * Renders one real product picture at its own proportions, so no crop hides the content.
+- * @param props The picture file and its localized alt text.
++ * @param props The picture file, its localized alt text, and the optional eager load.
+  * @returns The picture element.
+  */
+-export default function ProductPicture({ picture, alt }: ProductPictureProps) {
++export default function ProductPicture({ picture, alt, priority }: ProductPictureProps) {
+   return (
+     <Image
+       src={picture.src}
+       alt={alt}
+       width={picture.width}
+       height={picture.height}
++      priority={priority}
++      loading={priority ? "eager" : undefined}
+       sizes={picture.portrait ? "12rem" : "(min-width: 1024px) 25vw, 100vw"}
+       className={
+         picture.portrait
+diff --git a/measure/tracks/www_tutor_calculator_20261117/plan.md b/measure/tracks/www_tutor_calculator_20261117/plan.md
+index 369d85179..326978a6b 100644
+--- a/measure/tracks/www_tutor_calculator_20261117/plan.md
++++ b/measure/tracks/www_tutor_calculator_20261117/plan.md
+@@ -863,7 +863,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
+   `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0. Full output:
+   `measure/runs/www_tutor_calculator_20261117/red-p3-3.6a-vitest.txt`.
+ 
+-- [ ] 3.6b Green: fix the review findings of round 1. Test: AC-23.
++- [~] 3.6b Green: fix the review findings of round 1. Test: AC-23.
+ 
+   The `graph.ownBar` row reads the own students' volume (the price times the personal students). The
+   bar lengths are shares of the network volume, so the own bar and the leg bars add up to the whole.
+
+---
+
+# Green P3 task 3.6b, second run after Red retry F5
+
+- role_base_sha: a03605b020300703ed9bfc2f493e197c733d847a (clean tree at start)
+- phase_base_sha: 24dbaa0506b292c24d5966a41df0ee4d555d590e
+- Red retry: a03605b02 "test(www): stop pinning the pre-tax figure on screen" changed
+  tutor-commission-calculator.test.tsx:243 and :316 to require `graphTotalValue(netBar)`
+  and `hasFigure(preTax) === false`. No test blocked the fix after that.
+- The fix from the appendix above was re-applied to the three production files, with
+  `loading="eager"` next to `priority` for the hero.
+
+## Gates at the implementation commit a3e02f457965cfbbaa1d42e324f4bedf9ab21796
+
+1. The seven-file vitest command of the brief, with `--reporter=dot --maxWorkers=1`:
+   exit 0. "Test Files 7 passed (7)", "Tests 102 passed (102)".
+   Output: `/tmp/opencode/green-3.6b-vitest-final.txt`.
+2. `pnpm --filter www-reading-advantage exec tsc --noEmit -p .`: exit 0.
+3. `pnpm --filter www-reading-advantage lint`: exit 0.
+
+`build-graph update ./graph.db` ran on the three files before the commit (exit 0).
+
+## Commits
+
+- `a3e02f457965cfbbaa1d42e324f4bedf9ab21796` fix(www): fix review round 1 findings of
+  the tutor page (track_id: www_tutor_calculator_20261117) — the three production files.
+  The subject is 98 characters; the brief's string was 101, so one "the" was dropped.
+- `f85f63cf3ccfc1f03a62b63739b9144296df62a3` docs(measure): record green p3 task 3.6b
+  (track_id: www_tutor_calculator_20261117) — plan.md alone.
+
+No new file was added by Green. `page.placeholders.test.tsx` came from the Red commit
+8aa9002ad. The tree is clean at f85f63cf3.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+commits: a3e02f457965cfbbaa1d42e324f4bedf9ab21796 (fix), f85f63cf3ccfc1f03a62b63739b9144296df62a3 (plan evidence)
+tests_run: seven-file vitest command exit 0 (7 files, 102 tests) at a3e02f457; tsc --noEmit exit 0; lint exit 0; the Red rerun at 24dbaa05 before the fix exited 1 with 9 failed and 93 passed
+files_changed: apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx, apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx, apps/www-reading-advantage/src/components/products/product-picture.tsx, measure/tracks/www_tutor_calculator_20261117/plan.md
+plan_updates: 3.6b flipped to [x] with Done a3e02f457965cfbbaa1d42e324f4bedf9ab21796, the three gate commands with exit 0, and the A-P3-5 fix on task 3.6 (gate SHA be506e211 kept, "record 6c22d6284" added); no task flipped to [b]
+known_failures: none
+handoff: Task 3.6b is done. Commits a3e02f457 (implementation) and f85f63cf3 (plan evidence) sit on role_base_sha a03605b02; phase_base_sha is 24dbaa0506b292c24d5966a41df0ee4d555d590e; final Green HEAD is f85f63cf3ccfc1f03a62b63739b9144296df62a3. The seven-file vitest command, tsc, and lint all exited 0. Red command output before the fix: exit 1, 9 failed, 93 passed, all AC-23. New files: none from Green; page.placeholders.test.tsx was added by the Red commit 8aa9002ad. One note for reviewers: Next 16.4.1 drops the loading attribute when next/image gets priority alone, so ProductPicture passes loading="eager" with priority for the hero (design rule 8, no second image component). The two stale pre-tax pins were fixed by Red retry F5 (a03605b02), not by Green. No task is [b]. Task 3.6 line now records both the gate head be506e211 and the record commit 6c22d6284, closing A-P3-5.
+END_MEASURE_AGENT_RESULT

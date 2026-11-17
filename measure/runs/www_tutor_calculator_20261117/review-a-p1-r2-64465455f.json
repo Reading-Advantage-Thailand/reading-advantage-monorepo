@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a",
+  "round": 2,
+  "verdict": "PASS",
+  "route": "opencode/glm-5.3-flash-free#high",
+  "note": "Round-2 audit of the remediation commit. The remediation touches exactly two test files and one plan line; no product source changed since round 1. F1 is closed: all four prescribed AC-9 component cases are present and each fails on a named wrong implementation. F2 is closed: the three prescribed clamp pins plus two extras are present, and every pinned figure was recomputed from the spec 3 formula and reproduced by executing the shipped module. The two targeted test files were rerun live through heavy-run: exit 0, Test Files 2 passed (2), Tests 41 passed (41), matching the plan's claim word for word. F3 and F4 remain open as nonblocking carried items; no blocker remains.",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "4e32f7c76710f0647aa712b74d55dc8618bc8076",
+  "role_base_sha_note": "State at this review's start: the last commit before remediation (task 1.9 checkpoint). The round-1 artifact review-a-p1-10dcf42a8.json is untracked, so it has no commit SHA to use as role base.",
+  "audited_head_sha": "64465455f7052cf3e01c3cfcaafc81da648f5f94",
+  "audited_head_is_head": true,
+  "head_check": "git rev-parse HEAD returned 64465455f7052cf3e01c3cfcaafc81da648f5f94 and git status --short is empty in the worktree.",
+  "diff_range": "10dcf42a8d88c90f8e02debae761196ef40f2ccd..64465455f7052cf3e01c3cfcaafc81da648f5f94",
+  "remediation_diff_scope": {
+    "files": [
+      "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx (+78)",
+      "apps/www-reading-advantage/src/lib/tutor-commission.test.ts (+89)",
+      "measure/tracks/www_tutor_calculator_20261117/plan.md (+12 net: one remediation note line, the 1.9 checkbox flip, one checkpoint block)"
+    ],
+    "product_source_changed": false,
+    "check": "git diff --stat 10dcf42a8..64465455f lists exactly the three files above; no module, component, page, locale, config, or lockfile file appears."
+  },
+  "round1_findings": {
+    "F1": "withdrawn: closed. All four prescribed cases are present in tutor-commission-calculator.test.tsx — leg removal 3 to 2 (lines 158-176), four legs at count 4 (178-191), preset index 1 figures, setup, result, and pressed state (260-279), and preset index 2 setup and result text (281-287). With the pre-existing preset 0 and preset 2 figure tests and the preset 0 text test, every AC-9 clause (add and remove a leg row, each preset's setup, result, and figures, D-7 clear, aria-pressed, live region) now has an assertion.",
+    "F2": "withdrawn: closed. The three prescribed pins are present in tutor-commission.test.ts describe 9 — commissionRate(NaN) === 0 and commissionRate(Infinity) === 0 (lines 263-266), a NaN-price calculateNetwork returning all-zero money (288-300), and a NaN leg entry clamping to 0 students with leg row intact (302-311) — plus two extras: Infinity price and Infinity student clamps with a conservation guard (268-286) and negative price and negative student count (313-336).",
+    "F3": "open (carried, nonblocking): the build-graph scan still was not run; plan.md line 215 now documents the skip under the PM load watch. The orchestrator's round-2 brief forbids a graph scan this run, so this stays a closeout item.",
+    "F4": "open (carried, nonblocking): unchanged documented spec deviation — the net row shows as the hero figure only (tutor-commission-calculator.tsx:171-178), documented in plan 1.6."
+  },
+  "mutation_analysis": {
+    "leg_removal_3_to_2": {
+      "catches": "Strategy mutant M14 ('keep the leg rows after the leg count drops') and a mutant that keeps a removed leg's payout in the downline sum: legStudentInputs() and legRows() drop to length 2 and the downline changes 12,015 to 8,010, so both survive states fail.",
+      "still_misses": "Which leg is dropped. All three legs hold 3 students, so a mutant that drops the first leg instead of the last passes (the money and row counts are identical). See nit N1."
+    },
+    "four_leg_case": {
+      "catches": "A mutant that caps the row list at 3 (slice) — length 4 fails; a mutant that appends a wrong default to the new leg — legStudentInputs()[3] must hold 3; and a mutant that computes the gross from the wrong rate tier — gross 20,744.54 at GV 36,000 excludes the rate(27,000) branch (which gives 14,663.41).",
+      "still_misses": "The fourth row's onChange wiring: the test never types into leg 4's input, so a mutant binding row 4's change handler to index 2 passes."
+    },
+    "preset_1_full_case": {
+      "catches": "A mutant that maps NETWORK_PRESETS[1] to preset 0's inputs (networkGV would be 12,000, not 24,000); a mutant that drops the tax row or misroutes the label-to-value rows (resultValue reads the dd beside each named dt); a mutant that leaves two presets pressed (pressedPresetCount() must be 1 and indexes 0 and 2 must be aria-pressed false); and stale setup or result text.",
+      "still_misses": "The preset 1 graph row count: legRows() is not called in this case, and hasFigure() is screen-wide, so it pins that 4,645.69 and 4,506.32 appear somewhere but not which row carries them. The figures themselves depend on the leg inputs, so the money is still pinned."
+    },
+    "preset_2_text_case": {
+      "catches": "A mutant that renders preset 0's setup or result text for index 2 — getByText(copy.presets[2].setup) fails because that exact string is absent.",
+      "still_misses": "Nothing material: preset 2's figures were already pinned by the pre-existing test at lines 203-211, so this case closes the text half of AC-9 only, as prescribed."
+    },
+    "clamp_pins": {
+      "rate_nan_infinity": "Catches dropping Number.isFinite from clampNonNegative: Infinity would flow through (Infinity > 0 is true) and commissionRate would return 0.5/0.7, not 0. Still misses a mutant that breaks only NaN handling, because NaN > 0 is already false and the ternary returns 0 either way — the NaN assertion is a pin, not a discriminator.",
+      "infinity_price_and_students": "Catches a mutant that lets Infinity through: toSatang(Infinity) throws RangeError, and a mutant that clamps to a large finite value instead of 0 fails the exact networkVolume and gross 0 assertions. Still misses a clamp that maps Infinity to 0 but breaks the leg array only when the array is longer than 2 (untested shape).",
+      "nan_price": "Catches a NaN-propagating clamp: NaN would reach toSatang and throw, or fail the exact 0 assertions. Still misses little: behaviorally this case equals price 0; it pins the NaN path rather than discriminating a new mutant.",
+      "nan_leg_entry": "Strong case: catches a mutant that drops the NaN leg from the array (legs toEqual fails), one that passes NaN through (students NaN), and one that clamps NaN to 1. Still misses a mutant where clampCount(NaN) is correct but the leg index is 0-based — actually caught by the toEqual leg: 1 shape.",
+      "negative_price_and_count": "Catches Math.abs mutants and no-clamp mutants: negative money fields fail expectSafeMoney's non-negative guard, and gross or networkVolume would not be 0. Still misses a Math.max(0, value) mutant without the floor for fractional counts — see nit N2."
+    },
+    "conservation_guard": "expectSafeMoney (tutor-commission.test.ts:254-269) asserts finite, non-negative money on all eight fields and the satang conservation identity; it is only fed cases where legPayouts is 0, so the identity holds on every case it guards. No vacuous pass found."
+  },
+  "figure_verification": {
+    "method": "Two independent paths: (1) a from-scratch implementation of the spec 3 formula with the D-3 integer-satang truncation, computed with Code Mode; (2) direct execution of the shipped module with node --experimental-strip-types on the exact inputs the new tests use. Neither used the module's own tests.",
+    "leg_drop_3_to_2": "price 3,000, own 0, three legs of 3: networkGV 27,000, rate 54.3089%, each leg flat(9,000, 0.445) = 400,500 satang (4,005.00), downline 1,201,500 satang (12,015). Two legs: networkGV 18,000, downline 801,000 satang (8,010). Matches the test pins at test.tsx:167-168 and 174-175.",
+    "four_leg_case": "GV 36,000: rate 57.6237%, gross satang 2,074,454 (20,744.54), downline 4 x 400,500 = 1,602,000 satang (16,020). Matches the test pins at test.tsx:188-190. Note: the float product rate*GV also rounds to 20,744.54 here, so this pin alone does not discriminate BigInt from float; the 1e9 case at round 1 already carries that discrimination.",
+    "preset_index_1": "GV 24,000: rate 52.7321%, gross 1,265,569 satang (12,655.69), downline 801,000 (8,010), preTax 464,569 (4,645.69), tax 13,937 (139.37), net 450,632 (4,506.32). Conservation 801,000 + 464,569 = 1,265,569 holds. Matches the test pins at test.tsx:265-270.",
+    "clamps": "Module execution confirms: commissionRate(NaN) = 0, commissionRate(Infinity) = 0; price NaN, Infinity, and -5 all give all-zero money; personalStudents Infinity and -3 and leg [Infinity] and [-2] give networkVolume 0; leg [NaN] gives {leg:1, students:0, volume:0, payout:0} with networkVolume 12,000. resizeLegs([7,3,3], 2) = [7,3] (first entries kept)."
+  },
+  "regression_checks": {
+    "spec_section_3": "No product file changed since round 1 (diff scope above); round 1's independent implementation reproduced every rate pin and preset value, and this round re-executed the module on the new inputs with matching results.",
+    "spec_5_2": "The module source is byte-identical to round 1 (untouched by 64465455f); the seven 5.2 rules re-checked by execution: clamps (1), V <= 0 gives 0 (2), satang money (3, verified in the preset and 4-leg figures), payoutAfterDeduction floor (4, round 1), explainVariant (5, round 1), resizeLegs keep-append-drop (6, execution shows [7,3] and the append default 3), presets (7, NETWORK_PRESETS[1] drives the preset 1 test).",
+    "spec_5_3": "The component source is byte-identical to round 1; the new tests only add assertions against the existing DOM contract (aria-live region rows with dt/dd pairs, aria-pressed on the three preset buttons), all of which match the shipped markup at tutor-commission-calculator.tsx:171-178, 194-208, 210-212, 360-389.",
+    "new_assertions_on_wrong_implementation": "Every new assertion was traced to a discriminating value: the row counts, the dd-beside-dt reads, the exact formatted figures, the pressed states, and the clamp zeros would each fail on the named mutants. The two formatted-figure reads rely on formatMoney grouping ('27,000', '20,744.54'), so a formatting mutant also fails."
+  },
+  "gates_rerun_by_review": {
+    "targeted_two_files": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx src/lib/tutor-commission.test.ts --reporter=dot --silent=true' — exit 0, Test Files 2 passed (2), Tests 41 passed (41), Duration 1.89s. Matches the plan line's claim exactly. Count check: module 22 + 5 new = 27, component 14 (10 pre-existing + 4 new) = 41."
+  },
+  "plan_evidence_check": {
+    "A5_remediation_line": "plan.md line 215 quotes the same heavy-run command, exit 0, and labeled counts this review reproduced live; the base SHAs it names match the artifacts. No false claim found.",
+    "A3_digit_only": "No bare-digit count assertions in the new code: row counts use toHaveLength with a named subject, pressedPresetCount counts labeled aria-pressed states, and the helper loops over fields by name.",
+    "A4_vacuous_pass": "No 'deliverable present' check was added; resultValue throws when a named row or its dd is missing, and getByText throws on absent preset text, so the new checks fail on a missing deliverable.",
+    "framework_wide_checks": "Not triggered: the remediation changed no orchestration script, contract test, or registry file — only two app test files and one plan line."
+  },
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "N1",
+      "severity": "nonblocking",
+      "file": "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx:158-176",
+      "defect": "The removal test cannot distinguish which leg row is dropped: all three legs hold 3 students, so a mutant that removes the first leg instead of the last passes. The shipped resizeLegs keeps the first entries (verified: resizeLegs([7,3,3], 2) = [7,3]), so this is a pin gap, not a behavior defect.",
+      "smallest_fix": "Before typing the leg count 2, type a distinct value (for example 9) into leg 1's input, then assert the surviving two inputs are [9, 3]."
+    },
+    {
+      "id": "N2",
+      "severity": "nonblocking",
+      "file": "apps/www-reading-advantage/src/lib/tutor-commission.test.ts:238-248",
+      "defect": "The fractional leg count floor of spec 5.2 item 1 (a leg count of 2.5 becomes 2) is still unpinned; clampCount's Math.floor has no test. Round 1's F2 prescribed three pins (all delivered); this residual was named in F2's defect text but not in its fix.",
+      "smallest_fix": "Add one assertion to the resizeLegs block: expect(resizeLegs([2, 4], 2.5)).toEqual([2, 4])."
+    },
+    {
+      "id": "F3",
+      "severity": "nonblocking",
+      "carried_from": "round 1",
+      "file": "measure/tracks/www_tutor_calculator_20261117/plan.md:215",
+      "defect": "Strategy anti-pattern A10 (Phase 1 row) wants a build-graph scan of the changed source files at the checkpoint. The plan documents the skip under the PM load watch, and this review's brief forbids a graph scan this run. The risk stays: a later role could trust a stale or absent graph.",
+      "smallest_fix": "At the phase closeout or the next approved heavy slot, run build-graph scan into the worktree graph.db and record one line in the plan."
+    },
+    {
+      "id": "F4",
+      "severity": "nonblocking",
+      "carried_from": "round 1",
+      "file": "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx:171-178",
+      "defect": "Unchanged: spec 5.3 item 6 lists a net row after tax; the component shows net only as the hero figure, and plan 1.6 documents the choice. The information is on the page and gross - downline - tax = net holds.",
+      "smallest_fix": "None required for Phase 1; Review C or the spec owner decides on the literal row."
+    }
+  ],
+  "anti_pattern_checks": {
+    "A4_vacuous_pass": "No new absence or presence check; all new checks read concrete DOM rows and module outputs and throw on absence.",
+    "A3_digit_only_count": "No bare-digit counts in the new code; all counts are labeled integer assertions.",
+    "A5_false_claim_text": "The plan's remediation claim was reproduced live by this review and matches exactly."
+  },
+  "retry_recommendation": "none",
+  "handoff": "No blocker. F3 (build-graph at closeout), F4 (documented net-row deviation), N1 (which-leg pin), and N2 (fractional floor pin) are optional hardening for Review C or a later phase; route them as notes, not work.",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "Every new pinned figure was recomputed from the spec 3 formula and reproduced by executing the shipped module (27,000/12,015 to 18,000/8,010; 36,000 at 57.6237% and 20,744.54; preset 1's 12,655.69/8,010/139.37/4,645.69/4,506.32; all clamps), and no product file changed since round 1."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The live rerun gives 41 passed (41) and each new case fails on a named mutant (M14, slice cap, wrong preset inputs, isFinite drop, Math.abs clamp), but the which-leg and fractional-floor pins are still missing (N1, N2)."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --stat 10dcf42a8..64465455f shows exactly two test files (+167 lines) and one plan line group; no product, config, or lockfile change."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The plan's remediation claim was reproduced live through heavy-run (exit 0, Test Files 2 passed (2), Tests 41 passed (41)), and every figure claim in this artifact carries a command result or file:line."
+    }
+  ]
+}

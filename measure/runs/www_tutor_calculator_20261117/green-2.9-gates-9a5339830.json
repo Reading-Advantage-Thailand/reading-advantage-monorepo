@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "role": "measure-green",
+  "verdict": "pass",
+  "verdict_basis": "provisional at write time; confirmed after the gates and the plan commit",
+  "kind": "gate-confirmation",
+  "product_change": false,
+  "track": "www_tutor_calculator_20261117",
+  "phase": "2",
+  "task": "2.9 gate confirmation",
+  "phase_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "role_base_sha": "9a53398301ae2fbd41e7e95de8e36ce18d50b9b5",
+  "gate_head": "9a53398301ae2fbd41e7e95de8e36ce18d50b9b5",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/deepseek-v4.1-flash (substitution record: `ra-quota pick green` returns opencode-go/hy4-flash-free, the Red family of this track, so it is excluded)",
+  "worktree_clean_before_edit": true,
+  "gates": [
+    {
+      "n": 1,
+      "command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test --reporter=dot --silent=true'",
+      "exit_code": 0,
+      "test_files": "Test Files 71 passed (71)",
+      "tests": "Tests 2618 passed (2618)",
+      "duration": "60.81s",
+      "started_at": "15:36:31"
+    },
+    {
+      "n": 2,
+      "command": "pnpm turbo run check-types --filter=www-reading-advantage",
+      "exit_code": 0,
+      "evidence": "cache hit, replaying logs f8d9bd0a3c285a8b; tsc --noEmit; 1 successful, 1 total",
+      "extra_command": "pnpm turbo run check-types --filter=www-reading-advantage --force",
+      "extra_exit_code": 0,
+      "extra_evidence": "cache bypass, force executing f8d9bd0a3c285a8b; tsc --noEmit; 4.015s; 1 successful, 1 total",
+      "note": "The plain command replayed the cache of the unchanged inputs. The forced rerun proves a live tsc pass at this head."
+    },
+    {
+      "n": 3,
+      "command": "pnpm --filter www-reading-advantage lint",
+      "exit_code": 0,
+      "evidence": "No output after `$ eslint .`."
+    },
+    {
+      "n": 4,
+      "command": "git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json",
+      "exit_code": 0,
+      "evidence": "No diff."
+    },
+    {
+      "n": 5,
+      "command": "node scripts/ci/affected-apps.mjs --base ff028a7105ccd5de0c3e9534dd8536b7667e22de --head 9a5339830",
+      "exit_code": 2,
+      "evidence": "affected-apps: --head must be a 40-character lowercase hex commit id",
+      "resolved_head_command": "node scripts/ci/affected-apps.mjs --base ff028a7105ccd5de0c3e9534dd8536b7667e22de --head 9a53398301ae2fbd41e7e95de8e36ce18d50b9b5",
+      "resolved_head_exit_code": 0,
+      "resolved_head_output": "[\"www-reading-advantage\"]",
+      "note": "The short head in the brief hits the documented 40-character rule of section 5.2. The resolved full head exits 0 and prints the one expected app id."
+    }
+  ],
+  "files_added": [],
+  "files_modified": [
+    "measure/tracks/www_tutor_calculator_20261117/plan.md"
+  ],
+  "plan_evidence_commit": "a1f3b095c0013e087fb7341be21027250f610a04",
+  "final_head": "a1f3b095c0013e087fb7341be21027250f610a04",
+  "final_worktree_clean": true,
+  "tasks_flipped": {},
+  "tasks_deferred": {},
+  "build_note": "The orchestrator rebuilt at this head: first attempt exit 1 on the known Next.js security nudge, retry exit 0. This session did not rebuild and did not touch the server on port 3120.",
+  "constraints_held": [
+    "No product file changed",
+    "No build, no server start, no deploy, no push",
+    "No build-graph scan and no doctor.sh",
+    "No disposition line and no question tool",
+    "Explicit pathspec commit of the plan file only",
+    "One heavy job at a time"
+  ],
+  "questions": []
+}

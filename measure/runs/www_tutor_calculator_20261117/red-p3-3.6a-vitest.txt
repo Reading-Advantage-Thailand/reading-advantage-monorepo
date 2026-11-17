@@ -1,0 +1,394 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage
+
+···········x······················xxxx···x······························xxx
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.adversarial.test.tsx > Adversarial: display of D-3 > the own bar and the leg bars add up to the whole network volume
+AssertionError: expected 31.64584467539897 to be close to 37.5, received difference is 5.854155324601031, but expected 5e-7
+ ❯ src/components/marketing/tutor-commission-calculator.adversarial.test.tsx:344:23
+    342|     const widths = barWidths();
+    343|     expect(widths).toHaveLength(3);
+    344|     expect(widths[0]).toBeCloseTo((9000 / 24000) * 100, 6);
+       |                       ^
+    345|     expect(widths[1]).toBeCloseTo((9000 / 24000) * 100, 6);
+    346|     expect(widths[2]).toBeCloseTo((6000 / 24000) * 100, 6);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator own bar (spec D-20, AC-23) > preset 1 shows the own students' volume in the own bar
+AssertionError: expected '5,520' to be '12,000' // Object.is equality
+
+Expected: [32m"[7m12,00[27m0"[39m
+Received: [31m"[7m5,52[27m0"[39m
+
+ ❯ src/components/marketing/tutor-commission-calculator.test.tsx:414:46
+    412|     renderCalculator();
+    413|     await user.click(presetButton(0));
+    414|     expect(graphBarValue(copy.graph.ownBar)).toBe("12,000");
+       |                                              ^
+    415|   });
+    416|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator own bar (spec D-20, AC-23) > preset 2 shows the own students' volume in the own bar
+AssertionError: expected '4,645.69' to be '6,000' // Object.is equality
+
+Expected: [32m"6,000"[39m
+Received: [31m"4,645.69"[39m
+
+ ❯ src/components/marketing/tutor-commission-calculator.test.tsx:421:46
+    419|     renderCalculator();
+    420|     await user.click(presetButton(1));
+    421|     expect(graphBarValue(copy.graph.ownBar)).toBe("6,000");
+       |                                              ^
+    422|   });
+    423|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator own bar (spec D-20, AC-23) > preset 3 shows the own students' volume in the own bar
+AssertionError: expected '8,273.45' to be '6,000' // Object.is equality
+
+Expected: [32m"6,000"[39m
+Received: [31m"8,273.45"[39m
+
+ ❯ src/components/marketing/tutor-commission-calculator.test.tsx:428:46
+    426|     renderCalculator();
+    427|     await user.click(presetButton(2));
+    428|     expect(graphBarValue(copy.graph.ownBar)).toBe("6,000");
+       |                                              ^
+    429|   });
+    430| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator leg count field (AC-23) > keeps the leg rows and the typed students when the field is cleared
+AssertionError: expected [] to have a length of 2 but got +0
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 2[39m
+[31m+ 0[39m
+
+ ❯ src/components/marketing/tutor-commission-calculator.test.tsx:449:23
+    447|
+    448|     await user.clear(count);
+    449|     expect(legRows()).toHaveLength(2);
+       |                       ^
+    450|
+    451|     await user.type(count, "2");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx > AC-23: the hero image is the eager largest image > en: the hero img loads eagerly or declares high fetch priority
+AssertionError: hero loading=lazy fetchpriority=null: expected false to be true // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- true[39m
+[31m+ false[39m
+
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx:205:7
+    203|       loading === "eager" || fetchPriority === "high",
+    204|       `hero loading=${String(loading)} fetchpriority=${String(fetchPri…
+    205|     ).toBe(true);
+       |       ^
+    206|   });
+    207| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx > AC-23: every requested placeholder has a value > en: renders with no string missing a placeholder value
+AssertionError: en: messages with a missing placeholder value: expected [ 'calculator.graph.legBar: {n}' ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "calculator.graph.legBar: {n}",[39m
+[31m+ ][39m
+
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx:109:9
+    107|         trace.missing.map((item) => `${item.key}: {${item.name}}`),
+    108|         `${locale}: messages with a missing placeholder value`,
+    109|       ).toEqual([]);
+       |         ^
+    110|     });
+    111|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx > AC-23: every requested placeholder has a value > th: renders with no string missing a placeholder value
+AssertionError: th: messages with a missing placeholder value: expected [ 'calculator.graph.legBar: {n}' ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "calculator.graph.legBar: {n}",[39m
+[31m+ ][39m
+
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx:109:9
+    107|         trace.missing.map((item) => `${item.key}: {${item.name}}`),
+    108|         `${locale}: messages with a missing placeholder value`,
+    109|       ).toEqual([]);
+       |         ^
+    110|     });
+    111|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx > AC-23: every requested placeholder has a value > zh: renders with no string missing a placeholder value
+AssertionError: zh: messages with a missing placeholder value: expected [ 'calculator.graph.legBar: {n}' ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "calculator.graph.legBar: {n}",[39m
+[31m+ ][39m
+
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx:109:9
+    107|         trace.missing.map((item) => `${item.key}: {${item.name}}`),
+    108|         `${locale}: messages with a missing placeholder value`,
+    109|       ).toEqual([]);
+       |         ^
+    110|     });
+    111|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯
+
+
+ Test Files  4 failed | 1 passed (5)
+      Tests  9 failed | 66 passed (75)
+   Start at  22:50:07
+   Duration  7.32s (transform 211ms, setup 258ms, import 826ms, tests 3.46s, environment 2.27s)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run src/components/marketing/tutor-commission-calculator.test.tsx src/components/marketing/tutor-commission-calculator.adversarial.test.tsx 'src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx' 'src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx' 'src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx' '--reporter=dot' '--maxWorkers=1'
+
+=== RETRY F5 2026-11-17T23:20:34+07:00 ===
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage
+
+·······x····x·····xxxx···········x·······x······························xxx
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.adversarial.test.tsx > Adversarial: display of D-3 > the own bar and the leg bars add up to the whole network volume
+AssertionError: expected 31.64584467539897 to be close to 37.5, received difference is 5.854155324601031, but expected 5e-7
+ ❯ src/components/marketing/tutor-commission-calculator.adversarial.test.tsx:344:23
+    342|     const widths = barWidths();
+    343|     expect(widths).toHaveLength(3);
+    344|     expect(widths[0]).toBeCloseTo((9000 / 24000) * 100, 6);
+       |                       ^
+    345|     expect(widths[1]).toBeCloseTo((9000 / 24000) * 100, 6);
+    346|     expect(widths[2]).toBeCloseTo((6000 / 24000) * 100, 6);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator presets > shows the preset 3 figures and three leg rows of four students in the graph
+AssertionError: expected true to be false // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- false[39m
+[31m+ true[39m
+
+ ❯ src/components/marketing/tutor-commission-calculator.test.tsx:244:35
+    242|     expect(resultValue(copy.results.legCommissions)).toBe("16,560");
+    243|     expect(graphTotalValue(copy.graph.netBar)).toBe("8,025.25");
+    244|     expect(hasFigure("8,273.45")).toBe(false);
+       |                                   ^
+    245|     expect(resultValue(copy.results.tax)).toBe("248.20");
+    246|     expect(heroValue()).toBe("8,025.25");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator presets > shows every preset 1 figure, its text, and only one pressed preset
+AssertionError: expected true to be false // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- false[39m
+[31m+ true[39m
+
+ ❯ src/components/marketing/tutor-commission-calculator.test.tsx:317:35
+    315|     expect(resultValue(copy.results.tax)).toBe("139.37");
+    316|     expect(graphTotalValue(copy.graph.netBar)).toBe("4,506.32");
+    317|     expect(hasFigure("4,645.69")).toBe(false);
+       |                                   ^
+    318|     expect(hasFigure("4,506.32")).toBe(true);
+    319|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator own bar (spec D-20, AC-23) > preset 1 shows the own students' volume in the own bar
+AssertionError: expected '5,520' to be '12,000' // Object.is equality
+
+Expected: [32m"[7m12,00[27m0"[39m
+Received: [31m"[7m5,52[27m0"[39m
+
+ ❯ src/components/marketing/tutor-commission-calculator.test.tsx:425:46
+    423|     renderCalculator();
+    424|     await user.click(presetButton(0));
+    425|     expect(graphBarValue(copy.graph.ownBar)).toBe("12,000");
+       |                                              ^
+    426|   });
+    427|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator own bar (spec D-20, AC-23) > preset 2 shows the own students' volume in the own bar
+AssertionError: expected '4,645.69' to be '6,000' // Object.is equality
+
+Expected: [32m"6,000"[39m
+Received: [31m"4,645.69"[39m
+
+ ❯ src/components/marketing/tutor-commission-calculator.test.tsx:432:46
+    430|     renderCalculator();
+    431|     await user.click(presetButton(1));
+    432|     expect(graphBarValue(copy.graph.ownBar)).toBe("6,000");
+       |                                              ^
+    433|   });
+    434|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator own bar (spec D-20, AC-23) > preset 3 shows the own students' volume in the own bar
+AssertionError: expected '8,273.45' to be '6,000' // Object.is equality
+
+Expected: [32m"6,000"[39m
+Received: [31m"8,273.45"[39m
+
+ ❯ src/components/marketing/tutor-commission-calculator.test.tsx:439:46
+    437|     renderCalculator();
+    438|     await user.click(presetButton(2));
+    439|     expect(graphBarValue(copy.graph.ownBar)).toBe("6,000");
+       |                                              ^
+    440|   });
+    441| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator leg count field (AC-23) > keeps the leg rows and the typed students when the field is cleared
+AssertionError: expected [] to have a length of 2 but got +0
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 2[39m
+[31m+ 0[39m
+
+ ❯ src/components/marketing/tutor-commission-calculator.test.tsx:460:23
+    458|
+    459|     await user.clear(count);
+    460|     expect(legRows()).toHaveLength(2);
+       |                       ^
+    461|
+    462|     await user.type(count, "2");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx > AC-23: the hero image is the eager largest image > en: the hero img loads eagerly or declares high fetch priority
+AssertionError: hero loading=lazy fetchpriority=null: expected false to be true // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- true[39m
+[31m+ false[39m
+
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx:205:7
+    203|       loading === "eager" || fetchPriority === "high",
+    204|       `hero loading=${String(loading)} fetchpriority=${String(fetchPri…
+    205|     ).toBe(true);
+       |       ^
+    206|   });
+    207| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/11]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx > AC-23: every requested placeholder has a value > en: renders with no string missing a placeholder value
+AssertionError: en: messages with a missing placeholder value: expected [ 'calculator.graph.legBar: {n}' ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "calculator.graph.legBar: {n}",[39m
+[31m+ ][39m
+
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx:109:9
+    107|         trace.missing.map((item) => `${item.key}: {${item.name}}`),
+    108|         `${locale}: messages with a missing placeholder value`,
+    109|       ).toEqual([]);
+       |         ^
+    110|     });
+    111|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/11]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx > AC-23: every requested placeholder has a value > th: renders with no string missing a placeholder value
+AssertionError: th: messages with a missing placeholder value: expected [ 'calculator.graph.legBar: {n}' ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "calculator.graph.legBar: {n}",[39m
+[31m+ ][39m
+
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx:109:9
+    107|         trace.missing.map((item) => `${item.key}: {${item.name}}`),
+    108|         `${locale}: messages with a missing placeholder value`,
+    109|       ).toEqual([]);
+       |         ^
+    110|     });
+    111|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/11]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx > AC-23: every requested placeholder has a value > zh: renders with no string missing a placeholder value
+AssertionError: zh: messages with a missing placeholder value: expected [ 'calculator.graph.legBar: {n}' ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "calculator.graph.legBar: {n}",[39m
+[31m+ ][39m
+
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx:109:9
+    107|         trace.missing.map((item) => `${item.key}: {${item.name}}`),
+    108|         `${locale}: messages with a missing placeholder value`,
+    109|       ).toEqual([]);
+       |         ^
+    110|     });
+    111|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/11]⎯
+
+
+ Test Files  4 failed | 1 passed (5)
+      Tests  11 failed | 64 passed (75)
+   Start at  23:20:37
+   Duration  6.78s (transform 147ms, setup 231ms, import 749ms, tests 3.19s, environment 2.16s)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run src/components/marketing/tutor-commission-calculator.test.tsx src/components/marketing/tutor-commission-calculator.adversarial.test.tsx 'src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx' 'src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx' 'src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx' '--reporter=dot' '--maxWorkers=1'

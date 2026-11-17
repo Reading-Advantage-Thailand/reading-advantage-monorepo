@@ -1,0 +1,56 @@
+MEASURE REVIEW A — Phase 1 audit log
+Track: www_tutor_calculator_20261117
+Audited head: 10dcf42a8d88c90f8e02debae761196ef40f2ccd (Phase 1)
+Diff range: 8862cf14cc6e9b11e62d08d5084288a4c294752c..10dcf42a8d88c90f8e02debae761196ef40f2ccd
+Role base: 6c47d7fe49398ac91b3703e47b15249d226294cf (test-strategy.md header)
+Route: opencode/glm-5.3-flash-free#high
+
+HEAD STATUS
+- At audit start, git rev-parse HEAD = 10dcf42a8d88c90f8e02debae761196ef40f2ccd. Confirmed equal to the briefed audited head.
+- Commit 4e32f7c76710f0647aa712b74d55dc8618bc8076 ("docs(measure): checkpoint phase 1 task 1.9") landed while the audit ran. git show --stat: it touches only measure/tracks/www_tutor_calculator_20261117/plan.md (+9/-1). The only later change is the plan file.
+
+WHAT WAS READ
+- spec.md (sections 3, 4 D-1..D-16, 5.2, 5.3, 5.4, 8 gates, 9 AC-1..AC-12), plan.md diff, test-strategy.md in full.
+- The full diff of the range; every added file line by line: tutor-commission.ts, tutor-commission-calculator.tsx, the four test files, the calculator locale blocks in en/th/zh, page.tsx wiring, page.test.tsx, globals.css rule.
+
+MONEY VERIFICATION (independent, not the module's tests)
+1. Wrote a second implementation from the spec text only (node -e): six rate checks → 40.5000/42.5000/45.0000/50.0000/55.6065/60.6315, all OK.
+2. Preset 1: gross 552000 satang (5,520), tax 16560 (165.60), net 535440 (5,354.40). Preset 2: rate 52.7321%, gross 1265569 (12,655.69), legs 400500 each, preTax 464569, tax 13937 (139.37), net 450632 (4,506.32); conservation 801000+464569=1265569 holds. Preset 3: rate 56.6953%, gross 1870944 (18,709.44), legs 1201500, preTax 669444, tax 20083 (200.83), net 649361 (6,493.61); conservation 1201500+669444=1870944 holds. All match D-2/D-3 and AC-3 to the satang.
+3. 1e9 case: rate 0.71422027..., rateUnits 714220276, gross satang 71422027600; the float product is 71422027583 (17 satang lower), so the BigInt path is real. Matches strategy R2/M1.
+4. Executed the shipped module directly (node type-stripping import) and compared with my implementation: every value identical. Clamps: 0, -5, -0, NaN, Infinity → rate 0; payoutAfterDeduction (0,0)=0, (100,150)=0, (5520,0)=5520; zero input gives tax 0 and net 0.
+5. Adversarial attacks (strategy 4.2): 13 inputs — negative/NaN/Infinity/fractional price, own students, and leg entries, MAX_SAFE_INTEGER volume, a 1000-entry leg array — all return finite non-negative money; conservation holds or the zero floor applies. resizeLegs([],1)=[3]; counts 2.5/-1/NaN clamp. Monotonicity argument: rate nondecreasing ⇒ legPayouts ≤ gross, so the floor is defensive and conservation cannot break in range.
+
+TEST MEANING
+- Module test: string-pinned rates (not toBeCloseTo), satang literals, both conservation equalities, the 1e9 satang pin, floor cases, resizeLegs, explainVariant. Strong. Gap: NaN/Infinity clamps unpinned (F2, nonblocking).
+- Locale test: 34 string leaves pinned word for word in en and th; key order; en/th/zh path parity; zh equals en (D-10); no second-level keys (D-4); D-16 scan and superseded-figure scan, each with a positive control that injects the value and proves the scan fires (A4 clean). The "34" count is a labeled constant, not a digit match (A3 clean).
+- Component test: default zero paint, leg growth to 3, preset 1 and 3 figures, one aria-pressed, setup/result text, D-7 clear, D-5 price reset, aria-live, labelled min=0 inputs. Gap: no removal case and no preset-2 coverage (F1, blocker).
+- Page test: section presence, anchor id, DOM order tutorRole → calculator → commitments.
+
+GATES RERUN LIVE (no redirection; heavy-run.sh)
+- www suite: exit 0, Test Files 65 passed (65), Tests 2533 passed (2533). Matches plan 1.8 exactly (A5 clean).
+- Module test alone: exit 0, 22 passed. Targeted locale+component+page: exit 0, 34 passed.
+- check-types --force: exit 0. Lint: exit 0, no output. Ratchet: git diff --exit-code exit 0, byte-unchanged (AC-12).
+- Build: not rerun; artifact green-1.8-10dcf42a8.json records exit 0 with a documented advisory-nudge retry.
+
+RED/GREEN CHAIN
+- git show --stat on 7eb6991fc, 377e45b8c, 08fcd93b0, 27f33b18e, bcaf27d80, 3786a1d29, f18b6dbbd: each Red commit adds only its test file before its Green counterpart, so the recorded import-failure causes are the real states.
+
+COMPONENT AND CALLERS
+- Every displayed figure comes from calculateNetwork(); no duplicated arithmetic except the decorative curve, which reuses commissionRate() (D-11). Bars: leg shares + preTax share = 100% of gross (D-9 item 2). State: resizeLegs preserves and appends 3 (D-6), preset resets price (D-5), edit clears selection (D-7). Format: 5,520 / 4,506.32 / 46% / 52.7% per D-3.
+- Callers: page.tsx is the only production caller; key() cast pattern matches the page's existing classTour/faq/books usage; getScopedI18n scoped path correct. No other page or component touched; diff stat = the ten planned files.
+
+SECURITY PROBES (folded Review B)
+1. No fetch/XHR/remote dynamic import in the new client code.
+2. No dangerouslySetInnerHTML anywhere new.
+3. package.json and pnpm-lock.yaml unchanged in the range.
+4. The only inline styles are two --bar-width custom properties set from a clamped numeric ratio; no user string reaches a style attribute; the globals.css @utility bar-width rule is the single added rule.
+5. No persistence, no URL parameters, no server action, no form post, no third-party script.
+6. No income promise: "Every figure is an example, not a promise of income", disclaimer last, default paint 0 with explain.zero; D-16 scan holds the June claims out.
+
+FINDINGS
+F1 (blocker) tutor-commission-calculator.test.tsx:121-209 — AC-9 partial coverage: no leg-row removal case (mutant M14 survives), no 4-row case, preset index 1 unasserted, preset index 2 setup/result text unasserted. Fix: three added cases. Route to Green.
+F2 (nonblocking) tutor-commission.test.ts — NaN/Infinity clamp behavior correct but unpinned; add three assertions.
+F3 (nonblocking) plan task 1.9 — A10 build-graph step skipped; no graph.db in the worktree; fresh scan by this review (/tmp/opencode/a63-graph.db) indexes the new exports, so no cost today.
+F4 (nonblocking) tutor-commission-calculator.tsx:171-178 — spec 5.3 item 6's net row is shown as the hero only; plan 1.6 documents it openly.
+
+VERDICT: CHANGES_REQUIRED (1 blocker, 3 nits). retry_recommendation: retry_implementation.
