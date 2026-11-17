@@ -915,7 +915,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
 
   The Red test scan also pins `faq.items.3.answer` in th and zh (AC-24 covers every string
   of the file). The false clause is deleted there too, by deletion only. The en faq answer
-  stays: no pattern matches it. Log:
+  was kept in the first round; retry F6 below pins it. Log:
   `measure/runs/www_tutor_calculator_20261117/green-p3-3.6d-fe1cb8b26.log`.
 
   Red rerun before the edits: `pnpm --filter www-reading-advantage exec vitest run
@@ -926,6 +926,19 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
 
   1. `cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-reedy-claim.test.tsx "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.phase3.adversarial.test.tsx" src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --maxWorkers=1`: exit 0 (7 files, 104 tests).
   2. `cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter www-reading-advantage exec vitest run src/lib/__tests__/primary-page-images.test.ts "src/app/[locale]/(marketing)/products/primary-advantage/page.adversarial.test.tsx" "src/app/[locale]/(marketing)/products/primary-advantage/page.content.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.phase3.adversarial.test.tsx" src/__tests__/www-tutor-reedy-claim.test.tsx --reporter=dot --maxWorkers=1` (every file from `rg -l "reedyBlock|platformFeatures|Reedy" apps/www-reading-advantage/src --glob '*.test.*'`): exit 0 (6 files, 266 tests).
+  3. `pnpm --filter www-reading-advantage exec tsc --noEmit -p .`: exit 0.
+  4. `pnpm --filter www-reading-advantage lint`: exit 0.
+
+  Retry F6. Red commit `28a621ce4` added two patterns and the exact en faq pin. Red rerun
+  before the edit: exit 1, `Tests 2 failed | 15 passed (17)`. Deleted only
+  ` Reedy is not available in Primary Advantage or Reading Advantage.` from
+  `faq.items.3.answer` in en. No other file changed.
+
+  Retry implementation commit: `5ca39dcfa2d4f24565e7067f18e0bcaa3250485f`.
+  Gates at that commit, the same four commands as above, in order:
+
+  1. Seven-file vitest command: exit 0 (7 files, 105 tests).
+  2. rg-listed Reedy vitest command: exit 0 (6 files, 267 tests).
   3. `pnpm --filter www-reading-advantage exec tsc --noEmit -p .`: exit 0.
   4. `pnpm --filter www-reading-advantage lint`: exit 0.
 
