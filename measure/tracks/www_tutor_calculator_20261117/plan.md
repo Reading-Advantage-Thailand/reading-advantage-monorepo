@@ -61,7 +61,7 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   --silent=true'` reports `Test Files 1 passed (1)` and `Tests 22 passed (22)` at exit 0.
   `pnpm turbo run check-types --filter=www-reading-advantage` exits 0.
 
-- [ ] 1.3 Red: pin the locale keys and the copy. Test: AC-5, AC-7, AC-8.
+- [x] 1.3 Red: pin the locale keys and the copy. Test: AC-5, AC-7, AC-8.
 
   File `apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts`. It
   imports the three dictionaries from `@/locales/pages/products/tutor-advantage` and holds:
@@ -73,7 +73,16 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   `calculator` block: `annual`, `per year`, `hour`, `hourly`, `VAT`, `Tawi`, `no earning cap`,
   `salary`, and `teacher`.
 
-  Done: it fails on the missing `calculator` block.
+  Done: 08fcd93b039f53d26447a9ec8590c17264397ec3. Red command exit 1: `bash
+  /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+  www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts
+  --reporter=dot --silent=true'`. Evidence: `Test Files 1 failed (1)`, `Tests 10 failed | 8
+  passed (18)`. The `calculator` block is absent, so `en.calculator` is `undefined`. The ten
+  failing cases name the block, the en and th pins, the key order, the zh pins, the D-2a
+  draft, the chart labels, and the two price notes. Four passing cases are vacuous at Red:
+  key-path parity, zh leaf-map equality, the figure absence scan, and the D-16 absence scan.
+  The four positive controls prove those checks fire on an injected value. Evidence files:
+  `measure/runs/www_tutor_calculator_20261117/red-1.3-08fcd93b.json` and `.log`.
 
 - [ ] 1.4 Green: add the `calculator` block to en, th, and zh. Test: AC-5, AC-7, AC-8.
 
