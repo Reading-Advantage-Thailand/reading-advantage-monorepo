@@ -60,7 +60,8 @@ export default async function TutorAdvantage({
   await params;
   const t = await getScopedI18n("pages.products.tutorAdvantage");
   // Indexed keys are built at run time, so the typed key union does not apply.
-  const key = t as unknown as (k: string) => string;
+  // A value object lets rule 11 pass a literal placeholder for the client to fill.
+  const key = t as unknown as (k: string, values?: Record<string, unknown>) => string;
 
   const phases = Array.from({ length: PHASE_COUNT }, (_, i) => ({
     title: key(`classTour.phases.${i}.title`),
@@ -112,7 +113,7 @@ export default async function TutorAdvantage({
       title: key("calculator.graph.title"),
       caption: key("calculator.graph.caption"),
       ownBar: key("calculator.graph.ownBar"),
-      legBar: key("calculator.graph.legBar"),
+      legBar: key("calculator.graph.legBar", { n: "{n}" }),
       grossBar: key("calculator.graph.grossBar"),
       legCommissionBar: key("calculator.graph.legCommissionBar"),
       netBar: key("calculator.graph.netBar"),
@@ -190,7 +191,11 @@ export default async function TutorAdvantage({
           </div>
           <div className="lg:col-span-6">
             <div className="overflow-hidden rounded-4xl border border-white/20 shadow-2xl">
-              <ProductPicture picture={productPictures.tutorSession} alt={t("heroExtra.imageAlt")} />
+              <ProductPicture
+                picture={productPictures.tutorSession}
+                alt={t("heroExtra.imageAlt")}
+                priority
+              />
             </div>
           </div>
         </div>

@@ -144,10 +144,10 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
   const markerX = (markerVolume / CURVE_MAX_VOLUME) * 100;
   const markerY = CURVE_HEIGHT * (1 - commissionRate(markerVolume) / CURVE_MAX_RATE);
 
-  /** Returns a row's share of the gross, for the bar width of spec D-9. */
-  const shareOfGross = (amount: number) => {
-    if (result.gross <= 0) return 0;
-    return Math.min(100, Math.max(0, (amount / result.gross) * 100));
+  /** Returns a row's share of the network volume, for the bar width of spec D-9 and D-20. */
+  const shareOfNetwork = (amount: number) => {
+    if (result.networkVolume <= 0) return 0;
+    return Math.min(100, Math.max(0, (amount / result.networkVolume) * 100));
   };
 
   const onPriceChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -163,7 +163,10 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
   const onLegCountChange = (event: ChangeEvent<HTMLInputElement>) => {
     const text = event.target.value;
     setLegCountText(text);
-    setLegTexts(resizeLegs(legTexts.map(readNumber), readNumber(text)).map(String));
+    // An empty field keeps the leg rows and their typed students (AC-23).
+    if (text.trim() !== "") {
+      setLegTexts(resizeLegs(legTexts.map(readNumber), readNumber(text)).map(String));
+    }
     setPresetIndex(null);
   };
 
@@ -179,14 +182,18 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
     setPresetIndex(null);
   };
 
+  /** Reads the leg-count field, or the row count while the field is empty (AC-23). */
+  const readLegCount = () =>
+    legCountText.trim() === "" ? legTexts.length : readNumber(legCountText);
+
   /** Adds one leg, at the default student count (spec 5.3 item 4). */
   const addLeg = () => {
-    setLegCount(readNumber(legCountText) + 1);
+    setLegCount(readLegCount() + 1);
   };
 
   /** Removes the last leg and keeps the rest (spec 5.3 item 4). */
   const removeLeg = () => {
-    setLegCount(Math.max(0, readNumber(legCountText) - 1));
+    setLegCount(Math.max(0, readLegCount() - 1));
   };
 
   /** Applies a preset input; the price resets to 3,000 baht (spec D-5). */
@@ -395,7 +402,7 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
                   <div className="mt-1 h-2 overflow-hidden rounded-full bg-emerald-100">
                     <div
                       className="bar-width h-full rounded-full bg-emerald-600"
-                      style={{ "--bar-width": `${shareOfGross(leg.payout)}%` }}
+                      style={{ "--bar-width": `${shareOfNetwork(leg.volume)}%` }}
                     />
                   </div>
                 </div>
@@ -405,13 +412,13 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm">
                   <span className="font-medium text-site-navy">{copy.graph.ownBar}</span>
                   <span className="ml-auto font-semibold tabular-nums text-emerald-900">
-                    {formatMoney(result.preTax)}
+                    {formatMoney(result.ownVolume)}
                   </span>
                 </div>
                 <div className="mt-1 h-2 overflow-hidden rounded-full bg-emerald-100">
                   <div
                     className="bar-width h-full rounded-full bg-emerald-900"
-                    style={{ "--bar-width": `${shareOfGross(result.preTax)}%` }}
+                    style={{ "--bar-width": `${shareOfNetwork(result.ownVolume)}%` }}
                   />
                 </div>
               </div>
