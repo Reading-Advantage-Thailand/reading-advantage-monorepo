@@ -49,6 +49,11 @@ This file tracks all major tracks for the project.
   *Status: active, light lane; post 2026-11-15 (`a-five-year-old-reads-by-herself`) live; one task per post; the track stays open for later daily posts | Owner: Monorepo orchestrator | PM task A-61 follow-up*
   *Note: PR's daily posts in en and th, written from `apps/www-reading-advantage/docs/blog-post-format.md` (track `www_blog_rich_format_20261115`). www-only push is standing-approved (Daniel 2026-11-15).*
 
+- [ ] **Track: www Tutor Advantage calculator and screens** — *created 2026-11-17*
+  *Link: [./tracks/www_tutor_calculator_20261117/](./tracks/www_tutor_calculator_20261117/)*
+  *Status: new, opened 2026-11-17; Phase 1 (commission calculator with the payout graph) first, no push; Phase 2 (blurred screens, the gallery, the two live lines) can start at once, because the set arrived 2026-11-17 | Owner: Monorepo orchestrator | PM assignment A-63 (Daniel, Google Tasks R2t2eF9Z) | Due 2026-11-21*
+  *Note: Daniel's shape of 06:50 ICT: personal students, legs with students by leg, and a graph of the payout. One level: the leg payouts come off rate x GV, and the three parts add up to the gross. Every figure is an example. Three gallery captions have a screen (student 070, student 002, tutor 062); `network` and `earnings` have none, and `studentHome` names Reedy practice, which no screen shows, so three answers wait with PR. Preset 3 and the three chart labels are drafts. No deploy; the www-only push follows the PM page-check at 390, 980, and 1280 px.*
+
 - [x] **Track: Primary class code: six hours** — *created 2026-11-12*
   *Link: [./tracks/primary_class_code_six_hours_20261112/](./tracks/primary_class_code_six_hours_20261112/)*
   *Status: complete; six-hour codes and automatic latest routing live, isolated production QA fixture created, actual Class sign-in screenshot captured (13:30 to19:30 Bangkok).*
