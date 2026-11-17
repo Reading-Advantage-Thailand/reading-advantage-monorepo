@@ -101,6 +101,15 @@ function hasFigure(figure: string): boolean {
   return screen.queryAllByText(figure).length > 0;
 }
 
+/** Returns the hero net figure shown under the net label in the result card. */
+function heroValue(): string {
+  const paragraphs = Array.from(resultRegion().querySelectorAll("p"));
+  const index = paragraphs.findIndex((p) => p.textContent === copy.results.net);
+  const hero = paragraphs[index + 1];
+  if (!hero) throw new Error("no hero figure under the net label");
+  return hero.textContent ?? "";
+}
+
 describe("TutorCommissionCalculator first paint", () => {
   it("shows the zero line and no income figures", () => {
     renderCalculator();
@@ -213,7 +222,7 @@ describe("TutorCommissionCalculator presets", () => {
     expect(resultValue(copy.results.downline)).toBe("16,560");
     expect(hasFigure("8,273.45")).toBe(true);
     expect(resultValue(copy.results.tax)).toBe("248.20");
-    expect(resultValue(copy.results.net)).toBe("8,025.25");
+    expect(heroValue()).toBe("8,025.25");
 
     const inputs = legStudentInputs();
     expect(inputs).toHaveLength(3);
