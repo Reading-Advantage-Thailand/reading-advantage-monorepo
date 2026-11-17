@@ -133,7 +133,6 @@ export const en = {
         "heading": "Practice speaking English with Reedy",
         "description": "After a lesson, students can practice speaking English with Reedy, an AI voice coach, in the LINE student app. Reedy talks with them about the lesson in simple English, with short Thai hints.",
         "points": [
-            "Live in Tutor Advantage only. It is not in Primary Advantage or Reading Advantage.",
             "Open to students with an active class package, on the lessons they finished.",
             "After each practice, students see one thing they did well, one thing to try next time, and a sentence to say again.",
             "Before they start, students can check their microphone and get tips."
@@ -295,7 +294,7 @@ export const en = {
         features: [
             { title: "Printed Workbook", description: "One printed workbook of 14 lessons for each class package." },
             { title: "Digital Twin", description: "Every workbook has a digital version for practice between classes." },
-            { title: "Reedy Voice Practice", description: "Reedy voice practice is live in Tutor Advantage only. It is open to students with an active class package, on lessons they finished." },
+            { title: "Reedy Voice Practice", description: "Reedy voice practice is open to students with an active class package, on lessons they finished." },
             { title: "Flashcards and Games", description: "Each class adds flashcards, two games, a pair conversation, and a wrap-up." },
             { title: "Local Tutors", description: "A tutor in your community teaches the class in person." },
             { title: "Mastery Advantage", description: "Workbook content is tagged to the Mastery Advantage knowledge graph, which maps skills and schedules review." },
@@ -471,7 +470,6 @@ export const th = {
         "heading": "ฝึกพูดภาษาอังกฤษกับ Reedy",
         "description": "หลังบทเรียน นักเรียนฝึกพูดภาษาอังกฤษกับ Reedy โค้ชเสียง AI ในแอปนักเรียนบน LINE Reedy คุยกับนักเรียนเรื่องบทเรียนด้วยภาษาอังกฤษง่ายๆ พร้อมคำใบ้ภาษาไทยสั้นๆ",
         "points": [
-            "ใช้ได้ใน Tutor Advantage เท่านั้น ไม่มีใน Primary Advantage หรือ Reading Advantage",
             "เปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว",
             "หลังฝึกแต่ละครั้ง นักเรียนเห็นสิ่งที่ทำได้ดีหนึ่งอย่าง สิ่งที่ควรลองครั้งหน้าหนึ่งอย่าง และประโยคหนึ่งประโยคให้พูดซ้ำ",
             "ก่อนเริ่ม นักเรียนตรวจไมโครโฟนและดูเคล็ดลับได้"
@@ -571,7 +569,7 @@ export const th = {
             },
             {
                 "question": "ใครใช้การฝึกพูดกับ Reedy ได้บ้าง",
-                "answer": "นักเรียนที่มีแพ็กเกจคลาส Tutor Advantage ที่ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว Reedy ไม่มีใน Primary Advantage หรือ Reading Advantage"
+                "answer": "นักเรียนที่มีแพ็กเกจคลาส Tutor Advantage ที่ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว"
             },
             {
                 "question": "บทเรียนดำเนินอย่างไร",
@@ -633,7 +631,7 @@ export const th = {
         features: [
             { title: "เวิร์กบุ๊กพิมพ์เป็นเล่ม", description: "เวิร์กบุ๊กที่พิมพ์เป็นเล่มหนึ่งเล่ม 14 บทเรียนต่อหนึ่งแพ็กเกจคลาส" },
             { title: "เวอร์ชันดิจิทัล", description: "เวิร์กบุ๊กทุกเล่มมีเวอร์ชันดิจิทัลไว้ฝึกระหว่างคลาส" },
-            { title: "ฝึกพูดกับ Reedy", description: "การฝึกพูดกับ Reedy ใช้ได้ใน Tutor Advantage เท่านั้น สำหรับนักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่ และในบทเรียนที่เรียนจบแล้ว" },
+            { title: "ฝึกพูดกับ Reedy", description: "การฝึกพูดกับ Reedy สำหรับนักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่ และในบทเรียนที่เรียนจบแล้ว" },
             { title: "แฟลชการ์ดและเกม", description: "ทุกคลาสมีแฟลชการ์ด เกมสองเกม การสนทนาเป็นคู่ และช่วงสรุป" },
             { title: "ติวเตอร์ในพื้นที่", description: "ติวเตอร์ในชุมชนของคุณสอนในคลาสแบบพบหน้า" },
             { title: "Mastery Advantage", description: "เนื้อหาในเวิร์กบุ๊กถูกติดแท็กกับกราฟความรู้ Mastery Advantage ซึ่งจัดทำแผนที่ทักษะและกำหนดเวลาทบทวน" },
@@ -809,7 +807,6 @@ export const zh = {
         "heading": "与 Reedy 练习英语口语",
         "description": "课后，学生可以在 LINE 学生应用中与 Reedy（一位 AI 语音教练）练习说英语。Reedy 用简单的英语和简短的泰语提示与学生谈论本课内容。",
         "points": [
-            "仅在 Tutor Advantage 中提供。Primary Advantage 和 Reading Advantage 中没有。",
             "面向持有有效课程包的学生，用于已完成的课程。",
             "每次练习后，学生会看到一件做得好的事、一件下次可以尝试的事，以及一个可以再说一遍的句子。",
             "开始前，学生可以检查麦克风并查看提示。"
@@ -911,7 +908,7 @@ export const zh = {
             },
             {
                 "question": "谁可以使用 Reedy 口语练习？",
-                "answer": "持有有效 Tutor Advantage 课程包的学生，用于已完成的课程。Primary Advantage 和 Reading Advantage 中没有 Reedy。"
+                "answer": "持有有效 Tutor Advantage 课程包的学生，用于已完成的课程。"
             },
             {
                 "question": "一节课如何进行？",
@@ -973,7 +970,7 @@ export const zh = {
         features: [
             { title: "印刷练习册", description: "每个课程包配一本印刷练习册，共 14 节课。" },
             { title: "数字版本", description: "每本练习册都有数字版本，供课间练习。" },
-            { title: "Reedy 口语练习", description: "Reedy 口语练习仅在 Tutor Advantage 中提供，面向持有有效课程包的学生，用于已完成的课程。" },
+            { title: "Reedy 口语练习", description: "Reedy 口语练习面向持有有效课程包的学生，用于已完成的课程。" },
             { title: "单词卡与游戏", description: "每节课包含单词卡、两个游戏、双人对话和课堂总结。" },
             { title: "本地导师", description: "您所在社区的导师面对面授课。" },
             { title: "Mastery Advantage", description: "练习册内容已标记到 Mastery Advantage 知识图谱，该图谱梳理技能并安排复习。" },

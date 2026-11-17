@@ -77,7 +77,7 @@ export default async function TutorAdvantage({
     alt: key(`books.items.${i}.alt`),
   }));
   const roleKeys = [0, 1, 2, 3];
-  const reedyKeys = [0, 1, 2, 3];
+  const reedyKeys = [0, 1, 2];
   const calculatorCopy = {
     eyebrow: key("calculator.eyebrow"),
     heading: key("calculator.heading"),
