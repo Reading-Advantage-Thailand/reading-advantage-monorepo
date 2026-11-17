@@ -38,6 +38,8 @@ const FORBIDDEN = [
   /ไม่มีใน Primary Advantage/,
   /仅在\s*Tutor Advantage/,
   /Primary Advantage 和 Reading Advantage 中没有/,
+  /not available in Primary Advantage/i,
+  /Reedy is not available/i,
 ] as const;
 
 /**
@@ -168,9 +170,12 @@ describe("AC-24: the scan detects every forbidden claim", () => {
       "ไม่มีใน Primary Advantage หรือ Reading Advantage",
       "仅在 Tutor Advantage 中提供。",
       "Primary Advantage 和 Reading Advantage 中没有。",
+      "Reedy is not available in Primary Advantage or Reading Advantage.",
     ];
-    const hits = probes.filter((probe) => FORBIDDEN.some((pattern) => pattern.test(probe)));
-    expect(hits).toHaveLength(FORBIDDEN.length);
+    const unmatched = FORBIDDEN.filter(
+      (pattern) => !probes.some((probe) => pattern.test(probe)),
+    );
+    expect(unmatched).toEqual([]);
   });
 });
 
@@ -196,6 +201,16 @@ describe("AC-24: the new Reedy descriptions", () => {
       expect(feature?.description).toBe(COMPONENT_REEDY[locale]);
     });
   }
+});
+
+describe("AC-24: the FAQ answer drops the not-available clause", () => {
+  it("en: the Reedy FAQ answer is the package sentence only", () => {
+    const items = (PAGES.en.faq as Dict).items as Array<Dict>;
+    const entry = items.find((item) => item.question === "Who can use Reedy voice practice?");
+    expect(entry?.answer).toBe(
+      "Students with an active Tutor Advantage class package, on the lessons they finished.",
+    );
+  });
 });
 
 describe("AC-24: the Reedy block keeps three bullets", () => {
