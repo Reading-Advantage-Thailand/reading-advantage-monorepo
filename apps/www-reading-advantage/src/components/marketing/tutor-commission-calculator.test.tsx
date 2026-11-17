@@ -103,6 +103,15 @@ function hasFigure(figure: string): boolean {
   return screen.queryAllByText(figure).length > 0;
 }
 
+/** Returns the money value shown beside a graph bar label. */
+function graphBarValue(label: string): string {
+  const term = screen.getByText(label);
+  const row = term.closest("div");
+  const value = row?.querySelector(".ml-auto");
+  if (!value) throw new Error(`no graph bar value for ${label}`);
+  return value.textContent ?? "";
+}
+
 /** Returns the hero net figure shown under the net label in the result card. */
 function heroValue(): string {
   const paragraphs = Array.from(resultRegion().querySelectorAll("p"));
@@ -394,5 +403,55 @@ describe("TutorCommissionCalculator settlement eligibility (spec D-18, AC-21)", 
     expect(
       within(resultRegion()).getByText(thCopy.explain.zero),
     ).toBeInTheDocument();
+  });
+});
+
+describe("TutorCommissionCalculator own bar (spec D-20, AC-23)", () => {
+  it("preset 1 shows the own students' volume in the own bar", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    await user.click(presetButton(0));
+    expect(graphBarValue(copy.graph.ownBar)).toBe("12,000");
+  });
+
+  it("preset 2 shows the own students' volume in the own bar", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    await user.click(presetButton(1));
+    expect(graphBarValue(copy.graph.ownBar)).toBe("6,000");
+  });
+
+  it("preset 3 shows the own students' volume in the own bar", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    await user.click(presetButton(2));
+    expect(graphBarValue(copy.graph.ownBar)).toBe("6,000");
+  });
+});
+
+describe("TutorCommissionCalculator leg count field (AC-23)", () => {
+  it("keeps the leg rows and the typed students when the field is cleared", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+
+    const count = legCountInput();
+    await user.clear(count);
+    await user.type(count, "2");
+
+    const students = legStudentInputs();
+    expect(students).toHaveLength(2);
+    await user.clear(students[0]!);
+    await user.type(students[0]!, "5");
+    await user.clear(students[1]!);
+    await user.type(students[1]!, "7");
+
+    await user.clear(count);
+    expect(legRows()).toHaveLength(2);
+
+    await user.type(count, "2");
+    const restored = legStudentInputs();
+    expect(restored).toHaveLength(2);
+    expect(restored[0]).toHaveValue(5);
+    expect(restored[1]).toHaveValue(7);
   });
 });

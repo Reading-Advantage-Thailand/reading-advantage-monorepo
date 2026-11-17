@@ -126,6 +126,15 @@ function barWidths(): number[] {
   );
 }
 
+/** Returns the money value shown beside a graph total label. */
+function graphTotalValue(label: string): string {
+  const term = screen.getByText(label);
+  const row = term.closest("div");
+  const value = row?.querySelector("dd");
+  if (!value) throw new Error(`no graph total value for ${label}`);
+  return value.textContent ?? "";
+}
+
 describe("Adversarial: leg count", () => {
   it("a decimal leg count keeps whole rows and whole students", async () => {
     const user = userEvent.setup();
@@ -325,22 +334,34 @@ describe("Adversarial: display of D-3", () => {
     expect(resultRegion().textContent ?? "").not.toMatch(/59\.1273|52\.732/);
   });
 
-  it("the graph bars add up to the whole gross", async () => {
+  it("the own bar and the leg bars add up to the whole network volume", async () => {
     const user = userEvent.setup();
     renderCalculator();
     await user.click(presetButton(1));
 
     const widths = barWidths();
     expect(widths).toHaveLength(3);
-    expect(widths[0]).toBeCloseTo((4005 / 12655.69) * 100, 6);
-    expect(widths[1]).toBeCloseTo((4005 / 12655.69) * 100, 6);
-    expect(widths[2]).toBeCloseTo((4645.69 / 12655.69) * 100, 6);
+    expect(widths[0]).toBeCloseTo((9000 / 24000) * 100, 6);
+    expect(widths[1]).toBeCloseTo((9000 / 24000) * 100, 6);
+    expect(widths[2]).toBeCloseTo((6000 / 24000) * 100, 6);
     expect(widths.reduce((sum, width) => sum + width, 0)).toBeCloseTo(100, 6);
+
+    expect(graphTotalValue(copy.graph.grossBar)).toBe("12,655.69");
+    expect(graphTotalValue(copy.graph.legCommissionBar)).toBe("8,010");
+    expect(graphTotalValue(copy.graph.netBar)).toBe("4,506.32");
 
     await user.click(presetButton(2));
     const threeLegWidths = barWidths();
     expect(threeLegWidths).toHaveLength(4);
+    expect(threeLegWidths[0]).toBeCloseTo((12000 / 42000) * 100, 6);
+    expect(threeLegWidths[1]).toBeCloseTo((12000 / 42000) * 100, 6);
+    expect(threeLegWidths[2]).toBeCloseTo((12000 / 42000) * 100, 6);
+    expect(threeLegWidths[3]).toBeCloseTo((6000 / 42000) * 100, 6);
     expect(threeLegWidths.reduce((sum, width) => sum + width, 0)).toBeCloseTo(100, 6);
+
+    expect(graphTotalValue(copy.graph.grossBar)).toBe("24,833.45");
+    expect(graphTotalValue(copy.graph.legCommissionBar)).toBe("16,560");
+    expect(graphTotalValue(copy.graph.netBar)).toBe("8,025.25");
   });
 });
 

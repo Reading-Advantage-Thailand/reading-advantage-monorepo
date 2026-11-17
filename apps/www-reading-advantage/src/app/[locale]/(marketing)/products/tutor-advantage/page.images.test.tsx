@@ -193,6 +193,19 @@ describe("AC-22: the hero image", () => {
   }
 });
 
+describe("AC-23: the hero image is the eager largest image", () => {
+  it("en: the hero img loads eagerly or declares high fetch priority", async () => {
+    await renderWithRealCopy("en");
+    const picture = contentImage(heroBlock());
+    const loading = picture.getAttribute("loading");
+    const fetchPriority = picture.getAttribute("fetchpriority");
+    expect(
+      loading === "eager" || fetchPriority === "high",
+      `hero loading=${String(loading)} fetchpriority=${String(fetchPriority)}`,
+    ).toBe(true);
+  });
+});
+
 describe("AC-22: the three book covers", () => {
   for (const locale of LOCALES) {
     it(`${locale}: shows each cover in the books order with its alt`, async () => {

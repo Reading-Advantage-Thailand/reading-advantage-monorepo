@@ -238,18 +238,21 @@ before the `commitments` ("Honest basics") section, which is before `faq`. This 
 ### D-9 The payout graph
 
 Daniel's shape: "which demonstrates in a graph how the payout works". The graph is one row per
-leg plus one row for the tutor:
+leg plus one row for the tutor's own students:
 
-1. A row holds a label, a bar, and the money figures of that row.
-2. The bar length is the payout of that row against the gross, so the rows add up to the whole.
-3. A leg row reads `chart.legPayout` and the leg numeral, then `chart.legVolume` with the
-   volume, then the leg payout as bold text.
-4. The tutor row reads `chart.yourPayout` and the payout as bold text.
+1. A row holds a label, a bar, and the money figure of that row.
+2. The bar length is the volume of that row against the network volume, so the own bar and the
+   leg bars add up to the whole network volume.
+3. A leg row reads `graph.legBar` with the leg numeral, then the leg volume, then the leg
+   commission as bold text.
+4. The own row reads `graph.ownBar` and the own students' volume: the price times the personal
+   students (D-20).
 5. The rate curve of the June file sits next to the graph at `lg` and above it at small widths
    (D-11).
 
-The graph uses three short labels. PR v0.4 section 8 named them `chart.legVolume`,
-`chart.legPayout`, and `chart.yourPayout`, and task 2.7 shipped them. The bar length is a
+The graph uses the PR section 6 labels: `graph.legBar` with the `{n}` placeholder, `graph.ownBar`,
+`graph.grossBar`, `graph.legCommissionBar`, `graph.netBar`, and `graph.axisBaht`. The three
+totals under the bars read the gross, the leg commission, and the net. The bar length is a
 run-time value: an inline style carries it as a CSS custom property, and one rule in
 `src/app/[locale]/globals.css` reads it. The `shadcn/no-inline-styles` row of
 `apps/www-reading-advantage/docs/design-rules.md` allows an inline style that sets a CSS
@@ -405,6 +408,22 @@ is the orchestrator default until Daniel decides on a Muse picture.
 The new cover file is a 480 by 651 webp. Green converts it from the printed cover PNG
 `/home/daniebo/Desktop/Workbooks/assets/PA-Origins-3.1-Front Cover.png`.
 
+### D-20 The own bar shows the own students' volume (Phase 3, review round 1)
+
+PR handoff section 3 says: "The graph shows one bar per leg, with that leg's volume and that
+leg's own commission. It shows the tutor's own students as one bar, the gross at the tutor's
+rate, and the payout after the leg commissions and the 3% tax."
+
+Decision: the `graph.ownBar` row shows the own students' volume, which is the price times the
+personal students. At the 3,000 baht price the own bar reads 12,000 for preset 1, and 6,000 for
+presets 2 and 3. The own bar and the leg bars add up to the network volume. The tutor's payout
+after the leg commissions and the 3% tax stays under `graph.netBar`: 5,354.40, 4,506.32, and
+8,025.25 for the three presets. The payout before tax has no row in the graph.
+
+The source is the PM decision of 2026-11-17 on review A finding A-P3-1, which accepts the PR
+line. This decision replaces the D-9 text that named `chart.*` and demanded bars that add up to
+the gross.
+
 ## 5. Phase 1: the calculator
 
 ### 5.1 Files
@@ -485,12 +504,13 @@ type TutorCommissionCalculatorProps = {
     eyebrow: string; heading: string; description: string;
     volumeNote: string; rateNote: string; payoutNote: string; disclaimer: string;
     inputs: { price: string; priceNote: string; ownStudents: string;
-              directTutors: string; studentsPerDirect: string };
+              legCount: string; legStudents: string; addLeg: string; removeLeg: string };
     results: { ownGV: string; networkGV: string; rate: string; gross: string;
-               downline: string; tax: string; net: string };
-    explain: { ownOnly: string; withDownline: string; zero: string };
-    chart: { legVolume: string; legPayout: string; yourPayout: string };
-    graph: { rateTitle: string; ratePoint: string };
+               legCommissions: string; tax: string; net: string };
+    explain: { ownOnly: string; withLegs: string; zero: string };
+    graph: { title: string; caption: string; ownBar: string; legBar: string;
+             grossBar: string; legCommissionBar: string; netBar: string;
+             axisBaht: string; rateTitle: string; rateAxis: string; ratePoint: string };
     presets: readonly { name: string; setup: string; result: string }[];
   };
 };
@@ -502,10 +522,11 @@ Layout, from the June file:
 2. Three preset buttons in a row. The selected one is `aria-pressed`.
 3. A 12-column grid at `lg`. Inputs take seven columns, results take five.
 4. Input cards: price with `priceNote`; own students; the leg count. Below the count, one row
-   per leg, each with the leg numeral, the `studentsPerDirect` label, and a number input.
+   per leg, each with the leg numeral, the `legStudents` label, and a number input.
 5. The payout graph and the rate curve under the input cards (D-9, D-11).
 6. Results: the net payout as the hero figure, then the rows `ownGV`, `networkGV`, `rate`,
-   `gross`, `downline`, `tax`, `net`. `gross - downline - tax = net` holds on the page.
+   `gross`, `legCommissions`, `tax`, `net`. `gross - leg commissions - tax = net` holds on the
+   page.
 7. The explain line under the result, chosen by `explainVariant`.
 8. The selected preset's `setup` under the buttons and its `result` in a bordered block under
    the result panel.
@@ -742,13 +763,13 @@ Constraints on the gates:
   count adding and removing one leg row, each preset's setup and result text and its figures,
   the clear on edit (D-7), the `aria-pressed` state, and the live region on the result card.
 - **AC-10.** The page test finds `tutor-calculator` after the `tutorRole` section and before the
-  `commitments` section, and `tutor-screens` before `tutor-calculator`, with three cards in the
+  `commitments` section, and `tutor-screens` before `tutor-calculator`, with five cards in the
   copy order and their alt texts.
 - **AC-11.** The gates of section 8 exit 0: the module test, the www suite, types, lint, and
   build.
 - **AC-12.** `scripts/ci/shadcn-ratchet-baseline.json` is unchanged.
-- **AC-13.** Phase 2 adds the three manifest entries and the three webp files.
-  `src/lib/__tests__/tutor-screens.test.ts` holds the three keys in slot order, each
+- **AC-13.** The gallery holds the manifest entries and the webp files of AC-19.
+  `src/lib/__tests__/tutor-screens.test.ts` holds the keys in slot order, each
   `src`/`width`/`height`/`portrait` value, and a file existence check under `public/`, and each
   card renders its file with the copy's alt text.
 - **AC-14.** No used image shows "Reading 3.1": the task records the blur rectangles, the
@@ -784,6 +805,15 @@ Constraints on the gates:
   locale in en, th, and zh. The three book cards follow the `books.items` order. The five
   gallery screens keep their files and alts. No block shows a banned file of D-19. The new
   cover file exists at 480 by 651. No test reads production source as text or computes a hash.
+- **AC-23.** The component shows the own students' volume under `graph.ownBar` for each preset:
+  12,000, 6,000, and 6,000 baht (D-20). The own bar and the leg bars add up to the network
+  volume, each bar as its volume share. The `graph.grossBar`, `graph.legCommissionBar`, and
+  `graph.netBar` rows keep the gross, the leg commissions, and the net. The page passes a value
+  for the `{n}` placeholder of `calculator.graph.legBar`, and it renders in en, th, and zh with
+  no missing placeholder value. A cleared leg-count field keeps the leg rows and the typed
+  students, and a count of 2 again restores the earlier 5 and 7 students. The hero image loads
+  with `loading="eager"` or `fetchpriority="high"`. No test reads production source as text or
+  computes a hash.
 
 ## 10. Open questions
 

@@ -844,6 +844,33 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
 
   The build output stays in place for the UX role. No server starts in this run.
 
+- [x] 3.6a Red: pin the review findings of round 1. Test: AC-23. Done: recorded by the next commit.
+
+  Files: `src/components/marketing/tutor-commission-calculator.test.tsx` (one own-bar assertion per
+  preset; the cleared leg-count field), `src/components/marketing/tutor-commission-calculator.adversarial.test.tsx`
+  (the own bar and the leg bars add up to the network volume; the graph totals keep their values), the
+  new `src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx` (a value for
+  every requested placeholder in en, th, and zh), and
+  `src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx` (the eager hero).
+  The spec text follows D-20 and AC-23.
+
+  Red command:
+  `cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx src/components/marketing/tutor-commission-calculator.adversarial.test.tsx "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx" --reporter=dot --maxWorkers=1`.
+  Exit 1. The failing cases are the own bar of preset 1 (5,520 shown), preset 2 (4,645.69), preset 3
+  (8,273.45), the bar-sum case (31.6458 against 37.5), the cleared leg count (0 leg rows), the hero
+  image (loading=lazy, fetchpriority null), and the missing `{n}` value in en, th, and zh. Every
+  failure is an AC-23 assertion. No failure is an import, syntax, or fixture error.
+  `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0. Full output:
+  `measure/runs/www_tutor_calculator_20261117/red-p3-3.6a-vitest.txt`.
+
+- [ ] 3.6b Green: fix the review findings of round 1. Test: AC-23.
+
+  The `graph.ownBar` row reads the own students' volume (the price times the personal students). The
+  bar lengths are shares of the network volume, so the own bar and the leg bars add up to the whole.
+  `page.tsx` passes `{ n: "{n}" }` for `calculator.graph.legBar`. A cleared leg-count field keeps the
+  leg rows and their typed students. `ProductPicture` takes an optional `priority` prop and the hero
+  sets it. No other assertion moves.
+
 - [ ] 3.7 Reviews A and C, adversarial, and phase acceptance. Test: AC-17, AC-18, AC-19, AC-20.
 
   Run the reviews on a model family other than the Green family. Re-run the adversarial suite on the new copy and tax rule. Record the phase acceptance artifact.
