@@ -190,7 +190,8 @@ describe("TutorCommissionCalculator presets", () => {
     expect(screen.queryByText(copy.presets[0].setup)).toBeNull();
     expect(screen.queryByText(copy.presets[0].result)).toBeNull();
     expect(presetButton(0)).toHaveAttribute("aria-pressed", "false");
-    expect(screen.queryByText("15,000")).not.toBeNull();
+    const results = resultRegion();
+    expect(within(results).getAllByText("15,000")).toHaveLength(2);
   });
 
   it("defaults the price to 3,000 and restores it when a preset is picked", async () => {
