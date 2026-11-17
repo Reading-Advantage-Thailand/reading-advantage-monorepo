@@ -59,7 +59,7 @@ export type NetworkResult = {
   gross: number;
   /** Downline deduction in baht: the sum of the leg payouts. */
   legPayouts: number;
-  /** Payout before tax in baht; not displayed. */
+  /** Payout before tax in baht, shown as the tutor's payout row (spec D-9 item 2). */
   preTax: number;
   /** Withholding tax in baht. */
   withholdingTax: number;
@@ -93,7 +93,9 @@ function clampCount(value: number): number {
  * @returns The amount in whole satang.
  */
 function toSatang(baht: number): bigint {
-  return BigInt(Math.round(baht * SATANG_PER_BAHT));
+  const satang = baht * SATANG_PER_BAHT;
+  if (!Number.isFinite(satang)) return 0n;
+  return BigInt(Math.round(satang));
 }
 
 /**
@@ -145,11 +147,11 @@ export function calculateNetwork(input: NetworkInput): NetworkResult {
   const price = clampNonNegative(input.price);
   const personalStudents = clampCount(input.personalStudents);
 
-  const ownVolume = price * personalStudents;
+  const ownVolume = clampNonNegative(price * personalStudents);
 
   const legRows = input.studentsPerLeg.map((rawStudents, index) => {
     const students = clampCount(rawStudents);
-    const volume = price * students;
+    const volume = clampNonNegative(price * students);
     const payoutSatang = flatSatang(volume, commissionRate(volume));
     return { leg: index + 1, students, volume, payoutSatang };
   });
@@ -166,7 +168,7 @@ export function calculateNetwork(input: NetworkInput): NetworkResult {
     0n,
   );
   const legVolume = legRows.reduce((sum, row) => sum + row.volume, 0);
-  const networkVolume = ownVolume + legVolume;
+  const networkVolume = clampNonNegative(ownVolume + legVolume);
   const rate = commissionRate(networkVolume);
   const grossSatang = flatSatang(networkVolume, rate);
 
