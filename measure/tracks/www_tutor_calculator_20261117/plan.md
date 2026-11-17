@@ -212,9 +212,17 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   `bash measure/doctor.sh` was not run as a gate here: a pre-existing architecture snapshot hash
   mismatch fails it, and no file in this track touches that check.
 
-- [ ] 1.9 Checkpoint Phase 1. Test: AC-11.
+- [x] 1.9 Checkpoint Phase 1. Test: AC-11.
 
   Commit the plan update with the task SHAs and the gate output. Phase 1 ships no push (D-13).
+
+  Checkpoint: 2026-11-17. `phase_base_sha` 8862cf14cc6e9b11e62d08d5084288a4c294752c; code head
+  10dcf42a8d88c90f8e02debae761196ef40f2ccd. Task SHAs, 1.1 to 1.8: 7eb6991fc, 21e23c2f2,
+  377e45b8c, 545a43a79, 08fcd93b0, 704f03c49, fb453f519, 27f33b18e, 1142ecff9, bcaf27d80,
+  e42aa53fa, 3786a1d29, a8b78cf90, f18b6dbbd, 4c4153b04, 10dcf42a8. The five gates of task 1.8:
+  suite exit 0 with `Test Files 65 passed (65)` and `Tests 2533 passed (2533)`; types exit 0; lint
+  exit 0; ratchet exit 0; build exit 0 on retry. Captures:
+  `measure/runs/www_tutor_calculator_20261117/p1-captures/`. Phase 1 ships no push (D-13).
 
 ## Phase 2: the screens gallery and the live copy
 
