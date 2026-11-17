@@ -889,6 +889,30 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   2. `pnpm --filter www-reading-advantage exec tsc --noEmit -p .`: exit 0.
   3. `pnpm --filter www-reading-advantage lint`: exit 0.
 
+- [x] 3.6c Red: pin the removal of the false Reedy claim. Test: AC-24. Done: e0637db220e5f72c31043973d5a6b8f5c7260d73.
+
+  File `src/__tests__/www-tutor-reedy-claim.test.tsx`. It imports both locale modules and the
+  page, walks every string value of both modules in en, th, and zh, and fails on each pattern
+  of D-21. It pins the six new strings of D-21 and the three Reedy bullets. One control case
+  proves the scan rejects one probe per pattern. No case reads production source as text.
+
+  Red command: `cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter
+  www-reading-advantage exec vitest run src/__tests__/www-tutor-reedy-claim.test.tsx
+  --reporter=dot --maxWorkers=1`. Exit 1. Every failed case is an AC-24 assertion: six
+  forbidden-claim cases, six new-string cases, and three Reedy-block cases. The probe control
+  passes. No failure is an import, syntax, or fixture error. `pnpm --filter www-reading-advantage
+  exec tsc --noEmit -p .` exits 0. Output:
+  `measure/runs/www_tutor_calculator_20261117/red-p3-3.6c-vitest.txt`.
+
+  No committed test pins the old Reedy strings or the old bullet count. Only this new file
+  covers them.
+
+- [ ] 3.6d Green: delete the false Reedy claim. Test: AC-24.
+
+  Delete `reedyBlock.points.0` in en, th, and zh. Delete the Tutor-Advantage-only clause in
+  the Reedy entry of `platformFeatures.features` in both locale files and all three locales
+  (D-21). The page `reedyKeys` list keeps three entries. No other copy changes.
+
 - [ ] 3.7 Reviews A and C, adversarial, and phase acceptance. Test: AC-17, AC-18, AC-19, AC-20.
 
   Run the reviews on a model family other than the Green family. Re-run the adversarial suite on the new copy and tax rule. Record the phase acceptance artifact.

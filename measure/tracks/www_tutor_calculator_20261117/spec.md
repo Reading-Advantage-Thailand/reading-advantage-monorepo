@@ -424,6 +424,32 @@ The source is the PM decision of 2026-11-17 on review A finding A-P3-1, which ac
 line. This decision replaces the D-9 text that named `chart.*` and demanded bars that add up to
 the gross.
 
+### D-21 The Reedy copy drops the false Tutor-Advantage-only claim (Phase 3, page check)
+
+The PM page check of 2026-11-18, finding PM-1 (FIX), quotes the Reedy bullet: "Live in
+Tutor Advantage only. It is not in Primary Advantage or Reading Advantage." The finding says
+the bullet is false. Reedy Preview is live in Primary Advantage since the 2026-10-20 cutover,
+and the PR copy has no such line. The PM order: delete the whole bullet in en and th, and add
+a test that no locale string says Reedy is "not in Primary". zh follows en, so the zh bullet is
+deleted too.
+
+The same false claim appears in two `platformFeatures` descriptions. The orchestrator extends
+the order to each place, by deletion only. No new sentence is written.
+
+| File | Locale | After |
+|---|---|---|
+| `locales/pages/products/tutor-advantage.ts` | en | `Reedy voice practice is open to students with an active class package, on lessons they finished.` |
+| same | th | `การฝึกพูดกับ Reedy สำหรับนักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่ และในบทเรียนที่เรียนจบแล้ว` |
+| same | zh | `Reedy 口语练习面向持有有效课程包的学生，用于已完成的课程。` |
+| `locales/components/products/tutor-advantage.ts` | en | `Your students practice speaking with Reedy on the lessons they finished.` |
+| same | th | `นักเรียนของคุณฝึกพูดกับ Reedy ในบทเรียนที่เรียนจบแล้ว` |
+| same | zh | `您的学生在已完成的课程上与 Reedy 练习口语。` |
+
+The Reedy block keeps three bullets in en, th, and zh: the package bullet, the feedback
+bullet, and the microphone bullet. The claim, the phrase "not in Primary Advantage", and their
+Thai and zh forms never ship in the two modules. The zh bullet sits first, at
+`reedyBlock.points.0`, so the deletion keeps each array at three entries.
+
 ## 5. Phase 1: the calculator
 
 ### 5.1 Files
@@ -814,6 +840,13 @@ Constraints on the gates:
   students, and a count of 2 again restores the earlier 5 and 7 students. The hero image loads
   with `loading="eager"` or `fetchpriority="high"`. No test reads production source as text or
   computes a hash.
+- **AC-24.** No string in `locales/pages/products/tutor-advantage.ts` or
+  `locales/components/products/tutor-advantage.ts` matches `/Tutor Advantage only/i`,
+  `/not in Primary Advantage/i`, `/Tutor Advantage เท่านั้น/`, `/ไม่มีใน Primary Advantage/`,
+  `/仅在\s*Tutor Advantage/`, or `/Primary Advantage 和 Reading Advantage 中没有/` in en, th,
+  or zh (D-21). The imported objects hold the six new strings of D-21. The rendered Reedy block
+  shows exactly three bullets in en, th, and zh, and they are the package, feedback, and
+  microphone bullets. No test reads production source as text and no test computes a hash.
 
 ## 10. Open questions
 
