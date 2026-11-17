@@ -371,14 +371,35 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   Note (build-graph): skipped under the PM load watch. No export, signature, or import edge
   changed.
 
-- [ ] 2.3 Change the two live lines. Test: AC-6.
+- [x] 2.3 Change the two live lines. Test: AC-6.
 
   `tutorRole.points[3]` and `faq.items[5].answer` in en and th take the strings of spec 6.4. The
   zh values take the new English lines (D-10). Add both lines to the locale test, and add the
   two old lines to its absent list.
 
-  Done: the locale test passes and `grep -n "We do not publish income figures"` over the tutor
-  locale file finds no hit.
+  Done: 0a7ff97e596643212b52c3b9bf8fb7703e0628b2. `phase_base_sha`
+  d279b870341c067c33fc884ae8863b5428487c17; `role_base_sha`
+  9314f07decb27045ddce7d4f87d105d458b9b290.
+
+  Red: exit 1. Command:
+  `pnpm --filter www-reading-advantage exec vitest run
+  src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --silent=true`. Evidence:
+  `Test Files 1 failed (1)`, `Tests 4 failed | 27 passed (31)`. Both paths still held the old
+  copy, so the en pins, the th pins, and the zh pins failed, and the absent scan reported both
+  old lines at `tutorRole.points[3]` and `faq.items[5].answer`.
+
+  Green: exit 0. Command:
+  `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+  www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts
+  --reporter=dot --silent=true'`. Evidence: `Test Files 1 passed (1)`, `Tests 31 passed (31)`.
+
+  `grep -n "We do not publish income figures"
+  apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts` prints no line and
+  exits 1. `pnpm turbo run check-types --filter=www-reading-advantage` exits 0. Evidence files:
+  `measure/runs/www_tutor_calculator_20261117/green-2.3-0a7ff97e5.json` and `.log`.
+
+  Note (build-graph): skipped under the PM load watch. No export, signature, or import edge
+  changed.
 
 - [ ] 2.4 Run the Phase 2 gates. Test: AC-11, AC-12, AC-16.
 
