@@ -153,6 +153,17 @@ export const en = {
         "cta": "Apply as a tutor",
         "alt": "A tutor asking a student a question during a class"
     },
+    screens: {
+        "eyebrow": "INSIDE THE APPS",
+        "heading": "The student app and the tutor app",
+        "description": "A student joins the class in LINE. The tutor runs the class in the tutor app. Both follow the same printed workbook.",
+        "items": [
+            { "caption": "The student's home: the next class, the lesson, and Reedy practice.", "alt": "Tutor Advantage student app home screen" },
+            // Alt draft (spec D-15a): PR corrects it to a student-app wording or confirms it.
+            { "caption": "One lesson, 18 phases. The app follows the printed workbook step by step.", "alt": "Tutor app showing the 18 phases of one lesson" },
+            { "caption": "The tutor's class list: who is in today's class and which lesson they are on.", "alt": "Tutor app class list with the students of one class" }
+        ]
+    },
     calculator: {
         "eyebrow": "THE COMMISSION CALCULATOR",
         "heading": "See how one month's commission works",
@@ -471,6 +482,17 @@ export const th = {
         "cta": "สมัครเป็นติวเตอร์",
         "alt": "ติวเตอร์ถามคำถามนักเรียนระหว่างคลาส"
     },
+    screens: {
+        "eyebrow": "ภายในแอป",
+        "heading": "แอปของนักเรียน และแอปของติวเตอร์",
+        "description": "นักเรียนเข้าคลาสผ่าน LINE ติวเตอร์สอนผ่านแอปของติวเตอร์ ทั้งสองใช้เวิร์กบุ๊กที่พิมพ์เป็นเล่มชุดเดียวกัน",
+        "items": [
+            { "caption": "หน้าแรกของนักเรียน: คลาสถัดไป บทเรียน และการฝึกพูดกับ Reedy", "alt": "หน้าแรกของแอปนักเรียน Tutor Advantage" },
+            // Alt draft (spec D-15a): PR corrects it to a student-app wording or confirms it.
+            { "caption": "หนึ่งบทเรียน 18 ช่วง แอปพาไปทีละขั้นตามเวิร์กบุ๊กที่พิมพ์เป็นเล่ม", "alt": "แอปติวเตอร์แสดง 18 ช่วงของบทเรียนหนึ่งบท" },
+            { "caption": "รายชื่อคลาสของติวเตอร์: วันนี้มีใครบ้าง และแต่ละคนอยู่บทไหน", "alt": "รายชื่อนักเรียนในคลาสหนึ่งของแอปติวเตอร์" }
+        ]
+    },
     calculator: {
         "eyebrow": "เครื่องคำนวณค่าคอมมิชชัน",
         "heading": "ดูว่าค่าคอมมิชชันของหนึ่งเดือนคิดอย่างไร",
@@ -788,6 +810,18 @@ export const zh = {
         ],
         "cta": "申请成为导师",
         "alt": "导师在课堂上向学生提问"
+    },
+    // D-10 placeholder: the screens block holds the English lines until the contracted Chinese speaker delivers.
+    screens: {
+        "eyebrow": "INSIDE THE APPS",
+        "heading": "The student app and the tutor app",
+        "description": "A student joins the class in LINE. The tutor runs the class in the tutor app. Both follow the same printed workbook.",
+        "items": [
+            { "caption": "The student's home: the next class, the lesson, and Reedy practice.", "alt": "Tutor Advantage student app home screen" },
+            // Alt draft (spec D-15a): PR corrects it to a student-app wording or confirms it.
+            { "caption": "One lesson, 18 phases. The app follows the printed workbook step by step.", "alt": "Tutor app showing the 18 phases of one lesson" },
+            { "caption": "The tutor's class list: who is in today's class and which lesson they are on.", "alt": "Tutor app class list with the students of one class" }
+        ]
     },
     // D-10 placeholder: the calculator block holds the English lines until the contracted Chinese speaker delivers.
     calculator: {

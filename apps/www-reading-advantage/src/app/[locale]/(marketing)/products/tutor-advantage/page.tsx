@@ -8,6 +8,8 @@ import { SiteImageView } from "@/components/marketing/site-image";
 import { SectionHeader } from "@/components/marketing/section-header";
 import { TutorClassStepper } from "@/components/marketing/tutor-class-stepper";
 import { TutorCommissionCalculator } from "@/components/marketing/tutor-commission-calculator";
+import ProductPicture from "@/components/products/product-picture";
+import { tutorScreens } from "@/lib/product-pictures";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { FAQAccordion } from "@/components/ui/faq-accordion";
 
@@ -109,6 +111,16 @@ export default async function TutorAdvantage({
       result: key(`calculator.presets.${i}.result`),
     })),
   };
+  // Gallery slots in copy order; the two phone screens are half-width and the wide screen spans at md (spec 6.3).
+  const screenCards = [
+    { picture: tutorScreens.studentHome, wide: false },
+    { picture: tutorScreens.lessonPhases, wide: false },
+    { picture: tutorScreens.classList, wide: true },
+  ].map((card, i) => ({
+    ...card,
+    caption: key(`screens.items.${i}.caption`),
+    alt: key(`screens.items.${i}.alt`),
+  }));
 
   return (
     <main className="overflow-x-hidden bg-site-page">
@@ -338,6 +350,31 @@ export default async function TutorAdvantage({
               <ArrowRight className="h-5 w-5" aria-hidden="true" />
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Inside the apps */}
+      <section data-testid="tutor-screens" className="bg-site-page py-20 md:py-28">
+        <div className="container mx-auto max-w-6xl px-4 sm:px-6">
+          <SectionHeader
+            eyebrow={t("screens.eyebrow")}
+            title={t("screens.heading")}
+            description={t("screens.description")}
+            accent="text-emerald-800"
+            className="mb-12"
+          />
+          <ul className="grid grid-cols-1 gap-8 md:grid-cols-2">
+            {screenCards.map((card) => (
+              <li key={card.picture.src} className={card.wide ? "md:col-span-2" : undefined}>
+                <figure className="overflow-hidden rounded-3xl border border-site-border bg-white p-4 shadow-sm">
+                  <ProductPicture picture={card.picture} alt={card.alt} />
+                  <figcaption className="mt-4 text-base leading-relaxed text-site-body">
+                    {card.caption}
+                  </figcaption>
+                </figure>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

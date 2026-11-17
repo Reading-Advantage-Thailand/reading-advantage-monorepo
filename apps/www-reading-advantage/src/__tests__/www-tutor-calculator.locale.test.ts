@@ -1,7 +1,9 @@
 /**
- * Red contract for the calculator locale keys and copy (AC-5, AC-7, AC-8).
- * Pins spec section 5.4 word for word, D-2a, D-10 and D-16.
- * The `calculator` block is intentionally absent at the Red stage.
+ * Red contract for the calculator locale keys and copy (AC-5, AC-7, AC-8),
+ * and for the screens gallery keys (AC-10, spec 6.3, D-10, D-15a).
+ * Pins spec sections 5.4 and 6.3 word for word.
+ * The `calculator` block was intentionally absent at the Red stage of task 1.3;
+ * the `screens` block is intentionally absent at the Red stage of task 2.2.
  */
 import { describe, expect, it } from "vitest";
 import { en, th, zh } from "@/locales/pages/products/tutor-advantage";
@@ -444,5 +446,133 @@ describe("8. June claims are absent (D-16, AC-8)", () => {
       const probe = { ...stringLeaves(block("en")), __probe: claim };
       expect(findTokens(probe, [claim]).some((hit) => hit.path === "__probe")).toBe(true);
     }
+  });
+});
+
+/** Returns the screens block, or an empty object when the key is missing. */
+function screensBlock(locale: Locale): Dict {
+  const value = DICTS[locale].screens;
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+    ? (value as Dict)
+    : {};
+}
+
+/**
+ * One row per string leaf of the screens block (spec 6.3): exact en copy, exact th copy.
+ * Nine leaves: the three section strings plus caption and alt for each of the three slots.
+ */
+const SCREEN_PINS: readonly { path: readonly string[]; en: string; th: string }[] = [
+  {
+    path: ["eyebrow"],
+    en: "INSIDE THE APPS",
+    th: "ภายในแอป",
+  },
+  {
+    path: ["heading"],
+    en: "The student app and the tutor app",
+    th: "แอปของนักเรียน และแอปของติวเตอร์",
+  },
+  {
+    path: ["description"],
+    en: "A student joins the class in LINE. The tutor runs the class in the tutor app. Both follow the same printed workbook.",
+    th: "นักเรียนเข้าคลาสผ่าน LINE ติวเตอร์สอนผ่านแอปของติวเตอร์ ทั้งสองใช้เวิร์กบุ๊กที่พิมพ์เป็นเล่มชุดเดียวกัน",
+  },
+  {
+    path: ["items", "0", "caption"],
+    en: "The student's home: the next class, the lesson, and Reedy practice.",
+    th: "หน้าแรกของนักเรียน: คลาสถัดไป บทเรียน และการฝึกพูดกับ Reedy",
+  },
+  {
+    path: ["items", "0", "alt"],
+    en: "Tutor Advantage student app home screen",
+    th: "หน้าแรกของแอปนักเรียน Tutor Advantage",
+  },
+  {
+    path: ["items", "1", "caption"],
+    en: "One lesson, 18 phases. The app follows the printed workbook step by step.",
+    th: "หนึ่งบทเรียน 18 ช่วง แอปพาไปทีละขั้นตามเวิร์กบุ๊กที่พิมพ์เป็นเล่ม",
+  },
+  {
+    path: ["items", "1", "alt"],
+    en: "Tutor app showing the 18 phases of one lesson",
+    th: "แอปติวเตอร์แสดง 18 ช่วงของบทเรียนหนึ่งบท",
+  },
+  {
+    path: ["items", "2", "caption"],
+    en: "The tutor's class list: who is in today's class and which lesson they are on.",
+    th: "รายชื่อคลาสของติวเตอร์: วันนี้มีใครบ้าง และแต่ละคนอยู่บทไหน",
+  },
+  {
+    path: ["items", "2", "alt"],
+    en: "Tutor app class list with the students of one class",
+    th: "รายชื่อนักเรียนในคลาสหนึ่งของแอปติวเตอร์",
+  },
+];
+
+describe("9. the screens block exists (AC-10)", () => {
+  it("exists in en, th, and zh", () => {
+    expect(DICTS.en.screens).toBeDefined();
+    expect(DICTS.th.screens).toBeDefined();
+    expect(DICTS.zh.screens).toBeDefined();
+  });
+
+  it("sits after tutorRole and before calculator in every dictionary", () => {
+    for (const locale of LOCALES) {
+      const keys = Object.keys(DICTS[locale]);
+      const screens = keys.indexOf("screens");
+      expect(screens, `${locale} screens index`).toBeGreaterThan(-1);
+      expect(screens, `${locale} after tutorRole`).toBeGreaterThan(keys.indexOf("tutorRole"));
+      expect(screens, `${locale} before calculator`).toBeLessThan(keys.indexOf("calculator"));
+    }
+  });
+});
+
+describe("10. screens copy pinned word for word (AC-10, spec 6.3)", () => {
+  it("holds all nine string leaves in en", () => {
+    const leaves = stringLeaves(screensBlock("en"));
+    expect(Object.keys(leaves).length).toBe(SCREEN_PINS.length);
+    // Self-check: a wrong pin path fails here with its key, not as a copy mismatch below.
+    for (const pin of SCREEN_PINS) {
+      expect(typeof read(screensBlock("en"), pin.path), `pin path ${leafKey(pin.path)}`).toBe(
+        "string",
+      );
+    }
+    for (const pin of SCREEN_PINS) {
+      expect(leaves[leafKey(pin.path)]).toBe(pin.en);
+    }
+  });
+
+  it("holds all nine string leaves in th", () => {
+    const leaves = stringLeaves(screensBlock("th"));
+    expect(Object.keys(leaves).length).toBe(SCREEN_PINS.length);
+    for (const pin of SCREEN_PINS) {
+      expect(leaves[leafKey(pin.path)]).toBe(pin.th);
+    }
+  });
+
+  it("uses the same string key paths in en, th, and zh", () => {
+    const enPaths = Object.keys(stringLeaves(screensBlock("en"))).sort();
+    expect(enPaths.length).toBe(SCREEN_PINS.length);
+    for (const locale of LOCALES) {
+      expect(Object.keys(stringLeaves(screensBlock(locale))).sort()).toEqual(enPaths);
+    }
+  });
+
+  it("keeps the zh values equal to the en values (D-10)", () => {
+    expect(stringLeaves(screensBlock("zh"))).toEqual(stringLeaves(screensBlock("en")));
+    for (const pin of SCREEN_PINS) {
+      expect(read(screensBlock("zh"), pin.path)).toBe(pin.en);
+    }
+  });
+
+  it("carries no draft marker in any value (D-15a)", () => {
+    for (const locale of LOCALES) {
+      expect(findTokens(stringLeaves(screensBlock(locale)), ["draft"])).toEqual([]);
+    }
+  });
+
+  it("detects a draft marker when it is injected (positive control)", () => {
+    const probe = { ...stringLeaves(screensBlock("en")), __probe: "draft" };
+    expect(findTokens(probe, ["draft"]).some((hit) => hit.path === "__probe")).toBe(true);
   });
 });
