@@ -12,7 +12,7 @@ import TutorAdvantage from "@/app/[locale]/(marketing)/products/tutor-advantage/
  * key-path render cannot prove which copy the visitor reads.
  */
 const SCREENS_COPY = "pages.products.tutorAdvantage.screens.items";
-const SCREEN_SLOT_INDEXES = [0, 1, 2] as const;
+const SCREEN_SLOT_INDEXES = [0, 1, 2, 3, 4] as const;
 
 type Dict = Record<string, unknown>;
 const REAL: Record<string, Dict> = {
@@ -33,9 +33,14 @@ function resolve(dict: Dict, key: string): string {
 
 /** Restores the setup.ts key-path mock after a real-message case. */
 function restoreMock(): void {
-  vi.mocked(getScopedI18n).mockImplementation(async (scope: string) => (key: string) =>
-    key.endsWith(".image") ? "/images/placeholder.png" : `${scope}.${key}`,
-  );
+  vi.mocked(getScopedI18n).mockImplementation((scope) => {
+    const translator = ((key: string) =>
+      key.endsWith(".image")
+        ? "/images/placeholder.png"
+        : `${String(scope)}.${key}`) as Awaited<ReturnType<typeof getScopedI18n>>;
+
+    return Promise.resolve(translator);
+  });
 }
 
 /** Escapes a literal string for use inside a RegExp. */
@@ -104,7 +109,7 @@ describe("TutorAdvantage", () => {
     }
   });
 
-  it("renders three screen cards with the slot alt and caption in copy order", async () => {
+  it("renders five screen cards with the slot alt and caption in copy order", async () => {
     const jsx = await TutorAdvantage({ params: Promise.resolve({ locale: "en" }) });
     render(jsx);
     const section = document.querySelector("[data-testid='tutor-screens']");
@@ -146,9 +151,12 @@ describe("TutorAdvantage real-copy downline gate (D-17, AC-17)", () => {
   /** Renders the page with the real messages of one locale. */
   async function renderWithRealCopy(locale: string): Promise<void> {
     const dict = REAL[locale]!;
-    vi.mocked(getScopedI18n).mockImplementation(
-      async () => (key: string) => resolve(dict, key),
-    );
+    vi.mocked(getScopedI18n).mockImplementation(() => {
+      const translator = ((key: string) =>
+        resolve(dict, key)) as Awaited<ReturnType<typeof getScopedI18n>>;
+
+      return Promise.resolve(translator);
+    });
     const jsx = await TutorAdvantage({ params: Promise.resolve({ locale }) });
     render(jsx);
   }
