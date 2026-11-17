@@ -27,7 +27,7 @@
 
 Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no push.
 
-- [ ] 1.1 Red: pin the module with a failing test. Test: AC-1, AC-2, AC-3, AC-4.
+- [x] 1.1 Red: pin the module with a failing test. Test: AC-1, AC-2, AC-3, AC-4.
 
   File `apps/www-reading-advantage/src/lib/tutor-commission.test.ts`. It holds:
 
@@ -46,7 +46,7 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
      `ownOnly`.
   8. `resizeLegs`: add, keep, and drop entries, and a new leg gets 3 students.
 
-  Done: it fails, because the module does not exist.
+  Done: 7eb6991fc85fbd0e833a193e35101ddd2b172915. Red command exit 1: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts --reporter=dot --silent=true'`. Evidence: `Test Files 1 failed (1)`, `Tests no tests`, cause `Failed to resolve import "@/lib/tutor-commission" from "src/lib/tutor-commission.test.ts"`. The module file does not exist.
 
 - [ ] 1.2 Green: write the module. Test: AC-1, AC-2, AC-3, AC-4.
 
