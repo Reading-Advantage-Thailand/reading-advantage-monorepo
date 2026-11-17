@@ -625,6 +625,11 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
 
 > **Phase base:** `phase_base_sha` `81df01cf2e7c2954f4a2de1aaee593913a00bc75`, captured at the branch head before the first Phase 3 Red file was written. `role_base_sha` has the same value. Sources: the audit report `~/Desktop/handoff/audit-20261117/reading-advantage-monorepo.md` (rows `377e45b8c`, `27f33b18e`, `e583e21b3`, `08fcd93b0`, `61e614489`, `96887abe5`, D-1, D-2, D-3), and PR handoff v0.4 `~/Desktop/advantage-pr/11-content/www-tutor-advantage-calculator-handoff.md` (sections 2, 3, 5, 6, and 8). Section 6, with the Thai of sections 2 and 3, is the only source for every calculator and gallery string. Section 4 rounds the gross; settlement truncates the gross and rounds tax half up. The calculator follows settlement. A string that section 6 does not carry does not ship.
 
+> **Phase 3 gates (Green, 2026-11-17).** The eleven-file command of task 3.1 exits 0.
+> `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0. The eslint command on the
+> five changed source files exits 0 with no output. The scan `rg -n -i "downline|ดาวน์ไลน์"
+> apps/www-reading-advantage/src --glob '!**/*.test.*'` exits 1 and prints nothing.
+
 - [x] 3.1 Red: pin the PR v0.4 copy, the five-slot student gallery, and the half-up tax. Test: AC-17, AC-18, AC-19, AC-20.
 
   Test files: `src/__tests__/www-tutor-calculator.locale.test.ts`, `src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx`, `src/lib/__tests__/tutor-screens.test.ts`, `src/lib/__tests__/tutor-screens.adversarial.test.ts`, `src/lib/tutor-commission.test.ts`, `src/lib/tutor-commission.adversarial.test.ts`, `src/components/marketing/tutor-commission-calculator.test.tsx`, `src/components/marketing/tutor-commission-calculator.adversarial.test.tsx`, `src/__tests__/www-tutor-screens-copy.adversarial.test.ts`, and `src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx`. The locale test deep-equals the whole `calculator` and `screens` blocks against PR section 6, en and zh from section 6, th from the Thai of sections 2 and 3. A new rendered-page case finds no `downline` text in en, th, or zh, before and after preset 2 and preset 3 are pressed. The manifest tests pin five student slots and their sizes. The module tests pin the half-up tax and the `withLegs` variant. The three source-text reads become behaviour checks.
@@ -632,21 +637,61 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   Done: 8d8f1c01cc6dfc7ff8fd85afa6c623300a9bf9d1. Red command:
   `cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter www-reading-advantage exec vitest run <the ten named test files> --reporter=dot --silent=true --maxWorkers=1`. Exit 1. Every failure reads a missing PR key, a superseded v0.1 string, a missing gallery slot or asset, or a truncated tax. No failure is an import, syntax, or fixture error. The positive controls, the retired-line scan, and the reference-formula check pass at this base. Full output: `measure/runs/www_tutor_calculator_20261117/red-p3-81df01cf2-vitest.txt`.
 
-- [ ] 3.2 Green: replace the `calculator` and `screens` blocks in en, th, and zh with PR section 6. Test: AC-17.
+- [x] 3.2 Green: replace the `calculator` and `screens` blocks in en, th, and zh with PR section 6. Test: AC-17.
 
   The th values come from the Thai of PR sections 2 and 3 in the same key order. The zh values equal the en values (D-10). No key outside section 6 stays.
 
-- [ ] 3.3 Green: move the component and the page to the section 6 keys. Test: AC-18.
+  Done: 032abe9f4. The targeted command `pnpm --filter www-reading-advantage exec vitest run
+  src/__tests__/www-tutor-calculator.locale.test.ts src/__tests__/www-tutor-screens-copy.adversarial.test.ts
+  --reporter=dot --silent=true --maxWorkers=1` exits 0. The eleven-file gate of task 3.1 exits 0.
+  `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0.
+
+- [x] 3.3 Green: move the component and the page to the section 6 keys. Test: AC-18.
 
   Inputs: `inputs.legCount`, `inputs.legStudents`, `inputs.addLeg`, `inputs.removeLeg`. Results include `results.legCommissions`. The graph carries `ownBar`, `legBar` with the `{n}` placeholder, `grossBar`, `legCommissionBar`, `netBar`, `axisBaht`, `rateTitle`, `rateAxis`, and `ratePoint`. Explain uses `ownOnly`, `withLegs`, and `zero`. Notes and disclaimer use the section 6 strings. Remove every key that section 6 does not have: the `chart.*` keys, any downline, second-level, or direct-tutor key, and any pre-tax label. Rename the module variant `withDownline` to `withLegs`.
 
-- [ ] 3.4 Green: replace the gallery with the five PR section 2 slots. Test: AC-19.
+  Done: 032abe9f4. The targeted command `pnpm --filter www-reading-advantage exec vitest run
+  src/components/marketing/tutor-commission-calculator.test.tsx
+  src/components/marketing/tutor-commission-calculator.adversarial.test.tsx --reporter=dot
+  --silent=true --maxWorkers=1` exits 0. The eleven-file gate of task 3.1 exits 0.
+  `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0.
+
+  Note (the own bar): the committed adversarial case "the graph bars add up to the whole gross"
+  pins the preset 2 bar widths to the leg commissions and the tutor's own share of the gross.
+  The own volume is 25 percent of the network volume and 47.4 percent of the gross, and no
+  pinned width carries it, so no bar shows the own volume. PR section 6 gives the tutor's own
+  bar one label, `ownBar`, and D-17 removes every pre-tax label, so the own bar shows the
+  tutor's own share of the gross under the PR wording. The totals under the bars carry
+  `grossBar`, `legCommissionBar` and `netBar`, and `axisBaht` is the unit of the bar figures.
+
+- [x] 3.4 Green: replace the gallery with the five PR section 2 slots. Test: AC-19.
 
   Order: `guidedWriting` 040, `shortAnswer` 002, `feedback` 004, `selfReflection` 052, `classRecord` 064. All are webp files at 520 by 1125 under `public/images/products/tutor-advantage/student-mobile/`. Delete the 070 and `tutor-desktop/062` webp files and their manifest keys. No tutor screen stays. Source PNGs: `~/Desktop/advantage-pr/assets/screenshots/tutor-advantage/dev-2026-11-16/student-mobile/`. No blur is needed: the orchestrator viewed 040, 004, 052, and 064 and saw no "Reading 3.1" and no price; 064 shows the demo tutor name "ครู ฝน ใจดี", which the audit accepts.
 
-- [ ] 3.5 Green: compute tax half up. Test: AC-20.
+  Done: 032abe9f4. The targeted command `pnpm --filter www-reading-advantage exec vitest run
+  src/lib/__tests__/tutor-screens.test.ts src/lib/__tests__/tutor-screens.adversarial.test.ts
+  "src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx"
+  --reporter=dot --silent=true --maxWorkers=1` exits 0. The eleven-file gate of task 3.1 exits 0.
+
+  The four new webp files come from the task 2.1 tool and the task 2.1 quality:
+  `scripts/blur-tutor-screens.py`, PIL, WEBP quality 85. The script now lists the five gallery
+  screens and no blur box, and the regenerated 002 file is byte identical to the committed one.
+  The 070 and `tutor-desktop/062` webp files are removed with `git rm`, so the folder holds
+  exactly five webp files.
+
+  Red retry (2026-11-17): the Red commit `8d8f1c01c` left two defects in the committed Red
+  test file `page.test.tsx`. The gallery case still pinned three cards while the sibling
+  committed Red file `page.adversarial.test.tsx` pinned five, and the two i18n mocks failed the
+  type check. The Mid Red retry `debbed4f1` pins five cards and types both mocks. No committed
+  Red test file changed in the Green commit.
+
+- [x] 3.5 Green: compute tax half up. Test: AC-20.
 
   Use `(preTaxSatang * 3n + 50n) / 100n`, as `finance-mlm-service/src/services/taxService.ts:4` does. Gross stays truncated by `calculatePayoutMinor`. The three preset figures do not move.
+
+  Done: 032abe9f4. The targeted command `pnpm --filter www-reading-advantage exec vitest run
+  src/lib/tutor-commission.test.ts src/lib/tutor-commission.adversarial.test.ts --reporter=dot
+  --silent=true --maxWorkers=1` exits 0. The eleven-file gate of task 3.1 exits 0.
 
 - [ ] 3.6 Run the Phase 3 gates. Test: AC-11, AC-12, AC-16.
 
