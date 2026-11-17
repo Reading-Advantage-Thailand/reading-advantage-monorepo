@@ -83,6 +83,7 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   key-path parity, zh leaf-map equality, the figure absence scan, and the D-16 absence scan.
   The four positive controls prove those checks fire on an injected value. Evidence files:
   `measure/runs/www_tutor_calculator_20261117/red-1.3-08fcd93b.json` and `.log`.
+  Correction (2026-11-17): the preset pins now render bracket leaf keys through `leafKey()`; correction commit `704f03c497cac94d735684b839ae0538f3882465`.
 
 - [ ] 1.4 Green: add the `calculator` block to en, th, and zh. Test: AC-5, AC-7, AC-8.
 
