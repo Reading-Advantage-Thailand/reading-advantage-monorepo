@@ -717,6 +717,25 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   `explainVariant` returns `zero` for that input. Keep the network volume, the rate, the gross,
   and the leg commissions. The three presets and the own-only inputs do not move.
 
+- [~] 3.5c Red: pin the image of each page block. Test: AC-22.
+
+  File `apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx`.
+  It renders the page in en, th, and zh with the real dictionaries. It finds each block by its
+  heading or its id. It asserts the file and the alt of the hero, the three book covers, the
+  Reedy block, the become-a-tutor block, and the five gallery screens. It finds no banned file
+  of D-19. One case reads the header of
+  `public/images/products/primary-origins-3-1-cover.webp` and asserts 480 by 651. No case reads
+  production source as text. No case computes a hash.
+
+- [ ] 3.5d Green: put the right image in each block. Test: AC-22.
+
+  Change the four blocks of `page.tsx` to the files of D-19. The books use the three cover
+  files in the `books.items` order. Each cover shows whole, with no crop. The hero and the
+  become-a-tutor block share `/images/tutor-advantage-hero.jpg`, and the second block shows a
+  4:3 crop. Add the 480 by 651 webp `primary-origins-3-1-cover.webp` from the printed cover
+  PNG. Set the alt values of D-19 in en and th; the zh values take the en values (D-10). Keep
+  the five gallery screens and their alts.
+
 - [~] 3.6 Run the Phase 3 gates. Test: AC-11, AC-12, AC-16.
 
   The gate block of section 8, with the ten targeted files of task 3.1. The app selector prints `["www-reading-advantage"]`.

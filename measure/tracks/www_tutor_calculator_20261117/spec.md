@@ -363,6 +363,48 @@ The other inputs keep their present behavior. A personal student count of 0 with
 volume 0 and the `"zero"` variant. A personal student count of 1 or more gives the figures of
 D-2.
 
+### D-19 Each page block shows its own image (Phase 3)
+
+The PM order of 2026-11-17 follows Daniel's live check of the page: "5 of 6 images are wrong".
+The page order is top to bottom. The table names the file and the alt text of each block. All
+files sit under `apps/www-reading-advantage/public`.
+
+| # | Block | File | Size |
+|---|---|---|---|
+| 1 | Hero, the section with the `heroExtra` copy | `/images/tutor-advantage-hero.jpg` | 1024 by 1024 |
+| 2 | Books, card 1, "Primary Advantage Origins 2" | `/images/products/primary-origins-2-cover.webp` | 480 by 651 |
+| 3 | Books, card 2, "Primary Advantage Origins 3.1" | `/images/products/primary-origins-3-1-cover.webp` | 480 by 651 |
+| 4 | Books, card 3, "Reading Advantage Origins 2" | `/images/products/reading-origins-2-cover.webp` | 480 by 651 |
+| 5 | Reedy, the section with the `reedyBlock` copy | `/images/primary-advantage/reedy-preview.webp` | 1280 by 912 |
+| 6 | Become a tutor, `id="become-a-tutor"`, the `tutorRole` copy | `/images/tutor-advantage-hero.jpg` | 4:3 crop |
+| 7 | Screens gallery, `data-testid="tutor-screens"` | the five student screens | unchanged |
+
+The three book cards follow the order of the `books.items` keys. The whole cover shows, with
+no crop.
+
+The alt text belongs to the locale:
+
+1. Hero: key `heroExtra.imageAlt`. en: "A tutor and a child look at a tablet together, with a
+   notebook and a pen on the table." th: "ติวเตอร์และเด็กดูแท็บเล็ตด้วยกัน มีสมุดและปากกาวางอยู่บนโต๊ะ".
+   zh equals en.
+2. Books, one value per card. en: "<product name> book cover". th: "ปกหนังสือ <product name>".
+   zh equals en.
+3. Reedy: the approved Primary page alt, `src/__tests__/fixtures/primary-page-expected.ts:145`.
+   en: "Reedy, the speaking coach, is marked Preview. A wizard avatar stands in a forest next
+   to a Start talking button." th: "รีดี้ โค้ชฝึกพูด มีป้ายทดลอง ตัวละครพ่อมดยืนอยู่ในป่าข้างปุ่มเริ่มพูดคุย".
+   zh equals en.
+4. Become a tutor: the hero alt of the locale.
+5. Screens: the five gallery alts of PR section 2 stay.
+
+No block shows a file under `/media/images/classroom/`, `/media/images/primary/primary-book`,
+`/media/images/chibi/`, or `/media/images/tutor/tutor-question`.
+
+The hero and the become-a-tutor block share one file. The second block shows a 4:3 crop. This
+is the orchestrator default until Daniel decides on a Muse picture.
+
+The new cover file is a 480 by 651 webp. Green converts it from the printed cover PNG
+`/home/daniebo/Desktop/Workbooks/assets/PA-Origins-3.1-Front Cover.png`.
+
 ## 5. Phase 1: the calculator
 
 ### 5.1 Files
@@ -738,6 +780,10 @@ Constraints on the gates:
   keeps the preset figures. The component shows a net payout of 0 and the `explain.zero` line
   for 0 personal students and one leg with 3 students, in en and th. No test reads production
   source as text or computes a hash.
+- **AC-22.** The page renders each block of D-19 with the named file and the alt text of its
+  locale in en, th, and zh. The three book cards follow the `books.items` order. The five
+  gallery screens keep their files and alts. No block shows a banned file of D-19. The new
+  cover file exists at 480 by 651. No test reads production source as text or computes a hash.
 
 ## 10. Open questions
 
