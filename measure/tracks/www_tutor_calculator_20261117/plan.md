@@ -722,12 +722,17 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   src/lib/tutor-commission.adversarial.test.ts --reporter=dot --maxWorkers=1` exits 0 with
   `Test Files 1 passed (1)` and `Tests 23 passed (23)`.
 
-- [~] 3.5b Green: pay 0 to a tutor with legs and no personal students. Test: AC-21.
+- [x] 3.5b Green: pay 0 to a tutor with legs and no personal students. Test: AC-21. Done: a6434d513118455ce951ade7a79b1b7bada8650b.
 
   Apply the settlement rule after the leg deduction: when the clamped personal student count is
   0 and the leg count is 1 or more, set the payout before tax, the tax, and the net to 0.
   `explainVariant` returns `zero` for that input. Keep the network volume, the rate, the gross,
   and the leg commissions. The three presets and the own-only inputs do not move.
+
+  Done: a6434d513118455ce951ade7a79b1b7bada8650b. The two-file gate command of task 3.5a
+  exits 0 after that commit. The record sits in
+  `measure/runs/www_tutor_calculator_20261117/green-p3-3.5b-eccc7c2a6.log`. Task 3.5b was
+  recorded by this Green run; no code edit happened in this run.
 
 - [x] 3.5c Red: pin the image of each page block. Test: AC-22. Done: 84df0eb89.
 
@@ -807,9 +812,37 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   Note (build-graph): skipped. The brief's allowed commands do not include it, and no export
   or signature changed.
 
-- [~] 3.6 Run the Phase 3 gates. Test: AC-11, AC-12, AC-16.
+- [x] 3.6 Run the Phase 3 gates. Test: AC-11, AC-12, AC-16. Done: be506e211ec9f18d16bd9e21c607dd08afc52678.
 
   The gate block of section 8, with the ten targeted files of task 3.1. The app selector prints `["www-reading-advantage"]`.
+
+  Done: be506e211ec9f18d16bd9e21c607dd08afc52678. `phase_base_sha`
+  81df01cf2e7c2954f4a2de1aaee593913a00bc75; `role_base_sha`
+  be506e211ec9f18d16bd9e21c607dd08afc52678. The committed Red changes `a48aa764d`,
+  `8edb5ff97`, and `84df0eb89` sit inside `81df01cf2..be506e211`.
+
+  Commands and exit codes, in order. Full output:
+  `measure/runs/www_tutor_calculator_20261117/green-p3-3.6-gates.txt`.
+
+  1. The targeted `vitest run` of the twelve named paths with `--reporter=dot
+     --maxWorkers=1` through `heavy-run.sh`: exit 0. The brief's path
+     `src/__tests__/www-tutor-screens-copy.adversarial.test.tsx` does not exist, so
+     vitest matched nothing for it and ran the other eleven paths. Gate 1b runs the real
+     file `src/__tests__/www-tutor-screens-copy.adversarial.test.ts` with the same
+     flags: exit 0.
+  2. `pnpm --filter www-reading-advantage test -- --maxWorkers=1` through
+     `heavy-run.sh`: exit 0.
+  3. `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` then
+     `pnpm --filter www-reading-advantage lint`: exit 0 and exit 0.
+  4. `rg -n -i 'downline|ดาวน์ไลน์' apps/www-reading-advantage/src --glob '!**/*.test.*'`:
+     exit 1 with no output, so no hit.
+  5. `pnpm --filter www-reading-advantage build` through `heavy-run.sh`: the first run
+     exit 1 on the Next.js security reminder, which asks for one re-run. The one
+     allowed re-run: exit 0. Both runs are in the gates file.
+  6. `node scripts/ci/affected-apps.mjs --base $(git rev-parse origin/master) --head
+     $(git rev-parse HEAD)`: exit 0. It prints `["www-reading-advantage"]`.
+
+  The build output stays in place for the UX role. No server starts in this run.
 
 - [ ] 3.7 Reviews A and C, adversarial, and phase acceptance. Test: AC-17, AC-18, AC-19, AC-20.
 
