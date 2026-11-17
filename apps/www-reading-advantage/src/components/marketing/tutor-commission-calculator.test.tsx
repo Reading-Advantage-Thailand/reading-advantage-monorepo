@@ -1,0 +1,209 @@
+/**
+ * Red contract for the calculator component (AC-9, spec 5.3, D-5, D-6, D-7, D-9).
+ * The copy comes from the en dictionary, so the component receives the strings
+ * the page will pass. The component module does not exist at the Red stage.
+ */
+import { cleanup, render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { afterEach, describe, expect, it } from "vitest";
+import { en } from "@/locales/pages/products/tutor-advantage";
+import { TutorCommissionCalculator } from "./tutor-commission-calculator";
+
+const copy = en.calculator;
+
+afterEach(() => {
+  cleanup();
+});
+
+/** Renders the calculator with the en copy the page passes as props. */
+function renderCalculator() {
+  return render(<TutorCommissionCalculator copy={copy} />);
+}
+
+/** Escapes a literal string for use inside a RegExp. */
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/** Builds a substring matcher for a copy label. */
+function labelPattern(label: string): RegExp {
+  return new RegExp(escapeRegExp(label));
+}
+
+/** Returns one preset button by its en name. */
+function presetButton(index: number): HTMLElement {
+  return screen.getByRole("button", {
+    name: labelPattern(copy.presets[index].name),
+  });
+}
+
+/** Returns the price number input. */
+function priceInput(): HTMLElement {
+  return screen.getByRole("spinbutton", {
+    name: labelPattern(copy.inputs.price),
+  });
+}
+
+/** Returns the own-students number input. */
+function ownStudentsInput(): HTMLElement {
+  return screen.getByRole("spinbutton", {
+    name: labelPattern(copy.inputs.ownStudents),
+  });
+}
+
+/** Returns the leg-count number input. */
+function legCountInput(): HTMLElement {
+  return screen.getByRole("spinbutton", {
+    name: labelPattern(copy.inputs.directTutors),
+  });
+}
+
+/** Returns one per-leg student number input. */
+function legStudentInputs(): HTMLElement[] {
+  return screen.queryAllByRole("spinbutton", {
+    name: labelPattern(copy.inputs.studentsPerDirect),
+  });
+}
+
+/** Returns the graph label of each leg row, for example "Leg 1". */
+function legRows(): HTMLElement[] {
+  const pattern = new RegExp(
+    `^\\s*${escapeRegExp(copy.chart.leg)}\\s*[1-9]\\d*\\s*$`,
+  );
+  return screen.queryAllByText(pattern);
+}
+
+/** Returns the result card, which is the polite live region. */
+function resultRegion(): HTMLElement {
+  const region = document.querySelector('[aria-live="polite"]');
+  if (!region) throw new Error("no polite live-region result card found");
+  return region as HTMLElement;
+}
+
+/** Counts the presets whose aria-pressed state is true. */
+function pressedPresetCount(): number {
+  return copy.presets.reduce((total, _preset, index) => {
+    return total + (presetButton(index).getAttribute("aria-pressed") === "true" ? 1 : 0);
+  }, 0);
+}
+
+describe("TutorCommissionCalculator first paint", () => {
+  it("shows the zero line and no income figures", () => {
+    renderCalculator();
+    const result = resultRegion();
+    expect(within(result).getByText(copy.explain.zero)).toBeInTheDocument();
+    expect(within(result).getAllByText("0").length).toBeGreaterThan(0);
+    expect(screen.queryByText("5,520")).toBeNull();
+    expect(screen.queryByText("5,354.40")).toBeNull();
+    expect(screen.queryByText("18,709.44")).toBeNull();
+    expect(screen.queryByText("6,493.61")).toBeNull();
+  });
+
+  it("marks the result card as a polite live region", () => {
+    renderCalculator();
+    const result = resultRegion();
+    expect(result).toHaveAttribute("aria-live", "polite");
+    expect(within(result).getByText(copy.results.net)).toBeInTheDocument();
+  });
+
+  it("labels every input and gives it a zero minimum", () => {
+    const { container } = renderCalculator();
+    const inputs = Array.from(container.querySelectorAll("input"));
+    expect(inputs.length).toBeGreaterThan(0);
+    for (const input of inputs) {
+      expect(input).toHaveAttribute("min", "0");
+      expect(input).toHaveAccessibleName();
+    }
+  });
+});
+
+describe("TutorCommissionCalculator leg rows", () => {
+  it("grows from 0 to 3 legs, one student row per leg, each new leg at 3", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    expect(legStudentInputs()).toHaveLength(0);
+
+    const count = legCountInput();
+    expect(count).toHaveValue(0);
+
+    await user.clear(count);
+    await user.type(count, "1");
+    expect(legStudentInputs()).toHaveLength(1);
+    expect(legStudentInputs()[0]).toHaveValue(3);
+
+    await user.clear(count);
+    await user.type(count, "2");
+    expect(legStudentInputs()).toHaveLength(2);
+
+    await user.clear(count);
+    await user.type(count, "3");
+    expect(legStudentInputs()).toHaveLength(3);
+    expect(legRows()).toHaveLength(3);
+  });
+});
+
+describe("TutorCommissionCalculator presets", () => {
+  it("shows the preset 1 figures", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    await user.click(presetButton(0));
+    expect(screen.queryAllByText("5,520").length).toBeGreaterThan(0);
+    expect(screen.queryAllByText("5,354.40").length).toBeGreaterThan(0);
+  });
+
+  it("shows the preset 3 figures and three leg rows in the graph", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    await user.click(presetButton(2));
+    for (const figure of ["18,709.44", "12,015", "6,694.44", "6,493.61"]) {
+      expect(screen.queryAllByText(figure).length, figure).toBeGreaterThan(0);
+    }
+    expect(legRows()).toHaveLength(3);
+  });
+
+  it("presses exactly one preset after a selection", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    expect(pressedPresetCount()).toBe(0);
+    await user.click(presetButton(1));
+    expect(pressedPresetCount()).toBe(1);
+  });
+
+  it("shows the selected preset's setup and result text", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    await user.click(presetButton(0));
+    expect(screen.getByText(copy.presets[0].setup)).toBeInTheDocument();
+    expect(screen.getByText(copy.presets[0].result)).toBeInTheDocument();
+  });
+
+  it("clears the example text on edit but keeps the figures", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    await user.click(presetButton(0));
+    expect(screen.getByText(copy.presets[0].setup)).toBeInTheDocument();
+
+    const own = ownStudentsInput();
+    await user.clear(own);
+    await user.type(own, "5");
+
+    expect(screen.queryByText(copy.presets[0].setup)).toBeNull();
+    expect(screen.queryByText(copy.presets[0].result)).toBeNull();
+    expect(presetButton(0)).toHaveAttribute("aria-pressed", "false");
+    expect(screen.queryByText("15,000")).not.toBeNull();
+  });
+
+  it("defaults the price to 3,000 and restores it when a preset is picked", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    const price = priceInput();
+    expect(price).toHaveValue(3000);
+
+    await user.clear(price);
+    await user.type(price, "5000");
+    expect(price).toHaveValue(5000);
+
+    await user.click(presetButton(0));
+    expect(price).toHaveValue(3000);
+  });
+});
