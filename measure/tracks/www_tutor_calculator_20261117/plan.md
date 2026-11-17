@@ -489,6 +489,30 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
 
   Note (build-graph): skipped under the PM load watch. No product file changed.
 
+- [x] 2.9 Fix the rate-curve card labels that PM page-check F-1 names. Test: AC-15.
+
+  On the rate-curve card, show `graph.rateTitle` as a visible `h3`, and show
+  `graph.ratePoint` with the live rate beside it, as "This month · 59.1%". The SVG stays
+  `aria-hidden` (D-11). Add `graph: { rateTitle, ratePoint }` to en, th, and zh in the
+  `calculator` block. zh equals en at both paths (D-10), and the placeholder comment stays.
+  Add one component case with preset 3. Add the two new leaves to the locale test's key
+  order, pins, parity, and zh-equals-en coverage.
+
+  Answers PM page-check finding F-1 of `a63-20261117-1500`
+  (`~/Desktop/handoff/page-check/a63-20261117-1500/report.md`).
+
+  Done: 6c0cf5de65ea092a28bf1246dff8a6fb57df7ce4. Red: exit 1, `Test Files 1 failed | 2
+  passed (3)`, `Tests 1 failed | 60 passed (61)`, name `TutorCommissionCalculator rate curve
+  card > shows the rate title, the month point with the rate, and keeps the curve
+  aria-hidden`, cause `Cannot read properties of undefined (reading 'rateTitle')` because the
+  `graph` block was absent. Green: exit 0, `Test Files 3 passed (3)`, `Tests 61 passed (61)`.
+  `pnpm turbo run check-types --filter=www-reading-advantage` exits 0. `pnpm --filter
+  www-reading-advantage lint` exits 0 with no output. Evidence files:
+  `measure/runs/www_tutor_calculator_20261117/green-2.9-6c0cf5de6.json` and `.log`.
+
+  Note (page wiring): `page.tsx` builds `calculatorCopy` key by key, so the two `graph`
+  strings need a pass-through there. The file list of the fix brief did not name it.
+
 - [b] 2.5 PM page-check at 390, 980, and 1280 px. Test: AC-15.
 
   The PM captures `/en/`, `/th/`, and `/zh/products/tutor-advantage`. The check covers: both
