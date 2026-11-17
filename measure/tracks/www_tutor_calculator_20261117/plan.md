@@ -244,6 +244,8 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   exit 0; ratchet exit 0; build exit 0 on retry. Captures:
   `measure/runs/www_tutor_calculator_20261117/p1-captures/`. Phase 1 ships no push (D-13).
 
+Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact measure/runs/www_tutor_calculator_20261117/phase-accept-p1-d279b8703.json.
+
 ## Phase 2: the screens gallery and the live copy
 
 - [x] 2.0 The set arrived. Test: 41 files in `student-mobile/`, 31 in `tutor-desktop/`, and a
@@ -254,7 +256,7 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   `tutor-desktop/` at 1440 x 900, and `README.md` with the use rules of spec 6.1. Recorded at
   authoring time.
 
-- [ ] 2.1 Make the blurred copies, add the three assets, and add the manifest entries.
+- [x] 2.1 Make the blurred copies, add the three assets, and add the manifest entries.
   Test: AC-13, AC-14.
 
   Files: `apps/www-reading-advantage/scripts/blur-tutor-screens.py`, the three webp files under
@@ -278,11 +280,54 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   Then the review of D-14: one line per file against the six use rules, and one full-size look
   at each saved copy to confirm that no "Reading 3.1" shows.
 
-  Done: three files exist under `public/`. The new test
-  `src/lib/__tests__/tutor-screens.test.ts` asserts the three `tutorScreens` keys in slot order,
-  each entry's `src`, `width`, `height`, and `portrait: false`, that `src` starts with
+  Done: 320fc2fa176b2c2e40eab09c2d208ede98945370. Three files exist under `public/`. The new
+  test `src/lib/__tests__/tutor-screens.test.ts` asserts the three `tutorScreens` keys in slot
+  order, each entry's `src`, `width`, `height`, and `portrait: false`, that `src` starts with
   `/images/products/tutor-advantage/`, and that each file exists under `public/` through
-  `node:fs`. The full-size review lines go into this plan.
+  `node:fs`.
+
+  Red run: exit 1, `Test Files 1 failed (1)`, `Tests 7 failed (7)`, because the module held no
+  `tutorScreens` export. Green run: exit 0, `Test Files 1 passed (1)`, `Tests 7 passed (7)`.
+  The products-page picture test still passes: exit 0, `Tests 19 passed (19)`.
+  `pnpm turbo run check-types --filter=www-reading-advantage` exits 0. `pnpm --filter
+  www-reading-advantage lint` exits 0.
+
+  Deviation (spec 6.2): spec says "into `productPictures`". That object is `as const satisfies
+  Record<string, ProductPictureFile>`, and `src/__tests__/products-page-pictures.red.test.tsx`
+  runs `statSync` on every value. A nested object breaks both, so `tutorScreens` is a sibling
+  export in the same file, in slot order.
+
+  Deviation (blur boxes): four delivered edges were widened after a full-size measurement of
+  the glyph bounds. Hero `x1` 269 to 303 ("3.1" ends at 301). Bubble `y1` 227 to 234 ("g"
+  descender ends at 232). Title `x1` 547 to 553 ("1" ends at 550). Dropdown `x0` 391 to 395
+  (the "1:" colon ends at 392 and stays). The delivered boxes left glyph pixels outside the
+  blur.
+
+  Blur check by measurement, grey mean and standard deviation of each box, source to output:
+
+  | File | Box | Source mean | Source sd | Output mean | Output sd |
+  |---|---|---|---|---|---|
+  | `student-mobile/070` | (34,121,182,152) | 220.97 | 66.96 | 226.43 | 7.01 |
+  | `student-mobile/070` | (110,198,233,234) | 224.94 | 68.36 | 229.82 | 10.47 |
+  | `student-mobile/070` | (137,351,303,388) | 208.65 | 83.77 | 215.22 | 9.35 |
+  | `student-mobile/070` | (118,923,247,953) | 213.59 | 78.43 | 220.60 | 7.80 |
+  | `tutor-desktop/062` | (395,95,553,134) | 213.74 | 79.66 | 219.52 | 9.66 |
+  | `tutor-desktop/062` | (393,132,485,157) | 235.19 | 45.59 | 233.49 | 4.71 |
+  | `tutor-desktop/062` | (395,390,487,419) | 230.63 | 59.08 | 235.29 | 5.13 |
+  | `tutor-desktop/062` | (1085,341,1173,364) | 235.47 | 43.96 | 240.55 | 4.59 |
+
+  `student-mobile/002` holds no box; it shows no class name.
+
+  Full-size review of D-14 and AC-14, one line per saved file:
+
+  - `student-mobile/070-screen.webp`: student home with the Saturday class. No admin screen, no
+    price, no error state, no student face. The chip, the bubble, the hero title, and the class
+    row show no class name.
+  - `student-mobile/002-screen.webp`: lesson phase 8 of 18 with a typed answer. No class name,
+    no admin screen, no price, no error state, no face.
+  - `tutor-desktop/062-screen.webp`: tutor class list and lesson dropdown. No admin screen, no
+    price, no error state, no student face. The header, the subtitle, the dropdown, and the
+    progress card show no class name.
 
 - [ ] 2.2 Add the gallery section and its copy. Test: AC-10, AC-13.
 
