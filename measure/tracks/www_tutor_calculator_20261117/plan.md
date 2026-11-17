@@ -128,7 +128,7 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   correction commit `e42aa53fa0f00571b32a46f4c80fc4fb20b81958`. The targeted command reports
   `Tests 10 passed (10)`. The two uncommitted Green files were left untouched.
 
-- [ ] 1.6 Green: build the client component. Test: AC-9.
+- [x] 1.6 Green: build the client component. Test: AC-9.
 
   File `apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx`
   with `"use client"` and the props of spec 5.3. Layout from the June file: preset row, input
@@ -138,7 +138,10 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   style except the bar width custom property, 44 px targets, and no horizontal scroll at
   390 px.
 
-  Done: the command of task 1.5 exits 0.
+  Done: 3786a1d299929a5bb5f4912ccbffcb120bf0c66d.
+
+  Note: spec 5.3 item 6 lists a net row; the hero already carries the net figure, so the row
+  list ends at withholding tax and the hero is the net.
 
 - [ ] 1.7 Wire the section and pin the order. Test: AC-10.
 
