@@ -40,6 +40,11 @@ function specGrossSatang(volume: number): bigint {
   return (rateUnits * gvSatang) / BigInt(RATE_SCALE);
 }
 
+/** Settlement tax rule of taxService.ts:4: three percent, half up, in satang. */
+function halfUpTaxSatang(payoutSatang: number): number {
+  return Number((BigInt(payoutSatang) * 3n + 50n) / 100n);
+}
+
 /** Asserts the money fields are finite and non-negative. */
 function expectFiniteMoney(result: ReturnType<typeof calculateNetwork>): void {
   const money = [
@@ -68,8 +73,8 @@ function expectSatangConservation(result: ReturnType<typeof calculateNetwork>): 
   expect(satang(result.legPayouts) + satang(result.preTax), "legs plus payout equal gross").toBe(
     satang(result.gross),
   );
-  expect(satang(result.withholdingTax), "tax truncates at 3 percent").toBe(
-    Math.floor((satang(result.preTax) * 3) / 100),
+  expect(satang(result.withholdingTax), "tax rounds half up at 3 percent").toBe(
+    halfUpTaxSatang(satang(result.preTax)),
   );
   expect(satang(result.net), "net is payout minus tax").toBe(
     satang(result.preTax) - satang(result.withholdingTax),
@@ -126,24 +131,24 @@ describe("A1 float leakage: the satang path, not a baht Number product", () => {
     expect(Number.isSafeInteger(satang(result.gross))).toBe(false);
   });
 
-  it("the 3 percent tax truncates satang where a float product rounds up", () => {
+  it("the 3 percent tax rounds half up where truncation loses a satang", () => {
     // GV 3 baht at 40.0015 percent: 120.0045 satang gross becomes 120 satang.
     const result = calculateNetwork({ price: 1, personalStudents: 3, studentsPerLeg: [] });
     expect(result.networkVolume).toBe(3);
     expect(satang(result.gross)).toBe(120);
     expect(satang(result.preTax)).toBe(120);
-    expect(satang(result.withholdingTax)).toBe(3);
-    expect(satang(result.net)).toBe(117);
-    expect(result.withholdingTax).toBe(0.03);
-    expect(result.net).toBe(1.17);
+    expect(satang(result.withholdingTax)).toBe(4);
+    expect(satang(result.net)).toBe(116);
+    expect(result.withholdingTax).toBe(0.04);
+    expect(result.net).toBe(1.16);
 
-    // Control: a float tax rounds 3.6 satang up to 4, and 0.03 to 0.04 baht.
-    const floatTax = Math.round(120 * 0.03);
-    expect(floatTax).toBe(4);
-    expect(satang(result.withholdingTax)).not.toBe(floatTax);
+    // Control: truncation gives 3 satang, so the pin must see the half-up satang.
+    const truncatedTax = Math.floor((120 * 3) / 100);
+    expect(truncatedTax).toBe(3);
+    expect(satang(result.withholdingTax)).not.toBe(truncatedTax);
   });
 
-  it("the tax truncates on every payout whose 3 percent lands above a half satang", () => {
+  it("the tax rounds half up on every payout whose 3 percent lands above a half satang", () => {
     let discriminating = 0;
     for (let price = 1; price <= 40; price += 1) {
       for (let students = 1; students <= 6; students += 1) {
@@ -154,9 +159,9 @@ describe("A1 float leakage: the satang path, not a baht Number product", () => {
         });
         const payoutSatang = satang(result.preTax);
         expect(satang(result.withholdingTax), `price ${price} students ${students}`).toBe(
-          Math.floor((payoutSatang * 3) / 100),
+          halfUpTaxSatang(payoutSatang),
         );
-        if (Math.round(payoutSatang * 0.03) !== Math.floor((payoutSatang * 3) / 100)) {
+        if (halfUpTaxSatang(payoutSatang) !== Math.floor((payoutSatang * 3) / 100)) {
           discriminating += 1;
         }
       }
@@ -243,8 +248,8 @@ describe("A3 boundaries", () => {
 
     const below = calculateNetwork({ price: 19999.99, personalStudents: 1, studentsPerLeg: [] });
     expect(satang(below.gross)).toBe(999999);
-    expect(below.withholdingTax).toBe(299.99);
-    expect(below.net).toBe(9700);
+    expect(below.withholdingTax).toBe(300);
+    expect(below.net).toBe(9699.99);
 
     const at = calculateNetwork({ price: 20000, personalStudents: 1, studentsPerLeg: [] });
     expect(satang(at.gross)).toBe(1000000);

@@ -53,23 +53,25 @@ function ownStudentsInput(): HTMLElement {
 
 /** Returns the leg-count number input. */
 function legCountInput(): HTMLElement {
+  expect(copy.inputs.legCount, "PR key inputs.legCount").toBeTypeOf("string");
   return screen.getByRole("spinbutton", {
-    name: labelPattern(copy.inputs.directTutors),
+    name: labelPattern(copy.inputs.legCount),
   });
 }
 
 /** Returns one per-leg student number input. */
 function legStudentInputs(): HTMLElement[] {
+  expect(copy.inputs.legStudents, "PR key inputs.legStudents").toBeTypeOf("string");
   return screen.queryAllByRole("spinbutton", {
-    name: labelPattern(copy.inputs.studentsPerDirect),
+    name: labelPattern(copy.inputs.legStudents),
   });
 }
 
-/** Returns the graph label of each leg row, for example "Leg commission 1". */
+/** Returns the graph label of each leg row, for example "Leg 1". */
 function legRows(): HTMLElement[] {
-  const pattern = new RegExp(
-    `^\\s*${escapeRegExp(copy.chart.legPayout)}\\s*[1-9]\\d*\\s*$`,
-  );
+  expect(copy.graph.legBar, "PR key graph.legBar").toBeTypeOf("string");
+  const prefix = copy.graph.legBar.replace("{n}", "");
+  const pattern = new RegExp(`^\\s*${escapeRegExp(prefix)}\\s*[1-9]\\d*\\s*$`);
   return screen.queryAllByText(pattern);
 }
 
@@ -174,14 +176,14 @@ describe("TutorCommissionCalculator leg rows", () => {
     expect(legStudentInputs()).toHaveLength(3);
     expect(legRows()).toHaveLength(3);
     expect(resultValue(copy.results.networkGV)).toBe("27,000");
-    expect(resultValue(copy.results.downline)).toBe("12,015");
+    expect(resultValue(copy.results.legCommissions)).toBe("12,015");
 
     await user.clear(count);
     await user.type(count, "2");
     expect(legStudentInputs()).toHaveLength(2);
     expect(legRows()).toHaveLength(2);
     expect(resultValue(copy.results.networkGV)).toBe("18,000");
-    expect(resultValue(copy.results.downline)).toBe("8,010");
+    expect(resultValue(copy.results.legCommissions)).toBe("8,010");
   });
 
   it("shows four input rows and four graph rows at a count of 4", async () => {
@@ -196,7 +198,7 @@ describe("TutorCommissionCalculator leg rows", () => {
     expect(legStudentInputs()[3]).toHaveValue(3);
     expect(resultValue(copy.results.networkGV)).toBe("36,000");
     expect(resultValue(copy.results.gross)).toBe("20,744.54");
-    expect(resultValue(copy.results.downline)).toBe("16,020");
+    expect(resultValue(copy.results.legCommissions)).toBe("16,020");
   });
 });
 
@@ -219,7 +221,7 @@ describe("TutorCommissionCalculator presets", () => {
     expect(resultValue(copy.results.networkGV)).toBe("42,000");
     expect(resultValue(copy.results.rate)).toBe("59.1%");
     expect(resultValue(copy.results.gross)).toBe("24,833.45");
-    expect(resultValue(copy.results.downline)).toBe("16,560");
+    expect(resultValue(copy.results.legCommissions)).toBe("16,560");
     expect(hasFigure("8,273.45")).toBe(true);
     expect(resultValue(copy.results.tax)).toBe("248.20");
     expect(heroValue()).toBe("8,025.25");
@@ -290,7 +292,7 @@ describe("TutorCommissionCalculator presets", () => {
 
     expect(resultValue(copy.results.networkGV)).toBe("24,000");
     expect(resultValue(copy.results.gross)).toBe("12,655.69");
-    expect(resultValue(copy.results.downline)).toBe("8,010");
+    expect(resultValue(copy.results.legCommissions)).toBe("8,010");
     expect(resultValue(copy.results.tax)).toBe("139.37");
     expect(hasFigure("4,645.69")).toBe(true);
     expect(hasFigure("4,506.32")).toBe(true);

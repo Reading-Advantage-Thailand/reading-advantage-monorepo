@@ -1,9 +1,9 @@
 /**
- * Red contract for the calculator locale keys and copy (AC-5, AC-7, AC-8),
- * and for the screens gallery keys (AC-10, spec 6.3, D-10, D-15a).
- * Pins spec sections 5.4, 6.3, and 6.4 word for word.
- * The `calculator` block was intentionally absent at the Red stage of task 1.3;
- * the `screens` block is intentionally absent at the Red stage of task 2.2.
+ * Red contract for the PR v0.4 calculator and screens copy (D-17, AC-5, AC-7,
+ * AC-17). PR handoff v0.4 section 6 is the only string source for these two
+ * blocks. English and zh come from section 6; Thai comes from the Thai of PR
+ * sections 2 and 3 in the same key order. A string outside section 6 does not
+ * ship. The two live lines come from PR section 5.
  */
 import { describe, expect, it } from "vitest";
 import { en, th, zh } from "@/locales/pages/products/tutor-advantage";
@@ -19,208 +19,237 @@ const DICTS: Record<Locale, Dict> = {
 
 const LOCALES: readonly Locale[] = ["en", "th", "zh"];
 
-/** The exact key order of the calculator block, from spec section 5.4. */
-const KEY_ORDER = [
-  "eyebrow",
-  "heading",
-  "description",
-  "volumeNote",
-  "rateNote",
-  "payoutNote",
-  "inputs",
-  "results",
-  "explain",
-  "chart",
-  "graph",
-  "presets",
-  "disclaimer",
-] as const;
+/** PR section 6, calculator block, English. */
+const CALC_EN = {
+  eyebrow: "THE COMMISSION CALCULATOR",
+  heading: "See how one month's commission works",
+  description:
+    "The calculator uses the same formula as our settlement system. Choose the price, your students, and your legs, and see the month. Every figure is an example, not a promise of income.",
+  volumeNote: "Volume is the class package price times the students who paid in the month.",
+  rateNote:
+    "The rate starts near 40% on a small volume. It passes 50% at 20,000 baht and approaches 71% at very high volume.",
+  payoutNote:
+    "Your payout is the rate times the network volume, minus the commission of each leg. 3% withholding tax comes off a positive payout.",
+  inputs: {
+    price: "Class package price (baht)",
+    priceNote: "Default: 3,000 baht. The price adapts to the market.",
+    ownStudents: "Personal students this month",
+    legCount: "Legs with students",
+    legStudents: "Students in this leg",
+    addLeg: "Add a leg",
+    removeLeg: "Remove a leg",
+  },
+  results: {
+    ownGV: "Your own volume",
+    networkGV: "Network volume",
+    rate: "Commission rate",
+    gross: "Gross commission",
+    legCommissions: "Leg commissions",
+    tax: "Withholding tax (3%)",
+    net: "Net payout",
+  },
+  graph: {
+    title: "How this month's payout is built",
+    caption:
+      "Each bar is one leg: the volume it brings and the commission it earns on its own. Your payout is your rate on the whole volume, minus the commissions of the legs.",
+    ownBar: "Your own students",
+    legBar: "Leg {n}",
+    grossBar: "Gross at your rate",
+    legCommissionBar: "Commission of each leg",
+    netBar: "Your payout after 3% tax",
+    axisBaht: "Baht",
+    rateTitle: "Your rate for the network volume",
+    rateAxis: "Rate",
+    ratePoint: "This month",
+  },
+  explain: {
+    ownOnly: "No legs this month, so the whole gross amount is the payout.",
+    withLegs:
+      "Your rate applies to the whole network volume. The commission of each leg comes off, and 3% withholding tax comes off the rest.",
+    zero: "Add students to see a month.",
+  },
+  presets: [
+    {
+      name: "A new tutor",
+      setup: "Four personal students, no legs.",
+      result:
+        "12,000 baht of volume at a rate of 46%. The gross is 5,520 baht, and with no legs it is all payout. After 3% withholding tax: 5,354 baht.",
+    },
+    {
+      name: "A tutor with two legs",
+      setup: "Two personal students, and two legs with three students each.",
+      result:
+        "24,000 baht of network volume at a rate of 52.7%. The gross is 12,656 baht, and the two legs earn 8,010 baht of it. The payout is 4,646 baht before tax, and 4,506 baht after 3% withholding tax.",
+    },
+    {
+      name: "A small team with three legs",
+      setup: "Two personal students, and three legs with four students each.",
+      result:
+        "42,000 baht of network volume at a rate of 59.1%. The gross is 24,833 baht, and the three legs earn 16,560 baht of it. The payout is 8,273 baht before tax, and 8,025 baht after 3% withholding tax.",
+    },
+  ],
+  disclaimer:
+    "Every figure in these examples is an illustration. Commission depends on the classes that run and are paid for.",
+} as const;
 
-/** One row per string leaf of spec 5.4: exact en copy, exact th copy. */
-const PINS: readonly { path: readonly string[]; en: string; th: string }[] = [
+/** PR section 6, calculator block, Thai from the Thai of PR sections 2 and 3. */
+const CALC_TH = {
+  eyebrow: "เครื่องคำนวณค่าคอมมิชชัน",
+  heading: "ดูว่าค่าคอมมิชชันของหนึ่งเดือนคิดอย่างไร",
+  description:
+    "เครื่องคำนวณนี้ใช้สูตรเดียวกับระบบสรุปยอดของเรา เลือกราคา จำนวนนักเรียนของคุณเอง และจำนวนสาย แล้วดูยอดของเดือนนั้น ตัวเลขทุกตัวเป็นตัวอย่าง ไม่ใช่คำสัญญาเรื่องรายได้",
+  volumeNote: "ยอดรวม คือราคาแพ็กเกจคลาสคูณกับจำนวนนักเรียนที่จ่ายเงินในเดือนนั้น",
+  rateNote:
+    "อัตราเริ่มต้นใกล้ 40% เมื่อยอดรวมยังน้อย ผ่าน 50% ที่ 20,000 บาท และเข้าใกล้ 71% เมื่อยอดรวมสูงมาก",
+  payoutNote:
+    "เงินที่คุณได้รับ คืออัตราคูณกับยอดรวมของเครือข่าย หักด้วยค่าคอมมิชชันของแต่ละสาย แล้วหักภาษีหัก ณ ที่จ่าย 3% จากยอดที่เป็นบวก",
+  inputs: {
+    price: "ราคาแพ็กเกจคลาส (บาท)",
+    priceNote: "ค่าเริ่มต้น 3,000 บาท ราคาปรับตามตลาด",
+    ownStudents: "นักเรียนในคลาสของคุณเองเดือนนี้",
+    legCount: "จำนวนสายที่มีนักเรียน",
+    legStudents: "นักเรียนในสายนี้",
+    addLeg: "เพิ่มสาย",
+    removeLeg: "ลบสาย",
+  },
+  results: {
+    ownGV: "ยอดรวมของคุณเอง",
+    networkGV: "ยอดรวมของเครือข่าย",
+    rate: "อัตราค่าคอมมิชชัน",
+    gross: "ค่าคอมมิชชันก่อนหัก",
+    legCommissions: "ค่าคอมมิชชันของสาย",
+    tax: "ภาษีหัก ณ ที่จ่าย (3%)",
+    net: "เงินที่ได้รับสุทธิ",
+  },
+  graph: {
+    title: "ยอดจ่ายเดือนนี้ประกอบขึ้นอย่างไร",
+    caption:
+      "แท่งแต่ละแท่งคือหนึ่งสาย: ยอดที่สายนั้นพามา และค่าคอมมิชชันที่สายนั้นได้เอง ยอดจ่ายของคุณคืออัตราของคุณคูณกับยอดรวมทั้งเครือข่าย ลบด้วยค่าคอมมิชชันของทุกสาย",
+    ownBar: "นักเรียนในคลาสของคุณเอง",
+    legBar: "สาย {n}",
+    grossBar: "ยอดก่อนหักตามอัตราของคุณ",
+    legCommissionBar: "ค่าคอมมิชชันของแต่ละสาย",
+    netBar: "ยอดจ่ายของคุณหลังหักภาษี 3%",
+    axisBaht: "บาท",
+    rateTitle: "อัตราของคุณตามยอดรวมของเครือข่าย",
+    rateAxis: "อัตรา",
+    ratePoint: "เดือนนี้",
+  },
+  explain: {
+    ownOnly: "เดือนนี้ไม่มีสาย เงินก่อนหักทั้งหมดจึงเป็นเงินที่คุณได้รับ",
+    withLegs:
+      "อัตราของคุณใช้กับยอดรวมทั้งเครือข่าย จากนั้นหักค่าคอมมิชชันของแต่ละสายออก และหักภาษีหัก ณ ที่จ่าย 3% จากยอดที่เหลือ",
+    zero: "ใส่จำนวนนักเรียนเพื่อดูยอดของเดือน",
+  },
+  presets: [
+    {
+      name: "ติวเตอร์ใหม่",
+      setup: "นักเรียนในคลาสของคุณเอง 4 คน ไม่มีสาย",
+      result:
+        "ยอด 12,000 บาท ที่อัตรา 46% ยอดก่อนหักคือ 5,520 บาท และเพราะไม่มีสาย ทั้งหมดจึงเป็นยอดจ่าย หลังหักภาษีหัก ณ ที่จ่าย 3%: 5,354 บาท",
+    },
+    {
+      name: "ติวเตอร์ที่มีสองสาย",
+      setup: "นักเรียนในคลาสของคุณเอง 2 คน และ 2 สาย สายละ 3 คน",
+      result:
+        "ยอดรวมของเครือข่าย 24,000 บาท ที่อัตรา 52.7% ยอดก่อนหักคือ 12,656 บาท และสองสายได้ค่าคอมมิชชัน 8,010 บาทจากยอดนี้ ยอดจ่ายคือ 4,646 บาทก่อนหักภาษี และ 4,506 บาทหลังหักภาษีหัก ณ ที่จ่าย 3%",
+    },
+    {
+      name: "ทีมเล็กที่มีสามสาย",
+      setup: "นักเรียนในคลาสของคุณเอง 2 คน และ 3 สาย สายละ 4 คน",
+      result:
+        "ยอดรวมของเครือข่าย 42,000 บาท ที่อัตรา 59.1% ยอดก่อนหักคือ 24,833 บาท และสามสายได้ค่าคอมมิชชัน 16,560 บาทจากยอดนี้ ยอดจ่ายคือ 8,273 บาทก่อนหักภาษี และ 8,025 บาทหลังหักภาษีหัก ณ ที่จ่าย 3%",
+    },
+  ],
+  disclaimer:
+    "ตัวเลขทุกตัวในตัวอย่างนี้เป็นการอธิบายให้เห็นภาพ ค่าคอมมิชชันขึ้นอยู่กับคลาสที่เปิดสอนและมีการจ่ายเงินจริง",
+} as const;
+
+/** PR section 6, screens block, English. */
+const SCREENS_EN = {
+  eyebrow: "INSIDE THE APPS",
+  heading: "Inside the student app",
+  description:
+    "One lesson in the LINE student app, step by step. The app follows the printed workbook.",
+  items: [
+    {
+      caption:
+        "A writing task from the printed workbook: the student picks a sentence frame and writes the answer.",
+      alt: "Student app guided writing screen with sentence frames",
+    },
+    {
+      caption: "The student types the answer in the app, on the same lesson as the printed page.",
+      alt: "Student app short-answer screen with the question and a typed answer",
+    },
+    {
+      caption: "After the answer, the app shows the AI check and the points.",
+      alt: "Student app screen with the AI check and the points for one answer",
+    },
+    {
+      caption:
+        "At the end of the lesson, the student rates the effort and writes a note for the tutor.",
+      alt: "Student app end-of-lesson screen with the student's rating and a note for the tutor",
+    },
+    {
+      caption: "The learning record: the lessons, the points, and today's class.",
+      alt: "Student app learning record with the lesson count, the points, and today's class",
+    },
+  ],
+} as const;
+
+/** PR section 6, screens block, Thai from the Thai of PR section 2. */
+const SCREENS_TH = {
+  eyebrow: "ภายในแอป",
+  heading: "ในแอปของนักเรียน",
+  description:
+    "บทเรียนหนึ่งบทในแอปนักเรียนบน LINE ทีละขั้นตอน แอปทำตามเวิร์กบุ๊กที่พิมพ์เป็นเล่ม",
+  items: [
+    {
+      caption:
+        "โจทย์เขียนจากเวิร์กบุ๊กที่พิมพ์เป็นเล่ม นักเรียนเลือกโครงประโยค แล้วเขียนคำตอบเอง",
+      alt: "หน้าจอฝึกเขียนในแอปนักเรียน พร้อมโครงประโยคให้เลือก",
+    },
+    {
+      caption: "นักเรียนพิมพ์คำตอบในแอป ในบทเดียวกับหน้าที่พิมพ์เป็นเล่ม",
+      alt: "หน้าจอตอบคำถามสั้นในแอปนักเรียน พร้อมคำถามและคำตอบที่พิมพ์ไว้",
+    },
+    {
+      caption: "หลังตอบคำถาม แอปจะแสดงผลตรวจของ AI และคะแนนที่ได้",
+      alt: "หน้าจอแอปนักเรียนที่แสดงผลตรวจของ AI และคะแนนของคำตอบหนึ่งข้อ",
+    },
+    {
+      caption:
+        "ตอนท้ายบทเรียน นักเรียนให้คะแนนความตั้งใจของตัวเอง และเขียนข้อความถึงติวเตอร์",
+      alt: "หน้าจอท้ายบทเรียนในแอปนักเรียน ที่มีคะแนนที่นักเรียนให้ และข้อความถึงติวเตอร์",
+    },
+    {
+      caption: "บันทึกการเรียนรู้: บทเรียนที่เรียนแล้ว คะแนนที่ได้ และคลาสของวันนี้",
+      alt: "หน้าจอบันทึกการเรียนรู้ในแอปนักเรียน ที่มีจำนวนบทเรียน คะแนนที่ได้ และคลาสของวันนี้",
+    },
+  ],
+} as const;
+
+/** The two live lines of PR section 5. */
+const LIVE_LINE_PINS: readonly { path: readonly string[]; en: string; th: string }[] = [
   {
-    path: ["eyebrow"],
-    en: "THE COMMISSION CALCULATOR",
-    th: "เครื่องคำนวณค่าคอมมิชชัน",
+    path: ["tutorRole", "points", "3"],
+    en: "The calculator on this page shows examples. Ask us about your own case.",
+    th: "เครื่องคำนวณในหน้านี้แสดงตัวอย่าง ทักมาคุยกับเราเรื่องกรณีของคุณเองได้",
   },
   {
-    path: ["heading"],
-    en: "See how one month's commission works",
-    th: "ดูว่าค่าคอมมิชชันของหนึ่งเดือนคิดอย่างไร",
-  },
-  {
-    path: ["description"],
-    en: "The calculator uses the same formula as our settlement system. Choose the price and the students, and see the month. Every figure is an example, not a promise of income.",
-    th: "เครื่องคำนวณนี้ใช้สูตรเดียวกับระบบสรุปยอดของเรา เลือกราคาและจำนวนนักเรียน แล้วดูยอดของเดือนนั้น ตัวเลขทุกตัวเป็นตัวอย่าง ไม่ใช่คำสัญญาเรื่องรายได้",
-  },
-  {
-    path: ["volumeNote"],
-    en: "Volume is the class package price times the students who paid in the month.",
-    th: "ยอดรวม คือราคาแพ็กเกจคลาสคูณกับจำนวนนักเรียนที่จ่ายเงินในเดือนนั้น",
-  },
-  {
-    path: ["rateNote"],
-    en: "The rate starts near 40% on a small volume. It passes 50% at 20,000 baht and approaches 71% at very high volume.",
-    th: "อัตราเริ่มต้นใกล้ 40% เมื่อยอดรวมยังน้อย ผ่าน 50% ที่ 20,000 บาท และเข้าใกล้ 71% เมื่อยอดรวมสูงมาก",
-  },
-  {
-    path: ["payoutNote"],
-    en: "Your payout is the rate times the network volume, minus the payouts of your direct downline tutors. 3% withholding tax comes off a positive payout.",
-    th: "เงินที่คุณได้รับ คืออัตราคูณกับยอดรวมของเครือข่าย หักด้วยเงินที่ติวเตอร์ดาวน์ไลน์ชั้นแรกได้รับ แล้วหักภาษีหัก ณ ที่จ่าย 3% จากยอดที่เป็นบวก",
-  },
-  {
-    path: ["inputs", "price"],
-    en: "Class package price (baht)",
-    th: "ราคาแพ็กเกจคลาส (บาท)",
-  },
-  {
-    path: ["inputs", "priceNote"],
-    en: "Default: 3,000 baht. The price adapts to the market.",
-    th: "ค่าเริ่มต้น 3,000 บาท ราคาปรับตามตลาด",
-  },
-  {
-    path: ["inputs", "ownStudents"],
-    en: "Students in your own classes this month",
-    th: "จำนวนนักเรียนในคลาสของคุณเดือนนี้",
-  },
-  {
-    path: ["inputs", "directTutors"],
-    en: "Direct tutors in your network",
-    th: "ติวเตอร์ชั้นแรกในเครือข่ายของคุณ",
-  },
-  {
-    path: ["inputs", "studentsPerDirect"],
-    en: "Students for each direct tutor",
-    th: "จำนวนนักเรียนของติวเตอร์ชั้นแรกแต่ละคน",
-  },
-  {
-    path: ["results", "ownGV"],
-    en: "Your own volume",
-    th: "ยอดรวมของคุณเอง",
-  },
-  {
-    path: ["results", "networkGV"],
-    en: "Network volume",
-    th: "ยอดรวมของเครือข่าย",
-  },
-  {
-    path: ["results", "rate"],
-    en: "Commission rate",
-    th: "อัตราค่าคอมมิชชัน",
-  },
-  {
-    path: ["results", "gross"],
-    en: "Gross commission",
-    th: "ค่าคอมมิชชันก่อนหัก",
-  },
-  {
-    path: ["results", "downline"],
-    en: "Downline deduction",
-    th: "ส่วนที่หักให้ดาวน์ไลน์",
-  },
-  {
-    path: ["results", "tax"],
-    en: "Withholding tax (3%)",
-    th: "ภาษีหัก ณ ที่จ่าย (3%)",
-  },
-  {
-    path: ["results", "net"],
-    en: "Net payout",
-    th: "เงินที่ได้รับสุทธิ",
-  },
-  {
-    path: ["explain", "ownOnly"],
-    en: "No downline this month, so the whole gross amount is the payout.",
-    th: "เดือนนี้ไม่มีดาวน์ไลน์ เงินก่อนหักทั้งหมดจึงเป็นเงินที่คุณได้รับ",
-  },
-  {
-    path: ["explain", "withDownline"],
-    en: "Your rate applies to the whole network volume. The payouts of the tutors directly below you come off, and so does 3% withholding tax.",
-    th: "อัตราของคุณคิดกับยอดรวมทั้งเครือข่าย จากนั้นหักเงินที่ติวเตอร์ที่อยู่ใต้คุณโดยตรงได้รับ และหักภาษีหัก ณ ที่จ่าย 3%",
-  },
-  {
-    path: ["explain", "zero"],
-    en: "Add students to see a month.",
-    th: "ใส่จำนวนนักเรียนเพื่อดูยอดของเดือน",
-  },
-  {
-    path: ["chart", "legPayout"],
-    en: "Leg commission",
-    th: "ค่าคอมมิชชันของสาย",
-  },
-  {
-    path: ["chart", "yourPayout"],
-    en: "Your payout",
-    th: "ยอดจ่ายของคุณ",
-  },
-  {
-    path: ["chart", "legVolume"],
-    en: "Leg volume",
-    th: "ยอดรวมของสาย",
-  },
-  {
-    path: ["graph", "rateTitle"],
-    en: "Your rate for the network volume",
-    th: "อัตราของคุณตามยอดรวมของเครือข่าย",
-  },
-  {
-    path: ["graph", "ratePoint"],
-    en: "This month",
-    th: "เดือนนี้",
-  },
-  {
-    path: ["presets", "0", "name"],
-    en: "A new tutor",
-    th: "ติวเตอร์ใหม่",
-  },
-  {
-    path: ["presets", "0", "setup"],
-    en: "Four students, no network.",
-    th: "นักเรียนสี่คน ไม่มีเครือข่าย",
-  },
-  {
-    path: ["presets", "0", "result"],
-    en: "12,000 baht of volume at a rate of 46%. The gross is 5,520 baht, and with no downline it is all payout. After 3% withholding tax: 5,354 baht.",
-    th: "ยอดรวม 12,000 บาท ที่อัตรา 46% ค่าคอมมิชชันก่อนหัก 5,520 บาท ไม่มีดาวน์ไลน์ จึงได้รับทั้งหมด หลังหักภาษีหัก ณ ที่จ่าย 3% เหลือ 5,354 บาท",
-  },
-  {
-    path: ["presets", "1", "name"],
-    en: "A tutor with two direct tutors",
-    th: "ติวเตอร์ที่มีติวเตอร์ชั้นแรกสองคน",
-  },
-  {
-    path: ["presets", "1", "setup"],
-    en: "Two own students, and two direct tutors with three students each.",
-    th: "นักเรียนของตัวเองสองคน และติวเตอร์ชั้นแรกสองคนที่มีนักเรียนคนละสามคน",
-  },
-  {
-    path: ["presets", "1", "result"],
-    en: "24,000 baht of network volume at a rate of 52.7%. The gross is 12,656 baht, and the two direct tutors earn 8,010 baht of it. The payout is 4,646 baht before tax, and 4,506 baht after 3% withholding tax.",
-    th: "ยอดรวมของเครือข่าย 24,000 บาท ที่อัตรา 52.7% ค่าคอมมิชชันก่อนหัก 12,656 บาท โดยติวเตอร์ชั้นแรกสองคนได้รับ 8,010 บาท เหลือจ่ายก่อนภาษี 4,646 บาท และหลังหักภาษีหัก ณ ที่จ่าย 3% เหลือ 4,506 บาท",
-  },
-  {
-    path: ["presets", "2", "name"],
-    en: "A small team with three legs",
-    th: "ทีมเล็กที่มีสามสาย",
-  },
-  {
-    path: ["presets", "2", "setup"],
-    en: "Two personal students, and three legs with four students each.",
-    th: "นักเรียนในคลาสของคุณเอง 2 คน และ 3 สาย สายละ 4 คน",
-  },
-  {
-    path: ["presets", "2", "result"],
-    en: "42,000 baht of network volume at a rate of 59.1%. The gross is 24,833 baht, and the three legs earn 16,560 baht of it. The payout is 8,273 baht before tax, and 8,025 baht after 3% withholding tax.",
-    th: "ยอดรวมของเครือข่าย 42,000 บาท ที่อัตรา 59.1% ยอดก่อนหักคือ 24,833 บาท และสามสายได้ค่าคอมมิชชัน 16,560 บาทจากยอดนี้ ยอดจ่ายคือ 8,273 บาทก่อนหักภาษี และ 8,025 บาทหลังหักภาษีหัก ณ ที่จ่าย 3%",
-  },
-  {
-    path: ["disclaimer"],
-    en: "Every figure in these examples is an illustration. Commission depends on the classes that run and are paid for.",
-    th: "ตัวเลขทุกตัวในตัวอย่างนี้เป็นการอธิบายให้เห็นภาพ ค่าคอมมิชชันขึ้นอยู่กับคลาสที่เปิดสอนและมีการจ่ายเงินจริง",
+    path: ["faq", "items", "5", "answer"],
+    en: "Tutors earn commission under a unilevel commission model, and the system settles it monthly. The rate rises with the network volume of the month. The calculator on this page shows examples; the real figure comes from the classes that run and are paid for.",
+    th: "ติวเตอร์ได้รับค่าคอมมิชชันตามโมเดลคอมมิชชันแบบยูนิเลเวล และระบบสรุปยอดให้ทุกเดือน อัตราจะสูงขึ้นตามยอดรวมของเครือข่ายในเดือนนั้น เครื่องคำนวณในหน้านี้แสดงตัวอย่าง ตัวเลขจริงมาจากคลาสที่เปิดสอนและมีการจ่ายเงินจริง",
   },
 ];
 
-/** The forbidden June claims of D-16, matched case-insensitively. */
+/** The two old live lines that PR section 5 removes. */
+const ABSENT_LIVE_LINES = [
+  "We do not publish income figures. Ask us for the details.",
+  "Tutors earn commission under a unilevel commission model, and the system settles it monthly. We do not publish income figures. Use the contact page to ask about the details.",
+] as const;
+
+/** Forbidden June claims of D-16, matched case-insensitively. */
 const FORBIDDEN_CLAIMS = [
   "annual",
   "per year",
@@ -233,25 +262,38 @@ const FORBIDDEN_CLAIMS = [
   "teacher",
 ] as const;
 
-/** The superseded two-level figures of D-2 and D-3. */
+/** Superseded two-level figures of D-2 and D-3. */
 const ABSENT_FIGURES = ["5,884", "5,707", "22,714", "9,889"] as const;
 
-/** Returns the calculator block, or an empty object when the key is missing. */
-function block(locale: Locale): Dict {
-  const value = DICTS[locale].calculator;
+/** Key paths that section 6 does not carry (D-17). */
+const ABSENT_PATH_TOKENS = [
+  "downline",
+  "directTutors",
+  "studentsPerDirect",
+  "chart",
+  "secondLevel",
+  "studentsSecondLevel",
+  "twoLevels",
+  "preTax",
+  "preTaxes",
+] as const;
+
+/** Returns a block, or an empty object when the key is missing. */
+function block(locale: Locale, name: "calculator" | "screens"): Dict {
+  const value = DICTS[locale][name];
   return value !== null && typeof value === "object" && !Array.isArray(value)
     ? (value as Dict)
     : {};
 }
 
-/** Reads one path from a node. Returns undefined for a missing path. */
-function read(node: unknown, path: readonly string[]): unknown {
-  let value: unknown = node;
+/** Reads one dotted or bracketed path as a string, or undefined when absent. */
+function at(node: unknown, path: readonly string[]): string | undefined {
+  let cur: unknown = node;
   for (const part of path) {
-    if (value === null || typeof value !== "object" || !(part in value)) return undefined;
-    value = (value as Dict)[part];
+    if (cur == null || typeof cur !== "object") return undefined;
+    cur = (cur as Dict)[part];
   }
-  return value;
+  return typeof cur === "string" ? cur : undefined;
 }
 
 /** Renders a traversal path as the bracket-indexed leaf key that stringLeaves emits. */
@@ -278,20 +320,6 @@ function stringLeaves(node: unknown, prefix: readonly string[] = []): Record<str
   return out;
 }
 
-/** Adds one string leaf at a path in a shallow copy; used for positive controls. */
-function withLeaf(obj: Dict, path: readonly string[], value: string): Dict {
-  const root: Dict = { ...obj };
-  let cursor = root;
-  for (let i = 0; i < path.length - 1; i += 1) {
-    const existing = cursor[path[i]];
-    const child: Dict = existing !== null && typeof existing === "object" ? { ...(existing as Dict) } : {};
-    cursor[path[i]] = child;
-    cursor = child;
-  }
-  cursor[path[path.length - 1]] = value;
-  return root;
-}
-
 /** Returns one record per path and token that occur together. */
 function findTokens(
   leaves: Record<string, string>,
@@ -307,335 +335,157 @@ function findTokens(
   return found;
 }
 
-describe("1. the calculator block exists", () => {
-  it("exists in en, th, and zh", () => {
-    expect(DICTS.en.calculator).toBeDefined();
-    expect(DICTS.th.calculator).toBeDefined();
-    expect(DICTS.zh.calculator).toBeDefined();
-  });
-});
-
-describe("2. en and th copy pinned word for word (AC-5)", () => {
-  it("holds all 36 string leaves in en", () => {
-    const leaves = stringLeaves(block("en"));
-    expect(Object.keys(leaves).length).toBe(PINS.length);
-    // Self-check: a wrong pin path fails here with its key, not as a copy mismatch below.
-    for (const pin of PINS) {
-      expect(typeof read(block("en"), pin.path), `pin path ${leafKey(pin.path)}`).toBe("string");
+/** Returns one record per leaf key path and token that occur together. */
+function findTokenPaths(
+  leaves: Record<string, string>,
+  tokens: readonly string[],
+): { path: string; token: string }[] {
+  const found: { path: string; token: string }[] = [];
+  for (const path of Object.keys(leaves)) {
+    for (const token of tokens) {
+      if (path.toLowerCase().includes(token.toLowerCase())) found.push({ path, token });
     }
-    for (const pin of PINS) {
-      expect(leaves[leafKey(pin.path)]).toBe(pin.en);
-    }
-  });
-
-  it("holds all 36 string leaves in th", () => {
-    const leaves = stringLeaves(block("th"));
-    expect(Object.keys(leaves).length).toBe(PINS.length);
-    for (const pin of PINS) {
-      expect(leaves[leafKey(pin.path)]).toBe(pin.th);
-    }
-  });
-});
-
-describe("3. key order and structure (AC-5)", () => {
-  it("keeps the spec 5.4 key order in en, th, and zh", () => {
-    for (const locale of LOCALES) {
-      expect(Object.keys(block(locale))).toEqual([...KEY_ORDER]);
-    }
-  });
-
-  it("uses the same string key paths in en, th, and zh", () => {
-    const enPaths = Object.keys(stringLeaves(block("en"))).sort();
-    for (const locale of LOCALES) {
-      expect(Object.keys(stringLeaves(block(locale))).sort()).toEqual(enPaths);
-    }
-  });
-
-  it("has no second-level keys (D-4)", () => {
-    for (const locale of LOCALES) {
-      expect(read(block(locale), ["inputs", "secondLevel"])).toBeUndefined();
-      expect(read(block(locale), ["inputs", "studentsSecondLevel"])).toBeUndefined();
-      expect(read(block(locale), ["explain", "twoLevels"])).toBeUndefined();
-    }
-  });
-
-  it("detects each dropped key when it is injected (positive control)", () => {
-    for (const path of [
-      ["inputs", "secondLevel"],
-      ["inputs", "studentsSecondLevel"],
-      ["explain", "twoLevels"],
-    ]) {
-      const probe = withLeaf(block("en"), path, "probe");
-      expect(read(probe, path)).toBe("probe");
-    }
-  });
-});
-
-describe("4. zh holds the English lines (D-10)", () => {
-  it("equals en at every pinned key path", () => {
-    for (const pin of PINS) {
-      expect(read(block("zh"), pin.path)).toBe(pin.en);
-    }
-  });
-
-  it("equals the whole en leaf map", () => {
-    expect(stringLeaves(block("zh"))).toEqual(stringLeaves(block("en")));
-  });
-});
-
-describe("5. preset 3 final copy of handoff v0.4 section 8", () => {
-  it("pins the en name, setup, and result", () => {
-    expect(read(block("en"), ["presets", "2", "name"])).toBe("A small team with three legs");
-    expect(read(block("en"), ["presets", "2", "setup"])).toBe(
-      "Two personal students, and three legs with four students each.",
-    );
-    expect(read(block("en"), ["presets", "2", "result"])).toBe(
-      "42,000 baht of network volume at a rate of 59.1%. The gross is 24,833 baht, and the three legs earn 16,560 baht of it. The payout is 8,273 baht before tax, and 8,025 baht after 3% withholding tax.",
-    );
-  });
-
-  it("pins the th name, setup, and result", () => {
-    expect(read(block("th"), ["presets", "2", "name"])).toBe("ทีมเล็กที่มีสามสาย");
-    expect(read(block("th"), ["presets", "2", "setup"])).toBe(
-      "นักเรียนในคลาสของคุณเอง 2 คน และ 3 สาย สายละ 4 คน",
-    );
-    expect(read(block("th"), ["presets", "2", "result"])).toBe(
-      "ยอดรวมของเครือข่าย 42,000 บาท ที่อัตรา 59.1% ยอดก่อนหักคือ 24,833 บาท และสามสายได้ค่าคอมมิชชัน 16,560 บาทจากยอดนี้ ยอดจ่ายคือ 8,273 บาทก่อนหักภาษี และ 8,025 บาทหลังหักภาษีหัก ณ ที่จ่าย 3%",
-    );
-  });
-
-  it("pins the three chart final labels in en and th", () => {
-    for (const [key, enValue, thValue] of [
-      ["legPayout", "Leg commission", "ค่าคอมมิชชันของสาย"],
-      ["yourPayout", "Your payout", "ยอดจ่ายของคุณ"],
-      ["legVolume", "Leg volume", "ยอดรวมของสาย"],
-    ] as const) {
-      expect(read(block("en"), ["chart", key])).toBe(enValue);
-      expect(read(block("th"), ["chart", key])).toBe(thValue);
-    }
-  });
-});
-
-describe("6. superseded figures are absent (AC-7)", () => {
-  it("finds no 5,884, 5,707, 22,714, or 9,889 in any calculator block", () => {
-    for (const locale of LOCALES) {
-      expect(findTokens(stringLeaves(block(locale)), [...ABSENT_FIGURES])).toEqual([]);
-    }
-  });
-
-  it("detects each superseded figure when it is injected (positive control)", () => {
-    for (const figure of ABSENT_FIGURES) {
-      const probe = { ...stringLeaves(block("en")), __probe: figure };
-      expect(findTokens(probe, [figure]).some((hit) => hit.path === "__probe")).toBe(true);
-    }
-  });
-});
-
-describe("7. price default of 3,000 (AC-8)", () => {
-  it("keeps 3,000 in the en price note", () => {
-    const value = read(block("en"), ["inputs", "priceNote"]);
-    expect(value).toBe("Default: 3,000 baht. The price adapts to the market.");
-    expect(typeof value === "string" && value.includes("3,000")).toBe(true);
-  });
-
-  it("keeps 3,000 in the th price note", () => {
-    const value = read(block("th"), ["inputs", "priceNote"]);
-    expect(value).toBe("ค่าเริ่มต้น 3,000 บาท ราคาปรับตามตลาด");
-    expect(typeof value === "string" && value.includes("3,000")).toBe(true);
-  });
-});
-
-describe("8. June claims are absent (D-16, AC-8)", () => {
-  it("finds no forbidden claim in any calculator block", () => {
-    for (const locale of LOCALES) {
-      expect(findTokens(stringLeaves(block(locale)), [...FORBIDDEN_CLAIMS])).toEqual([]);
-    }
-  });
-
-  it("fails on each forbidden claim when it is injected (positive control)", () => {
-    for (const claim of FORBIDDEN_CLAIMS) {
-      const probe = { ...stringLeaves(block("en")), __probe: claim };
-      expect(findTokens(probe, [claim]).some((hit) => hit.path === "__probe")).toBe(true);
-    }
-  });
-});
-
-/** Returns the screens block, or an empty object when the key is missing. */
-function screensBlock(locale: Locale): Dict {
-  const value = DICTS[locale].screens;
-  return value !== null && typeof value === "object" && !Array.isArray(value)
-    ? (value as Dict)
-    : {};
+  }
+  return found;
 }
 
-/**
- * One row per string leaf of the screens block (spec 6.3): exact en copy, exact th copy.
- * Nine leaves: the three section strings plus caption and alt for each of the three slots.
- */
-const SCREEN_PINS: readonly { path: readonly string[]; en: string; th: string }[] = [
-  {
-    path: ["eyebrow"],
-    en: "INSIDE THE APPS",
-    th: "ภายในแอป",
-  },
-  {
-    path: ["heading"],
-    en: "The student app and the tutor app",
-    th: "แอปของนักเรียน และแอปของติวเตอร์",
-  },
-  {
-    path: ["description"],
-    en: "A student joins the class in LINE. The tutor runs the class in the tutor app. Both follow the same printed workbook.",
-    th: "นักเรียนเข้าคลาสผ่าน LINE ติวเตอร์สอนผ่านแอปของติวเตอร์ ทั้งสองใช้เวิร์กบุ๊กที่พิมพ์เป็นเล่มชุดเดียวกัน",
-  },
-  {
-    path: ["items", "0", "caption"],
-    en: "The student's home: the greeting, the next class, and the class card. Reedy voice practice is live for students with an active class package, on lessons they completed.",
-    th: "หน้าหลักของนักเรียน: คำทักทาย คลาสถัดไป และการ์ดคลาส การฝึกเสียงกับ Reedy เปิดใช้จริงสำหรับนักเรียนที่มีแพ็กเกจคลาสที่ยังใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว",
-  },
-  {
-    path: ["items", "0", "alt"],
-    en: "Student app home screen with the next class and the class card",
-    th: "หน้าหลักแอปนักเรียน แสดงคลาสถัดไปและการ์ดคลาส",
-  },
-  {
-    path: ["items", "1", "caption"],
-    en: "The student types the answer in the app, on the same lesson as the printed page.",
-    th: "นักเรียนพิมพ์คำตอบในแอป ในบทเดียวกับหน้าที่พิมพ์เป็นเล่ม",
-  },
-  {
-    path: ["items", "1", "alt"],
-    en: "Student app short-answer screen with the question and a typed answer",
-    th: "หน้าจอตอบคำถามสั้นในแอปนักเรียน พร้อมคำถามและคำตอบที่พิมพ์ไว้",
-  },
-  {
-    path: ["items", "2", "caption"],
-    en: "The tutor's class list: who is in today's class and which lesson they are on.",
-    th: "รายชื่อคลาสของติวเตอร์: วันนี้มีใครบ้าง และแต่ละคนอยู่บทไหน",
-  },
-  {
-    path: ["items", "2", "alt"],
-    en: "Tutor app class list with the students of one class",
-    th: "รายชื่อนักเรียนในคลาสหนึ่งของแอปติวเตอร์",
-  },
-];
-
-describe("9. the screens block exists (AC-10)", () => {
-  it("exists in en, th, and zh", () => {
-    expect(DICTS.en.screens).toBeDefined();
-    expect(DICTS.th.screens).toBeDefined();
-    expect(DICTS.zh.screens).toBeDefined();
-  });
-
-  it("sits after tutorRole and before calculator in every dictionary", () => {
+describe("1. both PR section 6 blocks exist in every locale", () => {
+  it("exposes calculator and screens in en, th, and zh", () => {
     for (const locale of LOCALES) {
-      const keys = Object.keys(DICTS[locale]);
-      const screens = keys.indexOf("screens");
-      expect(screens, `${locale} screens index`).toBeGreaterThan(-1);
-      expect(screens, `${locale} after tutorRole`).toBeGreaterThan(keys.indexOf("tutorRole"));
-      expect(screens, `${locale} before calculator`).toBeLessThan(keys.indexOf("calculator"));
+      expect(DICTS[locale].calculator, `${locale} calculator`).toBeDefined();
+      expect(DICTS[locale].screens, `${locale} screens`).toBeDefined();
     }
   });
 });
 
-describe("10. screens copy pinned word for word (AC-10, spec 6.3)", () => {
-  it("holds all nine string leaves in en", () => {
-    const leaves = stringLeaves(screensBlock("en"));
-    expect(Object.keys(leaves).length).toBe(SCREEN_PINS.length);
-    // Self-check: a wrong pin path fails here with its key, not as a copy mismatch below.
-    for (const pin of SCREEN_PINS) {
-      expect(typeof read(screensBlock("en"), pin.path), `pin path ${leafKey(pin.path)}`).toBe(
-        "string",
+describe("2. the calculator block equals PR section 6 exactly", () => {
+  it("en deep-equals the section 6 block", () => {
+    expect(block("en", "calculator")).toEqual(CALC_EN);
+  });
+
+  it("th deep-equals the Thai of PR sections 2 and 3 in the same order", () => {
+    expect(block("th", "calculator")).toEqual(CALC_TH);
+  });
+
+  it("zh deep-equals en (D-10)", () => {
+    expect(block("zh", "calculator")).toEqual(CALC_EN);
+  });
+
+  it("keeps the section 6 key order in every locale", () => {
+    for (const locale of LOCALES) {
+      expect(Object.keys(block(locale, "calculator")), locale).toEqual(Object.keys(CALC_EN));
+    }
+  });
+
+  it("keeps the section 6 leaf paths in every locale", () => {
+    const expected = Object.keys(stringLeaves(CALC_EN)).sort();
+    for (const locale of LOCALES) {
+      expect(Object.keys(stringLeaves(block(locale, "calculator"))).sort(), locale).toEqual(
+        expected,
       );
     }
-    for (const pin of SCREEN_PINS) {
-      expect(leaves[leafKey(pin.path)]).toBe(pin.en);
-    }
-  });
-
-  it("holds all nine string leaves in th", () => {
-    const leaves = stringLeaves(screensBlock("th"));
-    expect(Object.keys(leaves).length).toBe(SCREEN_PINS.length);
-    for (const pin of SCREEN_PINS) {
-      expect(leaves[leafKey(pin.path)]).toBe(pin.th);
-    }
-  });
-
-  it("uses the same string key paths in en, th, and zh", () => {
-    const enPaths = Object.keys(stringLeaves(screensBlock("en"))).sort();
-    expect(enPaths.length).toBe(SCREEN_PINS.length);
-    for (const locale of LOCALES) {
-      expect(Object.keys(stringLeaves(screensBlock(locale))).sort()).toEqual(enPaths);
-    }
-  });
-
-  it("keeps the zh values equal to the en values (D-10)", () => {
-    expect(stringLeaves(screensBlock("zh"))).toEqual(stringLeaves(screensBlock("en")));
-    for (const pin of SCREEN_PINS) {
-      expect(read(screensBlock("zh"), pin.path)).toBe(pin.en);
-    }
-  });
-
-  it("carries no draft marker in any value (D-15a)", () => {
-    for (const locale of LOCALES) {
-      expect(findTokens(stringLeaves(screensBlock(locale)), ["draft"])).toEqual([]);
-    }
-  });
-
-  it("detects a draft marker when it is injected (positive control)", () => {
-    const probe = { ...stringLeaves(screensBlock("en")), __probe: "draft" };
-    expect(findTokens(probe, ["draft"]).some((hit) => hit.path === "__probe")).toBe(true);
   });
 });
 
-/** One row per changed live line of spec 6.4: exact new en copy, exact new th copy. */
-const LIVE_LINE_PINS: readonly { path: readonly string[]; en: string; th: string }[] = [
-  {
-    path: ["tutorRole", "points", "3"],
-    en: "The calculator on this page shows examples. Ask us about your own case.",
-    th: "เครื่องคำนวณในหน้านี้แสดงตัวอย่าง ทักมาคุยกับเราเรื่องกรณีของคุณเองได้",
-  },
-  {
-    path: ["faq", "items", "5", "answer"],
-    en: "Tutors earn commission under a unilevel commission model, and the system settles it monthly. The rate rises with the network volume of the month. The calculator on this page shows examples; the real figure comes from the classes that run and are paid for.",
-    th: "ติวเตอร์ได้รับค่าคอมมิชชันตามโมเดลคอมมิชชันแบบยูนิเลเวล และระบบสรุปยอดให้ทุกเดือน อัตราจะสูงขึ้นตามยอดรวมของเครือข่ายในเดือนนั้น เครื่องคำนวณในหน้านี้แสดงตัวอย่าง ตัวเลขจริงมาจากคลาสที่เปิดสอนและมีการจ่ายเงินจริง",
-  },
-];
+describe("3. the screens block equals PR section 6 exactly", () => {
+  it("en deep-equals the section 6 block with five slots", () => {
+    expect(block("en", "screens")).toEqual(SCREENS_EN);
+  });
 
-/** The two old en lines that spec 6.4 removes from the file. */
-const ABSENT_LIVE_LINES = [
-  "We do not publish income figures. Ask us for the details.",
-  "Tutors earn commission under a unilevel commission model, and the system settles it monthly. We do not publish income figures. Use the contact page to ask about the details.",
-] as const;
+  it("th deep-equals the Thai of PR section 2 in the same order", () => {
+    expect(block("th", "screens")).toEqual(SCREENS_TH);
+  });
 
-describe("11. the two live lines (AC-6, spec 6.4)", () => {
+  it("zh deep-equals en (D-10)", () => {
+    expect(block("zh", "screens")).toEqual(SCREENS_EN);
+  });
+
+  it("keeps the five slot order and the section 6 key order in every locale", () => {
+    for (const locale of LOCALES) {
+      expect(Object.keys(block(locale, "screens")), locale).toEqual(Object.keys(SCREENS_EN));
+      expect((block(locale, "screens").items as unknown[]).length, locale).toBe(5);
+    }
+  });
+});
+
+describe("4. no removed key survives (D-17)", () => {
+  it("carries no downline, direct-tutor, second-level, chart, or pre-tax key", () => {
+    for (const locale of LOCALES) {
+      for (const name of ["calculator", "screens"] as const) {
+        const leaves = stringLeaves(block(locale, name));
+        expect(findTokenPaths(leaves, [...ABSENT_PATH_TOKENS]), `${locale} ${name} keys`).toEqual([]);
+      }
+    }
+  });
+
+  it("detects each removed key when it is injected (positive control)", () => {
+    for (const token of ABSENT_PATH_TOKENS) {
+      const probe = { ...stringLeaves(CALC_EN), [`__probe_${token}`]: "probe" };
+      expect(findTokenPaths(probe, [token]).some((hit) => hit.path.includes("__probe"))).toBe(true);
+    }
+  });
+});
+
+describe("5. superseded figures and June claims are absent", () => {
+  it("finds no superseded two-level figure in any block", () => {
+    for (const locale of LOCALES) {
+      for (const name of ["calculator", "screens"] as const) {
+        expect(findTokens(stringLeaves(block(locale, name)), [...ABSENT_FIGURES])).toEqual([]);
+      }
+    }
+  });
+
+  it("finds no forbidden claim in any block", () => {
+    for (const locale of LOCALES) {
+      for (const name of ["calculator", "screens"] as const) {
+        expect(findTokens(stringLeaves(block(locale, name)), [...FORBIDDEN_CLAIMS])).toEqual([]);
+      }
+    }
+  });
+
+  it("fires on each forbidden claim and figure when injected (positive controls)", () => {
+    for (const token of [...FORBIDDEN_CLAIMS, ...ABSENT_FIGURES]) {
+      const probe = { ...stringLeaves(CALC_EN), __probe: token };
+      expect(findTokens(probe, [token]).some((hit) => hit.path === "__probe")).toBe(true);
+    }
+  });
+});
+
+describe("6. the price default of 3,000 (AC-8)", () => {
+  it("keeps 3,000 in the en and th price notes", () => {
+    for (const locale of ["en", "th"] as const) {
+      const value = at(block(locale, "calculator"), ["inputs", "priceNote"]);
+      expect(typeof value === "string" && value.includes("3,000")).toBe(true);
+    }
+  });
+});
+
+describe("7. the two live lines (AC-6, PR section 5)", () => {
   it("holds the new en copy at both paths", () => {
     for (const pin of LIVE_LINE_PINS) {
-      expect(read(DICTS.en, pin.path), `en ${leafKey(pin.path)}`).toBe(pin.en);
+      expect(at(DICTS.en, pin.path), `en ${leafKey(pin.path)}`).toBe(pin.en);
     }
   });
 
   it("holds the new th copy at both paths", () => {
     for (const pin of LIVE_LINE_PINS) {
-      expect(read(DICTS.th, pin.path), `th ${leafKey(pin.path)}`).toBe(pin.th);
+      expect(at(DICTS.th, pin.path), `th ${leafKey(pin.path)}`).toBe(pin.th);
     }
   });
 
-  it("keeps the zh values equal to the en values (D-10)", () => {
+  it("keeps the zh values equal to en (D-10)", () => {
     for (const pin of LIVE_LINE_PINS) {
-      expect(read(DICTS.zh, pin.path), `zh ${leafKey(pin.path)}`).toBe(pin.en);
+      expect(at(DICTS.zh, pin.path)).toBe(pin.en);
     }
   });
 
   it("finds neither old en line in any dictionary", () => {
     for (const locale of LOCALES) {
-      expect(findTokens(stringLeaves(DICTS[locale]), [...ABSENT_LIVE_LINES]), `${locale} old line`).toEqual(
-        [],
-      );
+      expect(findTokens(stringLeaves(DICTS[locale]), [...ABSENT_LIVE_LINES])).toEqual([]);
     }
   });
 
-  it("detects each old line when it is injected (positive control)", () => {
+  it("detects each old line when injected (positive control)", () => {
     for (const line of ABSENT_LIVE_LINES) {
       const probe = { ...stringLeaves(DICTS.en), __probe: line };
       expect(findTokens(probe, [line]).some((hit) => hit.path === "__probe")).toBe(true);

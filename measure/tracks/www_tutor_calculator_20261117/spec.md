@@ -81,7 +81,7 @@ The money rule, with one level of legs:
 gross      = rate(GV) * GV
 legPayout  = rate(legGV) * legGV            one value per leg
 payout     = max(0, gross - the sum of the leg payouts)
-tax        = 3% of a positive payout
+tax        = (payoutSatang * 3n + 50n) / 100n   half up, only on a positive payout
 net        = payout - tax
 ```
 
@@ -156,18 +156,34 @@ The earlier corrected-preset-3 line of the 2026-11-17 brief (GV 33,000 with two 
 second-level tutor, payout 5,884.44, net 5,707.91) is superseded by the shipped one-level shape.
 It does not appear.
 
-### D-3 Money is integer satang, truncated
+### D-3 Money is integer satang: gross truncates, tax rounds half up
 
-The graphic states the rule: GV and payouts are whole satang, the rate has a scale of 10^9,
-and `rate * GV` is truncated to the satang. The module does the same:
+The graphic states the gross rule: GV and payouts are whole satang, the rate has a scale of
+10^9, and `rate * GV` is truncated to the satang. The settlement service does the same in
+`finance-mlm-service/src/services/commissionService.ts`, `calculatePayoutMinor`:
+`(volumeMinor * scaledRate) / RATE_SCALE` with BigInt division, which truncates. The module
+matches that rule:
 
 1. `gvSatang = Math.round(GV baht * 100)`.
 2. `rateUnits = Math.round(rate(GV) * 1e9)`.
 3. `flatSatang = (BigInt(rateUnits) * BigInt(gvSatang)) / 1000000000n`, which truncates.
-4. Deduction and tax are integer arithmetic on satang. Tax is `(payoutSatang * 3n) / 100n`.
+4. The deduction is integer arithmetic on satang.
+5. Tax is half up. The settlement service does this in
+   `finance-mlm-service/src/services/taxService.ts:4`:
+   `(grossPayoutMinor * 3n + 50n) / 100n`. The module uses
+   `(payoutSatang * 3n + 50n) / 100n`. Net is payout minus tax.
 
 BigInt keeps the product exact. A Number product passes 2^53 at large volume, so the module
 does not use one. The module returns baht as a Number for display.
+
+The two rounding points differ and must not be merged. Gross truncates. Tax rounds half up.
+Price 1,007 with one own student and no legs gives gross 407.87 satang-exact, tax 12.24, and
+net 395.63. Truncating the tax would give 12.23.
+
+PR handoff v0.4 section 4 rounds the gross to 12,655.70, 24,833.46, 4,506.33, and 8,025.26.
+The settlement code truncates the gross, so the calculator shows 12,655.69, 24,833.45,
+4,506.32, and 8,025.25. The PR copy quotes whole baht, so its text is not affected. The
+calculator follows settlement, not the PR table.
 
 Reviewed result, round 1 of `fb6bf7c0d`: preset 2 under this algorithm is gross 12,655.69,
 payout 4,645.69, and net 4,506.32. Rounding the raw float product gives 12,655.70 / 4,645.70 /
@@ -304,6 +320,19 @@ These June claims stay out: the annual projection, the teacher-salary comparison
 rate, "VAT handled", "50 Tawi", and "no earning cap". No percentage appears beyond the rate
 formula. Every figure is an example, and the disclaimer says so.
 
+### D-17 PR section 6 is the only string authority (Phase 3)
+
+The audit (rows D-1, D-2, `27f33b18e`, `e583e21b3`, `08fcd93b0`) found that the shipped page
+carried copy v0.1. PR handoff v0.4 section 6 now supersedes this spec's earlier key tables for
+both new blocks. Section 6 supplies every `calculator.*` and `screens.*` string in en. The Thai
+of PR sections 2 and 3 supplies every th string in the same key order. The zh values equal the
+en values (D-10).
+
+Decision: a string that section 6 does not carry does not ship. The `chart.*` keys, any
+downline, second-level, or direct-tutor key, and any pre-tax label are removed. The gallery
+uses the five student slots of PR section 2, in that order; the 070 and `tutor-desktop/062`
+files and their manifest keys are removed.
+
 ## 5. Phase 1: the calculator
 
 ### 5.1 Files
@@ -355,7 +384,7 @@ export type NetworkResult = {
 export function commissionRate(volume: number): number;
 export function payoutAfterDeduction(gross: number, paidBelow: number): number;
 export function calculateNetwork(input: NetworkInput): NetworkResult;
-export function explainVariant(result: NetworkResult): "zero" | "ownOnly" | "withDownline";
+export function explainVariant(result: NetworkResult): "zero" | "ownOnly" | "withLegs";
 export function resizeLegs(current: readonly number[], count: number): number[];
 export const NETWORK_PRESETS: readonly NetworkInput[];
 ```
@@ -368,7 +397,8 @@ Rules the module holds:
 4. `payoutAfterDeduction` returns `max(0, gross - paidBelow)` in satang. It is exported so the
    zero floor has one test that does not depend on a network that reaches it.
 5. `explainVariant` reads the result: `networkVolume === 0` gives `zero`; `legPayouts === 0`
-   gives `ownOnly`; anything else gives `withDownline`.
+   gives `ownOnly`; anything else gives `withLegs`. The variant name equals the PR section 6
+   key `explain.withLegs`.
 6. `resizeLegs` keeps the first entries, appends `LEG_STUDENTS_DEFAULT` for new legs, and drops
    the rest.
 7. `NETWORK_PRESETS` holds the three inputs of D-2, price 3,000 included.
@@ -415,106 +445,73 @@ Design rules: theme colors only (site neutrals plus the emerald scale), no arbit
 inline style except the bar width custom property, 390 px with no horizontal scroll, and a
 44 px minimum target on the buttons and the leg controls.
 
-### 5.4 The locale keys (en, then th, then zh)
+### 5.4 The locale keys (PR section 6; Phase 3)
 
-Key order follows the copy file. Insert the `calculator` block after `tutorRole` and before
-`faq` in all three dictionaries.
+D-17 makes PR handoff v0.4 section 6 the authority for this block. The earlier v0.1 key
+tables and the `chart.*` labels do not ship. Insert the block after `tutorRole` and before
+`faq` in all three dictionaries. Key order follows section 6.
 
 ```ts
 calculator: {
     eyebrow: "THE COMMISSION CALCULATOR",
     heading: "See how one month's commission works",
-    description: "The calculator uses the same formula as our settlement system. Choose the price and the students, and see the month. Every figure is an example, not a promise of income.",
+    description: "The calculator uses the same formula as our settlement system. Choose the price, your students, and your legs, and see the month. Every figure is an example, not a promise of income.",
     volumeNote: "Volume is the class package price times the students who paid in the month.",
     rateNote: "The rate starts near 40% on a small volume. It passes 50% at 20,000 baht and approaches 71% at very high volume.",
-    payoutNote: "Your payout is the rate times the network volume, minus the payouts of your direct downline tutors. 3% withholding tax comes off a positive payout.",
+    payoutNote: "Your payout is the rate times the network volume, minus the commission of each leg. 3% withholding tax comes off a positive payout.",
     inputs: {
         price: "Class package price (baht)",
         priceNote: "Default: 3,000 baht. The price adapts to the market.",
-        ownStudents: "Students in your own classes this month",
-        directTutors: "Direct tutors in your network",
-        studentsPerDirect: "Students for each direct tutor",
+        ownStudents: "Personal students this month",
+        legCount: "Legs with students",
+        legStudents: "Students in this leg",
+        addLeg: "Add a leg",
+        removeLeg: "Remove a leg",
     },
     results: {
         ownGV: "Your own volume",
         networkGV: "Network volume",
         rate: "Commission rate",
         gross: "Gross commission",
-        downline: "Downline deduction",
+        legCommissions: "Leg commissions",
         tax: "Withholding tax (3%)",
         net: "Net payout",
     },
-    explain: {
-        ownOnly: "No downline this month, so the whole gross amount is the payout.",
-        withDownline: "Your rate applies to the whole network volume. The payouts of the tutors directly below you come off, and so does 3% withholding tax.",
-        zero: "Add students to see a month.",
-    },
-    chart: {
-        legVolume: "Leg volume",
-        legPayout: "Leg commission",
-        yourPayout: "Your payout",
-    },
     graph: {
+        title: "How this month's payout is built",
+        caption: "Each bar is one leg: the volume it brings and the commission it earns on its own. Your payout is your rate on the whole volume, minus the commissions of the legs.",
+        ownBar: "Your own students",
+        legBar: "Leg {n}",
+        grossBar: "Gross at your rate",
+        legCommissionBar: "Commission of each leg",
+        netBar: "Your payout after 3% tax",
+        axisBaht: "Baht",
         rateTitle: "Your rate for the network volume",
+        rateAxis: "Rate",
         ratePoint: "This month",
     },
+    explain: {
+        ownOnly: "No legs this month, so the whole gross amount is the payout.",
+        withLegs: "Your rate applies to the whole network volume. The commission of each leg comes off, and 3% withholding tax comes off the rest.",
+        zero: "Add students to see a month.",
+    },
     presets: [
-        { name: "A new tutor", setup: "Four students, no network.", result: "12,000 baht of volume at a rate of 46%. The gross is 5,520 baht, and with no downline it is all payout. After 3% withholding tax: 5,354 baht." },
-        { name: "A tutor with two direct tutors", setup: "Two own students, and two direct tutors with three students each.", result: "24,000 baht of network volume at a rate of 52.7%. The gross is 12,656 baht, and the two direct tutors earn 8,010 baht of it. The payout is 4,646 baht before tax, and 4,506 baht after 3% withholding tax." },
+        { name: "A new tutor", setup: "Four personal students, no legs.", result: "12,000 baht of volume at a rate of 46%. The gross is 5,520 baht, and with no legs it is all payout. After 3% withholding tax: 5,354 baht." },
+        { name: "A tutor with two legs", setup: "Two personal students, and two legs with three students each.", result: "24,000 baht of network volume at a rate of 52.7%. The gross is 12,656 baht, and the two legs earn 8,010 baht of it. The payout is 4,646 baht before tax, and 4,506 baht after 3% withholding tax." },
         { name: "A small team with three legs", setup: "Two personal students, and three legs with four students each.", result: "42,000 baht of network volume at a rate of 59.1%. The gross is 24,833 baht, and the three legs earn 16,560 baht of it. The payout is 8,273 baht before tax, and 8,025 baht after 3% withholding tax." },
     ],
     disclaimer: "Every figure in these examples is an illustration. Commission depends on the classes that run and are paid for.",
 },
 ```
 
-PR v0.4 section 8 replaced the drafts of `presets[2]` and `chart` (D-2a, D-9). Task 2.7
-shipped that copy.
+The th block takes the Thai lines of PR sections 2 and 3 for the matching keys, in the same
+key order. The two live lines come from PR section 5 (section 6.4). The `www-tutor-calculator`
+locale test pins every th value exactly.
 
-The `th` block holds the Thai values of the copy file in the same order:
-
-| Key | Thai |
-|---|---|
-| `eyebrow` | เครื่องคำนวณค่าคอมมิชชัน |
-| `heading` | ดูว่าค่าคอมมิชชันของหนึ่งเดือนคิดอย่างไร |
-| `description` | เครื่องคำนวณนี้ใช้สูตรเดียวกับระบบสรุปยอดของเรา เลือกราคาและจำนวนนักเรียน แล้วดูยอดของเดือนนั้น ตัวเลขทุกตัวเป็นตัวอย่าง ไม่ใช่คำสัญญาเรื่องรายได้ |
-| `volumeNote` | ยอดรวม คือราคาแพ็กเกจคลาสคูณกับจำนวนนักเรียนที่จ่ายเงินในเดือนนั้น |
-| `rateNote` | อัตราเริ่มต้นใกล้ 40% เมื่อยอดรวมยังน้อย ผ่าน 50% ที่ 20,000 บาท และเข้าใกล้ 71% เมื่อยอดรวมสูงมาก |
-| `payoutNote` | เงินที่คุณได้รับ คืออัตราคูณกับยอดรวมของเครือข่าย หักด้วยเงินที่ติวเตอร์ดาวน์ไลน์ชั้นแรกได้รับ แล้วหักภาษีหัก ณ ที่จ่าย 3% จากยอดที่เป็นบวก |
-| `inputs.price` | ราคาแพ็กเกจคลาส (บาท) |
-| `inputs.priceNote` | ค่าเริ่มต้น 3,000 บาท ราคาปรับตามตลาด |
-| `inputs.ownStudents` | จำนวนนักเรียนในคลาสของคุณเดือนนี้ |
-| `inputs.directTutors` | ติวเตอร์ชั้นแรกในเครือข่ายของคุณ |
-| `inputs.studentsPerDirect` | จำนวนนักเรียนของติวเตอร์ชั้นแรกแต่ละคน |
-| `results.ownGV` | ยอดรวมของคุณเอง |
-| `results.networkGV` | ยอดรวมของเครือข่าย |
-| `results.rate` | อัตราค่าคอมมิชชัน |
-| `results.gross` | ค่าคอมมิชชันก่อนหัก |
-| `results.downline` | ส่วนที่หักให้ดาวน์ไลน์ |
-| `results.tax` | ภาษีหัก ณ ที่จ่าย (3%) |
-| `results.net` | เงินที่ได้รับสุทธิ |
-| `explain.ownOnly` | เดือนนี้ไม่มีดาวน์ไลน์ เงินก่อนหักทั้งหมดจึงเป็นเงินที่คุณได้รับ |
-| `explain.withDownline` | อัตราของคุณคิดกับยอดรวมทั้งเครือข่าย จากนั้นหักเงินที่ติวเตอร์ที่อยู่ใต้คุณโดยตรงได้รับ และหักภาษีหัก ณ ที่จ่าย 3% |
-| `explain.zero` | ใส่จำนวนนักเรียนเพื่อดูยอดของเดือน |
-| `chart.legVolume` | ยอดรวมของสาย |
-| `chart.legPayout` | ค่าคอมมิชชันของสาย |
-| `chart.yourPayout` | ยอดจ่ายของคุณ |
-| `graph.rateTitle` | อัตราของคุณตามยอดรวมของเครือข่าย |
-| `graph.ratePoint` | เดือนนี้ |
-| `presets[0].name` | ติวเตอร์ใหม่ |
-| `presets[0].setup` | นักเรียนสี่คน ไม่มีเครือข่าย |
-| `presets[0].result` | ยอดรวม 12,000 บาท ที่อัตรา 46% ค่าคอมมิชชันก่อนหัก 5,520 บาท ไม่มีดาวน์ไลน์ จึงได้รับทั้งหมด หลังหักภาษีหัก ณ ที่จ่าย 3% เหลือ 5,354 บาท |
-| `presets[1].name` | ติวเตอร์ที่มีติวเตอร์ชั้นแรกสองคน |
-| `presets[1].setup` | นักเรียนของตัวเองสองคน และติวเตอร์ชั้นแรกสองคนที่มีนักเรียนคนละสามคน |
-| `presets[1].result` | ยอดรวมของเครือข่าย 24,000 บาท ที่อัตรา 52.7% ค่าคอมมิชชันก่อนหัก 12,656 บาท โดยติวเตอร์ชั้นแรกสองคนได้รับ 8,010 บาท เหลือจ่ายก่อนภาษี 4,646 บาท และหลังหักภาษีหัก ณ ที่จ่าย 3% เหลือ 4,506 บาท |
-| `presets[2].name` | ทีมเล็กที่มีสามสาย |
-| `presets[2].setup` | นักเรียนในคลาสของคุณเอง 2 คน และ 3 สาย สายละ 4 คน |
-| `presets[2].result` | ยอดรวมของเครือข่าย 42,000 บาท ที่อัตรา 59.1% ยอดก่อนหักคือ 24,833 บาท และสามสายได้ค่าคอมมิชชัน 16,560 บาทจากยอดนี้ ยอดจ่ายคือ 8,273 บาทก่อนหักภาษี และ 8,025 บาทหลังหักภาษีหัก ณ ที่จ่าย 3% |
-| `disclaimer` | ตัวเลขทุกตัวในตัวอย่างนี้เป็นการอธิบายให้เห็นภาพ ค่าคอมมิชชันขึ้นอยู่กับคลาสที่เปิดสอนและมีการจ่ายเงินจริง |
-
-The keys `inputs.secondLevel`, `inputs.studentsSecondLevel`, and `explain.twoLevels` of copy
-v0.1 do not exist (D-4).
-
-`zh` takes the English values of every key above, key for key. D-10 applies.
+The keys `inputs.directTutors`, `inputs.studentsPerDirect`, `results.downline`,
+`explain.withDownline`, every `chart.*` key, and any pre-tax label do not exist (D-17). The
+second-level keys of copy v0.1 stay absent (D-4). `zh` takes the en values of every key above,
+key for key. D-10 applies.
 
 ## 6. Phase 2: the gallery and the live copy
 
@@ -551,58 +548,49 @@ names:
 
 | Slot | Manifest key | Source file | Repo file |
 |---|---|---|---|
-| 1 | `tutorScreens.studentHome` | `student-mobile/070-screen.png` | `student-mobile/070-screen.webp` |
+| 1 | `tutorScreens.guidedWriting` | `student-mobile/040-screen.png` | `student-mobile/040-screen.webp` |
 | 2 | `tutorScreens.shortAnswer` | `student-mobile/002-screen.png` | `student-mobile/002-screen.webp` |
-| 3 | `tutorScreens.classList` | `tutor-desktop/062-screen.png` | `tutor-desktop/062-screen.webp` |
+| 3 | `tutorScreens.feedback` | `student-mobile/004-screen.png` | `student-mobile/004-screen.webp` |
+| 4 | `tutorScreens.selfReflection` | `student-mobile/052-screen.png` | `student-mobile/052-screen.webp` |
+| 5 | `tutorScreens.classRecord` | `student-mobile/064-screen.png` | `student-mobile/064-screen.webp` |
 
-The manifest entries go into `productPictures` in
+D-17 makes PR section 2 the authority for the gallery. All five files are 520 by 1125. No
+tutor screen ships. The 070 and `tutor-desktop/062` webp files and their manifest keys are
+removed. No blur is needed on the five delivered files: the orchestrator viewed 040, 004,
+052, and 064 and saw no "Reading 3.1" and no price; 064 shows the demo tutor name
+"ครู ฝน ใจดี", which the audit accepts.
+
+The manifest entries stay a sibling export in
 `apps/www-reading-advantage/src/lib/product-pictures.ts`, in slot order, with the real pixel
 size and `portrait: false`, so each screen keeps its own proportions at card width.
 
-Slots 4 and 5 have no picture (D-15).
-
 ### 6.3 The gallery section
 
-`SectionHeader` with the three `screens` strings, then one card per slot in copy order. Each
-card renders `ProductPicture` with the slot's `alt` and the caption under it. The grid puts the
-two phone screens in half-width cards and the wide screen across the row at `md`, and one
+D-17 makes PR handoff v0.4 section 6 the authority. `SectionHeader` takes the three `screens`
+strings, then one card per slot in copy order. Each card renders `ProductPicture` with the
+slot's `alt` and the caption under it. The five phone screens sit in a responsive grid, one
 column at 390 px. No new image or heading component: item 8 of the review checklist in
 `apps/www-reading-advantage/docs/design-rules.md` requires the shared parts.
 
 ```ts
 screens: {
     eyebrow: "INSIDE THE APPS",
-    heading: "The student app and the tutor app",
-    description: "A student joins the class in LINE. The tutor runs the class in the tutor app. Both follow the same printed workbook.",
+    heading: "Inside the student app",
+    description: "One lesson in the LINE student app, step by step. The app follows the printed workbook.",
     items: [
-        { caption: "The student's home: the greeting, the next class, and the class card. Reedy voice practice is live for students with an active class package, on lessons they completed.", alt: "Student app home screen with the next class and the class card" },
+        { caption: "A writing task from the printed workbook: the student picks a sentence frame and writes the answer.", alt: "Student app guided writing screen with sentence frames" },
         { caption: "The student types the answer in the app, on the same lesson as the printed page.", alt: "Student app short-answer screen with the question and a typed answer" },
-        { caption: "The tutor's class list: who is in today's class and which lesson they are on.", alt: "Tutor app class list with the students of one class" },
+        { caption: "After the answer, the app shows the AI check and the points.", alt: "Student app screen with the AI check and the points for one answer" },
+        { caption: "At the end of the lesson, the student rates the effort and writes a note for the tutor.", alt: "Student app end-of-lesson screen with the student's rating and a note for the tutor" },
+        { caption: "The learning record: the lessons, the points, and today's class.", alt: "Student app learning record with the lesson count, the points, and today's class" },
     ],
 },
 ```
 
-The Thai values, in the same order:
-
-| Key | Thai |
-|---|---|
-| `eyebrow` | ภายในแอป |
-| `heading` | แอปของนักเรียน และแอปของติวเตอร์ |
-| `description` | นักเรียนเข้าคลาสผ่าน LINE ติวเตอร์สอนผ่านแอปของติวเตอร์ ทั้งสองใช้เวิร์กบุ๊กที่พิมพ์เป็นเล่มชุดเดียวกัน |
-| `items[0].caption` | หน้าหลักของนักเรียน: คำทักทาย คลาสถัดไป และการ์ดคลาส การฝึกเสียงกับ Reedy เปิดใช้จริงสำหรับนักเรียนที่มีแพ็กเกจคลาสที่ยังใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว |
-| `items[0].alt` | หน้าหลักแอปนักเรียน แสดงคลาสถัดไปและการ์ดคลาส |
-| `items[1].caption` | นักเรียนพิมพ์คำตอบในแอป ในบทเดียวกับหน้าที่พิมพ์เป็นเล่ม |
-| `items[1].alt` | หน้าจอตอบคำถามสั้นในแอปนักเรียน พร้อมคำถามและคำตอบที่พิมพ์ไว้ |
-| `items[2].caption` | รายชื่อคลาสของติวเตอร์: วันนี้มีใครบ้าง และแต่ละคนอยู่บทไหน |
-| `items[2].alt` | รายชื่อนักเรียนในคลาสหนึ่งของแอปติวเตอร์ |
-
-PR v0.4 section 8 gave the `studentHome` and `shortAnswer` captions and alt texts. The PM
-dropped the `network` and `earnings` captions, so the gallery holds three cards (D-15). The
-copy file's `lessonPhases` alt named the tutor app, and PR v0.4 replaced it with the
-student-app alt of the shipped locale (D-15a). The screen `student-mobile/002` shows the
-student app.
-
-`zh` takes the English values. D-10 applies.
+The th block takes the Thai captions and alt texts of PR section 2 in the same key order. The
+`www-tutor-calculator` locale test pins every th value exactly. PR section 8 dropped the
+`network` and `earnings` captions (D-15) and corrected the slot-2 alt to the student app
+(D-15a). `zh` takes the English values. D-10 applies.
 
 ### 6.4 The two live lines
 
@@ -662,7 +650,8 @@ Constraints on the gates:
 - **AC-3.** For preset 2 and preset 3, the conservation check holds in integer satang: leg
   payouts plus payout equal the gross satang, so 801,000 + 464,569 = 1,265,569 and
   1,656,000 + 827,345 = 2,483,345. Preset 3 reports leg payouts 16,560.00, payout 8,273.45, and
-  net 8,025.25.
+  net 8,025.25. Tax uses half up (D-3); price 1,007 with one own student and no legs gives
+  gross 407.87, tax 12.24, and net 395.63.
 - **AC-4.** `payoutAfterDeduction` returns 0 for `(0, 0)` and for `(100, 150)`, and tax and net
   are 0 on a zero payout.
 - **AC-5.** `www-tutor-calculator.locale.test.ts` holds every `calculator.*` string of
@@ -670,10 +659,11 @@ Constraints on the gates:
   equal to the en values, and none of `inputs.secondLevel`, `inputs.studentsSecondLevel`, or
   `explain.twoLevels`.
 - **AC-6.** The same test holds the two new live lines and finds neither old line.
-- **AC-7.** The same test holds the preset 3 copy of PR v0.4 and the three chart labels in en
-  and th, and finds no `5,884`, `5,707`, `22,714`, or `9,889` string in the `calculator` block.
-  The shipped test does not check the superseded one-level draft figures (18,709.44 / 6,694.44 /
-  6,493.61 / 12,015), so this spec claims no such check.
+- **AC-7.** The same test finds no `5,884`, `5,707`, `22,714`, or `9,889` string in the
+  `calculator` block. Under D-17 it also finds no `chart.*` key, no downline, second-level, or
+  direct-tutor key, and no pre-tax label. The shipped test does not check the superseded
+  one-level draft figures (18,709.44 / 6,694.44 / 6,493.61 / 12,015), so this spec claims no
+  such check.
 - **AC-8.** The same test fails on each forbidden claim of D-16 inside the new strings, and it
   finds the price default of 3,000 baht.
 - **AC-9.** The component test shows the default state (0 figures and the `zero` line), the leg
@@ -695,6 +685,22 @@ Constraints on the gates:
   sections in the order of section 2, the calculator figures readable, and the Thai checked by
   Daniel.
 - **AC-16.** The app selector prints `["www-reading-advantage"]` for the code commits.
+- **AC-17.** `www-tutor-calculator.locale.test.ts` deep-equals the whole `calculator` and
+  `screens` blocks against PR section 6: en and zh from section 6, th from the Thai of sections
+  2 and 3, in the same key order, with no other key in either block. A rendered-page case finds
+  no `downline`, `Downline deduction`, or `ดาวน์ไลน์` in en, th, or zh, before and after preset
+  2 and preset 3 are pressed.
+- **AC-18.** The component and the page use only PR section 6 keys. The graph carries
+  `ownBar`, `legBar` with `{n}`, `grossBar`, `legCommissionBar`, `netBar`, `axisBaht`,
+  `rateTitle`, `rateAxis`, and `ratePoint`. The variant `withLegs` equals the locale key. No
+  `chart.*`, downline, second-level, direct-tutor, or pre-tax key remains.
+- **AC-19.** `tutorScreens` holds exactly `guidedWriting`, `shortAnswer`, `feedback`,
+  `selfReflection`, and `classRecord`, in that order, with the 040, 002, 004, 052, and 064
+  student-mobile webp files at 520 by 1125. The page renders five cards with the PR alt text.
+  No tutor screen ships.
+- **AC-20.** Tax rounds half up as `(payoutSatang * 3n + 50n) / 100n`. Gross stays truncated.
+  The three preset figures do not move. No test reads production source as text or computes a
+  hash.
 
 ## 10. Open questions
 

@@ -621,6 +621,42 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   `/blog/nobody-interrupts-her-while-she-reads` answers 307 to
   `/en/blog/nobody-interrupts-her-while-she-reads`, then 200.
 
+## Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+
+> **Phase base:** `phase_base_sha` `81df01cf2e7c2954f4a2de1aaee593913a00bc75`, captured at the branch head before the first Phase 3 Red file was written. `role_base_sha` has the same value. Sources: the audit report `~/Desktop/handoff/audit-20261117/reading-advantage-monorepo.md` (rows `377e45b8c`, `27f33b18e`, `e583e21b3`, `08fcd93b0`, `61e614489`, `96887abe5`, D-1, D-2, D-3), and PR handoff v0.4 `~/Desktop/advantage-pr/11-content/www-tutor-advantage-calculator-handoff.md` (sections 2, 3, 5, 6, and 8). Section 6, with the Thai of sections 2 and 3, is the only source for every calculator and gallery string. Section 4 rounds the gross; settlement truncates the gross and rounds tax half up. The calculator follows settlement. A string that section 6 does not carry does not ship.
+
+- [~] 3.1 Red: pin the PR v0.4 copy, the five-slot student gallery, and the half-up tax. Test: AC-17, AC-18, AC-19, AC-20.
+
+  Test files: `src/__tests__/www-tutor-calculator.locale.test.ts`, `src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx`, `src/lib/__tests__/tutor-screens.test.ts`, `src/lib/__tests__/tutor-screens.adversarial.test.ts`, `src/lib/tutor-commission.test.ts`, `src/lib/tutor-commission.adversarial.test.ts`, `src/components/marketing/tutor-commission-calculator.test.tsx`, `src/components/marketing/tutor-commission-calculator.adversarial.test.tsx`, `src/__tests__/www-tutor-screens-copy.adversarial.test.ts`, and `src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx`. The locale test deep-equals the whole `calculator` and `screens` blocks against PR section 6, en and zh from section 6, th from the Thai of sections 2 and 3. A new rendered-page case finds no `downline` text in en, th, or zh, before and after preset 2 and preset 3 are pressed. The manifest tests pin five student slots and their sizes. The module tests pin the half-up tax and the `withLegs` variant. The three source-text reads become behaviour checks.
+
+- [ ] 3.2 Green: replace the `calculator` and `screens` blocks in en, th, and zh with PR section 6. Test: AC-17.
+
+  The th values come from the Thai of PR sections 2 and 3 in the same key order. The zh values equal the en values (D-10). No key outside section 6 stays.
+
+- [ ] 3.3 Green: move the component and the page to the section 6 keys. Test: AC-18.
+
+  Inputs: `inputs.legCount`, `inputs.legStudents`, `inputs.addLeg`, `inputs.removeLeg`. Results include `results.legCommissions`. The graph carries `ownBar`, `legBar` with the `{n}` placeholder, `grossBar`, `legCommissionBar`, `netBar`, `axisBaht`, `rateTitle`, `rateAxis`, and `ratePoint`. Explain uses `ownOnly`, `withLegs`, and `zero`. Notes and disclaimer use the section 6 strings. Remove every key that section 6 does not have: the `chart.*` keys, any downline, second-level, or direct-tutor key, and any pre-tax label. Rename the module variant `withDownline` to `withLegs`.
+
+- [ ] 3.4 Green: replace the gallery with the five PR section 2 slots. Test: AC-19.
+
+  Order: `guidedWriting` 040, `shortAnswer` 002, `feedback` 004, `selfReflection` 052, `classRecord` 064. All are webp files at 520 by 1125 under `public/images/products/tutor-advantage/student-mobile/`. Delete the 070 and `tutor-desktop/062` webp files and their manifest keys. No tutor screen stays. Source PNGs: `~/Desktop/advantage-pr/assets/screenshots/tutor-advantage/dev-2026-11-16/student-mobile/`. No blur is needed: the orchestrator viewed 040, 004, 052, and 064 and saw no "Reading 3.1" and no price; 064 shows the demo tutor name "ครู ฝน ใจดี", which the audit accepts.
+
+- [ ] 3.5 Green: compute tax half up. Test: AC-20.
+
+  Use `(preTaxSatang * 3n + 50n) / 100n`, as `finance-mlm-service/src/services/taxService.ts:4` does. Gross stays truncated by `calculatePayoutMinor`. The three preset figures do not move.
+
+- [ ] 3.6 Run the Phase 3 gates. Test: AC-11, AC-12, AC-16.
+
+  The gate block of section 8, with the ten targeted files of task 3.1. The app selector prints `["www-reading-advantage"]`.
+
+- [ ] 3.7 Reviews A and C, adversarial, and phase acceptance. Test: AC-17, AC-18, AC-19, AC-20.
+
+  Run the reviews on a model family other than the Green family. Re-run the adversarial suite on the new copy and tax rule. Record the phase acceptance artifact.
+
+- [ ] 3.8 Push www-only and check the live pages. Test: AC-16.
+
+  The push follows the PM page-check. Record the CD run and the HTTP status of en, th, and zh. No deploy command runs from this session.
+
 ## Answers owed to PR
 
 1. Preset 3 (name, setup, result) and the three `chart.*` labels are drafts (spec D-2a, D-9).

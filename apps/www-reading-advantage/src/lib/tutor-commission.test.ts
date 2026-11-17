@@ -227,8 +227,8 @@ describe("7. explainVariant", () => {
     expect(explainVariant(result)).toBe("ownOnly");
   });
 
-  it("returns withDownline for preset 2", () => {
-    expect(explainVariant(calculateNetwork(NETWORK_PRESETS[1]))).toBe("withDownline");
+  it("returns withLegs for preset 2", () => {
+    expect(explainVariant(calculateNetwork(NETWORK_PRESETS[1]))).toBe("withLegs");
   });
 });
 
@@ -335,5 +335,30 @@ describe("9. non-finite and negative inputs clamp", () => {
     expect(badStudents.networkVolume).toBe(0);
     expect(badStudents.gross).toBe(0);
     expectSafeMoney(badStudents);
+  });
+});
+
+describe("10. withholding tax rounds half up (spec D-3)", () => {
+  it("price 1,007 with one own student gives tax 12.24, not the truncated 12.23", () => {
+    const result = calculateNetwork({
+      price: 1007,
+      personalStudents: 1,
+      studentsPerLeg: [],
+    });
+    expect(result.networkVolume).toBe(1007);
+    expect(result.gross).toBe(407.87);
+    expect(result.preTax).toBe(407.87);
+    expect(result.withholdingTax).toBe(12.24);
+    expect(result.net).toBe(395.63);
+
+    // The rejected rule truncates the tax at 12.23; the pin must see the satang.
+    expect(Math.floor((toSatang(result.preTax) * 3) / 100)).toBe(1223);
+    expect(toSatang(result.withholdingTax)).toBe(1224);
+  });
+
+  it("keeps the three preset taxes unchanged under half up", () => {
+    expect(calculateNetwork(NETWORK_PRESETS[0]).withholdingTax).toBe(165.6);
+    expect(calculateNetwork(NETWORK_PRESETS[1]).withholdingTax).toBe(139.37);
+    expect(calculateNetwork(NETWORK_PRESETS[2]).withholdingTax).toBe(248.2);
   });
 });

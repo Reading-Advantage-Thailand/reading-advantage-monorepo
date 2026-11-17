@@ -1,40 +1,38 @@
 /**
- * A-63 Phase 2 adversarial controls: gallery render wiring and consumer scope.
+ * A-63 Phase 3 adversarial controls: gallery render wiring and manifest use.
  * The i18n mock returns key paths, so copy assertions are per-slot path checks.
+ * No test in this file reads production source as text.
  */
-import { readFileSync, readdirSync } from "node:fs";
-import { join, relative } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { render, cleanup } from "@testing-library/react";
 import TutorAdvantage from "@/app/[locale]/(marketing)/products/tutor-advantage/page";
+import { tutorScreens } from "@/lib/product-pictures";
 
 const SCREENS = "pages.products.tutorAdvantage.screens.items";
+const SLOTS = [
+  "guidedWriting",
+  "shortAnswer",
+  "feedback",
+  "selfReflection",
+  "classRecord",
+] as const;
 
 afterEach(() => {
   cleanup();
 });
 
+/** Decodes a next/image optimizer URL back to the manifest path. */
+function decodeSrc(src: string | null): string | null {
+  if (!src) return src;
+  if (!src.startsWith("/_next/image")) return src;
+  const encoded = new URL(src, "http://localhost").searchParams.get("url");
+  return encoded ? decodeURIComponent(encoded) : src;
+}
+
 /** Renders the async route in jsdom. */
 async function renderPage(): Promise<void> {
   const jsx = await TutorAdvantage({ params: Promise.resolve({ locale: "en" }) });
   render(jsx);
-}
-
-/**
- * Lists repo-relative TypeScript source files below a directory.
- * @param dir The directory to walk.
- * @returns Relative paths of .ts and .tsx files.
- */
-function sourceFiles(dir: string): string[] {
-  const out: string[] = [];
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    const full = join(dir, entry.name);
-    if (entry.isDirectory()) out.push(...sourceFiles(full));
-    else if (entry.isFile() && /\.(ts|tsx)$/.test(entry.name)) {
-      out.push(relative(process.cwd(), full));
-    }
-  }
-  return out;
 }
 
 describe("tutor screens gallery adversarial controls", () => {
@@ -43,7 +41,7 @@ describe("tutor screens gallery adversarial controls", () => {
     const section = document.querySelector("[data-testid='tutor-screens']");
     expect(section).toBeInTheDocument();
     const imgs = section!.querySelectorAll("img");
-    expect(imgs.length).toBe(3);
+    expect(imgs.length).toBe(5);
     for (const img of imgs) {
       const alt = img.getAttribute("alt");
       expect(alt).toBeTruthy();
@@ -55,8 +53,8 @@ describe("tutor screens gallery adversarial controls", () => {
     await renderPage();
     const section = document.querySelector("[data-testid='tutor-screens']");
     const cards = section!.querySelectorAll("li");
-    expect(cards.length).toBe(3);
-    for (let i = 0; i < 3; i += 1) {
+    expect(cards.length).toBe(5);
+    for (let i = 0; i < 5; i += 1) {
       const card = cards[i]!;
       const img = card.querySelector("img");
       const cap = card.querySelector("figcaption");
@@ -67,7 +65,7 @@ describe("tutor screens gallery adversarial controls", () => {
       expect(capText).toContain(`${SCREENS}.${i}.caption`);
       expect(img!.getAttribute("alt")).not.toContain(".caption");
       expect(capText).not.toContain(".alt");
-      for (let j = 0; j < 3; j += 1) {
+      for (let j = 0; j < 5; j += 1) {
         if (j !== i) expect(capText).not.toContain(`${SCREENS}.${j}.caption`);
       }
     }
@@ -89,26 +87,25 @@ describe("tutor screens gallery adversarial controls", () => {
     }
   });
 
-  it("ADV-G4 the gallery renders exactly three cards and no fourth", async () => {
+  it("ADV-G4 the gallery renders exactly five cards and no sixth", async () => {
     await renderPage();
     const sections = document.querySelectorAll("[data-testid='tutor-screens']");
     expect(sections.length).toBe(1);
     const cards = sections[0]!.querySelectorAll("li");
-    expect(cards.length).toBe(3);
-    expect(sections[0]!.textContent).not.toContain(`${SCREENS}.3.`);
+    expect(cards.length).toBe(5);
+    expect(sections[0]!.textContent).not.toContain(`${SCREENS}.5.`);
   });
 
-  it("ADV-G5 tutorScreens is consumed only by the manifest and the tutor page in production source", () => {
-    const consumers = sourceFiles(join(process.cwd(), "src"))
-      .filter((rel) => {
-        const isTest = rel.includes("__tests__") || /\.test\.(ts|tsx)$/.test(rel);
-        if (isTest) return false;
-        return readFileSync(join(process.cwd(), rel), "utf8").includes("tutorScreens");
-      })
-      .sort();
-    expect(consumers).toEqual([
-      "src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
-      "src/lib/product-pictures.ts",
-    ]);
+  it("ADV-G5 the five rendered images use the manifest srcs in slot order", async () => {
+    await renderPage();
+    const section = document.querySelector("[data-testid='tutor-screens']");
+    const imgs = Array.from(section!.querySelectorAll("img"));
+    expect(Object.keys(tutorScreens)).toEqual([...SLOTS]);
+    const expected = SLOTS.map((slot) => tutorScreens[slot].src);
+    expect(imgs.map((img) => decodeSrc(img.getAttribute("src")))).toEqual(expected);
+    for (const src of expected) {
+      expect(src.startsWith("/images/products/tutor-advantage/student-mobile/")).toBe(true);
+      expect(src).not.toContain("tutor-desktop");
+    }
   });
 });

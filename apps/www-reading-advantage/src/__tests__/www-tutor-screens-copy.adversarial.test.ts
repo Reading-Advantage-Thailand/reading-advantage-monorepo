@@ -2,8 +2,6 @@
  * A-63 Phase 2 adversarial controls: screens copy fidelity and locale robustness.
  * Every case passes on the delivered dictionaries and fails on a wrong or hostile one.
  */
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { en, th, zh } from "@/locales/pages/products/tutor-advantage";
 
@@ -45,6 +43,19 @@ function at(node: unknown, path: string): string | undefined {
 
 const screens = (loc: Loc) => D[loc].screens as Dict;
 
+/** Returns one record per path and token that occur together in a dictionary. */
+function hits(node: unknown, tokens: readonly string[]): { path: string; token: string }[] {
+  const found: { path: string; token: string }[] = [];
+  for (const path of stringPaths(node)) {
+    const value = at(node, path);
+    if (typeof value !== "string") continue;
+    for (const token of tokens) {
+      if (value.toLowerCase().includes(token.toLowerCase())) found.push({ path, token });
+    }
+  }
+  return found;
+}
+
 describe("tutor screens copy adversarial controls", () => {
   it("ADV-C1 no screens leaf is empty or whitespace", () => {
     for (const loc of LOCALES) {
@@ -61,9 +72,9 @@ describe("tutor screens copy adversarial controls", () => {
   it("ADV-C2 en and th screens captions differ with no untranslated placeholder", () => {
     const enItems = screens("en").items as Dict[];
     const thItems = screens("th").items as Dict[];
-    expect(enItems.length).toBe(3);
-    expect(thItems.length).toBe(3);
-    for (let i = 0; i < 3; i += 1) {
+    expect(enItems.length).toBe(5);
+    expect(thItems.length).toBe(5);
+    for (let i = 0; i < 5; i += 1) {
       const enCap = enItems[i]!.caption as string;
       const thCap = thItems[i]!.caption as string;
       expect(enCap.trim().length).toBeGreaterThan(0);
@@ -85,24 +96,18 @@ describe("tutor screens copy adversarial controls", () => {
     expect(at(D.zh, "faq.items.5.answer")).toBe(at(D.en, "faq.items.5.answer"));
   });
 
-  it("ADV-C4 the two retired income lines are absent anywhere in the tutor locale file", () => {
-    const source = readFileSync(
-      join(process.cwd(), "src", "locales", "pages", "products", "tutor-advantage.ts"),
-      "utf8",
-    );
+  it("ADV-C4 the two retired income lines are absent from every delivered message", () => {
     const retired = [
       "We do not publish income figures. Ask us for the details.",
       "Tutors earn commission under a unilevel commission model, and the system settles it monthly. We do not publish income figures. Use the contact page to ask about the details.",
     ];
-    const detect = (text: string) => retired.filter((line) => text.includes(line));
-    expect(detect(source)).toEqual([]);
-
-    // Vacuity control: the exact predicate fires when a retired line is present.
-    for (const line of retired) {
-      expect(detect(`${source}\n${line}`)).toContain(line);
-      // Filter-word probe: a hit beside "do not"/"never" is still preserved.
-      expect(detect(`note: do not show, never print -> ${line}`)).toContain(line);
+    for (const loc of LOCALES) {
+      expect(hits(D[loc], retired), `${loc} retired lines`).toEqual([]);
     }
+
+    // Vacuity control: the same predicate fires on an injected message.
+    const probe = { ...stringPaths(D.en), __probe: retired[0] };
+    expect(hits(probe, [retired[0]!]).some((hit) => hit.path === "__probe")).toBe(true);
   });
 
   it("ADV-C5 screens key paths match across en, th, zh and item lengths are equal", () => {
@@ -114,7 +119,7 @@ describe("tutor screens copy adversarial controls", () => {
     expect(enPaths).toEqual(zhPaths);
     for (const loc of LOCALES) {
       const items = screens(loc).items as unknown[];
-      expect(items.length).toBe(3);
+      expect(items.length).toBe(5);
     }
   });
 });
