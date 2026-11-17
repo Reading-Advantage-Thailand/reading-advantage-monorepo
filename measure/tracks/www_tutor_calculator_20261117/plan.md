@@ -85,14 +85,19 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   `measure/runs/www_tutor_calculator_20261117/red-1.3-08fcd93b.json` and `.log`.
   Correction (2026-11-17): the preset pins now render bracket leaf keys through `leafKey()`; correction commit `704f03c497cac94d735684b839ae0538f3882465`.
 
-- [ ] 1.4 Green: add the `calculator` block to en, th, and zh. Test: AC-5, AC-7, AC-8.
+- [x] 1.4 Green: add the `calculator` block to en, th, and zh. Test: AC-5, AC-7, AC-8.
 
   File `apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts`, in all three
   dictionaries, after `tutorRole` and before `faq`. Values come from spec 5.4, D-2a, and D-9.
   The `presets[2]` values and the `chart` values carry a `draft` comment. One comment above the
   zh block records the placeholder rule of D-10.
 
-  Done: the command of task 1.3 exits 0.
+  Done: 27f33b18e7198d498f6f2008740c38077cb1dfaf. The command of task 1.3 exits 0: the targeted
+  command `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+  www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts
+  --reporter=dot --silent=true'` reports `Test Files 1 passed (1)` and `Tests 18 passed (18)`
+  at exit 0. `pnpm turbo run check-types --filter=www-reading-advantage` exits 0. Evidence
+  files: `measure/runs/www_tutor_calculator_20261117/green-1.4-27f33b18e.json` and `.log`.
 
 - [ ] 1.5 Red: pin the calculator behaviour. Test: AC-9.
 
