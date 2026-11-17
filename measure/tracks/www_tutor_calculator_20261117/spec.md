@@ -1,6 +1,6 @@
 # Spec: www Tutor Advantage screens and commission calculator
 
-Track: `www_tutor_calculator_20261117` (standard lane: two phases).
+Track: `www_tutor_calculator_20261117` (standard lane: three phases).
 Author model: opencode-go/deepseek-v4.1-flash.
 Source owner: PM assignment A-63 (Daniel, Google Tasks `R2t2eF9Z`, 2026-11-17 06:30 ICT).
 Due: 2026-11-21.
@@ -34,14 +34,15 @@ Sources, read once at authoring time:
 This spec carries every new string. The implementation reads no file outside the repository.
 The tests read no file outside the repository and compute no hashes.
 
-## 2. The two phases
+## 2. The three phases
 
 | Phase | Delivers | Dependency |
 |---|---|---|
 | 1 | The pure commission module with tests, the client calculator with the payout graph, the `calculator.*` locale keys, the calculator section on the page | None |
 | 2 | The blurred screen copies, the gallery and its `screens.*` keys, the two live copy lines, the page-check, one www-only push | None; the set arrived 2026-11-17 |
+| 3 | PR final copy, the five student screens, the half-up settlement tax, the Reedy claim fix, one www-only push | Audit remediation after the phase 2 page-check |
 
-Page order after both phases:
+Page order after the three phases:
 
 | # | Section | Anchor |
 |---|---|---|
@@ -300,13 +301,13 @@ vitest cannot read pixels. Task 2.1 checks each file against them, records one l
 and confirms each saved copy at full size. The PM page-check confirms it again. The tests pin
 the file names, the captions, the alt text, and the render order.
 
-### D-15 Three gallery captions have a picture; two do not
+### D-15 Two gallery captions have no picture
 
 The delivered set holds a student app and a tutor or presenter app. It holds no network screen
 and no earnings screen (set README, rule 7). The copy file has five captions, so `network` and
-`earnings` have no allowed picture. They are not rendered, and PR answers with a screen or a
-withdrawn caption (open question 2). The gallery shows the three slots that have a picture, in
-copy order.
+`earnings` have no allowed picture. They are not rendered, and PR handoff v0.4 section 8.3
+drops them (open question 2). The gallery shows the five student slots of PR section 2, in copy
+order.
 
 **D-15a. Slot 2's alt text (resolved by PR v0.4, task 2.7).** Copy v0.1 gave the `lessonPhases`
 alt as "Tutor app showing the 18 phases of one lesson", and the Thai as "แอปติวเตอร์แสดง 18
@@ -859,17 +860,23 @@ Constraints on the gates:
 
 ## 10. Open questions
 
-All seven questions closed on 2026-11-17. PR handoff v0.4 section 8 answers questions 1, 3, and
-7 in task 2.7, commit `d91e6c527` and its follow-ups. The PM decisions answer questions 2, 5,
-and 6. The PM page-check of task 2.5 answers question 4.
+All seven questions closed on 2026-11-17. PR handoff v0.4 section 8 answers questions 1, 2, 3,
+and 7 in task 2.7, commit `d91e6c527` and its follow-ups. The PM decisions answer questions 5
+and 6. The PM page-check of task 2.5 answers question 4; the Thai check of question 4 stays open.
 
-1. Resolved. PR v0.4 gives the preset 3 copy and the three graph labels (D-2a, D-9).
-2. Resolved. The PM dropped the `network` and `earnings` captions, so the gallery holds three
-   cards (D-15).
-3. Resolved. PR v0.4 gives the `studentHome` caption and alt text of the shipped locale.
-4. Resolved. The PM page-check passed on 2026-11-17, and Daniel read the Thai on the live page.
-   The zh lines keep the English values (D-10).
+1. Resolved. PR handoff v0.4 section 8.1 gives the preset 3 copy and the three graph labels
+   (D-2a, D-9).
+2. Resolved. PR handoff v0.4 section 8.3 drops the `network` and `earnings` captions, so the
+   gallery holds five cards (D-15).
+3. Resolved. PR handoff v0.4 section 8.4 gives the `studentHome` caption and alt text. D-17 and
+   AC-19 then set the gallery to the five student slots. No `studentHome` key ships.
+4. Resolved for the page-check. The PM page-check passed on 2026-11-17. Daniel checks the Thai
+   on the live page (PR handoff section 7). The zh lines keep the English values (D-10). The th
+   Reedy feature line goes to PR for a fixed sentence, then to Daniel (PM 2026-11-18).
 5. Resolved. The www-only push `a726b2be2` came after the page-check, and CD run 44053703983
    succeeded. No deploy command ran from the session.
 6. Resolved. The PM accepted the 11 % upscale of the phone screens at 1280 px.
 7. Resolved. PR v0.4 replaced the alt text, and the manifest key is now `shortAnswer` (D-15a).
+
+Five items stay open after the push of `af78cfb43`. The plan section "Answers owed to PR"
+lists them; each item goes in the next www push, which the PM schedules.

@@ -986,13 +986,28 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
 
 ## Answers owed to PR
 
-1. Preset 3 (name, setup, result) and the three `chart.*` labels are drafts (spec D-2a, D-9).
-2. The `network` and `earnings` captions have no screen in the delivered set. Deliver a
-   capture of the tutor app's network page and income page, or withdraw the two captions.
-3. The `studentHome` caption names "Reedy practice". No allowed screen in the set shows it.
-   Drop the clause or deliver a screen.
-4. The `lessonPhases` alt names the tutor app, and the mapped screen is the student app
-   (spec D-15a). Correct the alt or confirm it.
+Answered by PR handoff v0.4 section 8, in task 2.7 (`d91e6c527`):
+
+1. Preset 3 (name, setup, result) and the three `chart.*` labels were drafts (spec D-2a, D-9).
+   Answer: section 8.1 gives both.
+2. The `network` and `earnings` captions had no screen in the delivered set. Answer: section 8.3
+   drops the two captions, so the gallery holds five cards.
+3. The `studentHome` caption named "Reedy practice". Answer: section 8.4 gives the caption and
+   alt. D-17 and AC-19 then set the gallery to the five student slots, and no `studentHome` key
+   ships.
+4. The `lessonPhases` alt named the tutor app (spec D-15a). Answer: section 8.2 corrects the
+   alt, and the manifest key is now `shortAnswer`.
+
+Five items stay open after the push of `af78cfb43`. Each item goes in the next www push, which
+the PM schedules:
+
+- `calc.result.needsOwnStudents`, after its PR fact gate (PR v0.6 section 7 records the gate as
+  PASS).
+- A better label for `graph.legCommissionBar` (PR v0.6 reads "Commission of all legs").
+- The `graph.caption` rewording of PR v0.6: "Each leg has its own bar." (final acceptance F3).
+- The th Reedy feature sentence: PR writes a fixed sentence, then Daniel checks it (PM
+  2026-11-18).
+- Daniel's picture for the become-a-tutor block.
 
 ## Closeout
 
