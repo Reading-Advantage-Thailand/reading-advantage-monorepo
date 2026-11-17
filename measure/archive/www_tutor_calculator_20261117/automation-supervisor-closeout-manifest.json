@@ -39,10 +39,10 @@
       "af78cfb43",
       "3dbe8a4f8"
     ],
-    "closeout_commit_sha": "recorded in the follow-up record commit"
+    "closeout_commit_sha": "25c54f5feeed1e52f7f79a3e38f5c5a011ba777d"
   },
   "commands": [
-    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track www_tutor_calculator_20261117 -> exit 0 after the record commit",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track www_tutor_calculator_20261117 -> exit 0",
     "rg A5 (plan false-claim) -> exit 1, no hit",
     "rg A6 (registry overstatement) -> exit 1, no hit",
     "rg www_tutor_calculator tests/ -> exit 1, no reference, so the archive move breaks no test path (A9)",

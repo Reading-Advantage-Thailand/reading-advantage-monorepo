@@ -1011,7 +1011,7 @@ the PM schedules:
 
 ## Closeout
 
-- [x] C.1 Move the track to `measure/archive/www_tutor_calculator_20261117`, update the registry row, and record the closeout. Done: 3dbe8a4f8 (temporary placeholder, replaced by the closeout commit SHA in the record commit). Test: the closeout checker exits 0.
+- [x] C.1 Move the track to `measure/archive/www_tutor_calculator_20261117`, update the registry row, and record the closeout. Done: 25c54f5feeed1e52f7f79a3e38f5c5a011ba777d. Test: the closeout checker exits 0.
 
   The closeout runs after task 2.5 and before the report to the PM. The registry row names the
   commit range, the gate output, the page-check folder, and the open questions that stay with
