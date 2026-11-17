@@ -549,7 +549,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
 
   Gate owner: the PM, with Daniel on the Thai.
 
-- [ ] 2.6 Push www-only and check the live pages. Test: AC-16.
+- [~] 2.6 Push www-only and check the live pages. Test: AC-16.
 
   Confirm `origin/master` did not move, rebase when it did, then push. One commit range, www
   only, no deploy command from this session. Record the CD run and the HTTP status of the three
@@ -557,6 +557,46 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
 
   Done: the three URLs answer 200 and show the two sections; the selector prints
   `["www-reading-advantage"]`; the Thai page shows the new Thai lines.
+
+  Gate run at the merge head `cd72047c2` (2026-11-17). `role_base_sha`
+  cd72047c299c03cd5f502b0480cda5ed4692098d; `phase_base_sha`
+  d279b870341c067c33fc884ae8863b5428487c17. The worktree was clean and no product file
+  changed. The committed Phase 2 Red change `6c0cf5de6` sits inside `d279b8703..cd72047c2`.
+  `origin/master` is `59821e80b`, the base of the merge, so it did not move and no rebase is
+  needed.
+
+  1. `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+     www-reading-advantage test --reporter=dot --silent=true'` exit 0: `Test Files 71 passed
+     (71)`, `Tests 2647 passed (2647)`, duration 60.52 s. The count is 29 above the 2618 of
+     task 2.9; this session did not run a control at the pre-merge head, so it states the
+     delta and no cause.
+  2. `pnpm turbo run check-types --filter=www-reading-advantage` exit 0 on a live run: `cache
+     miss, executing d4bf8bc1de537863`, `tsc --noEmit` in 3.913 s.
+  3. `pnpm --filter www-reading-advantage lint` exit 0 with no output after `$ eslint .`.
+  4. `git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json` exit 0, so the baseline
+     file is byte-unchanged.
+  5. `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+     www-reading-advantage build'` exits 1 on the first attempt at the Next.js
+     security-advisory nudge, after the route table prints. The retry exits 0 with the nudge
+     as a warning.
+  6. `node scripts/ci/affected-apps.mjs --base
+     59821e80b347375d7cb90e30420a958158a47885 --head
+     cd72047c299c03cd5f502b0480cda5ed4692098d` exit 0, output
+     `["www-reading-advantage"]`. Full 40-hex ids are used, so the short-id rule of section 5.2
+     does not apply.
+
+  Merge check: the daily post survives. `git log --oneline -1 --
+  'apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/posts/en/nobody-interrupts-her-while-she-reads.md'`
+  prints `59821e80b feat(www): add the 2026-11-17 daily post
+  (track_id: www_daily_blog_posts_20261115)`. `git cat-file -e` finds the post in HEAD, and
+  `ls apps/www-reading-advantage/public/blog/2026-11-17-reading-time.webp` finds the image
+  (308298 bytes).
+
+  Deviation: the brief path `apps/www-reading-advantage/public/blog/posts/en/...` does not
+  exist. The post lives under `src/app/[locale]/(marketing)/blog/posts/`.
+
+  Evidence files: `measure/runs/www_tutor_calculator_20261117/green-2.6-gates-cd72047c2.json`
+  and `.log`. The push and the live URL check stay open.
 
 ## Answers owed to PR
 
