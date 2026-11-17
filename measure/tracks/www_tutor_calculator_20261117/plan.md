@@ -450,6 +450,45 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
 
   Done: 7d94576c9018ddcd1c394837d40dad0f61076830. Ten-file targeted gate exits 0: `Test Files 10 passed (10)`, `Tests 140 passed (140)`. `pnpm turbo run check-types --filter=www-reading-advantage` exits 0; `pnpm --filter www-reading-advantage lint` exits 0 with no `shadcn/*` error in a touched file. The implementation commit holds the four named product files plus `page.tsx`, which needs `calculator.chart.*` and `tutorScreens.shortAnswer` so check-types and the page render pass after the manifest rename. Result artifacts: `measure/runs/www_tutor_calculator_20261117/green-2.7-7d94576c9.json` and `.log`.
 
+- [x] 2.8 Run the Phase 2 gates again at the copy-changed head. Test: AC-11, AC-12, AC-16.
+
+  `phase_base_sha` d279b870341c067c33fc884ae8863b5428487c17; `role_base_sha`
+  203bd5e78dceb9c1701ac708886915f340005d5e. HEAD 203bd5e78 is clean, and the committed
+  Phase 2 Red change sits inside `d279b8703..203bd5e78`.
+
+  The six exit codes are 0, 0, 0, 0, 1 then 0, and 2 then 0. Every accepted run exits 0.
+
+  1. `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+     www-reading-advantage test --reporter=dot --silent=true'` exit 0: `Test Files 71 passed
+     (71)`, `Tests 2617 passed (2617)`.
+  2. `pnpm turbo run check-types --filter=www-reading-advantage` exit 0 on a cache hit. The
+     `--force` rerun exits 0 with `cache bypass, force executing`.
+  3. `pnpm --filter www-reading-advantage lint` exit 0 with no output, so no `shadcn/*` error
+     is in a file this track touched, and none anywhere in the app.
+  4. `git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json` exit 0, so the baseline
+     file is byte-unchanged.
+  5. `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+     www-reading-advantage build'` exits 1 on the first attempt at the Next.js
+     security-advisory nudge, after the route table prints. The retry exits 0 with the nudge
+     as a warning.
+  6. `node scripts/ci/affected-apps.mjs --base
+     ff028a7105ccd5de0c3e9534dd8536b7667e22de --head 203bd5e78` exits 2:
+     `affected-apps: --head must be a 40-character lowercase hex commit id`. The resolved full
+     head exits 0 and prints `["www-reading-advantage"]`.
+
+  The ten-file targeted gate of task 2.7 exits 0 at this head: `Test Files 10 passed (10)`,
+  `Tests 140 passed (140)`.
+
+  Build proof: `.next/BUILD_ID` is `79VUEHlWBdmk6t_tXaU-p` at `2026-11-17 14:32:31 +0700`,
+  against `date` `14:33:06`. The prior id was `O_4OqTZ0s7DFdhzVYcCKk` at 11:38 today, so the
+  build is new. The build holds `Leg commission` and `A small team with three legs` in the
+  tutor-advantage locale chunk. It holds no `Leg share` and no `22,714`.
+
+  Evidence files: `measure/runs/www_tutor_calculator_20261117/green-2.8-203bd5e78.json` and
+  `.log`.
+
+  Note (build-graph): skipped under the PM load watch. No product file changed.
+
 - [b] 2.5 PM page-check at 390, 980, and 1280 px. Test: AC-15.
 
   The PM captures `/en/`, `/th/`, and `/zh/products/tutor-advantage`. The check covers: both
