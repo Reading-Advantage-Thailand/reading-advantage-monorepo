@@ -436,7 +436,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   it, and no file in this track touches that check. Evidence files:
   `measure/runs/www_tutor_calculator_20261117/green-2.4-9befd67c3.json` and `.log`.
 
-- [~] 2.7 Red: replace the spec drafts with PR's final copy (handoff v0.4 section 8). Test: AC-5, AC-13.
+- [x] 2.7 Red: replace the spec drafts with PR's final copy (handoff v0.4 section 8). Test: AC-5, AC-13.
 
   Update the pins that hold a superseded string, key, or figure: the three `chart.*` labels and preset 3 (8.1), gallery slot 2's `shortAnswer` key, caption, and alt (8.2), the `studentHome` caption and alt (8.4), and every preset-3 figure recomputed from `calculateNetwork` with `{ price: 3000, personalStudents: 2, studentsPerLeg: [4, 4, 4] }`. The gallery stays at three cards because 8.3 drops the `network` and `earnings` captions.
 
@@ -447,6 +447,8 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   Recompute: `calculateNetwork({ price: 3000, personalStudents: 2, studentsPerLeg: [4, 4, 4] })` gives own volume 6,000, network volume 42,000, rate 59.1273%, gross 24,833.45, three legs of 12,000 at 5,520 each, leg total 16,560, payout before tax 8,273.45, tax 248.20, net 8,025.25. Display strings: `42,000`, `59.1%`, `24,833.45`, `16,560`, `8,273.45`, `248.20`, `8,025.25`. Chart key map by role: `chart.leg` to `chart.legPayout` for the leg row label, `chart.volume` to `chart.legVolume` for the leg row volume, `chart.you` to `chart.yourPayout` for the tutor payout row. Evidence: `measure/runs/www_tutor_calculator_20261117/red-2.7-d91e6c527.json` and `.log`.
 
   Correction (2026-11-17): the preset 3 net pin now reads the hero figure under the net label through a `heroValue()` helper. The net is the hero of the result card, not a breakdown `dd` row (task 1.6), and the committed adversarial pin fixes the breakdown at six `dd` values. The meaning holds: the figure 8,025.25 is visible on the result card. Correction commit `07a22294e46824e0a3be4ebdacfde1a4405c2ff4`. Command `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx src/components/marketing/tutor-commission-calculator.adversarial.test.tsx --reporter=dot --silent=true'` exits 0 with the five uncommitted Green files present: `Test Files 2 passed (2)`, `Tests 29 passed (29)`. The five uncommitted product files are untouched. `phase_base_sha` d279b870341c067c33fc884ae8863b5428487c17; `role_base_sha` 6c2d67161f9f86ee371901a3abf0648fb37341c6.
+
+  Done: 7d94576c9018ddcd1c394837d40dad0f61076830. Ten-file targeted gate exits 0: `Test Files 10 passed (10)`, `Tests 140 passed (140)`. `pnpm turbo run check-types --filter=www-reading-advantage` exits 0; `pnpm --filter www-reading-advantage lint` exits 0 with no `shadcn/*` error in a touched file. The implementation commit holds the four named product files plus `page.tsx`, which needs `calculator.chart.*` and `tutorScreens.shortAnswer` so check-types and the page render pass after the manifest rename. Result artifacts: `measure/runs/www_tutor_calculator_20261117/green-2.7-7d94576c9.json` and `.log`.
 
 - [b] 2.5 PM page-check at 390, 980, and 1280 px. Test: AC-15.
 
