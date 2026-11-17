@@ -241,18 +241,25 @@ function read(node: unknown, path: readonly string[]): unknown {
   return value;
 }
 
-/** Flattens every string leaf under a node into dotted paths. */
-function stringLeaves(node: unknown, prefix = ""): Record<string, string> {
+/** Renders a traversal path as the bracket-indexed leaf key that stringLeaves emits. */
+function leafKey(path: readonly string[]): string {
+  return path
+    .map((part, index) => (/^\d+$/.test(part) ? `[${part}]` : index === 0 ? part : `.${part}`))
+    .join("");
+}
+
+/** Flattens every string leaf under a node into bracket-indexed leaf keys. */
+function stringLeaves(node: unknown, prefix: readonly string[] = []): Record<string, string> {
   const out: Record<string, string> = {};
   if (typeof node === "string") {
-    out[prefix] = node;
+    out[leafKey(prefix)] = node;
   } else if (Array.isArray(node)) {
     node.forEach((item, index) => {
-      Object.assign(out, stringLeaves(item, `${prefix}[${index}]`));
+      Object.assign(out, stringLeaves(item, [...prefix, String(index)]));
     });
   } else if (node !== null && typeof node === "object") {
     for (const [key, item] of Object.entries(node as Dict)) {
-      Object.assign(out, stringLeaves(item, prefix ? `${prefix}.${key}` : key));
+      Object.assign(out, stringLeaves(item, [...prefix, key]));
     }
   }
   return out;
@@ -299,8 +306,12 @@ describe("2. en and th copy pinned word for word (AC-5)", () => {
   it("holds all 34 string leaves in en", () => {
     const leaves = stringLeaves(block("en"));
     expect(Object.keys(leaves).length).toBe(PINS.length);
+    // Self-check: a wrong pin path fails here with its key, not as a copy mismatch below.
     for (const pin of PINS) {
-      expect(leaves[pin.path.join(".")]).toBe(pin.en);
+      expect(typeof read(block("en"), pin.path), `pin path ${leafKey(pin.path)}`).toBe("string");
+    }
+    for (const pin of PINS) {
+      expect(leaves[leafKey(pin.path)]).toBe(pin.en);
     }
   });
 
@@ -308,7 +319,7 @@ describe("2. en and th copy pinned word for word (AC-5)", () => {
     const leaves = stringLeaves(block("th"));
     expect(Object.keys(leaves).length).toBe(PINS.length);
     for (const pin of PINS) {
-      expect(leaves[pin.path.join(".")]).toBe(pin.th);
+      expect(leaves[leafKey(pin.path)]).toBe(pin.th);
     }
   });
 });
