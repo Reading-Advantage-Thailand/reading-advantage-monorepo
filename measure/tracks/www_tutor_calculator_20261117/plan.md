@@ -513,6 +513,32 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   Note (page wiring): `page.tsx` builds `calculatorCopy` key by key, so the two `graph`
   strings need a pass-through there. The file list of the fix brief did not name it.
 
+  Gate confirmation at 9a53398301ae2fbd41e7e95de8e36ce18d50b9b5 (role base, clean worktree, no
+  product change):
+
+  1. `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+     www-reading-advantage test --reporter=dot --silent=true'` exits 0 with `Test Files 71
+     passed (71)` and `Tests 2618 passed (2618)`, duration 60.81 s.
+  2. `pnpm turbo run check-types --filter=www-reading-advantage` exits 0 on a cache hit
+     (`f8d9bd0a3c285a8b`). The `--force` rerun exits 0 with `tsc --noEmit` in 4.015 s.
+  3. `pnpm --filter www-reading-advantage lint` exits 0 with no output after `$ eslint .`.
+  4. `git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json` exits 0.
+  5. `node scripts/ci/affected-apps.mjs --base
+     ff028a7105ccd5de0c3e9534dd8536b7667e22de --head 9a5339830` exits 2:
+     `affected-apps: --head must be a 40-character lowercase hex commit id`, which is the rule
+     of test-strategy section 5.2. The resolved head exits 0 and prints
+     `["www-reading-advantage"]`.
+
+  The Red change of this task is inside `d279b8703..HEAD` (commit 6c0cf5de6). No Red test
+  changed in this run.
+
+  Evidence files: `measure/runs/www_tutor_calculator_20261117/green-2.9-gates-9a5339830.json`
+  and `.log`.
+
+  Note (build): the orchestrator rebuilt at this head. The first attempt exited 1 on the known
+  Next.js security-advisory nudge; the retry exited 0. This session did not rebuild and did not
+  touch the server on port 3120.
+
 - [b] 2.5 PM page-check at 390, 980, and 1280 px. Test: AC-15.
 
   The PM captures `/en/`, `/th/`, and `/zh/products/tutor-advantage`. The check covers: both
