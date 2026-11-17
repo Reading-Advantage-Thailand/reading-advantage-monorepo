@@ -46,8 +46,8 @@ This file tracks all major tracks for the project.
 
 - [ ] **Track: www Tutor Advantage follow-ups (picture and copy)** — *created 2026-11-18*
   *Link: [./tracks/www_tutor_followups_20261118/](./tracks/www_tutor_followups_20261118/)*
-  *Status: new, opened 2026-11-18; Phase 1 unblocked, the alt gate passed | Owner: Monorepo orchestrator | PM order 2026-11-18 (Daniel answer, Google Tasks `LU1FRkk2`) | Follows `www_tutor_calculator_20261117`, closed at `80ac554b4`*
-  *Note: The become-a-tutor block takes the new 16:9 classroom picture `tutor-advantage-teach-class.webp`. The PM accepted D-1 on 2026-11-18, and the image box changes from `aspect-4/3` to `aspect-video`. Phase 2 ships `calc.result.needsOwnStudents`, the leg-total label, the `graph.caption` v0.6 text, and the Thai Reedy sentence, each after its PR fact gate. One www-only fast-forward push follows the PM page check. One question stays open: the `graph.caption` fact gate.*
+  *Status: new, opened 2026-11-18; the block alt gate passed, the hero alt gate is open | Owner: Monorepo orchestrator | PM order 2026-11-18 (Daniel answer, Google Tasks `LU1FRkk2`) | Follows `www_tutor_calculator_20261117`, closed at `80ac554b4`*
+  *Note: The hero gets the 2026-11-06 classroom picture and the become-a-tutor block gets the 2026-11-13 picture. Each block takes its own entry, both frames stay 16:9, and the old `tutor-advantage-hero.jpg` leaves the page. The PM accepted D-1 on 2026-11-18. Phase 2 ships `calc.result.needsOwnStudents`, the leg-total label, the `graph.caption` v0.6 text, and the Thai Reedy sentence, each after its PR fact gate. The picture work does not wait for `graph.caption`. One www-only fast-forward push follows the PM page check of both blocks. Two questions stay open: the `graph.caption` fact gate and the hero alt.*
 
 - [~] **Track: www daily blog posts of PR** — *created 2026-11-15*
   *Link: [./tracks/www_daily_blog_posts_20261115/](./tracks/www_daily_blog_posts_20261115/)*

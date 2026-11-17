@@ -19,20 +19,21 @@
 6. Every heavy command runs as
    `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<command>'`.
 7. No deploy command and no Cloud Run change. One www-only fast-forward push follows the PM page
-   check (spec D-9).
+   check (spec D-10).
 8. Every new string comes from spec section 5. The drafts stay marked `draft` in code comments.
    Daniel checks the Thai on the built page.
 9. A task with `[b]` does not start until its gate passes. The gate evidence goes in the task
    record.
-10. The picture task and the alt task ship in one change. The new picture cannot ship with the
-    old alt (spec D-4).
+10. Each picture ships with its alt in one change. A new picture cannot ship with an old alt
+    (spec D-5).
 
-## Phase 1: the become-a-tutor picture
+## Phase 1: the two pictures
 
-Phase 1 starts at task 1.1. Task 1.0 passed on 2026-11-18. The picture, the box, and the alt ship
-in one change. The phase ends at the PM page-check evidence, with no push.
+Phase 1 starts at task 1.1. Task 1.0 passed on 2026-11-18. The two pictures, the two entries, the
+boxes, and the two alts ship in one change. The phase ends at the PM page-check evidence, with no
+push. The picture work does not wait for `graph.caption` (spec section 2).
 
-- [x] 1.0 Gate: confirm the PR alt text and its fact gate. Test: AC-3. Done: 2026-11-18.
+- [x] 1.0 Gate: confirm the PR alt text for the block and its fact gate. Test: AC-3. Done: 2026-11-18.
 
   Answers from the orchestrator, 2026-11-18, from the image and PR handoff version 0.8:
 
@@ -45,79 +46,122 @@ in one change. The phase ends at the PM page-check evidence, with no push.
      holds the en and th lines.
   3. The alt fact gate passed on the third pass on 2026-11-18 (PR handoff section 7). The first
      pass found the child count, and the text now reads "three schoolchildren".
-  4. The zh value equals en. The hero keeps its old picture, so `heroExtra.imageAlt` stays
-     unchanged.
+  4. The zh value equals en.
 
   No code change in this task.
 
-- [ ] 1.1 Red: pin the new block file, the 16:9 box, the size, and the alt. Test: AC-1, AC-2, AC-3, AC-4.
+- [b] 1.1 Gate: confirm the PR hero alt text and its fact gate. Test: AC-14.
+
+  Daniel's look gate on 2026-11-18 asks for a new hero picture (spec D-2). The hero alt
+  `heroExtra.imageAlt` changes with it (spec D-5). PR owes the en and th text, and the PM asked PR
+  on 2026-11-18.
+
+  Gate items:
+
+  1. PR delivers the en and th text for `heroExtra.imageAlt` (spec Q4).
+  2. PR handoff section 7 holds a fact gate line for the hero alt with result PASS.
+  3. PR confirms the zh rule: the zh value equals en.
+
+  Record the PR version, the date, and the gate result in this task. No code change in this task.
+
+- [ ] 1.2 Red: pin the two pictures, the two entries, the old-file rule, and the sizes. Test: AC-1, AC-2, AC-3, AC-14, AC-15, AC-16, AC-17, AC-18.
 
   File `apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx`.
 
-  1. Add a map `TUTOR` with one entry per locale: the src
-     `/images/tutor-advantage-teach-class.webp` and the alt from spec section 5.5. The three
-     locales share one file. The en and zh alts are equal. The th alt is the Thai text.
-  2. Change the case "AC-22: the become-a-tutor block" (lines 243..254). It asserts
-     `fileRefs(picture)` contains `TUTOR[locale].src` and the alt equals `TUTOR[locale].alt`.
-  3. Add a case "AC-4: the become-a-tutor file". It reads
-     `public/images/tutor-advantage-teach-class.webp` from `process.cwd()`, calls `webpSize`, and
-     asserts `{ width: 1920, height: 1080 }`. It asserts the file size is at or below 300 KB.
-  4. Add a case "AC-2: the become-a-tutor box". It renders the page in en, reads the `img` of the
-     block, and asserts the class list holds `aspect-video` and does not hold `aspect-4/3`.
-  5. The hero case (lines 184..194) and the book cases stay as they are.
+  1. Replace the `HERO` map (lines 47..59) with two maps. `HERO` holds
+     `/images/tutor-advantage-hero-2026-11-06.webp` and `text(locale, "heroExtra.imageAlt")`.
+     `TUTOR` holds `/images/tutor-advantage-teach-class.webp` and `text(locale, "tutorRole.alt")`.
+     The en and zh values are equal. The th values are the Thai text.
+  2. The hero case (lines 184..194) asserts `HERO[locale].src` and `HERO[locale].alt`. AC-14.
+  3. The case "AC-22: the become-a-tutor block" (lines 243..254) asserts `TUTOR[locale].src` and
+     `TUTOR[locale].alt`. AC-15.
+  4. Add a case "AC-16: no image uses the old hero file". It reads every `img` of the page and
+     asserts no reference contains `tutor-advantage-hero.jpg`. AC-16.
+  5. Add a case "AC-17: no two content images share a file". It maps each `img` to its file, drops
+     the files under `/media/brand/`, and asserts the list has no duplicate. AC-17.
+  6. Add a case "AC-18: both pictures have the expected size". It reads
+     `public/images/tutor-advantage-hero-2026-11-06.webp` and
+     `public/images/tutor-advantage-teach-class.webp` with `webpSize`, asserts `{ width: 1920,
+     height: 1080 }` for each, and asserts each size is at or below 300 KB. AC-18.
+  7. Add a case that the block box holds `aspect-video` and not `aspect-4/3` (spec 4.3). AC-2.
+  8. The three book cases and the banned-file case stay as they are.
+
+  File `src/app/[locale]/(marketing)/products/tutor-advantage/page.phase3.adversarial.test.tsx`.
+
+  9. `expectedContentImages` (lines 352 and 357) takes the two new files, one per block.
+  10. The preload case (line 437) expects `/images/tutor-advantage-hero-2026-11-06.webp` in
+      `imagesrcset`.
 
   Red command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
-  www-reading-advantage exec vitest run "src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx" --reporter=dot --silent=true --maxWorkers=1'`.
-  Expect exit 1: the block still shows the hero file and the hero alt, the new file is missing, and
-  the class is `aspect-4/3`. No failure is an import or syntax error.
+  www-reading-advantage exec vitest run "src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx"
+  "src/app/[locale]/(marketing)/products/tutor-advantage/page.phase3.adversarial.test.tsx" --reporter=dot
+  --silent=true --maxWorkers=1'`.
 
-- [ ] 1.2 Green: convert the source to the delivered webp. Test: AC-4.
+  Expect exit 1: the hero and the block both show the old file, the new files are missing, two
+  content images share one file, and the class is `aspect-4/3`. No failure is an import or syntax
+  error.
 
-  Run the command of spec section 4.2 from the repository root. The output path is
+- [ ] 1.3 Green: convert the two sources to the delivered webp files. Test: AC-18.
+
+  Run the command of spec section 4.2 from the repository root. The outputs are
+  `apps/www-reading-advantage/public/images/tutor-advantage-hero-2026-11-06.webp` and
   `apps/www-reading-advantage/public/images/tutor-advantage-teach-class.webp`.
 
-  Check: the check command of spec section 4.2 prints `(1920, 1080) WEBP` and a byte count at or
-  below 307,200. The probe value is 190,298 bytes.
+  Check: the check command of spec section 4.2 prints `(1920, 1080)` for each file. The probe
+  values are 165,522 bytes for the hero and 190,298 bytes for the block. Each size is at or below
+  307,200 bytes.
 
-  The source check `sha256sum -c SHA256SUMS` in the picture folder exits 0. Record the result. Add
-  no hash field.
+  The source check `sha256sum -c SHA256SUMS` in the picture folder exits 0 for both sources.
+  Record the result. Add no hash field.
 
-- [ ] 1.3 Green: add the manifest entry, point the block at it, and set the box and the alt. Test: AC-1, AC-2, AC-3.
+- [ ] 1.4 Green: split the manifest and point the hero and the block at their files. Test: AC-1, AC-2, AC-3, AC-14, AC-15.
 
   Files:
 
-  1. `src/lib/product-pictures.ts`: add the `tutorTeachClass` entry after `tutorSession` (lines
-     56..61), with the JSDoc line of spec section 4.3.
-  2. `src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx`: lines 329, 331, and 332
-     read `productPictures.tutorTeachClass`. Line 334 reads
-     `className="aspect-video w-full object-cover"`. The alt line and the `sizes` line stay.
+  1. `src/lib/product-pictures.ts`: replace `tutorSession` (lines 56..61) with `tutorHero` and
+     `tutorTeachClass`, with the JSDoc lines and the values of spec section 4.3.
+  2. `src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx`: line 195 reads
+     `picture={productPictures.tutorHero}`, and `priority` stays. Lines 329, 331, and 332 read
+     `productPictures.tutorTeachClass`. Line 334 reads
+     `className="aspect-video w-full object-cover"`. The two alt lines and the `sizes` line stay.
   3. `src/locales/pages/products/tutor-advantage.ts`: set `tutorRole.alt` in en (line 153), th
-     (line 490), and zh (line 827) to the gated text of spec section 5.5. The th value is the Thai
-     text. The zh value equals en.
+     (line 490), and zh (line 827) to the text of spec section 5.5. Set `heroExtra.imageAlt` in
+     en (line 19), th (line 356), and zh (line 693) to the gated text of task 1.1. The th values
+     are the Thai text. The zh values equal en.
 
-  Green command: the gate of task 1.1 exits 0. Then
+  Green command: the command of task 1.2 exits 0. Then
   `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0.
 
-- [ ] 1.4 Gates: run the five app gates. Test: AC-9.
+- [ ] 1.5 Green: remove the old hero file. Test: AC-16.
+
+  1. Run the scan of spec section 4.5:
+     `rg -n "tutor-advantage-hero\.jpg" apps/www-reading-advantage/src --glob '!**/*.test.*'`.
+     Pass: no output.
+  2. Run `git rm apps/www-reading-advantage/public/images/tutor-advantage-hero.jpg`.
+  3. If the scan finds a source reference, keep the file and record the path here. AC-16 still
+     requires that no `img` shows it.
+
+- [ ] 1.6 Gates: run the five app gates. Test: AC-9.
 
   Commands of spec section 6.1 for the www app: types, lint, build, the downline scan, and
   affected apps with `--base 80ac554b426551e5749f0e2cd500cbbf0eb93530`. Each holds its pass value
   of spec section 6.1.
 
   Save the output to `measure/runs/www_tutor_followups_20261118/` as
-  `green-1.4-<short sha>.json` and `.log`.
+  `green-1.6-<short sha>.json` and `.log`.
 
-- [ ] 1.5 Page-check evidence: capture `#become-a-tutor` at three widths and send it to the PM. Test: AC-10.
+- [ ] 1.7 Page-check evidence: capture the hero and `#become-a-tutor` at three widths and send the folder to the PM. Test: AC-10.
 
   1. `pnpm --filter www-reading-advantage build`.
   2. `pnpm --filter www-reading-advantage start` on port 3107.
-  3. Capture the block at 390, 980, and 1280 px in en and th. Six captures.
-  4. Write `checks.json` with the URL, the width, the block height, and the file name of each
-     capture.
+  3. Capture the hero and the block at 390, 980, and 1280 px in en and th. Twelve captures.
+  4. Write `checks.json` with the URL, the width, the block, the picture height, and the file name
+     of each capture.
   5. Save all files to `measure/runs/www_tutor_followups_20261118/p1-captures/`.
 
-  The check list at each width: the picture shows all faces and the book, the box is 16:9, the
-  text does not overlap the picture, and the page has no horizontal scroll at 390 px.
+  The check list at each width: the picture shows all four faces and the book, the frame is 16:9
+  with no crop, the text does not overlap the picture, and the page has no horizontal scroll at
+  390 px.
 
   Send the folder path to the PM. The PM answer is the gate of task 3.2.
 
@@ -211,7 +255,7 @@ Task 2.5 waits for the caption gate.
 - [b] 3.2 Gate: the PM page check. Test: AC-10.
 
   The PM checks the built page at 390, 980, and 1280 px after the Phase 1 and Phase 2 changes. The
-  PM checks `#become-a-tutor` and the calculator. The folder of task 1.5 is the input.
+  PM checks the hero and `#become-a-tutor`. The folder of task 1.7 is the input.
 
   Pass: the PM sends a PASS with the folder path of its captures. No push runs before this task.
 
@@ -236,8 +280,9 @@ Task 2.5 waits for the caption gate.
      spec section 6.4.
 
   Pass: the CD run succeeds, each page answers 200, each page holds
-  `tutor-advantage-teach-class.webp`, `Commission of all legs`, and the new caption text, and no
-  page holds `downline`, `ดาวน์ไลน์`, or "Tutor Advantage only".
+  `tutor-advantage-hero-2026-11-06.webp`, `tutor-advantage-teach-class.webp`, `Commission of all
+  legs`, and the new caption text, and no page holds `tutor-advantage-hero.jpg`, `downline`,
+  `ดาวน์ไลน์`, or "Tutor Advantage only".
 
   Save the run id, the URL, and the check output as `live-3.4-<short sha>.json` and `.log` in
   `measure/runs/www_tutor_followups_20261118/`.
@@ -251,9 +296,10 @@ Task 2.5 waits for the caption gate.
 
 ## Questions carried to the PM
 
-One question of spec section 10 stays open:
+Two questions of spec section 10 stay open:
 
 1. Q2: the `graph.caption` fact gate (task 2.5).
+2. Q4: the hero alt text and its fact gate (task 1.1).
 
 Q1 and Q3 closed on 2026-11-18 (task 1.0).
 
