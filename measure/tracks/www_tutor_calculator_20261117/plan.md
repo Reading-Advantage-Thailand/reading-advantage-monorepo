@@ -710,6 +710,18 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0. Full output:
   `measure/runs/www_tutor_calculator_20261117/red-p3-3.5a-vitest.txt`.
 
+  Red retry (2026-11-17, F4): the committed adversarial file contradicted D-18. Its
+  conservation helper required `legPayouts + preTax === gross` for every input, and the "a
+  million legs" case pinned preTax 89777083800, tax 2693312514, and net 87083771286. The helper
+  now applies the conservation identity only to an eligible input (1 or more personal students,
+  or no legs). For an ineligible input it asserts preTax 0, tax 0, net 0, legPayouts at or
+  below the gross, and the leg rows equal to legPayouts. The million-legs case keeps its gross,
+  its legPayouts, and its leg-row pins, and pins the three zero money values. The A2 and A5
+  cases stay and follow from the helper. Commit `8edb5ff97`. Command
+  `pnpm --filter www-reading-advantage exec vitest run
+  src/lib/tutor-commission.adversarial.test.ts --reporter=dot --maxWorkers=1` exits 0 with
+  `Test Files 1 passed (1)` and `Tests 23 passed (23)`.
+
 - [~] 3.5b Green: pay 0 to a tutor with legs and no personal students. Test: AC-21.
 
   Apply the settlement rule after the leg deduction: when the clamped personal student count is
@@ -717,7 +729,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   `explainVariant` returns `zero` for that input. Keep the network volume, the rate, the gross,
   and the leg commissions. The three presets and the own-only inputs do not move.
 
-- [~] 3.5c Red: pin the image of each page block. Test: AC-22.
+- [x] 3.5c Red: pin the image of each page block. Test: AC-22. Done: 84df0eb89.
 
   File `apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx`.
   It renders the page in en, th, and zh with the real dictionaries. It finds each block by its
@@ -726,6 +738,21 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   of D-19. One case reads the header of
   `public/images/products/primary-origins-3-1-cover.webp` and asserts 480 by 651. No case reads
   production source as text. No case computes a hash.
+
+  Done: 84df0eb89. Red command:
+  `cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter
+  www-reading-advantage exec vitest run src/lib/tutor-commission.adversarial.test.ts
+  src/lib/tutor-commission.test.ts
+  "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx"
+  "src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx" --reporter=dot
+  --maxWorkers=1`. Exit 1. Evidence: `Test Files 1 failed | 3 passed (4)`, `Tests 16 failed |
+  74 passed (90)`. The 16 failing cases are the hero file (3 locales), book card 1 file (3), the
+  Reedy file (3), the become-a-tutor file (3), the banned-file scan (3), and the missing
+  Origins 3.1 cover file (1). The five gallery cases pass at this base, so the page wiring is
+  proven. The adversarial file, the module test, and the page test pass. No failure is an
+  import, syntax, or fixture error. `pnpm --filter www-reading-advantage exec tsc --noEmit -p
+  .` exits 0. Full output:
+  `measure/runs/www_tutor_calculator_20261117/red-p3-3.5c-vitest.txt`.
 
 - [ ] 3.5d Green: put the right image in each block. Test: AC-22.
 
