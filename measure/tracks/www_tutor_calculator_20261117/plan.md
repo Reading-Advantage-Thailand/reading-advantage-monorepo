@@ -401,13 +401,40 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   Note (build-graph): skipped under the PM load watch. No export, signature, or import edge
   changed.
 
-- [ ] 2.4 Run the Phase 2 gates. Test: AC-11, AC-12, AC-16.
+- [x] 2.4 Run the Phase 2 gates. Test: AC-11, AC-12, AC-16.
 
   The five gates of task 1.8 again, then
   `node scripts/ci/affected-apps.mjs --base ff028a710 --head <HEAD>`, which prints
   `["www-reading-advantage"]`.
 
-  Done: every command exits 0.
+  Done: 2026-11-17, on HEAD `9befd67c3`. `phase_base_sha`
+  d279b870341c067c33fc884ae8863b5428487c17; `role_base_sha`
+  9befd67c3ab8df69dbed087b24a882f6189b444c. Every required gate reaches exit 0: the five
+  exit codes are 0, 0, 0, 0, and 0, and the build reaches 0 on its second attempt.
+
+  1. `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+     www-reading-advantage test --reporter=dot --silent=true'` exit 0: `Test Files 68 passed
+     (68)`, `Tests 2602 passed (2602)`.
+  2. `pnpm turbo run check-types --filter=www-reading-advantage` exit 0. The first run replays a
+     cache hit on unchanged inputs; a `--force` rerun exits 0 with `cache bypass, force
+     executing`.
+  3. `pnpm --filter www-reading-advantage lint` exit 0 with no output, so no `shadcn/*` error is
+     in a file this track touched, and none anywhere in the app.
+  4. `git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json` exit 0. The baseline keeps
+     `lintWarnings: 241` and `copies: 36`.
+  5. `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+     www-reading-advantage build'` exits 1 on the first attempt at the Next.js
+     security-advisory nudge, after the route table prints. The same command retried exits 0
+     with the nudge as a warning.
+  6. `node scripts/ci/affected-apps.mjs --base ff028a7105ccd5de0c3e9534dd8536b7667e22de --head
+     9befd67c3ab8df69dbed087b24a882f6189b444c` exit 0, output `["www-reading-advantage"]`.
+     Deviation: the script accepts only a 40-hex id, so the short base `ff028a710` exits 2 with
+     `affected-apps: --base must be a 40-character lowercase hex commit id`. The resolved id of
+     the same commit is the base above, and that run prints the expected app.
+
+  `bash measure/doctor.sh` was not run: a pre-existing architecture snapshot hash mismatch fails
+  it, and no file in this track touches that check. Evidence files:
+  `measure/runs/www_tutor_calculator_20261117/green-2.4-9befd67c3.json` and `.log`.
 
 - [b] 2.5 PM page-check at 390, 980, and 1280 px. Test: AC-15.
 
