@@ -901,8 +901,10 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   --reporter=dot --maxWorkers=1`. Exit 1. Every failed case is an AC-24 assertion: six
   forbidden-claim cases, six new-string cases, and three Reedy-block cases. The probe control
   passes. No failure is an import, syntax, or fixture error. `pnpm --filter www-reading-advantage
-  exec tsc --noEmit -p .` exits 0. Output:
-  `measure/runs/www_tutor_calculator_20261117/red-p3-3.6c-vitest.txt`.
+  exec tsc --noEmit -p .` exits 0. The file
+  `measure/runs/www_tutor_calculator_20261117/red-p3-3.6c-vitest.txt` holds the retry run. The
+  first run is in
+  `measure/runs/www_tutor_calculator_20261117/red-p3-3.6c-9fc1292b9.log`.
 
   No committed test pins the old Reedy strings or the old bullet count. Only this new file
   covers them.
@@ -942,13 +944,45 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   3. `pnpm --filter www-reading-advantage exec tsc --noEmit -p .`: exit 0.
   4. `pnpm --filter www-reading-advantage lint`: exit 0.
 
-- [ ] 3.7 Reviews A and C, adversarial, and phase acceptance. Test: AC-17, AC-18, AC-19, AC-20.
+- [x] 3.7 Reviews A and C, adversarial, and phase acceptance. Test: AC-17, AC-18, AC-19, AC-20. Done: af78cfb4380b9b482fe86132c30dfbbfbebef81d.
 
-  Run the reviews on a model family other than the Green family. Re-run the adversarial suite on the new copy and tax rule. Record the phase acceptance artifact.
+  Round 1 fails review A, passes review B, and fails review C at commit `6c22d6284`. Artifacts:
+  `measure/runs/www_tutor_calculator_20261117/review-a-p3-6c22d6284.json`,
+  `review-b-p3-6c22d6284.json`, `review-c-p3-6c22d6284.json`.
 
-- [ ] 3.8 Push www-only and check the live pages. Test: AC-16.
+  Round 2 passes reviews A, B, and C at commit `f85f63cf3`
+  (`review-a-p3-r2-f85f63cf3.json`, `review-b-p3-r2-f85f63cf3.json`,
+  `review-c-p3-r2-f85f63cf3.json`). The adversarial suite passes at commit `9fc1292b9`
+  (`measure/runs/www_tutor_calculator_20261117/adversarial-p3-f85f63cf3.json`). Phase acceptance
+  passes at `9fc1292b9` (`phase-acceptance-p3-9fc1292b9.json`). The PM page check passes with
+  one fix, PM-1, fixed in tasks 3.6c and 3.6d.
 
-  The push follows the PM page-check. Record the CD run and the HTTP status of en, th, and zh. No deploy command runs from this session.
+  Round 3 passes reviews A and C at commit `af78cfb43`
+  (`review-a-p3-r3-af78cfb43.json`, `review-c-p3-r3-af78cfb43.json`). Review B does not apply in
+  round 3. Phase acceptance passes at `af78cfb43`
+  (`measure/runs/www_tutor_calculator_20261117/phase-acceptance-p3-af78cfb43.json`). Gate exits
+  at that commit: the www suite dies with an out-of-memory error first and exits 0 after a rerun;
+  `tsc` exits 0; `lint` exits 0; the downline scan exits 1 with no output; `build` exits 1 first
+  with a Next.js security reminder and exits 0 after a rerun; the app selector is
+  `["www-reading-advantage"]`.
+
+  Model routes: review A on `claude-opus-5-5`, review B on `muse-spark-1.3`, review C and the
+  adversarial suite on `claude-sonnet-5-5`, phase acceptance on `muse-spark-1.3`.
+
+- [x] 3.8 Push www-only and check the live pages. Test: AC-16. Done: af78cfb4380b9b482fe86132c30dfbbfbebef81d.
+
+  Push `af78cfb43` to `origin/master` as a fast-forward from `5211596e4`. The push touches only
+  the `apps/www-reading-advantage` and `measure` paths. The GitHub Actions run "CD —
+  www-reading-advantage" number 44142775630 succeeds.
+
+  On 2026-11-18 the pages `/en`, `/th`, and `/zh/products/tutor-advantage` answer HTTP 200. The
+  live HTML holds "Inside the student app", "Your own students", `primary-origins-3-1-cover`, and
+  `tutor-advantage-hero`. The live HTML holds no "Tutor Advantage only", no "downline", and no
+  "Tutor Advantage เท่านั้น".
+
+  Open after the push: `calc.result.needsOwnStudents` ships in the next push after its PR fact
+  gate; a pull request gives a better `graph.legCommissionBar` label; Daniel chooses the picture
+  for the become-a-tutor block.
 
 ## Answers owed to PR
 

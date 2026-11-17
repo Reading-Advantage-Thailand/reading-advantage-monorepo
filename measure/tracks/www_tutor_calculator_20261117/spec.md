@@ -108,7 +108,7 @@ rule; the branch is one level deep.
 Two earlier forms are wrong and do not appear in this work:
 
 1. The June file's per-child override `(r - r_child) * GV_child`. The result panel replaces it
-   with one downline deduction row. The per-row form needs a child rate for every row and
+   with one leg commissions row. The per-row form needs a child rate for every row and
    hides the payout arithmetic.
 2. The direct-net variant. It subtracts a direct tutor's own net payout and drops the level
    below. With two levels it pays 22,714.44 across the network against `rate * GV` of
@@ -262,7 +262,7 @@ custom property or a value computed at run time.
 
 The copy rule for this page: the zh block copies the English lines until the contracted Chinese
 speaker delivers. This applies to the new `screens.*` and `calculator.*` values, the three
-chart labels, and the two changed live lines. The existing zh translations of every other key
+graph labels, and the two changed live lines. The existing zh translations of every other key
 stay unchanged.
 
 The zh page therefore shows English inside the two new sections and on two lines in the tutor
@@ -450,6 +450,12 @@ bullet, and the microphone bullet. The claim, the phrase "not in Primary Advanta
 Thai and zh forms never ship in the two modules. The zh bullet sits first, at
 `reedyBlock.points.0`, so the deletion keeps each array at three entries.
 
+The same false claim sits in `faq.items.3.answer` in en, th, and zh. The false clause is
+deleted there in each locale, by deletion only. The answer keeps the package sentence. The
+test file `src/__tests__/www-tutor-reedy-claim.test.tsx` gains two scan patterns in retry F6:
+`/not available in Primary Advantage/i` and `/Reedy is not available/i`. The scan holds eight
+patterns in total.
+
 ## 5. Phase 1: the calculator
 
 ### 5.1 Files
@@ -491,7 +497,7 @@ export type NetworkResult = {
   networkVolume: number;  // baht
   rate: number;           // 0 to 1
   gross: number;          // baht, satang
-  legPayouts: number;     // baht, satang; the downline deduction
+  legPayouts: number;     // baht, satang; the leg commissions
   preTax: number;         // baht, satang; not displayed
   withholdingTax: number; // baht, satang
   net: number;            // baht, satang
@@ -843,8 +849,11 @@ Constraints on the gates:
 - **AC-24.** No string in `locales/pages/products/tutor-advantage.ts` or
   `locales/components/products/tutor-advantage.ts` matches `/Tutor Advantage only/i`,
   `/not in Primary Advantage/i`, `/Tutor Advantage เท่านั้น/`, `/ไม่มีใน Primary Advantage/`,
-  `/仅在\s*Tutor Advantage/`, or `/Primary Advantage 和 Reading Advantage 中没有/` in en, th,
-  or zh (D-21). The imported objects hold the six new strings of D-21. The rendered Reedy block
+  `/仅在\s*Tutor Advantage/`, `/Primary Advantage 和 Reading Advantage 中没有/`,
+  `/not available in Primary Advantage/i`, or `/Reedy is not available/i` in en, th,
+  or zh (D-21). These are the eight patterns of `src/__tests__/www-tutor-reedy-claim.test.tsx`.
+  The imported objects hold the six new strings of D-21, and `faq.items.3.answer` keeps the
+  package sentence in en, th, and zh. The rendered Reedy block
   shows exactly three bullets in en, th, and zh, and they are the package, feedback, and
   microphone bullets. No test reads production source as text and no test computes a hash.
 
@@ -854,7 +863,7 @@ All seven questions closed on 2026-11-17. PR handoff v0.4 section 8 answers ques
 7 in task 2.7, commit `d91e6c527` and its follow-ups. The PM decisions answer questions 2, 5,
 and 6. The PM page-check of task 2.5 answers question 4.
 
-1. Resolved. PR v0.4 gives the preset 3 copy and the three chart labels (D-2a, D-9).
+1. Resolved. PR v0.4 gives the preset 3 copy and the three graph labels (D-2a, D-9).
 2. Resolved. The PM dropped the `network` and `earnings` captions, so the gallery holds three
    cards (D-15).
 3. Resolved. PR v0.4 gives the `studentHome` caption and alt text of the shipped locale.
