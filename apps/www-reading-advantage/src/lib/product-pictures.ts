@@ -52,3 +52,30 @@ export const productPictures = {
     portrait: true,
   },
 } as const satisfies Record<string, ProductPictureFile>;
+
+/**
+ * The three Tutor Advantage screens of the gallery (spec 6.2, task 2.1).
+ * Source set: handoff `a63-tutor-www-calculator/screens`, version 2.0, 2026-11-17.
+ * Each file is a webp at its delivered size after the blur pass of
+ * `scripts/blur-tutor-screens.py`. The keys follow the gallery slot order.
+ */
+export const tutorScreens = {
+  studentHome: {
+    src: "/images/products/tutor-advantage/student-mobile/070-screen.webp",
+    width: 520,
+    height: 1125,
+    portrait: false,
+  },
+  lessonPhases: {
+    src: "/images/products/tutor-advantage/student-mobile/002-screen.webp",
+    width: 520,
+    height: 1125,
+    portrait: false,
+  },
+  classList: {
+    src: "/images/products/tutor-advantage/tutor-desktop/062-screen.webp",
+    width: 1440,
+    height: 900,
+    portrait: false,
+  },
+} as const satisfies Record<string, ProductPictureFile>;
