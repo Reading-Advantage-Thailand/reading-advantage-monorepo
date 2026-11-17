@@ -29,22 +29,26 @@
 
 ## Phase 1: the become-a-tutor picture
 
-Phase 1 starts at task 1.0 and waits for the PR alt gate. The picture, the box, and the alt ship in
-one change. The phase ends at the PM page-check evidence, with no push.
+Phase 1 starts at task 1.1. Task 1.0 passed on 2026-11-18. The picture, the box, and the alt ship
+in one change. The phase ends at the PM page-check evidence, with no push.
 
-- [b] 1.0 Gate: confirm the PR alt text and its fact gate. Test: AC-3.
+- [x] 1.0 Gate: confirm the PR alt text and its fact gate. Test: AC-3. Done: 2026-11-18.
 
-  Gate items:
+  Answers from the orchestrator, 2026-11-18, from the image and PR handoff version 0.8:
 
-  1. The PM confirms the source file. The delivered file shows one tutor and three children. The
-     PM words say five faces, and the PR alt names four schoolchildren. The file may be a variant
-     other than Daniel's chosen picture (spec Q1).
-  2. PR confirms the alt text of `tutorRole.alt` in en and th. The spec section 5.5 candidate reads
-     "A tutor with four schoolchildren in a classroom; ...". PR must confirm or correct the count.
-  3. PR handoff section 7 holds a fact gate line for the alt with result PASS (spec Q3).
-  4. PR confirms the zh rule: the zh value equals en.
+  1. The file is the right one. It is Daniel's choice, and `sha256sum -c SHA256SUMS` exits 0. It
+     shows one tutor and three children, which is four faces. The words "five faces" and "four
+     children" were wrong (spec Q1).
+  2. PR handoff version 0.8 section 8.6 is the delivered alt for `tutorRole.alt` (lines 386..392).
+     The en line reads "A tutor with three schoolchildren in a bright classroom; one holds the
+     Primary Advantage Origins 2 workbook, another the student app on a phone." Spec section 5.5
+     holds the en and th lines.
+  3. The alt fact gate passed on the third pass on 2026-11-18 (PR handoff section 7). The first
+     pass found the child count, and the text now reads "three schoolchildren".
+  4. The zh value equals en. The hero keeps its old picture, so `heroExtra.imageAlt` stays
+     unchanged.
 
-  Record the PR version, the date, and the gate result in this task. No code change in this task.
+  No code change in this task.
 
 - [ ] 1.1 Red: pin the new block file, the 16:9 box, the size, and the alt. Test: AC-1, AC-2, AC-3, AC-4.
 
@@ -180,7 +184,8 @@ Task 2.5 waits for the caption gate.
 - [b] 2.5 Gate and Green: change `graph.caption`. Test: AC-6.
 
   Gate: PR handoff section 7 holds a fact gate line for the v0.6 caption with result PASS, or the
-  PM accepts the text without one (spec Q2). Record the answer in this task.
+  PM accepts the text without one (spec Q2). The orchestrator routed the question to the PM on
+  2026-11-18. Record the answer in this task.
 
   Red: the locale fixture asserts the caption text of spec section 5.3 in en and th. The zh value
   equals en. Run the locale test. Expect exit 1 on the old first clause.
@@ -246,11 +251,11 @@ Task 2.5 waits for the caption gate.
 
 ## Questions carried to the PM
 
-The three questions of spec section 10 stay in this plan until they close:
+One question of spec section 10 stays open:
 
-1. Q1: the file variant and the face and child count (task 1.0).
-2. Q2: the `graph.caption` fact gate (task 2.5).
-3. Q3: the alt delivery and its fact gate (task 1.0).
+1. Q2: the `graph.caption` fact gate (task 2.5).
+
+Q1 and Q3 closed on 2026-11-18 (task 1.0).
 
 ## Out of scope
 

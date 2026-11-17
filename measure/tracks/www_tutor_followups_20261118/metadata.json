@@ -14,7 +14,9 @@
   ],
   "decisions": [
     "PM, 2026-11-18: D-1 is accepted, not pending. PM words: \"My 4:3 order was wrong; all five faces matter more.\" The block keeps the full 16:9 frame and only the image class changes.",
-    "PM, 2026-11-18: the alt text stays owed by PR. The picture task waits on the PR alt text and its fact gate.",
+    "Orchestrator, 2026-11-18: Q1 resolved. The file is Daniel's choice and SHA256SUMS checks OK. It shows one tutor and three children, which is four faces. The \"five faces\" and \"four children\" wording was wrong.",
+    "Orchestrator, 2026-11-18: Q3 resolved. PR handoff v0.8 section 8.6 is the delivered alt for tutorRole.alt. Its fact gate passed on the third pass on 2026-11-18. The hero alt heroExtra.imageAlt stays unchanged.",
+    "Orchestrator, 2026-11-18: Q2 stays open. PR section 7 holds no fact gate line for graph.caption. The orchestrator routes it to the PM.",
     "Parent closeout, 2026-11-18: one www-only fast-forward push follows the PM page check; no deploy command runs from the session."
   ],
   "constraints": [

@@ -55,7 +55,10 @@ PM decision, 2026-11-18, accepted and not pending. PM words:
 "My 4:3 order was wrong; all five faces matter more."
 
 The block keeps the full frame of the source file. The image box changes from `aspect-4/3` to
-`aspect-video`. No crop ships.
+`aspect-video`. No crop ships. This decision keeps all four faces and the book.
+
+The PM corrected the face count on 2026-11-18: the file is Daniel's choice, and it shows one tutor
+and three children, which is four faces. The words "five faces" in the order were wrong.
 
 Reason: the source is 1920 by 1080. The PM measurement gives a face span of x=185 to x=1895,
 which is 1710 px. A 4:3 frame at 1080 px height is 1440 px wide. The face span is wider than
@@ -63,14 +66,11 @@ which is 1710 px. A 4:3 frame at 1080 px height is 1440 px wide. The face span i
 
 A second reading of the delivered file gives a face span of about x=185 to about x=1855, which
 is 1670 px. The second reading uses a 100 px grid over the file. Both spans are wider than
-1440 px. The crop cannot keep every face and the book.
+1440 px. The crop cannot keep all four faces and the book.
 
 The book sits at about x=565 to x=810. The book stays inside either span.
 
-The delivered file shows four faces: one tutor and three children. The PM words and this order
-say five faces. PR handoff section 8.6 names "four schoolchildren". The file may be a variant
-other than Daniel's chosen picture. Open question Q1 covers the file and the count. Neither
-question changes D-1.
+The file check `sha256sum -c SHA256SUMS` exits 0. The file is the right one.
 
 ### D-2 The block gets its own picture entry
 
@@ -100,12 +100,16 @@ The key stays `tutorRole.alt` in all three locale blocks. Its value changes with
 The current value describes the old picture: a tutor and a child with a tablet. That sentence is
 false for the new picture. The new picture cannot ship with the old alt.
 
-The en and th values come from PR handoff section 8.6. The zh value equals en, as for every other
-alt of the page. Section 5.5 holds the candidate text.
+The en and th values come from PR handoff version 0.8, section 8.6 (lines 386..392). The zh value
+equals en, as for every other alt of the page.
 
-The alt task waits on two conditions. First, PR delivers the alt text. Second, the PR fact gate
-for the alt runs and passes. The PM says the alt is still owed. The file at the path holds
-version 0.8 with a candidate. Open questions Q1 and Q3 cover the count and the gate.
+PR answered on 2026-11-18. Version 0.8 section 8.6 is the delivered alt for the key
+`tutorRole.alt`. Its fact gate passed on the third pass on 2026-11-18 (handoff section 7). The
+first pass found a fault in the child count: the text said `four schoolchildren`, and it now says
+`three schoolchildren`.
+
+The hero keeps its old picture. The PM order gives the block its own picture, and the block does
+not repeat the hero. The key `heroExtra.imageAlt` stays unchanged.
 
 ### D-5 `needsOwnStudents` is a fourth explain state
 
@@ -150,7 +154,7 @@ PR handoff section 7 holds the gate lines. The state at authoring time:
 | `graph.caption` | No gate line |
 | `tutorRole.alt` | No gate line |
 
-Section 8 maps each item to its gate. Open questions Q2 and Q3 cover the two missing lines.
+Section 8 maps each item to its gate. Open question Q2 covers the one missing line.
 
 ### D-9 The push follows the PM page check
 
@@ -250,8 +254,8 @@ Full cases run for en, th, and zh, as the file does today.
 
 ### 4.6 The order of the Phase 1 tasks
 
-Task 1.0 is a gate. No Phase 1 code task starts before task 1.0 passes. The new picture cannot
-ship with the old alt (D-4), and the test of task 1.1 pins the PR alt.
+Task 1.0 passed on 2026-11-18. Phase 1 code tasks may start. The new picture cannot ship with the
+old alt (D-4), so tasks 1.2 and 1.3 ship in one change with the alt.
 
 ## 5. Phase 2: the PR copy
 
@@ -322,17 +326,18 @@ The zh line stays as it is. The zh line reads
 The test `src/__tests__/www-tutor-reedy-claim.test.tsx` pins the line at `PAGE_REEDY.th`
 (lines 97..101). The constant changes to the new Thai.
 
-### 5.5 The alt candidate (`tutorRole.alt`)
+### 5.5 The alt text (`tutorRole.alt`)
 
-The text below is the PR v0.8 candidate. It is not authority until its fact gate passes (D-4).
+The text below is the delivered alt, PR handoff version 0.8 section 8.6 (lines 386..392). Its fact
+gate passed on the third pass on 2026-11-18.
 
 | Key | English | Thai |
 |---|---|---|
-| `tutorRole.alt` | A tutor with four schoolchildren in a classroom; one holds the Primary Advantage Origins 2 workbook, another the student app on a phone. | ติวเตอร์กับเด็กประถมสี่คนในห้องเรียนที่สว่าง คนหนึ่งถือเวิร์กบุ๊ก Primary Advantage Origins 2 อีกคนถือโทรศัพท์ที่เปิดแอปนักเรียน |
+| `tutorRole.alt` | A tutor with three schoolchildren in a bright classroom; one holds the Primary Advantage Origins 2 workbook, another the student app on a phone. | ติวเตอร์กับเด็กนักเรียนสามคนในห้องเรียนที่สว่าง คนหนึ่งถือเวิร์กบุ๊ก Primary Advantage Origins 2 อีกคนถือโทรศัพท์ที่เปิดแอปนักเรียน |
 
 zh equals en.
 
-Open question Q1: the delivered file shows three children. The candidate says four.
+The hero alt `heroExtra.imageAlt` stays unchanged. The hero keeps `/images/tutor-advantage-hero.jpg`.
 
 ### 5.6 The tests of Phase 2
 
@@ -421,11 +426,11 @@ The CD run id and its result go in the ledger at closeout.
 | Item | Gate | State at authoring | Task |
 |---|---|---|---|
 | The picture file and the 16:9 box | PM D-1 accepted 2026-11-18 | Accepted | 1.2, 1.3 |
-| `tutorRole.alt` | PR text plus PR fact gate | PR text candidate in v0.8; no fact gate line | 1.0 |
+| `tutorRole.alt` | PR text plus PR fact gate | PASS, third pass, 2026-11-18 | 1.0 |
 | `needsOwnStudents` | PR fact gate | PASS 2026-11-17 | 2.2 |
 | `graph.legCommissionBar` | PR fact gate | PASS 2026-11-18 | 2.3 |
-| `graph.caption` | PR fact gate | No gate line | 2.4 |
-| Thai Reedy line | PR fact gate | PASS 2026-11-18 | 2.5 |
+| Thai Reedy line | PR fact gate | PASS 2026-11-18 | 2.4 |
+| `graph.caption` | PR fact gate | No gate line | 2.5 |
 | The push | PM page check | Pending | 3.2, 3.3 |
 
 ## 9. Acceptance criteria
@@ -470,20 +475,22 @@ holds no hash field. `git status` is clean at closeout.
 
 ## 10. Open questions
 
-**Q1. The face count and the file variant.** The delivered file shows four faces: one tutor and
-three children. The PM words say five faces. PR handoff section 8.6 says "four schoolchildren".
-The file may be a variant other than Daniel's chosen picture. Confirm the file and the count
-before task 1.2. This question blocks task 1.0.
+### Resolved on 2026-11-18
+
+**Q1. The face count and the file variant.** Resolved. The file is Daniel's choice, and
+`SHA256SUMS` checks OK. The file shows one tutor and three children, which is four faces. The
+words "five faces" and "four children" in the first order were wrong. D-1 keeps all four faces and
+the book.
+
+**Q3. The alt delivery and its gate.** Resolved. PR handoff version 0.8 section 8.6 is the
+delivered alt for `tutorRole.alt`. Its fact gate passed on the third pass on 2026-11-18 (section
+7). Section 5.5 holds the delivered text. The hero alt `heroExtra.imageAlt` stays unchanged.
+
+### Open
 
 **Q2. The `graph.caption` fact gate.** PR handoff section 7 holds no fact gate line for the v0.6
-caption. Does PR add a gate line, or does the PM accept the text without one? This question
-blocks task 2.4.
-
-**Q3. The alt delivery and its gate.** PR handoff v0.8 section 8.6 holds en and th alt text. The
-PM says the alt is still owed. Is v0.8 the delivered text? When does its fact gate run? This
-question blocks task 1.0.
-
-Q1 and Q3 share one gate task. The PM answer closes both, or the PR answer does.
+caption. The orchestrator routes the question to the PM on 2026-11-18. The PM answers with a gate
+line or with an acceptance. This question blocks task 2.5.
 
 ## 11. The closeout
 
