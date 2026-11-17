@@ -907,11 +907,27 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   No committed test pins the old Reedy strings or the old bullet count. Only this new file
   covers them.
 
-- [ ] 3.6d Green: delete the false Reedy claim. Test: AC-24.
+- [x] 3.6d Green: delete the false Reedy claim. Test: AC-24. Done: 0a0797355b0a9a91ed79326b0f3ce3e75d88a387.
 
   Delete `reedyBlock.points.0` in en, th, and zh. Delete the Tutor-Advantage-only clause in
   the Reedy entry of `platformFeatures.features` in both locale files and all three locales
   (D-21). The page `reedyKeys` list keeps three entries. No other copy changes.
+
+  The Red test scan also pins `faq.items.3.answer` in th and zh (AC-24 covers every string
+  of the file). The false clause is deleted there too, by deletion only. The en faq answer
+  stays: no pattern matches it. Log:
+  `measure/runs/www_tutor_calculator_20261117/green-p3-3.6d-fe1cb8b26.log`.
+
+  Red rerun before the edits: `pnpm --filter www-reading-advantage exec vitest run
+  src/__tests__/www-tutor-reedy-claim.test.tsx --reporter=dot --maxWorkers=1`. Exit 1.
+  `Tests 15 failed | 1 passed (16)`.
+
+  Gates at `0a0797355b0a9a91ed79326b0f3ce3e75d88a387`, commands and exit codes, in order:
+
+  1. `cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-reedy-claim.test.tsx "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.phase3.adversarial.test.tsx" src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --maxWorkers=1`: exit 0 (7 files, 104 tests).
+  2. `cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter www-reading-advantage exec vitest run src/lib/__tests__/primary-page-images.test.ts "src/app/[locale]/(marketing)/products/primary-advantage/page.adversarial.test.tsx" "src/app/[locale]/(marketing)/products/primary-advantage/page.content.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.phase3.adversarial.test.tsx" src/__tests__/www-tutor-reedy-claim.test.tsx --reporter=dot --maxWorkers=1` (every file from `rg -l "reedyBlock|platformFeatures|Reedy" apps/www-reading-advantage/src --glob '*.test.*'`): exit 0 (6 files, 266 tests).
+  3. `pnpm --filter www-reading-advantage exec tsc --noEmit -p .`: exit 0.
+  4. `pnpm --filter www-reading-advantage lint`: exit 0.
 
 - [ ] 3.7 Reviews A and C, adversarial, and phase acceptance. Test: AC-17, AC-18, AC-19, AC-20.
 
