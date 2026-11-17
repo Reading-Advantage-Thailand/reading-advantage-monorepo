@@ -87,6 +87,20 @@ function pressedPresetCount(): number {
   }, 0);
 }
 
+/** Returns the formatted value shown beside a named result row. */
+function resultValue(label: string): string {
+  const term = within(resultRegion()).getByText(label);
+  const row = term.closest("div");
+  const value = row?.querySelector("dd");
+  if (!value) throw new Error(`no result value for ${label}`);
+  return value.textContent ?? "";
+}
+
+/** Reports whether a formatted figure appears anywhere in the rendered calculator. */
+function hasFigure(figure: string): boolean {
+  return screen.queryAllByText(figure).length > 0;
+}
+
 describe("TutorCommissionCalculator first paint", () => {
   it("shows the zero line and no income figures", () => {
     renderCalculator();
@@ -139,6 +153,41 @@ describe("TutorCommissionCalculator leg rows", () => {
     await user.type(count, "3");
     expect(legStudentInputs()).toHaveLength(3);
     expect(legRows()).toHaveLength(3);
+  });
+
+  it("removes one input row and one graph row when the count drops from 3 to 2", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+
+    const count = legCountInput();
+    await user.clear(count);
+    await user.type(count, "3");
+    expect(legStudentInputs()).toHaveLength(3);
+    expect(legRows()).toHaveLength(3);
+    expect(resultValue(copy.results.networkGV)).toBe("27,000");
+    expect(resultValue(copy.results.downline)).toBe("12,015");
+
+    await user.clear(count);
+    await user.type(count, "2");
+    expect(legStudentInputs()).toHaveLength(2);
+    expect(legRows()).toHaveLength(2);
+    expect(resultValue(copy.results.networkGV)).toBe("18,000");
+    expect(resultValue(copy.results.downline)).toBe("8,010");
+  });
+
+  it("shows four input rows and four graph rows at a count of 4", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+
+    const count = legCountInput();
+    await user.clear(count);
+    await user.type(count, "4");
+    expect(legStudentInputs()).toHaveLength(4);
+    expect(legRows()).toHaveLength(4);
+    expect(legStudentInputs()[3]).toHaveValue(3);
+    expect(resultValue(copy.results.networkGV)).toBe("36,000");
+    expect(resultValue(copy.results.gross)).toBe("20,744.54");
+    expect(resultValue(copy.results.downline)).toBe("16,020");
   });
 });
 
@@ -206,5 +255,34 @@ describe("TutorCommissionCalculator presets", () => {
 
     await user.click(presetButton(0));
     expect(price).toHaveValue(3000);
+  });
+
+  it("shows every preset 1 figure, its text, and only one pressed preset", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    await user.click(presetButton(1));
+
+    expect(resultValue(copy.results.networkGV)).toBe("24,000");
+    expect(resultValue(copy.results.gross)).toBe("12,655.69");
+    expect(resultValue(copy.results.downline)).toBe("8,010");
+    expect(resultValue(copy.results.tax)).toBe("139.37");
+    expect(hasFigure("4,645.69")).toBe(true);
+    expect(hasFigure("4,506.32")).toBe(true);
+
+    expect(screen.getByText(copy.presets[1].setup)).toBeInTheDocument();
+    expect(screen.getByText(copy.presets[1].result)).toBeInTheDocument();
+
+    expect(pressedPresetCount()).toBe(1);
+    expect(presetButton(1)).toHaveAttribute("aria-pressed", "true");
+    expect(presetButton(0)).toHaveAttribute("aria-pressed", "false");
+    expect(presetButton(2)).toHaveAttribute("aria-pressed", "false");
+  });
+
+  it("shows the preset 2 setup and result text", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    await user.click(presetButton(2));
+    expect(screen.getByText(copy.presets[2].setup)).toBeInTheDocument();
+    expect(screen.getByText(copy.presets[2].result)).toBeInTheDocument();
   });
 });

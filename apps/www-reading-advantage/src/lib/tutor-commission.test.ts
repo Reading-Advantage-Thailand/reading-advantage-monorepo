@@ -248,3 +248,92 @@ describe("8. resizeLegs", () => {
     expect(resizeLegs([2, 4], 0)).toEqual([]);
   });
 });
+
+/** Asserts that every money field is finite, non-negative, and conservation-safe. */
+function expectSafeMoney(result: ReturnType<typeof calculateNetwork>): void {
+  const money = [
+    result.ownVolume,
+    result.networkVolume,
+    result.rate,
+    result.gross,
+    result.legPayouts,
+    result.preTax,
+    result.withholdingTax,
+    result.net,
+  ];
+  for (const value of money) {
+    expect(Number.isFinite(value), "finite money").toBe(true);
+    expect(value, "non-negative money").toBeGreaterThanOrEqual(0);
+  }
+  expect(toSatang(result.legPayouts) + toSatang(result.preTax)).toBe(toSatang(result.gross));
+}
+
+describe("9. non-finite and negative inputs clamp", () => {
+  it("returns rate 0 for NaN and Infinity volume", () => {
+    expect(commissionRate(NaN)).toBe(0);
+    expect(commissionRate(Infinity)).toBe(0);
+  });
+
+  it("clamps Infinity inputs to finite, non-negative, conservation-safe money", () => {
+    const infinitePrice = calculateNetwork({
+      price: Infinity,
+      personalStudents: 4,
+      studentsPerLeg: [3, 3],
+    });
+    expect(infinitePrice.networkVolume).toBe(0);
+    expect(infinitePrice.gross).toBe(0);
+    expectSafeMoney(infinitePrice);
+
+    const infiniteStudents = calculateNetwork({
+      price: CLASS_PRICE_DEFAULT,
+      personalStudents: Infinity,
+      studentsPerLeg: [Infinity, Infinity],
+    });
+    expect(infiniteStudents.networkVolume).toBe(0);
+    expect(infiniteStudents.gross).toBe(0);
+    expectSafeMoney(infiniteStudents);
+  });
+
+  it("returns all-zero money for a NaN price", () => {
+    const result = calculateNetwork({
+      price: NaN,
+      personalStudents: 4,
+      studentsPerLeg: [3, 3],
+    });
+    expect(result.networkVolume).toBe(0);
+    expect(result.gross).toBe(0);
+    expect(result.net).toBe(0);
+    expectSafeMoney(result);
+  });
+
+  it("clamps a NaN leg entry to zero students", () => {
+    const result = calculateNetwork({
+      price: CLASS_PRICE_DEFAULT,
+      personalStudents: 4,
+      studentsPerLeg: [NaN],
+    });
+    expect(result.legs).toEqual([{ leg: 1, students: 0, volume: 0, payout: 0 }]);
+    expect(result.networkVolume).toBe(12000);
+    expectSafeMoney(result);
+  });
+
+  it("clamps a negative price and a negative student count to zero", () => {
+    const badPrice = calculateNetwork({
+      price: -5,
+      personalStudents: 4,
+      studentsPerLeg: [3],
+    });
+    expect(badPrice.gross).toBe(0);
+    expect(badPrice.net).toBe(0);
+    expectSafeMoney(badPrice);
+
+    const badStudents = calculateNetwork({
+      price: CLASS_PRICE_DEFAULT,
+      personalStudents: -3,
+      studentsPerLeg: [-2],
+    });
+    expect(badStudents.networkVolume).toBe(0);
+    expect(badStudents.gross).toBe(0);
+    expectSafeMoney(badStudents);
+  });
+});

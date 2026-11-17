@@ -212,6 +212,8 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   `bash measure/doctor.sh` was not run as a gate here: a pre-existing architecture snapshot hash
   mismatch fails it, and no file in this track touches that check.
 
+  Red remediation (2026-11-17): Review A at audited head `10dcf42a8d88c90f8e02debae761196ef40f2ccd` (artifact `review-a-p1-10dcf42a8.json`) returned CHANGES_REQUIRED. F1 added four AC-9 component cases: leg removal from 3 to 2, four legs at count 4, preset index 1 figures and text and pressed state, and preset index 2 text. F2 added five clamp pins: NaN and Infinity rates, Infinity network money, NaN price, NaN leg, and negative price and student count. `phase_base_sha` 8862cf14cc6e9b11e62d08d5084288a4c294752c; `role_base_sha` 4e32f7c76710f0647aa712b74d55dc8618bc8076. Command `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx src/lib/tutor-commission.test.ts --reporter=dot --silent=true'` exits 0: `Test Files 2 passed (2)`, `Tests 41 passed (41)`. Build-graph scan skipped under PM load watch: scope graph work to the app or skip. Result artifacts: `measure/runs/www_tutor_calculator_20261117/red-remediation-1-*.json` and `.log`.
+
 - [x] 1.9 Checkpoint Phase 1. Test: AC-11.
 
   Commit the plan update with the task SHAs and the gate output. Phase 1 ships no push (D-13).
