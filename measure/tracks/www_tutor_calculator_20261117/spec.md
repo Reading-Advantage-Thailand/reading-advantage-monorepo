@@ -140,7 +140,7 @@ Preset 3 does not fit "a small team, two levels" any more, because the calculato
 (D-4). The default is three legs of three students with two own students: GV 33,000, rate
 56.6953%, gross 18,709.44, leg payouts 12,015.00, payout 6,694.44, tax 200.83, net 6,493.61.
 The rate is 56.6953% from the formula; the brief of 2026-11-17 gives 56.6951%, which differs in
-the fourth decimal. Every money figure in the brief matches this table.
+the fourth decimal. Every money figure in the brief matches this table to the whole baht.
 
 **D-2a. Preset 3 wording (pending from PR).** The copy file's preset 3 name, setup, and result
 no longer describe the inputs. This session supplies a draft. PR replaces the draft when it
@@ -168,6 +168,10 @@ and `rate * GV` is truncated to the satang. The module does the same:
 
 BigInt keeps the product exact. A Number product passes 2^53 at large volume, so the module
 does not use one. The module returns baht as a Number for display.
+
+Reviewed result, round 1 of `fb6bf7c0d`: preset 2 under this algorithm is gross 12,655.69,
+payout 4,645.69, and net 4,506.32. Rounding the raw float product gives 12,655.70 / 4,645.70 /
+4,506.33, and that value is not this algorithm. Do not reopen the difference.
 
 Display rules, ASCII digits, comma grouping, and a period decimal mark in all three locales:
 
@@ -231,7 +235,9 @@ leg plus one row for the tutor:
 The graph uses three short labels, `chart.leg`, `chart.you`, and `chart.volume`. The copy file
 has no such keys, so this session supplies drafts, and PR confirms them with the preset 3
 wording (D-2a). The bar length is a run-time value: an inline style carries it as a CSS custom
-property, and one rule in `src/app/[locale]/globals.css` reads it (design rule 3).
+property, and one rule in `src/app/[locale]/globals.css` reads it. The `shadcn/no-inline-styles`
+row of `apps/www-reading-advantage/docs/design-rules.md` allows an inline style that sets a CSS
+custom property or a value computed at run time.
 
 ### D-10 The zh block takes the English lines for the new work
 
@@ -250,7 +256,9 @@ One code comment at the zh block records it. No `TODO` text reaches the page.
 The June file's rate curve returns as an SVG next to the payout graph. It is `aria-hidden` and
 has no alt text, because every number it draws appears as text in the result panel and in
 `rateNote`. The curve uses the formula, the x axis runs 0 to 500,000 baht, and a dot marks the
-current network volume. This keeps design rule 7 without inventing copy.
+current network volume. Item 7 of the review checklist in
+`apps/www-reading-advantage/docs/design-rules.md` asks for alt text on a non-decorative image,
+so a decorative curve needs none.
 
 ### D-12 The calculator is a client component with server props
 
@@ -280,6 +288,16 @@ and no earnings screen (set README, rule 7). The copy file has five captions, so
 `earnings` have no allowed picture. They are not rendered, and PR answers with a screen or a
 withdrawn caption (open question 2). The gallery shows the three slots that have a picture, in
 copy order.
+
+**D-15a. Slot 2's alt text is a draft.** Copy v0.1 gives the `lessonPhases` alt as "Tutor app
+showing the 18 phases of one lesson", and the Thai as "แอปติวเตอร์แสดง 18 ช่วงของบทเรียนหนึ่งบท".
+The mapped screen, `student-mobile/002`, is a student-app screen: the student tab bar and the
+student points header are visible. The caption ("One lesson, 18 phases") fits the screen; the
+alt names the wrong app.
+
+This spec keeps PR's wording word for word and marks it as a draft. PR either corrects it to a
+student-app wording or confirms it. The locale test pins the string as it stands, so the change
+is one line in the dictionary and one line in the test.
 
 ### D-16 The June claims do not return
 
@@ -541,7 +559,8 @@ Slots 4 and 5 have no picture (D-15).
 `SectionHeader` with the three `screens` strings, then one card per slot in copy order. Each
 card renders `ProductPicture` with the slot's `alt` and the caption under it. The grid puts the
 two phone screens in half-width cards and the wide screen across the row at `md`, and one
-column at 390 px. No new image or heading component (design rule 8).
+column at 390 px. No new image or heading component: item 8 of the review checklist in
+`apps/www-reading-advantage/docs/design-rules.md` requires the shared parts.
 
 ```ts
 screens: {
@@ -550,7 +569,7 @@ screens: {
     description: "A student joins the class in LINE. The tutor runs the class in the tutor app. Both follow the same printed workbook.",
     items: [
         { caption: "The student's home: the next class, the lesson, and Reedy practice.", alt: "Tutor Advantage student app home screen" },
-        { caption: "One lesson, 18 phases. The app follows the printed workbook step by step.", alt: "Tutor app showing the 18 phases of one lesson" },
+        { caption: "One lesson, 18 phases. The app follows the printed workbook step by step.", alt: "Tutor app showing the 18 phases of one lesson" }, // alt draft, see D-15a
         { caption: "The tutor's class list: who is in today's class and which lesson they are on.", alt: "Tutor app class list with the students of one class" },
     ],
 },
@@ -566,13 +585,14 @@ The Thai values, in the same order:
 | `items[0].caption` | หน้าแรกของนักเรียน: คลาสถัดไป บทเรียน และการฝึกพูดกับ Reedy |
 | `items[0].alt` | หน้าแรกของแอปนักเรียน Tutor Advantage |
 | `items[1].caption` | หนึ่งบทเรียน 18 ช่วง แอปพาไปทีละขั้นตามเวิร์กบุ๊กที่พิมพ์เป็นเล่ม |
-| `items[1].alt` | แอปติวเตอร์แสดง 18 ช่วงของบทเรียนหนึ่งบท |
+| `items[1].alt` | แอปติวเตอร์แสดง 18 ช่วงของบทเรียนหนึ่งบท (draft, D-15a) |
 | `items[2].caption` | รายชื่อคลาสของติวเตอร์: วันนี้มีใครบ้าง และแต่ละคนอยู่บทไหน |
 | `items[2].alt` | รายชื่อนักเรียนในคลาสหนึ่งของแอปติวเตอร์ |
 
 The copy file's `network` and `earnings` captions are not added until PR delivers a matching
 screen (D-15). The copy file's `lessonPhases` alt text says "18 phases of one lesson", which is
-what `student-mobile/002` shows: "ขั้นที่ 2/18".
+what `student-mobile/002` shows: "ขั้นที่ 8/18". That alt also names the tutor app, and the
+screen is a student-app screen, so the alt is a draft (D-15a).
 
 `zh` takes the English values. D-10 applies.
 
@@ -631,9 +651,10 @@ Constraints on the gates:
   `V <= 0` case, a negative volume, and a rate below 71.43% at 10^9 baht.
 - **AC-2.** `calculateNetwork` returns the money values of D-2 to the satang for the three
   presets, including each leg's volume and payout.
-- **AC-3.** For preset 2 and preset 3, the leg payouts plus the payout equal the gross
-  (conservation), and preset 3 reports leg payouts 12,015.00, payout 6,694.44, and net
-  6,493.61.
+- **AC-3.** For preset 2 and preset 3, the conservation check holds in integer satang: leg
+  payouts plus payout equal the gross satang, so 801,000 + 464,569 = 1,265,569 and
+  1,201,500 + 669,444 = 1,870,944. Preset 3 reports leg payouts 12,015.00, payout 6,694.44, and
+  net 6,493.61.
 - **AC-4.** `payoutAfterDeduction` returns 0 for `(0, 0)` and for `(100, 150)`, and tax and net
   are 0 on a zero payout.
 - **AC-5.** `www-tutor-calculator.locale.test.ts` holds every `calculator.*` string of
@@ -654,8 +675,10 @@ Constraints on the gates:
 - **AC-11.** The gates of section 8 exit 0: the module test, the www suite, types, lint, and
   build.
 - **AC-12.** `scripts/ci/shadcn-ratchet-baseline.json` is unchanged.
-- **AC-13.** Phase 2 adds the three manifest entries and the three webp files, and each card
-  renders its file with the copy's alt text.
+- **AC-13.** Phase 2 adds the three manifest entries and the three webp files.
+  `src/lib/__tests__/tutor-screens.test.ts` holds the three keys in slot order, each
+  `src`/`width`/`height`/`portrait` value, and a file existence check under `public/`, and each
+  card renders its file with the copy's alt text.
 - **AC-14.** No used image shows "Reading 3.1": the task records the blur rectangles, the
   output files, and one full-size review per file.
 - **AC-15.** The PM page-check at 390, 980, and 1280 px passes: no horizontal scroll, both new
@@ -681,3 +704,5 @@ Constraints on the gates:
 6. The delivered `student-mobile` files are 520 x 1125, the original capture size. A larger
    phone file does not exist. At 390 px the card is sharp; at 1280 px it is upscaled. Daniel
    accepts the softness or PR captures again.
+7. The `lessonPhases` alt names the tutor app, and the mapped screen is the student app
+   (D-15a). PR corrects the alt or confirms it.

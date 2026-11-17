@@ -36,7 +36,9 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   2. Preset 1 (4 own students, no legs): GV 12,000, rate 46%, gross 5,520.00, leg payouts 0,
      tax 165.60, net 5,354.40.
   3. Presets 2 and 3 of spec D-2 to the satang, each leg's volume and payout included.
-  4. The conservation check: leg payouts plus payout equals gross for presets 2 and 3.
+  4. The conservation check in integer satang, not in baht Numbers: leg payouts plus payout
+     equal the gross satang for presets 2 and 3, so 801,000 + 464,569 = 1,265,569 and
+     1,201,500 + 669,444 = 1,870,944. A baht-Number sum fails here in float.
   5. The zero case: no students and no legs gives 0 everywhere, rate 0, and `zero`.
   6. `payoutAfterDeduction(0, 0)` and `(100, 150)` equal 0, and tax and net are 0 on a zero
      payout.
@@ -145,8 +147,8 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   Test: AC-13, AC-14.
 
   Files: `apps/www-reading-advantage/scripts/blur-tutor-screens.py`, the three webp files under
-  `apps/www-reading-advantage/public/images/products/tutor-advantage/`, and
-  `src/lib/product-pictures.ts`.
+  `apps/www-reading-advantage/public/images/products/tutor-advantage/`,
+  `src/lib/product-pictures.ts`, and `src/lib/__tests__/tutor-screens.test.ts`.
 
   The script takes the source folder and the output folder as arguments and holds one rectangle
   list per used file for every visible "Reading 3.1". It blurs those rectangles, writes the webp
@@ -165,8 +167,11 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   Then the review of D-14: one line per file against the six use rules, and one full-size look
   at each saved copy to confirm that no "Reading 3.1" shows.
 
-  Done: three files exist under `public/`, one test asserts the three manifest keys, their
-  widths and heights, and that each file exists, and the review lines are in this plan.
+  Done: three files exist under `public/`. The new test
+  `src/lib/__tests__/tutor-screens.test.ts` asserts the three `tutorScreens` keys in slot order,
+  each entry's `src`, `width`, `height`, and `portrait: false`, that `src` starts with
+  `/images/products/tutor-advantage/`, and that each file exists under `public/` through
+  `node:fs`. The full-size review lines go into this plan.
 
 - [ ] 2.2 Add the gallery section and its copy. Test: AC-10, AC-13.
 
@@ -224,6 +229,8 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
    capture of the tutor app's network page and income page, or withdraw the two captions.
 3. The `studentHome` caption names "Reedy practice". No allowed screen in the set shows it.
    Drop the clause or deliver a screen.
+4. The `lessonPhases` alt names the tutor app, and the mapped screen is the student app
+   (spec D-15a). Correct the alt or confirm it.
 
 ## Closeout
 
