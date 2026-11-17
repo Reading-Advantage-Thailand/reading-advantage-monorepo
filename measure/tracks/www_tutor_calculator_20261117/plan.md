@@ -27,7 +27,7 @@
 
 Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no push.
 
-- [x] 1.1 Red: pin the module with a failing test. Test: AC-1, AC-2, AC-3, AC-4.
+- [x] 1.1 Red: pin the module with a failing test. Test: AC-1, AC-2, AC-3, AC-4. Done: 7eb6991fc85fbd0e833a193e35101ddd2b172915.
 
   File `apps/www-reading-advantage/src/lib/tutor-commission.test.ts`. It holds:
 
@@ -48,7 +48,7 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
 
   Done: 7eb6991fc85fbd0e833a193e35101ddd2b172915. Red command exit 1: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts --reporter=dot --silent=true'`. Evidence: `Test Files 1 failed (1)`, `Tests no tests`, cause `Failed to resolve import "@/lib/tutor-commission" from "src/lib/tutor-commission.test.ts"`. The module file does not exist.
 
-- [x] 1.2 Green: write the module. Test: AC-1, AC-2, AC-3, AC-4.
+- [x] 1.2 Green: write the module. Test: AC-1, AC-2, AC-3, AC-4. Done: 377e45b8c87d13adf1f1b3365829581cb60964b1.
 
   File `apps/www-reading-advantage/src/lib/tutor-commission.ts` with the API of spec section
   5.2. Satang truncation with BigInt (D-3), the one-level leg payout and the deduction (D-1,
@@ -61,7 +61,7 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   --silent=true'` reports `Test Files 1 passed (1)` and `Tests 22 passed (22)` at exit 0.
   `pnpm turbo run check-types --filter=www-reading-advantage` exits 0.
 
-- [x] 1.3 Red: pin the locale keys and the copy. Test: AC-5, AC-7, AC-8.
+- [x] 1.3 Red: pin the locale keys and the copy. Test: AC-5, AC-7, AC-8. Done: 08fcd93b039f53d26447a9ec8590c17264397ec3.
 
   File `apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts`. It
   imports the three dictionaries from `@/locales/pages/products/tutor-advantage` and holds:
@@ -85,7 +85,7 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   `measure/runs/www_tutor_calculator_20261117/red-1.3-08fcd93b.json` and `.log`.
   Correction (2026-11-17): the preset pins now render bracket leaf keys through `leafKey()`; correction commit `704f03c497cac94d735684b839ae0538f3882465`.
 
-- [x] 1.4 Green: add the `calculator` block to en, th, and zh. Test: AC-5, AC-7, AC-8.
+- [x] 1.4 Green: add the `calculator` block to en, th, and zh. Test: AC-5, AC-7, AC-8. Done: 27f33b18e7198d498f6f2008740c38077cb1dfaf.
 
   File `apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts`, in all three
   dictionaries, after `tutorRole` and before `faq`. Values come from spec 5.4, D-2a, and D-9.
@@ -99,7 +99,7 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   at exit 0. `pnpm turbo run check-types --filter=www-reading-advantage` exits 0. Evidence
   files: `measure/runs/www_tutor_calculator_20261117/green-1.4-27f33b18e.json` and `.log`.
 
-- [x] 1.5 Red: pin the calculator behaviour. Test: AC-9.
+- [x] 1.5 Red: pin the calculator behaviour. Test: AC-9. Done: bcaf27d8003a8f83ceb3dac6e24f3a28f989eb12.
 
   File `apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx`
   with `@testing-library/react` and `userEvent`. It holds: the default paint of 0 figures and
@@ -128,7 +128,7 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   correction commit `e42aa53fa0f00571b32a46f4c80fc4fb20b81958`. The targeted command reports
   `Tests 10 passed (10)`. The two uncommitted Green files were left untouched.
 
-- [x] 1.6 Green: build the client component. Test: AC-9.
+- [x] 1.6 Green: build the client component. Test: AC-9. Done: 3786a1d299929a5bb5f4912ccbffcb120bf0c66d.
 
   File `apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx`
   with `"use client"` and the props of spec 5.3. Layout from the June file: preset row, input
@@ -143,7 +143,7 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   Note: spec 5.3 item 6 lists a net row; the hero already carries the net figure, so the row
   list ends at withholding tax and the hero is the net.
 
-- [x] 1.7 Wire the section and pin the order. Test: AC-10.
+- [x] 1.7 Wire the section and pin the order. Test: AC-10. Done: f18b6dbbd6e0af3e2d9bdb8e1f96b39d6267947b.
 
   Files `page.tsx` and `page.test.tsx`. The page reads `calculator.*` with `getScopedI18n` and
   renders the component in a `section` with `data-testid="tutor-calculator"` and an
@@ -166,7 +166,7 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   measure/doctor.sh` exits 1 at its architecture step on a pre-existing analyzer snapshot hash
   mismatch; that step covers `packages/architecture-enforcement`, which this task does not touch.
 
-- [x] 1.8 Run the Phase 1 gates and check the page by hand. Test: AC-11, AC-12.
+- [x] 1.8 Run the Phase 1 gates and check the page by hand. Test: AC-11, AC-12. Done: 10dcf42a8d88c90f8e02debae761196ef40f2ccd.
 
   - www suite: `pnpm --filter www-reading-advantage test --reporter=dot --silent=true`.
   - Types: `pnpm turbo run check-types --filter=www-reading-advantage`.
@@ -232,7 +232,7 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   whole-repo scan (PM load watch). Result artifacts:
   `measure/runs/www_tutor_calculator_20261117/green-p1-fix-daa77805d.json` and `.log`.
 
-- [x] 1.9 Checkpoint Phase 1. Test: AC-11.
+- [x] 1.9 Checkpoint Phase 1. Test: AC-11. Done: 4e32f7c76710f0647aa712b74d55dc8618bc8076.
 
   Commit the plan update with the task SHAs and the gate output. Phase 1 ships no push (D-13).
 
@@ -248,7 +248,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
 
 ## Phase 2: the screens gallery and the live copy
 
-- [x] 2.0 The set arrived. Test: 41 files in `student-mobile/`, 31 in `tutor-desktop/`, and a
+- [x] 2.0 The set arrived. Done: fb6bf7c0d86033dfb6b055796b4988a424997064. Test: 41 files in `student-mobile/`, 31 in `tutor-desktop/`, and a
   README at version 2.0.
 
   Path `~/Desktop/handoff/a63-tutor-www-calculator/screens/`, version 2.0, 2026-11-17, source
@@ -256,7 +256,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   `tutor-desktop/` at 1440 x 900, and `README.md` with the use rules of spec 6.1. Recorded at
   authoring time.
 
-- [x] 2.1 Make the blurred copies, add the three assets, and add the manifest entries.
+- [x] 2.1 Make the blurred copies, add the three assets, and add the manifest entries. Done: 320fc2fa176b2c2e40eab09c2d208ede98945370.
   Test: AC-13, AC-14.
 
   Files: `apps/www-reading-advantage/scripts/blur-tutor-screens.py`, the three webp files under
@@ -329,7 +329,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
     price, no error state, no student face. The header, the subtitle, the dropdown, and the
     progress card show no class name.
 
-- [x] 2.2 Add the gallery section and its copy. Test: AC-10, AC-13.
+- [x] 2.2 Add the gallery section and its copy. Test: AC-10, AC-13. Done: e583e21b31b6a73c2d1e8ba1aa65ddc0053bd3d7.
 
   Add the `screens` block to en, th, and zh (spec 6.3, after `tutorRole` and before
   `calculator`). Render the section in `page.tsx` with `SectionHeader`, three `ProductPicture`
@@ -371,7 +371,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   Note (build-graph): skipped under the PM load watch. No export, signature, or import edge
   changed.
 
-- [x] 2.3 Change the two live lines. Test: AC-6.
+- [x] 2.3 Change the two live lines. Test: AC-6. Done: 0a7ff97e596643212b52c3b9bf8fb7703e0628b2.
 
   `tutorRole.points[3]` and `faq.items[5].answer` in en and th take the strings of spec 6.4. The
   zh values take the new English lines (D-10). Add both lines to the locale test, and add the
@@ -401,7 +401,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   Note (build-graph): skipped under the PM load watch. No export, signature, or import edge
   changed.
 
-- [x] 2.4 Run the Phase 2 gates. Test: AC-11, AC-12, AC-16.
+- [x] 2.4 Run the Phase 2 gates. Test: AC-11, AC-12, AC-16. Done: e2439b438511046b58ec8f3e734e655706c2ab8c.
 
   The five gates of task 1.8 again, then
   `node scripts/ci/affected-apps.mjs --base ff028a710 --head <HEAD>`, which prints
@@ -436,7 +436,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   it, and no file in this track touches that check. Evidence files:
   `measure/runs/www_tutor_calculator_20261117/green-2.4-9befd67c3.json` and `.log`.
 
-- [x] 2.7 Red: replace the spec drafts with PR's final copy (handoff v0.4 section 8). Test: AC-5, AC-13.
+- [x] 2.7 Red: replace the spec drafts with PR's final copy (handoff v0.4 section 8). Test: AC-5, AC-13. Done: 7d94576c9018ddcd1c394837d40dad0f61076830.
 
   Update the pins that hold a superseded string, key, or figure: the three `chart.*` labels and preset 3 (8.1), gallery slot 2's `shortAnswer` key, caption, and alt (8.2), the `studentHome` caption and alt (8.4), and every preset-3 figure recomputed from `calculateNetwork` with `{ price: 3000, personalStudents: 2, studentsPerLeg: [4, 4, 4] }`. The gallery stays at three cards because 8.3 drops the `network` and `earnings` captions.
 
@@ -450,7 +450,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
 
   Done: 7d94576c9018ddcd1c394837d40dad0f61076830. Ten-file targeted gate exits 0: `Test Files 10 passed (10)`, `Tests 140 passed (140)`. `pnpm turbo run check-types --filter=www-reading-advantage` exits 0; `pnpm --filter www-reading-advantage lint` exits 0 with no `shadcn/*` error in a touched file. The implementation commit holds the four named product files plus `page.tsx`, which needs `calculator.chart.*` and `tutorScreens.shortAnswer` so check-types and the page render pass after the manifest rename. Result artifacts: `measure/runs/www_tutor_calculator_20261117/green-2.7-7d94576c9.json` and `.log`.
 
-- [x] 2.8 Run the Phase 2 gates again at the copy-changed head. Test: AC-11, AC-12, AC-16.
+- [x] 2.8 Run the Phase 2 gates again at the copy-changed head. Test: AC-11, AC-12, AC-16. Done: 94af2c15b5e4eaf393f696564c9eed3e689de057.
 
   `phase_base_sha` d279b870341c067c33fc884ae8863b5428487c17; `role_base_sha`
   203bd5e78dceb9c1701ac708886915f340005d5e. HEAD 203bd5e78 is clean, and the committed
@@ -489,7 +489,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
 
   Note (build-graph): skipped under the PM load watch. No product file changed.
 
-- [x] 2.9 Fix the rate-curve card labels that PM page-check F-1 names. Test: AC-15.
+- [x] 2.9 Fix the rate-curve card labels that PM page-check F-1 names. Test: AC-15. Done: 6c0cf5de65ea092a28bf1246dff8a6fb57df7ce4.
 
   On the rate-curve card, show `graph.rateTitle` as a visible `h3`, and show
   `graph.ratePoint` with the live rate beside it, as "This month · 59.1%". The SVG stays
@@ -539,7 +539,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   Next.js security-advisory nudge; the retry exited 0. This session did not rebuild and did not
   touch the server on port 3120.
 
-- [x] 2.5 PM page-check at 390, 980, and 1280 px. Test: AC-15.
+- [x] 2.5 PM page-check at 390, 980, and 1280 px. Test: AC-15. Done: 7e9724069a0f013967fd22bc7bd6e2b341b7462c.
 
   The PM captures `/en/`, `/th/`, and `/zh/products/tutor-advantage`. The check covers: both
   new sections in order, no horizontal scroll, the calculator figures readable, the graph rows
@@ -559,7 +559,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   "Your rate for the network volume" and "This month · 59.1%" in en and th, zh shows the English
   line, and no sideways scroll. The PM closed task 2.5 in writing on 2026-11-17.
 
-- [x] 2.6 Push www-only and check the live pages. Test: AC-16.
+- [x] 2.6 Push www-only and check the live pages. Test: AC-16. Done: a726b2be2b3771934e2d518f21b42f91d6882fc8.
 
   Confirm `origin/master` did not move, rebase when it did, then push. One commit range, www
   only, no deploy command from this session. Record the CD run and the HTTP status of the three
@@ -630,14 +630,14 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
 > five changed source files exits 0 with no output. The scan `rg -n -i "downline|ดาวน์ไลน์"
 > apps/www-reading-advantage/src --glob '!**/*.test.*'` exits 1 and prints nothing.
 
-- [x] 3.1 Red: pin the PR v0.4 copy, the five-slot student gallery, and the half-up tax. Test: AC-17, AC-18, AC-19, AC-20.
+- [x] 3.1 Red: pin the PR v0.4 copy, the five-slot student gallery, and the half-up tax. Test: AC-17, AC-18, AC-19, AC-20. Done: 8d8f1c01cc6dfc7ff8fd85afa6c623300a9bf9d1.
 
   Test files: `src/__tests__/www-tutor-calculator.locale.test.ts`, `src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx`, `src/lib/__tests__/tutor-screens.test.ts`, `src/lib/__tests__/tutor-screens.adversarial.test.ts`, `src/lib/tutor-commission.test.ts`, `src/lib/tutor-commission.adversarial.test.ts`, `src/components/marketing/tutor-commission-calculator.test.tsx`, `src/components/marketing/tutor-commission-calculator.adversarial.test.tsx`, `src/__tests__/www-tutor-screens-copy.adversarial.test.ts`, and `src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx`. The locale test deep-equals the whole `calculator` and `screens` blocks against PR section 6, en and zh from section 6, th from the Thai of sections 2 and 3. A new rendered-page case finds no `downline` text in en, th, or zh, before and after preset 2 and preset 3 are pressed. The manifest tests pin five student slots and their sizes. The module tests pin the half-up tax and the `withLegs` variant. The three source-text reads become behaviour checks.
 
   Done: 8d8f1c01cc6dfc7ff8fd85afa6c623300a9bf9d1. Red command:
   `cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter www-reading-advantage exec vitest run <the ten named test files> --reporter=dot --silent=true --maxWorkers=1`. Exit 1. Every failure reads a missing PR key, a superseded v0.1 string, a missing gallery slot or asset, or a truncated tax. No failure is an import, syntax, or fixture error. The positive controls, the retired-line scan, and the reference-formula check pass at this base. Full output: `measure/runs/www_tutor_calculator_20261117/red-p3-81df01cf2-vitest.txt`.
 
-- [x] 3.2 Green: replace the `calculator` and `screens` blocks in en, th, and zh with PR section 6. Test: AC-17.
+- [x] 3.2 Green: replace the `calculator` and `screens` blocks in en, th, and zh with PR section 6. Test: AC-17. Done: 032abe9f4e4a3f4734e52cb38133b72c1db5d50b.
 
   The th values come from the Thai of PR sections 2 and 3 in the same key order. The zh values equal the en values (D-10). No key outside section 6 stays.
 
@@ -646,7 +646,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   --reporter=dot --silent=true --maxWorkers=1` exits 0. The eleven-file gate of task 3.1 exits 0.
   `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0.
 
-- [x] 3.3 Green: move the component and the page to the section 6 keys. Test: AC-18.
+- [x] 3.3 Green: move the component and the page to the section 6 keys. Test: AC-18. Done: 032abe9f4e4a3f4734e52cb38133b72c1db5d50b.
 
   Inputs: `inputs.legCount`, `inputs.legStudents`, `inputs.addLeg`, `inputs.removeLeg`. Results include `results.legCommissions`. The graph carries `ownBar`, `legBar` with the `{n}` placeholder, `grossBar`, `legCommissionBar`, `netBar`, `axisBaht`, `rateTitle`, `rateAxis`, and `ratePoint`. Explain uses `ownOnly`, `withLegs`, and `zero`. Notes and disclaimer use the section 6 strings. Remove every key that section 6 does not have: the `chart.*` keys, any downline, second-level, or direct-tutor key, and any pre-tax label. Rename the module variant `withDownline` to `withLegs`.
 
@@ -664,7 +664,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   tutor's own share of the gross under the PR wording. The totals under the bars carry
   `grossBar`, `legCommissionBar` and `netBar`, and `axisBaht` is the unit of the bar figures.
 
-- [x] 3.4 Green: replace the gallery with the five PR section 2 slots. Test: AC-19.
+- [x] 3.4 Green: replace the gallery with the five PR section 2 slots. Test: AC-19. Done: 032abe9f4e4a3f4734e52cb38133b72c1db5d50b.
 
   Order: `guidedWriting` 040, `shortAnswer` 002, `feedback` 004, `selfReflection` 052, `classRecord` 064. All are webp files at 520 by 1125 under `public/images/products/tutor-advantage/student-mobile/`. Delete the 070 and `tutor-desktop/062` webp files and their manifest keys. No tutor screen stays. Source PNGs: `~/Desktop/advantage-pr/assets/screenshots/tutor-advantage/dev-2026-11-16/student-mobile/`. No blur is needed: the orchestrator viewed 040, 004, 052, and 064 and saw no "Reading 3.1" and no price; 064 shows the demo tutor name "ครู ฝน ใจดี", which the audit accepts.
 
@@ -685,7 +685,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   type check. The Mid Red retry `debbed4f1` pins five cards and types both mocks. No committed
   Red test file changed in the Green commit.
 
-- [x] 3.5 Green: compute tax half up. Test: AC-20.
+- [x] 3.5 Green: compute tax half up. Test: AC-20. Done: 032abe9f4e4a3f4734e52cb38133b72c1db5d50b.
 
   Use `(preTaxSatang * 3n + 50n) / 100n`, as `finance-mlm-service/src/services/taxService.ts:4` does. Gross stays truncated by `calculatePayoutMinor`. The three preset figures do not move.
 
@@ -693,7 +693,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   src/lib/tutor-commission.test.ts src/lib/tutor-commission.adversarial.test.ts --reporter=dot
   --silent=true --maxWorkers=1` exits 0. The eleven-file gate of task 3.1 exits 0.
 
-- [x] 3.5a Red: pin the settlement eligibility rule. Test: AC-21.
+- [x] 3.5a Red: pin the settlement eligibility rule. Test: AC-21. Done: a48aa764db15ae64a55ca99c92dfe05cf23d4d9d.
 
   The settlement service pays 0 to a tutor with no personal volume and at least one child
   (spec D-18). The module test pins 0 payout before tax, 0 tax, and 0 net for 0 personal
@@ -710,14 +710,14 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0. Full output:
   `measure/runs/www_tutor_calculator_20261117/red-p3-3.5a-vitest.txt`.
 
-- [ ] 3.5b Green: pay 0 to a tutor with legs and no personal students. Test: AC-21.
+- [~] 3.5b Green: pay 0 to a tutor with legs and no personal students. Test: AC-21.
 
   Apply the settlement rule after the leg deduction: when the clamped personal student count is
   0 and the leg count is 1 or more, set the payout before tax, the tax, and the net to 0.
   `explainVariant` returns `zero` for that input. Keep the network volume, the rate, the gross,
   and the leg commissions. The three presets and the own-only inputs do not move.
 
-- [ ] 3.6 Run the Phase 3 gates. Test: AC-11, AC-12, AC-16.
+- [~] 3.6 Run the Phase 3 gates. Test: AC-11, AC-12, AC-16.
 
   The gate block of section 8, with the ten targeted files of task 3.1. The app selector prints `["www-reading-advantage"]`.
 
