@@ -7,6 +7,7 @@ import { siteImages, siteLogos } from "@/lib/site-assets";
 import { SiteImageView } from "@/components/marketing/site-image";
 import { SectionHeader } from "@/components/marketing/section-header";
 import { TutorClassStepper } from "@/components/marketing/tutor-class-stepper";
+import { TutorCommissionCalculator } from "@/components/marketing/tutor-commission-calculator";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { FAQAccordion } from "@/components/ui/faq-accordion";
 
@@ -68,6 +69,46 @@ export default async function TutorAdvantage({
   }));
   const roleKeys = [0, 1, 2, 3];
   const reedyKeys = [0, 1, 2, 3];
+  const calculatorCopy = {
+    eyebrow: key("calculator.eyebrow"),
+    heading: key("calculator.heading"),
+    description: key("calculator.description"),
+    volumeNote: key("calculator.volumeNote"),
+    rateNote: key("calculator.rateNote"),
+    payoutNote: key("calculator.payoutNote"),
+    disclaimer: key("calculator.disclaimer"),
+    inputs: {
+      price: key("calculator.inputs.price"),
+      priceNote: key("calculator.inputs.priceNote"),
+      ownStudents: key("calculator.inputs.ownStudents"),
+      directTutors: key("calculator.inputs.directTutors"),
+      studentsPerDirect: key("calculator.inputs.studentsPerDirect"),
+    },
+    results: {
+      ownGV: key("calculator.results.ownGV"),
+      networkGV: key("calculator.results.networkGV"),
+      rate: key("calculator.results.rate"),
+      gross: key("calculator.results.gross"),
+      downline: key("calculator.results.downline"),
+      tax: key("calculator.results.tax"),
+      net: key("calculator.results.net"),
+    },
+    explain: {
+      ownOnly: key("calculator.explain.ownOnly"),
+      withDownline: key("calculator.explain.withDownline"),
+      zero: key("calculator.explain.zero"),
+    },
+    chart: {
+      leg: key("calculator.chart.leg"),
+      you: key("calculator.chart.you"),
+      volume: key("calculator.chart.volume"),
+    },
+    presets: [0, 1, 2].map((i) => ({
+      name: key(`calculator.presets.${i}.name`),
+      setup: key(`calculator.presets.${i}.setup`),
+      result: key(`calculator.presets.${i}.result`),
+    })),
+  };
 
   return (
     <main className="overflow-x-hidden bg-site-page">
@@ -300,8 +341,19 @@ export default async function TutorAdvantage({
         </div>
       </section>
 
+      {/* Commission calculator */}
+      <section
+        id="commission-calculator"
+        data-testid="tutor-calculator"
+        className="scroll-mt-24 bg-white py-20 md:py-28"
+      >
+        <div className="container mx-auto max-w-6xl px-4 sm:px-6">
+          <TutorCommissionCalculator copy={calculatorCopy} />
+        </div>
+      </section>
+
       {/* Honest basics */}
-      <section className="py-20 md:py-24">
+      <section className="py-20 md:py-24" data-testid="tutor-commitments">
         <div className="container mx-auto max-w-6xl px-4 sm:px-6">
           <SectionHeader
             eyebrow={t("commitments.eyebrow")}
