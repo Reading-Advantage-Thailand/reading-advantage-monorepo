@@ -143,15 +143,28 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   Note: spec 5.3 item 6 lists a net row; the hero already carries the net figure, so the row
   list ends at withholding tax and the hero is the net.
 
-- [ ] 1.7 Wire the section and pin the order. Test: AC-10.
+- [x] 1.7 Wire the section and pin the order. Test: AC-10.
 
   Files `page.tsx` and `page.test.tsx`. The page reads `calculator.*` with `getScopedI18n` and
   renders the component in a `section` with `data-testid="tutor-calculator"` and an
   `id="commission-calculator"` anchor, after the `tutorRole` section and before `commitments`.
   The test asserts the DOM order and the presence of the section.
 
-  Done: `pnpm --filter www-reading-advantage exec vitest run "src/app/\[locale\]/(marketing)/products/tutor-advantage/page.test.tsx" --silent=true`
-  exits 0.
+  Done: f18b6dbbd6e0af3e2d9bdb8e1f96b39d6267947b.
+
+  Red: the targeted page test with the new assertions exits 1. Evidence: `Test Files 1 failed
+  (1)`, `Tests 2 failed | 4 passed (6)`; both new cases see a null `tutor-calculator` section.
+
+  Green: the targeted command `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh
+  -c 'pnpm --filter www-reading-advantage exec vitest run
+  "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx" --reporter=dot
+  --silent=true'` exits 0 with `Test Files 1 passed (1)` and `Tests 6 passed (6)`. Note: the
+  `[[]locale[]]` escaping form in the brief finds no test files and exits 0 through
+  `passWithNoTests`; the literal quoted path is the form above. Types:
+  `pnpm turbo run check-types --filter=www-reading-advantage` exits 0. Lint:
+  `pnpm --filter www-reading-advantage lint` exits 0 with no `shadcn/*` error. `bash
+  measure/doctor.sh` exits 1 at its architecture step on a pre-existing analyzer snapshot hash
+  mismatch; that step covers `packages/architecture-enforcement`, which this task does not touch.
 
 - [ ] 1.8 Run the Phase 1 gates and check the page by hand. Test: AC-11, AC-12.
 
