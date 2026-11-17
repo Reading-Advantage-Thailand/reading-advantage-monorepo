@@ -754,7 +754,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   .` exits 0. Full output:
   `measure/runs/www_tutor_calculator_20261117/red-p3-3.5c-vitest.txt`.
 
-- [ ] 3.5d Green: put the right image in each block. Test: AC-22.
+- [x] 3.5d Green: put the right image in each block. Test: AC-22. Done: 9647b32c6e103e01496c524256b85c9b835e8363.
 
   Change the four blocks of `page.tsx` to the files of D-19. The books use the three cover
   files in the `books.items` order. Each cover shows whole, with no crop. The hero and the
@@ -762,6 +762,50 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   4:3 crop. Add the 480 by 651 webp `primary-origins-3-1-cover.webp` from the printed cover
   PNG. Set the alt values of D-19 in en and th; the zh values take the en values (D-10). Keep
   the five gallery screens and their alts.
+
+  Done: 9647b32c6e103e01496c524256b85c9b835e8363. `phase_base_sha`
+  81df01cf2e7c2954f4a2de1aaee593913a00bc75; `role_base_sha`
+  c9cb6fa0c2b25bc95f66dd281b08502d7ffb3c19. The committed Red change `84df0eb89` sits inside
+  `81df01cf2..9647b32c6`.
+
+  The hero, the three cards, and the Reedy block use `ProductPicture` with `tutorSession`,
+  `primaryCover`, `primaryCover31`, `readingCover`, and `reedyPreview`. The become-a-tutor
+  block shows a 4:3 crop of `tutorSession`. `BOOK_ART` and the four banned `siteImages` uses
+  leave this page; the asset files and the registry entries stay, because other pages use
+  them. The D-19 alts are set in en and th, and zh takes the en values for those keys. No
+  other string moves.
+
+  Red first, exit 1: `Test Files 1 failed | 3 passed (4)`, `Tests 16 failed | 43 passed (59)`,
+  the hero file (3 locales), book card 1 file (3), the Reedy file (3), the become-a-tutor file
+  (3), the banned-file scan (3), and the missing Origins 3.1 cover (1).
+
+  Green gates at this commit, exit codes 0, 0, and 0:
+
+  1. `cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter
+     www-reading-advantage exec vitest run
+     "src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx"
+     "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx"
+     "src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx"
+     src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --maxWorkers=1` exits 0:
+     `Test Files 4 passed (4)`, `Tests 59 passed (59)`.
+  2. `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0.
+  3. `pnpm --filter www-reading-advantage lint` exits 0 with no output, so no `shadcn/*`
+     error in a touched file.
+
+  Extra check: `pnpm --filter www-reading-advantage exec vitest run
+  src/__tests__/products-page-pictures.red.test.tsx --reporter=dot --maxWorkers=1` exits 0
+  with `Tests 22 passed (22)`. That file stats every `productPictures` entry, so the three new
+  entries are covered.
+
+  Deviation (the become-a-tutor crop): `SiteImageView` needs a `SiteImage` with an 800w and a
+  1600w file, and this photo has one 1024px file, so its `srcSet` would advertise widths the
+  file does not have. The block uses `next/image` on `productPictures.tutorSession` with
+  `aspect-4/3 w-full object-cover`, the pattern of the sibling product pages. No new image
+  component was added. The hero keeps `ProductPicture` and drops the `priority` hint;
+  `next.config.ts` sets `images.unoptimized: true`, so one file ships either way.
+
+  Note (build-graph): skipped. The brief's allowed commands do not include it, and no export
+  or signature changed.
 
 - [~] 3.6 Run the Phase 3 gates. Test: AC-11, AC-12, AC-16.
 
