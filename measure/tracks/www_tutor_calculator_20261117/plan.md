@@ -844,7 +844,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
 
   The build output stays in place for the UX role. No server starts in this run.
 
-- [x] 3.6a Red: pin the review findings of round 1. Test: AC-23. Done: recorded by the next commit.
+- [x] 3.6a Red: pin the review findings of round 1. Test: AC-23. Done: 8aa9002ad7d5718727eb0443fcfcab5aa0e3f2f9.
 
   Files: `src/components/marketing/tutor-commission-calculator.test.tsx` (one own-bar assertion per
   preset; the cleared leg-count field), `src/components/marketing/tutor-commission-calculator.adversarial.test.tsx`
