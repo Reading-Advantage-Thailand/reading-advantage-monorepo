@@ -539,7 +539,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   Next.js security-advisory nudge; the retry exited 0. This session did not rebuild and did not
   touch the server on port 3120.
 
-- [b] 2.5 PM page-check at 390, 980, and 1280 px. Test: AC-15.
+- [x] 2.5 PM page-check at 390, 980, and 1280 px. Test: AC-15.
 
   The PM captures `/en/`, `/th/`, and `/zh/products/tutor-advantage`. The check covers: both
   new sections in order, no horizontal scroll, the calculator figures readable, the graph rows
@@ -549,7 +549,17 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
 
   Gate owner: the PM, with Daniel on the Thai.
 
-- [~] 2.6 Push www-only and check the live pages. Test: AC-16.
+  Done: 2026-11-17, PM PASS. Report
+  `~/Desktop/handoff/page-check/a63-20261117-1500/report.md` opens with the verdict "PASS with
+  one fix (F-1)". Its table passes the section order, no horizontal scroll, the three sharp
+  screens with the class name blurred, the calculator figures and rows at preset 3 (gross
+  24,833.45, legs 16,560, payout 8,273.45, tax 248.20, net 8,025.25), and the zh placeholder
+  (D-10); Daniel reads the Thai on the live page. F-1 (rate-curve card labels) is fixed in
+  `6c0cf5de6`. The report section "Recheck F-1 (worktree 6c0cf5de6)" is PASS: the card shows
+  "Your rate for the network volume" and "This month · 59.1%" in en and th, zh shows the English
+  line, and no sideways scroll. The PM closed task 2.5 in writing on 2026-11-17.
+
+- [x] 2.6 Push www-only and check the live pages. Test: AC-16.
 
   Confirm `origin/master` did not move, rebase when it did, then push. One commit range, www
   only, no deploy command from this session. Record the CD run and the HTTP status of the three
@@ -597,6 +607,19 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
 
   Evidence files: `measure/runs/www_tutor_calculator_20261117/green-2.6-gates-cd72047c2.json`
   and `.log`. The push and the live URL check stay open.
+
+  Closed: the push and the live URL check are done (2026-11-17). Done: `a726b2be2` is the branch
+  head and `origin/master`. The push was a fast-forward from `59821e80b`, with no force and no
+  tags. `git diff --name-only 59821e80b..a726b2be2` lists `apps/www-reading-advantage` and
+  `measure/` only, so the range is www-only. CD workflow "CD — www-reading-advantage" run
+  `44053703983` concluded success:
+  https://github.com/Reading-Advantage-Thailand/reading-advantage-monorepo/actions/runs/44053703983.
+  The live pages after the deploy: `/en/products/tutor-advantage` answers 200 with "Your rate for
+  the network volume"; `/th/products/tutor-advantage` answers 200 with
+  "อัตราของคุณตามยอดรวมของเครือข่าย"; `/zh/products/tutor-advantage` answers 200 and carries the
+  English lines (D-10). The 2026-11-17 daily post
+  `/blog/nobody-interrupts-her-while-she-reads` answers 307 to
+  `/en/blog/nobody-interrupts-her-while-she-reads`, then 200.
 
 ## Answers owed to PR
 
