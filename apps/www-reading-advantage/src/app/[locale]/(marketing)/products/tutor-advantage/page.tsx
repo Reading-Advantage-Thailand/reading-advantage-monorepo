@@ -105,6 +105,10 @@ export default async function TutorAdvantage({
       legPayout: key("calculator.chart.legPayout"),
       yourPayout: key("calculator.chart.yourPayout"),
     },
+    graph: {
+      rateTitle: key("calculator.graph.rateTitle"),
+      ratePoint: key("calculator.graph.ratePoint"),
+    },
     presets: [0, 1, 2].map((i) => ({
       name: key(`calculator.presets.${i}.name`),
       setup: key(`calculator.presets.${i}.setup`),

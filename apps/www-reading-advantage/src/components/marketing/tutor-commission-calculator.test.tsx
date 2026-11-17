@@ -312,3 +312,26 @@ describe("TutorCommissionCalculator presets", () => {
     expect(screen.getByText(copy.presets[2].result)).toBeInTheDocument();
   });
 });
+
+describe("TutorCommissionCalculator rate curve card", () => {
+  it("shows the rate title, the month point with the rate, and keeps the curve aria-hidden", async () => {
+    const user = userEvent.setup();
+    const { container } = renderCalculator();
+    await user.click(presetButton(2));
+
+    const curve = container.querySelector('svg[aria-hidden="true"]');
+    expect(curve).not.toBeNull();
+
+    const card = curve?.closest("div");
+    expect(card).not.toBeNull();
+    const inCard = within(card as HTMLElement);
+
+    expect(inCard.getByRole("heading", { name: copy.graph.rateTitle })).toBeInTheDocument();
+
+    const pointLine = inCard.getByText(copy.graph.ratePoint).closest("p");
+    expect(pointLine).not.toBeNull();
+    expect(pointLine?.textContent).toBe(`${copy.graph.ratePoint} · 59.1%`);
+
+    expect(curve).toHaveAttribute("aria-hidden", "true");
+  });
+});

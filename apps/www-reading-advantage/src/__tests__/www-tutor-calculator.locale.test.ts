@@ -31,6 +31,7 @@ const KEY_ORDER = [
   "results",
   "explain",
   "chart",
+  "graph",
   "presets",
   "disclaimer",
 ] as const;
@@ -156,6 +157,16 @@ const PINS: readonly { path: readonly string[]; en: string; th: string }[] = [
     path: ["chart", "legVolume"],
     en: "Leg volume",
     th: "ยอดรวมของสาย",
+  },
+  {
+    path: ["graph", "rateTitle"],
+    en: "Your rate for the network volume",
+    th: "อัตราของคุณตามยอดรวมของเครือข่าย",
+  },
+  {
+    path: ["graph", "ratePoint"],
+    en: "This month",
+    th: "เดือนนี้",
   },
   {
     path: ["presets", "0", "name"],
@@ -305,7 +316,7 @@ describe("1. the calculator block exists", () => {
 });
 
 describe("2. en and th copy pinned word for word (AC-5)", () => {
-  it("holds all 34 string leaves in en", () => {
+  it("holds all 36 string leaves in en", () => {
     const leaves = stringLeaves(block("en"));
     expect(Object.keys(leaves).length).toBe(PINS.length);
     // Self-check: a wrong pin path fails here with its key, not as a copy mismatch below.
@@ -317,7 +328,7 @@ describe("2. en and th copy pinned word for word (AC-5)", () => {
     }
   });
 
-  it("holds all 34 string leaves in th", () => {
+  it("holds all 36 string leaves in th", () => {
     const leaves = stringLeaves(block("th"));
     expect(Object.keys(leaves).length).toBe(PINS.length);
     for (const pin of PINS) {

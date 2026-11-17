@@ -196,6 +196,10 @@ export const en = {
             "legPayout": "Leg commission",
             "yourPayout": "Your payout"
         },
+        "graph": {
+            "rateTitle": "Your rate for the network volume",
+            "ratePoint": "This month"
+        },
         "presets": [
             { "name": "A new tutor", "setup": "Four students, no network.", "result": "12,000 baht of volume at a rate of 46%. The gross is 5,520 baht, and with no downline it is all payout. After 3% withholding tax: 5,354 baht." },
             { "name": "A tutor with two direct tutors", "setup": "Two own students, and two direct tutors with three students each.", "result": "24,000 baht of network volume at a rate of 52.7%. The gross is 12,656 baht, and the two direct tutors earn 8,010 baht of it. The payout is 4,646 baht before tax, and 4,506 baht after 3% withholding tax." },
@@ -521,6 +525,10 @@ export const th = {
             "legVolume": "ยอดรวมของสาย",
             "legPayout": "ค่าคอมมิชชันของสาย",
             "yourPayout": "ยอดจ่ายของคุณ"
+        },
+        "graph": {
+            "rateTitle": "อัตราของคุณตามยอดรวมของเครือข่าย",
+            "ratePoint": "เดือนนี้"
         },
         "presets": [
             { "name": "ติวเตอร์ใหม่", "setup": "นักเรียนสี่คน ไม่มีเครือข่าย", "result": "ยอดรวม 12,000 บาท ที่อัตรา 46% ค่าคอมมิชชันก่อนหัก 5,520 บาท ไม่มีดาวน์ไลน์ จึงได้รับทั้งหมด หลังหักภาษีหัก ณ ที่จ่าย 3% เหลือ 5,354 บาท" },
@@ -849,6 +857,10 @@ export const zh = {
             "legVolume": "Leg volume",
             "legPayout": "Leg commission",
             "yourPayout": "Your payout"
+        },
+        "graph": {
+            "rateTitle": "Your rate for the network volume",
+            "ratePoint": "This month"
         },
         "presets": [
             { "name": "A new tutor", "setup": "Four students, no network.", "result": "12,000 baht of volume at a rate of 46%. The gross is 5,520 baht, and with no downline it is all payout. After 3% withholding tax: 5,354 baht." },

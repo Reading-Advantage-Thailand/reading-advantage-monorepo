@@ -47,6 +47,7 @@ export type TutorCommissionCalculatorProps = {
     };
     explain: { ownOnly: string; withDownline: string; zero: string };
     chart: { legVolume: string; legPayout: string; yourPayout: string };
+    graph: { rateTitle: string; ratePoint: string };
     presets: readonly { name: string; setup: string; result: string }[];
   };
 };
@@ -289,6 +290,7 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
 
           <div className="grid gap-4 lg:grid-cols-2">
             <div className="rounded-3xl border border-emerald-200 bg-white p-5 shadow-sm sm:p-6">
+              <h3 className="mb-3 text-base font-semibold text-site-navy">{copy.graph.rateTitle}</h3>
               <svg
                 viewBox="0 0 100 40"
                 className="h-auto w-full"
@@ -313,6 +315,13 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
                 />
                 <circle cx={markerX} cy={markerY} r={1.5} className="fill-emerald-900" />
               </svg>
+              <p className="mt-3 text-sm leading-relaxed text-site-body">
+                <span className="font-medium text-site-navy">{copy.graph.ratePoint}</span>
+                {" · "}
+                <span className="font-semibold tabular-nums text-emerald-900">
+                  {formatRate(result.rate)}
+                </span>
+              </p>
             </div>
 
             <div className="space-y-4 rounded-3xl border border-emerald-200 bg-white p-5 shadow-sm sm:p-6">
