@@ -101,9 +101,9 @@ export default async function TutorAdvantage({
       zero: key("calculator.explain.zero"),
     },
     chart: {
-      leg: key("calculator.chart.leg"),
-      you: key("calculator.chart.you"),
-      volume: key("calculator.chart.volume"),
+      legVolume: key("calculator.chart.legVolume"),
+      legPayout: key("calculator.chart.legPayout"),
+      yourPayout: key("calculator.chart.yourPayout"),
     },
     presets: [0, 1, 2].map((i) => ({
       name: key(`calculator.presets.${i}.name`),
@@ -114,7 +114,7 @@ export default async function TutorAdvantage({
   // Gallery slots in copy order; the two phone screens are half-width and the wide screen spans at md (spec 6.3).
   const screenCards = [
     { picture: tutorScreens.studentHome, wide: false },
-    { picture: tutorScreens.lessonPhases, wide: false },
+    { picture: tutorScreens.shortAnswer, wide: false },
     { picture: tutorScreens.classList, wide: true },
   ].map((card, i) => ({
     ...card,

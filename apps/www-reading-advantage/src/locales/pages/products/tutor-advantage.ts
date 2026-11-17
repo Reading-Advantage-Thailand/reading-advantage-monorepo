@@ -158,9 +158,8 @@ export const en = {
         "heading": "The student app and the tutor app",
         "description": "A student joins the class in LINE. The tutor runs the class in the tutor app. Both follow the same printed workbook.",
         "items": [
-            { "caption": "The student's home: the next class, the lesson, and Reedy practice.", "alt": "Tutor Advantage student app home screen" },
-            // Alt draft (spec D-15a): PR corrects it to a student-app wording or confirms it.
-            { "caption": "One lesson, 18 phases. The app follows the printed workbook step by step.", "alt": "Tutor app showing the 18 phases of one lesson" },
+            { "caption": "The student's home: the greeting, the next class, and the class card. Reedy voice practice is live for students with an active class package, on lessons they completed.", "alt": "Student app home screen with the next class and the class card" },
+            { "caption": "The student types the answer in the app, on the same lesson as the printed page.", "alt": "Student app short-answer screen with the question and a typed answer" },
             { "caption": "The tutor's class list: who is in today's class and which lesson they are on.", "alt": "Tutor app class list with the students of one class" }
         ]
     },
@@ -193,16 +192,14 @@ export const en = {
             "zero": "Add students to see a month."
         },
         "chart": {
-            // Draft labels (spec D-9); PR confirms or replaces them.
-            "leg": "Leg",
-            "you": "Your payout",
-            "volume": "Volume"
+            "legVolume": "Leg volume",
+            "legPayout": "Leg commission",
+            "yourPayout": "Your payout"
         },
         "presets": [
             { "name": "A new tutor", "setup": "Four students, no network.", "result": "12,000 baht of volume at a rate of 46%. The gross is 5,520 baht, and with no downline it is all payout. After 3% withholding tax: 5,354 baht." },
             { "name": "A tutor with two direct tutors", "setup": "Two own students, and two direct tutors with three students each.", "result": "24,000 baht of network volume at a rate of 52.7%. The gross is 12,656 baht, and the two direct tutors earn 8,010 baht of it. The payout is 4,646 baht before tax, and 4,506 baht after 3% withholding tax." },
-            // Draft wording (spec D-2a); PR replaces it when it delivers the new wording.
-            { "name": "A small team, three legs", "setup": "Two own students, and three direct tutors with three students each.", "result": "33,000 baht of network volume at a rate of 56.7%. The gross is 18,709 baht, and the three direct tutors earn 12,015 baht of it. The payout is 6,694 baht before tax, and 6,494 baht after 3% withholding tax." }
+            { "name": "A small team with three legs", "setup": "Two personal students, and three legs with four students each.", "result": "42,000 baht of network volume at a rate of 59.1%. The gross is 24,833 baht, and the three legs earn 16,560 baht of it. The payout is 8,273 baht before tax, and 8,025 baht after 3% withholding tax." }
         ],
         "disclaimer": "Every figure in these examples is an illustration. Commission depends on the classes that run and are paid for."
     },
@@ -487,9 +484,8 @@ export const th = {
         "heading": "แอปของนักเรียน และแอปของติวเตอร์",
         "description": "นักเรียนเข้าคลาสผ่าน LINE ติวเตอร์สอนผ่านแอปของติวเตอร์ ทั้งสองใช้เวิร์กบุ๊กที่พิมพ์เป็นเล่มชุดเดียวกัน",
         "items": [
-            { "caption": "หน้าแรกของนักเรียน: คลาสถัดไป บทเรียน และการฝึกพูดกับ Reedy", "alt": "หน้าแรกของแอปนักเรียน Tutor Advantage" },
-            // Alt draft (spec D-15a): PR corrects it to a student-app wording or confirms it.
-            { "caption": "หนึ่งบทเรียน 18 ช่วง แอปพาไปทีละขั้นตามเวิร์กบุ๊กที่พิมพ์เป็นเล่ม", "alt": "แอปติวเตอร์แสดง 18 ช่วงของบทเรียนหนึ่งบท" },
+            { "caption": "หน้าหลักของนักเรียน: คำทักทาย คลาสถัดไป และการ์ดคลาส การฝึกเสียงกับ Reedy เปิดใช้จริงสำหรับนักเรียนที่มีแพ็กเกจคลาสที่ยังใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว", "alt": "หน้าหลักแอปนักเรียน แสดงคลาสถัดไปและการ์ดคลาส" },
+            { "caption": "นักเรียนพิมพ์คำตอบในแอป ในบทเดียวกับหน้าที่พิมพ์เป็นเล่ม", "alt": "หน้าจอตอบคำถามสั้นในแอปนักเรียน พร้อมคำถามและคำตอบที่พิมพ์ไว้" },
             { "caption": "รายชื่อคลาสของติวเตอร์: วันนี้มีใครบ้าง และแต่ละคนอยู่บทไหน", "alt": "รายชื่อนักเรียนในคลาสหนึ่งของแอปติวเตอร์" }
         ]
     },
@@ -522,16 +518,14 @@ export const th = {
             "zero": "ใส่จำนวนนักเรียนเพื่อดูยอดของเดือน"
         },
         "chart": {
-            // Draft labels (spec D-9); PR confirms or replaces them.
-            "leg": "สายงาน",
-            "you": "เงินที่คุณได้รับ",
-            "volume": "ยอดรวม"
+            "legVolume": "ยอดรวมของสาย",
+            "legPayout": "ค่าคอมมิชชันของสาย",
+            "yourPayout": "ยอดจ่ายของคุณ"
         },
         "presets": [
             { "name": "ติวเตอร์ใหม่", "setup": "นักเรียนสี่คน ไม่มีเครือข่าย", "result": "ยอดรวม 12,000 บาท ที่อัตรา 46% ค่าคอมมิชชันก่อนหัก 5,520 บาท ไม่มีดาวน์ไลน์ จึงได้รับทั้งหมด หลังหักภาษีหัก ณ ที่จ่าย 3% เหลือ 5,354 บาท" },
             { "name": "ติวเตอร์ที่มีติวเตอร์ชั้นแรกสองคน", "setup": "นักเรียนของตัวเองสองคน และติวเตอร์ชั้นแรกสองคนที่มีนักเรียนคนละสามคน", "result": "ยอดรวมของเครือข่าย 24,000 บาท ที่อัตรา 52.7% ค่าคอมมิชชันก่อนหัก 12,656 บาท โดยติวเตอร์ชั้นแรกสองคนได้รับ 8,010 บาท เหลือจ่ายก่อนภาษี 4,646 บาท และหลังหักภาษีหัก ณ ที่จ่าย 3% เหลือ 4,506 บาท" },
-            // Draft wording (spec D-2a); PR replaces it when it delivers the new wording.
-            { "name": "ทีมเล็ก สามสายงาน", "setup": "นักเรียนของตัวเองสองคน และติวเตอร์ชั้นแรกสามคนที่มีนักเรียนคนละสามคน", "result": "ยอดรวมของเครือข่าย 33,000 บาท ที่อัตรา 56.7% ค่าคอมมิชชันก่อนหัก 18,709 บาท โดยติวเตอร์ชั้นแรกสามคนได้รับ 12,015 บาท เหลือจ่ายก่อนภาษี 6,694 บาท และหลังหักภาษีหัก ณ ที่จ่าย 3% เหลือ 6,494 บาท" }
+            { "name": "ทีมเล็กที่มีสามสาย", "setup": "นักเรียนในคลาสของคุณเอง 2 คน และ 3 สาย สายละ 4 คน", "result": "ยอดรวมของเครือข่าย 42,000 บาท ที่อัตรา 59.1% ยอดก่อนหักคือ 24,833 บาท และสามสายได้ค่าคอมมิชชัน 16,560 บาทจากยอดนี้ ยอดจ่ายคือ 8,273 บาทก่อนหักภาษี และ 8,025 บาทหลังหักภาษีหัก ณ ที่จ่าย 3%" }
         ],
         "disclaimer": "ตัวเลขทุกตัวในตัวอย่างนี้เป็นการอธิบายให้เห็นภาพ ค่าคอมมิชชันขึ้นอยู่กับคลาสที่เปิดสอนและมีการจ่ายเงินจริง"
     },
@@ -817,9 +811,8 @@ export const zh = {
         "heading": "The student app and the tutor app",
         "description": "A student joins the class in LINE. The tutor runs the class in the tutor app. Both follow the same printed workbook.",
         "items": [
-            { "caption": "The student's home: the next class, the lesson, and Reedy practice.", "alt": "Tutor Advantage student app home screen" },
-            // Alt draft (spec D-15a): PR corrects it to a student-app wording or confirms it.
-            { "caption": "One lesson, 18 phases. The app follows the printed workbook step by step.", "alt": "Tutor app showing the 18 phases of one lesson" },
+            { "caption": "The student's home: the greeting, the next class, and the class card. Reedy voice practice is live for students with an active class package, on lessons they completed.", "alt": "Student app home screen with the next class and the class card" },
+            { "caption": "The student types the answer in the app, on the same lesson as the printed page.", "alt": "Student app short-answer screen with the question and a typed answer" },
             { "caption": "The tutor's class list: who is in today's class and which lesson they are on.", "alt": "Tutor app class list with the students of one class" }
         ]
     },
@@ -853,16 +846,14 @@ export const zh = {
             "zero": "Add students to see a month."
         },
         "chart": {
-            // Draft labels (spec D-9); PR confirms or replaces them.
-            "leg": "Leg",
-            "you": "Your payout",
-            "volume": "Volume"
+            "legVolume": "Leg volume",
+            "legPayout": "Leg commission",
+            "yourPayout": "Your payout"
         },
         "presets": [
             { "name": "A new tutor", "setup": "Four students, no network.", "result": "12,000 baht of volume at a rate of 46%. The gross is 5,520 baht, and with no downline it is all payout. After 3% withholding tax: 5,354 baht." },
             { "name": "A tutor with two direct tutors", "setup": "Two own students, and two direct tutors with three students each.", "result": "24,000 baht of network volume at a rate of 52.7%. The gross is 12,656 baht, and the two direct tutors earn 8,010 baht of it. The payout is 4,646 baht before tax, and 4,506 baht after 3% withholding tax." },
-            // Draft wording (spec D-2a); PR replaces it when it delivers the new wording.
-            { "name": "A small team, three legs", "setup": "Two own students, and three direct tutors with three students each.", "result": "33,000 baht of network volume at a rate of 56.7%. The gross is 18,709 baht, and the three direct tutors earn 12,015 baht of it. The payout is 6,694 baht before tax, and 6,494 baht after 3% withholding tax." }
+            { "name": "A small team with three legs", "setup": "Two personal students, and three legs with four students each.", "result": "42,000 baht of network volume at a rate of 59.1%. The gross is 24,833 baht, and the three legs earn 16,560 baht of it. The payout is 8,273 baht before tax, and 8,025 baht after 3% withholding tax." }
         ],
         "disclaimer": "Every figure in these examples is an illustration. Commission depends on the classes that run and are paid for."
     },

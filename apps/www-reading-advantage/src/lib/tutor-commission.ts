@@ -233,6 +233,6 @@ export const NETWORK_PRESETS: readonly NetworkInput[] = [
   {
     price: CLASS_PRICE_DEFAULT,
     personalStudents: 2,
-    studentsPerLeg: [3, 3, 3],
+    studentsPerLeg: [4, 4, 4],
   },
 ];

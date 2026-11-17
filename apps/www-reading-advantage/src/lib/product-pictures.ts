@@ -66,7 +66,7 @@ export const tutorScreens = {
     height: 1125,
     portrait: false,
   },
-  lessonPhases: {
+  shortAnswer: {
     src: "/images/products/tutor-advantage/student-mobile/002-screen.webp",
     width: 520,
     height: 1125,

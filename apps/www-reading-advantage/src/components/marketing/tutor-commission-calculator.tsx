@@ -46,7 +46,7 @@ export type TutorCommissionCalculatorProps = {
       net: string;
     };
     explain: { ownOnly: string; withDownline: string; zero: string };
-    chart: { leg: string; you: string; volume: string };
+    chart: { legVolume: string; legPayout: string; yourPayout: string };
     presets: readonly { name: string; setup: string; result: string }[];
   };
 };
@@ -320,10 +320,10 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
                 <div key={`graph-leg-${leg.leg}`}>
                   <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm">
                     <span className="font-medium text-site-navy">
-                      {copy.chart.leg} {leg.leg}
+                      {copy.chart.legPayout} {leg.leg}
                     </span>
                     <span className="tabular-nums text-site-body">
-                      {copy.chart.volume} {formatMoney(leg.volume)}
+                      {copy.chart.legVolume} {formatMoney(leg.volume)}
                     </span>
                     <span className="ml-auto font-semibold tabular-nums text-emerald-900">
                       {formatMoney(leg.payout)}
@@ -340,7 +340,7 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
 
               <div>
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm">
-                  <span className="font-medium text-site-navy">{copy.chart.you}</span>
+                  <span className="font-medium text-site-navy">{copy.chart.yourPayout}</span>
                   <span className="ml-auto font-semibold tabular-nums text-emerald-900">
                     {formatMoney(result.preTax)}
                   </span>
