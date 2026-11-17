@@ -166,7 +166,7 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   measure/doctor.sh` exits 1 at its architecture step on a pre-existing analyzer snapshot hash
   mismatch; that step covers `packages/architecture-enforcement`, which this task does not touch.
 
-- [ ] 1.8 Run the Phase 1 gates and check the page by hand. Test: AC-11, AC-12.
+- [x] 1.8 Run the Phase 1 gates and check the page by hand. Test: AC-11, AC-12.
 
   - www suite: `pnpm --filter www-reading-advantage test --reporter=dot --silent=true`.
   - Types: `pnpm turbo run check-types --filter=www-reading-advantage`.
@@ -176,8 +176,41 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   - Dev server by hand: 390, 980, and 1280 px, each preset, the leg count from 0 to 4, one hand
     edit, and the keyboard path through the inputs. Record the captures under the track folder.
 
-  Done: every command exits 0 and the captures show the result rows adding up
-  (`gross - downline - tax = net`) and the graph rows adding up to the gross.
+  Done: 2026-11-17, on HEAD `4c4153b04`. The five gates exit 0:
+
+  1. `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+     www-reading-advantage test --reporter=dot --silent=true'` exit 0: `Test Files 65 passed
+     (65)`, `Tests 2533 passed (2533)`.
+  2. `pnpm turbo run check-types --filter=www-reading-advantage` exit 0. The first run replays a
+     cache hit on unchanged inputs; a `--force` rerun exits 0.
+  3. `pnpm --filter www-reading-advantage lint` exit 0 with no output, so no `shadcn/*` error in a
+     touched file.
+  4. `git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json` exit 0.
+  5. `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+     www-reading-advantage build'` exit 0. The first attempt exits 1 on the Next.js
+     security-advisory nudge after the route table prints; the same command retried exits 0.
+
+  Captures: `measure/runs/www_tutor_calculator_20261117/p1-captures/` holds 66 PNGs and
+  `p1-checks.json`. The run uses the built app on port 3107 (`pnpm --filter
+  www-reading-advantage start`), `/en/` and `/th/products/tutor-advantage`, and 390, 980, and
+  1280 px.
+
+  Checks, each verified at both locales and the three widths:
+  - no horizontal scroll at 390 px in every state;
+  - the order `#become-a-tutor` then `tutor-calculator` then `tutor-commitments`;
+  - `gross - downline - tax = net` on every preset and leg state, for example preset 3
+    `18,709.44 - 12,015 - 200.83 = 6,493.61`;
+  - the graph rows add up to the gross, for example preset 3 `4,005 + 4,005 + 4,005 + 6,694.44 =
+    18,709.44`;
+  - the graph leg rows equal the leg count from 0 to 4;
+  - exactly one preset is pressed after a click, and none after an edit;
+  - a typed price of 5,000 returns to 3,000 when a preset is picked;
+  - a new leg starts at 3 students;
+  - Thai text renders in the calculator at 390, 980, and 1280 px;
+  - the Tab path reaches the three presets and all five inputs at two legs.
+
+  `bash measure/doctor.sh` was not run as a gate here: a pre-existing architecture snapshot hash
+  mismatch fails it, and no file in this track touches that check.
 
 - [ ] 1.9 Checkpoint Phase 1. Test: AC-11.
 
