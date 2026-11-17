@@ -693,6 +693,22 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   src/lib/tutor-commission.test.ts src/lib/tutor-commission.adversarial.test.ts --reporter=dot
   --silent=true --maxWorkers=1` exits 0. The eleven-file gate of task 3.1 exits 0.
 
+- [~] 3.5a Red: pin the settlement eligibility rule. Test: AC-21.
+
+  The settlement service pays 0 to a tutor with no personal volume and at least one child
+  (spec D-18). The module test pins 0 payout before tax, 0 tax, and 0 net for 0 personal
+  students and one or more legs. It keeps the network volume, the rate, the gross, and the leg
+  commissions. It pins the `zero` variant. The component test renders 0 personal students with
+  one leg of 3 students, in en and th, and reads a net payout of 0 and the `explain.zero` line.
+  The existing cases stay unchanged; a tutor with personal students keeps the preset figures.
+
+- [ ] 3.5b Green: pay 0 to a tutor with legs and no personal students. Test: AC-21.
+
+  Apply the settlement rule after the leg deduction: when the clamped personal student count is
+  0 and the leg count is 1 or more, set the payout before tax, the tax, and the net to 0.
+  `explainVariant` returns `zero` for that input. Keep the network volume, the rate, the gross,
+  and the leg commissions. The three presets and the own-only inputs do not move.
+
 - [ ] 3.6 Run the Phase 3 gates. Test: AC-11, AC-12, AC-16.
 
   The gate block of section 8, with the ten targeted files of task 3.1. The app selector prints `["www-reading-advantage"]`.

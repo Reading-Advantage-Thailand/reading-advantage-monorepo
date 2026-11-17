@@ -6,7 +6,7 @@
 import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it } from "vitest";
-import { en } from "@/locales/pages/products/tutor-advantage";
+import { en, th } from "@/locales/pages/products/tutor-advantage";
 import { TutorCommissionCalculator } from "./tutor-commission-calculator";
 
 const copy = en.calculator;
@@ -335,5 +335,64 @@ describe("TutorCommissionCalculator rate curve card", () => {
     expect(pointLine?.textContent).toBe(`${copy.graph.ratePoint} · 59.1%`);
 
     expect(curve).toHaveAttribute("aria-hidden", "true");
+  });
+});
+
+describe("TutorCommissionCalculator settlement eligibility (spec D-18, AC-21)", () => {
+  /** Returns the net figure shown under the net label of a rendered result card. */
+  function netFigure(copyBlock: typeof copy): string {
+    const region = resultRegion();
+    const netLabel = within(region).getByText(copyBlock.results.net);
+    const hero = netLabel.parentElement?.querySelectorAll("p")[1];
+    if (!hero) throw new Error("no net figure in the result card");
+    return hero.textContent ?? "";
+  }
+
+  it("shows a net payout of 0 and the zero line for 0 own students and one leg of 3 in en", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    const count = legCountInput();
+    await user.clear(count);
+    await user.type(count, "1");
+
+    expect(resultValue(copy.results.networkGV)).toBe("9,000");
+    expect(resultValue(copy.results.legCommissions)).toBe("4,005");
+    expect(resultValue(copy.results.tax)).toBe("0");
+    expect(netFigure(copy)).toBe("0");
+
+    const region = resultRegion();
+    expect(within(region).getByText(copy.explain.zero)).toBeInTheDocument();
+    expect(within(region).queryByText(copy.explain.withLegs)).toBeNull();
+  });
+
+  it("drops the two-leg payout to 0 and shows the zero line in en", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    const count = legCountInput();
+    await user.clear(count);
+    await user.type(count, "2");
+
+    expect(resultValue(copy.results.networkGV)).toBe("18,000");
+    expect(resultValue(copy.results.legCommissions)).toBe("8,010");
+    expect(resultValue(copy.results.tax)).toBe("0");
+    expect(netFigure(copy)).toBe("0");
+    expect(within(resultRegion()).getByText(copy.explain.zero)).toBeInTheDocument();
+  });
+
+  it("shows a net payout of 0 and the Thai zero line for 0 own students and one leg of 3 in th", async () => {
+    const thCopy = th.calculator;
+    const user = userEvent.setup();
+    render(<TutorCommissionCalculator copy={thCopy} />);
+
+    const count = screen.getByRole("spinbutton", {
+      name: labelPattern(thCopy.inputs.legCount),
+    });
+    await user.clear(count);
+    await user.type(count, "1");
+
+    expect(netFigure(thCopy)).toBe("0");
+    expect(
+      within(resultRegion()).getByText(thCopy.explain.zero),
+    ).toBeInTheDocument();
   });
 });

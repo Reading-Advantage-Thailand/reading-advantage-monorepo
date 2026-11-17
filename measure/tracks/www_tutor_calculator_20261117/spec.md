@@ -333,6 +333,36 @@ downline, second-level, or direct-tutor key, and any pre-tax label are removed. 
 uses the five student slots of PR section 2, in that order; the 070 and `tutor-desktop/062`
 files and their manifest keys are removed.
 
+### D-18 The calculator pays 0 to a tutor with legs and no own students (Phase 3)
+
+The page copy says, "The calculator uses the same formula as our settlement system." The
+settlement service pays 0 to a tutor who has no personal volume and at least one child. The
+source is
+`/home/daniebo/Desktop/tutor-advantage/services/finance-mlm-service/src/services/settlementService.ts:536-548`:
+
+```
+let payoutForMe = calculatePayoutMinor(node.groupVolumeMinor, myRate) - childPayouts;
+if (payoutForMe < 0n) payoutForMe = 0n;
+if (node.personalVolumeMinor === 0n && children.length > 0) {
+  node.eligibilityStatus = "INELIGIBLE_NO_PV";
+  payoutForMe = 0n;
+}
+```
+
+The calculator takes the own student count and one student entry per leg. A leg is a child,
+so a leg count of 1 or more is `children.length > 0`. No personal students is
+`node.personalVolumeMinor === 0n`, after the clamp.
+
+Decision: when the clamped personal student count is 0 and the leg count is 1 or more, the
+payout before tax is 0, the withholding tax is 0, and the net payout is 0. The network volume,
+the rate, the gross, and the leg commissions keep their present values, because settlement
+still computes them. `explainVariant` returns `"zero"` for that input. This is the orchestrator
+default until PR supplies a dedicated line, so no locale key is added.
+
+The other inputs keep their present behavior. A personal student count of 0 with no legs gives
+volume 0 and the `"zero"` variant. A personal student count of 1 or more gives the figures of
+D-2.
+
 ## 5. Phase 1: the calculator
 
 ### 5.1 Files
@@ -701,6 +731,13 @@ Constraints on the gates:
 - **AC-20.** Tax rounds half up as `(payoutSatang * 3n + 50n) / 100n`. Gross stays truncated.
   The three preset figures do not move. No test reads production source as text or computes a
   hash.
+- **AC-21.** For 0 personal students and 1 or more legs, the payout before tax, the tax, and the
+  net are 0, and `explainVariant` returns `zero` (D-18). The network volume, the rate, the gross,
+  and the leg commissions keep their present values. One leg with 0 students and 0 personal
+  students still gives volume 0 and the `zero` variant. A personal student count of 1 or more
+  keeps the preset figures. The component shows a net payout of 0 and the `explain.zero` line
+  for 0 personal students and one leg with 3 students, in en and th. No test reads production
+  source as text or computes a hash.
 
 ## 10. Open questions
 
