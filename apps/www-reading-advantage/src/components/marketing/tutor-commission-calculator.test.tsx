@@ -112,6 +112,15 @@ function graphBarValue(label: string): string {
   return value.textContent ?? "";
 }
 
+/** Returns the money value shown beside a graph total label. */
+function graphTotalValue(label: string): string {
+  const term = screen.getByText(label);
+  const row = term.closest("div");
+  const value = row?.querySelector("dd");
+  if (!value) throw new Error(`no graph total value for ${label}`);
+  return value.textContent ?? "";
+}
+
 /** Returns the hero net figure shown under the net label in the result card. */
 function heroValue(): string {
   const paragraphs = Array.from(resultRegion().querySelectorAll("p"));
@@ -231,7 +240,8 @@ describe("TutorCommissionCalculator presets", () => {
     expect(resultValue(copy.results.rate)).toBe("59.1%");
     expect(resultValue(copy.results.gross)).toBe("24,833.45");
     expect(resultValue(copy.results.legCommissions)).toBe("16,560");
-    expect(hasFigure("8,273.45")).toBe(true);
+    expect(graphTotalValue(copy.graph.netBar)).toBe("8,025.25");
+    expect(hasFigure("8,273.45")).toBe(false);
     expect(resultValue(copy.results.tax)).toBe("248.20");
     expect(heroValue()).toBe("8,025.25");
 
@@ -303,7 +313,8 @@ describe("TutorCommissionCalculator presets", () => {
     expect(resultValue(copy.results.gross)).toBe("12,655.69");
     expect(resultValue(copy.results.legCommissions)).toBe("8,010");
     expect(resultValue(copy.results.tax)).toBe("139.37");
-    expect(hasFigure("4,645.69")).toBe(true);
+    expect(graphTotalValue(copy.graph.netBar)).toBe("4,506.32");
+    expect(hasFigure("4,645.69")).toBe(false);
     expect(hasFigure("4,506.32")).toBe(true);
 
     expect(screen.getByText(copy.presets[1].setup)).toBeInTheDocument();
