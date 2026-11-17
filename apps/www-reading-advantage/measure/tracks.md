@@ -4,6 +4,18 @@ This file tracks all major tracks for project. Each track has its own detailed p
 
 ---
 
+## [x] Track: www Products Images Faded or Blurred
+
+**Status:** Completed 2026-11-15 (pushed 11aa5068a, www deploy run 43666163019 success; earlier deploy run 43663295522 success at ea0bda240)
+
+**Type:** bug (light lane) | **Estimated Tasks:** 7
+
+**Description:** Product page images and cards render stuck faded or blurred despite HTTP 200 image URLs. Fix the render-state cause with a regression test, content visible under both motion settings, and check every www page with the same pattern.
+
+_Link: [./measure/tracks/www_products_images_20261115/](./measure/tracks/www_products_images_20261115/)_
+
+---
+
 ## [ ] Track: www Design Refresh
 
 **Status:** In progress 2026-10-02

@@ -1,0 +1,28 @@
+# Spec Review: www_products_photos_20261115
+
+## Round 2
+
+### What this track proposes
+The track restores real photos on the www products page at every viewport width and stops a repeat with tests. It fixes what is still wrong at HEAD: the text box that covers the blended-learning photo, the missing Tutor section picture, the squeezed pictures at 1024 px, and the covered home hero. It adds a Playwright e2e (each photo loaded, visible, at most 30 percent covered, with a 100 px short side and a 5 percent aspect assertion, at 390, 980, 1024, and 1280 px, in en and th), a HeroSection unit test, and it runs the e2e twice: in the ci.yml affected job and in the www CD workflow before the deploy step, so a failing e2e stops the deploy.
+
+### How the current system works, per this spec
+Commit 8193625ca already removed the hidden xl:block wrapper from the products hero and added 8 product pictures, and those load at all four widths. The services/blended-learning photo stays covered by the See How We Report Results overlay, the Tutor section has no picture, and the home hero photo is 40 percent covered at 390 px. The ci.yml affected job builds, lints, type-checks, and tests www-reading-advantage but runs no e2e; the www CD deploys on push and needs only its own select job. The ci.yml job Build, Lint, and Test is red on master for an unrelated architecture-check cause, so the e2e gate goes into the CD job itself rather than a CD-needs-CI link.
+
+### Findings
+- F5 [Nit] spec.md AC-3(b) and plan.md Runner facts part (b): the start command is an open "or" — "next start -p 3123 or node .next/standalone/server.js". Rationale: the standalone output does not include public/ or .next/static, so the server.js option needs a copy step the plan does not name, and a naive pick fails the e2e for a reason Red did not choose. The app builds standalone output (next.config.ts line 17), so both options work, but only next start needs no extra step. Name next start -p 3123 as the command and drop the alternative.
+
+MEASURE_AGENT_RESULT
+role: spec-review
+status: complete
+track: www_products_photos_20261115
+phase: track setup
+baseline: 756471bd5
+head: 40419d4bc1f3a712f295acd7a6fc8939c8b6d69a
+result_file: measure/runs/www_products_photos_20261115/spec-review-40419d4bc.json
+commits: none (report-only role; the reviser commit 40419d4bc precedes this run)
+tests_run: git rev-parse HEAD (pass, equals audited head); read of revised spec.md and plan.md; grep of next.config.ts for output/standalone (pass, line 17)
+files_changed: measure/runs/www_products_photos_20261115/spec-review-40419d4bc.json; measure/runs/www_products_photos_20261115/spec-review-40419d4bc.log (this block rewrite)
+plan_updates: none (review-only; no track document edited)
+known_failures: none blocking; one Nit (F5) remains — AC-3(b) start command is an open "or"; name next start -p 3123 and drop the standalone alternative
+handoff: Round 2 pass. F1, F2, F3, F4 withdrawn — all closed by revision 40419d4bc. One new Nit (F5). The extra next build in the deploy job (4 to 6 minutes) is a recorded trade-off and not a finding. No owner question remains; retry_recommendation none. The author fixes F5 (one line in spec.md and plan.md), then Red starts.
+END_MEASURE_AGENT_RESULT

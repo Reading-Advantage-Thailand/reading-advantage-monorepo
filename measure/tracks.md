@@ -44,6 +44,16 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
+- [~] **Track: www daily blog posts of PR** — *created 2026-11-15*
+  *Link: [./tracks/www_daily_blog_posts_20261115/](./tracks/www_daily_blog_posts_20261115/)*
+  *Status: active, light lane; post 2026-11-15 (`a-five-year-old-reads-by-herself`) live; one task per post; the track stays open for later daily posts | Owner: Monorepo orchestrator | PM task A-61 follow-up*
+  *Note: PR's daily posts in en and th, written from `apps/www-reading-advantage/docs/blog-post-format.md` (track `www_blog_rich_format_20261115`). www-only push is standing-approved (Daniel 2026-11-15).*
+
+- [ ] **Track: www Tutor Advantage calculator and screens** — *created 2026-11-17*
+  *Link: [./tracks/www_tutor_calculator_20261117/](./tracks/www_tutor_calculator_20261117/)*
+  *Status: new, opened 2026-11-17; Phase 1 (commission calculator with the payout graph) first, no push; Phase 2 (blurred screens, the gallery, the two live lines) can start at once, because the set arrived 2026-11-17 | Owner: Monorepo orchestrator | PM assignment A-63 (Daniel, Google Tasks R2t2eF9Z) | Due 2026-11-21*
+  *Note: Daniel's shape of 06:50 ICT: personal students, legs with students by leg, and a graph of the payout. One level: the leg payouts come off rate x GV, and the three parts add up to the gross. Every figure is an example. Three gallery captions have a screen (student 070, student 002, tutor 062); `network` and `earnings` have none, and `studentHome` names Reedy practice, which no screen shows, so three answers wait with PR. Preset 3 and the three chart labels are drafts. No deploy; the www-only push follows the PM page-check at 390, 980, and 1280 px.*
+
 - [x] **Track: Primary class code: six hours** — *created 2026-11-12*
   *Link: [./tracks/primary_class_code_six_hours_20261112/](./tracks/primary_class_code_six_hours_20261112/)*
   *Status: complete; six-hour codes and automatic latest routing live, isolated production QA fixture created, actual Class sign-in screenshot captured (13:30 to19:30 Bangkok).*
@@ -1273,6 +1283,24 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
   *Status: active, standing (no end date); Phase 0 open | Priority: MEDIUM | Requested by Daniel 2026-10-26 (tracks page, row E8)*
   *Note: PR keeps one www change list in its repository. Each Monday the PM orchestrator sends the new entries to Monorepo. This standing track builds them weekly. It replaces the two archived July www tracks.*
 
+- [x] **Track: www Monday batch 2026-11-16, rows A and B** — *created 2026-11-16, archived 2026-11-16*
+  *Link: [./archive/www_batch_20261116/](./archive/www_batch_20261116/)*
+  *Build the READY rows of the www change list batch of 2026-11-16: row A puts the 2027 school year on the Science, Math, and Zhongwen Advantage cards and changes the two limit features; row B says that the Storytime Advantage first unit launches on 30 November 2026 as interim copy. The stapler row of 2026-11-05 (TH-184) goes in one separate last commit.*
+  *Status: done, opened 2026-11-16, archived 2026-11-16; 10 tasks done, no deferred task | Owner: Monorepo orchestrator | Source: batch v1.2, change list v1.39 | The work is in the range `146a2cd15..9a9ae9aea` on `origin/master`. CD runs 43798094094 and 43806994592 passed. The PM page-check of rows A and B passed on 2026-11-16 (`~/Desktop/handoff/page-check/20261116-1121/`); the detail-page rows and the Science GSE labels wait for the PM re-check.*
+  *Note: Row A puts the 2027 school year on the Science, Math, and Zhongwen cards of `/products` and changes the two limit features. Row B sets the Storytime Advantage first unit on 30 November 2026. The en and th copy comes from the change list, word for word; Daniel checked the Thai on 2026-11-16. No zh change: the zh lines Z19 to Z28 are machine drafts. The orchestrator live check of 2026-11-16 found the six detail URLs at HTTP 200, with no no-release-date sentence and no `GSE`; the notify line reads "<Product> is on our roadmap. We will keep your email for news.".*
+
+- [x] **Track: www: GSE out of customer copy** — *created 2026-11-16, archived 2026-11-16*
+  *Link: [./archive/www_gse_guard_20261116/](./archive/www_gse_guard_20261116/)*
+  *Remove the GSE labels from the two Reading Advantage marketing mockups and add a vitest guard that blocks GSE, Global Scale of English, Pearson, and YLE in www customer copy. The blog post the-advantage-engine-kst-srs stays unchanged and sits on an explicit PENDING list for the PM decision.*
+  *Status: done, opened 2026-11-16, archived 2026-11-16; 8 tasks done, no deferred task | Owner: Monorepo orchestrator | PM final-check gate 2026-11-16 | The work is in `9f7a75b01`, `51ddd4aef`, `3b4bda109`, and `0c7d3485a` on `origin/master`. CD run 43808443454 passed. The live page `/products/reading-advantage` in en and th returned HTTP 200 and holds no `GSE`. The PM runs the page-check.*
+  *Note: PM decision 2026-11-16: "GSE leaves all customer copy (CEFR only)". The Reading mockups lose their three GSE labels. `no-gse-in-customer-copy.test.ts` blocks GSE, Global Scale of English, Pearson, and YLE in customer copy. The pending list holds one item: the blog post `the-advantage-engine-kst-srs` in en and th, line 24. The PR sends the CEFR sentence.*
+
+- [x] **Track: www STEM Advantage release-date line** — *created 2026-11-16, archived 2026-11-16*
+  *Link: [./archive/www_stem_date_line_20261116/](./archive/www_stem_date_line_20261116/)*
+  *Delete the release-date text from the STEM Advantage page in en and th at six places. Deletions only, no new copy. The zh lines stay as they are.*
+  *Status: done, opened 2026-11-16, archived 2026-11-16; 6 tasks done, no deferred task | Owner: Monorepo orchestrator | PM decision 2026-11-16 | The work is in `f6055a4aa`, `bae6053da`, and `8aeb92028` on `origin/master`. CD run 43816539480 passed. The live en and th pages returned HTTP 200 and hold no release or launch date text.*
+  *Note: "STEM keeps no date and the page says nothing about one. No new copy." The zh lines keep `暂无发布日期` and stay as they are. No other page changes. `www-stem-date-line.locale.test.ts` holds the six kept strings word for word.*
+
 - [x] **Track: www Primary Advantage page revamp** — *created 2026-10-30*
   *Link: [./archive/www_primary_page_revamp_20261030/](./archive/www_primary_page_revamp_20261030/)*
   *Status: implementation accepted and archived 2026-11-03 at 5e719505257c6f7390d28c15a0dc7d09da15e643; final acceptance passed. Daniel approved Thai and v2 captures. Local-master merge, push, and deploy remain with Daniel under deferred:daniel-deploy. Carried findings are listed in tech-debt.md.*
@@ -1286,6 +1314,18 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
   *Link: [./archive/www_storytime_song_embed_20261104/](./archive/www_storytime_song_embed_20261104/)*
   *Status: implementation accepted and archived 2026-11-04 at 1ac346337325d69d2d121e67913423935ad0f78f. Review C passed at audited head 84b37333edf9f1d2695525e5644105297751fe32 with 0 blocking findings and 2 notes. The fix round 1 commit 309f0c9fa closed both notes, and the evidence commit is f3611d47c. Daniel accepted the look on 2026-11-04 at 14:51 ICT. The push to origin/master, the local merge d5a315686, the deploy run 41796713212, and the live check at 15:2x ICT on 2026-11-04 are complete. The CI run 41796713259 at f3611d47c failed only on the step "Architecture boundary check", which track A-32 owns. The zh song strings stay a draft for a contracted Chinese speaker.*
   *Note: Daniel 2026-11-04, Google Tasks bms4Ujg2bEQ3TFNsNlVqYg: "Storytime Advantage www page - add song embed". One song section with a click-to-load player: a local poster before the tap, the phone video under 768 px, the desktop video from 768 px, and no request to any video host before the tap. The en, th, and zh strings come from hand-off v0.2. The Thai passed Daniel's look check. The zh song strings go live, and a contracted Chinese speaker checks them after the push.*
+
+- [x] **Track: www products page photos** — *created 2026-11-15, archived 2026-11-16*
+  *Link: [./archive/www_products_photos_20261115/](./archive/www_products_photos_20261115/)*
+  *The www products page showed one hidden hero photo and no product pictures. Find the root cause, pin it with Playwright and unit tests that check what a reader sees at 390, 980, 1024, and 1280 px, and fix what is still wrong.*
+  *Status: done, opened 2026-11-15, archived 2026-11-16; the Phase 1 acceptance is 23c29d89a and the final acceptance at 23c29d89a passed on 2026-11-16 | Owner: Monorepo orchestrator | PM assignment A-62 | Priority: P1 | 4 tasks done; no deferred task | AC-3a waits on the `blog-blocks.test.ts` timeout in ci_green_master_20261115*
+  *Note: Daniel passed the look of the live page with "Ok" in Tasks at 2026-11-16 07:38 ICT, relayed by the PM. The PM page-check passed 2026-11-16 06:15 (`~/Desktop/handoff/page-check/20261116-0615/`). The report-results card stays stacked at every width, against AC-4; no text covers the photo. The track report and the closeout manifest sit in the archive folder.*
+
+- [x] **Track: shadcn lint ratchet** — *created 2026-11-15, archived 2026-11-16*
+  *Link: [./archive/shadcn_lint_ratchet_20261115/](./archive/shadcn_lint_ratchet_20261115/)*
+  *Add a CI ratchet for @shadcn/lint warnings on the app components/ui folders and for the count of local shadcn component copies. Both counts compare with a committed baseline and fail only when a count goes up. Step 1 of PM order A-32.*
+  *Status: done, opened 2026-11-15, archived 2026-11-16; 9 tasks done, no deferred task | Owner: Monorepo orchestrator | PM order A-32 step 1 | The gate counts the four `@shadcn/lint` rules that do not read the Tailwind theme. CI run 43798094179 on `e502b81f0` passed the steps "Install shadcn lint plugin" and "Shadcn lint ratchet"; that job failed later on "Architecture boundary check", which is PC-4 and another session.*
+  *Note: the gate compares both counts with `scripts/ci/shadcn-ratchet-baseline.json` and fails only when a count goes up. Fixing the findings and moving the copies into `packages/ui` is out of this track.*
 
 - [x] **Track: Update Science Advantage Product Page** *Link: [./archive/www_science_product_update_20260517/](./archive/www_science_product_update_20260517/)*
   Update marketing page from "Coming 2025" to reflect actual implemented features: student dashboards, teacher intervention alerts, AI recommendations, NGSS-aligned curriculum. Add real screenshots and role-based CTAs. *Status: COMPLETE — Page updated with Early Access badge, student features (join classes, interactive lessons, progress tracking, AI recommendations), teacher features (intervention alerts, class analytics, student progress, assignments), and platform features. All 7 tests passing, lint clean. Commit: 1c384a1*
@@ -1677,3 +1717,22 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 - [ ] **Track: Master push readiness** — *created 2026-11-12*
   *Link: [./tracks/master_push_readiness_20261112/](./tracks/master_push_readiness_20261112/)*
   *Status: Phase 1 accepted 2026-11-13 at be528a025 (phase-acceptance pass, route opencode/minimax-m3.1-flash-free#high; nine nonblocking findings recorded in the plan; Review A and Review B pass at b7180a7f4, the adversarial run passes at a8a336ea8 with 10 of 10 mutants killed; PM decisions of 2026-11-13 07:20 recorded in the plan) | Chore, in-repo plan of PM assignment A-55 (master push of about 11-17), PM decisions 2 and 3 of 2026-11-12 | Owner chain: Daniel (owner; push word, traffic word) → Monorepo orchestrator (track owner) → PM orchestrator | Phase 1: move the codecamp scheduler step from the push file to the traffic file (default option B) | Tasks 1.7 (`deferred:pm`), 1.8 (`deferred:daniel-push`), and 1.9 (`deferred:push-list`) stay open; task 1.9 carries F602 and F701 as preconditions of the first codecamp traffic move | Phase 2 starts after the deploy word list goes to Daniel; it holds the 4 old Primary test failures and the 2 suites that do not load, not a push blocker | Deferred: `deferred:pm` for the Cloud Build scheduler IAM grant, `deferred:daniel-push` for the cd-apps run after the push (no run id yet)*
+
+- [x] **Track: www blog rich post format** — *created 2026-11-15, completed 2026-11-15*
+  *Link: [./tracks/www_blog_rich_format_20261115/](./tracks/www_blog_rich_format_20261115/)*
+  *Status: completed (pushed 6e5f78fc4, www deploy run 43657768544 success) | Feature, light lane, PM task A-61 | Inline images, YouTube, short video, galleries, pull quotes, callouts, and a draft flag for www blog posts; www-only push*
+
+- [ ] **Track: CI green on master** — *created 2026-11-15*
+  *Link: [./tracks/ci_green_master_20261115/](./tracks/ci_green_master_20261115/)*
+  *Status: round 3 pushed at a54b5741a (CI run 43686964616): PC-1 www lint, PC-2 manifest
+  hashes (refreshed twice; concurrent pushes stale the report pin), and PC-3 analyzer parse
+  errors are green in CI. PC-5 fixed on branch ci/primary-lint at 39649dca8 (pushed to
+  origin, merges with the next Primary deploy); master keeps the 13 primary lint errors as
+  the one allowed job failure. PC-4 is the only remaining cause on master and is reported:
+  every baseline write route is closed by the Gate 1 v1 freeze and the v1-to-v2 mirror, and
+  the Hashing and Provenance Policy forbids the acceptedSha256 route (strategy doc Q11);
+  the ledger is debt-ledger.v1.json. PC-6 is reported: the primary and storytime page
+  revamps broke the Oct-27 ink thresholds; a threshold or page decision belongs to the www
+  owner. Track stays open for the PM route decision on PC-4 and the www owner decision on
+  PC-6 | Chore, light lane, PM order 2026-11-15 | Run 43667794723 at 8d3cb8233 |
+  Done when ci.yml passes on master except the PC-5 job (2026-11-17)*

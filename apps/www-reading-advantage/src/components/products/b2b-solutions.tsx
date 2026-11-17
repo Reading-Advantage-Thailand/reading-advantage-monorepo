@@ -13,7 +13,10 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
+import { siteLogos } from "@/lib/site-assets";
 import { ArrowRight } from "lucide-react";
+import ProductPicture from "@/components/products/product-picture";
+import { productPictures, type ProductPictureFile } from "@/lib/product-pictures";
 
 type ProductKey =
   | "primaryAdvantage"
@@ -25,8 +28,14 @@ type ProductKey =
   | "storytimeAdvantage"
   | "codecampAdvantage";
 
+type PictureAltKey =
+  | "products.readingAdvantage.imageAlt"
+  | "products.primaryAdvantage.imageAlt"
+  | "products.storytimeAdvantage.imageAlt";
+
 interface ProductConfig {
   key: ProductKey;
+  picture?: { file: ProductPictureFile; altKey: PictureAltKey };
   href: string;
   bgColor: string;
   logo?: string;
@@ -55,9 +64,13 @@ const FEATURE_INDEXES = [0, 1, 2, 3] as const;
 const productConfigs: ProductConfigList = [
   {
     key: "readingAdvantage",
+    picture: {
+      file: productPictures.readingCover,
+      altKey: "products.readingAdvantage.imageAlt",
+    },
     href: "/products/reading-advantage",
     bgColor: "from-sky-50 to-sky-100",
-    logo: "/reading-advantage.jpg",
+    logo: siteLogos.reading.square,
     icon: BookOpen,
     layout: "feature",
     badgeKey: "products.readingAdvantage.badge",
@@ -67,9 +80,13 @@ const productConfigs: ProductConfigList = [
   },
   {
     key: "primaryAdvantage",
+    picture: {
+      file: productPictures.primaryLesson,
+      altKey: "products.primaryAdvantage.imageAlt",
+    },
     href: "/products/primary-advantage",
     bgColor: "from-sky-50 to-sky-100",
-    logo: "/primary-advantage logo.png",
+    logo: siteLogos.primary.square,
     layout: "standard",
     badgeType: "new",
     gradientFrom: "from-sky-300",
@@ -80,7 +97,7 @@ const productConfigs: ProductConfigList = [
     key: "scienceAdvantage",
     href: "/products/science-advantage",
     bgColor: "from-rose-50 to-rose-100",
-    logo: "/science-advantage.png",
+    logo: siteLogos.science.square,
     icon: Beaker,
     badgeKey: "products.scienceAdvantage.badge",
     gradientFrom: "from-rose-400",
@@ -91,7 +108,7 @@ const productConfigs: ProductConfigList = [
     key: "mathAdvantage",
     href: "/products/math-advantage",
     bgColor: "from-orange-50 to-orange-100",
-    logo: "/math-advantage.png",
+    logo: siteLogos.math.square,
     icon: Calculator,
     badgeKey: "products.mathAdvantage.badge",
     gradientFrom: "from-orange-400",
@@ -102,7 +119,7 @@ const productConfigs: ProductConfigList = [
     key: "zhongwenAdvantage",
     href: "/products/zhongwen-advantage",
     bgColor: "from-fuchsia-50 to-purple-50",
-    logo: "/zhongwen-advantage.png",
+    logo: siteLogos.zhongwen.square,
     icon: Languages,
     badgeKey: "products.zhongwenAdvantage.badge",
     gradientFrom: "from-fuchsia-400",
@@ -111,9 +128,13 @@ const productConfigs: ProductConfigList = [
   },
   {
     key: "storytimeAdvantage",
+    picture: {
+      file: productPictures.storytimeSound,
+      altKey: "products.storytimeAdvantage.imageAlt",
+    },
     href: "/products/storytime-advantage",
     bgColor: "from-amber-50 to-amber-100",
-    logo: "/storytime-advantage.svg",
+    logo: siteLogos.storytime.square,
     icon: BookMarked,
     badgeKey: "products.storytimeAdvantage.badge",
     gradientFrom: "from-amber-400",
@@ -124,7 +145,7 @@ const productConfigs: ProductConfigList = [
     key: "stemAdvantage",
     href: "/products/stem-advantage",
     bgColor: "from-indigo-50 to-indigo-100",
-    logo: "/stem-advantage.png",
+    logo: siteLogos.stem.square,
     icon: Bot,
     badgeKey: "products.stemAdvantage.badge",
     gradientFrom: "from-indigo-400",
@@ -156,6 +177,7 @@ export default async function B2BSolutions() {
       t(`products.${config.key}.features.${featureIndex}`),
     );
     const gradeRange = t(`products.${config.key}.gradeRange`);
+    const imageAlt = config.picture ? t(config.picture.altKey) : undefined;
 
     const badgeLabel = config.badgeKey
       ? t(config.badgeKey)
@@ -171,6 +193,7 @@ export default async function B2BSolutions() {
       features,
       gradeRange,
       badgeLabel,
+      imageAlt,
     };
   });
 
@@ -196,6 +219,7 @@ export default async function B2BSolutions() {
             return (
               <Fragment key={product.key}>
                 <div
+                  data-testid={`product-block-${product.key}`}
                   className={`${
                     product.layout === "feature"
                       ? "col-span-full lg:col-span-2"
@@ -253,6 +277,15 @@ export default async function B2BSolutions() {
                         </span>
                       )}
                     </div>
+
+                    {product.picture && product.imageAlt && (
+                      <div className="relative z-10 mb-6">
+                        <ProductPicture
+                          picture={product.picture.file}
+                          alt={product.imageAlt}
+                        />
+                      </div>
+                    )}
 
                     {/* Content */}
                     <div className="mb-4 relative z-10">
@@ -314,18 +347,16 @@ export default async function B2BSolutions() {
                     className="animate-in fade-in zoom-in-95 duration-500"
                     style={{ "--delay": `${baseDelay + 50}ms` }}
                   >
-                    <div className="relative h-full flex flex-col items-center justify-center overflow-hidden p-8 rounded-2xl bg-white border border-sky-200 shadow-md hover:shadow-lg hover:-translate-y-2 transition-all duration-300">
-                      <div className="absolute inset-0 z-0">
-                        <Image
-                          src="/images/blended-learning.png"
-                          alt="Blended learning approach"
-                          fill
-                          sizes="(min-width: 1024px) 25vw, 100vw"
-                          className="object-cover opacity-75 blur-sm"
-                        />
-                      </div>
-                      <div className="absolute inset-0 z-10 bg-gradient-to-br from-white/40 to-white/20" />
-                      <div className="relative z-20 text-center space-y-3 bg-white/80 backdrop-blur-xs rounded-2xl px-6 py-4 shadow-md border border-white/50">
+                    <div className="flex h-full flex-col overflow-hidden rounded-2xl bg-white border border-sky-200 shadow-md hover:shadow-lg hover:-translate-y-2 transition-all duration-300">
+                      <Image
+                        src="/images/blended-learning.png"
+                        alt="Blended learning approach"
+                        width={800}
+                        height={1200}
+                        sizes="(min-width: 1024px) 25vw, 100vw"
+                        className="h-auto w-full"
+                      />
+                      <div className="space-y-3 p-6 text-center">
                         <p className="text-lg font-semibold text-slate-800">
                           {t("seeSuccessStories")}
                         </p>

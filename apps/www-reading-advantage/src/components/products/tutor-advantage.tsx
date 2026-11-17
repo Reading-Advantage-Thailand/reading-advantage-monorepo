@@ -3,6 +3,9 @@ import { Link } from "@/locales/navigation";
 import Image from "next/image";
 import { Network, Brain, GraduationCap, Clock, ArrowRight } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
+import { siteLogos } from "@/lib/site-assets";
+import ProductPicture from "@/components/products/product-picture";
+import { productPictures } from "@/lib/product-pictures";
 
 export default async function TutorAdvantage() {
   const t = await getScopedI18n("components.products.tutorAdvantage");
@@ -45,7 +48,7 @@ export default async function TutorAdvantage() {
               <div className="relative w-40 h-40">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent rounded-3xl blur-2xl" />
                 <Image
-                  src="/tutor-advantage.png"
+                  src={siteLogos.tutor.square}
                   alt="Tutor Advantage"
                   fill
                   sizes="10rem"
@@ -63,6 +66,14 @@ export default async function TutorAdvantage() {
             <p className="text-xl text-emerald-800 leading-relaxed max-w-3xl mx-auto">
               {t("description")}
             </p>
+          </div>
+
+          {/* Real app screen */}
+          <div className="mb-10 relative z-10">
+            <ProductPicture
+              picture={productPictures.tutorFlashcard}
+              alt={t("imageAlt")}
+            />
           </div>
 
           {/* Features grid */}

@@ -58,7 +58,7 @@ export default async function BlogPage({ params }: PageProps) {
           href: "/contact",
           variant: "primary",
         }}
-        height="medium"
+        height="compact"
       />
       <div className="container mx-auto px-4 py-8">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">

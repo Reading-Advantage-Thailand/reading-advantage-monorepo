@@ -1,0 +1,46 @@
+name: Capture real logos
+
+# Runs the committed capture spec on a CI runner and uploads the PNGs, so the
+# logo ink thresholds can be re-recorded from the CI environment instead of a
+# local machine (track ci_green_master_20261115, PC-6). Dispatch only: this
+# workflow costs nothing on a normal push.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    name: Capture the logo pages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          standalone: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright chromium
+        run: pnpm --filter www-reading-advantage exec playwright install --with-deps chromium
+
+      - name: Capture the pages
+        run: pnpm --filter www-reading-advantage exec playwright test e2e/real-logos-captures.spec.ts
+
+      - name: Upload the captures
+        uses: actions/upload-artifact@v4
+        with:
+          name: real-logos-captures
+          path: measure/tracks/www_real_logos_20261008/captures/

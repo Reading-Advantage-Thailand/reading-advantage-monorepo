@@ -1,0 +1,12 @@
+{
+  "track_id": "shadcn_lint_ratchet_20261115",
+  "type": "chore",
+  "lane": "light",
+  "status": "done",
+  "created_at": "2026-11-16T00:00:00Z",
+  "updated_at": "2026-11-16T00:00:00Z",
+  "completed": "2026-11-16",
+  "description": "Add a CI ratchet for @shadcn/lint warnings on the app components/ui folders and for the count of local shadcn component copies. Both counts compare with a committed baseline and fail only when a count goes up. Step 1 of PM order A-32.",
+  "estimated_tasks": 5,
+  "deviation_notes": "Two of the six @shadcn/lint rules are out: no-raw-colors and no-unknown-classes need a Tailwind theme build, and the build worker times out for primary-advantage and reading-advantage at every budget up to 120 s. The bundled fallback grammar is not stable enough for a ratchet, so the gate counts the four rules that do not read the theme. The plugin stays out of the workspace: no root devDependency and no pnpm-lock.yaml change, so the affected-app selector prints [] for a scripts-only change. CI installs the plugin into RUNNER_TEMP/shadcn-lint with npm, and the script loads it through SHADCN_LINT_DIR. A missing variable or plugin exits 2."
+}

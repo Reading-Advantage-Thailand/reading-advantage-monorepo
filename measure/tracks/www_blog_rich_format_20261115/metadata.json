@@ -1,0 +1,11 @@
+{
+  "track_id": "www_blog_rich_format_20261115",
+  "type": "feature",
+  "lane": "light",
+  "status": "completed",
+  "created_at": "2026-11-15T00:00:00Z",
+  "updated_at": "2026-11-15T00:00:00Z",
+  "description": "Add inline images, YouTube embeds, short videos, galleries, pull quotes, callouts, and a draft flag to the www blog post format.",
+  "estimated_tasks": 6,
+  "deviation_notes": "PM task A-61 from Daniel (2026-11-15): \"Blog post format needs to be improved to include inline images, videos, etc.\" www-only push is standing-approved (Daniel 2026-11-15)."
+}

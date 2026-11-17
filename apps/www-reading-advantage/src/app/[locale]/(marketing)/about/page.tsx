@@ -48,6 +48,7 @@ export default async function AboutPage() {
         }}
         height="medium"
         alignment="left"
+        textColor="dark"
       />
 
       {/* Introduction Section */}

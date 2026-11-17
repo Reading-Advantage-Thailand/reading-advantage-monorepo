@@ -3,7 +3,7 @@ export const en = {
     title: "Chinese Learning, Planned",
     subtitle: "On Our Roadmap · Planned",
     description:
-      "Zhongwen Advantage is on our roadmap. It is planned as a workbook line tagged to the Mastery Advantage knowledge graph. It has no release date.",
+      "Zhongwen Advantage is on our roadmap. It is planned as a workbook line tagged to the Mastery Advantage knowledge graph.",
     badge: "On Our Roadmap",
     ctaButton: "Tell Us You Are Interested",
     alt: "Digital Chinese language learning with cultural elements",
@@ -51,7 +51,7 @@ export const en = {
   waitlist: {
     joinWaitlist: "Tell Us You Are Interested",
     description:
-      "Zhongwen Advantage has no release date. We will keep your email for news.",
+      "Zhongwen Advantage is on our roadmap. We will keep your email for news.",
     emailPlaceholder: "Enter your email",
     subscribe: "Send",
   },
@@ -71,7 +71,7 @@ export const th = {
     title: "การเรียนภาษาจีน ในแผนงาน",
     subtitle: "อยู่ในแผนงาน · กำลังวางแผน",
     description:
-      "Zhongwen Advantage อยู่ในแผนงานของเรา วางแผนเป็นชุดแบบฝึกหัดที่เชื่อมกับกราฟความรู้ Mastery Advantage และยังไม่มีกำหนดวันเปิดตัว",
+      "Zhongwen Advantage อยู่ในแผนงานของเรา วางแผนเป็นชุดแบบฝึกหัดที่เชื่อมกับกราฟความรู้ Mastery Advantage",
     badge: "อยู่ในแผนงาน",
     ctaButton: "บอกเราว่าคุณสนใจ",
     alt: "การเรียนรู้ภาษาจีนดิจิทัลพร้อมองค์ประกอบทางวัฒนธรรม",
@@ -119,7 +119,7 @@ export const th = {
   waitlist: {
     joinWaitlist: "บอกเราว่าคุณสนใจ",
     description:
-      "Zhongwen Advantage ยังไม่มีกำหนดวันเปิดตัว เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
+      "Zhongwen Advantage อยู่ในแผนงานของเรา เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
     emailPlaceholder: "ป้อนอีเมลของคุณ",
     subscribe: "ส่ง",
   },

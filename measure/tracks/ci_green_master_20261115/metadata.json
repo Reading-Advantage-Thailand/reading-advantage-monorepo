@@ -1,0 +1,11 @@
+{
+  "track_id": "ci_green_master_20261115",
+  "type": "chore",
+  "lane": "light",
+  "status": "in-progress",
+  "created_at": "2026-11-15T00:00:00Z",
+  "updated_at": "2026-11-15T00:00:00Z",
+  "description": "Make CI on master green: ignore the built game bundles in www lint and refresh the stale architecture-check v2 manifest pins.",
+  "estimated_tasks": 5,
+  "deviation_notes": "PM order 2026-11-15: make CI on master green; push-often needs green CI. Failing run 43667794723 at 8d3cb8233, jobs \"Build, Lint, and Test\" and \"Check www-reading-advantage\"."
+}

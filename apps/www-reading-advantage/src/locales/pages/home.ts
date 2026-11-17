@@ -45,9 +45,9 @@ export const en = {
                 meta: "About 12 to 15 weeks.",
             },
             roadmapLabel: "On our roadmap",
-            roadmapNote: "These product lines are planned. We give no dates.",
+            roadmapNote: "These product lines are planned.",
             roadmapTag: "Planned",
-            storytimePreparingLabel: "First unit being prepared",
+            storytimePreparingLabel: "Launches 30 November 2026",
         },
         schools: {
             imageAlt: "A teacher at the board while students work from printed workbooks and tablets.",
@@ -104,7 +104,7 @@ export const en = {
         eyebrow: "The suite",
         title: "Three live product lines. More on the roadmap.",
         description:
-            "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. Science, Math, Zhongwen, and STEM Advantage are on our roadmap, with no dates. The first Storytime Advantage unit is being prepared.",
+            "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. Science, Math, Zhongwen, and STEM Advantage are on our roadmap. The first Storytime Advantage unit launches on 30 November 2026.",
     },
     mission: {
         title: "Student Success Is Our Mission",
@@ -270,9 +270,9 @@ export const th = {
                 meta: "ประมาณ 12 ถึง 15 สัปดาห์",
             },
             roadmapLabel: "อยู่ในแผนงานของเรา",
-            roadmapNote: "สายผลิตภัณฑ์เหล่านี้อยู่ในแผน เรายังไม่กำหนดวันที่",
+            roadmapNote: "สายผลิตภัณฑ์เหล่านี้อยู่ในแผน",
             roadmapTag: "อยู่ในแผน",
-            storytimePreparingLabel: "กำลังจัดเตรียมหน่วยแรก",
+            storytimePreparingLabel: "เปิดตัววันที่ 30 พฤศจิกายน 2569",
         },
         schools: {
             imageAlt: "ครูยืนหน้ากระดานขณะที่นักเรียนเรียนจากสมุดงานที่พิมพ์และแท็บเล็ต",
@@ -329,7 +329,7 @@ export const th = {
         eyebrow: "ชุดผลิตภัณฑ์",
         title: "สามสายผลิตภัณฑ์ที่เปิดใช้งานแล้ว และอีกหลายสายอยู่ในแผนงาน",
         description:
-            "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก Science, Math, Zhongwen และ STEM Advantage อยู่ในแผนงาน ยังไม่มีกำหนดวันเปิดตัว กำลังจัดเตรียมหน่วยการเรียนรู้แรกของ Storytime Advantage",
+            "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก Science, Math, Zhongwen และ STEM Advantage อยู่ในแผนงาน หน่วยการเรียนรู้แรกของ Storytime Advantage เปิดตัววันที่ 30 พฤศจิกายน 2569",
     },
     mission: {
         title: "ภารกิจของเราคือความสำเร็จของนักเรียน",

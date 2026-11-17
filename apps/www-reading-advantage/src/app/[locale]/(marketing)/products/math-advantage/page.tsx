@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { buildMarketingMetadata } from "@/lib/seo";
+import { siteLogos } from "@/lib/site-assets";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { FloatingPill } from "@/components/ui/floating-pill";
 import { Card, CardContent } from "@/components/ui/card";
@@ -128,7 +129,7 @@ export default async function MathAdvantage({
             <div className="lg:col-span-5 flex justify-center lg:justify-end animate-in fade-in slide-in-from-right-8 duration-1000">
               <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-4 shadow-2xl">
                 <Image
-                  src="/math-advantage.png"
+                  src={siteLogos.math.square}
                   alt={t("logoAlt")}
                   width={350}
                   height={350}

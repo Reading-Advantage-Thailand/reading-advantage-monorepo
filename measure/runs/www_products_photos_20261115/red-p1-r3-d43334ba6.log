@@ -1,0 +1,94 @@
+# Red report — www_products_photos_20261115, task 1.1, remediation round r3
+
+Role: measure-mid, Red phase (remediation). Route: opencode-go/deepseek-v4.1-flash.
+Worktree: `/home/daniebo/Desktop/rama-worktrees/www-products-a62`, branch `www/products-a62`.
+role_base_sha: `d43334ba6e2d5d1b481441d314b3ac4c0fe589d9`. Review A r1: pass.
+dispositions: F1=FIX; F2=FIX; F3=FIX; F4=FIX
+
+## What changed (tests and spec only; Green owns the code)
+
+- **R1 (text overlap, PM pass limit).** Every counted photo now measures the union of the bounding
+  boxes of visible text boxes that paint over the photo. A text box is an element with non-empty own
+  text. The rule skips the photo's own ancestors and a figcaption that sits below the photo. The
+  share is exact (coordinate compression over the clipped boxes). Limit: 10 percent of the photo
+  area. The 30 percent grid rule stays. The photo report prints `textOverlap=N%` and up to three
+  text boxes.
+- **F1.** The aspect and short-side rule now covers every loaded photo whose src holds
+  `/images/products/`, plus every photo in a `program-card-*` or `product-block-*` block, plus the
+  report-results file `/images/blended-learning.png` (explicit list with the reason). The Tutor
+  picture and the report-results picture are inside the rule now.
+- **F2.** An `<img>` in a page `main` element with an empty src or no `currentSrc` adds a problem and
+  fails the case; it is no longer skipped. The badge rule needs both signals: the file name starts
+  with `qr`, `logo`, or `icon`, and the alt names a logo, an icon, or a QR code. Both rules are in
+  `spec.md` AC-1.
+- **F3.** The plan task 1.1 line now says the pre-fix e2e run was skipped and the hero unit test is
+  the pre-fix proof.
+- **Home Mastery card.** `/` at 390 px asserts that the card centre falls within 10 percent of the
+  viewport centre, or its width is at least 90 percent of the photo width. The locator is the
+  page's `figure` element; the home page renders one figure, the Mastery card.
+- `spec.md` AC-1 gains the text rule, the broken-image rule, the two-signal badge rule, and the home
+  Mastery card rule.
+
+## Evidence
+
+- `pnpm exec tsc --noEmit` in `apps/www-reading-advantage` → 0.
+- Run at HEAD `d43334ba6`, with the `.next` build of that commit (no source is newer than
+  `BUILD_ID`):
+  - `pnpm exec next start -p 3131` (port 3131, not 3123) → `SERVER_HTTP=200` on `/en`, within the
+    600 s wait budget.
+  - `BASE_URL=http://localhost:3131 pnpm exec playwright test e2e/photos.spec.ts --reporter=list
+    --workers=2 --retries=0` through `heavy-run.sh` → **exit 1, 2 failed, 54 passed**.
+  - Raw log: `/tmp/opencode/a62-r3-e2e.log`. Server log: `/tmp/opencode/a62-r3-server.log`.
+
+## Failing cases (the only Red)
+
+- `home en 390 px` and `home th 390 px`:
+  "the home Mastery card sits 23 percent from the viewport centre and is 40 percent of the photo
+  width (centred or 90 percent width required)". The card is `mt-4 ml-4 w-2/5` in flow below the
+  photo, so it is neither centred nor full width. Green must center it or make it full width at
+  390 px.
+- Nothing else fails. The Green fixes hold the new 10 percent text rule on every page at the four
+  widths in en and th. The home rows report `textOverlap=0%`; `classroom-small-group-800.webp`
+  reports `covered=12%` (under the 30 percent limit).
+
+## Notes
+
+- The home `line-qr.jpg` (512 x 512, rendered 100 x 100) now counts as a photo under the F2 rule,
+  because its file name starts with `line`, not `qr`. It loads, shows, and is uncovered, so it
+  passes. The QR exclusion needs both signals by the disposition, so this stays.
+- `test-results/` artifacts of the run were removed and `.last-run.json` was restored; the tree is
+  clean. `measure/runs` is gitignored, so this file stays on disk as the cited evidence.
+- Nothing was pushed.
+
+F4 is the PM text-overlap limit (called R1 in the brief).
+```
+MEASURE_AGENT_RESULT
+role: measure-red
+track_id: www_products_photos_20261115
+phase: "Phase 1: Photo checks, then the remaining fixes"
+task: "1.1 Red (remediation r3)"
+status: pass
+dispositions: F1=FIX; F2=FIX; F3=FIX; F4=FIX
+baseline_sha: 40419d4bc1f3a712f295acd7a6fc8939c8b6d69a
+role_base_sha: d43334ba6e2d5d1b481441d314b3ac4c0fe589d9
+head_sha: 02a77d0d0
+commits:
+  - 415d172be test(www): add the text overlap limit and close review a r1 (track_id: www_products_photos_20261115)
+  - 02a77d0d0 chore(www): record the r3 remediation and reopen task 1.2 (track_id: www_products_photos_20261115)
+tests_changed:
+  - apps/www-reading-advantage/e2e/photos.spec.ts (R1, F1, F2, home Mastery card)
+docs_changed:
+  - measure/tracks/www_products_photos_20261115/spec.md (AC-1 text rule, broken image, badge rule, home card)
+  - measure/tracks/www_products_photos_20261115/plan.md (1.1 proof line, r3 sub-line, 1.2 back to [~])
+commands:
+  - pnpm exec tsc --noEmit -> 0
+  - pnpm exec next start -p 3131 ; curl /en -> 200
+  - BASE_URL=http://localhost:3131 pnpm exec playwright test e2e/photos.spec.ts --workers=2 --retries=0 -> 1
+remaining_failures:
+  - home en 390 px: the home Mastery card sits 23 percent from the viewport centre and is 40 percent of the photo width
+  - home th 390 px: the home Mastery card sits 23 percent from the viewport centre and is 40 percent of the photo width
+open_for_green:
+  - centre the Mastery card at 390 px, or make it at least 90 percent of the photo width
+  - everything else passes: no photo is over the 10 percent text limit and none is over the 30 percent grid limit
+END_MEASURE_AGENT_RESULT
+```

@@ -9,6 +9,7 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import GithubSlugger from "github-slugger";
 import { BlogPost, BlogListItem } from "@/types/blog";
+import { isBlogBlock, remarkBlogBlocks } from "@/lib/blog-blocks";
 
 const postsBaseDirectory = path.join(
   process.cwd(),
@@ -88,6 +89,25 @@ function markdownSlugs(locale: SupportedLocale): Set<string> {
   }
 }
 
+/**
+ * Checks whether draft posts show. Drafts show everywhere except in production.
+ * @returns True outside a production build or server.
+ */
+function showDrafts(): boolean {
+  return process.env.NODE_ENV !== "production";
+}
+
+function postFilePath(slug: string, locale: SupportedLocale): string | null {
+  const localePath = path.join(postsDirectory(locale), `${slug}.md`);
+  if (fs.existsSync(localePath)) return localePath;
+  const enPath = path.join(postsDirectory("en"), `${slug}.md`);
+  return locale !== "en" && fs.existsSync(enPath) ? enPath : null;
+}
+
+function isDraftFile(fullPath: string): boolean {
+  return matter(fs.readFileSync(fullPath, "utf8")).data.draft === true;
+}
+
 function allBlogSlugs(locale: SupportedLocale): string[] {
   const resolvedLocale = normalizeBlogLocale(locale);
   const allSlugs = markdownSlugs("en");
@@ -98,7 +118,10 @@ function allBlogSlugs(locale: SupportedLocale): string[] {
     }
   }
 
-  return [...allSlugs];
+  if (showDrafts()) return [...allSlugs];
+  return [...allSlugs].filter(
+    (slug) => !isDraftFile(postFilePath(slug, resolvedLocale) as string),
+  );
 }
 
 interface BlogFrontmatter {
@@ -110,6 +133,7 @@ interface BlogFrontmatter {
   readingTime?: number;
   coverImage?: string;
   product?: string;
+  draft: boolean;
 }
 
 function validateFrontmatter(data: unknown): BlogFrontmatter {
@@ -143,7 +167,30 @@ function validateFrontmatter(data: unknown): BlogFrontmatter {
     readingTime: typeof d.readingTime === "number" ? d.readingTime : undefined,
     coverImage: typeof d.coverImage === "string" ? d.coverImage : undefined,
     product: typeof d.product === "string" ? d.product : undefined,
+    draft: d.draft === true,
   };
+}
+
+/**
+ * Renders the Markdown body of a post to HTML, with the rich blocks of docs/blog-post-format.md.
+ * @param markdown The post body without frontmatter.
+ * @param locale The post locale, for the callout labels.
+ * @returns The HTML of the body.
+ * @throws When a rich block is not valid.
+ */
+export async function renderBlogMarkdown(
+  markdown: string,
+  locale: SupportedLocale = "en",
+): Promise<string> {
+  const processedContent = await unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkBlogBlocks({ locale }))
+    .use(remarkHtml, { sanitize: false })
+    .use(rehypeSlug)
+    .use(rehypeAutolinkHeadings)
+    .process(markdown);
+  return processedContent.toString();
 }
 
 async function parseBlogFile(
@@ -154,15 +201,8 @@ async function parseBlogFile(
   const { data, content } = matter(fileContents);
 
   const frontmatter = validateFrontmatter(data);
-  const processedContent = await unified()
-    .use(remarkParse)
-    .use(remarkGfm)
-    .use(remarkHtml, { sanitize: false })
-    .use(rehypeSlug)
-    .use(rehypeAutolinkHeadings)
-    .process(content);
-
-  const htmlContent = processedContent.toString();
+  const locale = normalizeBlogLocale(path.basename(path.dirname(fullPath)));
+  const htmlContent = await renderBlogMarkdown(content, locale);
   const readingTime = frontmatter.readingTime ?? calculateReadingTime(content);
 
   return {
@@ -177,6 +217,7 @@ async function parseBlogFile(
     readingTime,
     coverImage: frontmatter.coverImage,
     product: frontmatter.product,
+    draft: frontmatter.draft,
   };
 }
 
@@ -210,17 +251,12 @@ export async function getBlogPost(
   if (!isSafeBlogSlug(slug)) return null;
 
   const resolvedLocale = normalizeBlogLocale(locale);
+  const fullPath = postFilePath(slug, resolvedLocale);
+  if (!fullPath) return null;
 
   try {
-    const localePath = path.join(postsDirectory(resolvedLocale), `${slug}.md`);
-    try {
-      fs.readFileSync(localePath);
-      return await parseCachedBlogFile(localePath, slug);
-    } catch {
-      if (resolvedLocale === "en") return null;
-      const enPath = path.join(postsDirectory("en"), `${slug}.md`);
-      return await parseCachedBlogFile(enPath, slug);
-    }
+    const post = await parseCachedBlogFile(fullPath, slug);
+    return post.draft && !showDrafts() ? null : post;
   } catch (error) {
     console.error(`Error getting blog post ${slug}:`, error);
     return null;
@@ -279,8 +315,53 @@ export const getAllPosts = getAllBlogPosts;
 
 export function calculateReadingTime(content: string): number {
   const wordsPerMinute = 200;
-  const words = content.trim().split(/\s+/).length;
-  return Math.ceil(words / wordsPerMinute);
+  const text = readableBlogText(content);
+  // Thai writes many words without spaces, so count Thai characters. Six characters
+  // are about one Thai word, counting the vowel and tone marks.
+  const thaiCharacters = (text.match(/[\u0E00-\u0E7F]/g) ?? []).length;
+  const latinWords = text
+    .replace(/[\u0E00-\u0E7F]/g, " ")
+    .split(/\s+/)
+    .map((token) => token.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, ""))
+    .filter((token) => token.length > 0).length;
+  const words = latinWords + Math.ceil(thaiCharacters / 6);
+  return Math.max(1, Math.ceil(words / wordsPerMinute));
+}
+
+/** Block keys whose values are not prose, per block type. */
+const NON_PROSE_BLOCK_KEYS: Record<string, Set<string>> = {
+  figure: new Set(["src", "alt"]),
+  youtube: new Set(["id", "title"]),
+  video: new Set(["src", "poster", "title"]),
+  gallery: new Set(["image"]),
+  pullquote: new Set(),
+  callout: new Set(["type"]),
+};
+
+/**
+ * Keeps the text a reader reads and drops rich block keys, paths, alt text, and labels.
+ * Figure captions, callout titles, pull quotes, and callouts stay in the text.
+ * @param content The Markdown body of a post.
+ * @returns The readable text, with code fences and non-prose block lines removed.
+ */
+function readableBlogText(content: string): string {
+  const kept: string[] = [];
+  let block: string | null = null;
+  for (const line of content.split("\n")) {
+    const fence = line.match(/^\s*```\s*([\w-]*)\s*$/);
+    if (fence) {
+      block = block === null && isBlogBlock(fence[1]) ? fence[1] : null;
+      continue;
+    }
+    if (block === null) {
+      kept.push(line);
+      continue;
+    }
+    const pair = line.match(/^\s*([A-Za-z][\w-]*)\s*:\s*(.*)$/);
+    if (!pair) continue;
+    if (!NON_PROSE_BLOCK_KEYS[block].has(pair[1].toLowerCase())) kept.push(pair[2]);
+  }
+  return kept.join("\n");
 }
 
 export interface PaginatedPosts {

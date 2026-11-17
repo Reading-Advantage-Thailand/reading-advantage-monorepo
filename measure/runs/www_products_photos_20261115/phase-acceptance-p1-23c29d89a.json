@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "role": "measure-phase-acceptance",
+  "track_id": "www_products_photos_20261115",
+  "phase": "Phase 1: Photo checks, then the remaining fixes",
+  "audited_head_sha": "23c29d89acc30ca5515c4cf1b57d74bcc9104287",
+  "route": "bailian-token-plan/qwen3.8-max#high",
+  "round": "r1",
+  "verdict": "pass",
+  "status": "pass",
+  "summary": "Phase 1 passes acceptance at 23c29d89a, the tip of origin/master. AC-1, AC-2, and AC-3 hold with evidence. Every task line (1.1 to 1.4) is [x] with SHAs. Review A r1 passed at d43334ba6 and Review A r2 passed at ac1e54efd. The W-23 regression is closed: the pin commit bbe4c3561 sets pnpm/action-setup to b906affcce14559ad1aafd4ab0e942779e9f58b1, this SHA is the current v4 tag commit (refs/tags/v4^{}), a W-23 regex replay on both CD workflows at the audited SHA returns 12 uses lines and 0 unpinned, and CI run 43771969916 passed the CI selector tests step at 23c29d89a. The plan test strategy names no adversarial round and no UX browser review, so neither was required. The task 1.3 live check (80 photo rows pass) and the PM page-check of 2026-11-16 (verified artifact: 6 URL x width checks, 8 photos each, hidden [], covered [], textOver []) cover the UX browser concern on the live page. Six nonblocking findings stay; none masks a gate.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F1 [Low] Plan task 1.4 still reads \"PM page check pending\". The check passed at 2026-11-16 06:15 Bangkok, after the last plan commit 23c29d89a (05:54 +0700), so the line was true when written but is now stale. The artifact sits at ~/Desktop/handoff/page-check/20261116-0615/ (summary.txt and 6 JSON files). Closeout updates the plan line with this path.",
+    "F2 [Low] measure/tracks.md line 54 still reads \"Phase 1 Red is next\" at the audited SHA. Closeout or the weekly doc-drift detector fixes the status line.",
+    "F3 [Medium, carried from Review A r2 F5] The 10 percent text-overlap rule in e2e/photos.spec.ts has no recorded failing-first proof and no recorded nonzero measurement. Static reading (Review A r2) finds the union algorithm correct. Cheap proof: run the spec against a build of 40419d4bc and confirm the report-results case fails the text rule.",
+    "F4 [Low] The Green r4 log green-p1-r4-3de3846cf.log died with the deleted worktree www-w23-pin. The plan line cites counts (38/38, 211/211) with no committed log, against the skill rule \"write no test count in plan.md; cite the log\". This acceptance re-verified the decisive claim directly (W-23 replay, tag equivalence, CI run 43771969916 selector step success). Future role logs must be committed to measure/runs/ from the working worktree.",
+    "F5 [Low, carried from Review A r2] apps/www-reading-advantage/test-results/.last-run.json stays tracked in git by mistake. Untrack it in a later chore, outside this track.",
+    "F6 [Info, orchestrator governance] Both Review A rounds ran on opencode-go/mimo-v2.6-flash. measure/orchestration-models.md lists mimo-v2.6-flash as banned (bench 7.9) for the primary-parity staffing. The reviews themselves are evidence-backed and this acceptance re-checked their key claims; the note is for the orchestrator's staffing record only."
+  ],
+  "evidence": [
+    "HEAD currency: git rev-parse origin/master in the worktree -> 23c29d89acc30ca5515c4cf1b57d74bcc9104287, equal to the audited SHA; worktree HEAD fe891bc3e, git status --porcelain empty; no fetch was run",
+    "phase_base_sha 40419d4bc1f3a712f295acd7a6fc8939c8b6d69a (from review-a-p1-d43334ba6.json evidence and plan.md task 1.2); role base of this acceptance: worktree checkout fe891bc3e",
+    "post-review delta ac1e54efd..23c29d89a (git diff --name-only): cd-www-reading-advantage.yml (the one-line pin), 5 blog content files of track www_daily_blog_posts_20261115 (commit 3de3846cf), and plan.md. No product source that Review A r2 audited changed. Accepted commits after Review A r2: fe891bc3e (plan doc), 3de3846cf (other track content), bbe4c3561 (pin), 23c29d89a (plan doc)",
+    "AC-1: e2e/photos.spec.ts at the audited content holds WIDTHS [390, 980, 1024, 1280] (line 35), LOCALES en/th (line 36), the 6-page PAGES set (line 56), MAX_TEXT_OVERLAP_PERCENT = 10 (line 128), ASPECT_TOLERANCE = 0.05 (line 41), PHOTO_MIN_SHORT_SIDE_PX = 100 (line 40), masteryCardProblems with the centre/90-percent rule (lines 679-706), and currentSrc/naturalWidth checks (lines 158-206)",
+    "AC-1 runs: green-p1-r3-gate.log and green-p1-5f197fd99-gate.log each read 56 passed, EXIT=0; red-p1-40419d4bc.log reads exit 1, 18 failed, 38 passed at 40419d4bc; red-p1-r3-d43334ba6.log reads exit 1, 2 failed, 54 passed at d43334ba6 (the Mastery card fails first)",
+    "AC-2: hero-section.test.tsx test \"renders the floating image without a hidden container at any breakpoint\" (line 88) checks hidden tokens; pre-fix proof: 1 failed, 6 passed at 8193625ca^ (red-p1-40419d4bc.log); green-p1-r3-checks.log reads 4 files, 36 tests, VITEST=0 TSC=0 ESLINT=0",
+    "AC-3a: ci.yml at the audited SHA carries the Chrome install, the next start -p 3123 with port wait, and the e2e run, each with if: matrix.id == 'www-reading-advantage' (lines 287-306)",
+    "AC-3b: cd-www-reading-advantage.yml at the audited SHA runs Set Up pnpm (line 93, pinned), Node, install, build, Chrome, start, and Run the www photo e2e (line 125) before Authenticate with Google Cloud (129), Set Up Google Cloud SDK (134), and Submit Cloud Build (139); a failing e2e stops the deploy",
+    "W-23 closure: regex replay of the W-23 rule (scripts/ci/__tests__/cd-workflows.test.mjs lines 529-543) on both CD workflows at 23c29d89a -> uses_lines=12, unpinned=[], PASS; gh run view 43771969916 (headSha 23c29d89a) -> step \"CI selector tests\" success; the run-level failure is only \"Architecture boundary check\" (known open item PC-4, out of scope per spec.md); job \"Check matrix\" skipped, which corroborates affected-apps []",
+    "pin authenticity: git ls-remote https://github.com/pnpm/action-setup 'refs/tags/v4*' -> refs/tags/v4^{} = b906affcce14559ad1aafd4ab0e942779e9f58b1, so the pinned SHA is the current v4 tag commit; the GitHub API confirms it is a genuine signed upstream commit (2026-03-11)",
+    "task 1.4: gh run view 43721191756 (headSha ac1e54efd) -> conclusion success; every photo-e2e step in the Deploy job success; the job log reads \"56 passed (1.5m)\" in the Run the www photo e2e step",
+    "PM page-check artifact verified on disk: ~/Desktop/handoff/page-check/20261116-0615/summary.txt shows 8 photos each on /en/products and /th/products at 390, 980, and 1280, hidden/blank none, covered none; the JSON files show hidden [], covered [], textOver [], coveredPct 0, textOverlapPct 0, loaded true, visible true; generatedAt 2026-11-15T23:15:44Z = 2026-11-16 06:15 Bangkok",
+    "task 1.3 live check: plan records 80 photo rows pass on the live site after CD run 43721191756 (visible share 100 percent, text overlap 0 percent, naturalWidth > 0); the home texture-warm and workbook-tablet-cutaway items went to the PM as out-of-scope",
+    "prerequisites: spec-review-756471bd5.json r1 fail escalate_human, spec-review-40419d4bc.json r2 pass; review-a-p1-d43334ba6.json r1 pass (F1-F3 nonblocking, D1 accepted, both workflows audited); review-a-p1-r2-ac1e54efd.json r2 pass (F1-F3 fixed, F5 open, D1 carried); no adversarial-*.json and no ux-*.json exist in measure/runs/www_products_photos_20261115/",
+    "adversarial/UX decision: the plan Test strategy section names only the unit test, the e2e through heavy-run.sh, tsc, and eslint, so the plan required no adversarial round and no UX browser review; the live check and the verified PM page-check ran real browsers against the live deployed pages and cover the UX concern; the repo W-23 selector test acted as the adversarial gate on the workflow surface and caught a real regression, now closed",
+    "Review B/C: not dispatched; the phase adds no auth, API, or secrets surface (marketing page photos, an e2e spec, a unit test case, workflow steps); the pin improves supply-chain hygiene",
+    "A3/A4/A6/A7 applicability: the phase diff 40419d4bc..23c29d89a touches no framework contract tests, no filters, and no tracks registry tooling, so the conditional checks do not apply; A5 verified: every checked plan claim matches its log or the live GitHub run data",
+    "fake-gate check: the CD e2e gate is real (run 43721191756 executed the e2e steps in the deploy job before the deploy); no artifact-only live-proof claim found; no stale intentional-red test: products-page-pictures.red.test.tsx passes (19 passed, Review A r1 commands); the blog-blocks.test.ts CI timeout is a known open item outside this track",
+    "main repo note: the local master ca3a3d854 diverged from origin/master at 8bcce8c84 and lacks the e2e block; this is branch divergence, not a regression of the AC-3b gate on origin/master"
+  ],
+  "commands": [
+    "git -C worktree status --porcelain; git log --oneline -3; git diff --stat fe891bc3e 23c29d89a; git log --oneline fe891bc3e..23c29d89a",
+    "git show 23c29d89a:measure/tracks/www_products_photos_20261115/plan.md (task lines and Green r4 evidence)",
+    "git rev-parse origin/master; git log --oneline ac1e54efd..23c29d89a; git show bbe4c3561 (one-line pin diff)",
+    "git show 23c29d89a:.github/workflows/cd-www-reading-advantage.yml and ci.yml (grep name/uses/if)",
+    "git ls-remote https://github.com/pnpm/action-setup refs/tags/v4 and 'refs/tags/v4*'",
+    "GitHub API commits/b906affcce14559ad1aafd4ab0e942779e9f58b1 (authentic signed commit)",
+    "git show 23c29d89a on both CD workflows piped to grep uses: plus a manual replay of the W-23 regex (12 lines, 0 unpinned)",
+    "gh run view 43771969916 --json conclusion,headSha,jobs (selector step success, only the architecture step failed, matrix job skipped)",
+    "gh run view 43721191756 --json jobs and gh run view --job <id> --log (56 passed in the e2e step, deploy success)",
+    "gh run list --workflow cd-www-reading-advantage.yml --limit 6 (no CD run after the pin; pin equals the already-deployed v4 tag commit)",
+    "grep/sed over e2e/photos.spec.ts and hero-section.test.tsx at the audited content (rules and constants)",
+    "cat ~/Desktop/handoff/page-check/20261116-0615/summary.txt and head of the en-products-390.json",
+    "grep over red-p1-40419d4bc.log, red-p1-r3-d43334ba6.log, green-p1-r3-gate.log, green-p1-5f197fd99-gate.log, green-p1-r3-checks.log, green-p1-5f197fd99-checks.log",
+    "git diff --stat 40419d4bc 23c29d89a; git diff --name-only ac1e54efd 23c29d89a",
+    "read review-a-p1-d43334ba6.json, review-a-p1-r2-ac1e54efd.json, spec-review verdict fields, metadata.json, tracks.md at the audited SHA"
+  ],
+  "changed_files": [
+    ".github/workflows/cd-www-reading-advantage.yml",
+    ".github/workflows/ci.yml",
+    "apps/www-reading-advantage/e2e/photos.spec.ts",
+    "apps/www-reading-advantage/public/blog/2026-11-16-class-book.png",
+    "apps/www-reading-advantage/public/blog/2026-11-16-teacher-monday.webp",
+    "apps/www-reading-advantage/public/blog/2026-11-16-workbook-key-vocabulary.webp",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/posts/en/the-teacher-who-said-she-could-not-teach-english.md",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/posts/th/the-teacher-who-said-she-could-not-teach-english.md",
+    "apps/www-reading-advantage/src/components/marketing/hero-section.test.tsx",
+    "apps/www-reading-advantage/src/components/products/b2b-solutions.tsx",
+    "apps/www-reading-advantage/src/components/products/product-picture.tsx",
+    "apps/www-reading-advantage/src/components/products/tutor-advantage.tsx",
+    "apps/www-reading-advantage/src/locales/components/products/tutor-advantage.ts",
+    "measure/tracks/www_products_photos_20261115/plan.md",
+    "measure/tracks/www_products_photos_20261115/spec.md"
+  ],
+  "retry_recommendation": "none",
+  "handoff": "Verdict pass at the accepted HEAD 23c29d89acc30ca5515c4cf1b57d74bcc9104287 (tip of origin/master). The phase diff covers only the expected files; the 5 blog content files belong to track www_daily_blog_posts_20261115 and ride the shared master line. Commits allowed after Review A r2 (ac1e54efd): fe891bc3e and 23c29d89a (plan docs), 3de3846cf (other-track blog content), bbe4c3561 (the one-line pnpm/action-setup pin; verified by a W-23 regex replay, the v4^{} tag equivalence, and CI run 43771969916). No adversarial round and no UX browser review was required by the plan test strategy; the live check and the PM page-check cover the UX concern. Six nonblocking findings (F1-F6) go to closeout and to the orchestrator: F1 and F2 are doc updates at closeout, F3 is the carried failing-first proof gap of the 10 percent text rule, F4 asks that future role logs stay committed, F5 untracks test-results/.last-run.json in a later chore, F6 is a staffing note. Next: final acceptance (light-lane exception applies) and closeout.",
+  "confidence": "high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "AC-1 to AC-3 verified at the audited content: photos.spec.ts constants (WIDTHS line 35, MAX_TEXT_OVERLAP_PERCENT line 128, ASPECT_TOLERANCE line 41), the CD e2e steps before Submit Cloud Build (lines 125 vs 139), and the live PM page-check artifact with 0 hidden, 0 covered, 0 text over on both locales."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "Failing-first proofs exist for the e2e (18 failed at 40419d4bc), the Mastery card (2 failed at d43334ba6), and the hero unit test (1 failed at 8193625ca^); the 10 percent text rule alone has no recorded firing (carried finding F3)."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --name-only ac1e54efd 23c29d89a shows only the pin, other-track blog content, and plan.md; the phase diff holds no unrelated change; the D1 layout deviation is documented and accepted in both Review A rounds."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Every checked plan claim matches a committed log or live gh run data (56 passed in the CD job log; selector step success in run 43771969916); the Green r4 log itself was lost with its worktree (finding F4), but its decisive claim was re-verified directly."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "opencode-go/mimo-v2.6-flash",
+      "agreed": true,
+      "score": 5,
+      "evidence": "Review A r1 at d43334ba6: I re-checked its workflow claims (e2e steps before deploy, conditional ci.yml steps) and its A4/A5 fixtures against the audited content and the gh run data; all hold."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "opencode-go/mimo-v2.6-flash",
+      "agreed": true,
+      "score": 4,
+      "evidence": "Review A r2 at ac1e54efd: verdict pass with the honest F5 proof gap; I re-verified its log claims (56 passed EXIT=0, red r3 2 failed) but the F5 failing-first proof stays open, so the review left one claim untested."
+    }
+  ]
+}

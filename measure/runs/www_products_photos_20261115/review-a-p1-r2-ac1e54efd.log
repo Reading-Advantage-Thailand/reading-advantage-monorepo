@@ -1,0 +1,113 @@
+# Review A r2 report — www_products_photos_20261115, Phase 1
+
+Track: `www_products_photos_20261115`, phase "Phase 1: Photo checks, then the remaining fixes".
+Role: measure-review-a-correctness. Round: r2. Route: opencode-go/mimo-v2.6-flash.
+Worktree: `/home/daniebo/Desktop/rama-worktrees/www-products-a62`.
+`git rev-parse HEAD` = `ac1e54efdb23d1831136ea144db52ce837a02a8e`, which equals `audited_head_sha`.
+The tree was clean. I audited the delta `d43334ba6..ac1e54efd` (4 files, +334, -83).
+Commits: `415d172be` (Red r3 tests and spec), `02a77d0d0` (Red r3 record), `428b557dc`
+(Green r3 fix), `5169ae23b` and `ac1e54efd` (evidence records). Tests came before the fix.
+This round ran no playwright and no vitest, so the tracked `test-results/.last-run.json`
+stayed untouched.
+
+## Dispositions of the r1 findings
+
+- F1 fixed. The aspect and short-side rule now covers every loaded photo whose src holds
+  `/images/products/`, every photo with a `program-card` or `product-block` ancestor, and
+  `/images/blended-learning.png` through an explicit list. The Tutor picture and the
+  report-results picture are inside the rule. A guard pushes a problem when the list is empty,
+  so the rule cannot pass on a missing deliverable. spec.md records the wider scope.
+- F2 fixed. An `img` in a page `main` with an empty src adds a problem instead of being skipped.
+  All six pages in the set have a `main` element. The badge skip needs both signals: a file name
+  that starts with `qr`, `logo`, or `icon`, and an alt that names a logo, an icon, or a QR code.
+  A photo named `icon-guide.png` now counts. `line-qr.jpg` also counts, which matches the
+  two-signal rule, and Red r3 records it as loaded, visible, and uncovered at 100 x 100.
+- F3 fixed. Plan task 1.1 now says the pre-fix e2e run was skipped and that the hero unit test at
+  `8193625ca^` is the pre-fix proof. The stale claim is gone.
+
+## F4, the PM text overlap limit of 10 percent
+
+The rule measures the union of the clipped text boxes with coordinate compression over the
+visible photo area, the same denominator as the cover test. I checked the two fooling vectors.
+
+- An ancestor that holds the photo is skipped. An ancestor's own text nodes sit in normal flow
+  and cannot paint over an in-flow child image without contrived float or negative-margin CSS.
+  spec.md AC-1 documents the skip as a rule. A positioned text element inside the ancestor does
+  not hold the image, so it is counted.
+- A `figcaption` is skipped only when its top starts at or below the photo bottom. In that case
+  it cannot intersect the photo, and the generic clip test would drop it anyway. A caption that
+  overlaps the photo is counted.
+
+The rule runs on the counted set, the same set as the cover test. That matches the thumbnail
+rule in spec.md AC-1. One proof gap stays, recorded as F5.
+
+## Home Mastery card
+
+Below `lg` the card is centered under the photo with `mx-auto w-3/4 max-w-sm`. From `lg` the
+corner placement stays. The e2e assertion runs for `/` at 390 px in both locales. It fails when
+there is no figure, when the hero photo does not count, or when the card is neither within
+10 percent of the viewport centre nor 90 percent of the photo width. The home page renders
+exactly one figure, so `figure.first()` targets the Mastery card. Red r3 proved the assertion
+first: at `d43334ba6` it failed `home en 390 px` and `home th 390 px` with the card 23 percent
+from the centre and 40 percent of the photo width.
+
+## Findings
+
+- F5 (medium, nonblocking). The 10 percent text rule has no failing-first proof and no recorded
+  nonzero measurement. The Red r3 raw log holds 12 report lines, all `textOverlap=0%`, and zero
+  `textBoxes=` labels. The Red r3 run failed only the Mastery card assertion, so no case ever
+  drove the union past zero. A natural fixture existed at `40419d4bc`, where the report-results
+  text box covered `blended-learning.png` 100 percent, and it was not run. Static reading finds
+  the union algorithm correct, so the finding stays nonblocking. Cheap proof: run the new spec
+  against a build of `40419d4bc` and confirm the text rule fails that case.
+- D1 (accepted, carried from r1). The report-results card stays stacked at every width, because
+  the grid cell is one third wide at `lg` and the stacked card keeps text off the photo.
+
+## Evidence of the runs
+
+- `green-p1-r3-gate.log` reads 56 passed (1.4m) and `EXIT=0`, with `--retries=0` on port 3141.
+- `green-p1-r3-checks.log` reads 4 test files and 36 tests passed, `VITEST=0`, `TSC=0`,
+  `ESLINT=0`.
+- `red-p1-r3-d43334ba6.log` reads exit 1 with 2 failed and 54 passed at `d43334ba6`.
+- Plan claims match these logs (A5). No bare-digit count assertion appears (A3).
+
+## Verdict
+
+The delta fixes F1, F2, and F3, implements F4 safely against the named fooling vectors, and
+centers the home Mastery card with a failing-first assertion. One nonblocking finding, F5,
+stays open.
+
+```
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+track_id: www_products_photos_20261115
+phase: "Phase 1: Photo checks, then the remaining fixes"
+task: "Phase 1 review r2"
+status: pass
+round: r2
+phase_base_sha: 40419d4bc1f3a712f295acd7a6fc8939c8b6d69a
+role_base_sha: 02a77d0d0707bda0ab7dd7ab028d97f0c9f566a7
+audited_head_sha: ac1e54efdb23d1831136ea144db52ce837a02a8e
+route: opencode-go/mimo-v2.6-flash
+verdict: pass
+retry_recommendation: none
+blocking_findings: []
+nonblocking_findings:
+  - F5 medium: the 10 percent text rule has no failing-first proof and no recorded nonzero measurement; grep over the Red r3 raw log shows 12 textOverlap=0% lines and zero textBoxes= labels; prove it against a build of 40419d4bc.
+  - D1 accepted, carried: the report-results card stays stacked, because the grid cell is one third wide at lg.
+commands:
+  - git rev-parse HEAD -> ac1e54efdb23d1831136ea144db52ce837a02a8e
+  - git diff --stat d43334ba6..ac1e54efd -> 4 files, +334 -83
+  - grep textOverlap over /tmp/opencode/a62-r3-e2e.log -> 12 matches, all 0%
+  - grep textBoxes over /tmp/opencode/a62-r3-e2e.log -> 0
+  - read green-p1-r3-gate.log -> 56 passed, EXIT=0
+  - read green-p1-r3-checks.log -> 4 files, 36 tests, exit 0
+  - read red-p1-r3-d43334ba6.log -> exit 1, 2 failed, 54 passed
+  - git status --short -> clean
+artifacts:
+  - measure/runs/www_products_photos_20261115/review-a-p1-r2-ac1e54efd.json
+  - measure/runs/www_products_photos_20261115/review-a-p1-r2-ac1e54efd.log
+END_MEASURE_AGENT_RESULT
+```
+
+RESULT: PASS

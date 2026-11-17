@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "role": "measure-final-acceptance",
+  "track_id": "www_products_photos_20261115",
+  "phase": "track",
+  "audited_head_sha": "23c29d89acc30ca5515c4cf1b57d74bcc9104287",
+  "route": "opencode-go/deepseek-v4.1-flash",
+  "round": "r1",
+  "verdict": "pass",
+  "status": "pass",
+  "summary": "Track A-62 passes final acceptance at 23c29d89a, the tip of origin/master. AC-1, AC-2, AC-3b, and AC-4 hold with evidence; AC-3a is wired and correct but cannot execute while the unrelated blog-blocks.test.ts timeout fails the www CI job first, and the orchestrator classifies that carry as nonblocking with an owner (track ci_green_master_20261115). The plan tasks 1.1 to 1.4 are [x] with commit SHAs. Every role result is bound to an ancestor HEAD of the audit target: spec-review r1 756471bd5 fail then r2 40419d4bc pass, review-a r1 d43334ba6 pass, review-a r2 ac1e54efd pass, phase-acceptance r1 23c29d89a pass (mechanical role-gate rerun PASS). No blocking finding is open. Ten nonblocking findings go to closeout, to the CI owner, and to the orchestrator: the four phase-acceptance doc chores, the carried text-rule proof gap, the dormant CI gate, the AC-4 layout deviation, the tracked .last-run.json, the staffing note, and doctor.sh exit 1 for the known architecture-manifest failure that belongs to track ci_green_master_20261115. The worktree checkout fe891bc3e is 3 commits behind origin/master; the two later track commits are the one-line W-23 pin and one plan line, both inside the audited range of the phase acceptance. doctor.sh exit code: 1 (architecture step, external; see evidence and F10).",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F1 [Low, plan doc] Plan task 1.4 still reads \"PM page check pending\". The check passed 2026-11-16 06:15 Bangkok, after the last plan commit. Route: closeout updates this line with ~/Desktop/handoff/page-check/20261116-0615/.",
+    "F2 [Low, registry doc] measure/tracks.md still reads \"Phase 1 Red is next\" and lists the track as [ ]. It understates the state and is not an A6 overstatement. Route: closeout rewrites the line (archive move) and the archive summary keeps it truthful.",
+    "F3 [Medium, carried] The 10 percent text-overlap rule in e2e/photos.spec.ts has no recorded failing-first proof. The union algorithm reads correct, and every counted photo reports textOverlap in the photo row, but no logged run shows the rule firing on a real text box. Route: closeout records the gap as accepted residue; a later adversarial round can build a pre-fix page and prove it.",
+    "F4 [Low] The Green r4 log died with the deleted worktree www-w23-pin. The plan line cites 38/38 and 211/211 with no committed log. This acceptance re-verified 38/38 at the audited content by a W-23 regex replay (12 uses lines, 0 unpinned). Route: the closeout summary states the lost log; future role logs stay in measure/runs/.",
+    "F5 [Low] apps/www-reading-advantage/test-results/.last-run.json stays tracked in git by mistake. Route: a later chore outside this track untracks it.",
+    "F6 [Info, governance] Both Review A rounds ran on opencode-go/mimo-v2.6-flash, which measure/orchestration-models.md bans for the primary-parity staffing. Route: orchestrator staffing record.",
+    "F7 [Medium, new] AC-3a is dormant: the three www photo-e2e steps in ci.yml have never executed, because the earlier unit-test step fails on src/lib/blog-blocks.test.ts:210 (5000 ms timeout) on every www push (runs 43721191676 and 43739337764 both skip the photo steps). The wiring itself is correct and mirrors the CD twin that ran green before the deploy. Route: track ci_green_master_20261115 fixes the timeout; the CI photo steps then run and the wiring is proven.",
+    "F8 [Low, new] AC-4 says the report-results text goes beside the picture from lg; the card stays stacked at every width. The plan records the deviation and no text covers the photo. Route: closeout notes the deviation in the archive summary.",
+    "F9 [Info, owner look] Daniel passed the look of the live page (\"Ok\", Tasks, 2026-11-16 07:38 ICT). This is the manual gate; it is not a role finding.",
+    "F10 [Medium, new] bash measure/doctor.sh exits 1 at the worktree: the architecture step reads \"V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes\" and the doctor states \"this is a tool failure, not a boundary verdict\". The same architecture step failed in ci.yml run 43771969916 at the audited HEAD. spec.md puts it out of scope (track ci_green_master_20261115), and this track changes no path under packages/. Route: track ci_green_master_20261115; closeout must not record doctor as green until that track fixes the manifest."
+  ],
+  "evidence": [
+    "HEAD currency: git rev-parse HEAD in the worktree -> fe891bc3e614b6b33a2e6e31f394ae05ea015d0e (clean, git status --porcelain empty); the briefed audit target origin/master is 23c29d89acc30ca5515c4cf1b57d74bcc9104287; git merge-base --is-ancestor fe891bc3e 23c29d89a -> true (exit 0); git merge-base --is-ancestor 23c29d89a HEAD -> false (exit 1), so the checkout lags the audited tip by 3 commits and no commit exists after the audited tip",
+    "path diff: git diff --name-only fe891bc3e 23c29d89a -> .github/workflows/cd-www-reading-advantage.yml, 3 blog binaries, 2 blog posts (en, th), measure/tracks/www_products_photos_20261115/plan.md; the blog files belong to commit 3de3846cf (track www_daily_blog_posts_20261115) and plan.md is a plan file, so no unreviewed track path follows the checkout",
+    "track scope: the track commits in the range carry track_id www_products_photos_20261115, and 8193625ca carries www_products_images_20261115, an id that names no folder, so it belongs to this track; the track paths are the two workflows, e2e/photos.spec.ts, six public/images/products files, the products page, (home)/page.tsx, hero-section.tsx and its test, b2b-solutions.tsx, product-picture.tsx, tutor-advantage.tsx, product-pictures.ts, the three locale files, phase-3-group-b-types.test.ts, products-page-pictures.red.test.tsx, and measure/tracks.md plus the track docs",
+    "phase-acceptance result: measure/runs/www_products_photos_20261115/phase-acceptance-p1-23c29d89a.json, status pass, audited_head_sha 23c29d89a, 6 nonblocking findings, retry none; python3 measure_interphase_checks.py role-gate --role phase-acceptance --baseline fe891bc3e --result-file <that file> -> PASS: phase-acceptance gate passed (exit 0)",
+    "role results: spec-review r1 756471bd5 fail (1 blocking, superseded), spec-review r2 40419d4bc pass, review-a r1 d43334ba6 pass (0 blocking), review-a r2 ac1e54efd pass (0 blocking); no adversarial-*.json and no ux-*.json exist; the plan Test strategy names the unit test, the e2e through heavy-run.sh, tsc, and eslint only",
+    "plan tasks at the audited content: 1.1 [x] Done 4c48a8b12, 415d172be; 1.2 [x] Done b09e21f32, 428b557dc; 1.3 [x] Done ac1e54efd; 1.4 [x] Done ac1e54efd; every task cites a commit SHA",
+    "AC-1 content: e2e/photos.spec.ts holds WIDTHS [390, 980, 1024, 1280], LOCALES en/th, the six-page PAGES set, MAX_COVERED_PERCENT 30, MAX_TEXT_OVERLAP_PERCENT 10, ASPECT_TOLERANCE 0.05, PHOTO_MIN_SHORT_SIDE_PX 100, the decorative/logo/badge exclusion rules, the broken-src rule over main img, the 5 x 5 elementFromPoint cover grid, the text union measure, the home Mastery card rule, the program-card and product-block checks, the Tutor section photo check, and the products picture aspect and short-side checks",
+    "AC-1 runs: green-p1-r3-gate.log and green-p1-5f197fd99-gate.log each read 56 passed (1.2m to 1.4m) and EXIT=0; the case count matches 6 pages x 2 locales x 4 widths plus 8 products cases; red-p1-40419d4bc.log reads exit 1, 18 failed, 38 passed; red-p1-r3-d43334ba6.log reads exit 1, 2 failed, 54 passed (the Mastery card rule fires)",
+    "AC-2: hero-section.test.tsx test \"renders the floating image without a hidden container at any breakpoint\" walks the image and its ancestors for hidden and breakpoint-prefixed hidden tokens; hero-section.tsx at 8193625ca removed hidden xl:block; my rerun of the file -> 7 passed in 876ms, exit 0",
+    "AC-3a (wired, dormant): ci.yml holds the Chrome install, the next start -p 3123 with a 60-attempt port wait, and the photo e2e run, each with if: matrix.id == 'www-reading-advantage'; gh run view 43721191676 and 43739337764 show all three steps skipped after the earlier unit-test step failed; gh run view 43721191676 --log-failed shows src/lib/blog-blocks.test.ts:210 Error: Test timed out in 5000ms with 2370 passed and 10 skipped",
+    "AC-3b (live): cd-www-reading-advantage.yml at the audited SHA runs pnpm setup, node, install, build, Chrome, start, and the photo e2e before Authenticate with Google Cloud and Submit Cloud Build; gh run view 43721191756 -> conclusion success, headSha ac1e54efd, created 13:51:33Z, updated 14:06:58Z (15m25s)",
+    "AC-4: b09e21f32 moves the report-results picture above its text, uses ProductPicture with a localized alt in en/th/zh for the Tutor section, and sets portrait pictures to w-full max-w-48 h-auto; 428b557dc centers the home Mastery card below lg and keeps the corner placement from lg; I read tutor-flashcard.webp, primary-lesson-intro.webp, primary-origins-2-cover.webp, and storytime-reader-card.webp: a flashcard app screen, a lesson screen, a printed cover with illustrated characters, and a rendered app character; no photograph of a real child",
+    "AC-4 provenance: ~/Desktop/handoff/products-images-2026-11-15/MANIFEST.txt names each source file, its original path, repo commit, sha256, crop box, and resize for all six web files, so the files come from the handoff set",
+    "W-23 at the audited content: git show 23c29d89a:.github/workflows/cd-www-reading-advantage.yml line 93 -> pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4; a node replay of the test regex on both CD workflows at 23c29d89a -> uses_lines=12, unpinned=[], PASS=true; the same test at the checkout fe891bc3e -> 37 passed, 1 failed (unpinned pnpm/action-setup@v4), which is the by-design lag",
+    "CI at the audited HEAD: gh run view 43771969916 -> conclusion failure at headSha 23c29d89a; step \"CI selector tests\" success, \"Architecture boundary check\" failure (known item PC-4, out of scope per spec.md), the www matrix job skipped because no app is affected",
+    "A5 plan truthfulness: every checked claim matches a log or a live run (56 passed in both gate logs, 4 files 36 tests in green-p1-r3-checks.log, 19 files 323 tests in green-p1-5f197fd99-checks.log, CD 43721191756 success in 15m25s, the blog-blocks timeout claim reproduced from the CI log); the lost Green r4 log is the only unlogged count (F4)",
+    "A6 registry: measure/tracks.md lists the track as [ ] with \"Phase 1 Red is next\"; it understates the state and makes no resolved or all-pass claim, so no overstatement is present; closeout must still rewrite the line (F2)",
+    "A9: grep -rohE 'measure/tracks/[a-z_0-9-]+' tests/*.sh -> only fixture_* ids in temporary roots; no id exists in measure/archive/ without measure/tracks/, so no test points at an archived track",
+    "type check: pnpm exec tsc --noEmit in apps/www-reading-advantage -> exit 0",
+    "measure/doctor.sh exit code: 1. The marker, catalog, marker-vocabulary, and deferred-review checks pass. The architecture step fails with \"V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes\", then prints \"ARCHITECTURE: step 4 exits 1; this is a tool failure, not a boundary verdict\" and \"DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1\". The same architecture step failed in ci.yml run 43771969916 at the audited HEAD, spec.md puts it out of scope (track ci_green_master_20261115), and git diff --name-only 705a9ad60 23c29d89a lists no path under packages/, so this track neither causes nor owns the failure (F10)"
+  ],
+  "commands": [
+    "git rev-parse HEAD; git status --porcelain; git merge-base --is-ancestor fe891bc3e 23c29d89a; git merge-base --is-ancestor 23c29d89a HEAD",
+    "git log --oneline fe891bc3e..23c29d89a; git diff --name-only fe891bc3e 23c29d89a; git diff --stat fe891bc3e 23c29d89a",
+    "git diff --name-only 705a9ad60 23c29d89a; for c in $(git rev-list --reverse 756471bd5^..23c29d89a); do git diff-tree -r --root --no-commit-id --name-only $c; done",
+    "git show 23c29d89a:measure/tracks/www_products_photos_20261115/plan.md; git show 23c29d89a:.../spec.md; git show 23c29d89a:measure/tracks.md",
+    "git show 23c29d89a:apps/www-reading-advantage/e2e/photos.spec.ts; git show 23c29d89a:.../hero-section.test.tsx; git show 23c29d89a:.../hero-section.tsx",
+    "git show 8193625ca -- src/; git show b09e21f32 -- src/; git show 23c29d89a:.github/workflows/ci.yml; git show 23c29d89a:.github/workflows/cd-www-reading-advantage.yml",
+    "cd apps/www-reading-advantage && pnpm exec vitest run src/components/marketing/hero-section.test.tsx --maxWorkers=1",
+    "cd apps/www-reading-advantage && pnpm exec tsc --noEmit",
+    "npx vitest run scripts/ci/__tests__/cd-workflows.test.mjs",
+    "node -e '<W-23 regex replay over git show 23c29d89a:.github/workflows/cd-www-reading-advantage.yml and cd-apps.yml>'",
+    "gh run view 43721191756 --json conclusion,headSha,createdAt,updatedAt; gh run view 43771969916 --json jobs; gh run view 43721191676 --json jobs; gh run view 43721191676 --log-failed; gh run view 43739337764 --json jobs; gh run list --workflow cd-www-reading-advantage.yml --limit 5",
+    "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py role-gate --repo . --role phase-acceptance --track www_products_photos_20261115 --phase 'Phase 1: Photo checks, then the remaining fixes' --baseline fe891bc3e --result-file measure/runs/www_products_photos_20261115/phase-acceptance-p1-23c29d89a.json --log-file measure/runs/www_products_photos_20261115/phase-acceptance-p1-23c29d89a.log",
+    "grep over measure/runs/www_products_photos_20261115/*.log for pass, fail, EXIT, VITEST, TSC, ESLINT counts",
+    "grep -rohE 'measure/tracks/[a-z_0-9-]+' tests/*.sh, cross-checked against measure/tracks/ and measure/archive/",
+    "cat ~/Desktop/handoff/products-images-2026-11-15/MANIFEST.txt",
+    "bash measure/doctor.sh (exit code recorded in the evidence and summary lines)"
+  ],
+  "changed_files": [
+    ".github/workflows/cd-www-reading-advantage.yml",
+    ".github/workflows/ci.yml",
+    "apps/www-reading-advantage/e2e/photos.spec.ts",
+    "apps/www-reading-advantage/public/images/products/primary-lesson-intro.webp",
+    "apps/www-reading-advantage/public/images/products/primary-origins-2-cover.webp",
+    "apps/www-reading-advantage/public/images/products/reading-origins-2-cover.webp",
+    "apps/www-reading-advantage/public/images/products/storytime-reader-card.webp",
+    "apps/www-reading-advantage/public/images/products/storytime-sound-card.webp",
+    "apps/www-reading-advantage/public/images/products/tutor-flashcard.webp",
+    "apps/www-reading-advantage/src/__tests__/phase-3-group-b-types.test.ts",
+    "apps/www-reading-advantage/src/__tests__/products-page-pictures.red.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/page.tsx",
+    "apps/www-reading-advantage/src/components/marketing/hero-section.test.tsx",
+    "apps/www-reading-advantage/src/components/marketing/hero-section.tsx",
+    "apps/www-reading-advantage/src/components/products/b2b-solutions.tsx",
+    "apps/www-reading-advantage/src/components/products/product-picture.tsx",
+    "apps/www-reading-advantage/src/components/products/tutor-advantage.tsx",
+    "apps/www-reading-advantage/src/lib/product-pictures.ts",
+    "apps/www-reading-advantage/src/locales/components/products/b2b-solutions.ts",
+    "apps/www-reading-advantage/src/locales/components/products/tutor-advantage.ts",
+    "apps/www-reading-advantage/src/locales/pages/products/overview.ts",
+    "measure/tracks.md",
+    "measure/tracks/www_products_photos_20261115/index.md",
+    "measure/tracks/www_products_photos_20261115/metadata.json",
+    "measure/tracks/www_products_photos_20261115/plan.md",
+    "measure/tracks/www_products_photos_20261115/spec.md"
+  ],
+  "retry_recommendation": "none",
+  "handoff": "Verdict pass at the audited HEAD 23c29d89acc30ca5515c4cf1b57d74bcc9104287 (tip of origin/master). Route to measure-closeout for the archive move. Closeout owns: F1 (task 1.4 PM line with ~/Desktop/handoff/page-check/20261116-0615/), F2 (tracks.md status and the archive move), F8 (note the AC-4 stacked-card deviation in the archive summary), and the record that F4's Green r4 log is lost and F3's text-rule proof gap stays accepted. Route F7 and F10 to track ci_green_master_20261115: fix the src/lib/blog-blocks.test.ts:210 5000 ms timeout, confirm the three www photo-e2e steps in ci.yml execute, and repair the architecture manifest so doctor.sh exits 0. Route F5 (the tracked test-results/.last-run.json) to a later chore outside this track. F6 is a staffing note for the orchestrator. The worktree checkout is 3 commits behind the audited tip; the two later track commits are bbe4c3561 (one-line W-23 pin, verified by regex replay) and 23c29d89a (one plan line). Next: closeout, then the archive. Daniel's look answer is already recorded: \"Ok\" in Tasks at 2026-11-16 07:38 ICT.",
+  "confidence": "high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "AC-1 to AC-4 hold at the audited content: photos.spec.ts constants (MAX_TEXT_OVERLAP_PERCENT 10 line 128, MAX_COVERED_PERCENT 30), the CD e2e block before Submit Cloud Build, and the PM page-check artifact with 0 hidden, 0 covered, 0 text over."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "red-p1-40419d4bc.log reads 18 failed and 38 passed, red-p1-r3-d43334ba6.log reads 2 failed and 54 passed, and the hero test failed at 8193625ca^; the 10 percent text rule alone has no recorded firing (F3)."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --name-only fe891bc3e 23c29d89a lists only the W-23 pin, other-track blog content, and plan.md; every track commit touches only www marketing files, tests, workflows, and track docs."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Both green gate logs are raw Playwright output (56 passed, EXIT=0) and gh run 43721191756 is success in 15m25s; the Green r4 log is lost with its worktree (F4), though its 38/38 claim re-verified by replay."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "spec-review",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 4,
+      "evidence": "spec-review r2 at 40419d4bc: I re-read the AC-1 exclusion and page-set text against e2e/photos.spec.ts and both hold; r1 correctly blocked on the missing badge and broken-src rules."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "opencode-go/mimo-v2.6-flash",
+      "agreed": true,
+      "score": 5,
+      "evidence": "Review A r1 at d43334ba6: I re-checked its workflow and e2e claims (Chrome install, port wait, e2e before the deploy) against the audited content and gh run data; all hold."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "opencode-go/mimo-v2.6-flash",
+      "agreed": true,
+      "score": 4,
+      "evidence": "Review A r2 at ac1e54efd: verdict pass with the honest F5 proof gap; I reproduced its log claims but found the AC-3a dormancy it did not name (F7), so the review left one gap."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "not dispatched",
+      "agreed": true,
+      "score": 3,
+      "evidence": "No adversarial round ran, and the plan Test strategy did not require one; the live check and PM page-check carry the browser proof instead, which leaves the text rule unproven (F3)."
+    }
+  ]
+}

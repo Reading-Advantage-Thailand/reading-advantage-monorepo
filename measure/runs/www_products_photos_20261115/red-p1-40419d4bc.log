@@ -1,0 +1,118 @@
+# Red report — www_products_photos_20261115, task 1.1 (Red)
+
+Track: `www_products_photos_20261115` (light lane, bug), Phase 1, task 1.1.
+Role: measure-mid, Red phase. Route: opencode-go/deepseek-v4.1-flash (substitution, recorded by the
+orchestrator).
+Worktree: `/home/daniebo/Desktop/rama-worktrees/www-products-a62`, branch `www/products-a62`.
+Baseline (phase and role): `40419d4bc1f3a712f295acd7a6fc8939c8b6d69a`.
+`origin/master` was `40419d4bc1f3a712f295acd7a6fc8939c8b6d69a` at the start. No rebase.
+
+## What the tests say
+
+A reader must see every content photo on the six www marketing pages that show a hero photo, and on
+`/products`, at 390, 980, 1024, and 1280 px, in en and th. A photo must load, show, and stay at most
+30 percent covered on a 5 x 5 `document.elementFromPoint` grid, with `pointer-events:auto` forced on
+every element. `/products` must show one photo in each program card and each product block, and the
+Tutor section must show one. Each product picture must keep its natural aspect within 5 percent and a
+short side of at least 100 px.
+
+## Evidence
+
+All heavy commands went through `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh`.
+
+1. `pnpm exec tsc --noEmit` in `apps/www-reading-advantage` → exit 0.
+2. `pnpm exec eslint e2e/photos.spec.ts src/components/marketing/hero-section.test.tsx` → exit 0.
+   `e2e/` is in an eslint ignore pattern; the hero test lints clean.
+3. Unit test at HEAD: `vitest run src/components/marketing/hero-section.test.tsx` → exit 0.
+   The hero fix is in `8193625ca`, so the new case passes at HEAD by design.
+4. Red proof at HEAD `40419d4bc`, with `.next` from that commit:
+   - `pnpm exec next build` → exit 0.
+   - `next start -p 3123` → answered HTTP 200 on `/en`. Next 16.4.1 prints
+     `"next start" does not work with "output: standalone"` as a warning only; it serves.
+   - `BASE_URL=http://localhost:3123 pnpm exec playwright test e2e/photos.spec.ts --reporter=list
+     --workers=2 --retries=0` → exit 1, 18 failed, 38 passed. Raw log: `/tmp/opencode/a62-head-e2e2.log`.
+5. Pre-fix proof at `8193625ca^` (`705a9ad60`) in a temporary worktree: the hero unit test fails with
+   `AssertionError: expected [ 'div.hidden' ] to deeply equal []` (the test found `div.hidden`).
+   Result: 1 failed, 6 passed. The worktree was removed with `git worktree remove --force` and
+   `git worktree prune`.
+
+## Failing cases at HEAD, by name
+
+- `home en 390 px` and `home th 390 px`: `workbook-tablet-cutaway-800.webp` renders 356 x 200 and is
+  40 percent covered (max 30). The dark card of the mastery graph covers the bottom-left corner. The
+  photo passes at 980, 1024, and 1280 px. The spec evidence line said 60 percent at 390 px and
+  76 percent at 980 px; this run reads 40 percent at 390 px and no failure above 390 px. The spec
+  now records the Red numbers.
+- `/products` photo cases at 390, 980, 1024, and 1280 px, en and th (8 cases):
+  `blended-learning.png` is 100 percent covered. The box "See How We Report Results" and its gradient
+  overlay sit on top of the file at every width.
+- `/products` block cases at 390, 980, and 1280 px, en and th (6 cases): the Tutor section shows no
+  photo. Only the tutor logo (SVG) sits there.
+- `/products` block cases at 1024 px, en and th (2 cases): the Tutor section shows no photo, and the
+  three portrait program cards render 160 x 256 against a natural 480 x 651:
+  `primary-origins-2-cover.webp` (deviation 15.2 percent), `reading-origins-2-cover.webp`
+  (15.2 percent), and `tutor-flashcard.webp` (22.2 percent). Tailwind `max-width: 100%` shrinks the
+  width while `h-64` holds the height.
+
+## Checks that pass, and why
+
+- `/services/blended-learning` passes at the four widths. Its hero is a HeroSection floating image
+  with no overlay. The covered instance of the same file is the `/products` card, and that case fails.
+- `/products/managed-service`, `/pricing`, and `/about` pass: each hero floating image shows with no
+  overlay.
+- The program-card coverage cases pass at 390, 980, and 1280 px. The aspect case is what catches the
+  1024 px squeeze.
+
+## Deviations and limits
+
+- The e2e pre-fix run at `8193625ca^` was skipped to keep the run cost down. The hero unit test proves
+  the hidden-container regression there. The missing product pictures are proven at HEAD by the Tutor
+  case. At `8193625ca^` the program cards carry no `data-testid` and no picture, so the same case
+  fails there by construction (checked by reading the file at that commit).
+- Red commits `4c48a8b12` and `5f197fd99` sit on `www/products-a62`. Nothing was pushed.
+  The working tree is clean after the second commit.
+
+```
+MEASURE_AGENT_RESULT
+role: measure-red
+track_id: www_products_photos_20261115
+phase: "Phase 1: Photo checks, then the remaining fixes"
+task: "1.1 Red"
+status: pass
+baseline_sha: 40419d4bc1f3a712f295acd7a6fc8939c8b6d69a
+role_base_sha: 40419d4bc1f3a712f295acd7a6fc8939c8b6d69a
+head_sha: 5f197fd99 (Red work committed on www/products-a62)
+commits:
+  - 4c48a8b12 test(www): add the photo e2e, hero unit test, and ci wiring (track_id: www_products_photos_20261115)
+  - 5f197fd99 chore(www): mark task 1.1 Red done and start 1.2 (track_id: www_products_photos_20261115)
+tests_added:
+  - apps/www-reading-advantage/e2e/photos.spec.ts (AC-1, 56 cases)
+  - apps/www-reading-advantage/src/components/marketing/hero-section.test.tsx (AC-2, one new case)
+wiring:
+  - .github/workflows/ci.yml job affected: Chrome install, next start -p 3123, e2e, gated on matrix.id == www-reading-advantage
+  - .github/workflows/cd-www-reading-advantage.yml deploy job: install, build, Chrome, next start -p 3123, e2e, before Submit Cloud Build
+commands:
+  - pnpm exec tsc --noEmit -> 0
+  - pnpm exec eslint e2e/photos.spec.ts src/components/marketing/hero-section.test.tsx -> 0
+  - pnpm exec vitest run src/components/marketing/hero-section.test.tsx (HEAD) -> 0
+  - pnpm exec next build (HEAD) -> 0
+  - pnpm exec next start -p 3123 ; curl /en -> 200
+  - BASE_URL=http://localhost:3123 pnpm exec playwright test e2e/photos.spec.ts -> 1
+  - vitest run hero-section.test.tsx at 8193625ca^ -> 1
+remaining_failures:
+  - home 390 px (en, th): workbook-tablet-cutaway-800.webp 40 percent covered
+  - /products 390, 980, 1024, 1280 px (en, th): blended-learning.png 100 percent covered
+  - /products blocks 390, 980, 1280 px (en, th): Tutor section has no photo
+  - /products blocks 1024 px (en, th): Tutor section has no photo; three portrait program cards break the 5 percent aspect rule
+open_for_green:
+  - AC-4 list in spec.md. /products/reading-advantage stays out of the track (orchestrator, 2026-11-15).
+files_changed:
+  - apps/www-reading-advantage/e2e/photos.spec.ts (new)
+  - apps/www-reading-advantage/src/components/marketing/hero-section.test.tsx
+  - .github/workflows/ci.yml
+  - .github/workflows/cd-www-reading-advantage.yml
+  - measure/tracks/www_products_photos_20261115/spec.md
+  - measure/tracks/www_products_photos_20261115/plan.md
+  - measure/runs/www_products_photos_20261115/red-p1-40419d4bc.log (gitignored: measure/runs)
+END_MEASURE_AGENT_RESULT
+```

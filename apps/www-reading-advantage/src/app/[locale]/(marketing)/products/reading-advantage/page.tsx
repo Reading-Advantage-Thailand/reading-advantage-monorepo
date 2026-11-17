@@ -19,6 +19,7 @@ import { FloatingPill } from "@/components/ui/floating-pill";
 import { HorizontalStrip } from "@/components/ui/horizontal-strip";
 import { MarketingSvgClient } from "@/components/marketing/marketing-svg-client";
 import { buildMarketingMetadata } from "@/lib/seo";
+import { siteLogos } from "@/lib/site-assets";
 import type { Metadata } from "next";
 
 /**
@@ -92,7 +93,7 @@ export default async function ReadingAdvantage() {
         }}
         customGradient="bg-gradient-to-br from-sky-400 to-sky-800"
         productLogo={{
-          src: "/reading-advantage.jpg",
+          src: siteLogos.reading.square,
           alt: "Reading Advantage Logo",
         }}
         backgroundImage={{

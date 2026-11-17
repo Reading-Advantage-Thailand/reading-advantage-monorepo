@@ -11,6 +11,7 @@ export const en = {
             title: "Primary Advantage",
             badge: "NOW AVAILABLE",
             gradeRange: "Primary English, CEFR Pre-A1 to A2",
+            imageAlt: "Primary Advantage lesson in the app: the Introduction step with a picture of a dog and the list of 14 steps",
             features: {
                 0: "Build reading stamina with leveled fiction and informational texts for primary students",
                 1: "Support bilingual classrooms with Thai and Simplified Chinese scaffolds",
@@ -22,6 +23,7 @@ export const en = {
             title: "Reading Advantage",
             badge: "Available Now",
             gradeRange: "English reading, CEFR A1 to A2 active scope",
+            imageAlt: "Printed Reading Advantage Origins 2 workbook cover with two drawn travelers at a village notice board",
             features: {
                 0: "Strengthen English comprehension with sustained extensive reading routines",
                 1: "Research shows extensive reading outperforms traditional grammar instruction (Aka, 2019)",
@@ -42,18 +44,18 @@ export const en = {
         },
         scienceAdvantage: {
             title: "Science Advantage",
-            badge: "On our roadmap",
+            badge: "For the 2027 school year",
             gradeRange: "Science book line, built but not released",
             features: {
                 0: "Built as a printed workbook with a digital twin",
                 1: "Planned to mix reading investigations and interactive explorations",
                 2: "Planned to build on the Mastery Advantage knowledge graph",
-                3: "No release date has been set",
+                3: "Planned for Thai primary schools in the 2027 school year",
             },
         },
         mathAdvantage: {
             title: "Math Advantage",
-            badge: "On our roadmap",
+            badge: "For the 2027 school year",
             gradeRange: "Math book line, planned",
             features: {
                 0: "Planned printed workbook with a digital twin",
@@ -64,19 +66,20 @@ export const en = {
         },
         zhongwenAdvantage: {
             title: "Zhongwen Advantage",
-            badge: "On our roadmap",
+            badge: "For the 2027 school year",
             gradeRange: "Chinese book line, planned",
             features: {
                 0: "Planned leveled narrative and informational reading for Chinese learners",
                 1: "Planned bilingual scaffolds such as pinyin, tone audio, and English summaries",
                 2: "Planned to build on the Mastery Advantage knowledge graph",
-                3: "No release date has been set",
+                3: "Planned for Thai primary schools in the 2027 school year",
             },
         },
         storytimeAdvantage: {
             title: "Storytime Advantage",
-            badge: "First unit being prepared",
+            badge: "Launches 30 November 2026",
             gradeRange: "English program for Anuban 2 to P2",
+            imageAlt: "Storytime Advantage sound page for the letter n, with a drawn girl pointing at a bird's nest",
             features: {
                 0: "One sound, one song, and two books each week",
                 1: "Every lesson printed in full for the class teacher",
@@ -110,6 +113,7 @@ export const th = {
             title: "Primary Advantage",
             badge: "พร้อมใช้งานแล้ว",
             gradeRange: "ภาษาอังกฤษระดับประถม CEFR Pre-A1 ถึง A2",
+            imageAlt: "บทเรียน Primary Advantage ในแอป: ขั้นแนะนำพร้อมภาพสุนัขและรายการ 14 ขั้นตอน",
             features: {
                 0: "พัฒนาความคล่องในการอ่านด้วยสื่อแบ่งระดับสำหรับนักเรียนประถม",
                 1: "สนับสนุนห้องเรียนสองภาษา ด้วยสื่อเสริมภาษาไทยและภาษาจีน",
@@ -121,6 +125,7 @@ export const th = {
             title: "Reading Advantage",
             badge: "พร้อมใช้งานแล้ว",
             gradeRange: "การอ่านภาษาอังกฤษ ขอบเขตหลัก CEFR A1 ถึง A2",
+            imageAlt: "ปกหนังสือแบบฝึกหัด Reading Advantage Origins 2 ฉบับพิมพ์ พร้อมภาพวาดนักเดินทางสองคนที่หน้ากระดานประกาศของหมู่บ้าน",
             features: {
                 0: "พัฒนาความเข้าใจการอ่านภาษาอังกฤษผ่านกิจวัตรการอ่านแบบกว้างขวางอย่างต่อเนื่อง",
                 1: "งานวิจัยแสดงว่าการอ่านแบบกว้างขวางให้ผลดีกว่าการสอนไวยากรณ์แบบดั้งเดิม (Aka, 2019)",
@@ -141,18 +146,18 @@ export const th = {
         },
         scienceAdvantage: {
             title: "Science Advantage",
-            badge: "อยู่ในแผนงาน",
+            badge: "สำหรับปีการศึกษา 2570",
             gradeRange: "ชุดหนังสือวิทยาศาสตร์ สร้างเสร็จแล้วแต่ยังไม่เปิดตัว",
             features: {
                 0: "สร้างเป็นแบบฝึกหัดเล่มพิมพ์พร้อมเวอร์ชันดิจิทัล",
                 1: "วางแผนผสานการสืบค้นผ่านการอ่านและกิจกรรมโต้ตอบ",
                 2: "วางแผนให้ต่อยอดบนกราฟความรู้ Mastery Advantage",
-                3: "ยังไม่มีกำหนดวันเปิดตัว",
+                3: "มีแผนเปิดให้โรงเรียนประถมไทยใช้ในปีการศึกษา 2570",
             },
         },
         mathAdvantage: {
             title: "Math Advantage",
-            badge: "อยู่ในแผนงาน",
+            badge: "สำหรับปีการศึกษา 2570",
             gradeRange: "ชุดหนังสือคณิตศาสตร์ วางแผนไว้",
             features: {
                 0: "วางแผนแบบฝึกหัดเล่มพิมพ์พร้อมเวอร์ชันดิจิทัล",
@@ -163,19 +168,20 @@ export const th = {
         },
         zhongwenAdvantage: {
             title: "Zhongwen Advantage",
-            badge: "อยู่ในแผนงาน",
+            badge: "สำหรับปีการศึกษา 2570",
             gradeRange: "ชุดหนังสือภาษาจีน วางแผนไว้",
             features: {
                 0: "วางแผนบทอ่านแบ่งระดับทั้งเรื่องเล่าและข้อมูลสำหรับผู้เรียนภาษาจีน",
                 1: "วางแผนสื่อเสริมสองภาษา เช่น พินอิน เสียงวรรณยุกต์ และสรุปภาษาอังกฤษ",
                 2: "วางแผนให้ต่อยอดบนกราฟความรู้ Mastery Advantage",
-                3: "ยังไม่มีกำหนดวันเปิดตัว",
+                3: "มีแผนเปิดให้โรงเรียนประถมไทยใช้ในปีการศึกษา 2570",
             },
         },
         storytimeAdvantage: {
             title: "Storytime Advantage",
-            badge: "กำลังจัดเตรียมหน่วยแรก",
+            badge: "เปิดตัววันที่ 30 พฤศจิกายน 2569",
             gradeRange: "หลักสูตรภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2",
+            imageAlt: "หน้าเสียงตัว n ของ Storytime Advantage พร้อมภาพวาดเด็กหญิงชี้ไปที่รังนก",
             features: {
                 0: "หนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มต่อสัปดาห์",
                 1: "ทุกคาบมีแผนการสอนครบ",
@@ -210,6 +216,7 @@ export const zh = {
             title: "Primary Advantage",
             badge: "现已上线",
             gradeRange: "小学英语，CEFR Pre-A1 至 A2",
+            imageAlt: "应用中的 Primary Advantage 课程：带有小狗图片的导入步骤和 14 个步骤的列表",
             features: {
                 0: "通过分级小说与信息文本，提升小学生的阅读耐力",
                 1: "为泰语与简体中文双语课堂提供支撑",
@@ -221,6 +228,7 @@ export const zh = {
             title: "Reading Advantage",
             badge: "现已上线",
             gradeRange: "英语阅读，当前重点为 CEFR A1 至 A2",
+            imageAlt: "Reading Advantage Origins 2 练习册印刷封面，画有两位旅行者站在村庄布告栏前",
             features: {
                 0: "通过持续的泛读训练强化英语阅读理解",
                 1: "研究表明，泛读优于传统语法教学（Aka，2019）",
@@ -276,6 +284,7 @@ export const zh = {
             title: "Storytime Advantage",
             badge: "首个单元准备中",
             gradeRange: "面向 Anuban 2 至 P2 的英语课程",
+            imageAlt: "Storytime Advantage 字母 n 发音页面，画中的女孩指着鸟巢",
             features: {
                 0: "每周一个发音、一首歌和两本书",
                 1: "每节课均有完整教学脚本",

@@ -8,6 +8,9 @@ export const en = {
   onThisPage: "On this page",
   youMightAlsoLike: "You might also like",
   readingTime: "{count} min read",
+  calloutNote: "Note",
+  calloutTip: "Tip",
+  calloutWarning: "Warning",
 } as const;
 
 export const th = {
@@ -20,6 +23,9 @@ export const th = {
   onThisPage: "บนหน้านี้",
   youMightAlsoLike: "คุณอาจสนใจ",
   readingTime: "{count} นาทีในการอ่าน",
+  calloutNote: "หมายเหตุ",
+  calloutTip: "เคล็ดลับ",
+  calloutWarning: "คำเตือน",
 } as const;
 
 export const zh = {
@@ -32,4 +38,7 @@ export const zh = {
   onThisPage: "本页目录",
   youMightAlsoLike: "你可能还喜欢",
   readingTime: "{count} 分钟阅读",
+  calloutNote: "说明",
+  calloutTip: "提示",
+  calloutWarning: "警告",
 } as const;

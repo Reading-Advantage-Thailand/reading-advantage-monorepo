@@ -84,4 +84,37 @@ describe("HeroSection", () => {
     const button = screen.queryByRole("link");
     expect(button).not.toBeInTheDocument();
   });
+
+  it("renders the floating image without a hidden container at any breakpoint", () => {
+    render(
+      <HeroSection
+        title="Test Title"
+        description="Test description"
+        alignment="left"
+        floatingImage={{ src: "/images/small-group.png", alt: "Floating hero photo" }}
+      />,
+    );
+
+    const image = screen.getByAltText("Floating hero photo");
+    expect(image).toBeInTheDocument();
+    expect(image).not.toHaveAttribute("hidden");
+
+    // A `hidden` token, bare or with a breakpoint prefix (for example
+    // `xl:block` next to `hidden`), hides the photo below that breakpoint.
+    const hiddenTokens: string[] = [];
+    for (
+      let node: HTMLElement | null = image;
+      node !== null && node !== document.body;
+      node = node.parentElement
+    ) {
+      const classes = (node.getAttribute("class") ?? "").split(/\s+/);
+      for (const token of classes) {
+        if (token === "hidden" || /^(sm|md|lg|xl|2xl):hidden$/.test(token)) {
+          hiddenTokens.push(`${node.tagName.toLowerCase()}.${token}`);
+        }
+      }
+    }
+
+    expect(hiddenTokens).toEqual([]);
+  });
 });

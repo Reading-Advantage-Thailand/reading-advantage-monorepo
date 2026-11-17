@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { buildMarketingMetadata } from "@/lib/seo";
+import { siteLogos } from "@/lib/site-assets";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { LargeImageBreak } from "@/components/ui/large-image-break";
 import { Card } from "@/components/ui/card";
@@ -95,7 +96,7 @@ export default async function ScienceAdvantage({
             <div className="lg:col-span-5 flex justify-center lg:justify-end animate-in fade-in slide-in-from-right-8 duration-1000">
               <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-4 shadow-2xl">
                 <Image
-                  src="/science-advantage.png"
+                  src={siteLogos.science.square}
                   alt={t("logoAlt")}
                   width={350}
                   height={350}

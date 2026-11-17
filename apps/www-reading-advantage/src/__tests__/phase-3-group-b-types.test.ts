@@ -85,6 +85,12 @@ const EXPECTED_SERVICE_KEYS = [
   "cta.button",
 ];
 
+const PICTURED_PRODUCT_KEYS: readonly string[] = [
+  "readingAdvantage",
+  "primaryAdvantage",
+  "storytimeAdvantage",
+];
+
 const EXPECTED_B2B_KEYS = [
   ...B2B_RENDER_ORDER.flatMap((productKey) => [
     `products.${productKey}.title`,
@@ -92,6 +98,9 @@ const EXPECTED_B2B_KEYS = [
       (featureIndex) => `products.${productKey}.features.${featureIndex}`,
     ),
     `products.${productKey}.gradeRange`,
+    ...(PICTURED_PRODUCT_KEYS.includes(productKey)
+      ? [`products.${productKey}.imageAlt`]
+      : []),
     `products.${productKey}.badge`,
   ]),
   "title",
@@ -423,7 +432,9 @@ describe("Phase 3 Group B locale contracts", () => {
       sentinelFor("products.readingAdvantage.title"),
     );
     expect(productsEvidence.hrefs).toContain("/products/reading-advantage");
-    expect(productsEvidence.imageSources).toContain("/reading-advantage.jpg");
+    expect(productsEvidence.imageSources).toContain(
+      "/media/brand/logos/vector/square/reading-advantage.svg",
+    );
     expect(productsEvidence.imageAlts).toContain(
       sentinelFor("products.readingAdvantage.title"),
     );
