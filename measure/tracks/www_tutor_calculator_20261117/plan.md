@@ -123,6 +123,10 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   (test_files=1, authored_cases=10); none execute because the import fails at transform.
   Evidence files: `measure/runs/www_tutor_calculator_20261117/red-1.5-bcaf27d80.json` and
   `.log`.
+  Correction (2026-11-17): the D-7 figure assertion now scopes to the results region and expects
+  exactly two `15,000` matches (`results.ownGV` and `results.networkGV`, spec 5.3 item 6 and D-3),
+  correction commit `e42aa53fa0f00571b32a46f4c80fc4fb20b81958`. The targeted command reports
+  `Tests 10 passed (10)`. The two uncommitted Green files were left untouched.
 
 - [ ] 1.6 Green: build the client component. Test: AC-9.
 
