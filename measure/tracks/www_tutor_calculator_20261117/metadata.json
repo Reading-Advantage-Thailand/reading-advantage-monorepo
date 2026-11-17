@@ -1,0 +1,41 @@
+{
+  "track_id": "www_tutor_calculator_20261117",
+  "type": "feature",
+  "status": "in_progress",
+  "created_at": "2026-11-17T00:00:00Z",
+  "updated_at": "2026-11-17T00:00:00Z",
+  "opened": "2026-11-17",
+  "description": "Add two sections to the www Tutor Advantage page. The first is a commission calculator with a payout graph and three example presets. The second is a gallery of three blurred app screens. The zh block holds the English lines until the contracted Chinese speaker delivers. One www-only push follows the PM page-check.",
+  "author_model": "opencode-go/deepseek-v4.1-flash",
+  "depends_on": "none",
+  "owner_chain": [
+    "Daniel (owner; deploy gate)",
+    "Monorepo orchestrator (track owner)",
+    "PM orchestrator (decisions of 2026-11-17)"
+  ],
+  "decisions": [
+    "PM, 2026-11-17: PR handoff v0.4 section 8 overrides the draft lines; the final copy ships",
+    "PM, 2026-11-17: no Next.js security upgrade in this track; the advisory nudge stays a warning",
+    "PM, 2026-11-17: the 11 % upscale of the phone screens at 1280 px is accepted",
+    "PM, 2026-11-17: a draft copy never ships; PR delivers the final copy first",
+    "PM, 2026-11-17: the PM drops the network and earnings captions; the gallery holds three cards",
+    "PM, 2026-11-17: one www-only push follows the PM page-check; no deploy command runs from the session"
+  ],
+  "dates": {
+    "due": "2026-11-21",
+    "phase_1_acceptance": "2026-11-17",
+    "phase_2_acceptance": "2026-11-17",
+    "page_check": "2026-11-17",
+    "www_push": "2026-11-17"
+  },
+  "constraints": [
+    "www-only change: apps/www-reading-advantage and the measure records",
+    "No hash or checksum field (AGENTS.md hashing policy)",
+    "No deploy command and no Cloud Run change",
+    "The push to origin/master is www-only and standing-approved (Daniel 2026-11-15)",
+    "The zh block holds the English lines until the contracted Chinese speaker delivers"
+  ],
+  "estimated_tasks": 20,
+  "actual_tasks": 19,
+  "deviation_notes": "Task C.1, the closeout, stays open for the closeout role. The Phase 2 copy tasks 2.7 to 2.9 ran before the page-check tasks 2.5 and 2.6, so the plan lists them out of order."
+}

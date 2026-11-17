@@ -51,8 +51,8 @@ This file tracks all major tracks for the project.
 
 - [ ] **Track: www Tutor Advantage calculator and screens** — *created 2026-11-17*
   *Link: [./tracks/www_tutor_calculator_20261117/](./tracks/www_tutor_calculator_20261117/)*
-  *Status: new, opened 2026-11-17; Phase 1 (commission calculator with the payout graph) first, no push; Phase 2 (blurred screens, the gallery, the two live lines) can start at once, because the set arrived 2026-11-17 | Owner: Monorepo orchestrator | PM assignment A-63 (Daniel, Google Tasks R2t2eF9Z) | Due 2026-11-21*
-  *Note: Daniel's shape of 06:50 ICT: personal students, legs with students by leg, and a graph of the payout. One level: the leg payouts come off rate x GV, and the three parts add up to the gross. Every figure is an example. Three gallery captions have a screen (student 070, student 002, tutor 062); `network` and `earnings` have none, and `studentHome` names Reedy practice, which no screen shows, so three answers wait with PR. Preset 3 and the three chart labels are drafts. No deploy; the www-only push follows the PM page-check at 390, 980, and 1280 px.*
+  *Status: Phase 1 accepted (`d279b8703`); Phase 2 accepted, round 2 (`94af2c15b`); PM page-check PASS with F-1 fixed (`6c0cf5de6`); www-only push `a726b2be2` to origin/master; CD run 44053703983 success; live en, th, and zh on 2026-11-17; final acceptance and closeout next | Owner: Monorepo orchestrator | PM assignment A-63 (Daniel, Google Tasks R2t2eF9Z) | Due 2026-11-21*
+  *Note: Task 2.7 replaced the drafts with the PR handoff v0.4 section 8 copy. The gallery keeps three cards (070, 002, 062). The key `shortAnswer` replaces `lessonPhases`. The PM dropped the network and earnings captions.*
 
 - [x] **Track: Primary class code: six hours** — *created 2026-11-12*
   *Link: [./tracks/primary_class_code_six_hours_20261112/](./tracks/primary_class_code_six_hours_20261112/)*

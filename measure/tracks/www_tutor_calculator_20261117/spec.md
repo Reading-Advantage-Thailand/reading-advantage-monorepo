@@ -123,38 +123,38 @@ Price 3,000 baht in every preset.
 |---|---|---|---|
 | Own students | 4 | 2 | 2 |
 | Legs | 0 | 2 | 3 |
-| Students per leg | none | 3, 3 | 3, 3, 3 |
+| Students per leg | none | 3, 3 | 4, 4, 4 |
 | Own GV | 12,000.00 | 6,000.00 | 6,000.00 |
-| Network GV | 12,000.00 | 24,000.00 | 33,000.00 |
-| Rate | 46.0000% | 52.7321% | 56.6953% |
-| Gross | 5,520.00 | 12,655.69 | 18,709.44 |
-| Leg payouts | 0 | 8,010.00 | 12,015.00 |
-| Payout before tax | 5,520.00 | 4,645.69 | 6,694.44 |
-| Withholding tax | 165.60 | 139.37 | 200.83 |
-| Net | 5,354.40 | 4,506.32 | 6,493.61 |
+| Network GV | 12,000.00 | 24,000.00 | 42,000.00 |
+| Rate | 46.0000% | 52.7321% | 59.1273% |
+| Gross | 5,520.00 | 12,655.69 | 24,833.45 |
+| Leg payouts | 0 | 8,010.00 | 16,560.00 |
+| Payout before tax | 5,520.00 | 4,645.69 | 8,273.45 |
+| Withholding tax | 165.60 | 139.37 | 248.20 |
+| Net | 5,354.40 | 4,506.32 | 8,025.25 |
 
 Preset 1 and preset 2 fit the copy file's lines as they stand. Their figures round to the same
 whole baht: 5,520 / 5,354 and 12,656 / 4,646 / 4,506.
 
-Preset 3 does not fit "a small team, two levels" any more, because the calculator has one level
-(D-4). The default is three legs of three students with two own students: GV 33,000, rate
-56.6953%, gross 18,709.44, leg payouts 12,015.00, payout 6,694.44, tax 200.83, net 6,493.61.
-The rate is 56.6953% from the formula; the brief of 2026-11-17 gives 56.6951%, which differs in
-the fourth decimal. Every money figure in the brief matches this table to the whole baht.
+Preset 3 has one level (D-4). It uses two own students and three legs of four students. The
+table holds its figures, and the PR v0.4 copy of 2026-11-17 quotes the same ones. The rate comes
+from the formula of section 3, and the module test pins it to four decimals.
 
-**D-2a. Preset 3 wording (pending from PR).** The copy file's preset 3 name, setup, and result
-no longer describe the inputs. This session supplies a draft. PR replaces the draft when it
-delivers the new wording. The figures are the table above.
+**D-2a. Preset 3 wording (resolved by PR v0.4, task 2.7).** PR handoff v0.4 section 8 replaced
+the draft on 2026-11-17. The shipped copy is the final copy:
 
-| Key | Draft en | Draft th |
+| Key | en | th |
 |---|---|---|
-| `presets[2].name` | A small team, three legs | ทีมเล็ก สามสายงาน |
-| `presets[2].setup` | Two own students, and three direct tutors with three students each. | นักเรียนของตัวเองสองคน และติวเตอร์ชั้นแรกสามคนที่มีนักเรียนคนละสามคน |
-| `presets[2].result` | 33,000 baht of network volume at a rate of 56.7%. The gross is 18,709 baht, and the three direct tutors earn 12,015 baht of it. The payout is 6,694 baht before tax, and 6,494 baht after 3% withholding tax. | ยอดรวมของเครือข่าย 33,000 บาท ที่อัตรา 56.7% ค่าคอมมิชชันก่อนหัก 18,709 บาท โดยติวเตอร์ชั้นแรกสามคนได้รับ 12,015 บาท เหลือจ่ายก่อนภาษี 6,694 บาท และหลังหักภาษีหัก ณ ที่จ่าย 3% เหลือ 6,494 บาท |
+| `presets[2].name` | A small team with three legs | ทีมเล็กที่มีสามสาย |
+| `presets[2].setup` | Two personal students, and three legs with four students each. | นักเรียนในคลาสของคุณเอง 2 คน และ 3 สาย สายละ 4 คน |
+| `presets[2].result` | 42,000 baht of network volume at a rate of 59.1%. The gross is 24,833 baht, and the three legs earn 16,560 baht of it. The payout is 8,273 baht before tax, and 8,025 baht after 3% withholding tax. | ยอดรวมของเครือข่าย 42,000 บาท ที่อัตรา 59.1% ยอดก่อนหักคือ 24,833 บาท และสามสายได้ค่าคอมมิชชัน 16,560 บาทจากยอดนี้ ยอดจ่ายคือ 8,273 บาทก่อนหักภาษี และ 8,025 บาทหลังหักภาษีหัก ณ ที่จ่าย 3% |
+
+The draft of this session ("A small team, three legs", three legs of three students) never
+shipped. The commit `d91e6c527` and its follow-ups carry the final copy.
 
 The earlier corrected-preset-3 line of the 2026-11-17 brief (GV 33,000 with two directs and one
-second-level tutor, payout 5,884.44, net 5,707.91) is superseded by this one-level shape. It
-does not appear.
+second-level tutor, payout 5,884.44, net 5,707.91) is superseded by the shipped one-level shape.
+It does not appear.
 
 ### D-3 Money is integer satang, truncated
 
@@ -205,7 +205,7 @@ show a result that its own example line contradicts.
 The default state is price 3,000 baht, 0 own students, and 0 legs. The result card shows the
 `explain.zero` line and 0 values. The copy provides that line, and a page that opens on an
 income figure looks like a promise (gate: no income promise). A leg added by the count control
-starts with 3 students, the value the presets use.
+starts with 3 students, the module default.
 
 ### D-7 An edit clears the selected preset
 
@@ -226,17 +226,17 @@ leg plus one row for the tutor:
 
 1. A row holds a label, a bar, and the money figures of that row.
 2. The bar length is the payout of that row against the gross, so the rows add up to the whole.
-3. A leg row reads `chart.leg` and the leg numeral, then `chart.volume` with the volume, then
-   the leg payout as bold text.
-4. The tutor row reads `chart.you` and the payout as bold text.
+3. A leg row reads `chart.legPayout` and the leg numeral, then `chart.legVolume` with the
+   volume, then the leg payout as bold text.
+4. The tutor row reads `chart.yourPayout` and the payout as bold text.
 5. The rate curve of the June file sits next to the graph at `lg` and above it at small widths
    (D-11).
 
-The graph uses three short labels, `chart.leg`, `chart.you`, and `chart.volume`. The copy file
-has no such keys, so this session supplies drafts, and PR confirms them with the preset 3
-wording (D-2a). The bar length is a run-time value: an inline style carries it as a CSS custom
-property, and one rule in `src/app/[locale]/globals.css` reads it. The `shadcn/no-inline-styles`
-row of `apps/www-reading-advantage/docs/design-rules.md` allows an inline style that sets a CSS
+The graph uses three short labels. PR v0.4 section 8 named them `chart.legVolume`,
+`chart.legPayout`, and `chart.yourPayout`, and task 2.7 shipped them. The bar length is a
+run-time value: an inline style carries it as a CSS custom property, and one rule in
+`src/app/[locale]/globals.css` reads it. The `shadcn/no-inline-styles` row of
+`apps/www-reading-advantage/docs/design-rules.md` allows an inline style that sets a CSS
 custom property or a value computed at run time.
 
 ### D-10 The zh block takes the English lines for the new work
@@ -289,15 +289,14 @@ and no earnings screen (set README, rule 7). The copy file has five captions, so
 withdrawn caption (open question 2). The gallery shows the three slots that have a picture, in
 copy order.
 
-**D-15a. Slot 2's alt text is a draft.** Copy v0.1 gives the `lessonPhases` alt as "Tutor app
-showing the 18 phases of one lesson", and the Thai as "แอปติวเตอร์แสดง 18 ช่วงของบทเรียนหนึ่งบท".
-The mapped screen, `student-mobile/002`, is a student-app screen: the student tab bar and the
-student points header are visible. The caption ("One lesson, 18 phases") fits the screen; the
-alt names the wrong app.
+**D-15a. Slot 2's alt text (resolved by PR v0.4, task 2.7).** Copy v0.1 gave the `lessonPhases`
+alt as "Tutor app showing the 18 phases of one lesson", and the Thai as "แอปติวเตอร์แสดง 18
+ช่วงของบทเรียนหนึ่งบท". The mapped screen, `student-mobile/002`, is a student-app screen: the
+student tab bar and the student points header are visible. The alt named the wrong app.
 
-This spec keeps PR's wording word for word and marks it as a draft. PR either corrects it to a
-student-app wording or confirms it. The locale test pins the string as it stands, so the change
-is one line in the dictionary and one line in the test.
+PR v0.4 replaced the alt with "Student app short-answer screen with the question and a typed
+answer", and the Thai with "หน้าจอตอบคำถามสั้นในแอปนักเรียน พร้อมคำถามและคำตอบที่พิมพ์ไว้".
+The manifest key is now `shortAnswer`, and task 2.7 shipped the new alt.
 
 ### D-16 The June claims do not return
 
@@ -388,7 +387,8 @@ type TutorCommissionCalculatorProps = {
     results: { ownGV: string; networkGV: string; rate: string; gross: string;
                downline: string; tax: string; net: string };
     explain: { ownOnly: string; withDownline: string; zero: string };
-    chart: { leg: string; you: string; volume: string };
+    chart: { legVolume: string; legPayout: string; yourPayout: string };
+    graph: { rateTitle: string; ratePoint: string };
     presets: readonly { name: string; setup: string; result: string }[];
   };
 };
@@ -450,20 +450,25 @@ calculator: {
         zero: "Add students to see a month.",
     },
     chart: {
-        leg: "Leg",
-        you: "Your payout",
-        volume: "Volume",
+        legVolume: "Leg volume",
+        legPayout: "Leg commission",
+        yourPayout: "Your payout",
+    },
+    graph: {
+        rateTitle: "Your rate for the network volume",
+        ratePoint: "This month",
     },
     presets: [
         { name: "A new tutor", setup: "Four students, no network.", result: "12,000 baht of volume at a rate of 46%. The gross is 5,520 baht, and with no downline it is all payout. After 3% withholding tax: 5,354 baht." },
         { name: "A tutor with two direct tutors", setup: "Two own students, and two direct tutors with three students each.", result: "24,000 baht of network volume at a rate of 52.7%. The gross is 12,656 baht, and the two direct tutors earn 8,010 baht of it. The payout is 4,646 baht before tax, and 4,506 baht after 3% withholding tax." },
-        { name: "A small team, three legs", setup: "Two own students, and three direct tutors with three students each.", result: "33,000 baht of network volume at a rate of 56.7%. The gross is 18,709 baht, and the three direct tutors earn 12,015 baht of it. The payout is 6,694 baht before tax, and 6,494 baht after 3% withholding tax." },
+        { name: "A small team with three legs", setup: "Two personal students, and three legs with four students each.", result: "42,000 baht of network volume at a rate of 59.1%. The gross is 24,833 baht, and the three legs earn 16,560 baht of it. The payout is 8,273 baht before tax, and 8,025 baht after 3% withholding tax." },
     ],
     disclaimer: "Every figure in these examples is an illustration. Commission depends on the classes that run and are paid for.",
 },
 ```
 
-`presets[2]` is a draft (D-2a). `chart` is a draft (D-9).
+PR v0.4 section 8 replaced the drafts of `presets[2]` and `chart` (D-2a, D-9). Task 2.7
+shipped that copy.
 
 The `th` block holds the Thai values of the copy file in the same order:
 
@@ -490,18 +495,20 @@ The `th` block holds the Thai values of the copy file in the same order:
 | `explain.ownOnly` | เดือนนี้ไม่มีดาวน์ไลน์ เงินก่อนหักทั้งหมดจึงเป็นเงินที่คุณได้รับ |
 | `explain.withDownline` | อัตราของคุณคิดกับยอดรวมทั้งเครือข่าย จากนั้นหักเงินที่ติวเตอร์ที่อยู่ใต้คุณโดยตรงได้รับ และหักภาษีหัก ณ ที่จ่าย 3% |
 | `explain.zero` | ใส่จำนวนนักเรียนเพื่อดูยอดของเดือน |
-| `chart.leg` | สายงาน (draft) |
-| `chart.you` | เงินที่คุณได้รับ (draft) |
-| `chart.volume` | ยอดรวม (draft) |
+| `chart.legVolume` | ยอดรวมของสาย |
+| `chart.legPayout` | ค่าคอมมิชชันของสาย |
+| `chart.yourPayout` | ยอดจ่ายของคุณ |
+| `graph.rateTitle` | อัตราของคุณตามยอดรวมของเครือข่าย |
+| `graph.ratePoint` | เดือนนี้ |
 | `presets[0].name` | ติวเตอร์ใหม่ |
 | `presets[0].setup` | นักเรียนสี่คน ไม่มีเครือข่าย |
 | `presets[0].result` | ยอดรวม 12,000 บาท ที่อัตรา 46% ค่าคอมมิชชันก่อนหัก 5,520 บาท ไม่มีดาวน์ไลน์ จึงได้รับทั้งหมด หลังหักภาษีหัก ณ ที่จ่าย 3% เหลือ 5,354 บาท |
 | `presets[1].name` | ติวเตอร์ที่มีติวเตอร์ชั้นแรกสองคน |
 | `presets[1].setup` | นักเรียนของตัวเองสองคน และติวเตอร์ชั้นแรกสองคนที่มีนักเรียนคนละสามคน |
 | `presets[1].result` | ยอดรวมของเครือข่าย 24,000 บาท ที่อัตรา 52.7% ค่าคอมมิชชันก่อนหัก 12,656 บาท โดยติวเตอร์ชั้นแรกสองคนได้รับ 8,010 บาท เหลือจ่ายก่อนภาษี 4,646 บาท และหลังหักภาษีหัก ณ ที่จ่าย 3% เหลือ 4,506 บาท |
-| `presets[2].name` | ทีมเล็ก สามสายงาน (draft) |
-| `presets[2].setup` | นักเรียนของตัวเองสองคน และติวเตอร์ชั้นแรกสามคนที่มีนักเรียนคนละสามคน (draft) |
-| `presets[2].result` | see D-2a (draft) |
+| `presets[2].name` | ทีมเล็กที่มีสามสาย |
+| `presets[2].setup` | นักเรียนในคลาสของคุณเอง 2 คน และ 3 สาย สายละ 4 คน |
+| `presets[2].result` | ยอดรวมของเครือข่าย 42,000 บาท ที่อัตรา 59.1% ยอดก่อนหักคือ 24,833 บาท และสามสายได้ค่าคอมมิชชัน 16,560 บาทจากยอดนี้ ยอดจ่ายคือ 8,273 บาทก่อนหักภาษี และ 8,025 บาทหลังหักภาษีหัก ณ ที่จ่าย 3% |
 | `disclaimer` | ตัวเลขทุกตัวในตัวอย่างนี้เป็นการอธิบายให้เห็นภาพ ค่าคอมมิชชันขึ้นอยู่กับคลาสที่เปิดสอนและมีการจ่ายเงินจริง |
 
 The keys `inputs.secondLevel`, `inputs.studentsSecondLevel`, and `explain.twoLevels` of copy
@@ -545,7 +552,7 @@ names:
 | Slot | Manifest key | Source file | Repo file |
 |---|---|---|---|
 | 1 | `tutorScreens.studentHome` | `student-mobile/070-screen.png` | `student-mobile/070-screen.webp` |
-| 2 | `tutorScreens.lessonPhases` | `student-mobile/002-screen.png` | `student-mobile/002-screen.webp` |
+| 2 | `tutorScreens.shortAnswer` | `student-mobile/002-screen.png` | `student-mobile/002-screen.webp` |
 | 3 | `tutorScreens.classList` | `tutor-desktop/062-screen.png` | `tutor-desktop/062-screen.webp` |
 
 The manifest entries go into `productPictures` in
@@ -568,8 +575,8 @@ screens: {
     heading: "The student app and the tutor app",
     description: "A student joins the class in LINE. The tutor runs the class in the tutor app. Both follow the same printed workbook.",
     items: [
-        { caption: "The student's home: the next class, the lesson, and Reedy practice.", alt: "Tutor Advantage student app home screen" },
-        { caption: "One lesson, 18 phases. The app follows the printed workbook step by step.", alt: "Tutor app showing the 18 phases of one lesson" }, // alt draft, see D-15a
+        { caption: "The student's home: the greeting, the next class, and the class card. Reedy voice practice is live for students with an active class package, on lessons they completed.", alt: "Student app home screen with the next class and the class card" },
+        { caption: "The student types the answer in the app, on the same lesson as the printed page.", alt: "Student app short-answer screen with the question and a typed answer" },
         { caption: "The tutor's class list: who is in today's class and which lesson they are on.", alt: "Tutor app class list with the students of one class" },
     ],
 },
@@ -582,17 +589,18 @@ The Thai values, in the same order:
 | `eyebrow` | ภายในแอป |
 | `heading` | แอปของนักเรียน และแอปของติวเตอร์ |
 | `description` | นักเรียนเข้าคลาสผ่าน LINE ติวเตอร์สอนผ่านแอปของติวเตอร์ ทั้งสองใช้เวิร์กบุ๊กที่พิมพ์เป็นเล่มชุดเดียวกัน |
-| `items[0].caption` | หน้าแรกของนักเรียน: คลาสถัดไป บทเรียน และการฝึกพูดกับ Reedy |
-| `items[0].alt` | หน้าแรกของแอปนักเรียน Tutor Advantage |
-| `items[1].caption` | หนึ่งบทเรียน 18 ช่วง แอปพาไปทีละขั้นตามเวิร์กบุ๊กที่พิมพ์เป็นเล่ม |
-| `items[1].alt` | แอปติวเตอร์แสดง 18 ช่วงของบทเรียนหนึ่งบท (draft, D-15a) |
+| `items[0].caption` | หน้าหลักของนักเรียน: คำทักทาย คลาสถัดไป และการ์ดคลาส การฝึกเสียงกับ Reedy เปิดใช้จริงสำหรับนักเรียนที่มีแพ็กเกจคลาสที่ยังใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว |
+| `items[0].alt` | หน้าหลักแอปนักเรียน แสดงคลาสถัดไปและการ์ดคลาส |
+| `items[1].caption` | นักเรียนพิมพ์คำตอบในแอป ในบทเดียวกับหน้าที่พิมพ์เป็นเล่ม |
+| `items[1].alt` | หน้าจอตอบคำถามสั้นในแอปนักเรียน พร้อมคำถามและคำตอบที่พิมพ์ไว้ |
 | `items[2].caption` | รายชื่อคลาสของติวเตอร์: วันนี้มีใครบ้าง และแต่ละคนอยู่บทไหน |
 | `items[2].alt` | รายชื่อนักเรียนในคลาสหนึ่งของแอปติวเตอร์ |
 
-The copy file's `network` and `earnings` captions are not added until PR delivers a matching
-screen (D-15). The copy file's `lessonPhases` alt text says "18 phases of one lesson", which is
-what `student-mobile/002` shows: "ขั้นที่ 8/18". That alt also names the tutor app, and the
-screen is a student-app screen, so the alt is a draft (D-15a).
+PR v0.4 section 8 gave the `studentHome` and `shortAnswer` captions and alt texts. The PM
+dropped the `network` and `earnings` captions, so the gallery holds three cards (D-15). The
+copy file's `lessonPhases` alt named the tutor app, and PR v0.4 replaced it with the
+student-app alt of the shipped locale (D-15a). The screen `student-mobile/002` shows the
+student app.
 
 `zh` takes the English values. D-10 applies.
 
@@ -653,8 +661,8 @@ Constraints on the gates:
   presets, including each leg's volume and payout.
 - **AC-3.** For preset 2 and preset 3, the conservation check holds in integer satang: leg
   payouts plus payout equal the gross satang, so 801,000 + 464,569 = 1,265,569 and
-  1,201,500 + 669,444 = 1,870,944. Preset 3 reports leg payouts 12,015.00, payout 6,694.44, and
-  net 6,493.61.
+  1,656,000 + 827,345 = 2,483,345. Preset 3 reports leg payouts 16,560.00, payout 8,273.45, and
+  net 8,025.25.
 - **AC-4.** `payoutAfterDeduction` returns 0 for `(0, 0)` and for `(100, 150)`, and tax and net
   are 0 on a zero payout.
 - **AC-5.** `www-tutor-calculator.locale.test.ts` holds every `calculator.*` string of
@@ -662,8 +670,10 @@ Constraints on the gates:
   equal to the en values, and none of `inputs.secondLevel`, `inputs.studentsSecondLevel`, or
   `explain.twoLevels`.
 - **AC-6.** The same test holds the two new live lines and finds neither old line.
-- **AC-7.** The same test holds the preset 3 draft of D-2a in en and th, and finds no `5,884`,
-  `5,707`, `22,714`, or `9,889` string in the `calculator` block.
+- **AC-7.** The same test holds the preset 3 copy of PR v0.4 and the three chart labels in en
+  and th, and finds no `5,884`, `5,707`, `22,714`, or `9,889` string in the `calculator` block.
+  The shipped test does not check the superseded one-level draft figures (18,709.44 / 6,694.44 /
+  6,493.61 / 12,015), so this spec claims no such check.
 - **AC-8.** The same test fails on each forbidden claim of D-16 inside the new strings, and it
   finds the price default of 3,000 baht.
 - **AC-9.** The component test shows the default state (0 figures and the `zero` line), the leg
@@ -688,21 +698,17 @@ Constraints on the gates:
 
 ## 10. Open questions
 
-1. Preset 3 (name, setup, result) and the three `chart.*` labels are drafts (D-2a, D-9). PR
-   confirms or replaces them, with one fact-gate pass.
-2. The copy file's `network` and `earnings` captions have no screen in the delivered set. PR
-   delivers a capture of the tutor app's network page and its income page, or withdraws the two
-   captions. The gallery holds three cards until then.
-3. The `studentHome` caption names "Reedy practice". `student-mobile/070` shows the next class,
-   the lesson, and a chat button, and no Reedy card. Neither allowed screen `070` nor `071`
-   shows Reedy practice. PR either drops the clause or delivers a Reedy screen.
-4. The Thai lines are drafts until Daniel checks them on the built page. The zh lines wait for
-   the contracted Chinese speaker (D-10).
-5. "No deploy" and "push to master" meet at the CD run: a push to `origin/master` starts the CD
-   deploy. This plan reads the standing approval as a push after the page-check, with no deploy
-   command from this session. Daniel confirms the order.
-6. The delivered `student-mobile` files are 520 x 1125, the original capture size. A larger
-   phone file does not exist. At 390 px the card is sharp; at 1280 px it is upscaled. Daniel
-   accepts the softness or PR captures again.
-7. The `lessonPhases` alt names the tutor app, and the mapped screen is the student app
-   (D-15a). PR corrects the alt or confirms it.
+All seven questions closed on 2026-11-17. PR handoff v0.4 section 8 answers questions 1, 3, and
+7 in task 2.7, commit `d91e6c527` and its follow-ups. The PM decisions answer questions 2, 5,
+and 6. The PM page-check of task 2.5 answers question 4.
+
+1. Resolved. PR v0.4 gives the preset 3 copy and the three chart labels (D-2a, D-9).
+2. Resolved. The PM dropped the `network` and `earnings` captions, so the gallery holds three
+   cards (D-15).
+3. Resolved. PR v0.4 gives the `studentHome` caption and alt text of the shipped locale.
+4. Resolved. The PM page-check passed on 2026-11-17, and Daniel read the Thai on the live page.
+   The zh lines keep the English values (D-10).
+5. Resolved. The www-only push `a726b2be2` came after the page-check, and CD run 44053703983
+   succeeded. No deploy command ran from the session.
+6. Resolved. The PM accepted the 11 % upscale of the phone screens at 1280 px.
+7. Resolved. PR v0.4 replaced the alt text, and the manifest key is now `shortAnswer` (D-15a).
