@@ -812,7 +812,7 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   Note (build-graph): skipped. The brief's allowed commands do not include it, and no export
   or signature changed.
 
-- [x] 3.6 Run the Phase 3 gates. Test: AC-11, AC-12, AC-16. Done: be506e211ec9f18d16bd9e21c607dd08afc52678.
+- [x] 3.6 Run the Phase 3 gates. Test: AC-11, AC-12, AC-16. Done: be506e211ec9f18d16bd9e21c607dd08afc52678 (gate head); record 6c22d6284.
 
   The gate block of section 8, with the ten targeted files of task 3.1. The app selector prints `["www-reading-advantage"]`.
 
@@ -863,13 +863,31 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0. Full output:
   `measure/runs/www_tutor_calculator_20261117/red-p3-3.6a-vitest.txt`.
 
-- [ ] 3.6b Green: fix the review findings of round 1. Test: AC-23.
+- [x] 3.6b Green: fix the review findings of round 1. Test: AC-23. Done: a3e02f457965cfbbaa1d42e324f4bedf9ab21796.
 
   The `graph.ownBar` row reads the own students' volume (the price times the personal students). The
   bar lengths are shares of the network volume, so the own bar and the leg bars add up to the whole.
   `page.tsx` passes `{ n: "{n}" }` for `calculator.graph.legBar`. A cleared leg-count field keeps the
   leg rows and their typed students. `ProductPicture` takes an optional `priority` prop and the hero
   sets it. No other assertion moves.
+
+  Red retry F5 (`a03605b02`) replaced the two pre-tax pins with the `graph.netBar` total and the
+  absence of the pre-tax figure, so the fix no longer meets a blocked test. Green first ran the Red
+  command at `24dbaa050` and saw exit 1 with 9 failed and 93 passed, every failure an AC-23
+  assertion.
+
+  Files: `src/components/marketing/tutor-commission-calculator.tsx` (the own bar value, the bar
+  shares of the network volume, the empty leg-count field keeps the rows and the typed students),
+  `src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx` (the `{ n: "{n}" }` value and the
+  hero `priority`), and `src/components/products/product-picture.tsx` (the `priority` prop and
+  `loading="eager"`, because Next 16.4.1 drops the loading attribute when `priority` alone is set).
+  `build-graph update` ran on the three files before the commit.
+
+  Gates at `a3e02f457965cfbbaa1d42e324f4bedf9ab21796`, commands and exit codes, in order:
+
+  1. `cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx src/components/marketing/tutor-commission-calculator.adversarial.test.tsx "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx" src/__tests__/products-page-pictures.red.test.tsx --reporter=dot --maxWorkers=1`: exit 0 (7 files, 102 tests).
+  2. `pnpm --filter www-reading-advantage exec tsc --noEmit -p .`: exit 0.
+  3. `pnpm --filter www-reading-advantage lint`: exit 0.
 
 - [ ] 3.7 Reviews A and C, adversarial, and phase acceptance. Test: AC-17, AC-18, AC-19, AC-20.
 
