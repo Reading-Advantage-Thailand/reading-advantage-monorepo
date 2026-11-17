@@ -33,6 +33,13 @@ export const productPictures = {
     height: 651,
     portrait: true,
   },
+  /** The printed Origins 3.1 cover, converted from the workbook PNG (spec D-19 item 3). */
+  primaryCover31: {
+    src: "/images/products/primary-origins-3-1-cover.webp",
+    width: 480,
+    height: 651,
+    portrait: true,
+  },
   primaryLesson: {
     src: "/images/products/primary-lesson-intro.webp",
     width: 944,
@@ -44,6 +51,20 @@ export const productPictures = {
     width: 480,
     height: 651,
     portrait: true,
+  },
+  /** The tutor photo of the hero and of the become-a-tutor block (spec D-19 items 1 and 6). */
+  tutorSession: {
+    src: "/images/tutor-advantage-hero.jpg",
+    width: 1024,
+    height: 1024,
+    portrait: false,
+  },
+  /** The Reedy preview of the Reedy block (spec D-19 item 5). */
+  reedyPreview: {
+    src: "/images/primary-advantage/reedy-preview.webp",
+    width: 1280,
+    height: 912,
+    portrait: false,
   },
   tutorFlashcard: {
     src: "/images/products/tutor-flashcard.webp",

@@ -16,7 +16,7 @@ export const en = {
         "priceNote": "The price adapts to the market.",
         "cta": "Ask about a class",
         "ctaTutor": "Become a tutor",
-        "imageAlt": "Students and a tutor around a table with a printed workbook and a tablet",
+        "imageAlt": "A tutor and a child look at a tablet together, with a notebook and a pen on the table.",
         "factsLabel": "Tutor Advantage at a glance"
     },
     classTour: {
@@ -113,17 +113,17 @@ export const en = {
             {
                 "name": "Primary Advantage Origins 2",
                 "series": "Primary Advantage",
-                "alt": "Illustrated Primary Advantage workbook art"
+                "alt": "Primary Advantage Origins 2 book cover"
             },
             {
                 "name": "Primary Advantage Origins 3.1",
                 "series": "Primary Advantage",
-                "alt": "Warm illustrated Primary Advantage workbook art"
+                "alt": "Primary Advantage Origins 3.1 book cover"
             },
             {
                 "name": "Reading Advantage Origins 2",
                 "series": "Reading Advantage",
-                "alt": "Students in a classroom using a workbook and a tablet"
+                "alt": "Reading Advantage Origins 2 book cover"
             }
         ],
         "note": "Each workbook has 14 lessons and a digital twin."
@@ -138,7 +138,7 @@ export const en = {
             "After each practice, students see one thing they did well, one thing to try next time, and a sentence to say again.",
             "Before they start, students can check their microphone and get tips."
         ],
-        "alt": "Chibi Quest art of a clearing with an oak tree"
+        "alt": "Reedy, the speaking coach, is marked Preview. A wizard avatar stands in a forest next to a Start talking button."
     },
     tutorRole: {
         "eyebrow": "Become a tutor",
@@ -151,7 +151,7 @@ export const en = {
             "The calculator on this page shows examples. Ask us about your own case."
         ],
         "cta": "Apply as a tutor",
-        "alt": "A tutor asking a student a question during a class"
+        "alt": "A tutor and a child look at a tablet together, with a notebook and a pen on the table."
     },
     screens: {
         "eyebrow": "INSIDE THE APPS",
@@ -354,7 +354,7 @@ export const th = {
         "priceNote": "ราคาปรับตามตลาด",
         "cta": "สอบถามเรื่องคลาส",
         "ctaTutor": "สมัครเป็นติวเตอร์",
-        "imageAlt": "นักเรียนและติวเตอร์นั่งรอบโต๊ะพร้อมเวิร์กบุ๊กที่พิมพ์เป็นเล่มและแท็บเล็ต",
+        "imageAlt": "ติวเตอร์และเด็กดูแท็บเล็ตด้วยกัน มีสมุดและปากกาวางอยู่บนโต๊ะ",
         "factsLabel": "Tutor Advantage โดยสรุป"
     },
     classTour: {
@@ -451,17 +451,17 @@ export const th = {
             {
                 "name": "Primary Advantage Origins 2",
                 "series": "Primary Advantage",
-                "alt": "ภาพประกอบเวิร์กบุ๊ก Primary Advantage"
+                "alt": "ปกหนังสือ Primary Advantage Origins 2"
             },
             {
                 "name": "Primary Advantage Origins 3.1",
                 "series": "Primary Advantage",
-                "alt": "ภาพประกอบโทนอุ่นของเวิร์กบุ๊ก Primary Advantage"
+                "alt": "ปกหนังสือ Primary Advantage Origins 3.1"
             },
             {
                 "name": "Reading Advantage Origins 2",
                 "series": "Reading Advantage",
-                "alt": "นักเรียนในห้องเรียนใช้เวิร์กบุ๊กและแท็บเล็ต"
+                "alt": "ปกหนังสือ Reading Advantage Origins 2"
             }
         ],
         "note": "เวิร์กบุ๊กแต่ละเล่มมี 14 บทเรียนและเวอร์ชันดิจิทัล"
@@ -476,7 +476,7 @@ export const th = {
             "หลังฝึกแต่ละครั้ง นักเรียนเห็นสิ่งที่ทำได้ดีหนึ่งอย่าง สิ่งที่ควรลองครั้งหน้าหนึ่งอย่าง และประโยคหนึ่งประโยคให้พูดซ้ำ",
             "ก่อนเริ่ม นักเรียนตรวจไมโครโฟนและดูเคล็ดลับได้"
         ],
-        "alt": "ภาพ Chibi Quest ลานโล่งที่มีต้นโอ๊ก"
+        "alt": "รีดี้ โค้ชฝึกพูด มีป้ายทดลอง ตัวละครพ่อมดยืนอยู่ในป่าข้างปุ่มเริ่มพูดคุย"
     },
     tutorRole: {
         "eyebrow": "เป็นติวเตอร์",
@@ -489,7 +489,7 @@ export const th = {
             "เครื่องคำนวณในหน้านี้แสดงตัวอย่าง ทักมาคุยกับเราเรื่องกรณีของคุณเองได้"
         ],
         "cta": "สมัครเป็นติวเตอร์",
-        "alt": "ติวเตอร์ถามคำถามนักเรียนระหว่างคลาส"
+        "alt": "ติวเตอร์และเด็กดูแท็บเล็ตด้วยกัน มีสมุดและปากกาวางอยู่บนโต๊ะ"
     },
     screens: {
         "eyebrow": "ภายในแอป",
@@ -692,7 +692,7 @@ export const zh = {
         "priceNote": "价格随市场调整。",
         "cta": "咨询课程",
         "ctaTutor": "成为导师",
-        "imageAlt": "学生和导师围坐在桌旁，桌上有印刷练习册和平板电脑",
+        "imageAlt": "A tutor and a child look at a tablet together, with a notebook and a pen on the table.",
         "factsLabel": "Tutor Advantage 概览"
     },
     classTour: {
@@ -789,17 +789,17 @@ export const zh = {
             {
                 "name": "Primary Advantage Origins 2",
                 "series": "Primary Advantage",
-                "alt": "Primary Advantage 练习册插画"
+                "alt": "Primary Advantage Origins 2 book cover"
             },
             {
                 "name": "Primary Advantage Origins 3.1",
                 "series": "Primary Advantage",
-                "alt": "暖色调的 Primary Advantage 练习册插画"
+                "alt": "Primary Advantage Origins 3.1 book cover"
             },
             {
                 "name": "Reading Advantage Origins 2",
                 "series": "Reading Advantage",
-                "alt": "学生在教室里使用练习册和平板电脑"
+                "alt": "Reading Advantage Origins 2 book cover"
             }
         ],
         "note": "每本练习册有 14 节课和一个数字版本。"
@@ -814,7 +814,7 @@ export const zh = {
             "每次练习后，学生会看到一件做得好的事、一件下次可以尝试的事，以及一个可以再说一遍的句子。",
             "开始前，学生可以检查麦克风并查看提示。"
         ],
-        "alt": "Chibi Quest 插画：有一棵橡树的林间空地"
+        "alt": "Reedy, the speaking coach, is marked Preview. A wizard avatar stands in a forest next to a Start talking button."
     },
     tutorRole: {
         "eyebrow": "成为导师",
@@ -827,7 +827,7 @@ export const zh = {
             "The calculator on this page shows examples. Ask us about your own case."
         ],
         "cta": "申请成为导师",
-        "alt": "导师在课堂上向学生提问"
+        "alt": "A tutor and a child look at a tablet together, with a notebook and a pen on the table."
     },
     // D-10 placeholder: the screens block holds the English lines until the contracted Chinese speaker delivers.
     screens: {

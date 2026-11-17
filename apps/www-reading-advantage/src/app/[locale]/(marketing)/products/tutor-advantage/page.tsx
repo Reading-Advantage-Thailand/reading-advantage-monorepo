@@ -1,22 +1,28 @@
 import { Metadata } from "next";
+import Image from "next/image";
 import { Link } from "@/locales/navigation";
 import { ArrowRight, Check, Mic } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { buildMarketingMetadata } from "@/lib/seo";
-import { siteImages, siteLogos } from "@/lib/site-assets";
-import { SiteImageView } from "@/components/marketing/site-image";
+import { siteLogos } from "@/lib/site-assets";
 import { SectionHeader } from "@/components/marketing/section-header";
 import { TutorClassStepper } from "@/components/marketing/tutor-class-stepper";
 import { TutorCommissionCalculator } from "@/components/marketing/tutor-commission-calculator";
 import ProductPicture from "@/components/products/product-picture";
-import { tutorScreens } from "@/lib/product-pictures";
+import { productPictures, tutorScreens } from "@/lib/product-pictures";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { FAQAccordion } from "@/components/ui/faq-accordion";
 
 const PRINTED_STEPS = 13;
 const PHASE_COUNT = 18;
-const BOOK_ART = [siteImages.primaryBook, siteImages.primaryBookWarm, siteImages.classroomStudentsApp];
 const BOOK_LOGOS = [siteLogos.primary.color, siteLogos.primary.color, siteLogos.reading.color];
+
+/** The three covers in the books.items order; each cover shows whole (spec D-19 item 2). */
+const BOOK_COVERS = [
+  productPictures.primaryCover,
+  productPictures.primaryCover31,
+  productPictures.readingCover,
+];
 
 /**
  * Builds metadata for the localized Tutor Advantage route.
@@ -184,13 +190,7 @@ export default async function TutorAdvantage({
           </div>
           <div className="lg:col-span-6">
             <div className="overflow-hidden rounded-4xl border border-white/20 shadow-2xl">
-              <SiteImageView
-                image={siteImages.classroomSmallGroup}
-                alt={t("heroExtra.imageAlt")}
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                priority
-                className="h-auto w-full"
-              />
+              <ProductPicture picture={productPictures.tutorSession} alt={t("heroExtra.imageAlt")} />
             </div>
           </div>
         </div>
@@ -248,12 +248,7 @@ export default async function TutorAdvantage({
                 key={book.name}
                 className="overflow-hidden rounded-3xl border border-emerald-200 bg-white shadow-sm"
               >
-                <SiteImageView
-                  image={BOOK_ART[i]}
-                  alt={book.alt}
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="aspect-4/3 w-full object-cover"
-                />
+                <ProductPicture picture={BOOK_COVERS[i]} alt={book.alt} />
                 <div className="p-6">
                   <img src={BOOK_LOGOS[i]} alt="" className="mb-4 h-8 w-auto" />
                   <h3 className="text-xl font-semibold text-slate-900">{book.name}</h3>
@@ -288,12 +283,7 @@ export default async function TutorAdvantage({
           </div>
           <div className="lg:col-span-5">
             <div className="overflow-hidden rounded-3xl border border-white/20 shadow-2xl">
-              <SiteImageView
-                image={siteImages.chibiOakClearing}
-                alt={t("reedyBlock.alt")}
-                sizes="(max-width: 1024px) 100vw, 40vw"
-                className="h-auto w-full"
-              />
+              <ProductPicture picture={productPictures.reedyPreview} alt={t("reedyBlock.alt")} />
             </div>
           </div>
         </div>
@@ -330,11 +320,13 @@ export default async function TutorAdvantage({
         <div className="container mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-12">
           <div className="order-2 lg:order-1 lg:col-span-5">
             <div className="overflow-hidden rounded-3xl border border-emerald-200 shadow-lg">
-              <SiteImageView
-                image={siteImages.tutorQuestion}
+              <Image
+                src={productPictures.tutorSession.src}
                 alt={t("tutorRole.alt")}
+                width={productPictures.tutorSession.width}
+                height={productPictures.tutorSession.height}
                 sizes="(max-width: 1024px) 100vw, 40vw"
-                className="h-auto w-full"
+                className="aspect-4/3 w-full object-cover"
               />
             </div>
           </div>
