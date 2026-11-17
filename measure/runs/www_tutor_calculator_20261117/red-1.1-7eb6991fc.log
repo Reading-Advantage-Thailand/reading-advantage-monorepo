@@ -1,0 +1,104 @@
+=== Measure Red 1.1 evidence: www_tutor_calculator_20261117 ===
+
+Pre-gate
+  bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm install --frozen-lockfile'
+  exit code: 0
+  pnpm-lock.yaml unchanged.
+
+Red command
+  bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts --reporter=dot --silent=true'
+  exit code: 1
+
+Captured output (verbatim)
+  RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage
+  Failed Suites 1
+  FAIL  src/lib/tutor-commission.test.ts [ src/lib/tutor-commission.test.ts ]
+  Error: Failed to resolve import "@/lib/tutor-commission" from "src/lib/tutor-commission.test.ts". Does the file exist?
+    Plugin: vite:import-analysis
+    File: apps/www-reading-advantage/src/lib/tutor-commission.test.ts:16:7
+  Test Files  1 failed (1)
+       Tests  no tests
+  [ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1
+
+Failure reason
+  The module apps/www-reading-advantage/src/lib/tutor-commission.ts does not exist.
+  Vite import analysis aborts during collection, so no test case runs. This is the
+  intended Red state for task 1.1.
+
+Failing suite and authored test names
+  The single failing suite is src/lib/tutor-commission.test.ts. All 22 authored test
+  cases are blocked at collection by the missing module. Their names are:
+  1. commissionRate > reference formula reproduces the six pinned rate strings
+  1. commissionRate > pins the six rates to four decimals as strings
+  1. commissionRate > returns 0 at zero volume and at a negative volume
+  1. commissionRate > stays below 71.43 percent at one billion baht
+  1. commissionRate > keeps the exact satang gross at one billion baht
+  2. preset 1, four own students and no legs > holds the spec input
+  2. preset 1, four own students and no legs > returns the D-2 money values
+  3. presets 2 and 3 to the satang > exposes three presets, all at the 3,000 baht price
+  3. presets 2 and 3 to the satang > preset 2: two legs of 9,000 baht at 4,005 baht each
+  3. presets 2 and 3 to the satang > preset 3: three legs of 9,000 baht at 4,005 baht each
+  4. conservation in integer satang > preset 2: 801,000 + 464,569 = 1,265,569
+  4. conservation in integer satang > preset 3: 1,201,500 + 669,444 = 1,870,944
+  4. conservation in integer satang > a baht Number sum loses a satang, so the equality must use integers
+  5. zero case > returns zero everywhere, rate 0, and the zero variant
+  6. payout floor and tax on a zero payout > returns 0 for (0, 0) and for (100, 150)
+  6. payout floor and tax on a zero payout > keeps a positive payout as a positive control
+  6. payout floor and tax on a zero payout > charges no tax and shows no net on a zero payout
+  7. explainVariant > returns ownOnly for two legs with 0 students
+  7. explainVariant > returns withDownline for preset 2
+  8. resizeLegs > appends the default of 3 students for a new leg
+  8. resizeLegs > keeps the first entries when the count is unchanged
+  8. resizeLegs > drops entries beyond the new count
+
+Contracts pinned
+  AC-1: six rate strings at four decimals, rate 0 at 0 and -5, rate below 71.43 percent at 1e9, gross 71422027600 satang at 1e9.
+  AC-2: all three presets to the satang, including each leg volume and payout.
+  AC-3: conservation in integer satang for presets 2 and 3, plus the baht Number failure case.
+  AC-4: payoutAfterDeduction floor cases and zero tax and net on a zero payout.
+
+Files changed in this role
+  apps/www-reading-advantage/src/lib/tutor-commission.test.ts (new, 250 lines)
+  measure/tracks/www_tutor_calculator_20261117/plan.md (task 1.1 marked [x] with Done sha)
+  measure/runs/www_tutor_calculator_20261117/red-1.1-7eb6991fc.json (this run)
+  measure/runs/www_tutor_calculator_20261117/red-1.1-7eb6991fc.log (this log)
+
+Remaining failure handed to Green
+  Implement apps/www-reading-advantage/src/lib/tutor-commission.ts with the section 5.2 API so the 22 test cases pass.
+
+MEASURE_AGENT_RESULT
+{
+  "role": "measure-mid-red",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "task": "1.1",
+  "baseline_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "resulting_head": "21e23c2f2410288306112edb8a69dc9106e9df03",
+  "verdict": "pass",
+  "commits": [
+    "7eb6991fc85fbd0e833a193e35101ddd2b172915 test(www-reading-advantage): pin commission module (track_id: www_tutor_calculator_20261117)",
+    "21e23c2f2410288306112edb8a69dc9106e9df03 docs(measure): record red 1.1 evidence (track_id: www_tutor_calculator_20261117)"
+  ],
+  "tests": {
+    "file": "apps/www-reading-advantage/src/lib/tutor-commission.test.ts",
+    "authored_case_count": 22,
+    "red_exit_code": 1,
+    "test_files": "Test Files 1 failed (1)",
+    "tests_line": "Tests no tests",
+    "failing_suite": "src/lib/tutor-commission.test.ts"
+  },
+  "files": [
+    "apps/www-reading-advantage/src/lib/tutor-commission.test.ts",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md",
+    "measure/runs/www_tutor_calculator_20261117/red-1.1-7eb6991fc.json",
+    "measure/runs/www_tutor_calculator_20261117/red-1.1-7eb6991fc.log"
+  ],
+  "failure_reason": "Failed to resolve import \"@/lib/tutor-commission\" from \"src/lib/tutor-commission.test.ts\"; the module file does not exist.",
+  "remaining_failures": [
+    "src/lib/tutor-commission.test.ts: collection aborts on the missing module; Green must implement the section 5.2 API."
+  ],
+  "questions": []
+}
+RESULT: PASS

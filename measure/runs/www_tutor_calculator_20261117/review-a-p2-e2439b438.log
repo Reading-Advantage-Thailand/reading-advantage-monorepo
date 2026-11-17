@@ -1,0 +1,27 @@
+Review A Phase 2 audit at e2439b438 (base d279b8703). Verdict: PASS, 0 blockers, 2 nits.
+
+Scope: git diff d279b8703..e2439b438 names 11 files: the three webp assets, blur-tutor-screens.py, product-pictures.ts, tutor-screens.test.ts, page.tsx, page.test.tsx, tutor-advantage.ts, www-tutor-calculator.locale.test.ts, plan.md. No Phase 1 file changed. HEAD equals audited head; worktree clean.
+
+Assets: source and output sizes identical (520x1125, 520x1125, 1440x900). All 8 blur boxes flatten (output sd below 15, source sd above 40). Folder and file names kept with the spec .webp suffix. 002 has zero boxes and shows no class name.
+
+Manifest: tutorScreens holds studentHome, lessonPhases, classList in slot order with the real sizes and portrait false. Sibling export is correct: productPictures is as const satisfies Record<string, ProductPictureFile> and products-page-pictures.red.test.tsx:59 statSyncs every value, so nesting breaks type and test. Only caller is page.tsx:116-118 via ProductPicture, which takes ProductPictureFile: no caller breaks.
+
+Tests: targeted heavy-run rerun exits 0, 3 files, 46 tests. tutor-screens.test.ts fails on missing, mis-sized, or renamed files (toEqual plus existsSync; missing fixture 999-screen.webp returns false). Gallery test proves three cards with per-slot alt and caption plus the five-node DOM order; a misplaced section fails the compareDocumentPosition chain. setup.ts mocks getScopedI18n to scope.key, so the page test asserts key paths while the locale test pins literals: the locale test compensates, nothing weakened.
+
+Copy: nine screens leaves and two live lines match spec 6.3 and 6.4 word for word in en and th; zh equals en; all five old-line fragments absent from the locale file.
+
+Security: exactly three webp files, no source png, no admin, price, error, face, or earnings screen. No dangerouslySetInnerHTML, fetch, XHR, dynamic import, script tag, server action, or URL input. Only style props set --bar-width. No dependency or lockfile change.
+
+Nits: N1 manifest test lacks the strategy-promised negative control (add one false-path case). N2 full 2.4 gate block unevaluated here under the one-command limit (targeted 46/46 exit 0; plan evidence files exist).
+
+```MEASURE_AGENT_RESULT
+status: pass
+verdict: PASS
+audited_head_sha: e2439b438511046b58ec8f3e734e655706c2ab8c
+blocking_findings: 0
+nonblocking_findings: N1 (manifest negative control absent), N2 (full gate block unevaluated, evidence limitation)
+retry_recommendation: none
+result_artifact: measure/runs/www_tutor_calculator_20261117/review-a-p2-e2439b438.json
+log_artifact: measure/runs/www_tutor_calculator_20261117/review-a-p2-e2439b438.log
+route: opencode-go/muse-spark-1.3-contributor#high
+```

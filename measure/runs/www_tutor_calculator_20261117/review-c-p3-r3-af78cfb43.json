@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-c-ux-api",
+  "round": "r3",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)",
+  "baseline_sha": "9fc1292b914bb4a67bac3c8fa48e7a68762f3c0b",
+  "phase_base_sha": "81df01cf2e7c2954f4a2de1aaee593913a00bc75",
+  "role_base_sha": "9fc1292b914bb4a67bac3c8fa48e7a68762f3c0b",
+  "audited_head_sha": "af78cfb4380b9b482fe86132c30dfbbfbebef81d",
+  "audited_head_is_head": true,
+  "diff_range": "9fc1292b914bb4a67bac3c8fa48e7a68762f3c0b..af78cfb4380b9b482fe86132c30dfbbfbebef81d",
+  "phase_diff_range": "81df01cf2e7c2954f4a2de1aaee593913a00bc75..af78cfb4380b9b482fe86132c30dfbbfbebef81d",
+  "contract_applicability": "applicable: the delta changes the key wiring of the tutor-advantage page (reedyKeys, page.tsx:80) and the Reedy copy of the Reedy block, the platform feature card, and the FAQ in en, th, and zh, so the copy, key, and user-flow contracts move.",
+  "status": "pass",
+  "summary": "Pass. The Reedy copy delta keeps the key wiring. reedyBlock.points holds 3 entries in en, th, and zh, and page.tsx:80 reads exactly 3. No key is missing, and the set of unused keys is the same at the base and at the head. The platform card still renders from its caller products/page.tsx:182 and reads 13 keys that exist in all three locales. The rendered Reedy block shows 3 bullets in each locale. The delta changes no layout class. Vitest passes (11 files, 149 tests) and eslint exits 0. Two nonblocking nits remain: the FAQ and card copy go beyond PR section 8.4, and the D-21 records lag the delta.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "C-P3-r3-1 [Nit] review-c: apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts (faq.items.3.answer and platformFeatures.features.2.description in en, th, and zh) and apps/www-reading-advantage/src/locales/components/products/tutor-advantage.ts (features.2.description) delete more than the PR handoff orders. /home/daniebo/Desktop/advantage-pr/11-content/www-tutor-advantage-calculator-handoff.md line 362 says the lane drops 'only' and 'not in Primary Advantage' from the FAQ answer and the card, and that 'Not in Reading Advantage' stays true. The FAQ answer now loses the whole second sentence, so the true Reading Advantage half goes too. The card and the platform description lose 'live in Tutor Advantage' as well as 'only'. Spec D-21 pins the card strings and does not name the FAQ answer. The test pattern /Reedy is not available/i (apps/www-reading-advantage/src/__tests__/www-tutor-reedy-claim.test.tsx:42) would reject the PR text 'Reedy is not available in Reading Advantage.' No shipped string is false, so this nit does not block. Owner: the PR copy owner and the spec owner. Option A: keep the deletion and record it in handoff section 8.4 and in D-21. Option B: restore the Reading Advantage half by deletion only (en 'Reedy is not available in Reading Advantage.', th 'Reedy ไม่มีใน Reading Advantage', zh 'Reading Advantage 中没有 Reedy。') and narrow the pattern at test line 42. Found by reading handoff lines 360-371 against git diff 9fc1292b9..af78cfb43, not in a browser.",
+    "C-P3-r3-2 [Nit] review-c: the records of D-21 are out of step with the shipped delta. measure/tracks/www_tutor_calculator_20261117/spec.md AC-24 names six patterns, but apps/www-reading-advantage/src/__tests__/www-tutor-reedy-claim.test.tsx:34-43 holds eight. D-21 lists six new strings, but the delta also edits the three FAQ answers and pins the en answer (test lines 206-214). plan.md task 3.6c cites measure/runs/www_tutor_calculator_20261117/red-p3-3.6c-vitest.txt for the first Red run, but that file now holds the retry run (2 failed | 15 passed). The first run is in red-p3-3.6c-9fc1292b9.log:42. One stale rule also stays: apps/www-reading-advantage/measure/tracks/www_copy_truth_pass_20261002/spec.md:12 rule 7 says 'Reedy voice practice appears only on the Tutor Advantage page', and that is false since 2026-10-20. Owner: the spec owner. Options: add the two patterns and the FAQ answers to AC-24 and D-21, repoint the plan citation, and mark rule 7 as superseded by D-21. Found by comparing the spec text with the test file, the diff, and the run files."
+  ],
+  "evidence": [
+    "HEAD check: git rev-parse HEAD = af78cfb4380b9b482fe86132c30dfbbfbebef81d, equal to audited_head_sha. git status --short printed nothing before this review wrote its files. measure/runs/ is ignored by .gitignore:56.",
+    "Delta shape: git diff --name-status 9fc1292b9..af78cfb43 lists 11 files. Six belong to this track: page.tsx, the pages locale, the components locale, the new test www-tutor-reedy-claim.test.tsx, spec.md, and plan.md. Five come from the origin/master merge: two blog posts, two webp files, and the daily-posts plan.md. git diff-tree -r --root --cc af78cfb43 prints only the hash, so the merge commit changes no path itself. git diff --stat 5b6b10f09 af78cfb43 shows the same 5 master files.",
+    "Key wiring, node check (review-c-p3-r3-af78cfb43-check.mjs, CHECK 1, git show of both revisions). Base 9fc1292b9: 230 leaves in en, th, and zh, reedyBlock.points = 4/4/4, reedyKeys = [0,1,2,3]. Head af78cfb43: 229 leaves in en, th, and zh with the same keys in the same order, reedyBlock.points = 3/3/3, reedyKeys = [0,1,2] (page.tsx:80), indexed key reedyBlock.points.${i} expands to 0, 1, 2. Missing keys: none in en, th, or zh. Unused leaves: 40 at the base and 40 at the head, and the two lists are identical (output 'unused leaves identical at base and head: true'). All 40 sit outside the Reedy block (metadata, heroAlt, valuePropositions, steps, eyebrows, and similar), so the delta creates no unused key.",
+    "The Reedy block has one reader: page.tsx:273-291. grep for reedyBlock, reedyKeys, points.3 finds no other production reader. The only other hits are tests (page.images.test.tsx:236, page.phase3.adversarial.test.tsx:356, www-tutor-reedy-claim.test.tsx:220).",
+    "Card caller: apps/www-reading-advantage/src/app/[locale]/(marketing)/products/page.tsx:3 imports TutorAdvantage from @/components/products/tutor-advantage and :182 renders it. The card (components/products/tutor-advantage.tsx:11) reads scope components.products.tutorAdvantage, which locales/en.ts, th.ts, and zh.ts wire at line 75 from ./components/products/tutor-advantage (line 33). The card reads 13 keys (heading, description, imageAlt, joinButton, joinCaption, features.0-3 title and description). CHECK 1 shows 0 missing or empty keys in en, th, and zh, 13 leaves in each locale with the same order, and 0 unused leaves. The delta edits only features.2.description (3 strings). The card file itself is not in the delta. products-page-pictures.red.test.tsx mocks the card (line 19), so no test renders it with real copy.",
+    "Real library check (CHECK 2, use-intl createTranslator on the head messages): en, th, and zh render reedyBlock.points.0 to 2 with 0 errors. points.3 is a missing message in all three locales (the expected 4th-bullet absence). The FAQ answer, the platform description, and the card description render with 0 ICU special characters ({ } ' # |) in each of the 3 locales. The Reedy FAQ item is index 3 of 6 in all three locales.",
+    "Rendered Reedy block: vitest verbose run of src/__tests__/www-tutor-reedy-claim.test.tsx passes 17 of 17. The three cases 'AC-24: the Reedy block keeps three bullets' for en, th, and zh render the page with the real dictionaries and compare the li texts with three pinned strings. The test translator returns the key path for a missing key, so a stale 4th key would render as a 4th li and fail the test.",
+    "Spec D-21 parity: the six strings of the D-21 table equal the shipped strings in en, th, and zh (diff and the CHECK 2 print). The zh bullet that was deleted sat first at reedyBlock.points.0, as D-21 states, so each array keeps 3 entries.",
+    "No layout class change: git diff -U0 9fc1292b9..af78cfb43 over apps/www-reading-advantage/src printed no changed line with className, class=, or cn(. The only page.tsx change is the reedyKeys line (page.tsx:80). Neither components/products/tutor-advantage.tsx nor components/products/product-picture.tsx is in the delta. The grid classes at page.tsx:270-293 are unchanged.",
+    "Other Reedy claims: ripgrep over apps/www-reading-advantage for Reedy near only, not, เท่านั้น, เฉพาะ, 仅, and 没有 finds no shipped copy that says Reedy is Tutor-only. The hits are the Primary page privacy line (locales/pages/products/primary-advantage.ts:40 and :122), design rule 9 about art (docs/design-rules.md:26), the new test, the PR handoff, and two old measure specs (one is the stale rule 7 of C-P3-r3-2).",
+    "PR parity basis: PR handoff lines 360-362 order the deletion of the Reedy bullet in en, th, and zh (done) and the drop of 'only' and 'not in Primary Advantage' in the FAQ answer and the card, with 'Not in Reading Advantage' staying true. Line 371 (v0.6) says the lane drops 'only' from the FAQ answer and the card. The shipped strings delete the whole FAQ sentence and the whole 'live in Tutor Advantage only' clause. This is the basis of C-P3-r3-1.",
+    "Tests: heavy-run.sh with pnpm --filter www-reading-advantage exec vitest run www-tutor-reedy-claim products/tutor-advantage/page www-tutor-calculator.locale tutor-screens products-page-pictures --maxWorkers=1: 11 files, 149 tests passed, vitest-exit=0. A second run of www-tutor-reedy-claim alone with the verbose reporter: 17 tests passed.",
+    "Lint: heavy-run.sh with pnpm --filter www-reading-advantage exec eslint on page.tsx, the pages locale, the components locale, and www-tutor-reedy-claim.test.tsx: eslint-exit=0. The shadcn rules are errors in this config.",
+    "Failing-first record: red-p3-3.6c-9fc1292b9.log:42 records 15 failed and 1 passed for the first Red run. green-p3-3.6d-fe1cb8b26.log:12 records 'Tests 15 failed | 1 passed (16)'. green-p3-3.6d-fe1cb8b26.log:78 and red-p3-3.6c-vitest.txt:48 record 'Tests 2 failed | 15 passed (17)' for the retry Red run.",
+    "Round 2 nits C-P3-r2-1, C-P3-r2-2, and C-P3-r2-3 are not touched by this delta. product-picture.tsx, tutor-commission-calculator.tsx, and page.placeholders.test.tsx are not in git diff --name-status 9fc1292b9..af78cfb43. They stay open as round 2 recorded them. This review did not judge them again.",
+    "Limits: no browser, no server, no build, and no tsc run. The visual check of the 3-bullet block belongs to the UX browser role. The tsc exit 0 at 0a0797355 and 5ca39dcfa is a Green record in plan.md task 3.6d, and this review did not repeat it. The origin/master blog posts belong to track www_daily_blog_posts_20261115 and this review did not audit them. The shell guard rejected three inline node calls (two with 'Permission denied: shell', one with 'unterminated-quote'). I did not find the exact cause, so I moved the checks into measure/runs/www_tutor_calculator_20261117/review-c-p3-r3-af78cfb43-check.mjs and ran that file from the repo root."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git status --short; git log --format='%h %p %s' 9fc1292b9..af78cfb43; git diff --name-status 9fc1292b9..af78cfb43",
+    "git diff 9fc1292b9..af78cfb43 -- page.tsx apps/www-reading-advantage/src/locales/components/products/tutor-advantage.ts apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts; git diff 9fc1292b9..af78cfb43 -- spec.md plan.md",
+    "node --input-type=module -e (key parity at 9fc1292b9 and af78cfb43 with git show and execFileSync): 230 -> 229 leaves, points 4 -> 3, reedyKeys [0,1,2,3] -> [0,1,2], missing none, unused 40 and 40 identical, card 13 keys none missing",
+    "node measure/runs/www_tutor_calculator_20261117/review-c-p3-r3-af78cfb43-check.mjs: CHECK 1 key wiring (same result as above), CHECK 2 real use-intl: 0 errors for 3 bullets, points.3 missing, 0 ICU special characters",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run www-tutor-reedy-claim products/tutor-advantage/page www-tutor-calculator.locale tutor-screens products-page-pictures --maxWorkers=1 --reporter=dot; echo vitest-exit=$?': 11 files, 149 tests passed, vitest-exit=0",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run www-tutor-reedy-claim --maxWorkers=1 --reporter=verbose; echo vitest-claim-exit=$?; pnpm --filter www-reading-advantage exec eslint <4 touched files>; echo eslint-exit=$?': 17 tests passed, vitest-claim-exit=0, eslint-exit=0",
+    "git diff -U0 9fc1292b9..af78cfb43 -- apps/www-reading-advantage/src | grep -E '^[+-].*(className|class=|cn\\()': no output; git diff-tree -r --root --cc --no-renames --name-only af78cfb43: hash only; git diff --stat 5b6b10f09 af78cfb43: 5 files",
+    "grep (ripgrep) for reedyBlock|reedyKeys|points.3, for TutorAdvantage in products/page.tsx, for tutorAdvantage in locales/en.ts th.ts zh.ts, and for Reedy near only/not/เท่านั้น/仅 over apps/www-reading-advantage",
+    "grep and read of /home/daniebo/Desktop/advantage-pr/11-content/www-tutor-advantage-calculator-handoff.md lines 340-371; read of red-p3-3.6c-vitest.txt and grep of red-p3-3.6c-9fc1292b9.log and green-p3-3.6d-fe1cb8b26.log"
+  ],
+  "changed_files": [],
+  "files_audited": [
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+    "apps/www-reading-advantage/src/locales/components/products/tutor-advantage.ts",
+    "apps/www-reading-advantage/src/components/products/tutor-advantage.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/page.tsx",
+    "apps/www-reading-advantage/src/locales/en.ts",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-reedy-claim.test.tsx",
+    "measure/tracks/www_tutor_calculator_20261117/spec.md",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md",
+    "apps/www-reading-advantage/measure/tracks/www_copy_truth_pass_20261002/spec.md",
+    "/home/daniebo/Desktop/advantage-pr/11-content/www-tutor-advantage-calculator-handoff.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "claude-code/claude-sonnet-5-5#max",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "page.tsx:80 reads [0,1,2] and the check script shows reedyBlock.points = 3/3/3 with 0 missing keys, but the FAQ and card copy go beyond handoff line 362 (C-P3-r3-1)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "www-tutor-reedy-claim.test.tsx renders the page with the real dictionaries and pins 3 bullets per locale (17 of 17 pass; red-p3-3.6c-9fc1292b9.log:42 shows 15 failed first), but the th and zh FAQ answers get pattern checks only."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff -U0 9fc1292b9..af78cfb43 over src shows one page.tsx line plus deletion-only locale edits, and git diff-tree --cc af78cfb43 shows the merge commit changes no path itself."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "The check script output, vitest (11 files, 149 tests) and eslint-exit=0 back each claim, but I did not render the products-page card or open a browser."
+    }
+  ]
+}

@@ -5,9 +5,6 @@
  * This file adds cases only. It changes no existing assertion and no product code.
  * The money pins come from spec section 3 and D-2; the display rules come from D-3.
  */
-import { readFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it } from "vitest";
@@ -22,11 +19,6 @@ const MONEY = /^(0|[1-9]\d{0,2}(,\d{3})*)(\.\d{2})?$/;
 
 /** Rate of spec D-3: one decimal at most, with a percent sign. */
 const RATE = /^(0|[1-9]\d*)(\.\d)?%$/;
-
-const COMPONENT_PATH = resolve(
-  dirname(fileURLToPath(import.meta.url)),
-  "tutor-commission-calculator.tsx",
-);
 
 afterEach(() => {
   cleanup();
@@ -63,21 +55,25 @@ function ownStudentsInput(): HTMLElement {
 
 /** Returns the leg-count number input. */
 function legCountInput(): HTMLElement {
+  expect(copy.inputs.legCount, "PR key inputs.legCount").toBeTypeOf("string");
   return screen.getByRole("spinbutton", {
-    name: new RegExp(escapeRegExp(copy.inputs.directTutors)),
+    name: new RegExp(escapeRegExp(copy.inputs.legCount)),
   });
 }
 
 /** Returns one per-leg student number input. */
 function legStudentInputs(): HTMLElement[] {
+  expect(copy.inputs.legStudents, "PR key inputs.legStudents").toBeTypeOf("string");
   return screen.queryAllByRole("spinbutton", {
-    name: new RegExp(escapeRegExp(copy.inputs.studentsPerDirect)),
+    name: new RegExp(escapeRegExp(copy.inputs.legStudents)),
   });
 }
 
-/** Returns the graph label of each leg row, for example "Leg commission 1". */
+/** Returns the graph label of each leg row, for example "Leg 1". */
 function legRows(): HTMLElement[] {
-  const pattern = new RegExp(`^\\s*${escapeRegExp(copy.chart.legPayout)}\\s*[1-9]\\d*\\s*$`);
+  expect(copy.graph.legBar, "PR key graph.legBar").toBeTypeOf("string");
+  const prefix = copy.graph.legBar.replace("{n}", "");
+  const pattern = new RegExp(`^\\s*${escapeRegExp(prefix)}\\s*[1-9]\\d*\\s*$`);
   return screen.queryAllByText(pattern);
 }
 
@@ -130,6 +126,15 @@ function barWidths(): number[] {
   );
 }
 
+/** Returns the money value shown beside a graph total label. */
+function graphTotalValue(label: string): string {
+  const term = screen.getByText(label);
+  const row = term.closest("div");
+  const value = row?.querySelector("dd");
+  if (!value) throw new Error(`no graph total value for ${label}`);
+  return value.textContent ?? "";
+}
+
 describe("Adversarial: leg count", () => {
   it("a decimal leg count keeps whole rows and whole students", async () => {
     const user = userEvent.setup();
@@ -144,7 +149,7 @@ describe("Adversarial: leg count", () => {
     expect(legStudentInputs()[1]).toHaveValue(3);
     expect(legRows()).toHaveLength(2);
     expect(resultValue(copy.results.networkGV)).toBe("18,000");
-    expect(resultValue(copy.results.downline)).toBe("8,010");
+    expect(resultValue(copy.results.legCommissions)).toBe("8,010");
 
     await user.clear(count);
     await user.type(count, "0.5");
@@ -192,7 +197,7 @@ describe("Adversarial: an edit clears the preset example", () => {
     expect(screen.queryByText(copy.presets[2].result)).toBeNull();
     expect(pressedPresetCount()).toBe(0);
     expect(resultValue(copy.results.networkGV)).toBe("45,000");
-    expect(resultValue(copy.results.downline)).toBe("18,165");
+    expect(resultValue(copy.results.legCommissions)).toBe("18,165");
     expect(resultValue(copy.results.gross)).toBe("26,885.73");
     expect(heroValue()).toBe("8,459.11");
   });
@@ -329,40 +334,66 @@ describe("Adversarial: display of D-3", () => {
     expect(resultRegion().textContent ?? "").not.toMatch(/59\.1273|52\.732/);
   });
 
-  it("the graph bars add up to the whole gross", async () => {
+  it("the own bar and the leg bars add up to the whole network volume", async () => {
     const user = userEvent.setup();
     renderCalculator();
     await user.click(presetButton(1));
 
     const widths = barWidths();
     expect(widths).toHaveLength(3);
-    expect(widths[0]).toBeCloseTo((4005 / 12655.69) * 100, 6);
-    expect(widths[1]).toBeCloseTo((4005 / 12655.69) * 100, 6);
-    expect(widths[2]).toBeCloseTo((4645.69 / 12655.69) * 100, 6);
+    expect(widths[0]).toBeCloseTo((9000 / 24000) * 100, 6);
+    expect(widths[1]).toBeCloseTo((9000 / 24000) * 100, 6);
+    expect(widths[2]).toBeCloseTo((6000 / 24000) * 100, 6);
     expect(widths.reduce((sum, width) => sum + width, 0)).toBeCloseTo(100, 6);
+
+    expect(graphTotalValue(copy.graph.grossBar)).toBe("12,655.69");
+    expect(graphTotalValue(copy.graph.legCommissionBar)).toBe("8,010");
+    expect(graphTotalValue(copy.graph.netBar)).toBe("4,506.32");
 
     await user.click(presetButton(2));
     const threeLegWidths = barWidths();
     expect(threeLegWidths).toHaveLength(4);
+    expect(threeLegWidths[0]).toBeCloseTo((12000 / 42000) * 100, 6);
+    expect(threeLegWidths[1]).toBeCloseTo((12000 / 42000) * 100, 6);
+    expect(threeLegWidths[2]).toBeCloseTo((12000 / 42000) * 100, 6);
+    expect(threeLegWidths[3]).toBeCloseTo((6000 / 42000) * 100, 6);
     expect(threeLegWidths.reduce((sum, width) => sum + width, 0)).toBeCloseTo(100, 6);
+
+    expect(graphTotalValue(copy.graph.grossBar)).toBe("24,833.45");
+    expect(graphTotalValue(copy.graph.legCommissionBar)).toBe("16,560");
+    expect(graphTotalValue(copy.graph.netBar)).toBe("8,025.25");
   });
 });
 
 describe("Adversarial: no locale-dependent formatting", () => {
-  it("the component source has no locale formatter and no third-decimal format", () => {
-    const source = readFileSync(COMPONENT_PATH, "utf8");
-    expect(source).not.toMatch(/toLocaleString/);
-    expect(source).not.toMatch(/\bIntl\./);
-    expect(source).not.toMatch(/from "next-intl"/);
-    expect(source).not.toMatch(/from "@\/locales/);
-
-    const fixedCalls = Array.from(source.matchAll(/toFixed\((\d+)\)/g)).map((match) =>
-      Number(match[1]),
-    );
-    expect(fixedCalls.length).toBeGreaterThan(0);
-    for (const digits of fixedCalls) {
-      expect([0, 1, 2], `toFixed(${digits})`).toContain(digits);
+  it("every rendered figure is ASCII with at most two decimals", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    await user.click(presetButton(1));
+    const figures = [...breakdownValues(), heroValue()];
+    expect(figures.length).toBeGreaterThan(0);
+    for (const figure of figures) {
+      expect(figure, `figure ${figure}`).toMatch(/^(0|[1-9][0-9,]*|[0-9]+(\.[0-9]{1,2})?%|[0-9,]+\.[0-9]{2})$/);
+      expect(figure).not.toMatch(/[^\x20-\x7E]/);
     }
+  });
+
+  it("hostile locale copy cannot change the figure strings", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    await user.click(presetButton(1));
+    const baseline = [...breakdownValues(), heroValue()];
+
+    cleanup();
+    const hostile = {
+      ...copy,
+      heading: "1,234.567每位老师每小时",
+      payoutNote: "USD 1.234,56每小时",
+      disclaimer: "฿2,500 per year",
+    };
+    renderCalculator(hostile);
+    await user.click(presetButton(1));
+    expect([...breakdownValues(), heroValue()]).toEqual(baseline);
   });
 
   it("a different locale copy gives the same figure strings", async () => {

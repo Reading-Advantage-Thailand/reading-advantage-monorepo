@@ -49,11 +49,6 @@ This file tracks all major tracks for the project.
   *Status: active, light lane; post 2026-11-15 (`a-five-year-old-reads-by-herself`) live; one task per post; the track stays open for later daily posts | Owner: Monorepo orchestrator | PM task A-61 follow-up*
   *Note: PR's daily posts in en and th, written from `apps/www-reading-advantage/docs/blog-post-format.md` (track `www_blog_rich_format_20261115`). www-only push is standing-approved (Daniel 2026-11-15).*
 
-- [ ] **Track: www Tutor Advantage calculator and screens** — *created 2026-11-17*
-  *Link: [./tracks/www_tutor_calculator_20261117/](./tracks/www_tutor_calculator_20261117/)*
-  *Status: new, opened 2026-11-17; Phase 1 (commission calculator with the payout graph) first, no push; Phase 2 (blurred screens, the gallery, the two live lines) can start at once, because the set arrived 2026-11-17 | Owner: Monorepo orchestrator | PM assignment A-63 (Daniel, Google Tasks R2t2eF9Z) | Due 2026-11-21*
-  *Note: Daniel's shape of 06:50 ICT: personal students, legs with students by leg, and a graph of the payout. One level: the leg payouts come off rate x GV, and the three parts add up to the gross. Every figure is an example. Three gallery captions have a screen (student 070, student 002, tutor 062); `network` and `earnings` have none, and `studentHome` names Reedy practice, which no screen shows, so three answers wait with PR. Preset 3 and the three chart labels are drafts. No deploy; the www-only push follows the PM page-check at 390, 980, and 1280 px.*
-
 - [x] **Track: Primary class code: six hours** — *created 2026-11-12*
   *Link: [./tracks/primary_class_code_six_hours_20261112/](./tracks/primary_class_code_six_hours_20261112/)*
   *Status: complete; six-hour codes and automatic latest routing live, isolated production QA fixture created, actual Class sign-in screenshot captured (13:30 to19:30 Bangkok).*
@@ -1282,6 +1277,12 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
   *Link: [./tracks/www_change_list_20261027/](./tracks/www_change_list_20261027/)*
   *Status: active, standing (no end date); Phase 0 open | Priority: MEDIUM | Requested by Daniel 2026-10-26 (tracks page, row E8)*
   *Note: PR keeps one www change list in its repository. Each Monday the PM orchestrator sends the new entries to Monorepo. This standing track builds them weekly. It replaces the two archived July www tracks.*
+
+- [x] **Track: www Tutor Advantage calculator and screens** — *created 2026-11-17, archived 2026-11-18*
+  *Link: [./archive/www_tutor_calculator_20261117/](./archive/www_tutor_calculator_20261117/)*
+  *Add two sections to the www Tutor Advantage page. The first is a commission calculator with a payout graph and three example presets. The second is a gallery of five student app screens. The zh block holds the English lines until the contracted Chinese speaker delivers. One www-only push follows the PM page-check.*
+  *Status: done, opened 2026-11-17, archived 2026-11-18; three phases accepted (P1 `d279b8703`, P2 round 2 `94af2c15b`, P3 `3dbe8a4f8`) and final acceptance PASS at `3dbe8a4f8`; 36 tasks done, no deferred task | Owner: Monorepo orchestrator | PM assignment A-63 (Daniel, Google Tasks R2t2eF9Z) | The gallery holds five student screens (040, 002, 004, 052, 064) | The commit range ending at `af78cfb43` is pushed to origin/master; CD runs 44053703983 and 44142775630 succeeded | Gate output: `measure/runs/www_tutor_calculator_20261117/`*
+  *Note: Task 2.7 replaced the drafts with the PR handoff v0.4 section 8 copy. The key `shortAnswer` replaces `lessonPhases`, and the PM dropped the network and earnings captions. Five items stay open for the PM's next www push: `calc.result.needsOwnStudents` after its PR fact gate, a better `graph.legCommissionBar` label, the PR v0.6 `graph.caption` rewording, the th Reedy feature sentence, and Daniel's picture for the become-a-tutor block. The Phase 3 adversarial tests and the full www suite pass at `af78cfb43` (77 files, 2827 tests); `measure/doctor.sh` still fails the architecture step on the analyzer input snapshot pin, owner `architecture_ci_input_pin_20261110`.*
 
 - [x] **Track: www Monday batch 2026-11-16, rows A and B** — *created 2026-11-16, archived 2026-11-16*
   *Link: [./archive/www_batch_20261116/](./archive/www_batch_20261116/)*

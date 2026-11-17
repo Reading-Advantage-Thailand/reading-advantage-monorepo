@@ -12,7 +12,13 @@ import { tutorScreens } from "../product-pictures";
 const PUBLIC = join(process.cwd(), "public");
 const SCREENS_DIR = join(PUBLIC, "images", "products", "tutor-advantage");
 const PREFIX = "/images/products/tutor-advantage/";
-const SLOTS = ["studentHome", "shortAnswer", "classList"] as const;
+const SLOTS = [
+  "guidedWriting",
+  "shortAnswer",
+  "feedback",
+  "selfReflection",
+  "classRecord",
+] as const;
 const BYTES_MAX = 1_000_000;
 
 /**
@@ -69,6 +75,7 @@ describe("tutorScreens adversarial controls", () => {
     const actual: Record<string, { width: number; height: number }> = {};
     for (const slot of SLOTS) {
       const entry = tutorScreens[slot];
+      expect(existsSync(join(PUBLIC, entry.src)), `${slot} ${entry.src}`).toBe(true);
       const real = webpSize(readFileSync(join(PUBLIC, entry.src)));
       declared[slot] = { width: entry.width, height: entry.height };
       actual[slot] = real;
@@ -78,7 +85,7 @@ describe("tutorScreens adversarial controls", () => {
 
   it("ADV-M2 no two slots share one src", () => {
     const srcs = SLOTS.map((slot) => tutorScreens[slot].src);
-    expect(srcs.length).toBe(3);
+    expect(srcs.length).toBe(5);
     expect(new Set(srcs).size).toBe(srcs.length);
   });
 
@@ -87,6 +94,7 @@ describe("tutorScreens adversarial controls", () => {
     for (const slot of SLOTS) {
       const src = tutorScreens[slot].src;
       expect(src.startsWith(PREFIX)).toBe(true);
+      expect(src).not.toContain("tutor-desktop");
       const file = resolve(join(PUBLIC, src));
       expect(file.startsWith(base)).toBe(true);
       expect(existsSync(file)).toBe(true);
@@ -103,7 +111,7 @@ describe("tutorScreens adversarial controls", () => {
 
   it("ADV-A1 every repository image file is webp, non-zero, and no source PNG is present", () => {
     const files = allFiles(SCREENS_DIR);
-    expect(files.length).toBe(3);
+    expect(files.length).toBe(5);
     for (const file of files) {
       expect(file.endsWith(".webp")).toBe(true);
       expect(statSync(file).size).toBeGreaterThan(0);

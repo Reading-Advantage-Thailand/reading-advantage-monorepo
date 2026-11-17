@@ -227,8 +227,8 @@ describe("7. explainVariant", () => {
     expect(explainVariant(result)).toBe("ownOnly");
   });
 
-  it("returns withDownline for preset 2", () => {
-    expect(explainVariant(calculateNetwork(NETWORK_PRESETS[1]))).toBe("withDownline");
+  it("returns withLegs for preset 2", () => {
+    expect(explainVariant(calculateNetwork(NETWORK_PRESETS[1]))).toBe("withLegs");
   });
 });
 
@@ -335,5 +335,111 @@ describe("9. non-finite and negative inputs clamp", () => {
     expect(badStudents.networkVolume).toBe(0);
     expect(badStudents.gross).toBe(0);
     expectSafeMoney(badStudents);
+  });
+});
+
+describe("10. withholding tax rounds half up (spec D-3)", () => {
+  it("price 1,007 with one own student gives tax 12.24, not the truncated 12.23", () => {
+    const result = calculateNetwork({
+      price: 1007,
+      personalStudents: 1,
+      studentsPerLeg: [],
+    });
+    expect(result.networkVolume).toBe(1007);
+    expect(result.gross).toBe(407.87);
+    expect(result.preTax).toBe(407.87);
+    expect(result.withholdingTax).toBe(12.24);
+    expect(result.net).toBe(395.63);
+
+    // The rejected rule truncates the tax at 12.23; the pin must see the satang.
+    expect(Math.floor((toSatang(result.preTax) * 3) / 100)).toBe(1223);
+    expect(toSatang(result.withholdingTax)).toBe(1224);
+  });
+
+  it("keeps the three preset taxes unchanged under half up", () => {
+    expect(calculateNetwork(NETWORK_PRESETS[0]).withholdingTax).toBe(165.6);
+    expect(calculateNetwork(NETWORK_PRESETS[1]).withholdingTax).toBe(139.37);
+    expect(calculateNetwork(NETWORK_PRESETS[2]).withholdingTax).toBe(248.2);
+  });
+});
+
+describe("11. settlement eligibility: 0 personal students with legs pay 0 (spec D-18, AC-21)", () => {
+  it("pays 0 before tax, 0 tax, and 0 net for two legs of 3 students", () => {
+    const result = calculateNetwork({
+      price: CLASS_PRICE_DEFAULT,
+      personalStudents: 0,
+      studentsPerLeg: [3, 3],
+    });
+
+    // Settlement still computes the volume, the rate, the gross, and the leg commissions.
+    expect(result.ownVolume).toBe(0);
+    expect(result.networkVolume).toBe(18000);
+    expect((result.rate * 100).toFixed(4)).toBe("49.0000");
+    expect(result.gross).toBe(8820);
+    expect(result.legPayouts).toBe(8010);
+
+    // SettlementService.ts:536-548 pays 0 to a node with no PV and a child.
+    expect(result.preTax).toBe(0);
+    expect(result.withholdingTax).toBe(0);
+    expect(result.net).toBe(0);
+    expect(explainVariant(result)).toBe("zero");
+  });
+
+  it("pays 0 for one leg of 3 students and keeps the leg commission", () => {
+    const result = calculateNetwork({
+      price: CLASS_PRICE_DEFAULT,
+      personalStudents: 0,
+      studentsPerLeg: [3],
+    });
+
+    expect(result.networkVolume).toBe(9000);
+    expect((result.rate * 100).toFixed(4)).toBe("44.5000");
+    expect(result.gross).toBe(4005);
+    expect(result.legPayouts).toBe(4005);
+    expect(result.legs).toEqual([{ leg: 1, students: 3, volume: 9000, payout: 4005 }]);
+    expect(result.preTax).toBe(0);
+    expect(result.withholdingTax).toBe(0);
+    expect(result.net).toBe(0);
+    expect(explainVariant(result)).toBe("zero");
+  });
+
+  it("pays 0 when the only leg has 0 students, because the leg count is not 0", () => {
+    const result = calculateNetwork({
+      price: CLASS_PRICE_DEFAULT,
+      personalStudents: 0,
+      studentsPerLeg: [0],
+    });
+
+    expect(result.networkVolume).toBe(0);
+    expect(result.rate).toBe(0);
+    expect(result.gross).toBe(0);
+    expect(result.legPayouts).toBe(0);
+    expect(result.preTax).toBe(0);
+    expect(result.withholdingTax).toBe(0);
+    expect(result.net).toBe(0);
+    expect(explainVariant(result)).toBe("zero");
+  });
+
+  it("keeps 0 personal students with no legs at volume 0 and the zero variant", () => {
+    const result = calculateNetwork({
+      price: CLASS_PRICE_DEFAULT,
+      personalStudents: 0,
+      studentsPerLeg: [],
+    });
+
+    expect(result.networkVolume).toBe(0);
+    expect(result.preTax).toBe(0);
+    expect(result.withholdingTax).toBe(0);
+    expect(result.net).toBe(0);
+    expect(explainVariant(result)).toBe("zero");
+  });
+
+  it("keeps the preset figures for a tutor with personal students", () => {
+    const result = calculateNetwork(NETWORK_PRESETS[1]);
+
+    expect(result.preTax).toBe(4645.69);
+    expect(result.withholdingTax).toBe(139.37);
+    expect(result.net).toBe(4506.32);
+    expect(explainVariant(result)).toBe("withLegs");
   });
 });

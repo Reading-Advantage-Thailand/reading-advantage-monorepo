@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "role": "measure-mid-red",
+  "verdict": "pass",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "task": "1.1",
+  "baseline_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/hy4-flash-free#high (ra-quota pick red)",
+  "resulting_head": "21e23c2f2410288306112edb8a69dc9106e9df03",
+  "commits": [
+    {
+      "sha": "7eb6991fc85fbd0e833a193e35101ddd2b172915",
+      "subject": "test(www-reading-advantage): pin commission module (track_id: www_tutor_calculator_20261117)",
+      "files": ["apps/www-reading-advantage/src/lib/tutor-commission.test.ts"]
+    },
+    {
+      "sha": "21e23c2f2410288306112edb8a69dc9106e9df03",
+      "subject": "docs(measure): record red 1.1 evidence (track_id: www_tutor_calculator_20261117)",
+      "files": ["measure/tracks/www_tutor_calculator_20261117/plan.md"]
+    }
+  ],
+  "test_file": "apps/www-reading-advantage/src/lib/tutor-commission.test.ts",
+  "module_file": "apps/www-reading-advantage/src/lib/tutor-commission.ts",
+  "module_absent_at_finish": true,
+  "install_pre_gate": {
+    "command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm install --frozen-lockfile'",
+    "exit_code": 0,
+    "lockfile_changed": false
+  },
+  "red_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts --reporter=dot --silent=true'",
+  "red_exit_code": 1,
+  "red_evidence": {
+    "test_files": "Test Files 1 failed (1)",
+    "tests": "Tests no tests",
+    "failure_reason": "Failed to resolve import \"@/lib/tutor-commission\" from \"src/lib/tutor-commission.test.ts\". Does the file exist?",
+    "vitest_phase": "collection / import analysis, before any test case runs",
+    "expected_failure": true
+  },
+  "failing_suite": "src/lib/tutor-commission.test.ts",
+  "authored_test_cases": [
+    "1. commissionRate > reference formula reproduces the six pinned rate strings",
+    "1. commissionRate > pins the six rates to four decimals as strings",
+    "1. commissionRate > returns 0 at zero volume and at a negative volume",
+    "1. commissionRate > stays below 71.43 percent at one billion baht",
+    "1. commissionRate > keeps the exact satang gross at one billion baht",
+    "2. preset 1, four own students and no legs > holds the spec input",
+    "2. preset 1, four own students and no legs > returns the D-2 money values",
+    "3. presets 2 and 3 to the satang > exposes three presets, all at the 3,000 baht price",
+    "3. presets 2 and 3 to the satang > preset 2: two legs of 9,000 baht at 4,005 baht each",
+    "3. presets 2 and 3 to the satang > preset 3: three legs of 9,000 baht at 4,005 baht each",
+    "4. conservation in integer satang > preset 2: 801,000 + 464,569 = 1,265,569",
+    "4. conservation in integer satang > preset 3: 1,201,500 + 669,444 = 1,870,944",
+    "4. conservation in integer satang > a baht Number sum loses a satang, so the equality must use integers",
+    "5. zero case > returns zero everywhere, rate 0, and the zero variant",
+    "6. payout floor and tax on a zero payout > returns 0 for (0, 0) and for (100, 150)",
+    "6. payout floor and tax on a zero payout > keeps a positive payout as a positive control",
+    "6. payout floor and tax on a zero payout > charges no tax and shows no net on a zero payout",
+    "7. explainVariant > returns ownOnly for two legs with 0 students",
+    "7. explainVariant > returns withDownline for preset 2",
+    "8. resizeLegs > appends the default of 3 students for a new leg",
+    "8. resizeLegs > keeps the first entries when the count is unchanged",
+    "8. resizeLegs > drops entries beyond the new count"
+  ],
+  "authored_test_case_count": 22,
+  "contracts_pinned": {
+    "ac1_rates": "40.5000, 42.5000, 45.0000, 50.0000, 55.6065, 60.6315 as toFixed(4) strings; rate 0 at 0 and -5; rate below 0.7143 at 1e9; gross 71422027600 satang at 1e9",
+    "ac2_presets": "preset 1 gross 5520 and net 5354.4; preset 2 gross 12655.69, legs two times 9000 at 4005, payout 4645.69, tax 139.37, net 4506.32; preset 3 gross 18709.44, legs three times 9000 at 4005, payout 6694.44, tax 200.83, net 6493.61",
+    "ac3_conservation": "801000 + 464569 = 1265569 and 1201500 + 669444 = 1870944 in integer satang; baht Number sum 8010 + 4645.69 is not 12655.69",
+    "ac4_floor": "payoutAfterDeduction(0,0) = 0, (100,150) = 0; zero payout has tax 0 and net 0"
+  },
+  "files_written": [
+    "apps/www-reading-advantage/src/lib/tutor-commission.test.ts",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md",
+    "measure/runs/www_tutor_calculator_20261117/red-1.1-7eb6991fc.json",
+    "measure/runs/www_tutor_calculator_20261117/red-1.1-7eb6991fc.log"
+  ],
+  "constraints_held": [
+    "No production source, locale file, component, or page written",
+    "No module file written",
+    "No file read outside the repository by the test",
+    "No hash computed",
+    "No disposition line written",
+    "No question tool used",
+    "No deploy and no push",
+    "Explicit pathspecs only; no git add -A"
+  ],
+  "questions": []
+}

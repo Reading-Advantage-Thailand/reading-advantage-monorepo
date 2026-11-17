@@ -12,7 +12,7 @@ export const en = {
         },
         {
             title: "Reedy Voice Practice",
-            description: "Your students practice speaking with Reedy on the lessons they finished. Reedy is live in Tutor Advantage only",
+            description: "Your students practice speaking with Reedy on the lessons they finished.",
         },
         {
             title: "Commission Model",
@@ -38,7 +38,7 @@ export const th = {
         },
         {
             title: "ฝึกพูดกับ Reedy",
-            description: "นักเรียนของคุณฝึกพูดกับ Reedy ในบทเรียนที่เรียนจบแล้ว Reedy ใช้ได้ใน Tutor Advantage เท่านั้น",
+            description: "นักเรียนของคุณฝึกพูดกับ Reedy ในบทเรียนที่เรียนจบแล้ว",
         },
         {
             title: "โมเดลคอมมิชชัน",
@@ -64,7 +64,7 @@ export const zh = {
         },
         {
             title: "Reedy 口语练习",
-            description: "您的学生在已完成的课程上与 Reedy 练习口语。Reedy 仅在 Tutor Advantage 中提供",
+            description: "您的学生在已完成的课程上与 Reedy 练习口语。",
         },
         {
             title: "佣金模式",

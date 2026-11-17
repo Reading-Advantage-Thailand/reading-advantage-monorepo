@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)",
+  "baseline_sha": "9fc1292b914bb4a67bac3c8fa48e7a68762f3c0b",
+  "role_base_sha": "9fc1292b914bb4a67bac3c8fa48e7a68762f3c0b",
+  "audited_head_sha": "af78cfb4380b9b482fe86132c30dfbbfbebef81d",
+  "status": "pass",
+  "summary": "The PM-1 fix is correct at af78cfb43. No www locale string says that Reedy is only in Tutor Advantage or is not in Primary or Reading Advantage. Every copy edit is a deletion, and the en, th, and zh sentences stay correct. The new test reads the imported dictionaries and the rendered page, and it failed first. The merge of origin/master 5211596e4 adds only the 2026-11-18 blog post and its plan. Three nits stay: the spec omits the FAQ deletions and the two retry patterns, the plan cites a Red output file that the retry overwrote, and one Thai feature description has no verb.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "A-P3-r3-1 [Nit] review-a: Spec D-21 and AC-24 are behind the test and the code. The Green commits deleted the false clause from faq.items.3.answer in en, th, and zh (locales/pages/products/tutor-advantage.ts:235, 572, 911), and Red retry 28a621ce4 added /not available in Primary Advantage/i and /Reedy is not available/i plus an exact en FAQ pin (www-tutor-reedy-claim.test.tsx:41-42, 206-214). D-21 (spec.md:427-451) names only the bullet and the two platformFeatures descriptions, and AC-24 (spec.md:843-849) lists six patterns, not eight. Plan 3.6d records the FAQ deletions, so the record exists only in the plan. Disposition proposal: FIX in the next spec edit (add the three FAQ answers to the D-21 table and the two patterns to AC-24).",
+    "A-P3-r3-2 [Nit] review-a: Plan task 3.6c cites measure/runs/www_tutor_calculator_20261117/red-p3-3.6c-vitest.txt as the round-1 Red output (15 failed). The retry run overwrote that git-ignored file; it now holds 'Tests 2 failed | 15 passed (17)'. The round-1 summary survives only in red-p3-3.6c-9fc1292b9.log:42 and green-p3-3.6d-fe1cb8b26.log:12. Disposition proposal: DECLINE (the logs keep both summaries) or FIX by a separate file name for each Red run.",
+    "A-P3-r3-3 [Nit] review-a: The th platformFeatures Reedy description is now a noun phrase with no verb: 'การฝึกพูดกับ Reedy สำหรับนักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่ และในบทเรียนที่เรียนจบแล้ว' (locales/pages/products/tutor-advantage.ts:634). The en text says 'is open to', and the th package bullet (line 473) uses 'เปิดให้'. The deletion-only order caused this, and a Thai reader can still read it as a card caption. Disposition proposal: DECLINE under the deletion-only order, or ESCALATE to the owner for one added word 'เปิดให้'."
+  ],
+  "evidence": [
+    "HEAD check: git rev-parse HEAD = af78cfb4380b9b482fe86132c30dfbbfbebef81d = audited_head_sha.",
+    "No false claim remains: rg -i 'reedy' over apps/www-reading-advantage/src/locales, filtered for only/เท่านั้น/仅/只/not in/not available/ไม่มี/没有, gives no line that limits Reedy to Tutor Advantage. home.ts:79, 304, 529 and primary-advantage.ts:37-67, 119-149 make no availability claim. The only 'Not in Reading Advantage' hit (mastery-advantage.ts:173) is about Mastery Advantage, not Reedy.",
+    "Deletion only: git diff 9fc1292b9..af78cfb43 on both locale files shows each changed line as the old line with one span removed. Examples: en features 'is live in Tutor Advantage only. It is ' removed; en component ' Reedy is live in Tutor Advantage only' removed; reedyBlock.points.0 removed in en, th, and zh; FAQ answer tail clause removed in en, th, and zh. page.tsx:80 reedyKeys changed from [0,1,2,3] to [0,1,2], which matches the three remaining bullets.",
+    "Sentences read correctly: en 'Reedy voice practice is open to students with an active class package, on lessons they finished.'; zh 'Reedy 口语练习面向持有有效课程包的学生，用于已完成的课程。'; zh and th component and FAQ texts end at a complete clause. See A-P3-r3-3 for the one th phrase without a verb.",
+    "Test meaning: www-tutor-reedy-claim.test.tsx imports both locale modules and walks every string leaf (lines 52-78); it renders the real page with the real dictionary and reads the li elements of the Reedy section (lines 134-150, 216-228). A probe control proves each of the 8 patterns matches one sample (lines 164-180). No case reads source text or computes a hash.",
+    "Failing first: red-p3-3.6c-9fc1292b9.log:42 records 15 failed | 1 passed for round 1; red-p3-3.6c-vitest.txt shows the retry Red run failing on the en page scan and the en FAQ pin with the old 'Reedy is not available in Primary Advantage or Reading Advantage.' text received.",
+    "Merge check: af78cfb43 parents are 5b6b10f09 and 5211596e4. git diff --stat af78cfb43^1 af78cfb43 equals git diff --stat 9295ee0ef^ 5211596e4: 2 blog webp files, the en and th post 'she-chooses-the-words-she-keeps.md', and the daily posts plan. git diff-tree --cc on the merge lists no file, so the merge resolved nothing by hand.",
+    "git diff --stat 5211596e4..af78cfb43 -- apps packages lists only apps/www-reading-advantage paths of the tutor page work (31 files), and no package path.",
+    "Plan truth: 3.6c Done e0637db22 and 3.6d Done 0a0797355 plus retry 5ca39dcfa resolve and are ancestors of HEAD. The 3.6d retry claim '7 files, 105 tests' and the Red retry claim '2 failed | 15 passed (17)' match the logs. The reviewer run of the same 7 files plus primary-advantage page.content.test.tsx gave 8 files, 260 tests, all pass.",
+    "A5 check: no plan claim in the delta states PASS=N with a failing exit; the tsc exit 0 claim matches the reviewer tsc run."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git log --oneline 9fc1292b9..af78cfb43",
+    "git diff 9fc1292b9..af78cfb43 -- apps/www-reading-advantage/src/locales apps/www-reading-advantage/src/app measure/tracks/www_tutor_calculator_20261117",
+    "git diff-tree -r --cc --no-renames --name-status af78cfb43",
+    "git diff --stat af78cfb43^1 af78cfb43; git diff --stat 9295ee0ef^ 5211596e4",
+    "git diff --stat 5211596e4..af78cfb43 -- apps packages",
+    "rg -n -i 'reedy' apps/www-reading-advantage/src/locales | rg -i 'only|เท่านั้น|仅|只|not in|not available|ไม่มี|没有|没|ไม่|Primary|Reading'",
+    "pnpm --filter www-reading-advantage exec vitest run <reedy-claim, tutor page x5, locale test, primary page.content> --reporter=dot --maxWorkers=1 -> exit 0, Test Files 8 passed (8), Tests 260 passed (260)",
+    "pnpm --filter www-reading-advantage exec tsc --noEmit -p . -> exit 0"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/www-tutor-reedy-claim.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+    "apps/www-reading-advantage/src/locales/components/products/tutor-advantage.ts",
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md",
+    "measure/tracks/www_tutor_calculator_20261117/spec.md",
+    "merge 5211596e4: apps/www-reading-advantage/public/blog/2026-11-18-*.webp, blog posts en/th she-chooses-the-words-she-keeps.md, measure/tracks/www_daily_blog_posts_20261115/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "claude-code/claude-opus-5-5[1m]#high",
+  "ratings": [
+    {"axis": "correctness", "score": 5, "evidence": "rg over all www locale files finds no Reedy availability claim, and reedyKeys [0,1,2] at page.tsx:80 matches the three bullets."},
+    {"axis": "test_meaning", "score": 5, "evidence": "www-tutor-reedy-claim.test.tsx scans every imported string leaf, renders the real Reedy block, has a probe control, and failed first (15 then 2 failures)."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "The copy diff is deletion only, and the merge first-parent diff equals the master blog-post commit diff exactly."},
+    {"axis": "evidence_quality", "score": 4, "evidence": "Plan gate counts match the logs, but the 3.6c Red output file was overwritten by the retry (A-P3-r3-2)."}
+  ]
+}

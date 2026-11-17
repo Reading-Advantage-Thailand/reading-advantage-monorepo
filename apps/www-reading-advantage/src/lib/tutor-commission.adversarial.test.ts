@@ -40,6 +40,11 @@ function specGrossSatang(volume: number): bigint {
   return (rateUnits * gvSatang) / BigInt(RATE_SCALE);
 }
 
+/** Settlement tax rule of taxService.ts:4: three percent, half up, in satang. */
+function halfUpTaxSatang(payoutSatang: number): number {
+  return Number((BigInt(payoutSatang) * 3n + 50n) / 100n);
+}
+
 /** Asserts the money fields are finite and non-negative. */
 function expectFiniteMoney(result: ReturnType<typeof calculateNetwork>): void {
   const money = [
@@ -57,19 +62,53 @@ function expectFiniteMoney(result: ReturnType<typeof calculateNetwork>): void {
   }
 }
 
+/** The input fields that decide settlement eligibility (spec D-18). */
+type EligibilityInput = {
+  personalStudents: number;
+  studentsPerLeg: readonly number[];
+};
+
 /**
- * Asserts the D-3 conservation identities in integer satang.
+ * True when settlement pays the input: 1 or more personal students, or no legs.
+ * The personal count uses the module clamp of spec 5.2 item 1.
+ */
+function isEligible(input: EligibilityInput): boolean {
+  const personalStudents =
+    Number.isFinite(input.personalStudents) && input.personalStudents > 0
+      ? Math.floor(input.personalStudents)
+      : 0;
+  return personalStudents >= 1 || input.studentsPerLeg.length === 0;
+}
+
+/**
+ * Asserts the D-3 conservation identities in integer satang for an eligible input.
+ * For an ineligible input (0 personal students and 1 or more legs) it asserts the
+ * D-18 zero payout, the zero tax, and the zero net, and that the legs stay within
+ * the gross. The leg rows equal the deduction in both cases.
  * Only for results whose satang values fit a double exactly.
  */
-function expectSatangConservation(result: ReturnType<typeof calculateNetwork>): void {
+function expectSatangConservation(
+  result: ReturnType<typeof calculateNetwork>,
+  input: EligibilityInput,
+): void {
   expectFiniteMoney(result);
   const legSum = result.legs.reduce((sum, leg) => sum + satang(leg.payout), 0);
   expect(legSum, "leg rows equal the deduction").toBe(satang(result.legPayouts));
+  if (!isEligible(input)) {
+    expect(result.legs.length, "an ineligible input keeps its leg rows").toBeGreaterThan(0);
+    expect(satang(result.legPayouts), "the deduction stays within the gross").toBeLessThanOrEqual(
+      satang(result.gross),
+    );
+    expect(satang(result.preTax), "an ineligible input pays 0 before tax").toBe(0);
+    expect(satang(result.withholdingTax), "an ineligible input pays 0 tax").toBe(0);
+    expect(satang(result.net), "an ineligible input pays 0 net").toBe(0);
+    return;
+  }
   expect(satang(result.legPayouts) + satang(result.preTax), "legs plus payout equal gross").toBe(
     satang(result.gross),
   );
-  expect(satang(result.withholdingTax), "tax truncates at 3 percent").toBe(
-    Math.floor((satang(result.preTax) * 3) / 100),
+  expect(satang(result.withholdingTax), "tax rounds half up at 3 percent").toBe(
+    halfUpTaxSatang(satang(result.preTax)),
   );
   expect(satang(result.net), "net is payout minus tax").toBe(
     satang(result.preTax) - satang(result.withholdingTax),
@@ -126,24 +165,24 @@ describe("A1 float leakage: the satang path, not a baht Number product", () => {
     expect(Number.isSafeInteger(satang(result.gross))).toBe(false);
   });
 
-  it("the 3 percent tax truncates satang where a float product rounds up", () => {
+  it("the 3 percent tax rounds half up where truncation loses a satang", () => {
     // GV 3 baht at 40.0015 percent: 120.0045 satang gross becomes 120 satang.
     const result = calculateNetwork({ price: 1, personalStudents: 3, studentsPerLeg: [] });
     expect(result.networkVolume).toBe(3);
     expect(satang(result.gross)).toBe(120);
     expect(satang(result.preTax)).toBe(120);
-    expect(satang(result.withholdingTax)).toBe(3);
-    expect(satang(result.net)).toBe(117);
-    expect(result.withholdingTax).toBe(0.03);
-    expect(result.net).toBe(1.17);
+    expect(satang(result.withholdingTax)).toBe(4);
+    expect(satang(result.net)).toBe(116);
+    expect(result.withholdingTax).toBe(0.04);
+    expect(result.net).toBe(1.16);
 
-    // Control: a float tax rounds 3.6 satang up to 4, and 0.03 to 0.04 baht.
-    const floatTax = Math.round(120 * 0.03);
-    expect(floatTax).toBe(4);
-    expect(satang(result.withholdingTax)).not.toBe(floatTax);
+    // Control: truncation gives 3 satang, so the pin must see the half-up satang.
+    const truncatedTax = Math.floor((120 * 3) / 100);
+    expect(truncatedTax).toBe(3);
+    expect(satang(result.withholdingTax)).not.toBe(truncatedTax);
   });
 
-  it("the tax truncates on every payout whose 3 percent lands above a half satang", () => {
+  it("the tax rounds half up on every payout whose 3 percent lands above a half satang", () => {
     let discriminating = 0;
     for (let price = 1; price <= 40; price += 1) {
       for (let students = 1; students <= 6; students += 1) {
@@ -154,9 +193,9 @@ describe("A1 float leakage: the satang path, not a baht Number product", () => {
         });
         const payoutSatang = satang(result.preTax);
         expect(satang(result.withholdingTax), `price ${price} students ${students}`).toBe(
-          Math.floor((payoutSatang * 3) / 100),
+          halfUpTaxSatang(payoutSatang),
         );
-        if (Math.round(payoutSatang * 0.03) !== Math.floor((payoutSatang * 3) / 100)) {
+        if (halfUpTaxSatang(payoutSatang) !== Math.floor((payoutSatang * 3) / 100)) {
           discriminating += 1;
         }
       }
@@ -223,7 +262,7 @@ describe("A2 truncation order and the 1e9 rate scale", () => {
         BigInt(satang(result.gross)),
         `gross at ${JSON.stringify(input)}`,
       ).toBe(specGrossSatang(result.networkVolume));
-      expectSatangConservation(result);
+      expectSatangConservation(result, input);
       if (Math.round(specRate(result.networkVolume) * result.networkVolume * SATANG_PER_BAHT) !== satang(result.gross)) {
         roundingCells += 1;
       }
@@ -243,8 +282,8 @@ describe("A3 boundaries", () => {
 
     const below = calculateNetwork({ price: 19999.99, personalStudents: 1, studentsPerLeg: [] });
     expect(satang(below.gross)).toBe(999999);
-    expect(below.withholdingTax).toBe(299.99);
-    expect(below.net).toBe(9700);
+    expect(below.withholdingTax).toBe(300);
+    expect(below.net).toBe(9699.99);
 
     const at = calculateNetwork({ price: 20000, personalStudents: 1, studentsPerLeg: [] });
     expect(satang(at.gross)).toBe(1000000);
@@ -273,7 +312,8 @@ describe("A3 boundaries", () => {
   });
 
   it("one baht of volume pays 0.40 gross, 0.01 tax and 0.39 net", () => {
-    const result = calculateNetwork({ price: 1, personalStudents: 1, studentsPerLeg: [] });
+    const input = { price: 1, personalStudents: 1, studentsPerLeg: [] };
+    const result = calculateNetwork(input);
     expect(result.ownVolume).toBe(1);
     expect(result.networkVolume).toBe(1);
     expect((result.rate * 100).toFixed(6)).toBe("40.000500");
@@ -283,44 +323,47 @@ describe("A3 boundaries", () => {
     expect(satang(result.net)).toBe(39);
     expect(result.net).toBe(0.39);
     expect(explainVariant(result)).toBe("ownOnly");
-    expectSatangConservation(result);
+    expectSatangConservation(result, input);
   });
 
   it("a billion baht with a leg stays conserved in satang", () => {
-    const result = calculateNetwork({
+    const input = {
       price: 1000,
       personalStudents: 999_000,
       studentsPerLeg: [1000],
-    });
+    };
+    const result = calculateNetwork(input);
     expect(result.networkVolume).toBe(1e9);
     expect(satang(result.gross)).toBe(71422027600);
     expect(satang(result.legs[0].payout)).toBe(70280301);
     expect(satang(result.legPayouts)).toBe(70280301);
-    expectSatangConservation(result);
+    expectSatangConservation(result, input);
   });
 });
 
 describe("A4 hostile inputs clamp and stay finite", () => {
   it("NaN, Infinity and -Infinity give zero money in every field", () => {
     for (const value of [NaN, Infinity, -Infinity]) {
-      const asPrice = calculateNetwork({
+      const priceInput = {
         price: value,
         personalStudents: 4,
         studentsPerLeg: [3, 3],
-      });
+      };
+      const asPrice = calculateNetwork(priceInput);
       expect(asPrice.networkVolume, `price ${value}`).toBe(0);
       expect(asPrice.gross).toBe(0);
       expect(asPrice.net).toBe(0);
-      expectSatangConservation(asPrice);
+      expectSatangConservation(asPrice, priceInput);
 
-      const asStudents = calculateNetwork({
+      const studentsInput = {
         price: CLASS_PRICE_DEFAULT,
         personalStudents: value,
         studentsPerLeg: [value, value],
-      });
+      };
+      const asStudents = calculateNetwork(studentsInput);
       expect(asStudents.networkVolume, `students ${value}`).toBe(0);
       expect(asStudents.gross).toBe(0);
-      expectSatangConservation(asStudents);
+      expectSatangConservation(asStudents, studentsInput);
     }
     expect(commissionRate(-Infinity)).toBe(0);
     expect(commissionRate(1e-9)).toBeGreaterThan(0.4);
@@ -342,33 +385,36 @@ describe("A4 hostile inputs clamp and stay finite", () => {
   });
 
   it("fractional and negative leg counts become whole students of 0 or more", () => {
-    const fractional = calculateNetwork({
+    const fractionalInput = {
       price: 3000,
       personalStudents: 1,
       studentsPerLeg: [2.9],
-    });
+    };
+    const fractional = calculateNetwork(fractionalInput);
     expect(fractional.legs).toEqual([{ leg: 1, students: 2, volume: 6000, payout: 2580 }]);
     expect(fractional.networkVolume).toBe(9000);
     expect(fractional.gross).toBe(4005);
     expect(fractional.withholdingTax).toBe(42.75);
     expect(fractional.net).toBe(1382.25);
-    expectSatangConservation(fractional);
+    expectSatangConservation(fractional, fractionalInput);
 
-    const hostile = calculateNetwork({
+    const hostileInput = {
       price: 3000,
       personalStudents: 1,
       studentsPerLeg: [2.5, -1, NaN],
-    });
+    };
+    const hostile = calculateNetwork(hostileInput);
     expect(hostile.legs.map((leg) => leg.students)).toEqual([2, 0, 0]);
-    expectSatangConservation(hostile);
+    expectSatangConservation(hostile, hostileInput);
   });
 
   it("a million legs stay conserved in satang", () => {
-    const result = calculateNetwork({
+    const input = {
       price: 1000,
       personalStudents: 0,
-      studentsPerLeg: new Array(1_000_000).fill(3),
-    });
+      studentsPerLeg: new Array<number>(1_000_000).fill(3),
+    };
+    const result = calculateNetwork(input);
     expect(result.legs).toHaveLength(1_000_000);
     expect(result.legs[0]).toEqual({ leg: 1, students: 3, volume: 3000, payout: 1245 });
     expect(result.legs[999_999]).toEqual({
@@ -380,45 +426,49 @@ describe("A4 hostile inputs clamp and stay finite", () => {
     expect(result.networkVolume).toBe(3_000_000_000);
     expect(satang(result.gross)).toBe(214277083800);
     expect(satang(result.legPayouts)).toBe(124500000000);
-    expect(satang(result.preTax)).toBe(89777083800);
-    expect(satang(result.withholdingTax)).toBe(2693312514);
-    expect(satang(result.net)).toBe(87083771286);
-    expectSatangConservation(result);
+    // D-18: 0 personal students and legs pay 0 before tax, 0 tax, and 0 net.
+    expect(satang(result.preTax)).toBe(0);
+    expect(satang(result.withholdingTax)).toBe(0);
+    expect(satang(result.net)).toBe(0);
+    expectSatangConservation(result, input);
   });
 
   it("price 0 with legs, students 0 with legs, and no legs with students", () => {
-    const zeroPrice = calculateNetwork({
+    const zeroPriceInput = {
       price: 0,
       personalStudents: 4,
       studentsPerLeg: [3, 3],
-    });
+    };
+    const zeroPrice = calculateNetwork(zeroPriceInput);
     expect(zeroPrice.legs).toEqual([
       { leg: 1, students: 3, volume: 0, payout: 0 },
       { leg: 2, students: 3, volume: 0, payout: 0 },
     ]);
     expect(zeroPrice.networkVolume).toBe(0);
     expect(explainVariant(zeroPrice)).toBe("zero");
-    expectSatangConservation(zeroPrice);
+    expectSatangConservation(zeroPrice, zeroPriceInput);
 
-    const zeroStudents = calculateNetwork({
+    const zeroStudentsInput = {
       price: 3000,
       personalStudents: 0,
       studentsPerLeg: [0, 0],
-    });
+    };
+    const zeroStudents = calculateNetwork(zeroStudentsInput);
     expect(zeroStudents.legPayouts).toBe(0);
     expect(zeroStudents.gross).toBe(0);
     expect(explainVariant(zeroStudents)).toBe("zero");
-    expectSatangConservation(zeroStudents);
+    expectSatangConservation(zeroStudents, zeroStudentsInput);
 
-    const ownOnly = calculateNetwork({
+    const ownOnlyInput = {
       price: 3000,
       personalStudents: 4,
       studentsPerLeg: [],
-    });
+    };
+    const ownOnly = calculateNetwork(ownOnlyInput);
     expect(ownOnly.networkVolume).toBe(12000);
     expect(ownOnly.legPayouts).toBe(0);
     expect(explainVariant(ownOnly)).toBe("ownOnly");
-    expectSatangConservation(ownOnly);
+    expectSatangConservation(ownOnly, ownOnlyInput);
   });
 
   it("resizeLegs clamps a hostile count and hostile entries", () => {
@@ -435,33 +485,36 @@ describe("A6 finite input whose product overflows", () => {
   it("a finite price whose volume overflows returns finite money instead of throwing", () => {
     // 1e307 baht times one student passes the input clamp (finite and positive) but
     // the satang conversion overflows, and BigInt(Infinity) throws a RangeError.
-    const hugePrice = calculateNetwork({
+    const hugePriceInput = {
       price: 1e307,
       personalStudents: 1,
       studentsPerLeg: [],
-    });
+    };
+    const hugePrice = calculateNetwork(hugePriceInput);
     expect(Number.isFinite(hugePrice.networkVolume)).toBe(true);
     expect(Number.isFinite(hugePrice.gross)).toBe(true);
     expect(hugePrice.gross).toBe(0);
-    expectSatangConservation(hugePrice);
+    expectSatangConservation(hugePrice, hugePriceInput);
 
     // A finite price times a finite count overflows before the satang step.
-    const hugeProduct = calculateNetwork({
+    const hugeProductInput = {
       price: 1e306,
       personalStudents: 1000,
       studentsPerLeg: [],
-    });
+    };
+    const hugeProduct = calculateNetwork(hugeProductInput);
     expect(Number.isFinite(hugeProduct.networkVolume)).toBe(true);
-    expectSatangConservation(hugeProduct);
+    expectSatangConservation(hugeProduct, hugeProductInput);
 
     // The same overflow through one leg.
-    const hugeLeg = calculateNetwork({
+    const hugeLegInput = {
       price: 1e306,
       personalStudents: 0,
       studentsPerLeg: [1000],
-    });
+    };
+    const hugeLeg = calculateNetwork(hugeLegInput);
     expect(Number.isFinite(hugeLeg.networkVolume)).toBe(true);
-    expectSatangConservation(hugeLeg);
+    expectSatangConservation(hugeLeg, hugeLegInput);
   });
 });
 
@@ -484,7 +537,7 @@ describe("A5 conservation under every attack input", () => {
   it("leg payouts plus payout equal the gross satang for every attack", () => {
     for (const attack of attacks) {
       const result = calculateNetwork(attack.input);
-      expectSatangConservation(result);
+      expectSatangConservation(result, attack.input);
     }
   });
 

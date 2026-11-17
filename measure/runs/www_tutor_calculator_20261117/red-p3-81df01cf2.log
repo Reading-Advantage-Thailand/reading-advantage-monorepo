@@ -1,0 +1,99 @@
+MEASURE RED — Phase 3 (audit remediation) — www_tutor_calculator_20261117
+Role: measure-mid-red (opencode-go/hy4-flash-free)
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+
+phase_base_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+role_base_sha:  81df01cf2e7c2954f4a2de1aaee593913a00bc75
+Both resolve to HEAD. Phase 3 starts at this HEAD.
+
+phase_base_sha was missing from the first brief. The orchestrator supplied it as
+option A in the gate answer; the gate then passed. No work happened before that answer.
+
+Git status at start: clean. No dirty paths to classify. No unrelated user work.
+
+SCOPE
+- plan.md: Phase 3 heading with the phase base, tasks 3.1 to 3.8, each with Test lines.
+- spec.md: D-3 half-up tax with both settlement citations, the PR section 4 rounding
+  conflict, the withLegs rename, D-17 (section 6 is the only string authority), and
+  sections 5.4, 6.2, 6.3 replaced with PR section 6 and section 2 content. AC-3 and
+  AC-7 updated; AC-17 to AC-20 added.
+- Ten test files changed. No production source, locale file, or image was edited.
+
+RED COMMAND (final run)
+cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx" src/lib/__tests__/tutor-screens.test.ts src/lib/__tests__/tutor-screens.adversarial.test.ts src/lib/tutor-commission.test.ts src/lib/tutor-commission.adversarial.test.ts src/components/marketing/tutor-commission-calculator.test.tsx src/components/marketing/tutor-commission-calculator.adversarial.test.tsx src/__tests__/www-tutor-screens-copy.adversarial.test.ts "src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx" --reporter=dot --silent=true --maxWorkers=1
+
+Exit 1. Test Files 10 failed (10). Tests 53 failed | 92 passed (145).
+Full output: red-p3-81df01cf2-vitest.txt in this folder.
+
+Every failing case is listed in that file under "FAIL". Categories:
+- real-copy page gate: six cases, en/th/zh first paint and preset 2 and preset 3,
+  failing on the live v0.1 strings "Downline deduction", the direct-downline note,
+  and the Thai "ส่วนที่หักให้ดาวน์ไลน์" and "ดาวน์ไลน์ชั้นแรก".
+- locale: en/th/zh calculator and screens blocks, key order, leaf paths, and the
+  retained-key scan, all failing on v0.1 keys and copy.
+- gallery: manifest keys, srcs, sizes, file existence, five-card render order, and
+  image srcs, all failing on the three-card 070/002/062 set.
+- tax: the half-up pin at price 1,007, the withLegs variant, and six adversarial
+  pins, all failing on truncated tax or the old variant name.
+- component: leg-count, leg-student, and leg-bar keys, and preset result figures,
+  failing on the missing PR keys in the current dictionary.
+
+No failure is an import, syntax, ReferenceError, or fixture error. One failure
+surfaces as a TypeError in ADV-M2 because a manifest slot is undefined; that is the
+missing-gallery-slot cause, not a test defect. Positive controls, retired-line scan,
+reference-formula check, and D-16 claim scan pass at this base.
+
+COMMITS
+Red: 8d8f1c01cc6dfc7ff8fd85afa6c623300a9bf9d1
+  test(www): pin PR copy, gallery, half-up tax (track_id: www_tutor_calculator_20261117)
+  Twelve files: ten tests, spec.md, plan.md.
+Record: f6004f65e6872fafcbc4083263dbcd652a56a524
+  chore(measure): record red p3 and close task 3.1 (track_id: www_tutor_calculator_20261117)
+  plan.md marker and Done line; this log.
+
+CONFLICTS OBSERVED
+- PR section 4 rounds the gross to 12,655.70, 24,833.46, 4,506.33, 8,025.26. Settlement
+  truncates the gross. The calculator shows 12,655.69, 24,833.45, 4,506.32, 8,025.25.
+  The PR copy quotes whole baht, so its text is unaffected. Recorded in D-3.
+- Spec D-3 pinned truncation against taxService.ts:4 half up. Fixed.
+- Spec named the variant withDownline; PR section 6 names explain.withLegs. Fixed.
+- Spec sections 5.4, 6.2, 6.3 carried v0.1 copy and three gallery slots. Fixed.
+- The live page carries v0.1 copy. The new real-message test proves it.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: www_tutor_calculator_20261117
+phase: 3 (audit remediation)
+baseline_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+role_base_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+head: f6004f65e6872fafcbc4083263dbcd652a56a524
+commits: [8d8f1c01cc6dfc7ff8fd85afa6c623300a9bf9d1, f6004f65e6872fafcbc4083263dbcd652a56a524]
+tests: [53 failed | 92 passed (145), exit 1]
+files: [ten test files, measure/tracks/www_tutor_calculator_20261117/plan.md, measure/tracks/www_tutor_calculator_20261117/spec.md, this log, red-p3-81df01cf2-vitest.txt]
+remaining_failures: all 53 named failures in red-p3-81df01cf2-vitest.txt; each is missing PR copy, missing gallery slot or asset, or truncated tax
+status: PASS
+handoff: |
+  Phase 3 Red is complete. Task 3.1 is [x] with Done: f6004f65e6872fafcbc4083263dbcd652a56a524? No: 3.1 carries
+  Done: 8d8f1c01cc6dfc7ff8fd85afa6c623300a9bf9d1, the Red commit.
+  Next role: Green, tasks 3.2 to 3.5. Green must edit production only: locale blocks,
+  component and page keys, five webp assets and the manifest, and the half-up tax.
+  The ten Red tests are the contract and must not be weakened.
+  Open items for the PM: none from this role. The audit's D-4, D-6, D-7, D-8, and
+  Storytime items stay with the PM and are outside this track.
+END_MEASURE_AGENT_RESULT
+
+RETRY F1/F2 (orchestrator-verified defects in page.test.tsx)
+F1 FIX: SCREEN_SLOT_INDEXES is now [0, 1, 2, 3, 4] and the case is retitled
+  "renders five screen cards with the slot alt and caption in copy order". This
+  matches AC-19 and PR section 2 (five student slots), not the old three-card set.
+F2 FIX: both getScopedI18n mock implementations now cast the translator to
+  Awaited<ReturnType<typeof getScopedI18n>>, following
+  src/__tests__/phase-2-seo-assets.red.test.ts:59. Behaviour is unchanged: the
+  restore mock still returns "<scope>.<key>" (and the placeholder image path), and
+  the real-copy mock still resolves keys against en, th, or zh.
+CHECK: pnpm --filter www-reading-advantage exec tsc --noEmit -p . exits 0 with no
+  output. No error names products/tutor-advantage/page.test.tsx.
+SCOPE: only page.test.tsx was edited and staged. The uncommitted Green work in the
+  worktree (locale, component, page, module, manifest, webp files) was not touched,
+  staged, stashed, or reverted.

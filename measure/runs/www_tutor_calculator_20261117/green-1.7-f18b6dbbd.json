@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "role": "measure-green",
+  "verdict": "pass",
+  "note": "Final. The targeted page test exits 0 with 6 passing cases against the wired section. Types and lint exit 0 with no shadcn/* error in the touched files. measure/doctor.sh exits 1 at its architecture step on a pre-existing analyzer snapshot hash mismatch, in files this task does not touch.",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "task": "1.7",
+  "baseline_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "a8b78cf90ea852ee0255d79df5c18957854fedf6",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/deepseek-v4.1-flash (ra-quota pick green returns the Red family hy4, so it is excluded; this is the next allowed non-Red route)",
+  "resulting_head": "4c4153b04700a3ada45934fcb3336cae84fcf4cc",
+  "commits": [
+    {
+      "sha": "f18b6dbbd6e0af3e2d9bdb8e1f96b39d6267947b",
+      "subject": "feat(www): wire tutor commission calculator section (track_id: www_tutor_calculator_20261117)",
+      "files": [
+        "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+        "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx"
+      ]
+    },
+    {
+      "sha": "4c4153b04700a3ada45934fcb3336cae84fcf4cc",
+      "subject": "docs(measure): record green 1.7 evidence (track_id: www_tutor_calculator_20261117)",
+      "files": [
+        "measure/tracks/www_tutor_calculator_20261117/plan.md"
+      ]
+    }
+  ],
+  "red_change_inside_phase_base": {
+    "note": "Task 1.7 carries its own test, so the order assertions are authored in this task's working tree, run to failure, and committed with the implementation per the brief. No prior committed Red change exists for 1.7.",
+    "red_run": "Test Files 1 failed (1), Tests 2 failed | 4 passed (6), exit 1",
+    "role_base_sha_note": "The brief printed role_base_sha as a8b78cf90f9e8d7ad2eb9c7ff1a2a0d8f5de8e9b (41 characters). The real commit is a8b78cf90ea852ee0255d79df5c18957854fedf6."
+  },
+  "targeted_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run \"src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx\" --reporter=dot --silent=true'",
+  "targeted_result": {
+    "exit_code": 0,
+    "test_files": "Test Files 1 passed (1)",
+    "tests": "Tests 6 passed (6)",
+    "new_cases": 2
+  },
+  "gates": {
+    "targeted_test_exit_code": 0,
+    "test_files": "Test Files 1 passed (1)",
+    "tests": "Tests 6 passed (6)",
+    "check_types": {
+      "command": "pnpm turbo run check-types --filter=www-reading-advantage",
+      "exit_code": 0
+    },
+    "lint": {
+      "command": "pnpm --filter www-reading-advantage lint",
+      "exit_code": 0,
+      "new_shadcn_errors_in_touched_files": "none"
+    },
+    "measure_doctor": {
+      "command": "bash measure/doctor.sh",
+      "exit_code": 1,
+      "cause": "The architecture step reports \"V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes\". That manifest and its analyzer inputs live in packages/architecture-enforcement, which is unchanged between role_base_sha and HEAD (git diff empty). This is a pre-existing tool failure, not a boundary verdict from this task."
+    }
+  },
+  "spec_ac10_check": {
+    "section_present": "The page renders section[data-testid='tutor-calculator'] with id='commission-calculator'.",
+    "order": "The test asserts the DOM order tutorRole (#become-a-tutor) -> calculator -> commitments (data-testid='tutor-commitments') through compareDocumentPosition.",
+    "copy_source": "The page reads every calculator.* key with getScopedI18n('pages.products.tutorAdvantage') and passes one copy object to TutorCommissionCalculator.",
+    "no_other_page_change": "Only the import, the calculatorCopy object, the new section, and data-testid='tutor-commitments' were added. No other page content or order changed."
+  },
+  "files_changed_by_this_role": [
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md (task 1.7 marked [x] with the sha and both runs)",
+    "measure/runs/www_tutor_calculator_20261117/green-1.7-f18b6dbbd.json",
+    "measure/runs/www_tutor_calculator_20261117/green-1.7-f18b6dbbd.log"
+  ],
+  "files_intentionally_untouched": [
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+    "apps/www-reading-advantage/src/lib/tutor-commission.ts",
+    "apps/www-reading-advantage/src/lib/tutor-commission.test.ts",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "package.json and pnpm-lock.yaml"
+  ],
+  "plan_marking": {
+    "task": "1.7",
+    "state": "[x]",
+    "evidence": "Done: f18b6dbbd6e0af3e2d9bdb8e1f96b39d6267947b, with the Red and Green run results."
+  },
+  "constraints_held": [
+    "Only page.tsx, page.test.tsx, the plan line, and the two result files changed",
+    "No edit to the locale file, the component, the module, or another test file",
+    "Explicit pathspecs only; no git add -A, no git commit -a, no stash, no reset",
+    "No disposition line, no question tool, no deploy, and no push",
+    "The plan commit is amended once to add the doctor note; it is not pushed"
+  ],
+  "command_note": "The brief's `[[]locale[]]` escaping form matches no test file and exits 0 through passWithNoTests. The literal quoted path is the form that runs the file; the plan records this note.",
+  "questions": [],
+  "handoff_notes": [
+    "Task 1.7 is done. Task 1.8 runs the Phase 1 gates and the hand page check.",
+    "The commitments section gained only data-testid='tutor-commitments' as the order anchor; it has no visual change.",
+    "Phase 2 task 2.2 must insert the screens section between tutorRole and the calculator (spec D-8). The current order is tutorRole -> calculator -> commitments, so 2.2 inserts directly after tutorRole and keeps the calculator test passing."
+  ]
+}

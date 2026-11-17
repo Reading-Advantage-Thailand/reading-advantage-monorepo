@@ -1,0 +1,136 @@
+# Green 2.6 gate run — www_tutor_calculator_20261117
+
+- Date: 2026-11-17
+- Branch: feat/a63-tutor-calculator
+- Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+- role_base_sha: cd72047c299c03cd5f502b0480cda5ed4692098d
+- phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+- Gate head: cd72047c299c03cd5f502b0480cda5ed4692098d (merge of origin/master 59821e80b)
+- Worktree clean before edit: yes
+- Product change: none
+- Red change 6c0cf5de6 inside d279b870..cd72047c2: confirmed
+- origin/master: 59821e80b, the merge base, so it did not move
+- Route: opencode-go/deepseek-v4.1-flash (substitution record: `ra-quota pick green` returns
+  opencode-go/hy4-flash-free, the Red family of this track, so it is excluded)
+
+## Gate 1 — app tests
+
+Command:
+
+    bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test --reporter=dot --silent=true'
+
+Exit code: 0
+
+    Test Files  71 passed (71)
+         Tests  2647 passed (2647)
+      Start at  16:08:56
+      Duration  60.52s (transform 1.09s, setup 2.79s, import 6.17s, tests 18.64s, environment 26.67s)
+
+The count is 29 above the 2618 of task 2.9. No control run at the pre-merge head, so the cause
+is not claimed.
+
+## Gate 2 — check-types
+
+Command:
+
+    pnpm turbo run check-types --filter=www-reading-advantage
+
+Exit code: 0
+
+    www-reading-advantage:check-types: cache miss, executing d4bf8bc1de537863
+    www-reading-advantage:check-types: $ tsc --noEmit
+     Tasks:    1 successful, 1 total
+       Time:    3.913s
+
+This is a live run, not a cache replay.
+
+## Gate 3 — lint
+
+Command:
+
+    pnpm --filter www-reading-advantage lint
+
+Exit code: 0
+
+    $ eslint .
+    (no further output)
+
+## Gate 4 — shadcn ratchet baseline
+
+Command:
+
+    git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json
+
+Exit code: 0 (no diff)
+
+## Gate 5 — build
+
+Command, attempt 1:
+
+    bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage build'
+
+Exit code: 1
+
+    > Build error occurred
+    Error [SecurityFatalError]: Your version of Next.js is affected by a known security vulnerability.
+
+    **We strongly recommend you upgrade Next.js.**
+
+    This command stopped to show the upgrade recommendation. Retry the same command to continue the original task.
+
+    next upgrade --agent=security --internal-nudge-id=1393b458-d2d5-443c-a951-4726de43950d
+
+The route table prints before the error. This is the known security-advisory nudge.
+
+Command, attempt 2: the same command.
+
+Exit code: 0. The route table prints and the build finishes.
+
+## Gate 6 — affected apps
+
+Command:
+
+    node scripts/ci/affected-apps.mjs --base 59821e80b347375d7cb90e30420a958158a47885 --head cd72047c299c03cd5f502b0480cda5ed4692098d
+
+Exit code: 0
+
+    ["www-reading-advantage"]
+
+Full 40-hex ids are used, so the short-id rule of test-strategy section 5.2 does not apply.
+
+## Daily post survival
+
+The brief path does not exist:
+
+    apps/www-reading-advantage/public/blog/posts/en/nobody-interrupts-her-while-she-reads.md   (absent)
+
+The post lives under `src/app/[locale]/(marketing)/blog/posts/`:
+
+    git log --oneline -1 -- 'apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/posts/en/nobody-interrupts-her-while-she-reads.md'
+    59821e80b feat(www): add the 2026-11-17 daily post (track_id: www_daily_blog_posts_20261115)
+
+    git cat-file -e HEAD:'apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/posts/en/nobody-interrupts-her-while-she-reads.md'
+    present in HEAD
+
+    ls -l apps/www-reading-advantage/public/blog/2026-11-17-reading-time.webp
+    -rw-rw-r-- 1 daniebo daniebo 308298 Nov 17 16:07 apps/www-reading-advantage/public/blog/2026-11-17-reading-time.webp
+    present in HEAD
+
+The post and the image survived the merge.
+
+## Plan commit
+
+Commit `a726b2be2b3771934e2d518f21b42f91d6882fc8` changes the plan file only. The plan file
+takes the six results and the merge check. Task 2.6 stays `[~]` because the push and the live
+URL check are not done.
+
+New head after the plan commit: `a726b2be2b3771934e2d518f21b42f91d6882fc8`.
+
+## Held constraints
+
+- No product file changed.
+- No push, no deploy, no server start on port 3120.
+- No build-graph scan and no doctor.sh.
+- No disposition line and no question tool.
+- Explicit pathspec commit of the plan file only.
+- One heavy job at a time.

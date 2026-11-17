@@ -1,0 +1,80 @@
+Green P3 · www_tutor_calculator_20261117 · session "Green · P3 T3.6 · www_tutor_calculator"
+
+Working dir: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+phase_base_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+role_base_sha: be506e211ec9f18d16bd9e21c607dd08afc52678 (equals HEAD at role start)
+Red model: opencode-go/deepseek-v4.1-flash
+No coder sub-delegation. No production or test edits in this role.
+
+== Provenance ==
+`git rev-parse HEAD` at start: be506e211ec9f18d16bd9e21c607dd08afc52678.
+Committed Red changes inside phase_base_sha..HEAD (git log 81df01cf2..HEAD):
+a48aa764d (3.5a Red), 8edb5ff97 (Red retry), 84df0eb89 (3.5c Red).
+All three sit inside 81df01cf2..be506e211. The committed Red tests were not edited.
+Implementation commits already on the branch before this role:
+a6434d513 (3.5b, D-18 zero payout rule), 9647b32c6 (3.5d, page images).
+This role ran the Phase 3 gates and recorded tasks 3.5b and 3.6.
+
+Why the targeted Red command no longer fails: the D-18 zero-payout rule was
+committed at a6434d513 and the page image fix at 9647b32c6 before this role
+started. The Red tests are immutable and were not edited here.
+
+== Gates ==
+Full output: measure/runs/www_tutor_calculator_20261117/green-p3-3.6-gates.txt
+
+Gate 1, targeted vitest (the twelve paths of the brief) through heavy-run.sh: exit 0.
+  Deviation: the brief's path src/__tests__/www-tutor-screens-copy.adversarial.test.tsx
+  does not exist. vitest matched nothing for it, so eleven of the twelve paths ran.
+  The real file ends .ts.
+Gate 1b, the same run on src/__tests/www-tutor-screens-copy.adversarial.test.ts: exit 0.
+Gate 2, whole www suite `pnpm --filter www-reading-advantage test -- --maxWorkers=1`
+  through heavy-run.sh: exit 0.
+Gate 3, `pnpm --filter www-reading-advantage exec tsc --noEmit -p .`: exit 0.
+  `pnpm --filter www-reading-advantage lint`: exit 0.
+Gate 4, `rg -n -i 'downline|ดาวน์ไลน์' apps/www-reading-advantage/src --glob '!**/*.test.*'`:
+  exit 1 with no output, so no hit.
+Gate 5, `pnpm --filter www-reading-advantage build` through heavy-run.sh:
+  first run exit 1 on the Next.js security reminder (it asks for one re-run).
+  The one allowed re-run: exit 0. Both runs are in the gates file.
+  The build output stays in place for the UX role. No server starts.
+Gate 6, `node scripts/ci/affected-apps.mjs --base $(git rev-parse origin/master)
+  --head $(git rev-parse HEAD)`: exit 0. It prints ["www-reading-advantage"].
+
+Note (build-graph): skipped. No structural TypeScript file changed in this role, so
+no graph artifact needs an update.
+
+== Plan and commits ==
+plan.md: task 3.5b marked [x] with Done: a6434d513118455ce951ade7a79b1b7bada8650b
+  and a citation of measure/runs/www_tutor_calculator_20261117/green-p3-3.5b-eccc7c2a6.log.
+  Task 3.6 marked [x] with Done: be506e211ec9f18d16bd9e21c607dd08afc52678, the six
+  commands and their exit codes, and a citation of the gates file. No test counts
+  were written to plan.md.
+Plan-evidence commit (plan.md alone): 6c22d6284dd47deeab35105c036bc549c67557aa
+  `docs(measure): record green p3 tasks 3.5b and 3.6 (track_id: www_tutor_calculator_20261117)`
+Final Green HEAD: 6c22d6284dd47deeab35105c036bc549c67557aa
+Working tree: clean after the commit.
+The track is not moved to archive. No final closeout metadata changes.
+
+New or changed files for reviewer scope:
+  - measure/tracks/www_tutor_calculator_20261117/plan.md (plan evidence)
+  - measure/runs/www_tutor_calculator_20261117/green-p3-3.6-gates.txt (appended)
+  - measure/runs/www_tutor_calculator_20261117/green-p3-3.6-be506e211.log (this file)
+
+Tasks flipped:
+  - 3.5b [x] with SHA evidence a6434d513118455ce951ade7a79b1b7bada8650b
+  - 3.6 [x] with SHA evidence be506e211ec9f18d16bd9e21c607dd08afc52678
+Tasks flipped to [b]: none. No human-gated task in this role.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+commits: 6c22d6284dd47deeab35105c036bc549c67557aa (plan evidence; role_base be506e211)
+tests_run: gate 1 targeted vitest exit 0 (eleven of the twelve named paths; the named .tsx path does not exist); gate 1b the real .ts copy file exit 0; gate 2 whole www suite exit 0; gate 3 tsc exit 0 and lint exit 0; gate 4 rg exit 1 with no hit; gate 5 build exit 1 on the Next.js security reminder then exit 0 on the one allowed re-run; gate 6 affected-apps exit 0 printing ["www-reading-advantage"]
+files_changed: measure/tracks/www_tutor_calculator_20261117/plan.md; appended measure/runs/www_tutor_calculator_20261117/green-p3-3.6-gates.txt; this log measure/runs/www_tutor_calculator_20261117/green-p3-3.6-be506e211.log
+plan_updates: 3.5b marked [x] with Done a6434d513118455ce951ade7a79b1b7bada8650b citing green-p3-3.5b-eccc7c2a6.log; 3.6 marked [x] with Done be506e211ec9f18d16bd9e21c607dd08afc52678 listing the six commands, their exit codes, and the gates file; no test counts in plan.md; committed alone at 6c22d6284
+known_failures: none; one deviation: the brief's gate-1 path src/__tests__/www-tutor-screens-copy.adversarial.test.tsx does not exist, so gate 1b ran the real .ts file and exits 0
+handoff: phase_base_sha 81df01cf2e7c2954f4a2de1aaee593913a00bc75 is immutable; role_base_sha be506e211ec9f18d16bd9e21c607dd08afc52678; final Green HEAD 6c22d6284dd47deeab35105c036bc549c67557aa. Tasks 3.5b and 3.6 are [x]. Next tasks: 3.7 (reviews A and C, adversarial, phase acceptance) and 3.8 (push). Reviewers: gate output lives in measure/runs/www_tutor_calculator_20261117/green-p3-3.6-gates.txt; the 3.5b record lives in green-p3-3.5b-eccc7c2a6.log. The Next.js security reminder is a known repo condition; it fired once and the allowed re-run exited 0. Build output stays in place for the UX role.
+END_MEASURE_AGENT_RESULT

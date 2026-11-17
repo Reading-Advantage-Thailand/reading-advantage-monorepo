@@ -22,8 +22,11 @@ const RATE_SCALE = 1_000_000_000n;
 /** Fixed-point scale of the rate as a Number, for the round step. */
 const RATE_SCALE_NUMBER = 1_000_000_000;
 
-/** Tax as a whole percent, for the integer truncation of spec D-3. */
+/** Tax as a whole percent, for the half-up rounding of spec D-3. */
 const TAX_PERCENT = BigInt(Math.round(TAX_RATE * 100));
+
+/** Half of one percent in satang, the rounding offset of spec D-3. */
+const TAX_ROUND_OFFSET = 50n;
 
 /** One calculator input: the price, the own students, and the students per leg. */
 export type NetworkInput = {
@@ -57,9 +60,9 @@ export type NetworkResult = {
   rate: number;
   /** Gross commission in baht, rounded to the satang. */
   gross: number;
-  /** Downline deduction in baht: the sum of the leg payouts. */
+  /** Leg commission deduction in baht: the sum of the leg payouts. */
   legPayouts: number;
-  /** Payout before tax in baht, shown as the tutor's payout row (spec D-9 item 2). */
+  /** Payout before tax in baht: 0 for legs without own students (spec D-18), else the tutor's payout row (spec D-9 item 2). */
   preTax: number;
   /** Withholding tax in baht. */
   withholdingTax: number;
@@ -125,7 +128,7 @@ export function commissionRate(volume: number): number {
 }
 
 /**
- * Deducts the downline payouts from the gross and floors the result at 0 (spec D-1, D-4).
+ * Deducts the leg payouts from the gross and floors the result at 0 (spec D-1, D-4).
  * @param gross The gross commission in baht.
  * @param paidBelow The sum of the leg payouts in baht.
  * @returns The payout before tax in baht, never negative.
@@ -172,9 +175,14 @@ export function calculateNetwork(input: NetworkInput): NetworkResult {
   const rate = commissionRate(networkVolume);
   const grossSatang = flatSatang(networkVolume, rate);
 
-  const preTaxSatang =
+  // Settlement pays 0 to a node with no personal volume and at least one child
+  // (spec D-18), after the leg deduction and before the tax.
+  const ineligibleNoOwnStudents =
+    personalStudents === 0 && legRows.length >= 1;
+  const afterLegDeduction =
     grossSatang - legPayoutsSatang > 0n ? grossSatang - legPayoutsSatang : 0n;
-  const taxSatang = (preTaxSatang * TAX_PERCENT) / 100n;
+  const preTaxSatang = ineligibleNoOwnStudents ? 0n : afterLegDeduction;
+  const taxSatang = (preTaxSatang * TAX_PERCENT + TAX_ROUND_OFFSET) / 100n;
   const netSatang = preTaxSatang - taxSatang;
 
   return {
@@ -191,16 +199,16 @@ export function calculateNetwork(input: NetworkInput): NetworkResult {
 }
 
 /**
- * Names the state a result shows (spec 5.2 item 5).
+ * Names the state a result shows (spec 5.2 item 5, D-18).
  * @param result The calculator result.
- * @returns "zero" for no volume, "ownOnly" for no leg payouts, else "withDownline".
+ * @returns "zero" for no volume or for legs without own students, "ownOnly" for no leg
+ * payouts, else "withLegs".
  */
-export function explainVariant(
-  result: NetworkResult,
-): "zero" | "ownOnly" | "withDownline" {
+export function explainVariant(result: NetworkResult): "zero" | "ownOnly" | "withLegs" {
   if (result.networkVolume === 0) return "zero";
+  if (result.ownVolume === 0 && result.legs.length >= 1) return "zero";
   if (result.legPayouts === 0) return "ownOnly";
-  return "withDownline";
+  return "withLegs";
 }
 
 /**

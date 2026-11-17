@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "role": "measure-closeout",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "closeout",
+  "route": "opencode-go/mimo-v2.6-flash",
+  "audited_head_sha": "3dbe8a4f87f96774caa44d0b5563287bb620e73c",
+  "status": "pass",
+  "summary": "PASS at closeout. Final acceptance audited_head_sha 3dbe8a4f8 equals the pre-closeout HEAD. All 36 plan tasks are [x] with Done SHAs; no [~], no [ ], no [b] task remains. The track moved to measure/archive/www_tutor_calculator_20261117, the registry row left the active section and now carries the shipped state, metadata.json says status done with completed 2026-11-18 and a superseding five-screen entry, the closeout manifest exists, and the closeout checker exits 0. A5, A6, and A9 checks show no hit. Run evidence (json, log, txt) is committed with the archive move.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 [Nit] final-acceptance F7 stands: bash measure/doctor.sh still fails the architecture step on the analyzer input snapshot pin, owner architecture_ci_input_pin_20261110. The registry row and the manifest record it as a bounded exception, not a closeout blocker.",
+    "N2 [Nit] The closeout log and audit JSON cannot contain the SHA of the record commit that carries them; the record commit SHA is reported to the orchestrator in the final message."
+  ],
+  "evidence": [
+    "Provenance: measure/runs/www_tutor_calculator_20261117/final-acceptance-3dbe8a4f8.json has audited_head_sha 3dbe8a4f87f96774caa44d0b5563287bb620e73c, which equals git rev-parse HEAD at the start of this run.",
+    "Pre-closeout plan state: rg '^(- \\[[ ~]\\]|- \\[b\\])' over plan.md matched only C.1 before this run; no deferred [b] task exists; the other 35 tasks carry Done SHAs that final acceptance resolved as ancestors of HEAD.",
+    "A5: rg -n -e 'PASS=[0-9]+.*FAIL=0|all checks pass' over plan.md -> exit 1, no hit.",
+    "A6: rg -n -e 'API-key encryption (was )?resolved|encryption.*resolved|completely fixed|fully solved|all (checks |tests )?pass' over measure/tracks.md -> exit 1, no hit.",
+    "A9: rg -n www_tutor_calculator tests/ -> exit 1, no test hardcodes the track path, so the archive move breaks no test.",
+    "Closeout move: git mv measure/tracks/www_tutor_calculator_20261117 measure/archive/www_tutor_calculator_20261117 in commit 25c54f5fe; the active section of measure/tracks.md no longer names the track, and the archived row links ./archive/www_tutor_calculator_20261117/.",
+    "Registry description: the line after the archive link equals the collapsed metadata.json description, as the checker verifies.",
+    "metadata.json: status done, completed 2026-11-18, actual_tasks 36, and a dated Closeout entry that supersedes the 2026-11-17 three-card decision; Phase 3 ships five student screens 040, 002, 004, 052, 064.",
+    "Evidence commit: git add -f committed the *.json, *.log, and *.txt (all under 200 KB) files of measure/runs/www_tutor_calculator_20261117/; PNG capture folders and *.mjs scratch scripts stayed untracked; no run artifact was deleted because the orchestrator identified none.",
+    "Closeout checker: python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track www_tutor_calculator_20261117 -> PASS: closeout checks passed, exit 0.",
+    "No apps/** file changed; both commits touch measure/ paths only."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> 3dbe8a4f87f96774caa44d0b5563287bb620e73c",
+    "git mv measure/tracks/www_tutor_calculator_20261117 measure/archive/www_tutor_calculator_20261117 -> exit 0",
+    "rg '^(- \\[[ ~]\\]|- \\[b\\])' plan.md -> exit 1 after C.1 closes",
+    "rg A5, A6, A9 -> exit 1 each, no hit",
+    "python3 measure_interphase_checks.py closeout --repo . --track www_tutor_calculator_20261117 -> exit 0 (PASS: closeout checks passed)",
+    "git add -f measure/runs/www_tutor_calculator_20261117/*.json *.log *.txt via find -maxdepth 1 -> 148 evidence files staged with the archive move"
+  ],
+  "changed_files": [
+    "measure/tracks.md",
+    "measure/archive/www_tutor_calculator_20261117/plan.md",
+    "measure/archive/www_tutor_calculator_20261117/metadata.json",
+    "measure/archive/www_tutor_calculator_20261117/automation-supervisor-closeout-manifest.json",
+    "measure/runs/www_tutor_calculator_20261117/closeout-3dbe8a4f8.json",
+    "measure/runs/www_tutor_calculator_20261117/closeout-3dbe8a4f8.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

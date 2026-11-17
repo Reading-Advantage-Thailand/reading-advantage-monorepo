@@ -6,7 +6,7 @@
 import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it } from "vitest";
-import { en } from "@/locales/pages/products/tutor-advantage";
+import { en, th } from "@/locales/pages/products/tutor-advantage";
 import { TutorCommissionCalculator } from "./tutor-commission-calculator";
 
 const copy = en.calculator;
@@ -53,23 +53,25 @@ function ownStudentsInput(): HTMLElement {
 
 /** Returns the leg-count number input. */
 function legCountInput(): HTMLElement {
+  expect(copy.inputs.legCount, "PR key inputs.legCount").toBeTypeOf("string");
   return screen.getByRole("spinbutton", {
-    name: labelPattern(copy.inputs.directTutors),
+    name: labelPattern(copy.inputs.legCount),
   });
 }
 
 /** Returns one per-leg student number input. */
 function legStudentInputs(): HTMLElement[] {
+  expect(copy.inputs.legStudents, "PR key inputs.legStudents").toBeTypeOf("string");
   return screen.queryAllByRole("spinbutton", {
-    name: labelPattern(copy.inputs.studentsPerDirect),
+    name: labelPattern(copy.inputs.legStudents),
   });
 }
 
-/** Returns the graph label of each leg row, for example "Leg commission 1". */
+/** Returns the graph label of each leg row, for example "Leg 1". */
 function legRows(): HTMLElement[] {
-  const pattern = new RegExp(
-    `^\\s*${escapeRegExp(copy.chart.legPayout)}\\s*[1-9]\\d*\\s*$`,
-  );
+  expect(copy.graph.legBar, "PR key graph.legBar").toBeTypeOf("string");
+  const prefix = copy.graph.legBar.replace("{n}", "");
+  const pattern = new RegExp(`^\\s*${escapeRegExp(prefix)}\\s*[1-9]\\d*\\s*$`);
   return screen.queryAllByText(pattern);
 }
 
@@ -99,6 +101,24 @@ function resultValue(label: string): string {
 /** Reports whether a formatted figure appears anywhere in the rendered calculator. */
 function hasFigure(figure: string): boolean {
   return screen.queryAllByText(figure).length > 0;
+}
+
+/** Returns the money value shown beside a graph bar label. */
+function graphBarValue(label: string): string {
+  const term = screen.getByText(label);
+  const row = term.closest("div");
+  const value = row?.querySelector(".ml-auto");
+  if (!value) throw new Error(`no graph bar value for ${label}`);
+  return value.textContent ?? "";
+}
+
+/** Returns the money value shown beside a graph total label. */
+function graphTotalValue(label: string): string {
+  const term = screen.getByText(label);
+  const row = term.closest("div");
+  const value = row?.querySelector("dd");
+  if (!value) throw new Error(`no graph total value for ${label}`);
+  return value.textContent ?? "";
 }
 
 /** Returns the hero net figure shown under the net label in the result card. */
@@ -174,14 +194,14 @@ describe("TutorCommissionCalculator leg rows", () => {
     expect(legStudentInputs()).toHaveLength(3);
     expect(legRows()).toHaveLength(3);
     expect(resultValue(copy.results.networkGV)).toBe("27,000");
-    expect(resultValue(copy.results.downline)).toBe("12,015");
+    expect(resultValue(copy.results.legCommissions)).toBe("12,015");
 
     await user.clear(count);
     await user.type(count, "2");
     expect(legStudentInputs()).toHaveLength(2);
     expect(legRows()).toHaveLength(2);
     expect(resultValue(copy.results.networkGV)).toBe("18,000");
-    expect(resultValue(copy.results.downline)).toBe("8,010");
+    expect(resultValue(copy.results.legCommissions)).toBe("8,010");
   });
 
   it("shows four input rows and four graph rows at a count of 4", async () => {
@@ -196,7 +216,7 @@ describe("TutorCommissionCalculator leg rows", () => {
     expect(legStudentInputs()[3]).toHaveValue(3);
     expect(resultValue(copy.results.networkGV)).toBe("36,000");
     expect(resultValue(copy.results.gross)).toBe("20,744.54");
-    expect(resultValue(copy.results.downline)).toBe("16,020");
+    expect(resultValue(copy.results.legCommissions)).toBe("16,020");
   });
 });
 
@@ -219,8 +239,9 @@ describe("TutorCommissionCalculator presets", () => {
     expect(resultValue(copy.results.networkGV)).toBe("42,000");
     expect(resultValue(copy.results.rate)).toBe("59.1%");
     expect(resultValue(copy.results.gross)).toBe("24,833.45");
-    expect(resultValue(copy.results.downline)).toBe("16,560");
-    expect(hasFigure("8,273.45")).toBe(true);
+    expect(resultValue(copy.results.legCommissions)).toBe("16,560");
+    expect(graphTotalValue(copy.graph.netBar)).toBe("8,025.25");
+    expect(hasFigure("8,273.45")).toBe(false);
     expect(resultValue(copy.results.tax)).toBe("248.20");
     expect(heroValue()).toBe("8,025.25");
 
@@ -290,9 +311,10 @@ describe("TutorCommissionCalculator presets", () => {
 
     expect(resultValue(copy.results.networkGV)).toBe("24,000");
     expect(resultValue(copy.results.gross)).toBe("12,655.69");
-    expect(resultValue(copy.results.downline)).toBe("8,010");
+    expect(resultValue(copy.results.legCommissions)).toBe("8,010");
     expect(resultValue(copy.results.tax)).toBe("139.37");
-    expect(hasFigure("4,645.69")).toBe(true);
+    expect(graphTotalValue(copy.graph.netBar)).toBe("4,506.32");
+    expect(hasFigure("4,645.69")).toBe(false);
     expect(hasFigure("4,506.32")).toBe(true);
 
     expect(screen.getByText(copy.presets[1].setup)).toBeInTheDocument();
@@ -333,5 +355,114 @@ describe("TutorCommissionCalculator rate curve card", () => {
     expect(pointLine?.textContent).toBe(`${copy.graph.ratePoint} · 59.1%`);
 
     expect(curve).toHaveAttribute("aria-hidden", "true");
+  });
+});
+
+describe("TutorCommissionCalculator settlement eligibility (spec D-18, AC-21)", () => {
+  /** Returns the net figure shown under the net label of a rendered result card. */
+  function netFigure(copyBlock: typeof copy): string {
+    const region = resultRegion();
+    const netLabel = within(region).getByText(copyBlock.results.net);
+    const hero = netLabel.parentElement?.querySelectorAll("p")[1];
+    if (!hero) throw new Error("no net figure in the result card");
+    return hero.textContent ?? "";
+  }
+
+  it("shows a net payout of 0 and the zero line for 0 own students and one leg of 3 in en", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    const count = legCountInput();
+    await user.clear(count);
+    await user.type(count, "1");
+
+    expect(resultValue(copy.results.networkGV)).toBe("9,000");
+    expect(resultValue(copy.results.legCommissions)).toBe("4,005");
+    expect(resultValue(copy.results.tax)).toBe("0");
+    expect(netFigure(copy)).toBe("0");
+
+    const region = resultRegion();
+    expect(within(region).getByText(copy.explain.zero)).toBeInTheDocument();
+    expect(within(region).queryByText(copy.explain.withLegs)).toBeNull();
+  });
+
+  it("drops the two-leg payout to 0 and shows the zero line in en", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    const count = legCountInput();
+    await user.clear(count);
+    await user.type(count, "2");
+
+    expect(resultValue(copy.results.networkGV)).toBe("18,000");
+    expect(resultValue(copy.results.legCommissions)).toBe("8,010");
+    expect(resultValue(copy.results.tax)).toBe("0");
+    expect(netFigure(copy)).toBe("0");
+    expect(within(resultRegion()).getByText(copy.explain.zero)).toBeInTheDocument();
+  });
+
+  it("shows a net payout of 0 and the Thai zero line for 0 own students and one leg of 3 in th", async () => {
+    const thCopy = th.calculator;
+    const user = userEvent.setup();
+    render(<TutorCommissionCalculator copy={thCopy} />);
+
+    const count = screen.getByRole("spinbutton", {
+      name: labelPattern(thCopy.inputs.legCount),
+    });
+    await user.clear(count);
+    await user.type(count, "1");
+
+    expect(netFigure(thCopy)).toBe("0");
+    expect(
+      within(resultRegion()).getByText(thCopy.explain.zero),
+    ).toBeInTheDocument();
+  });
+});
+
+describe("TutorCommissionCalculator own bar (spec D-20, AC-23)", () => {
+  it("preset 1 shows the own students' volume in the own bar", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    await user.click(presetButton(0));
+    expect(graphBarValue(copy.graph.ownBar)).toBe("12,000");
+  });
+
+  it("preset 2 shows the own students' volume in the own bar", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    await user.click(presetButton(1));
+    expect(graphBarValue(copy.graph.ownBar)).toBe("6,000");
+  });
+
+  it("preset 3 shows the own students' volume in the own bar", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    await user.click(presetButton(2));
+    expect(graphBarValue(copy.graph.ownBar)).toBe("6,000");
+  });
+});
+
+describe("TutorCommissionCalculator leg count field (AC-23)", () => {
+  it("keeps the leg rows and the typed students when the field is cleared", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+
+    const count = legCountInput();
+    await user.clear(count);
+    await user.type(count, "2");
+
+    const students = legStudentInputs();
+    expect(students).toHaveLength(2);
+    await user.clear(students[0]!);
+    await user.type(students[0]!, "5");
+    await user.clear(students[1]!);
+    await user.type(students[1]!, "7");
+
+    await user.clear(count);
+    expect(legRows()).toHaveLength(2);
+
+    await user.type(count, "2");
+    const restored = legStudentInputs();
+    expect(restored).toHaveLength(2);
+    expect(restored[0]).toHaveValue(5);
+    expect(restored[1]).toHaveValue(7);
   });
 });

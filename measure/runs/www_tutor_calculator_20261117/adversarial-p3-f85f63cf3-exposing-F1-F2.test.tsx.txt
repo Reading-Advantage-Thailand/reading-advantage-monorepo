@@ -1,0 +1,43 @@
+// PROBE for findings F1 and F2 of adversarial-p3-f85f63cf3.json. It is NOT committed:
+// measure/runs/ is gitignored. To reproduce, copy this file to
+// apps/www-reading-advantage/src/components/marketing/zz-f1-probe.adversarial.test.tsx and run
+//   pnpm --filter www-reading-advantage exec vitest run src/components/marketing/zz-f1-probe.adversarial.test.tsx
+// Today both cases FAIL (the first reads "435.00", the second reads "1e+21"). Delete the copy afterwards.
+import { fireEvent, render } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+import { en } from "@/locales/pages/products/tutor-advantage";
+import { TutorCommissionCalculator } from "./tutor-commission-calculator";
+
+const copy = en.calculator;
+
+/** Finds the input behind a label text. */
+function field(label: string): HTMLInputElement {
+  const found = Array.from(document.querySelectorAll("label")).find((node) =>
+    (node.textContent ?? "").includes(label),
+  );
+  return found!.control as HTMLInputElement;
+}
+
+/** Reads the first two result rows: own volume and network volume. */
+function volumes(): string[] {
+  const region = document.querySelector('[aria-live="polite"]')!;
+  return Array.from(region.querySelectorAll("dd"))
+    .slice(0, 2)
+    .map((node) => node.textContent ?? "");
+}
+
+describe("F1 and F2: volume display (spec D-3 display rule)", () => {
+  it("F1: price 4.35 with 100 students is exactly 435 baht and must print as 435", () => {
+    render(<TutorCommissionCalculator copy={copy} />);
+    fireEvent.change(field(copy.inputs.price), { target: { value: "4.35" } });
+    fireEvent.change(field(copy.inputs.ownStudents), { target: { value: "100" } });
+    expect(volumes()).toEqual(["435", "435"]);
+  });
+
+  it("F2: a volume of 1e21 baht must not print in exponent notation", () => {
+    render(<TutorCommissionCalculator copy={copy} />);
+    fireEvent.change(field(copy.inputs.price), { target: { value: "1e21" } });
+    fireEvent.change(field(copy.inputs.ownStudents), { target: { value: "1" } });
+    expect(volumes()[0]).not.toMatch(/e\+/i);
+  });
+});

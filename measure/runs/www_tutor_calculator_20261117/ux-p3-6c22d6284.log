@@ -1,0 +1,41 @@
+UX Browser P3 final log — www_tutor_calculator_20261117
+Audited HEAD: 6c22d6284dd47deeab35105c036bc549c67557aa (HEAD confirmed current at role start; worktree clean, no commits during role)
+Phase base: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+Role base: 6c22d6284dd47deeab35105c036bc549c67557aa
+Verdict: PASS (confidence high)
+
+Method
+- Served the existing .next production build of HEAD with `pnpm exec next start -p 3431`. No rebuild, per the brief.
+- The agent-browser CLI is not installed in this environment, so the role followed the agent-browser skill workflow (open, snapshot, click, fill, element screenshot) through Playwright 1.61 driving system Chrome. webbridge_status is therefore not_run; the 36 PNGs, snapshots, and interactions are recorded in the JSON webbridge_evidence.
+- Capture script ux-p3-capture.mjs kept in this runs folder: 36 element crops (en/th x 390/980/1280 x blocks 1 hero, 2 books, 3 reedy, 4 become-a-tutor, 5 gallery, 6 calculator) plus checks.json.
+- Viewed crops: books en-1280, hero en-390, gallery en-390, calculator en-390, reedy en-1280, become-a-tutor en-390, calculator th-390.
+
+Findings (all checks passed, no blocking or nonblocking findings)
+1. Hero loads /images/tutor-advantage-hero.jpg (natural 1024x1024) with the D-19 alt in en and th.
+2. Books load primary-origins-2-cover, primary-origins-3-1-cover, reading-origins-2-cover in order, each natural 480x651, rendered ratio 0.737 objectFit fill: whole covers visible, no crop.
+3. Reedy loads /images/primary-advantage/reedy-preview.webp (natural 1280x912) with the D-19 alt.
+4. Become-a-tutor loads the hero photo rendered at 1.333 (4:3 crop) with the hero alt.
+5. Gallery loads 040, 002, 004, 052, 064 in order, each natural 520x1125.
+6. Every recorded naturalWidth is above 0; no banned /media/images/* file appears in any crop.
+7. Horizontal overflow is 0 px at 390 px in en and th (also 0 at 980 and 1280).
+8. Calculator at 1280 en: preset 1 NET PAYOUT 5,354.40; preset 2 4,506.32; preset 3 8,025.25. Preset result copy carries the whole-baht lines 5,354 / 4,506 / 8,025.
+9. Zero case (personal students 0, 1 leg of 3): NET PAYOUT 0 with the line "Add students to see a month."
+10. No "downline" and no Thai downline string anywhere on the page.
+11. Anchored sections use scroll-margin-top 96 px, so anchor jumps clear the sticky header. Heading clips seen in crops are element-screenshot artifacts of the sticky header, not page defects.
+12. Text over images stays readable in all viewed crops; Thai calculator renders fully in Thai.
+
+Server
+- Started on port 3431 (PID 3851640), stopped with `kill 3851640` by PID; `ss -ltnp | grep 3431` confirms no listener remains.
+
+MEASURE_AGENT_RESULT
+role: measure-ux-browser-review
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+commits: none
+tests_run: none (audit-only role; browser verification only)
+files_changed: measure/runs/www_tutor_calculator_20261117/ux-p3-6c22d6284.json, measure/runs/www_tutor_calculator_20261117/ux-p3-6c22d6284.log, capture scripts ux-p3-capture.mjs and ux-p3-probe2/3.mjs in the same runs folder
+plan_updates: none
+known_failures: none
+handoff: PASS. 36 block crops and checks.json sit in /tmp/opencode/a63-p3-blocks/. All D-19 images, alts, overflow, and calculator flows check out at en/th x 390/980/1280. Nothing needs Green.
+END_MEASURE_AGENT_RESULT

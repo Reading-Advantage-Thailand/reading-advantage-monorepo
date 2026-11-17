@@ -1,0 +1,1388 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage
+
+x·x·x···················xxxxxx···xxx·x····x·····xx···xx···x·······x·xx·xx·xxxxxxxxxx····························x········x··x··xxxx··xxxxxxxxxxxx
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 53 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 2. the calculator block equals PR section 6 exactly > en deep-equals the section 6 block
+AssertionError: expected { …(13) } to deeply equal { …(12) }
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[33m@@ -1,59 +1,53 @@[39m
+[2m  {[22m
+[32m-   "description": "The calculator uses the same formula as our settlement system. Choose the price, your students, and your legs, and see the month. Every figure is an example, not a promise of income.",[39m
+[31m+   "chart": {[39m
+[31m+     "legPayout": "Leg commission",[39m
+[31m+     "legVolume": "Leg volume",[39m
+[31m+     "yourPayout": "Your payout",[39m
+[31m+   },[39m
+[31m+   "description": "The calculator uses the same formula as our settlement system. Choose the price and the students, and see the month. Every figure is an example, not a promise of income.",[39m
+[2m    "disclaimer": "Every figure in these examples is an illustration. Commission depends on the classes that run and are paid for.",[22m
+[2m    "explain": {[22m
+[32m-     "ownOnly": "No legs this month, so the whole gross amount is the payout.",[39m
+[32m-     "withLegs": "Your rate applies to the whole network volume. The commission of each leg comes off, and 3% withholding tax comes off the rest.",[39m
+[31m+     "ownOnly": "No downline this month, so the whole gross amount is the payout.",[39m
+[31m+     "withDownline": "Your rate applies to the whole network volume. The payouts of the tutors directly below you come off, and so does 3% withholding tax.",[39m
+[2m      "zero": "Add students to see a month.",[22m
+[2m    },[22m
+[2m    "eyebrow": "THE COMMISSION CALCULATOR",[22m
+[2m    "graph": {[22m
+[32m-     "axisBaht": "Baht",[39m
+[32m-     "caption": "Each bar is one leg: the volume it brings and the commission it earns on its own. Your payout is your rate on the whole volume, minus the commissions of the legs.",[39m
+[32m-     "grossBar": "Gross at your rate",[39m
+[32m-     "legBar": "Leg {n}",[39m
+[32m-     "legCommissionBar": "Commission of each leg",[39m
+[32m-     "netBar": "Your payout after 3% tax",[39m
+[32m-     "ownBar": "Your own students",[39m
+[32m-     "rateAxis": "Rate",[39m
+[2m      "ratePoint": "This month",[22m
+[2m      "rateTitle": "Your rate for the network volume",[22m
+[32m-     "title": "How this month's payout is built",[39m
+[2m    },[22m
+[2m    "heading": "See how one month's commission works",[22m
+[2m    "inputs": {[22m
+[32m-     "addLeg": "Add a leg",[39m
+[32m-     "legCount": "Legs with students",[39m
+[32m-     "legStudents": "Students in this leg",[39m
+[32m-     "ownStudents": "Personal students this month",[39m
+[31m+     "directTutors": "Direct tutors in your network",[39m
+[31m+     "ownStudents": "Students in your own classes this month",[39m
+[2m      "price": "Class package price (baht)",[22m
+[2m      "priceNote": "Default: 3,000 baht. The price adapts to the market.",[22m
+[32m-     "removeLeg": "Remove a leg",[39m
+[31m+     "studentsPerDirect": "Students for each direct tutor",[39m
+[2m    },[22m
+[32m-   "payoutNote": "Your payout is the rate times the network volume, minus the commission of each leg. 3% withholding tax comes off a positive payout.",[39m
+[31m+   "payoutNote": "Your payout is the rate times the network volume, minus the payouts of your direct downline tutors. 3% withholding tax comes off a positive payout.",[39m
+[2m    "presets": [[22m
+[2m      {[22m
+[2m        "name": "A new tutor",[22m
+[32m-       "result": "12,000 baht of volume at a rate of 46%. The gross is 5,520 baht, and with no legs it is all payout. After 3% withholding tax: 5,354 baht.",[39m
+[32m-       "setup": "Four personal students, no legs.",[39m
+[31m+       "result": "12,000 baht of volume at a rate of 46%. The gross is 5,520 baht, and with no downline it is all payout. After 3% withholding tax: 5,354 baht.",[39m
+[31m+       "setup": "Four students, no network.",[39m
+[2m      },[22m
+[2m      {[22m
+[32m-       "name": "A tutor with two legs",[39m
+[32m-       "result": "24,000 baht of network volume at a rate of 52.7%. The gross is 12,656 baht, and the two legs earn 8,010 baht of it. The payout is 4,646 baht before tax, and 4,506 baht after 3% withholding tax.",[39m
+[32m-       "setup": "Two personal students, and two legs with three students each.",[39m
+[31m+       "name": "A tutor with two direct tutors",[39m
+[31m+       "result": "24,000 baht of network volume at a rate of 52.7%. The gross is 12,656 baht, and the two direct tutors earn 8,010 baht of it. The payout is 4,646 baht before tax, and 4,506 baht after 3% withholding tax.",[39m
+[31m+       "setup": "Two own students, and two direct tutors with three students each.",[39m
+[2m      },[22m
+[2m      {[22m
+[2m        "name": "A small team with three legs",[22m
+[2m        "result": "42,000 baht of network volume at a rate of 59.1%. The gross is 24,833 baht, and the three legs earn 16,560 baht of it. The payout is 8,273 baht before tax, and 8,025 baht after 3% withholding tax.",[22m
+[2m        "setup": "Two personal students, and three legs with four students each.",[22m
+[2m      },[22m
+[2m    ],[22m
+[2m    "rateNote": "The rate starts near 40% on a small volume. It passes 50% at 20,000 baht and approaches 71% at very high volume.",[22m
+[2m    "results": {[22m
+[31m+     "downline": "Downline deduction",[39m
+[2m      "gross": "Gross commission",[22m
+[32m-     "legCommissions": "Leg commissions",[39m
+[2m      "net": "Net payout",[22m
+[2m      "networkGV": "Network volume",[22m
+[2m      "ownGV": "Your own volume",[22m
+[2m      "rate": "Commission rate",[22m
+[2m      "tax": "Withholding tax (3%)",[22m
+
+ ❯ src/__tests__/www-tutor-calculator.locale.test.ts:363:39
+    361| describe("2. the calculator block equals PR section 6 exactly", () => {
+    362|   it("en deep-equals the section 6 block", () => {
+    363|     expect(block("en", "calculator")).toEqual(CALC_EN);
+       |                                       ^
+    364|   });
+    365|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/53]⎯
+
+ FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 2. the calculator block equals PR section 6 exactly > th deep-equals the Thai of PR sections 2 and 3 in the same order
+AssertionError: expected { …(13) } to deeply equal { …(12) }
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[33m@@ -1,59 +1,53 @@[39m
+[2m  {[22m
+[32m-   "description": "เครื่องคำนวณนี้ใช้สูตรเดียวกับระบบสรุปยอดของเรา เลือกราคา จำนวนนักเรียนของคุณเอง และจำนวนสาย แล้วดูยอดของเดือนนั้น ตัวเลขทุกตัวเป็นตัวอย่าง ไม่ใช่คำสัญญาเรื่องรายได้",[39m
+[31m+   "chart": {[39m
+[31m+     "legPayout": "ค่าคอมมิชชันของสาย",[39m
+[31m+     "legVolume": "ยอดรวมของสาย",[39m
+[31m+     "yourPayout": "ยอดจ่ายของคุณ",[39m
+[31m+   },[39m
+[31m+   "description": "เครื่องคำนวณนี้ใช้สูตรเดียวกับระบบสรุปยอดของเรา เลือกราคาและจำนวนนักเรียน แล้วดูยอดของเดือนนั้น ตัวเลขทุกตัวเป็นตัวอย่าง ไม่ใช่คำสัญญาเรื่องรายได้",[39m
+[2m    "disclaimer": "ตัวเลขทุกตัวในตัวอย่างนี้เป็นการอธิบายให้เห็นภาพ ค่าคอมมิชชันขึ้นอยู่กับคลาสที่เปิดสอนและมีการจ่ายเงินจริง",[22m
+[2m    "explain": {[22m
+[32m-     "ownOnly": "เดือนนี้ไม่มีสาย เงินก่อนหักทั้งหมดจึงเป็นเงินที่คุณได้รับ",[39m
+[32m-     "withLegs": "อัตราของคุณใช้กับยอดรวมทั้งเครือข่าย จากนั้นหักค่าคอมมิชชันของแต่ละสายออก และหักภาษีหัก ณ ที่จ่าย 3% จากยอดที่เหลือ",[39m
+[31m+     "ownOnly": "เดือนนี้ไม่มีดาวน์ไลน์ เงินก่อนหักทั้งหมดจึงเป็นเงินที่คุณได้รับ",[39m
+[31m+     "withDownline": "อัตราของคุณคิดกับยอดรวมทั้งเครือข่าย จากนั้นหักเงินที่ติวเตอร์ที่อยู่ใต้คุณโดยตรงได้รับ และหักภาษีหัก ณ ที่จ่าย 3%",[39m
+[2m      "zero": "ใส่จำนวนนักเรียนเพื่อดูยอดของเดือน",[22m
+[2m    },[22m
+[2m    "eyebrow": "เครื่องคำนวณค่าคอมมิชชัน",[22m
+[2m    "graph": {[22m
+[32m-     "axisBaht": "บาท",[39m
+[32m-     "caption": "แท่งแต่ละแท่งคือหนึ่งสาย: ยอดที่สายนั้นพามา และค่าคอมมิชชันที่สายนั้นได้เอง ยอดจ่ายของคุณคืออัตราของคุณคูณกับยอดรวมทั้งเครือข่าย ลบด้วยค่าคอมมิชชันของทุกสาย",[39m
+[32m-     "grossBar": "ยอดก่อนหักตามอัตราของคุณ",[39m
+[32m-     "legBar": "สาย {n}",[39m
+[32m-     "legCommissionBar": "ค่าคอมมิชชันของแต่ละสาย",[39m
+[32m-     "netBar": "ยอดจ่ายของคุณหลังหักภาษี 3%",[39m
+[32m-     "ownBar": "นักเรียนในคลาสของคุณเอง",[39m
+[32m-     "rateAxis": "อัตรา",[39m
+[2m      "ratePoint": "เดือนนี้",[22m
+[2m      "rateTitle": "อัตราของคุณตามยอดรวมของเครือข่าย",[22m
+[32m-     "title": "ยอดจ่ายเดือนนี้ประกอบขึ้นอย่างไร",[39m
+[2m    },[22m
+[2m    "heading": "ดูว่าค่าคอมมิชชันของหนึ่งเดือนคิดอย่างไร",[22m
+[2m    "inputs": {[22m
+[32m-     "addLeg": "เพิ่มสาย",[39m
+[32m-     "legCount": "จำนวนสายที่มีนักเรียน",[39m
+[32m-     "legStudents": "นักเรียนในสายนี้",[39m
+[32m-     "ownStudents": "นักเรียนในคลาสของคุณเองเดือนนี้",[39m
+[31m+     "directTutors": "ติวเตอร์ชั้นแรกในเครือข่ายของคุณ",[39m
+[31m+     "ownStudents": "จำนวนนักเรียนในคลาสของคุณเดือนนี้",[39m
+[2m      "price": "ราคาแพ็กเกจคลาส (บาท)",[22m
+[2m      "priceNote": "ค่าเริ่มต้น 3,000 บาท ราคาปรับตามตลาด",[22m
+[32m-     "removeLeg": "ลบสาย",[39m
+[31m+     "studentsPerDirect": "จำนวนนักเรียนของติวเตอร์ชั้นแรกแต่ละคน",[39m
+[2m    },[22m
+[32m-   "payoutNote": "เงินที่คุณได้รับ คืออัตราคูณกับยอดรวมของเครือข่าย หักด้วยค่าคอมมิชชันของแต่ละสาย แล้วหักภาษีหัก ณ ที่จ่าย 3% จากยอดที่เป็นบวก",[39m
+[31m+   "payoutNote": "เงินที่คุณได้รับ คืออัตราคูณกับยอดรวมของเครือข่าย หักด้วยเงินที่ติวเตอร์ดาวน์ไลน์ชั้นแรกได้รับ แล้วหักภาษีหัก ณ ที่จ่าย 3% จากยอดที่เป็นบวก",[39m
+[2m    "presets": [[22m
+[2m      {[22m
+[2m        "name": "ติวเตอร์ใหม่",[22m
+[32m-       "result": "ยอด 12,000 บาท ที่อัตรา 46% ยอดก่อนหักคือ 5,520 บาท และเพราะไม่มีสาย ทั้งหมดจึงเป็นยอดจ่าย หลังหักภาษีหัก ณ ที่จ่าย 3%: 5,354 บาท",[39m
+[32m-       "setup": "นักเรียนในคลาสของคุณเอง 4 คน ไม่มีสาย",[39m
+[31m+       "result": "ยอดรวม 12,000 บาท ที่อัตรา 46% ค่าคอมมิชชันก่อนหัก 5,520 บาท ไม่มีดาวน์ไลน์ จึงได้รับทั้งหมด หลังหักภาษีหัก ณ ที่จ่าย 3% เหลือ 5,354 บาท",[39m
+[31m+       "setup": "นักเรียนสี่คน ไม่มีเครือข่าย",[39m
+[2m      },[22m
+[2m      {[22m
+[32m-       "name": "ติวเตอร์ที่มีสองสาย",[39m
+[32m-       "result": "ยอดรวมของเครือข่าย 24,000 บาท ที่อัตรา 52.7% ยอดก่อนหักคือ 12,656 บาท และสองสายได้ค่าคอมมิชชัน 8,010 บาทจากยอดนี้ ยอดจ่ายคือ 4,646 บาทก่อนหักภาษี และ 4,506 บาทหลังหักภาษีหัก ณ ที่จ่าย 3%",[39m
+[32m-       "setup": "นักเรียนในคลาสของคุณเอง 2 คน และ 2 สาย สายละ 3 คน",[39m
+[31m+       "name": "ติวเตอร์ที่มีติวเตอร์ชั้นแรกสองคน",[39m
+[31m+       "result": "ยอดรวมของเครือข่าย 24,000 บาท ที่อัตรา 52.7% ค่าคอมมิชชันก่อนหัก 12,656 บาท โดยติวเตอร์ชั้นแรกสองคนได้รับ 8,010 บาท เหลือจ่ายก่อนภาษี 4,646 บาท และหลังหักภาษีหัก ณ ที่จ่าย 3% เหลือ 4,506 บาท",[39m
+[31m+       "setup": "นักเรียนของตัวเองสองคน และติวเตอร์ชั้นแรกสองคนที่มีนักเรียนคนละสามคน",[39m
+[2m      },[22m
+[2m      {[22m
+[2m        "name": "ทีมเล็กที่มีสามสาย",[22m
+[2m        "result": "ยอดรวมของเครือข่าย 42,000 บาท ที่อัตรา 59.1% ยอดก่อนหักคือ 24,833 บาท และสามสายได้ค่าคอมมิชชัน 16,560 บาทจากยอดนี้ ยอดจ่ายคือ 8,273 บาทก่อนหักภาษี และ 8,025 บาทหลังหักภาษีหัก ณ ที่จ่าย 3%",[22m
+[2m        "setup": "นักเรียนในคลาสของคุณเอง 2 คน และ 3 สาย สายละ 4 คน",[22m
+[2m      },[22m
+[2m    ],[22m
+[2m    "rateNote": "อัตราเริ่มต้นใกล้ 40% เมื่อยอดรวมยังน้อย ผ่าน 50% ที่ 20,000 บาท และเข้าใกล้ 71% เมื่อยอดรวมสูงมาก",[22m
+[2m    "results": {[22m
+[31m+     "downline": "ส่วนที่หักให้ดาวน์ไลน์",[39m
+[2m      "gross": "ค่าคอมมิชชันก่อนหัก",[22m
+[32m-     "legCommissions": "ค่าคอมมิชชันของสาย",[39m
+[2m      "net": "เงินที่ได้รับสุทธิ",[22m
+[2m      "networkGV": "ยอดรวมของเครือข่าย",[22m
+[2m      "ownGV": "ยอดรวมของคุณเอง",[22m
+[2m      "rate": "อัตราค่าคอมมิชชัน",[22m
+[2m      "tax": "ภาษีหัก ณ ที่จ่าย (3%)",[22m
+
+ ❯ src/__tests__/www-tutor-calculator.locale.test.ts:367:39
+    365|
+    366|   it("th deep-equals the Thai of PR sections 2 and 3 in the same order…
+    367|     expect(block("th", "calculator")).toEqual(CALC_TH);
+       |                                       ^
+    368|   });
+    369|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/53]⎯
+
+ FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 2. the calculator block equals PR section 6 exactly > zh deep-equals en (D-10)
+AssertionError: expected { …(13) } to deeply equal { …(12) }
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[33m@@ -1,59 +1,53 @@[39m
+[2m  {[22m
+[32m-   "description": "The calculator uses the same formula as our settlement system. Choose the price, your students, and your legs, and see the month. Every figure is an example, not a promise of income.",[39m
+[31m+   "chart": {[39m
+[31m+     "legPayout": "Leg commission",[39m
+[31m+     "legVolume": "Leg volume",[39m
+[31m+     "yourPayout": "Your payout",[39m
+[31m+   },[39m
+[31m+   "description": "The calculator uses the same formula as our settlement system. Choose the price and the students, and see the month. Every figure is an example, not a promise of income.",[39m
+[2m    "disclaimer": "Every figure in these examples is an illustration. Commission depends on the classes that run and are paid for.",[22m
+[2m    "explain": {[22m
+[32m-     "ownOnly": "No legs this month, so the whole gross amount is the payout.",[39m
+[32m-     "withLegs": "Your rate applies to the whole network volume. The commission of each leg comes off, and 3% withholding tax comes off the rest.",[39m
+[31m+     "ownOnly": "No downline this month, so the whole gross amount is the payout.",[39m
+[31m+     "withDownline": "Your rate applies to the whole network volume. The payouts of the tutors directly below you come off, and so does 3% withholding tax.",[39m
+[2m      "zero": "Add students to see a month.",[22m
+[2m    },[22m
+[2m    "eyebrow": "THE COMMISSION CALCULATOR",[22m
+[2m    "graph": {[22m
+[32m-     "axisBaht": "Baht",[39m
+[32m-     "caption": "Each bar is one leg: the volume it brings and the commission it earns on its own. Your payout is your rate on the whole volume, minus the commissions of the legs.",[39m
+[32m-     "grossBar": "Gross at your rate",[39m
+[32m-     "legBar": "Leg {n}",[39m
+[32m-     "legCommissionBar": "Commission of each leg",[39m
+[32m-     "netBar": "Your payout after 3% tax",[39m
+[32m-     "ownBar": "Your own students",[39m
+[32m-     "rateAxis": "Rate",[39m
+[2m      "ratePoint": "This month",[22m
+[2m      "rateTitle": "Your rate for the network volume",[22m
+[32m-     "title": "How this month's payout is built",[39m
+[2m    },[22m
+[2m    "heading": "See how one month's commission works",[22m
+[2m    "inputs": {[22m
+[32m-     "addLeg": "Add a leg",[39m
+[32m-     "legCount": "Legs with students",[39m
+[32m-     "legStudents": "Students in this leg",[39m
+[32m-     "ownStudents": "Personal students this month",[39m
+[31m+     "directTutors": "Direct tutors in your network",[39m
+[31m+     "ownStudents": "Students in your own classes this month",[39m
+[2m      "price": "Class package price (baht)",[22m
+[2m      "priceNote": "Default: 3,000 baht. The price adapts to the market.",[22m
+[32m-     "removeLeg": "Remove a leg",[39m
+[31m+     "studentsPerDirect": "Students for each direct tutor",[39m
+[2m    },[22m
+[32m-   "payoutNote": "Your payout is the rate times the network volume, minus the commission of each leg. 3% withholding tax comes off a positive payout.",[39m
+[31m+   "payoutNote": "Your payout is the rate times the network volume, minus the payouts of your direct downline tutors. 3% withholding tax comes off a positive payout.",[39m
+[2m    "presets": [[22m
+[2m      {[22m
+[2m        "name": "A new tutor",[22m
+[32m-       "result": "12,000 baht of volume at a rate of 46%. The gross is 5,520 baht, and with no legs it is all payout. After 3% withholding tax: 5,354 baht.",[39m
+[32m-       "setup": "Four personal students, no legs.",[39m
+[31m+       "result": "12,000 baht of volume at a rate of 46%. The gross is 5,520 baht, and with no downline it is all payout. After 3% withholding tax: 5,354 baht.",[39m
+[31m+       "setup": "Four students, no network.",[39m
+[2m      },[22m
+[2m      {[22m
+[32m-       "name": "A tutor with two legs",[39m
+[32m-       "result": "24,000 baht of network volume at a rate of 52.7%. The gross is 12,656 baht, and the two legs earn 8,010 baht of it. The payout is 4,646 baht before tax, and 4,506 baht after 3% withholding tax.",[39m
+[32m-       "setup": "Two personal students, and two legs with three students each.",[39m
+[31m+       "name": "A tutor with two direct tutors",[39m
+[31m+       "result": "24,000 baht of network volume at a rate of 52.7%. The gross is 12,656 baht, and the two direct tutors earn 8,010 baht of it. The payout is 4,646 baht before tax, and 4,506 baht after 3% withholding tax.",[39m
+[31m+       "setup": "Two own students, and two direct tutors with three students each.",[39m
+[2m      },[22m
+[2m      {[22m
+[2m        "name": "A small team with three legs",[22m
+[2m        "result": "42,000 baht of network volume at a rate of 59.1%. The gross is 24,833 baht, and the three legs earn 16,560 baht of it. The payout is 8,273 baht before tax, and 8,025 baht after 3% withholding tax.",[22m
+[2m        "setup": "Two personal students, and three legs with four students each.",[22m
+[2m      },[22m
+[2m    ],[22m
+[2m    "rateNote": "The rate starts near 40% on a small volume. It passes 50% at 20,000 baht and approaches 71% at very high volume.",[22m
+[2m    "results": {[22m
+[31m+     "downline": "Downline deduction",[39m
+[2m      "gross": "Gross commission",[22m
+[32m-     "legCommissions": "Leg commissions",[39m
+[2m      "net": "Net payout",[22m
+[2m      "networkGV": "Network volume",[22m
+[2m      "ownGV": "Your own volume",[22m
+[2m      "rate": "Commission rate",[22m
+[2m      "tax": "Withholding tax (3%)",[22m
+
+ ❯ src/__tests__/www-tutor-calculator.locale.test.ts:371:39
+    369|
+    370|   it("zh deep-equals en (D-10)", () => {
+    371|     expect(block("zh", "calculator")).toEqual(CALC_EN);
+       |                                       ^
+    372|   });
+    373|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/53]⎯
+
+ FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 2. the calculator block equals PR section 6 exactly > keeps the section 6 key order in every locale
+AssertionError: en: expected [ 'eyebrow', 'heading', …(11) ] to deeply equal [ 'eyebrow', 'heading', …(10) ]
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[33m@@ -5,10 +5,11 @@[39m
+[2m    "volumeNote",[22m
+[2m    "rateNote",[22m
+[2m    "payoutNote",[22m
+[2m    "inputs",[22m
+[2m    "results",[22m
+[31m+   "explain",[39m
+[31m+   "chart",[39m
+[2m    "graph",[22m
+[32m-   "explain",[39m
+[2m    "presets",[22m
+[2m    "disclaimer",[22m
+[2m  ][22m
+
+ ❯ src/__tests__/www-tutor-calculator.locale.test.ts:376:64
+    374|   it("keeps the section 6 key order in every locale", () => {
+    375|     for (const locale of LOCALES) {
+    376|       expect(Object.keys(block(locale, "calculator")), locale).toEqual…
+       |                                                                ^
+    377|     }
+    378|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/53]⎯
+
+ FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 2. the calculator block equals PR section 6 exactly > keeps the section 6 leaf paths in every locale
+AssertionError: en: expected [ 'chart.legPayout', …(35) ] to deeply equal [ 'description', 'disclaimer', …(42) ]
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[33m@@ -1,31 +1,23 @@[39m
+[2m  [[22m
+[31m+   "chart.legPayout",[39m
+[31m+   "chart.legVolume",[39m
+[31m+   "chart.yourPayout",[39m
+[2m    "description",[22m
+[2m    "disclaimer",[22m
+[2m    "explain.ownOnly",[22m
+[32m-   "explain.withLegs",[39m
+[31m+   "explain.withDownline",[39m
+[2m    "explain.zero",[22m
+[2m    "eyebrow",[22m
+[32m-   "graph.axisBaht",[39m
+[32m-   "graph.caption",[39m
+[32m-   "graph.grossBar",[39m
+[32m-   "graph.legBar",[39m
+[32m-   "graph.legCommissionBar",[39m
+[32m-   "graph.netBar",[39m
+[32m-   "graph.ownBar",[39m
+[32m-   "graph.rateAxis",[39m
+[2m    "graph.ratePoint",[22m
+[2m    "graph.rateTitle",[22m
+[32m-   "graph.title",[39m
+[2m    "heading",[22m
+[32m-   "inputs.addLeg",[39m
+[32m-   "inputs.legCount",[39m
+[32m-   "inputs.legStudents",[39m
+[31m+   "inputs.directTutors",[39m
+[2m    "inputs.ownStudents",[22m
+[2m    "inputs.price",[22m
+[2m    "inputs.priceNote",[22m
+[32m-   "inputs.removeLeg",[39m
+[31m+   "inputs.studentsPerDirect",[39m
+[2m    "payoutNote",[22m
+[2m    "presets[0].name",[22m
+[2m    "presets[0].result",[22m
+[2m    "presets[0].setup",[22m
+[2m    "presets[1].name",[22m
+[33m@@ -33,12 +25,12 @@[39m
+[2m    "presets[1].setup",[22m
+[2m    "presets[2].name",[22m
+[2m    "presets[2].result",[22m
+[2m    "presets[2].setup",[22m
+[2m    "rateNote",[22m
+[31m+   "results.downline",[39m
+[2m    "results.gross",[22m
+[32m-   "results.legCommissions",[39m
+[2m    "results.net",[22m
+[2m    "results.networkGV",[22m
+[2m    "results.ownGV",[22m
+[2m    "results.rate",[22m
+[2m    "results.tax",[22m
+
+ ❯ src/__tests__/www-tutor-calculator.locale.test.ts:383:85
+    381|     const expected = Object.keys(stringLeaves(CALC_EN)).sort();
+    382|     for (const locale of LOCALES) {
+    383|       expect(Object.keys(stringLeaves(block(locale, "calculator"))).so…
+       |                                                                                     ^
+    384|         expected,
+    385|       );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/53]⎯
+
+ FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 3. the screens block equals PR section 6 exactly > en deep-equals the section 6 block with five slots
+AssertionError: expected { eyebrow: 'INSIDE THE APPS', …(3) } to deeply equal { eyebrow: 'INSIDE THE APPS', …(3) }
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  {[22m
+[32m-   "description": "One lesson in the LINE student app, step by step. The app follows the printed workbook.",[39m
+[31m+   "description": "A student joins the class in LINE. The tutor runs the class in the tutor app. Both follow the same printed workbook.",[39m
+[2m    "eyebrow": "INSIDE THE APPS",[22m
+[32m-   "heading": "Inside the student app",[39m
+[31m+   "heading": "The student app and the tutor app",[39m
+[2m    "items": [[22m
+[2m      {[22m
+[32m-       "alt": "Student app guided writing screen with sentence frames",[39m
+[32m-       "caption": "A writing task from the printed workbook: the student picks a sentence frame and writes the answer.",[39m
+[31m+       "alt": "Student app home screen with the next class and the class card",[39m
+[31m+       "caption": "The student's home: the greeting, the next class, and the class card. Reedy voice practice is live for students with an active class package, on lessons they completed.",[39m
+[2m      },[22m
+[2m      {[22m
+[2m        "alt": "Student app short-answer screen with the question and a typed answer",[22m
+[2m        "caption": "The student types the answer in the app, on the same lesson as the printed page.",[22m
+[2m      },[22m
+[2m      {[22m
+[32m-       "alt": "Student app screen with the AI check and the points for one answer",[39m
+[32m-       "caption": "After the answer, the app shows the AI check and the points.",[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "alt": "Student app end-of-lesson screen with the student's rating and a note for the tutor",[39m
+[32m-       "caption": "At the end of the lesson, the student rates the effort and writes a note for the tutor.",[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "alt": "Student app learning record with the lesson count, the points, and today's class",[39m
+[32m-       "caption": "The learning record: the lessons, the points, and today's class.",[39m
+[31m+       "alt": "Tutor app class list with the students of one class",[39m
+[31m+       "caption": "The tutor's class list: who is in today's class and which lesson they are on.",[39m
+[2m      },[22m
+[2m    ],[22m
+[2m  }[22m
+
+ ❯ src/__tests__/www-tutor-calculator.locale.test.ts:392:36
+    390| describe("3. the screens block equals PR section 6 exactly", () => {
+    391|   it("en deep-equals the section 6 block with five slots", () => {
+    392|     expect(block("en", "screens")).toEqual(SCREENS_EN);
+       |                                    ^
+    393|   });
+    394|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/53]⎯
+
+ FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 3. the screens block equals PR section 6 exactly > th deep-equals the Thai of PR section 2 in the same order
+AssertionError: expected { eyebrow: 'ภายในแอป', …(3) } to deeply equal { eyebrow: 'ภายในแอป', …(3) }
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  {[22m
+[32m-   "description": "บทเรียนหนึ่งบทในแอปนักเรียนบน LINE ทีละขั้นตอน แอปทำตามเวิร์กบุ๊กที่พิมพ์เป็นเล่ม",[39m
+[31m+   "description": "นักเรียนเข้าคลาสผ่าน LINE ติวเตอร์สอนผ่านแอปของติวเตอร์ ทั้งสองใช้เวิร์กบุ๊กที่พิมพ์เป็นเล่มชุดเดียวกัน",[39m
+[2m    "eyebrow": "ภายในแอป",[22m
+[32m-   "heading": "ในแอปของนักเรียน",[39m
+[31m+   "heading": "แอปของนักเรียน และแอปของติวเตอร์",[39m
+[2m    "items": [[22m
+[2m      {[22m
+[32m-       "alt": "หน้าจอฝึกเขียนในแอปนักเรียน พร้อมโครงประโยคให้เลือก",[39m
+[32m-       "caption": "โจทย์เขียนจากเวิร์กบุ๊กที่พิมพ์เป็นเล่ม นักเรียนเลือกโครงประโยค แล้วเขียนคำตอบเอง",[39m
+[31m+       "alt": "หน้าหลักแอปนักเรียน แสดงคลาสถัดไปและการ์ดคลาส",[39m
+[31m+       "caption": "หน้าหลักของนักเรียน: คำทักทาย คลาสถัดไป และการ์ดคลาส การฝึกเสียงกับ Reedy เปิดใช้จริงสำหรับนักเรียนที่มีแพ็กเกจคลาสที่ยังใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว",[39m
+[2m      },[22m
+[2m      {[22m
+[2m        "alt": "หน้าจอตอบคำถามสั้นในแอปนักเรียน พร้อมคำถามและคำตอบที่พิมพ์ไว้",[22m
+[2m        "caption": "นักเรียนพิมพ์คำตอบในแอป ในบทเดียวกับหน้าที่พิมพ์เป็นเล่ม",[22m
+[2m      },[22m
+[2m      {[22m
+[32m-       "alt": "หน้าจอแอปนักเรียนที่แสดงผลตรวจของ AI และคะแนนของคำตอบหนึ่งข้อ",[39m
+[32m-       "caption": "หลังตอบคำถาม แอปจะแสดงผลตรวจของ AI และคะแนนที่ได้",[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "alt": "หน้าจอท้ายบทเรียนในแอปนักเรียน ที่มีคะแนนที่นักเรียนให้ และข้อความถึงติวเตอร์",[39m
+[32m-       "caption": "ตอนท้ายบทเรียน นักเรียนให้คะแนนความตั้งใจของตัวเอง และเขียนข้อความถึงติวเตอร์",[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "alt": "หน้าจอบันทึกการเรียนรู้ในแอปนักเรียน ที่มีจำนวนบทเรียน คะแนนที่ได้ และคลาสของวันนี้",[39m
+[32m-       "caption": "บันทึกการเรียนรู้: บทเรียนที่เรียนแล้ว คะแนนที่ได้ และคลาสของวันนี้",[39m
+[31m+       "alt": "รายชื่อนักเรียนในคลาสหนึ่งของแอปติวเตอร์",[39m
+[31m+       "caption": "รายชื่อคลาสของติวเตอร์: วันนี้มีใครบ้าง และแต่ละคนอยู่บทไหน",[39m
+[2m      },[22m
+[2m    ],[22m
+[2m  }[22m
+
+ ❯ src/__tests__/www-tutor-calculator.locale.test.ts:396:36
+    394|
+    395|   it("th deep-equals the Thai of PR section 2 in the same order", () =…
+    396|     expect(block("th", "screens")).toEqual(SCREENS_TH);
+       |                                    ^
+    397|   });
+    398|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/53]⎯
+
+ FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 3. the screens block equals PR section 6 exactly > zh deep-equals en (D-10)
+AssertionError: expected { eyebrow: 'INSIDE THE APPS', …(3) } to deeply equal { eyebrow: 'INSIDE THE APPS', …(3) }
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  {[22m
+[32m-   "description": "One lesson in the LINE student app, step by step. The app follows the printed workbook.",[39m
+[31m+   "description": "A student joins the class in LINE. The tutor runs the class in the tutor app. Both follow the same printed workbook.",[39m
+[2m    "eyebrow": "INSIDE THE APPS",[22m
+[32m-   "heading": "Inside the student app",[39m
+[31m+   "heading": "The student app and the tutor app",[39m
+[2m    "items": [[22m
+[2m      {[22m
+[32m-       "alt": "Student app guided writing screen with sentence frames",[39m
+[32m-       "caption": "A writing task from the printed workbook: the student picks a sentence frame and writes the answer.",[39m
+[31m+       "alt": "Student app home screen with the next class and the class card",[39m
+[31m+       "caption": "The student's home: the greeting, the next class, and the class card. Reedy voice practice is live for students with an active class package, on lessons they completed.",[39m
+[2m      },[22m
+[2m      {[22m
+[2m        "alt": "Student app short-answer screen with the question and a typed answer",[22m
+[2m        "caption": "The student types the answer in the app, on the same lesson as the printed page.",[22m
+[2m      },[22m
+[2m      {[22m
+[32m-       "alt": "Student app screen with the AI check and the points for one answer",[39m
+[32m-       "caption": "After the answer, the app shows the AI check and the points.",[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "alt": "Student app end-of-lesson screen with the student's rating and a note for the tutor",[39m
+[32m-       "caption": "At the end of the lesson, the student rates the effort and writes a note for the tutor.",[39m
+[32m-     },[39m
+[32m-     {[39m
+[32m-       "alt": "Student app learning record with the lesson count, the points, and today's class",[39m
+[32m-       "caption": "The learning record: the lessons, the points, and today's class.",[39m
+[31m+       "alt": "Tutor app class list with the students of one class",[39m
+[31m+       "caption": "The tutor's class list: who is in today's class and which lesson they are on.",[39m
+[2m      },[22m
+[2m    ],[22m
+[2m  }[22m
+
+ ❯ src/__tests__/www-tutor-calculator.locale.test.ts:400:36
+    398|
+    399|   it("zh deep-equals en (D-10)", () => {
+    400|     expect(block("zh", "screens")).toEqual(SCREENS_EN);
+       |                                    ^
+    401|   });
+    402|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/53]⎯
+
+ FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 3. the screens block equals PR section 6 exactly > keeps the five slot order and the section 6 key order in every locale
+AssertionError: en: expected 3 to be 5 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 5[39m
+[31m+ 3[39m
+
+ ❯ src/__tests__/www-tutor-calculator.locale.test.ts:406:76
+    404|     for (const locale of LOCALES) {
+    405|       expect(Object.keys(block(locale, "screens")), locale).toEqual(Ob…
+    406|       expect((block(locale, "screens").items as unknown[]).length, loc…
+       |                                                                            ^
+    407|     }
+    408|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/53]⎯
+
+ FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 4. no removed key survives (D-17) > carries no downline, direct-tutor, second-level, chart, or pre-tax key
+AssertionError: en calculator keys: expected [ { …(2) }, { …(2) }, { …(2) }, …(4) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   {[39m
+[31m+     "path": "inputs.directTutors",[39m
+[31m+     "token": "directTutors",[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "path": "inputs.studentsPerDirect",[39m
+[31m+     "token": "studentsPerDirect",[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "path": "results.downline",[39m
+[31m+     "token": "downline",[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "path": "explain.withDownline",[39m
+[31m+     "token": "downline",[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "path": "chart.legVolume",[39m
+[31m+     "token": "chart",[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "path": "chart.legPayout",[39m
+[31m+     "token": "chart",[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "path": "chart.yourPayout",[39m
+[31m+     "token": "chart",[39m
+[31m+   },[39m
+[31m+ ][39m
+
+ ❯ src/__tests__/www-tutor-calculator.locale.test.ts:416:91
+    414|       for (const name of ["calculator", "screens"] as const) {
+    415|         const leaves = stringLeaves(block(locale, name));
+    416|         expect(findTokenPaths(leaves, [...ABSENT_PATH_TOKENS]), `${loc…
+       |                                                                                           ^
+    417|       }
+    418|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/53]⎯
+
+ FAIL  src/__tests__/www-tutor-screens-copy.adversarial.test.ts > tutor screens copy adversarial controls > ADV-C2 en and th screens captions differ with no untranslated placeholder
+AssertionError: expected 3 to be 5 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 5[39m
+[31m+ 3[39m
+
+ ❯ src/__tests__/www-tutor-screens-copy.adversarial.test.ts:75:28
+     73|     const enItems = screens("en").items as Dict[];
+     74|     const thItems = screens("th").items as Dict[];
+     75|     expect(enItems.length).toBe(5);
+       |                            ^
+     76|     expect(thItems.length).toBe(5);
+     77|     for (let i = 0; i < 5; i += 1) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/53]⎯
+
+ FAIL  src/__tests__/www-tutor-screens-copy.adversarial.test.ts > tutor screens copy adversarial controls > ADV-C5 screens key paths match across en, th, zh and item lengths are equal
+AssertionError: expected 3 to be 5 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 5[39m
+[31m+ 3[39m
+
+ ❯ src/__tests__/www-tutor-screens-copy.adversarial.test.ts:122:28
+    120|     for (const loc of LOCALES) {
+    121|       const items = screens(loc).items as unknown[];
+    122|       expect(items.length).toBe(5);
+       |                            ^
+    123|     }
+    124|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/53]⎯
+
+ FAIL  src/lib/tutor-commission.adversarial.test.ts > A1 float leakage: the satang path, not a baht Number product > the 3 percent tax rounds half up where truncation loses a satang
+AssertionError: expected 3 to be 4 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 4[39m
+[31m+ 3[39m
+
+ ❯ src/lib/tutor-commission.adversarial.test.ts:140:43
+    138|     expect(satang(result.gross)).toBe(120);
+    139|     expect(satang(result.preTax)).toBe(120);
+    140|     expect(satang(result.withholdingTax)).toBe(4);
+       |                                           ^
+    141|     expect(satang(result.net)).toBe(116);
+    142|     expect(result.withholdingTax).toBe(0.04);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/53]⎯
+
+ FAIL  src/lib/tutor-commission.adversarial.test.ts > A1 float leakage: the satang path, not a baht Number product > the tax rounds half up on every payout whose 3 percent lands above a half satang
+AssertionError: price 1 students 3: expected 3 to be 4 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 4[39m
+[31m+ 3[39m
+
+ ❯ src/lib/tutor-commission.adversarial.test.ts:161:86
+    159|         });
+    160|         const payoutSatang = satang(result.preTax);
+    161|         expect(satang(result.withholdingTax), `price ${price} students…
+       |                                                                                      ^
+    162|           halfUpTaxSatang(payoutSatang),
+    163|         );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/53]⎯
+
+ FAIL  src/lib/tutor-commission.adversarial.test.ts > A2 truncation order and the 1e9 rate scale > D-3 reproduces the gross satang over a matrix of volumes
+AssertionError: tax rounds half up at 3 percent: expected 3 to be 4 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 4[39m
+[31m+ 3[39m
+
+ ❯ expectSatangConservation src/lib/tutor-commission.adversarial.test.ts:76:76
+     74|     satang(result.gross),
+     75|   );
+     76|   expect(satang(result.withholdingTax), "tax rounds half up at 3 perce…
+       |                                                                            ^
+     77|     halfUpTaxSatang(satang(result.preTax)),
+     78|   );
+ ❯ src/lib/tutor-commission.adversarial.test.ts:231:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/53]⎯
+
+ FAIL  src/lib/tutor-commission.adversarial.test.ts > A3 boundaries > V just below 20,000 uses the linear branch and V at 20,000 is exactly 50 percent
+AssertionError: expected 299.99 to be 300 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 300[39m
+[31m+ 299.99[39m
+
+ ❯ src/lib/tutor-commission.adversarial.test.ts:251:34
+    249|     const below = calculateNetwork({ price: 19999.99, personalStudents…
+    250|     expect(satang(below.gross)).toBe(999999);
+    251|     expect(below.withholdingTax).toBe(300);
+       |                                  ^
+    252|     expect(below.net).toBe(9699.99);
+    253|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/53]⎯
+
+ FAIL  src/lib/tutor-commission.adversarial.test.ts > A3 boundaries > a billion baht with a leg stays conserved in satang
+AssertionError: tax rounds half up at 3 percent: expected 2140552418 to be 2140552419 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 2140552419[39m
+[31m+ 2140552418[39m
+
+ ❯ expectSatangConservation src/lib/tutor-commission.adversarial.test.ts:76:76
+     74|     satang(result.gross),
+     75|   );
+     76|   expect(satang(result.withholdingTax), "tax rounds half up at 3 perce…
+       |                                                                            ^
+     77|     halfUpTaxSatang(satang(result.preTax)),
+     78|   );
+ ❯ src/lib/tutor-commission.adversarial.test.ts:304:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/53]⎯
+
+ FAIL  src/lib/tutor-commission.adversarial.test.ts > A5 conservation under every attack input > leg payouts plus payout equal the gross satang for every attack
+AssertionError: tax rounds half up at 3 percent: expected 29999 to be 30000 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 30000[39m
+[31m+ 29999[39m
+
+ ❯ expectSatangConservation src/lib/tutor-commission.adversarial.test.ts:76:76
+     74|     satang(result.gross),
+     75|   );
+     76|   expect(satang(result.withholdingTax), "tax rounds half up at 3 perce…
+       |                                                                            ^
+     77|     halfUpTaxSatang(satang(result.preTax)),
+     78|   );
+ ❯ src/lib/tutor-commission.adversarial.test.ts:492:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/53]⎯
+
+ FAIL  src/lib/tutor-commission.test.ts > 7. explainVariant > returns withLegs for preset 2
+AssertionError: expected 'withDownline' to be 'withLegs' // Object.is equality
+
+Expected: [32m"with[7mLegs[27m"[39m
+Received: [31m"with[7mDownline[27m"[39m
+
+ ❯ src/lib/tutor-commission.test.ts:231:66
+    229|
+    230|   it("returns withLegs for preset 2", () => {
+    231|     expect(explainVariant(calculateNetwork(NETWORK_PRESETS[1]))).toBe(…
+       |                                                                  ^
+    232|   });
+    233| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/53]⎯
+
+ FAIL  src/lib/tutor-commission.test.ts > 10. withholding tax rounds half up (spec D-3) > price 1,007 with one own student gives tax 12.24, not the truncated 12.23
+AssertionError: expected 12.23 to be 12.24 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 12.24[39m
+[31m+ 12.23[39m
+
+ ❯ src/lib/tutor-commission.test.ts:351:35
+    349|     expect(result.gross).toBe(407.87);
+    350|     expect(result.preTax).toBe(407.87);
+    351|     expect(result.withholdingTax).toBe(12.24);
+       |                                   ^
+    352|     expect(result.net).toBe(395.63);
+    353|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/53]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.adversarial.test.tsx > Adversarial: leg count > a decimal leg count keeps whole rows and whole students
+AssertionError: PR key inputs.legCount: expected undefined to be type of 'string'
+
+Expected: [32m"string"[39m
+Received: [31m"undefined"[39m
+
+ ❯ legCountInput src/components/marketing/tutor-commission-calculator.adversarial.test.tsx:58:58
+     56| /** Returns the leg-count number input. */
+     57| function legCountInput(): HTMLElement {
+     58|   expect(copy.inputs.legCount, "PR key inputs.legCount").toBeTypeOf("s…
+       |                                                          ^
+     59|   return screen.getByRole("spinbutton", {
+     60|     name: new RegExp(escapeRegExp(copy.inputs.legCount)),
+ ❯ src/components/marketing/tutor-commission-calculator.adversarial.test.tsx:133:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/53]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.adversarial.test.tsx > Adversarial: an edit clears the preset example > a leg-student edit clears the example and the live figures follow
+AssertionError: PR key inputs.legStudents: expected undefined to be type of 'string'
+
+Expected: [32m"string"[39m
+Received: [31m"undefined"[39m
+
+ ❯ legStudentInputs src/components/marketing/tutor-commission-calculator.adversarial.test.tsx:66:64
+     64| /** Returns one per-leg student number input. */
+     65| function legStudentInputs(): HTMLElement[] {
+     66|   expect(copy.inputs.legStudents, "PR key inputs.legStudents").toBeTyp…
+       |                                                                ^
+     67|   return screen.queryAllByRole("spinbutton", {
+     68|     name: new RegExp(escapeRegExp(copy.inputs.legStudents)),
+ ❯ src/components/marketing/tutor-commission-calculator.adversarial.test.tsx:183:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/53]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.adversarial.test.tsx > Adversarial: presets > the typed path and the preset path show the same text
+AssertionError: PR key inputs.legCount: expected undefined to be type of 'string'
+
+Expected: [32m"string"[39m
+Received: [31m"undefined"[39m
+
+ ❯ legCountInput src/components/marketing/tutor-commission-calculator.adversarial.test.tsx:58:58
+     56| /** Returns the leg-count number input. */
+     57| function legCountInput(): HTMLElement {
+     58|   expect(copy.inputs.legCount, "PR key inputs.legCount").toBeTypeOf("s…
+       |                                                          ^
+     59|   return screen.getByRole("spinbutton", {
+     60|     name: new RegExp(escapeRegExp(copy.inputs.legCount)),
+ ❯ src/components/marketing/tutor-commission-calculator.adversarial.test.tsx:223:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/53]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator leg rows > grows from 0 to 3 legs, one student row per leg, each new leg at 3
+AssertionError: PR key inputs.legStudents: expected undefined to be type of 'string'
+
+Expected: [32m"string"[39m
+Received: [31m"undefined"[39m
+
+ ❯ legStudentInputs src/components/marketing/tutor-commission-calculator.test.tsx:64:64
+     62| /** Returns one per-leg student number input. */
+     63| function legStudentInputs(): HTMLElement[] {
+     64|   expect(copy.inputs.legStudents, "PR key inputs.legStudents").toBeTyp…
+       |                                                                ^
+     65|   return screen.queryAllByRole("spinbutton", {
+     66|     name: labelPattern(copy.inputs.legStudents),
+ ❯ src/components/marketing/tutor-commission-calculator.test.tsx:149:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/53]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator leg rows > removes one input row and one graph row when the count drops from 3 to 2
+AssertionError: PR key inputs.legCount: expected undefined to be type of 'string'
+
+Expected: [32m"string"[39m
+Received: [31m"undefined"[39m
+
+ ❯ legCountInput src/components/marketing/tutor-commission-calculator.test.tsx:56:58
+     54| /** Returns the leg-count number input. */
+     55| function legCountInput(): HTMLElement {
+     56|   expect(copy.inputs.legCount, "PR key inputs.legCount").toBeTypeOf("s…
+       |                                                          ^
+     57|   return screen.getByRole("spinbutton", {
+     58|     name: labelPattern(copy.inputs.legCount),
+ ❯ src/components/marketing/tutor-commission-calculator.test.tsx:173:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/53]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator leg rows > shows four input rows and four graph rows at a count of 4
+AssertionError: PR key inputs.legCount: expected undefined to be type of 'string'
+
+Expected: [32m"string"[39m
+Received: [31m"undefined"[39m
+
+ ❯ legCountInput src/components/marketing/tutor-commission-calculator.test.tsx:56:58
+     54| /** Returns the leg-count number input. */
+     55| function legCountInput(): HTMLElement {
+     56|   expect(copy.inputs.legCount, "PR key inputs.legCount").toBeTypeOf("s…
+       |                                                          ^
+     57|   return screen.getByRole("spinbutton", {
+     58|     name: labelPattern(copy.inputs.legCount),
+ ❯ src/components/marketing/tutor-commission-calculator.test.tsx:193:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/53]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator presets > shows the preset 3 figures and three leg rows of four students in the graph
+Error: It looks like undefined was passed instead of a matcher. Did you do something like getByText(undefined)?
+ ❯ assertNotNullOrUndefined ../../node_modules/@testing-library/dom/dist/matches.js:12:11
+ ❯ matches ../../node_modules/@testing-library/dom/dist/matches.js:35:3
+ ❯ ../../node_modules/@testing-library/dom/dist/queries/text.js:31:68
+ ❯ queryAllByText ../../node_modules/@testing-library/dom/dist/queries/text.js:31:53
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:74:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ resultValue src/components/marketing/tutor-commission-calculator.test.tsx:94:39
+     92| /** Returns the formatted value shown beside a named result row. */
+     93| function resultValue(label: string): string {
+     94|   const term = within(resultRegion()).getByText(label);
+       |                                       ^
+     95|   const row = term.closest("div");
+     96|   const value = row?.querySelector("dd");
+ ❯ src/components/marketing/tutor-commission-calculator.test.tsx:224:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/53]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator presets > shows every preset 1 figure, its text, and only one pressed preset
+Error: It looks like undefined was passed instead of a matcher. Did you do something like getByText(undefined)?
+ ❯ assertNotNullOrUndefined ../../node_modules/@testing-library/dom/dist/matches.js:12:11
+ ❯ matches ../../node_modules/@testing-library/dom/dist/matches.js:35:3
+ ❯ ../../node_modules/@testing-library/dom/dist/queries/text.js:31:68
+ ❯ queryAllByText ../../node_modules/@testing-library/dom/dist/queries/text.js:31:53
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:74:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ resultValue src/components/marketing/tutor-commission-calculator.test.tsx:94:39
+     92| /** Returns the formatted value shown beside a named result row. */
+     93| function resultValue(label: string): string {
+     94|   const term = within(resultRegion()).getByText(label);
+       |                                       ^
+     95|   const row = term.closest("div");
+     96|   const value = row?.querySelector("dd");
+ ❯ src/components/marketing/tutor-commission-calculator.test.tsx:295:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/53]⎯
+
+ FAIL  src/lib/__tests__/tutor-screens.adversarial.test.ts > tutorScreens adversarial controls > ADV-M1 declared pixel size equals the real webp header size
+TypeError: Cannot read properties of undefined (reading 'src')
+ ❯ src/lib/__tests__/tutor-screens.adversarial.test.ts:78:44
+     76|     for (const slot of SLOTS) {
+     77|       const entry = tutorScreens[slot];
+     78|       expect(existsSync(join(PUBLIC, entry.src)), `${slot} ${entry.src…
+       |                                            ^
+     79|       const real = webpSize(readFileSync(join(PUBLIC, entry.src)));
+     80|       declared[slot] = { width: entry.width, height: entry.height };
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/53]⎯
+
+ FAIL  src/lib/__tests__/tutor-screens.adversarial.test.ts > tutorScreens adversarial controls > ADV-M2 no two slots share one src
+TypeError: Cannot read properties of undefined (reading 'src')
+ ❯ src/lib/__tests__/tutor-screens.adversarial.test.ts:87:57
+     85|
+     86|   it("ADV-M2 no two slots share one src", () => {
+     87|     const srcs = SLOTS.map((slot) => tutorScreens[slot].src);
+       |                                                         ^
+     88|     expect(srcs.length).toBe(5);
+     89|     expect(new Set(srcs).size).toBe(srcs.length);
+ ❯ src/lib/__tests__/tutor-screens.adversarial.test.ts:87:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/53]⎯
+
+ FAIL  src/lib/__tests__/tutor-screens.adversarial.test.ts > tutorScreens adversarial controls > ADV-M3 every src stays under the prefix without traversal and is at most 1 MB
+TypeError: Cannot read properties of undefined (reading 'src')
+ ❯ src/lib/__tests__/tutor-screens.adversarial.test.ts:95:38
+     93|     const base = resolve(SCREENS_DIR) + sep;
+     94|     for (const slot of SLOTS) {
+     95|       const src = tutorScreens[slot].src;
+       |                                      ^
+     96|       expect(src.startsWith(PREFIX)).toBe(true);
+     97|       expect(src).not.toContain("tutor-desktop");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/53]⎯
+
+ FAIL  src/lib/__tests__/tutor-screens.adversarial.test.ts > tutorScreens adversarial controls > ADV-M4 slot order is fixed and every portrait flag is false
+AssertionError: expected [ 'studentHome', 'shortAnswer', …(1) ] to deeply equal [ Array(5) ]
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[32m-   "guidedWriting",[39m
+[31m+   "studentHome",[39m
+[2m    "shortAnswer",[22m
+[32m-   "feedback",[39m
+[32m-   "selfReflection",[39m
+[32m-   "classRecord",[39m
+[31m+   "classList",[39m
+[2m  ][22m
+
+ ❯ src/lib/__tests__/tutor-screens.adversarial.test.ts:106:39
+    104|
+    105|   it("ADV-M4 slot order is fixed and every portrait flag is false", ()…
+    106|     expect(Object.keys(tutorScreens)).toEqual([...SLOTS]);
+       |                                       ^
+    107|     for (const slot of SLOTS) {
+    108|       expect(tutorScreens[slot].portrait).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/53]⎯
+
+ FAIL  src/lib/__tests__/tutor-screens.adversarial.test.ts > tutorScreens adversarial controls > ADV-A1 every repository image file is webp, non-zero, and no source PNG is present
+AssertionError: expected 3 to be 5 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 5[39m
+[31m+ 3[39m
+
+ ❯ src/lib/__tests__/tutor-screens.adversarial.test.ts:114:26
+    112|   it("ADV-A1 every repository image file is webp, non-zero, and no sou…
+    113|     const files = allFiles(SCREENS_DIR);
+    114|     expect(files.length).toBe(5);
+       |                          ^
+    115|     for (const file of files) {
+    116|       expect(file.endsWith(".webp")).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/53]⎯
+
+ FAIL  src/lib/__tests__/tutor-screens.test.ts > tutor screens manifest > holds the five PR section 2 slots in gallery order
+AssertionError: expected [ 'studentHome', 'shortAnswer', …(1) ] to deeply equal [ Array(5) ]
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[32m-   "guidedWriting",[39m
+[31m+   "studentHome",[39m
+[2m    "shortAnswer",[22m
+[32m-   "feedback",[39m
+[32m-   "selfReflection",[39m
+[32m-   "classRecord",[39m
+[31m+   "classList",[39m
+[2m  ][22m
+
+ ❯ src/lib/__tests__/tutor-screens.test.ts:48:39
+     46| describe("tutor screens manifest", () => {
+     47|   it("holds the five PR section 2 slots in gallery order", () => {
+     48|     expect(Object.keys(tutorScreens)).toEqual([
+       |                                       ^
+     49|       "guidedWriting",
+     50|       "shortAnswer",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/53]⎯
+
+ FAIL  src/lib/__tests__/tutor-screens.test.ts > tutor screens manifest > guidedWriting holds the delivered path and size
+AssertionError: expected undefined to deeply equal { …(4) }
+
+[32m- Expected:[39m
+{
+  "height": 1125,
+  "portrait": false,
+  "src": "/images/products/tutor-advantage/student-mobile/040-screen.webp",
+  "width": 520,
+}
+
+[31m+ Received:[39m
+undefined
+
+ ❯ src/lib/__tests__/tutor-screens.test.ts:59:59
+     57|   for (const [slot, expected] of Object.entries(EXPECTED)) {
+     58|     it(`${slot} holds the delivered path and size`, () => {
+     59|       expect(tutorScreens[slot as keyof typeof EXPECTED]).toEqual(expe…
+       |                                                           ^
+     60|       expect(expected.src.startsWith("/images/products/tutor-advantage…
+     61|         true,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/53]⎯
+
+ FAIL  src/lib/__tests__/tutor-screens.test.ts > tutor screens manifest > guidedWriting exists in public and is 1 MB or less
+ FAIL  src/lib/__tests__/tutor-screens.test.ts > tutor screens manifest > feedback exists in public and is 1 MB or less
+ FAIL  src/lib/__tests__/tutor-screens.test.ts > tutor screens manifest > selfReflection exists in public and is 1 MB or less
+ FAIL  src/lib/__tests__/tutor-screens.test.ts > tutor screens manifest > classRecord exists in public and is 1 MB or less
+AssertionError: expected false to be true // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- true[39m
+[31m+ false[39m
+
+ ❯ src/lib/__tests__/tutor-screens.test.ts:67:32
+     65|     it(`${slot} exists in public and is 1 MB or less`, () => {
+     66|       const file = publicPath(expected.src);
+     67|       expect(existsSync(file)).toBe(true);
+       |                                ^
+     68|       expect(statSync(file).size).toBeLessThanOrEqual(1_000_000);
+     69|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/53]⎯
+
+ FAIL  src/lib/__tests__/tutor-screens.test.ts > tutor screens manifest > feedback holds the delivered path and size
+AssertionError: expected undefined to deeply equal { …(4) }
+
+[32m- Expected:[39m
+{
+  "height": 1125,
+  "portrait": false,
+  "src": "/images/products/tutor-advantage/student-mobile/004-screen.webp",
+  "width": 520,
+}
+
+[31m+ Received:[39m
+undefined
+
+ ❯ src/lib/__tests__/tutor-screens.test.ts:59:59
+     57|   for (const [slot, expected] of Object.entries(EXPECTED)) {
+     58|     it(`${slot} holds the delivered path and size`, () => {
+     59|       expect(tutorScreens[slot as keyof typeof EXPECTED]).toEqual(expe…
+       |                                                           ^
+     60|       expect(expected.src.startsWith("/images/products/tutor-advantage…
+     61|         true,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/53]⎯
+
+ FAIL  src/lib/__tests__/tutor-screens.test.ts > tutor screens manifest > selfReflection holds the delivered path and size
+AssertionError: expected undefined to deeply equal { …(4) }
+
+[32m- Expected:[39m
+{
+  "height": 1125,
+  "portrait": false,
+  "src": "/images/products/tutor-advantage/student-mobile/052-screen.webp",
+  "width": 520,
+}
+
+[31m+ Received:[39m
+undefined
+
+ ❯ src/lib/__tests__/tutor-screens.test.ts:59:59
+     57|   for (const [slot, expected] of Object.entries(EXPECTED)) {
+     58|     it(`${slot} holds the delivered path and size`, () => {
+     59|       expect(tutorScreens[slot as keyof typeof EXPECTED]).toEqual(expe…
+       |                                                           ^
+     60|       expect(expected.src.startsWith("/images/products/tutor-advantage…
+     61|         true,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/53]⎯
+
+ FAIL  src/lib/__tests__/tutor-screens.test.ts > tutor screens manifest > classRecord holds the delivered path and size
+AssertionError: expected undefined to deeply equal { …(4) }
+
+[32m- Expected:[39m
+{
+  "height": 1125,
+  "portrait": false,
+  "src": "/images/products/tutor-advantage/student-mobile/064-screen.webp",
+  "width": 520,
+}
+
+[31m+ Received:[39m
+undefined
+
+ ❯ src/lib/__tests__/tutor-screens.test.ts:59:59
+     57|   for (const [slot, expected] of Object.entries(EXPECTED)) {
+     58|     it(`${slot} holds the delivered path and size`, () => {
+     59|       expect(tutorScreens[slot as keyof typeof EXPECTED]).toEqual(expe…
+       |                                                           ^
+     60|       expect(expected.src.startsWith("/images/products/tutor-advantage…
+     61|         true,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/53]⎯
+
+ FAIL  src/lib/__tests__/tutor-screens.test.ts > tutor screens manifest > carries no tutor-desktop screen
+AssertionError: expected '/images/products/tutor-advantage/tuto…' not to contain 'tutor-desktop'
+
+Expected: [32m"[7mtutor-deskto[27mp"[39m
+Received: [31m"[7m/images/products/tutor-advantage/tutor-desktop/062-screen.web[27mp"[39m
+
+ ❯ src/lib/__tests__/tutor-screens.test.ts:74:31
+     72|   it("carries no tutor-desktop screen", () => {
+     73|     for (const picture of Object.values(tutorScreens)) {
+     74|       expect(picture.src).not.toContain("tutor-desktop");
+       |                               ^
+     75|     }
+     76|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/53]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx > tutor screens gallery adversarial controls > ADV-G1 every rendered screen card has a non-empty alt
+AssertionError: expected 3 to be 5 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 5[39m
+[31m+ 3[39m
+
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx:44:25
+     42|     expect(section).toBeInTheDocument();
+     43|     const imgs = section!.querySelectorAll("img");
+     44|     expect(imgs.length).toBe(5);
+       |                         ^
+     45|     for (const img of imgs) {
+     46|       const alt = img.getAttribute("alt");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/53]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx > tutor screens gallery adversarial controls > ADV-G2 each card alt and caption match its own slot with no swap
+AssertionError: expected 3 to be 5 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 5[39m
+[31m+ 3[39m
+
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx:56:26
+     54|     const section = document.querySelector("[data-testid='tutor-screen…
+     55|     const cards = section!.querySelectorAll("li");
+     56|     expect(cards.length).toBe(5);
+       |                          ^
+     57|     for (let i = 0; i < 5; i += 1) {
+     58|       const card = cards[i]!;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[42/53]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx > tutor screens gallery adversarial controls > ADV-G4 the gallery renders exactly five cards and no sixth
+AssertionError: expected 3 to be 5 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 5[39m
+[31m+ 3[39m
+
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx:95:26
+     93|     expect(sections.length).toBe(1);
+     94|     const cards = sections[0]!.querySelectorAll("li");
+     95|     expect(cards.length).toBe(5);
+       |                          ^
+     96|     expect(sections[0]!.textContent).not.toContain(`${SCREENS}.5.`);
+     97|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[43/53]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx > tutor screens gallery adversarial controls > ADV-G5 the five rendered images use the manifest srcs in slot order
+AssertionError: expected [ 'studentHome', 'shortAnswer', …(1) ] to deeply equal [ Array(5) ]
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[32m-   "guidedWriting",[39m
+[31m+   "studentHome",[39m
+[2m    "shortAnswer",[22m
+[32m-   "feedback",[39m
+[32m-   "selfReflection",[39m
+[32m-   "classRecord",[39m
+[31m+   "classList",[39m
+[2m  ][22m
+
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx:103:39
+    101|     const section = document.querySelector("[data-testid='tutor-screen…
+    102|     const imgs = Array.from(section!.querySelectorAll("img"));
+    103|     expect(Object.keys(tutorScreens)).toEqual([...SLOTS]);
+       |                                       ^
+    104|     const expected = SLOTS.map((slot) => tutorScreens[slot].src);
+    105|     expect(imgs.map((img) => decodeSrc(img.getAttribute("src")))).toEq…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[44/53]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx > TutorAdvantage real-copy downline gate (D-17, AC-17) > en: the first paint carries no downline wording
+AssertionError: en first paint: /downline/i: expected 'Live NowTutor-Led English Classes for…' not to match /downline/i
+
+[32m- Expected:[39m
+/downline/i
+
+[31m+ Received:[39m
+"Live NowTutor-Led English Classes for FamiliesOne class package. One workbook. A local tutor.Tutor Advantage is a tutor-led class network. A local tutor teaches one printed workbook in each class package. Class packages start from 3,000 baht and the price adapts to the market.From 3,000 baht per class packageThe price adapts to the market.Ask about a classBecome a tutorBooks on sale3Baht, from, per class package3,000Lessons in each workbook14Inside one class13 printed steps, 18 class phasesEvery lesson follows the fixed printed workbook steps. Tutor Advantage adds five phases around them. The digital phases never remove or reorder a printed step.Printed workbook steps1Before You Read2Key Vocabulary3Read the Article4Collect Vocabulary5Deep Reading Notes6Collect Sentences7Comprehension Check8Guided Response9Vocabulary Practice10Sentence Practice11Guided Writing12Language Questions13Lesson ReflectionAdded by Tutor Advantage+Flashcards+Vocabulary Game+Sentence Game+Pair Conversation+Wrap-UpStep 1 of 13Before You ReadStudents look at the lesson title and picture, then mark how interested they are. There is no wrong answer.Previous phase1 / 18Next phaseOn sale nowThree books on saleOne class package covers one workbook. More books go on sale when each book is printed.Primary Advantage Origins 2Primary Advantage Origins 3.1Reading Advantage Origins 2Each workbook has 14 lessons and a digital twin.Reedy voice practicePractice speaking English with ReedyAfter a lesson, students can practice speaking English with Reedy, an AI voice coach, in the LINE student app. Reedy talks with them about the lesson in simple English, with short Thai hints.Live in Tutor Advantage only. It is not in Primary Advantage or Reading Advantage.Open to students with an active class package, on the lessons they finished.After each practice, students see one thing they did well, one thing to try next time, and a sentence to say again.Before they start, students can check their microphone and get tips.What Each Class Package IncludesPrinted WorkbookOne printed workbook of 14 lessons for each class package.Digital TwinEvery workbook has a digital version for practice between classes.Reedy Voice PracticeReedy voice practice is live in Tutor Advantage only. It is open to students with an active class package, on lessons they finished.Flashcards and GamesEach class adds flashcards, two games, a pair conversation, and a wrap-up.Local TutorsA tutor in your community teaches the class in person.Mastery AdvantageWorkbook content is tagged to the Mastery Advantage knowledge graph, which maps skills and schedules review.Become a tutorTeach a class in your communityTutors teach one printed workbook to a small group, in person. The company provides the books and the apps: a tutor app, a LINE student app, and payments.You teach the class. The class package is one workbook, about 25 hours of teaching.A unilevel commission model pays tutors for the classes they teach and for the tutors they bring into the network.Commission is calculated by the system and settled each month.The calculator on this page shows examples. Ask us about your own case.Apply as a tutorINSIDE THE APPSThe student app and the tutor appA student joins the class in LINE. The tutor runs the class in the tutor app. Both follow the same printed workbook.The student's home: the greeting, the next class, and the class card. Reedy voice practice is live for students with an active class package, on lessons they completed.The student types the answer in the app, on the same lesson as the printed page.The tutor's class list: who is in today's class and which lesson they are on.THE COMMISSION CALCULATORSee how one month's commission worksThe calculator uses the same formula as our settlement system. Choose the price and the students, and see the month. Every figure is an example, not a promise of income.A new tutorA tutor with two direct tutorsA small team with three legsClass package price (baht)Default: 3,000 baht. The price adapts to the market.Students in your own classes this monthDirect tutors in your networkYour rate for the network volumeThis month · 0%Your payout0Net payout0Your own volume0Network volume0Commission rate0%Gross commission0Downline deduction0Withholding tax (3%)0Add students to see a month.Volume is the class package price times the students who paid in the month.The rate starts near 40% on a small volume. It passes 50% at 20,000 baht and approaches 71% at very high volume.Your payout is the rate times the network volume, minus the payouts of your direct downline tutors. 3% withholding tax comes off a positive payout.Every figure in these examples is an illustration. Commission depends on the classes that run and are paid for.The basicsOur CommitmentResearch-BackedResearch shows extensive reading outperforms traditional grammar instruction (Aka, 2019).Honest About ScaleWe are a small team. Tutor Advantage grows one tutor and one class at a time.Clear PriceClass packages start from 3,000 baht. One class package covers one workbook.QuestionsFrequently asked questionsWhat is a class package?One class package is one printed workbook, taught by a local tutor to a small group. It is about 25 hours of teaching. Class packages start from 3,000 baht, and the price adapts to the market.Which books are on sale?Primary Advantage Origins 2, Primary Advantage Origins 3.1, and Reading Advantage Origins 2. Each level goes on sale when its book is printed.Is Tutor Advantage an AI tutor app?No. Tutor Advantage is a class network. A human tutor teaches each class from the printed workbook. Reedy, an AI voice coach, gives students speaking practice after lessons.Who can use Reedy voice practice?Students with an active Tutor Advantage class package, on the lessons they finished. Reedy is not available in Primary Advantage or Reading Advantage.How does a lesson run?A lesson follows the 13 fixed printed workbook steps. Tutor Advantage delivers them as 18 phases by adding flashcards, a vocabulary game, a sentence game, a pair conversation, and a wrap-up.How do tutors earn?Tutors earn commission under a unilevel commission model, and the system settles it monthly. The rate rises with the network volume of the month. The calculator on this page shows examples; the real figure comes from the classes that run and are paid for.READY TO START?Start a Class or Become a TutorAsk about a class package for your child, or apply to teach Tutor Advantage classes.Ask About a ClassApply as Tutor"
+
+ ❯ expectNoDownline src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx:159:46
+    157|   function expectNoDownline(step: string): void {
+    158|     const text = document.body.textContent ?? "";
+    159|     expect(text, `${step}: /downline/i`).not.toMatch(/downline/i);
+       |                                              ^
+    160|     expect(text, `${step}: Downline deduction`).not.toContain("Downlin…
+    161|     expect(text, `${step}: ดาวน์ไลน์`).not.toContain("ดาวน์ไลน์");
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx:167:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[45/53]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx > TutorAdvantage real-copy downline gate (D-17, AC-17) > en: preset 2 and preset 3 carry no downline wording
+AssertionError: en preset 2: /downline/i: expected 'Live NowTutor-Led English Classes for…' not to match /downline/i
+
+[32m- Expected:[39m
+/downline/i
+
+[31m+ Received:[39m
+"Live NowTutor-Led English Classes for FamiliesOne class package. One workbook. A local tutor.Tutor Advantage is a tutor-led class network. A local tutor teaches one printed workbook in each class package. Class packages start from 3,000 baht and the price adapts to the market.From 3,000 baht per class packageThe price adapts to the market.Ask about a classBecome a tutorBooks on sale3Baht, from, per class package3,000Lessons in each workbook14Inside one class13 printed steps, 18 class phasesEvery lesson follows the fixed printed workbook steps. Tutor Advantage adds five phases around them. The digital phases never remove or reorder a printed step.Printed workbook steps1Before You Read2Key Vocabulary3Read the Article4Collect Vocabulary5Deep Reading Notes6Collect Sentences7Comprehension Check8Guided Response9Vocabulary Practice10Sentence Practice11Guided Writing12Language Questions13Lesson ReflectionAdded by Tutor Advantage+Flashcards+Vocabulary Game+Sentence Game+Pair Conversation+Wrap-UpStep 1 of 13Before You ReadStudents look at the lesson title and picture, then mark how interested they are. There is no wrong answer.Previous phase1 / 18Next phaseOn sale nowThree books on saleOne class package covers one workbook. More books go on sale when each book is printed.Primary Advantage Origins 2Primary Advantage Origins 3.1Reading Advantage Origins 2Each workbook has 14 lessons and a digital twin.Reedy voice practicePractice speaking English with ReedyAfter a lesson, students can practice speaking English with Reedy, an AI voice coach, in the LINE student app. Reedy talks with them about the lesson in simple English, with short Thai hints.Live in Tutor Advantage only. It is not in Primary Advantage or Reading Advantage.Open to students with an active class package, on the lessons they finished.After each practice, students see one thing they did well, one thing to try next time, and a sentence to say again.Before they start, students can check their microphone and get tips.What Each Class Package IncludesPrinted WorkbookOne printed workbook of 14 lessons for each class package.Digital TwinEvery workbook has a digital version for practice between classes.Reedy Voice PracticeReedy voice practice is live in Tutor Advantage only. It is open to students with an active class package, on lessons they finished.Flashcards and GamesEach class adds flashcards, two games, a pair conversation, and a wrap-up.Local TutorsA tutor in your community teaches the class in person.Mastery AdvantageWorkbook content is tagged to the Mastery Advantage knowledge graph, which maps skills and schedules review.Become a tutorTeach a class in your communityTutors teach one printed workbook to a small group, in person. The company provides the books and the apps: a tutor app, a LINE student app, and payments.You teach the class. The class package is one workbook, about 25 hours of teaching.A unilevel commission model pays tutors for the classes they teach and for the tutors they bring into the network.Commission is calculated by the system and settled each month.The calculator on this page shows examples. Ask us about your own case.Apply as a tutorINSIDE THE APPSThe student app and the tutor appA student joins the class in LINE. The tutor runs the class in the tutor app. Both follow the same printed workbook.The student's home: the greeting, the next class, and the class card. Reedy voice practice is live for students with an active class package, on lessons they completed.The student types the answer in the app, on the same lesson as the printed page.The tutor's class list: who is in today's class and which lesson they are on.THE COMMISSION CALCULATORSee how one month's commission worksThe calculator uses the same formula as our settlement system. Choose the price and the students, and see the month. Every figure is an example, not a promise of income.A new tutorA tutor with two direct tutorsA small team with three legsTwo own students, and two direct tutors with three students each.Class package price (baht)Default: 3,000 baht. The price adapts to the market.Students in your own classes this monthDirect tutors in your network1. Students for each direct tutor2. Students for each direct tutorYour rate for the network volumeThis month · 52.7%Leg commission 1Leg volume 9,0004,005Leg commission 2Leg volume 9,0004,005Your payout4,645.69Net payout4,506.32Your own volume6,000Network volume24,000Commission rate52.7%Gross commission12,655.69Downline deduction8,010Withholding tax (3%)139.37Your rate applies to the whole network volume. The payouts of the tutors directly below you come off, and so does 3% withholding tax.24,000 baht of network volume at a rate of 52.7%. The gross is 12,656 baht, and the two direct tutors earn 8,010 baht of it. The payout is 4,646 baht before tax, and 4,506 baht after 3% withholding tax.Volume is the class package price times the students who paid in the month.The rate starts near 40% on a small volume. It passes 50% at 20,000 baht and approaches 71% at very high volume.Your payout is the rate times the network volume, minus the payouts of your direct downline tutors. 3% withholding tax comes off a positive payout.Every figure in these examples is an illustration. Commission depends on the classes that run and are paid for.The basicsOur CommitmentResearch-BackedResearch shows extensive reading outperforms traditional grammar instruction (Aka, 2019).Honest About ScaleWe are a small team. Tutor Advantage grows one tutor and one class at a time.Clear PriceClass packages start from 3,000 baht. One class package covers one workbook.QuestionsFrequently asked questionsWhat is a class package?One class package is one printed workbook, taught by a local tutor to a small group. It is about 25 hours of teaching. Class packages start from 3,000 baht, and the price adapts to the market.Which books are on sale?Primary Advantage Origins 2, Primary Advantage Origins 3.1, and Reading Advantage Origins 2. Each level goes on sale when its book is printed.Is Tutor Advantage an AI tutor app?No. Tutor Advantage is a class network. A human tutor teaches each class from the printed workbook. Reedy, an AI voice coach, gives students speaking practice after lessons.Who can use Reedy voice practice?Students with an active Tutor Advantage class package, on the lessons they finished. Reedy is not available in Primary Advantage or Reading Advantage.How does a lesson run?A lesson follows the 13 fixed printed workbook steps. Tutor Advantage delivers them as 18 phases by adding flashcards, a vocabulary game, a sentence game, a pair conversation, and a wrap-up.How do tutors earn?Tutors earn commission under a unilevel commission model, and the system settles it monthly. The rate rises with the network volume of the month. The calculator on this page shows examples; the real figure comes from the classes that run and are paid for.READY TO START?Start a Class or Become a TutorAsk about a class package for your child, or apply to teach Tutor Advantage classes.Ask About a ClassApply as Tutor"
+
+ ❯ expectNoDownline src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx:159:46
+    157|   function expectNoDownline(step: string): void {
+    158|     const text = document.body.textContent ?? "";
+    159|     expect(text, `${step}: /downline/i`).not.toMatch(/downline/i);
+       |                                              ^
+    160|     expect(text, `${step}: Downline deduction`).not.toContain("Downlin…
+    161|     expect(text, `${step}: ดาวน์ไลน์`).not.toContain("ดาวน์ไลน์");
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx:179:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[46/53]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx > TutorAdvantage real-copy downline gate (D-17, AC-17) > th: the first paint carries no downline wording
+AssertionError: th first paint: ดาวน์ไลน์: expected 'เปิดให้บริการแล้วคลาสภาษาอังกฤษสำหรับ…' not to contain 'ดาวน์ไลน์'
+
+Expected: [32m"[7mดาวน์ไลน[27m์"[39m
+Received: [31m"[7mเปิดให้บริการแล้วคลาสภาษาอังกฤษสำหรับครอบครัว สอนโดยติวเตอร์หนึ่งแพ็กเกจคลาส หนึ่งเวิร์กบุ๊ก ติวเตอร์ในพื้นที่ของคุณTutor Advantage คือเครือข่ายคลาสที่สอนโดยติวเตอร์ ติวเตอร์ในพื้นที่สอนหนึ่งเวิร์กบุ๊กที่พิมพ์เป็นเล่มในแต่ละแพ็กเกจคลาส ราคาเริ่มต้น 3,000 บาท และปรับตามตลาดเริ่มต้น 3,000 บาทต่อแพ็กเกจคลาสราคาปรับตามตลาดสอบถามเรื่องคลาสสมัครเป็นติวเตอร์หนังสือที่วางจำหน่าย3บาท เริ่มต้นต่อแพ็กเกจคลาส3,000บทเรียนในเวิร์กบุ๊กแต่ละเล่ม14ภายในหนึ่งคลาส13 ขั้นตอนในเล่ม 18 ช่วงในคลาสทุกบทเรียนทำตามขั้นตอนของเวิร์กบุ๊กที่พิมพ์เป็นเล่มซึ่งตายตัว Tutor Advantage เพิ่มอีกห้าช่วงรอบขั้นตอนเหล่านั้น ช่วงดิจิทัลไม่ตัดหรือสลับลำดับขั้นตอนในเล่มขั้นตอนในเวิร์กบุ๊กที่พิมพ์เป็นเล่ม1Before You Read2Key Vocabulary3Read the Article4Collect Vocabulary5Deep Reading Notes6Collect Sentences7Comprehension Check8Guided Response9Vocabulary Practice10Sentence Practice11Guided Writing12Language Questions13Lesson Reflectionช่วงที่ Tutor Advantage เพิ่ม+Flashcards+Vocabulary Game+Sentence Game+Pair Conversation+Wrap-Upขั้นตอนที่ 1 จาก 13Before You Readนักเรียนดูชื่อบทเรียนและภาพ แล้วทำเครื่องหมายระดับความสนใจ ไม่มีคำตอบที่ผิดช่วงก่อนหน้า1 / 18ช่วงถัดไปวางจำหน่ายแล้วหนังสือสามเล่มที่วางจำหน่ายหนึ่งแพ็กเกจคลาสใช้หนึ่งเวิร์กบุ๊ก หนังสือเล่มใหม่จะเปิดขายเมื่อพิมพ์เสร็จPrimary Advantage Origins 2Primary Advantage Origins 3.1Reading Advantage Origins 2เวิร์กบุ๊กแต่ละเล่มมี 14 บทเรียนและเวอร์ชันดิจิทัลฝึกพูดกับ Reedyฝึกพูดภาษาอังกฤษกับ Reedyหลังบทเรียน นักเรียนฝึกพูดภาษาอังกฤษกับ Reedy โค้ชเสียง AI ในแอปนักเรียนบน LINE Reedy คุยกับนักเรียนเรื่องบทเรียนด้วยภาษาอังกฤษง่ายๆ พร้อมคำใบ้ภาษาไทยสั้นๆใช้ได้ใน Tutor Advantage เท่านั้น ไม่มีใน Primary Advantage หรือ Reading Advantageเปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้วหลังฝึกแต่ละครั้ง นักเรียนเห็นสิ่งที่ทำได้ดีหนึ่งอย่าง สิ่งที่ควรลองครั้งหน้าหนึ่งอย่าง และประโยคหนึ่งประโยคให้พูดซ้ำก่อนเริ่ม นักเรียนตรวจไมโครโฟนและดูเคล็ดลับได้สิ่งที่แต่ละแพ็กเกจคลาสมีเวิร์กบุ๊กพิมพ์เป็นเล่มเวิร์กบุ๊กที่พิมพ์เป็นเล่มหนึ่งเล่ม 14 บทเรียนต่อหนึ่งแพ็กเกจคลาสเวอร์ชันดิจิทัลเวิร์กบุ๊กทุกเล่มมีเวอร์ชันดิจิทัลไว้ฝึกระหว่างคลาสฝึกพูดกับ Reedyการฝึกพูดกับ Reedy ใช้ได้ใน Tutor Advantage เท่านั้น สำหรับนักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่ และในบทเรียนที่เรียนจบแล้วแฟลชการ์ดและเกมทุกคลาสมีแฟลชการ์ด เกมสองเกม การสนทนาเป็นคู่ และช่วงสรุปติวเตอร์ในพื้นที่ติวเตอร์ในชุมชนของคุณสอนในคลาสแบบพบหน้าMastery Advantageเนื้อหาในเวิร์กบุ๊กถูกติดแท็กกับกราฟความรู้ Mastery Advantage ซึ่งจัดทำแผนที่ทักษะและกำหนดเวลาทบทวนเป็นติวเตอร์สอนคลาสในชุมชนของคุณติวเตอร์สอนเวิร์กบุ๊กที่พิมพ์เป็นเล่มหนึ่งเล่มให้กลุ่มเล็กแบบพบหน้า บริษัทจัดหาหนังสือและแอปให้ ได้แก่ แอปติวเตอร์ แอปนักเรียนบน LINE และระบบชำระเงินคุณเป็นผู้สอนคลาส หนึ่งแพ็กเกจคลาสคือหนึ่งเวิร์กบุ๊ก ใช้เวลาสอนประมาณ 25 ชั่วโมงโมเดลคอมมิชชันแบบยูนิเลเวลจ่ายค่าคอมมิชชันให้ติวเตอร์ตามคลาสที่สอนและติวเตอร์ที่ชวนเข้าเครือข่ายระบบคำนวณค่าคอมมิชชันและชำระทุกเดือนเครื่องคำนวณในหน้านี้แสดงตัวอย่าง ทักมาคุยกับเราเรื่องกรณีของคุณเองได้สมัครเป็นติวเตอร์ภายในแอปแอปของนักเรียน และแอปของติวเตอร์นักเรียนเข้าคลาสผ่าน LINE ติวเตอร์สอนผ่านแอปของติวเตอร์ ทั้งสองใช้เวิร์กบุ๊กที่พิมพ์เป็นเล่มชุดเดียวกันหน้าหลักของนักเรียน: คำทักทาย คลาสถัดไป และการ์ดคลาส การฝึกเสียงกับ Reedy เปิดใช้จริงสำหรับนักเรียนที่มีแพ็กเกจคลาสที่ยังใช้งานอยู่ ในบทเรียนที่เรียนจบแล้วนักเรียนพิมพ์คำตอบในแอป ในบทเดียวกับหน้าที่พิมพ์เป็นเล่มรายชื่อคลาสของติวเตอร์: วันนี้มีใครบ้าง และแต่ละคนอยู่บทไหนเครื่องคำนวณค่าคอมมิชชันดูว่าค่าคอมมิชชันของหนึ่งเดือนคิดอย่างไรเครื่องคำนวณนี้ใช้สูตรเดียวกับระบบสรุปยอดของเรา เลือกราคาและจำนวนนักเรียน แล้วดูยอดของเดือนนั้น ตัวเลขทุกตัวเป็นตัวอย่าง ไม่ใช่คำสัญญาเรื่องรายได้ติวเตอร์ใหม่ติวเตอร์ที่มีติวเตอร์ชั้นแรกสองคนทีมเล็กที่มีสามสายราคาแพ็กเกจคลาส (บาท)ค่าเริ่มต้น 3,000 บาท ราคาปรับตามตลาดจำนวนนักเรียนในคลาสของคุณเดือนนี้ติวเตอร์ชั้นแรกในเครือข่ายของคุณอัตราของคุณตามยอดรวมของเครือข่ายเดือนนี้ · 0%ยอดจ่ายของคุณ0เงินที่ได้รับสุทธิ0ยอดรวมของคุณเอง0ยอดรวมของเครือข่าย0อัตราค่าคอมมิชชัน0%ค่าคอมมิชชันก่อนหัก0ส่วนที่หักให้ดาวน์ไลน์0ภาษีหัก ณ ที่จ่าย (3%)0ใส่จำนวนนักเรียนเพื่อดูยอดของเดือนยอดรวม คือราคาแพ็กเกจคลาสคูณกับจำนวนนักเรียนที่จ่ายเงินในเดือนนั้นอัตราเริ่มต้นใกล้ 40% เมื่อยอดรวมยังน้อย ผ่าน 50% ที่ 20,000 บาท และเข้าใกล้ 71% เมื่อยอดรวมสูงมากเงินที่คุณได้รับ คืออัตราคูณกับยอดรวมของเครือข่าย หักด้วยเงินที่ติวเตอร์ดาวน์ไลน์ชั้นแรกได้รับ แล้วหักภาษีหัก ณ ที่จ่าย 3% จากยอดที่เป็นบวกตัวเลขทุกตัวในตัวอย่างนี้เป็นการอธิบายให้เห็นภาพ ค่าคอมมิชชันขึ้นอยู่กับคลาสที่เปิดสอนและมีการจ่ายเงินจริงข้อมูลพื้นฐานความมุ่งมั่นของเราอิงงานวิจัยงานวิจัยแสดงว่าการอ่านปริมาณมากให้ผลดีกว่าการสอนไวยากรณ์แบบดั้งเดิม (Aka, 2019)ตรงไปตรงมาเรื่องขนาดเราเป็นทีมขนาดเล็ก Tutor Advantage เติบโตทีละติวเตอร์และทีละคลาสราคาชัดเจนแพ็กเกจคลาสเริ่มต้น 3,000 บาท หนึ่งแพ็กเกจคลาสใช้หนึ่งเวิร์กบุ๊กคำถามคำถามที่พบบ่อยแพ็กเกจคลาสคืออะไรหนึ่งแพ็กเกจคลาสคือเวิร์กบุ๊กที่พิมพ์เป็นเล่มหนึ่งเล่ม สอนโดยติวเตอร์ในพื้นที่ให้กลุ่มเล็ก ใช้เวลาสอนประมาณ 25 ชั่วโมง ราคาเริ่มต้น 3,000 บาท และปรับตามตลาดตอนนี้มีหนังสือเล่มไหนวางจำหน่ายPrimary Advantage Origins 2, Primary Advantage Origins 3.1 และ Reading Advantage Origins 2 แต่ละระดับจะเปิดขายเมื่อหนังสือพิมพ์เสร็จTutor Advantage เป็นแอปติวเตอร์ AI หรือไม่ไม่ใช่ Tutor Advantage เป็นเครือข่ายคลาส ติวเตอร์ที่เป็นคนสอนแต่ละคลาสจากเวิร์กบุ๊กที่พิมพ์เป็นเล่ม ส่วน Reedy โค้ชเสียง AI ให้นักเรียนฝึกพูดหลังบทเรียนใครใช้การฝึกพูดกับ Reedy ได้บ้างนักเรียนที่มีแพ็กเกจคลาส Tutor Advantage ที่ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว Reedy ไม่มีใน Primary Advantage หรือ Reading Advantageบทเรียนดำเนินอย่างไรบทเรียนทำตาม 13 ขั้นตอนที่ตายตัวในเวิร์กบุ๊กที่พิมพ์เป็นเล่ม Tutor Advantage สอนเป็น 18 ช่วงโดยเพิ่มแฟลชการ์ด เกมคำศัพท์ เกมประโยค การสนทนาเป็นคู่ และช่วงสรุปติวเตอร์ได้รายได้อย่างไรติวเตอร์ได้รับค่าคอมมิชชันตามโมเดลคอมมิชชันแบบยูนิเลเวล และระบบสรุปยอดให้ทุกเดือน อัตราจะสูงขึ้นตามยอดรวมของเครือข่ายในเดือนนั้น เครื่องคำนวณในหน้านี้แสดงตัวอย่าง ตัวเลขจริงมาจากคลาสที่เปิดสอนและมีการจ่ายเงินจริงพร้อมเริ่มต้น?เริ่มเรียนหรือสมัครเป็นติวเตอร์สอบถามแพ็กเกจคลาสสำหรับลูกของคุณ หรือสมัครเป็นติวเตอร์สอนคลาส Tutor Advantageสอบถามเรื่องคลาสสมัครเป็นติวเตอร[27m์"[39m
+
+ ❯ expectNoDownline src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx:161:44
+    159|     expect(text, `${step}: /downline/i`).not.toMatch(/downline/i);
+    160|     expect(text, `${step}: Downline deduction`).not.toContain("Downlin…
+    161|     expect(text, `${step}: ดาวน์ไลน์`).not.toContain("ดาวน์ไลน์");
+       |                                            ^
+    162|   }
+    163|
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx:167:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[47/53]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx > TutorAdvantage real-copy downline gate (D-17, AC-17) > th: preset 2 and preset 3 carry no downline wording
+AssertionError: th preset 2: ดาวน์ไลน์: expected 'เปิดให้บริการแล้วคลาสภาษาอังกฤษสำหรับ…' not to contain 'ดาวน์ไลน์'
+
+Expected: [32m"[7mดาวน์ไลน[27m์"[39m
+Received: [31m"[7mเปิดให้บริการแล้วคลาสภาษาอังกฤษสำหรับครอบครัว สอนโดยติวเตอร์หนึ่งแพ็กเกจคลาส หนึ่งเวิร์กบุ๊ก ติวเตอร์ในพื้นที่ของคุณTutor Advantage คือเครือข่ายคลาสที่สอนโดยติวเตอร์ ติวเตอร์ในพื้นที่สอนหนึ่งเวิร์กบุ๊กที่พิมพ์เป็นเล่มในแต่ละแพ็กเกจคลาส ราคาเริ่มต้น 3,000 บาท และปรับตามตลาดเริ่มต้น 3,000 บาทต่อแพ็กเกจคลาสราคาปรับตามตลาดสอบถามเรื่องคลาสสมัครเป็นติวเตอร์หนังสือที่วางจำหน่าย3บาท เริ่มต้นต่อแพ็กเกจคลาส3,000บทเรียนในเวิร์กบุ๊กแต่ละเล่ม14ภายในหนึ่งคลาส13 ขั้นตอนในเล่ม 18 ช่วงในคลาสทุกบทเรียนทำตามขั้นตอนของเวิร์กบุ๊กที่พิมพ์เป็นเล่มซึ่งตายตัว Tutor Advantage เพิ่มอีกห้าช่วงรอบขั้นตอนเหล่านั้น ช่วงดิจิทัลไม่ตัดหรือสลับลำดับขั้นตอนในเล่มขั้นตอนในเวิร์กบุ๊กที่พิมพ์เป็นเล่ม1Before You Read2Key Vocabulary3Read the Article4Collect Vocabulary5Deep Reading Notes6Collect Sentences7Comprehension Check8Guided Response9Vocabulary Practice10Sentence Practice11Guided Writing12Language Questions13Lesson Reflectionช่วงที่ Tutor Advantage เพิ่ม+Flashcards+Vocabulary Game+Sentence Game+Pair Conversation+Wrap-Upขั้นตอนที่ 1 จาก 13Before You Readนักเรียนดูชื่อบทเรียนและภาพ แล้วทำเครื่องหมายระดับความสนใจ ไม่มีคำตอบที่ผิดช่วงก่อนหน้า1 / 18ช่วงถัดไปวางจำหน่ายแล้วหนังสือสามเล่มที่วางจำหน่ายหนึ่งแพ็กเกจคลาสใช้หนึ่งเวิร์กบุ๊ก หนังสือเล่มใหม่จะเปิดขายเมื่อพิมพ์เสร็จPrimary Advantage Origins 2Primary Advantage Origins 3.1Reading Advantage Origins 2เวิร์กบุ๊กแต่ละเล่มมี 14 บทเรียนและเวอร์ชันดิจิทัลฝึกพูดกับ Reedyฝึกพูดภาษาอังกฤษกับ Reedyหลังบทเรียน นักเรียนฝึกพูดภาษาอังกฤษกับ Reedy โค้ชเสียง AI ในแอปนักเรียนบน LINE Reedy คุยกับนักเรียนเรื่องบทเรียนด้วยภาษาอังกฤษง่ายๆ พร้อมคำใบ้ภาษาไทยสั้นๆใช้ได้ใน Tutor Advantage เท่านั้น ไม่มีใน Primary Advantage หรือ Reading Advantageเปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้วหลังฝึกแต่ละครั้ง นักเรียนเห็นสิ่งที่ทำได้ดีหนึ่งอย่าง สิ่งที่ควรลองครั้งหน้าหนึ่งอย่าง และประโยคหนึ่งประโยคให้พูดซ้ำก่อนเริ่ม นักเรียนตรวจไมโครโฟนและดูเคล็ดลับได้สิ่งที่แต่ละแพ็กเกจคลาสมีเวิร์กบุ๊กพิมพ์เป็นเล่มเวิร์กบุ๊กที่พิมพ์เป็นเล่มหนึ่งเล่ม 14 บทเรียนต่อหนึ่งแพ็กเกจคลาสเวอร์ชันดิจิทัลเวิร์กบุ๊กทุกเล่มมีเวอร์ชันดิจิทัลไว้ฝึกระหว่างคลาสฝึกพูดกับ Reedyการฝึกพูดกับ Reedy ใช้ได้ใน Tutor Advantage เท่านั้น สำหรับนักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่ และในบทเรียนที่เรียนจบแล้วแฟลชการ์ดและเกมทุกคลาสมีแฟลชการ์ด เกมสองเกม การสนทนาเป็นคู่ และช่วงสรุปติวเตอร์ในพื้นที่ติวเตอร์ในชุมชนของคุณสอนในคลาสแบบพบหน้าMastery Advantageเนื้อหาในเวิร์กบุ๊กถูกติดแท็กกับกราฟความรู้ Mastery Advantage ซึ่งจัดทำแผนที่ทักษะและกำหนดเวลาทบทวนเป็นติวเตอร์สอนคลาสในชุมชนของคุณติวเตอร์สอนเวิร์กบุ๊กที่พิมพ์เป็นเล่มหนึ่งเล่มให้กลุ่มเล็กแบบพบหน้า บริษัทจัดหาหนังสือและแอปให้ ได้แก่ แอปติวเตอร์ แอปนักเรียนบน LINE และระบบชำระเงินคุณเป็นผู้สอนคลาส หนึ่งแพ็กเกจคลาสคือหนึ่งเวิร์กบุ๊ก ใช้เวลาสอนประมาณ 25 ชั่วโมงโมเดลคอมมิชชันแบบยูนิเลเวลจ่ายค่าคอมมิชชันให้ติวเตอร์ตามคลาสที่สอนและติวเตอร์ที่ชวนเข้าเครือข่ายระบบคำนวณค่าคอมมิชชันและชำระทุกเดือนเครื่องคำนวณในหน้านี้แสดงตัวอย่าง ทักมาคุยกับเราเรื่องกรณีของคุณเองได้สมัครเป็นติวเตอร์ภายในแอปแอปของนักเรียน และแอปของติวเตอร์นักเรียนเข้าคลาสผ่าน LINE ติวเตอร์สอนผ่านแอปของติวเตอร์ ทั้งสองใช้เวิร์กบุ๊กที่พิมพ์เป็นเล่มชุดเดียวกันหน้าหลักของนักเรียน: คำทักทาย คลาสถัดไป และการ์ดคลาส การฝึกเสียงกับ Reedy เปิดใช้จริงสำหรับนักเรียนที่มีแพ็กเกจคลาสที่ยังใช้งานอยู่ ในบทเรียนที่เรียนจบแล้วนักเรียนพิมพ์คำตอบในแอป ในบทเดียวกับหน้าที่พิมพ์เป็นเล่มรายชื่อคลาสของติวเตอร์: วันนี้มีใครบ้าง และแต่ละคนอยู่บทไหนเครื่องคำนวณค่าคอมมิชชันดูว่าค่าคอมมิชชันของหนึ่งเดือนคิดอย่างไรเครื่องคำนวณนี้ใช้สูตรเดียวกับระบบสรุปยอดของเรา เลือกราคาและจำนวนนักเรียน แล้วดูยอดของเดือนนั้น ตัวเลขทุกตัวเป็นตัวอย่าง ไม่ใช่คำสัญญาเรื่องรายได้ติวเตอร์ใหม่ติวเตอร์ที่มีติวเตอร์ชั้นแรกสองคนทีมเล็กที่มีสามสายนักเรียนของตัวเองสองคน และติวเตอร์ชั้นแรกสองคนที่มีนักเรียนคนละสามคนราคาแพ็กเกจคลาส (บาท)ค่าเริ่มต้น 3,000 บาท ราคาปรับตามตลาดจำนวนนักเรียนในคลาสของคุณเดือนนี้ติวเตอร์ชั้นแรกในเครือข่ายของคุณ1. จำนวนนักเรียนของติวเตอร์ชั้นแรกแต่ละคน2. จำนวนนักเรียนของติวเตอร์ชั้นแรกแต่ละคนอัตราของคุณตามยอดรวมของเครือข่ายเดือนนี้ · 52.7%ค่าคอมมิชชันของสาย 1ยอดรวมของสาย 9,0004,005ค่าคอมมิชชันของสาย 2ยอดรวมของสาย 9,0004,005ยอดจ่ายของคุณ4,645.69เงินที่ได้รับสุทธิ4,506.32ยอดรวมของคุณเอง6,000ยอดรวมของเครือข่าย24,000อัตราค่าคอมมิชชัน52.7%ค่าคอมมิชชันก่อนหัก12,655.69ส่วนที่หักให้ดาวน์ไลน์8,010ภาษีหัก ณ ที่จ่าย (3%)139.37อัตราของคุณคิดกับยอดรวมทั้งเครือข่าย จากนั้นหักเงินที่ติวเตอร์ที่อยู่ใต้คุณโดยตรงได้รับ และหักภาษีหัก ณ ที่จ่าย 3%ยอดรวมของเครือข่าย 24,000 บาท ที่อัตรา 52.7% ค่าคอมมิชชันก่อนหัก 12,656 บาท โดยติวเตอร์ชั้นแรกสองคนได้รับ 8,010 บาท เหลือจ่ายก่อนภาษี 4,646 บาท และหลังหักภาษีหัก ณ ที่จ่าย 3% เหลือ 4,506 บาทยอดรวม คือราคาแพ็กเกจคลาสคูณกับจำนวนนักเรียนที่จ่ายเงินในเดือนนั้นอัตราเริ่มต้นใกล้ 40% เมื่อยอดรวมยังน้อย ผ่าน 50% ที่ 20,000 บาท และเข้าใกล้ 71% เมื่อยอดรวมสูงมากเงินที่คุณได้รับ คืออัตราคูณกับยอดรวมของเครือข่าย หักด้วยเงินที่ติวเตอร์ดาวน์ไลน์ชั้นแรกได้รับ แล้วหักภาษีหัก ณ ที่จ่าย 3% จากยอดที่เป็นบวกตัวเลขทุกตัวในตัวอย่างนี้เป็นการอธิบายให้เห็นภาพ ค่าคอมมิชชันขึ้นอยู่กับคลาสที่เปิดสอนและมีการจ่ายเงินจริงข้อมูลพื้นฐานความมุ่งมั่นของเราอิงงานวิจัยงานวิจัยแสดงว่าการอ่านปริมาณมากให้ผลดีกว่าการสอนไวยากรณ์แบบดั้งเดิม (Aka, 2019)ตรงไปตรงมาเรื่องขนาดเราเป็นทีมขนาดเล็ก Tutor Advantage เติบโตทีละติวเตอร์และทีละคลาสราคาชัดเจนแพ็กเกจคลาสเริ่มต้น 3,000 บาท หนึ่งแพ็กเกจคลาสใช้หนึ่งเวิร์กบุ๊กคำถามคำถามที่พบบ่อยแพ็กเกจคลาสคืออะไรหนึ่งแพ็กเกจคลาสคือเวิร์กบุ๊กที่พิมพ์เป็นเล่มหนึ่งเล่ม สอนโดยติวเตอร์ในพื้นที่ให้กลุ่มเล็ก ใช้เวลาสอนประมาณ 25 ชั่วโมง ราคาเริ่มต้น 3,000 บาท และปรับตามตลาดตอนนี้มีหนังสือเล่มไหนวางจำหน่ายPrimary Advantage Origins 2, Primary Advantage Origins 3.1 และ Reading Advantage Origins 2 แต่ละระดับจะเปิดขายเมื่อหนังสือพิมพ์เสร็จTutor Advantage เป็นแอปติวเตอร์ AI หรือไม่ไม่ใช่ Tutor Advantage เป็นเครือข่ายคลาส ติวเตอร์ที่เป็นคนสอนแต่ละคลาสจากเวิร์กบุ๊กที่พิมพ์เป็นเล่ม ส่วน Reedy โค้ชเสียง AI ให้นักเรียนฝึกพูดหลังบทเรียนใครใช้การฝึกพูดกับ Reedy ได้บ้างนักเรียนที่มีแพ็กเกจคลาส Tutor Advantage ที่ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว Reedy ไม่มีใน Primary Advantage หรือ Reading Advantageบทเรียนดำเนินอย่างไรบทเรียนทำตาม 13 ขั้นตอนที่ตายตัวในเวิร์กบุ๊กที่พิมพ์เป็นเล่ม Tutor Advantage สอนเป็น 18 ช่วงโดยเพิ่มแฟลชการ์ด เกมคำศัพท์ เกมประโยค การสนทนาเป็นคู่ และช่วงสรุปติวเตอร์ได้รายได้อย่างไรติวเตอร์ได้รับค่าคอมมิชชันตามโมเดลคอมมิชชันแบบยูนิเลเวล และระบบสรุปยอดให้ทุกเดือน อัตราจะสูงขึ้นตามยอดรวมของเครือข่ายในเดือนนั้น เครื่องคำนวณในหน้านี้แสดงตัวอย่าง ตัวเลขจริงมาจากคลาสที่เปิดสอนและมีการจ่ายเงินจริงพร้อมเริ่มต้น?เริ่มเรียนหรือสมัครเป็นติวเตอร์สอบถามแพ็กเกจคลาสสำหรับลูกของคุณ หรือสมัครเป็นติวเตอร์สอนคลาส Tutor Advantageสอบถามเรื่องคลาสสมัครเป็นติวเตอร[27m์"[39m
+
+ ❯ expectNoDownline src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx:161:44
+    159|     expect(text, `${step}: /downline/i`).not.toMatch(/downline/i);
+    160|     expect(text, `${step}: Downline deduction`).not.toContain("Downlin…
+    161|     expect(text, `${step}: ดาวน์ไลน์`).not.toContain("ดาวน์ไลน์");
+       |                                            ^
+    162|   }
+    163|
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx:179:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[48/53]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx > TutorAdvantage real-copy downline gate (D-17, AC-17) > zh: the first paint carries no downline wording
+AssertionError: zh first paint: /downline/i: expected '现已开放面向家庭的导师英语班一个课程包，一本练习册，一位本地导师。Tuto…' not to match /downline/i
+
+[32m- Expected:[39m
+/downline/i
+
+[31m+ Received:[39m
+"现已开放面向家庭的导师英语班一个课程包，一本练习册，一位本地导师。Tutor Advantage 是由导师授课的班级网络。每个课程包由本地导师讲授一本印刷练习册。课程包 3,000 泰铢起，价格随市场调整。每个课程包 3,000 泰铢起价格随市场调整。咨询课程成为导师本在售图书3泰铢起，每个课程包3,000每本练习册的课时14走进一节课13 个印刷步骤，18 个课堂阶段每节课都遵循固定的印刷练习册步骤。Tutor Advantage 在这些步骤前后增加五个阶段。数字阶段不会删除或调换任何印刷步骤。印刷练习册步骤1Before You Read2Key Vocabulary3Read the Article4Collect Vocabulary5Deep Reading Notes6Collect Sentences7Comprehension Check8Guided Response9Vocabulary Practice10Sentence Practice11Guided Writing12Language Questions13Lesson ReflectionTutor Advantage 新增阶段+Flashcards+Vocabulary Game+Sentence Game+Pair Conversation+Wrap-Up第 1 步，共 13 步Before You Read学生看课文标题和图片，然后标出自己的兴趣程度。没有错误答案。上一阶段1 / 18下一阶段现已在售三本在售图书一个课程包对应一本练习册。每本新书印刷完成后即开始销售。Primary Advantage Origins 2Primary Advantage Origins 3.1Reading Advantage Origins 2每本练习册有 14 节课和一个数字版本。Reedy 口语练习与 Reedy 练习英语口语课后，学生可以在 LINE 学生应用中与 Reedy（一位 AI 语音教练）练习说英语。Reedy 用简单的英语和简短的泰语提示与学生谈论本课内容。仅在 Tutor Advantage 中提供。Primary Advantage 和 Reading Advantage 中没有。面向持有有效课程包的学生，用于已完成的课程。每次练习后，学生会看到一件做得好的事、一件下次可以尝试的事，以及一个可以再说一遍的句子。开始前，学生可以检查麦克风并查看提示。每个课程包包含什么印刷练习册每个课程包配一本印刷练习册，共 14 节课。数字版本每本练习册都有数字版本，供课间练习。Reedy 口语练习Reedy 口语练习仅在 Tutor Advantage 中提供，面向持有有效课程包的学生，用于已完成的课程。单词卡与游戏每节课包含单词卡、两个游戏、双人对话和课堂总结。本地导师您所在社区的导师面对面授课。Mastery Advantage练习册内容已标记到 Mastery Advantage 知识图谱，该图谱梳理技能并安排复习。成为导师在您的社区开班授课导师当面向小组讲授一本印刷练习册。公司提供图书和应用：导师应用、LINE 学生应用和支付功能。您负责授课。一个课程包对应一本练习册，约 25 小时的教学。多级（unilevel）佣金模式按导师所授课程以及带入网络的导师支付佣金。系统计算佣金，并按月结算。The calculator on this page shows examples. Ask us about your own case.申请成为导师INSIDE THE APPSThe student app and the tutor appA student joins the class in LINE. The tutor runs the class in the tutor app. Both follow the same printed workbook.The student's home: the greeting, the next class, and the class card. Reedy voice practice is live for students with an active class package, on lessons they completed.The student types the answer in the app, on the same lesson as the printed page.The tutor's class list: who is in today's class and which lesson they are on.THE COMMISSION CALCULATORSee how one month's commission worksThe calculator uses the same formula as our settlement system. Choose the price and the students, and see the month. Every figure is an example, not a promise of income.A new tutorA tutor with two direct tutorsA small team with three legsClass package price (baht)Default: 3,000 baht. The price adapts to the market.Students in your own classes this monthDirect tutors in your networkYour rate for the network volumeThis month · 0%Your payout0Net payout0Your own volume0Network volume0Commission rate0%Gross commission0Downline deduction0Withholding tax (3%)0Add students to see a month.Volume is the class package price times the students who paid in the month.The rate starts near 40% on a small volume. It passes 50% at 20,000 baht and approaches 71% at very high volume.Your payout is the rate times the network volume, minus the payouts of your direct downline tutors. 3% withholding tax comes off a positive payout.Every figure in these examples is an illustration. Commission depends on the classes that run and are paid for.基本信息我们的承诺研究支持研究表明，大量阅读优于传统语法教学（Aka，2019）。如实说明规模我们是一个小团队。Tutor Advantage 一位导师、一个班级地逐步成长。价格清晰课程包 3,000 泰铢起，一个课程包对应一本练习册。常见问题常见问题解答什么是课程包？一个课程包对应一本印刷练习册，由本地导师向小组讲授，约 25 小时。课程包 3,000 泰铢起，价格随市场调整。目前在售哪些图书？Primary Advantage Origins 2、Primary Advantage Origins 3.1 和 Reading Advantage Origins 2。每个级别在其图书印刷完成后开始销售。Tutor Advantage 是 AI 导师应用吗？不是。Tutor Advantage 是班级网络。每个班由真人导师使用印刷练习册授课。Reedy 是 AI 语音教练，在课后为学生提供口语练习。谁可以使用 Reedy 口语练习？持有有效 Tutor Advantage 课程包的学生，用于已完成的课程。Primary Advantage 和 Reading Advantage 中没有 Reedy。一节课如何进行？一节课遵循 13 个固定的印刷练习册步骤。Tutor Advantage 通过增加单词卡、单词游戏、句子游戏、双人对话和课堂总结，把它们分为 18 个阶段。导师如何获得收入？Tutors earn commission under a unilevel commission model, and the system settles it monthly. The rate rises with the network volume of the month. The calculator on this page shows examples; the real figure comes from the classes that run and are paid for.准备好开始了吗？开班学习或成为导师咨询适合您孩子的课程包，或申请成为 Tutor Advantage 导师。咨询课程申请成为导师"
+
+ ❯ expectNoDownline src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx:159:46
+    157|   function expectNoDownline(step: string): void {
+    158|     const text = document.body.textContent ?? "";
+    159|     expect(text, `${step}: /downline/i`).not.toMatch(/downline/i);
+       |                                              ^
+    160|     expect(text, `${step}: Downline deduction`).not.toContain("Downlin…
+    161|     expect(text, `${step}: ดาวน์ไลน์`).not.toContain("ดาวน์ไลน์");
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx:167:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[49/53]⎯
+
+ FAIL  src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx > TutorAdvantage real-copy downline gate (D-17, AC-17) > zh: preset 2 and preset 3 carry no downline wording
+AssertionError: zh preset 2: /downline/i: expected '现已开放面向家庭的导师英语班一个课程包，一本练习册，一位本地导师。Tuto…' not to match /downline/i
+
+[32m- Expected:[39m
+/downline/i
+
+[31m+ Received:[39m
+"现已开放面向家庭的导师英语班一个课程包，一本练习册，一位本地导师。Tutor Advantage 是由导师授课的班级网络。每个课程包由本地导师讲授一本印刷练习册。课程包 3,000 泰铢起，价格随市场调整。每个课程包 3,000 泰铢起价格随市场调整。咨询课程成为导师本在售图书3泰铢起，每个课程包3,000每本练习册的课时14走进一节课13 个印刷步骤，18 个课堂阶段每节课都遵循固定的印刷练习册步骤。Tutor Advantage 在这些步骤前后增加五个阶段。数字阶段不会删除或调换任何印刷步骤。印刷练习册步骤1Before You Read2Key Vocabulary3Read the Article4Collect Vocabulary5Deep Reading Notes6Collect Sentences7Comprehension Check8Guided Response9Vocabulary Practice10Sentence Practice11Guided Writing12Language Questions13Lesson ReflectionTutor Advantage 新增阶段+Flashcards+Vocabulary Game+Sentence Game+Pair Conversation+Wrap-Up第 1 步，共 13 步Before You Read学生看课文标题和图片，然后标出自己的兴趣程度。没有错误答案。上一阶段1 / 18下一阶段现已在售三本在售图书一个课程包对应一本练习册。每本新书印刷完成后即开始销售。Primary Advantage Origins 2Primary Advantage Origins 3.1Reading Advantage Origins 2每本练习册有 14 节课和一个数字版本。Reedy 口语练习与 Reedy 练习英语口语课后，学生可以在 LINE 学生应用中与 Reedy（一位 AI 语音教练）练习说英语。Reedy 用简单的英语和简短的泰语提示与学生谈论本课内容。仅在 Tutor Advantage 中提供。Primary Advantage 和 Reading Advantage 中没有。面向持有有效课程包的学生，用于已完成的课程。每次练习后，学生会看到一件做得好的事、一件下次可以尝试的事，以及一个可以再说一遍的句子。开始前，学生可以检查麦克风并查看提示。每个课程包包含什么印刷练习册每个课程包配一本印刷练习册，共 14 节课。数字版本每本练习册都有数字版本，供课间练习。Reedy 口语练习Reedy 口语练习仅在 Tutor Advantage 中提供，面向持有有效课程包的学生，用于已完成的课程。单词卡与游戏每节课包含单词卡、两个游戏、双人对话和课堂总结。本地导师您所在社区的导师面对面授课。Mastery Advantage练习册内容已标记到 Mastery Advantage 知识图谱，该图谱梳理技能并安排复习。成为导师在您的社区开班授课导师当面向小组讲授一本印刷练习册。公司提供图书和应用：导师应用、LINE 学生应用和支付功能。您负责授课。一个课程包对应一本练习册，约 25 小时的教学。多级（unilevel）佣金模式按导师所授课程以及带入网络的导师支付佣金。系统计算佣金，并按月结算。The calculator on this page shows examples. Ask us about your own case.申请成为导师INSIDE THE APPSThe student app and the tutor appA student joins the class in LINE. The tutor runs the class in the tutor app. Both follow the same printed workbook.The student's home: the greeting, the next class, and the class card. Reedy voice practice is live for students with an active class package, on lessons they completed.The student types the answer in the app, on the same lesson as the printed page.The tutor's class list: who is in today's class and which lesson they are on.THE COMMISSION CALCULATORSee how one month's commission worksThe calculator uses the same formula as our settlement system. Choose the price and the students, and see the month. Every figure is an example, not a promise of income.A new tutorA tutor with two direct tutorsA small team with three legsTwo own students, and two direct tutors with three students each.Class package price (baht)Default: 3,000 baht. The price adapts to the market.Students in your own classes this monthDirect tutors in your network1. Students for each direct tutor2. Students for each direct tutorYour rate for the network volumeThis month · 52.7%Leg commission 1Leg volume 9,0004,005Leg commission 2Leg volume 9,0004,005Your payout4,645.69Net payout4,506.32Your own volume6,000Network volume24,000Commission rate52.7%Gross commission12,655.69Downline deduction8,010Withholding tax (3%)139.37Your rate applies to the whole network volume. The payouts of the tutors directly below you come off, and so does 3% withholding tax.24,000 baht of network volume at a rate of 52.7%. The gross is 12,656 baht, and the two direct tutors earn 8,010 baht of it. The payout is 4,646 baht before tax, and 4,506 baht after 3% withholding tax.Volume is the class package price times the students who paid in the month.The rate starts near 40% on a small volume. It passes 50% at 20,000 baht and approaches 71% at very high volume.Your payout is the rate times the network volume, minus the payouts of your direct downline tutors. 3% withholding tax comes off a positive payout.Every figure in these examples is an illustration. Commission depends on the classes that run and are paid for.基本信息我们的承诺研究支持研究表明，大量阅读优于传统语法教学（Aka，2019）。如实说明规模我们是一个小团队。Tutor Advantage 一位导师、一个班级地逐步成长。价格清晰课程包 3,000 泰铢起，一个课程包对应一本练习册。常见问题常见问题解答什么是课程包？一个课程包对应一本印刷练习册，由本地导师向小组讲授，约 25 小时。课程包 3,000 泰铢起，价格随市场调整。目前在售哪些图书？Primary Advantage Origins 2、Primary Advantage Origins 3.1 和 Reading Advantage Origins 2。每个级别在其图书印刷完成后开始销售。Tutor Advantage 是 AI 导师应用吗？不是。Tutor Advantage 是班级网络。每个班由真人导师使用印刷练习册授课。Reedy 是 AI 语音教练，在课后为学生提供口语练习。谁可以使用 Reedy 口语练习？持有有效 Tutor Advantage 课程包的学生，用于已完成的课程。Primary Advantage 和 Reading Advantage 中没有 Reedy。一节课如何进行？一节课遵循 13 个固定的印刷练习册步骤。Tutor Advantage 通过增加单词卡、单词游戏、句子游戏、双人对话和课堂总结，把它们分为 18 个阶段。导师如何获得收入？Tutors earn commission under a unilevel commission model, and the system settles it monthly. The rate rises with the network volume of the month. The calculator on this page shows examples; the real figure comes from the classes that run and are paid for.准备好开始了吗？开班学习或成为导师咨询适合您孩子的课程包，或申请成为 Tutor Advantage 导师。咨询课程申请成为导师"
+
+ ❯ expectNoDownline src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx:159:46
+    157|   function expectNoDownline(step: string): void {
+    158|     const text = document.body.textContent ?? "";
+    159|     expect(text, `${step}: /downline/i`).not.toMatch(/downline/i);
+       |                                              ^
+    160|     expect(text, `${step}: Downline deduction`).not.toContain("Downlin…
+    161|     expect(text, `${step}: ดาวน์ไลน์`).not.toContain("ดาวน์ไลน์");
+ ❯ src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx:179:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[50/53]⎯
+
+
+ Test Files  10 failed (10)
+      Tests  53 failed | 92 passed (145)
+   Start at  19:59:14
+   Duration  8.58s (transform 163ms, setup 469ms, import 667ms, tests 2.13s, environment 4.30s)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run src/__tests__/www-tutor-calculator.locale.test.ts 'src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx' src/lib/__tests__/tutor-screens.test.ts src/lib/__tests__/tutor-screens.adversarial.test.ts src/lib/tutor-commission.test.ts src/lib/tutor-commission.adversarial.test.ts src/components/marketing/tutor-commission-calculator.test.tsx src/components/marketing/tutor-commission-calculator.adversarial.test.tsx src/__tests__/www-tutor-screens-copy.adversarial.test.ts 'src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx' '--reporter=dot' '--silent=true' '--maxWorkers=1'

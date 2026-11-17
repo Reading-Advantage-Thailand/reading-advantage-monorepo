@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-c-ux-api",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)",
+  "baseline_sha": "81df01cf2e7c2954f4a2de1aaee593913a00bc75",
+  "phase_base_sha": "81df01cf2e7c2954f4a2de1aaee593913a00bc75",
+  "role_base_sha": "81df01cf2e7c2954f4a2de1aaee593913a00bc75",
+  "audited_head_sha": "6c22d6284dd47deeab35105c036bc549c67557aa",
+  "audited_head_is_head": true,
+  "diff_range": "81df01cf2e7c2954f4a2de1aaee593913a00bc75..6c22d6284dd47deeab35105c036bc549c67557aa",
+  "contract_applicability": "applicable: the exact phase diff changes the tutor-advantage route page, its three locale dictionaries, the picture manifest, the calculator component, and the commission module, so the copy, key wiring, image, and user-flow contracts all move.",
+  "status": "fail",
+  "summary": "Fail. One blocker: page.tsx:115 passes graph.legBar ('Leg {n}') to next-intl with no value, which breaks design rule 11. The development build then logs FORMATTING_ERROR and shows a key path in each leg row. All other checked contracts hold: 57 of 57 PR section 6 keys in en, th, and zh, the D-19 images and alts, the five gallery slots, the calculator flow, and a clean lint of the five touched source files. Three nits.",
+  "blocking_findings": [
+    "C-P3-1 [Blocker] review-c: apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx:115 requests graph.legBar with no value, but the string is 'Leg {n}' (locale file lines 197, 535, 875). Design rule 11 (docs/design-rules.md:28) requires t(key, { n: '{n}' }). In the development build of use-intl 4.13.0, a bare call logs FORMATTING_ERROR and returns the key path. Each leg row then shows 'pages.products.tutorAdvantage.calculator.graph.legBar' instead of 'Leg 1' in en, th, and zh. The production build keeps '{n}' raw, so the label works there only because of the build variant. No test can fail on the bare call, because the translator mocks (src/test/setup.ts:45) ignore values. Fix: pass { n: '{n}' } for legBar, widen the key helper type to accept values, and add a page test whose translator mock throws on a missing placeholder value. Precedent: commit b351f4f2e and src/components/marketing/mastery-graph-labels.ts:13. Evidence: node run of createTranslator with and without --conditions=development."
+  ],
+  "nonblocking_findings": [
+    "C-P3-2 [Nit] review-c: measure/tracks/www_tutor_calculator_20261117/spec.md D-9 items 3 and 4 (lines 245-252) and the section 5.3 props block (lines 483-496) still name chart.legPayout, chart.legVolume, chart.yourPayout, directTutors, and downline. D-17 (lines 331-334) and AC-18 (lines 765-768) remove these keys, and the code follows D-17. Owner: the spec owner. Update both sections to the graph.* keys of PR section 6.",
+    "C-P3-3 [Nit] review-c: apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx:163-168 resizes the legs on every change of the leg-count field. An empty field gives readNumber('') = 0 (:108-111), so Backspace drops all leg rows and the typed leg students. The next digit restores the default of 3 students per leg (resizeLegs, src/lib/tutor-commission.ts:220-231; module run: resizeLegs([4,5],0) = [] and resizeLegs([],2) = [3,3]). Keep the entries while the field is empty, or resize only on a whole number of 1 or more. Found by code reading and a module run, not in a browser.",
+    "C-P3-4 [Nit] review-c: apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx:193 replaced the hero SiteImageView, which had priority, with ProductPicture, and src/components/products/product-picture.tsx:13-31 has no priority prop. next/image then sets loading=lazy on the hero picture, a likely largest-paint element at lg width. Next dev can warn that an LCP image lacks priority. Add an optional priority prop to ProductPicture and set it for the hero. Found by code reading (diff hunk at page.tsx:190-196), not in a browser."
+  ],
+  "evidence": [
+    "HEAD check: git rev-parse HEAD = 6c22d6284dd47deeab35105c036bc549c67557aa, equal to audited_head_sha; git status --short printed nothing, so the audited tree has no uncommitted product edit.",
+    "PR section 6 parity: a node import of src/locales/pages/products/tutor-advantage.ts against the parsed PR code block gives 57 of 57 leaf keys in screens and calculator for en, with no missing key, no extra key, no value difference, and the same key order. zh values equal en. th has the same 57 keys in the same order.",
+    "Thai: 53 Thai table cells of PR sections 2, 3, and 5 occur exactly in the th dictionary. The 7 cells that do not occur are explained: the needsOwnStudents Thai (open copy item), chart.legVolume and chart.yourPayout Thai (D-17 removes chart.*), the two drop reasons of PR 8.3, and the studentHome caption and alt (D-17 removes that slot).",
+    "Key use: page.tsx references 57 of 57 calculator and screens leaves and no referenced key is missing. No chart, downline, secondLevel, directTutors, withDownline, twoLevels, or needsOwnStudents key exists in en, th, or zh. Each field the page passes is rendered in tutor-commission-calculator.tsx (rows :202-209, graph :339-439, explain line :465, notes :477-483).",
+    "Live lines: tutorRole.points[3] and faq.items[5].answer equal the PR section 5 English text in en and zh.",
+    "D-19 blocks: hero page.tsx:193 and become-a-tutor page.tsx:323-330 use tutorSession (/images/tutor-advantage-hero.jpg, 1024 by 1024 jpg on disk). Books page.tsx:21-25 and :251 use primaryCover, primaryCover31, readingCover in books.items order (three 480 by 651 webp files on disk). Reedy page.tsx:286 uses reedyPreview (1280 by 912 webp on disk, read from the VP8L header). page.tsx imports no siteImages, so no banned /media/images file can render.",
+    "Alts: heroExtra.imageAlt equals tutorRole.alt in en, th, and zh. books.items[i].alt follows '<name> book cover' and 'ปกหนังสือ <name>' (zh equals en). reedyBlock.alt matches D-19 item 3 in en and th. The five screens.items alts equal PR section 2. The only non-decorative img outside the manifest, the hero logo, has logoAlt in all three locales; the book logos use alt='' as decoration.",
+    "Gallery AC-19: tutorScreens keys guidedWriting, shortAnswer, feedback, selfReflection, classRecord in that order (product-pictures.ts:84-115) point to the 040, 002, 004, 052, 064 student-mobile webp files. All five exist at 520 by 1125. page.tsx:131-141 renders them in that order with the screens.items alt and caption.",
+    "Flow, by module run and code reading: presets 1 to 3 give net 5,354.4, 4,506.32, 8,025.25. Zero personal students with one leg of 3 gives net 0, tax 0, variant zero, and keeps gross 4,005 and leg commissions 4,005 (D-18, AC-21). Zero personal students with no legs gives zero. A leg count of 0 hides the leg fields (tutor-commission-calculator.tsx:312). Add and remove leg call setLegCount (:176-190). Every edit clears the preset (:153-180).",
+    "Rule 8 judgement, no finding: the next/image at page.tsx:323-330 is acceptable. It adds no image component, ProductPicture (product-picture.tsx:13-31) has no crop mode, and D-19 item 6 needs a 4:3 crop. Reusing ProductPicture with a crop option is an optional follow-up.",
+    "Layout class inspection, no browser: eslint exit 0 on the five touched source files, so no raw color, arbitrary value, inline style other than --bar-width (globals.css:636), or unknown class. The only accent is emerald on site neutrals. Both calculator columns carry min-w-0 (:219, :443). Leg rows are one column below sm (:315). The gallery is grid-cols-1 at base (page.tsx:370). Covers and screens render with h-auto and no object-cover (product-picture.tsx:21-30). The only crop is the intended 4:3 crop of D-19 item 6. page.tsx:144 sets overflow-x-hidden, which clamps overflow but does not prove there is none; the 390 px capture belongs to the UX browser role.",
+    "Known open copy item, no finding: calc.result.needsOwnStudents is not shipped (PM decision: ship explain.zero now). With 0 personal students and legs, the page shows non-zero gross and leg commission rows, a net of 0, and 'Add students to see a month.' (tutor-commission-calculator.tsx:465). The PR v0.5 line replaces it later, and its fact gate is pending (PR handoff section 7).",
+    "A-P3-1 is the same fact as my reading of graph.ownBar: tutor-commission-calculator.tsx:404-417 shows result.preTax under the label ownBar, but PR section 3 says the bar shows the tutor's own students. Review A routed it as FIX to Green. Not repeated.",
+    "B-P3-1 is the same fact as my module run: resizeLegs([], 2000000) returned 2,000,000 entries (src/lib/tutor-commission.ts:220-231). Review B accepted it as no-fix. Not repeated.",
+    "Real next-intl check for C-P3-1: use-intl 4.13.0 createTranslator with node --conditions=development: t('calculator.graph.legBar') returned the key path and reported FORMATTING_ERROR 'The intl string context variable n was not provided'. With { n: '{n}' } it returned 'Leg {n}'. With the default (production) format-message module, the bare call returned 'Leg {n}' and no error.",
+    "legBar is the only string with a {name} placeholder in the page dictionary (grep: lines 197, 535, 875), so the page has exactly one bare placeholder.",
+    "Tests: heavy-run vitest on products/tutor-advantage/page, tutor-commission, www-tutor-calculator.locale, and tutor-screens, --maxWorkers=1: 11 files passed, 172 tests passed. None can fail on the bare legBar call, because the translator mocks ignore values (src/test/setup.ts:45; restoreMock in page.test.tsx).",
+    "Lint: pnpm --filter www-reading-advantage exec eslint on page.tsx, tutor-commission-calculator.tsx, tutor-commission.ts, product-pictures.ts, and the locale file printed nothing and exited 0."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git status --short",
+    "git diff --stat 81df01cf2e7c2954f4a2de1aaee593913a00bc75..6c22d6284dd47deeab35105c036bc549c67557aa (26 files)",
+    "node --input-type=module -e (import of the locale file; parse of PR section 6; key and alt comparison): 57 of 57 keys, zh equals en, 53 Thai cells found",
+    "node --input-type=module -e (page.tsx key references against the dictionary): 57 of 57 referenced, none missing",
+    "node --input-type=module -e (src/lib/tutor-commission.ts: presets, D-18 case, resizeLegs): figures as in the evidence list",
+    "node --input-type=module -e (use-intl createTranslator, with and without --conditions=development): bare legBar fails in the development build",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run products/tutor-advantage/page tutor-commission www-tutor-calculator.locale tutor-screens --maxWorkers=1 --reporter=dot --silent=true': 11 files, 172 tests passed",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec eslint <5 touched source files>; echo eslint-exit=$?': eslint-exit=0",
+    "file and a python3 -I read of the VP8L header for public image sizes: all ten files exist at the manifest sizes"
+  ],
+  "changed_files": [],
+  "files_audited": [
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx",
+    "apps/www-reading-advantage/src/lib/tutor-commission.ts",
+    "apps/www-reading-advantage/src/lib/product-pictures.ts",
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+    "apps/www-reading-advantage/src/components/products/product-picture.tsx",
+    "apps/www-reading-advantage/src/components/marketing/site-image.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/globals.css",
+    "apps/www-reading-advantage/docs/design-rules.md",
+    "measure/tracks/www_tutor_calculator_20261117/spec.md",
+    "/home/daniebo/Desktop/advantage-pr/11-content/www-tutor-advantage-calculator-handoff.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [
+    "design-rules rule 11 (docs/design-rules.md:28): page.tsx:115 requests graph.legBar without { n: '{n}' }; see C-P3-1"
+  ],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "claude-code/claude-sonnet-5-5#max",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "Copy, images, flow, and math match the contracts (57 of 57 keys, D-19 alts, 11 test files pass), but page.tsx:115 breaks design rule 11 for graph.legBar."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 3,
+      "evidence": "172 real tests pass, but none can fail on the bare legBar call because the translator mock at src/test/setup.ts:45 ignores values."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 4,
+      "evidence": "git diff --stat lists 26 files, all in the tutor page, calculator, module, manifest, locale, image set, and track records; the hero priority loss at page.tsx:193 is a side effect."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Every finding has a file:line and a node run (use-intl dev and prod, parity script, module run), but I ran no browser and read C-P3-3 and C-P3-4 from code."
+    }
+  ]
+}

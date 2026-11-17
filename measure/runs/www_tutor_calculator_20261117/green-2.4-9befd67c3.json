@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "role": "measure-green",
+  "verdict": "pass",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "2",
+  "task": "2.4 (Phase 2 gate run only: no product code change)",
+  "phase_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "role_base_sha": "9befd67c3ab8df69dbed087b24a882f6189b444c",
+  "gate_head": "9befd67c3ab8df69dbed087b24a882f6189b444c",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/deepseek-v4.1-flash (substitution record: ra-quota pick green returns opencode-go/hy4-flash-free, the Red family of this track, so it is excluded)",
+  "resulting_head_module_commit": null,
+  "plan_evidence_commit": "e2439b438511046b58ec8f3e734e655706c2ab8c",
+  "final_head": "e2439b438511046b58ec8f3e734e655706c2ab8c",
+  "commits": [
+    {
+      "sha": "e2439b438511046b58ec8f3e734e655706c2ab8c",
+      "subject": "docs(measure): record phase 2 gate evidence (track_id: www_tutor_calculator_20261117)",
+      "files": [
+        "measure/tracks/www_tutor_calculator_20261117/plan.md"
+      ]
+    }
+  ],
+  "phase_range_check": {
+    "range": "d279b870341c067c33fc884ae8863b5428487c17..9befd67c3ab8df69dbed087b24a882f6189b444c",
+    "phase_base_is_ancestor": true,
+    "committed_red_change_in_range": true,
+    "commits_in_range": [
+      "320fc2fa176b2c2e40eab09c2d208ede98945370",
+      "29ffa35423fc8131cc099d5b0462ebc286e13ae7",
+      "e583e21b31b6a73c2d1e8ba1aa65ddc0053bd3d7",
+      "9314f07decb27045ddce7d4f87d105d458b9b290",
+      "0a7ff97e596643212b52c3b9bf8fb7703e0628b2",
+      "9befd67c3ab8df69dbed087b24a882f6189b444c"
+    ],
+    "note": "Phase 2 Red tests landed at 320fc2fa1, e583e21b3, 0a7ff97e5, and their plan evidence commits. Task 2.4 adds no test and no product code: it runs the Phase 2 gates on 9befd67c3."
+  },
+  "red_test_files": [
+    "apps/www-reading-advantage/src/lib/__tests__/tutor-screens.test.ts",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx"
+  ],
+  "red_command": null,
+  "red_exit_code": null,
+  "red_evidence": "No Red run belongs to task 2.4. The task runs the gates on the already-green Phase 2 tree. Each Phase 2 Red and Green pair is recorded in tasks 2.1, 2.2, and 2.3.",
+  "gates": [
+    {
+      "gate": 1,
+      "name": "www test suite",
+      "command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test --reporter=dot --silent=true'",
+      "exit_code": 0,
+      "evidence": {
+        "test_files": "Test Files 68 passed (68)",
+        "tests": "Tests 2602 passed (2602)",
+        "duration": "58.54s"
+      },
+      "note": "Phase 1 recorded 2533 tests across 65 files on 4c4153b04. Phase 2 adds 69 tests across 3 files: the tutor screens test (7), the locale block additions, and the page section cases."
+    },
+    {
+      "gate": 2,
+      "name": "types",
+      "command": "pnpm turbo run check-types --filter=www-reading-advantage",
+      "exit_code": 0,
+      "evidence": "1 successful, 1 total; cache hit, replaying logs abb77ec39e8968b7",
+      "proving_run": {
+        "command": "pnpm turbo run check-types --filter=www-reading-advantage --force",
+        "exit_code": 0,
+        "evidence": "cache bypass, force executing abb77ec39e8968b7; 1 successful, 1 total; 4.169s"
+      },
+      "note": "The forced rerun proves a real tsc --noEmit pass, not only a replayed cache hit."
+    },
+    {
+      "gate": 3,
+      "name": "lint",
+      "command": "pnpm --filter www-reading-advantage lint",
+      "exit_code": 0,
+      "evidence": "No output after `$ eslint .`, so zero lint errors and zero lint warnings.",
+      "shadcn_errors_in_touched_files": 0,
+      "note": "The run holds no `shadcn/*` error in any file, so it holds none in a file this track touched."
+    },
+    {
+      "gate": 4,
+      "name": "shadcn ratchet baseline",
+      "command": "git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json",
+      "exit_code": 0,
+      "evidence": "No diff. The baseline keeps lintWarnings: 241 and copies: 36."
+    },
+    {
+      "gate": 5,
+      "name": "build",
+      "command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage build'",
+      "exit_code": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "exit_code": 1,
+          "evidence": "The route table printed, including `/[locale]/products/tutor-advantage`, then `Build error occurred Error [SecurityFatalError]: Your version of Next.js is affected by a known security vulnerability.` and `[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL]`."
+        },
+        {
+          "attempt": 2,
+          "exit_code": 0,
+          "evidence": "The route table printed, then the nudge printed as `⚠ Your version of Next.js is affected by a known security vulnerability. This command is continuing after the upgrade reminder.`"
+        }
+      ],
+      "note": "This is the known Next.js security-advisory nudge: it exits 1 once and 0 on the retry. The build output is produced on both attempts."
+    },
+    {
+      "gate": 6,
+      "name": "app selector",
+      "command": "node scripts/ci/affected-apps.mjs --base ff028a7105ccd5de0c3e9534dd8536b7667e22de --head 9befd67c3ab8df69dbed087b24a882f6189b444c",
+      "exit_code": 0,
+      "output": "[\"www-reading-advantage\"]",
+      "literal_brief_form": {
+        "command": "node scripts/ci/affected-apps.mjs --base ff028a710 --head 9befd67c3ab8df69dbed087b24a882f6189b444c",
+        "exit_code": 2,
+        "evidence": "affected-apps: --base must be a 40-character lowercase hex commit id"
+      },
+      "note": "The script accepts only a 40-hex id, so the short base of the plan and spec exits 2. `git rev-parse ff028a710` resolves it to ff028a7105ccd5de0c3e9534dd8536b7667e22de (chore(measure): close out the STEM date-line track), and that run prints the expected single app."
+    }
+  ],
+  "five_exit_codes": [0, 0, 0, 0, 0],
+  "six_exit_codes_including_selector": [0, 0, 0, 0, 0, 0],
+  "test_count": {
+    "test_files": 68,
+    "tests": 2602
+  },
+  "selector_output": "[\"www-reading-advantage\"]",
+  "files_added": [],
+  "files_modified": [
+    "measure/tracks/www_tutor_calculator_20261117/plan.md"
+  ],
+  "not_run": [
+    {
+      "command": "bash measure/doctor.sh",
+      "reason": "A pre-existing architecture snapshot hash mismatch fails it, and no file in this track touches that check. The brief excludes it."
+    },
+    {
+      "command": "build-graph scan",
+      "reason": "No export, signature, or import edge changed in task 2.4. The brief excludes it."
+    }
+  ],
+  "constraints_held": [
+    "No product code changed: the commit holds only the plan file",
+    "The committed Red tests were not touched",
+    "No deploy and no push",
+    "No disposition line and no question tool",
+    "Explicit pathspec commit only; no git add -A, no stash, no reset",
+    "Result files under measure/runs are gitignored",
+    "No plan task fakes a test result: every exit code in the plan is the observed code"
+  ],
+  "questions": [
+    "The Next.js build nudge asks once: would you like the `next upgrade --agent=security --internal-nudge-id=a8759afa-436e-4810-bf7b-f0b90573e99c` upgrade run in the background in a separate Git worktree? This session ran no upgrade."
+  ],
+  "plan_task_2_4_marked": true,
+  "plan_task_2_4_gate_head": "9befd67c3ab8df69dbed087b24a882f6189b444c"
+}

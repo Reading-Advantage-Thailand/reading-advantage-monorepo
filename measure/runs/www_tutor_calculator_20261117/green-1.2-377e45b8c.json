@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "role": "measure-green",
+  "verdict": "pass",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "task": "1.2",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "21e23c2f2410288306112edb8a69dc9106e9df03",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/deepseek-v4.1-flash (substitution record: ra-quota pick green returns opencode-go/hy4-flash-free, the Red model family of this task, so it is excluded)",
+  "resulting_head_module_commit": "377e45b8c87d13adf1f1b3365829581cb60964b1",
+  "commits": [
+    {
+      "sha": "377e45b8c87d13adf1f1b3365829581cb60964b1",
+      "subject": "feat(www): add pure tutor commission module (track_id: www_tutor_calculator_20261117)",
+      "files": ["apps/www-reading-advantage/src/lib/tutor-commission.ts"]
+    }
+  ],
+  "red_commit_in_phase_range": {
+    "commit": "7eb6991fc85fbd0e833a193e35101ddd2b172915",
+    "range": "8862cf14cc6e9b11e62d08d5084288a4c294752c..HEAD",
+    "confirmed": true
+  },
+  "files_added": [
+    "apps/www-reading-advantage/src/lib/tutor-commission.ts"
+  ],
+  "red_test_unchanged": true,
+  "red_test_file": "apps/www-reading-advantage/src/lib/tutor-commission.test.ts",
+  "green_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts --reporter=dot --silent=true'",
+  "green_exit_code": 0,
+  "green_evidence": {
+    "test_files": "Test Files 1 passed (1)",
+    "tests": "Tests 22 passed (22)",
+    "duration": "667ms",
+    "vitest": "v4.1.8"
+  },
+  "types_command": "pnpm turbo run check-types --filter=www-reading-advantage",
+  "types_exit_code": 0,
+  "api_surface": [
+    "CLASS_PRICE_DEFAULT = 3000",
+    "TAX_RATE = 0.03",
+    "LEG_STUDENTS_DEFAULT = 3",
+    "type NetworkInput",
+    "type LegResult",
+    "type NetworkResult",
+    "commissionRate(volume)",
+    "payoutAfterDeduction(gross, paidBelow)",
+    "calculateNetwork(input)",
+    "explainVariant(result)",
+    "resizeLegs(current, count)",
+    "NETWORK_PRESETS (three inputs, price 3000)"
+  ],
+  "satang_rule_held": "gvSatang = round(baht * 100); rateUnits = round(rate * 1e9); flatSatang = rateUnits * gvSatang / 1e9 truncated; tax = payoutSatang * 3 / 100 truncated; BigInt product",
+  "one_level_legs_held": "leg payout = rate(legVolume) * legVolume; tutor payout = max(0, gross - sum of leg payouts)",
+  "clamp_rules_held": "negative and non-finite inputs become 0; leg counts and student counts become whole numbers of 0 or more",
+  "jsdoc_on_every_export": true,
+  "plan_task_1_2_marked": true,
+  "constraints_held": [
+    "Wrote only apps/www-reading-advantage/src/lib/tutor-commission.ts as production code",
+    "Did not edit the committed Red test",
+    "Did not touch the locale file, the component, the page, or any test",
+    "No hash computed",
+    "No disposition line written",
+    "No question tool used",
+    "No deploy and no push",
+    "Explicit pathspecs only; no git add -A"
+  ],
+  "questions": []
+}

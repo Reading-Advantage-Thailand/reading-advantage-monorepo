@@ -1,0 +1,116 @@
+# Phase 2 acceptance log — www_tutor_calculator_20261117
+
+Role: measure-phase-acceptance (Phase 2 only). Route: opencode-go/mimo-v2.6-flash.
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator, branch feat/a63-tutor-calculator.
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha: 96887abe595b7d17927787521c3bc8edcb2ed440
+audited_head_sha: 96887abe595b7d17927787521c3bc8edcb2ed440
+Head check: `git rev-parse HEAD` = 96887abe595b7d17927787521c3bc8edcb2ed440 (the adversarial test commit); `git status --porcelain` empty before and after the gates. No later plan-only commit landed.
+Gate-only role: this run wrote no product file, no test, no plan, and no spec, and made no commit beyond the two result files below.
+
+## 1. Phase boundary
+
+Command: `git log --oneline d279b870341c067c33fc884ae8863b5428487c17..HEAD`
+
+Eight commits, all with `(track_id: www_tutor_calculator_20261117)`:
+
+- 320fc2fa1 feat(www): add the three blurred tutor screens — task 2.1.
+- 29ffa3542 docs(measure): record green 2.1 asset evidence — plan evidence.
+- e583e21b3 feat(www): add the tutor screens gallery and its copy — task 2.2.
+- 9314f07de docs(measure): record green 2.2 gallery evidence — plan evidence.
+- 0a7ff97e5 feat(www): update the two tutor income lines — task 2.3.
+- 9befd67c3 docs(measure): record green 2.3 locale evidence — plan evidence.
+- e2439b438 docs(measure): record phase 2 gate evidence — task 2.4, plan.md only.
+- 96887abe5 test(www): phase 2 tutor screens adversarial controls — adversarial test commit, 3 new test files.
+
+Out-of-scope commits: none. Phase 1 product files changed: none. The range touches only the three webp assets, `blur-tutor-screens.py`, `product-pictures.ts`, `tutor-screens.test.ts`, `page.tsx`, `page.test.tsx`, the tutor-advantage locale file, the locale test, three new adversarial test files, and plan.md. No package.json or pnpm-lock.yaml change. No push, no deploy.
+
+Test-only HEAD advance: e2439b438..96887abe5 holds only 96887abe5, which adds three test files. The Review A, Review C, and adversarial results filed at e2439b438 therefore still apply, and this acceptance records 96887abe5 as the head it accepts.
+
+## 2. Claim map (Phase 2 scope)
+
+| AC | Status | Proof | Exact |
+|---|---|---|---|
+| AC-6 | met | locale test describe 11, lines 580-640: exact new en and th pins at both paths, zh equals en, both old lines absent in all three locales, injected positive control | yes |
+| AC-10 | met | page.test.tsx:72-99 (three cards, alt and caption per slot, order tutorRole < tutor-screens < tutor-calculator < commitments < faq) plus locale describes 9-10 (nine leaves pinned, count asserted, parity, zh equals en) | yes |
+| AC-13 | met | tutor-screens.test.ts (slot order, path, 520x1125 / 520x1125 / 1440x900, portrait false, existence under public/) plus three webp files present plus page card render with copy alt; ADV-M1 parses the webp headers | yes, with carried nit: no in-test wrong-path negative control |
+| AC-14 | met as recorded | plan task 2.1 Done: rectangle table with source/output grey mean and sd for all 8 boxes (sd 43-84 to 4.6-10.5), four widened edges, one full-size review line per file; script RECTANGLES; Review A re-measured the same boxes | yes by AC wording (recorded review); no live pixel test exists by spec D-14 |
+| AC-15 | open, not met | plan task 2.5 is `[b]`; no page-check folder exists; the UX role gate (PASS) is not the PM page-check | no |
+| AC-16 (push) | open, not met | plan task 2.6 is `[ ]`; no push, no CD run, no HTTP status exists; the selector half runs here and exits 0 with `["www-reading-advantage"]` | no for the push; yes for the selector |
+
+Spec AC-16 words the app selector; plan task 2.6 labels the push as AC-16. Both facts are recorded above. AC-15 and AC-16 are reported open, not treated as met.
+
+## 3. Gates (one heavy job at a time, PM load watch)
+
+a. `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test --reporter=dot --silent=true'`
+   exit 0. Evidence: `Test Files  71 passed (71)`, `Tests  2617 passed (2617)`, Duration 60.81s. Plan 2.4 claims 68 files and 2602 tests at 9befd67c3; the delta equals the 3 adversarial files and 15 adversarial tests added by 96887abe5. No failing file, no stale intentional-red test.
+
+b. `pnpm turbo run check-types --filter=www-reading-advantage`
+   exit 0. Evidence: cache miss, executing 4f06614d4aecef32; `$ tsc --noEmit`; `Tasks: 1 successful, 1 total`.
+
+c. `pnpm --filter www-reading-advantage lint`
+   exit 0. Evidence: output is only `$ eslint .`. No `shadcn/*` error anywhere.
+
+d. `git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json`
+   exit 0. No output. Baseline unchanged.
+
+e. Build: skipped per the brief's instruction, recorded not run. `.next/BUILD_ID` timestamp `2026-11-17 11:38:13 +0700` is newer than every product source (page.tsx 11:29:09, locale 11:33:48, product-pictures.ts 11:19:42, webp 11:18:41). Commits after the build head 9befd67c3 are e2439b438 (plan.md only) and 96887abe5 (three test files): `git diff --name-only 9befd67c3..HEAD` lists exactly those four paths. Prior evidence: green-2.4-9befd67c3.json records build attempt 1 exit 1 on the Next.js nudge and attempt 2 exit 0. The UX role served this build with `PORT=3111 pnpm start` and captured every viewport from it.
+
+f. `node scripts/ci/affected-apps.mjs --base ff028a7105ccd5de0c3e9534dd8536b7667e22de --head 96887abe595b7d17927787521c3bc8edcb2ed440`
+   exit 0. Output: `["www-reading-advantage"]`.
+
+No heavy-run slot was busy; every job ran on the first attempt.
+
+## 4. Audit trail
+
+Phase 2 verdicts: review-a PASS (2 nits), review-c PASS (2 nits), adversarial PASS (15 controls, 61/61), ux PASS (final, not provisional, 14 captures).
+
+Non-PASS verdicts and their remediation:
+
+- review-a-p1 CHANGES_REQUIRED (F1-F4) -> commit 64465455f -> review-a-p1-r2 PASS and r3 PASS at d279b8703. F1 and F2 closed with live reruns; F3 and F4 carried nonblocking.
+- adversarial-p1 fail, route_to_green -> commits e42aa53fa, 704f03c4, daa77805d -> adversarial-p1-r2 PASS at d279b8703.
+- green-1.4 BLOCKED (environment) -> green-1.4-27f33b18e pass.
+
+`git merge-base --is-ancestor` confirms d279b8703, daa77805d, 64465455f, e42aa53fa, 704f03c4, 9befd67c3, and e2439b438 are all ancestors of 96887abe5.
+
+## 5. Independence and carried nits
+
+No audit role edited product code: feat commits come only from Green tasks; the adversarial commit adds only test files; Review A, Review C, the adversarial role, and the UX role wrote only under `measure/runs/`, which `.gitignore:56` ignores. Worktree clean throughout. No human evidence invented: no page-check report, push, CD run id, or HTTP status is claimed anywhere; `measure/tracks.md` still says the push follows the PM page-check.
+
+Carried nits, all correctly nonblocking:
+
+- Review A N1 (manifest wrong-path negative control absent): partially closed by ADV-M1..M4, which add four manifest falsifiers, but none asserts `existsSync === false` on a wrong path, so the test-strategy 2.3 promise remains unmet. A4 vacuity is closed by Review A's live 999-path fixture. Closeout fix: one test case, or amend strategy 2.3.
+- Review A N2 (gate block unevaluated by that audit): closed by this acceptance; gates a-d and f rerun live, gate e recorded.
+- Review C N1 (phone-card upscale): page-check judgement; spec open question 6 and strategy 8.1 assign it to Daniel at task 2.5. UX re-measured 574 CSS px at 1280 and judged it not blocking.
+- Review C N2 (zh page case promised, absent): strategy-to-test wording gap; zh equals en holds via locale describe 4 and ADV-C3. Closeout fix: amend strategy or add a locale-aware case.
+- Adversarial N1 judgement: consistent with Review C N1; correctly routes sharpness to task 2.5 and adds no pixel test (spec D-14).
+- Phase 1 F3 (build-graph scan skipped): closeout item; plan documents the skip under PM load watch; strategy 8.1 item 7 records the residual risk.
+- Phase 1 F4 (net-row hero-only deviation): documented in plan 1.6; waits for Review C or the spec owner; no Phase 2 impact.
+
+## 6. Anti-pattern checks
+
+- A5: pass. Plan 2.4's counts and exit codes match green-2.4-9befd67c3.json and my live rerun (71/2617, types 0, lint 0, ratchet 0, selector identical).
+- A3 (applies, contract tests changed): pass. Labeled integers only; no bare-digit matcher (Review A grep, confirmed).
+- A4 (applies): pass. Existence check proven able to fail; leaf-count and absence checks hold positive controls.
+- A6, A7 (registry and filters unchanged by this diff): not applicable; spot-checked anyway and clean.
+
+## 7. Open gates, named
+
+- AC-15, plan task 2.5 `[b]`: the PM page-check at 390, 980, and 1280 px with Daniel's Thai. Open at this head. Owner: the PM, with Daniel.
+- AC-16 as the push, plan task 2.6 `[ ]`: the www-only push, the CD run, and the three HTTP 200s. Open at this head. Owner: the PM/orchestrator after task 2.5.
+
+test-strategy.md section 3 assigns task 2.5 to track closeout and task 2.6 to closeout C.1, and names the task 2.4 block as the Phase 2 closeout gate. That block is complete and was rerun live. This verdict covers the Phase 2 implementation and review gates only; it records AC-15 and AC-16 as open, not as met, and it does not mark the phase accepted in the plan.
+
+MEASURE_AGENT_RESULT
+role: measure-phase-acceptance
+track: www_tutor_calculator_20261117
+phase: 2
+verdict: PASS
+status: pass
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha: 96887abe595b7d17927787521c3bc8edcb2ed440
+audited_head_sha: 96887abe595b7d17927787521c3bc8edcb2ed440
+tests: heavy-run www suite exit 0 (Test Files 71 passed, Tests 2617 passed); check-types exit 0; lint exit 0; shadcn ratchet diff exit 0; build skipped per brief with BUILD_ID 2026-11-17 11:38:13 +0700 newer than all sources and later commits test-only; affected-apps selector exit 0, ["www-reading-advantage"]
+artifacts: measure/runs/www_tutor_calculator_20261117/phase-accept-p2-96887abe5.json, measure/runs/www_tutor_calculator_20261117/phase-accept-p2-96887abe5.log
+open_gates: AC-15 PM page-check (task 2.5 [b], owner PM with Daniel) and AC-16 push (task 2.6 [ ]) are open and not covered by this verdict
+END MEASURE_AGENT_RESULT

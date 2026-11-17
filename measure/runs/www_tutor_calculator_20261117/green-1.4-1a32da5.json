@@ -1,0 +1,24 @@
+{
+  "track": "www_tutor_calculator_20261117",
+  "phase": "green",
+  "task": "1.4",
+  "role_base_sha": "1a32da5b2a38c8e60ff9d6509786b8521a3ce988",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "red_commit": "08fcd93b039f53d26447a9ec8590c17264397ec3",
+  "verdict": "BLOCKED",
+  "reason": "The committed Red test contradicts the specification on the shape of calculator.presets. Test 2 (\"holds all 34 string leaves in en/th\") reads leaves[pin.path.join(\".\")] with pin paths [\"presets\",\"0\",\"name\"], i.e. the dot-indexed key \"presets.0.name\". The test's own stringLeaves helper renders array indices in bracket notation (\"presets[0].name\"). Spec 5.4 prints presets as an array literal and spec 5.3 pins the props type as presets: readonly { name: string; setup: string; result: string }[], so a spec-faithful array cannot pass test 2. The only shape that passes is an object keyed \"0\", \"1\", \"2\", which contradicts the spec and local style (faq.items, valuePropositions.features, steps, stats are arrays in the same file).",
+  "evidence": {
+    "red_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --silent=true'",
+    "red_result": "Tests 10 failed | 8 passed (18), exit 1",
+    "green_attempt_result": "Tests 2 failed | 16 passed (18), exit 1, with the spec-faithful array implementation in place",
+    "failing_after_green_attempt": [
+      "2. en and th copy pinned word for word (AC-5) > holds all 34 string leaves in en",
+      "2. en and th copy pinned word for word (AC-5) > holds all 34 string leaves in th"
+    ],
+    "failure_detail": "AssertionError: expected undefined to be 'A new tutor' at test line 303 / 'ติวเตอร์ใหม่' at line 311, path presets.0.name undefined because stringLeaves yields presets[0].name for arrays",
+    "worktree_state": "clean at role_base_sha 1a32da5b2; the locale edit was reverted, nothing committed"
+  },
+  "files_changed": [],
+  "commit": null,
+  "question": "Should the Red test be retried so that the presets pins address array indices the way stringLeaves renders them (bracket paths), or should the spec adopt the dot-indexed object shape? Green cannot satisfy both as committed."
+}

@@ -1,0 +1,117 @@
+=== Measure Green 1.4 evidence (restart) : www_tutor_calculator_20261117 ===
+
+Role: Measure Green, task 1.4 only. Restart after the Red test path defect was fixed.
+Route: opencode/glm-5.3-flash-free#high.
+Substitution record: `ra-quota pick green` returns opencode-go/hy4-flash-free, the Red family of
+this track, so it is excluded. The DeepSeek Go route stalled at 08:10 ICT, so this free GLM
+route is used.
+
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+role_base_sha:  fb453f519402c2267b906e94f44c6490fa4941f6
+
+Scope confirmation
+  git status --short before editing: clean at fb453f519.
+  The committed Red change is inside phase_base_sha..HEAD: commits 08fcd93b0 (Red test) and
+  704f03c49 (pin-path correction) both show in git log 8862cf14c..fb453f519. Confirmed.
+  Since the last attempt, Red fixed the test: preset pin paths now use `presets[0].name`
+  bracket form through a shared `leafKey()` helper (commit 704f03c4).
+
+Targeted Red rerun before implementation
+  bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+  www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts
+  --reporter=dot --silent=true'
+  exit code: 1
+  Test Files 1 failed (1); Tests 10 failed | 8 passed (18).
+  Cause: the `calculator` block is absent, so en.calculator is undefined. Expected Red state.
+
+Implementation
+  File apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts, +127 lines:
+  - `calculator` block added after `tutorRole` and before `faq` in en, th, and zh.
+  - Key order per spec 5.4: eyebrow, heading, description, volumeNote, rateNote, payoutNote,
+    inputs, results, explain, chart, presets, disclaimer. 34 string leaves.
+  - Every en string exactly as spec 5.4 prints it; th from the spec 5.4 th table; preset 3 in
+    en and th from D-2a; chart labels as spec 5.4 gives them.
+  - presets stays an array of three objects with name, setup, result.
+  - zh equals en at every key path (D-10); one code comment above the zh block records it.
+  - Draft markers are code comments only (chart in all three, presets[2] in all three); no
+    value carries the word "draft".
+  - No inputs.secondLevel, inputs.studentsSecondLevel, or explain.twoLevels.
+  - No existing key changed; tutorRole.points[3] and faq.items[5].answer untouched.
+  - The committed Red test file was not edited.
+
+Green command
+  bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+  www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts
+  --reporter=dot --silent=true'
+  exit code: 0
+  Test Files 1 passed (1); Tests 18 passed (18). 721ms, vitest v4.1.8.
+
+Types gate
+  pnpm turbo run check-types --filter=www-reading-advantage
+  exit code: 0. 1 successful, 1 total.
+
+Commits
+  27f33b18e7198d498f6f2008740c38077cb1dfaf
+    feat(www): add calculator locale copy in en, th, and zh (track_id: www_tutor_calculator_20261117)
+    apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts
+  1142ecff96513faaa77007453f11722aa3d86ad9
+    docs(measure): record green 1.4 evidence (track_id: www_tutor_calculator_20261117)
+    measure/tracks/www_tutor_calculator_20261117/plan.md (task 1.4 [x], Done: 27f33b18e)
+
+Plan update
+  Task 1.4 marked [x] with `Done: 27f33b18e7198d498f6f2008740c38077cb1dfaf` and the gate
+  output. No other task marker moved. No track archive move and no closeout metadata change.
+
+New files for reviewer scope
+  - measure/runs/www_tutor_calculator_20261117/green-1.4-27f33b18e.json (this evidence, gitignored)
+  - measure/runs/www_tutor_calculator_20261117/green-1.4-27f33b18e.log (this log, gitignored)
+  No new tracked file. The implementation file already existed and gained 127 lines.
+
+Handoff to the review roles
+  - Task 1.4 flipped to [x], evidence sha 27f33b18e7198d498f6f2008740c38077cb1dfaf, plan
+    evidence commit 1142ecff96513faaa77007453f11722aa3d86ad9.
+  - No task flipped to [b]; no human-gated item in this task.
+  - Targeted Red command output: failed 10/18 before, passes 18/18 after; both runs in this log.
+  - Immutable phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c.
+  - Final Green HEAD: 1142ecff96513faaa77007453f11722aa3d86ad9.
+  - Open questions stay with PR (plan section "Answers owed to PR"); none block this task.
+
+Questions: none.
+
+MEASURE_AGENT_RESULT
+{
+  "role": "measure-green",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "task": "1.4",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "fb453f519402c2267b906e94f44c6490fa4941f6",
+  "final_head": "1142ecff96513faaa77007453f11722aa3d86ad9",
+  "commits": [
+    "27f33b18e7198d498f6f2008740c38077cb1dfaf feat(www): add calculator locale copy in en, th, and zh (track_id: www_tutor_calculator_20261117)",
+    "1142ecff96513faaa77007453f11722aa3d86ad9 docs(measure): record green 1.4 evidence (track_id: www_tutor_calculator_20261117)"
+  ],
+  "tasks_flipped_to_x": [
+    { "task": "1.4", "evidence_sha": "27f33b18e7198d498f6f2008740c38077cb1dfaf" }
+  ],
+  "tasks_flipped_to_b": [],
+  "targeted_red_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --silent=true'",
+  "red_before": "exit 1; Tests 10 failed | 8 passed (18); calculator block absent",
+  "green_after": "exit 0; Test Files 1 passed (1); Tests 18 passed (18)",
+  "types_gate": "pnpm turbo run check-types --filter=www-reading-advantage; exit 0",
+  "new_files": [],
+  "files_modified": [
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md"
+  ],
+  "result_files": [
+    "measure/runs/www_tutor_calculator_20261117/green-1.4-27f33b18e.json",
+    "measure/runs/www_tutor_calculator_20261117/green-1.4-27f33b18e.log"
+  ],
+  "dispositions": "none (no routed findings in this brief)",
+  "handoff": "Task 1.4 done: the calculator block is in en, th, and zh per spec 5.4, D-2a, D-9, and D-10; the locale test passes 18/18 and types exit 0. Next in the plan: task 1.5 (Red: pin the calculator behaviour, AC-9). tutorRole.points[3] and faq.items[5].answer stay for task 2.3.",
+  "verdict": "pass"
+}
+END_MEASURE_AGENT_RESULT

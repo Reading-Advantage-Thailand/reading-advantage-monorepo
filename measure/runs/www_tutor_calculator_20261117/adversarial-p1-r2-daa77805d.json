@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track_id": "www_tutor_calculator_20261117",
+  "phase": "P1",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "418b4e7cb4f3f46260a80b67e4699739210d9922",
+  "pre_adversarial_head_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "audited_head_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "audited_head_is_head": true,
+  "head_note": "The audited head is the current clean checkout. It contains implementation daa77805d plus plan-evidence commit d279b8703; the latter touches measure/ only, so no product or test file changed after daa77805d.",
+  "route": "opencode-go/hy4-flash-free#high",
+  "route_note": "Substitution record: the free deepseek route hit the OpenCode free usage limit, so this allowed Go route is used.",
+  "round": "r2",
+  "verdict": "PASS",
+  "status": "pass",
+  "summary": "Re-verify after remediation daa77805d. The fix closes round-1 finding F1: toSatang returns 0n when the satang product is not finite, and calculateNetwork clamps ownVolume, each leg volume, and networkVolume to finite non-negative values. A6 is green. The gate reports 4 files / 79 tests / exit 0, matching Green. Five targeted clamp probes (leg-only overflow, sum overflow, -0, tiny price with huge count, satang near MAX_SAFE_INTEGER) all return finite non-negative money with no throw and no masking of a representable value. No normal input changes value and the D-3 truncation rule is untouched. No test file changed; all 14 round-1 mutants still die (8 rebuilt from the new module and measured, 6 unchanged by construction). No new test was needed.",
+  "diff_review": {
+    "range": "418b4e7cb4f3f46260a80b67e4699739210d9922..d279b870341c067c33fc884ae8863b5428487c17",
+    "files_changed": [
+      "apps/www-reading-advantage/src/lib/tutor-commission.ts",
+      "measure/tracks/www_tutor_calculator_20261117/plan.md"
+    ],
+    "test_files_changed": 0,
+    "closes_A6": true,
+    "changes_no_normal_input": true,
+    "masks_no_real_value": true,
+    "truncation_rule_unchanged": true,
+    "detail": "toSatang (line 95-99) added `const satang = baht * 100; if (!Number.isFinite(satang)) return 0n;` before the existing `BigInt(Math.round(satang))`; the Math.round-to-satang and the (rateUnits*gvSatang)/RATE_SCALE truncation are untouched. calculateNetwork (lines 150,154,171) wraps ownVolume, each leg volume and networkVolume in clampNonNegative, which already returned the value unchanged when finite and positive. Line 62 JSDoc corrected to state the graph renders preTax as the tutor's payout row (round-1 N1)."
+  },
+  "gate": {
+    "command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.adversarial.test.ts src/components/marketing/tutor-commission-calculator.adversarial.test.ts src/lib/tutor-commission.test.ts src/components/marketing/tutor-commission-calculator.test.tsx --reporter=dot --silent=true'",
+    "workdir": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+    "test_files": 4,
+    "test_files_passed": 4,
+    "tests": 79,
+    "tests_passed": 79,
+    "tests_failed": 0,
+    "exit": 0,
+    "matches_green_report": true,
+    "note": "A first invocation ran from the workspace root, where the adversarial files do not exist; vitest reported 'No test files found, exiting with code 0'. The gate was rerun from the worktree, which is the correct checkout, and produced the counts above."
+  },
+  "probes": [
+    {"label": "A leg-only volume overflow with finite own volume", "input": "price 1e308, personal 1, leg [2]", "result": "own=1e308, network=1e308, leg volume=0, gross=0, finite", "outcome": "PASS"},
+    {"label": "Leg-only overflow, own zero", "input": "price 1e308, personal 0, leg [2]", "result": "all volumes 0, gross 0, finite", "outcome": "PASS"},
+    {"label": "Sum overflow, parts finite", "input": "price 1e308, personal 1, legs [1,1]", "result": "each leg volume 1e308 finite, sum Infinity clamped to network=0, gross=0, finite", "outcome": "PASS"},
+    {"label": "Negative zero", "input": "price -0, personal -0, leg [-0]", "result": "no -0 in money fields, network=0", "outcome": "PASS"},
+    {"label": "Tiny price x huge count, finite product", "input": "price 1e-300, personal 1e308", "result": "own=1e8 preserved (not masked), gross 71391935.8, finite", "outcome": "PASS"},
+    {"label": "Tiny price x huge count, overflow", "input": "price 100, personal 1e308", "result": "own=0, gross=0, finite", "outcome": "PASS"},
+    {"label": "Satang just under MAX_SAFE_INTEGER", "input": "price (MAX_SAFE-1)/100", "result": "own preserved, gross finite, exact BigInt, no throw", "outcome": "PASS"},
+    {"label": "Satang above MAX_SAFE but finite", "input": "price 1e14", "result": "own=1e14 preserved, gross finite, no throw", "outcome": "PASS"},
+    {"label": "Satang product overflow to Infinity", "input": "price 2e306", "result": "own=2e306, gross=0 via guard, finite", "outcome": "PASS"}
+  ],
+  "probe_total_failures": 0,
+  "mutants": {
+    "count": 14,
+    "all_still_die": true,
+    "measured": [
+      {"id": "M1", "fingerprint": "p2 gross 1265570 vs pin 1265569, gross1032 41813 vs 41812"},
+      {"id": "M2", "fingerprint": "p2 gross 1265570 vs 1265569, gross1032 41813 vs 41812"},
+      {"id": "M2b", "fingerprint": "scale30000 gross 1668195 vs 1668193, e9 gross 71422000000 vs 71422027600"},
+      {"id": "M3", "fingerprint": "p2 payout 885898 vs 464569"},
+      {"id": "M5", "fingerprint": "p2 legs 1602000 vs 801000, p3 legs 2403000 vs 1201500"},
+      {"id": "M6", "fingerprint": "payoutAfterDeduction(100,150) = -50 vs 0"},
+      {"id": "M9", "fingerprint": "resizeLegs([],1) = [0] vs [3]"},
+      {"id": "M_tax_float", "fingerprint": "tax at GV 3 baht = 4 satang vs 3"}
+    ],
+    "structural": [
+      "M4 (per-child override), M_conservation_float_sum (float sum) mutate money lines untouched by the fix; pinned by unchanged A1/A2/A5 tests.",
+      "M7, M8, M14, M15 are component mutants; component code and its adversarial tests are unchanged by the fix."
+    ],
+    "method": "Rebuilt 8 module mutants from the NEW module source at /tmp/opencode/adv-p1/mut and reran driver.mjs; each still emitted the round-1 wrong value that an unchanged test pins against. Remaining 6 untouched by construction."
+  },
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "new_test_added": false,
+  "new_test_note": "No real gap was found, so no test file was added. The nine probes were run in /tmp/opencode/adv-p1-r2 scratch, not committed.",
+  "evidence": [
+    "git diff 418b4e7cb..d279b8703 --name-only: only tutor-commission.ts and plan.md; zero .test files changed.",
+    "Heavy-run gate from the worktree: Test Files 4 passed (4), Tests 79 passed (79), exit 0.",
+    "Probe script /tmp/opencode/adv-p1-r2/probe.mjs: 9 probes, TOTAL FAILURES 0.",
+    "Mutant driver rebuilt from new module /tmp/opencode/adv-p1/mut/driver.mjs: all 8 measured mutants emit their round-1 discriminating wrong values.",
+    "A6 committed case src/lib/tutor-commission.adversarial.test.ts:434-466 is green under the gate; the formerly throwing RangeError at toSatang line 96 no longer occurs."
+  ],
+  "commands": [
+    "git diff 418b4e7cb..d279b8703",
+    "git diff --name-only 418b4e7cb..d279b8703 | grep .test (empty)",
+    "heavy-run gate (above): 4 files / 79 tests / exit 0",
+    "esbuild new module -> /tmp/opencode/adv-p1-r2/mod.mjs",
+    "node /tmp/opencode/adv-p1-r2/probe.mjs -> TOTAL FAILURES 0",
+    "cp new module to mut/base.ts && node mut/make.mjs && node mut/driver.mjs -> 8 wrong-value fingerprints confirmed"
+  ],
+  "no_changes": [
+    "No test, product, locale, page, or CSS file changed in this re-verify.",
+    "No commit, no deploy, no push, no graph scan.",
+    "Only the two artifact files in measure/runs/www_tutor_calculator_20261117/ were written."
+  ],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "ratings": [
+    {"axis": "correctness", "score": 5, "evidence": "Gate 79/79 and 9 clamp probes pass; toSatang line 95-99 and calculateNetwork lines 150/154/171 close A6 without changing finite inputs (tutor-commission.ts)."},
+    {"axis": "test_meaning", "score": 5, "evidence": "All 14 mutants still die; 8 rebuilt from the new module emit the pinned wrong values (e.g. M6 payoutAfterDeduction(100,150) = -50 vs pinned 0)."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "git diff 418b4e7cb..d279b8703 shows only tutor-commission.ts and plan.md, zero test files changed."},
+    {"axis": "evidence_quality", "score": 5, "evidence": "Gate result, probe script with 9 named cases, and mutant driver values are all measured with commands and file:line references."}
+  ]
+}

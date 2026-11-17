@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "www_tutor_calculator_20261117",
+  "track_id": "www_tutor_calculator_20261117",
+  "phase": "Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)",
+  "phase_base_sha": "81df01cf2e7c2954f4a2de1aaee593913a00bc75",
+  "baseline_sha": "81df01cf2e7c2954f4a2de1aaee593913a00bc75",
+  "role_base_sha": "f85f63cf3ccfc1f03a62b63739b9144296df62a3",
+  "pre_adversarial_head_sha": "f85f63cf3ccfc1f03a62b63739b9144296df62a3",
+  "audited_head_sha": "f85f63cf3ccfc1f03a62b63739b9144296df62a3",
+  "audited_head_is_head": false,
+  "commit_sha": "9fc1292b914bb4a67bac3c8fa48e7a68762f3c0b",
+  "head_note": "The implementation under audit is f85f63cf3. HEAD is 9fc1292b9. The only change between the two is three new adversarial test files (git diff --name-only f85f63cf3..HEAD). No production file, locale file, plan, or spec changed.",
+  "route": "claude-code/claude-sonnet-5-5#max",
+  "status": "pass",
+  "provisional": false,
+  "summary": "The Phase 3 implementation holds under attack. Three new behavior test files add 92 tests. All pass. The settlement model matched the module on every seeded input. The two routed gaps (A-P3-r2-1 and C-P3-r2-3) now have tests that fail on a fault. Seven faults were injected into scratch copies, and each one failed 3 to 18 tests. Two nonblocking nits are open: F1 (a whole-baht volume prints as 435.00) and F2 (exponent notation from 1e21). The probe for both is in the gitignored run folder.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F1 [Nit] adversarial-testing: A whole-baht volume prints with '.00' for some satang prices. formatMoney (apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx:86-91) tests Number.isInteger on ownVolume, networkVolume, and each leg volume. These values are float products (apps/www-reading-advantage/src/lib/tutor-commission.ts:153,157,173). Price 4.35 with 100 students gives 434.99999999999994, so the own volume row, the network volume row, and the own bar read '435.00'. Spec D-3 asks for '435'. A node scan found 16,055 of 207,993 whole-baht products with this fault (prices 0.01 to 999.99, student counts 3, 6, 10, 20, 25, 50, 100). Gross, tax, and net come from integer satang, so no money value is wrong. Whole-baht prices and prices ending in .25, .5, or .75 are not affected. Probe: measure/runs/www_tutor_calculator_20261117/adversarial-p3-f85f63cf3-exposing-F1-F2.test.tsx.txt. It fails with received ['435.00','435.00'] and expected ['435','435']. Fix proposal: round each volume to the satang in the module. Owner: Green.",
+    "F2 [Nit] adversarial-testing: A volume of 1e21 baht or more prints in exponent notation. formatMoney (apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx:87) calls toFixed(0), and toFixed returns '1e+21' from 1e21 upward. Price '1e21' with 1 own student shows '1e+21' in the own volume row. Only an absurd input reaches this, and every money value stays finite. The same probe file fails with received '1e+21'. Fix proposal: limit the typed price and counts to a maximum, or format from BigInt. Owner: Green."
+  ],
+  "evidence": [
+    "HEAD at the start of the run: f85f63cf3ccfc1f03a62b63739b9144296df62a3, clean tree. Baseline at that head: 13 files, 202 tests, exit 0 (the gate files plus the five existing adversarial files).",
+    "A-P3-r2-1 covered: tutor-commission-calculator.legs.adversarial.test.tsx groups L1 to L4 click Add a leg and Remove a leg, with and without a cleared leg-count field. A seeded random walk (36 English walks and 8 Thai walks of 30 actions) checks rows, typed students, and every figure against the module after each action. Scratch fault M-L1 (readLegCount replaced by readNumber(legCountText)) fails 5 tests.",
+    "C-P3-r2-3 covered: page.phase3.adversarial.test.tsx group P2 renders the page through the real next-intl engine (createTranslator). The rows read Leg 1, Leg 2, ... (Thai: สาย 1, สาย 2, ...) after presets, Add, and Remove in en, th, and zh. Scratch fault M-N (page passes { n: '1' }) fails 3 tests, one for each locale. Two in-test controls prove the check can fail: a page that passes n = '1' gives Leg 1, Leg 1, Leg 1, and a page that passes no value makes the engine report a formatting error.",
+    "Real engine check P1: the page renders in en, th, and zh with 0 engine errors and more than 120 distinct keys. A scratch run also showed that all 230 dictionary leaves in each locale come out of the engine unchanged (legBar excepted), so ICU does not change any string.",
+    "Settlement parity (tutor-commission.settlement.adversarial.test.tsx is not the name; the file is tutor-commission.settlement.adversarial.test.ts, 37 tests): an independent BigInt satang model settles a tutor node with one child node per leg. It follows commissionService.ts (rate and truncated gross), taxService.ts line 4 (half-up tax), and settlementService.ts lines 536 to 548 (D-18). The model reproduces the six rates, the three presets, and the 1,007 baht case of the spec, so the check is not circular. 20,000 seeded inputs, 4,000 inputs within 3 satang of the 20,000 baht boundary, a leg exactly at 20,000 baht, large volumes, 100 hostile count pairs, and every one-student price from 1 to 600 baht gave 0 differences. A scratch run of 200,000 seeded inputs gave 0 differences and 1,996 exact half-satang tax ties.",
+    "Coverage counters prevent a vacuous pass (A4): the 20,000-input sample reaches over 100 zero, over 100 ownOnly, over 1,000 withLegs, over 100 unpaid-with-legs, and over 50 tax-tie cases. The boundary sample sits below, on, and above 20,000 baht. The random walk reaches Add with a cleared field more than 5 times, Remove with a cleared field more than 5 times, and Add with a fractional count more than 2 times.",
+    "Control tests (A4, A7): the comparison against settlement flags a rounded gross, a truncated tax, a tutor with legs and no own students that is paid, a missing or renumbered leg row, a wrong explain variant, and a rate that is 2e-9 off. The banned-image scan fires on 8 carrier forms (img src, double-encoded optimizer URL, srcset, source, preload link, inline style, data attribute, style element) for each of the 4 banned files, and it stays quiet on near-miss paths. The downline scanner keeps a hit that sits beside the words never and do not, in English and Thai (probe lines in groups L7 and P4).",
+    "D-18 against settlement: a truth table of 10 inputs (own 0, 0.9, 1, 1.9, 2.9 and legs 0 or more, including a leg of 0 students) matches the model. An unpaid tutor keeps volume, rate, gross, and leg commissions, pays 0 before tax, 0 tax, 0 net, shows the zero line, and never returns negative zero.",
+    "Half-up tax: every one-student price from 1 to 600 baht (59,901 inputs) and 120 exact half-satang ties match (3N + 50) / 100. Truncation would differ in more than 10,000 of those inputs. Scratch fault M-T (truncated tax) fails 9 tests. Scratch fault M-D (D-18 removed) fails 5. Scratch fault M-R (gross rounded) fails 8.",
+    "Image map (AC-22): the page shows 11 content images in the D-19 order in en, th, and zh (hero, 3 covers, Reedy, become-a-tutor, 5 screens) with the alt text of each locale. Each file exists and its width and height attributes equal the real header size of the webp or jpeg. The scan of every attribute of the document, head included, finds no banned file. Only the hero is eager, only the hero is preloaded, and the other content images are lazy.",
+    "Own bar (AC-23): 120 seeded states show the own volume under graph.ownBar, each bar as a share of the network volume, and bars that add up to 100. Scratch fault M-G1 (own bar shows the payout before tax) fails 13 tests. Scratch fault M-G2 (bar share of the payout) fails 18.",
+    "No downline wording (AC-17): the whole document, head and attributes included, holds no downline wording in en, th, and zh at first paint, after each of the three presets, and after Add and Remove. The calculator alone passes the same checks in en and th.",
+    "Copy against live figures: the result line of each preset in en, th, and zh quotes the module figures (volume, rate, gross, leg commissions, payout before tax, net) in reading order. The calculator claim 'the same formula as our settlement system' holds for one-level, satang-exact inputs.",
+    "Observation, not a finding: a price with three decimals gives a different network volume when each row is rounded first (5,434 of 20,000 seeded cases). Spec D-3 step 1 rounds the volume once, and settlement money has no sub-satang amounts, so the module follows the spec.",
+    "Observation, not a finding: addLeg, removeLeg, and the leg-student handler read state from the render closure. Two clicks in one React batch would apply once. A visitor cannot reach this, because each click is its own event. No test claims it.",
+    "Review C nits C-P3-r2-1 (the sizes hint) and C-P3-r2-2 (the leg commission total label) are unchanged by this run and stay with the orchestrator.",
+    "No Playwright test was added: none of the routed gaps asks for a layout or pixel claim, and jsdom covers the behavior.",
+    "A5: the plan 3.6b claim of 7 files and 102 tests equals the baseline of the reviewers. This run adds a wider check of 16 files and 294 tests, exit 0. No claim in plan.md for Phase 3 was found false.",
+    "The brief's commit subject has 102 characters, which is over the 100-character commitlint limit. The commit uses the 98-character subject 'test(www): add phase 3 adversarial checks for tutor page (track_id: www_tutor_calculator_20261117)'.",
+    "Evidence files in measure/runs/www_tutor_calculator_20261117/: adversarial-p3-f85f63cf3-vitest.txt, -tsc.txt, -lint.txt, -lint-touched.txt, -mutants.txt, -exposing-run.txt, and -exposing-F1-F2.test.tsx.txt."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> f85f63cf3ccfc1f03a62b63739b9144296df62a3",
+    "pnpm --filter www-reading-advantage exec vitest run <13 gate and existing adversarial files> --reporter=dot --maxWorkers=1 -> exit 0, 13 files, 202 tests (baseline)",
+    "pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.settlement.adversarial.test.ts --maxWorkers=1 -> exit 0, 37 tests",
+    "pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx --maxWorkers=1 -> exit 0, 30 tests",
+    "pnpm --filter www-reading-advantage exec vitest run page.phase3.adversarial.test.tsx --maxWorkers=1 -> exit 0, 25 tests",
+    "bash /tmp/p3-mutants.sh (7 faults in scratch copies, deleted on exit) -> exit 0; fails: M-L1 5, M-G1 13, M-G2 18, M-T 9, M-D 5, M-R 8, M-N 3",
+    "pnpm --filter www-reading-advantage exec vitest run <the 3 new files and the 13 existing files> --reporter=dot --maxWorkers=1 -> exit 0, 16 files, 294 tests",
+    "pnpm --filter www-reading-advantage exec tsc --noEmit -p . -> first run exit 1 (a never[] typing error in my own new page test, fixed before the commit), second run exit 0",
+    "pnpm --filter www-reading-advantage exec eslint <the 3 new files> -> exit 0",
+    "git add and git commit with pathspecs for the 3 new files -> exit 0, 9fc1292b914bb4a67bac3c8fa48e7a68762f3c0b",
+    "pnpm --filter www-reading-advantage lint (on the committed tree) -> exit 0",
+    "vitest run of the F1 and F2 probe copied into src and deleted after -> exit 1 (expected: both cases fail)",
+    "git status --short -> empty after the run; git diff --name-only f85f63cf3..HEAD -> the 3 new test files"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/lib/tutor-commission.settlement.adversarial.test.ts",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.phase3.adversarial.test.tsx"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "The settlement model matched the module on 200,000 seeded inputs with 0 differences, but tutor-commission-calculator.tsx:86-91 prints 435.00 for price 4.35 with 100 students (F1)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "Faults M-L1, M-G1, M-G2, M-T, M-D, M-R, and M-N fail 3 to 18 of the new tests each; the add and remove buttons had no test before page.phase3 and legs files."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --name-only f85f63cf3..HEAD lists only the three new adversarial test files."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every claim cites an exit code or a file under measure/runs/www_tutor_calculator_20261117/adversarial-p3-f85f63cf3-*.txt."
+    }
+  ]
+}

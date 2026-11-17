@@ -1,0 +1,50 @@
+# Green P3 T3.8a — merge origin/master before the phase 3 push
+
+Track: www_tutor_calculator_20261117, Phase 3
+Role: measure-jr-green
+Session: Green · P3 T3.8a · www_tutor_calculator
+Date: 2026-11-18
+Branch: feat/a63-tutor-calculator
+Green HEAD at start: 5b6b10f091056d1198165ed492f3b84fcf57bda8
+
+## Steps and exit codes
+
+1. git fetch origin master
+   exit 0
+   origin/master = 5211596e4ebb72434e1babaede65bc811cceb5df
+   (5211596e4 chore(measure): close task 1.3 of the daily posts track
+   (track_id: www_daily_blog_posts_20261115)) — matches the expected 2026-11-18 daily post.
+
+2. git merge --no-ff origin/master
+   First attempt message header was 106 chars and commitlint rejected it
+   (header-max-length, exit 1). No commit was created; the merge tree was staged
+   with no conflicts. Second attempt used a 97-char header and exit 0.
+   Final merge commit message:
+   "chore(measure): merge origin/master before phase 3 push (track_id: www_tutor_calculator_20261117)"
+   Header length: 97 chars (limit 100).
+   Merge SHA = af78cfb4380b9b482fe86132c30dfbbfbebef81d
+   Conflicts: none. No conflict edits were needed.
+
+3. Checks
+   git diff --name-only origin/master..HEAD
+     exit 0
+     Files: only apps/www-reading-advantage/** and measure/** (37 files).
+     No other paths.
+
+   node scripts/ci/affected-apps.mjs --base <origin/master> --head <HEAD>
+     exit 0
+     output: ["www-reading-advantage"]
+
+   pnpm --filter www-reading-advantage exec tsc --noEmit -p .
+     exit 0
+
+4. No push. No rebase. No reset. No stash.
+
+## Summary
+
+origin/master SHA: 5211596e4ebb72434e1babaede65bc811cceb5df
+Merge SHA:         af78cfb4380b9b482fe86132c30dfbbfbebef81d
+affected-apps exit: 0
+tsc exit:           0
+diff exit:          0
+merge exit:         0

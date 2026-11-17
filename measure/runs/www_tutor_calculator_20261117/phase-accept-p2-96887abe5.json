@@ -1,0 +1,280 @@
+{
+  "schema_version": 1,
+  "role": "measure-phase-acceptance",
+  "phase": 2,
+  "phase_name": "Phase 2: the screens gallery and the live copy",
+  "track": "www_tutor_calculator_20261117",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/mimo-v2.6-flash",
+  "route_note": "Brief Route line: opencode-go/mimo-v2.6-flash. Substitution record: the role table route claude-code/claude-opus-5-5 is excluded by Daniel until 2026-11-17 15:00; this Go route is a different family from the Red role's hy4 route and from the Green author's deepseek route.",
+  "phase_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "role_base_sha": "96887abe595b7d17927787521c3bc8edcb2ed440",
+  "audited_head_sha": "96887abe595b7d17927787521c3bc8edcb2ed440",
+  "audited_head_is_head": true,
+  "head_note": "git rev-parse HEAD returned 96887abe595b7d17927787521c3bc8edcb2ed440, the adversarial test commit, and git status --porcelain was empty before and after the gates. No later plan-only commit landed. The prerequisite results at e2439b438 (review-a, review-c, adversarial) still apply: the only commit between e2439b438 and this head is 96887abe5, which adds three test files under apps/www-reading-advantage/src and touches no implementation. The test-only advance rule is used for that one commit and is named here.",
+  "diff_range": "d279b870341c067c33fc884ae8863b5428487c17..96887abe595b7d17927787521c3bc8edcb2ed440",
+  "boundary_check": {
+    "command": "git log --oneline d279b870341c067c33fc884ae8863b5428487c17..HEAD",
+    "commits": [
+      "320fc2fa1 feat(www): add the three blurred tutor screens (Phase 2 task 2.1)",
+      "29ffa3542 docs(measure): record green 2.1 asset evidence (plan evidence)",
+      "e583e21b3 feat(www): add the tutor screens gallery and its copy (Phase 2 task 2.2)",
+      "9314f07de docs(measure): record green 2.2 gallery evidence (plan evidence)",
+      "0a7ff97e5 feat(www): update the two tutor income lines (Phase 2 task 2.3)",
+      "9befd67c3 docs(measure): record green 2.3 locale evidence (plan evidence)",
+      "e2439b438 docs(measure): record phase 2 gate evidence (Phase 2 task 2.4, plan.md only)",
+      "96887abe5 test(www): phase 2 tutor screens adversarial controls (adversarial test commit, 3 new test files)"
+    ],
+    "out_of_scope_commits": [],
+    "phase1_files_changed": "none. The range touches only the three webp assets, blur-tutor-screens.py, product-pictures.ts, tutor-screens.test.ts, page.tsx, page.test.tsx, the tutor-advantage locale file, the locale test, three new adversarial test files, and plan.md. No Phase 1 module, component, or test changed.",
+    "dependency_change": "no package.json or pnpm-lock.yaml change in the range."
+  },
+  "claim_map": [
+    {
+      "ac": "AC-6",
+      "status": "met",
+      "proof": "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts:580-640 (describe 11, 'the two live lines (AC-6, spec 6.4)')",
+      "command": "gate a, full www suite, exit 0, Tests 2617 passed (2617)",
+      "exact": true,
+      "detail": "LIVE_LINE_PINS pins both new en strings and both new th strings word for word against spec 6.4, pins zh equal to en for both paths (D-10), scans all three dictionaries for ABSENT_LIVE_LINES (the two old lines, quoted exactly from spec 6.4), and holds a positive control that injects each old line and finds it. The pins match the spec table text verbatim."
+    },
+    {
+      "ac": "AC-10",
+      "status": "met",
+      "proof": "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx:72-99 (three cards with slot alt and caption in copy order; order tutorRole < tutor-screens < tutor-calculator < tutor-commitments < faq) plus locale test describes 9 and 10 (lines 512-578: screens block after tutorRole and before calculator in en/th/zh, nine leaves pinned word for word, key-path parity, zh equals en, leaf count asserted)",
+      "command": "gate a, full www suite, exit 0",
+      "exact": true,
+      "detail": "The page test asserts the DOM order and one card per slot with its alt and caption. Under the getScopedI18n mock the page test asserts key paths, not literals; the locale test pins the literal en and th strings and the count, so an invented or changed string fails. Review C reran both files and passed 65/65 with the three Phase 2 files."
+    },
+    {
+      "ac": "AC-13",
+      "status": "met",
+      "proof": "apps/www-reading-advantage/src/lib/__tests__/tutor-screens.test.ts (three cases: slot order, delivered path and width/height/portrait per slot, existence under public/ at 1 MB or less) plus the three webp files under apps/www-reading-advantage/public/images/products/tutor-advantage/ (17928, 35422, 65094 bytes) plus page.test.tsx:72-87 rendering each card with the copy alt",
+      "command": "gate a, full www suite, exit 0; adversarial ADV-M1 parses the webp headers and confirms 520x1125, 520x1125, 1440x900 against the manifest",
+      "exact": true,
+      "detail": "Every clause of AC-13 has a test or a file check. Caveat carried as nonblocking N1: the in-test wrong-path negative control promised by test-strategy 2.3 is still absent; Review A proved the existence check can fail with an out-of-test 999-path fixture."
+    },
+    {
+      "ac": "AC-14",
+      "status": "met_as_recorded",
+      "proof": "plan.md task 2.1 Done block (blur rectangle table for all 8 boxes with source and output grey mean and standard deviation, the four widened-edge deviations, and one full-size review line per saved file) plus apps/www-reading-advantage/scripts/blur-tutor-screens.py RECTANGLES (one list per used file) plus Review A's independent re-measurement of the same boxes and spill rings in review-a-p2-e2439b438.json",
+      "command": "no automated command exists by design: spec D-14 forbids a vitest that reads pixels; AC-14's own wording requires the task to record the rectangles, the outputs, and one review per file",
+      "exact": true,
+      "detail": "Output box standard deviation falls from 43-84 (source, text present) to 4.6-10.5 (output, flat) for all eight boxes. The three output webp exist. This is recorded evidence, not live pixel proof; the open PM page-check (task 2.5) re-judges a visible class name on the built page."
+    },
+    {
+      "ac": "AC-15",
+      "status": "open_not_met",
+      "proof": "plan.md task 2.5 is marked [b] at a human gate; no page-check folder or report exists",
+      "command": "none run; gate owner is the PM with Daniel on the Thai",
+      "exact": false,
+      "detail": "AC-15 is the PM page-check at 390, 980, and 1280 px with Daniel's Thai read. It is open at this head. The Phase 2 UX browser review (ux-p2-96887abe5.json, verdict PASS, 14 captures across en/th/zh at 390/768/980/1280) is a role gate, not the PM page-check, and does not substitute for it. This acceptance records AC-15 as open, not as met."
+    },
+    {
+      "ac": "AC-16",
+      "status": "open_not_met_as_push",
+      "proof": "plan.md task 2.6 (push www-only) is marked [ ] unstarted; no push, no CD run, and no HTTP status is recorded anywhere",
+      "command": "the selector half of the same AC ran here: node scripts/ci/affected-apps.mjs --base ff028a7105ccd5de0c3e9534dd8536b7667e22de --head 96887abe595b7d17927787521c3bc8edcb2ed440 exits 0 with output [\"www-reading-advantage\"]",
+      "exact": false,
+      "detail": "Spec AC-16 words the app selector; plan task 2.4 cites AC-16 for the selector and plan task 2.6 cites AC-16 for the push. The selector proof is exact and live at this head. The push is open at this head. This acceptance records the push as open, not as met."
+    }
+  ],
+  "gates": [
+    {
+      "id": "a",
+      "command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test --reporter=dot --silent=true'",
+      "exit_code": 0,
+      "evidence": "Test Files  71 passed (71); Tests  2617 passed (2617); Duration 60.81s. The plan 2.4 claim of 68 files and 2602 tests at 9befd67c3 plus the 3 adversarial files and 15 adversarial tests added by 96887abe5 equals 71 and 2617 exactly. No failing or intentionally-red file in the aggregate run."
+    },
+    {
+      "id": "b",
+      "command": "pnpm turbo run check-types --filter=www-reading-advantage",
+      "exit_code": 0,
+      "evidence": "cache miss, executing 4f06614d4aecef32; $ tsc --noEmit; Tasks: 1 successful, 1 total."
+    },
+    {
+      "id": "c",
+      "command": "pnpm --filter www-reading-advantage lint",
+      "exit_code": 0,
+      "evidence": "output is only '$ eslint .'; no shadcn/* error anywhere, so none in a touched file."
+    },
+    {
+      "id": "d",
+      "command": "git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json",
+      "exit_code": 0,
+      "evidence": "no output; the baseline file is unchanged."
+    },
+    {
+      "id": "e",
+      "command": "rebuild skipped per brief instruction; recorded instead of run",
+      "exit_code": null,
+      "evidence": ".next/BUILD_ID timestamp 2026-11-17 11:38:13 +0700 is newer than every product source file (page.tsx 11:29:09, tutor-advantage locale 11:33:48, product-pictures.ts 11:19:42, webp 11:18:41). The build head 9befd67c3 is followed only by e2439b438 (plan.md) and 96887abe5 (three test files): git diff --name-only 9befd67c3..HEAD lists exactly those four paths. Prior build evidence: green-2.4-9befd67c3.json records attempt 1 exit 1 on the Next.js security-advisory nudge and attempt 2 exit 0. The UX role served this build with PORT=3111 pnpm start and captured all viewports from it."
+    },
+    {
+      "id": "f",
+      "command": "node scripts/ci/affected-apps.mjs --base ff028a7105ccd5de0c3e9534dd8536b7667e22de --head 96887abe595b7d17927787521c3bc8edcb2ed440",
+      "exit_code": 0,
+      "evidence": "output [\"www-reading-advantage\"]"
+    }
+  ],
+  "review_trail": {
+    "phase2_verdicts": [
+      "review-a-p2-e2439b438.json: PASS, 2 nits, audited head e2439b438",
+      "review-c-p2-e2439b438.json: PASS, 2 nits, audited head e2439b438",
+      "adversarial-p2-e2439b438.json: PASS, 15 controls, 61/61 combined, audited head e2439b438",
+      "ux-p2-96887abe5.json: PASS, 2 info notes, audited head 96887abe5"
+    ],
+    "non_pass_verdicts_and_remediation": [
+      "review-a-p1-10dcf42a8.json CHANGES_REQUIRED (F1-F4) -> remediation commit 64465455f -> review-a-p1-r2-64465455f.json PASS and review-a-p1-r3-daa77805d.json PASS at d279b8703; F1 and F2 closed with live reruns, F3 and F4 carried as nonblocking.",
+      "adversarial-p1-61e614489.json fail, route_to_green -> remediation commits e42aa53fa, 704f03c4, daa77805d -> adversarial-p1-r2-daa77805d.json PASS at d279b8703.",
+      "green-1.4-1a32da5.json BLOCKED (environment) -> green-1.4-27f33b18e.json pass at 27f33b18e."
+    ],
+    "ancestry": "d279b8703, daa77805d, 64465455f, 64465455f, e42aa53fa, 704f03c4, 9befd67c3 and e2439b438 were each checked with git merge-base --is-ancestor against 96887abe5: every one is an ancestor of the audited head.",
+    "phase1_acceptance": "phase-accept-p1-d279b8703.json: PASS at the phase base; no reopened finding."
+  },
+  "prerequisite_artifacts": [
+    "measure/runs/www_tutor_calculator_20261117/phase-accept-p1-d279b8703.json (PASS, phase base)",
+    "measure/runs/www_tutor_calculator_20261117/review-a-p2-e2439b438.json (PASS, 2 nits)",
+    "measure/runs/www_tutor_calculator_20261117/review-c-p2-e2439b438.json (PASS, 2 nits)",
+    "measure/runs/www_tutor_calculator_20261117/adversarial-p2-e2439b438.json (PASS, 15 controls, 61/61)",
+    "measure/runs/www_tutor_calculator_20261117/ux-p2-96887abe5.json and ux-p2-96887abe5/ (PASS, final, not provisional; 14 PNG captures, 3 result JSON files, 2 server logs)"
+  ],
+  "open_gates_not_covered_by_this_verdict": [
+    "AC-15, plan task 2.5 [b]: the PM page-check at 390, 980, and 1280 px with Daniel's Thai. Open at this head. Owner: the PM, with Daniel. No page-check report exists, and none is claimed.",
+    "AC-16 as the push, plan task 2.6 [ ]: the www-only push, the CD run, and the three HTTP 200s. Open at this head. Owner: the PM/orchestrator after task 2.5, per spec D-13 and open question 5.",
+    "Classification: test-strategy.md section 3 assigns task 2.5 to 'Track closeout' and task 2.6 to 'Closeout C.1', and names the task 2.4 block as 'the Phase 2 closeout gate'. That block is complete and was rerun live here. This verdict covers the Phase 2 implementation and review gates only. It records AC-15 and AC-16 as open, not as met."
+  ],
+  "independence": {
+    "audit_roles_edited_product_code": false,
+    "evidence": "git log over the range shows feat commits only from the Green tasks 2.1-2.3. The adversarial commit 96887abe5 adds only three new test files. Review A, Review C, the adversarial role, and the UX role wrote only files under measure/runs/, which .gitignore:56 ignores; git status --porcelain stayed empty through this run. This acceptance run wrote only its two result files and made no commit.",
+    "human_evidence_invented": false,
+    "evidence2": "No page-check folder, no push, no CD run id, and no HTTP status is claimed anywhere in the plan, the registry, or the run artifacts. measure/tracks.md still reads 'the www-only push follows the PM page-check at 390, 980, and 1280 px.' Task 2.5 stays [b] and task 2.6 stays [ ]."
+  },
+  "carry_forward_nits": [
+    {
+      "id": "review-a-N1",
+      "text": "Manifest test lacks the strategy-promised wrong-path negative control (tutor-screens.test.ts:45-49).",
+      "classification": "nonblocking, correct",
+      "closed_by_adv_m1_m4": "partially. ADV-M1..M4 add four independent manifest falsifiers: real webp header sizes, src uniqueness, prefix and traversal safety with a 1 MB cap, and fixed slot order with portrait false. None of them asserts existsSync === false on a wrong path, so the literal test-strategy 2.3 promise remains unmet. The A4 vacuity concern is closed: Review A constructed the 999-path fixture live and the existence check failed on it. Smallest closeout fix: add expect(existsSync(publicPath('.../999-screen.webp'))).toBe(false), or amend test-strategy 2.3 to name the controls that exist."
+    },
+    {
+      "id": "review-a-N2",
+      "text": "Full Phase 2 gate block was not re-executed by Review A under its one-command limit.",
+      "classification": "nonblocking, correct, and now closed by this acceptance: gates a-d and f were rerun live at the audited head with the exit codes recorded above; gate e is recorded with the BUILD_ID reason the brief authorizes."
+    },
+    {
+      "id": "review-c-N1",
+      "text": "Phone-card upscale above 1169 px: 576 CSS px against a 520 px source (page.tsx:358 via globals.css:167).",
+      "classification": "nonblocking, correct. It is a page-check judgement, not a Phase 2 regression: the .container rule is app-wide and predates the track, spec open question 6 and test-strategy 8.1 item 3 assign the sharpness decision to Daniel at task 2.5, and no delivered phone source exceeds 520 px. The UX role re-measured it (574 CSS px at 1280) and judged the cards not visibly soft."
+    },
+    {
+      "id": "review-c-N2",
+      "text": "The zh page case promised at test-strategy 39 and 56 is absent; all eight page cases render locale en.",
+      "classification": "nonblocking, correct. It is a strategy-to-test wording gap: the zh equals en claim holds at dictionary level via locale test describe 4 and ADV-C3, and the i18n mock ignores the locale so no page case could assert it. Smallest closeout fix: amend the two strategy sentences or add a locale-aware page case."
+    },
+    {
+      "id": "adversarial-N1",
+      "text": "The adversarial n1_judgement on the upscale.",
+      "classification": "nonblocking, correct, and consistent with Review C N1: it routes the sharpness decision to the PM at task 2.5, cites D-14 (a vitest cannot read pixels), and correctly adds no Playwright sharpness test."
+    },
+    {
+      "id": "phase1-F3",
+      "text": "build-graph scan not run; graph.db stays stale (review-a-p1-r2, carried).",
+      "classification": "nonblocking, correct. It is a closeout item: plan documents the skip under the PM load watch, test-strategy 8.1 item 7 records the residual risk, and Phase 2 tasks 2.1-2.2 repeat the same documented skip. No Phase 2 export or import edge changed (ADV-G5 confirms the only tutorScreens consumers)."
+    },
+    {
+      "id": "phase1-F4",
+      "text": "Net row shows as the hero figure only (tutor-commission-calculator.tsx:171-178), a documented spec deviation.",
+      "classification": "nonblocking, correct. It is documented in plan task 1.6, holds no Phase 2 impact, and waits for Review C or the spec owner at closeout."
+    }
+  ],
+  "anti_pattern_checks": {
+    "A5_false_claim_text": "Pass. Plan 2.4 claims suite 68 files / 2602 tests with six exit codes 0,0,0,0,0 and selector [\"www-reading-advantage\"]; green-2.4-9befd67c3.json records exactly those per-gate exit codes and counts, and my live rerun at the audited head gives 71 files / 2617 tests (delta = the 3 adversarial files and 15 tests), types 0, lint 0, ratchet 0, selector identical. No plan sentence this audit checked contradicts a live result.",
+    "A3_digit_only_count": "Applies (the phase diff changed contract tests). Pass. Review A verified no bare-digit matcher in the new tests; sizes are labeled integers (width: 520, height: 1125, bytes <= 1_000_000), the leaf count is asserted against SCREEN_PINS.length, and my runs quote labeled integers (71 files, 2617 tests).",
+    "A4_vacuous_pass": "Applies (the phase diff changed contract tests). Pass. tutor-screens.test.ts existence assertions were proven able to fail by Review A's 999-path fixture; the screens leaf-count assertion fails on 0 leaves; both live-line absence checks hold injected positive controls.",
+    "A6_registry_overstatement": "Not applicable: the phase diff does not touch measure/tracks.md. Spot-checked anyway: the registry row claims no resolution, no push, and no live page.",
+    "A7_over_broad_filter": "Not applicable: the phase diff adds no filter. Spot-checked anyway: ADV-C4 scans raw substrings with no line filter and holds vacuity and filter-word positive controls; the two old live lines are exact literals in ABSENT_LIVE_LINES."
+  },
+  "tests": [
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test --reporter=dot --silent=true' -> exit 0 (71 files, 2617 tests)",
+    "pnpm turbo run check-types --filter=www-reading-advantage -> exit 0",
+    "pnpm --filter www-reading-advantage lint -> exit 0",
+    "git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json -> exit 0",
+    "build: skipped per brief instruction; .next/BUILD_ID 2026-11-17 11:38:13 +0700 is newer than every product source and the only later commits are tests and plan.md (recorded, not run)",
+    "node scripts/ci/affected-apps.mjs --base ff028a7105ccd5de0c3e9534dd8536b7667e22de --head 96887abe595b7d17927787521c3bc8edcb2ed440 -> exit 0, [\"www-reading-advantage\"]"
+  ],
+  "artifacts": [
+    "measure/runs/www_tutor_calculator_20261117/phase-accept-p2-96887abe5.json (this result)",
+    "measure/runs/www_tutor_calculator_20261117/phase-accept-p2-96887abe5.log (this log)",
+    "measure/runs/www_tutor_calculator_20261117/phase-accept-p1-d279b8703.json",
+    "measure/runs/www_tutor_calculator_20261117/review-a-p2-e2439b438.json",
+    "measure/runs/www_tutor_calculator_20261117/review-c-p2-e2439b438.json",
+    "measure/runs/www_tutor_calculator_20261117/adversarial-p2-e2439b438.json",
+    "measure/runs/www_tutor_calculator_20261117/ux-p2-96887abe5.json",
+    "measure/runs/www_tutor_calculator_20261117/ux-p2-96887abe5/ (capture folder)"
+  ],
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "P2-N1",
+      "severity": "info",
+      "text": "AC-15 (PM page-check, task 2.5 [b]) and AC-16 as the push (task 2.6 [ ]) are open at this head. This verdict does not record them as met; they gate track closeout per test-strategy section 3, not the Phase 2 closeout gate, which is the task 2.4 block and is complete."
+    },
+    {
+      "id": "P2-N2",
+      "severity": "info",
+      "text": "ux-p2-96887abe5.json carries retry_recommendation escalate_human while its verdict and status are PASS and its handoff is none. The field points at the human sharpness judgement it defers to task 2.5, not at a failed gate."
+    }
+  ],
+  "verdict": "PASS",
+  "status": "pass",
+  "retry_recommendation": "no_retry",
+  "note": "Phase 2 acceptance at 96887abe5. The phase boundary holds: eight commits, all Phase 2 tasks, plan evidence, or the adversarial test commit, with no Phase 1 file changed. AC-6, AC-10, AC-13, and AC-14 have exact proofs; AC-14 is recorded evidence by spec D-14 design, not a live pixel test. AC-15 and AC-16 (push) are open human gates and are recorded as open, not met. All five runnable gates exit 0 at the audited head; the build is recorded as already valid at this head per the brief. The review trail is consistent: every non-PASS verdict has a remediation and a re-run that is an ancestor of the audited head. The UX browser verdict exists and is PASS, final, not provisional. No audit role edited product code and no human evidence was invented. The seven carried nits stay nonblocking; Review A N1 is only partially closed by ADV-M1..M4. This acceptance covers Phase 2 implementation and review gates only and does not mark the phase accepted in the plan.",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "Copy, manifest, and DOM order match spec 6.1-6.4 word for word under live tests (locale test describes 9-11, page.test.tsx:72-99), with edge gaps: the phone-card upscale above 1169 px awaits Daniel at task 2.5 (Review C N1) and the strategy-promised zh page case is absent (Review C N2)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "Tasks 2.1-2.3 each have a red exit 1 and a green exit 0 pair with positive controls, and 15 adversarial controls pass 61/61 combined, but AC-14 rests on recorded review by D-14 design and the strategy-promised wrong-path negative control is still absent (Review A N1)."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --name-only d279b8703..96887abe5 names only the task 2.1-2.3 files, plan.md, and three adversarial test files; no Phase 1 file, dependency, or lockfile changed."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every gate was rerun live in this run with its exit code recorded verbatim (suite 71/2617 exit 0, types 0, lint 0, ratchet 0, selector [\"www-reading-advantage\"]), and green-2.4-9befd67c3.json holds per-gate exit codes that match the plan claim."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "opencode-go/muse-spark-1.3-contributor#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "Its PASS verdict and both nits re-check out: I reproduced its gate limitation (now closed by my live rerun) and confirmed its blur measurements against plan task 2.1; its A4 999-path fixture proof is the evidence that closes vacuous-pass for the manifest test."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "opencode-go/mimo-v2.6-flash",
+      "agreed": true,
+      "score": 5,
+      "evidence": "Its PASS verdict and both info nits re-check out: page.tsx section order at 317/357/382/393/421 matches my read, and N1 and N2 describe real, correctly nonblocking gaps that the UX role and this acceptance independently confirmed."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "opencode-go/hy4-flash-free#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "Its 15 controls and 61/61 combined gate are included in my live suite run of 71 files and 2617 tests at exit 0, and its test-only commit is the one HEAD advance this acceptance allows."
+    }
+  ],
+  "review_b_note": "No separate Review B result exists: test-strategy section 4 folds the security probes into Review A, and review-a-p2-e2439b438.json records them (no fetch, no dangerouslySetInnerHTML, no dependency or lockfile change, single-app selector). No Review B artifact was read, so no review_b entry is fabricated."
+}

@@ -33,21 +33,34 @@ export type TutorCommissionCalculatorProps = {
       price: string;
       priceNote: string;
       ownStudents: string;
-      directTutors: string;
-      studentsPerDirect: string;
+      legCount: string;
+      legStudents: string;
+      addLeg: string;
+      removeLeg: string;
     };
     results: {
       ownGV: string;
       networkGV: string;
       rate: string;
       gross: string;
-      downline: string;
+      legCommissions: string;
       tax: string;
       net: string;
     };
-    explain: { ownOnly: string; withDownline: string; zero: string };
-    chart: { legVolume: string; legPayout: string; yourPayout: string };
-    graph: { rateTitle: string; ratePoint: string };
+    explain: { ownOnly: string; withLegs: string; zero: string };
+    graph: {
+      title: string;
+      caption: string;
+      ownBar: string;
+      legBar: string;
+      grossBar: string;
+      legCommissionBar: string;
+      netBar: string;
+      axisBaht: string;
+      rateTitle: string;
+      rateAxis: string;
+      ratePoint: string;
+    };
     presets: readonly { name: string; setup: string; result: string }[];
   };
 };
@@ -131,10 +144,10 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
   const markerX = (markerVolume / CURVE_MAX_VOLUME) * 100;
   const markerY = CURVE_HEIGHT * (1 - commissionRate(markerVolume) / CURVE_MAX_RATE);
 
-  /** Returns a row's share of the gross, for the bar width of spec D-9. */
-  const shareOfGross = (amount: number) => {
-    if (result.gross <= 0) return 0;
-    return Math.min(100, Math.max(0, (amount / result.gross) * 100));
+  /** Returns a row's share of the network volume, for the bar width of spec D-9 and D-20. */
+  const shareOfNetwork = (amount: number) => {
+    if (result.networkVolume <= 0) return 0;
+    return Math.min(100, Math.max(0, (amount / result.networkVolume) * 100));
   };
 
   const onPriceChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -150,13 +163,37 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
   const onLegCountChange = (event: ChangeEvent<HTMLInputElement>) => {
     const text = event.target.value;
     setLegCountText(text);
-    setLegTexts(resizeLegs(legTexts.map(readNumber), readNumber(text)).map(String));
+    // An empty field keeps the leg rows and their typed students (AC-23).
+    if (text.trim() !== "") {
+      setLegTexts(resizeLegs(legTexts.map(readNumber), readNumber(text)).map(String));
+    }
     setPresetIndex(null);
   };
 
   const onLegStudentsChange = (index: number, text: string) => {
     setLegTexts(legTexts.map((value, position) => (position === index ? text : value)));
     setPresetIndex(null);
+  };
+
+  /** Sets the leg count and resizes the student rows to match (spec 5.3 item 4). */
+  const setLegCount = (count: number) => {
+    setLegCountText(String(count));
+    setLegTexts(resizeLegs(legTexts.map(readNumber), count).map(String));
+    setPresetIndex(null);
+  };
+
+  /** Reads the leg-count field, or the row count while the field is empty (AC-23). */
+  const readLegCount = () =>
+    legCountText.trim() === "" ? legTexts.length : readNumber(legCountText);
+
+  /** Adds one leg, at the default student count (spec 5.3 item 4). */
+  const addLeg = () => {
+    setLegCount(readLegCount() + 1);
+  };
+
+  /** Removes the last leg and keeps the rest (spec 5.3 item 4). */
+  const removeLeg = () => {
+    setLegCount(Math.max(0, readLegCount() - 1));
   };
 
   /** Applies a preset input; the price resets to 3,000 baht (spec D-5). */
@@ -174,7 +211,7 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
     { label: copy.results.networkGV, value: formatMoney(result.networkVolume) },
     { label: copy.results.rate, value: formatRate(result.rate) },
     { label: copy.results.gross, value: formatMoney(result.gross) },
-    { label: copy.results.downline, value: formatMoney(result.legPayouts) },
+    { label: copy.results.legCommissions, value: formatMoney(result.legPayouts) },
     { label: copy.results.tax, value: formatMoney(result.withholdingTax) },
   ];
 
@@ -248,11 +285,11 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
               </div>
 
               <div className="rounded-3xl border border-emerald-200 bg-white p-5 shadow-sm sm:p-6">
-                <label htmlFor="tutor-direct-tutors" className="block text-sm font-semibold text-site-navy">
-                  {copy.inputs.directTutors}
+                <label htmlFor="tutor-leg-count" className="block text-sm font-semibold text-site-navy">
+                  {copy.inputs.legCount}
                 </label>
                 <input
-                  id="tutor-direct-tutors"
+                  id="tutor-leg-count"
                   type="number"
                   min={0}
                   inputMode="numeric"
@@ -260,6 +297,22 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
                   onChange={onLegCountChange}
                   className={fieldClass}
                 />
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={addLeg}
+                    className="inline-flex min-h-11 items-center rounded-full border border-emerald-200 bg-white px-4 text-sm font-medium text-emerald-950 transition-colors hover:border-emerald-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-800 focus-visible:ring-offset-2 motion-reduce:transition-none"
+                  >
+                    {copy.inputs.addLeg}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={removeLeg}
+                    className="inline-flex min-h-11 items-center rounded-full border border-emerald-200 bg-white px-4 text-sm font-medium text-emerald-950 transition-colors hover:border-emerald-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-800 focus-visible:ring-offset-2 motion-reduce:transition-none"
+                  >
+                    {copy.inputs.removeLeg}
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -271,7 +324,7 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
                       htmlFor={`tutor-leg-${index}-students`}
                       className="text-sm leading-relaxed text-site-body"
                     >
-                      {index + 1}. {copy.inputs.studentsPerDirect}
+                      {index + 1}. {copy.inputs.legStudents}
                     </label>
                     <input
                       id={`tutor-leg-${index}-students`}
@@ -322,17 +375,25 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
                   {formatRate(result.rate)}
                 </span>
               </p>
+              <p className="mt-1 text-xs tracking-eyebrow text-site-body">{copy.graph.rateAxis}</p>
             </div>
 
             <div className="space-y-4 rounded-3xl border border-emerald-200 bg-white p-5 shadow-sm sm:p-6">
+              <div>
+                <h3 className="text-base font-semibold text-site-navy">{copy.graph.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-site-body">{copy.graph.caption}</p>
+              </div>
+
+              <p className="text-xs tracking-eyebrow text-site-body">{copy.graph.axisBaht}</p>
+
               {result.legs.map((leg) => (
                 <div key={`graph-leg-${leg.leg}`}>
                   <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm">
                     <span className="font-medium text-site-navy">
-                      {copy.chart.legPayout} {leg.leg}
+                      {copy.graph.legBar.replace("{n}", String(leg.leg))}
                     </span>
                     <span className="tabular-nums text-site-body">
-                      {copy.chart.legVolume} {formatMoney(leg.volume)}
+                      {formatMoney(leg.volume)}
                     </span>
                     <span className="ml-auto font-semibold tabular-nums text-emerald-900">
                       {formatMoney(leg.payout)}
@@ -341,7 +402,7 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
                   <div className="mt-1 h-2 overflow-hidden rounded-full bg-emerald-100">
                     <div
                       className="bar-width h-full rounded-full bg-emerald-600"
-                      style={{ "--bar-width": `${shareOfGross(leg.payout)}%` }}
+                      style={{ "--bar-width": `${shareOfNetwork(leg.volume)}%` }}
                     />
                   </div>
                 </div>
@@ -349,18 +410,39 @@ export function TutorCommissionCalculator({ copy }: TutorCommissionCalculatorPro
 
               <div>
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm">
-                  <span className="font-medium text-site-navy">{copy.chart.yourPayout}</span>
+                  <span className="font-medium text-site-navy">{copy.graph.ownBar}</span>
                   <span className="ml-auto font-semibold tabular-nums text-emerald-900">
-                    {formatMoney(result.preTax)}
+                    {formatMoney(result.ownVolume)}
                   </span>
                 </div>
                 <div className="mt-1 h-2 overflow-hidden rounded-full bg-emerald-100">
                   <div
                     className="bar-width h-full rounded-full bg-emerald-900"
-                    style={{ "--bar-width": `${shareOfGross(result.preTax)}%` }}
+                    style={{ "--bar-width": `${shareOfNetwork(result.ownVolume)}%` }}
                   />
                 </div>
               </div>
+
+              <dl className="space-y-2 border-t border-site-border pt-4 text-sm">
+                <div className="flex items-baseline justify-between gap-3">
+                  <dt className="text-site-body">{copy.graph.grossBar}</dt>
+                  <dd className="font-medium tabular-nums text-site-navy">
+                    {formatMoney(result.gross)}
+                  </dd>
+                </div>
+                <div className="flex items-baseline justify-between gap-3">
+                  <dt className="text-site-body">{copy.graph.legCommissionBar}</dt>
+                  <dd className="font-medium tabular-nums text-site-navy">
+                    {formatMoney(result.legPayouts)}
+                  </dd>
+                </div>
+                <div className="flex items-baseline justify-between gap-3">
+                  <dt className="text-site-body">{copy.graph.netBar}</dt>
+                  <dd className="font-medium tabular-nums text-site-navy">
+                    {formatMoney(result.net)}
+                  </dd>
+                </div>
+              </dl>
             </div>
           </div>
         </div>

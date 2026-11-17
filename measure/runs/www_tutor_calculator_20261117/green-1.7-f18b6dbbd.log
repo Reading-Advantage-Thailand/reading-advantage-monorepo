@@ -1,0 +1,65 @@
+Measure Green · Phase 1 · task 1.7 · track www_tutor_calculator_20261117
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+role_base_sha: a8b78cf90ea852ee0255d79df5c18957854fedf6 (the brief printed a 41-character string with the right prefix; this is the real commit)
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+resulting_head: 4c4153b04700a3ada45934fcb3336cae84fcf4cc
+verdict: pass
+commits:
+  f18b6dbbd6e0af3e2d9bdb8e1f96b39d6267947b feat(www): wire tutor commission calculator section (track_id: www_tutor_calculator_20261117)
+  4c4153b04700a3ada45934fcb3336cae84fcf4cc docs(measure): record green 1.7 evidence (track_id: www_tutor_calculator_20261117)
+plan_updates: task 1.7 [x] with Done: f18b6dbbd6e0af3e2d9bdb8e1f96b39d6267947b and both run results.
+
+Red change inside phase_base_sha..HEAD: task 1.7 carries its own test, so the order
+assertions were authored in this task's working tree, run to failure, and committed with the
+implementation in f18b6dbbd. No prior committed Red change exists for 1.7.
+
+Red run (order assertions before the page change), exit code 1:
+Command: bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx" --reporter=dot --silent=true'
+  Test Files  1 failed (1)
+       Tests  2 failed | 4 passed (6)
+Both new cases fail with: expect(section).toBeInTheDocument() — received null, because the
+calculator section does not exist yet.
+
+Green run (same command), exit code 0:
+  Test Files  1 passed (1)
+       Tests  6 passed (6)
+
+Command note: the brief's `[[]locale[]]` escaping form matches no test file and exits 0 through
+passWithNoTests, so it cannot prove anything. The literal quoted path above is the form that
+runs the file. The plan records the same note.
+
+Gates:
+- check-types: pnpm turbo run check-types --filter=www-reading-advantage, exit 0
+- lint: pnpm --filter www-reading-advantage lint, exit 0, no new shadcn/* error in the touched files
+- doctor: bash measure/doctor.sh exits 1 at its architecture step with "V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes". The manifest and its analyzer inputs are unchanged between role_base_sha and HEAD (git diff over packages/architecture-enforcement is empty), so this is a pre-existing tool failure, not a boundary verdict from this task.
+
+Product files changed by this role:
+- apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx:
+  import of TutorCommissionCalculator, the calculatorCopy object from getScopedI18n, the new
+  section, and data-testid="tutor-commitments" on the existing commitments section.
+- apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx:
+  two new cases, the section and anchor presence and the DOM order of the three anchors.
+
+Untouched: the locale file, the component, the component test, the module and its test, the
+locale test, package.json, and the lockfile.
+
+AC-10 check:
+- section[data-testid='tutor-calculator'] exists and carries id="commission-calculator".
+- Order: tutorRole (#become-a-tutor) -> calculator -> commitments (data-testid='tutor-commitments'),
+  asserted with compareDocumentPosition.
+- The page reads every calculator.* key through getScopedI18n and passes one copy object.
+- No other page content or order changed. The commitments section has a testid only, no visual change.
+
+MEASURE_AGENT_RESULT
+role: measure-green
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 1
+commits: f18b6dbbd, 4c4153b04
+tests_run: red page test exit 1 (Test Files 1 failed (1), Tests 2 failed | 4 passed (6)); targeted page test exit 0 (Test Files 1 passed (1), Tests 6 passed (6)); pnpm turbo run check-types --filter=www-reading-advantage exit 0; pnpm --filter www-reading-advantage lint exit 0
+files_changed: apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx; apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx; measure/tracks/www_tutor_calculator_20261117/plan.md
+plan_updates: task 1.7 marked [x] with Done: f18b6dbbd6e0af3e2d9bdb8e1f96b39d6267947b and both run results
+known_failures: none
+handoff: Task 1.7 is complete at HEAD 4c4153b04. The plan commit is amended once to add the doctor note. measure/doctor.sh fails its architecture step on a pre-existing analyzer snapshot hash mismatch outside this task's files; the orchestrator should route that separately if it blocks a gate. The page renders TutorCommissionCalculator inside section[data-testid='tutor-calculator'][id='commission-calculator'] between the tutorRole section and the commitments section (data-testid='tutor-commitments', testid only). Task 1.8 runs the Phase 1 gates and the hand page check. Phase 2 task 2.2 inserts the screens section between tutorRole and the calculator and keeps this order test passing. Phase 1 ships no push (D-13). Note for reviewers: the `[[]locale[]]` filter form finds no test file, so the literal quoted path is the evidence form.
+END_MEASURE_AGENT_RESULT

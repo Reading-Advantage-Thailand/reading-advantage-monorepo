@@ -1,0 +1,103 @@
+# Green P1 adversarial remediation — www_tutor_calculator_20261117
+
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator (branch feat/a63-tutor-calculator)
+role_base_sha: 418b4e7cb4f3f46260a80b67e4699739210d9922
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+Git status at start: clean.
+
+## Targeted Red command (before)
+
+`pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.adversarial.test.ts --reporter=dot --silent=true`
+
+```
+Test Files  1 failed (1)
+Tests  1 failed | 22 passed (23)
+FAIL  A6 finite input whose product overflows > a finite price whose volume overflows
+RangeError: The number Infinity cannot be converted to a BigInt
+ ❯ toSatang src/lib/tutor-commission.ts:96
+ ❯ flatSatang src/lib/tutor-commission.ts:106
+ ❯ calculateNetwork src/lib/tutor-commission.ts:171
+```
+
+## Implementation (commit daa77805d)
+
+`apps/www-reading-advantage/src/lib/tutor-commission.ts` only (7 insertions, 5 deletions):
+
+1. `calculateNetwork`: `ownVolume`, each leg `volume`, and `networkVolume` are clamped
+   through `clampNonNegative`, so a finite price times a finite count that overflows to
+   Infinity becomes 0 before it reaches the satang rule.
+2. `toSatang`: returns `0n` when the satang product `baht * SATANG_PER_BAHT` is not
+   finite. Brief deviation, documented: the guard covers the product, not only the baht
+   value, because the Red test's first case (price 1e307) is finite but its product with
+   100 overflows; the committed Red test is the contract and demands `gross === 0`.
+3. `preTax` JSDoc: "not displayed" replaced with the statement that the graph renders it
+   as the tutor's payout row (spec D-9 item 2). Sentence only.
+
+No test, component, locale file, or page was edited. The committed Red test is untouched.
+Normal inputs are bit-identical: both guards are no-ops for finite non-negative values.
+
+## Targeted Red command (after)
+
+`pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.adversarial.test.ts --reporter=dot --silent=true`
+
+```
+Test Files  1 passed (1)
+Tests  23 passed (23)
+```
+
+## Green gate (live, via heavy-run.sh)
+
+```
+Test Files  4 passed (4)
+Tests  79 passed (79)
+src/lib/tutor-commission.test.ts: 27
+src/lib/tutor-commission.adversarial.test.ts: 23
+src/components/marketing/tutor-commission-calculator.test.tsx: 14
+src/components/marketing/tutor-commission-calculator.adversarial.test.tsx: 15
+```
+
+## Types
+
+`pnpm turbo run check-types --filter=www-reading-advantage` — exit 0 (1 successful).
+
+## Graph
+
+`build-graph update ./graph.db apps/www-reading-advantage/src/lib/tutor-commission.ts`
+— 1 file, 25 nodes, 24 edges. No whole-repo scan; one heavy job at a time (PM load watch).
+
+## Commits
+
+- `daa77805d` fix(www): clamp volume overflow in tutor commission (track_id: www_tutor_calculator_20261117)
+- `d279b8703` chore(measure): record adversarial remediation evidence (track_id: www_tutor_calculator_20261117) — plan.md only; `measure/runs/` is gitignored, so the result JSON stays local at `measure/runs/www_tutor_calculator_20261117/green-p1-fix-daa77805d.json`.
+
+Git status at end: clean. No deploy, no push, no archive move, no registry or metadata update.
+
+MEASURE_AGENT_RESULT
+{
+  "schema_version": 1,
+  "role": "measure-green",
+  "subrole": "green-p1-fix",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "verdict": "pass",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "418b4e7cb4f3f46260a80b67e4699739210d9922",
+  "final_head": "d279b8703",
+  "implementation_commit": "daa77805d",
+  "plan_evidence_commit": "d279b8703",
+  "tasks_flipped": [],
+  "tasks_deferred": [],
+  "red_command": "pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.adversarial.test.ts --reporter=dot --silent=true",
+  "red_command_before": "1 failed | 22 passed (23) — RangeError at toSatang",
+  "red_command_after": "23 passed (23)",
+  "green_gate": "Test Files 4 passed (4), Tests 79 passed (79): module 27, module adversarial 23, component 14, component adversarial 15",
+  "check_types_exit_code": 0,
+  "new_files": ["measure/runs/www_tutor_calculator_20261117/green-p1-fix-daa77805d.json (local, gitignored)"],
+  "files_changed": ["apps/www-reading-advantage/src/lib/tutor-commission.ts", "measure/tracks/www_tutor_calculator_20261117/plan.md"],
+  "brief_deviations": [
+    "toSatang guards the satang product baht * SATANG_PER_BAHT rather than only the baht value, because the committed Red test's 1e307 case is finite in baht but overflows at the product and demands gross === 0"
+  ],
+  "normal_input_impact": "Nothing: both guards are no-ops for finite non-negative products, so every normal input is bit-identical.",
+  "handoff": "Phase 1 adversarial remediation is complete. Review roles audit implementation commit daa77805d and plan evidence d279b8703. The A6 Red test passes, the four-file gate is 79/79, types exit 0. No routed findings, no dispositions, no deferred tasks."
+}
+END_MEASURE_AGENT_RESULT

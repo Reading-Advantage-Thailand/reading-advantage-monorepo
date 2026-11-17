@@ -33,6 +33,13 @@ export const productPictures = {
     height: 651,
     portrait: true,
   },
+  /** The printed Origins 3.1 cover, converted from the workbook PNG (spec D-19 item 3). */
+  primaryCover31: {
+    src: "/images/products/primary-origins-3-1-cover.webp",
+    width: 480,
+    height: 651,
+    portrait: true,
+  },
   primaryLesson: {
     src: "/images/products/primary-lesson-intro.webp",
     width: 944,
@@ -45,6 +52,20 @@ export const productPictures = {
     height: 651,
     portrait: true,
   },
+  /** The tutor photo of the hero and of the become-a-tutor block (spec D-19 items 1 and 6). */
+  tutorSession: {
+    src: "/images/tutor-advantage-hero.jpg",
+    width: 1024,
+    height: 1024,
+    portrait: false,
+  },
+  /** The Reedy preview of the Reedy block (spec D-19 item 5). */
+  reedyPreview: {
+    src: "/images/primary-advantage/reedy-preview.webp",
+    width: 1280,
+    height: 912,
+    portrait: false,
+  },
   tutorFlashcard: {
     src: "/images/products/tutor-flashcard.webp",
     width: 520,
@@ -54,14 +75,15 @@ export const productPictures = {
 } as const satisfies Record<string, ProductPictureFile>;
 
 /**
- * The three Tutor Advantage screens of the gallery (spec 6.2, task 2.1).
- * Source set: handoff `a63-tutor-www-calculator/screens`, version 2.0, 2026-11-17.
- * Each file is a webp at its delivered size after the blur pass of
- * `scripts/blur-tutor-screens.py`. The keys follow the gallery slot order.
+ * The five Tutor Advantage student screens of the gallery (spec 6.2, task 3.4).
+ * Source set: `advantage-pr/assets/screenshots/tutor-advantage/dev-2026-11-16/`,
+ * version 2.0, 2026-11-17. Each file is a webp at its delivered size, made by
+ * `scripts/blur-tutor-screens.py`. The keys follow the gallery slot order of
+ * PR section 2. No tutor screen ships.
  */
 export const tutorScreens = {
-  studentHome: {
-    src: "/images/products/tutor-advantage/student-mobile/070-screen.webp",
+  guidedWriting: {
+    src: "/images/products/tutor-advantage/student-mobile/040-screen.webp",
     width: 520,
     height: 1125,
     portrait: false,
@@ -72,10 +94,22 @@ export const tutorScreens = {
     height: 1125,
     portrait: false,
   },
-  classList: {
-    src: "/images/products/tutor-advantage/tutor-desktop/062-screen.webp",
-    width: 1440,
-    height: 900,
+  feedback: {
+    src: "/images/products/tutor-advantage/student-mobile/004-screen.webp",
+    width: 520,
+    height: 1125,
+    portrait: false,
+  },
+  selfReflection: {
+    src: "/images/products/tutor-advantage/student-mobile/052-screen.webp",
+    width: 520,
+    height: 1125,
+    portrait: false,
+  },
+  classRecord: {
+    src: "/images/products/tutor-advantage/student-mobile/064-screen.webp",
+    width: 520,
+    height: 1125,
     portrait: false,
   },
 } as const satisfies Record<string, ProductPictureFile>;

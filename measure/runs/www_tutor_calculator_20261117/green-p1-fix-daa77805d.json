@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "role": "measure-green",
+  "subrole": "green-p1-fix",
+  "verdict": "pass",
+  "note": "Final. The committed Red test `tutor-commission.adversarial.test.ts > A6 finite input whose product overflows` threw a RangeError in toSatang for finite inputs whose volume product overflows to Infinity. The fix clamps every volume product in calculateNetwork to finite non-negative and makes toSatang return 0n for a non-finite satang product, plus the stale preTax JSDoc correction. The targeted Red command went from 1 failed | 22 passed to 23 passed, the full four-file gate passes 79/79, and types exit 0. Normal inputs are bit-identical: every clamp is a no-op for finite non-negative products, and the satang guard only fires on Infinity. No Red test, component, locale file, or page was edited. The deviation from the brief is documented: the toSatang guard covers the satang product baht * SATANG_PER_BAHT, not only the baht value, because the test's first case (price 1e307) is finite but overflows at the product; the committed Red test is the contract.",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "task": "1.8 (adversarial remediation)",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "418b4e7cb4f3f46260a80b67e4699739210d9922",
+  "implementation_commit": "daa77805d",
+  "plan_evidence_commit": "d279b8703",
+  "red_command": "pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.adversarial.test.ts --reporter=dot --silent=true",
+  "red_command_before": "1 failed | 22 passed (23) — RangeError: The number Infinity cannot be converted to a BigInt at toSatang (tutor-commission.ts:96) via flatSatang and calculateNetwork",
+  "red_command_after": "23 passed (23)",
+  "green_gate": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts src/lib/tutor-commission.adversarial.test.ts src/components/marketing/tutor-commission-calculator.test.tsx src/components/marketing/tutor-commission-calculator.adversarial.test.tsx --reporter=dot --silent=true'",
+  "green_gate_result": {
+    "test_files": "4 passed (4)",
+    "tests": "79 passed (79)",
+    "module": 27,
+    "module_adversarial": 23,
+    "component": 14,
+    "component_adversarial": 15
+  },
+  "check_types": "pnpm turbo run check-types --filter=www-reading-advantage — exit 0, 1 successful",
+  "changes": {
+    "file": "apps/www-reading-advantage/src/lib/tutor-commission.ts",
+    "items": [
+      "calculateNetwork clamps ownVolume, each leg volume, and networkVolume to finite non-negative before the satang rule",
+      "toSatang returns 0n when the satang product baht * SATANG_PER_BAHT is not finite (the Red test's 1e307 case overflows at the product, not the baht value)",
+      "preTax JSDoc now states the graph renders it as the tutor's payout row (spec D-9 item 2)"
+    ],
+    "no_other_changes": true,
+    "normal_inputs_bit_identical": true
+  },
+  "new_files": [
+    "measure/runs/www_tutor_calculator_20261117/green-p1-fix-daa77805d.json (local; measure/runs is gitignored)"
+  ],
+  "graph": "build-graph update ./graph.db apps/www-reading-advantage/src/lib/tutor-commission.ts — 1 file, 25 nodes, 24 edges; no whole-repo scan (PM load watch)",
+  "committed_red_test_untouched": true,
+  "dispositions": "none — no routed findings in this brief"
+}

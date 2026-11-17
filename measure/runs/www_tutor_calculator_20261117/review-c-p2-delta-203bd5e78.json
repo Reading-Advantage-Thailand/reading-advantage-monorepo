@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-c",
+  "round": 2,
+  "track": "www_tutor_calculator_20261117",
+  "phase": 2,
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/mimo-v2.6-flash",
+  "phase_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "role_base_sha": "e2439b438511046b58ec8f3e734e655706c2ab8c",
+  "audited_head_sha": "94af2c15b5e4eaf393f696564c9eed3e689de057",
+  "audited_head_is_head": true,
+  "head_check": {
+    "briefed_head": "203bd5e78dceb9c1701ac708886915f340005d5e",
+    "head_sha": "94af2c15b5e4eaf393f696564c9eed3e689de057",
+    "porcelain_empty": true,
+    "advanced_during_audit": true,
+    "new_commit": "94af2c15b docs(measure): record green 2.8 gate evidence (track_id: www_tutor_calculator_20261117)",
+    "new_commit_files": ["measure/tracks/www_tutor_calculator_20261117/plan.md"],
+    "product_diff_unchanged": "git diff --name-only 203bd5e78 94af2c15b returns only measure/tracks/www_tutor_calculator_20261117/plan.md, so every product file in the briefed range is byte-identical at the audited HEAD."
+  },
+  "diff_range": "96887abe5..203bd5e78",
+  "contract_applicability": "applicable: spec-review-6c47d7fe sets review_c apply for Phase 2, and the exact phase delta changes the tutor-advantage route page, its three locale dictionaries, the picture manifest, and the calculator component, so the route, copy, chart-label, gallery, and user-flow contracts all move.",
+  "verdict": "PASS",
+  "retry_recommendation": "none",
+  "checks": [
+    {
+      "item": "Delta read in full",
+      "status": "pass",
+      "evidence": "git diff 96887abe5..203bd5e78 lists 12 files and 144 insertions against 113 deletions: five product files (page.tsx, tutor-commission-calculator.tsx, product-pictures.ts, tutor-commission.ts, locales/pages/products/tutor-advantage.ts), six test files, and plan.md. I read every hunk."
+    },
+    {
+      "item": "Wiring: changed strings reach the page through getScopedI18n",
+      "status": "pass",
+      "evidence": "page.tsx:55 calls getScopedI18n(\"pages.products.tutorAdvantage\") and page.tsx:57 aliases it to key. The changed paths read through key at page.tsx:104-106 (calculator.chart.legVolume, legPayout, yourPayout), page.tsx:109-111 (calculator.presets.<i>.*), and page.tsx:121-122 (screens.items.<i>.caption and alt). The gallery array at page.tsx:115-118 names tutorScreens.studentHome, tutorScreens.shortAnswer, and tutorScreens.classList in copy order. The page renders tutorScreens.shortAnswer at page.tsx:117 and passes copy to the calculator at page.tsx:388. No rendered literal sits in page.tsx or in tutor-commission-calculator.tsx; the JSX text is all t(...) or copy.*."
+    },
+    {
+      "item": "Wiring: gallery cards, captions, and alt",
+      "status": "pass",
+      "evidence": "page.tsx:366-377 map three cards into figure elements; page.tsx:370 passes card.alt into ProductPicture and product-picture.tsx:21 sets it on next/image, so every picture carries an alt; page.tsx:371-373 place figcaption under the picture inside the same figure. The locale holds exactly three items with three non-empty alts in en (161-163), th (487-489), and zh (814-816). page.test.tsx:72 asserts three cards with the slot alt and caption in copy order; page.adversarial.test.tsx:41, 54, and 92 assert non-empty alt, no slot swap, and exactly three cards."
+    },
+    {
+      "item": "Copy contract: en, th, zh key paths and D-10",
+      "status": "pass",
+      "evidence": "A node script over the locale file confirms each of the three blocks holds chart keys legVolume, legPayout, and yourPayout only, and three screens items each. A second script confirms zh repeats en at all ten changed paths. The locale test asserts the same key paths in en, th, and zh (www-tutor-calculator.locale.test.ts:336 and :553) and zh equal to en (:364, :370, :561, :613)."
+    },
+    {
+      "item": "Copy contract: section 8 strings are exact",
+      "status": "pass",
+      "evidence": "A node script checks twenty strings against both the handoff and the locale file: all twenty appear in handoff v0.4 section 8 and in the dictionaries. They cover the three chart labels in en and th, preset 3 name, setup, and result in en and th, and the shortAnswer and studentHome captions and alts in en and th. The en and th values sit at tutor-advantage.ts:161-163, 194-202, 487-489, 520-528."
+    },
+    {
+      "item": "Copy contract: retired lines and dropped captions",
+      "status": "pass",
+      "evidence": "grep -c \"We do not publish income figures\" over the locale file exits 1 with count 0, so both retired income lines stay absent; they survive only as absence pins in www-tutor-calculator.locale.test.ts:596-597 and www-tutor-screens-copy.adversarial.test.ts:94-95 (ADV-C4 at :88). grep for \"network\" and \"earnings\" captions, for tutor-desktop/12-network and 11-earnings, and for dev-2026-10-15 over src returns no line, so the two captions of section 8.3 did not reappear."
+    },
+    {
+      "item": "Chart-label contract",
+      "status": "pass",
+      "evidence": "The component type at tutor-commission-calculator.tsx:49 and the three reads at :323, :326, and :343 use legPayout, legVolume, and yourPayout, which is the role map of section 8.1: leg row label, leg row volume, tutor payout row. page.tsx:104-106 feeds the same three keys, and the dictionaries hold the same three in en (194-198), th (520-524), and zh (848-852). grep for chart.leg, chart.you, and chart.volume over apps/ and packages/ returns no line, so no stale read survives; the names that remain live only in spec.md:229-235 and plan.md:447 as the superseded drafts that section 8 replaces."
+    },
+    {
+      "item": "User flow: preset 3",
+      "status": "pass",
+      "evidence": "NETWORK_PRESETS[2] at tutor-commission.ts:233-237 holds price 3000, personalStudents 2, and studentsPerLeg [4,4,4]. applyPreset at tutor-commission-calculator.tsx:162-169 writes those into price, own students, leg count, and the three leg fields, so a visitor who selects the preset sees 2 own students and three legs of 4. tutor-commission.test.ts:125-143 pins own volume 6000, network volume 42000, rate 59.1273%, gross 24833.45, three legs of 12000 at 5520, leg total 16560, preTax 8273.45, tax 248.2, net 8025.25. tutor-commission-calculator.test.tsx:212-237 asserts the three leg inputs read 4 and every graph line holds 12,000 and 5,520."
+    },
+    {
+      "item": "User flow: example text against on-screen figures",
+      "status": "pass",
+      "evidence": "Preset 3 result text at tutor-advantage.ts:202 states 42,000, 59.1%, 24,833, 16,560, 8,273, and 8,025 baht. The card shows 42,000, 59.1%, 24,833.45, 16,560, 8,273.45, and 8,025.25. Every card figure rounds to the stated baht at nearest whole baht, so the two read as one rounding step, not as a contradiction on screen."
+    },
+    {
+      "item": "Regression: other presets, price reset, clear on edit, live region",
+      "status": "pass",
+      "evidence": "The delta changes only the third preset line in each dictionary; presets 0 and 1 keep their en and th strings at tutor-advantage.ts:200-201 and 526-527. applyPreset resets price at tutor-commission-calculator.tsx:164, the four onChange handlers clear presetIndex at :141, :146, :153, :158, and the result card keeps aria-live=\"polite\" at :361. The covering cases are tutor-commission-calculator.test.tsx:204-210, 247-253, 255-270, 272-284, 286-305, and 125-130; ids become-a-tutor (page.tsx:317) and commission-calculator (page.tsx:383) are unchanged and page.test.tsx:45 asserts the calculator anchor."
+    },
+    {
+      "item": "No id or anchor changed",
+      "status": "pass",
+      "evidence": "git diff 96887abe5..203bd5e78 filtered for lines that add or remove id=, href=\"#\", scroll-mt, or data-testid returns no line, so the delta touches no id, anchor, or testid."
+    },
+    {
+      "item": "Test rerun",
+      "status": "pass",
+      "evidence": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx --reporter=dot --silent=true' run from the worktree root exits 0: Test Files 1 passed (1), Tests 14 passed (14). The first attempt with no workdir resolved to the main checkout and printed No test files found, exit 0, so it ran no test; the worktree run above is the result I count. The gallery and page wiring rest on read evidence plus the filed green-2.8-203bd5e78 gate, which records the full app suite at 71 files and 2617 tests and the ten-file targeted gate at 140 tests, both exit 0 at this product head."
+    }
+  ],
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "N1",
+      "severity": "nit",
+      "file": "measure/tracks/www_tutor_calculator_20261117/test-strategy.md:49, 78, 81, 122",
+      "defect": "The strategy rows still name the superseded preset 3 figures (12,015.00, 6,694.44, 200.83, 6,493.61 at :49; 18,709.44, 12,015, 6,694.44, 6,493.61 at :78; 12,015.00 at :122) and the retired manifest key lessonPhases at :81. The code now holds 16,560, 8,273.45, 248.20, 8,025.25 and the key shortAnswer.",
+      "smallest_fix": "The orchestrator rewrites those four rows to the v0.4 figures and to shortAnswer. No product file changes.",
+      "note": "Each row's pass criterion, the named command exiting 0, still holds, and plan task 2.7 records the re-pin. This is strategy-text drift, not a render or test defect."
+    },
+    {
+      "id": "N2",
+      "severity": "info",
+      "file": "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx:319-339",
+      "defect": "A graph leg row prints the leg numeral, the leg volume, and the leg payout, but no student numeral. After preset 3 the three rows read Leg commission 1..3, Leg volume 12,000, and 5,520, so four students show in the input rows and as the 12,000 volume, not as a count in the graph.",
+      "smallest_fix": "No change. Spec D-9 item 3 defines a leg row as label, volume, and payout, and 12,000 equals four students at the 3,000 baht price.",
+      "note": "Recorded because the brief asked whether the graph rows show four students each. They show the money of four students; the input rows show the count 4."
+    },
+    {
+      "id": "N3",
+      "severity": "info",
+      "file": "~/Desktop/handoff/a63-tutor-www-calculator/www-tutor-advantage-calculator-handoff.md:298",
+      "defect": "Section 8.1 states behind-the-line floats of gross 24,833.46, payout before tax 8,273.46, and net 8,025.26, while the truncating code of spec D-3 yields 24,833.45, 8,273.45, and 8,025.25, one satang lower.",
+      "smallest_fix": "No change for this track. The copy rounds to whole baht, so both readings give the same public line. Note the truncation basis if the handoff is ever revised.",
+      "note": "I computed both paths in node: rateUnits 591272855 times 4,200,000 satang divided by 10^9 gives 2,483,345 satang by truncation. Review A raised the same fact independently as its N1."
+    }
+  ],
+  "files_audited": [
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx",
+    "apps/www-reading-advantage/src/lib/product-pictures.ts",
+    "apps/www-reading-advantage/src/lib/tutor-commission.ts",
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+    "apps/www-reading-advantage/src/components/products/product-picture.tsx",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-screens-copy.adversarial.test.ts",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.adversarial.test.tsx",
+    "apps/www-reading-advantage/src/lib/tutor-commission.test.ts",
+    "apps/www-reading-advantage/src/lib/__tests__/tutor-screens.test.ts",
+    "apps/www-reading-advantage/src/lib/__tests__/tutor-screens.adversarial.test.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx",
+    "measure/tracks/www_tutor_calculator_20261117/spec.md",
+    "measure/tracks/www_tutor_calculator_20261117/test-strategy.md",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md",
+    "/home/daniebo/Desktop/handoff/a63-tutor-www-calculator/www-tutor-advantage-calculator-handoff.md"
+  ],
+  "tests_rerun_by_review": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx --reporter=dot --silent=true' (workdir /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator) exits 0: Test Files 1 passed (1), Tests 14 passed (14). One earlier attempt with no workdir ran in the main checkout and found no test file, exit 0, no test executed. I used one test file only, as briefed, and started no server and no build.",
+  "note": "Review C delta of the Phase 2 PR copy change at 96887abe5..203bd5e78 against handoff v0.4 section 8, which overrides the spec drafts. Wiring, copy parity, chart keys, preset 3 flow, and the anchor and gallery regressions all hold. HEAD advanced during the audit from the briefed 203bd5e78 to 94af2c15b, a plan.md-only docs commit, so the product diff I audited is the product diff at HEAD. No blocker; three notes carry no gate impact. No CONTEST items arrived with this brief, so nothing was kept or withdrawn. Payout arithmetic, image content, and aesthetics belong to other roles and were not judged; I ran no server and no build.",
+  "handoff": "none",
+  "anti_pattern_checks": [],
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "All twenty section 8 strings match both the handoff and the dictionaries, and preset 3 fills 2 own students with three legs of 4 as tutor-commission.ts:233-237 and tutor-commission-calculator.test.tsx:212-237 show."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The delta re-pins every replaced key, string, and figure first and then fixes the product files, but test-strategy.md:49, 78, 81, and 122 still name the superseded values (N1)."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --stat 96887abe5..203bd5e78 lists twelve files: five product files, six test files, and plan.md, with no route, config, or unrelated page touched."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every claim cites a file:line, a git command result, a node recomputation, or my heavy-run output recorded in this artifact."
+    }
+  ]
+}

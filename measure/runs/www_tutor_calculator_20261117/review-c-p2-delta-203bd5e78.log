@@ -1,0 +1,200 @@
+Measure Review C, delta round 2, Phase 2, track www_tutor_calculator_20261117.
+Route: opencode-go/mimo-v2.6-flash.
+Role base: e2439b438511046b58ec8f3e734e655706c2ab8c (my first Phase 2 round).
+Phase base: d279b870341c067c33fc884ae8863b5428487c17.
+Briefed head: 203bd5e78dceb9c1701ac708886915f340005d5e.
+Audited head: 94af2c15b5e4eaf393f696564c9eed3e689de057.
+
+1. PROVENANCE
+
+git rev-parse HEAD in /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+returned 94af2c15b5e4eaf393f696564c9eed3e689de057 at my final check, and
+git status --porcelain was empty. HEAD moved once during the audit. The
+briefed head was 203bd5e78. The new commit is
+94af2c15b docs(measure): record green 2.8 gate evidence, and it adds 39
+lines to measure/tracks/www_tutor_calculator_20261117/plan.md only.
+git diff --name-only 203bd5e78 94af2c15b returns that one plan file, so
+every product file of the briefed range is byte-identical at my audited
+head. Both phase base and briefed head resolve and are ancestors of HEAD.
+
+2. CONTRACT APPLICABILITY
+
+Applicable. spec-review-6c47d7fe sets review_c apply for Phase 2. The
+exact phase delta changes the tutor-advantage route page, its three locale
+dictionaries, the picture manifest, and the calculator component, so the
+route, copy, chart-label, gallery, and user-flow contracts all move.
+
+3. DELTA READ IN FULL (pass)
+
+git diff 96887abe5..203bd5e78 lists 12 files: page.tsx,
+tutor-commission-calculator.tsx, product-pictures.ts, tutor-commission.ts,
+locales/pages/products/tutor-advantage.ts, six test files, and plan.md.
+144 insertions, 113 deletions. I read every hunk.
+
+4. WIRING (pass)
+
+page.tsx:55 calls getScopedI18n("pages.products.tutorAdvantage") and
+page.tsx:57 aliases it to key. Every changed string reaches the page
+through that key: calculator.chart.legVolume, legPayout, and yourPayout at
+page.tsx:104-106; calculator.presets.<i>.* at page.tsx:109-111; and
+screens.items.<i>.caption and alt at page.tsx:121-122. The gallery array at
+page.tsx:115-118 names tutorScreens.studentHome, tutorScreens.shortAnswer,
+and tutorScreens.classList in copy order, so shortAnswer is slot two. The
+page passes copy into the calculator at page.tsx:388. The rendered JSX of
+page.tsx and of tutor-commission-calculator.tsx holds no copy literal; the
+text nodes are t(...) or copy.*.
+
+The gallery keeps three cards. page.tsx:366-377 map them into figure
+elements. page.tsx:370 passes card.alt into ProductPicture, and
+product-picture.tsx:21 sets it on next/image, so every picture carries an
+alt. page.tsx:371-373 put figcaption under the picture inside the same
+figure. The locale holds three items with three non-empty alts in en
+(161-163), th (487-489), and zh (814-816). The three image files exist on
+disk: student-mobile/002-screen.webp, student-mobile/070-screen.webp, and
+tutor-desktop/062-screen.webp.
+
+5. COPY CONTRACT (pass)
+
+I compared twenty strings with a node script. Each string appears in both
+handoff v0.4 section 8 and the locale file: the three chart labels in en
+and th, preset 3 name, setup, and result in en and th, and the shortAnswer
+and studentHome captions and alts in en and th. The values sit at
+tutor-advantage.ts:161-163, 194-202, 487-489, and 520-528.
+
+A second node script confirms three facts. Each dictionary block holds
+exactly the chart keys legVolume, legPayout, and yourPayout. Each block
+holds exactly three screens items. zh repeats en at all ten changed paths,
+which is rule D-10. The locale test asserts the same key paths in en, th,
+and zh at www-tutor-calculator.locale.test.ts:336 and :553, and zh equal to
+en at :364, :370, :561, and :613.
+
+The two retired income lines stay absent. grep -c "We do not publish
+income figures" over the locale file returns count 0. The lines survive
+only as absence pins at www-tutor-calculator.locale.test.ts:596-597 and
+www-tutor-screens-copy.adversarial.test.ts:94-95 (ADV-C4 at :88). The
+dropped network and earnings captions did not reappear: grep over src for
+those captions, for tutor-desktop/12-network and 11-earnings, and for
+dev-2026-10-15 returns no line.
+
+6. CHART-LABEL CONTRACT (pass)
+
+The component type at tutor-commission-calculator.tsx:49 and the three
+reads at :323, :326, and :343 use legPayout, legVolume, and yourPayout.
+Those are the three roles of section 8.1: leg row label, leg row volume,
+and tutor payout row. page.tsx:104-106 feeds the same three keys, and the
+dictionaries hold the same three at en 194-198, th 520-524, and zh 848-852.
+
+grep for chart.leg, chart.you, and chart.volume over apps/ and packages/
+returns no line, so no stale read survives in code or test. The old names
+live only in spec.md:229-235 and plan.md:447 as the superseded drafts that
+section 8 replaces.
+
+7. USER FLOW (pass)
+
+NETWORK_PRESETS[2] at tutor-commission.ts:233-237 holds price 3000,
+personalStudents 2, and studentsPerLeg [4,4,4]. applyPreset at
+tutor-commission-calculator.tsx:162-169 writes those into the price, own
+students, leg count, and three leg fields. A visitor who selects preset 3
+sees two own students and three legs of four. tutor-commission.test.ts:125-143
+pins own volume 6000, network volume 42000, rate 59.1273%, gross 24833.45,
+three legs of 12000 at 5520, leg total 16560, preTax 8273.45, tax 248.2,
+and net 8025.25.
+
+The example text at tutor-advantage.ts:202 states 42,000, 59.1%, 24,833,
+16,560, 8,273, and 8,025 baht. The card shows 42,000, 59.1%, 24,833.45,
+16,560, 8,273.45, and 8,025.25. Every card figure rounds to the stated
+baht at nearest whole baht. The two read as one rounding step on screen,
+not as a contradiction.
+
+8. REGRESSION (pass)
+
+The delta changes only the third preset line in each dictionary. Presets 0
+and 1 keep their strings at tutor-advantage.ts:200-201 and 526-527. The
+price reset stays at tutor-commission-calculator.tsx:164. The clear-on-edit
+rule stays in the four onChange handlers at :141, :146, :153, and :158. The
+result card keeps aria-live="polite" at :361. The covering cases are
+tutor-commission-calculator.test.tsx:125-130, 204-210, 247-253, 255-270,
+272-284, and 286-305. The ids become-a-tutor (page.tsx:317) and
+commission-calculator (page.tsx:383) are unchanged, and page.test.tsx:45
+asserts the calculator anchor. A diff filter for id=, href="#", scroll-mt,
+and data-testid returns no line, so no id or anchor changed.
+
+9. TESTS
+
+One targeted test file, as briefed:
+
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx --reporter=dot --silent=true'
+
+run from the worktree root exits 0: Test Files 1 passed (1), Tests 14
+passed (14). One earlier attempt carried no workdir, resolved to the main
+checkout, printed "No test files found" and exited 0, so it executed no
+test; I count only the worktree run. The gallery and page wiring rest on
+read evidence plus the filed green-2.8-203bd5e78 gate, which records the
+full app suite at 71 files and 2617 tests and the ten-file targeted gate
+at 140 tests, both exit 0 at this product head. No server started. No
+build run. No build-graph scan.
+
+10. FINDINGS
+
+Blocking: none.
+
+Nonblocking: three notes, no gate impact.
+
+N1 nit: measure/tracks/www_tutor_calculator_20261117/test-strategy.md:49,
+:78, :81, and :122 still name the superseded preset 3 figures (12,015.00,
+6,694.44, 200.83, 6,493.61; and 18,709.44, 12,015, 6,694.44, 6,493.61) and
+the retired manifest key lessonPhases. The code now holds 16,560,
+8,273.45, 248.20, 8,025.25 and the key shortAnswer. Smallest fix: the
+orchestrator rewrites those four rows. Each row's pass criterion, the
+named command exiting 0, still holds, so this is strategy-text drift.
+
+N2 info: a graph leg row at tutor-commission-calculator.tsx:319-339 prints
+the leg numeral, the leg volume, and the leg payout, but no student
+numeral. After preset 3 the rows read Leg commission 1..3, Leg volume
+12,000, and 5,520. Four students show in the input rows and as the 12,000
+volume, not as a count in the graph. Smallest fix: none. Spec D-9 item 3
+defines the row as label, volume, and payout, and 12,000 equals four
+students at the 3,000 baht price. Recorded because the brief asked whether
+the graph rows show four students each.
+
+N3 info: handoff v0.4 section 8.1 at line 298 states behind-the-line
+floats of gross 24,833.46, payout before tax 8,273.46, and net 8,025.26,
+while the truncating code of spec D-3 gives 24,833.45, 8,273.45, and
+8,025.25, one satang lower. My node recompute gives rateUnits 591272855
+times 4,200,000 satang divided by 10^9 = 2,483,345 satang by truncation.
+The copy rounds to whole baht, so both readings give the same public line.
+Smallest fix: none for this track. Review A raised the same fact as its N1.
+
+No CONTEST items arrived with this brief, so nothing was kept or withdrawn.
+Payout arithmetic, image content, and aesthetics belong to other roles and
+were not judged.
+
+11. ARTIFACTS
+
+- measure/runs/www_tutor_calculator_20261117/review-c-p2-delta-203bd5e78.json
+- measure/runs/www_tutor_calculator_20261117/review-c-p2-delta-203bd5e78.log (this file)
+
+Those two paths are the only write scope. No product file, test, plan, or
+spec was changed. No dispositions. No question tool. No deploy. No push.
+
+MEASURE_AGENT_RESULT
+task: review-c-p2-delta
+track: www_tutor_calculator_20261117
+phase: 2
+role: measure-review-c
+route: opencode-go/mimo-v2.6-flash
+verdict: PASS
+status: pass
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha: e2439b438511046b58ec8f3e734e655706c2ab8c
+audited_head_sha: 94af2c15b5e4eaf393f696564c9eed3e689de057
+commit_sha: 94af2c15b5e4eaf393f696564c9eed3e689de057
+briefed_head_sha: 203bd5e78dceb9c1701ac708886915f340005d5e
+head_advanced_during_audit: true (94af2c15b is plan.md only; product diff unchanged)
+result_file: measure/runs/www_tutor_calculator_20261117/review-c-p2-delta-203bd5e78.json
+tests: heavy-run 1 file passed (1), 14 passed (14) from the worktree root
+blocking_findings: 0
+nonblocking_findings: 3 (N1 nit, test-strategy.md rows still name superseded preset 3 figures and the retired lessonPhases key; N2 info, graph leg rows carry no student numeral, which spec D-9 item 3 allows; N3 info, handoff behind-the-line floats sit 1 satang above the truncating code, copy unaffected)
+retry_recommendation: none
+handoff: none
+END_MEASURE_AGENT_RESULT

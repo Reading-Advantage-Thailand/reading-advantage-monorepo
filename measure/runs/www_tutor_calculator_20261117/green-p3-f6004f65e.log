@@ -1,0 +1,198 @@
+Green P3 · www_tutor_calculator_20261117 · role_base_sha f6004f65e6872fafcbc4083263dbcd652a56a524
+
+Working dir: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+phase_base_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+role_base_sha: f6004f65e6872fafcbc4083263dbcd652a56a524
+Red commits inside phase_base_sha..HEAD: 8d8f1c01cc6dfc7ff8fd85afa6c623300a9bf9d1
+(the Phase 3 Red change) and debbed4f190c8ffd6472ca03a201bfa043413e5c (the Mid Red retry).
+
+Tasks in this role: 3.2 (locale copy), 3.3 (component and page keys), 3.4 (gallery),
+3.5 (half-up tax). All four marked [~] at the start.
+
+== Red baseline ==
+
+Command:
+  pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts
+  src/lib/tutor-commission.adversarial.test.ts src/lib/__tests__/tutor-screens.test.ts
+  src/lib/__tests__/tutor-screens.adversarial.test.ts src/__tests__/www-tutor-calculator.locale.test.ts
+  src/__tests__/www-tutor-screens-copy.adversarial.test.ts
+  src/components/marketing/tutor-commission-calculator.test.tsx
+  src/components/marketing/tutor-commission-calculator.adversarial.test.tsx
+  "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx"
+  "src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx"
+  src/__tests__/products-page-pictures.red.test.tsx --reporter=dot --silent=true --maxWorkers=1
+
+Exit 1. Test Files 10 failed | 1 passed (11). Tests 53 failed | 111 passed (164).
+Same counts as the Red run log measure/runs/www_tutor_calculator_20261117/red-p3-81df01cf2-vitest.txt.
+
+== Green ==
+
+Implementation: tasks 3.2, 3.3, 3.4, 3.5.
+
+3.2 The calculator and screens blocks in en, th, and zh now hold the PR v0.4 section 6 strings
+    byte for byte, in the section 6 key order. The th values come from the Thai of PR sections 2
+    and 3. The zh values equal the en values (D-10). No chart.*, downline, direct-tutor,
+    second-level, or pre-tax key stays.
+
+3.3 The component and the page read only the section 6 keys. The graph shows one bar per leg
+    (graph.legBar with {n} replaced, the leg volume and the leg commission), the tutor's own bar
+    (graph.ownBar), and the totals graph.grossBar, graph.legCommissionBar, graph.netBar with
+    graph.axisBaht as the unit. The rate card keeps graph.rateTitle, graph.rateAxis and
+    graph.ratePoint, and the SVG stays aria-hidden. The results rows are ownGV, networkGV, rate,
+    gross, legCommissions and tax, and the net stays the hero figure. The explain variant is
+    withLegs. The leg count field has the add and remove buttons of the section 6 inputs.
+
+3.4 The manifest holds guidedWriting, shortAnswer, feedback, selfReflection and classRecord, in
+    that order, and every file is a student-mobile webp at 520 by 1125. The four new webp files
+    come from the same tool and the same quality that task 2.1 used for 002: the script
+    scripts/blur-tutor-screens.py, PIL, WEBP quality 85. The regenerated 002 file is byte
+    identical to the committed one. The 070 and tutor-desktop/062 webp files are removed with
+    git rm, so the folder holds exactly five webp files. The page renders five cards.
+
+3.5 The tax rounds half up as (preTaxSatang * 3n + 50n) / 100n, the rule of
+    finance-mlm-service/src/services/taxService.ts:4. The gross stays truncated. The three
+    preset taxes do not move.
+
+== Gates ==
+
+1. Eleven-file targeted command: exit 0. Test Files 11 passed (11). Tests 164 passed (164).
+
+2. Per-task targeted commands, each exit 0:
+   - 3.2: src/__tests__/www-tutor-calculator.locale.test.ts and
+     src/__tests__/www-tutor-screens-copy.adversarial.test.ts.
+   - 3.3: src/components/marketing/tutor-commission-calculator.test.tsx and
+     src/components/marketing/tutor-commission-calculator.adversarial.test.tsx.
+   - 3.4: src/lib/__tests__/tutor-screens.test.ts,
+     src/lib/__tests__/tutor-screens.adversarial.test.ts and
+     "src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx".
+   - 3.5: src/lib/tutor-commission.test.ts and src/lib/tutor-commission.adversarial.test.ts.
+   Each command ends with --reporter=dot --silent=true --maxWorkers=1.
+
+3. pnpm --filter www-reading-advantage exec tsc --noEmit -p .: exit 0.
+
+4. pnpm --filter www-reading-advantage exec eslint src/locales/pages/products/tutor-advantage.ts
+   src/components/marketing/tutor-commission-calculator.tsx
+   "src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx" src/lib/product-pictures.ts
+   src/lib/tutor-commission.ts: exit 0, no output.
+
+5. rg -n -i "downline|ดาวน์ไลน์" apps/www-reading-advantage/src --glob '!**/*.test.*':
+   exit 1 and no output, so the scan finds nothing.
+
+== Mid Red retry ==
+
+The Red commit 8d8f1c01c left two defects in the committed Red test file
+src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx. Green may not edit a
+committed Red test, so the defects were reported to the orchestrator and the Mid Red retry
+debbed4f1 fixed both. No committed Red test file changed in the Green commit.
+
+Defect 1, the gallery count. The Red commit raised the gallery to five cards in the sibling
+file page.adversarial.test.tsx and left the Phase 2 case in page.test.tsx at three.
+  - page.test.tsx line 15: const SCREEN_SLOT_INDEXES = [0, 1, 2] as const;
+  - page.test.tsx line 114: expect(cards.length).toBe(SCREEN_SLOT_INDEXES.length);
+  - page.adversarial.test.tsx line 58 and line 65: expect(cards.length).toBe(5);
+  Both cases read the same section: document.querySelector("[data-testid='tutor-screens']")
+  .querySelectorAll("li"). One number of list items cannot be three and five at the same time.
+  The specification and the rest of the committed Red contract want five: spec 6.2 and 6.3 and
+  AC-19 name the five slots and the five cards, PR section 2 names the five student screens,
+  the locale test deep-equals the screens block with five items, and ADV-C2 and ADV-C5 expect
+  five items in every locale. The retry sets SCREEN_SLOT_INDEXES to [0, 1, 2, 3, 4].
+
+Defect 2, the type errors. The Red commit added the real-copy downline gate with
+vi.mocked(getScopedI18n).mockImplementation(async (scope: string) => (key: string) => string).
+getScopedI18n is next-intl's getTranslations, whose first parameter is an options object
+{ locale, namespace } and whose result is a Translator. The mock typed both as a plain string
+scope and a plain function, so tsc rejected the file at line 36 and line 150. The retry casts
+the translator with "as Awaited<ReturnType<typeof getScopedI18n>>", the way
+src/__tests__/phase-2-seo-assets.red.test.ts line 59 does.
+
+== Interpretation recorded ==
+
+The graph carries one bar per leg and one bar for the tutor's own share of the gross. The
+committed adversarial case "the graph bars add up to the whole gross" pins the widths of the
+preset 2 bars to 4,005, 4,005 and 4,645.69 over the gross of 12,655.69. The own volume of
+6,000 baht is 25 percent of the network volume and 47.4 percent of the gross, and no pinned
+width carries it, so no bar shows the own volume. PR section 6 gives the tutor's own bar one
+label, graph.ownBar, and D-17 removes every pre-tax label, so the own bar shows the tutor's own
+share of the gross under the PR wording. The totals under the bars carry graph.grossBar,
+graph.legCommissionBar and graph.netBar, and graph.axisBaht is the unit of the bar figures.
+
+== Commits ==
+
+Implementation commit: 032abe9f4e4a3f4734e52cb38133b72c1db5d50b
+Plan evidence commit: 519852dd11ec524a847010c06296d0b186f630ac
+
+MEASURE_AGENT_RESULT
+status: pass
+role: measure-green
+track: www_tutor_calculator_20261117
+phase: 3
+task: 3.2-3.5
+phase_base_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+role_base_sha: f6004f65e6872fafcbc4083263dbcd652a56a524
+module_commit: 032abe9f4e4a3f4734e52cb38133b72c1db5d50b
+plan_evidence_commit: 519852dd11ec524a847010c06296d0b186f630ac
+final_head: 519852dd11ec524a847010c06296d0b186f630ac
+red_run:
+-  exit_code: 1
+  test_files: 10 failed | 1 passed (11)
+  tests: 53 failed | 111 passed (164)
+  cause: the PR v0.4 copy, the five-slot gallery, the half-up tax and the withLegs variant were absent
+red_retry_commit: debbed4f190c8ffd6472ca03a201bfa043413e5c
+red_retry_reason: the Red commit left a three-card gallery count and two mistyped i18n mocks in the committed Red test file page.test.tsx
+green_run:
+-  exit_code: 0
+  test_files: 11 passed (11)
+  tests: 164 passed (164)
+type_exit_code: 0
+lint_exit_code: 0
+rg_downline_exit_code: 1
+rg_downline_output: none
+tasks_done:
+- 3.2
+- 3.3
+- 3.4
+- 3.5
+tasks_deferred: none
+files_added:
+- apps/www-reading-advantage/public/images/products/tutor-advantage/student-mobile/040-screen.webp
+- apps/www-reading-advantage/public/images/products/tutor-advantage/student-mobile/004-screen.webp
+- apps/www-reading-advantage/public/images/products/tutor-advantage/student-mobile/052-screen.webp
+- apps/www-reading-advantage/public/images/products/tutor-advantage/student-mobile/064-screen.webp
+files_modified:
+- apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts
+- apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx
+- apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx
+- apps/www-reading-advantage/src/lib/product-pictures.ts
+- apps/www-reading-advantage/src/lib/tutor-commission.ts
+- apps/www-reading-advantage/scripts/blur-tutor-screens.py
+files_removed:
+- apps/www-reading-advantage/public/images/products/tutor-advantage/student-mobile/070-screen.webp
+- apps/www-reading-advantage/public/images/products/tutor-advantage/tutor-desktop/062-screen.webp
+files_unchanged_tests:
+- no committed Red test file was edited by Green
+handoff: |
+  Tasks 3.2 to 3.5 are implemented, and the phase gate passes. The Mid Red retry debbed4f1
+  fixed the two defects of the committed Red test file, and the Green implementation needed
+  no change for it.
+
+  What a reviewer should scope:
+  1. The locale file: the calculator and screens blocks in en, th, and zh, copied from PR
+     section 6 and the Thai of PR sections 2 and 3, with zh equal to en.
+  2. The component: the new props, the leg count with the add and remove buttons, the graph
+     with one bar per leg and the own bar, the rate card with the rate axis, and the results
+     rows without the downline row.
+  3. The page: the calculator copy keys and the five gallery cards.
+  4. The manifest and the five webp files, and the two removed files.
+  5. The module: the half-up tax, the withLegs variant, and the JSDoc without the downline word.
+  6. The build script: the five gallery screens, no blur box needed.
+
+  One design choice for the reviewers: the own bar of the graph carries the PR label
+  "Your own students" and shows the tutor's own share of the gross. The committed adversarial
+  case pins the bar widths, and the own volume fits none of them, while PR section 6 gives the
+  tutor's own bar one label and D-17 removes every pre-tax label. The reasoning is in plan.md
+  under task 3.3.
+
+  Next for the orchestrator: the Phase 3 gate block of task 3.6, then the reviews of task 3.7.
+questions: none
+END_MEASURE_AGENT_RESULT
