@@ -214,6 +214,24 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
 
   Red remediation (2026-11-17): Review A at audited head `10dcf42a8d88c90f8e02debae761196ef40f2ccd` (artifact `review-a-p1-10dcf42a8.json`) returned CHANGES_REQUIRED. F1 added four AC-9 component cases: leg removal from 3 to 2, four legs at count 4, preset index 1 figures and text and pressed state, and preset index 2 text. F2 added five clamp pins: NaN and Infinity rates, Infinity network money, NaN price, NaN leg, and negative price and student count. `phase_base_sha` 8862cf14cc6e9b11e62d08d5084288a4c294752c; `role_base_sha` 4e32f7c76710f0647aa712b74d55dc8618bc8076. Command `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx src/lib/tutor-commission.test.ts --reporter=dot --silent=true'` exits 0: `Test Files 2 passed (2)`, `Tests 41 passed (41)`. Build-graph scan skipped under PM load watch: scope graph work to the app or skip. Result artifacts: `measure/runs/www_tutor_calculator_20261117/red-remediation-1-*.json` and `.log`.
 
+  Adversarial remediation (2026-11-17): the adversarial suite at `61e614489` left one Red test,
+  `src/lib/tutor-commission.adversarial.test.ts > A6 finite input whose product overflows`, which
+  threw `RangeError: The number Infinity cannot be converted to a BigInt` in `toSatang` for a
+  finite price whose volume product overflows. Fix at `daa77805d` in `src/lib/tutor-commission.ts`:
+  `calculateNetwork` clamps `ownVolume`, each leg volume, and `networkVolume` to finite
+  non-negative, and `toSatang` returns `0n` when the satang product is not finite; the stale
+  `preTax` JSDoc now states the graph renders it as the tutor's payout row (spec D-9 item 2).
+  Normal inputs are bit-identical. `role_base_sha` 418b4e7cb4f3f46260a80b67e4699739210d9922.
+  Gate `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+  www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts
+  src/lib/tutor-commission.adversarial.test.ts src/components/marketing/tutor-commission-calculator.test.tsx
+  src/components/marketing/tutor-commission-calculator.adversarial.test.tsx --reporter=dot
+  --silent=true'` exits 0: `Test Files 4 passed (4)`, `Tests 79 passed (79)` (module 27, module
+  adversarial 23, component 14, component adversarial 15). `pnpm turbo run check-types
+  --filter=www-reading-advantage` exits 0. Build-graph updated incrementally, one file, no
+  whole-repo scan (PM load watch). Result artifacts:
+  `measure/runs/www_tutor_calculator_20261117/green-p1-fix-daa77805d.json` and `.log`.
+
 - [x] 1.9 Checkpoint Phase 1. Test: AC-11.
 
   Commit the plan update with the task SHAs and the gate output. Phase 1 ships no push (D-13).
