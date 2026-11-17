@@ -99,7 +99,7 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   at exit 0. `pnpm turbo run check-types --filter=www-reading-advantage` exits 0. Evidence
   files: `measure/runs/www_tutor_calculator_20261117/green-1.4-27f33b18e.json` and `.log`.
 
-- [ ] 1.5 Red: pin the calculator behaviour. Test: AC-9.
+- [x] 1.5 Red: pin the calculator behaviour. Test: AC-9.
 
   File `apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx`
   with `@testing-library/react` and `userEvent`. It holds: the default paint of 0 figures and
@@ -107,11 +107,22 @@ Phase 1 needs nothing from the PM. It ends at a local checkpoint and ships no pu
   3; preset 1 giving `5,520` and `5,354.40`; preset 3 giving `18,709.44`, `12,015`, `6,694.44`,
   and `6,493.61` with three leg rows in the graph; the `aria-pressed` state on one preset only;
   the setup and result text of the selected preset; the clear on edit (D-7); the live region on
-  the result card; and the labelled inputs with `min="0"`.
+  the result card; the labelled inputs with `min="0"`; and the price default of 3,000 restored
+  by a preset (D-5).
 
   Props come from the en dictionary, so the test reads the copy the page reads.
 
-  Done: it fails, because the component does not exist.
+  Done: bcaf27d8003a8f83ceb3dac6e24f3a28f989eb12. Red command exit 1: `bash
+  /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+  www-reading-advantage exec vitest run
+  src/components/marketing/tutor-commission-calculator.test.tsx --reporter=dot
+  --silent=true'`. Evidence: `Test Files 1 failed (1)`, `Tests no tests`, cause
+  `Failed to resolve import "./tutor-commission-calculator" from
+  "src/components/marketing/tutor-commission-calculator.test.tsx". Does the file exist?`.
+  The component file does not exist at this commit. The test holds 10 cases
+  (test_files=1, authored_cases=10); none execute because the import fails at transform.
+  Evidence files: `measure/runs/www_tutor_calculator_20261117/red-1.5-bcaf27d80.json` and
+  `.log`.
 
 - [ ] 1.6 Green: build the client component. Test: AC-9.
 
