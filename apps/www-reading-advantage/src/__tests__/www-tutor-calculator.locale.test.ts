@@ -1,7 +1,7 @@
 /**
  * Red contract for the calculator locale keys and copy (AC-5, AC-7, AC-8),
  * and for the screens gallery keys (AC-10, spec 6.3, D-10, D-15a).
- * Pins spec sections 5.4 and 6.3 word for word.
+ * Pins spec sections 5.4, 6.3, and 6.4 word for word.
  * The `calculator` block was intentionally absent at the Red stage of task 1.3;
  * the `screens` block is intentionally absent at the Red stage of task 2.2.
  */
@@ -574,5 +574,60 @@ describe("10. screens copy pinned word for word (AC-10, spec 6.3)", () => {
   it("detects a draft marker when it is injected (positive control)", () => {
     const probe = { ...stringLeaves(screensBlock("en")), __probe: "draft" };
     expect(findTokens(probe, ["draft"]).some((hit) => hit.path === "__probe")).toBe(true);
+  });
+});
+
+/** One row per changed live line of spec 6.4: exact new en copy, exact new th copy. */
+const LIVE_LINE_PINS: readonly { path: readonly string[]; en: string; th: string }[] = [
+  {
+    path: ["tutorRole", "points", "3"],
+    en: "The calculator on this page shows examples. Ask us about your own case.",
+    th: "เครื่องคำนวณในหน้านี้แสดงตัวอย่าง ทักมาคุยกับเราเรื่องกรณีของคุณเองได้",
+  },
+  {
+    path: ["faq", "items", "5", "answer"],
+    en: "Tutors earn commission under a unilevel commission model, and the system settles it monthly. The rate rises with the network volume of the month. The calculator on this page shows examples; the real figure comes from the classes that run and are paid for.",
+    th: "ติวเตอร์ได้รับค่าคอมมิชชันตามโมเดลคอมมิชชันแบบยูนิเลเวล และระบบสรุปยอดให้ทุกเดือน อัตราจะสูงขึ้นตามยอดรวมของเครือข่ายในเดือนนั้น เครื่องคำนวณในหน้านี้แสดงตัวอย่าง ตัวเลขจริงมาจากคลาสที่เปิดสอนและมีการจ่ายเงินจริง",
+  },
+];
+
+/** The two old en lines that spec 6.4 removes from the file. */
+const ABSENT_LIVE_LINES = [
+  "We do not publish income figures. Ask us for the details.",
+  "Tutors earn commission under a unilevel commission model, and the system settles it monthly. We do not publish income figures. Use the contact page to ask about the details.",
+] as const;
+
+describe("11. the two live lines (AC-6, spec 6.4)", () => {
+  it("holds the new en copy at both paths", () => {
+    for (const pin of LIVE_LINE_PINS) {
+      expect(read(DICTS.en, pin.path), `en ${leafKey(pin.path)}`).toBe(pin.en);
+    }
+  });
+
+  it("holds the new th copy at both paths", () => {
+    for (const pin of LIVE_LINE_PINS) {
+      expect(read(DICTS.th, pin.path), `th ${leafKey(pin.path)}`).toBe(pin.th);
+    }
+  });
+
+  it("keeps the zh values equal to the en values (D-10)", () => {
+    for (const pin of LIVE_LINE_PINS) {
+      expect(read(DICTS.zh, pin.path), `zh ${leafKey(pin.path)}`).toBe(pin.en);
+    }
+  });
+
+  it("finds neither old en line in any dictionary", () => {
+    for (const locale of LOCALES) {
+      expect(findTokens(stringLeaves(DICTS[locale]), [...ABSENT_LIVE_LINES]), `${locale} old line`).toEqual(
+        [],
+      );
+    }
+  });
+
+  it("detects each old line when it is injected (positive control)", () => {
+    for (const line of ABSENT_LIVE_LINES) {
+      const probe = { ...stringLeaves(DICTS.en), __probe: line };
+      expect(findTokens(probe, [line]).some((hit) => hit.path === "__probe")).toBe(true);
+    }
   });
 });

@@ -148,7 +148,7 @@ export const en = {
             "You teach the class. The class package is one workbook, about 25 hours of teaching.",
             "A unilevel commission model pays tutors for the classes they teach and for the tutors they bring into the network.",
             "Commission is calculated by the system and settled each month.",
-            "We do not publish income figures. Ask us for the details."
+            "The calculator on this page shows examples. Ask us about your own case."
         ],
         "cta": "Apply as a tutor",
         "alt": "A tutor asking a student a question during a class"
@@ -232,7 +232,7 @@ export const en = {
             },
             {
                 "question": "How do tutors earn?",
-                "answer": "Tutors earn commission under a unilevel commission model, and the system settles it monthly. We do not publish income figures. Use the contact page to ask about the details."
+                "answer": "Tutors earn commission under a unilevel commission model, and the system settles it monthly. The rate rises with the network volume of the month. The calculator on this page shows examples; the real figure comes from the classes that run and are paid for."
             }
         ]
     },
@@ -477,7 +477,7 @@ export const th = {
             "คุณเป็นผู้สอนคลาส หนึ่งแพ็กเกจคลาสคือหนึ่งเวิร์กบุ๊ก ใช้เวลาสอนประมาณ 25 ชั่วโมง",
             "โมเดลคอมมิชชันแบบยูนิเลเวลจ่ายค่าคอมมิชชันให้ติวเตอร์ตามคลาสที่สอนและติวเตอร์ที่ชวนเข้าเครือข่าย",
             "ระบบคำนวณค่าคอมมิชชันและชำระทุกเดือน",
-            "เราไม่เผยแพร่ตัวเลขรายได้ สอบถามรายละเอียดได้"
+            "เครื่องคำนวณในหน้านี้แสดงตัวอย่าง ทักมาคุยกับเราเรื่องกรณีของคุณเองได้"
         ],
         "cta": "สมัครเป็นติวเตอร์",
         "alt": "ติวเตอร์ถามคำถามนักเรียนระหว่างคลาส"
@@ -561,7 +561,7 @@ export const th = {
             },
             {
                 "question": "ติวเตอร์ได้รายได้อย่างไร",
-                "answer": "ติวเตอร์ได้ค่าคอมมิชชันตามโมเดลคอมมิชชันแบบยูนิเลเวล และระบบชำระทุกเดือน เราไม่เผยแพร่ตัวเลขรายได้ สอบถามรายละเอียดได้ที่หน้าติดต่อ"
+                "answer": "ติวเตอร์ได้รับค่าคอมมิชชันตามโมเดลคอมมิชชันแบบยูนิเลเวล และระบบสรุปยอดให้ทุกเดือน อัตราจะสูงขึ้นตามยอดรวมของเครือข่ายในเดือนนั้น เครื่องคำนวณในหน้านี้แสดงตัวอย่าง ตัวเลขจริงมาจากคลาสที่เปิดสอนและมีการจ่ายเงินจริง"
             }
         ]
     },
@@ -806,7 +806,7 @@ export const zh = {
             "您负责授课。一个课程包对应一本练习册，约 25 小时的教学。",
             "多级（unilevel）佣金模式按导师所授课程以及带入网络的导师支付佣金。",
             "系统计算佣金，并按月结算。",
-            "我们不公布收入数字。欢迎来询问详情。"
+            "The calculator on this page shows examples. Ask us about your own case."
         ],
         "cta": "申请成为导师",
         "alt": "导师在课堂上向学生提问"
@@ -892,7 +892,7 @@ export const zh = {
             },
             {
                 "question": "导师如何获得收入？",
-                "answer": "导师按多级（unilevel）佣金模式获得佣金，系统按月结算。我们不公布收入数字。请通过联系页面咨询详情。"
+                "answer": "Tutors earn commission under a unilevel commission model, and the system settles it monthly. The rate rises with the network volume of the month. The calculator on this page shows examples; the real figure comes from the classes that run and are paid for."
             }
         ]
     },
