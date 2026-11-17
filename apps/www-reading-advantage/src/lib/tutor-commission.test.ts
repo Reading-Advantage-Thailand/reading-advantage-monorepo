@@ -122,25 +122,25 @@ describe("3. presets 2 and 3 to the satang", () => {
     expect(result.net).toBe(4506.32);
   });
 
-  it("preset 3: three legs of 9,000 baht at 4,005 baht each", () => {
+  it("preset 3: three legs of 12,000 baht at 5,520 baht each", () => {
     const input = NETWORK_PRESETS[2];
     expect(input.personalStudents).toBe(2);
-    expect(input.studentsPerLeg).toEqual([3, 3, 3]);
+    expect(input.studentsPerLeg).toEqual([4, 4, 4]);
 
     const result = calculateNetwork(input);
     expect(result.ownVolume).toBe(6000);
-    expect(result.networkVolume).toBe(33000);
-    expect((result.rate * 100).toFixed(4)).toBe("56.6953");
-    expect(result.gross).toBe(18709.44);
+    expect(result.networkVolume).toBe(42000);
+    expect((result.rate * 100).toFixed(4)).toBe("59.1273");
+    expect(result.gross).toBe(24833.45);
     expect(result.legs).toEqual([
-      { leg: 1, students: 3, volume: 9000, payout: 4005 },
-      { leg: 2, students: 3, volume: 9000, payout: 4005 },
-      { leg: 3, students: 3, volume: 9000, payout: 4005 },
+      { leg: 1, students: 4, volume: 12000, payout: 5520 },
+      { leg: 2, students: 4, volume: 12000, payout: 5520 },
+      { leg: 3, students: 4, volume: 12000, payout: 5520 },
     ]);
-    expect(result.legPayouts).toBe(12015);
-    expect(result.preTax).toBe(6694.44);
-    expect(result.withholdingTax).toBe(200.83);
-    expect(result.net).toBe(6493.61);
+    expect(result.legPayouts).toBe(16560);
+    expect(result.preTax).toBe(8273.45);
+    expect(result.withholdingTax).toBe(248.2);
+    expect(result.net).toBe(8025.25);
   });
 });
 
@@ -155,11 +155,11 @@ describe("4. conservation in integer satang", () => {
     );
   });
 
-  it("preset 3: 1,201,500 + 669,444 = 1,870,944", () => {
+  it("preset 3: 1,656,000 + 827,345 = 2,483,345", () => {
     const result = calculateNetwork(NETWORK_PRESETS[2]);
-    expect(toSatang(result.legPayouts)).toBe(1201500);
-    expect(toSatang(result.preTax)).toBe(669444);
-    expect(toSatang(result.gross)).toBe(1870944);
+    expect(toSatang(result.legPayouts)).toBe(1656000);
+    expect(toSatang(result.preTax)).toBe(827345);
+    expect(toSatang(result.gross)).toBe(2483345);
     expect(toSatang(result.legPayouts) + toSatang(result.preTax)).toBe(
       toSatang(result.gross),
     );

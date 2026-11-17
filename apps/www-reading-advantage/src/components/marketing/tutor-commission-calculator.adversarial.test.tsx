@@ -75,9 +75,9 @@ function legStudentInputs(): HTMLElement[] {
   });
 }
 
-/** Returns the graph label of each leg row, for example "Leg 1". */
+/** Returns the graph label of each leg row, for example "Leg commission 1". */
 function legRows(): HTMLElement[] {
-  const pattern = new RegExp(`^\\s*${escapeRegExp(copy.chart.leg)}\\s*[1-9]\\d*\\s*$`);
+  const pattern = new RegExp(`^\\s*${escapeRegExp(copy.chart.legPayout)}\\s*[1-9]\\d*\\s*$`);
   return screen.queryAllByText(pattern);
 }
 
@@ -186,15 +186,15 @@ describe("Adversarial: an edit clears the preset example", () => {
 
     const secondLeg = legStudentInputs()[1];
     await user.clear(secondLeg);
-    await user.type(secondLeg, "4");
+    await user.type(secondLeg, "5");
 
     expect(screen.queryByText(copy.presets[2].setup)).toBeNull();
     expect(screen.queryByText(copy.presets[2].result)).toBeNull();
     expect(pressedPresetCount()).toBe(0);
-    expect(resultValue(copy.results.networkGV)).toBe("36,000");
-    expect(resultValue(copy.results.downline)).toBe("13,530");
-    expect(resultValue(copy.results.gross)).toBe("20,744.54");
-    expect(heroValue()).toBe("6,998.11");
+    expect(resultValue(copy.results.networkGV)).toBe("45,000");
+    expect(resultValue(copy.results.downline)).toBe("18,165");
+    expect(resultValue(copy.results.gross)).toBe("26,885.73");
+    expect(heroValue()).toBe("8,459.11");
   });
 });
 
@@ -303,11 +303,11 @@ describe("Adversarial: display of D-3", () => {
     await user.click(presetButton(2));
 
     const [, , rate, gross, downline, tax] = breakdownValues();
-    expect(rate).toBe("56.7%");
-    expect(parseSatang(gross)).toBe(1870944);
-    expect(parseSatang(downline)).toBe(1201500);
-    expect(parseSatang(tax)).toBe(20083);
-    expect(parseSatang(heroValue())).toBe(649361);
+    expect(rate).toBe("59.1%");
+    expect(parseSatang(gross)).toBe(2483345);
+    expect(parseSatang(downline)).toBe(1656000);
+    expect(parseSatang(tax)).toBe(24820);
+    expect(parseSatang(heroValue())).toBe(802525);
     expect(parseSatang(gross) - parseSatang(downline) - parseSatang(tax)).toBe(
       parseSatang(heroValue()),
     );
@@ -325,8 +325,8 @@ describe("Adversarial: display of D-3", () => {
     expect(resultValue(copy.results.rate)).toBe("52.7%");
 
     await user.click(presetButton(2));
-    expect(resultValue(copy.results.rate)).toBe("56.7%");
-    expect(resultRegion().textContent ?? "").not.toMatch(/56\.6953|52\.732/);
+    expect(resultValue(copy.results.rate)).toBe("59.1%");
+    expect(resultRegion().textContent ?? "").not.toMatch(/59\.1273|52\.732/);
   });
 
   it("the graph bars add up to the whole gross", async () => {

@@ -143,19 +143,19 @@ const PINS: readonly { path: readonly string[]; en: string; th: string }[] = [
     th: "ใส่จำนวนนักเรียนเพื่อดูยอดของเดือน",
   },
   {
-    path: ["chart", "leg"],
-    en: "Leg",
-    th: "สายงาน",
+    path: ["chart", "legPayout"],
+    en: "Leg commission",
+    th: "ค่าคอมมิชชันของสาย",
   },
   {
-    path: ["chart", "you"],
+    path: ["chart", "yourPayout"],
     en: "Your payout",
-    th: "เงินที่คุณได้รับ",
+    th: "ยอดจ่ายของคุณ",
   },
   {
-    path: ["chart", "volume"],
-    en: "Volume",
-    th: "ยอดรวม",
+    path: ["chart", "legVolume"],
+    en: "Leg volume",
+    th: "ยอดรวมของสาย",
   },
   {
     path: ["presets", "0", "name"],
@@ -189,18 +189,18 @@ const PINS: readonly { path: readonly string[]; en: string; th: string }[] = [
   },
   {
     path: ["presets", "2", "name"],
-    en: "A small team, three legs",
-    th: "ทีมเล็ก สามสายงาน",
+    en: "A small team with three legs",
+    th: "ทีมเล็กที่มีสามสาย",
   },
   {
     path: ["presets", "2", "setup"],
-    en: "Two own students, and three direct tutors with three students each.",
-    th: "นักเรียนของตัวเองสองคน และติวเตอร์ชั้นแรกสามคนที่มีนักเรียนคนละสามคน",
+    en: "Two personal students, and three legs with four students each.",
+    th: "นักเรียนในคลาสของคุณเอง 2 คน และ 3 สาย สายละ 4 คน",
   },
   {
     path: ["presets", "2", "result"],
-    en: "33,000 baht of network volume at a rate of 56.7%. The gross is 18,709 baht, and the three direct tutors earn 12,015 baht of it. The payout is 6,694 baht before tax, and 6,494 baht after 3% withholding tax.",
-    th: "ยอดรวมของเครือข่าย 33,000 บาท ที่อัตรา 56.7% ค่าคอมมิชชันก่อนหัก 18,709 บาท โดยติวเตอร์ชั้นแรกสามคนได้รับ 12,015 บาท เหลือจ่ายก่อนภาษี 6,694 บาท และหลังหักภาษีหัก ณ ที่จ่าย 3% เหลือ 6,494 บาท",
+    en: "42,000 baht of network volume at a rate of 59.1%. The gross is 24,833 baht, and the three legs earn 16,560 baht of it. The payout is 8,273 baht before tax, and 8,025 baht after 3% withholding tax.",
+    th: "ยอดรวมของเครือข่าย 42,000 บาท ที่อัตรา 59.1% ยอดก่อนหักคือ 24,833 บาท และสามสายได้ค่าคอมมิชชัน 16,560 บาทจากยอดนี้ ยอดจ่ายคือ 8,273 บาทก่อนหักภาษี และ 8,025 บาทหลังหักภาษีหัก ณ ที่จ่าย 3%",
   },
   {
     path: ["disclaimer"],
@@ -372,32 +372,32 @@ describe("4. zh holds the English lines (D-10)", () => {
   });
 });
 
-describe("5. preset 3 draft of D-2a", () => {
-  it("pins the en draft name, setup, and result", () => {
-    expect(read(block("en"), ["presets", "2", "name"])).toBe("A small team, three legs");
+describe("5. preset 3 final copy of handoff v0.4 section 8", () => {
+  it("pins the en name, setup, and result", () => {
+    expect(read(block("en"), ["presets", "2", "name"])).toBe("A small team with three legs");
     expect(read(block("en"), ["presets", "2", "setup"])).toBe(
-      "Two own students, and three direct tutors with three students each.",
+      "Two personal students, and three legs with four students each.",
     );
     expect(read(block("en"), ["presets", "2", "result"])).toBe(
-      "33,000 baht of network volume at a rate of 56.7%. The gross is 18,709 baht, and the three direct tutors earn 12,015 baht of it. The payout is 6,694 baht before tax, and 6,494 baht after 3% withholding tax.",
+      "42,000 baht of network volume at a rate of 59.1%. The gross is 24,833 baht, and the three legs earn 16,560 baht of it. The payout is 8,273 baht before tax, and 8,025 baht after 3% withholding tax.",
     );
   });
 
-  it("pins the th draft name, setup, and result", () => {
-    expect(read(block("th"), ["presets", "2", "name"])).toBe("ทีมเล็ก สามสายงาน");
+  it("pins the th name, setup, and result", () => {
+    expect(read(block("th"), ["presets", "2", "name"])).toBe("ทีมเล็กที่มีสามสาย");
     expect(read(block("th"), ["presets", "2", "setup"])).toBe(
-      "นักเรียนของตัวเองสองคน และติวเตอร์ชั้นแรกสามคนที่มีนักเรียนคนละสามคน",
+      "นักเรียนในคลาสของคุณเอง 2 คน และ 3 สาย สายละ 4 คน",
     );
     expect(read(block("th"), ["presets", "2", "result"])).toBe(
-      "ยอดรวมของเครือข่าย 33,000 บาท ที่อัตรา 56.7% ค่าคอมมิชชันก่อนหัก 18,709 บาท โดยติวเตอร์ชั้นแรกสามคนได้รับ 12,015 บาท เหลือจ่ายก่อนภาษี 6,694 บาท และหลังหักภาษีหัก ณ ที่จ่าย 3% เหลือ 6,494 บาท",
+      "ยอดรวมของเครือข่าย 42,000 บาท ที่อัตรา 59.1% ยอดก่อนหักคือ 24,833 บาท และสามสายได้ค่าคอมมิชชัน 16,560 บาทจากยอดนี้ ยอดจ่ายคือ 8,273 บาทก่อนหักภาษี และ 8,025 บาทหลังหักภาษีหัก ณ ที่จ่าย 3%",
     );
   });
 
-  it("pins the three chart draft labels in en and th", () => {
+  it("pins the three chart final labels in en and th", () => {
     for (const [key, enValue, thValue] of [
-      ["leg", "Leg", "สายงาน"],
-      ["you", "Your payout", "เงินที่คุณได้รับ"],
-      ["volume", "Volume", "ยอดรวม"],
+      ["legPayout", "Leg commission", "ค่าคอมมิชชันของสาย"],
+      ["yourPayout", "Your payout", "ยอดจ่ายของคุณ"],
+      ["legVolume", "Leg volume", "ยอดรวมของสาย"],
     ] as const) {
       expect(read(block("en"), ["chart", key])).toBe(enValue);
       expect(read(block("th"), ["chart", key])).toBe(thValue);
@@ -479,23 +479,23 @@ const SCREEN_PINS: readonly { path: readonly string[]; en: string; th: string }[
   },
   {
     path: ["items", "0", "caption"],
-    en: "The student's home: the next class, the lesson, and Reedy practice.",
-    th: "หน้าแรกของนักเรียน: คลาสถัดไป บทเรียน และการฝึกพูดกับ Reedy",
+    en: "The student's home: the greeting, the next class, and the class card. Reedy voice practice is live for students with an active class package, on lessons they completed.",
+    th: "หน้าหลักของนักเรียน: คำทักทาย คลาสถัดไป และการ์ดคลาส การฝึกเสียงกับ Reedy เปิดใช้จริงสำหรับนักเรียนที่มีแพ็กเกจคลาสที่ยังใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว",
   },
   {
     path: ["items", "0", "alt"],
-    en: "Tutor Advantage student app home screen",
-    th: "หน้าแรกของแอปนักเรียน Tutor Advantage",
+    en: "Student app home screen with the next class and the class card",
+    th: "หน้าหลักแอปนักเรียน แสดงคลาสถัดไปและการ์ดคลาส",
   },
   {
     path: ["items", "1", "caption"],
-    en: "One lesson, 18 phases. The app follows the printed workbook step by step.",
-    th: "หนึ่งบทเรียน 18 ช่วง แอปพาไปทีละขั้นตามเวิร์กบุ๊กที่พิมพ์เป็นเล่ม",
+    en: "The student types the answer in the app, on the same lesson as the printed page.",
+    th: "นักเรียนพิมพ์คำตอบในแอป ในบทเดียวกับหน้าที่พิมพ์เป็นเล่ม",
   },
   {
     path: ["items", "1", "alt"],
-    en: "Tutor app showing the 18 phases of one lesson",
-    th: "แอปติวเตอร์แสดง 18 ช่วงของบทเรียนหนึ่งบท",
+    en: "Student app short-answer screen with the question and a typed answer",
+    th: "หน้าจอตอบคำถามสั้นในแอปนักเรียน พร้อมคำถามและคำตอบที่พิมพ์ไว้",
   },
   {
     path: ["items", "2", "caption"],

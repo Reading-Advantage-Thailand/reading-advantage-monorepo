@@ -436,6 +436,16 @@ Phase 1 acceptance: PASS at d279b870341c067c33fc884ae8863b5428487c17; artifact m
   it, and no file in this track touches that check. Evidence files:
   `measure/runs/www_tutor_calculator_20261117/green-2.4-9befd67c3.json` and `.log`.
 
+- [~] 2.7 Red: replace the spec drafts with PR's final copy (handoff v0.4 section 8). Test: AC-5, AC-13.
+
+  Update the pins that hold a superseded string, key, or figure: the three `chart.*` labels and preset 3 (8.1), gallery slot 2's `shortAnswer` key, caption, and alt (8.2), the `studentHome` caption and alt (8.4), and every preset-3 figure recomputed from `calculateNetwork` with `{ price: 3000, personalStudents: 2, studentsPerLeg: [4, 4, 4] }`. The gallery stays at three cards because 8.3 drops the `network` and `earnings` captions.
+
+  Note: PR's answers of handoff v0.4 (advantage-pr commit c97ec996, section 8) supersede spec D-2a, D-9's draft labels and D-15a; the gallery stays at three cards because section 8.3 drops the two captions.
+
+  Red evidence: exit 1. Command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts src/lib/tutor-commission.adversarial.test.ts src/components/marketing/tutor-commission-calculator.test.tsx src/components/marketing/tutor-commission-calculator.adversarial.test.tsx src/__tests__/www-tutor-calculator.locale.test.ts src/__tests__/www-tutor-screens-copy.adversarial.test.ts src/lib/__tests__/tutor-screens.test.ts src/lib/__tests__/tutor-screens.adversarial.test.ts "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx" --reporter=dot --silent=true'`. Summary: `Test Files 6 failed | 4 passed (10)`, `Tests 25 failed | 115 passed (140)`. The 25 failing cases are nine locale copy and key failures, two module preset-3 failures, six component and component-adversarial failures, and eight manifest key failures. Every failure reads a replaced key, copy line, figure, or preset input. No failure has an unrelated cause.
+
+  Recompute: `calculateNetwork({ price: 3000, personalStudents: 2, studentsPerLeg: [4, 4, 4] })` gives own volume 6,000, network volume 42,000, rate 59.1273%, gross 24,833.45, three legs of 12,000 at 5,520 each, leg total 16,560, payout before tax 8,273.45, tax 248.20, net 8,025.25. Display strings: `42,000`, `59.1%`, `24,833.45`, `16,560`, `8,273.45`, `248.20`, `8,025.25`. Chart key map by role: `chart.leg` to `chart.legPayout` for the leg row label, `chart.volume` to `chart.legVolume` for the leg row volume, `chart.you` to `chart.yourPayout` for the tutor payout row. Evidence: `measure/runs/www_tutor_calculator_20261117/red-2.7-<sha>.json` and `.log`.
+
 - [b] 2.5 PM page-check at 390, 980, and 1280 px. Test: AC-15.
 
   The PM captures `/en/`, `/th/`, and `/zh/products/tutor-advantage`. The check covers: both

@@ -65,10 +65,10 @@ function legStudentInputs(): HTMLElement[] {
   });
 }
 
-/** Returns the graph label of each leg row, for example "Leg 1". */
+/** Returns the graph label of each leg row, for example "Leg commission 1". */
 function legRows(): HTMLElement[] {
   const pattern = new RegExp(
-    `^\\s*${escapeRegExp(copy.chart.leg)}\\s*[1-9]\\d*\\s*$`,
+    `^\\s*${escapeRegExp(copy.chart.legPayout)}\\s*[1-9]\\d*\\s*$`,
   );
   return screen.queryAllByText(pattern);
 }
@@ -109,8 +109,8 @@ describe("TutorCommissionCalculator first paint", () => {
     expect(within(result).getAllByText("0").length).toBeGreaterThan(0);
     expect(screen.queryByText("5,520")).toBeNull();
     expect(screen.queryByText("5,354.40")).toBeNull();
-    expect(screen.queryByText("18,709.44")).toBeNull();
-    expect(screen.queryByText("6,493.61")).toBeNull();
+    expect(screen.queryByText("24,833.45")).toBeNull();
+    expect(screen.queryByText("8,025.25")).toBeNull();
   });
 
   it("marks the result card as a polite live region", () => {
@@ -200,14 +200,31 @@ describe("TutorCommissionCalculator presets", () => {
     expect(screen.queryAllByText("5,354.40").length).toBeGreaterThan(0);
   });
 
-  it("shows the preset 3 figures and three leg rows in the graph", async () => {
+  it("shows the preset 3 figures and three leg rows of four students in the graph", async () => {
     const user = userEvent.setup();
     renderCalculator();
     await user.click(presetButton(2));
-    for (const figure of ["18,709.44", "12,015", "6,694.44", "6,493.61"]) {
-      expect(screen.queryAllByText(figure).length, figure).toBeGreaterThan(0);
+
+    // Recomputed from calculateNetwork({ price: 3000, personalStudents: 2,
+    // studentsPerLeg: [4, 4, 4] }) and formatted by the component's display rules.
+    expect(resultValue(copy.results.networkGV)).toBe("42,000");
+    expect(resultValue(copy.results.rate)).toBe("59.1%");
+    expect(resultValue(copy.results.gross)).toBe("24,833.45");
+    expect(resultValue(copy.results.downline)).toBe("16,560");
+    expect(hasFigure("8,273.45")).toBe(true);
+    expect(resultValue(copy.results.tax)).toBe("248.20");
+    expect(resultValue(copy.results.net)).toBe("8,025.25");
+
+    const inputs = legStudentInputs();
+    expect(inputs).toHaveLength(3);
+    for (const input of inputs) expect(input).toHaveValue(4);
+
+    const lines = legRows().map((row) => row.parentElement!);
+    expect(lines).toHaveLength(3);
+    for (const line of lines) {
+      expect(line.textContent).toContain("12,000");
+      expect(line.textContent).toContain("5,520");
     }
-    expect(legRows()).toHaveLength(3);
   });
 
   it("presses exactly one preset after a selection", async () => {

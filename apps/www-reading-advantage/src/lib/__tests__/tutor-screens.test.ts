@@ -17,7 +17,7 @@ const EXPECTED = {
     height: 1125,
     portrait: false,
   },
-  lessonPhases: {
+  shortAnswer: {
     src: "/images/products/tutor-advantage/student-mobile/002-screen.webp",
     width: 520,
     height: 1125,
@@ -33,7 +33,7 @@ const EXPECTED = {
 
 describe("tutor screens manifest", () => {
   it("holds the three slots in gallery order", () => {
-    expect(Object.keys(tutorScreens)).toEqual(["studentHome", "lessonPhases", "classList"]);
+    expect(Object.keys(tutorScreens)).toEqual(["studentHome", "shortAnswer", "classList"]);
   });
 
   for (const [slot, expected] of Object.entries(EXPECTED)) {

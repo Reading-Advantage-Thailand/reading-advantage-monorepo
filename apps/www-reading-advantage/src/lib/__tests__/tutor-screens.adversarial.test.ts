@@ -12,7 +12,7 @@ import { tutorScreens } from "../product-pictures";
 const PUBLIC = join(process.cwd(), "public");
 const SCREENS_DIR = join(PUBLIC, "images", "products", "tutor-advantage");
 const PREFIX = "/images/products/tutor-advantage/";
-const SLOTS = ["studentHome", "lessonPhases", "classList"] as const;
+const SLOTS = ["studentHome", "shortAnswer", "classList"] as const;
 const BYTES_MAX = 1_000_000;
 
 /**
