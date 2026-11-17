@@ -83,30 +83,36 @@ export default async function TutorAdvantage({
       price: key("calculator.inputs.price"),
       priceNote: key("calculator.inputs.priceNote"),
       ownStudents: key("calculator.inputs.ownStudents"),
-      directTutors: key("calculator.inputs.directTutors"),
-      studentsPerDirect: key("calculator.inputs.studentsPerDirect"),
+      legCount: key("calculator.inputs.legCount"),
+      legStudents: key("calculator.inputs.legStudents"),
+      addLeg: key("calculator.inputs.addLeg"),
+      removeLeg: key("calculator.inputs.removeLeg"),
     },
     results: {
       ownGV: key("calculator.results.ownGV"),
       networkGV: key("calculator.results.networkGV"),
       rate: key("calculator.results.rate"),
       gross: key("calculator.results.gross"),
-      downline: key("calculator.results.downline"),
+      legCommissions: key("calculator.results.legCommissions"),
       tax: key("calculator.results.tax"),
       net: key("calculator.results.net"),
     },
     explain: {
       ownOnly: key("calculator.explain.ownOnly"),
-      withDownline: key("calculator.explain.withDownline"),
+      withLegs: key("calculator.explain.withLegs"),
       zero: key("calculator.explain.zero"),
     },
-    chart: {
-      legVolume: key("calculator.chart.legVolume"),
-      legPayout: key("calculator.chart.legPayout"),
-      yourPayout: key("calculator.chart.yourPayout"),
-    },
     graph: {
+      title: key("calculator.graph.title"),
+      caption: key("calculator.graph.caption"),
+      ownBar: key("calculator.graph.ownBar"),
+      legBar: key("calculator.graph.legBar"),
+      grossBar: key("calculator.graph.grossBar"),
+      legCommissionBar: key("calculator.graph.legCommissionBar"),
+      netBar: key("calculator.graph.netBar"),
+      axisBaht: key("calculator.graph.axisBaht"),
       rateTitle: key("calculator.graph.rateTitle"),
+      rateAxis: key("calculator.graph.rateAxis"),
       ratePoint: key("calculator.graph.ratePoint"),
     },
     presets: [0, 1, 2].map((i) => ({
@@ -115,13 +121,15 @@ export default async function TutorAdvantage({
       result: key(`calculator.presets.${i}.result`),
     })),
   };
-  // Gallery slots in copy order; the two phone screens are half-width and the wide screen spans at md (spec 6.3).
+  // Gallery slots in copy order; every slot is a phone screen of the student app (spec 6.3).
   const screenCards = [
-    { picture: tutorScreens.studentHome, wide: false },
-    { picture: tutorScreens.shortAnswer, wide: false },
-    { picture: tutorScreens.classList, wide: true },
-  ].map((card, i) => ({
-    ...card,
+    tutorScreens.guidedWriting,
+    tutorScreens.shortAnswer,
+    tutorScreens.feedback,
+    tutorScreens.selfReflection,
+    tutorScreens.classRecord,
+  ].map((picture, i) => ({
+    picture,
     caption: key(`screens.items.${i}.caption`),
     alt: key(`screens.items.${i}.alt`),
   }));
@@ -367,9 +375,9 @@ export default async function TutorAdvantage({
             accent="text-emerald-800"
             className="mb-12"
           />
-          <ul className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <ul className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {screenCards.map((card) => (
-              <li key={card.picture.src} className={card.wide ? "md:col-span-2" : undefined}>
+              <li key={card.picture.src}>
                 <figure className="overflow-hidden rounded-3xl border border-site-border bg-white p-4 shadow-sm">
                   <ProductPicture picture={card.picture} alt={card.alt} />
                   <figcaption className="mt-4 text-base leading-relaxed text-site-body">
