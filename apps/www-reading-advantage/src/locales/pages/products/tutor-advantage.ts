@@ -232,7 +232,7 @@ export const en = {
             },
             {
                 "question": "Who can use Reedy voice practice?",
-                "answer": "Students with an active Tutor Advantage class package, on the lessons they finished. Reedy is not available in Primary Advantage or Reading Advantage."
+                "answer": "Students with an active Tutor Advantage class package, on the lessons they finished."
             },
             {
                 "question": "How does a lesson run?",
