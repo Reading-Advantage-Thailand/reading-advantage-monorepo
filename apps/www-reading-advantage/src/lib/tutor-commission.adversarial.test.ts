@@ -384,6 +384,17 @@ describe("A4 hostile inputs clamp and stay finite", () => {
     expect(explainVariant(result)).toBe("zero");
   });
 
+  it("legs with students and no own students name needsOwnStudents (spec D-6, AC-5)", () => {
+    const result = calculateNetwork({
+      price: CLASS_PRICE_DEFAULT,
+      personalStudents: 0,
+      studentsPerLeg: [3, 3],
+    });
+    expect(result.networkVolume, "the legs give the network a volume").toBeGreaterThan(0);
+    expect(result.net, "settlement pays 0 before tax (D-18)").toBe(0);
+    expect(explainVariant(result)).toBe("needsOwnStudents");
+  });
+
   it("fractional and negative leg counts become whole students of 0 or more", () => {
     const fractionalInput = {
       price: 3000,

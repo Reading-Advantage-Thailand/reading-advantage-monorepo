@@ -96,7 +96,7 @@ function text(dict: Dict, path: string): string {
 /** The new page Reedy description of D-21. */
 const PAGE_REEDY: Record<Locale, string> = {
   en: "Reedy voice practice is open to students with an active class package, on lessons they finished.",
-  th: "การฝึกพูดกับ Reedy สำหรับนักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่ และในบทเรียนที่เรียนจบแล้ว",
+  th: "การฝึกพูดกับ Reedy เปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ยังใช้งานอยู่ใช้ได้ ในบทเรียนที่เรียนจบแล้ว",
   zh: "Reedy 口语练习面向持有有效课程包的学生，用于已完成的课程。",
 };
 

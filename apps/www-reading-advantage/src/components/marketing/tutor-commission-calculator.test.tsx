@@ -368,7 +368,7 @@ describe("TutorCommissionCalculator settlement eligibility (spec D-18, AC-21)", 
     return hero.textContent ?? "";
   }
 
-  it("shows a net payout of 0 and the zero line for 0 own students and one leg of 3 in en", async () => {
+  it("shows a net payout of 0 and the needsOwnStudents line for 0 own students and one leg of 3 in en", async () => {
     const user = userEvent.setup();
     renderCalculator();
     const count = legCountInput();
@@ -380,12 +380,15 @@ describe("TutorCommissionCalculator settlement eligibility (spec D-18, AC-21)", 
     expect(resultValue(copy.results.tax)).toBe("0");
     expect(netFigure(copy)).toBe("0");
 
+    const line = (copy.explain as Record<string, string | undefined>).needsOwnStudents;
+    expect(line, "en locale holds calculator.explain.needsOwnStudents").toBeTruthy();
+    if (line === undefined) return;
     const region = resultRegion();
-    expect(within(region).getByText(copy.explain.zero)).toBeInTheDocument();
+    expect(within(region).getByText(line)).toBeInTheDocument();
     expect(within(region).queryByText(copy.explain.withLegs)).toBeNull();
   });
 
-  it("drops the two-leg payout to 0 and shows the zero line in en", async () => {
+  it("drops the two-leg payout to 0 and shows the needsOwnStudents line in en", async () => {
     const user = userEvent.setup();
     renderCalculator();
     const count = legCountInput();
@@ -396,10 +399,13 @@ describe("TutorCommissionCalculator settlement eligibility (spec D-18, AC-21)", 
     expect(resultValue(copy.results.legCommissions)).toBe("8,010");
     expect(resultValue(copy.results.tax)).toBe("0");
     expect(netFigure(copy)).toBe("0");
-    expect(within(resultRegion()).getByText(copy.explain.zero)).toBeInTheDocument();
+    const line = (copy.explain as Record<string, string | undefined>).needsOwnStudents;
+    expect(line, "en locale holds calculator.explain.needsOwnStudents").toBeTruthy();
+    if (line === undefined) return;
+    expect(within(resultRegion()).getByText(line)).toBeInTheDocument();
   });
 
-  it("shows a net payout of 0 and the Thai zero line for 0 own students and one leg of 3 in th", async () => {
+  it("shows a net payout of 0 and the Thai needsOwnStudents line for 0 own students and one leg of 3 in th", async () => {
     const thCopy = th.calculator;
     const user = userEvent.setup();
     render(<TutorCommissionCalculator copy={thCopy} />);
@@ -411,9 +417,10 @@ describe("TutorCommissionCalculator settlement eligibility (spec D-18, AC-21)", 
     await user.type(count, "1");
 
     expect(netFigure(thCopy)).toBe("0");
-    expect(
-      within(resultRegion()).getByText(thCopy.explain.zero),
-    ).toBeInTheDocument();
+    const line = (thCopy.explain as Record<string, string | undefined>).needsOwnStudents;
+    expect(line, "th locale holds calculator.explain.needsOwnStudents").toBeTruthy();
+    if (line === undefined) return;
+    expect(within(resultRegion()).getByText(line)).toBeInTheDocument();
   });
 });
 

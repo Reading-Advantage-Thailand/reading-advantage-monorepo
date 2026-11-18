@@ -43,19 +43,35 @@ function text(locale: Locale, path: string): string {
   return cur;
 }
 
-/** The hero file and alt of each locale (spec D-19 item 1). */
+/** The hero file and alt of each locale (spec D-2, D-5; AC-14). */
 const HERO = {
   en: {
-    src: "/images/tutor-advantage-hero.jpg",
-    alt: "A tutor and a child look at a tablet together, with a notebook and a pen on the table.",
+    src: "/images/tutor-advantage-hero-2026-11-06.webp",
+    alt: text("en", "heroExtra.imageAlt"),
   },
   th: {
-    src: "/images/tutor-advantage-hero.jpg",
-    alt: "ติวเตอร์และเด็กดูแท็บเล็ตด้วยกัน มีสมุดและปากกาวางอยู่บนโต๊ะ",
+    src: "/images/tutor-advantage-hero-2026-11-06.webp",
+    alt: text("th", "heroExtra.imageAlt"),
   },
   zh: {
-    src: "/images/tutor-advantage-hero.jpg",
-    alt: "A tutor and a child look at a tablet together, with a notebook and a pen on the table.",
+    src: "/images/tutor-advantage-hero-2026-11-06.webp",
+    alt: text("zh", "heroExtra.imageAlt"),
+  },
+} as const;
+
+/** The teach-class file and alt of each locale (spec D-3, D-5; AC-15). */
+const TUTOR = {
+  en: {
+    src: "/images/tutor-advantage-teach-class.webp",
+    alt: text("en", "tutorRole.alt"),
+  },
+  th: {
+    src: "/images/tutor-advantage-teach-class.webp",
+    alt: text("th", "tutorRole.alt"),
+  },
+  zh: {
+    src: "/images/tutor-advantage-teach-class.webp",
+    alt: text("zh", "tutorRole.alt"),
   },
 } as const;
 
@@ -130,6 +146,16 @@ function fileRefs(img: Element): string[] {
   return refs;
 }
 
+/**
+ * Returns the file reference an img element carries: the nested url of a
+ * `/_next/image` src, or the src itself.
+ */
+function imgFile(img: Element): string {
+  const src = img.getAttribute("src") ?? "";
+  const nested = new URL(src, "http://localhost").searchParams.get("url");
+  return nested ?? src;
+}
+
 /** Returns the single content image of a block, outside the brand logo files. */
 function contentImage(root: Element): HTMLElement {
   const images = Array.from(root.querySelectorAll("img")).filter((img) => {
@@ -181,7 +207,7 @@ afterEach(() => {
   });
 });
 
-describe("AC-22: the hero image", () => {
+describe("AC-14: the hero image", () => {
   for (const locale of LOCALES) {
     it(`${locale}: shows the hero file with the hero alt`, async () => {
       await renderWithRealCopy(locale);
@@ -191,6 +217,10 @@ describe("AC-22: the hero image", () => {
       expect(picture.getAttribute("alt"), `${locale} hero alt`).toBe(expected.alt);
     });
   }
+
+  it("en and zh hold one hero alt value (spec D-5)", () => {
+    expect(HERO.en.alt).toBe(HERO.zh.alt);
+  });
 });
 
 describe("AC-23: the hero image is the eager largest image", () => {
@@ -240,15 +270,58 @@ describe("AC-22: the Reedy block", () => {
   }
 });
 
-describe("AC-22: the become-a-tutor block", () => {
+describe("AC-15: the become-a-tutor block", () => {
   for (const locale of LOCALES) {
-    it(`${locale}: shows the hero file with the hero alt`, async () => {
+    it(`${locale}: shows the teach-class file with the tutor alt`, async () => {
       await renderWithRealCopy(locale);
       const block = document.querySelector("#become-a-tutor");
       expect(block, `${locale} become-a-tutor block`).toBeInTheDocument();
       const picture = contentImage(block!);
-      expect(fileRefs(picture), `${locale} tutor file`).toContain(HERO[locale].src);
-      expect(picture.getAttribute("alt"), `${locale} tutor alt`).toBe(HERO[locale].alt);
+      expect(fileRefs(picture), `${locale} tutor file`).toContain(TUTOR[locale].src);
+      expect(picture.getAttribute("alt"), `${locale} tutor alt`).toBe(TUTOR[locale].alt);
+    });
+  }
+
+  it("en and zh hold one tutor alt value (spec D-5)", () => {
+    expect(TUTOR.en.alt).toBe(TUTOR.zh.alt);
+  });
+});
+
+describe("AC-16: no image uses the old hero file", () => {
+  for (const locale of LOCALES) {
+    it(`${locale}: no img references tutor-advantage-hero.jpg`, async () => {
+      await renderWithRealCopy(locale);
+      const refs = Array.from(document.querySelectorAll("img")).flatMap((img) => fileRefs(img));
+      expect(refs.length, `${locale} image references`).toBeGreaterThan(0);
+      const hits = refs.filter((ref) => ref.includes("tutor-advantage-hero.jpg"));
+      expect(hits, `${locale} old hero file references`).toEqual([]);
+    });
+  }
+});
+
+describe("AC-17: no two content images share a file", () => {
+  for (const locale of LOCALES) {
+    it(`${locale}: every content img shows a distinct file`, async () => {
+      await renderWithRealCopy(locale);
+      const files = Array.from(document.querySelectorAll("img"))
+        .map((img) => imgFile(img))
+        .filter((file) => file !== "" && !file.startsWith("/media/brand/"));
+      expect(files.length, `${locale} content images`).toBeGreaterThan(0);
+      const duplicates = files.filter((file, index) => files.indexOf(file) !== index);
+      expect(duplicates, `${locale} files shown by two blocks`).toEqual([]);
+    });
+  }
+});
+
+describe("AC-2: the block image box keeps the full 16:9 frame", () => {
+  for (const locale of LOCALES) {
+    it(`${locale}: the become-a-tutor image box is aspect-video and not aspect-4/3`, async () => {
+      await renderWithRealCopy(locale);
+      const block = document.querySelector("#become-a-tutor");
+      expect(block, `${locale} become-a-tutor block`).toBeInTheDocument();
+      const picture = contentImage(block!);
+      expect(picture.className, `${locale} block box class`).toContain("aspect-video");
+      expect(picture.className, `${locale} block box class`).not.toContain("aspect-4/3");
     });
   }
 });
@@ -318,6 +391,22 @@ function webpSize(buf: Buffer): { width: number; height: number } {
   }
   throw new Error(`unsupported webp chunk ${chunk}`);
 }
+
+describe("AC-18: the two new picture files", () => {
+  for (const name of [
+    "tutor-advantage-hero-2026-11-06.webp",
+    "tutor-advantage-teach-class.webp",
+  ]) {
+    it(`${name} is a 1920 by 1080 webp at or below 300 KB`, () => {
+      const file = join(process.cwd(), "public", "images", name);
+      const bytes = existsSync(file) ? readFileSync(file) : null;
+      expect(bytes, `missing ${file}`).not.toBeNull();
+      if (bytes === null) return;
+      expect(webpSize(bytes), `${name} header size`).toEqual({ width: 1920, height: 1080 });
+      expect(bytes.length, `${name} byte count`).toBeLessThanOrEqual(307_200);
+    });
+  }
+});
 
 describe("AC-22: the Origins 3.1 cover file", () => {
   it("is a 480 by 651 webp under public/images/products", () => {

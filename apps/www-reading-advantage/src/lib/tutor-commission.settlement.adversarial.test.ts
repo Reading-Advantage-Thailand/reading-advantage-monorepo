@@ -610,7 +610,7 @@ describe("S3 D-18 eligibility truth table against settlement", () => {
         expect(Object.is(result.preTax, 0)).toBe(true);
         expect(Object.is(result.withholdingTax, 0)).toBe(true);
         expect(Object.is(result.net, 0)).toBe(true);
-        expect(explainVariant(result)).toBe("zero");
+        expect(explainVariant(result)).toBe("needsOwnStudents");
       }
       if (row.paid && settled.networkVolumeMinor > 0n) {
         expect(result.net).toBeGreaterThan(0);

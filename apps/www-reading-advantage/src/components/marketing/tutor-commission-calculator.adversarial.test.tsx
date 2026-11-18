@@ -278,6 +278,26 @@ describe("Adversarial: prices at and below zero", () => {
   });
 });
 
+describe("Adversarial: legs without own students name the needsOwnStudents state (spec D-6, AC-5)", () => {
+  it("shows a net of 0 and the needsOwnStudents line for one leg of 3 students", async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+    await user.clear(ownStudentsInput());
+    await user.clear(legCountInput());
+    await user.type(legCountInput(), "1");
+
+    const line = (copy.explain as Record<string, string | undefined>).needsOwnStudents;
+    expect(line, "en locale holds calculator.explain.needsOwnStudents").toBeTruthy();
+    if (line === undefined) return;
+
+    expect(resultValue(copy.results.networkGV)).toBe("9,000");
+    expect(resultValue(copy.results.legCommissions)).toBe("4,005");
+    expect(resultValue(copy.results.tax)).toBe("0");
+    expect(heroValue()).toBe("0");
+    expect(within(resultRegion()).getByText(line)).toBeInTheDocument();
+  });
+});
+
 describe("Adversarial: display of D-3", () => {
   it("preset 2 keeps two decimals and reconciles in satang", async () => {
     const user = userEvent.setup();
