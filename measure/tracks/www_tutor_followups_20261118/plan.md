@@ -288,6 +288,16 @@ items as failing tests.
   Done: 2026-11-18 at `ad055b9e2`. Task 2.6 runs the same five gates as task 1.6 at the same HEAD.
   The file pair `green-1.6-ad055b9e2.json` and `.log` covers both tasks.
 
+### Review B waiver
+
+The PM waived Review B in writing for this track on 2026-11-18. The reason: this track has no allowed non-Muse route.
+
+The PM words, quoted exactly: "content-only change (pictures, alt text, caption, a no-duplicate test); no auth, data, API, or input handling; PM 2026-11-18 12:2x"
+
+Final acceptance runs on `claude-code/claude-sonnet-5-5#max` by PM exception (tag `pm-exception`). This run is outside the ra-quota pick.
+
+Record: `measure/runs/www_tutor_followups_20261118/review-b-waiver.md`. The audited HEAD is `3eb492a5c7616140ab1692308fe3b74ae8982399`.
+
 ## Phase 3: gates, push, and live checks
 
 - [x] 3.1 Full suite: run the whole www suite with one worker. Test: AC-9. `5e5990b42`
