@@ -2,14 +2,13 @@ export const en = {
   metadata: {
     title: "Storytime Advantage - English for Anuban 2 to P2 | Reading Advantage Thailand",
     description:
-      "Storytime Advantage is an English program for Anuban 2 to P2: one sound, one song, and two books each week. The first unit launches on 30 November 2026, with the Storytime Advantage, Level 2, Unit 1 student book and QR-linked digital parts.",
+      "Storytime Advantage is an English app for Anuban 2 to P2. It launches on 30 November 2026 with one sound, one song, and two books each week.",
   },
   hero: {
     title: "Stories, Songs, and First Sounds",
     subtitle: "English for Anuban 2 to P2 (ages 4 to 8)",
     description:
-      "Storytime Advantage is an English program for kindergarten and early primary. Each week has one sound, one song, and two books, and every lesson is printed in full for the class teacher. The first unit launches on 30 November 2026.",
-    launchNote: "Storytime Advantage launches on 30 November 2026.",
+      "A child taps a word and hears it. The class joins the song. Storytime Advantage brings one sound, one song, and two books to each week, on a phone at home and a screen in the classroom.",
     comingSoon: "Launches 30 November 2026",
   },
   heroAlt: "Pip in a Storytime Advantage week 1 story picture",
@@ -17,28 +16,28 @@ export const en = {
     eyebrow: "Mastery Advantage",
     heading: "Every Item on One Skill Map",
     description:
-      "Every sound, word, and sentence frame is tagged to the Mastery Advantage skill map, in the same English map as the Primary Advantage books. The printed review strips bring each item back on a fixed schedule.",
+      "Every sound, word, and sentence frame is tagged to the Mastery Advantage skill map, the same English map used by the Primary Advantage books.",
     alt: "The cover picture of Storytime Advantage Level 2.",
   },
   keyFeatures: {
-    heading: "What Is in the First Unit",
+    heading: "Inside the Storytime Advantage App",
     features: [
       {
-        title: "In Print",
+        title: "Two Books Every Week",
         points: [
-          "One A4 Storytime Advantage, Level 2, Unit 1, Student Book for weeks 1 to 8. Small reader books sit inside it. Children tear them out and fold them. The teacher staples them.",
-          "A Thai-only teacher book, with five lesson scripts a week",
-          "Color reader files for the teacher to print on A3 and lead the class",
-          "A review strip for each day",
+          "The read-along book reads to your child page by page.",
+          "Choose “Read to me” or “I read”, and tap any word to hear it.",
+          "Choose slow mode when your child wants a slower reading speed.",
+          "The decodable book introduces first sounds, with words to tap and hear.",
         ],
       },
       {
-        title: "By QR Code, With No Login",
+        title: "One Sign-In, Then Storytime",
         points: [
-          "The song of the week, with a video",
-          "The read-along book, with \"read to me\" and \"I read\"",
-          "The decodable book, with words to tap and hear",
-          "A 5-minute home activity in Thai",
+          "Open on a phone at home or a screen in the classroom.",
+          "A parent, or the teacher for the class, signs in on the first visit.",
+          "The device then stays signed in.",
+          "The week’s song comes with a video.",
         ],
       },
     ],
@@ -47,19 +46,19 @@ export const en = {
     heading: "One Sound, One Song, Two Books a Week",
     features: [
       {
-        title: "Lessons Printed in Full",
+        title: "A Story You Can Hear",
         description:
-          "Five 30-minute lessons a week in Anuban. Each step gives what the teacher does and the English the teacher says, with the Thai beside it.",
+          "The read-along book reads page by page. Children can choose “Read to me” or “I read”, tap a word, or select slow mode.",
       },
       {
         title: "One Sound a Week",
         description:
-          "Each week teaches one letter sound, with a recorded pure sound, a hand action, and words that start with the sound.",
+          "The decodable book introduces first sounds and gives children words to tap and hear.",
       },
       {
         title: "A Link to Home",
         description:
-          "A Thai home card each week, with QR codes that open the song and the books on a phone.",
+          "Each weekly Thai parent page includes the sound, three words, one sentence, and a 5-minute home activity.",
       },
     ],
   },
@@ -72,33 +71,33 @@ export const en = {
   teacherTools: {
     heading: "For the Teacher",
     tools: [
-      { title: "Printed Scripts", description: "The teacher reads the script. There is no lesson planning." },
-      { title: "Review Strips", description: "Each sound and word comes back on a fixed schedule, in 4 minutes or less a day." },
-      { title: "Friday Check", description: "A 3-minute picture check tells the teacher which sounds and words to bring back." },
+      { title: "The Classroom Screen", description: "Open the app on your classroom screen. Share the story and play the week’s song video with the class." },
+      { title: "Hear the Page, Hear the Word", description: "Play the read-aloud page by page. Tap a word to hear it, or choose slow mode." },
+      { title: "A Clear Weekly Rhythm", description: "One sound, one song, and two books give your class a shared focus. Sign in once, and the classroom device stays signed in." },
     ],
   },
   faq: {
     heading: "Frequently Asked Questions",
     questions: [
       {
-        question: "What is in the first unit?",
+        question: "What does each week include?",
         answer:
-          "One A4 student book for weeks 1 to 8, with small reader books inside it; a teacher book in Thai; color reader files the teacher prints on A3; and the song and books by QR code. Contact us to discuss the first unit.",
+          "Each week brings one sound, one song with a video, and two books: a read-along book and a decodable book. Children can hear pages and tap words. Parents also receive a short Thai page with a 5-minute home activity.",
       },
       {
-        question: "Do we need computers or an app?",
+        question: "What do we need to open Storytime Advantage?",
         answer:
-          "No. The program is printed. The songs and the books open on a phone or a classroom screen by QR code, with no app and no login.",
+          "A phone at home or a screen in the classroom. A parent, or the teacher for the class, signs in on the first visit. The device then stays signed in.",
       },
       {
         question: "Our kindergarten teachers are not English teachers. Can they teach it?",
         answer:
-          "Yes. Every lesson is printed in full: what the teacher does, the English the teacher says with the Thai beside it, what the children do, and what to watch.",
+          "Yes. The app supplies the English audio. The read-along book reads page by page, and each word can be heard with a tap. Teachers can also use slow mode and the song video with the class.",
       },
       {
         question: "Who is Storytime Advantage for?",
         answer:
-          "Children from Anuban 2 to P2, about ages 4 to 8, and their class teachers. Parents join through the weekly home card.",
+          "Storytime Advantage is for children from Anuban 2 to P2, ages 4 to 8. Schools open it on a classroom screen, and families open it on a phone at home. A weekly Thai parent page includes a 5-minute home activity.",
       },
       {
         question: "What happens after P2?",
@@ -109,7 +108,7 @@ export const en = {
   },
   cta: {
     heading: "Interested in Storytime Advantage?",
-    description: "The first unit launches on 30 November 2026. Contact us to discuss Storytime Advantage.",
+    description: "The app launches on 30 November 2026. Ask us on LINE OA for the steps to join Storytime Advantage with your family or class.",
     buttons: { joinWaitlist: "Contact Us", learnMore: "Learn More" },
   },
   eyebrows: {
@@ -136,14 +135,13 @@ export const th = {
   metadata: {
     title: "Storytime Advantage - ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 | Reading Advantage Thailand",
     description:
-      "Storytime Advantage คือหลักสูตรภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569 พร้อมหนังสือนักเรียน Storytime Advantage, Level 2, Unit 1 และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด",
+      "Storytime Advantage เป็นแอปภาษาอังกฤษสำหรับเด็กอนุบาล 2 ถึง ป.2 เปิดตัววันที่ 30 พฤศจิกายน 2569 พร้อมหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มในแต่ละสัปดาห์",
   },
   hero: {
     title: "นิทาน เพลง และเสียงแรกของภาษาอังกฤษ",
     subtitle: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 (อายุประมาณ 4 ถึง 8 ปี)",
     description:
-      "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษสำหรับชั้นอนุบาลและประถมต้น ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ทุกคาบมีแผนการสอนครบ หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569 พร้อมหนังสือนักเรียนฉบับพิมพ์และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด",
-    launchNote: "Storytime Advantage เปิดตัววันที่ 30 พฤศจิกายน 2569",
+      "เด็กคนหนึ่งแตะคำแล้วได้ยินเสียงอ่าน ทั้งชั้นร้องเพลงไปด้วยกัน Storytime Advantage นำหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มมาสู่ทุกสัปดาห์ บนโทรศัพท์ที่บ้านและจอในห้องเรียน",
     comingSoon: "เปิดตัววันที่ 30 พฤศจิกายน 2569",
   },
   heroAlt: "Pip ในภาพประกอบเรื่องประจำสัปดาห์ที่ 1 ของ Storytime Advantage",
@@ -151,28 +149,28 @@ export const th = {
     eyebrow: "Mastery Advantage",
     heading: "ทุกรายการอยู่บนแผนผังทักษะเดียวกัน",
     description:
-      "ทุกเสียง ทุกคำ และทุกรูปประโยค ผูกกับแผนผังทักษะ Mastery Advantage ในแผนผังภาษาอังกฤษเดียวกับหนังสือ Primary Advantage แถบทบทวนที่พิมพ์ไว้นำแต่ละรายการกลับมาทบทวนตามตารางที่กำหนด",
+      "ทุกเสียง ทุกคำ และทุกรูปประโยค ผูกกับแผนผังทักษะ Mastery Advantage ซึ่งเป็นแผนผังภาษาอังกฤษเดียวกับที่ใช้ในหนังสือ Primary Advantage",
     alt: "ภาพปกของ Storytime Advantage Level 2",
   },
   keyFeatures: {
-    heading: "สิ่งที่มีในหน่วยแรก",
+    heading: "สิ่งที่มีในแอป Storytime Advantage",
     features: [
       {
-        title: "ฉบับพิมพ์",
+        title: "หนังสือสองเล่มทุกสัปดาห์",
         points: [
-          "หนังสือนักเรียน Storytime Advantage, Level 2, Unit 1, Student Book ขนาด A4 หนึ่งเล่ม สำหรับสัปดาห์ที่ 1 ถึง 8 มีหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน เด็กฉีกออกและพับ ครูเป็นคนเย็บหนังสือฝึกอ่านเล่มเล็ก",
-          "คู่มือครูภาษาไทย พร้อมแผนการสอนสัปดาห์ละ 5 คาบ",
-          "ไฟล์หนังสือฝึกอ่านสีสำหรับครูพิมพ์ลงกระดาษ A3 เพื่อใช้สอนในชั้นเรียน",
-          "แถบทบทวนประจำวัน",
+          "หนังสืออ่านตามอ่านให้ลูกฟังทีละหน้า",
+          "เลือก “อ่านให้ฟัง” หรือ “ฉันอ่านเอง” แล้วแตะคำใดก็ได้เพื่อฟังเสียงอ่าน",
+          "เลือกโหมดอ่านช้าเมื่อลูกต้องการฟังเสียงอ่านที่ช้าลง",
+          "หนังสือฝึกอ่านแบบถอดเสียงแนะนำเสียงแรก ๆ พร้อมคำให้เด็กแตะเพื่อฟังเสียงอ่าน",
         ],
       },
       {
-        title: "ผ่านคิวอาร์โค้ด ไม่ต้องเข้าสู่ระบบ",
+        title: "เข้าสู่ระบบครั้งเดียว แล้วอ่านนิทานได้เลย",
         points: [
-          "เพลงประจำสัปดาห์พร้อมวิดีโอ",
-          "หนังสืออ่านตามพร้อมโหมด \"อ่านให้ฟัง\" และ \"ฉันอ่านเอง\"",
-          "หนังสือฝึกอ่านที่แตะคำเพื่อฟังเสียงได้",
-          "กิจกรรมที่บ้านภาษาไทย ใช้เวลาห้านาที",
+          "เปิดบนโทรศัพท์ที่บ้านหรือจอในห้องเรียน",
+          "ผู้ปกครอง หรือครูประจำชั้น เข้าสู่ระบบเมื่อเปิดใช้ครั้งแรก",
+          "จากนั้นอุปกรณ์จะยังคงเข้าสู่ระบบไว้",
+          "เพลงประจำสัปดาห์มาพร้อมวิดีโอ",
         ],
       },
     ],
@@ -180,9 +178,9 @@ export const th = {
   coreValue: {
     heading: "หนึ่งเสียง หนึ่งเพลง หนังสือสองเล่ม ทุกสัปดาห์",
     features: [
-      { title: "แผนการสอนครบทุกขั้นตอน", description: "หนังสือนักเรียนและคู่มือครูจัดเนื้อหาสำหรับการสอนแต่ละสัปดาห์" },
-      { title: "ฝึกอ่านจากหนังสือ", description: "หนังสือหนึ่งเล่มมีเรื่องอ่านตามและหนังสือฝึกอ่านที่ใช้เสียงและคำตามบทเรียน" },
-      { title: "เชื่อมต่อกับบ้านด้วยคิวอาร์โค้ด", description: "บัตรกิจกรรมที่บ้านภาษาไทยมีคิวอาร์โค้ดที่เปิดเพลงและหนังสือบนโทรศัพท์ได้" },
+      { title: "นิทานที่ฟังได้", description: "หนังสืออ่านตามอ่านให้ฟังทีละหน้า เด็กเลือก “อ่านให้ฟัง” หรือ “ฉันอ่านเอง” แตะคำเพื่อฟังเสียงอ่าน หรือเลือกโหมดอ่านช้าได้" },
+      { title: "หนึ่งเสียงในแต่ละสัปดาห์", description: "หนังสือฝึกอ่านแบบถอดเสียงแนะนำเสียงแรก ๆ และมีคำให้เด็กแตะเพื่อฟังเสียงอ่าน" },
+      { title: "เชื่อมต่อกับบ้าน", description: "หน้าสำหรับผู้ปกครองภาษาไทยในแต่ละสัปดาห์มีเสียงประจำสัปดาห์ สามคำ หนึ่งประโยค และกิจกรรมที่บ้าน 5 นาที" },
     ],
   },
   song: {
@@ -194,24 +192,24 @@ export const th = {
   teacherTools: {
     heading: "สำหรับครู",
     tools: [
-      { title: "คู่มือครูฉบับพิมพ์", description: "ครูอ่านตามแผนการสอนที่จัดเตรียมไว้" },
-      { title: "แถบทบทวน", description: "แถบทบทวนช่วยให้ครูนำเสียงและคำกลับมาทบทวนตามแผน" },
-      { title: "การตรวจประจำสัปดาห์", description: "การตรวจด้วยภาพช่วยให้ครูเห็นเสียงและคำที่ควรนำมาทบทวน" },
+      { title: "จอในห้องเรียน", description: "เปิดแอปบนจอในห้องเรียน เพื่อใช้นิทานและเล่นวิดีโอเพลงประจำสัปดาห์ร่วมกับเด็กทั้งชั้น" },
+      { title: "ฟังทั้งหน้า ฟังทีละคำ", description: "เปิดเสียงอ่านทีละหน้า แตะคำเพื่อฟังเสียงอ่าน หรือเลือกโหมดอ่านช้า" },
+      { title: "จังหวะการเรียนรู้รายสัปดาห์ที่ชัดเจน", description: "หนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ช่วยให้ทั้งชั้นมีจุดเน้นร่วมกันในแต่ละสัปดาห์ เข้าสู่ระบบเพียงครั้งเดียว จากนั้นอุปกรณ์ในห้องเรียนจะยังคงเข้าสู่ระบบไว้" },
     ],
   },
   faq: {
     heading: "คำถามที่พบบ่อย",
     questions: [
-      { question: "ในหน่วยแรกมีอะไรบ้าง", answer: "หนังสือนักเรียน A4 หนึ่งเล่มสำหรับสัปดาห์ที่ 1 ถึง 8 พร้อมหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน คู่มือครูภาษาไทย ไฟล์หนังสือฝึกอ่านสีที่ครูพิมพ์ลงกระดาษ A3 และเพลงกับหนังสือที่เปิดด้วยคิวอาร์โค้ด ติดต่อเราเพื่อพูดคุยเกี่ยวกับหน่วยแรก" },
-      { question: "ต้องใช้คอมพิวเตอร์หรือแอปไหม", answer: "ไม่ต้องใช้ โปรแกรมเป็นสื่อสิ่งพิมพ์ เพลงและหนังสือเปิดได้บนโทรศัพท์หรือจอในห้องเรียนด้วยคิวอาร์โค้ด โดยไม่ต้องใช้แอปและไม่ต้องเข้าสู่ระบบ" },
-      { question: "ครูอนุบาลที่ไม่ใช่ครูภาษาอังกฤษสอนได้ไหม", answer: "ได้ คู่มือครูมีแผนการสอนและข้อความภาษาอังกฤษที่ใช้สอน พร้อมความหมายภาษาไทยและสิ่งที่เด็กทำในแต่ละขั้นตอน" },
-      { question: "Storytime Advantage เหมาะกับใคร", answer: "เด็กอนุบาล 2 ถึง ป.2 อายุประมาณ 4 ถึง 8 ปี และครูประจำชั้น ผู้ปกครองร่วมกิจกรรมที่บ้านได้ผ่านบัตรประจำสัปดาห์" },
+      { question: "แต่ละสัปดาห์มีอะไรบ้าง", answer: "แต่ละสัปดาห์มีหนึ่งเสียง หนึ่งเพลงพร้อมวิดีโอ และหนังสือสองเล่ม ได้แก่ หนังสืออ่านตามและหนังสือฝึกอ่านแบบถอดเสียง เด็กฟังเสียงอ่านทีละหน้าและแตะคำเพื่อฟังเสียงอ่านได้ ผู้ปกครองยังได้รับหน้าข้อมูลภาษาไทยสั้น ๆ พร้อมกิจกรรมที่บ้าน 5 นาที" },
+      { question: "ต้องใช้อะไรเพื่อเปิด Storytime Advantage", answer: "โทรศัพท์ที่บ้านหรือจอในห้องเรียน ผู้ปกครอง หรือครูประจำชั้น เข้าสู่ระบบเมื่อเปิดใช้ครั้งแรก จากนั้นอุปกรณ์จะยังคงเข้าสู่ระบบไว้" },
+      { question: "ครูอนุบาลที่ไม่ใช่ครูภาษาอังกฤษสอนได้ไหม", answer: "ได้ แอปมีเสียงอ่านภาษาอังกฤษให้ หนังสืออ่านตามอ่านให้ฟังทีละหน้า และแตะคำใดก็ได้เพื่อฟังเสียงอ่าน ครูยังใช้โหมดอ่านช้าและวิดีโอเพลงกับเด็กทั้งชั้นได้" },
+      { question: "Storytime Advantage เหมาะกับใคร", answer: "Storytime Advantage เหมาะสำหรับเด็กอนุบาล 2 ถึง ป.2 อายุ 4 ถึง 8 ปี โรงเรียนเปิดใช้บนจอในห้องเรียน และครอบครัวเปิดใช้บนโทรศัพท์ที่บ้าน หน้าสำหรับผู้ปกครองภาษาไทยประจำสัปดาห์มีกิจกรรมที่บ้าน 5 นาที" },
       { question: "หลังจาก ป.2 แล้วเรียนอะไรต่อ", answer: "Storytime Advantage: Anuban 2 to P2. Primary Advantage from P3. A P3 class without phonics runs the Primary catch-up module." },
     ],
   },
   cta: {
     heading: "สนใจ Storytime Advantage ไหม",
-    description: "หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569 ติดต่อเราเพื่อพูดคุยเกี่ยวกับ Storytime Advantage",
+    description: "แอปเปิดตัววันที่ 30 พฤศจิกายน 2569 สอบถามขั้นตอนการเข้าร่วม Storytime Advantage สำหรับครอบครัวหรือชั้นเรียนของคุณได้ทาง LINE OA",
     buttons: { joinWaitlist: "ติดต่อเรา", learnMore: "ดูข้อมูลเพิ่มเติม" },
   },
   eyebrows: {

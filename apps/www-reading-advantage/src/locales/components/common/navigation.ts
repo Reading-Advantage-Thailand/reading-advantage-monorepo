@@ -61,7 +61,7 @@ export const zh = {
         scienceAdvantage: "实践科学教育",
         stemAdvantage: "综合 STEM 学习平台",
         zhongwenAdvantage: "中文学习平台",
-        storytimeAdvantage: "面向 Anuban 2 至 P2 的英语课程，正在准备第一个单元",
+        storytimeAdvantage: "English for Anuban 2 to P2; the first unit launches on 30 November 2026",
         codecampAdvantage: "通过项目学习编码",
         tutorAdvantage: "在线辅导平台",
     }

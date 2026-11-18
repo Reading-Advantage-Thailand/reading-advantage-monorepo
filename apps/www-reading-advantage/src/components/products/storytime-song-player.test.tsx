@@ -193,14 +193,27 @@ describe("Storytime song player", () => {
     expect(container.querySelectorAll("iframe")).toHaveLength(1);
   });
 
-  it("keeps the play control at the bottom of the box", () => {
+  it("leaves the poster uncovered with no full-size tinted layer", () => {
+    stubMatchMedia(false);
+    renderPlayer();
+    const button = screen.getByRole("button", { name: SONG_COPY.en.playLabel });
+    expect(button.className).not.toContain("inset-0");
+    expect(button.className).not.toContain("bg-site-navy");
+  });
+
+  it("keeps the play control at the bottom center of the box", () => {
     stubMatchMedia(false);
     const { container } = renderPlayer();
     const button = screen.getByRole("button", { name: SONG_COPY.en.playLabel });
-    expect(button.className).toContain("justify-end");
-    expect(button.className).toContain("pb-2");
+    expect(button.className).toContain("left-1/2");
+    expect(button.className).toContain("-translate-x-1/2");
+    expect(button.className).toContain("bottom-3");
+    expect(button.className).not.toContain("top-1/2");
+    expect(button.className).not.toContain("inset-0");
+    expect(button.className).not.toContain("bg-site-navy");
     const control = container.querySelector("[data-testid='song-player-control']");
     expect(control).not.toBeNull();
+    expect(button.contains(control)).toBe(true);
     expect(control?.textContent).toBe(SONG_COPY.en.playLabel);
   });
 

@@ -497,7 +497,7 @@ export const zh = {
             roadmapLabel: "路线图中",
             roadmapNote: "这些产品线在计划中，我们不给出日期。",
             roadmapTag: "计划中",
-            storytimePreparingLabel: "首个单元准备中",
+            storytimePreparingLabel: "Launches 30 November 2026",
         },
         schools: {
             imageAlt: "老师站在黑板前，学生使用纸质练习册和平板电脑学习。",
@@ -554,7 +554,7 @@ export const zh = {
         eyebrow: "产品套件",
         title: "三条已上线的产品线，更多已在路线图中。",
         description:
-            "Primary Advantage、Reading Advantage 和 CodeCamp Advantage 已上线。Mastery Advantage 在 CodeCamp Advantage 中运行，并通过带标签的内容进入 Primary Advantage。Science、Math、Zhongwen 和 STEM Advantage 在路线图中，暂无日期。Storytime Advantage 的第一个单元正在准备中。",
+            "Primary Advantage、Reading Advantage 和 CodeCamp Advantage 已上线。Mastery Advantage 在 CodeCamp Advantage 中运行，并通过带标签的内容进入 Primary Advantage。Science、Math、Zhongwen 和 STEM Advantage 在路线图中，暂无日期。",
     },
     mission: {
         title: "学生的成功就是我们的使命",
