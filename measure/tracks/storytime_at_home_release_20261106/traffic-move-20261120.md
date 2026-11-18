@@ -45,10 +45,10 @@ Every command below comes from a file in this repository. The citation sits unde
 4. Run the browser gate through heavy-run.
 
    ```
-   SMOKE_STORE_ROOT=/home/daniebo/.local/share/storytime-smoke-1001/storage SMOKE_STORE_RUNROOT=/run/user/1001/storytime-smoke bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'bash apps/storytime/__tests__/phase3-browser-gate.sh'
+   bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'bash apps/storytime/__tests__/phase3-browser-gate.sh'
    ```
 
-   This shell user is uid 1001. The old store belongs to uid 1000, so the prefix sets the uid 1001 store. Plan task 3.1, its deploy sub-bullet, names the script. The script enters heavy-run itself (apps/storytime/__tests__/phase3-browser-gate.sh:5). If the first run stops on the Next.js security notice, run it once more; the rerun continues (plan task 3.1, retry rule).
+   The browser gate reads neither `SMOKE_STORE_ROOT` nor `SMOKE_STORE_RUNROOT`, so this step needs no prefix (phase acceptance r3, finding F1). Plan task 3.1, its deploy sub-bullet, names the script. The script enters heavy-run itself (apps/storytime/__tests__/phase3-browser-gate.sh:5). If the first run stops on the Next.js security notice, run it once more; the rerun continues (plan task 3.1, retry rule).
 
 5. Read the phase acceptance record of the receipt head. The record must show `"verdict": "pass"`. The file name pattern is `measure/runs/storytime_at_home_release_20261106/phase-acceptance-<phase>-<sha>.json`. The example is `measure/runs/storytime_at_home_release_20261106/phase-acceptance-p2-7b0ec07ab.json`.
 
@@ -118,6 +118,13 @@ Record the revision name and the percent of every traffic row. The report needs 
 
 ### 2.1 Before the move
 
+**Before readings (2026-11-18 14:41 +07, `gcloud run services describe`):**
+
+- `storytime-app` live revision: `storytime-app-00011-dut` at 100 percent, tag `st-4907d929`.
+- Candidates at 0 percent: `storytime-app-00031-jek` (tag `st-178dd0fb`), `storytime-app-00032-him`.
+- `status.latestReadyRevisionName`: `storytime-app-00032-him`.
+- Take a new before reading on 2026-11-20 right before the move. These values may change.
+
 1. Confirm the deploy commit. It is the candidate/receipt commit (PM, 2026-11-18 05:36). Read the sha with `git rev-parse HEAD`.
 
 2. Check the media of the published weeks in the private bucket, file by file.
@@ -151,6 +158,8 @@ Record the revision name and the percent of every traffic row. The report needs 
    ```
 
    The digest reads `asia-southeast1-docker.pkg.dev/primary-advantage/primary-advantage-repo/storytime-app@sha256:17aa55e3c3988d80a9ada19db0fb52ad065bdeb8c896ba40e44c3e5acc60386b`. A push of any file under `apps/storytime/` builds a new candidate. After that push, replace the revision name with the new candidate revision, and read its revision and digest with the same command. docs/runbooks/storytime-deploy.md:133.
+
+   PM decision 2026-11-18 chooses `00032-him` when CD run 44255708289 and CI run 44255708298 are both green, else `00031-jek`. CD 44255708289 is success, but CI 44255708298 fails the jobs `CI selector tests` (W-16 storytime-deploy.md holds 5 of 7 FR-4 facts) and `Check storytime` (phase-7-closeout.test.ts, measure/tech-debt.md over 50 lines). So the candidate is `00031-jek`. `00032-him` is not chosen: its digest `...@sha256:b732b87542436d8b464b4c95c0b7e2dd9ea06cf42442ea48ceb69192ea759439` comes from `e5db88bbd` with the same product code, but a red CI run blocks it.
 
 7. Compare the env names of the candidate revision and the live revision.
 
@@ -274,6 +283,13 @@ The host is `https://storytime.reading-advantage.com`. The curl form is at docs/
    It answers 307. The Location names `/th/sign-in?next=%2Fth%2Fst%2F2%2F1` (apps/storytime/__tests__/phase3-docker-smoke.sh:330, plan.md:96).
 
 ## 3. Primary Advantage (service `primary-advantage-app`)
+
+**Before readings (2026-11-18 14:41 +07, `gcloud run services describe`):**
+
+- `primary-advantage-app` live revision: `primary-advantage-app-00141-q2d` at 100 percent, no tag.
+- Candidate at 0 percent: `primary-advantage-app-00151-sar` (tag `pa-117e96d3`).
+- `status.latestReadyRevisionName`: `primary-advantage-app-00151-sar`.
+- Take a new before reading on 2026-11-20 right before the move. These values may change.
 
 ### 3.1 The traffic file
 
