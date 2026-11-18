@@ -37,18 +37,18 @@ Every command below comes from a file in this repository. The citation sits unde
 3. Run the Docker smoke through heavy-run.
 
    ```
-   bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'bash apps/storytime/__tests__/phase3-docker-smoke.sh'
+   SMOKE_STORE_ROOT=/home/daniebo/.local/share/storytime-smoke-1001/storage SMOKE_STORE_RUNROOT=/run/user/1001/storytime-smoke bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'bash apps/storytime/__tests__/phase3-docker-smoke.sh'
    ```
 
-   plan.md:322 (task 3.1) names the script. The script enters heavy-run itself (apps/storytime/__tests__/phase3-docker-smoke.sh:168).
+   This shell user is uid 1001. The old store belongs to uid 1000, so the prefix sets the uid 1001 store. Plan task 3.1, its deploy sub-bullet, names the script. The script enters heavy-run itself (apps/storytime/__tests__/phase3-docker-smoke.sh:168). If the first run stops on the Next.js security notice, run it once more; the rerun continues (plan task 3.1, retry rule).
 
 4. Run the browser gate through heavy-run.
 
    ```
-   bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'bash apps/storytime/__tests__/phase3-browser-gate.sh'
+   SMOKE_STORE_ROOT=/home/daniebo/.local/share/storytime-smoke-1001/storage SMOKE_STORE_RUNROOT=/run/user/1001/storytime-smoke bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'bash apps/storytime/__tests__/phase3-browser-gate.sh'
    ```
 
-   plan.md:322 (task 3.1) names the script. The script enters heavy-run itself (apps/storytime/__tests__/phase3-browser-gate.sh:5).
+   This shell user is uid 1001. The old store belongs to uid 1000, so the prefix sets the uid 1001 store. Plan task 3.1, its deploy sub-bullet, names the script. The script enters heavy-run itself (apps/storytime/__tests__/phase3-browser-gate.sh:5). If the first run stops on the Next.js security notice, run it once more; the rerun continues (plan task 3.1, retry rule).
 
 5. Read the phase acceptance record of the receipt head. The record must show `"verdict": "pass"`. The file name pattern is `measure/runs/storytime_at_home_release_20261106/phase-acceptance-<phase>-<sha>.json`. The example is `measure/runs/storytime_at_home_release_20261106/phase-acceptance-p2-7b0ec07ab.json`.
 
@@ -144,32 +144,32 @@ Record the revision name and the percent of every traffic row. The report needs 
 
    docs/runbooks/storytime-deploy.md:68. The printed text is `--remove-env-vars=STORYTIME_REVIEW_DRAFT_WEEKS,STORYTIME_SHOW_DRAFT_MEDIA,STORYTIME_TEACHER_ROUTES` (docs/runbooks/storytime-deploy.md:72).
 
-6. Read the image of the live revision.
+6. Read the image of the candidate revision `storytime-app-00031-jek` (tag `st-178dd0fb`, built by CD run 44239707392 from commit `3804ab55a`).
 
    ```
-   gcloud run revisions describe <live revision> --project primary-advantage --region asia-southeast1 --format='value(status.imageDigest)'
+   gcloud run revisions describe storytime-app-00031-jek --project primary-advantage --region asia-southeast1 --format='value(status.imageDigest)'
    ```
 
-   docs/runbooks/storytime-deploy.md:133.
+   The digest reads `asia-southeast1-docker.pkg.dev/primary-advantage/primary-advantage-repo/storytime-app@sha256:17aa55e3c3988d80a9ada19db0fb52ad065bdeb8c896ba40e44c3e5acc60386b`. A push of any file under `apps/storytime/` builds a new candidate. After that push, replace the revision name with the new candidate revision, and read its revision and digest with the same command. docs/runbooks/storytime-deploy.md:133.
 
-7. Compare the env names of the new revision and the live revision.
+7. Compare the env names of the candidate revision and the live revision.
 
    ```
-   gcloud run revisions describe <new revision> --project primary-advantage --region asia-southeast1 --format='value(spec.containers[0].env.name)'
+   gcloud run revisions describe storytime-app-00031-jek --project primary-advantage --region asia-southeast1 --format='value(spec.containers[0].env.name)'
    gcloud run revisions describe <live revision> --project primary-advantage --region asia-southeast1 --format='value(spec.containers[0].env.name)'
    ```
 
-   docs/runbooks/storytime-deploy.md:177-178. Stop and report to Daniel when another name differs.
+   docs/runbooks/storytime-deploy.md:177-178. The candidate holds 9 names: `NODE_ENV`, `NEXT_PUBLIC_STORAGE_BUCKET_NAME`, `STORYTIME_MEDIA_BASE`, `STORYTIME_DATABASE_URL`, `STORYTIME_STORAGE_ACCESS_KEY`, `STORYTIME_STORAGE_SECRET_KEY`, and the three review switches. After step 8 the new revision must hold the first 6 names and none of the 3 switches. Stop and report to Daniel only when a name lies outside this set.
 
-8. Remove the three review switches when the guard failed. Pin the live image, hold no traffic, and use a new tag.
+8. Remove the three review switches when the guard failed. Pin the candidate image, hold no traffic, and use a new tag.
 
    ```
-   gcloud run services update storytime-app --project primary-advantage --region asia-southeast1 --remove-env-vars=STORYTIME_REVIEW_DRAFT_WEEKS,STORYTIME_SHOW_DRAFT_MEDIA,STORYTIME_TEACHER_ROUTES --image=<the live revision image reference with its digest> --no-traffic --tag=<new tag>
+   gcloud run services update storytime-app --project primary-advantage --region asia-southeast1 --remove-env-vars=STORYTIME_REVIEW_DRAFT_WEEKS,STORYTIME_SHOW_DRAFT_MEDIA,STORYTIME_TEACHER_ROUTES --image=asia-southeast1-docker.pkg.dev/primary-advantage/primary-advantage-repo/storytime-app@sha256:17aa55e3c3988d80a9ada19db0fb52ad065bdeb8c896ba40e44c3e5acc60386b --no-traffic --tag=<new tag>
    ```
 
-   The update form is at docs/runbooks/storytime-deploy.md:143 and :149. The removal argument is at :72. Plan task 3.1 names the same three names (plan.md:321).
+   The update form is at docs/runbooks/storytime-deploy.md:143 and :149. The removal argument is at :72. Plan task 3.1 names the same three names.
 
-9. Check the tag URL of the revision of that update. Use the curl form of docs/runbooks/storytime-deploy.md:42.
+9. Read the env names of the new revision of that update (all three switches absent), then check the tag URL of that revision. Use the curl form of docs/runbooks/storytime-deploy.md:42.
 
 10. Wait for Daniel's word.
 
@@ -231,7 +231,7 @@ Record the revision name and the percent of every traffic row. The report needs 
 
 The host is `https://storytime.reading-advantage.com`. The curl form is at docs/runbooks/storytime-deploy.md:42.
 
-1. Sign in as the family account `staff-01`. The password is in the card file outside the repository (plan.md:326-328). The sign-in POST form is at apps/storytime/__tests__/phase3-docker-smoke.sh:228-236. The session cookie name is `__Host-st_session`.
+1. Sign in as the family account `staff-01`. The password is in the card file outside the repository (plan task 3.1, the release 1 account batch lines). The sign-in POST form is at apps/storytime/__tests__/phase3-docker-smoke.sh:228-236. The session cookie name is `__Host-st_session`.
 
 2. Check each week page of the published weeks with the cookie.
 
