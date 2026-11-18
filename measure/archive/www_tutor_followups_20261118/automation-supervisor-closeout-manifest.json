@@ -66,7 +66,7 @@
       "383df188a",
       "ac3886b4a"
     ],
-    "closeout_commit_sha": "recorded in the follow-up record commit"
+    "closeout_commit_sha": "a04a5745cfc2b7bc59686c0ec3185f27600305a8"
   },
   "commands": [
     "git rev-parse HEAD -> ac3886b4a37ba7d50551958bfd5de00da72d8b13",
@@ -77,7 +77,7 @@
     "rg www_tutor_followups tests/ -> exit 1, no reference, so the archive move breaks no test path (A9)",
     "git mv measure/tracks/www_tutor_followups_20261118 measure/archive/www_tutor_followups_20261118 -> exit 0",
     "git add -f measure/runs/www_tutor_followups_20261118 -> the evidence of the track, including the capture folders",
-    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track www_tutor_followups_20261118 -> exit 0 after the record commit"
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track www_tutor_followups_20261118 -> exit 0"
   ],
   "evidence_retained": [
     "measure/runs/www_tutor_followups_20261118/final-acceptance-383df18.json and .log (the passing final acceptance)",

@@ -371,7 +371,7 @@ Record: `measure/runs/www_tutor_followups_20261118/review-b-waiver.md`. The audi
 
 ## Closeout
 
-- [x] C.1 Move the track to `measure/archive/www_tutor_followups_20261118`, update the registry row, and record the closeout. Done: `ac3886b4a` (temporary placeholder, replaced by the closeout commit SHA in the record commit). Test: the closeout checker exits 0.
+- [x] C.1 Move the track to `measure/archive/www_tutor_followups_20261118`, update the registry row, and record the closeout. Done: `a04a5745cfc2b7bc59686c0ec3185f27600305a8`. Test: the closeout checker exits 0.
 
   The registry row names the commit range, the gate output, the page-check folder, the CD run, and
   the closed questions. The closeout runs after task 3.4.
