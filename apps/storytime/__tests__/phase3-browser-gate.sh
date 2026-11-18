@@ -323,7 +323,10 @@ const PNG_1X1 = Buffer.from(
 async function interceptMedia(pg) {
   // The signed URLs name the storage endpoint (here the origin of the server) and carry a
   // signature; the old `/media/` path rule stays for the keys that hold `/media/`.
-  await pg.route(url => url.pathname.includes('/media/') || url.searchParams.has('X-Amz-Signature'), route => {
+  // Build assets under `/_next/static/` are never stubbed: the two place pictures
+  // (meadow-p and path-p) are build assets there, and AC-5.3 counts their real bytes and
+  // then subtracts them.
+  await pg.route(url => (url.pathname.includes('/media/') && !url.pathname.startsWith('/_next/static/')) || url.searchParams.has('X-Amz-Signature'), route => {
     const path = new URL(route.request().url()).pathname;
     if (/\.mp3$/i.test(path)) return route.fulfill({ status: 200, contentType: 'audio/wav', body: WAV });
     // The built app serves no static media, so a page picture would 404 and take no layout
@@ -587,6 +590,29 @@ async function watchNetwork(page) {
     async close() { await cdp.detach(); },
   };
 }
+// The two place pictures (meadow-p and path-p) are build assets under
+// `/_next/static/media/`. AC-5.3 counts the first load without them (PM decision,
+// 2026-11-18): AC-4.7 keeps the approved place look, and the browser cache holds both
+// pictures after the first visit. The match reads the whole file stem, so the exclusion
+// cannot widen to another picture.
+function isPlacePicture(pathname) {
+  const name = pathname.split('/').pop() ?? '';
+  if (!/\.webp$/i.test(name)) return false;
+  const stem = name.split('.')[0];
+  return stem === 'meadow-p' || stem === 'path-p';
+}
+function firstLoadMeasure(network) {
+  const transfers = network.transfers.filter(r => !r.afterTap);
+  const withPlaces = transfers.reduce((sum, r) => sum + r.bytes, 0);
+  const places = transfers.filter(r => isPlacePicture(new URL(r.url).pathname));
+  const excludedBytes = places.reduce((sum, r) => sum + r.bytes, 0);
+  return {
+    withPlaces,
+    withoutPlaces: withPlaces - excludedBytes,
+    placeCount: places.length,
+    placePaths: places.map(r => new URL(r.url).pathname),
+  };
+}
 try {
   const selfTestPages = new Map([
     ['/button', '<!doctype html><button style="width:30px;height:30px">x</button>'],
@@ -695,11 +721,26 @@ try {
     await page.goto(`${base}/th/st/2/1`, { waitUntil: 'networkidle' });
     return { ok: true };
   });
-  const firstLoadBytes = await runCheck('AC-5.3 first-load transfer is at most 300000 bytes', async () => {
+  const firstLoad = await runCheck('AC-5.3 first load without the two place pictures is at most 300000 bytes', async () => {
     if (!network) throw new Error('CDP session is unavailable');
-    const bytes = network.transfers.filter(r => !r.afterTap).reduce((sum, r) => sum + r.bytes, 0);
-    console.log(`transferred_bytes_first_load=${bytes}`);
-    return { ok: bytes <= 300000, detail: `transferred_bytes_first_load=${bytes}`, value: bytes };
+    const measure = firstLoadMeasure(network);
+    console.log(`transferred_bytes_first_load_with_place_pictures=${measure.withPlaces}`);
+    console.log(`transferred_bytes_first_load=${measure.withoutPlaces}`);
+    console.log(`place_pictures_excluded=${measure.placeCount} (${measure.placePaths.join(', ')})`);
+    return {
+      ok: measure.withoutPlaces <= 300000,
+      detail: `transferred_bytes_first_load=${measure.withoutPlaces} (first load without the two place pictures)`,
+      value: measure,
+    };
+  });
+  await runCheck('AC-5.3 place pictures excluded: exactly two (meadow-p, path-p)', async () => {
+    if (!firstLoad) throw new Error('The first-load measure is unavailable');
+    console.log(`place_pictures_excluded=${firstLoad.placeCount} (${firstLoad.placePaths.join(', ')})`);
+    return {
+      ok: firstLoad.placeCount === 2,
+      detail: `place_pictures_excluded=${firstLoad.placeCount} (${firstLoad.placePaths.join(', ')})`,
+      value: firstLoad.placeCount,
+    };
   });
   const beforeTapMedia = await runCheck('AC-5.3 no audio or video request occurs before tap', async () => {
     if (!network) throw new Error('CDP session is unavailable');
