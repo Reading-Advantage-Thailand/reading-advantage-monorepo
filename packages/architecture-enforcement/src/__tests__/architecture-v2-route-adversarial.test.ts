@@ -174,6 +174,7 @@ interface PreviewShape {
   removals: number;
   renames: number;
   policyVersion?: "v1" | "v2";
+  manifestPath?: string;
 }
 
 /** Creates one preview whose plan stages the v2 manifest bytes. */
@@ -193,7 +194,7 @@ function previewFixture(shape: PreviewShape): ArchitectureReconciliationPreview 
       replacements: [
         replacementFixture(
           shape.manifestId,
-          V2_MANIFEST_PATH,
+          shape.manifestPath ?? V2_MANIFEST_PATH,
           stagedManifest({
             reviews: shape.reviews,
             status: shape.status,
@@ -296,7 +297,7 @@ describe("review-record gate: bypass attempts (target 1)", () => {
     { label: "unknown_id", manifestId: "v2-manifest" },
     { label: "known_other_id", manifestId: "ownership-map" },
   ])(
-    "renamed_replacement_id_cannot_complete_a_write ($label)",
+    "gate_refuses_a_renamed_replacement_id ($label)",
     async ({ manifestId }) => {
       const message = await applyRejectionMessage(
         previewFixture({
@@ -310,11 +311,185 @@ describe("review-record gate: bypass attempts (target 1)", () => {
         }),
       );
       expect(
-        message.length,
-        `a doctored replacement id must never complete a write: id=${manifestId} message=${message}`,
-      ).toBeGreaterThan(0);
+        message,
+        `the gate must key on the manifest destination path: id=${manifestId} message=${message}`,
+      ).toContain(GATE_MESSAGE);
     },
   );
+
+  it.each([
+    {
+      label: "dot_segment",
+      manifestPath:
+        "packages/architecture-enforcement/src/config/./analyzer-reconciliation.v2.json",
+    },
+    {
+      label: "double_slash",
+      manifestPath:
+        "packages/architecture-enforcement/src/config//analyzer-reconciliation.v2.json",
+    },
+    {
+      label: "trailing_slash",
+      manifestPath: `${V2_MANIFEST_PATH}/`,
+    },
+    {
+      label: "capitalized_root",
+      manifestPath: V2_MANIFEST_PATH.replace("packages", "Packages"),
+    },
+  ])(
+    "gate_refuses_a_delta_staged_at_a_path_variant ($label)",
+    async ({ manifestPath }) => {
+      const message = await applyRejectionMessage(
+        previewFixture({
+          manifestId: "reconciliation-manifest",
+          reviews: [],
+          status: "candidate",
+          additions: 1,
+          removals: 0,
+          renames: 0,
+          policyVersion: "v2",
+          manifestPath,
+        }),
+      );
+      expect(
+        message,
+        `the id arm of the gate must read the staged bytes: path=${manifestPath} message=${message}`,
+      ).toContain(GATE_MESSAGE);
+    },
+  );
+
+  it.each([
+    {
+      label: "dot_segment",
+      manifestPath:
+        "packages/architecture-enforcement/src/config/./analyzer-reconciliation.v2.json",
+    },
+    {
+      label: "double_slash",
+      manifestPath:
+        "packages/architecture-enforcement/src/config//analyzer-reconciliation.v2.json",
+    },
+    {
+      label: "trailing_slash",
+      manifestPath: `${V2_MANIFEST_PATH}/`,
+    },
+    {
+      label: "capitalized_root",
+      manifestPath: V2_MANIFEST_PATH.replace("packages", "Packages"),
+    },
+  ])(
+    "write_guard_refuses_a_renamed_id_at_a_path_variant ($label)",
+    async ({ manifestPath }) => {
+      const message = await applyRejectionMessage(
+        previewFixture({
+          manifestId: "v2-manifest",
+          reviews: [],
+          status: "candidate",
+          additions: 1,
+          removals: 0,
+          renames: 0,
+          policyVersion: "v2",
+          manifestPath,
+        }),
+      );
+      expect(
+        message,
+        `the exact destination set must refuse the variant: path=${manifestPath} message=${message}`,
+      ).toContain("V2 reconciliation write set is not exact");
+    },
+  );
+
+  it("gate_refuses_a_swapped_id_and_path", async () => {
+    const summary = summaryFixture();
+    const preview: ArchitectureReconciliationPreview = {
+      schemaVersion: 1,
+      reconciliationPlanHash: PLAN_HASH,
+      manifestHash: summary.manifestHash,
+      analyzerImplementationTreeHash: summary.analyzerImplementationTreeHash,
+      reconciliationImplementationTreeHash:
+        summary.reconciliationImplementationTreeHash,
+      architectureInputSnapshotHash: summary.architectureInputSnapshotHash,
+      transactionPlan: {
+        schemaVersion: 1,
+        repoRoot: "/repo",
+        replacements: [
+          replacementFixture(
+            "database-baseline",
+            V2_MANIFEST_PATH,
+            stagedManifest({
+              reviews: [],
+              status: "candidate",
+              additions: 1,
+              removals: 0,
+              renames: 0,
+            }),
+          ),
+          replacementFixture("ownership-map", V2_OWNERSHIP_PATH, "{}\n"),
+          replacementFixture(
+            "reconciliation-manifest",
+            V2_DATABASE_PATH,
+            stagedManifest({
+              reviews: [],
+              status: "candidate",
+              additions: 0,
+              removals: 0,
+              renames: 0,
+            }),
+          ),
+          replacementFixture("provider-baseline", V2_PROVIDER_PATH, "{}\n"),
+        ],
+        planHash: summary.transactionPlanHash,
+      },
+      summary,
+      policyVersion: "v2",
+      policyStatus: "candidate",
+    };
+    const message = await applyRejectionMessage(preview);
+    expect(
+      message,
+      `the path arm of the gate must read the bytes at the manifest path: message=${message}`,
+    ).toContain(GATE_MESSAGE);
+  });
+
+  it("apply_fails_closed_on_non_json_staged_manifest_bytes", async () => {
+    const summary = summaryFixture();
+    const preview: ArchitectureReconciliationPreview = {
+      schemaVersion: 1,
+      reconciliationPlanHash: PLAN_HASH,
+      manifestHash: summary.manifestHash,
+      analyzerImplementationTreeHash: summary.analyzerImplementationTreeHash,
+      reconciliationImplementationTreeHash:
+        summary.reconciliationImplementationTreeHash,
+      architectureInputSnapshotHash: summary.architectureInputSnapshotHash,
+      transactionPlan: {
+        schemaVersion: 1,
+        repoRoot: "/repo",
+        replacements: [
+          replacementFixture(
+            "reconciliation-manifest",
+            V2_MANIFEST_PATH,
+            "not-json",
+          ),
+          replacementFixture("ownership-map", V2_OWNERSHIP_PATH, "{}\n"),
+          replacementFixture("database-baseline", V2_DATABASE_PATH, "{}\n"),
+          replacementFixture("provider-baseline", V2_PROVIDER_PATH, "{}\n"),
+        ],
+        planHash: summary.transactionPlanHash,
+      },
+      summary,
+      policyVersion: "v2",
+      policyStatus: "candidate",
+    };
+    await expect(
+      applyArchitectureReconciliation({
+        preview,
+        acknowledge: true,
+        expectedReconciliationPlanHash: PLAN_HASH,
+        newDebtMetadata: { owner: REVIEW_OWNER, rationale: REVIEW_RATIONALE },
+      }),
+      "non-json staged bytes must never complete a write",
+    ).rejects.toThrow();
+  });
 
   it.each([
     { label: "no_policy_field", policyVersion: undefined },
@@ -957,6 +1132,32 @@ describe("pin refresh budget boundary (target 3)", () => {
       () => parsePinRefreshArguments(["--budget-s", value], "/repo", () => "/repo"),
       `a value that Number() maps to Infinity must be refused: characters=${value.length}`,
     ).toThrow(/positive whole number of seconds/);
+  });
+
+  it.each([
+    { label: "max_safe_integer", value: "9007199254740992", accepted: true },
+    {
+      label: "one_above_max_safe_integer",
+      value: "9007199254740993",
+      accepted: false,
+    },
+  ])("budget_boundary_$label", ({ value, accepted }) => {
+    const parse = () =>
+      parsePinRefreshArguments(["--budget-s", value], "/repo", () => "/repo");
+    if (accepted) {
+      const parsed = parse();
+      expect(
+        parsed.budgetSeconds,
+        `the largest safe whole number must be accepted: value=${value}`,
+      ).toBe(9_007_199_254_740_992);
+    } else {
+      expect(
+        parse,
+        `the value must be refused as not a safe whole number: value=${value}`,
+      ).toThrow(
+        `--budget-s must be a positive whole number of seconds: ${value}`,
+      );
+    }
   });
 });
 
