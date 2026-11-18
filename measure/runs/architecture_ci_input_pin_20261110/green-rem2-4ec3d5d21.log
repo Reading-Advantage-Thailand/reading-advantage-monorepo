@@ -1,0 +1,181 @@
+# Green · P1 remediation r3 · architecture_ci_input_pin_20261110
+
+Status: complete.
+
+- Session: Green · P1 remediation · architecture_ci_input_pin · r3
+- Model: opencode/deepseek-v4.1-flash-free#high (substitution for a plan limit)
+- Red model of this phase task: opencode-go/hy4-flash-free#high. No coder subagent ran; no
+  code came from the Red model family.
+- Repository: /home/daniebo/Desktop/reading-advantage-monorepo, branch master
+- baseline_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+- role_base_sha: 4ec3d5d21453a46f998cef8bfd42578bd1669c46
+- Pre-edit `git status --short`: three modified `next-env.d.ts` files and one prior run log
+  (`green-rem-9619b9548.log`). They stayed untouched.
+- The committed Red change sits inside `phase_base_sha..HEAD`: `4ec3d5d21` is the role base
+  and a descendant of `09168dc42`.
+
+## Routed findings and dispositions
+
+- D1 = adversarial F1: `--budget-s` accepted a 400-digit value that `Number()` maps to
+  `Infinity`. The refresh CLI now rejects any value that is not a finite positive safe
+  integer (`Number.isSafeInteger`).
+- D2 = adversarial F2: the review-record gate found the staged manifest by replacement id
+  only. The lookup now keys on the manifest destination path as well, so a renamed id
+  cannot skip the gate. A new case in `architecture-review-gate.test.ts` pins it.
+- C1 = review C r2: the docs said the reconcile owner id is lower case, but only the apply
+  path enforces the owner pattern. The docs now say the acknowledged run enforces the
+  pattern and the preview accepts any `--owner` value.
+- A1 = review A r2 (N3): the plan moved-value list now names `reviewSubjectSha256`.
+
+## Step 1: targeted Red command, before any edit
+
+Command: `CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-v2-route-adversarial.test.ts --maxWorkers=1`
+
+- exit 1. `tests_total=61`, `tests_failed=1`, `tests_passed=60`, duration 2.82 s.
+- The one failure is `budget_rejects_a_value_that_is_not_a_finite_whole_number`:
+  "expected [Function] to throw an error", `characters=400`.
+
+## Step 2: implementation
+
+- `packages/architecture-enforcement/src/architecture-pin-refresh-cli.ts`: after the digit
+  regex, `Number(value)` must pass `Number.isSafeInteger`, else the same
+  `--budget-s must be a positive whole number of seconds: <value>` error.
+- `packages/architecture-enforcement/src/architecture-reconciliation.ts`:
+  `stagedManifestFromPreview` matches `entry.id === "reconciliation-manifest"` or
+  `entry.repositoryPath === V2_RECONCILIATION_DESTINATION_PATHS[0]`. The JSDoc names the
+  path keying.
+- `packages/architecture-enforcement/src/__tests__/architecture-review-gate.test.ts`: the
+  fixture takes a `manifestId`; a new case group "refuses a staged delta under a renamed
+  replacement id" runs `v2-manifest` and `ownership-map` and expects the gate message.
+- `docs/architecture-enforcement.md`: the owner paragraph now reads that the accepted
+  manifest binds an owner id that matches `[a-z][a-z0-9-]{0,63}`, that the acknowledged
+  run enforces the pattern when it validates the committed manifest, and that the preview
+  accepts any `--owner` value.
+- `packages/architecture-enforcement/src/__tests__/architecture-v2-route-adversarial.test.ts`
+  was not edited. No committed Red test was edited.
+
+## Step 3: failing-first check for the new gate case
+
+- With `architecture-reconciliation.ts` temporarily restored from HEAD and the new test
+  file in place: the two renamed-id rows fail (2 failed, 4 skipped). The fix was restored
+  and `git diff --stat` read 7 insertions and 1 deletion.
+- Targeted command with the fix:
+  `CI=true pnpm exec vitest run <adversarial> <review-gate> <budget> --maxWorkers=1`
+  exits 0. `test_files=3`, `tests_total=71`, `tests_failed=0`.
+
+## Step 4: implementation commits
+
+- `ae29f456be3936346d99232e3d6745a7c975ace2`
+  `fix(architecture): gate the staged manifest by path (track_id: architecture_ci_input_pin_20261110)`
+  Paths: `architecture-reconciliation.ts`, `architecture-review-gate.test.ts`.
+- `36925e1f6`
+  `fix(architecture): refuse a non-finite budget value (track_id: architecture_ci_input_pin_20261110)`
+  Path: `architecture-pin-refresh-cli.ts`.
+- `b9362c9d1ea299327f3350997a3549241e0ad8ae`
+  `docs(architecture): place the owner rule at apply (track_id: architecture_ci_input_pin_20261110)`
+  Path: `docs/architecture-enforcement.md`.
+- `965079f0563544dc1325e3a93183bbb692456eeb`
+  `chore(architecture): refresh the v2 manifest pins (track_id: architecture_ci_input_pin_20261110)`
+  Path: `packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json`.
+
+## Step 5: clean detached worktrees
+
+### First worktree under /tmp (removed)
+
+- `git worktree add --detach /tmp/opencode/green-rem2/reading-advantage-monorepo b9362c9d1`.
+- `pnpm install --frozen-lockfile --offline` exited 1 with `ERR_PNPM_NO_OFFLINE_TARBALL`
+  for `@commitlint/cli`. Deviation: the install with the explicit store exited 0:
+  `pnpm install --frozen-lockfile --offline --store-dir /home/daniebo/.local/share/pnpm/store/v11`
+  (`added 2112`, `Done in 11.3s`).
+- Build through heavy-run p2 exits 0, `build_tasks=6`, `build_cached=6`.
+- Named files exit 0: `test_files=3`, `tests_total=71`, `tests_failed=0`.
+- Package suite through heavy-run p2:
+  `CI=true pnpm --filter @reading-advantage/architecture-enforcement exec vitest run --maxWorkers=1`
+  exits 1. `suite_files=38`, `suite_tests=403`, `tests_failed=1`, `tests_passed=402`.
+  The one failure is `baseline-validation.test.ts:542` "rejects stale synchronous v2
+  implementation and input hashes": the implementation tree hash was stale after the two
+  source edits. That failure is the pin refresh signal, not a logic defect.
+- The pin refresh through heavy-run wrote the manifest, then an outside server fault killed
+  the job and the session. The worktree file held the refreshed values. No process of that
+  job remained.
+- The worktree was removed with `git worktree remove --force` and `git worktree prune`.
+
+### Second worktree under ~/.cache (the verified copy, removed at the end)
+
+- PM rule of 2026-11-19: clean copies live under `~/.cache`, never under `/tmp`.
+- `git worktree add --detach /home/daniebo/.cache/green-rem3/reading-advantage-monorepo b9362c9d1`.
+  The folder name ends with `reading-advantage-monorepo`.
+- `pnpm install --frozen-lockfile --offline` exits 0 (`Done in 2.7s`). No store override
+  was needed in this copy.
+- Build through heavy-run p2:
+  `pnpm turbo run build --filter=@reading-advantage/backend --filter=@reading-advantage/knowledge-space-core`
+  exits 0, `build_tasks=6`, `build_cached=6`.
+- Pin refresh through heavy-run p2:
+  `pnpm architecture:pin:refresh --acknowledge --budget-s 1500` exits 0.
+  `modules_total=7013`, pass 2 ended at `elapsed_s=33`, `step=validate` at
+  `elapsed_s=33`, `written`. The values:
+  - `analyzerInputSnapshotSha256`: `f75b93f03c06d5d769112c524ef7f243fdaa621883b6a61bbd0fb7cc2ad37a5f`
+    to `05a33da6b8be185e5bb8372f29c2e0d983c33e4a1aa08b8b4439b25dbeb2bf0f`.
+  - `analyzerImplementationTreeSha256`: unchanged at
+    `cb9c1431848cd13467d3e56aac09c958a31599eb186f8c0de6904113520fc91f`.
+  - `implementationAndTestTreeSha256`: `646368ca2eaa5ec44c2caf7d54340e0276d2cfae07b5c8c048cbaae1811bef7c`
+    to `cfec934043ca48886c5f7faa085baa1ffee5f0ac7d19951f80ec930484d499cb`.
+  - `reportSha256s`: both entries from `b189fcf6e4f8bd473277328c93f484fb66ef18e875eb6a71998c76b72c35d592`
+    to `a995b4f3bc7602adc2cc1d5fad847370e5fb4d7b15a95ca2e97c9114ad3ca6ff`.
+  - The manifest diff reads 5 insertions and 5 deletions, four fields moved. The copy in the
+    main checkout was committed as `965079f05`; no other path entered that commit.
+
+## Step 6: gates at 965079f0563544dc1325e3a93183bbb692456eeb
+
+All commands ran in `/home/daniebo/.cache/green-rem3/reading-advantage-monorepo` at the
+detached final HEAD, except where noted. Heavy jobs ran one at a time through heavy-run p2
+with `HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600`.
+
+| Gate | Command | Exit | Counts |
+| --- | --- | --- | --- |
+| install | `pnpm install --frozen-lockfile --offline` | 0 | done in 2.7 s |
+| build | `pnpm turbo run build --filter=@reading-advantage/backend --filter=@reading-advantage/knowledge-space-core` | 0 | `build_tasks=6`, `build_cached=6` |
+| targeted | `CI=true pnpm exec vitest run <adversarial> <review-gate> <budget> --maxWorkers=1` | 0 | `targeted_files=3`, `targeted_tests=71`, `tests_failed=0` |
+| package suite | `CI=true pnpm --filter @reading-advantage/architecture-enforcement exec vitest run --maxWorkers=1` | 0 | `suite_files=38`, `suite_tests=403`, `tests_failed=0` |
+| check-types | `pnpm --filter @reading-advantage/architecture-enforcement check-types` | 0 | no output |
+| lint | `pnpm --filter @reading-advantage/architecture-enforcement lint` | 0 | `lint_errors=0`, `lint_warnings=1` |
+| v2 check | `pnpm architecture:check --policy v2` | 0 | `files=7013`, `findings=800`, `parse_errors=0`, `additions=0`, `removals=0`, `renames=0` |
+
+- The one lint warning is the pre-existing `prefer-const` in
+  `architecture-pin-refresh-resume.test.ts`, a Red file that Green may not edit.
+- The folder name ends with `reading-advantage-monorepo`, so the known case at
+  `architecture-reconciliation-cli.test.ts:225` passed. No environmental failure appeared.
+- The v2 check reports `architecture policy: v2 (status=candidate, default=v1)`.
+- `git diff --name-only 5062b170e..HEAD -- measure/archive/backend_architecture_enforcement_20260713/`
+  is empty.
+- The worktree was removed with `git worktree remove --force` and `git worktree prune` after
+  the evidence copy.
+
+## Step 7: plan evidence
+
+- `measure/tracks/architecture_ci_input_pin_20261110/plan.md`: the `619aef753` moved-value
+  list now names the review subject (A1). A new sub-block "Phase 1 remediation r2
+  (2026-11-19)" records the four commits, the refresh values, and the gate counts.
+- This log is committed with the plan in one evidence commit.
+
+## Handoff notes
+
+- Tasks flipped to `[x]`: none. Every Phase 1 task was already `[x]`; this round is a
+  remediation sub-block under the existing phase.
+- Tasks flipped to `[b]`: none.
+- New files added: this log only. No new source file, no new test file.
+- The three dirty `next-env.d.ts` files of the main checkout were never edited.
+- No push. No archive change. No `measure/tracks.md`, `metadata.json`, or closeout change.
+- Default taken: the ~/.cache worktree is nested as
+  `~/.cache/green-rem3/reading-advantage-monorepo` so the folder-name case holds.
+
+MEASURE_AGENT_RESULT
+phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+role_base_sha: 4ec3d5d21453a46f998cef8bfd42578bd1669c46
+baseline_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+resulting_HEAD: 965079f0563544dc1325e3a93183bbb692456eeb
+commits: ae29f456be3936346d99232e3d6745a7c975ace2; 36925e1f6; b9362c9d1ea299327f3350997a3549241e0ad8ae; 965079f0563544dc1325e3a93183bbb692456eeb
+exit_codes: red_targeted=1; targeted_with_fix=0; install_tmp=1; install_tmp_explicit_store=0; install_cache=0; build=0; pinned_package_suite_before_refresh=1; pin_refresh=0; targeted_final=0; package_suite=0; check_types=0; lint=0; check_policy_v2=0
+dispositions: D1=FIX; D2=FIX; C1=FIX; A1=FIX
+disposition_map: D1=adversarial F1 non-finite budget (36925e1f6); D2=adversarial F2 renamed replacement id gate (ae29f456b); C1=review C r2 owner case docs (b9362c9d1); A1=review A r2 N3 reviewSubjectSha256 plan list (965079f05 evidence commit)
+END_MEASURE_AGENT_RESULT
