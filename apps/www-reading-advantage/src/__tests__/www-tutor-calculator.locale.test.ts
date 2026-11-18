@@ -51,11 +51,11 @@ const CALC_EN = {
   graph: {
     title: "How this month's payout is built",
     caption:
-      "Each bar is one leg: the volume it brings and the commission it earns on its own. Your payout is your rate on the whole volume, minus the commissions of the legs.",
+      "Each leg has its own bar: the volume it brings and the commission it earns on its own. Your payout before tax is your rate on the whole volume, minus the commissions of the legs.",
     ownBar: "Your own students",
     legBar: "Leg {n}",
     grossBar: "Gross at your rate",
-    legCommissionBar: "Commission of each leg",
+    legCommissionBar: "Commission of all legs",
     netBar: "Your payout after 3% tax",
     axisBaht: "Baht",
     rateTitle: "Your rate for the network volume",
@@ -67,6 +67,8 @@ const CALC_EN = {
     withLegs:
       "Your rate applies to the whole network volume. The commission of each leg comes off, and 3% withholding tax comes off the rest.",
     zero: "Add students to see a month.",
+    needsOwnStudents:
+      "Your own class unlocks your network commission. Add at least one personal student this month, and your legs count toward your payout.",
   },
   presets: [
     {
@@ -124,11 +126,11 @@ const CALC_TH = {
   graph: {
     title: "ยอดจ่ายเดือนนี้ประกอบขึ้นอย่างไร",
     caption:
-      "แท่งแต่ละแท่งคือหนึ่งสาย: ยอดที่สายนั้นพามา และค่าคอมมิชชันที่สายนั้นได้เอง ยอดจ่ายของคุณคืออัตราของคุณคูณกับยอดรวมทั้งเครือข่าย ลบด้วยค่าคอมมิชชันของทุกสาย",
+      "แต่ละสายมีแท่งของตัวเอง: ยอดที่สายนั้นพามา และค่าคอมมิชชันที่สายนั้นได้เอง ยอดจ่ายของคุณก่อนหักภาษี คืออัตราของคุณคูณกับยอดรวมทั้งเครือข่าย ลบด้วยค่าคอมมิชชันของทุกสาย",
     ownBar: "นักเรียนในคลาสของคุณเอง",
     legBar: "สาย {n}",
     grossBar: "ยอดก่อนหักตามอัตราของคุณ",
-    legCommissionBar: "ค่าคอมมิชชันของแต่ละสาย",
+    legCommissionBar: "ค่าคอมมิชชันของทุกสาย",
     netBar: "ยอดจ่ายของคุณหลังหักภาษี 3%",
     axisBaht: "บาท",
     rateTitle: "อัตราของคุณตามยอดรวมของเครือข่าย",
@@ -140,6 +142,8 @@ const CALC_TH = {
     withLegs:
       "อัตราของคุณใช้กับยอดรวมทั้งเครือข่าย จากนั้นหักค่าคอมมิชชันของแต่ละสายออก และหักภาษีหัก ณ ที่จ่าย 3% จากยอดที่เหลือ",
     zero: "ใส่จำนวนนักเรียนเพื่อดูยอดของเดือน",
+    needsOwnStudents:
+      "คลาสของคุณเองปลดล็อกค่าคอมมิชชันจากเครือข่าย เพิ่มนักเรียนในคลาสของคุณเองอย่างน้อย 1 คนในเดือนนี้ สายของคุณก็นับเข้ายอดจ่ายของคุณ",
   },
   presets: [
     {
@@ -163,6 +167,20 @@ const CALC_TH = {
   ],
   disclaimer:
     "ตัวเลขทุกตัวในตัวอย่างนี้เป็นการอธิบายให้เห็นภาพ ค่าคอมมิชชันขึ้นอยู่กับคลาสที่เปิดสอนและมีการจ่ายเงินจริง",
+} as const;
+
+/**
+ * CALC_EN with the zh draft explain line of spec 5.1 (D-11). Every other zh
+ * value equals en (D-10). The zh line stays a draft until the contracted
+ * Chinese speaker checks it.
+ */
+const CALC_ZH = {
+  ...CALC_EN,
+  explain: {
+    ...CALC_EN.explain,
+    needsOwnStudents:
+      "您自己的班级是解锁网络佣金的关键。本月只要有至少一名您自己的学员，您各团队的业绩就会计入您的结算。",
+  },
 } as const;
 
 /** PR section 6, screens block, English. */
@@ -367,8 +385,8 @@ describe("2. the calculator block equals PR section 6 exactly", () => {
     expect(block("th", "calculator")).toEqual(CALC_TH);
   });
 
-  it("zh deep-equals en (D-10)", () => {
-    expect(block("zh", "calculator")).toEqual(CALC_EN);
+  it("zh deep-equals en, with the zh draft explain line (D-10, D-11)", () => {
+    expect(block("zh", "calculator")).toEqual(CALC_ZH);
   });
 
   it("keeps the section 6 key order in every locale", () => {

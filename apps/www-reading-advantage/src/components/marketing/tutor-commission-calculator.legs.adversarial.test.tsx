@@ -158,7 +158,7 @@ function bind(copy: Copy) {
       const dd = Array.from(node.querySelectorAll("dd")).map((item) => item.textContent ?? "");
       const paragraphs = Array.from(node.querySelectorAll("p"));
       const labelAt = paragraphs.findIndex((item) => item.textContent === copy.results.net);
-      const explain = (["ownOnly", "withLegs", "zero"] as const).filter((key) =>
+      const explain = (["zero", "needsOwnStudents", "ownOnly", "withLegs"] as const).filter((key) =>
         (node.textContent ?? "").includes(copy.explain[key]),
       );
       return {
@@ -599,14 +599,14 @@ describe("L4 Add and Remove are edits (D-7) and the figures follow (D-18)", () =
     expectConsistent(EN, ui, "preset then remove");
   });
 
-  it("pays 0 and shows the zero line for legs without own students, then pays once a student is typed", async () => {
+  it("pays 0 and shows the needsOwnStudents line for legs without own students, then pays once a student is typed", async () => {
     const user = userEvent.setup();
     const ui = mount();
     await user.click(ui.add());
     await user.click(ui.add());
     expect(ui.figures().hero).toBe("0");
     expect(ui.figures().tax).toBe("0");
-    expect(ui.figures().explain).toEqual(["zero"]);
+    expect(ui.figures().explain).toEqual(["needsOwnStudents"]);
     expect(ui.figures().networkGV).toBe("18,000");
 
     type(ui.own(), "1");
@@ -615,7 +615,7 @@ describe("L4 Add and Remove are edits (D-7) and the figures follow (D-18)", () =
 
     type(ui.own(), "0");
     expect(ui.figures().hero).toBe("0");
-    expect(ui.figures().explain).toEqual(["zero"]);
+    expect(ui.figures().explain).toEqual(["needsOwnStudents"]);
     expectConsistent(EN, ui, "own student toggled");
   });
 

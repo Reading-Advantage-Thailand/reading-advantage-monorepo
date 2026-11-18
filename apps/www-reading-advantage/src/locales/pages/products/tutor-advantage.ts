@@ -16,7 +16,7 @@ export const en = {
         "priceNote": "The price adapts to the market.",
         "cta": "Ask about a class",
         "ctaTutor": "Become a tutor",
-        "imageAlt": "A tutor and a child look at a tablet together, with a notebook and a pen on the table.",
+        "imageAlt": "A tutor smiles at three schoolchildren at a small table in a bright classroom; a girl holds the Primary Advantage Origins 2 workbook, a boy the student app on a phone.",
         "factsLabel": "Tutor Advantage at a glance"
     },
     classTour: {
@@ -150,7 +150,7 @@ export const en = {
             "The calculator on this page shows examples. Ask us about your own case."
         ],
         "cta": "Apply as a tutor",
-        "alt": "A tutor and a child look at a tablet together, with a notebook and a pen on the table."
+        "alt": "A tutor with three schoolchildren in a bright classroom; one holds the Primary Advantage Origins 2 workbook, another the student app on a phone.",
     },
     screens: {
         "eyebrow": "INSIDE THE APPS",
@@ -191,11 +191,11 @@ export const en = {
         },
         "graph": {
             "title": "How this month's payout is built",
-            "caption": "Each bar is one leg: the volume it brings and the commission it earns on its own. Your payout is your rate on the whole volume, minus the commissions of the legs.",
+            "caption": "Each leg has its own bar: the volume it brings and the commission it earns on its own. Your payout before tax is your rate on the whole volume, minus the commissions of the legs.",
             "ownBar": "Your own students",
             "legBar": "Leg {n}",
             "grossBar": "Gross at your rate",
-            "legCommissionBar": "Commission of each leg",
+            "legCommissionBar": "Commission of all legs",
             "netBar": "Your payout after 3% tax",
             "axisBaht": "Baht",
             "rateTitle": "Your rate for the network volume",
@@ -205,7 +205,8 @@ export const en = {
         "explain": {
             "ownOnly": "No legs this month, so the whole gross amount is the payout.",
             "withLegs": "Your rate applies to the whole network volume. The commission of each leg comes off, and 3% withholding tax comes off the rest.",
-            "zero": "Add students to see a month."
+            "zero": "Add students to see a month.",
+            "needsOwnStudents": "Your own class unlocks your network commission. Add at least one personal student this month, and your legs count toward your payout."
         },
         "presets": [
             { "name": "A new tutor", "setup": "Four personal students, no legs.", "result": "12,000 baht of volume at a rate of 46%. The gross is 5,520 baht, and with no legs it is all payout. After 3% withholding tax: 5,354 baht." },
@@ -353,7 +354,7 @@ export const th = {
         "priceNote": "ราคาปรับตามตลาด",
         "cta": "สอบถามเรื่องคลาส",
         "ctaTutor": "สมัครเป็นติวเตอร์",
-        "imageAlt": "ติวเตอร์และเด็กดูแท็บเล็ตด้วยกัน มีสมุดและปากกาวางอยู่บนโต๊ะ",
+        "imageAlt": "ติวเตอร์ยิ้มให้เด็กนักเรียนสามคนที่โต๊ะตัวเล็กในห้องเรียนที่สว่าง เด็กหญิงถือเวิร์กบุ๊ก Primary Advantage Origins 2 เด็กชายถือโทรศัพท์ที่เปิดแอปนักเรียน",
         "factsLabel": "Tutor Advantage โดยสรุป"
     },
     classTour: {
@@ -487,7 +488,7 @@ export const th = {
             "เครื่องคำนวณในหน้านี้แสดงตัวอย่าง ทักมาคุยกับเราเรื่องกรณีของคุณเองได้"
         ],
         "cta": "สมัครเป็นติวเตอร์",
-        "alt": "ติวเตอร์และเด็กดูแท็บเล็ตด้วยกัน มีสมุดและปากกาวางอยู่บนโต๊ะ"
+        "alt": "ติวเตอร์กับเด็กนักเรียนสามคนในห้องเรียนที่สว่าง คนหนึ่งถือเวิร์กบุ๊ก Primary Advantage Origins 2 อีกคนถือโทรศัพท์ที่เปิดแอปนักเรียน",
     },
     screens: {
         "eyebrow": "ภายในแอป",
@@ -528,11 +529,11 @@ export const th = {
         },
         "graph": {
             "title": "ยอดจ่ายเดือนนี้ประกอบขึ้นอย่างไร",
-            "caption": "แท่งแต่ละแท่งคือหนึ่งสาย: ยอดที่สายนั้นพามา และค่าคอมมิชชันที่สายนั้นได้เอง ยอดจ่ายของคุณคืออัตราของคุณคูณกับยอดรวมทั้งเครือข่าย ลบด้วยค่าคอมมิชชันของทุกสาย",
+            "caption": "แต่ละสายมีแท่งของตัวเอง: ยอดที่สายนั้นพามา และค่าคอมมิชชันที่สายนั้นได้เอง ยอดจ่ายของคุณก่อนหักภาษี คืออัตราของคุณคูณกับยอดรวมทั้งเครือข่าย ลบด้วยค่าคอมมิชชันของทุกสาย",
             "ownBar": "นักเรียนในคลาสของคุณเอง",
             "legBar": "สาย {n}",
             "grossBar": "ยอดก่อนหักตามอัตราของคุณ",
-            "legCommissionBar": "ค่าคอมมิชชันของแต่ละสาย",
+            "legCommissionBar": "ค่าคอมมิชชันของทุกสาย",
             "netBar": "ยอดจ่ายของคุณหลังหักภาษี 3%",
             "axisBaht": "บาท",
             "rateTitle": "อัตราของคุณตามยอดรวมของเครือข่าย",
@@ -542,7 +543,8 @@ export const th = {
         "explain": {
             "ownOnly": "เดือนนี้ไม่มีสาย เงินก่อนหักทั้งหมดจึงเป็นเงินที่คุณได้รับ",
             "withLegs": "อัตราของคุณใช้กับยอดรวมทั้งเครือข่าย จากนั้นหักค่าคอมมิชชันของแต่ละสายออก และหักภาษีหัก ณ ที่จ่าย 3% จากยอดที่เหลือ",
-            "zero": "ใส่จำนวนนักเรียนเพื่อดูยอดของเดือน"
+            "zero": "ใส่จำนวนนักเรียนเพื่อดูยอดของเดือน",
+            "needsOwnStudents": "คลาสของคุณเองปลดล็อกค่าคอมมิชชันจากเครือข่าย เพิ่มนักเรียนในคลาสของคุณเองอย่างน้อย 1 คนในเดือนนี้ สายของคุณก็นับเข้ายอดจ่ายของคุณ"
         },
         "presets": [
             { "name": "ติวเตอร์ใหม่", "setup": "นักเรียนในคลาสของคุณเอง 4 คน ไม่มีสาย", "result": "ยอด 12,000 บาท ที่อัตรา 46% ยอดก่อนหักคือ 5,520 บาท และเพราะไม่มีสาย ทั้งหมดจึงเป็นยอดจ่าย หลังหักภาษีหัก ณ ที่จ่าย 3%: 5,354 บาท" },
@@ -631,7 +633,7 @@ export const th = {
         features: [
             { title: "เวิร์กบุ๊กพิมพ์เป็นเล่ม", description: "เวิร์กบุ๊กที่พิมพ์เป็นเล่มหนึ่งเล่ม 14 บทเรียนต่อหนึ่งแพ็กเกจคลาส" },
             { title: "เวอร์ชันดิจิทัล", description: "เวิร์กบุ๊กทุกเล่มมีเวอร์ชันดิจิทัลไว้ฝึกระหว่างคลาส" },
-            { title: "ฝึกพูดกับ Reedy", description: "การฝึกพูดกับ Reedy สำหรับนักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่ และในบทเรียนที่เรียนจบแล้ว" },
+            { title: "ฝึกพูดกับ Reedy", description: "การฝึกพูดกับ Reedy เปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ยังใช้งานอยู่ใช้ได้ ในบทเรียนที่เรียนจบแล้ว" },
             { title: "แฟลชการ์ดและเกม", description: "ทุกคลาสมีแฟลชการ์ด เกมสองเกม การสนทนาเป็นคู่ และช่วงสรุป" },
             { title: "ติวเตอร์ในพื้นที่", description: "ติวเตอร์ในชุมชนของคุณสอนในคลาสแบบพบหน้า" },
             { title: "Mastery Advantage", description: "เนื้อหาในเวิร์กบุ๊กถูกติดแท็กกับกราฟความรู้ Mastery Advantage ซึ่งจัดทำแผนที่ทักษะและกำหนดเวลาทบทวน" },
@@ -690,7 +692,7 @@ export const zh = {
         "priceNote": "价格随市场调整。",
         "cta": "咨询课程",
         "ctaTutor": "成为导师",
-        "imageAlt": "A tutor and a child look at a tablet together, with a notebook and a pen on the table.",
+        "imageAlt": "A tutor smiles at three schoolchildren at a small table in a bright classroom; a girl holds the Primary Advantage Origins 2 workbook, a boy the student app on a phone.",
         "factsLabel": "Tutor Advantage 概览"
     },
     classTour: {
@@ -824,7 +826,7 @@ export const zh = {
             "The calculator on this page shows examples. Ask us about your own case."
         ],
         "cta": "申请成为导师",
-        "alt": "A tutor and a child look at a tablet together, with a notebook and a pen on the table."
+        "alt": "A tutor with three schoolchildren in a bright classroom; one holds the Primary Advantage Origins 2 workbook, another the student app on a phone.",
     },
     // D-10 placeholder: the screens block holds the English lines until the contracted Chinese speaker delivers.
     screens: {
@@ -867,11 +869,11 @@ export const zh = {
         },
         "graph": {
             "title": "How this month's payout is built",
-            "caption": "Each bar is one leg: the volume it brings and the commission it earns on its own. Your payout is your rate on the whole volume, minus the commissions of the legs.",
+            "caption": "Each leg has its own bar: the volume it brings and the commission it earns on its own. Your payout before tax is your rate on the whole volume, minus the commissions of the legs.",
             "ownBar": "Your own students",
             "legBar": "Leg {n}",
             "grossBar": "Gross at your rate",
-            "legCommissionBar": "Commission of each leg",
+            "legCommissionBar": "Commission of all legs",
             "netBar": "Your payout after 3% tax",
             "axisBaht": "Baht",
             "rateTitle": "Your rate for the network volume",
@@ -881,7 +883,9 @@ export const zh = {
         "explain": {
             "ownOnly": "No legs this month, so the whole gross amount is the payout.",
             "withLegs": "Your rate applies to the whole network volume. The commission of each leg comes off, and 3% withholding tax comes off the rest.",
-            "zero": "Add students to see a month."
+            "zero": "Add students to see a month.",
+            // D-11 draft: the PR zh line stays a draft until the contracted Chinese speaker checks it.
+            "needsOwnStudents": "您自己的班级是解锁网络佣金的关键。本月只要有至少一名您自己的学员，您各团队的业绩就会计入您的结算。"
         },
         "presets": [
             { "name": "A new tutor", "setup": "Four personal students, no legs.", "result": "12,000 baht of volume at a rate of 46%. The gross is 5,520 baht, and with no legs it is all payout. After 3% withholding tax: 5,354 baht." },

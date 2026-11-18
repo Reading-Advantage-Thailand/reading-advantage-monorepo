@@ -195,13 +195,16 @@ function settleInput(
 }
 
 /**
- * The explain variant the spec names for a settled input (spec 5.2 item 5, D-18).
+ * The explain variant the spec names for a settled input (spec D-6).
  * @param settled The settlement outcome.
- * @returns The variant name.
+ * @returns "zero" for no volume, "needsOwnStudents" for legs without own volume,
+ * "ownOnly" for no leg payouts, else "withLegs".
  */
-function settledVariant(settled: Settled): "zero" | "ownOnly" | "withLegs" {
+function settledVariant(
+  settled: Settled,
+): "zero" | "needsOwnStudents" | "ownOnly" | "withLegs" {
   if (settled.networkVolumeMinor === 0n) return "zero";
-  if (settled.ownVolumeMinor === 0n && settled.legCount >= 1) return "zero";
+  if (settled.ownVolumeMinor === 0n) return "needsOwnStudents";
   if (settled.legPayoutsMinor === 0n) return "ownOnly";
   return "withLegs";
 }
@@ -435,8 +438,8 @@ describe("S1 controls: the comparison flags each wrong implementation", () => {
     const result = calculateNetwork({ price: 3000, personalStudents: 0, studentsPerLeg: [3] });
     const settled = settleInput(300000n, 0, [3]);
     expect(differences(result, settled)).toEqual([]);
-    expect(explainVariant(result)).toBe("zero");
-    // With an own volume on the result, the module names withLegs and settlement still says zero.
+    expect(explainVariant(result)).toBe("needsOwnStudents");
+    // With an own volume on the result, the module names withLegs and settlement still names needsOwnStudents.
     const found = differences({ ...result, ownVolume: 9000 }, settled);
     expect(found.some((line) => line.startsWith("variant"))).toBe(true);
   });
@@ -457,7 +460,15 @@ describe("S2 random parity with the settlement model", () => {
   it("matches the model on 20,000 seeded satang-exact inputs", () => {
     const random = seeded(20261117);
     const typicalPrices = [100000n, 150000n, 200000n, 250000n, 300000n, 350000n, 400000n, 500000n];
-    const coverage = { zero: 0, ownOnly: 0, withLegs: 0, ineligible: 0, ties: 0, legs: 0 };
+    const coverage = {
+      zero: 0,
+      needsOwnStudents: 0,
+      ownOnly: 0,
+      withLegs: 0,
+      ineligible: 0,
+      ties: 0,
+      legs: 0,
+    };
     const failures: string[] = [];
 
     for (let sample = 0; sample < 20000; sample += 1) {
@@ -497,6 +508,7 @@ describe("S2 random parity with the settlement model", () => {
     expect(failures, "inputs where the module and the model differ").toEqual([]);
     // The sample must reach each branch, or a pass would prove nothing.
     expect(coverage.zero).toBeGreaterThan(100);
+    expect(coverage.needsOwnStudents).toBeGreaterThan(100);
     expect(coverage.ownOnly).toBeGreaterThan(100);
     expect(coverage.withLegs).toBeGreaterThan(1000);
     expect(coverage.ineligible).toBeGreaterThan(100);
@@ -610,7 +622,7 @@ describe("S3 D-18 eligibility truth table against settlement", () => {
         expect(Object.is(result.preTax, 0)).toBe(true);
         expect(Object.is(result.withholdingTax, 0)).toBe(true);
         expect(Object.is(result.net, 0)).toBe(true);
-        expect(explainVariant(result)).toBe("zero");
+        expect(explainVariant(result)).toBe("needsOwnStudents");
       }
       if (row.paid && settled.networkVolumeMinor > 0n) {
         expect(result.net).toBeGreaterThan(0);

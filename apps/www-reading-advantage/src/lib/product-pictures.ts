@@ -52,11 +52,18 @@ export const productPictures = {
     height: 651,
     portrait: true,
   },
-  /** The tutor photo of the hero and of the become-a-tutor block (spec D-19 items 1 and 6). */
-  tutorSession: {
-    src: "/images/tutor-advantage-hero.jpg",
-    width: 1024,
-    height: 1024,
+  /** The hero picture (spec D-2). */
+  tutorHero: {
+    src: "/images/tutor-advantage-hero-2026-11-06.webp",
+    width: 1920,
+    height: 1080,
+    portrait: false,
+  },
+  /** The classroom picture of the become-a-tutor block (spec D-3). */
+  tutorTeachClass: {
+    src: "/images/tutor-advantage-teach-class.webp",
+    width: 1920,
+    height: 1080,
     portrait: false,
   },
   /** The Reedy preview of the Reedy block (spec D-19 item 5). */

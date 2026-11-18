@@ -1,0 +1,35 @@
+{
+  "track_id": "www_tutor_followups_20261118",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-11-18T00:00:00Z",
+  "updated_at": "2026-11-18T00:00:00Z",
+  "description": "Close the four copy items and the two picture items that stayed open after the www Tutor Advantage calculator track. The hero and the become-a-tutor block each get a new 16:9 picture and their own picture entry, so no page block repeats a file. Phase 2 ships the PR v0.5 and v0.6 copy, each item after its fact gate. One www-only fast-forward push follows the PM page check of both blocks.",
+  "author_model": "opencode-go/deepseek-v4.1-flash",
+  "depends_on": "www_tutor_calculator_20261117 (closed at 80ac554b4)",
+  "owner_chain": [
+    "Daniel (owner; deploy gate and look gate)",
+    "Monorepo orchestrator (track owner)",
+    "PM orchestrator (order of 2026-11-18)"
+  ],
+  "decisions": [
+    "PM, 2026-11-18: D-1 is accepted, not pending. PM words: \"My 4:3 order was wrong; all five faces matter more.\" The block keeps the full 16:9 frame and only the image class changes.",
+    "Daniel, 2026-11-18, look gate: \"You repeat the hero image later down the page. The tutor and student are also white presenting.\" The hero gets a new picture from the 2026-11-06 source, and the old hero file leaves the page.",
+    "Orchestrator, 2026-11-18: Q1 resolved. The block file is Daniel's choice and SHA256SUMS checks OK. It shows one tutor and three children, which is four faces. The \"five faces\" and \"four children\" wording was wrong.",
+    "Orchestrator, 2026-11-18: Q3 resolved for the block. PR handoff v0.8 section 8.6 is the delivered alt for tutorRole.alt. Its fact gate passed on the third pass on 2026-11-18.",
+    "Orchestrator, 2026-11-18: Q4 open. The hero alt heroExtra.imageAlt is owed by PR, and the PM asked PR. The hero picture task waits on the PR text and its fact gate.",
+    "Orchestrator, 2026-11-18: Q2 stays open. PR section 7 holds no fact gate line for graph.caption. The orchestrator routes it to the PM.",
+    "PM, 2026-11-18: the picture work ships today and does not wait for graph.caption. The PM wants crops of the hero and the block at 390, 980, and 1280 px before the push.",
+    "Parent closeout, 2026-11-18: one www-only fast-forward push follows the PM page check; no deploy command runs from the session."
+  ],
+  "constraints": [
+    "www-only change: apps/www-reading-advantage and the measure records",
+    "No hash or checksum field (AGENTS.md hashing policy); the SHA256SUMS check result is evidence only",
+    "No crop of either picture",
+    "No deploy command and no Cloud Run change",
+    "The zh values equal the en values until the contracted Chinese speaker delivers"
+  ],
+  "estimated_tasks": 19,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

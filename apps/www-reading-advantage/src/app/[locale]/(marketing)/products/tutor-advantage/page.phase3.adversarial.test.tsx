@@ -349,12 +349,12 @@ function pageImages(): PageImage[] {
  */
 function expectedContentImages(locale: Locale): Array<{ file: string; alt: string }> {
   return [
-    { file: "/images/tutor-advantage-hero.jpg", alt: text(locale, "heroExtra.imageAlt") },
+    { file: "/images/tutor-advantage-hero-2026-11-06.webp", alt: text(locale, "heroExtra.imageAlt") },
     { file: "/images/products/primary-origins-2-cover.webp", alt: text(locale, "books.items.0.alt") },
     { file: "/images/products/primary-origins-3-1-cover.webp", alt: text(locale, "books.items.1.alt") },
     { file: "/images/products/reading-origins-2-cover.webp", alt: text(locale, "books.items.2.alt") },
     { file: "/images/primary-advantage/reedy-preview.webp", alt: text(locale, "reedyBlock.alt") },
-    { file: "/images/tutor-advantage-hero.jpg", alt: text(locale, "tutorRole.alt") },
+    { file: "/images/tutor-advantage-teach-class.webp", alt: text(locale, "tutorRole.alt") },
     ...[
       "040-screen.webp",
       "002-screen.webp",
@@ -434,7 +434,9 @@ describe("P3 the image map of the whole page (AC-22, AC-23)", () => {
 
       const preloads = Array.from(document.head.querySelectorAll('link[rel="preload"][as="image"]'));
       for (const link of preloads) {
-        expect(decodeAll(link.getAttribute("imagesrcset") ?? "")).toContain("/images/tutor-advantage-hero.jpg");
+        expect(decodeAll(link.getAttribute("imagesrcset") ?? "")).toContain(
+          "/images/tutor-advantage-hero-2026-11-06.webp",
+        );
       }
     });
   }

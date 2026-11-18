@@ -47,7 +47,7 @@ export type TutorCommissionCalculatorProps = {
       tax: string;
       net: string;
     };
-    explain: { ownOnly: string; withLegs: string; zero: string };
+    explain: { ownOnly: string; withLegs: string; zero: string; needsOwnStudents: string };
     graph: {
       title: string;
       caption: string;

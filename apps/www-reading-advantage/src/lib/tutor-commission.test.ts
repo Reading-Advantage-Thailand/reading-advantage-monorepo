@@ -382,7 +382,7 @@ describe("11. settlement eligibility: 0 personal students with legs pay 0 (spec 
     expect(result.preTax).toBe(0);
     expect(result.withholdingTax).toBe(0);
     expect(result.net).toBe(0);
-    expect(explainVariant(result)).toBe("zero");
+    expect(explainVariant(result)).toBe("needsOwnStudents");
   });
 
   it("pays 0 for one leg of 3 students and keeps the leg commission", () => {
@@ -400,7 +400,7 @@ describe("11. settlement eligibility: 0 personal students with legs pay 0 (spec 
     expect(result.preTax).toBe(0);
     expect(result.withholdingTax).toBe(0);
     expect(result.net).toBe(0);
-    expect(explainVariant(result)).toBe("zero");
+    expect(explainVariant(result)).toBe("needsOwnStudents");
   });
 
   it("pays 0 when the only leg has 0 students, because the leg count is not 0", () => {

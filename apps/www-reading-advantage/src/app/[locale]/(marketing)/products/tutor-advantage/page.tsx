@@ -108,6 +108,7 @@ export default async function TutorAdvantage({
       ownOnly: key("calculator.explain.ownOnly"),
       withLegs: key("calculator.explain.withLegs"),
       zero: key("calculator.explain.zero"),
+      needsOwnStudents: key("calculator.explain.needsOwnStudents"),
     },
     graph: {
       title: key("calculator.graph.title"),
@@ -192,7 +193,7 @@ export default async function TutorAdvantage({
           <div className="lg:col-span-6">
             <div className="overflow-hidden rounded-4xl border border-white/20 shadow-2xl">
               <ProductPicture
-                picture={productPictures.tutorSession}
+                picture={productPictures.tutorHero}
                 alt={t("heroExtra.imageAlt")}
                 priority
               />
@@ -326,12 +327,12 @@ export default async function TutorAdvantage({
           <div className="order-2 lg:order-1 lg:col-span-5">
             <div className="overflow-hidden rounded-3xl border border-emerald-200 shadow-lg">
               <Image
-                src={productPictures.tutorSession.src}
+                src={productPictures.tutorTeachClass.src}
                 alt={t("tutorRole.alt")}
-                width={productPictures.tutorSession.width}
-                height={productPictures.tutorSession.height}
+                width={productPictures.tutorTeachClass.width}
+                height={productPictures.tutorTeachClass.height}
                 sizes="(max-width: 1024px) 100vw, 40vw"
-                className="aspect-4/3 w-full object-cover"
+                className="aspect-video w-full object-cover"
               />
             </div>
           </div>
