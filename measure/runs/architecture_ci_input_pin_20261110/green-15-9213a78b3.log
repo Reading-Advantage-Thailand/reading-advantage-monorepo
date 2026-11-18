@@ -1,0 +1,150 @@
+# Green 1.5 (phase check) — option 1, the v2 route
+
+Task 1.4 close note and task 1.5 phase check.
+
+- `phase_base_sha=09168dc422ed48604b8f2f0cb9a23ad4d110543b` resolves.
+- `role_base_sha=9213a78b3f88177e6c733c35420dde412d366a12` resolves (HEAD at run time).
+- The Red fix commit `9213a78b3` sits inside `phase_base_sha..HEAD` and changes one test line.
+- Model: `minimax-cn-coding-plan/MiniMax-M3.1-Flash`. The Red family of this
+  phase is `opencode-go/hy4-flash-free`.
+- No question tool was used. Every default below was taken and recorded.
+
+## Task 1: the close note for task 1.4
+
+The pin test `CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts --maxWorkers=1`
+exits 0 in the main checkout at `9213a78b3`. Counts: `tests_total=20`,
+`tests_failed=0`, `tests_passed=20`.
+
+The plan line expects the local check `pnpm architecture:check`. On the option 1
+route, CI runs the boundary check under `--policy v2`. The expectation therefore
+applies as `pnpm architecture:check --policy v2`. Default taken: the v1 default
+policy keeps the `v1_additions=339`, `v1_removals=15`, and `v1_renames=162`
+delta by design. The v1 baselines stay protected, so the plain v1 check reports
+a debt change by design and is not a gate of this route.
+
+### The stale pin found at `9213a78b3`
+
+The first phase-check round at `9213a78b3` failed at `check_policy_v2` and at
+`check_v1_plain` with the message "V2 reconciliation manifest is invalid:
+Analyzer input snapshot hash does not match current bytes".
+
+The cause is the Red fix commit `9213a78b3`. It changed
+`packages/architecture-enforcement/src/__tests__/architecture-v2-route-14d.test.ts`,
+which is a tracked analyzer input. The committed `analyzerInputSnapshotSha256`
+was computed at `863841016`, before that commit.
+
+The plan amendment of 2026-11-11 routes the task 1.4 series again after task
+1.4d is `[x]`. The refresh at `9213a78b3` ran in the clean worktree through
+heavy-run p2 and exited 0 in one run. It moved only `analyzerInputSnapshotSha256`
+and `reviewSubjectSha256`. The two tree fields and the report hash stayed. The
+staged baseline delta and the 15-key set stayed.
+
+The manifest commit is `7044e9aa58f58497c2efdac1ccffa4dda978f8b9` with the
+subject `chore(architecture): refresh the v2 manifest pins (track_id: architecture_ci_input_pin_20261110)`.
+It touches one path, 2 insertions and 2 deletions.
+
+The input snapshot pin moved from `7f3b60c4279c3c0469bb380ca31398ef26daf631168c46125a51d0b2b6bff00d`
+to `a2203ded4be3bdd541e5b96f40ca3b23a3c21a255d87706c64a77b818ca84a43`.
+
+## Task 2: the phase check at one HEAD
+
+The check ran in a detached worktree at `/home/daniebo/.cache/green15/reading-advantage-monorepo`.
+The folder name ends with `reading-advantage-monorepo` because one existing
+test asserts that name. The three dirty `next-env.d.ts` files of the main
+checkout stay untouched.
+
+- `git worktree add --detach <path> 9213a78b3`. Exit 0.
+- `pnpm install --frozen-lockfile --offline --config.manage-package-manager-versions=false`
+  exits 0.
+- `pnpm turbo run build --filter=@reading-advantage/backend --filter=@reading-advantage/knowledge-space-core`
+  through heavy-run p2 exits 0. `build_tasks=6`, `build_cached=6`. The build is
+  required. Without it, the analyzer reports `parse_errors=6`, because two
+  tsconfig path mappings point at build outputs.
+
+The worktree then moved to `7044e9aa5` with `git checkout`, and every command
+ran again at that HEAD.
+
+### The exit codes at `7044e9aa5`
+
+| Command | Exit | Output lines |
+| --- | --- | --- |
+| build (backend, knowledge-space-core) | `build=0` | `output_lines=32` |
+| `pnpm --filter @reading-advantage/architecture-enforcement check-types` | `check_types=0` | `output_lines=1` |
+| `pnpm --filter @reading-advantage/architecture-enforcement lint` | `lint=0` | `output_lines=8` |
+| `CI=true pnpm --filter @reading-advantage/architecture-enforcement test` | `package_test=0` | `output_lines=39` |
+| `CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts --maxWorkers=1` | `pin_test=0` | `output_lines=9` |
+| `pnpm architecture:check --skip-input-snapshot-pin --policy v2` | `check_skip_pin_v2=0` | `output_lines=4` |
+| `pnpm architecture:check --policy v2` | `check_policy_v2=0` | `output_lines=4` |
+| `pnpm architecture:check` | `check_v1_plain=1` | `output_lines=524` |
+
+The plain v1 check ran for information only. It reports
+`debt-change (files=7010, findings=884, parseErrors=0)` and
+`architecture debt: new-debt (additions=339, removals=15, renames=162)`. The
+v1 baselines stay protected, so that delta is by design.
+
+The two v2 checks report `clean (files=7010, findings=800, parseErrors=0)` and
+`architecture debt: clean (additions=0, removals=0, renames=0)`. No line names
+the input snapshot error.
+
+### The counts
+
+- `suite_files=35`, `suite_tests=332`, `tests_failed=0`, `tests_passed=332`.
+- `tests_total=20`, `tests_failed=0`, `tests_passed=20` for the pin test.
+- `lint_errors=0`, `lint_warnings=1`. The one warning is the pre-existing
+  `prefer-const` warning in the Red test file
+  `architecture-pin-refresh-resume.test.ts`.
+- `files=7010`, `findings=800`, `parse_errors=0`, `additions=0`, `removals=0`,
+  and `renames=0` under policy v2.
+- `files=7010`, `findings=884`, `parse_errors=0`, `v1_additions=339`,
+  `v1_removals=15`, and `v1_renames=162` under policy v1.
+- `archive_changed_paths=0`. The `track_commits=51` commits name no path under
+  `packages/backend/turbo.json` or `packages/webhooks`, so
+  `forbidden_path_commits=0`.
+- `hash_path_lists_changed=0`. The path lists in `reconciliation-manifest.ts`
+  stayed equal.
+- `manifest_fields_changed=9` over the phase, `manifest_keys_added=0`,
+  `manifest_keys=15`. The task 1.4 refresh alone changed
+  `task_1_4_manifest_fields_changed=3` fields.
+- `ci_flag_steps=1`, `ci_refresh_commands=0`, `local_script_flags=0`.
+- The A9 detector `rg -n 'measure/tracks|measure/runs' <the two test files>`
+  exits 1.
+
+### The first round of the phase check
+
+The round at `9213a78b3` recorded `build=0`, `check_types=0`, `lint=0`,
+`package_test=0`, `check_skip_pin_v2=0`, `check_policy_v2=1`, and
+`check_v1_plain=1`. The last two failed with the stale input snapshot pin.
+One driver command also exited 127 because the shell did not parse the
+`CI=true` prefix after the variable expansion. The pin test was rerun with the
+`env` form and exited 0.
+
+## Task 3: the plan evidence
+
+The plan evidence commit carries
+`measure/tracks/architecture_ci_input_pin_20261110/plan.md` and this log.
+Tasks 1.4 and 1.5 carry the marker `[x]`. The phase heading keeps its
+`[checkpoint: <sha>]` marker for the acceptance role. The worktree was removed
+after the evidence was copied back. No push.
+
+MEASURE_AGENT_RESULT
+status: pass
+track: architecture_ci_input_pin_20261110
+phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+task: 1.4 close note and 1.5 phase check
+role: green
+role_base_sha: 9213a78b3f88177e6c733c35420dde412d366a12
+baseline_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+resulting_HEAD: 7044e9aa58f58497c2efdac1ccffa4dda978f8b9
+commits: ["7044e9aa58f58497c2efdac1ccffa4dda978f8b9 chore(architecture): refresh the v2 manifest pins (track_id: architecture_ci_input_pin_20261110)"]
+exit_codes: "install=0, build=0, check_types=0, lint=0, package_test=0, pin_test=0, check_skip_pin_v2=0, check_policy_v2=0, check_v1_plain=1, pin_refresh=0"
+exit_codes_first_round: "build=0, check_types=0, lint=0, package_test=0, check_skip_pin_v2=0, check_policy_v2=1, check_v1_plain=1, pin_test_driver=127"
+tests: ["ac1_pin_error_present_without_option", "ac1_pin_error_absent_with_option", "ac1_sync_validator_skips_pin", "ac2_new_analyzed_file_fails_with_report_hash", "ac2_ci_mode_cli_exits_non_zero", "ac3_implementation_tree_error_survives_skip", "ac3b_implementation_and_test_tree_error_survives_skip", "ac3c_canonical_manifest_source_error_survives_skip", "ac4_workflow_step_runs_the_flag", "ac4_local_script_holds_no_flag", "ac4_cli_passes_the_flag_to_the_checker", "ac4_no_environment_variable_selects_the_mode", "ac4_unknown_flag_is_rejected", "ac5_preview_prints_old_and_new_and_writes_nothing", "ac5_acknowledged_run_writes_the_five_fields", "ac5_acknowledged_run_writes_canonical_bytes", "ac5_analysis_error_exits_two_and_writes_nothing", "ac5_validation_failure_restores_the_old_bytes", "fr6_documentation_names_the_three_commands"]
+test_files: ["packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts"]
+test_counts: "tests_total=20, tests_failed=0, tests_passed=20"
+suite_counts: "suite_files=35, suite_tests=332, tests_failed=0, tests_passed=332"
+lint_counts: "lint_errors=0, lint_warnings=1"
+final_counts: "files=7010, findings=800, parse_errors=0, additions=0, removals=0, renames=0, v1_additions=339, v1_removals=15, v1_renames=162, archive_changed_paths=0, forbidden_path_commits=0, hash_path_lists_changed=0, manifest_fields_changed=9, manifest_keys_added=0, manifest_keys=15, task_1_4_manifest_fields_changed=3, ci_flag_steps=1, ci_refresh_commands=0, local_script_flags=0, track_commits=51"
+new_files: []
+deferred: none
+handoff: "Green closed task 1.4 and ran the task 1.5 phase check at one HEAD. The check found a stale input snapshot pin, because the Red fix commit 9213a78b3 changed one tracked analyzer input. The plan amendment of 2026-11-11 routes the task 1.4 series again after task 1.4d is [x]. The refresh at 9213a78b3 exited 0 in one run and moved only analyzerInputSnapshotSha256 and reviewSubjectSha256. The manifest commit is 7044e9aa5. Every phase-check gate passes at that HEAD: check-types exit 0, lint exit 0, the package suite exit 0 with 332 of 332 cases, the pin test exit 0 with 20 of 20 cases, and both architecture checks under policy v2 exit 0 with additions=0. The plain v1 check exits 1 with the 339/15/162 delta by design, because the v1 baselines stay protected. The orchestrator should now route the acceptance role to check AC-1 to AC-5 at 7044e9aa5 and to append the checkpoint marker to the phase heading. The three dirty next-env.d.ts files stayed untouched. No push."
+END_MEASURE_AGENT_RESULT
