@@ -1173,6 +1173,60 @@ async function validateCommittedDocument(
 }
 
 /**
+ * Reads the staged v2 manifest from one preview transaction plan.
+ * @param preview Reconciliation preview whose plan stages the manifest bytes.
+ * @returns The parsed staged manifest, or undefined when the plan stages none.
+ */
+function stagedManifestFromPreview(
+  preview: ArchitectureReconciliationPreview,
+): Record<string, unknown> | undefined {
+  const replacement = preview.transactionPlan.replacements.find(
+    (entry) => entry.id === "reconciliation-manifest",
+  );
+  if (!replacement) return undefined;
+  const parsed = JSON.parse(replacement.contents) as unknown;
+  return typeof parsed === "object" && parsed !== null && !Array.isArray(parsed)
+    ? (parsed as Record<string, unknown>)
+    : undefined;
+}
+
+/**
+ * Counts the staged baseline delta records of one staged v2 manifest.
+ * @param manifest Parsed staged v2 manifest.
+ * @returns The number of staged additions, removals, and renames.
+ */
+function stagedDeltaRecordCount(manifest: Record<string, unknown>): number {
+  return ["baselineAdditions", "baselineRemovals", "baselineRenames"].reduce(
+    (total, key) => {
+      const records = manifest[key];
+      return total + (Array.isArray(records) ? records.length : 0);
+    },
+    0,
+  );
+}
+
+/**
+ * Refuses a v2 write whose staged baseline delta holds no review record.
+ * @param preview Reconciliation preview whose plan stages the manifest bytes.
+ * @returns Nothing when the write holds review evidence or stages no delta.
+ * @throws When a staged delta holds no review record and the status is candidate.
+ */
+function assertReviewedStagedDelta(
+  preview: ArchitectureReconciliationPreview,
+): void {
+  const staged = stagedManifestFromPreview(preview);
+  if (!staged) return;
+  const acceptance = staged.acceptance as { status?: unknown } | undefined;
+  if (acceptance?.status === "accepted") return;
+  if (stagedDeltaRecordCount(staged) === 0) return;
+  const reviews = staged.reviews;
+  if (Array.isArray(reviews) && reviews.length > 0) return;
+  throw new Error(
+    "V2 reconciliation refuses a staged baseline delta without a review record",
+  );
+}
+
+/**
  * Revalidates immutable wrapper inputs and applies the exact previewed transaction.
  * @param options Exact preview, explicit acknowledgement, wrapper hash, and dependencies.
  * @returns Secret-safe summary plus the generic transaction outcome.
@@ -1206,6 +1260,8 @@ export async function applyArchitectureReconciliation(
       "Reconciliation writes require the exact accepted v2 policy",
     );
   }
+
+  assertReviewedStagedDelta(options.preview);
 
   if (options.preview.policyVersion === "v2") {
     const guard = await applyArchitectureReconciliationForPolicy({
