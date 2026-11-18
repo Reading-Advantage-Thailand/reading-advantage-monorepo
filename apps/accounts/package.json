@@ -19,7 +19,7 @@
     "@reading-advantage/auth": "workspace:*",
     "@reading-advantage/backend": "workspace:*",
     "@reading-advantage/db": "workspace:*",
-    "next": "16.4.1",
+    "next": "16.4.6",
     "postgres": "catalog:",
     "react": "19.2.9",
     "react-dom": "19.2.9",

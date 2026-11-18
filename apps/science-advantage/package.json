@@ -66,7 +66,7 @@
     "clsx": "catalog:",
     "drizzle-orm": "^0.45.0",
     "lucide-react": "catalog:",
-    "next": "16.4.1",
+    "next": "16.4.6",
     "next-themes": "catalog:",
     "react": "19.2.9",
     "react-dom": "19.2.9",

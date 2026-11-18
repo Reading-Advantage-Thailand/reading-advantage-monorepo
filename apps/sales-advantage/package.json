@@ -36,7 +36,7 @@
     "@trpc/server": "catalog:",
     "drizzle-orm": "catalog:",
     "lucide-react": "catalog:",
-    "next": "16.4.1",
+    "next": "16.4.6",
     "next-intl": "catalog:",
     "react": "19.2.9",
     "react-dom": "19.2.9",
