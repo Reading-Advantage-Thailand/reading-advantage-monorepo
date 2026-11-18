@@ -144,32 +144,32 @@ Record the revision name and the percent of every traffic row. The report needs 
 
    docs/runbooks/storytime-deploy.md:68. The printed text is `--remove-env-vars=STORYTIME_REVIEW_DRAFT_WEEKS,STORYTIME_SHOW_DRAFT_MEDIA,STORYTIME_TEACHER_ROUTES` (docs/runbooks/storytime-deploy.md:72).
 
-6. Read the image of the live revision.
+6. Read the image of the candidate revision `storytime-app-00031-jek` (tag `st-178dd0fb`, built by CD run 44239707392 from commit `3804ab55a`).
 
    ```
-   gcloud run revisions describe <live revision> --project primary-advantage --region asia-southeast1 --format='value(status.imageDigest)'
+   gcloud run revisions describe storytime-app-00031-jek --project primary-advantage --region asia-southeast1 --format='value(status.imageDigest)'
    ```
 
-   docs/runbooks/storytime-deploy.md:133.
+   The digest reads `asia-southeast1-docker.pkg.dev/primary-advantage/primary-advantage-repo/storytime-app@sha256:17aa55e3c3988d80a9ada19db0fb52ad065bdeb8c896ba40e44c3e5acc60386b`. A later push makes a new candidate; then re-read its digest with the same command. docs/runbooks/storytime-deploy.md:133.
 
-7. Compare the env names of the new revision and the live revision.
+7. Compare the env names of the candidate revision and the live revision.
 
    ```
-   gcloud run revisions describe <new revision> --project primary-advantage --region asia-southeast1 --format='value(spec.containers[0].env.name)'
+   gcloud run revisions describe storytime-app-00031-jek --project primary-advantage --region asia-southeast1 --format='value(spec.containers[0].env.name)'
    gcloud run revisions describe <live revision> --project primary-advantage --region asia-southeast1 --format='value(spec.containers[0].env.name)'
    ```
 
    docs/runbooks/storytime-deploy.md:177-178. Stop and report to Daniel when another name differs.
 
-8. Remove the three review switches when the guard failed. Pin the live image, hold no traffic, and use a new tag.
+8. Remove the three review switches when the guard failed. Pin the candidate image, hold no traffic, and use a new tag.
 
    ```
-   gcloud run services update storytime-app --project primary-advantage --region asia-southeast1 --remove-env-vars=STORYTIME_REVIEW_DRAFT_WEEKS,STORYTIME_SHOW_DRAFT_MEDIA,STORYTIME_TEACHER_ROUTES --image=<the live revision image reference with its digest> --no-traffic --tag=<new tag>
+   gcloud run services update storytime-app --project primary-advantage --region asia-southeast1 --remove-env-vars=STORYTIME_REVIEW_DRAFT_WEEKS,STORYTIME_SHOW_DRAFT_MEDIA,STORYTIME_TEACHER_ROUTES --image=asia-southeast1-docker.pkg.dev/primary-advantage/primary-advantage-repo/storytime-app@sha256:17aa55e3c3988d80a9ada19db0fb52ad065bdeb8c896ba40e44c3e5acc60386b --no-traffic --tag=<new tag>
    ```
 
    The update form is at docs/runbooks/storytime-deploy.md:143 and :149. The removal argument is at :72. Plan task 3.1 names the same three names (plan.md:321).
 
-9. Check the tag URL of the revision of that update. Use the curl form of docs/runbooks/storytime-deploy.md:42.
+9. Read the env names of the new revision of that update (all three switches absent), then check the tag URL of that revision. Use the curl form of docs/runbooks/storytime-deploy.md:42.
 
 10. Wait for Daniel's word.
 
