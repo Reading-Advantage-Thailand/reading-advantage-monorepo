@@ -86,6 +86,7 @@ function previewFixture(
   reviews: readonly unknown[],
   status: string,
   stagedAdditions: number,
+  manifestId = "reconciliation-manifest",
 ): ArchitectureReconciliationPreview {
   const summary = summaryFixture();
   return {
@@ -101,7 +102,7 @@ function previewFixture(
       repoRoot: "/repo",
       replacements: [
         {
-          id: "reconciliation-manifest",
+          id: manifestId,
           repositoryPath: V2_MANIFEST_PATH,
           contents: stagedManifest(reviews, status, stagedAdditions),
           destination: `/repo/${V2_MANIFEST_PATH}`,
@@ -173,6 +174,19 @@ describe("v2 review-artifact gate (B F1)", () => {
       GATE_MESSAGE,
     );
   });
+
+  it.each(["v2-manifest", "ownership-map"])(
+    "refuses a staged delta under a renamed replacement id (%s)",
+    async (manifestId) => {
+      const message = await applyRejectionMessage(
+        previewFixture([], "candidate", 1, manifestId),
+      );
+      expect(
+        message,
+        `the gate must key on the manifest destination path: id=${manifestId} message=${message}`,
+      ).toContain(GATE_MESSAGE);
+    },
+  );
 
   it("allows a candidate write that stages no delta", async () => {
     const message = await applyRejectionMessage(

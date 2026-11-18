@@ -1174,14 +1174,20 @@ async function validateCommittedDocument(
 
 /**
  * Reads the staged v2 manifest from one preview transaction plan.
+ *
+ * The lookup keys on the manifest destination path as well as the canonical
+ * replacement id, so a preview that renames the id cannot skip the gate.
  * @param preview Reconciliation preview whose plan stages the manifest bytes.
  * @returns The parsed staged manifest, or undefined when the plan stages none.
  */
 function stagedManifestFromPreview(
   preview: ArchitectureReconciliationPreview,
 ): Record<string, unknown> | undefined {
+  const manifestPath = V2_RECONCILIATION_DESTINATION_PATHS[0];
   const replacement = preview.transactionPlan.replacements.find(
-    (entry) => entry.id === "reconciliation-manifest",
+    (entry) =>
+      entry.id === "reconciliation-manifest" ||
+      entry.repositoryPath === manifestPath,
   );
   if (!replacement) return undefined;
   const parsed = JSON.parse(replacement.contents) as unknown;
