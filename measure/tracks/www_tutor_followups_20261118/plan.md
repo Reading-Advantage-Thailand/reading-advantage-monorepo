@@ -29,9 +29,9 @@
 
 ## Phase 1: the two pictures
 
-Phase 1 starts at task 1.1. Task 1.0 passed on 2026-11-18. The two pictures, the two entries, the
-boxes, and the two alts ship in one change. The phase ends at the PM page-check evidence, with no
-push. The picture work does not wait for `graph.caption` (spec section 2).
+Phase 1 starts at task 1.2. Task 1.0 and task 1.1 passed on 2026-11-18. The two pictures, the two
+entries, the boxes, and the two alts ship in one change. The phase ends at the PM page-check
+evidence, with no push. The picture work does not wait for `graph.caption` (spec section 2).
 
 - [x] 1.0 Gate: confirm the PR alt text for the block and its fact gate. Test: AC-3. Done: 2026-11-18.
 
@@ -50,19 +50,17 @@ push. The picture work does not wait for `graph.caption` (spec section 2).
 
   No code change in this task.
 
-- [b] 1.1 Gate: confirm the PR hero alt text and its fact gate. Test: AC-14.
+- [x] 1.1 Gate: confirm the PR hero alt text and its fact gate. Test: AC-14. Done: 2026-11-18.
 
-  Daniel's look gate on 2026-11-18 asks for a new hero picture (spec D-2). The hero alt
-  `heroExtra.imageAlt` changes with it (spec D-5). PR owes the en and th text, and the PM asked PR
-  on 2026-11-18.
+  Record: PR handoff version 1.0, advantage-pr commit `5aa6d6ee`, 2026-11-18. Section 8.7
+  delivers `heroExtra.imageAlt`. Section 7 reads "Fact gate 2026-11-18 (the hero alt lines of
+  section 8.7): PASS, no fault."
 
-  Gate items:
+  The en line reads "A tutor smiles at three schoolchildren at a small table in a bright
+  classroom; a girl holds the Primary Advantage Origins 2 workbook, a boy the student app on a
+  phone." Spec section 5.6 holds the en and th lines. The zh value equals en.
 
-  1. PR delivers the en and th text for `heroExtra.imageAlt` (spec Q4).
-  2. PR handoff section 7 holds a fact gate line for the hero alt with result PASS.
-  3. PR confirms the zh rule: the zh value equals en.
-
-  Record the PR version, the date, and the gate result in this task. No code change in this task.
+  No code change in this task.
 
 - [ ] 1.2 Red: pin the two pictures, the two entries, the old-file rule, and the sizes. Test: AC-1, AC-2, AC-3, AC-14, AC-15, AC-16, AC-17, AC-18.
 
@@ -126,7 +124,7 @@ push. The picture work does not wait for `graph.caption` (spec section 2).
      `className="aspect-video w-full object-cover"`. The two alt lines and the `sizes` line stay.
   3. `src/locales/pages/products/tutor-advantage.ts`: set `tutorRole.alt` in en (line 153), th
      (line 490), and zh (line 827) to the text of spec section 5.5. Set `heroExtra.imageAlt` in
-     en (line 19), th (line 356), and zh (line 693) to the gated text of task 1.1. The th values
+     en (line 19), th (line 356), and zh (line 693) to the text of spec section 5.6. The th values
      are the Thai text. The zh values equal en.
 
   Green command: the command of task 1.2 exits 0. Then
@@ -167,10 +165,10 @@ push. The picture work does not wait for `graph.caption` (spec section 2).
 
 ## Phase 2: the PR copy items
 
-Each task takes one item and its gate. Tasks 2.1 to 2.4 cover the three items with a PASS gate.
-Task 2.5 waits for the caption gate.
+Each task takes one item and its gate. Every item now holds a PASS gate. Task 2.1 pins the four
+items as failing tests.
 
-- [ ] 2.1 Red: pin the three gated items. Test: AC-5, AC-7, AC-8.
+- [ ] 2.1 Red: pin the four copy items. Test: AC-5, AC-6, AC-7, AC-8.
 
   File `src/__tests__/www-tutor-calculator.locale.test.ts`.
 
@@ -178,17 +176,18 @@ Task 2.5 waits for the caption gate.
   2. `CALC_TH` gains the Thai text of spec section 5.1.
   3. Both fixtures change `graph.legCommissionBar` to the text of spec section 5.2. `CALC_EN` is
      also the zh expectation, so the zh value follows.
-  4. The deep-equal cases at lines 363, 367, and 371 then fail on the missing key and the old
-     label.
+  4. Both fixtures change `graph.caption` to the text of spec section 5.3. Both sentences change.
+  5. The deep-equal cases at lines 363, 367, and 371 then fail on the missing key and the old
+     label and caption.
 
   File `src/lib/tutor-commission.adversarial.test.ts`.
 
-  5. The case at line 384 expects `needsOwnStudents` for legs without own students. The case at
+  6. The case at line 384 expects `needsOwnStudents` for legs without own students. The case at
      line 553 keeps `zero` for a zero volume.
 
   File `src/__tests__/www-tutor-reedy-claim.test.tsx`.
 
-  6. `PAGE_REEDY.th` (line 99) takes the New Thai of spec section 5.4.
+  7. `PAGE_REEDY.th` (line 99) takes the New Thai of spec section 5.4.
 
   Red command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
   www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts
@@ -210,8 +209,8 @@ Task 2.5 waits for the caption gate.
   4. `src/locales/pages/products/tutor-advantage.ts`: add the key under `calculator.explain` in
      en, th, and zh. The zh text is the zh draft of spec section 5.1, with a `draft` comment.
 
-  Green command: the Red command of task 2.1 exits 0 on the locale file. Then
-  `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0.
+  Green command: the explain assertions of the Red command pass. The full locale file passes after
+  task 2.5. Then `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0.
 
 - [ ] 2.3 Green: change the leg-total label in three locales. Test: AC-7.
 
@@ -225,17 +224,18 @@ Task 2.5 waits for the caption gate.
 
   Daniel checks this line on the live page after the push.
 
-- [b] 2.5 Gate and Green: change `graph.caption`. Test: AC-6.
+- [ ] 2.5 Green: change `graph.caption` in three locales. Test: AC-6.
 
-  Gate: PR handoff section 7 holds a fact gate line for the v0.6 caption with result PASS, or the
-  PM accepts the text without one (spec Q2). The orchestrator routed the question to the PM on
-  2026-11-18. Record the answer in this task.
+  Gate record: PR handoff version 1.0 section 7 reads "Fact gate 2026-11-18 (the `graph.caption`
+  line of v0.6): the first pass found one fault. The caption payout is the figure before tax, so
+  the line now says "before tax". The second pass: PASS." The text is spec section 5.3.
 
-  Red: the locale fixture asserts the caption text of spec section 5.3 in en and th. The zh value
-  equals en. Run the locale test. Expect exit 1 on the old first clause.
+  File `src/locales/pages/products/tutor-advantage.ts`: `graph.caption` at en 194, th 530, and zh
+  870 takes the text of spec section 5.3.
 
-  Green: `graph.caption` at en 194, th 530, and zh 870 takes the text of spec section 5.3. Only
-  the first clause changes.
+  Both sentences change. The en and zh values read "Each leg has its own bar: ... Your payout
+  before tax is ...". The th value reads "แต่ละสายมีแท่งของตัวเอง: ... ยอดจ่ายของคุณก่อนหักภาษี ...".
+  The zh value equals en.
 
 - [ ] 2.6 Gates: run the five app gates. Test: AC-9.
 
@@ -296,12 +296,8 @@ Task 2.5 waits for the caption gate.
 
 ## Questions carried to the PM
 
-Two questions of spec section 10 stay open:
-
-1. Q2: the `graph.caption` fact gate (task 2.5).
-2. Q4: the hero alt text and its fact gate (task 1.1).
-
-Q1 and Q3 closed on 2026-11-18 (task 1.0).
+None. All four questions of spec section 10 closed on 2026-11-18. Q1 and Q3 closed at task 1.0.
+Q2 closed at task 2.5 and Q4 at task 1.1, both from PR handoff version 1.0, commit `5aa6d6ee`.
 
 ## Out of scope
 

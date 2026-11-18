@@ -18,7 +18,8 @@ Sources, read at authoring time (2026-11-18):
 1. Parent spec D-19 and section 10.
 2. Parent plan, section "Answers owed to PR".
 3. PR handoff `/home/daniebo/Desktop/advantage-pr/11-content/www-tutor-advantage-calculator-handoff.md`,
-   version 0.8, 2026-11-18. Sections 6, 6.1, 7, 8.4, 8.5, and 8.6.
+   version 1.0, 2026-11-18, advantage-pr commit `5aa6d6ee`. Sections 6, 6.1, 7, 8.4, 8.5, 8.6,
+   and 8.7.
 4. The picture handoff `/home/daniebo/Desktop/handoff/a63-become-a-tutor/`. It holds two sources
    and `SHA256SUMS`:
    - `2026-11-13-tutor-advantage-img1-1920x1080.jpg`, the become-a-tutor block.
@@ -44,7 +45,7 @@ file outside the repository. The tests read no file outside the repository and c
 
 | Phase | Delivers | Dependency |
 |---|---|---|
-| 1 | The new hero picture, the new `#become-a-tutor` picture, the two picture entries, the 16:9 boxes, the two alts, and the page check of both blocks | The PR alt text and its fact gate for each picture |
+| 1 | The new hero picture, the new `#become-a-tutor` picture, the two picture entries, the 16:9 boxes, the two alts, and the page check of both blocks | None; both alts passed their fact gate |
 | 2 | Four PR copy items: `needsOwnStudents`, the leg-total label, `graph.caption`, and the Thai Reedy line | The fact gate of each item |
 | 3 | The full www gates, one www-only fast-forward push, the CD watch, and the live checks | The PM page check |
 
@@ -101,7 +102,7 @@ at `page.tsx:195` stays.
 Reason: Daniel's words above. The hero and the block shared one file, and the file showed
 white-presenting people.
 
-The hero alt `heroExtra.imageAlt` changes with the picture. PR owes it (D-5).
+The hero alt `heroExtra.imageAlt` changes with the picture. PR delivers it in section 5.6 (D-5).
 
 This decision supersedes the orchestrator answer of 2026-11-18 that kept the old hero picture.
 
@@ -142,14 +143,14 @@ Two keys change with the pictures:
 | Key | Picture | State |
 |---|---|---|
 | `tutorRole.alt` | The teach-class block | Delivered in PR section 8.6; fact gate PASS on the third pass, 2026-11-18 |
-| `heroExtra.imageAlt` | The hero | Owed by PR; the gate waits on the PR text and its fact gate |
+| `heroExtra.imageAlt` | The hero | Delivered in PR section 8.7; fact gate PASS, 2026-11-18 |
 
 The zh value equals en for both keys, as for every other alt of the page.
 
 The old hero alt and the old block alt describe a tutor and a child with a tablet. Both sentences
 are false for the new pictures. A picture cannot ship with a false alt.
 
-Section 5.5 holds the delivered `tutorRole.alt` text. Open question Q4 covers the hero alt.
+Section 5.5 holds the `tutorRole.alt` text. Section 5.6 holds the `heroExtra.imageAlt` text.
 
 ### D-6 `needsOwnStudents` is a fourth explain state
 
@@ -192,11 +193,10 @@ PR handoff section 7 holds the gate lines. The state at authoring time:
 | `graph.legCommissionBar` | PASS, 2026-11-18 |
 | Thai Reedy line | PASS, 2026-11-18 |
 | `tutorRole.alt` | PASS, third pass, 2026-11-18 |
-| `graph.caption` | No gate line |
-| `heroExtra.imageAlt` | No gate line |
+| `graph.caption` | PASS, second pass, 2026-11-18 |
+| `heroExtra.imageAlt` | PASS, 2026-11-18 |
 
-Section 8 maps each item to its gate. Open question Q2 covers the caption. Open question Q4
-covers the hero alt.
+Every item holds its gate. Section 8 maps each item to its gate.
 
 ### D-10 The push follows the PM page check
 
@@ -293,7 +293,7 @@ Two locale keys change:
 | Key | Locale lines | State |
 |---|---|---|
 | `tutorRole.alt` | en 153, th 490, zh 827 | Delivered text in section 5.5 |
-| `heroExtra.imageAlt` | en 19, th 356, zh 693 | Owed by PR (section 5.6) |
+| `heroExtra.imageAlt` | en 19, th 356, zh 693 | Delivered text in section 5.6 |
 
 ### 4.5 The old hero file
 
@@ -339,8 +339,8 @@ File `src/app/[locale]/(marketing)/products/tutor-advantage/page.phase3.adversar
 
 ### 4.7 The order of the Phase 1 tasks
 
-Task 1.0 passed on 2026-11-18. Task 1.1 gates the hero alt. A picture cannot ship with a false
-alt (D-5). The hero picture task and the block picture task ship in one change with their alts.
+Task 1.0 and task 1.1 passed on 2026-11-18. A picture cannot ship with a false alt (D-5). The hero
+picture task and the block picture task ship in one change with their alts.
 
 ## 5. Phase 2: the PR copy
 
@@ -382,18 +382,22 @@ The current en and zh value is "Commission of each leg". The current th value is
 
 ### 5.3 `graph.caption`
 
+The text below is the PR handoff version 1.0 line 112. Its fact gate passed on the second pass on
+2026-11-18 (section 7).
+
 English:
 
-> Each leg has its own bar: the volume it brings and the commission it earns on its own. Your payout is your rate on the whole volume, minus the commissions of the legs.
+> Each leg has its own bar: the volume it brings and the commission it earns on its own. Your payout before tax is your rate on the whole volume, minus the commissions of the legs.
 
 Thai:
 
-> แต่ละสายมีแท่งของตัวเอง: ยอดที่สายนั้นพามา และค่าคอมมิชชันที่สายนั้นได้เอง ยอดจ่ายของคุณคืออัตราของคุณคูณกับยอดรวมทั้งเครือข่าย ลบด้วยค่าคอมมิชชันของทุกสาย
+> แต่ละสายมีแท่งของตัวเอง: ยอดที่สายนั้นพามา และค่าคอมมิชชันที่สายนั้นได้เอง ยอดจ่ายของคุณก่อนหักภาษี คืออัตราของคุณคูณกับยอดรวมทั้งเครือข่าย ลบด้วยค่าคอมมิชชันของทุกสาย
 
 zh equals en.
 
-The current lines start "Each bar is one leg:" in en and zh, and "แท่งแต่ละแท่งคือหนึ่งสาย:" in th.
-Only the first clause changes.
+Both sentences change. The current lines start "Each bar is one leg:" in en and zh, and
+"แท่งแต่ละแท่งคือหนึ่งสาย:" in th. The first sentence now gives each leg its own bar. The second
+sentence now says "before tax" in en and "ก่อนหักภาษี" in th.
 
 ### 5.4 The Thai Reedy line
 
@@ -422,15 +426,17 @@ gate passed on the third pass on 2026-11-18.
 
 zh equals en.
 
-### 5.6 The hero alt (`heroExtra.imageAlt`, owed)
+### 5.6 The hero alt (`heroExtra.imageAlt`)
 
-The hero picture changes, so the hero alt must change. The current value describes a tutor and a
-child with a tablet.
+The text below is the delivered alt, PR handoff version 1.0 section 8.7. Its fact gate passed on
+2026-11-18 with no fault (section 7). The zh value equals en.
 
-PR owes the en and th text, and the PM asked PR on 2026-11-18. The zh value equals en. The key
-stays `heroExtra.imageAlt` at en 19, th 356, zh 693.
+| Key | English | Thai |
+|---|---|---|
+| `heroExtra.imageAlt` | A tutor smiles at three schoolchildren at a small table in a bright classroom; a girl holds the Primary Advantage Origins 2 workbook, a boy the student app on a phone. | ติวเตอร์ยิ้มให้เด็กนักเรียนสามคนที่โต๊ะตัวเล็กในห้องเรียนที่สว่าง เด็กหญิงถือเวิร์กบุ๊ก Primary Advantage Origins 2 เด็กชายถือโทรศัพท์ที่เปิดแอปนักเรียน |
 
-Task 1.1 waits on the PR text and its fact gate. The old text does not ship with the new picture.
+The key stays at en 19, th 356, zh 693. The old text describes a tutor and a child with a tablet,
+and it does not ship with the new picture.
 
 ### 5.7 The tests of Phase 2
 
@@ -526,11 +532,11 @@ The CD run id and its result go in the ledger at closeout.
 | The block picture and its 16:9 box | PM D-1 accepted 2026-11-18 | Accepted | 1.3, 1.4 |
 | The hero picture and its 16:9 frame | Daniel's look gate, 2026-11-18 | Accepted | 1.3, 1.4 |
 | `tutorRole.alt` | PR text plus PR fact gate | PASS, third pass, 2026-11-18 | 1.0 |
-| `heroExtra.imageAlt` | PR text plus PR fact gate | Owed by PR | 1.1 |
+| `heroExtra.imageAlt` | PR text plus PR fact gate | PASS, 2026-11-18 | 1.1 |
 | `needsOwnStudents` | PR fact gate | PASS 2026-11-17 | 2.2 |
 | `graph.legCommissionBar` | PR fact gate | PASS 2026-11-18 | 2.3 |
 | Thai Reedy line | PR fact gate | PASS 2026-11-18 | 2.4 |
-| `graph.caption` | PR fact gate | No gate line | 2.5 |
+| `graph.caption` | PR fact gate | PASS, second pass, 2026-11-18 | 2.5 |
 | The push | PM page check of both blocks | Pending | 3.2, 3.3 |
 
 ## 9. Acceptance criteria
@@ -589,30 +595,27 @@ file is absent from `public/images/` unless task 1.5 records a remaining source 
 **AC-18.** Both new files are webp of 1920 by 1080. Each size is at or below 300 KB. The test reads
 the header and computes no hash.
 
-## 10. Open questions
+## 10. Questions and their state
 
-### Resolved on 2026-11-18
+All questions closed on 2026-11-18. PR handoff version 1.0 answers the last two.
 
 **Q1. The face count and the file variant.** Resolved. The file is Daniel's choice, and
 `SHA256SUMS` checks OK. The file shows one tutor and three children, which is four faces. The
 words "five faces" and "four children" in the first order were wrong. D-1 keeps all four faces and
 the book.
 
+**Q2. The `graph.caption` fact gate.** Resolved. PR handoff version 1.0 section 7 records the gate.
+The first pass found one fault: the caption payout is the figure before tax. The line now says
+"before tax". The second pass is PASS. Section 5.3 holds the text.
+
 **Q3. The alt delivery and its gate.** Resolved for the block. PR handoff version 0.8 section 8.6
 is the delivered alt for `tutorRole.alt`. Its fact gate passed on the third pass on 2026-11-18
-(section 7). Section 5.5 holds the delivered text.
+(section 7). Section 5.5 holds the text.
 
-The hero alt is now open again under Q4.
-
-### Open
-
-**Q2. The `graph.caption` fact gate.** PR handoff section 7 holds no fact gate line for the v0.6
-caption. The orchestrator routes the question to the PM on 2026-11-18. The PM answers with a gate
-line or with an acceptance. This question blocks task 2.5.
-
-**Q4. The hero alt delivery and its gate.** The hero picture changes (D-2), so `heroExtra.imageAlt`
-changes. PR owes the en and th text, and the PM asked PR on 2026-11-18. The task needs the PR text
-and a PASS fact gate. The zh value equals en. This question blocks task 1.1.
+**Q4. The hero alt delivery and its gate.** Resolved. PR handoff version 1.0 section 8.7 delivers
+`heroExtra.imageAlt`. Section 7 records "Fact gate 2026-11-18 (the hero alt lines of section 8.7):
+PASS, no fault." Version 1.0 comes from advantage-pr commit `5aa6d6ee`. Section 5.6 holds the
+text. The zh value equals en.
 
 ## 11. The closeout
 
