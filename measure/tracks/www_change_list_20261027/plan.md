@@ -36,10 +36,12 @@
 
 > Source: `/home/daniebo/Desktop/advantage-pr/11-content/www-change-list.md` v1.50, list line 50 (row 2026-11-16 app-first, LAUNCH copy of places 1, 4, 33, 34) and list line 60 (row 2026-10-27 release-state copy, places 5, 6, 7, 8). Branch `storytime-launch-day` from `origin/master`; no merge, no push; W.5 and W.6 wait for the launch day.
 
-- [x] W.1 Receive the entries. Record the 8 launch-day keys with en, th, zh LAUNCH text. Test: AC-4.
+- [x] W.1 Receive the entries. Record the 8 launch-day keys with en, th, zh LAUNCH text. Test: AC-4. Thai check 2026-11-19: Daniel checked the Thai of rows 2026-11-16 app-first (LAUNCH Thai, places 1, 4, 33, 34) and 2026-11-16 home roadmap (Google Tasks 05:40, "All ok"). The 4 draft Thai LAUNCH lines are now Daniel checked.
 - [x] W.2 Tests first. Update the storytime fixture and pin every changed key in en, th, zh. Test: AC-5. Commit `da4c5e955`.
 - [x] W.3 Build the copy. Put the LAUNCH text word for word into the locale files. Test: AC-6. Commit `631d10af9`.
 - [x] W.4 Run the gates. Lint, typecheck, the vitest suite, and the www build. Test: AC-7. Lint exit 0, typecheck exit 0, vitest 81 files 2876 tests exit 0, build exit 0 on retry 2. Guard commit `1915410e5`.
+
+- [x] Roadmap-note LAUNCH (list line 51, place 2). Pin `v2.products.roadmapNote` LAUNCH en+th in the launch test, apply to home.ts en+th, leave zh on its Chinese line. One key only. Test: AC-5/AC-6/AC-7. Test commit `8fcb40a`, copy commit `964201d`. Gates: lint 0, types 0, vitest 81 files 2876 tests 0, build 0 on retry 2.
 
 ## Out of scope
 
