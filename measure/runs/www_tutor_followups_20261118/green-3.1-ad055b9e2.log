@@ -1,0 +1,39 @@
+# Full www suite — task 3.1
+
+Track: www_tutor_followups_20261118
+Role: jr-green
+Head: ad055b9e263012a67ddfffd3ffb3fa7e0342f56a
+Date: 2026-11-18
+Command: bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1'
+
+Result: exit 1. No exit 143 OOM happened, so no re-run was needed.
+
+Counts: Test Files 2 failed | 75 passed (77). Tests 9 failed | 2834 passed (2843).
+
+## Failing files and causes
+
+1. src/__tests__/products-page-pictures.red.test.tsx:69 'does not use the retired Storytime set'
+   AssertionError: expected '/images/tutor-advantage-hero-2026-11-...' not to match /2026-11-06/
+   The guard rejects the date substring in the spec-mandated hero file name.
+
+2. src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx, 8 cases
+   AssertionError: explain line: expected [] to deeply equal [ 'needsOwnStudents' ]
+   Line 161 filters the explain texts on the old three-state list.
+   Lines 609 and 618 still expect the 'zero' state for legs without own students.
+
+## Failing case names
+    FAIL  src/__tests__/products-page-pictures.red.test.tsx > product picture files > does not use the retired Storytime set
+    FAIL  src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx > L1 Add a leg and Remove a leg > adds legs one at a time, each at the default of 3 students, and numbers them in order
+    FAIL  src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx > L1 Add a leg and Remove a leg > is reachable and operable from the keyboard
+    FAIL  src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx > L3 fractional and negative counts > adds one leg to a fractional count and removes one again
+    FAIL  src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx > L3 fractional and negative counts > treats a negative count as no legs, and Add then gives one
+    FAIL  src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx > L4 Add and Remove are edits (D-7) and the figures follow (D-18) > pays 0 and shows the zero line for legs without own students, then pays once a student is typed
+    FAIL  src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx > L5 the own bar and the leg bars for random inputs (AC-23, D-20) > shows the own volume under graph.ownBar, and the bars as shares of the network volume
+    FAIL  src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx > L6 a seeded random walk keeps rows, typed students, and figures consistent > holds over 36 walks of 30 actions in English
+    FAIL  src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx > L6 a seeded random walk keeps rows, typed students, and figures consistent > holds over 8 walks of 30 actions in Thai
+
+## Raw summary
+ Test Files  2 failed | 75 passed (77)
+      Tests  9 failed | 2834 passed (2843)
+   Start at  08:07:10
+   Duration  70.46s (transform 1.22s, setup 3.06s, import 6.92s, tests 23.82s, environment 29.75s)

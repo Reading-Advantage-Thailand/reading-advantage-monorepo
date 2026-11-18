@@ -1,0 +1,46 @@
+{
+  "track": "www_tutor_followups_20261118",
+  "role": "jr-green",
+  "tasks": ["1.6", "2.6"],
+  "head": "ad055b9e263012a67ddfffd3ffb3fa7e0342f56a",
+  "short_head": "ad055b9e2",
+  "date": "2026-11-18",
+  "gates": [
+    {
+      "name": "types",
+      "command": "pnpm --filter www-reading-advantage exec tsc --noEmit -p .",
+      "pass_value": "exit 0",
+      "exit": 0
+    },
+    {
+      "name": "lint",
+      "command": "pnpm --filter www-reading-advantage lint",
+      "pass_value": "exit 0, no error in a touched file",
+      "exit": 0
+    },
+    {
+      "name": "build",
+      "command": "heavy-run -c 'pnpm --filter www-reading-advantage build'",
+      "pass_value": "exit 0",
+      "first_run_exit": 1,
+      "first_run_cause": "Next.js SecurityFatalError reminder: the upgrade recommendation stops the first build",
+      "rerun_exit": 0
+    },
+    {
+      "name": "downline scan",
+      "command": "rg -n -i \"downline|ดาวน์ไลน์\" apps/www-reading-advantage/src --glob '!**/*.test.*'",
+      "pass_value": "exit 1, no output",
+      "exit": 1,
+      "output": ""
+    },
+    {
+      "name": "affected apps",
+      "command": "node scripts/ci/affected-apps.mjs --base 80ac554b426551e5749f0e2cd500cbbf0eb93530 --head ad055b9e263012a67ddfffd3ffb3fa7e0342f56a",
+      "pass_value": "lists www-reading-advantage only",
+      "exit": 0,
+      "output": ["www-reading-advantage"]
+    }
+  ],
+  "result": "pass",
+  "note": "One file pair covers task 1.6 and task 2.6. Both tasks ran the same five gates at the same HEAD."
+}

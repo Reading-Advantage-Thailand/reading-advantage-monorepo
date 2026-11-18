@@ -107,7 +107,7 @@ A2 and A9 and A10 do not apply directly. This track has no publish gate, no arch
 
 ## Phase base rule
 
-Do not embed a SHA that predates this strategy commit. After this strategy commit lands, the orchestrator captures the immutable `phase_base_sha` from `git rev-parse HEAD`. That SHA starts the Red work. The affected-apps gate uses `--base 80ac554b426551e5749f0e2cd500cbbf0eb375090a` with the full 40-character head, per spec section 6.1.
+Do not embed a SHA that predates this strategy commit. After this strategy commit lands, the orchestrator captures the immutable `phase_base_sha` from `git rev-parse HEAD`. That SHA starts the Red work. The affected-apps gate uses `--base 80ac554b426551e5749f0e2cd500cbbf0eb93530` with the full 40-character head, per spec section 6.1.
 
 ---
 MEASURE_AGENT_RESULT

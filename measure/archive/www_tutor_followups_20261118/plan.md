@@ -167,7 +167,7 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
   `www-reading-advantage` only. The file pair `green-1.6-ad055b9e2.json` and `.log` covers task 1.6
   and task 2.6.
 
-- [ ] 1.7 Page-check evidence: capture the hero and `#become-a-tutor` at three widths and send the folder to the PM. Test: AC-10.
+- [x] 1.7 Page-check evidence: capture the hero and `#become-a-tutor` at three widths and send the folder to the PM. Test: AC-10. Done: 2026-11-18 at `383df188a`.
 
   1. `pnpm --filter www-reading-advantage build`.
   2. `pnpm --filter www-reading-advantage start` on port 3107.
@@ -181,6 +181,11 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
   390 px.
 
   Send the folder path to the PM. The PM answer is the gate of task 3.2.
+
+  Done: 2026-11-18 at `383df188a`. The twelve captures and `checks.json` sit in
+  `measure/runs/www_tutor_followups_20261118/p1-captures/`. The orchestrator sent the folder path
+  to the PM. The capture set covers en and th at 390, 980, and 1280 px for the hero and for
+  `#become-a-tutor`.
 
 ## Phase 2: the PR copy items
 
@@ -312,14 +317,18 @@ Record: `measure/runs/www_tutor_followups_20261118/review-b-waiver.md`. The audi
   at `ad055b9e2` and Red repaired them at `5e5990b42`. The counts sit in
   `green-3.1-5e5990b42.log`.
 
-- [b] 3.2 Gate: the PM page check. Test: AC-10.
+- [x] 3.2 Gate: the PM page check. Test: AC-10. Done: 2026-11-18 at `383df188a`.
 
   The PM checks the built page at 390, 980, and 1280 px after the Phase 1 and Phase 2 changes. The
   PM checks the hero and `#become-a-tutor`. The folder of task 1.7 is the input.
 
   Pass: the PM sends a PASS with the folder path of its captures. No push runs before this task.
 
-- [ ] 3.3 Push www-only. Test: AC-11.
+  Done: 2026-11-18 at `383df188a`. The PM sent PASS on the folder of task 1.7 with the words
+  "crops PASS". The th-980 heading under the sticky header is an element-capture artifact, so no
+  retake runs. The PM gate is closed and no `[b]` task stays open in this track.
+
+- [x] 3.3 Push www-only. Test: AC-11. Done: 2026-11-18 at `ac3886b4a`.
 
   One fast-forward push to `origin/master`. The changed paths are `apps/www-reading-advantage/**`
   and `measure/**`.
@@ -330,7 +339,12 @@ Record: `measure/runs/www_tutor_followups_20261118/review-b-waiver.md`. The audi
 
   Record the pushed commit and the previous `origin/master` in the task.
 
-- [ ] 3.4 CD watch and live checks. Test: AC-12.
+  Done: 2026-11-18 at `ac3886b4a`. The push was a fast-forward of `origin/master` from
+  `3804ab55a` to `ac3886b4a`. The changed paths are `apps/www-reading-advantage/**` and
+  `measure/**`. The commit `ac3886b4a` merges `origin/master` into the track branch and carries
+  the fast-forward to `origin/master`.
+
+- [x] 3.4 CD watch and live checks. Test: AC-12. Done: 2026-11-18 at `ac3886b4a`.
 
   1. Find the CD run "CD — www-reading-advantage" for the pushed commit with
      `gh run list --workflow=cd-www-reading-advantage.yml --limit 5`.
@@ -347,12 +361,20 @@ Record: `measure/runs/www_tutor_followups_20261118/review-b-waiver.md`. The audi
   Save the run id, the URL, and the check output as `live-3.4-<short sha>.json` and `.log` in
   `measure/runs/www_tutor_followups_20261118/`.
 
+  Done: 2026-11-18 at `ac3886b4a`. The CD run 44254524617 for "CD — www-reading-advantage"
+  ended with success. The en, th, and zh pages answer 200. Each page holds
+  `tutor-advantage-hero-2026-11-06.webp` and `tutor-advantage-teach-class.webp`; en and zh hold
+  `Commission of all legs` and the new caption, and th holds the Thai label and the Thai caption.
+  No page holds `tutor-advantage-hero.jpg`, `downline`, `ดาวน์ไลน์`, or "Tutor Advantage only". The
+  live page-check contact sheet sits in `measure/runs/www_tutor_followups_20261118/live-page-check/`.
+  The closeout rerun of the same checks on 2026-11-18 gives the same result.
+
 ## Closeout
 
-- [ ] C.1 Move the track to `measure/archive/www_tutor_followups_20261118`, update the registry row, and record the closeout. Test: the closeout checker exits 0.
+- [x] C.1 Move the track to `measure/archive/www_tutor_followups_20261118`, update the registry row, and record the closeout. Done: `ac3886b4a` (temporary placeholder, replaced by the closeout commit SHA in the record commit). Test: the closeout checker exits 0.
 
   The registry row names the commit range, the gate output, the page-check folder, the CD run, and
-  the questions that stay open. The closeout runs after task 3.4.
+  the closed questions. The closeout runs after task 3.4.
 
 ## Questions carried to the PM
 

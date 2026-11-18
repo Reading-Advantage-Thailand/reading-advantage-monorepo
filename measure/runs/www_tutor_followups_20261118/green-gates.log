@@ -1,0 +1,96 @@
+# The www gates — tasks 1.6, 2.6, and 3.1
+
+Track: www_tutor_followups_20261118
+Role: jr-green (resumed run)
+Red model of the phase: opencode/glm-5.3-flash-free#high
+Base at resume: b1f1c3cdc
+HEAD at resume: ad055b9e2 (`ad055b9e263012a67ddfffd3ffb3fa7e0342f56a`)
+
+Status: blocked on task 3.1 (two committed test files hold the old contract)
+
+## Done in this run
+
+1. The commit SHA sat in backticks at the end of each `[x]` task line of `plan.md`:
+   1.0 `c8d750d56`, 1.1 `3cc535884`, 1.2 `9a1e001fb`, 1.3-1.5 `fa8ad4fd3`, 2.1 `9a1e001fb`,
+   2.2-2.5 `fa8ad4fd3`.
+2. Tasks 1.6 and 2.6 ran the same five gates once at `ad055b9e2`. Both are `[x]` with that SHA.
+   One file pair covers both tasks:
+   `measure/runs/www_tutor_followups_20261118/green-1.6-ad055b9e2.json` and `.log`.
+3. Task 3.1 ran the full suite once at `ad055b9e2`. The log is
+   `measure/runs/www_tutor_followups_20261118/green-3.1-ad055b9e2.log`. Task 3.1 stays `[~]`.
+
+## The five gates (tasks 1.6 and 2.6), pass
+
+- types: `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exit 0.
+- lint: `pnpm --filter www-reading-advantage lint` exit 0.
+- build: `heavy-run -c 'pnpm --filter www-reading-advantage build'` exited 1 on the first run
+  with the known Next.js security reminder, and exit 0 on the one re-run.
+- downline scan: exit 1, no output.
+- affected apps: `["www-reading-advantage"]` only, exit 0.
+
+## Task 3.1, fail
+
+`bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+www-reading-advantage exec vitest run --maxWorkers=1'` exited 1. No exit 143 OOM happened.
+Counts: 2 files failed, 75 passed; 9 tests failed, 2834 passed.
+
+The two failures are stale committed tests, not a production defect:
+
+1. `src/__tests__/products-page-pictures.red.test.tsx:69` has the case "does not use the retired
+   Storytime set". It rejects every `productPictures` src that matches `/2026-11-06/`. The
+   spec-mandated hero name `/images/tutor-advantage-hero-2026-11-06.webp` (spec D-2 and task 1.4)
+   holds that date, so the broad guard now fails. The guard intends the retired Storytime set, not
+   the date substring in every file.
+   Repair: narrow the guard to the Storytime files, for example a
+   `/images/products/storytime/` prefix or the two retired names. No production change.
+
+2. `src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx` keeps the old
+   three-state contract:
+   - line 161 filters the explain texts on `["ownOnly", "withLegs", "zero"]`, so the rendered
+     `needsOwnStudents` line is dropped and the list reads `[]`;
+   - line 609 and line 618 expect `["zero"]` for legs without own students, and spec D-6 now names
+     `needsOwnStudents`.
+   Repair: add `needsOwnStudents` to the filter list at line 161, and change the two `["zero"]`
+   expectations to `["needsOwnStudents"]`. No production change.
+
+Both repairs are test edits. Green made no production and no test edit in this run.
+
+MEASURE_AGENT_RESULT
+role: jr-green
+status: blocked
+track: www_tutor_followups_20261118
+phase: gates at ad055b9e2 (tasks 1.6, 2.6, 3.1)
+phase_base_sha: 80ac554b426551e5749f0e2cd500cbbf0eb93530
+role_base_sha: 6d09d2c37
+head: ad055b9e2
+commits: ad055b9e2 (plan evidence of the Green pass) plus the plan commit of this run
+tasks_flipped_x: 1.6, 2.6 (five app gates, evidence green-1.6-ad055b9e2.json and .log); SHA evidence added to 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2, 2.3, 2.4, 2.5
+tasks_flipped_b: none
+tasks_open: 1.7, 3.1, 3.3, 3.4, C.1
+tests_run: types exit 0; lint exit 0; build exit 1 on the first run (security reminder) then exit 0; downline scan exit 1 with no output; affected apps lists www-reading-advantage only; full suite exit 1 (2 files failed, 75 passed; 9 tests failed, 2834 passed)
+blocked_on: two stale committed tests, not a production defect. products-page-pictures.red.test.tsx:69 rejects the spec-mandated hero date name; tutor-commission-calculator.legs.adversarial.test.tsx lines 161, 609, and 618 hold the old three-state explain contract, while spec D-6 names a fourth state
+handoff: Mid Red or a remediation track owns the two test edits. products-page-pictures.red.test.tsx: narrow the `/2026-11-06/` guard to the retired Storytime files. tutor-commission-calculator.legs.adversarial.test.tsx: add needsOwnStudents to the line 161 filter list and take it at lines 609 and 618. Then rerun task 3.1; on exit 0 mark 3.1 [x] at the new HEAD and continue with task 1.7 (page-check captures), the PM gate 3.2, and the push tasks. No push ran and no production or test file changed in this run. Question: none. Default: a Mid Red retry on top of ad055b9e2 makes the four test lines and Green resumes at task 3.1.
+END_MEASURE_AGENT_RESULT
+
+## Resume: task 3.1 at 5e5990b42
+
+Red repaired the two stale tests at 5e5990b42. The full suite ran once through heavy-run and exited 0.
+No exit 143 OOM happened, so no re-run was needed. The log is green-3.1-5e5990b42.log.
+Task 3.1 is [x] with `5e5990b42`. The plan-evidence commit is e97e1d480.
+
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: www_tutor_followups_20261118
+phase: task 3.1 (the full www suite)
+phase_base_sha: 80ac554b426551e5749f0e2cd500cbbf0eb93530
+role_base_sha: 6d09d2c37
+head: e97e1d480
+suite_head: 5e5990b42
+commits: e97e1d480 (task 3.1 [x] evidence)
+tasks_flipped_x: 3.1 (full suite exit 0 at 5e5990b42, evidence green-3.1-5e5990b42.log)
+tasks_flipped_b: none
+tasks_open: 1.7, 3.3, 3.4, C.1, and the [b] gate 3.2
+tests_run: full www suite through heavy-run exit 0 on the first run (77 files passed, 2843 tests passed)
+handoff: Next is task 1.7 (build and capture the hero and #become-a-tutor at 390, 980, and 1280 px in en and th, write checks.json, save to measure/runs/www_tutor_followups_20261118/p1-captures/), then the PM gate 3.2. No push before the PM PASS. Question: none.
+END_MEASURE_AGENT_RESULT

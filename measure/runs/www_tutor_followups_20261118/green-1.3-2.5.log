@@ -1,0 +1,144 @@
+# Green run — Phase 1 tasks 1.3..1.5 and Phase 2 tasks 2.2..2.5
+
+Track: www_tutor_followups_20261118
+Role: jr-green (session: Green · P1-P2 T1.3-1.5+T2.2-2.5 · www_tutor_followups)
+Role base SHA: 6d09d2c37
+Phase base SHA: 80ac554b426551e5749f0e2cd500cbbf0eb93530
+Red commit: 9a1e001fb
+Red log: measure/runs/www_tutor_followups_20261118/red-1.2-2.1.log
+
+Status: complete
+
+## Start record
+
+- Plan tasks 1.3, 1.4, 1.5, 2.2, 2.3, 2.4, 2.5 were marked `[~]` alone in commit 522f03b75.
+- `git status --short` was empty before the first edit.
+- The Red commit 9a1e001fb is inside `80ac554b4..6d09d2c37`.
+
+## Task 1.3: the two picture files
+
+Source check in `/home/daniebo/Desktop/handoff/a63-become-a-tutor`:
+
+```
+2026-11-06-tutor-advantage-img1-1920x1080.jpg: OK
+2026-11-13-tutor-advantage-img1-1920x1080.jpg: OK
+exit=0
+```
+
+The Pillow command of spec 4.2 ran from the repository root. The check command of spec 4.2 printed:
+
+```
+tutor-advantage-hero-2026-11-06.webp (1920, 1080) 165522
+tutor-advantage-teach-class.webp (1920, 1080) 190298
+```
+
+Both sizes match the probe values of spec D-4, and each size is at or below 307,200 bytes.
+The sources check OK. No hash field was added.
+
+## Task 1.4: the manifest, the page, and the two alts
+
+1. `src/lib/product-pictures.ts`: `tutorSession` replaced by `tutorHero` and
+   `tutorTeachClass` with the JSDoc lines and the 1920 by 1080 values of spec 4.3.
+2. `page.tsx`: line 195 reads `picture={productPictures.tutorHero}` and `priority`
+   stays. Lines 329, 331, and 332 read `productPictures.tutorTeachClass`. Line 334 reads
+   `className="aspect-video w-full object-cover"`. The alt lines and the `sizes` line stay.
+3. `src/locales/pages/products/tutor-advantage.ts`: `heroExtra.imageAlt` set at en 19, th 356,
+   zh 693 to spec 5.6. `tutorRole.alt` set at en 153, th 490, zh 827 to spec 5.5. The zh values
+   equal en.
+
+Phase 1 targeted command (the task 1.2 Red command) through heavy-run: 2 files passed,
+58 tests passed, exit 0.
+
+## Task 1.5: the old hero file
+
+Scan `rg -n "tutor-advantage-hero\.jpg" apps/www-reading-advantage/src --glob '!**/*.test.*'`
+printed nothing (exit 1). Then `git rm apps/www-reading-advantage/public/images/tutor-advantage-hero.jpg`
+ran. No source reference remains.
+
+## Tasks 2.2..2.5: the PR copy items
+
+1. `src/lib/tutor-commission.ts`: `explainVariant` returns the four states of spec D-6. The
+   second condition returns `"needsOwnStudents"`. The JSDoc names the four states.
+2. `src/components/marketing/tutor-commission-calculator.tsx`: the `copy.explain` type gains
+   `needsOwnStudents: string`. The render at line 472 already reads `copy.explain[variant]`.
+3. `page.tsx` explain object gains `needsOwnStudents: key("calculator.explain.needsOwnStudents")`.
+4. Locale file: `calculator.explain.needsOwnStudents` added in en, th, and zh, with the zh
+   `draft` code comment of spec D-11. `graph.legCommissionBar` takes spec 5.2 at en 198, th 538,
+   zh 878. `graph.caption` takes spec 5.3 at en 194, th 534, zh 874. The Thai Reedy
+   `platformFeatures.features[2].description` takes the New Thai of spec 5.4 at th line 638.
+   The en Reedy line and the zh Reedy line stay.
+
+## The first Green run and the Red defect
+
+The first full Green command exited 1 with 9 failures, all in
+`src/lib/tutor-commission.settlement.adversarial.test.ts`. Every failure printed
+`variant: module needsOwnStudents settlement zero`.
+
+The cause was a committed Red test defect. `settledVariant` (lines 202..206) and line 438 pinned
+`"zero"` while line 613 pinned `"needsOwnStudents"` for the same input shape. No implementation
+could pass both lines.
+
+Green stopped, committed the implementation as `fa8ad4fd3`, and asked for a Mid Red retry. Green
+did not edit a test file.
+
+## The Mid Red fix
+
+Mid Red committed `b1f1c3cdc` ("test(www): align the settlement variant"). It widens
+`settledVariant` to the four states, returns `"needsOwnStudents"` for own volume 0, changes line
+438 to `"needsOwnStudents"`, and adds the coverage counter.
+
+## The resumed Green run
+
+The full Green command through heavy-run exited 0:
+
+```
+Test Files  9 passed (9)
+     Tests  230 passed (230)
+```
+
+`pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exited 0 with no output.
+
+The earlier gates still hold: lint exit 0, and the downline scan exit 1 with no output.
+
+## Plan evidence
+
+Tasks 1.3, 1.4, 1.5, 2.2, 2.3, 2.4, and 2.5 are `[x]`, with the implementation SHA `fa8ad4fd3`
+and this log as the evidence. The plan-evidence commit is `ad055b9e2`.
+
+## Commits and files
+
+- 522f03b75 — chore(measure): start the green pass — plan.md only, pathspec.
+- fa8ad4fd3 — feat(www): add the tutor pictures and the pr copy items — eight files, pathspec:
+  - `apps/www-reading-advantage/public/images/tutor-advantage-hero-2026-11-06.webp` (new)
+  - `apps/www-reading-advantage/public/images/tutor-advantage-teach-class.webp` (new)
+  - `apps/www-reading-advantage/public/images/tutor-advantage-hero.jpg` (deleted)
+  - `apps/www-reading-advantage/src/lib/product-pictures.ts`
+  - `apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx`
+  - `apps/www-reading-advantage/src/lib/tutor-commission.ts`
+  - `apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx`
+  - `apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts`
+- b1f1c3cdc — test(www): align the settlement variant — Mid Red, one test file.
+- ad055b9e2 — chore(measure): record the green pass — plan.md only, pathspec.
+
+One implementation commit holds both phase halves. A pathspec split cannot work: `page.tsx`
+holds both a Phase 1 hunk and a Phase 2 hunk, so either half alone fails `tsc`.
+
+`git status` is clean. No push, no build, and no full suite ran in this role.
+
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: www_tutor_followups_20261118
+phase: Phase 1 tasks 1.3-1.5 + Phase 2 tasks 2.2-2.5 (one combined Green pass)
+phase_base_sha: 80ac554b426551e5749f0e2cd500cbbf0eb93530
+role_base_sha: 6d09d2c37
+implementation_sha: fa8ad4fd3
+head: ad055b9e2
+commits: 522f03b75 (plan [~]), fa8ad4fd3 (implementation), ad055b9e2 (plan [x] evidence)
+tasks_flipped_x: 1.3, 1.4, 1.5, 2.2, 2.3, 2.4, 2.5 (evidence fa8ad4fd3, this log)
+tasks_flipped_b: none
+tests_run: full Green command through heavy-run exit 0 (9 files, 230 tests); tsc --noEmit -p . exit 0; lint exit 0; downline scan exit 1 with no output
+files_added: public/images/tutor-advantage-hero-2026-11-06.webp; public/images/tutor-advantage-teach-class.webp
+files_changed: product-pictures.ts; tutor-advantage/page.tsx; tutor-commission.ts; tutor-commission-calculator.tsx; locales/pages/products/tutor-advantage.ts; deleted public/images/tutor-advantage-hero.jpg
+handoff: Review roles start at ad055b9e2. Scope the image audit to the two new webp files and the delete of tutor-advantage-hero.jpg. Scope the copy audit to the six locale lines of tasks 2.2-2.5 and the four-state explainVariant. Task 1.6 (the five app gates), task 1.7 (the page-check captures), and task 3.x stay open. No push and no deploy before the PM page check of task 3.2. Question: none.
+END_MEASURE_AGENT_RESULT

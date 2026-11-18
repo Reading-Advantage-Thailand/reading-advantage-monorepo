@@ -1,0 +1,26 @@
+Spec review log for track www_tutor_followups_20261118 at 3cc535884979c784ee23d4dd6bba4a4eb375090a.
+
+HEAD check: git rev-parse HEAD returns 3cc535884979c784ee23d4dd6bba4a4eb375090a. It equals the audited head SHA.
+
+Scope: spec.md and plan.md of the track, each named code file, the parent archive spec D-19, the PR handoff v1.0 (read-only), and the picture handoff (read-only). No code changed. No commit made.
+
+Paraphrase: the track closes the six open items of the parent track in one www-only push. It gives the hero and the block their own 16:9 pictures, and it ships four PR copy items after each fact gate. The current page shares one square file in a 4:3 crop, returns zero for legs without own students, and holds the old caption, label, and Thai fragment.
+
+Findings: one Major (F1, downline scan pattern). No Blocker. No Nit.
+
+Tests run: none. This role runs no test command. It reads files only.
+
+Files changed: measure/runs/www_tutor_followups_20261118/spec-review-3cc5358.json and measure/runs/www_tutor_followups_20261118/spec-review-3cc5358.log.
+
+MEASURE_AGENT_RESULT
+role: spec-review
+status: pass
+track: www_tutor_followups_20261118
+phase: track setup
+commits: none
+tests_run: none (read-only review; no test command runs in this role)
+files_changed: measure/runs/www_tutor_followups_20261118/spec-review-3cc5358.json, measure/runs/www_tutor_followups_20261118/spec-review-3cc5358.log
+plan_updates: none
+known_failures: none
+handoff: Verdict pass with one Major (F1). Fix the downline scan pattern in spec section 6.1 to downline|ดาวน์ไลน์ or to two -e patterns. No owner question remains.
+END_MEASURE_AGENT_RESULT

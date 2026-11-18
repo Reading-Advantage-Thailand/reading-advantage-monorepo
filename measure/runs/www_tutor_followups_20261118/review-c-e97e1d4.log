@@ -1,0 +1,38 @@
+Review C log: www_tutor_followups_20261118 at e97e1d4 (Phases 1-2).
+
+HEAD check: git rev-parse HEAD gives e97e1d48011327383aac95a843c243cc18673360. It matches the audited HEAD. The phase base 80ac554b426551e5749f0e2cd500cbbf0eb93530 is an ancestor. The contract review applies: the phase diff touches the page, the manifest, the locales, and the calculator wiring.
+
+Hero: page.tsx lines 195-199 call ProductPicture with productPictures.tutorHero, alt heroExtra.imageAlt, and priority. Pass.
+
+Block: page.tsx lines 329-336 use tutorTeachClass src, width, height, alt tutorRole.alt, sizes (max-width: 1024px) 100vw, 40vw, and class aspect-video w-full object-cover. The 1920x1080 file matches the 16:9 box. Pass.
+
+Manifest: product-pictures.ts holds tutorHero and tutorTeachClass at 1920x1080. tutorSession is gone. Pass.
+
+Old file: rg for tutor-advantage-hero.jpg in non-test src exits 1 with no output. Only page.images.test.tsx names it as the banned file. The OG image is /images/teacher-at-board.png. No metadata, sitemap, or JSON-LD holds the old file. Pass.
+
+Shared file: hero and block use distinct webp paths. The AC-17 suite passes. Pass.
+
+Calculator: page.tsx lines 107-112 pass explain.needsOwnStudents. The component type at line 50 holds the key. The render at line 472 reads copy.explain[variant]. Locales hold the spec 5.1 text in en, th, and zh. Pass.
+
+Graph: locale caption and legCommissionBar match spec 5.2 and 5.3 in en, th, and zh. The component renders copy.graph.caption at line 384 and copy.graph.legCommissionBar at line 434. Pass.
+
+Route parity: SUPPORTED_LOCALES is en, th, zh. The [locale] route serves all three. Image and adversarial suites render all locales and pass. No parity violation.
+
+Tests (read-only, heavy-run): page.images.test.tsx 33 passed; locale plus commission plus reedy suites 101 passed; page.phase3.adversarial.test.tsx 25 passed.
+
+Scope: the phase diff touches apps/www-reading-advantage plus measure only.
+
+No blocking findings. No nonblocking findings. No owner question.
+
+MEASURE_AGENT_RESULT
+role: measure-review-c-ux-api
+status: pass
+track: www_tutor_followups_20261118
+phase: Phase 1 + Phase 2
+commits: e97e1d48011327383aac95a843c243cc18673360
+tests_run: heavy-run vitest page.images.test.tsx (33 passed); locale+commission+reedy suites (101 passed); page.phase3.adversarial.test.tsx (25 passed); rg old-file and tutorSession scans
+files_changed: measure/runs/www_tutor_followups_20261118/review-c-e97e1d4.json, measure/runs/www_tutor_followups_20261118/review-c-e97e1d4.log
+plan_updates: none
+known_failures: none
+handoff: No product decision is needed. No owner question remains.
+END_MEASURE_AGENT_RESULT
