@@ -11,6 +11,10 @@
  * checks, not a hash (strategy section 1.2). At the base none of the 16 asset files exists, so
  * A1 to A6 fail with `Missing <path>`. A9 (no `public/` folder), A10, and the byte-parser and
  * scanner self-tests pass at the base (named characterization).
+ *
+ * Task 3.2 (PM decision 2026-11-18) splits the ground layer from the hero window. The ground
+ * shows at blur(6px), so it draws its own six small files; the sharp hero window keeps the six
+ * shipped place pictures. The ten shipped place files stay on disk and stay byte-identical.
  */
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -30,6 +34,18 @@ const PLACE_FILES = PLACES.flatMap((place) => [
   { name: `${place}-p.webp`, width: 1080, height: 1920, orientation: "portrait" },
   { name: `${place}-d.webp`, width: 1920, height: 1080, orientation: "landscape" },
 ]);
+/** The sharp place pictures of the hero window (task 3.2: the window keeps the shipped files). */
+const HERO_FILES = ["meadow", "oak", "path"].flatMap((place) => [
+  { name: `${place}-p.webp`, place, orientation: "portrait" },
+  { name: `${place}-d.webp`, place, orientation: "landscape" },
+]);
+/** The ground files of the split ground layer (task 3.2). */
+const GROUND_FILES = ["meadow", "grove", "trail"].flatMap((place) => [
+  { name: `ground-${place}.webp`, place, orientation: "portrait" },
+  { name: `ground-${place}-land.webp`, place, orientation: "landscape" },
+]);
+/** The byte budget of the ground files together (task 3.2: 300000 - 284270). */
+const GROUND_BYTES_MAX = 15_730;
 const PIECES = ["q-tip-l.svg", "q-tip-r.svg"] as const;
 const FONTS = ["fredoka-latin.woff2", "mitr-500-thai.woff2"] as const;
 /** The largest place file (strategy A1). */
@@ -189,21 +205,39 @@ describe("the assets of the look (AC-2.2, FR-2)", () => {
     expect(`webp_files=${found}`).toBe("webp_files=10");
   });
 
-  it("A2 look.css draws all ten place files by a relative url() and the right orientation", () => {
+  it("A2 look.css draws the six hero place files and the six ground files by a relative url() and the right orientation", () => {
+    // Task 3.2 (PM decision 2026-11-18): the ground layer draws its own small files, so the
+    // three ground places no longer draw the shipped place files. The hero window keeps the
+    // shipped pictures, and the five scenes stay in use.
     expect(existsSync(lookCssPath), "Missing apps/storytime/app/look.css").toBe(true);
     const rules = parseCss(readFileSync(lookCssPath, "utf8"));
     const used = new Set<string>();
-    for (const entry of PLACE_FILES) {
+    for (const entry of [...HERO_FILES, ...GROUND_FILES]) {
       const drawing = rules.filter((rule) =>
         rule.declarations.some((declaration) => declaration.value.includes(`/${entry.name}`)),
       );
       expect(drawing.length, `look.css must draw ${entry.name}`).toBeGreaterThan(0);
       const chosen = drawing.some((rule) => rule.media.some((media) => media.includes(`(orientation: ${entry.orientation})`)));
       expect(chosen, `${entry.name} must sit inside (orientation: ${entry.orientation})`).toBe(true);
-      used.add(entry.name.replace(/-[pd]\.webp$/, ""));
+      used.add(entry.place);
     }
     expect(`places_used=${used.size}`).toBe("places_used=5");
     expect([...used].sort()).toEqual([...PLACES].sort());
+  });
+
+  it("A2b the six ground files are WebP files that hold at most 15730 bytes together (task 3.2)", () => {
+    const found = readdirSync(placesDir).filter((name) => name.startsWith("ground-"));
+    expect(`ground_files=${found.length}`).toBe("ground_files=6");
+    let total = 0;
+    for (const entry of GROUND_FILES) {
+      const path = resolve(placesDir, entry.name);
+      expect(existsSync(path), `Missing ${entry.name}`).toBe(true);
+      const bytes = readFileSync(path);
+      expect(webpSize(bytes), `${entry.name} must be a WebP file with a readable header`).not.toBeNull();
+      total += bytes.length;
+      expect(bytes.length, `ground_file_bytes_${entry.name}=${bytes.length}`).toBeLessThanOrEqual(GROUND_BYTES_MAX);
+    }
+    expect(total, `ground_files_bytes=${total}`).toBeLessThanOrEqual(GROUND_BYTES_MAX);
   });
 
   it.each(PIECES)("A3 %s must be gone: the crystal tips are removed", (name) => {

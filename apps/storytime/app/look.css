@@ -715,19 +715,20 @@ main[data-place] button:active:not(:disabled) {
 }
 
 /* ---- The painted files: the portrait ground on a portrait screen, the landscape ground on a
- * landscape screen (A2). ---- */
+ * landscape screen (A2). The ground shows at blur(6px), so it draws its own small files
+ * (task 3.2, PM decision 2026-11-18). The sharp hero window keeps the shipped place pictures. ---- */
 @media (orientation: portrait) {
-  main[data-place="meadow"]::before { background-image: url("look/places/meadow-p.webp"); }
-  main[data-place="grove"]::before { background-image: url("look/places/grove-p.webp"); }
-  main[data-place="trail"]::before { background-image: url("look/places/trail-p.webp"); }
+  main[data-place="meadow"]::before { background-image: url("look/places/ground-meadow.webp"); }
+  main[data-place="grove"]::before { background-image: url("look/places/ground-grove.webp"); }
+  main[data-place="trail"]::before { background-image: url("look/places/ground-trail.webp"); }
   main[data-hero="path"] > header { background-image: url("look/places/path-p.webp"); }
   main[data-hero="oak"] > header { background-image: url("look/places/oak-p.webp"); }
   main[data-hero="meadow"] > header { background-image: url("look/places/meadow-p.webp"); }
 }
 @media (orientation: landscape) {
-  main[data-place="meadow"]::before { background-image: url("look/places/meadow-d.webp"); }
-  main[data-place="grove"]::before { background-image: url("look/places/grove-d.webp"); }
-  main[data-place="trail"]::before { background-image: url("look/places/trail-d.webp"); }
+  main[data-place="meadow"]::before { background-image: url("look/places/ground-meadow-land.webp"); }
+  main[data-place="grove"]::before { background-image: url("look/places/ground-grove-land.webp"); }
+  main[data-place="trail"]::before { background-image: url("look/places/ground-trail-land.webp"); }
   main[data-hero="path"] > header { background-image: url("look/places/path-d.webp"); }
   main[data-hero="oak"] > header { background-image: url("look/places/oak-d.webp"); }
   main[data-hero="meadow"] > header { background-image: url("look/places/meadow-d.webp"); }
