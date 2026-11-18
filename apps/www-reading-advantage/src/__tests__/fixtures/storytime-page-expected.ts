@@ -25,12 +25,12 @@ export const EXPECTED_META = {
   en: {
     title: "Storytime Advantage - English for Anuban 2 to P2 | Reading Advantage Thailand",
     description:
-      "Storytime Advantage is an English app for Anuban 2 to P2. It launches on 30 November 2026 with one sound, one song, and two books each week.",
+      "Storytime Advantage is an English app for Anuban 2 to P2, available now with one sound, one song, and two books each week.",
   },
   th: {
     title: "Storytime Advantage - ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 | Reading Advantage Thailand",
     description:
-      "Storytime Advantage เป็นแอปภาษาอังกฤษสำหรับเด็กอนุบาล 2 ถึง ป.2 เปิดตัววันที่ 30 พฤศจิกายน 2569 พร้อมหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มในแต่ละสัปดาห์",
+      "Storytime Advantage เป็นแอปภาษาอังกฤษสำหรับเด็กอนุบาล 2 ถึง ป.2 เปิดให้ใช้งานแล้ว พร้อมหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มในแต่ละสัปดาห์",
   },
 } as const;
 
@@ -47,33 +47,33 @@ export const EXPECTED_AUX_COPY = {
 
 export const LABEL_COPY = {
   en: {
-    badge: "Launches 30 November 2026",
+    badge: "Available Now",
     gradeRange: "English program for Anuban 2 to P2",
     features: [
       "One sound, one song, and two books each week",
       "QR links open the song and books",
     ],
-    navigation: "English for Anuban 2 to P2; the first unit launches on 30 November 2026",
-    home: "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. Science, Math, Zhongwen, and STEM Advantage are on our roadmap. The first Storytime Advantage unit launches on 30 November 2026.",
+    navigation: "English for Anuban 2 to P2; the first unit is available now",
+    home: "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. Science, Math, Zhongwen, and STEM Advantage are on our roadmap. The first Storytime Advantage unit is available now.",
   },
   th: {
-    badge: "เปิดตัววันที่ 30 พฤศจิกายน 2569",
+    badge: "พร้อมใช้งานแล้ว",
     gradeRange: "หลักสูตรภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2",
     features: [
       "หนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มต่อสัปดาห์",
       "คิวอาร์โค้ดเปิดเพลงและหนังสือ",
     ],
-    navigation: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569",
-    home: "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก Science, Math, Zhongwen และ STEM Advantage อยู่ในแผนงาน หน่วยการเรียนรู้แรกของ Storytime Advantage เปิดตัววันที่ 30 พฤศจิกายน 2569",
+    navigation: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 หน่วยการเรียนรู้แรกพร้อมใช้งานแล้ว",
+    home: "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก Science, Math, Zhongwen และ STEM Advantage อยู่ในแผนงาน หน่วยการเรียนรู้แรกของ Storytime Advantage พร้อมใช้งานแล้ว",
   },
   zh: {
-    badge: "Launches 30 November 2026",
+    badge: "Available Now",
     gradeRange: "面向 Anuban 2 至 P2 的英语课程",
     features: [
       "每周一个发音、一首歌和两本书",
       "二维码可打开歌曲和书籍",
     ],
-    navigation: "English for Anuban 2 to P2; the first unit launches on 30 November 2026",
+    navigation: "English for Anuban 2 to P2; the first unit is available now",
     home: "Primary Advantage、Reading Advantage 和 CodeCamp Advantage 已上线。Mastery Advantage 在 CodeCamp Advantage 中运行，并通过带标签的内容进入 Primary Advantage。Science、Math、Zhongwen 和 STEM Advantage 在路线图中，暂无日期。",
   },
 } as const;
@@ -81,12 +81,12 @@ export const LABEL_COPY = {
 export const OVERVIEW_LABEL_COPY = {
   en: {
     gradeRange: "English for Anuban 2 to P2",
-    description: "Storytime Advantage is an English app for Anuban 2 to P2, ages 4 to 8. Each week brings one sound, one song, and two books to a phone at home or a classroom screen. The app launches on 30 November 2026.",
+    description: "Storytime Advantage is an English app for Anuban 2 to P2, ages 4 to 8. Each week brings one sound, one song, and two books to a phone at home or a classroom screen. The app is available now.",
     ctaLabel: "Explore Storytime",
   },
   th: {
     gradeRange: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2",
-    description: "Storytime Advantage เป็นแอปภาษาอังกฤษสำหรับเด็กอนุบาล 2 ถึง ป.2 อายุ 4 ถึง 8 ปี แต่ละสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม บนโทรศัพท์ที่บ้านหรือจอในห้องเรียน แอปเปิดตัววันที่ 30 พฤศจิกายน 2569",
+    description: "Storytime Advantage เป็นแอปภาษาอังกฤษสำหรับเด็กอนุบาล 2 ถึง ป.2 อายุ 4 ถึง 8 ปี แต่ละสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม บนโทรศัพท์ที่บ้านหรือจอในห้องเรียน แอปเปิดให้ใช้งานแล้ว",
     ctaLabel: "สำรวจ Storytime",
   },
   zh: {
@@ -147,7 +147,7 @@ export interface ExpectedCopy {
  */
 export const PAGE_COPY: Readonly<Record<(typeof CONTAINER_IDS)[number], readonly ExpectedCopy[]>> = {
   "st-hero": [
-    { key: "hero.comingSoon", en: "Launches 30 November 2026", th: "เปิดตัววันที่ 30 พฤศจิกายน 2569" },
+    { key: "hero.comingSoon", en: "Available now", th: "เปิดให้ใช้งานแล้ว" },
     { key: "hero.title", en: "Stories, Songs, and First Sounds", th: "นิทาน เพลง และเสียงแรกของภาษาอังกฤษ" },
     { key: "hero.subtitle", en: "English for Anuban 2 to P2 (ages 4 to 8)", th: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 (อายุประมาณ 4 ถึง 8 ปี)" },
     { key: "hero.description", en: "A child taps a word and hears it. The class joins the song. Storytime Advantage brings one sound, one song, and two books to each week, on a phone at home and a screen in the classroom.", th: "เด็กคนหนึ่งแตะคำแล้วได้ยินเสียงอ่าน ทั้งชั้นร้องเพลงไปด้วยกัน Storytime Advantage นำหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มมาสู่ทุกสัปดาห์ บนโทรศัพท์ที่บ้านและจอในห้องเรียน" },
@@ -210,7 +210,7 @@ export const PAGE_COPY: Readonly<Record<(typeof CONTAINER_IDS)[number], readonly
   ],
   "st-cta": [
     { key: "cta.heading", en: "Interested in Storytime Advantage?", th: "สนใจ Storytime Advantage ไหม" },
-    { key: "cta.description", en: "The app launches on 30 November 2026. Ask us on LINE OA for the steps to join Storytime Advantage with your family or class.", th: "แอปเปิดตัววันที่ 30 พฤศจิกายน 2569 สอบถามขั้นตอนการเข้าร่วม Storytime Advantage สำหรับครอบครัวหรือชั้นเรียนของคุณได้ทาง LINE OA" },
+    { key: "cta.description", en: "The app is available now. Ask us on LINE OA for the steps to join Storytime Advantage with your family or class.", th: "แอปเปิดให้ใช้งานแล้ว สอบถามขั้นตอนการเข้าร่วม Storytime Advantage สำหรับครอบครัวหรือชั้นเรียนของคุณได้ทาง LINE OA" },
     { key: "cta.buttons.joinWaitlist", en: "Contact Us", th: "ติดต่อเรา", href: "/contact" },
     { key: "cta.buttons.learnMore", en: "Learn More", th: "ดูข้อมูลเพิ่มเติม", href: "/contact" },
   ],
