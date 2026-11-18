@@ -4350,7 +4350,8 @@ Scope note (Daniel, Tasks, 2026-11-16 07:34 ICT): "We are not doing Chinese supp
 - [b] 8.4 Teacher access (Q1): the sign-in for the teacher app and the teacher routes on the public service. deferred:pm
 - [b] 8.5 The Phonics, Speaking, and Writing skill values (S8) with the first evidence code, if the release-1 scope has evidence. deferred:pm
 - [b] 8.6 Internal release 1 on 2026-12-01: no public date, and the deploy on Daniel's go. deferred:daniel
+- [b] 8.7 After 2026-11-20: apps/storytime/__tests__/phase5-media-list.test.ts and phase5-adversarial.test.ts read measure/runs/storytime_app_rebuild_20261025/media-list-w01.md, which .gitignore:56 ignores. The tests pass only where that local file exists. Commit the needed list as a test fixture, or build it inside the test, so a clean checkout passes. PM decision 2026-11-18. deferred:pm
 
 ## Task count
 
-Estimated tasks: 55 (Phase 1: 6, Phase 2: 7, Phase 3: 12, Phase 4: 6, Phase 5: 7, Phase 6: 5, Phase 7: 6, Phase 8: 6).
+Estimated tasks: 56 (Phase 1: 6, Phase 2: 7, Phase 3: 12, Phase 4: 6, Phase 5: 7, Phase 6: 5, Phase 7: 6, Phase 8: 7).
