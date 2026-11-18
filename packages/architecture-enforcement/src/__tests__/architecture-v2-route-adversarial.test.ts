@@ -1135,10 +1135,10 @@ describe("pin refresh budget boundary (target 3)", () => {
   });
 
   it.each([
-    { label: "max_safe_integer", value: "9007199254740992", accepted: true },
+    { label: "max_safe_integer", value: "9007199254740991", accepted: true },
     {
       label: "one_above_max_safe_integer",
-      value: "9007199254740993",
+      value: "9007199254740992",
       accepted: false,
     },
   ])("budget_boundary_$label", ({ value, accepted }) => {
@@ -1149,7 +1149,7 @@ describe("pin refresh budget boundary (target 3)", () => {
       expect(
         parsed.budgetSeconds,
         `the largest safe whole number must be accepted: value=${value}`,
-      ).toBe(9_007_199_254_740_992);
+      ).toBe(9_007_199_254_740_991);
     } else {
       expect(
         parse,
