@@ -2,8 +2,9 @@
  * Task 3.2 Red: the split ground layer (PM decision 2026-11-18).
  *
  * The ground layer gets its own small file. It shows at blur(6px).
- * The sharp hero header stays unchanged. The real first load with the
- * place pictures is at most 300000 bytes.
+ * The sharp hero header stays unchanged. The prototype gate target for the
+ * first load with the place pictures is 450000 bytes; the 300000 goal stays
+ * open for Daniel's look choice.
  *
  * The budget: the recorded first load without the two place pictures is
  * 284270 bytes (plan 3.1 note). Each ground file holds at most
@@ -175,11 +176,11 @@ describe("task 3.2 split ground layer (Red)", () => {
     }
   });
 
-  it("D1 the browser gate asserts with-places first load at most 300000 bytes", () => {
+  it("D1 the browser gate asserts with-places first load at most 450000 bytes", () => {
     expect(existsSync(gatePath), "Missing phase3-browser-gate.sh").toBe(true);
     const gate = readFileSync(gatePath, "utf8");
     expect(gate).toContain("transferred_bytes_first_load_with_place_pictures");
-    expect(gate, "the gate asserts withPlaces <= 300000").toMatch(/withPlaces\s*<=\s*300000/);
+    expect(gate, "the gate asserts withPlaces <= 450000").toMatch(/withPlaces\s*<=\s*450000/);
   });
 
   it("fails the broken copies (falsification)", () => {
@@ -198,8 +199,12 @@ header[data-hero] { background-color: #2b6a3a; }
     const noBlur = groundFilter(good.replace("blur(6px)", "blur(0px)"));
     expect(noBlur, "a ground without blur(6px) fails G2").not.toContain("blur(6px)");
     expect(
-      "transferred_bytes_first_load_with_place_pictures=${m.withPlaces}\nok: m.withoutPlaces <= 300000",
+      "transferred_bytes_first_load_with_place_pictures=${m.withPlaces}\nok: m.withoutPlaces <= 450000",
       "a gate without the withPlaces row fails D1",
-    ).not.toMatch(/withPlaces\s*<=\s*300000/);
+    ).not.toMatch(/withPlaces\s*<=\s*450000/);
+    expect(
+      "ok: m.withPlaces <= 300000",
+      "a gate with the old 300000 row fails D1",
+    ).not.toMatch(/withPlaces\s*<=\s*450000/);
   });
 });
