@@ -267,6 +267,127 @@ function findPackageJsonFiles(root: string): string[] {
   return out;
 }
 
+/** The patch floor of the two moderate Next.js advisories of November 2026. */
+const NEXT_PATCH_FLOOR = "16.4.5";
+
+/** The two advisories that the 16.4.5 patch floor closes. */
+const NEXT_PATCH_ADVISORIES = ["GHSA-mfr8-8qww-v76h", "GHSA-vc7v-qv4w-wrv8"];
+
+/**
+ * Returns the lowest version that a declared range allows. Strips `^`, `~`,
+ * `>=` and a leading `=`. A range with a space keeps its first comparator.
+ */
+function declaredFloor(value: string): string {
+  const first = value.trim().split(/\s+/)[0] ?? "";
+  return first.replace(/^[\^~>=<]+/, "");
+}
+
+/**
+ * Evaluates the Next.js patch floor against the app manifests and the locked
+ * `next` entries. An empty input set fails (A4). Each failure names the file
+ * or the lockfile entry.
+ */
+function evaluateNextPatchFloor(
+  manifests: Array<{ file: string; declared: string | undefined }>,
+  lockedNext: string[],
+): string[] {
+  const failures: string[] = [];
+  if (manifests.length === 0) failures.push("apps=0 apps declare next (A4)");
+  if (lockedNext.length === 0) failures.push("lockfile=0 next entries (A4)");
+  for (const m of manifests) {
+    const floor = declaredFloor(m.declared ?? "");
+    if (floor === "" || compareVersions(floor, NEXT_PATCH_FLOOR) < 0) {
+      failures.push(
+        `manifest=${m.file} declared=${m.declared ?? "missing"} floor=${NEXT_PATCH_FLOOR}`,
+      );
+    }
+  }
+  for (const v of lockedNext) {
+    if (compareVersions(v, NEXT_PATCH_FLOOR) < 0) {
+      failures.push(`lockfile=next locked=${v} floor=${NEXT_PATCH_FLOOR}`);
+    }
+  }
+  return failures;
+}
+
+/**
+ * Reads every `apps/<name>/package.json` that declares `next`. The caller
+ * asserts the set is non-empty (A4).
+ */
+function readAppNextDeclarations(): Array<{ file: string; declared: string | undefined }> {
+  const appsDir = resolve(ROOT, "apps");
+  const out: Array<{ file: string; declared: string | undefined }> = [];
+  for (const name of readdirSync(appsDir)) {
+    const file = join(appsDir, name, "package.json");
+    let pkg: Record<string, unknown>;
+    try {
+      pkg = JSON.parse(readFileSync(file, "utf8")) as Record<string, unknown>;
+    } catch {
+      continue;
+    }
+    const deps = (pkg.dependencies ?? {}) as Record<string, string>;
+    const devDeps = (pkg.devDependencies ?? {}) as Record<string, string>;
+    const declared = deps.next ?? devDeps.next;
+    if (declared !== undefined) out.push({ file: relative(ROOT, file), declared });
+  }
+  return out;
+}
+
+describe("next 16.4.5 patch floor", () => {
+  it("fails a manifest at 16.4.4 and passes 16.4.5", () => {
+    expect(
+      evaluateNextPatchFloor([{ file: "apps/a/package.json", declared: "16.4.4" }], ["16.4.5"]),
+    ).not.toEqual([]);
+    expect(
+      evaluateNextPatchFloor([{ file: "apps/a/package.json", declared: "16.4.5" }], ["16.4.5"]),
+    ).toEqual([]);
+  });
+
+  it("fails a caret range whose floor sits below 16.4.5", () => {
+    const failures = evaluateNextPatchFloor(
+      [{ file: "apps/a/package.json", declared: "^16.4.4" }],
+      ["16.4.6"],
+    ).join("\n");
+    expect(failures).toContain("declared=^16.4.4");
+    expect(failures).toContain("floor=16.4.5");
+  });
+
+  it("an empty app set fails (A4)", () => {
+    const failures = evaluateNextPatchFloor([], ["16.4.5"]).join("\n");
+    expect(failures).toContain("apps=0");
+  });
+
+  it("an empty lockfile set fails (A4)", () => {
+    const failures = evaluateNextPatchFloor(
+      [{ file: "apps/a/package.json", declared: "16.4.5" }],
+      [],
+    ).join("\n");
+    expect(failures).toContain("lockfile=0");
+  });
+
+  it("fails a 16.4.4 lockfile entry and passes 16.4.6", () => {
+    expect(
+      evaluateNextPatchFloor([{ file: "apps/a/package.json", declared: "16.4.6" }], ["16.4.4"]),
+    ).not.toEqual([]);
+    expect(
+      evaluateNextPatchFloor([{ file: "apps/a/package.json", declared: "16.4.6" }], ["16.4.6"]),
+    ).toEqual([]);
+  });
+
+  it(`every app and the lockfile resolve next at 16.4.5 or later (${NEXT_PATCH_ADVISORIES.join(", ")})`, () => {
+    const manifests = readAppNextDeclarations();
+    const lockfile = readFileSync(resolve(ROOT, "pnpm-lock.yaml"), "utf8");
+    const locked = parseLockedVersions(extractPackagesSection(lockfile));
+    const lockedNext = locked.get("next") ?? [];
+    const failures = evaluateNextPatchFloor(manifests, lockedNext);
+    if (failures.length > 0) {
+      throw new Error(
+        `next patch floor failures (${failures.length}):\n${failures.join("\n")}`,
+      );
+    }
+  });
+});
+
 describe("refutation fixtures", () => {
   const nextEntry: GuardEntry = {
     advisoryIds: ["GHSA-673q-mjm6-r5xr", "GHSA-2464-fhr4-w9xw", "GHSA-p3m5-59mp-jv5r"],

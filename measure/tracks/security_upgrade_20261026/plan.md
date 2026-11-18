@@ -242,6 +242,24 @@
 
 The merge into the local `master` happens after the Phase 1 and Phase 2 checks pass. The reviews must find no open critical or high defect. The merge stops and reports to Daniel when a check fails.
 
+## Phase 4: Next.js 16.4.6 patch (after 2026-11-20)
+
+PM decision (2026-11-18): the pinned `next` 16.4.1 is inside the range of two moderate advisories. The latest 16.4 patch is 16.4.6 (`npm view next@16.4 version`). The upgrade lands after 2026-11-20. No deploy happens without Daniel's word. The branch is `security/next-16-4-6`; its base is `837755eaa`.
+
+| Advisory | Vulnerable range | Effect |
+|---|---|---|
+| GHSA-mfr8-8qww-v76h | `>=16.3.0 <=16.4.4` | Information disclosure across root params with `use cache` and `unstable_cache`. |
+| GHSA-vc7v-qv4w-wrv8 | `>=16.2.0 <=16.4.4` | Cache leak in nested `use cache`. |
+
+Reachability finding (2026-11-18): no file in `apps/` or `packages/` uses `use cache` or `unstable_cache`. A grep returns no hit. The two advisories are not reachable through tracked source. The version 16.4.5 is the first fixed patch.
+
+- [x] 4.1 Red: the version guard requires next >= 16.4.5 in every app and in `pnpm-lock.yaml` (both advisories fixed). Test: AC-8.
+
+  Evidence — Red run, exit_code=1. Command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-version-guard.test.ts'`. phase_base_sha=837755eaa; role_base_sha=837755eaa. Result: 2 failed, 34 passed. The new test `next 16.4.5 patch floor > every app and the lockfile resolve next at 16.4.5 or later` fails on 11 app manifests (each declares `16.4.1`) and one lockfile entry (`next@16.4.1`). The second failure is the pre-existing `image-size` 2. floor. This is not a pass.
+- [ ] 4.2 Green: bump next (and eslint-config-next / @next/* that pin with it) to 16.4.6 in every package.json that pins 16.4.1; pnpm install; lockfile; the first build prints no SecurityFatalError. Test: AC-8.
+- [ ] 4.3 Phase check: affected app builds and test suites through heavy-run; no merge before 2026-11-20 and no deploy without Daniel's word. Test: AC-8.
+- [ ] 4.4 Fix the 5 red test files of this track. The five files are `tests/security-upgrade-adversarial.test.ts`, `tests/security-upgrade-p2-adversarial.test.ts`, `tests/security-upgrade-redeploy-list.test.ts`, `tests/security-upgrade-verification-ledger.test.ts` and `tests/security-upgrade-version-guard.test.ts`. The closeout run of 2026-11-18 found 8 failed and 176 passed. A rerun at `837755eaa` gives 8 failed and 181 passed; the extra 5 passes are the new Phase 4 tests. Four files are red: the version guard fails on the `image-size` 2. floor (the package key is absent from the lockfile), the ledger test fails on row drift, and the two adversarial tests fail on real-ledger and real-lockfile checks. `security-upgrade-redeploy-list.test.ts` passes. Test: AC-8.
+
 ## Out of scope
 
 - Push, deploy, Cloud Build job, `gcloud` command.
