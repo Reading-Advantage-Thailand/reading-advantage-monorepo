@@ -199,14 +199,16 @@ export function calculateNetwork(input: NetworkInput): NetworkResult {
 }
 
 /**
- * Names the state a result shows (spec 5.2 item 5, D-18).
+ * Names the state a result shows (spec 5.2 item 5, D-18, D-6).
  * @param result The calculator result.
- * @returns "zero" for no volume or for legs without own students, "ownOnly" for no leg
- * payouts, else "withLegs".
+ * @returns "zero" for no network volume, "needsOwnStudents" for legs without own students,
+ * "ownOnly" for no leg payouts, else "withLegs".
  */
-export function explainVariant(result: NetworkResult): "zero" | "ownOnly" | "withLegs" {
+export function explainVariant(
+  result: NetworkResult,
+): "zero" | "needsOwnStudents" | "ownOnly" | "withLegs" {
   if (result.networkVolume === 0) return "zero";
-  if (result.ownVolume === 0 && result.legs.length >= 1) return "zero";
+  if (result.ownVolume === 0 && result.legs.length >= 1) return "needsOwnStudents";
   if (result.legPayouts === 0) return "ownOnly";
   return "withLegs";
 }
