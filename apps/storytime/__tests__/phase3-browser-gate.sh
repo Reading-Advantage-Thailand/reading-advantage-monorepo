@@ -733,6 +733,15 @@ try {
       value: measure,
     };
   });
+  const firstLoadWithPlaces = await runCheck('AC-5.3 first load with the place pictures is at most 300000 bytes (task 3.2 prototype)', async () => {
+    if (!firstLoad) throw new Error('The first-load measure is unavailable');
+    console.log(`transferred_bytes_first_load_with_place_pictures=${firstLoad.withPlaces}`);
+    return {
+      ok: firstLoad.withPlaces <= 300000,
+      detail: `transferred_bytes_first_load_with_place_pictures=${firstLoad.withPlaces} (first load with the two place pictures)`,
+      value: firstLoad.withPlaces,
+    };
+  });
   await runCheck('AC-5.3 place pictures excluded: exactly two (meadow-p, path-p)', async () => {
     if (!firstLoad) throw new Error('The first-load measure is unavailable');
     console.log(`place_pictures_excluded=${firstLoad.placeCount} (${firstLoad.placePaths.join(', ')})`);
