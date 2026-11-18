@@ -1068,6 +1068,8 @@ describe("D mutants: the day rows kill a weakened copy", () => {
   it("M-D1 a mutant contract that allows a day of 6 is killed by D2", async () => {
     const mutant = writeMutant(resolve(app, "lib/contracts/week.ts"), "week.m1.ts", [
       ['from "../loops"', 'from "../lib/loops"'],
+      ['import { LEVEL_MAX, WEEK_MAX } from "./limits";', 'import { LEVEL_MAX, WEEK_MAX } from "../lib/contracts/limits";'],
+      ['export { LEVEL_MAX, WEEK_MAX } from "./limits";', 'export { LEVEL_MAX, WEEK_MAX } from "../lib/contracts/limits";'],
     ]);
     // The day anchor sits twice in the source (the lesson day and the review deck day); widen both.
     const widened = readFileSync(mutant, "utf8")

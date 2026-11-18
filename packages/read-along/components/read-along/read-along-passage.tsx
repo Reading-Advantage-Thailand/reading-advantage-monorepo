@@ -7,7 +7,8 @@ import {
   splitPassageIntoSentences,
   TARGET_PARAGRAPH_COUNT,
 } from "../../lib/paragraph";
-import { buildWordMaps, splitDisplayWords, type ReadAlongSentence, type WordMaps, type DisplaySentence } from "../../lib/align";
+import { buildWordMaps, splitDisplayWords, type WordMaps, type DisplaySentence } from "../../lib/align-words";
+import type { ReadAlongSentence } from "../../lib/align";
 import type { ReadAlongPosition } from "../../lib/position";
 import { cn } from "../../lib/cn";
 

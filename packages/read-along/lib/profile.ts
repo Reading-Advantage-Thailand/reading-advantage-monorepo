@@ -11,7 +11,7 @@ export interface ProfileSentence {
   words: { word: string; start: number; end: number }[];
 }
 
-import { tokenizeWords } from "./align";
+import { tokenizeWords } from "./align-words";
 
 /** The tags that mark a sentence shape the alignment must handle. */
 export type ProfileTag =

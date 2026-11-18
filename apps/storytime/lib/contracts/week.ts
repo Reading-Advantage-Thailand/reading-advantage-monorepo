@@ -19,6 +19,7 @@
  */
 import { z } from "zod";
 import { loopsApproved, STORYTIME_LOOPS_PART } from "../loops";
+import { LEVEL_MAX, WEEK_MAX } from "./limits";
 
 export { loopsApproved, STORYTIME_LOOPS_PART };
 
@@ -723,11 +724,9 @@ export const tagsSchema = z
   .passthrough()
   .default({ graphVersion: "", taught: [], reviewed: [] });
 
-/** The highest level of the week contract (finding F131). */
-export const LEVEL_MAX = 4;
-
-/** The highest week number of the week contract (finding F131). */
-export const WEEK_MAX = 32;
+/** The bounds live apart from the schema, so a browser module reads them without the schema
+ * library (plan task 3.1, AC-5.3). The contract keeps the same two numbers. */
+export { LEVEL_MAX, WEEK_MAX } from "./limits";
 
 /** The week header, with its level, its week number, and its publication status. */
 export const metaSchema = z
