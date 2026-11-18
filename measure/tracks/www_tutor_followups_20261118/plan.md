@@ -290,7 +290,7 @@ items as failing tests.
 
 ## Phase 3: gates, push, and live checks
 
-- [~] 3.1 Full suite: run the whole www suite with one worker. Test: AC-9.
+- [x] 3.1 Full suite: run the whole www suite with one worker. Test: AC-9. `5e5990b42`
 
   Command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
   www-reading-advantage exec vitest run --maxWorkers=1'`.
@@ -298,12 +298,9 @@ items as failing tests.
   Pass: exit 0. Record the file count and the test count in the task. Save the log as
   `green-3.1-<short sha>.log`.
 
-  Blocked on 2026-11-18 at `ad055b9e2`: the suite exits 1. Two committed test files still hold the
-  old contract. `src/__tests__/products-page-pictures.red.test.tsx:69` rejects every
-  `productPictures` src that matches `/2026-11-06/`, and it now catches the spec-mandated
-  `/images/tutor-advantage-hero-2026-11-06.webp`. `tutor-commission-calculator.legs.adversarial
-  .test.tsx` holds the old three-state explain list at line 161 and the old `zero` state at lines
-  609 and 618. The counts sit in `green-3.1-ad055b9e2.log`.
+  Done: 2026-11-18 at `5e5990b42`. The suite exits 0 on the first run. The two stale tests failed
+  at `ad055b9e2` and Red repaired them at `5e5990b42`. The counts sit in
+  `green-3.1-5e5990b42.log`.
 
 - [b] 3.2 Gate: the PM page check. Test: AC-10.
 
