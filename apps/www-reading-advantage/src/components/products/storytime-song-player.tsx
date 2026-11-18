@@ -64,7 +64,7 @@ export function StorytimeSongPlayer({ playLabel, playerTitle }: StorytimeSongPla
           <button
             type="button"
             onClick={play}
-            className="absolute inset-0 flex flex-col items-center justify-end gap-2 bg-site-navy/40 pb-2 text-white transition-colors hover:bg-site-navy/60 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-amber-400"
+            className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center text-white transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-amber-400"
           >
             <span data-testid="song-player-control" className="flex items-center gap-3">
               <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-site-navy shadow-lg">
