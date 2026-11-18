@@ -1,0 +1,137 @@
+# Green · P1 acceptance pin refresh · architecture_ci_input_pin_20261110
+
+Status: complete.
+
+- Session: Green · P1 pin refresh · architecture_ci_input_pin · r4
+- Model: opencode-go/deepseek-v4.1-flash (DeepSeek V4.1 Flash 1017)
+- Red family of this phase: hy and MiniMax. No coder subagent ran, so no code came from the
+  Red model family.
+- Repository: /home/daniebo/Desktop/reading-advantage-monorepo, branch master
+- baseline_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+- role_base_sha: 00dfbea9acfb3cdfe73b1cb6e04051c78dc90a9c
+- Pre-edit `git status --short`: three modified `next-env.d.ts` files and one prior run log
+  (`green-rem-9619b9548.log`). The three `next-env.d.ts` files were not touched. The prior
+  run log joined the plan-evidence commit of this round.
+- The committed Red change sits inside `phase_base_sha..HEAD`. The two test-only commits
+  `3c4a15581` and `00dfbea9a` are the last commits before the role base, and both are
+  descendants of `09168dc42`.
+
+## Routed finding
+
+- P1 = phase acceptance B1: the last pin refresh `965079f05` predates the two test-only
+  commits `3c4a15581` and `00dfbea9a`. Those commits changed the bytes of a tracked
+  analyzer input, so `analyzerInputSnapshotSha256` was stale at `00dfbea9a`.
+
+## Step 1: the failing gate before any edit
+
+Command in the clean copy `/home/daniebo/.cache/arch-gate-4/reading-advantage-monorepo` at
+`00dfbea9a`, through heavy-run p2:
+
+`pnpm architecture:check --policy v2`
+
+- exit 1. The output line reads "Architecture check failed: V2 reconciliation manifest is
+  invalid: Analyzer input snapshot hash does not match current bytes". The tsx child exits 2
+  and pnpm maps it to exit 1. No other manifest error line printed, so the stale input pin
+  is the only manifest error at that HEAD.
+
+## Step 2: the refresh run
+
+Command in the same clean copy at `00dfbea9a`, through heavy-run p2 with
+`HEAVY_RUN_TIMEOUT_S=1800`:
+
+`pnpm architecture:pin:refresh --acknowledge --budget-s 1500`
+
+- exit 0 in one run, so the series ended. The lock wait printed a p2 banner line only.
+- `modules_total=7013`. Pass 1 ended at `elapsed_s=18`. Pass 2 ended at `elapsed_s=33`.
+  `step=combine` and `step=input_snapshot` at `elapsed_s=33`, `step=trees` at
+  `elapsed_s=34`, `step=validate` at `elapsed_s=34`, then `written`.
+- No `checkpoint=discarded` line printed. The store was deleted after the write.
+- `git status --short` in the clean copy held one path:
+  `packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json`.
+
+The two moved fields:
+
+- `analyzerInputSnapshotSha256`: `05a33da6b8be185e5bb8372f29c2e0d983c33e4a1aa08b8b4439b25dbeb2bf0f`
+  to `36da45b86aa06c201ee7d57c7b80d662be9abcb41c1c744f074c8aba25b812be`.
+- `reviewSubjectSha256`: `69a58fa058bcb48baf98b7982425f319e3915682bfb3c0437b25ca4c5d36eb61`
+  to `a78a4291edd5cfd5b2ad39cd0889d16ba20054762cdd97550d05e5a110bb6fc8`.
+
+The unchanged fields: `analyzerImplementationTreeSha256` stays
+`cb9c1431848cd13467d3e56aac09c958a31599eb186f8c0de6904113520fc91f`.
+`implementationAndTestTreeSha256` stays
+`cfec934043ca48886c5f7faa085baa1ffee5f0ac7d19951f80ec930484d499cb`. Both `reportSha256s`
+entries stay `a995b4f3bc7602adc2cc1d5fad847370e5fb4d7b15a95ca2e97c9114ad3ca6ff`.
+`git diff --stat` reads `manifest_paths=1`, 2 insertions, and 2 deletions. This is the
+round-10 shape.
+
+## Step 3: implementation commit
+
+Only that manifest file entered the commit in the main checkout:
+
+- `dcf77dba54b3785d4f66ab87ece17c53206a298b`
+  `chore(architecture): refresh the v2 manifest pins (track_id: architecture_ci_input_pin_20261110)`
+  Path: `packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json`, 2
+  insertions and 2 deletions.
+
+## Step 4: verification in a clean copy at the new HEAD
+
+- Worktree: `git worktree add --detach /home/daniebo/.cache/arch-gate-4/pin-r4/reading-advantage-monorepo dcf77dba5`.
+  The folder name ends with `reading-advantage-monorepo`. The worktree is detached at
+  `dcf77dba54b3785d4f66ab87ece17c53206a298b` with a clean status.
+- `pnpm install --frozen-lockfile --offline` exits 0 in 2.8 s (`added 2112`). No store
+  override was needed.
+- `pnpm turbo run build --filter=@reading-advantage/backend --filter=@reading-advantage/knowledge-space-core`
+  through heavy-run p2 exits 0 with `build_tasks=6`, `build_cached=6`.
+  `packages/backend/dist` and `packages/knowledge-space-core/dist` exist after the build.
+
+| Gate | Command | Exit | Counts |
+| --- | --- | --- | --- |
+| install | `pnpm install --frozen-lockfile --offline` | 0 | done in 2.8 s |
+| build | `pnpm turbo run build --filter=@reading-advantage/backend --filter=@reading-advantage/knowledge-space-core` | 0 | `build_tasks=6`, `build_cached=6` |
+| v2 check | `pnpm architecture:check --policy v2` | 0 | `files=7013`, `findings=800`, `parse_errors=0`, `additions=0`, `removals=0`, `renames=0` |
+| v2 check, skip pin | `pnpm architecture:check --policy v2 --skip-input-snapshot-pin` | 0 | `files=7013`, `findings=800`, `parse_errors=0`, `additions=0`, `removals=0`, `renames=0` |
+| pin test | `CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts --maxWorkers=1` | 0 | `pin_test_files=1`, `tests_total=20`, `tests_failed=0`, `tests_passed=20` |
+
+- Both checks print `architecture policy: v2 (status=candidate, default=v1)` and
+  `architecture debt: clean (additions=0, removals=0, renames=0)`. No line names the input
+  snapshot error.
+- Heavy jobs ran one at a time through heavy-run p2 with `HEAVY_RUN_TIMEOUT_S=1800
+  HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600`. The pin test ran outside heavy-run,
+  as the strategy names that file.
+- The worktree was removed with `git worktree remove --force` and `git worktree prune` after
+  the evidence copy. `/home/daniebo/.cache/arch-gate-4/reading-advantage-monorepo` stays.
+
+## Step 5: plan evidence
+
+- `measure/tracks/architecture_ci_input_pin_20261110/plan.md` holds a new sub-block "Phase 1
+  acceptance pin refresh (2026-11-19)" under task 1.5. It names the Red state, the refresh
+  run, the two moved fields, the manifest commit, and the gate exit codes. No task marker
+  moved.
+- `measure/runs/architecture_ci_input_pin_20261110/green-rem-9619b9548.log` carries the
+  dispositions-line fix of the earlier Green round.
+- This log is part of the same plan-evidence commit
+  `docs(measure): record the acceptance pin refresh (track_id: architecture_ci_input_pin_20261110)`.
+  A `measure/` change is not an analyzer input, so the two pins stay valid at that HEAD.
+
+## Handoff notes
+
+- Tasks flipped to `[x]`: none. Every Phase 1 task was already `[x]`; this round fixes the
+  phase gate only.
+- Tasks flipped to `[b]`: none.
+- New files added: this log only. No source file, no test file, no new manifest field.
+- The three dirty `next-env.d.ts` files of the main checkout were never edited.
+- No push. No archive change. No `measure/tracks.md`, `metadata.json`, or closeout change.
+- No committed Red test was edited. This round changed one manifest and `measure/` files.
+
+MEASURE_AGENT_RESULT
+phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+role_base_sha: 00dfbea9acfb3cdfe73b1cb6e04051c78dc90a9c
+baseline_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+resulting_HEAD: dcf77dba54b3785d4f66ab87ece17c53206a298b
+commits: dcf77dba54b3785d4f66ab87ece17c53206a298b
+exit_codes: red_policy_v2_at_00dfbea9a=1; pin_refresh=0; install=0; build=0; check_policy_v2=0; check_skip_pin_v2=0; pin_test=0
+moved_fields: analyzerInputSnapshotSha256=05a33da6b8be185e5bb8372f29c2e0d983c33e4a1aa08b8b4439b25dbeb2bf0f->36da45b86aa06c201ee7d57c7b80d662be9abcb41c1c744f074c8aba25b812be; reviewSubjectSha256=69a58fa058bcb48baf98b7982425f319e3915682bfb3c0437b25ca4c5d36eb61->a78a4291edd5cfd5b2ad39cd0889d16ba20054762cdd97550d05e5a110bb6fc8; unchanged=analyzerImplementationTreeSha256,implementationAndTestTreeSha256,reportSha256s
+counts: files=7013; findings=800; parse_errors=0; additions=0; removals=0; renames=0; tests_total=20; tests_failed=0; tests_passed=20
+dispositions: P1=FIX
+disposition_map: P1=phase acceptance B1 stale input pin
+END_MEASURE_AGENT_RESULT
