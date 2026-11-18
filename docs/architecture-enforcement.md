@@ -51,8 +51,10 @@ pnpm architecture:reconcile --policy v2 --owner <owner-id> --rationale "<reason>
   --acknowledge --expected-plan-hash <plan-hash>
 ```
 
-The owner id holds a lower-case identifier, such as `monorepo-architecture`.
-The rationale states why the new entries are accepted. The acknowledged run
+The accepted manifest binds an owner id that matches `[a-z][a-z0-9-]{0,63}`,
+such as `monorepo-architecture`. The acknowledged run enforces that pattern
+when it validates the committed manifest; the preview accepts any `--owner`
+value. The rationale states why the new entries are accepted. The acknowledged run
 needs the plan hash of the reviewed preview. A staged baseline delta needs
 review evidence, so a candidate manifest without a review record cannot write.
 
