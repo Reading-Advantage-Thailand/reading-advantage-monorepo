@@ -32,6 +32,8 @@ function read(locale: "en" | "th" | "zh", path: string): string | undefined {
  * Places 1, 4, 33, 34 of list line 50 (row 2026-11-16, LAUNCH) and
  * places 5, 6, 7, 8 of list line 60 (row 2026-10-27, release-state copy).
  * Row 50 wins where it gives a LAUNCH line; print lines are not taken.
+ * Place 2 of list line 51 (row 2026-11-16 home roadmap, roadmapNote LAUNCH)
+ * is pinned at the bottom; zh keeps its Chinese line.
  */
 const LAUNCH = [
   {
@@ -127,7 +129,15 @@ describe("www batch 2026-11-30, storytime launch day", () => {
     expect(storytime?.description).toBe(read("en", "components.common.navigation.itemsDescription.storytimeAdvantage"));
   });
 
-  it("leaves the home roadmap note untouched", () => {
-    expect(read("en", "pages.home.v2.products.roadmapNote")).toBe("These product lines are planned.");
+  it("holds the launch roadmap note in en and th, zh keeps its Chinese line", () => {
+    expect(read("en", "pages.home.v2.products.roadmapNote")).toBe(
+      "In the 2027 school year, Thai primary schools open Science, Math, and Zhongwen Advantage: workbooks and apps.",
+    );
+    expect(read("th", "pages.home.v2.products.roadmapNote")).toBe(
+      "ในปีการศึกษา 2570 โรงเรียนประถมศึกษาไทยจะเปิดใช้ Science Advantage, Math Advantage และ Zhongwen Advantage ทั้งหนังสือแบบฝึกหัดและแอป",
+    );
+    expect(read("en", "pages.home.v2.products.roadmapNote")).not.toContain("These product lines are planned.");
+    expect(read("th", "pages.home.v2.products.roadmapNote")).not.toContain("สายผลิตภัณฑ์เหล่านี้อยู่ในแผน");
+    expect(read("zh", "pages.home.v2.products.roadmapNote")).toBe("这些产品线在计划中，我们不给出日期。");
   });
 });

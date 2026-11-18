@@ -189,12 +189,13 @@ describe("www batch 2026-11-16, row B", () => {
 
 /**
  * PM decision 2026-11-16: the home roadmap note keeps the plan sentence and drops the
- * no-dates sentence. These product lines are planned.
+ * no-dates sentence. SUPERSEDED by the launch batch (list line 51, place 2):
+ * the launch copy below pins the LAUNCH roadmap note.
  */
 const ROADMAP_NOTE = {
   key: "pages.home.v2.products.roadmapNote",
-  en: "These product lines are planned.",
-  th: "สายผลิตภัณฑ์เหล่านี้อยู่ในแผน",
+  en: "In the 2027 school year, Thai primary schools open Science, Math, and Zhongwen Advantage: workbooks and apps.",
+  th: "ในปีการศึกษา 2570 โรงเรียนประถมศึกษาไทยจะเปิดใช้ Science Advantage, Math Advantage และ Zhongwen Advantage ทั้งหนังสือแบบฝึกหัดและแอป",
   removed: { en: "We give no dates.", th: "เรายังไม่กำหนดวันที่" },
 } as const;
 
