@@ -1,0 +1,154 @@
+# Green remediation (Phase 1 reviews) — FINAL
+
+Phase 1 remediation after the reviews at `9619b9548`.
+
+- `phase_base_sha=09168dc422ed48604b8f2f0cb9a23ad4d110543b` resolves.
+- `role_base_sha=9619b95482833feae716bbe4182cbc8172787134` resolves.
+- Review A passed. Review C passed. Review B failed with F1.
+- Default taken (PM primary directive 2026-11-18): restore a review-artifact
+  gate. No question tool was used. Every default below was taken and recorded.
+- The Red family of this phase is `opencode-go/hy4-flash-free`. This role ran
+  on `minimax-cn-coding-plan/MiniMax-M3.1-Flash`.
+
+## The commits
+
+| Commit | Subject | Paths |
+| --- | --- | --- |
+| `a510c94920481b911efcfc7f01a3546277e37f73` | `fix(architecture): gate unreviewed delta writes` | `architecture-reconciliation.ts`, `architecture-review-gate.test.ts` |
+| `e52cefc5316edb89fb60b6e14ec391420940918f` | `fix(architecture): name the invalid budget value` | `architecture-pin-refresh-cli.ts`, `architecture-pin-refresh-budget.test.ts` |
+| `6061bed6655f51fb252c9b96bc09b3866effafef` | `test(architecture): assert the staged delta sizes` | `reconciliation-manifest-v2.red.test.ts` |
+| `ce87ce505b20d882acdb1dfb86a4c365602a7d0c` | `docs(architecture): name the ci policy and reconcile` | `docs/architecture-enforcement.md`, `measure/tracks.md` |
+| `619aef7530baad0a028666c55e2f1ef9057fc733` | `chore(architecture): refresh the v2 manifest pins` | `analyzer-reconciliation.v2.json` |
+
+## B F1: the review-artifact gate
+
+The write path in `applyArchitectureReconciliation` now calls
+`assertReviewedStagedDelta` before the write-set guard. The gate reads the
+staged manifest from the preview transaction plan. It refuses the write when
+the staged manifest stages a non-empty baseline delta, holds no review record,
+and its status is not `accepted`. An accepted manifest passes. A write that
+stages no delta passes.
+
+The new file `packages/architecture-enforcement/src/__tests__/architecture-review-gate.test.ts`
+holds four cases. The first case proves that an unreviewed candidate write
+with a staged delta is refused. The second case proves that a reviewed
+candidate write passes. The third case proves that an accepted manifest
+passes. The fourth case proves that a candidate write without a delta passes.
+
+### The review record was not added
+
+The orchestrator asked for a review entry in the committed v2 manifest that
+cites the review artifacts of this phase. The v2 schema cannot hold that
+entry. Two rules block it:
+
+- `packages/architecture-enforcement/src/v2-manifest-validation.ts:631` requires
+  `evidencePath` to equal `REVIEW_EVIDENCE_PATHS[index]`, which names the
+  review folder of another track. That folder holds no files today.
+- `packages/architecture-enforcement/src/v2-manifest-validation.ts:656-658`
+  requires the evidence file to bind `baselineAdditions`, `baselineRemovals`,
+  and `baselineRenames` as empty arrays. The staged delta holds 255 additions,
+  15 removals, and 162 renames, so such evidence would state a falsehood.
+
+Both rules belong to the deferred follow-up of Review B F2. Green did not
+write a review record and did not change the schema.
+
+The committed manifest stays valid. The gate is a write-path control. The
+validator did not change. The check under policy v2 exits 0 with
+`additions=0`, `removals=0`, and `renames=0`.
+
+The gate refuses every later v2 reconcile write while the committed manifest
+holds a non-empty delta and no review record. The follow-up must land before
+that route can write again.
+
+## B F2: the deferred follow-up
+
+`measure/tech-debt.md` holds 50 lines. The cap of the file is 50 lines, and
+`packages/auth/src/__tests__/phase-7-closeout.test.ts` checks the cap. The
+file sits at its cap, so the follow-up note stays in the plan of this track.
+
+## B F3, C N1, C N4: the documentation
+
+- `measure/tracks.md:80` names `pnpm architecture:check --skip-input-snapshot-pin --policy v2`.
+- `docs/architecture-enforcement.md` names the CI command of the workflow.
+- `docs/architecture-enforcement.md` holds a new `architecture:reconcile`
+  section. It names the preview, the acknowledged run with
+  `--acknowledge --expected-plan-hash`, the `--owner` flag, the `--rationale`
+  flag, and the lower-case owner id.
+
+## C N2: the budget value message
+
+The `--budget-s` flag is supported. An invalid value now names the value and
+the rule. The message is `--budget-s must be a positive whole number of
+seconds: <value>`. A missing value names the missing value. An unknown flag
+keeps the unsupported argument message.
+
+The new file `packages/architecture-enforcement/src/__tests__/architecture-pin-refresh-budget.test.ts`
+holds four cases.
+
+## A N1: the staged delta sizes
+
+`packages/architecture-enforcement/src/__tests__/reconciliation-manifest-v2.red.test.ts`
+asserts that the staged removals and renames hold records, not only that they
+are arrays. The committed manifest holds `baseline_removals=15` and
+`baseline_renames=162`.
+
+## The pin refresh
+
+The remediation code changed one analyzer input and added two test files. The
+refresh ran in the main checkout through heavy-run p2 and exited 0 in one run.
+`modules_total=7012`. It moved the input snapshot, the implementation and test
+tree, and the report hash. The analyzer implementation tree stayed. The staged
+delta and the 15-key set stayed.
+
+## The verification
+
+The verification ran in a detached worktree at
+`/home/daniebo/.cache/greenrem/reading-advantage-monorepo`. The folder name
+ends with `reading-advantage-monorepo`, because the case at
+`architecture-reconciliation-cli.test.ts:225` asserts that name. A worktree
+with another name fails that case, and the failure is environmental. The
+package suite holds `suite_files=37` and `suite_tests=340` with no failure.
+
+`pnpm install --frozen-lockfile --offline --config.manage-package-manager-versions=false`
+exits 0. Every command ran one at a time through heavy-run p2.
+
+| Command | Exit | Output lines |
+| --- | --- | --- |
+| build (backend, knowledge-space-core) | `build=0` | `output_lines=32` |
+| targeted tests (5 files) | `targeted_tests=0` | `output_lines=9` |
+| package suite | `package_test=0` | `output_lines=38` |
+| `pnpm --filter @reading-advantage/architecture-enforcement check-types` | `check_types=0` | `output_lines=1` |
+| `pnpm --filter @reading-advantage/architecture-enforcement lint` | `lint=0` | `output_lines=8` |
+| `pnpm architecture:check --policy v2 --skip-input-snapshot-pin` | `check_skip_pin_v2=0` | `output_lines=4` |
+| `pnpm architecture:check --policy v2` | `check_policy_v2=0` | `output_lines=4` |
+
+The targeted run holds `targeted_files=5`, `targeted_tests=44`, and
+`tests_failed=0`. The suite holds `suite_files=37`, `suite_tests=340`, and
+`tests_failed=0`. The lint run holds `lint_errors=0` and `lint_warnings=1`.
+The one warning is the pre-existing `prefer-const` warning in the Red test
+file `architecture-pin-refresh-resume.test.ts`.
+
+Both checks report `clean (files=7012, findings=800, parseErrors=0)` and
+`architecture debt: clean (additions=0, removals=0, renames=0)`.
+
+The worktree was removed after the evidence was copied back. The three dirty
+`next-env.d.ts` files stayed untouched. No push.
+
+MEASURE_AGENT_RESULT
+status: pass
+track: architecture_ci_input_pin_20261110
+phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+task: phase 1 remediation after the reviews
+role: green
+role_base_sha: 9619b95482833feae716bbe4182cbc8172787134
+baseline_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+resulting_HEAD: 619aef7530baad0a028666c55e2f1ef9057fc733
+commits: ["a510c94920481b911efcfc7f01a3546277e37f73 fix(architecture): gate unreviewed delta writes (track_id: architecture_ci_input_pin_20261110)", "e52cefc5316edb89fb60b6e14ec391420940918f fix(architecture): name the invalid budget value (track_id: architecture_ci_input_pin_20261110)", "6061bed6655f51fb252c9b96bc09b3866effafef test(architecture): assert the staged delta sizes (track_id: architecture_ci_input_pin_20261110)", "ce87ce505b20d882acdb1dfb86a4c365602a7d0c docs(architecture): name the ci policy and reconcile (track_id: architecture_ci_input_pin_20261110)", "619aef7530baad0a028666c55e2f1ef9057fc733 chore(architecture): refresh the v2 manifest pins (track_id: architecture_ci_input_pin_20261110)"]
+exit_codes: "install=0, build=0, targeted_tests=0, package_test=0, check_types=0, lint=0, check_skip_pin_v2=0, check_policy_v2=0, pin_refresh=0"
+counts: "targeted_files=5, targeted_tests=44, suite_files=37, suite_tests=340, tests_failed=0, lint_errors=0, lint_warnings=1, files=7012, findings=800, parse_errors=0, additions=0, removals=0, renames=0, modules_total=7012, gate_cases=4, budget_cases=4, baseline_additions=255, baseline_removals=15, baseline_renames=162, manifest_keys=15"
+tests: ["gate_refuses_an_unreviewed_candidate_write_with_a_staged_delta", "gate_allows_a_reviewed_candidate_write_with_a_staged_delta", "gate_allows_an_accepted_manifest_with_a_staged_delta", "gate_allows_a_candidate_write_that_stages_no_delta", "budget_names_the_invalid_budget_value", "budget_names_the_missing_budget_value", "budget_keeps_the_unsupported_argument_message_for_an_unknown_flag", "budget_accepts_a_whole_number_of_seconds"]
+test_files: ["packages/architecture-enforcement/src/__tests__/architecture-review-gate.test.ts", "packages/architecture-enforcement/src/__tests__/architecture-pin-refresh-budget.test.ts"]
+new_files: ["packages/architecture-enforcement/src/__tests__/architecture-review-gate.test.ts", "packages/architecture-enforcement/src/__tests__/architecture-pin-refresh-budget.test.ts"]
+dispositions: B-F1=FIXED; B-F2=DEFERRED: the fix stays outside this phase; measure/tech-debt.md sits at its 50-line cap, so the follow-up note stays in the track plan; B-F3=FIXED; B-F4=DEFERRED: not routed in this phase; the owner and rationale values are data only and reach no path or shell call; C-N1=FIXED; C-N2=FIXED; C-N3=DEFERRED: the orchestrator skipped the help output; C-N4=FIXED; A-N1=FIXED; A-N2=DEFERRED: an observation; the ratchet holds in layers; A-N3=DEFERRED: the path-name case predates the phase and is environmental
+handoff: "The Phase 1 remediation is done. The review-artifact gate refuses a v2 write whose staged delta holds no review record, and the new tests prove the refusal and the two passes. The budget error now names the invalid value. The docs, the registry note, and the staged delta sizes are fixed. Every gate exits 0 in a clean worktree: the targeted run holds 44 of 44 cases, the package suite holds 340 of 340 cases, the type check and the lint run exit 0, and both checks under policy v2 exit 0 with additions=0. Two facts need the orchestrator. First, the review record for the staged delta was not added, because v2-manifest-validation.ts:631 requires the evidence path of another track and :656-658 require the evidence to bind empty delta lists. The current manifest stays valid, but the gate refuses every later v2 reconcile write until the deferred follow-up lands. Second, the follow-up note of Review B F2 stays in the track plan, because measure/tech-debt.md sits at its 50-line cap. The next step is a re-review at 619aef753."
+END_MEASURE_AGENT_RESULT

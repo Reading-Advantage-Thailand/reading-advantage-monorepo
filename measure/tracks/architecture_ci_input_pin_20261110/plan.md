@@ -230,3 +230,17 @@ Blast radius: `packages/architecture-enforcement` and `.github/workflows/ci.yml:
     - The first phase-check round at `9213a78b3` failed at `check_policy_v2` and `check_v1_plain` with a stale input snapshot pin. The task 1.4 refresh fixed it. The round at `7044e9aa5` passed every gate.
     - The worktree was removed after the evidence was copied back. The three dirty `next-env.d.ts` files stayed untouched.
     - The log is `measure/runs/architecture_ci_input_pin_20261110/green-15-9213a78b3.log`. Evidence class: automated.
+  - Phase 1 remediation (2026-11-19) after the reviews at `9619b9548`. Review A passed. Review C passed. Review B failed with F1. Default taken (PM primary directive 2026-11-18): restore a review-artifact gate.
+    - The gate commit is `a510c94920481b911efcfc7f01a3546277e37f73`. The write path refuses a staged baseline delta unless the staged manifest holds a review record or its status is accepted. The new file `architecture-review-gate.test.ts` holds `gate_cases=4`.
+    - The budget message commit is `e52cefc5316edb89fb60b6e14ec391420940918f`. The new file `architecture-pin-refresh-budget.test.ts` holds `budget_cases=4`.
+    - The staged delta sizes commit is `6061bed6655f51fb252c9b96bc09b3866effafef`.
+    - The docs commit is `ce87ce505b20d882acdb1dfb86a4c365602a7d0c`. It names the CI policy flag and adds the reconcile section.
+    - The manifest refresh commit is `619aef7530baad0a028666c55e2f1ef9057fc733`. It moved the input snapshot, the implementation and test tree, and the report hash.
+    - The review record for the staged delta was not added. The v2 schema cannot hold one. `v2-manifest-validation.ts:631` requires the evidence path of another track, and `:656-658` require the evidence to bind empty delta lists. Both belong to the deferred follow-up below.
+    - The committed manifest stays valid. The gate is a write-path control. The validator did not change. The check under policy v2 exits 0 with `additions=0`.
+    - The gate refuses every later v2 reconcile write while the committed manifest holds a non-empty delta and no review record. The follow-up below must land before that route can write again.
+    - The verification ran in a detached worktree at `619aef753`. The folder name ends with `reading-advantage-monorepo`, because the case at `architecture-reconciliation-cli.test.ts:225` asserts that name. A worktree with another name fails that case, and the failure is environmental.
+    - The exit codes: `build=0`, `targeted_tests=0`, `package_test=0`, `check_types=0`, `lint=0`, `check_skip_pin_v2=0`, `check_policy_v2=0`.
+    - The counts: `targeted_files=5`, `targeted_tests=44`, `suite_files=37`, `suite_tests=340`, `tests_failed=0`, `lint_errors=0`, `lint_warnings=1`, `files=7012`, `findings=800`, `parse_errors=0`, `additions=0`, `removals=0`, `renames=0`.
+    - Deferred follow-up (Review B F2). `measure/tech-debt.md` holds 50 lines, so the file sits at its cap. The follow-up note stays in this plan. The follow-up must let the v2 review records bind the staged delta, and it must let `validateReviewSync` and the owner receipt read the real delta lists. It must also move the frozen evidence paths of the other track, so a v2 review record can cite this phase's review artifacts.
+    - The log is `measure/runs/architecture_ci_input_pin_20261110/green-rem-9619b9548.log`. Evidence class: automated.
