@@ -103,7 +103,7 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
   exited 1 on the new expectations only. `tsc --noEmit -p .` exited 0. Evidence:
   `measure/runs/www_tutor_followups_20261118/red-1.2-2.1.log`.
 
-- [~] 1.3 Green: convert the two sources to the delivered webp files. Test: AC-18.
+- [x] 1.3 Green: convert the two sources to the delivered webp files. Test: AC-18.
 
   Run the command of spec section 4.2 from the repository root. The outputs are
   `apps/www-reading-advantage/public/images/tutor-advantage-hero-2026-11-06.webp` and
@@ -116,7 +116,11 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
   The source check `sha256sum -c SHA256SUMS` in the picture folder exits 0 for both sources.
   Record the result. Add no hash field.
 
-- [~] 1.4 Green: split the manifest and point the hero and the block at their files. Test: AC-1, AC-2, AC-3, AC-14, AC-15.
+  Done: 2026-11-18 at `fa8ad4fd3`. The source check exited 0 for both sources. The check command
+  printed `(1920, 1080)` for each file, 165,522 bytes for the hero and 190,298 bytes for the block.
+  Evidence: `measure/runs/www_tutor_followups_20261118/green-1.3-2.5.log`.
+
+- [x] 1.4 Green: split the manifest and point the hero and the block at their files. Test: AC-1, AC-2, AC-3, AC-14, AC-15.
 
   Files:
 
@@ -134,7 +138,10 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
   Green command: the command of task 1.2 exits 0. Then
   `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0.
 
-- [~] 1.5 Green: remove the old hero file. Test: AC-16.
+  Done: 2026-11-18 at `fa8ad4fd3`. The targeted command and `tsc --noEmit -p .` exit 0.
+  Evidence: `measure/runs/www_tutor_followups_20261118/green-1.3-2.5.log`.
+
+- [x] 1.5 Green: remove the old hero file. Test: AC-16.
 
   1. Run the scan of spec section 4.5:
      `rg -n "tutor-advantage-hero\.jpg" apps/www-reading-advantage/src --glob '!**/*.test.*'`.
@@ -142,6 +149,9 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
   2. Run `git rm apps/www-reading-advantage/public/images/tutor-advantage-hero.jpg`.
   3. If the scan finds a source reference, keep the file and record the path here. AC-16 still
      requires that no `img` shows it.
+
+  Done: 2026-11-18 at `fa8ad4fd3`. The scan printed nothing, and the old file is deleted.
+  Evidence: `measure/runs/www_tutor_followups_20261118/green-1.3-2.5.log`.
 
 - [ ] 1.6 Gates: run the five app gates. Test: AC-9.
 
@@ -210,7 +220,7 @@ items as failing tests.
   expectations only. `tsc --noEmit -p .` exited 0. Evidence:
   `measure/runs/www_tutor_followups_20261118/red-1.2-2.1.log`.
 
-- [~] 2.2 Green: add the fourth explain state. Test: AC-5.
+- [x] 2.2 Green: add the fourth explain state. Test: AC-5.
 
   Files:
 
@@ -228,19 +238,28 @@ items as failing tests.
   Green command: the explain assertions of the Red command pass. The full locale file passes after
   task 2.5. Then `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0.
 
-- [~] 2.3 Green: change the leg-total label in three locales. Test: AC-7.
+  Done: 2026-11-18 at `fa8ad4fd3`. The Green command and `tsc --noEmit -p .` exit 0.
+  Evidence: `measure/runs/www_tutor_followups_20261118/green-1.3-2.5.log`.
+
+- [x] 2.3 Green: change the leg-total label in three locales. Test: AC-7.
 
   File `src/locales/pages/products/tutor-advantage.ts`: `graph.legCommissionBar` at en 198, th
   535, and zh 874 takes the text of spec section 5.2.
 
-- [~] 2.4 Green: change the Thai Reedy feature line. Test: AC-8.
+  Done: 2026-11-18 at `fa8ad4fd3`. The Green command exits 0. Evidence:
+  `measure/runs/www_tutor_followups_20261118/green-1.3-2.5.log`.
+
+- [x] 2.4 Green: change the Thai Reedy feature line. Test: AC-8.
 
   File `src/locales/pages/products/tutor-advantage.ts:634`. The th value takes the New Thai of
   spec section 5.4. The en line 297 and the zh line 973 stay.
 
   Daniel checks this line on the live page after the push.
 
-- [~] 2.5 Green: change `graph.caption` in three locales. Test: AC-6.
+  Done: 2026-11-18 at `fa8ad4fd3`. The Green command exits 0. Evidence:
+  `measure/runs/www_tutor_followups_20261118/green-1.3-2.5.log`.
+
+- [x] 2.5 Green: change `graph.caption` in three locales. Test: AC-6.
 
   Gate record: PR handoff version 1.0 section 7 reads "Fact gate 2026-11-18 (the `graph.caption`
   line of v0.6): the first pass found one fault. The caption payout is the figure before tax, so
@@ -252,6 +271,9 @@ items as failing tests.
   Both sentences change. The en and zh values read "Each leg has its own bar: ... Your payout
   before tax is ...". The th value reads "แต่ละสายมีแท่งของตัวเอง: ... ยอดจ่ายของคุณก่อนหักภาษี ...".
   The zh value equals en.
+
+  Done: 2026-11-18 at `fa8ad4fd3`. The Green command exits 0. Evidence:
+  `measure/runs/www_tutor_followups_20261118/green-1.3-2.5.log`.
 
 - [ ] 2.6 Gates: run the five app gates. Test: AC-9.
 
