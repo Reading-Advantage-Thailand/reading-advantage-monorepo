@@ -111,7 +111,7 @@
     }
   ],
   "commits": [
-    "chore(measure): close the architecture ci pin track (track_id: architecture_ci_input_pin_20261110) -- 98 characters. The orchestrator's literal wording was 104 characters, so 'input ' was removed to meet the 100-character header rule; the scope, meaning, and exact track_id stay. The commit carries the archive move, the checkpoint, the metadata, the closeout manifest, the registry, the tech-debt row, and measure/runs/architecture_ci_input_pin_20261110/. The resulting HEAD and commit SHA are recorded in closeout-743e7ddc3.log after the commit."
+    "chore(measure): close the architecture ci pin track (track_id: architecture_ci_input_pin_20261110) -- 98 characters. The orchestrator's literal wording was 104 characters, so 'input ' was removed to meet the 100-character header rule; the scope, meaning, and exact track_id stay. The commit carries the archive move, the checkpoint, the metadata, the closeout manifest, the registry, the tech-debt row, and measure/runs/architecture_ci_input_pin_20261110/. The resulting HEAD was c6598cc0f30ca8818bcc897b4ad16ac584bfcc65, recorded in closeout-743e7ddc3.log. A second bookkeeping commit records the finalized log and this note; its SHA is in the final reply of the role."
   ],
   "gate_commands": [
     "git rev-parse HEAD -> 743e7ddc3d860f9d1c6c814523a2275f473dca0b (pre-closeout HEAD, equal to the final acceptance audited HEAD)",

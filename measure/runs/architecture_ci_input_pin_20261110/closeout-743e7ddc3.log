@@ -24,11 +24,20 @@ Detectors (real mode)
 Commit
 - Header: chore(measure): close the architecture ci pin track (track_id: architecture_ci_input_pin_20261110) — 98 characters. The orchestrator's literal wording was 104 characters, so 'input ' was removed to meet the 100-character header rule; the scope, meaning, and exact track_id stay.
 - Explicit pathspecs only: the archive directory, measure/tracks.md, measure/tech-debt.md, and measure/runs/architecture_ci_input_pin_20261110/ (forced for ignored run files). No unrelated dirty or untracked path staged.
-- resulting_HEAD: PENDING (filled after the commit).
-- commits: PENDING (filled after the commit).
+- resulting_HEAD: c6598cc0f30ca8818bcc897b4ad16ac584bfcc65.
+- commits: c6598cc0f30ca8818bcc897b4ad16ac584bfcc65 — chore(measure): close the architecture ci pin track (track_id: architecture_ci_input_pin_20261110), 98 characters. A second bookkeeping commit records this finalized log and the manifest note; its SHA is in the final reply of the role.
 
-Post-commit gate output
-- PENDING (filled after the commit).
+Post-commit gate output (real mode, after c6598cc0f)
+- python3 .../measure_interphase_checks.py status --repo /home/daniebo/Desktop/reading-advantage-monorepo
+  repo: /home/daniebo/Desktop/reading-advantage-monorepo
+  head: c6598cc0f30ca8818bcc897b4ad16ac584bfcc65
+  worktree: dirty (three unrelated modified next-env.d.ts files and unrelated untracked paths; none staged by this role)
+  incomplete_phases: 240
+  closeout_candidates: 12, listed C1 to C12. architecture_ci_input_pin_20261110 is absent from the candidate list after the archive move; before closeout the orchestrator listed it as C1.
+  The status output lists 240 incomplete phases of other tracks and names accounting_app_foundation_20260820 as next_phase. Those are outside this closeout.
+- python3 .../measure_interphase_checks.py closeout --repo . --track architecture_ci_input_pin_20261110 -> PASS: closeout checks passed.
+- python3 .../measure_interphase_checks.py audit-result --role closeout --file measure/runs/architecture_ci_input_pin_20261110/closeout-743e7ddc3.json -> PASS: audit result is valid.
+- Archive check: measure/archive/architecture_ci_input_pin_20261110 exists and measure/tracks/architecture_ci_input_pin_20261110 does not.
 
 MEASURE_AGENT_RESULT
 role: measure-closeout
@@ -37,8 +46,8 @@ track: architecture_ci_input_pin_20261110
 track_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
 role_base_sha: 743e7ddc3d860f9d1c6c814523a2275f473dca0b
 audited_head_sha: 743e7ddc3d860f9d1c6c814523a2275f473dca0b
-resulting_HEAD: PENDING
-commits: PENDING
+resulting_HEAD: c6598cc0f30ca8818bcc897b4ad16ac584bfcc65
+commits: c6598cc0f30ca8818bcc897b4ad16ac584bfcc65 (archive closeout); a second bookkeeping commit records this log and its SHA is in the final reply of the role
 archive_path: measure/archive/architecture_ci_input_pin_20261110
 tests_run: A5, A6, A9 and A13 detectors in real mode with no hit; measure_interphase_checks closeout and status after the commit. The final acceptance at 743e7ddc3 had already rerun lint, check-types, the 415-test package suite, the 20-test pin contract, and both policy-v2 architecture checks with exit 0; this closeout changes Measure paths only.
 files_changed: measure/archive/architecture_ci_input_pin_20261110/; measure/tracks.md; measure/tech-debt.md; measure/runs/architecture_ci_input_pin_20261110/
