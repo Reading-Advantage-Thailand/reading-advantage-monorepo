@@ -33,7 +33,7 @@ Phase 1 starts at task 1.2. Task 1.0 and task 1.1 passed on 2026-11-18. The two 
 entries, the boxes, and the two alts ship in one change. The phase ends at the PM page-check
 evidence, with no push. The picture work does not wait for `graph.caption` (spec section 2).
 
-- [x] 1.0 Gate: confirm the PR alt text for the block and its fact gate. Test: AC-3. Done: 2026-11-18.
+- [x] 1.0 Gate: confirm the PR alt text for the block and its fact gate. Test: AC-3. Done: 2026-11-18. `c8d750d56`
 
   Answers from the orchestrator, 2026-11-18, from the image and PR handoff version 0.8:
 
@@ -50,7 +50,7 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
 
   No code change in this task.
 
-- [x] 1.1 Gate: confirm the PR hero alt text and its fact gate. Test: AC-14. Done: 2026-11-18.
+- [x] 1.1 Gate: confirm the PR hero alt text and its fact gate. Test: AC-14. Done: 2026-11-18. `3cc535884`
 
   Record: PR handoff version 1.0, advantage-pr commit `5aa6d6ee`, 2026-11-18. Section 8.7
   delivers `heroExtra.imageAlt`. Section 7 reads "Fact gate 2026-11-18 (the hero alt lines of
@@ -62,7 +62,7 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
 
   No code change in this task.
 
-- [x] 1.2 Red: pin the two pictures, the two entries, the old-file rule, and the sizes. Test: AC-1, AC-2, AC-3, AC-14, AC-15, AC-16, AC-17, AC-18.
+- [x] 1.2 Red: pin the two pictures, the two entries, the old-file rule, and the sizes. Test: AC-1, AC-2, AC-3, AC-14, AC-15, AC-16, AC-17, AC-18. `9a1e001fb`
 
   File `apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx`.
 
@@ -103,7 +103,7 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
   exited 1 on the new expectations only. `tsc --noEmit -p .` exited 0. Evidence:
   `measure/runs/www_tutor_followups_20261118/red-1.2-2.1.log`.
 
-- [x] 1.3 Green: convert the two sources to the delivered webp files. Test: AC-18.
+- [x] 1.3 Green: convert the two sources to the delivered webp files. Test: AC-18. `fa8ad4fd3`
 
   Run the command of spec section 4.2 from the repository root. The outputs are
   `apps/www-reading-advantage/public/images/tutor-advantage-hero-2026-11-06.webp` and
@@ -120,7 +120,7 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
   printed `(1920, 1080)` for each file, 165,522 bytes for the hero and 190,298 bytes for the block.
   Evidence: `measure/runs/www_tutor_followups_20261118/green-1.3-2.5.log`.
 
-- [x] 1.4 Green: split the manifest and point the hero and the block at their files. Test: AC-1, AC-2, AC-3, AC-14, AC-15.
+- [x] 1.4 Green: split the manifest and point the hero and the block at their files. Test: AC-1, AC-2, AC-3, AC-14, AC-15. `fa8ad4fd3`
 
   Files:
 
@@ -141,7 +141,7 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
   Done: 2026-11-18 at `fa8ad4fd3`. The targeted command and `tsc --noEmit -p .` exit 0.
   Evidence: `measure/runs/www_tutor_followups_20261118/green-1.3-2.5.log`.
 
-- [x] 1.5 Green: remove the old hero file. Test: AC-16.
+- [x] 1.5 Green: remove the old hero file. Test: AC-16. `fa8ad4fd3`
 
   1. Run the scan of spec section 4.5:
      `rg -n "tutor-advantage-hero\.jpg" apps/www-reading-advantage/src --glob '!**/*.test.*'`.
@@ -153,7 +153,7 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
   Done: 2026-11-18 at `fa8ad4fd3`. The scan printed nothing, and the old file is deleted.
   Evidence: `measure/runs/www_tutor_followups_20261118/green-1.3-2.5.log`.
 
-- [ ] 1.6 Gates: run the five app gates. Test: AC-9.
+- [x] 1.6 Gates: run the five app gates. Test: AC-9. `ad055b9e2`
 
   Commands of spec section 6.1 for the www app: types, lint, build, the downline scan, and
   affected apps with `--base 80ac554b426551e5749f0e2cd500cbbf0eb93530`. Each holds its pass value
@@ -161,6 +161,11 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
 
   Save the output to `measure/runs/www_tutor_followups_20261118/` as
   `green-1.6-<short sha>.json` and `.log`.
+
+  Done: 2026-11-18 at `ad055b9e2`. Types exit 0, lint exit 0, build exit 0 on the re-run after the
+  known Next.js security reminder, the downline scan exit 1 with no output, and affected apps lists
+  `www-reading-advantage` only. The file pair `green-1.6-ad055b9e2.json` and `.log` covers task 1.6
+  and task 2.6.
 
 - [ ] 1.7 Page-check evidence: capture the hero and `#become-a-tutor` at three widths and send the folder to the PM. Test: AC-10.
 
@@ -182,7 +187,7 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
 Each task takes one item and its gate. Every item now holds a PASS gate. Task 2.1 pins the four
 items as failing tests.
 
-- [x] 2.1 Red: pin the four copy items. Test: AC-5, AC-6, AC-7, AC-8.
+- [x] 2.1 Red: pin the four copy items. Test: AC-5, AC-6, AC-7, AC-8. `9a1e001fb`
 
   File `src/__tests__/www-tutor-calculator.locale.test.ts`.
 
@@ -220,7 +225,7 @@ items as failing tests.
   expectations only. `tsc --noEmit -p .` exited 0. Evidence:
   `measure/runs/www_tutor_followups_20261118/red-1.2-2.1.log`.
 
-- [x] 2.2 Green: add the fourth explain state. Test: AC-5.
+- [x] 2.2 Green: add the fourth explain state. Test: AC-5. `fa8ad4fd3`
 
   Files:
 
@@ -241,7 +246,7 @@ items as failing tests.
   Done: 2026-11-18 at `fa8ad4fd3`. The Green command and `tsc --noEmit -p .` exit 0.
   Evidence: `measure/runs/www_tutor_followups_20261118/green-1.3-2.5.log`.
 
-- [x] 2.3 Green: change the leg-total label in three locales. Test: AC-7.
+- [x] 2.3 Green: change the leg-total label in three locales. Test: AC-7. `fa8ad4fd3`
 
   File `src/locales/pages/products/tutor-advantage.ts`: `graph.legCommissionBar` at en 198, th
   535, and zh 874 takes the text of spec section 5.2.
@@ -249,7 +254,7 @@ items as failing tests.
   Done: 2026-11-18 at `fa8ad4fd3`. The Green command exits 0. Evidence:
   `measure/runs/www_tutor_followups_20261118/green-1.3-2.5.log`.
 
-- [x] 2.4 Green: change the Thai Reedy feature line. Test: AC-8.
+- [x] 2.4 Green: change the Thai Reedy feature line. Test: AC-8. `fa8ad4fd3`
 
   File `src/locales/pages/products/tutor-advantage.ts:634`. The th value takes the New Thai of
   spec section 5.4. The en line 297 and the zh line 973 stay.
@@ -259,7 +264,7 @@ items as failing tests.
   Done: 2026-11-18 at `fa8ad4fd3`. The Green command exits 0. Evidence:
   `measure/runs/www_tutor_followups_20261118/green-1.3-2.5.log`.
 
-- [x] 2.5 Green: change `graph.caption` in three locales. Test: AC-6.
+- [x] 2.5 Green: change `graph.caption` in three locales. Test: AC-6. `fa8ad4fd3`
 
   Gate record: PR handoff version 1.0 section 7 reads "Fact gate 2026-11-18 (the `graph.caption`
   line of v0.6): the first pass found one fault. The caption payout is the figure before tax, so
@@ -275,20 +280,30 @@ items as failing tests.
   Done: 2026-11-18 at `fa8ad4fd3`. The Green command exits 0. Evidence:
   `measure/runs/www_tutor_followups_20261118/green-1.3-2.5.log`.
 
-- [ ] 2.6 Gates: run the five app gates. Test: AC-9.
+- [x] 2.6 Gates: run the five app gates. Test: AC-9. `ad055b9e2`
 
   The commands of spec section 6.1. Save the output as `green-2.6-<short sha>.json` and `.log` in
   `measure/runs/www_tutor_followups_20261118/`.
 
+  Done: 2026-11-18 at `ad055b9e2`. Task 2.6 runs the same five gates as task 1.6 at the same HEAD.
+  The file pair `green-1.6-ad055b9e2.json` and `.log` covers both tasks.
+
 ## Phase 3: gates, push, and live checks
 
-- [ ] 3.1 Full suite: run the whole www suite with one worker. Test: AC-9.
+- [~] 3.1 Full suite: run the whole www suite with one worker. Test: AC-9.
 
   Command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
   www-reading-advantage exec vitest run --maxWorkers=1'`.
 
   Pass: exit 0. Record the file count and the test count in the task. Save the log as
   `green-3.1-<short sha>.log`.
+
+  Blocked on 2026-11-18 at `ad055b9e2`: the suite exits 1. Two committed test files still hold the
+  old contract. `src/__tests__/products-page-pictures.red.test.tsx:69` rejects every
+  `productPictures` src that matches `/2026-11-06/`, and it now catches the spec-mandated
+  `/images/tutor-advantage-hero-2026-11-06.webp`. `tutor-commission-calculator.legs.adversarial
+  .test.tsx` holds the old three-state explain list at line 161 and the old `zero` state at lines
+  609 and 618. The counts sit in `green-3.1-ad055b9e2.log`.
 
 - [b] 3.2 Gate: the PM page check. Test: AC-10.
 
