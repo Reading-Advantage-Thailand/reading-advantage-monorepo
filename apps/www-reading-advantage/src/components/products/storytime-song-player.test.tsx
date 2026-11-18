@@ -201,16 +201,16 @@ describe("Storytime song player", () => {
     expect(button.className).not.toContain("bg-site-navy");
   });
 
-  it("centers the play control in the box with translation classes", () => {
+  it("keeps the play control at the bottom center of the box", () => {
     stubMatchMedia(false);
     const { container } = renderPlayer();
     const button = screen.getByRole("button", { name: SONG_COPY.en.playLabel });
     expect(button.className).toContain("left-1/2");
-    expect(button.className).toContain("top-1/2");
     expect(button.className).toContain("-translate-x-1/2");
-    expect(button.className).toContain("-translate-y-1/2");
-    expect(button.className).not.toContain("justify-end");
-    expect(button.className).not.toContain("pb-2");
+    expect(button.className).toContain("bottom-3");
+    expect(button.className).not.toContain("top-1/2");
+    expect(button.className).not.toContain("inset-0");
+    expect(button.className).not.toContain("bg-site-navy");
     const control = container.querySelector("[data-testid='song-player-control']");
     expect(control).not.toBeNull();
     expect(button.contains(control)).toBe(true);
