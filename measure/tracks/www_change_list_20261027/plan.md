@@ -32,6 +32,15 @@
 - [ ] W.5 Open one live approval page for Daniel. Give it one row per changed page and locale. Test: AC-8.
 - [ ] W.6 After the pass, merge the branch into local `master`. Then remove the worktree and delete the branch in the same turn. Test: AC-9.
 
+## Batch 2026-11-30: Storytime launch day
+
+> Source: `/home/daniebo/Desktop/advantage-pr/11-content/www-change-list.md` v1.50, list line 50 (row 2026-11-16 app-first, LAUNCH copy of places 1, 4, 33, 34) and list line 60 (row 2026-10-27 release-state copy, places 5, 6, 7, 8). Branch `storytime-launch-day` from `origin/master`; no merge, no push; W.5 and W.6 wait for the launch day.
+
+- [x] W.1 Receive the entries. Record the 8 launch-day keys with en, th, zh LAUNCH text. Test: AC-4.
+- [x] W.2 Tests first. Update the storytime fixture and pin every changed key in en, th, zh. Test: AC-5. Commit `da4c5e955`.
+- [x] W.3 Build the copy. Put the LAUNCH text word for word into the locale files. Test: AC-6. Commit `631d10af9`.
+- [x] W.4 Run the gates. Lint, typecheck, the vitest suite, and the www build. Test: AC-7. Lint exit 0, typecheck exit 0, vitest 81 files 2876 tests exit 0, build exit 0 on retry 2. Guard commit `1915410e5`.
+
 ## Out of scope
 
 - Push and deploy. The push to `origin/master` stays with Daniel.
