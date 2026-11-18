@@ -45,7 +45,7 @@ For the teacher, the sequence gives a clear job: protect the plan and the draft.
 
 The app responds to the writing; it does not start it.
 
-On the long-answer card, her sentence sits in the answer box. The line under the answer box reads **Write at least 30 characters · 2 tries left**. The card shows two buttons below: **Get feedback** and **Submit answer**.
+On the long-answer card, her sentence sits in the answer box. The line under the answer box reads **Write at least 30 characters. · 2 tries left**. The card shows two buttons below: **Get feedback** and **Submit answer**.
 
 ```figure
 src: /blog/2026-11-20-long-answer.webp
