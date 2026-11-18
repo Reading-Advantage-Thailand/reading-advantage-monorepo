@@ -69,12 +69,12 @@ const ROW_A = [
   },
 ] as const;
 
-/** Row B of the change list v1.39: the Storytime Advantage launch on 30 November 2026, places 1 to 10. */
+/** Row B of the change list v1.39, superseded in part by the INTERIM copy of the row of 2026-11-16: the Storytime Advantage launch on 30 November 2026. */
 const ROW_B = [
   {
     key: "pages.products.storytimeAdvantage.metadata.description",
-    en: "Storytime Advantage is an English program for Anuban 2 to P2: one sound, one song, and two books each week. The first unit launches on 30 November 2026, with the Storytime Advantage, Level 2, Unit 1 student book and QR-linked digital parts.",
-    th: "Storytime Advantage คือหลักสูตรภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569 พร้อมหนังสือนักเรียน Storytime Advantage, Level 2, Unit 1 และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด",
+    en: "Storytime Advantage is an English app for Anuban 2 to P2. It launches on 30 November 2026 with one sound, one song, and two books each week.",
+    th: "Storytime Advantage เป็นแอปภาษาอังกฤษสำหรับเด็กอนุบาล 2 ถึง ป.2 เปิดตัววันที่ 30 พฤศจิกายน 2569 พร้อมหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มในแต่ละสัปดาห์",
     old: {
       en: "The first unit is being prepared, with a printed student book and QR-linked digital parts.",
       th: "กำลังจัดเตรียมหน่วยการเรียนรู้แรก",
@@ -82,8 +82,8 @@ const ROW_B = [
   },
   {
     key: "pages.products.storytimeAdvantage.hero.description",
-    en: "Storytime Advantage is an English program for kindergarten and early primary. Each week has one sound, one song, and two books, and every lesson is printed in full for the class teacher. The first unit launches on 30 November 2026.",
-    th: "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษสำหรับชั้นอนุบาลและประถมต้น ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ทุกคาบมีแผนการสอนครบ หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569 พร้อมหนังสือนักเรียนฉบับพิมพ์และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด",
+    en: "A child taps a word and hears it. The class joins the song. Storytime Advantage brings one sound, one song, and two books to each week, on a phone at home and a screen in the classroom.",
+    th: "เด็กคนหนึ่งแตะคำแล้วได้ยินเสียงอ่าน ทั้งชั้นร้องเพลงไปด้วยกัน Storytime Advantage นำหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มมาสู่ทุกสัปดาห์ บนโทรศัพท์ที่บ้านและจอในห้องเรียน",
     old: { en: "The first unit is being prepared.", th: "กำลังจัดเตรียมหน่วยการเรียนรู้แรก" },
   },
   {
@@ -94,8 +94,8 @@ const ROW_B = [
   },
   {
     key: "pages.products.storytimeAdvantage.cta.description",
-    en: "The first unit launches on 30 November 2026. Contact us to discuss Storytime Advantage.",
-    th: "หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569 ติดต่อเราเพื่อพูดคุยเกี่ยวกับ Storytime Advantage",
+    en: "The app launches on 30 November 2026. Ask us on LINE OA for the steps to join Storytime Advantage with your family or class.",
+    th: "แอปเปิดตัววันที่ 30 พฤศจิกายน 2569 สอบถามขั้นตอนการเข้าร่วม Storytime Advantage สำหรับครอบครัวหรือชั้นเรียนของคุณได้ทาง LINE OA",
     old: {
       en: "The first unit is being prepared. Contact us to discuss Storytime Advantage.",
       th: "กำลังจัดเตรียมหน่วยการเรียนรู้แรก",
@@ -127,15 +127,9 @@ const ROW_B = [
   },
   {
     key: "pages.products.overview.gradeBands.storytime.description",
-    en: "Storytime Advantage is an English program for kindergarten and early primary. Each week has one sound, one song, and two books, and every lesson is printed in full for the class teacher. The first unit launches on 30 November 2026.",
-    th: "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษสำหรับชั้นอนุบาลและประถมต้น ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ทุกคาบมีแผนการสอนครบ หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569",
+    en: "Storytime Advantage is an English app for Anuban 2 to P2, ages 4 to 8. Each week brings one sound, one song, and two books to a phone at home or a classroom screen. The app launches on 30 November 2026.",
+    th: "Storytime Advantage เป็นแอปภาษาอังกฤษสำหรับเด็กอนุบาล 2 ถึง ป.2 อายุ 4 ถึง 8 ปี แต่ละสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม บนโทรศัพท์ที่บ้านหรือจอในห้องเรียน แอปเปิดตัววันที่ 30 พฤศจิกายน 2569",
     old: { en: "The first unit is being prepared.", th: "กำลังจัดเตรียมหน่วยการเรียนรู้แรก" },
-  },
-  {
-    key: "pages.products.storytimeAdvantage.hero.launchNote",
-    en: "Storytime Advantage launches on 30 November 2026.",
-    th: "Storytime Advantage เปิดตัววันที่ 30 พฤศจิกายน 2569",
-    old: { en: "Storytime Advantage goes live in November.", th: "Storytime Advantage เปิดให้ใช้งานในเดือนพฤศจิกายน" },
   },
 ] as const;
 
@@ -187,7 +181,6 @@ describe("www batch 2026-11-16, row B", () => {
       "pages.products.storytimeAdvantage.hero.description",
       "pages.products.storytimeAdvantage.hero.comingSoon",
       "pages.products.storytimeAdvantage.cta.description",
-      "pages.products.storytimeAdvantage.hero.launchNote",
     ]) {
       expect(read("zh", key)).toBe(read("en", key));
     }
@@ -310,26 +303,26 @@ describe("www batch 2026-11-16, the science mockup SVGs", () => {
   );
 });
 
-/** The stapler row of 2026-11-05 (TH-184): the teacher holds the stapler. */
-const STAPLER = {
+/** The week 1 book line, as the INTERIM copy of the row of 2026-11-16 gives it. It supersedes the stapler row of 2026-11-05 (TH-184). */
+const WEEK1_BOOK_LINE = {
   key: "pages.products.storytimeAdvantage.keyFeatures.features.0.points.0",
-  en: "One A4 Storytime Advantage, Level 2, Unit 1, Student Book for weeks 1 to 8. Small reader books sit inside it. Children tear them out and fold them. The teacher staples them.",
-  th: "หนังสือนักเรียน Storytime Advantage, Level 2, Unit 1, Student Book ขนาด A4 หนึ่งเล่ม สำหรับสัปดาห์ที่ 1 ถึง 8 มีหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน เด็กฉีกออกและพับ ครูเป็นคนเย็บหนังสือฝึกอ่านเล่มเล็ก",
+  en: "The read-along book reads to your child page by page.",
+  th: "หนังสืออ่านตามอ่านให้ลูกฟังทีละหน้า",
   old: {
-    en: "Children tear them out, fold them, and staple them. No scissors are needed.",
-    th: "เด็กฉีกออก พับ และเย็บเล่มย่อยแต่ละเล่มได้โดยไม่ต้องใช้กรรไกร",
+    en: "One A4 Storytime Advantage, Level 2, Unit 1, Student Book for weeks 1 to 8. Small reader books sit inside it. Children tear them out and fold them. The teacher staples them.",
+    th: "หนังสือนักเรียน Storytime Advantage, Level 2, Unit 1, Student Book ขนาด A4 หนึ่งเล่ม สำหรับสัปดาห์ที่ 1 ถึง 8 มีหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน เด็กฉีกออกและพับ ครูเป็นคนเย็บหนังสือฝึกอ่านเล่มเล็ก",
   },
 } as const;
 
-describe("www stapler row of 2026-11-05 (TH-184)", () => {
+describe("www week 1 book line (row of 2026-11-16, supersedes TH-184)", () => {
   it("holds the new en and th line and no old line", () => {
-    expect(read("en", STAPLER.key)).toBe(STAPLER.en);
-    expect(read("th", STAPLER.key)).toBe(STAPLER.th);
-    expect(read("en", STAPLER.key)).not.toContain(STAPLER.old.en);
-    expect(read("th", STAPLER.key)).not.toContain(STAPLER.old.th);
+    expect(read("en", WEEK1_BOOK_LINE.key)).toBe(WEEK1_BOOK_LINE.en);
+    expect(read("th", WEEK1_BOOK_LINE.key)).toBe(WEEK1_BOOK_LINE.th);
+    expect(read("en", WEEK1_BOOK_LINE.key)).not.toContain(WEEK1_BOOK_LINE.old.en);
+    expect(read("th", WEEK1_BOOK_LINE.key)).not.toContain(WEEK1_BOOK_LINE.old.th);
   });
 
   it("shows the English line on the zh page through the spread", () => {
-    expect(read("zh", STAPLER.key)).toBe(STAPLER.en);
+    expect(read("zh", WEEK1_BOOK_LINE.key)).toBe(WEEK1_BOOK_LINE.en);
   });
 });

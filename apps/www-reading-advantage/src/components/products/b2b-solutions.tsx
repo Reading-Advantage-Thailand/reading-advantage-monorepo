@@ -60,6 +60,7 @@ type ProductConfigList = readonly [
 ];
 
 const FEATURE_INDEXES = [0, 1, 2, 3] as const;
+const STORYTIME_FEATURE_INDEXES = [0, 3] as const;
 
 const productConfigs: ProductConfigList = [
   {
@@ -173,9 +174,14 @@ export default async function B2BSolutions() {
 
   const products = productConfigs.map((config) => {
     const title = t(`products.${config.key}.title`);
-    const features = FEATURE_INDEXES.map((featureIndex) =>
-      t(`products.${config.key}.features.${featureIndex}`),
-    );
+    const features =
+      config.key === "storytimeAdvantage"
+        ? STORYTIME_FEATURE_INDEXES.map((featureIndex) =>
+            t(`products.storytimeAdvantage.features.${featureIndex}`),
+          )
+        : FEATURE_INDEXES.map((featureIndex) =>
+            t(`products.${config.key}.features.${featureIndex}`),
+          );
     const gradeRange = t(`products.${config.key}.gradeRange`);
     const imageAlt = config.picture ? t(config.picture.altKey) : undefined;
 
