@@ -1,15 +1,17 @@
 // @vitest-environment node
 /**
- * The readiness of the weeks of the at-home release (plan task 1.3, strategy P1.1, cases W1 to W6).
+ * The readiness of the weeks of the at-home release (plan tasks 1.3, 2.1, and 3.0b; strategy P1.1,
+ * cases W1 to W6).
  *
  * The file reads the shipped week files and runs the loader of the app on them. No week fixture
  * file sits under `__tests__`. A broken copy is a deep clone of a shipped week with one change,
  * made inside the test. A clone runs through the loader in a temporary content folder under the
  * temp folder of the system.
  *
- * The pictures case and the teacher lines case fail at the old pin and pass at the release pin.
- * The other cases hold at both pins. Each broken copy case proves that the check of its case
- * detects the change.
+ * Daniel approved audio, song, and scripts for weeks 2 to 7 (PM, 2026-11-18 05:36: "1. Ok"), so
+ * w01 to w07 are published and ready, and w08 stays a draft. The rows fail before the receipt
+ * commit and pass after it. Each broken copy case proves that the check of its case detects the
+ * change.
  */
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -24,10 +26,13 @@ const app = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const contentDirectory = resolve(app, "content");
 const weekDirectory = resolve(contentDirectory, "l2");
 
-/** The weeks of the release that stay draft, from 2 to 8. */
-const DRAFT_WEEKS = [2, 3, 4, 5, 6, 7, 8];
+/** The week of the release that stays draft: the eighth week. */
+const DRAFT_WEEKS = [8];
 
-/** The draft weeks that hold their page pictures at the release pin, from 2 to 7. */
+/** The published weeks of the release, from 1 to 7. */
+const PUBLISHED_WEEKS = [1, 2, 3, 4, 5, 6, 7];
+
+/** The published weeks that hold their page pictures, from 2 to 7. */
 const PICTURE_WEEKS = [2, 3, 4, 5, 6, 7];
 
 /** The teacher line of the r2 hand-off, in English. */
@@ -159,10 +164,10 @@ function withPageFiles(clone: Json): Json {
   return clone;
 }
 
-describe("AC-1.3 the draft weeks of the release stay at 404", () => {
-  it("keeps every draft week out of the app and names the draft reason", async () => {
+describe("AC-1.3 the eighth week of the release stays a draft at 404", () => {
+  it("keeps w08 out of the app and names the draft reason", async () => {
     const weeks = DRAFT_WEEKS.map((week) => readShippedWeek(week));
-    expect(weeks.length, "The test must read seven draft weeks (A4)").toBe(7);
+    expect(weeks.length, "the test must read the draft week (A4)").toBe(1);
     let checked = 0;
     for (const [index, week] of weeks.entries()) {
       const number = DRAFT_WEEKS[index];
@@ -175,9 +180,9 @@ describe("AC-1.3 the draft weeks of the release stay at 404", () => {
       ]);
       checked += 1;
     }
-    expect(checked, "The test must check seven draft weeks (A4)").toBeGreaterThan(0);
-    expect(`weeks_checked=${checked}`, "The loader must check the seven draft weeks").toBe(
-      "weeks_checked=7",
+    expect(checked, "The test must check the draft week (A4)").toBeGreaterThan(0);
+    expect(`weeks_checked=${checked}`, "The loader must check the draft week").toBe(
+      "weeks_checked=1",
     );
   });
 
@@ -214,10 +219,10 @@ describe("AC-1.3 the eighth week of the release stays a draft", () => {
   });
 });
 
-describe("AC-1.3 the draft weeks of the release hold their page pictures", () => {
-  it("gives every page of every draft week its picture file", () => {
+describe("AC-1.3 the published weeks of the release hold their page pictures", () => {
+  it("gives every page of every published week its picture file", () => {
     const weeks = PICTURE_WEEKS.map((week) => readShippedWeek(week));
-    expect(weeks.length, "The test must read six draft weeks (A4)").toBe(6);
+    expect(weeks.length, "The test must read six published weeks (A4)").toBe(6);
     let pagesWithFile = 0;
     for (const [index, week] of weeks.entries()) {
       const number = PICTURE_WEEKS[index];
@@ -241,10 +246,10 @@ describe("AC-1.3 the draft weeks of the release hold their page pictures", () =>
         `The shipped week ${number} holds a page without a picture file`,
       ).toBe(0);
     }
-    expect(pagesWithFile, "The test must read the pages of six draft weeks (A4)").toBeGreaterThan(0);
+    expect(pagesWithFile, "The test must read the pages of six published weeks (A4)").toBeGreaterThan(0);
     expect(
       `pages_with_file=${pagesWithFile}`,
-      "The six draft weeks must hold 96 pages with a picture file",
+      "The six published weeks must hold 96 pages with a picture file",
     ).toBe("pages_with_file=96");
   });
 
@@ -263,11 +268,39 @@ describe("AC-1.3 the draft weeks of the release hold their page pictures", () =>
   });
 });
 
-describe("AC-1.3 the review switch does not open a draft week", () => {
-  it("keeps every draft week out of the app when the review switch is on", async () => {
+describe("AC-1.4 w01 to w07 are published and answer 200 for a signed-in family", () => {
+  it("has every published week ready and serves it", async () => {
+    const weeks = PUBLISHED_WEEKS.map((week) => readShippedWeek(week));
+    expect(weeks.length, "the test must read seven published weeks (A4)").toBe(7);
+    let served = 0;
+    for (const [index, week] of weeks.entries()) {
+      const number = PUBLISHED_WEEKS[index];
+      expect(week.meta.status, `The shipped week ${number} is not published`).toBe("published");
+      expect(isWeekReady(week), `The shipped week ${number} must be ready`).toBe(true);
+      // The week page calls `notFound()` when the loader returns no week, so a visible week is
+      // the condition for HTTP 200. `phase3-docker-smoke.sh` asserts the status itself.
+      const { visible } = await loadShipped(number);
+      expect(visible, `The shipped week ${number} must reach a signed-in family`).not.toBeNull();
+      console.log(`w0${number} published=1 ready=1 visible=${visible === null ? 0 : 1}`);
+      served += 1;
+    }
+    expect(served, "the test must serve seven published weeks (A4)").toBe(7);
+  });
+
+  it("names the first week ready for a child", async () => {
+    const week = readShippedWeek(1);
+    expect(week.meta.status, "The shipped w01 is not published").toBe("published");
+    expect(isWeekReady(week), "The shipped w01 must be ready").toBe(true);
+    const { visible } = await loadShipped(1);
+    expect(visible, "The shipped w01 must reach a child").not.toBeNull();
+  });
+});
+
+describe("AC-1.4 the review switch does not open the draft week", () => {
+  it("keeps the draft week out of the app when the review switch is on", async () => {
     process.env.STORYTIME_SHOW_DRAFT_MEDIA = "1";
     const weeks = DRAFT_WEEKS.map((week) => readShippedWeek(week));
-    expect(weeks.length, "The test must read seven draft weeks (A4)").toBe(7);
+    expect(weeks.length, "the test must read the draft week (A4)").toBe(1);
     let checked = 0;
     for (const [index, week] of weeks.entries()) {
       const number = DRAFT_WEEKS[index];
@@ -279,9 +312,9 @@ describe("AC-1.3 the review switch does not open a draft week", () => {
       ]);
       checked += 1;
     }
-    expect(checked, "The test must check seven draft weeks (A4)").toBeGreaterThan(0);
-    expect(`weeks_checked=${checked}`, "The loader must check the seven draft weeks").toBe(
-      "weeks_checked=7",
+    expect(checked, "The test must check the draft week (A4)").toBeGreaterThan(0);
+    expect(`weeks_checked=${checked}`, "The loader must check the draft week").toBe(
+      "weeks_checked=1",
     );
   });
 
@@ -301,14 +334,6 @@ describe("AC-1.3 the review switch does not open a draft week", () => {
 });
 
 describe("AC-1.4 the first week of the release is ready", () => {
-  it("keeps the first week ready for a child", async () => {
-    const week = readShippedWeek(1);
-    expect(week.meta.status, "The shipped w01 is not published").toBe("published");
-    expect(isWeekReady(week), "The shipped w01 must be ready").toBe(true);
-    const { visible } = await loadShipped(1);
-    expect(visible, "The shipped w01 must reach a child").not.toBeNull();
-  });
-
   it("names the missing picture reason for a clone that lost one page file", async () => {
     const clone = structuredClone(readShippedWeek(1));
     expect(clone.books.length, "The clone must hold two books (A4)").toBe(2);

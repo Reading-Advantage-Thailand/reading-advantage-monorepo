@@ -12,7 +12,8 @@
  * week fixture file sits under `__tests__`, no file outside the repository is read, and no hash
  * is used (root AGENTS.md hashing policy).
  *
- * A second case asserts that the shipped files are still drafts, so this test changes no content.
+ * A second block asserts the shipped state after the receipt: w02 to w07 are published, the three
+ * parts are approved, and every week is ready (plan task 3.0b).
  */
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -111,23 +112,25 @@ describe("3.0a w02 to w07 publish on the flags alone", () => {
   });
 });
 
-describe("3.0a the shipped files change no content", () => {
-  it("keeps the shipped w02 to w07 at draft for the status and the three parts", () => {
+describe("3.0b the shipped files carry the receipt", () => {
+  it("keeps the shipped w02 to w07 published, approved, and ready", () => {
     const weeks = WEEKS.map((week) => readShippedWeek(week));
     expect(weeks.length, "The proof must read six shipped weeks (A4)").toBe(6);
-    let drafts = 0;
+    let receipt = 0;
     for (const [index, week] of weeks.entries()) {
       const number = WEEKS[index];
-      expect(week.meta.status, `The shipped w0${number} must stay a draft`).toBe("draft");
+      expect(week.meta.status, `The shipped w0${number} is not published`).toBe("published");
       for (const part of APPROVAL_PARTS) {
         expect(
           week.approval[part]?.status,
-          `The ${part} approval of the shipped w0${number} must stay a draft`,
-        ).toBe("draft");
+          `The ${part} approval of the shipped w0${number} is not approved`,
+        ).toBe("approved");
       }
-      drafts += 1;
+      expect(isWeekReady(week), `The shipped w0${number} must be ready`).toBe(true);
+      expect(readinessBlocker(week), `The shipped w0${number} must hold no blocker`).toBeNull();
+      receipt += 1;
     }
-    expect(drafts, "The proof must read six draft weeks (A4)").toBe(6);
-    console.log(`draft_weeks=${drafts}`);
+    expect(receipt, "The proof must read six published weeks (A4)").toBe(6);
+    console.log(`receipt_weeks=${receipt}`);
   });
 });

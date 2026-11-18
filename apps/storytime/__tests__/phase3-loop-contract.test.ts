@@ -29,13 +29,13 @@ const PREVIOUS_PIN = "cf30bb2eee55806bf8830b3a3e69e4f6044847e6";
 const A_42_PIN = "cad0307cad31a3131dc3a06e9e773537a1a6219b";
 
 /**
- * The pin of the release of 2026-11-20, after the approved A-42 pin of 2026-11-16 (plan task 2.1).
+ * The pin of the release of 2026-11-20, after Daniel approved weeks 2 to 7 (plan task 3.0b).
  *
- * The approved pin of 2026-11-16 (the Workbooks commit 70278a9beb8ef7314d98df80e0462892a0ca5019)
- * holds `approval.loops` approved in every week and the read-along sentence clips of w02 and w07,
- * so the source record names that commit now.
+ * The published pin (the Workbooks commit 1c5385a6e8a7243eaa102a3774cce7f2f0d80d8c) holds
+ * `meta.status` `published` in w01 to w07 and the approval parts of w02 to w07 approved.
+ * w08 stays a draft.
  */
-const RELEASE_PIN = "70278a9beb8ef7314d98df80e0462892a0ca5019";
+const RELEASE_PIN = "1c5385a6e8a7243eaa102a3774cce7f2f0d80d8c";
 
 /** A week as plain JSON, for a broken copy. */
 type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any

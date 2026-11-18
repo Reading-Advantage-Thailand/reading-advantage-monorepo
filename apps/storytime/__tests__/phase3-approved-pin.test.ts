@@ -1,18 +1,17 @@
 // @vitest-environment node
 /**
- * The approved A-42 pin of the at-home release (plan task 2.1, strategy P2 rows P1 to P8).
+ * The published pin of the at-home release (plan task 3.0b, after task 2.1).
  *
  * The file reads the shipped week files of the app and the source record. The pin of the task is
- * the Workbooks commit `70278a9b`, whose week files hold `approval.loops` `approved` and whose
- * statuses do not move: w01 stays `published`, and w02 to w08 stay `draft`. The loops approval
- * gates the routines and never opens a draft week.
+ * the Workbooks commit `1c5385a6`, whose week files hold `approval.loops` `approved` in every
+ * week. Daniel approved audio, song, and scripts for weeks 2 to 7 (PM, 2026-11-18 05:36: "1. Ok"),
+ * so w01 to w07 are `published` and w08 stays `draft`.
  *
  * A broken copy is a deep clone of a shipped week with one change, made inside the test. No week
  * fixture file sits under `__tests__`.
  *
- * The rows P1 to P7 fail at the base, because the shipped content is the pin before the approval.
- * Row P8 holds at both pins: the statuses are already the statuses of the release, and the
- * positive control proves that a published week reaches the readiness rule.
+ * The rows P1 to P4 hold at both pins. Row P5 and row P8 fail before the receipt commit, because
+ * the source record and the statuses change there.
  */
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -26,8 +25,8 @@ const app = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const contentDirectory = resolve(app, "content");
 const weekDirectory = resolve(contentDirectory, "l2");
 
-/** The approved pin that the source record must name. */
-const PIN = "70278a9beb8ef7314d98df80e0462892a0ca5019";
+/** The published pin that the source record must name. */
+const PIN = "1c5385a6e8a7243eaa102a3774cce7f2f0d80d8c";
 
 /** The date of the loops approval of the pin. */
 const LOOPS_DATE = "2026-11-15";
@@ -35,14 +34,11 @@ const LOOPS_DATE = "2026-11-15";
 /** The weeks of the release, from 1 to 8. */
 const WEEKS = [1, 2, 3, 4, 5, 6, 7, 8];
 
-/** The draft weeks of the release, from 2 to 8. */
-const DRAFT_WEEKS = [2, 3, 4, 5, 6, 7, 8];
+/** The week that stays draft in the release. */
+const DRAFT_WEEKS = [8];
 
 /** A word of an unused approval, which the pin must not hold. */
 const DRAFT_WORDS = /^(draft|pending|tbd|tba|todo|n\/a|none|waiting|not approved)$/i;
-
-/** The media approval parts that the readiness rule reads. */
-const MEDIA_PARTS = ["images", "audio", "song"] as const;
 
 /** A week as plain JSON, for a broken copy. */
 type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -142,29 +138,30 @@ describe("P1 to P4 the loops approval of the approved pin", () => {
   });
 });
 
-describe("P5 the source record names the approved pin", () => {
-  it("records the full approved pin", () => {
+describe("P5 the source record names the published pin", () => {
+  it("records the full published pin", () => {
     const record = JSON.parse(
       readFileSync(resolve(contentDirectory, "source.json"), "utf8"),
     ) as { commit?: string; files?: string[] };
     const full = typeof record.commit === "string" && /^[0-9a-f]{40}$/.test(record.commit);
     console.log(`pin=${record.commit} full_pin=${full ? 1 : 0}`);
     expect(full, "the source record holds a full commit id").toBe(true);
-    expect(record.commit, "the source record names the approved pin").toBe(PIN);
+    expect(record.commit, "the source record names the published pin").toBe(PIN);
     expect(record.files?.length, "the source record lists eight week files").toBe(8);
   });
 });
 
-describe("P6 the loops approval does not open a draft week", () => {
-  it("keeps w02 to w08 at 404 with the draft reason, with the draft-media switch on", async () => {
+describe("P6 the receipt does not open the eighth week", () => {
+  it("keeps w08 at 404 with the draft reason, with the draft-media switch on", async () => {
     let approvedDraftWeeks = 0;
+    expect(DRAFT_WEEKS.length, "the input set must hold w08 (A4)").toBeGreaterThan(0);
     for (const week of DRAFT_WEEKS) {
       const shipped = readShippedWeek(week);
-      expect(loopsOf(shipped)?.status, `the approved pin approves the loops of w0${week}`).toBe(
+      expect(loopsOf(shipped)?.status, `the shipped pin approves the loops of w0${week}`).toBe(
         "approved",
       );
       const { visible, warnings } = await loadShipped(week);
-      expect(visible, `the approved pin must not open w0${week}`).toBeNull();
+      expect(visible, `the receipt must not open w0${week}`).toBeNull();
       expect(
         warnings.some((line) => line.includes("blocked: draft")),
         `the loader names the draft reason for w0${week}: ${warnings.join(" | ")}`,
@@ -179,11 +176,11 @@ describe("P6 the loops approval does not open a draft week", () => {
       approvedDraftWeeks += 1;
     }
     console.log(`loops_approved_draft_weeks=${approvedDraftWeeks}`);
-    expect(approvedDraftWeeks, "loops_approved_draft_weeks").toBe(7);
+    expect(approvedDraftWeeks, "loops_approved_draft_weeks").toBe(1);
   });
 });
 
-describe("P7 w08 of the approved pin", () => {
+describe("P7 w08 of the published pin", () => {
   it("holds no book, stays draft, holds approved loops, and is not ready", () => {
     const week = readShippedWeek(8);
     const loops = loopsOf(week)?.status;
@@ -196,30 +193,29 @@ describe("P7 w08 of the approved pin", () => {
   });
 });
 
-describe("P8 the statuses hold and a published week reaches readiness", () => {
-  it("keeps one published week and seven draft weeks", () => {
+describe("P8 the released weeks are published and ready", () => {
+  it("keeps seven published weeks and one draft week", () => {
     const statuses = WEEKS.map((week) => readShippedWeek(week).meta.status);
     const published = statuses.filter((status) => status === "published").length;
     const draft = statuses.filter((status) => status === "draft").length;
     console.log(`published_weeks=${published} draft_weeks=${draft}`);
     expect(statuses.length, "the test must read eight statuses (A4)").toBe(8);
-    expect(published, "published_weeks").toBe(1);
-    expect(draft, "draft_weeks").toBe(7);
+    expect(published, "published_weeks").toBe(7);
+    expect(draft, "draft_weeks").toBe(1);
   });
 
-  it("makes a published clone ready when its media parts are approved", () => {
-    // The pin keeps `audio` and `song` at draft for w02 to w08, so the draft status is not the
-    // only blocker of a published clone. The control approves the three media parts of the
-    // readiness rule, then asserts the readiness result.
-    const clone = structuredClone(readShippedWeek(2)) as Json;
-    clone.meta.status = "published";
-    const before = readinessBlocker(clone);
-    for (const part of MEDIA_PARTS) clone.approval[part] = { ...clone.approval[part], status: "approved" };
-    const ready = isWeekReady(clone);
-    console.log(`published_clone_blocker=${before} published_clone_ready=${ready ? 1 : 0}`);
-    expect(before, "the media approvals block the published clone before the control").toBe(
-      "media_not_approved",
-    );
-    expect(ready, "published_clone_ready").toBe(true);
+  it("reads the shipped w01 to w07 as ready with no blocker", () => {
+    const weeks = [1, 2, 3, 4, 5, 6, 7].map((week) => readShippedWeek(week));
+    expect(weeks.length, "the test must read seven shipped weeks (A4)").toBe(7);
+    let ready = 0;
+    for (const [index, week] of weeks.entries()) {
+      const number = index + 1;
+      const blocker = readinessBlocker(week);
+      console.log(`w0${number} ready=${isWeekReady(week) ? 1 : 0} blocker=${blocker ?? "none"}`);
+      expect(blocker, `the shipped w0${number} must hold no readiness blocker`).toBeNull();
+      expect(isWeekReady(week), `the shipped w0${number} must be ready`).toBe(true);
+      ready += 1;
+    }
+    expect(ready, "the test must read seven ready weeks (A4)").toBe(7);
   });
 });

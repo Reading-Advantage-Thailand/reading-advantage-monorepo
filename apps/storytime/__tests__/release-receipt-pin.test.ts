@@ -22,14 +22,14 @@ const contentDirectory = resolve(app, "content");
 const weekDirectory = resolve(contentDirectory, "l2");
 
 /**
- * The pin of the at-home release of 2026-11-20, after the approved A-42 pin of 2026-11-16
- * (plan task 2.1).
+ * The pin of the at-home release of 2026-11-20, after Daniel approved weeks 2 to 7
+ * (plan task 3.0b).
  *
- * The approved pin of 2026-11-16 (the Workbooks commit 70278a9beb8ef7314d98df80e0462892a0ca5019)
- * holds `approval.loops` approved in every week and the read-along sentence clips of w02 and w07,
- * so the source record names that commit now.
+ * The published pin (the Workbooks commit 1c5385a6e8a7243eaa102a3774cce7f2f0d80d8c) holds
+ * `meta.status` `published` in w01 to w07 and the three approval parts `audio`, `song`, and
+ * `scripts` approved in w02 to w07. w08 stays a draft.
  */
-const RELEASE_PIN = "70278a9beb8ef7314d98df80e0462892a0ca5019";
+const RELEASE_PIN = "1c5385a6e8a7243eaa102a3774cce7f2f0d80d8c";
 
 /** The eight week files that the source record lists, in the order of the week. */
 const EXPECTED_FILES = [

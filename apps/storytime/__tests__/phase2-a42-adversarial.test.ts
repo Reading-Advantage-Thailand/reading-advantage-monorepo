@@ -37,7 +37,7 @@ const contentDirectory = resolve(app, "content");
 const handoffRoot = process.env.STORYTIME_HANDOFF_ROOT ?? join(homedir(), "Desktop", "handoff");
 
 /** The approved pin that the release reads. */
-const PIN = "70278a9beb8ef7314d98df80e0462892a0ca5019";
+const PIN = "1c5385a6e8a7243eaa102a3774cce7f2f0d80d8c";
 
 /** A week as plain JSON. */
 type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
