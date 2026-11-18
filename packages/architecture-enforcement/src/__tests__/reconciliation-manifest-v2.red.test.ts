@@ -494,7 +494,9 @@ describe("architecture analyzer reconciliation manifest v2 (expected Red)", () =
     expect(Array.isArray(manifest.baselineAdditions)).toBe(true);
     expect((manifest.baselineAdditions as unknown[]).length).toBeGreaterThan(0);
     expect(Array.isArray(manifest.baselineRemovals)).toBe(true);
+    expect((manifest.baselineRemovals as unknown[]).length).toBeGreaterThan(0);
     expect(Array.isArray(manifest.baselineRenames)).toBe(true);
+    expect((manifest.baselineRenames as unknown[]).length).toBeGreaterThan(0);
     const acceptance = manifest.acceptance as {
       status?: unknown;
       defaultPolicy?: unknown;
