@@ -62,7 +62,7 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
 
   No code change in this task.
 
-- [ ] 1.2 Red: pin the two pictures, the two entries, the old-file rule, and the sizes. Test: AC-1, AC-2, AC-3, AC-14, AC-15, AC-16, AC-17, AC-18.
+- [x] 1.2 Red: pin the two pictures, the two entries, the old-file rule, and the sizes. Test: AC-1, AC-2, AC-3, AC-14, AC-15, AC-16, AC-17, AC-18.
 
   File `apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx`.
 
@@ -98,6 +98,10 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
   Expect exit 1: the hero and the block both show the old file, the new files are missing, two
   content images share one file, and the class is `aspect-4/3`. No failure is an import or syntax
   error.
+
+  Done: 2026-11-18 at `9a1e001fb`. The combined Red command (tasks 1.2 and 2.1, nine test files)
+  exited 1 on the new expectations only. `tsc --noEmit -p .` exited 0. Evidence:
+  `measure/runs/www_tutor_followups_20261118/red-1.2-2.1.log`.
 
 - [ ] 1.3 Green: convert the two sources to the delivered webp files. Test: AC-18.
 
@@ -168,7 +172,7 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
 Each task takes one item and its gate. Every item now holds a PASS gate. Task 2.1 pins the four
 items as failing tests.
 
-- [ ] 2.1 Red: pin the four copy items. Test: AC-5, AC-6, AC-7, AC-8.
+- [x] 2.1 Red: pin the four copy items. Test: AC-5, AC-6, AC-7, AC-8.
 
   File `src/__tests__/www-tutor-calculator.locale.test.ts`.
 
@@ -193,6 +197,18 @@ items as failing tests.
   www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts
   src/lib/tutor-commission.adversarial.test.ts src/__tests__/www-tutor-reedy-claim.test.tsx
   --reporter=dot --silent=true --maxWorkers=1'`. Expect exit 1 on the four points above.
+
+  The orchestrator extended this Red pass with two more files (orchestrator answer 2026-11-18):
+  `src/lib/tutor-commission.test.ts` (the two legs-without-own-students cases take
+  `needsOwnStudents`, spec D-6) and `src/lib/tutor-commission.settlement.adversarial.test.ts`
+  (line 613 takes `needsOwnStudents` for an unpaid tutor with legs and a volume). The zh
+  `calculator` expectation is `CALC_EN` with `explain.needsOwnStudents` replaced by the zh draft
+  of spec section 5.1 (D-11). The case at adversarial line 384 keeps `zero`: its network volume is
+  0, so it stays the first branch of D-6; the `needsOwnStudents` pin is a new case beside it.
+
+  Done: 2026-11-18 at `9a1e001fb`. The combined Red command (nine test files) exited 1 on the new
+  expectations only. `tsc --noEmit -p .` exited 0. Evidence:
+  `measure/runs/www_tutor_followups_20261118/red-1.2-2.1.log`.
 
 - [ ] 2.2 Green: add the fourth explain state. Test: AC-5.
 
