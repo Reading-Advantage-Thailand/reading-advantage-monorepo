@@ -350,9 +350,7 @@ export default async function MathAdvantage({
             </div>
           </div>
           <p className="mt-12 text-center text-sm text-site-body max-w-2xl mx-auto">
-            Math Advantage is on our product roadmap. Specific efficacy stats
-            will be published when the product is generally available and has
-            verified evidence.
+            Math Advantage is on our product roadmap.
           </p>
         </div>
       </section>

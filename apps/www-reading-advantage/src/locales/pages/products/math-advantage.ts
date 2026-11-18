@@ -1,9 +1,9 @@
 export const en = {
     hero: {
         title: "Math Advantage",
-        subtitle: "On Our Roadmap · Planned",
-        description: "Math Advantage is on our product roadmap. It is a planned math book line with a printed workbook and a digital twin, tagged to the Mastery Advantage knowledge graph.",
-        comingSoon: "On Our Roadmap",
+        subtitle: "Math for Thai Primary Schools · 2027 School Year",
+        description: "In the 2027 school year, young mathematicians open printed workbooks and a Math Advantage app, both tagged to the Mastery Advantage knowledge graph. We are building the app now on the Primary Advantage base.",
+        comingSoon: "For the 2027 school year",
     },
     heroAlt: "Interactive digital math learning environment",
     logoAlt: "Math Advantage Logo",
@@ -71,7 +71,7 @@ export const en = {
     },
     cta: {
         heading: "Interested in Math Advantage?",
-        description: "Math Advantage is on our roadmap. Tell us what you need.",
+        description: "Put Math Advantage on your plan for the 2027 school year. Tell us what your teachers and students need.",
         button: "Tell Us You Are Interested",
         contactUs: "Contact Us",
     },
@@ -93,9 +93,9 @@ export const en = {
 export const th = {
     hero: {
         title: "แมธแอดแวนเทจ",
-        subtitle: "อยู่ในแผนงานของเรา · กำลังวางแผน",
-        description: "แมธแอดแวนเทจอยู่ในแผนงานผลิตภัณฑ์ของเรา เป็นชุดหนังสือคณิตศาสตร์ที่วางแผนไว้ มีแบบฝึกหัดเล่มพิมพ์และเวอร์ชันดิจิทัล เชื่อมกับกราฟความรู้ Mastery Advantage",
-        comingSoon: "อยู่ในแผนงาน",
+        subtitle: "คณิตศาสตร์สำหรับโรงเรียนประถมไทย · ปีการศึกษา 2570",
+        description: "ในปีการศึกษา 2570 นักคณิตศาสตร์ตัวน้อยจะได้เปิดหนังสือแบบฝึกหัดฉบับพิมพ์และใช้แอป Math Advantage ทั้งสองส่วนติดแท็กเชื่อมกับกราฟความรู้ Mastery Advantage ขณะนี้เรากำลังพัฒนาแอปโดยใช้พื้นฐานของ Primary Advantage",
+        comingSoon: "สำหรับปีการศึกษา 2570",
     },
     heroAlt: "สภาพแวดล้อมการเรียนรู้คณิตศาสตร์ดิจิทัลแบบโต้ตอบ",
     logoAlt: "โลโก้ Math Advantage",
@@ -163,7 +163,7 @@ export const th = {
     },
     cta: {
         heading: "สนใจ Math Advantage หรือไม่?",
-        description: "แมธแอดแวนเทจอยู่ในแผนงานของเรา บอกเราว่าคุณต้องการอะไร",
+        description: "เพิ่ม Math Advantage ในแผนปีการศึกษา 2570 แล้วบอกเราว่าครูและนักเรียนของคุณต้องการอะไร",
         button: "บอกเราว่าคุณสนใจ",
         contactUs: "ติดต่อเรา",
     },
