@@ -707,7 +707,7 @@ type GuardImplementation = {
 /** The ten override pins that the guard contract requires. */
 const REQUIRED_OVERRIDE_PINS: Record<string, string> = {
   "drizzle-orm": "0.45.2",
-  next: "16.4.1",
+  next: "16.4.6",
   react: "19.2.9",
   "react-dom": "19.2.9",
   vitest: "4.1.8",
@@ -1184,7 +1184,7 @@ describe("the real guard code fails the false passes of the guard", () => {
     // The guard reads the package key before the last at sign. The key
     // `next@npm:next@16.2.9` names the package `next@npm:next`, so the copy
     // stays outside the floor of next. The guard passes. The workspace
-    // override pins next to the exact version 16.4.1, so pnpm cannot write
+    // override pins next to the exact version 16.4.6, so pnpm cannot write
     // this key form. The limitation is a nonblocking finding of this pass.
     const text = [
       "packages:",

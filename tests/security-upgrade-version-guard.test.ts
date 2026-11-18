@@ -21,7 +21,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve, relative, join } from "node:path";
-import { GUARD_ENTRIES, NO_FIX_AVAILABLE, OPEN_MAJORS, type GuardEntry } from "./security-upgrade-guard-list";
+import { ABSENT_BY_DESIGN, GUARD_ENTRIES, NO_FIX_AVAILABLE, OPEN_MAJORS, type GuardEntry } from "./security-upgrade-guard-list";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -160,7 +160,7 @@ function parseFlatBlock(src: string, blockName: string): Record<string, string> 
 /** The ten override pins that must stay exact. An added key is not in this map. */
 const REQUIRED_OVERRIDE_PINS: Record<string, string> = {
   "drizzle-orm": "0.45.2",
-  next: "16.4.1",
+  next: "16.4.6",
   react: "19.2.9",
   "react-dom": "19.2.9",
   vitest: "4.1.8",
@@ -489,7 +489,7 @@ describe("refutation fixtures", () => {
     const actual = { ...REQUIRED_OVERRIDE_PINS, next: "16.2.9" };
     const msg = evaluateOverrideContract(actual, REQUIRED_OVERRIDE_PINS, GUARD_ENTRIES).join("\n");
     expect(msg).toContain("key=next");
-    expect(msg).toContain("expected=16.4.1");
+    expect(msg).toContain("expected=16.4.6");
     expect(msg).toContain("actual=16.2.9");
   });
 
@@ -532,8 +532,25 @@ describe("guard list", () => {
     expect(GUARD_ENTRIES.length).toBeGreaterThan(0);
   });
 
-  it("requires presence on every row", () => {
-    for (const e of GUARD_ENTRIES) expect(e.requirePresent).toBe(true);
+  it("requires presence on every row except a package that left the tree", () => {
+    // image-size left the dependency tree before this track. Its 2.0.3 floor
+    // stays. Only the demand for an installed copy goes.
+    const absent = GUARD_ENTRIES.filter((e) => !e.requirePresent);
+    expect(absent.map((e) => e.packageName)).toEqual([...ABSENT_BY_DESIGN]);
+    for (const e of GUARD_ENTRIES) {
+      if (e.packageName === "image-size") continue;
+      expect(e.requirePresent).toBe(true);
+    }
+  });
+
+  it("keeps the image-size 2.0.3 floor for a copy that returns", () => {
+    const entry = GUARD_ENTRIES.filter((e) => e.packageName === "image-size");
+    expect(entry.map((e) => e.fixedVersion)).toEqual(["2.0.3"]);
+    expect(entry.flatMap((e) => e.advisoryIds)).toContain("GHSA-5p2g-fcmc-qvqq");
+    const below = parseLockedVersions("  image-size@2.0.2:\n    resolution: {integrity: x}\n");
+    expect(evaluateGuard(below, entry).join("\n")).toContain("locked=2.0.2");
+    const atFloor = parseLockedVersions("  image-size@2.0.3:\n    resolution: {integrity: x}\n");
+    expect(evaluateGuard(atFloor, entry)).toEqual([]);
   });
 
   it("does not floor a package with no patched release", () => {

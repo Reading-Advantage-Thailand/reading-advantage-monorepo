@@ -4,12 +4,18 @@
  * One row per (package, line prefix) pair. The test reads this list and scans
  * the `packages:` section of `pnpm-lock.yaml`. A row fails while a locked
  * version that starts with `linePrefix` sits below `fixedVersion`. Absence of
- * the line fails closed (`requirePresent` is true on every row).
+ * the line fails closed (`requirePresent` is true on every row) except for a
+ * row whose package left the dependency tree; that row sets
+ * `requirePresent: false` and names the evidence.
  *
  * Version bumps stay patch or minor only. The MAJOR bumps of the spec stay out
  * of scope and must not appear here (the test asserts that).
  * A package with no patched release lives in NO_FIX_AVAILABLE, not here.
  */
+
+/** Packages that left the dependency tree. Their floor stays; presence is not required. */
+export const ABSENT_BY_DESIGN = ["image-size"] as const;
+
 export interface GuardEntry {
   /** The GitHub advisory IDs this row guards. Each id appears in the failure message. */
   advisoryIds: string[];
@@ -229,7 +235,10 @@ export const GUARD_ENTRIES: GuardEntry[] = [
     packageName: "image-size",
     linePrefix: "2.",
     fixedVersion: "2.0.3",
-    requirePresent: true,
+    // Absent by design. `pnpm why image-size` prints no dependent, and the
+    // base commit 837755eaa held no `image-size@` key either. A 2.x copy below
+    // 2.0.3 still fails the floor when one returns.
+    requirePresent: false,
   },
   {
     advisoryIds: ["GHSA-mwp4-54f8-5fhr"],

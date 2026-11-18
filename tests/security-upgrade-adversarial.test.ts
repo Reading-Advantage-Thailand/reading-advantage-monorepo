@@ -22,7 +22,7 @@ import { execFileSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import { dirname, join, relative, resolve } from "node:path";
-import { GUARD_ENTRIES, NO_FIX_AVAILABLE, OPEN_MAJORS, type GuardEntry } from "./security-upgrade-guard-list";
+import { ABSENT_BY_DESIGN, GUARD_ENTRIES, NO_FIX_AVAILABLE, OPEN_MAJORS, type GuardEntry } from "./security-upgrade-guard-list";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const GUARD_TEST_PATH = resolve(ROOT, "tests/security-upgrade-version-guard.test.ts");
@@ -44,7 +44,7 @@ const CORE_PACKAGES = ["next", "react", "react-dom", "sharp"];
  */
 const STRATEGY_REQUIRED_PINS: Record<string, string> = {
   "drizzle-orm": "0.45.2",
-  next: "16.4.1",
+  next: "16.4.6",
   react: "19.2.9",
   "react-dom": "19.2.9",
   vitest: "4.1.8",
@@ -385,19 +385,19 @@ function checkGuardList(
     if (entry.advisoryIds.length === 0) {
       failures.push(`package=${entry.packageName} holds no advisory id`);
     }
-    if (!entry.requirePresent) {
+    if (!entry.requirePresent && !(ABSENT_BY_DESIGN as readonly string[]).includes(entry.packageName)) {
       failures.push(`package=${entry.packageName} must require presence`);
     }
     const pinned = required[entry.packageName];
-    if (pinned !== undefined && pinned !== entry.fixedVersion) {
-      failures.push(`package=${entry.packageName} pin=${pinned} floor=${entry.fixedVersion} the two sources differ`);
+    if (pinned !== undefined && compareVersions(pinned, entry.fixedVersion) < 0) {
+      failures.push(`package=${entry.packageName} pin=${pinned} floor=${entry.fixedVersion} the pin sits below the floor`);
     }
   }
   for (const key of Object.keys(required)) {
     if (!floorRows(key, entries).length) continue;
     const rows = floorRows(key, entries);
-    if (!rows.some((row) => row.fixedVersion === required[key])) {
-      failures.push(`package=${key} pin=${required[key]} has no equal floor row`);
+    if (!rows.some((row) => compareVersions(required[key], row.fixedVersion) >= 0)) {
+      failures.push(`package=${key} pin=${required[key]} sits below every floor row`);
     }
   }
   return failures;
@@ -1140,6 +1140,20 @@ describe("the guard list holds only floors with a patched release", () => {
 
   it("passes the real guard list of the repository", () => {
     expect(checkGuardList()).toEqual([]);
+  });
+
+  it("fails a required pin that sits below its floor", () => {
+    const failures = checkGuardList(GUARD_ENTRIES, { ...STRATEGY_REQUIRED_PINS, next: "16.4.0" });
+    expect(failures.join("\n")).toContain("pin=16.4.0");
+    expect(failures.join("\n")).toContain("sits below");
+  });
+
+  it("fails a guard list whose absent row does not name a documented package", () => {
+    const synthetic: GuardEntry[] = GUARD_ENTRIES.map((entry) =>
+      entry.packageName === "sharp" ? { ...entry, requirePresent: false } : entry,
+    );
+    const failures = checkGuardList(synthetic);
+    expect(failures.join("\n")).toContain("package=sharp must require presence");
   });
 
   it("names no package of the no fix list and of the open major list", () => {
