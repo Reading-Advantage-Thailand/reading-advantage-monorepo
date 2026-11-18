@@ -36,6 +36,26 @@ pnpm architecture:check --skip-input-snapshot-pin
 pnpm architecture:check
 ```
 
+The CI step adds `--policy v2`, because the maintained v2 baselines replace the
+frozen v1 debt. The local full check keeps the committed default policy.
+
+## Reconcile the v2 baselines
+
+The reconcile command previews one four-file transaction. The preview writes
+nothing and prints the plan hash. The acknowledged run writes the manifest,
+the ownership map, and the two v2 baselines:
+
+```bash
+pnpm architecture:reconcile --policy v2 --owner <owner-id> --rationale "<reason>"
+pnpm architecture:reconcile --policy v2 --owner <owner-id> --rationale "<reason>" \
+  --acknowledge --expected-plan-hash <plan-hash>
+```
+
+The owner id holds a lower-case identifier, such as `monorepo-architecture`.
+The rationale states why the new entries are accepted. The acknowledged run
+needs the plan hash of the reviewed preview. A staged baseline delta needs
+review evidence, so a candidate manifest without a review record cannot write.
+
 ## Refresh the v2 manifest pins
 
 After a change to an analyzed file, refresh the five pinned analyzer values:
@@ -108,7 +128,7 @@ evidence.
 
 ## CI and Doctor
 
-GitHub CI runs `pnpm architecture:check --skip-input-snapshot-pin`.
+GitHub CI runs `pnpm architecture:check --skip-input-snapshot-pin --policy v2`.
 `measure/doctor.sh` runs the local full check `pnpm architecture:check`. CI
 never runs the baseline-update or pin-refresh command. A failing check must be
 remediated or explicitly reviewed through the update workflow; it must not be
