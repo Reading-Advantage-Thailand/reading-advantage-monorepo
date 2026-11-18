@@ -121,7 +121,13 @@ export function parsePinRefreshArguments(
           `--budget-s must be a positive whole number of seconds: ${value}`,
         );
       }
-      budgetSeconds = Number(value);
+      const requestedSeconds = Number(value);
+      if (!Number.isSafeInteger(requestedSeconds)) {
+        throw new Error(
+          `--budget-s must be a positive whole number of seconds: ${value}`,
+        );
+      }
+      budgetSeconds = requestedSeconds;
       index += 1;
       continue;
     }
