@@ -3,8 +3,15 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { SIGN_IN_USERNAME_COOKIE, getCurrentUser, mayOpenPath } from "../../../lib/auth";
+import {
+  SIGN_IN_USERNAME_COOKIE,
+  getCurrentUser,
+  mayOpenPath,
+  type StorytimeUser,
+} from "../../../lib/auth";
+import * as content from "../../../lib/content";
 import { safeReturnPath } from "../../../lib/auth/return-path";
+import { teacherRoutesEnabled } from "../../../lib/teacher";
 
 /**
  * The sign-in page of the Storytime app (design section 2, AC-4.1 and AC-4.3).
@@ -24,6 +31,36 @@ export function generateMetadata(): Metadata {
 }
 
 /**
+ * Builds the teacher landing of a signed-in visit (plan task 6.2, round 7, PM point 1).
+ *
+ * A teacher with the switch on and no usable `next` — the form fills the fallback
+ * `/<locale>/st` — goes to the teacher week page of the first open week. Every other visitor
+ * keeps the plain redirect. The path is computed before any `redirect` call, so a `redirect`
+ * never runs inside the try block, and a thrown redirect is never caught. The optional call
+ * keeps the page safe against a mock of `../lib/content` that holds no `firstOpenWeek`.
+ * @param user The signed-in user.
+ * @param locale The locale of the page.
+ * @param next The checked return path.
+ * @returns The teacher landing path, or `null` for the plain redirect.
+ */
+async function teacherLanding(
+  user: StorytimeUser,
+  locale: string,
+  next: string,
+): Promise<string | null> {
+  if (next !== `/${locale}/st` || user.role !== "teacher" || !teacherRoutesEnabled()) {
+    return null;
+  }
+  try {
+    const first = await content.firstOpenWeek?.();
+    if (!first) return null;
+    return `/${locale}/teacher/${first.level}/${first.week}`;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Renders the sign-in page.
  * @param props.params The locale of the page.
  * @param props.searchParams The query of the request, with `next` and `error`.
@@ -40,6 +77,8 @@ export default async function SignInPage({
   const query = await searchParams;
   const next = safeReturnPath(query.next, `/${locale}/st`);
   const user = await getCurrentUser();
+  const landing = user === null ? null : await teacherLanding(user, locale, next);
+  if (landing !== null) redirect(landing);
   if (user && mayOpenPath(user, next)) redirect(next);
 
   // The handler sets the flash cookie after a wrong sign-in, and the proxy clears it on this GET.

@@ -1,0 +1,368 @@
+{
+  "schema_version": 1,
+  "role": "measure-phase-acceptance",
+  "track": "www_tutor_calculator_20261117",
+  "phase": 1,
+  "phase_name": "Phase 1: the commission calculator",
+  "route": "opencode-go/mimo-v2.6-flash",
+  "route_note": "Substitution record from the brief: the role table route claude-code/claude-opus-5-5 is excluded by Daniel until 2026-11-17 15:00; this Go route is a different family from the Red role hy4 route and the Green author's deepseek route.",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "audited_head_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "audited_head_is_head": true,
+  "head_note": "git rev-parse HEAD returned d279b870341c067c33fc884ae8863b5428487c17 and git status --porcelain is empty, before and after the gate runs.",
+  "verdict": "PASS",
+  "status": "pass",
+  "retry_recommendation": "none",
+  "note": "Phase 1 acceptance at d279b8703. The phase boundary holds: 25 commits, all track-scoped Red, Green, plan-evidence, or remediation work on the spec 5.1 file list. Every Phase-1 acceptance criterion has an exact test or command proof; none rests on a plan sentence. All five gates were rerun live at the audited head and exit as recorded. The review and adversarial trail is consistent: both CHANGES_REQUIRED/fail verdicts have a remediation commit and a re-run at the current head. No blocker.",
+  "boundary_check": {
+    "command": "git log --oneline 8862cf14cc6e9b11e62d08d5084288a4c294752c..d279b870341c067c33fc884ae8863b5428487c17",
+    "commit_count": 25,
+    "all_commits_track_scoped": true,
+    "out_of_scope_commits": [],
+    "phase_2_work_in_range": false,
+    "files_changed_in_range": [
+      "apps/www-reading-advantage/src/lib/tutor-commission.ts",
+      "apps/www-reading-advantage/src/lib/tutor-commission.test.ts",
+      "apps/www-reading-advantage/src/lib/tutor-commission.adversarial.test.ts",
+      "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx",
+      "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+      "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.adversarial.test.tsx",
+      "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+      "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+      "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+      "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx",
+      "apps/www-reading-advantage/src/app/[locale]/globals.css",
+      "measure/tracks/www_tutor_calculator_20261117/plan.md",
+      "measure/runs/www_tutor_calculator_20261117/adversarial-p1-61e614489.json",
+      "measure/runs/www_tutor_calculator_20261117/adversarial-p1-61e614489.log"
+    ],
+    "scope_note": "The file list equals spec section 5.1 plus the two adversarial test files the adversarial role committed, the plan, and one tracked run artifact pair. No package.json or pnpm-lock.yaml change, no other page, no other locale file, no deploy or push. measure/runs/ is gitignored (.gitignore:56), so the other run artifacts are untracked by design.",
+    "no_phase_2_artifacts": "apps/www-reading-advantage/public/images/products/tutor-advantage/ and src/lib/__tests__/tutor-screens.test.ts do not exist; the tutor locale file has no `screens` block; both old live lines are still present, as D-13 requires for Phase 1."
+  },
+  "claim_map": [
+    {
+      "ac": "AC-1",
+      "applies_to_phase_1": true,
+      "proof": "apps/www-reading-advantage/src/lib/tutor-commission.test.ts:31-60",
+      "exact": true,
+      "detail": "Six rates pinned as toFixed(4) strings (40.5000, 42.5000, 45.0000, 50.0000, 55.6065, 60.6315), commissionRate(0)=0, commissionRate(-5)=0, and rate at 1e9 below 0.7143. A reference-formula control at lines 40-44 validates the pins.",
+      "plan_sentence_only": false
+    },
+    {
+      "ac": "AC-2",
+      "applies_to_phase_1": true,
+      "proof": "apps/www-reading-advantage/src/lib/tutor-commission.test.ts:74-145",
+      "exact": true,
+      "detail": "All three presets return the D-2 money values to the satang, with each leg's volume and payout in result.legs (lines 115-118 and 135-139) and NETWORK_PRESETS length 3 at price 3,000 (lines 98-103).",
+      "plan_sentence_only": false
+    },
+    {
+      "ac": "AC-3",
+      "applies_to_phase_1": true,
+      "proof": "apps/www-reading-advantage/src/lib/tutor-commission.test.ts:147-166",
+      "exact": true,
+      "detail": "Integer satang conservation with the exact spec sums 801000 + 464569 = 1265569 and 1201500 + 669444 = 1870944, plus preset 3 leg payouts 12015, payout 6694.44, net 6493.61 at lines 140-143. Labeled integers, no digit regex (A3 clean).",
+      "plan_sentence_only": false
+    },
+    {
+      "ac": "AC-4",
+      "applies_to_phase_1": true,
+      "proof": "apps/www-reading-advantage/src/lib/tutor-commission.test.ts:196-215",
+      "exact": true,
+      "detail": "payoutAfterDeduction(0,0)=0 and (100,150)=0, a positive-control case, and tax and net are 0 on a zero payout.",
+      "plan_sentence_only": false
+    },
+    {
+      "ac": "AC-5",
+      "applies_to_phase_1": true,
+      "proof": "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts:37-208, 305-358, 361-371",
+      "exact": true,
+      "detail": "34 string leaves pinned word for word in en and th, key order and key-path parity across en/th/zh, zh leaf map equal to en, and absence of inputs.secondLevel, inputs.studentsSecondLevel, and explain.twoLevels with per-key positive controls.",
+      "plan_sentence_only": false
+    },
+    {
+      "ac": "AC-6",
+      "applies_to_phase_1": false,
+      "proof": "Phase 2 task 2.3 owns this criterion. At this head both old live lines are still present (src/locales/pages/products/tutor-advantage.ts:151 and :224), which D-13 requires until task 2.3.",
+      "exact": true,
+      "detail": "No Phase 1 plan task claims AC-6. The Phase 1 push ban of D-13 keeps this criterion honest.",
+      "plan_sentence_only": false
+    },
+    {
+      "ac": "AC-7",
+      "applies_to_phase_1": true,
+      "proof": "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts:373-403, 406-418",
+      "exact": true,
+      "detail": "The D-2a preset 3 draft is pinned in en and th, the three chart labels are pinned, and the figures 5,884 / 5,707 / 22,714 / 9,889 are absent from every calculator block with one positive control per figure.",
+      "plan_sentence_only": false
+    },
+    {
+      "ac": "AC-8",
+      "applies_to_phase_1": true,
+      "proof": "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts:421-433, 435-447",
+      "exact": true,
+      "detail": "The D-16 scan covers all nine forbidden tokens over the whole calculator block in three locales with one injected positive control per token, and the price default 3,000 is pinned in en and th. The filter uses plain substring matching over calculator leaves with no exclusion words, so no real hit can be dropped (A7 clean).",
+      "plan_sentence_only": false
+    },
+    {
+      "ac": "AC-9",
+      "applies_to_phase_1": true,
+      "proof": "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx:104-287",
+      "exact": true,
+      "detail": "Default zero paint and the zero line (104-114), the polite live region (116-121), labelled inputs with min=0 (123-131), leg rows 0 to 4 with a new leg at 3 (134-192), removal 3 to 2 (158-176), preset figures, setup and result text for all three presets, one aria-pressed (213-219, 260-279), the D-7 clear on edit (229-244), and the D-5 price reset (246-258).",
+      "exactness_gap": "The removal case uses three identical 3-student legs, so a mutant that drops the first leg instead of the last passes. This is review-a N1, recorded as a nonblocking carried nit, not a blocker.",
+      "plan_sentence_only": false
+    },
+    {
+      "ac": "AC-10",
+      "applies_to_phase_1": "partial",
+      "proof": "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx:38-63",
+      "exact": true,
+      "detail": "The Phase 1 part is exact: the tutor-calculator section exists with id commission-calculator, and the DOM order tutorRole then tutor-calculator then tutor-commitments holds. The tutor-screens clause of AC-10 belongs to Phase 2 task 2.2; Phase 1 task 1.7 claims only the order and the section presence, so no over-claim.",
+      "plan_sentence_only": false
+    },
+    {
+      "ac": "AC-11",
+      "applies_to_phase_1": true,
+      "proof": "Live gate rerun at the audited head, recorded in gates below",
+      "exact": true,
+      "detail": "Module test and www suite, types, lint, and build all exit 0 at d279b8703. The plan 1.8 claim of 65 files and 2533 tests at 4c4153b04 reconciles exactly with this run: 65 + 2 adversarial files = 67, and 2533 + 9 remediation cases + 38 adversarial cases = 2580.",
+      "plan_sentence_only": false
+    },
+    {
+      "ac": "AC-12",
+      "applies_to_phase_1": true,
+      "proof": "git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json",
+      "exact": true,
+      "detail": "Exit 0 at the audited head; the baseline file is byte-unchanged across the phase.",
+      "plan_sentence_only": false
+    }
+  ],
+  "gates": [
+    {
+      "id": "a",
+      "command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test --reporter=dot --silent=true'",
+      "workdir": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+      "exit_code": 0,
+      "output_summary": "Test Files 67 passed (67), Tests 2580 passed (2580), Duration 57.80s. Run twice; both runs identical counts.",
+      "verbatim_exit_marker": "GATE_A_EXIT=0"
+    },
+    {
+      "id": "b",
+      "command": "pnpm turbo run check-types --filter=www-reading-advantage",
+      "exit_code": 0,
+      "output_summary": "cache hit 799d0ce15b2edbdc, 1 successful task. A --force rerun of the same command exits 0 with tsc --noEmit clean.",
+      "verbatim_exit_marker": "GATE_B_EXIT=0; GATE_B_FORCE_EXIT=0"
+    },
+    {
+      "id": "c",
+      "command": "pnpm --filter www-reading-advantage lint",
+      "exit_code": 0,
+      "output_summary": "eslint produced no output, so no shadcn/* error in a touched file.",
+      "verbatim_exit_marker": "GATE_C_EXIT=0"
+    },
+    {
+      "id": "d",
+      "command": "git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json",
+      "exit_code": 0,
+      "output_summary": "No output; the ratchet baseline is unchanged.",
+      "verbatim_exit_marker": "GATE_D_EXIT=0"
+    },
+    {
+      "id": "e",
+      "command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage build'",
+      "exit_code": 0,
+      "attempt_1_exit_code": 1,
+      "attempt_1_output": "Build completed the route table, then exited 1 on Error [SecurityFatalError]: Your version of Next.js is affected by a known security vulnerability. This is the known Next.js security-advisory nudge.",
+      "attempt_2_exit_code": 0,
+      "attempt_2_output": "Continuing after the upgrade reminder; all 17 static pages generated; route table printed; no build error.",
+      "verbatim_exit_markers": "GATE_E_ATTEMPT1_EXIT=1; GATE_E_ATTEMPT2_EXIT=0",
+      "nudge_note": "The nudge text asks the user once about running 'next upgrade --agent=security' in the background. That question is passed to the orchestrator, not run from this gate-only role."
+    }
+  ],
+  "review_trail": {
+    "consistent": true,
+    "chain": [
+      "review-a round 1 at 10dcf42a8: CHANGES_REQUIRED (F1 missing AC-9 cases, F2 missing clamp pins). Remediation commit 64465455f (red-remediation-1, targeted gate exit 0, Test Files 2 passed (2), Tests 41 passed (41)). Re-run: review-a round 2 at 64465455f, PASS, 0 blocking.",
+      "adversarial round 1 at 61e614489: fail, blocking F1 (A6 finite input overflows to Infinity and throws RangeError in toSatang). Remediation commit daa77805d by the Green role (green-p1-fix: red command 1 failed | 22 passed to 23 passed, four-file gate 79/79 exit 0). Re-run: adversarial round 2 at d279b8703, PASS, 14 mutants all die, gate 4 files / 79 tests / exit 0.",
+      "review-c round 1 at 64465455f: PASS, but the later product commit daa77805d changed the module, so review-c round 2 re-ran at d279b8703 (PASS, three-file rerun 65 tests exit 0). No verdict survives only at a stale head: review-a round 3, review-c round 2, adversarial round 2, and the UX review all record audited_head_sha d279b8703, which is the current HEAD.",
+      "ux review ux-p1-d279b8703.json at d279b8703: status pass, 0 blocking; build attempt 1 exit 1 on the same nudge, attempt 2 exit 0; capture folder holds 48 entries and p1-captures holds 66 PNGs plus p1-checks.json with 66 states and failuresCount 0."
+    ],
+    "review_b": "Test strategy section 4 folds Review B into Review A for this static public page. review-a round 1 records the B probes (no fetch, no dangerouslySetInnerHTML, no package.json or pnpm-lock change, inline style is one custom property, no personal data). The phase diff shows no dependency change, and this audit re-ran the probes itself: 0 hits for fetch/XHR/dangerouslySetInnerHTML in the component and the page, and the only style props set --bar-width."
+  },
+  "independence": {
+    "git_author_uniform": "All 25 commits carry the machine identity 'Daniel Bo <bodangren@gmail.com>'; role attribution comes from the run artifacts, not from authorship.",
+    "audit_roles_edited_product_code": false,
+    "audit_role_scope_evidence": "review-a r3, review-c r2, and adversarial r2 each record a diff range whose product content is only tutor-commission.ts for the Green fix, and their no_changes statements limit them to measure/runs artifacts. The two product commits in the range (3786a1d29, f18b6dbbd, daa77805d with 377e45b8c) map to Green tasks 1.6, 1.7, 1.2, and the adversarial remediation in the plan.",
+    "human_evidence_fabricated": false,
+    "human_evidence": "p1-captures/ holds 66 PNGs and p1-checks.json with 66 state records and failuresCount 0; ux-p1-d279b8703/ holds 48 entries including 37 screenshots, 3 run scripts, and 3 result JSON files. The UX run cross-checks 60 shared state records against p1-checks.json with 0 disagreements, which ties the two independent captures together."
+  },
+  "anti_pattern_checks": {
+    "A3_digit_only_count": "Pass. No count or baseline assertion uses a digit-only regex; grep found no `[0-9]+`-style count checks in the plan or the six test files. Plan and evidence quote labeled integers: 'Test Files 67 passed (67)', 'Tests 2580 passed (2580)'.",
+    "A4_vacuous_pass": "Pass. Every absence scan carries a per-token positive control that injects the value and expects the scan to fire (locale test lines 349-358, 413-418, 442-447). The aggregate suite has no stale red test: gate a reports 67 of 67 files and 2580 of 2580 tests passing, so no intentionally-red file hides in the suite.",
+    "A5_false_claim_text": "Pass. The plan's 'PASS' claims were re-run at the audited head: suite exit 0, types exit 0 (cache and force), lint exit 0, ratchet exit 0, build exit 1 then 0 on retry exactly as the plan records. The 1.8 counts (65 files, 2533 tests) reconcile with the live 67 files and 2580 tests after the 9 remediation cases and 38 adversarial cases.",
+    "A6_registry_overstatement": "Pass. The measure/tracks.md row for this track says 'new, opened 2026-11-17' and states no resolved or deployed claim.",
+    "A7_over_broad_filter": "Pass. The D-16 and superseded-figure filters match exact literals as case-insensitive substrings over the calculator block only, with no line exclusions and no bare-word tokens that could hide a real hit."
+  },
+  "carry_forward_nits": [
+    {
+      "id": "N1",
+      "text": "The leg-removal test uses three identical legs, so which leg the removal case drops is unpinned.",
+      "recorded_as": "nonblocking open nit in review-a-p1-r3-daa77805d.json (nonblocking_findings N1)",
+      "blocker": false
+    },
+    {
+      "id": "F4",
+      "text": "The net figure is shown as the hero only; spec 5.3 item 6 lists a net row.",
+      "recorded_as": "nonblocking carried deviation in review-a-p1-r3-daa77805d.json (F4), documented in plan task 1.6 lines 143-144, with the note that Review C or the spec owner decides",
+      "blocker": false
+    },
+    {
+      "id": "F3",
+      "text": "The build-graph scan was skipped under the PM load watch; only an incremental one-file update ran.",
+      "recorded_as": "nonblocking carried item in review-a-p1-r3-daa77805d.json (F3), to run or be skipped at closeout",
+      "blocker": false
+    }
+  ],
+  "nonblocking_findings": [
+    {
+      "id": "P1-A1",
+      "severity": "info",
+      "file": "measure/runs/www_tutor_calculator_20261117/adversarial-p1-r2-daa77805d.json",
+      "defect": "The gate.command string names the component adversarial file as tutor-commission-calculator.adversarial.test.ts; the committed file ends in .tsx.",
+      "assessment": "Text typo in the artifact only. The recorded counts (4 files, 79 tests, exit 0) match the correct command that review-a round 3 re-ran live, and the full-suite gate covers the same four files. No action needed for Phase 1."
+    },
+    {
+      "id": "P1-A2",
+      "severity": "info",
+      "file": "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx:260",
+      "defect": "The test that clicks preset index 1 is named 'shows every preset 1 figure, its text, and only one pressed preset', which reads as preset index 0.",
+      "assessment": "Naming nit only. The assertions target preset index 1 correctly, and preset index 0 is covered by two other cases. All three presets are proven."
+    },
+    {
+      "id": "P1-A3",
+      "severity": "info",
+      "file": "measure/tracks/www_tutor_calculator_20261117/plan.md Phase 2 tasks 2.1, 2.2, 2.3",
+      "defect": "Pending Phase 2 tasks carry 'Done:' sentences that describe the completion condition; the condition is not met at this head.",
+      "assessment": "The same phrasing exists at phase_base 8862cf14, where it is a condition template, and all Phase 2 markers are still pending. Not a false claim introduced in Phase 1, and Phase 2 is outside this audit's phase."
+    }
+  ],
+  "blocking_findings": [],
+  "tests": {
+    "suite_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test --reporter=dot --silent=true'",
+    "test_files_passed": 67,
+    "test_files_total": 67,
+    "tests_passed": 2580,
+    "tests_total": 2580,
+    "exit_code": 0
+  },
+  "artifacts": [
+    "measure/runs/www_tutor_calculator_20261117/phase-accept-p1-d279b8703.json",
+    "measure/runs/www_tutor_calculator_20261117/phase-accept-p1-d279b8703.log"
+  ],
+  "prerequisite_artifacts": [
+    "measure/runs/www_tutor_calculator_20261117/review-a-p1-r3-daa77805d.json",
+    "measure/runs/www_tutor_calculator_20261117/review-c-p1-r2-daa77805d.json",
+    "measure/runs/www_tutor_calculator_20261117/adversarial-p1-r2-daa77805d.json",
+    "measure/runs/www_tutor_calculator_20261117/ux-p1-d279b8703.json",
+    "measure/runs/www_tutor_calculator_20261117/p1-captures/p1-checks.json"
+  ],
+  "head_alignment": {
+    "prerequisites_at_audited_head": [
+      "review-a-p1-r3-daa77805d.json",
+      "review-c-p1-r2-daa77805d.json",
+      "adversarial-p1-r2-daa77805d.json",
+      "ux-p1-d279b8703.json"
+    ],
+    "test_only_commits_allowed": [],
+    "note": "Every current prerequisite already records audited_head_sha d279b8703, so no test-only-commit allowance was needed."
+  },
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "Every rate, preset, and conservation pin in tutor-commission.test.ts:31-166 matches spec section 3 and D-2 exactly, and review-a round 3 reproduced all of them with an independent BigInt recompute."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "Red artifacts show each Phase 1 test failing first with the named cause, and every absence scan has a per-token positive control (locale test:413-447); the carried gap is review-a N1, the unpinned which-leg removal case."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff 8862cf14..d279b8703 holds exactly the spec 5.1 file list plus plan.md and one tracked run artifact pair, with no dependency, lockfile, or Phase 2 change."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "All five gates were rerun live with verbatim exit markers (GATE_A_EXIT=0 ... GATE_E_ATTEMPT2_EXIT=0), and the plan's 2533-test claim reconciles exactly with the live 2580-test run."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_artifact": "review-a-p1-10dcf42a8.json",
+      "round": 1,
+      "reviewer_route": "opencode/glm-5.3-flash-free#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "CHANGES_REQUIRED was correct: F1 and F2 were real gaps, and the component test at 64465455f now holds the four AC-9 cases and five clamp pins the finding asked for."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_artifact": "review-a-p1-r2-64465455f.json",
+      "round": 2,
+      "reviewer_route": "opencode/glm-5.3-flash-free#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "PASS at its own head with a rerun of the targeted gate; its one gap is that the A6 overflow defect survived that head and was caught later by the adversarial role."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_artifact": "review-a-p1-r3-daa77805d.json",
+      "round": 3,
+      "reviewer_route": "opencode-go/muse-spark-1.3-contributor#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "PASS with an independent BigInt recompute, four live overflow probes, and a rerun of the four-file gate at the current head; I re-checked its N1, F3, and F4 classifications against plan.md and they hold."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_artifact": "review-c-p1-64465455f.json",
+      "round": 1,
+      "reviewer_route": "opencode-go/muse-spark-1.3-contributor#high",
+      "agreed": true,
+      "score": 3,
+      "evidence": "PASS held for its contract scope, but it did not probe a typed extreme price, where the component then threw during render; the adversarial role found that defect at the same head."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_artifact": "review-c-p1-r2-daa77805d.json",
+      "round": 2,
+      "reviewer_route": "opencode-go/muse-spark-1.3-contributor#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "PASS re-checked every contract after the module fix with a three-file rerun (65 tests, exit 0); its diff-confinement claim matches my own git diff of 64465455f..d279b8703."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_artifact": "adversarial-p1-61e614489.json",
+      "round": "r1",
+      "reviewer_route": "opencode/deepseek-v4.1-flash-free#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "fail was correct: the A6 case threw RangeError at tutor-commission.ts:96, and the plan and green-p1-fix artifact both reproduce that red and the fix."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_artifact": "adversarial-p1-r2-daa77805d.json",
+      "round": "r2",
+      "reviewer_route": "opencode-go/hy4-flash-free#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "PASS after remediation with 14 mutants all dying, 9 probes at 0 failures, and a 79-test gate exit 0; my full-suite run of 2580 tests exit 0 covers the same files."
+    }
+  ]
+}

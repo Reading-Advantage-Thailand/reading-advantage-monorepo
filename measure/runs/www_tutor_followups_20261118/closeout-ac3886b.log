@@ -1,0 +1,39 @@
+Closeout run for www_tutor_followups_20261118.
+Pre-closeout HEAD ac3886b4a37ba7d50551958bfd5de00da72d8b13.
+Provenance: final-acceptance-383df18.json holds status pass and audited_head_sha
+383df188a33c2d4df68ed57583bdb01f0cb95c6a. That SHA is the first parent of the pre-closeout
+HEAD. The commit ac3886b4a merges origin/master (3804ab55a) into the track branch before the
+www-only fast-forward push.
+
+Pre-closeout checks:
+- git rev-parse HEAD -> ac3886b4a37ba7d50551958bfd5de00da72d8b13
+- git rev-list --parents -n 1 HEAD -> ac3886b4a 383df188a 3804ab55a
+- git diff --name-only 383df188a ac3886b4a -- apps/www-reading-advantage/src apps/www-reading-advantage/public apps/www-reading-advantage/package.json -> no file, so the audited www code is the pushed www code
+- plan markers: 19 of 19 tasks [x] with Done SHAs; no [~], no [ ], no [b] task remains after the PM PASS of task 3.2
+- A5 rg over the archived plan.md -> exit 1, no hit
+- A6 rg over measure/tracks.md -> exit 1, no hit
+- A9 rg www_tutor_followups tests/ -> exit 1, no reference
+- bash measure/doctor.sh -> exit 1 at the architecture step, the line Analyzer input snapshot hash does not match current bytes; steps 1 to 3 pass
+- live rerun: en, th, and zh /products/tutor-advantage answer 200; each page holds tutor-advantage-hero-2026-11-06.webp and tutor-advantage-teach-class.webp; en and zh hold Commission of all legs and the new caption; th holds the Thai label and the Thai caption; no page holds tutor-advantage-hero.jpg, downline, ดาวน์ไลน์, or Tutor Advantage only
+
+Commands:
+- git mv measure/tracks/www_tutor_followups_20261118 measure/archive/www_tutor_followups_20261118 -> exit 0
+- git add measure/tracks.md measure/archive/www_tutor_followups_20261118
+- git add -f measure/runs/www_tutor_followups_20261118 -> the run evidence of the track, with the capture folders of tasks 1.7 and 3.4
+- python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track www_tutor_followups_20261118 -> exit 0 (PASS: closeout checks passed)
+
+Findings:
+- F3 and F4 of the final acceptance are fixed. The active registry row left the active section, and the archived row no longer says Two questions stay open. metadata.json holds status done with completed 2026-11-18 and its decision lines name the closed questions. spec-review.md records the pass at 3cc535884. The test-strategy base SHA reads 80ac554b426551e5749f0e2cd500cbbf0eb93530.
+- F1 stands as a bounded exception. The doctor architecture step fails on the analyzer input snapshot pin, owner architecture_ci_input_pin_20261110. The PM waived it again on 2026-11-18, the same as the parent track closeout at commit 25c54f5fe.
+- Review B is waived by the PM in writing. The record is measure/runs/www_tutor_followups_20261118/review-b-waiver.md. The waiver is not a pass. Final acceptance ran on claude-code/claude-sonnet-5-5#max by PM exception, tag pm-exception.
+- F2 is closed. The tasks 1.7, 3.2, 3.3, and 3.4 carry their Done SHAs.
+- F5, F6, F7, and F8 need no further work. The build re-run exits 0, Phase 3 holds the full www suite, the image tests read the shipped locale values, and the PM PASS covers the th-980 capture artifact.
+
+Commits:
+- a04a5745cfc2b7bc59686c0ec3185f27600305a8 chore(measure): close out www_tutor_followups (track_id: www_tutor_followups_20261118) -> the archive move, the registry row, the plan marks, the manifest, and the run evidence
+- record commit: adds the C.1 Done SHA, the manifest closeout_commit_sha, and this result; its SHA goes to the orchestrator, because it cannot appear in the file it carries.
+
+MEASURE_AGENT_RESULT
+dispositions: none
+{"role": "measure-closeout", "route": "minimax-cn-coding-plan/MiniMax-M3.1-Flash", "track": "www_tutor_followups_20261118", "status": "pass", "summary": "Closeout passed. The final acceptance result file holds status pass with audited_head_sha 383df188a33c2d4df68ed57583bdb01f0cb95c6a, which is the first parent of the pre-closeout HEAD ac3886b4a; no www source file changed between them. All 19 plan tasks are [x] with Done SHAs and no [b] task remains. The track moved to measure/archive/www_tutor_followups_20261118, the registry row left the active section and carries the shipped state, metadata.json is status done with completed 2026-11-18, the closeout manifest exists, the run evidence is committed with the archive move, and the closeout checker exits 0. The doctor architecture step stays a bounded exception, waived by the PM on 2026-11-18.", "commits": ["a04a5745cfc2b7bc59686c0ec3185f27600305a8"], "closeout_checker_exit": 0, "closeout_checker_output": "PASS: closeout checks passed", "app_paths_changed": false, "push": "not pushed; the range 3804ab55a..ac3886b4a is already on origin/master"}
+END_MEASURE_AGENT_RESULT

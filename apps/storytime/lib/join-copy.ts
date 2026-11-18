@@ -1,14 +1,15 @@
 /**
  * The copy of the "How to join" page (design section 2, AC-4.5).
  *
- * The copy comes from the PR hand-off `storytime-join-page-copy/app-join-page-copy.md`, version
- * 0.1, table (a). The English and the Thai words are byte for byte the words of that table, and
- * the blocks keep the order of the table. A `<br>` in a block is the line break of the table, and
- * the page renders one line per part.
+ * The copy comes from the PR hand-off `app-join-page-copy.md` version 0.3, table (a)
+ * (source commit 93662024). The English and the Thai words are byte for byte the words
+ * of that table, and the blocks keep the order of the table. A `<br>` in a block is the
+ * line break of the table, and the page renders one line per part.
  *
- * The status stays `draft` until the PR copy and the Thai check of Daniel are recorded. The page
- * shows a draft marker while the status is `draft`. A locale without its own copy shows the
- * English, so the Chinese page shows the English until the Chinese speaker checks the lines.
+ * Daniel approved the Thai TH-171 to TH-176 on 2026-11-16 07:36 ICT. The status is
+ * `approved`, so the page shows no draft marker. Storytime ships Thai and English only
+ * (Daniel, 2026-11-16 07:34 ICT, "We are not doing Chinese support for Storytime"). A
+ * locale without its own copy shows the English.
  */
 
 /** The status of the copy. */
@@ -38,11 +39,11 @@ export const JOIN_COPY: {
   version: string;
   /** The English copy. */
   en: JoinCopy;
-  /** The Thai copy, a draft until Daniel checks it. */
+  /** The Thai copy, approved by Daniel. */
   th: JoinCopy;
 } = {
-  status: "draft",
-  version: "0.1",
+  status: "approved",
+  version: "0.3",
   en: {
     title: "How to Join Storytime Advantage",
     heading: "How to Join Storytime Advantage",

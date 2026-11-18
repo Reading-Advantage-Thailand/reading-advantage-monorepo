@@ -17,7 +17,7 @@ vi.mock("../lib/media/url", () => ({
     `https://storage.googleapis.com/storytime-app-media/${file}`,
 }));
 
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render } from "@testing-library/react";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -143,8 +143,10 @@ describe("Task 1.3 song safe first frame (AC-1.4)", () => {
   });
 
   it("S4 keeps the stage background through play, loadstart, waiting, and timeupdate at 0", async () => {
-    const { song, stage, video } = await renderSong();
-    fireEvent.click(screen.getByRole("button", { name: labels.play }));
+    const { song, stage, video, container } = await renderSong();
+    // Task 6.2, round 3: the song holds a play mark over the poster, and the mark carries the
+    // play label as its name. The row taps the Play button of the part, not the mark.
+    fireEvent.click(container.querySelector<HTMLButtonElement>(".song-part > button")!);
     send(video, "play");
     expect(
       backgroundHolds(stage.style.backgroundImage, fileName(song.poster!)),
@@ -171,8 +173,10 @@ describe("Task 1.3 song safe first frame (AC-1.4)", () => {
 
   it("S5 turns the button to Pause after play and keeps the video source", async () => {
     // Named characterization: the label turns on `play`; poster and playsinline already hold.
-    const { song, video } = await renderSong();
-    const button = screen.getByRole("button", { name: labels.play });
+    const { song, video, container } = await renderSong();
+    // Task 6.2, round 3: the play mark over the poster carries the play label too, so the row
+    // takes the Play button of the part.
+    const button = container.querySelector<HTMLButtonElement>(".song-part > button")!;
     fireEvent.click(button);
     send(video, "play");
     expect(button.textContent, "the button must read Pause while the song plays").toBe(labels.pause);
@@ -202,11 +206,13 @@ describe("Task 1.3 song safe first frame (AC-1.4)", () => {
   });
 
   it("S7 returns the label to Play after a rejected play and keeps the poster", async () => {
-    const { song, stage } = await renderSong();
+    const { song, stage, container } = await renderSong();
     vi.spyOn(HTMLMediaElement.prototype, "play").mockRejectedValue(
       new DOMException("The play request was rejected.", "NotAllowedError"),
     );
-    const button = screen.getByRole("button", { name: labels.play });
+    // Task 6.2, round 3: the play mark over the poster carries the play label too, so the row
+    // takes the Play button of the part.
+    const button = container.querySelector<HTMLButtonElement>(".song-part > button")!;
     await act(async () => {
       fireEvent.click(button);
       await Promise.resolve();

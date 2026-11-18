@@ -1,12 +1,15 @@
 # Test strategy: Accounting Drive intake
 
 > **Track:** `accounting_drive_intake_20261109` · **Spec:** [spec.md](./spec.md) · **Plan:** [plan.md](./plan.md)
-> **Scope:** Phases 1 to 10 of the plan. Phases 1, 2, 3, 4, 6, 7, and 8 hold build code. Phases 5, 9, and 10 hold PM work or owner work and no code.
+> **Scope:** Phases 1 to 10 of the plan. Phases 1, 2, 3, 4, 6, 7, 8, and 10 hold build code. Phases 5 and 9 hold PM work or owner work and no code.
 > **Written:** 2026-11-09. Model: minimax-cn-coding-plan/MiniMax-M3. The route table names claude-opus-5-5, and the 11-10 15:22 Claude reset holds that route.
 > **Role base:** `git rev-parse HEAD` returned `f438d09d72328a94ba04888358d8455419756ea4` when this role started. The assignment named `9f784b842864fcb8bcaa25d08429e7c2971743f8` as the role base. That commit is the spec-review commit, and it is an ancestor of the role base. Another session committed on master during this role, so the role base moved. Section 1.5 holds the capture point of `phase_base_sha`.
 > **Spec review:** round 7 passed. The result sits at `measure/runs/accounting_drive_intake_20261109/spec-review-9f784b842.json`. The result line sits in [spec-review.md](./spec-review.md).
 > **Amendment P3 r1 (2026-11-13).** Route `claude-code/claude-opus-5-5[1m]#high`. The P3 section gains the subsection "P3 remediation r1" for Review A P3 and Review B P3 at `05ae3b335` and the PM decisions PM-20 to PM-23 (spec section 14.7). The P3 allowed list gains `pnpm-lock.yaml` (Review A P3 F314). The Phase 3 `phase_base_sha` does not move. The capture point of the r1 base is in the subsection.
+> **Amendment P10 (2026-11-13).** Route `claude-code/claude-opus-5-5[1m]#high`. `role_base_sha=e708b36f09fd0fdc93efa68839f2b4834233eacc`. The P10 section is rewritten for the accountant year files (PM-24, spec section 9b, FR-28 to FR-31, criteria 48 to 52, section 14.8). The P10 row of section 3 changes. Questions Q13 to Q20 are added, and Q9 is replaced. The capture point of the Phase 10 base is in the P10 section.
 > **Amendment r2 (2026-11-09).** PM decision of 2026-11-09 after Review A P1. The Phase 1 allowed path list of section 4 gains three paths: `packages/domain/src/__tests__/accounting-tenant-classification.test.ts`, `packages/db/src/accounting/__tests__/schema-parity.test.ts`, and `packages/db/tsconfig.build.json`. The count `intake_out_of_scope_paths=0` now holds for the real Phase 1 commits. The Phase 1 base of section 1.5 does not move.
+> **Amendment P10 r2 (2026-11-14).** Route kimi-code-plan-cn/kimi-for-coding#high. role_base_sha=59f4dd94d7c6f02531b3d3a71d7ac229f8eda4c9. P10.8 items 2, 4, and 5 change after the task 10.11 block (green-p10-1011.log). Item 2 gains the ten remediation paths of the Phase 10 commits. Item 4 narrows the first hash detector to hash symbols. Item 5 names the real paths of the P10 test files. Orchestrator default; the PM decides as for amendment r2.
+> **Amendment P4 r1 (2026-11-15).** Route `deepseek/deepseek-flash#high`. role_base_sha=f8e323fd97b9cbc2f292310d292ac01e664ca0d2. The P4 closeout gate item 2 gains `packages/ai/src/providers/vertex.test.ts`, because the existing row pinned the key-pair throw that task 4.2 removes, and Red changed that row in `64bd0212a`; Green changes no test. The Green gate line on the existing AI tests stays true: the key-pair rows of that file stay green. The Phase 4 `phase_base_sha` does not move; the capture point of section 1.5 holds after the commit of this amendment. Orchestrator decision 2026-11-15 (Red default accepted); the PM decides as for amendment r2.
 
 ## 1. Rules for every phase of this track
 
@@ -138,11 +141,11 @@ Red and Green measure the counts again. A fact of this table is not a proof for 
 | P7 The marker, the list, and the guards | high | yes | **yes (required)** | yes | yes | yes |
 | P8 The history import | critical | yes | **yes (required)** | no | yes | no |
 | P9 The deferred work | low (no code) | no | no | no | no | no |
-| P10 The `2024` and `2025` folders | medium (no code) | no | **yes (required, evidence only)** | no | no | no |
+| P10 The accountant year files for 2024 and 2025 | high (task 10.7 critical) | yes | **yes (required; before the task 10.7 summary leaves)** | yes | yes | **yes (required, task 10.9 view; waits for the Phase 7 script)** |
 
 Review B is required for every phase that touches roles, the close sign-off, IAM-adjacent config, secrets, the Drive read, the Vertex route, or finance data. The reason of each row sits in the phase table of section 4.
 
-The browser review applies to Phase 7 only. The intake list and the close controls are the new surfaces of this track, and both sit in Phase 7. The other phases change no page.
+The browser review applies to Phase 7 and Phase 10. The intake list and the close controls sit in Phase 7. The view "Filings and year end" sits in Phase 10 (task 10.9), and the Phase 7 gate script covers it. The other phases change no page.
 
 ## 4. The per-phase strategy
 
@@ -592,7 +595,7 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 **Closeout gate**
 
 1. The Green gate of this phase holds with the quoted counts.
-2. `intake_out_of_scope_paths=0`. The allowed paths of this phase: `packages/ai/src/providers/vertex.ts`, `packages/ai/src/client.ts`, `packages/ai/src/__tests__/vertex-adc.test.ts`, `apps/accounting/app/lib/document-extraction.ts`, `apps/accounting/app/lib/__tests__/document-extraction.test.ts`, `apps/accounting/package.json`, and the track files.
+2. `intake_out_of_scope_paths=0`. The allowed paths of this phase: `packages/ai/src/providers/vertex.ts`, `packages/ai/src/client.ts`, `packages/ai/src/__tests__/vertex-adc.test.ts`, `packages/ai/src/providers/vertex.test.ts` (amendment P4 r1: the existing row pinned the key-pair throw that task 4.2 removes, and Red changed that row in `64bd0212a`; Green changes no test), `apps/accounting/app/lib/document-extraction.ts`, `apps/accounting/app/lib/__tests__/document-extraction.test.ts`, `apps/accounting/package.json`, and the track files.
 3. The OpenRouter and Google provider files of the AI package hold an empty diff. The count `other_provider_files_changed=0` is a labeled integer.
 4. No test of this track calls a real model. The count `real_model_calls=0` is a labeled integer, and the test asserts that the fake provider served every call.
 5. The detector of section 1.7 for A9 exits 1.
@@ -981,40 +984,280 @@ None. The phase holds no Red task and no Green task.
 |---|---|---|---|
 | 9.1 to 9.9 | A1, A5, A8 | The owner is read from the structured `deferred:<owner>` suffix, never from a free-text word. The evidence class is person-checked or owner-passed. | A row loses its owner marker, or a note claims a deferred task is done. |
 
-### P10: The `2024` and `2025` folders
+### P10: The accountant year files for 2024 and 2025 (PM-24)
 
-**Risk: medium.** The phase holds no code. The same history mode reads the two folders. The start is `deferred:pm`, and the phase runs after Phase 8 passes.
+**Risk: high.** Task 10.7 is **critical**. The phase adds a new table, a migration, a new Drive walk, a widened intake contract, and a read-only page. Task 10.7 reads the real finance PDFs on this machine and sends a summary out of the repository. The year files create no submission and no close. The phase replaces the old P10 text (the plain `2024` and `2025` folders). Q30 keeps those two folders out of the walk.
 
-**Review applicability**
+**Role base and base capture.** `role_base_sha=e708b36f09fd0fdc93efa68839f2b4834233eacc` (the review-fix commit of the spec addendum). It is not a `phase_base_sha`. The orchestrator captures the Phase 10 `phase_base_sha` with `git rev-parse HEAD` immediately after the commit of this strategy (header `docs(accounting): write the phase 10 test strategy (track_id: accounting_drive_intake_20261109)`) and before the Red role of task 10.1 starts. A value from before that commit is not valid. Phase 10 starts before Phases 4, 6, 7, and 8 close, so the capture point is not "after the previous checkpoint" of section 1.5. The Red evidence of task 10.1 records the full value.
+
+**Order and the date.** Tasks 10.1 to 10.6 run first, in pair order. Task 10.7 sends the summary to the PM by 2026-11-14 18:00. Tasks 10.8 and 10.9 follow after the send. Task 10.10 is `deferred:daniel` for the deploy word and `deferred:pm` for the rest. Task 10.11 runs after task 10.9.
+
+#### P10.1 Measured facts at the role base
+
+Each fact was read at `e708b36f0` with a light read. Red measures each fact again.
+
+| # | Fact | Effect on the tests |
+|---|---|---|
+| Y1 | `packages/backend/src/modules/accounting/document-parsing.ts` does not exist. `parseWhtFilingPnd3` does not exist. Phase 6 is open. | Task 10.2 cannot "extend" the PND.3 parser. See Q13. |
+| Y2 | `accountingIntakeDocumentTypeSchema` holds eight keys and no `wht-filing-pnd3` (`intake-contracts.ts:46-55`). The db check holds the same eight keys (`packages/db/src/accounting/schema/index.ts:187`). | The phase adds eight type keys, not seven: `type_keys_added=8` (Q13 default). |
+| Y3 | The request of `intakeDriveDocument` holds `mode: "poll"` only (`intake.ts:317`). The history mode is task 8.2, and task 8.2 is open. | The walk needs the `history` value first. See Q14. |
+| Y4 | The check `accounting_intake_documents_history_source_check` allows `drive-folder` and `drive-modified-date` only (`schema/index.ts:202-203`). | A year-file row with `history_source = document` fails this check. Task 10.4 widens it. See Q15. |
+| Y5 | The source port member `list` returns files only. The adapter drops every folder entry (`drive-document-source.ts:153-182`). The poll reads the root and, from 2027, the current-year folder. The poll has no customer-folder read today. | The walk needs a folder-listing read. The Q29 skip has no current code to change. See Q16. |
+| Y6 | `apps/accounting/app/_components/intake-documents-list.tsx` and its test do not exist. Task 7.1 creates them. | The list row of task 10.3 has no file to join. See Q18. |
+| Y7 | The runner wires `unavailableLocalReader` (`apps/accounting/app/lib/intake-runner.ts:267`). The workspace holds no PDF text library. `/usr/bin/pdftotext` and `/usr/bin/pdfinfo` exist on this machine. | Task 10.7 needs a real text-layer reader. See Q17. |
+| Y8 | The backend Vitest config has no include list. The app config includes `app/**`. `apps/accounting/scripts/` sits outside the app include globs. | A `.txt` fixture is never a test file. `app/filings/__tests__/` is picked up. The runner script has no unit row. |
+| Y9 | The db accounting tests read Drizzle metadata and run no database (`packages/db/src/accounting/__tests__/intake-schema.test.ts`). | `year-file-facts.test.ts` follows the same form. |
+| Y10 | `measure/runs/` is in `.gitignore:56`. `git check-ignore -v` exits 0 for the report path of task 10.7. | The report stays out of git. Task 10.7 checks this again before the run. |
+| Y11 | `canReadYearFiles` does not exist. `canOpenMonthlyClose` sits at `packages/backend/src/modules/accounting/permissions.ts:161`. | Task 10.9 adds the new check in the permissions module. |
+
+#### P10.2 Risk list
+
+| # | Risk | Tasks | Class |
+|---|---|---|---|
+| R1 | The report, a log line, or the summary holds an amount, a tax id, a payee, a person name, a file name, or a Drive id. | 10.5, 10.6, 10.7 | critical |
+| R2 | The type comes from the file name or the subfolder name, not from the text. | 10.1, 10.2 | high |
+| R3 | The BE to CE step gives a wrong year, or the period falls back to the folder name or to `modifiedTime`. | 10.1, 10.2 | high |
+| R4 | The dry-run and the import use two walks or two intake functions, so the two lists differ. | 10.3 to 10.6 | high |
+| R5 | The walk reads outside the five subfolders or deeper than one level, or the poll reads the five subfolders. | 10.3, 10.4 | high |
+| R6 | A year file writes a submission, an audit row of action `submit`, or a close row. | 10.3, 10.4 | high |
+| R7 | A voucher matches a year file, a year file matches a submission, or a duplicate row names both targets or neither. | 10.1 to 10.4 | high |
+| R8 | A hash field, a checksum column, or a manifest enters the code (Q28). | all | high |
+| R9 | The migration uses `ALTER TYPE`, misses the `history_source` check, or leaves the new table out of the tenant registry. | 10.4 | high |
+| R10 | The dry-run writes a row, calls the evidence store, or calls a model. | 10.5, 10.6 | high |
+| R11 | The live run puts a credential, the folder id, or the report into git, a command line, or a log. | 10.7 | critical |
+| R12 | The CEO, the STAFF, or the CONTRACTOR reads the view, or the view holds a write control. | 10.8, 10.9 | medium |
+| R13 | A widened contract breaks the poll: the duplicate rule, the source port, the type list, or the `history_source` check. | 10.2, 10.4 | high |
+| R14 | Phase 10 runs before Phases 6, 7, and 8, and a Green role writes the code of those phases. | 10.2, 10.4 | medium |
+
+#### P10.3 Review applicability
 
 | Review | Applies | Reason and scope |
 |---|---|---|
-| Review A (code) | no | The phase adds no new code path. The same `intakeDriveDocument` history mode serves the two folders. |
-| Review B (security) | **yes (required, evidence only)** | The phase touches the Drive read and finance data. Review B reads the phase check evidence and confirms that the dry-run report for the two folders holds no amount and no document content, and that no close row exists for a past month. |
-| Review C (UX/API) | no | The phase adds no route and no page. |
-| Adversarial testing | no | The phase adds no code to attack. |
-| Browser review (UX) | no | The phase changes no page. |
+| Review A (code) | yes | Review A checks the one walk function, the one intake function, the dispatcher, the BE to CE step, the migration form, the tenant classification, and the port shape. It checks that no code of Phases 6, 7, or 8 enters beyond the Q13 to Q16 defaults. |
+| Review B (security) | **yes (required)** | The phase touches the Drive read, finance data, a new table, a role gate, and a report that leaves the repository. Review B of the slice 10.3 to 10.6 runs before the summary of task 10.7 leaves this machine (Q19). Review B checks the report and log content, the credential path of the runner, the read-only port, the `EXEMPT` classification, and `canReadYearFiles`. |
+| Review C (UX/API) | yes | The phase adds the page "Filings and year end", the read function `listYearFileFacts`, the duplicate display of a year-file row, and a new contract rule on `status = duplicate`. Review C checks the labels, the empty state, the grouping by tax year and form type, and the refusal shape for a refused role. |
+| Adversarial testing | yes | See the adversarial cases below. |
+| Browser review (UX) | **yes (required, task 10.9 only)** | The view is a new page. The browser run of the Phase 7 gate script covers the view rows (task 10.9). The script does not exist before Phase 7, so the browser review of P10 waits for it and records `blocked-by:7.4h` until then. |
 
-**Red and Green commands**
+**Adversarial cases.** Each case is a row of the named Red file.
 
-None. The phase holds no Red task and no Green task. The existing suites of Phase 8 stay green, and the phase check runs them:
+- A subfolder name with a trailing space, or a Unicode lookalike of a name of `YEAR_FILE_FOLDER_NAMES`. The walk does not read it (10.3).
+- Two subfolders with the same name of the constant. The walk stops with the safe error (10.3, Q20).
+- A PDF two levels deep inside a named subfolder. The walk does not read it (10.3).
+- A non-PDF file inside a named subfolder. The walk does not read it (10.3).
+- A fixture whose fake file name says `PND53` and whose text says PND.3. The type is PND.3 (10.1).
+- A year written in Thai digits. The parser reads the year or gives `period-unreadable`. It never gives a wrong year (10.1).
+- A text that holds a Drive-id-shaped string, a tax-id sentinel, and the payee sentinel. No output holds any of them (10.1, 10.5).
+- A model fake that throws when it is called. The dry-run finishes with `model_calls=0` (10.5).
+- A voucher candidate with the bytes of a year file, and a year file with the bytes of a submission evidence (10.3).
+- A CEO actor with the OWNER display name. `canReadYearFiles` refuses it (10.8).
+
+#### P10.4 Test levels per task
+
+Every Red row is a unit row or a function-level live row (section 1.3). No unit row reads the real Drive, makes a network call, or runs a database. The ports are fakes: the source port, the evidence store, the intake repository, the text-layer reader, and the model (`MockProvider` or a fake that throws).
+
+| Task | Level | Evidence class | What the rows prove |
+|---|---|---|---|
+| 10.1 | Unit, pure functions on fixture text | Function-level live test | The parsers, the dispatcher, the BE to CE step, the null facts, the `period-unreadable` result, the eight type keys, and the duplicate-target rule of the contract. |
+| 10.3 walk | Unit with fake ports | Function-level live test | The walk scope, the one walk function, the one intake function, the poll reach, the writes and the non-writes of a year file, the idempotency, and the pass 2 duplicate. |
+| 10.3 db | Metadata read of the Drizzle objects and of the migration SQL text | Artifact test | The facts table, its nine columns, the widened checks, the new duplicate column, and no hash column. No migration runs. |
+| 10.3 list | jsdom component render | Function-level live test | The year-file duplicate row of the list (Q18). |
+| 10.3 tenant | The existing tenant coverage suite | Artifact test | The new table is classified `EXEMPT`. |
+| 10.5 | Unit with fake ports and a temp folder | Function-level live test | The report fields, the counts, the duplicate groups, the non-writes, the non-calls, and the banned-token scans of the report and the log. |
+| 10.7 | The real runner against the real folder on this machine | Human evidence (person-checked) | The real counts. This is the one live proof of the Drive read, and it proves no correctness of a parser. |
+| 10.8 read | Unit with a fake repository | Function-level live test | The grouping, the role gate, and no write call. |
+| 10.8 page | jsdom render of the page with a fake reader | Function-level live test | The rows, the marker, the link, and no write control. |
+| 10.9 browser | The Phase 7 browser gate script with the view rows | Live behavior in a browser | The layout of the view with a signed-in OWNER and a refused CEO. |
+
+#### P10.5 The fixture rule
+
+- The fixtures sit under `packages/backend/src/modules/accounting/__tests__/__fixtures__/year-files/`. Each fixture is a plain `.txt` file that stands for the text layer of one PDF. No fixture is a PDF.
+- Line 1 of each fixture is exactly `no real sample`. The count `fixtures_without_marker=0` is a labeled integer.
+- A fixture is synthetic. It holds the public form labels that the parser keys on, a BE year (2567 or 2568), and sentinel values only. No fixture holds a real company figure, a real payee name, a real person name, a real tax id, or a real account number.
+- The sentinels are fixed: the amounts `1,234.56`, `7,890.12`, and `100.00`; the payee `Test Counterparty`; the tax id `0000000000000`; the account `000-0-00000-0`; the Drive ids `fake-drive-<n>`; the file names `fake-file-<n>.pdf`. The tests assert that no output holds a sentinel of the payee, the tax id, the account, the Drive id, or the file name.
+- No fixture is a copy of the text of a real file. After task 10.7, a fixture may gain a public form label that the report names. It never gains a value from a real file (Q27).
+- The app tests of tasks 10.3 and 10.5 build their fake files in memory. A fake file holds `fake-drive-<n>`, `fake-file-<n>.pdf`, a fake folder name, and fake bytes. The fake text-layer reader returns fixture text or `null`.
+- Minimum set: one fixture for each of the eight types (`year_file_fixtures>=8`), one with no readable period, one with a Thai-digit year, one with a misleading fake file name, and one PND form with its attachment and its receipt.
+
+#### P10.6 Red and Green pairs
+
+`HEAVY_P2` stands for `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c`. The commands below write it in full. Each command is one heavy job in the foreground. The command of this strategy is the gate. The `pnpm exec vitest` form of the plan rows is not the gate (fact M2).
+
+**Pair 1: tasks 10.1 (Red) and 10.2 (Green).**
 
 ```bash
-HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/accounting && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 app/lib/__tests__/drive-intake-history.test.ts app/lib/__tests__/intake-history-dry-run.test.ts'
+# RED_TEST_COMMAND 10.1
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/packages/backend && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/modules/accounting/__tests__/year-file-parsers.test.ts'
+
+# GREEN_TEST_COMMAND 10.2
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/packages/backend && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/modules/accounting/__tests__/year-file-parsers.test.ts src/modules/accounting/__tests__/intake-contracts.test.ts && ../../node_modules/.bin/tsc --noEmit && cd ../../apps/accounting && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 app/lib/__tests__/drive-intake.test.ts app/lib/__tests__/accounting-intake-document-repository.test.ts && ../../node_modules/.bin/tsc --noEmit'
 ```
 
-**Closeout gate**
+- Red, expected at the base: exit 1. The message names the missing module `year-file-parsers.ts` or the missing export `parseYearFile`. A bare load error with no named export is a defect of the Red file.
+- Labeled counts and floors: `year_file_types=8`, `filing_kinds=4`, `year_file_fixtures>=8`, `fixtures_without_marker=0`, `be_to_ce_cases>=2`, `period_unreadable_rows>=1`, `null_fact_rows>=1`, `type_from_text_rows>=2`, `type_keys_added=8`, `unknown_key_rows>=1`, `duplicate_target_rows=4` (submission only passes, intake document only passes, neither fails, both fail), `banned_fact_rows>=1`.
+- Green gate: exit 0, `tests_failed=0`, `tests_skipped=0`. The poll suites stay green, so the widened contract breaks no poll row. Both `tsc` runs exit 0.
+- Green guardrail: the new field `duplicateOfIntakeDocumentId` is optional or nullable in the contract at task 10.2, so the app adapter compiles before task 10.4 wires the column. Task 10.2 edits the three files of the plan only (Q13 changes the PND.3 file).
 
-1. The command exits 0 with `tests_failed=0`.
-2. The dry-run report for the two folders holds no amount and no document content. The counts `report_amount_hits=0` and `report_content_hits=0` are labeled integers.
-3. The production write ran on the owner word. The count `production_write_done=1` is a labeled integer, and the note names the owner.
-4. No close row and no sign-off row exists for a past month. The count `past_month_close_rows=0` is a labeled integer.
+**Pair 2: tasks 10.3 (Red) and 10.4 (Green).**
 
-**Anti-pattern coverage**
+```bash
+# RED_TEST_COMMAND 10.3 (a) the walk
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/accounting && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 app/lib/__tests__/year-file-walk.test.ts'
+
+# RED_TEST_COMMAND 10.3 (b) the facts table
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/packages/db && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/accounting/__tests__/year-file-facts.test.ts'
+
+# RED_TEST_COMMAND 10.3 (c) the list row; only when the component of task 7.2 exists (Q18)
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/accounting && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 app/_components/intake-documents-list.test.tsx'
+
+# GREEN_TEST_COMMAND 10.4
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/packages/db && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/accounting/__tests__/year-file-facts.test.ts src/accounting/__tests__/intake-schema.test.ts src/accounting/__tests__/schema-parity.test.ts && ../../node_modules/.bin/tsc --noEmit && cd ../domain && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/__tests__/tenant-coverage.test.ts src/__tests__/accounting-tenant-classification.test.ts && cd ../backend && ../../node_modules/.bin/tsc --noEmit && cd ../../apps/accounting && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 app/lib/__tests__/year-file-walk.test.ts app/lib/__tests__/drive-intake.test.ts app/lib/__tests__/drive-document-source-query.test.ts app/lib/__tests__/accounting-intake-document-repository.test.ts app/lib/__tests__/intake-runner.test.ts && ../../node_modules/.bin/tsc --noEmit'
+```
+
+- Red, expected at the base: exit 1 in (a) and (b). (a) names the missing export `YEAR_FILE_FOLDER_NAMES` or the missing walk function. (b) names the missing table export `accountingYearFileFacts`. The Q16 poll row passes at the base, and the Red evidence names it as a characterization row.
+- Labeled counts and floors: `named_subfolders=5`, `subfolders_read=5`, `deeper_list_calls=0`, `unnamed_subfolder_reads=0`, `customer_folder_reads_by_walk=0`, `missing_name_rows>=1`, `poll_year_file_folder_reads=0`, `drive_write_members=0`, `folder_id_output_hits=0`, `walk_functions=1`, `intake_functions=1`, `facts_rows_per_year_file=1`, `submissions_written=0`, `submit_audit_rows=0`, `close_rows=0`, `second_run_rows_added=0`, `duplicate_facts_rows=0`, `voucher_to_year_file_matches=0`, `year_file_to_submission_matches=0`, `unreadable_period_rows_written=0`, `facts_columns=9`, `hash_columns=0`, `document_type_keys=16`, `history_source_values=3`.
+- Green gate: exit 0, `tests_failed=0`, `tests_skipped=0`. The poll, the adapter query, the repository, and the runner suites stay green. The three `tsc` runs exit 0.
+- Green guardrails: the migration comes from `pnpm --filter @reading-advantage/db accounting:generate` inside `HEAVY_P2`. It uses `DROP CONSTRAINT` and `ADD CONSTRAINT` for both checks and no `ALTER TYPE`. The walk reads the folder listing through a new read member on a separate interface that extends the source port. The existing fakes of the poll tests stay unchanged: `existing_fake_edits=0`.
+
+**Pair 3: tasks 10.5 (Red) and 10.6 (Green).**
+
+```bash
+# RED_TEST_COMMAND 10.5
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/accounting && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 app/lib/__tests__/year-file-dry-run.test.ts'
+
+# GREEN_TEST_COMMAND 10.6
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/accounting && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 app/lib/__tests__/year-file-dry-run.test.ts app/lib/__tests__/year-file-walk.test.ts && ../../node_modules/.bin/tsc --noEmit && cd ../../packages/backend && ../../node_modules/.bin/tsc --noEmit'
+```
+
+- Red, expected at the base: exit 1. The message names the missing export `dryRunAccountingYearFiles`.
+- Labeled counts and floors: `dry_run_files>=6`, `report_fields_per_file=9`, `count_sections=7`, `duplicate_groups=1` for the two byte-equal files, `walk_calls=1` per run, `second_walk_functions=0`, `db_writes=0`, `evidence_store_calls=0`, `model_calls=0`, `no_text_layer_rows>=1`, `rerun_count_diffs=0`, `count_log_lines>=2`, and these scans of the report and of every log line: `report_amount_hits=0`, `report_tax_id_hits=0`, `report_payee_hits=0`, `report_person_name_hits=0`, `report_file_name_hits=0`, `report_drive_id_hits=0`, `log_banned_token_hits=0`.
+- The report path row: the test passes a `mktemp`-style temp folder and asserts that the report file sits in that folder. The test never holds the string of the `measure/runs` path (A9). The default path of task 10.7 is a runner argument, not a test fact.
+- Green gate: exit 0, `tests_failed=0`, `tests_skipped=0`. Both `tsc` runs exit 0.
+- Green guardrails: the runner `apps/accounting/scripts/year-file-dry-run.ts` reads the folder id from `ACCOUNTING_DRIVE_FOLDER_ID` and the credentials from the environment. It takes the report folder as an argument. It prints numbers in plain integers with no thousands separator. The text-layer reader follows Q17.
+
+**Task 10.7: the live dry-run (person-checked, no Red and no Green).**
+
+Before the run:
+
+1. `git check-ignore -v measure/runs/accounting_drive_intake_20261109/year-files-dry-run-2026-11-14.md` exits 0.
+2. The folder id and the credentials come from the PM channel as environment values. Use `openchamber_secret` `secret.run` when a value is a secret. No value goes on a command line, in a file in the repository, or in a log.
+
+The run, one heavy job (the variables are set in the environment of the job, not in the command text):
+
+```bash
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/accounting && ../../node_modules/.bin/tsx scripts/year-file-dry-run.ts /home/daniebo/Desktop/reading-advantage-monorepo/measure/runs/accounting_drive_intake_20261109'
+```
+
+After the run, each detector runs on the report file and must exit 1 (zero hits). An exit code of 2 is a failure (A14).
+
+```bash
+REPORT=/home/daniebo/Desktop/reading-advantage-monorepo/measure/runs/accounting_drive_intake_20261109/year-files-dry-run-2026-11-14.md
+rg -n '[A-Za-z0-9_-]{30,}' "$REPORT"                       # a Drive id; no report token reaches 30 characters
+rg -n '[0-9]{13}|[0-9]-[0-9]{4}-[0-9]{5}-[0-9]{2}-[0-9]' "$REPORT"   # a tax id
+rg -n '[0-9],[0-9]{3}|[0-9]\.[0-9]{2}' "$REPORT"           # an amount
+rg -n -i '\.pdf' "$REPORT"                                  # a file name
+```
+
+- Labeled counts: `report_files>=1` (a zero is a defect, A4). The PM scan expects `report_files=118` and the subfolder counts 9, 35, 10, 38, and 26. A difference is a finding for the PM. The run does not change a count to match.
+- The person reads the full report for a payee or a person name. No regex proves this. The note records `person_read=1` and the reader role.
+- `git status --short --ignored measure/runs/accounting_drive_intake_20261109` shows the report as ignored (`!!`). `git diff --cached --name-only` holds no `measure/runs` path.
+- The downloaded bytes stay in memory. A temp file of the text-layer reader goes into a `mktemp -d` folder under `/tmp` with a trap that removes it.
+- The summary to the PM holds the counts, the serials of the unmatched files, the serials of the files with no text layer, and the duplicate groups. It holds no value. It leaves after Review B of the slice (Q19).
+
+**Pair 4: tasks 10.8 (Red) and 10.9 (Green).**
+
+```bash
+# RED_TEST_COMMAND 10.8 (a) the read function
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/packages/backend && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/modules/accounting/__tests__/year-files-read.test.ts'
+
+# RED_TEST_COMMAND 10.8 (b) the page
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/accounting && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 app/filings/__tests__/filings-page.test.tsx'
+
+# GREEN_TEST_COMMAND 10.9
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/packages/backend && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/modules/accounting/__tests__/year-files-read.test.ts src/modules/accounting/__tests__/permissions.test.ts && ../../node_modules/.bin/tsc --noEmit && cd ../../apps/accounting && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 app/filings/__tests__/filings-page.test.tsx app/page.test.tsx && ../../node_modules/.bin/tsc --noEmit'
+```
+
+- Red, expected at the base: exit 1 in both commands. (a) names the missing export `listYearFileFacts` or `canReadYearFiles`. (b) names the missing module `app/filings/page.tsx`.
+- Labeled counts and floors: `read_roles_allowed=2`, `read_roles_refused=3`, `tax_years=2`, `form_type_groups>=2`, `write_calls=0`, `write_control_hits=0` (edit, approve, reject, delete), `history_marker_rows>=1`, `evidence_link_rows>=1`.
+- Green gate: exit 0, `tests_failed=0`, `tests_skipped=0`. The `permissions` suite and the main page suite stay green. Both `tsc` runs exit 0. The browser run of the view exits 0 with `FAIL=0` and `console_errors=0` when the Phase 7 script exists. Until then, the browser line is `blocked-by:7.4h`, and the Green note says so.
+
+#### P10.7 Intentionally-red aggregate suites
+
+- The app suite, the backend accounting suite, and the db accounting suite are not gates while a Red file of this phase is open. The open Red files are `year-file-parsers.test.ts`, `year-file-walk.test.ts`, `year-file-facts.test.ts`, `year-file-dry-run.test.ts`, `year-files-read.test.ts`, and `filings-page.test.tsx`, each until its Green task.
+- Tasks 10.8 and 10.9 run after the send of task 10.7. The aggregate suites stay red by design between task 10.8 and task 10.9.
+- The aggregate base is the last phase-check record of Phase 3. Task 10.11 quotes the new counts and the delta. Tasks 10.1 to 10.6 run the targeted commands only, so the date of task 10.7 holds.
+- A list row carried by Q18 is open across Phase 7. Task 10.11 names it with its path and its exit code when it is still red.
+
+#### P10.8 Closeout gate (task 10.11)
+
+```bash
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/accounting && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1'
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/packages/backend && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/modules/accounting'
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/packages/db && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/accounting'
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && pnpm --filter accounting run lint'
+```
+
+1. Each command exits 0. The note quotes the exit code, the file count, the test count, and the delta from the Phase 3 record. A pre-existing red file outside this track is named with its path and its exit code (`preexisting_red_files=<n>`).
+2. `intake_out_of_scope_paths=0`. The allowed paths of this phase: `packages/backend/src/modules/accounting/{year-file-parsers.ts,document-parsing.ts,intake-contracts.ts,intake.ts,year-files.ts,permissions.ts,index.ts}`, `packages/backend/src/modules/accounting/__tests__/{year-file-parsers.test.ts,year-files-read.test.ts,__fixtures__/year-files/**}`, `apps/accounting/app/lib/{drive-document-source.ts,accounting-intake-document-repository.ts}` and one new year-file reader member file there (`apps/accounting/app/lib/year-files.ts`, task 10.9), `apps/accounting/app/lib/__tests__/{year-file-walk.test.ts,year-file-dry-run.test.ts}`, `apps/accounting/app/_components/intake-documents-list.test.tsx` (Q18), `apps/accounting/app/filings/{page.tsx,__tests__/filings-page.test.tsx}`, `apps/accounting/app/page.tsx`, `apps/accounting/scripts/year-file-dry-run.ts`, `packages/db/src/accounting/schema/index.ts`, `packages/db/accounting/drizzle/**` (the one new migration and its meta files), `packages/db/src/accounting/__tests__/year-file-facts.test.ts`, `packages/domain/src/tenant-registry.ts`, the Phase 7 browser gate script when it exists, and the three track files. The list gains the ten remediation paths of the Phase 10 commits, each named with its plan task: `apps/accounting/app/lib/__tests__/accounting-runtime-grants.test.ts` (task 10.3 r3, 9c61dd9c7), `apps/accounting/app/lib/__tests__/database-access-contract.red.test.ts` (task 10.4, 78d106632), `apps/accounting/scripts/accounting-runtime-grants.sql` (task 10.4, 78d106632), `packages/db/src/accounting/__tests__/intake-schema.test.ts` (task 10.4, 78d106632), `packages/db/src/accounting/__tests__/schema-parity.test.ts` (task 10.4, 78d106632), `apps/accounting/app/lib/__tests__/drive-document-source-query.test.ts` (task 10.12, 5676603c0), `apps/accounting/app/lib/__tests__/year-file-text-layer.test.ts` (task 10.12, 5676603c0), `apps/accounting/app/lib/__tests__/year-file-dry-run-period.test.ts` (task 10.14, 5d834fddc), `packages/backend/src/modules/accounting/__tests__/year-file-period-wording.test.ts` (task 10.14, 5d834fddc), and `packages/backend/src/modules/accounting/__tests__/year-file-pnd3-month-block.test.ts` (task 10.16, 64822b381). A commit of another phase of this track inside the window is named by its SHA and is not counted.
+3. `dockerfile_changes=0` and `build_file_changes=0`. The phase changes no Dockerfile and no Cloud Build file. No docker or podman build runs.
+4. The hash detectors exit 1 over the product files of item 2 and the new migration: `rg -n 'createHash\(|subtle\.digest\(|createHmac\(' <files>` and `rg -n -i '"[a-z_]*(hash|checksum|digest|manifest)[a-z_]*"' <migration> packages/db/src/accounting/schema/index.ts`. The first detector names hash symbols only. The pre-existing `randomUUID` import of `node:crypto` in `intake.ts` (Phase 3, fd6a99142, present at the phase base) holds no hash and is not a hit.
+5. The A9 detector exits 1: `rg -n 'measure/(tracks|runs)' packages/backend/src/modules/accounting/__tests__/year-file-parsers.test.ts packages/backend/src/modules/accounting/__tests__/year-files-read.test.ts packages/backend/src/modules/accounting/__tests__/year-file-period-wording.test.ts packages/backend/src/modules/accounting/__tests__/year-file-pnd3-month-block.test.ts apps/accounting/app/lib/__tests__/year-file-walk.test.ts apps/accounting/app/lib/__tests__/year-file-dry-run.test.ts apps/accounting/app/lib/__tests__/year-file-text-layer.test.ts apps/accounting/app/lib/__tests__/year-file-dry-run-period.test.ts apps/accounting/app/lib/__tests__/drive-document-source-query.test.ts apps/accounting/app/lib/__tests__/database-access-contract.red.test.ts apps/accounting/app/lib/__tests__/accounting-runtime-grants.test.ts packages/db/src/accounting/__tests__/year-file-facts.test.ts packages/db/src/accounting/__tests__/intake-schema.test.ts packages/db/src/accounting/__tests__/schema-parity.test.ts apps/accounting/app/filings/__tests__/filings-page.test.tsx packages/backend/src/modules/accounting/__tests__/__fixtures__/year-files`.
+6. `walk_functions=1` and `intake_functions=1`. The poll of the root differs only by the skip of the five names: `poll_year_file_folder_reads=0`.
+7. `submissions_written=0`, `submit_audit_rows=0`, and `close_rows=0` for a year file, quoted from the green runs.
+8. Every new export holds a JSDoc comment. The note lists each new export for the graph update (`graph_update_pending=1`). No `build-graph update` runs today (section 1.1 rule of the orchestrator for 2026-11-13). The update runs at the first closeout after that rule lifts.
+9. Task 10.7 holds its person-checked note with the labeled counts. Task 10.10 keeps its two markers. No note claims the production import.
+
+#### P10.9 Mutants
+
+Each mutant must turn at least one row red. A mutant that stays green is a gap, and the Red role adds a row.
+
+- The dispatcher reads the type from the file name or the subfolder name.
+- The parser gives 2568 as the CE year, or subtracts 542.
+- A file with no readable period takes the month of the folder name or of `modifiedTime`.
+- A fact holds the payee sentinel or the tax-id sentinel.
+- A duplicate row with both targets, or with neither, passes the contract.
+- The walk reads a customer folder, an unnamed folder, or a PDF two levels deep.
+- The walk skips a missing name with no error.
+- The poll lists one of the five subfolders.
+- A year file writes a submission or an audit row of action `submit`.
+- A second byte-equal year file writes a facts row.
+- A voucher candidate matches a year-file row.
+- The dry-run calls `put` on the evidence store, writes a row, or calls the model for a text PDF.
+- The dry-run uses its own copy of the walk.
+- The report holds `fake-file-<n>.pdf`, `fake-drive-<n>`, or `1,234.56`.
+- The view admits the CEO, or it renders a reject control.
+- The migration widens the `document_type` check and leaves the `history_source` check unchanged.
+
+#### P10.10 Anti-pattern coverage
 
 | Task | Anti-patterns | Defense | Falsification condition |
 |---|---|---|---|
-| 10.1 | A1, A5, A6 | The phase check is person-checked and writes the labeled counts above. The note never claims the write ran without the owner word. | The note claims the history rows of `2024` or `2025` are in the database without the owner line. |
+| 10.1 | A3, A4 | `year_file_types=8` and `year_file_fixtures>=8` are parsed from the label. The test asserts the fixture count before the loop over the fixtures. | The loop runs over zero fixtures and exits 0, or a count is a bare number. |
+| 10.1 | A7 | The banned-fact scan of the parser output runs over the sentinels and over one counterexample output that holds the payee sentinel. The scan names no English exclusion word. | The scan reports zero hits on its own counterexample. |
+| 10.2 | A5 | The Green note quotes the exit code, the file count, the test count, and the labeled counts of the pair 1 Green command. | The note says "pass" and the cited command exits non-zero. |
+| 10.3 | A4 | The fake root listing holds `named_subfolders=5` before the walk runs. The walk row asserts `subfolders_read=5`, not only "no error". | The walk reads zero subfolders and the row passes. |
+| 10.3 | A5, A6 | The one-function rows assert that no second walk export and no second intake export exist. The poll row is named as a characterization row in the Red evidence (Q16). | A note claims a poll change that the code does not hold. |
+| 10.4 | A10 | The note lists the new exports, `graph_update_pending=1`, and the reason (no update today). | A new export is missing from the list. |
+| 10.5 | A2 | The report holds the line `anonymized: no amount, no tax id, no payee, no file name, no Drive id`. The summary of task 10.7 leaves only after the detectors and Review B. | The summary reaches the PM with no marker line and no named reviewer. |
+| 10.5 | A3, A7 | The report scans count each sentinel. The scan runs once over a counterexample report that holds every sentinel and must find each one. | A scan finds zero hits on the counterexample report. |
+| 10.5 | A9 | The report path row uses a temp folder. The test holds no `measure/runs` string. | The A9 detector exits 0. |
+| 10.6 | A4, A5 | `dry_run_files>=6` and `walk_calls=1` are parsed from the label. The note quotes the Green command result. | A dry run over an empty listing exits 0 with no files and no error. |
+| 10.7 | A2, A5, A14 | The four detectors use `rg -n` with no `-E`. Exit 1 is zero hits, and exit 2 is a failure. The note records `report_files=<n>`, the detector exit codes, `person_read=1`, and the reviewer. | A detector exits 2 and the note reads "no hit", or the note claims the import ran. |
+| 10.8 | A4 | The role rows loop over a list of five roles and assert the list size first. | The role loop runs over zero roles. |
+| 10.9 | A5, A6 | The browser line of the Green note is `blocked-by:7.4h` until the Phase 7 script exists. No note claims a browser pass that did not run. | A note claims a browser pass with no script output. |
+| 10.10 | A1, A5 | The task keeps the structured markers `deferred:daniel` (deploy word) and `deferred:pm` (the rest). No test claims the import. | A note claims the import, or a check reads the word "deferred" from prose. |
+| 10.11 | A14, A15, A16 | The detectors of the closeout use `rg -n`. The role receipt holds commits and commands, and no file hash. `git worktree list --porcelain` names one worktree. | A detector exits 2, a receipt holds a file hash, or a second worktree exists. |
+
+A8, A11, A12, and A13 are not risks of this phase, for the reasons of section 1.7.
+
+#### P10.11 What the tests cannot prove
+
+- That a parser reads a real layout. The fixtures are synthetic. Task 10.7 shows the real match rate as counts only.
+- That the real Drive listing holds the five names once each. Task 10.7 shows it.
+- That a real Drive id is shorter than 30 characters. The Drive id detector of task 10.7 catches an id of 30 or more characters only. The person read covers the rest.
+- That the report holds no payee or person name in free text. The report fields are a closed set, and the person read covers the rest.
+- The production import, the Vertex read of a scan PDF, and the deploy (`deferred:daniel` and `deferred:pm`).
+- The browser layout of the view before the Phase 7 script exists.
 
 ## 5. The deferred tasks and what no test claims
 
@@ -1031,6 +1274,7 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 | The first deploy of the Cloud Run job and its scheduler | `deferred:daniel` | No test proves the deploy. The image test reads text, the bundle run proves the file, and the guard and scheduler rows of task 3.6 run the step scripts with fake values and a stub `gcloud`. Daniel's deploy word is the gate; the session then runs `apps/accounting/cloudbuild-intake-job.yaml` (PM-20, task 9.7). |
 | The scheduler permission of the Cloud Build service account | `deferred:pm` | No test proves the grant. The build-file rows prove that neither build file holds a grant command (PM-23, task 9.3b). |
 | The production history write for January to October 2026 | `deferred:daniel` | No test writes a history row. The dry-run test proves that the dry run writes none. |
+| The production import of the year files for 2024 and 2025 (task 10.10) | `deferred:daniel` for the deploy word; `deferred:pm` for the rest | No test runs the import. The walk test proves the write shape on fakes, and task 10.7 proves the real counts only. |
 | The deploy and the traffic move | `deferred:daniel` | No test of this track moves traffic. |
 
 A deferred task carries no code in this track. No plan note claims a deferred task is done.
@@ -1049,7 +1293,15 @@ The default of each row applies if no answer comes. The orchestrator may change 
 | Q6 | The model route for the extraction adapter. The spec names Vertex and the assignment names Vertex only. | The adapter names the vertex provider only. A test that needs a model uses `MockProvider`. No test calls a real model, and the count `real_model_calls=0` is asserted. The Aliyun plan and OpenRouter are never used. |
 | Q7 | The Drive folder id. | The folder id comes only from `ACCOUNTING_DRIVE_FOLDER_ID`. No Drive id literal appears in a source file, a test, a fixture, or a log line, and the source scan for a Drive id literal is a detector that must exit 1. |
 | Q8 | The hash field. The PM wrote "file hash". The AGENTS.md hashing policy forbids a new hash field. | The track adds no hash field, no checksum column, and no manifest. The identity is the Drive file id, the comparison is a byte compare, and the stored size is the integer `evidence_byte_size`. The no-hash scanner of task 7.4 must find zero hits and must reject its own counterexample fixture. |
-| Q9 | The `2024` and `2025` folders of Phase 10. | The phase starts only after Phase 8 passes, it adds no new code path, it adds no new test file, and the phase check runs the Phase 8 suites. |
+| Q9 | The `2024` and `2025` folders (replaced 2026-11-13). | PM-24 replaces the old Phase 10. Q30 of the spec keeps the two old folders out of the walk. The P10 section holds the new strategy. |
 | Q10 | The aggregate suite as a gate. | The aggregate suite is not a gate while a Red file of the phase is open. The targeted command of the phase is the gate. At the phase check the aggregate suite runs, and a pre-existing red file outside this track is named with its path and its exit code. |
 | Q11 | The browser run of Phase 7. The plan names no browser script for this track. | The Red role of Phase 7 writes one browser gate script for the intake list. It uses a throwaway database, a seeded account, a signed-in OWNER session, and one process group with a trap on exit. It runs inside `HEAVY`. The browser review reads its output. |
 | Q12 | The model families of the Red and the Green roles. | The Red and the Green families differ from the family of this strategy role (minimax) and from each other where the quota allows. The orchestrator picks them at the spawn. |
+| Q13 | Task 10.2 says "extend `parseWhtFilingPnd3` in `document-parsing.ts`". The file and the parser do not exist (fact Y1), and the key `wht-filing-pnd3` is not in the type list (fact Y2). | Task 10.2 creates `document-parsing.ts` with `parseWhtFilingPnd3` for the year-file layouts only, and adds eight type keys (`type_keys_added=8`). Task 6.1 names its PND.3 row as a characterization row, and task 6.2 extends the same function for the voucher layouts. |
+| Q14 | The walk is an input of the `history` mode, and the mode does not exist before task 8.2 (fact Y3). | Task 10.4 adds the `history` value of `mode` with the year-file walk as its only input. Task 8.2 later adds the voucher-history input to the same function. Task 8.1 names the rows that pass at its base as characterization rows. `intake_functions=1` holds. |
+| Q15 | The check `accounting_intake_documents_history_source_check` refuses `document` (fact Y4). The plan names only the `document_type` check. | Task 10.4 widens both checks in the one migration with `DROP CONSTRAINT` and `ADD CONSTRAINT`. Task 10.3 (b) pins `history_source_values=3`. |
+| Q16 | The poll has no customer-folder read today (fact Y5), so the Q29 skip has no code to change. | The 10.3 poll row asserts `poll_year_file_folder_reads=0` on a listing with the five names and a customer folder. It passes at the base and is a named characterization row. The skip of the five names goes into the code that adds the customer-folder read (Phase 6), and the same row then guards it. |
+| Q17 | Task 10.7 needs a real text-layer reader, and the runner wires `unavailableLocalReader` (fact Y7). | The runner of task 10.6 takes a text-layer port. Its real adapter on this machine calls `/usr/bin/pdftotext` through `node:child_process` `execFile` with no shell, and it adds no dependency. Unit rows use a fake. The Cloud Run image does not hold `pdftotext`, so task 10.10 uses the local text-PDF reader of task 6.2. |
+| Q18 | The list row of task 10.3 needs `intake-documents-list.tsx`, and task 7.1 creates it (fact Y6). | The row is not on the path of task 10.7. Red 10.3 writes it only when the component exists at its base. Otherwise the row moves to Red 10.8, and the phase check names it. |
+| Q19 | The review gate before the summary of task 10.7 leaves this machine. The date is 2026-11-14 18:00. | The run may start before Review B, because the report stays in the ignored folder. The summary leaves only after Review B of the slice 10.3 to 10.6 passes and the four detectors exit 1. When Review B cannot finish by 17:00, the orchestrator tells the PM, and the PM decides. |
+| Q20 | Two Drive subfolders hold the same name of `YEAR_FILE_FOLDER_NAMES`. The spec does not say which one the walk reads. | The walk stops with the same safe error as for a missing name. The report names the subfolder name and no Drive id. |

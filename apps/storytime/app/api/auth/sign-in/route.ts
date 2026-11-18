@@ -3,8 +3,12 @@ import {
   SIGN_IN_USERNAME_COOKIE,
   login,
   localeSchema,
+  roleOfUsername,
   signInFieldsSchema,
+  type StorytimeRole,
 } from "../../../../lib/auth";
+import * as content from "../../../../lib/content";
+import { teacherRoutesEnabled } from "../../../../lib/teacher";
 import { clearSignInUsernameCookie, createSignInUsernameCookie } from "../../../../lib/auth/cookie";
 import { clientIp } from "../../../../lib/auth/client-ip";
 import { safeReturnPath } from "../../../../lib/auth/return-path";
@@ -44,6 +48,42 @@ function text(value: FormDataEntryValue | null): string {
  */
 function signInPath(locale: string, error: "invalid" | "locked", next: string): string {
   return `/${locale}/sign-in?error=${error}&next=${encodeURIComponent(next)}`;
+}
+
+/**
+ * Builds the teacher landing of a sign-in (plan task 6.2, round 7, PM point 1).
+ *
+ * A teacher that signs in with no usable `next` — the form always posts a value, and the
+ * fallback value is `/<locale>/st` — lands on the teacher week page of the first open week. A
+ * family or class account never reaches the content read, so its landing needs no content scan.
+ * The switch off, a missing open week, and a failed content read keep the plain landing. The
+ * namespace import keeps the optional call, because other test files mock `../lib/content` with
+ * a factory that holds no `firstOpenWeek`.
+ * @param username The username that signed in.
+ * @param locale The locale of the form.
+ * @param next The checked return path.
+ * @returns The teacher landing path, or `null` for the plain landing.
+ */
+async function teacherLanding(
+  username: string,
+  locale: string,
+  next: string,
+): Promise<string | null> {
+  if (next !== `/${locale}/st` || !teacherRoutesEnabled()) return null;
+  let role: StorytimeRole | null;
+  try {
+    role = await roleOfUsername(username);
+  } catch {
+    return null;
+  }
+  if (role !== "teacher") return null;
+  try {
+    const first = await content.firstOpenWeek?.();
+    if (!first) return null;
+    return `/${locale}/teacher/${first.level}/${first.week}`;
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -106,11 +146,13 @@ export async function POST(request: NextRequest): Promise<Response> {
     now,
   });
   if (outcome.status === "signed_in") {
-    redirects.signedIn.headers.set("Set-Cookie", outcome.cookie);
+    const landing = await teacherLanding(fields.data.username, locale, next);
+    const response = landing === null ? redirects.signedIn : seeOther(landing);
+    response.headers.set("Set-Cookie", outcome.cookie);
     if (request.cookies.has(SIGN_IN_USERNAME_COOKIE)) {
-      redirects.signedIn.headers.append("Set-Cookie", clearSignInUsernameCookie(locale));
+      response.headers.append("Set-Cookie", clearSignInUsernameCookie(locale));
     }
-    return redirects.signedIn;
+    return response;
   }
   return outcome.status === "locked" ? redirects.locked : invalid();
 }

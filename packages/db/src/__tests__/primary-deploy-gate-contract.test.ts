@@ -11,8 +11,12 @@ import { fileURLToPath } from "node:url";
 import { sentinelProbes } from "../sentinels";
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const CLOUDBUILD = readFileSync(
+const PUSH = readFileSync(
   join(PACKAGE_ROOT, "../../apps/primary-advantage/cloudbuild.yaml"),
+  "utf8",
+);
+const CLOUDBUILD = readFileSync(
+  join(PACKAGE_ROOT, "../../apps/primary-advantage/cloudbuild-traffic.yaml"),
   "utf8",
 );
 const JOURNAL = JSON.parse(
@@ -33,7 +37,7 @@ function stepBlocks(text: string = CLOUDBUILD): Map<string, string> {
 describe("Primary Cloud Build migration gate", () => {
   const ids = [...stepBlocks().keys()];
 
-  it("refuses a legacy database, migrates, runs the doctor, then deploys", () => {
+  it("refuses a legacy database, migrates, runs the doctor, then moves traffic", () => {
     const refuse = ids.indexOf("refuse-legacy-db");
     expect(refuse).toBeGreaterThanOrEqual(0);
     expect(ids.indexOf("migrate-db")).toBeGreaterThan(refuse);
@@ -42,13 +46,23 @@ describe("Primary Cloud Build migration gate", () => {
     expect(guard).toMatch(/secretEnv:\s*\n\s*-\s*"DATABASE_URL"/);
     const migrate = ids.indexOf("migrate-db");
     const doctor = ids.indexOf("doctor-check");
-    const deploy = ids.indexOf("deploy-cloudrun");
+    const deploy = ids.indexOf("update-traffic");
     expect(migrate).toBeGreaterThanOrEqual(0);
     expect(doctor).toBeGreaterThan(migrate);
     expect(deploy).toBeGreaterThan(doctor);
-    expect(ids.indexOf("update-traffic")).toBeGreaterThan(deploy);
-    expect(stepBlocks().get("deploy-cloudrun")).not.toContain("--no-traffic");
-    expect(stepBlocks().get("update-traffic")).toContain("--to-latest");
+    // D1: the push file holds no database step.
+    expect(PUSH).not.toMatch(/id:\s*"(refuse-legacy-db|migrate-db|doctor-check)"/);
+  });
+
+  it("deploys the push with no traffic and a pa- tag", () => {
+    const push = stepBlocks(PUSH);
+    expect([...push.keys()]).toEqual(["build-image", "push-image", "deploy-cloudrun"]);
+    const deploy = push.get("deploy-cloudrun") ?? "";
+    expect(deploy).toContain("--no-traffic");
+    expect(deploy).toContain("--tag=pa-$${BUILD_ID:0:8}");
+    expect(deploy).toMatch(/env:\s*\n\s*-\s*"BUILD_ID=\$BUILD_ID"/);
+    expect(PUSH).not.toMatch(/^availableSecrets:/m);
+    expect(PUSH).not.toMatch(/secretEnv/);
   });
 
   it("runs `pnpm --filter @reading-advantage/db migrate` with the DB secret", () => {
@@ -117,7 +131,7 @@ describe("Primary Cloud Build migration gate", () => {
   });
 
   it("mounts the Cloud SQL instance on the Cloud Run service for the socket URL", () => {
-    expect(stepBlocks().get("deploy-cloudrun")).toContain(
+    expect(stepBlocks(PUSH).get("deploy-cloudrun")).toContain(
       "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql",
     );
   });

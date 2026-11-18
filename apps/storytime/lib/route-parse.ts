@@ -4,9 +4,11 @@
  * The at-home route and the teacher route accept a level, a week, and a day only as canonical
  * positive numbers inside the contract bounds. Any other form answers 404 and never reaches the
  * content loader. The accepted locales come from the caller, so this module holds no Next.js or
- * next-intl import, and its tests run in the plain node environment.
+ * next-intl import, and its tests run in the plain node environment. The bounds come from the
+ * limits module, not from the week contract, because the not-found view is a browser module and
+ * the contract would bring the schema library into the first load (plan task 3.1, AC-5.3).
  */
-import { LEVEL_MAX, WEEK_MAX } from "./contracts/week";
+import { LEVEL_MAX, WEEK_MAX } from "./contracts/limits";
 
 /** The longest part of one route segment that the blocked-route log shows. */
 const LOG_SEGMENT_MAX = 80;

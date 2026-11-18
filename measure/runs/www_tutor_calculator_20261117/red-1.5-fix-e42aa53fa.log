@@ -1,0 +1,58 @@
+Measure Mid Red · correction to task 1.5 · track www_tutor_calculator_20261117
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+baseline_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+role_base_sha: 1142ecff96513faaa77007453f11722aa3d86ad9
+
+Defect from Green 1.6:
+The D-7 case "clears the example text on edit but keeps the figures" used
+test.tsx:193  expect(screen.queryByText("15,000")).not.toBeNull();
+and failed with "Found multiple elements with the text: 15,000". For five own
+students, no legs, and the 3,000 price, spec 5.3 item 6 and D-3 render 15,000
+twice: the results.ownGV row and the results.networkGV row. A single-element
+query cannot pass against a spec-conformant component.
+
+Correction applied (test file only):
+const results = resultRegion();
+expect(within(results).getAllByText("15,000")).toHaveLength(2);
+The check is scoped to the polite live-region result card and requires exactly
+two matches. This keeps the meaning: the example figure stays after an edit,
+and both spec rows are now proven to render it. Every other assertion, case
+name, and the copy import are unchanged.
+
+Targeted command (run from the worktree):
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx --reporter=dot --silent=true'
+Exit code: 0
+Test Files  1 passed (1)
+Tests  10 passed (10)
+Exact count: 10 passed.
+No other case failed.
+
+Commits (explicit pathspecs only):
+e42aa53fa0f00571b32a46f4c80fc4fb20b81958  test(www-reading-advantage): scope D-7 figure assertion (track_id: www_tutor_calculator_20261117)
+62a65cbde2cd9cf9cf531ef9c78a6fe9eb1ebde6  docs(measure): record red 1.5 correction (track_id: www_tutor_calculator_20261117)
+
+Uncommitted Green files left untouched:
+- apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx (new, untracked)
+- apps/www-reading-advantage/src/app/[locale]/globals.css (modified, one bar-width utility rule)
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: pass
+track: www_tutor_calculator_20261117
+phase: Phase 1
+task: 1.5 (correction)
+baseline_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+role_base_sha: 1142ecff96513faaa77007453f11722aa3d86ad9
+resulting_head: 62a65cbde2cd9cf9cf531ef9c78a6fe9eb1ebde6
+commits: e42aa53fa0f00571b32a46f4c80fc4fb20b81958 (test file), 62a65cbde2cd9cf9cf531ef9c78a6fe9eb1ebde6 (plan line)
+tests_run: targeted component test exit 0 (Tests 10 passed (10)); no other case failed
+test_count: 10 passed
+files_changed: apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx; measure/tracks/www_tutor_calculator_20261117/plan.md; measure/runs/www_tutor_calculator_20261117/red-1.5-fix-e42aa53fa.json; measure/runs/www_tutor_calculator_20261117/red-1.5-fix-e42aa53fa.log
+plan_updates: one Correction line added under task 1.5 Done text with the test-fix sha e42aa53fa; task 1.5 marker stays [x]
+known_failures: none
+uncommitted_green_files_left_untouched: apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx (new, untracked); apps/www-reading-advantage/src/app/[locale]/globals.css (modified, one bar-width utility rule)
+handoff: The D-7 assertion is now satisfiable by a spec-conformant component, so Green task 1.6 can proceed with the two uncommitted implementation files. Q2 from green-1.6 stays out of this correction scope: test.tsx:106 getByText(copy.results.net) allows one node while spec 5.3 item 6 names both a net hero and a net row; the current build renders net as the hero only, so that case passes.
+END_MEASURE_AGENT_RESULT

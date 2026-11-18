@@ -1,0 +1,107 @@
+# Closeout — www_products_photos_20261115 (A-62)
+
+Worktree: /home/daniebo/Desktop/rama-worktrees/www-products-a62
+Branch: www/products-a62
+Start HEAD: fe891bc3e614b6b33a2e6e31f394ae05ea015d0e (clean)
+Pre-closeout base: 23c29d89acc30ca5515c4cf1b57d74bcc9104287 (origin/master)
+Closeout commit: 2292cd674b80914ba98d655744f444b68b49a467
+Commit subject: chore(www): close out the products photos track (track_id: www_products_photos_20261115)
+
+## Provenance
+
+- Final acceptance: measure/runs/www_products_photos_20261115/final-acceptance-23c29d89a.json,
+  verdict pass, 0 blocking findings, 10 nonblocking findings.
+- audited_head_sha 23c29d89acc30ca5515c4cf1b57d74bcc9104287 equals the pre-closeout HEAD (tip of
+  origin/master). Confirmed.
+- Phase acceptance: phase-acceptance-p1-23c29d89a.json, verdict pass, same audited head.
+- Approval: Daniel "Ok", Tasks, 2026-11-16 07:38 ICT (PM relay).
+- PM page-check: PASS 2026-11-16 06:15, ~/Desktop/handoff/page-check/20261116-0615/.
+
+## Step 1 — fast-forward
+
+git merge --ff-only 23c29d89acc30ca5515c4cf1b57d74bcc9104287
+Result: "Updating fe891bc3e..23c29d89a, Fast-forward", exit 0. HEAD becomes 23c29d89a.
+
+## Pre-closeout state check
+
+- Plan census: 4 tasks, all [x], each with a commit SHA. No [~], no [ ], no [b].
+- bash tests/orchestrator_marker_vocabulary.sh --track www_products_photos_20261115:
+  PASS, exit 0, 1 plan checked.
+- A5 (false claim): the plan text matches the recorded logs and the live runs. The one unlogged
+  count (the Green r4 log, lost with its worktree) is recorded as such.
+- A6 (registry note): the old row understated the state ("Phase 1 Red is next"). It is replaced by
+  the archived row, which names the final acceptance SHA, the look approval, the PM page-check,
+  and the AC-3a carry.
+- A9 (archived-track path): no test references this track id or its plan path. Three tests define
+  track_dir_resolve() and check measure/archive/ first. No test update was required.
+
+## Step 2 and 3 — record, archive, registry
+
+- plan.md task 1.4: "PM page check pending." replaced by the PM page-check PASS line and Daniel's
+  look line ("Ok", Tasks, 2026-11-16 07:38 ICT, PM relay).
+- metadata.json: status done, completed 2026-11-16, updated_at 2026-11-16; the deviation note
+  records the final acceptance SHA, the phase acceptance, the PM page-check, and the look.
+- git mv measure/tracks/www_products_photos_20261115 measure/archive/www_products_photos_20261115:
+  exit 0. The active path no longer exists.
+- measure/tracks.md: the active row is removed, and the archived row sits in the www subsection of
+  the Archived Tracks section (status done, archive link, checkpoints, final acceptance 23c29d89a).
+- closeout-report.md in the archive holds the archive summary: the AC-4 layout deviation, the
+  AC-3a dormancy, and the routing of the 10 nonblocking findings F1 to F10.
+- automation-supervisor-closeout-manifest.json in the archive holds the audits, the commands, the
+  SHAs, the retained evidence, and the artifact cleanup.
+
+## Step 4 — commit
+
+Staged: measure/archive/www_products_photos_20261115, measure/tracks.md, and the run folder through
+git add -f. No apps/*/next-env.d.ts was staged (staged path check count 0).
+Commit 2292cd674b80914ba98d655744f444b68b49a467, exit 0.
+
+## Step 5 — gates
+
+- python3 measure_interphase_checks.py closeout --repo . --track www_products_photos_20261115:
+  "INFO: light lane, no final acceptance" then "PASS: closeout checks passed", exit 0.
+- bash measure/doctor.sh: exit 1. The catalog (A1-A15), the A12/A13 guard check, the marker
+  vocabulary (96 plans), and the review-truthfulness steps PASS. The architecture step fails on
+  "V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current
+  bytes" and prints "this is a tool failure, not a boundary verdict". This is the known external
+  failure owned by ci_green_master_20261115 (final-acceptance F10). The doctor is not recorded as
+  green.
+- node scripts/ci/affected-apps.mjs --base 23c29d89acc30ca5515c4cf1b57d74bcc9104287 --head
+  2292cd674b80914ba98d655744f444b68b49a467: output [], exit 0.
+  Note: the first call passed --head HEAD and the script rejected it ("--head must be a
+  40-character lowercase hex commit id", exit 2). The SHA form is the valid call.
+
+## Residual work outside this track
+
+- ci_green_master_20261115: fix src/lib/blog-blocks.test.ts:210 (5000 ms timeout) so the three www
+  photo-e2e steps in ci.yml run (AC-3a), and repair the architecture manifest so doctor.sh exits 0.
+- A later chore outside this track: untrack apps/www-reading-advantage/test-results/.last-run.json.
+- A later adversarial round can build a pre-fix page to prove the 10 percent text-overlap rule fires.
+
+MEASURE_AGENT_RESULT
+{
+  "role": "measure-closeout",
+  "track": "www_products_photos_20261115",
+  "status": "pass",
+  "commit_sha": "2292cd674b80914ba98d655744f444b68b49a467",
+  "audited_head_sha": "23c29d89acc30ca5515c4cf1b57d74bcc9104287",
+  "pre_closeout_head": "23c29d89acc30ca5515c4cf1b57d74bcc9104287",
+  "fast_forward": "pass",
+  "archive_path": "measure/archive/www_products_photos_20261115",
+  "registry": "moved to the www subsection of the Archived Tracks section",
+  "metadata_status": "done",
+  "completion_date": "2026-11-16",
+  "approval_look": "Daniel \"Ok\", 2026-11-16 07:38 ICT, PM relay",
+  "pm_page_check": "PASS 2026-11-16 06:15, ~/Desktop/handoff/page-check/20261116-0615/",
+  "closeout_gate": "PASS exit 0",
+  "doctor_exit": 1,
+  "doctor_note": "external architecture manifest hash failure, owner ci_green_master_20261115; three structural guards pass",
+  "affected_apps": [],
+  "affected_apps_exit": 0,
+  "blocking_findings": [],
+  "nonblocking_recorded": ["F3", "F4", "F5", "F7", "F8", "F10"],
+  "pushed": false,
+  "result": "PASS"
+}
+END_MEASURE_AGENT_RESULT
+RESULT: PASS

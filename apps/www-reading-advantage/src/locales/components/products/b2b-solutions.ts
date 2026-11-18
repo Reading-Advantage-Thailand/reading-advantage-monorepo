@@ -44,18 +44,18 @@ export const en = {
         },
         scienceAdvantage: {
             title: "Science Advantage",
-            badge: "On our roadmap",
+            badge: "For the 2027 school year",
             gradeRange: "Science book line, built but not released",
             features: {
                 0: "Built as a printed workbook with a digital twin",
                 1: "Planned to mix reading investigations and interactive explorations",
                 2: "Planned to build on the Mastery Advantage knowledge graph",
-                3: "No release date has been set",
+                3: "Planned for Thai primary schools in the 2027 school year",
             },
         },
         mathAdvantage: {
             title: "Math Advantage",
-            badge: "On our roadmap",
+            badge: "For the 2027 school year",
             gradeRange: "Math book line, planned",
             features: {
                 0: "Planned printed workbook with a digital twin",
@@ -66,24 +66,22 @@ export const en = {
         },
         zhongwenAdvantage: {
             title: "Zhongwen Advantage",
-            badge: "On our roadmap",
+            badge: "For the 2027 school year",
             gradeRange: "Chinese book line, planned",
             features: {
                 0: "Planned leveled narrative and informational reading for Chinese learners",
                 1: "Planned bilingual scaffolds such as pinyin, tone audio, and English summaries",
                 2: "Planned to build on the Mastery Advantage knowledge graph",
-                3: "No release date has been set",
+                3: "Planned for Thai primary schools in the 2027 school year",
             },
         },
         storytimeAdvantage: {
             title: "Storytime Advantage",
-            badge: "First unit being prepared",
+            badge: "Launches 30 November 2026",
             gradeRange: "English program for Anuban 2 to P2",
             imageAlt: "Storytime Advantage sound page for the letter n, with a drawn girl pointing at a bird's nest",
             features: {
                 0: "One sound, one song, and two books each week",
-                1: "Every lesson printed in full for the class teacher",
-                2: "A Storytime Advantage student book with small readers inside",
                 3: "QR links open the song and books",
             },
         },
@@ -146,18 +144,18 @@ export const th = {
         },
         scienceAdvantage: {
             title: "Science Advantage",
-            badge: "อยู่ในแผนงาน",
+            badge: "สำหรับปีการศึกษา 2570",
             gradeRange: "ชุดหนังสือวิทยาศาสตร์ สร้างเสร็จแล้วแต่ยังไม่เปิดตัว",
             features: {
                 0: "สร้างเป็นแบบฝึกหัดเล่มพิมพ์พร้อมเวอร์ชันดิจิทัล",
                 1: "วางแผนผสานการสืบค้นผ่านการอ่านและกิจกรรมโต้ตอบ",
                 2: "วางแผนให้ต่อยอดบนกราฟความรู้ Mastery Advantage",
-                3: "ยังไม่มีกำหนดวันเปิดตัว",
+                3: "มีแผนเปิดให้โรงเรียนประถมไทยใช้ในปีการศึกษา 2570",
             },
         },
         mathAdvantage: {
             title: "Math Advantage",
-            badge: "อยู่ในแผนงาน",
+            badge: "สำหรับปีการศึกษา 2570",
             gradeRange: "ชุดหนังสือคณิตศาสตร์ วางแผนไว้",
             features: {
                 0: "วางแผนแบบฝึกหัดเล่มพิมพ์พร้อมเวอร์ชันดิจิทัล",
@@ -168,24 +166,22 @@ export const th = {
         },
         zhongwenAdvantage: {
             title: "Zhongwen Advantage",
-            badge: "อยู่ในแผนงาน",
+            badge: "สำหรับปีการศึกษา 2570",
             gradeRange: "ชุดหนังสือภาษาจีน วางแผนไว้",
             features: {
                 0: "วางแผนบทอ่านแบ่งระดับทั้งเรื่องเล่าและข้อมูลสำหรับผู้เรียนภาษาจีน",
                 1: "วางแผนสื่อเสริมสองภาษา เช่น พินอิน เสียงวรรณยุกต์ และสรุปภาษาอังกฤษ",
                 2: "วางแผนให้ต่อยอดบนกราฟความรู้ Mastery Advantage",
-                3: "ยังไม่มีกำหนดวันเปิดตัว",
+                3: "มีแผนเปิดให้โรงเรียนประถมไทยใช้ในปีการศึกษา 2570",
             },
         },
         storytimeAdvantage: {
             title: "Storytime Advantage",
-            badge: "กำลังจัดเตรียมหน่วยแรก",
+            badge: "เปิดตัววันที่ 30 พฤศจิกายน 2569",
             gradeRange: "หลักสูตรภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2",
             imageAlt: "หน้าเสียงตัว n ของ Storytime Advantage พร้อมภาพวาดเด็กหญิงชี้ไปที่รังนก",
             features: {
                 0: "หนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มต่อสัปดาห์",
-                1: "ทุกคาบมีแผนการสอนครบ",
-                2: "หนังสือนักเรียน Storytime Advantage พร้อมหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน",
                 3: "คิวอาร์โค้ดเปิดเพลงและหนังสือ",
             },
         },
@@ -282,13 +278,11 @@ export const zh = {
         },
         storytimeAdvantage: {
             title: "Storytime Advantage",
-            badge: "首个单元准备中",
+            badge: "Launches 30 November 2026",
             gradeRange: "面向 Anuban 2 至 P2 的英语课程",
             imageAlt: "Storytime Advantage 字母 n 发音页面，画中的女孩指着鸟巢",
             features: {
                 0: "每周一个发音、一首歌和两本书",
-                1: "每节课均有完整教学脚本",
-                2: "Storytime Advantage 学生用书内含小读本",
                 3: "二维码可打开歌曲和书籍",
             },
         },

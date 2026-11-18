@@ -1,0 +1,319 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage
+
+···············xxx·····························xx···
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/tutor-commission.test.ts > 11. settlement eligibility: 0 personal students with legs pay 0 (spec D-18, AC-21) > pays 0 before tax, 0 tax, and 0 net for two legs of 3 students
+AssertionError: expected 810 to be +0 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 0[39m
+[31m+ 810[39m
+
+ ❯ src/lib/tutor-commission.test.ts:382:27
+    380|
+    381|     // SettlementService.ts:536-548 pays 0 to a node with no PV and a …
+    382|     expect(result.preTax).toBe(0);
+       |                           ^
+    383|     expect(result.withholdingTax).toBe(0);
+    384|     expect(result.net).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/lib/tutor-commission.test.ts > 11. settlement eligibility: 0 personal students with legs pay 0 (spec D-18, AC-21) > pays 0 for one leg of 3 students and keeps the leg commission
+AssertionError: expected 'withLegs' to be 'zero' // Object.is equality
+
+Expected: [32m"zero"[39m
+Received: [31m"withLegs"[39m
+
+ ❯ src/lib/tutor-commission.test.ts:403:36
+    401|     expect(result.withholdingTax).toBe(0);
+    402|     expect(result.net).toBe(0);
+    403|     expect(explainVariant(result)).toBe("zero");
+       |                                    ^
+    404|   });
+    405|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator settlement eligibility (spec D-18, AC-21) > shows a net payout of 0 and the zero line for 0 own students and one leg of 3 in en
+TestingLibraryElementError: Unable to find an element with the text: Add students to see a month.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-live[39m=[32m"polite"[39m
+  [33mclass[39m=[32m"rounded-3xl border border-emerald-200 bg-white p-6 shadow-sm sm:p-8"[39m
+[36m>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"text-xs font-semibold uppercase tracking-eyebrow text-emerald-800"[39m
+  [36m>[39m
+    [0mNet payout[0m
+  [36m</p>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"mt-2 text-4xl font-semibold tabular-nums text-site-navy sm:text-5xl"[39m
+  [36m>[39m
+    [0m0[0m
+  [36m</p>[39m
+  [36m<dl[39m
+    [33mclass[39m=[32m"mt-6 space-y-2 border-t border-site-border pt-4 text-sm"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"flex items-baseline justify-between gap-3"[39m
+    [36m>[39m
+      [36m<dt[39m
+        [33mclass[39m=[32m"text-site-body"[39m
+      [36m>[39m
+        [0mYour own volume[0m
+      [36m</dt>[39m
+      [36m<dd[39m
+        [33mclass[39m=[32m"font-medium tabular-nums text-site-navy"[39m
+      [36m>[39m
+        [0m0[0m
+      [36m</dd>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"flex items-baseline justify-between gap-3"[39m
+    [36m>[39m
+      [36m<dt[39m
+        [33mclass[39m=[32m"text-site-body"[39m
+      [36m>[39m
+        [0mNetwork volume[0m
+      [36m</dt>[39m
+      [36m<dd[39m
+        [33mclass[39m=[32m"font-medium tabular-nums text-site-navy"[39m
+      [36m>[39m
+        [0m9,000[0m
+      [36m</dd>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"flex items-baseline justify-between gap-3"[39m
+    [36m>[39m
+      [36m<dt[39m
+        [33mclass[39m=[32m"text-site-body"[39m
+      [36m>[39m
+        [0mCommission rate[0m
+      [36m</dt>[39m
+      [36m<dd[39m
+        [33mclass[39m=[32m"font-medium tabular-nums text-site-navy"[39m
+      [36m>[39m
+        [0m44.5%[0m
+      [36m</dd>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"flex items-baseline justify-between gap-3"[39m
+    [36m>[39m
+      [36m<dt[39m
+        [33mclass[39m=[32m"text-site-body"[39m
+      [36m>[39m
+        [0mGross commission[0m
+      [36m</dt>[39m
+      [36m<dd[39m
+        [33mclass[39m=[32m"font-medium tabular-nums text-site-navy"[39m
+      [36m>[39m
+        [0m4,005[0m
+      [36m</dd>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"flex items-baseline justify-between gap-3"[39m
+    [36m>[39m
+      [36m<dt[39m
+        [33mclass[39m=[32m"text-site-body"[39m
+      [36m>[39m
+        [0mLeg commissions[0m
+      [36m</dt>[39m
+      [36m<dd[39m
+        [33mclass[39m=[32m"font-medium tabular-nums text-site-navy"[39m
+      [36m>[39m
+        [0m4,005[0m
+      [36m</dd>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"flex items-baseline justify-between gap-3"[39m
+    [36m>[39m
+      [36m<dt[39m
+        [33mclass[39m=[32m"text-site-body"[39m
+      [36m>[39m
+        [0mWithholding tax (3%)[0m
+      [36m</dt>[39m
+      [36m<dd[39m
+        [33mclass[39m=[32m"font-medium tabular-nums text-site-navy"[39m
+      [36m>[39m
+        [0m0[0m
+      [36m</dd>[39m
+    [36m</div>[39m
+  [36m</dl>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"mt-4 border-t border-site-border pt-4 text-sm leading-relaxed text-site-body"[39m
+  [36m>[39m
+    [0mYour rate applies to the whole network volume. The commission of each leg comes off, and 3% withholding tax comes off the rest.[0m
+  [36m</p>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/marketing/tutor-commission-calculator.test.tsx:364:27
+    362|
+    363|     const region = resultRegion();
+    364|     expect(within(region).getByText(copy.explain.zero)).toBeInTheDocum…
+       |                           ^
+    365|     expect(within(region).queryByText(copy.explain.withLegs)).toBeNull…
+    366|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator settlement eligibility (spec D-18, AC-21) > drops the two-leg payout to 0 and shows the zero line in en
+AssertionError: expected '24.30' to be '0' // Object.is equality
+
+Expected: [32m"0"[39m
+Received: [31m"[7m24.3[27m0"[39m
+
+ ❯ src/components/marketing/tutor-commission-calculator.test.tsx:377:43
+    375|     expect(resultValue(copy.results.networkGV)).toBe("18,000");
+    376|     expect(resultValue(copy.results.legCommissions)).toBe("8,010");
+    377|     expect(resultValue(copy.results.tax)).toBe("0");
+       |                                           ^
+    378|     expect(netFigure(copy)).toBe("0");
+    379|     expect(within(resultRegion()).getByText(copy.explain.zero)).toBeIn…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator settlement eligibility (spec D-18, AC-21) > shows a net payout of 0 and the Thai zero line for 0 own students and one leg of 3 in th
+TestingLibraryElementError: Unable to find an element with the text: ใส่จำนวนนักเรียนเพื่อดูยอดของเดือน. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-live[39m=[32m"polite"[39m
+  [33mclass[39m=[32m"rounded-3xl border border-emerald-200 bg-white p-6 shadow-sm sm:p-8"[39m
+[36m>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"text-xs font-semibold uppercase tracking-eyebrow text-emerald-800"[39m
+  [36m>[39m
+    [0mเงินที่ได้รับสุทธิ[0m
+  [36m</p>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"mt-2 text-4xl font-semibold tabular-nums text-site-navy sm:text-5xl"[39m
+  [36m>[39m
+    [0m0[0m
+  [36m</p>[39m
+  [36m<dl[39m
+    [33mclass[39m=[32m"mt-6 space-y-2 border-t border-site-border pt-4 text-sm"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"flex items-baseline justify-between gap-3"[39m
+    [36m>[39m
+      [36m<dt[39m
+        [33mclass[39m=[32m"text-site-body"[39m
+      [36m>[39m
+        [0mยอดรวมของคุณเอง[0m
+      [36m</dt>[39m
+      [36m<dd[39m
+        [33mclass[39m=[32m"font-medium tabular-nums text-site-navy"[39m
+      [36m>[39m
+        [0m0[0m
+      [36m</dd>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"flex items-baseline justify-between gap-3"[39m
+    [36m>[39m
+      [36m<dt[39m
+        [33mclass[39m=[32m"text-site-body"[39m
+      [36m>[39m
+        [0mยอดรวมของเครือข่าย[0m
+      [36m</dt>[39m
+      [36m<dd[39m
+        [33mclass[39m=[32m"font-medium tabular-nums text-site-navy"[39m
+      [36m>[39m
+        [0m9,000[0m
+      [36m</dd>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"flex items-baseline justify-between gap-3"[39m
+    [36m>[39m
+      [36m<dt[39m
+        [33mclass[39m=[32m"text-site-body"[39m
+      [36m>[39m
+        [0mอัตราค่าคอมมิชชัน[0m
+      [36m</dt>[39m
+      [36m<dd[39m
+        [33mclass[39m=[32m"font-medium tabular-nums text-site-navy"[39m
+      [36m>[39m
+        [0m44.5%[0m
+      [36m</dd>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"flex items-baseline justify-between gap-3"[39m
+    [36m>[39m
+      [36m<dt[39m
+        [33mclass[39m=[32m"text-site-body"[39m
+      [36m>[39m
+        [0mค่าคอมมิชชันก่อนหัก[0m
+      [36m</dt>[39m
+      [36m<dd[39m
+        [33mclass[39m=[32m"font-medium tabular-nums text-site-navy"[39m
+      [36m>[39m
+        [0m4,005[0m
+      [36m</dd>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"flex items-baseline justify-between gap-3"[39m
+    [36m>[39m
+      [36m<dt[39m
+        [33mclass[39m=[32m"text-site-body"[39m
+      [36m>[39m
+        [0mค่าคอมมิชชันของสาย[0m
+      [36m</dt>[39m
+      [36m<dd[39m
+        [33mclass[39m=[32m"font-medium tabular-nums text-site-navy"[39m
+      [36m>[39m
+        [0m4,005[0m
+      [36m</dd>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"flex items-baseline justify-between gap-3"[39m
+    [36m>[39m
+      [36m<dt[39m
+        [33mclass[39m=[32m"text-site-body"[39m
+      [36m>[39m
+        [0mภาษีหัก ณ ที่จ่าย (3%)[0m
+      [36m</dt>[39m
+      [36m<dd[39m
+        [33mclass[39m=[32m"font-medium tabular-nums text-site-navy"[39m
+      [36m>[39m
+        [0m0[0m
+      [36m</dd>[39m
+    [36m</div>[39m
+  [36m</dl>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"mt-4 border-t border-site-border pt-4 text-sm leading-relaxed text-site-body"[39m
+  [36m>[39m
+    [0mอัตราของคุณใช้กับยอดรวมทั้งเครือข่าย จากนั้นหักค่าคอมมิชชันของแต่ละสายออก และหักภาษีหัก ณ ที่จ่าย 3% จากยอดที่เหลือ[0m
+  [36m</p>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/marketing/tutor-commission-calculator.test.tsx:395:30
+    393|     expect(netFigure(thCopy)).toBe("0");
+    394|     expect(
+    395|       within(resultRegion()).getByText(thCopy.explain.zero),
+       |                              ^
+    396|     ).toBeInTheDocument();
+    397|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  5 failed | 47 passed (52)
+   Start at  20:32:59
+   Duration  2.21s (transform 147ms, setup 118ms, import 224ms, tests 745ms, environment 864ms)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run src/lib/tutor-commission.test.ts src/components/marketing/tutor-commission-calculator.test.tsx '--reporter=dot' '--maxWorkers=1'

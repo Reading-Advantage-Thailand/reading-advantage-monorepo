@@ -5,13 +5,15 @@ import { rpgButton } from "@/components/rpg/chrome";
 import { cn } from "@/lib/utils";
 import { BucketImage } from "@/components/ui/bucket-image";
 import { getArticleImageUrl, getAudioUrl } from "@/lib/storage-config";
-import { parseSentences } from "@/lib/read-along/align";
-import { seekTimeForWord } from "@/lib/read-along/position";
-import { seekOrWait } from "@/lib/read-along/seek";
-import { ReadAlongPassage } from "@/components/read-along/read-along-passage";
-import { ReadAlongPlayer } from "@/components/read-along/read-along-player";
+import { parseSentences } from "@reading-advantage/read-along/lib/align";
+import { seekTimeForWord } from "@reading-advantage/read-along/lib/position";
+import { seekOrWait } from "@reading-advantage/read-along/lib/seek";
+import { ReadAlongPassage } from "@reading-advantage/read-along/components/read-along/read-along-passage";
+import { ReadAlongPlayer } from "@reading-advantage/read-along/components/read-along/read-along-player";
 import { useFollowScroll } from "@/hooks/use-follow-scroll";
-import { useReadAlong } from "@/hooks/use-read-along";
+import { useReadAlong } from "@reading-advantage/read-along/hooks/use-read-along";
+import { useReadAlongPlayerSkin } from "@/hooks/use-player-skin";
+import { HIGHLIGHT_CLASSES } from "@/lib/audio-highlight";
 import { useLocale, useTranslations } from "next-intl";
 import { toTranslationLanguage } from "@/lib/translation-language";
 import { TaskHeader } from "./task-header";
@@ -32,6 +34,7 @@ export function TaskReading({
 }) {
   const t = useTranslations("Lesson.Reading");
   const tComponents = useTranslations("Components");
+  const { labels, chrome } = useReadAlongPlayerSkin();
   const locale = useLocale();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const currentSentenceRef = useRef<HTMLSpanElement | null>(null);
@@ -163,6 +166,7 @@ export function TaskReading({
                 />
               )}
               onWordTap={handleWordTap}
+              highlightClasses={HIGHLIGHT_CLASSES}
             />
           </div>
         </div>
@@ -178,6 +182,8 @@ export function TaskReading({
         onPlayPause={handlePlayPause}
         onPlaySentence={handlePlaySentence}
         onSpeedChange={(value) => setSpeed(value)}
+        labels={labels}
+        chrome={chrome}
       />
 
       {/* Reading Tips */}

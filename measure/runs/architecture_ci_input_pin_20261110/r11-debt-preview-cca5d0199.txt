@@ -1,0 +1,524 @@
+$ pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/architecture-check-cli.ts
+architecture check: debt-change (files=7009, findings=884, parseErrors=0)
+architecture policy: v1 (status=candidate, default=v1)
+architecture debt: new-debt (additions=339, removals=15, renames=162)
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/service.ts:23:1 -> external:database-table [0289beae5d36]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/admin/employees/[accountId]/credential/route.ts:14:1 -> external:database-table [045bbc5397ba]
++ DATABASE_BOUNDARY dynamic-import apps/primary-advantage/app/api/upload/classes/__tests__/temp-file-cleanup.test.ts:35:24 -> packages/db/src/schema/index.ts [0a481f35a215]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/page.tsx:11:1 -> external:database-table [0cd73ad2e84a]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION dynamic-import packages/backend/src/modules/company-identity/__tests__/finance-authorization-adapter.red.test.ts:143:17 -> external:database-table [0d068acb29c8]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/codecamp-advantage/lib/company-oidc.ts:1:1 -> external:database-table [0d2a88a5fc68]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/marketing/app/api/ready/route.ts:3:1 -> external:database-table [0dc2e0fc9bb5]
++ INTEGRATION_PROVIDER_BOUNDARY client-construction packages/integrations/github/src/__tests__/client.test.ts:62:20 -> packages/integrations/github/src/drivers/rest.ts [0fb18ed9488c]
++ DATABASE_BOUNDARY static-import apps/accounts/scripts/idempotency-postgres.integration.test.ts:10:1 -> external:postgres [11ec36871708]
++ DATABASE_BOUNDARY static-import apps/sales-advantage/scripts/verify-sales-curriculum.ts:4:1 -> packages/db/src/client.ts [13e305672963]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/internal-route-adapter.ts:1:1 -> external:database-table [16b195f7186b]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/scripts/product-role-rejection.test.ts:3:1 -> external:database-table [16dc111b4975]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/lib/server/company-identity-route-bindings.test.ts:10:1 -> external:database-table [17562ad2a631]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/actions/__tests__/finish-quiz-existing-row.test.ts:44:1 -> external:drizzle-orm/pg-core [1768c840311b]
++ DATABASE_BOUNDARY dynamic-import apps/primary-advantage/app/api/upload/classes/__tests__/session-school.test.ts:40:24 -> packages/db/src/schema/index.ts [18b037e2ebea]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/workbooks/app/lib/company-oidc.ts:1:1 -> external:database-table [18d7ec7f1086]
++ DATABASE_BOUNDARY static-import apps/accounting/app/lib/monthly-close.ts:19:1 -> packages/db/src/accounting/runtime.ts [1b5a30e88028]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/admin/employees/[accountId]/status/route.ts:14:1 -> external:database-table [1b87d7fa94fb]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/scripts/idempotency-postgres.integration.test.ts:7:1 -> external:database-table [1e271777f6e6]
++ DATABASE_BOUNDARY dynamic-import apps/primary-advantage/app/api/upload/csv/__tests__/session-school.test.ts:40:24 -> packages/db/src/schema/index.ts [1ec13b2d573a]
++ DATABASE_BOUNDARY static-import apps/accounting/app/lib/intake-runner.ts:17:1 -> external:postgres [213f7b2b08e8]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION dynamic-import packages/backend/src/modules/company-identity/__tests__/postgres-finance-task3.integration.test.ts:68:34 -> external:database-table [21c1d0a83341]
++ DATABASE_BOUNDARY static-import apps/marketing/app/lib/apps.ts:1:1 -> packages/db/src/schema/marketing-constants.ts [2575c08f455d]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/__tests__/postgres-exchange.integration.test.ts:9:1 -> external:database-table [260f6d6abb7f]
++ DURABLE_JOB_DATABASE_BOUNDARY query-call packages/webhooks/src/review-worker.ts:643:22 -> external:database-table [26c662d48122]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/admin/employees/[accountId]/company-roles/route.ts:10:1 -> external:database-table [2730960515a8]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/__tests__/contracts.test.ts:3:1 -> external:database-table [27e231ef92f8]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/scripts/idempotency-postgres.integration.test.ts:7:1 -> packages/db/src/company-identity/index.ts [2a2197edd610]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/admin/employees/[accountId]/roles/route.ts:10:1 -> external:database-table [2bc16fea0d06]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/admin/employees/[accountId]/roles/route.ts:14:1 -> external:database-table [2d3b9fb6b628]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION dynamic-import packages/backend/src/modules/company-identity/__tests__/finance-task3-adversarial.test.ts:116:17 -> external:database-table [2e2789f560e8]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/domain/src/__tests__/sales-mastery-projection.red.test.ts:10:1 -> external:database-table [2ee2fe6ac210]
++ DATABASE_BOUNDARY static-import apps/accounting/app/lib/accounting-intake-document-repository.ts:15:1 -> packages/db/src/accounting/runtime.ts [2f61994b0d49]
++ DATABASE_BOUNDARY static-import apps/accounts/scripts/idempotency-postgres.integration.test.ts:7:1 -> packages/db/src/company-identity/index.ts [30ebbdf5443e]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/domain/src/sales/mutations.ts:2:1 -> external:database-table [31bda254dfcb]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/admin/employees/[accountId]/sessions/route.ts:10:1 -> external:database-table [32d7b7701ef6]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/domain/src/__tests__/sales-phase2-review-a.red.test.ts:6:1 -> external:database-table [33ab3271bf59]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounting/app/lib/company-oidc.ts:1:1 -> external:database-table [3a853ee650ad]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION namespace-import packages/backend/src/modules/company-identity/__tests__/protocol-safety.red.test.ts:6:1 -> external:database-table [3a98605d150f]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/__tests__/capabilities.test.ts:10:1 -> external:database-table [3b49e0c5e5b7]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/oidc/jwks/route.ts:4:1 -> external:database-table [3bdfab2c64f3]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/models/__tests__/articleModel.questions.test.ts:7:1 -> external:drizzle-orm [3c2bd3aa2e54]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/flashcard/decks/[deckId]/sentences-for-cloze/route.ts:2:1 -> external:drizzle-orm [3dce522916ee]
++ DATABASE_BOUNDARY static-import apps/marketing/app/lib/ai-credentials.ts:3:1 -> external:drizzle-orm [3eec9dc9b182]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/lib/server/identity.ts:3:1 -> external:database-table [3f2f18a79187]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/domain/src/__tests__/sales-phase2-review-a.red.test.ts:6:1 -> external:database-table [3f77379a9ae1]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/scripts/bootstrap-production.ts:4:1 -> packages/db/src/company-identity/index.ts [3fc10dd3939d]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION dynamic-import packages/backend/src/modules/company-identity/__tests__/route-bindings.security.test.ts:446:36 -> external:database-table [419d53495214]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/lib/license-db.ts:1:1 -> external:drizzle-orm [421289cd5443]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/postgres-repository.ts:9:1 -> external:database-table [4216bfd3cf23]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/internal-route-adapter.ts:1:1 -> external:database-table [42bf88b0889a]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/internal-route-adapter.ts:1:1 -> external:database-table [4335d343e28a]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/scripts/run-primary-evidence-jobs.ts:16:1 -> packages/db/src/client.ts [4399e25ce854]
++ DATABASE_BOUNDARY static-import apps/sales-advantage/scripts/static-seed.ts:19:1 -> packages/db/src/client.ts [44a7b1dc2438]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/utils/auth.ts:3:1 -> external:drizzle-orm [450b3fb5e1f0]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/__tests__/route-bindings.security.test.ts:7:1 -> external:database-table [48d8d2fb870c]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/oidc/token/route.ts:6:1 -> external:database-table [494336c4d22d]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/domain/src/__tests__/sales-phase2-trusted-only.red.test.ts:5:1 -> external:database-table [497c844ec780]
++ DATABASE_BOUNDARY static-import apps/sales-advantage/scripts/static-seed.ts:20:1 -> packages/db/src/schema/index.ts [497e844707d7]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/scripts/issue-temporary-passwords.ts:28:1 -> packages/db/src/schema/index.ts [49ac447b613d]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/flashcard/decks/[deckId]/sentences-for-ordering/route.ts:3:1 -> packages/db/src/schema/index.ts [49ae94c2850d]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/schools/route.ts:4:1 -> packages/db/src/schema/index.ts [4ab83ecc11e5]
++ DURABLE_JOB_DATABASE_BOUNDARY query-call packages/domain/src/primary-mastery/evidence-summary.ts:36:25 -> external:database-table [4abb33f4e3b6]
++ DURABLE_JOB_DATABASE_BOUNDARY query-call packages/backend/src/jobs/__tests__/durable-job-architecture.red.test.ts:130:10 -> external:database-table [4bf140ccf105]
++ DATABASE_BOUNDARY static-import apps/marketing/app/api/settings/route.ts:20:1 -> packages/db/src/schema/index.ts [4c4d13e472d4]
++ DURABLE_JOB_DATABASE_BOUNDARY static-import apps/primary-advantage/scripts/backfill-primary-evidence.ts:22:1 -> external:database-table [4d4ff29edd0e]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/flashcard/decks/[deckId]/words-for-ordering/route.ts:2:1 -> external:drizzle-orm [4dc2b7833179]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/oidc/logout/route.ts:6:1 -> external:database-table [4ddb8e38e32a]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/utils/__tests__/school-admin-rows.test.ts:3:1 -> external:drizzle-orm [4deb2e041de2]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/.well-known/openid-configuration/route.ts:4:1 -> external:database-table [4e7f3c7c9c01]
++ DATABASE_BOUNDARY client-construction apps/accounts/scripts/idempotency-postgres.integration.test.ts:58:14 -> external:postgres [5140f9965b13]
++ DATABASE_BOUNDARY static-import packages/api/src/routes/auth/temporary-password.ts:2:1 -> external:drizzle-orm [5191f1261c0d]
++ DATABASE_BOUNDARY static-import apps/marketing/app/campaigns/[id]/video/topic-step.tsx:3:1 -> packages/db/src/schema/marketing-constants.ts [52870e4b3e98]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/classrooms/route.ts:6:1 -> packages/db/src/schema/index.ts [530bfe98529d]
++ DATABASE_BOUNDARY static-import apps/sales-advantage/scripts/seed-reviewed-curriculum.ts:5:1 -> packages/db/src/client.ts [53350b476f4a]
++ DATABASE_BOUNDARY dynamic-import apps/advantage-games/tests/e2e/apk/seed-authenticated-student-content.ts:28:65 -> packages/db/src/schema/index.ts [568c7cb1ce74]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/flashcard/decks/[deckId]/words-for-ordering/route.ts:3:1 -> packages/db/src/schema/index.ts [5695c3d80eb9]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/users/me/school/route.ts:3:1 -> external:drizzle-orm [56bcd79ef047]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/auth/src/company-identity/client.ts:12:1 -> external:database-table [5764f564df11]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/utils/credentials.ts:3:1 -> external:drizzle-orm [58dabcbac008]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/flashcard/decks/[deckId]/sentences-for-cloze/route.ts:3:1 -> packages/db/src/schema/index.ts [592cfbd473c7]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/ready/route.ts:4:1 -> external:database-table [59f77e5f1793]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/marketing/app/lib/company-oidc.ts:1:1 -> external:database-table [5a1e3a5e1035]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/__tests__/service.test.ts:6:1 -> external:database-table [5af87a959aa6]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/sales-advantage/app/api/ready/route.ts:3:1 -> external:database-table [5bc9b9e144d9]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/sales-advantage/lib/company-oidc.ts:1:1 -> external:database-table [5cf59c64ad8d]
++ DATABASE_BOUNDARY static-import apps/accounts/scripts/bootstrap-production.ts:4:1 -> packages/db/src/company-identity/index.ts [5d0fa84d97ea]
++ DATABASE_BOUNDARY client-construction apps/accounts/scripts/idempotency-postgres.integration.test.ts:57:13 -> external:postgres [6022bfe7a252]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/utils/role-sql.ts:2:1 -> external:drizzle-orm [60334709cae1]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/utils/flashcard-game-submit.ts:4:1 -> packages/db/src/schema/index.ts [605c3ac61627]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/lib/primary-evidence-sql.ts:1:1 -> external:postgres [615a55f1c148]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/__tests__/protocol.test.ts:5:1 -> external:database-table [63b61afff873]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/admin/employees/[accountId]/sessions/route.ts:14:1 -> external:database-table [6497b190da3d]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/flashcard/decks/[deckId]/sentences-for-matching/route.ts:2:1 -> external:drizzle-orm [664d1c8483c2]
++ DATABASE_BOUNDARY dynamic-import apps/advantage-games/tests/e2e/apk/authenticated-magic-defense-lifecycle.ts:103:5 -> packages/db/src/schema/index.ts [673a62469b6b]
++ DATABASE_BOUNDARY dynamic-import apps/primary-advantage/app/api/upload/csv/__tests__/temp-file-cleanup.test.ts:35:24 -> packages/db/src/schema/index.ts [67d8d6a12adc]
++ DATABASE_BOUNDARY client-construction apps/primary-advantage/lib/primary-evidence-sql.ts:16:10 -> external:postgres [6852abb2f9bb]
++ DATABASE_BOUNDARY client-construction apps/primary-advantage/scripts/profile-read-along.ts:18:13 -> external:postgres [688228144140]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/admin/employees/[accountId]/company-roles/route.ts:14:1 -> external:database-table [6abc9f0e2432]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/protocol.ts:11:1 -> external:database-table [6ad75cedb955]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/domain/src/company-identity-principal.ts:8:1 -> external:database-table [6c9b9cdf1eb0]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/utils/credentials.ts:4:1 -> packages/db/src/schema/index.ts [6d69acfc09ef]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/oidc/introspect/route.ts:5:1 -> external:database-table [6e1091c54954]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/flashcard/deck-id/route.ts:3:1 -> external:drizzle-orm [6fb41866d656]
++ AI_PROVIDER_BOUNDARY environment-read apps/codecamp-advantage/app/api/tutor/intervention/route.ts:104:66 -> external:environment [7117849df56f]
++ AI_PROVIDER_BOUNDARY environment-read apps/codecamp-advantage/app/api/tutor/intervention/route.test.ts:215:12 -> external:environment [715c7c9ef49b]
++ AI_PROVIDER_BOUNDARY client-construction packages/ai/src/client.ts:73:14 -> packages/ai/src/providers/vertex.ts [71d3840895a3]
++ DATABASE_BOUNDARY dynamic-import packages/webhooks/src/review-worker.ts:1247:26 -> packages/db/src/index.ts [71d957a019b5]
++ DATABASE_BOUNDARY static-import apps/sales-advantage/scripts/sales-curriculum-reconciliation.real-db.test.ts:5:1 -> external:drizzle-orm [72385dd59383]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/models/__tests__/writerModels.behavior.test.ts:3:1 -> external:drizzle-orm [73c740927ce2]
++ DATABASE_BOUNDARY static-import packages/webhooks/src/__tests__/durable-task2-settle-limit-characterization.test.ts:2:1 -> external:drizzle-orm/pg-core [755db1f2b82d]
++ AI_PROVIDER_BOUNDARY environment-read apps/codecamp-advantage/app/api/tutor/intervention/route.test.ts:273:12 -> external:environment [76f40eb0f26b]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION dynamic-import packages/backend/src/modules/company-identity/__tests__/finance-task3-security-review-v2.red.test.ts:26:17 -> external:database-table [775e26180788]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/users/[id]/article-records/route.ts:6:1 -> packages/db/src/schema/index.ts [77c50de16950]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/protocol.ts:11:1 -> external:database-table [780753dd075a]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/actions/__tests__/flashcard-dashboard-data.test.ts:11:1 -> external:drizzle-orm [78f90cd4b851]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/upload/classes/__tests__/session-school.test.ts:54:1 -> packages/db/src/schema/index.ts [79c80d519b97]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/flashcard/decks/[deckId]/sentences-for-matching/route.ts:4:1 -> packages/db/src/schema/index.ts [79d38b84277d]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/internal-route-adapter.ts:1:1 -> external:database-table [79f51532d6f2]
++ DATABASE_BOUNDARY static-import packages/api/src/routes/auth/login.ts:5:1 -> packages/db/src/schema/index.ts [7a45b074242e]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/upload/csv/__tests__/duplicates.test.ts:49:1 -> packages/db/src/schema/index.ts [7c2d0ab01557]
++ DATABASE_BOUNDARY client-construction apps/primary-advantage/actions/__tests__/finish-quiz-existing-row.test.ts:109:19 -> external:drizzle-orm/pg-core [7da8e6e077af]
++ DATABASE_BOUNDARY static-import packages/webhooks/src/review-worker.ts:33:1 -> external:drizzle-orm [7de68491b0b9]
++ DATABASE_BOUNDARY static-import apps/marketing/app/api/video/research-topics/route.ts:26:1 -> external:drizzle-orm [7e96d90e42e1]
++ AI_PROVIDER_BOUNDARY environment-read apps/codecamp-advantage/app/api/tutor/intervention/route.test.ts:281:10 -> external:environment [7f1e5b5ad873]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/models/__tests__/classroomModel.authorization.test.ts:3:1 -> external:drizzle-orm [805c13f4dca8]
++ DATABASE_BOUNDARY dynamic-import apps/primary-advantage/app/api/users/__tests__/cross-tenant-reads.test.ts:23:13 -> packages/db/src/schema/index.ts [806d52e7beba]
++ DATABASE_BOUNDARY static-import apps/accounting/app/lib/accounting-intake-document-repository.ts:5:1 -> external:postgres [81413c350dc3]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/__tests__/protocol-safety.red.test.ts:2:1 -> external:database-table [8294b966f64b]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/lib/server/__fixtures__/company-identity-route-denominator/paired-swap-route.ts:2:1 -> external:database-table [83a6cad66e81]
++ AI_PROVIDER_BOUNDARY static-import packages/ai/src/__tests__/vertex-adc.test.ts:53:1 -> packages/ai/src/providers/vertex.ts [84698c8ffb05]
++ DATABASE_BOUNDARY static-import packages/domain/scripts/import-lesson-guides.ts:18:1 -> external:drizzle-orm [85e1240b7298]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/schools/route.ts:3:1 -> external:drizzle-orm [862df74d1309]
++ AI_PROVIDER_BOUNDARY environment-read packages/ai/src/client.ts:82:39 -> external:environment [865b1587efdf]
++ DATABASE_BOUNDARY static-import apps/reading-advantage/app/[locale]/(teacher)/teacher/student-progress/[studentId]/page.tsx:13:1 -> packages/db/src/schema/index.ts [86dc9fce0485]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/oidc/authorize/route.ts:6:1 -> external:database-table [86df2c43939b]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/users/[id]/route.ts:4:1 -> packages/db/src/schema/index.ts [86e045f9010f]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/scripts/run-primary-evidence-jobs.ts:13:1 -> external:drizzle-orm [870f7676e1f4]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/__tests__/route-bindings.security.test.ts:17:1 -> external:database-table [8879dd405391]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/scripts/demo-accounts.ts:11:1 -> packages/db/src/company-identity/index.ts [8a69e8b4804c]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/lib/server/company-identity-route-bindings.test.ts:10:1 -> external:database-table [8a8bfd6604d0]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/actions/__tests__/finish-quiz-existing-row.test.ts:45:1 -> external:drizzle-orm [8d85612c569f]
++ DATABASE_BOUNDARY dynamic-import apps/primary-advantage/app/api/users/[id]/__tests__/route.test.ts:20:13 -> packages/db/src/schema/index.ts [8e1aef435a8b]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/users/search/route.ts:3:1 -> external:drizzle-orm [90d7c6fbe361]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/session/logout/route.ts:6:1 -> external:database-table [90ff53ad46b2]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/models/__tests__/articleModel.level-band.test.ts:3:1 -> external:drizzle-orm [9133aed7e83b]
++ DATABASE_BOUNDARY static-import apps/marketing/app/api/campaigns/route.ts:23:1 -> external:drizzle-orm [927141a2127b]
++ COMPANY_IDENTITY_DB_BOUNDARY static-import apps/accounts/scripts/bootstrap-production.ts:4:1 -> packages/db/src/company-identity/index.ts [92b153257457]
++ DATABASE_BOUNDARY static-import apps/marketing/app/api/campaigns/[id]/route.ts:24:1 -> external:drizzle-orm [942ff1cb18f4]
++ DATABASE_BOUNDARY static-import apps/accounting/app/lib/submissions.ts:22:1 -> packages/db/src/accounting/runtime.ts [9460201793b5]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/users/me/school/admins/route.ts:4:1 -> packages/db/src/schema/index.ts [9581e9cd9f06]
++ DATABASE_BOUNDARY client-construction apps/primary-advantage/server/models/__tests__/userModel.article-records.test.ts:38:17 -> external:drizzle-orm/pg-core [96a782c78d65]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/models/__tests__/teacherModel.security.test.ts:3:1 -> external:drizzle-orm [96e2eeef6736]
++ DATABASE_BOUNDARY static-import apps/accounts/lib/server/identity.ts:27:1 -> packages/db/src/company-identity/runtime.ts [97c1c4bd3e07]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION re-export packages/backend/src/modules/company-identity/index.ts:11:1 -> external:database-table [97d8fb366d87]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/service.ts:30:1 -> external:database-table [9931cc41c378]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/session/login/route.ts:11:1 -> external:database-table [998b68d788c9]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/flashcard/cards/[cardId]/review/route.ts:4:1 -> external:drizzle-orm [9a0708f4121b]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/postgres-rate-limit.ts:5:1 -> external:database-table [9a0fbc0228bc]
++ DATABASE_BOUNDARY static-import apps/sales-advantage/scripts/verify-sales-curriculum.ts:5:1 -> packages/db/src/schema/index.ts [9bcb1bf8f3b6]
++ COMPANY_IDENTITY_DB_BOUNDARY static-import apps/accounts/scripts/idempotency-postgres.integration.test.ts:7:1 -> packages/db/src/company-identity/index.ts [9cdba9b558be]
++ DURABLE_JOB_DATABASE_BOUNDARY query-call packages/webhooks/src/review-worker.ts:260:30 -> external:database-table [9d0481135b97]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/flashcard/decks/[deckId]/due/route.ts:3:1 -> external:drizzle-orm [9d52ee69f234]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/utils/__tests__/authorizeResetTarget.test.ts:3:1 -> external:drizzle-orm [9d8e85f3a0ec]
++ DATABASE_BOUNDARY static-import apps/marketing/app/__tests__/phase-7-settings-encryption-live.test.ts:15:1 -> external:drizzle-orm [9dfaaa76b171]
++ DATABASE_BOUNDARY static-import apps/marketing/app/api/video/save-topics/route.ts:10:1 -> packages/db/src/schema/index.ts [9ef4d123a8a3]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/components/manage-tab.tsx:16:1 -> external:drizzle-orm [9f05b16a2ba4]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/licenses/[id]/route.ts:10:1 -> packages/db/src/schema/index.ts [a0d101a3033e]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/upload/classes/route.ts:8:1 -> external:drizzle-orm [a28cd8e7f8b2]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/lib/server/http.ts:4:1 -> external:database-table [a2e5d0935b40]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/models/__tests__/teacherModel.school-filter.test.ts:3:1 -> external:drizzle-orm [a35fce3af6f2]
++ DATABASE_BOUNDARY static-import apps/accounting/app/lib/intake-runner.ts:35:1 -> packages/db/src/accounting/runtime.ts [a3d8e12be164]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/flashcard/save/[id]/route.ts:4:1 -> packages/db/src/schema/index.ts [a45a4a87b75a]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/page.tsx:4:1 -> external:database-table [a4748242b3c1]
++ DATABASE_BOUNDARY dynamic-import apps/primary-advantage/app/api/users/[id]/__tests__/users-id-route.rank-check.test.ts:23:13 -> packages/db/src/schema/index.ts [a48edc19c6d7]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/domain/src/__tests__/company-identity-principal.test.ts:4:1 -> external:database-table [a5feeb2fe696]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/utils/role-sql.ts:4:1 -> packages/db/src/schema/index.ts [a6435c18a127]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/scripts/backfill-primary-evidence.ts:18:1 -> external:drizzle-orm [a68e4da0ecbb]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/lib/server/__fixtures__/company-identity-route-denominator/paired-swap-route.ts:1:1 -> external:database-table [a6c5ae08f720]
++ DATABASE_BOUNDARY dynamic-import apps/primary-advantage/app/api/users/search/__tests__/route.test.ts:21:13 -> packages/db/src/schema/index.ts [a7c1da8887dc]
++ DURABLE_JOB_DATABASE_BOUNDARY query-call apps/primary-advantage/scripts/backfill-primary-evidence.ts:85:22 -> external:database-table [a7d6787a1400]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/users/me/school/admins/route.ts:3:1 -> external:drizzle-orm [a7d941f35e99]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/capabilities.ts:22:1 -> external:database-table [a803476b039e]
++ COMPANY_IDENTITY_DB_BOUNDARY static-import apps/accounts/lib/server/identity.ts:27:1 -> packages/db/src/company-identity/runtime.ts [a9b36da27d54]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION dynamic-import packages/backend/src/modules/company-identity/__tests__/finance-thb-policy-approval-attestation.red.test.ts:318:17 -> external:database-table [a9c4a995efac]
++ DATABASE_BOUNDARY static-import apps/marketing/app/api/campaigns/[id]/route.ts:23:1 -> packages/db/src/schema/index.ts [ab1d49975d2e]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/users/[id]/article-records/route.ts:5:1 -> external:drizzle-orm [ad1a432dcff6]
++ DATABASE_BOUNDARY static-import apps/reading-advantage/server/controllers/auth-controller.ts:6:1 -> packages/db/src/schema/index.ts [ad21da87c57c]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/actions/question.ts:5:1 -> packages/db/src/index.ts [add683c1ddad]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/actions/question.ts:10:1 -> packages/db/src/index.ts [add802565b7f]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/flashcard/cards/[cardId]/review/route.ts:5:1 -> packages/db/src/schema/index.ts [ae746e8ecc74]
++ DATABASE_BOUNDARY static-import apps/codecamp-advantage/lib/company-oidc.ts:7:1 -> packages/db/src/index.ts [af75ebcf38ed]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/utils/flashcard-game-submit.ts:3:1 -> external:drizzle-orm [b041605dba91]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/licenses/[id]/route.ts:4:1 -> packages/db/src/schema/index.ts [b0a7af65af81]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/admin/employees/route.ts:10:1 -> external:database-table [b166747d2c05]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/upload/csv/__tests__/student-login.test.ts:55:1 -> packages/db/src/schema/index.ts [b21e3c8f3ab2]
++ DURABLE_JOB_DATABASE_BOUNDARY query-call apps/primary-advantage/scripts/run-primary-evidence-jobs.ts:33:22 -> external:database-table [b2aea9da750d]
++ DURABLE_JOB_DATABASE_BOUNDARY static-import packages/domain/src/codecamp/pr-reviews.ts:2:1 -> external:database-table [b3cd6e94a51f]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/actions/avatar.ts:4:1 -> packages/db/src/index.ts [b468c9371eab]
++ DATABASE_BOUNDARY static-import packages/webhooks/src/review-worker.ts:35:1 -> packages/db/src/index.ts [b4d460f001d7]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/models/assignmentModel.ts:384:1 -> packages/db/src/index.ts [b4e7978068e8]
++ DATABASE_BOUNDARY static-import apps/marketing/app/__tests__/apps-color-map.test.ts:2:1 -> packages/db/src/schema/marketing-constants.ts [b516a4938bd9]
++ DATABASE_BOUNDARY dynamic-import packages/webhooks/src/review-worker.ts:1152:35 -> packages/db/src/index.ts [b5365cef745d]
++ DATABASE_BOUNDARY dynamic-import apps/primary-advantage/app/api/upload/csv/__tests__/student-login.test.ts:36:24 -> packages/db/src/schema/index.ts [b58ce6c65942]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/health/route.ts:3:1 -> external:database-table [b5a0f1bbc28c]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/oidc/token/route.ts:3:1 -> external:database-table [b6bc1500e02a]
++ DATABASE_BOUNDARY client-construction apps/primary-advantage/actions/__tests__/flashcard-dashboard-data.test.ts:51:17 -> external:drizzle-orm/pg-core [b7b89bef7c66]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/users/search/route.ts:4:1 -> packages/db/src/schema/index.ts [b7c667e07d4c]
++ DATABASE_BOUNDARY static-import apps/reading-advantage/lib/pagination/smart-paginator.ts:23:1 -> external:drizzle-orm [b7d29265185e]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/actions/practice.ts:9:1 -> packages/db/src/index.ts [b7f4b4363ede]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/upload/classes/__tests__/route.test.ts:48:1 -> packages/db/src/schema/index.ts [b8d4b1500653]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/models/__tests__/schoolModel.detail-admins.test.ts:3:1 -> external:drizzle-orm [b91108649a7b]
++ DATABASE_BOUNDARY static-import apps/sales-advantage/app/api/roleplay-attempts/route.ts:2:1 -> packages/db/src/index.ts [b99268ed8b97]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/utils/auth.ts:6:1 -> packages/db/src/index.ts [ba0a8410ad95]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/utils/assignment-access.ts:1:1 -> packages/db/src/index.ts [bb23638c2af2]
++ DURABLE_JOB_DATABASE_BOUNDARY static-import packages/domain/src/tenant-registry.ts:291:1 -> external:database-table [bb6a05586f76]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/models/lessonModel.ts:64:1 -> packages/db/src/index.ts [bb91130be0de]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/scripts/seed-demo.ts:20:1 -> packages/db/src/schema/index.ts [bba450439ec4]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/[locale]/system/help/page.tsx:4:1 -> packages/db/src/index.ts [bbf005af9d30]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/scripts/issue-temporary-passwords.ts:26:1 -> external:drizzle-orm [bce4910646a1]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/service.ts:3:1 -> external:database-table [bd6a24b717f6]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/scripts/backfill-primary-evidence.ts:21:1 -> packages/db/src/client.ts [bf6e9513f48f]
++ DATABASE_BOUNDARY static-import apps/reading-advantage/server/services/article-service.ts:10:1 -> packages/db/src/schema/index.ts [bf9f78b7807a]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/controllers/questController.ts:1:1 -> packages/db/src/index.ts [c0c2dd9d30a5]
++ INTEGRATION_PROVIDER_BOUNDARY static-import packages/integrations/github/src/__tests__/client.test.ts:4:1 -> packages/integrations/github/src/drivers/rest.ts [c271436ea6cc]
++ DATABASE_BOUNDARY static-import apps/sales-advantage/app/api/ready/route.ts:7:1 -> packages/db/src/index.ts [c2e5583af1da]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/__tests__/protocol-safety.red.test.ts:1:1 -> external:database-table [c35e08f1a97e]
++ DATABASE_BOUNDARY dynamic-import apps/primary-advantage/lib/__tests__/primary-evidence-sql.test.ts:5:52 -> packages/db/src/connection-options.ts [c3b487b8d723]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/__tests__/route-bindings.security.test.ts:12:1 -> external:database-table [c421e965c3a7]
++ DATABASE_BOUNDARY static-import packages/domain/scripts/backfill-primary-tags.ts:19:1 -> packages/db/src/index.ts [c45ca682dea0]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/utils/school-admin-rows.ts:3:1 -> packages/db/src/schema/index.ts [c4da42c2be89]
++ COMPANY_IDENTITY_DB_BOUNDARY static-import apps/accounts/scripts/demo-accounts.ts:11:1 -> packages/db/src/company-identity/index.ts [c5cb7f043a03]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/[locale]/admin/dashboard/page.tsx:3:1 -> packages/db/src/index.ts [c5cce3418c8b]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/licenses/route.ts:12:1 -> packages/db/src/schema/index.ts [c6aea0882c13]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/utils/passwordEvents.ts:1:1 -> packages/db/src/index.ts [c7533fd15e6f]
++ DATABASE_BOUNDARY static-import apps/reading-advantage/app/[locale]/(student)/student/read/[articleId]/page.tsx:11:1 -> packages/db/src/schema/index.ts [c7755c899b46]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/models/__tests__/articleModel.logs-of-user.test.ts:4:1 -> external:drizzle-orm [cae04b081634]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/users/[id]/route.ts:3:1 -> external:drizzle-orm [cae7adb1e3c9]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/utils/assignment-access.ts:2:1 -> packages/db/src/index.ts [cb814289b41b]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/__tests__/capabilities.test.ts:16:1 -> external:database-table [cbe6f79785e8]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/flashcard/decks/[deckId]/due/route.ts:4:1 -> packages/db/src/schema/index.ts [cbea848b6de1]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/flashcard/decks/[deckId]/sentences-for-ordering/route.ts:2:1 -> external:drizzle-orm [cc9c8127f399]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION re-export packages/backend/src/index.ts:8:1 -> external:database-table [cd0e1b3eb58f]
++ DURABLE_JOB_DATABASE_BOUNDARY query-call packages/domain/src/codecamp/intern-accounts.ts:251:13 -> external:database-table [cd309a286e0f]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/scripts/run-primary-evidence-jobs.ts:17:1 -> packages/db/src/schema/index.ts [cde98f071f58]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/[locale]/teacher/class-roster/[classroomId]/books/[classBookId]/lessons/[number]/print/page.tsx:5:1 -> packages/db/src/index.ts [ce38bb05d49a]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/domain/src/sales/queries.ts:11:1 -> external:database-table [cebc584b896d]
++ DATABASE_BOUNDARY client-construction apps/primary-advantage/app/api/users/search/__tests__/route.test.ts:113:21 -> external:drizzle-orm/pg-core [cf0dee826f68]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/domain/src/__tests__/sales-mastery-projection.red.test.ts:10:1 -> external:database-table [cfd0a57a47f2]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/users/[id]/activity/route.ts:4:1 -> external:drizzle-orm [d08cd5490356]
++ DURABLE_JOB_DATABASE_BOUNDARY static-import packages/domain/src/tenant-registry.ts:291:1 -> external:database-table [d11e89ede9d9]
++ DATABASE_BOUNDARY static-import apps/marketing/app/campaigns/page.tsx:5:1 -> packages/db/src/schema/marketing-constants.ts [d226a57cb723]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/models/classroomModel.ts:3:1 -> packages/db/src/index.ts [d28c1b5053dc]
++ DATABASE_BOUNDARY dynamic-import apps/primary-advantage/app/api/upload/csv/__tests__/duplicates.test.ts:35:24 -> packages/db/src/schema/index.ts [d30246d2a34a]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/[locale]/(student)/student/games/apk/[cartridgeId]/page.tsx:1:1 -> packages/db/src/index.ts [d414b19d330f]
++ DATABASE_BOUNDARY static-import apps/reading-advantage/server/services/classroom-service.ts:9:1 -> packages/db/src/schema/index.ts [d4226ae90e5c]
++ DATABASE_BOUNDARY static-import apps/reading-advantage/server/controllers/level-test-controller.ts:8:1 -> packages/db/src/schema/index.ts [d425057b98c6]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/utils/__tests__/role-sql.test.ts:3:1 -> external:drizzle-orm [d491befea39c]
++ DATABASE_BOUNDARY static-import apps/marketing/app/api/video/projects/route.ts:17:1 -> packages/db/src/schema/index.ts [d4c142382e58]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/[locale]/(student)/student/books/[classBookId]/page.tsx:4:1 -> packages/db/src/index.ts [d4f631bd1499]
++ DATABASE_BOUNDARY static-import apps/codecamp-advantage/proxy.ts:2:1 -> packages/db/src/index.ts [d5c6e9ec0015]
++ DATABASE_BOUNDARY static-import apps/marketing/app/lib/ai-credentials.ts:2:1 -> packages/db/src/schema/index.ts [d63b6f92a3e2]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/actions/practice.ts:4:1 -> packages/db/src/index.ts [d63ff834d923]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/scripts/seed-demo.ts:18:1 -> external:drizzle-orm [d6ab46f3433a]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/scripts/profile-read-along.ts:11:1 -> external:postgres [d6fb9df53952]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/components/rpg/hud.tsx:2:1 -> packages/db/src/index.ts [d7db86122c1a]
++ DURABLE_JOB_DATABASE_BOUNDARY query-call packages/webhooks/src/review-worker.ts:927:26 -> external:database-table [d82adc850873]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/flashcard/deck-id/route.ts:4:1 -> packages/db/src/schema/index.ts [d84b53ab95c2]
++ DATABASE_BOUNDARY dynamic-import apps/primary-advantage/app/api/upload/classes/__tests__/route.test.ts:34:24 -> packages/db/src/schema/index.ts [d8d7ab479ee8]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/db/src/__tests__/company-product-principals-schema.test.ts:8:1 -> external:database-table [d914176a0920]
++ DATABASE_BOUNDARY static-import apps/sales-advantage/scripts/sales-curriculum-production.real-db.test.ts:6:1 -> external:drizzle-orm [d9809c65046b]
++ COMPANY_IDENTITY_DB_BOUNDARY environment-read apps/accounts/lib/server/identity.ts:88:25 -> external:environment [d98961e6d971]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/actions/lesson-games.ts:3:1 -> packages/db/src/index.ts [d9f3a68da5fb]
++ AI_PROVIDER_BOUNDARY static-import packages/ai/src/client.ts:6:1 -> packages/ai/src/providers/vertex.ts [daa6324fc7e4]
++ DATABASE_BOUNDARY static-import apps/reading-advantage/server/services/article-service.ts:9:1 -> packages/db/src/index.ts [daf3ee005f70]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/students/leaderboard/route.ts:5:1 -> packages/db/src/schema/index.ts [daf7b31446ce]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/utils/role-sql.ts:3:1 -> packages/db/src/index.ts [dda1331db4dc]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/upload/csv/route.ts:8:1 -> packages/db/src/schema/index.ts [dda19a85e3a2]
++ DATABASE_BOUNDARY static-import apps/marketing/app/__tests__/project-update-live.test.ts:3:1 -> external:drizzle-orm [dde8b6644150]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/users/me/school/admins/[adminId]/route.ts:3:1 -> external:drizzle-orm [de1538f958d5]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/[locale]/(student)/student/stories/[[...path]]/page.tsx:6:1 -> packages/db/src/index.ts [df66e9d11d42]
++ AI_PROVIDER_BOUNDARY environment-read apps/codecamp-advantage/app/api/tutor/intervention/route.test.ts:138:10 -> external:environment [e1b2b50d8f6d]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/v1/apk/complete/route.ts:2:1 -> packages/db/src/index.ts [e2d53aea8e58]
++ DATABASE_BOUNDARY dynamic-import apps/reading-advantage/scripts/seed-host-proof-session.ts:24:33 -> packages/db/src/index.ts [e30318cb9236]
++ DATABASE_BOUNDARY static-import apps/sales-advantage/app/api/auth/login/route.ts:6:1 -> packages/db/src/index.ts [e34531ef40f1]
++ AI_PROVIDER_BOUNDARY environment-read apps/codecamp-advantage/app/api/tutor/intervention/route.test.ts:120:5 -> external:environment [e381eb35b6e0]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/components/system/license-table.tsx:30:1 -> external:drizzle-orm [e4317e221728]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/v1/apk/practice/route.ts:2:1 -> packages/db/src/index.ts [e4c8f3cf594d]
++ AI_PROVIDER_BOUNDARY environment-read apps/codecamp-advantage/app/api/chat/route.ts:139:10 -> external:environment [e4f39cd66e02]
++ DATABASE_BOUNDARY dynamic-import packages/webhooks/src/review-worker.ts:61:21 -> packages/db/src/index.ts [e5b38009974d]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/models/__tests__/userModel.no-roles.test.ts:3:1 -> external:drizzle-orm [e690e5c5e9d7]
++ DATABASE_BOUNDARY static-import apps/reading-advantage/server/controllers/classroom-controller.ts:25:1 -> packages/db/src/schema/index.ts [e6c7737c27e2]
++ AI_PROVIDER_BOUNDARY environment-read apps/codecamp-advantage/app/api/tutor/intervention/route.test.ts:59:24 -> external:environment [e7a9b11f7fe1]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION dynamic-import apps/accounts/lib/server/company-identity-route-bindings.test.ts:337:36 -> external:database-table [e8a302ef80b9]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/admin/employees/route.ts:15:1 -> external:database-table [e9513edc7b28]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/models/__tests__/studentModel.security.test.ts:4:1 -> packages/db/src/index.ts [e9611a93602b]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/__tests__/route-bindings.security.test.ts:12:1 -> external:database-table [eb4d9416b8b4]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/controllers/avatarController.ts:1:1 -> packages/db/src/index.ts [ec2ef2cc61b8]
++ DATABASE_BOUNDARY static-import apps/advantage-games/src/app/[locale]/(student)/student/games/apk/[cartridgeId]/page.tsx:3:1 -> packages/db/src/index.ts [ec8b3a539307]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/domain/src/tenant-registry.ts:167:1 -> external:database-table [ecdafedd3b24]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/[locale]/(student)/student/avatar/shop/page.tsx:3:1 -> packages/db/src/index.ts [ed028fbe5129]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/models/assignmentModel.ts:2:1 -> packages/db/src/index.ts [eddc0e447d6a]
++ DATABASE_BOUNDARY client-construction packages/webhooks/src/__tests__/durable-task2-settle-limit-characterization.test.ts:30:19 -> external:drizzle-orm/pg-core [ee012045de44]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/admin/employees/[accountId]/status/route.ts:10:1 -> external:database-table [ee8452ea0a10]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/upload/csv/__tests__/route.test.ts:72:1 -> packages/db/src/schema/index.ts [efe09ee4debe]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/actions/__tests__/flashcard-dashboard-data.test.ts:10:1 -> external:drizzle-orm/pg-core [f03fbc9b5a9c]
++ DATABASE_BOUNDARY static-import apps/advantage-games/src/app/[locale]/(student)/student/games/page.tsx:5:1 -> packages/db/src/index.ts [f0a34d45c805]
++ DATABASE_BOUNDARY static-import apps/science-advantage/app/(teacher)/teacher/page.tsx:4:1 -> packages/db/src/index.ts [f16d717c3d5b]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/models/__tests__/teacherModel.role-change.test.ts:3:1 -> external:drizzle-orm [f185fd1faceb]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/flashcard/save/[id]/route.ts:3:1 -> external:drizzle-orm [f1973fb3bc5f]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/[locale]/(student)/student/reedy/page.tsx:3:1 -> packages/db/src/index.ts [f22ec805f72d]
++ DATABASE_BOUNDARY dynamic-import apps/reading-advantage/scripts/seed-host-proof-session.ts:25:46 -> packages/db/src/schema/index.ts [f44a999a9314]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/lib/server/identity.ts:27:1 -> packages/db/src/company-identity/runtime.ts [f526e3e007af]
++ DURABLE_JOB_DATABASE_BOUNDARY static-import packages/backend/src/jobs/__tests__/durable-job-architecture.red.test.ts:6:1 -> external:database-table [f5cf1d72a3cd]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/[locale]/teacher/class-roster/[classroomId]/books/[classBookId]/progress/[studentId]/page.tsx:6:1 -> packages/db/src/index.ts [f5e9958b7753]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/backend/src/modules/company-identity/postgres-repository.ts:7:1 -> external:database-table [f6d5184a02a2]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/users/[id]/reminder-reread/route.ts:4:1 -> external:drizzle-orm [f6e9f4f6557c]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import packages/domain/src/__tests__/company-identity-principal.real-db.test.ts:7:1 -> external:database-table [f70178f53e44]
++ DURABLE_JOB_DATABASE_BOUNDARY static-import packages/domain/src/primary-mastery/evidence-summary.ts:7:1 -> external:database-table [f70401a5b0ad]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/[locale]/(student)/student/quest/battle/page.tsx:3:1 -> packages/db/src/index.ts [f7050d88621a]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/components/system/edit-license-form.tsx:39:1 -> external:drizzle-orm [f732165914a4]
++ DURABLE_JOB_DATABASE_BOUNDARY static-import apps/primary-advantage/scripts/run-primary-evidence-jobs.ts:17:1 -> external:database-table [f77cdb66d99d]
++ DATABASE_BOUNDARY static-import apps/sales-advantage/scripts/static-seed.ts:17:1 -> external:drizzle-orm [f7db76552a76]
++ DURABLE_JOB_DATABASE_BOUNDARY query-call packages/webhooks/src/review-worker.ts:1178:11 -> external:database-table [f7dcad3d7505]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/scripts/seed-host-proof-session.ts:16:1 -> external:drizzle-orm [f90d73c0a9ce]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/actions/flashcard.ts:8:1 -> packages/db/src/index.ts [f93800434e49]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION dynamic-import packages/backend/src/modules/company-identity/__tests__/finance-task3-review-b.red.test.ts:92:17 -> external:database-table [f9e07c99cd46]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/upload/csv/__tests__/session-school.test.ts:54:1 -> packages/db/src/schema/index.ts [fb28ab27093f]
++ COMPANY_IDENTITY_PRODUCT_ISOLATION static-import apps/accounts/app/api/admin/employees/[accountId]/credential/route.ts:10:1 -> external:database-table [fb8f212e3a3f]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/api/users/search/__tests__/route.test.ts:32:1 -> external:drizzle-orm/pg-core [fb9dcceeadc9]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/scripts/seed-host-proof-session.ts:14:1 -> packages/db/src/schema/index.ts [fc402197da7a]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/app/[locale]/teacher/dashboard/page.tsx:4:1 -> packages/db/src/index.ts [fc5f67a440d9]
++ DATABASE_BOUNDARY static-import apps/accounts/scripts/demo-accounts.ts:11:1 -> packages/db/src/company-identity/index.ts [fc95f150cd99]
++ AI_PROVIDER_BOUNDARY client-construction packages/ai/src/__tests__/vertex-adc.test.ts:138:20 -> packages/ai/src/providers/vertex.ts [fcb2d6d0567a]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/models/assignmentModel.ts:11:1 -> packages/db/src/index.ts [fd063e3c59fc]
++ DATABASE_BOUNDARY static-import apps/marketing/app/api/campaigns/route.ts:22:1 -> packages/db/src/schema/index.ts [fdcb0f3ae047]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/models/__tests__/userModel.article-records.test.ts:8:1 -> external:drizzle-orm/pg-core [feffbbcb6323]
++ DATABASE_BOUNDARY static-import apps/primary-advantage/server/utils/__tests__/credentials.test.ts:3:1 -> packages/db/src/schema/index.ts [ffbd006a6e01]
++ DATABASE_BOUNDARY static-import packages/api/src/routes/auth/login.ts:3:1 -> external:drizzle-orm [ffbe963ed966]
+- AI_PROVIDER_BOUNDARY static-import apps/primary-advantage/app/api/assistant/lesson-chatbot/route.ts:5:1 -> external:ai [011a806a9a95]
+- AI_PROVIDER_BOUNDARY static-import apps/primary-advantage/utils/openai.ts:1:1 -> external:@ai-sdk/openai [06492ec24620]
+- AI_PROVIDER_BOUNDARY static-import apps/reading-advantage/server/controllers/validator-controller.ts:22:1 -> external:ai [1080b6d10551]
+- AI_PROVIDER_BOUNDARY static-import apps/primary-advantage/server/utils/genaretors/story-generator.ts:1:1 -> external:ai [19d4b26c854e]
+- AI_PROVIDER_BOUNDARY static-import apps/primary-advantage/server/utils/genaretors/audio-generator.ts:4:1 -> external:ai [2499a13351ea]
+- AI_PROVIDER_BOUNDARY static-import apps/primary-advantage/server/utils/genaretors/image-generator.ts:1:1 -> external:ai [61e6c17e9192]
+- AI_PROVIDER_BOUNDARY static-import apps/primary-advantage/server/utils/genaretors/question-generator.ts:2:1 -> external:ai [6b8f53eff87f]
+- AI_PROVIDER_BOUNDARY static-import apps/primary-advantage/utils/google.ts:1:1 -> external:@ai-sdk/google [724a0eb20fc1]
+- AI_PROVIDER_BOUNDARY static-import apps/primary-advantage/server/utils/genaretors/evaluate-rating-generator.ts:4:1 -> external:ai [896f720da58a]
+- AI_PROVIDER_BOUNDARY static-import apps/primary-advantage/server/utils/genaretors/sentence-translator.ts:1:1 -> external:ai [bb361c07d9e2]
+- AI_PROVIDER_BOUNDARY static-import apps/primary-advantage/server/utils/genaretors/new-generator.ts:1:1 -> external:ai [c214bbba38c0]
+- AI_PROVIDER_BOUNDARY static-import apps/primary-advantage/server/utils/genaretors/topic-generator.ts:1:1 -> external:ai [d13f8a658329]
+- AI_PROVIDER_BOUNDARY static-import apps/primary-advantage/server/utils/assistant.ts:14:1 -> external:ai [d3bca8997958]
+- AI_PROVIDER_BOUNDARY static-import apps/primary-advantage/server/utils/genaretors/article-generator.ts:3:1 -> external:ai [d4a45f3c724e]
+- AI_PROVIDER_BOUNDARY static-import apps/primary-advantage/server/utils/genaretors/wordlist-generator.ts:2:1 -> external:ai [e15574aec8cd]
+~ 005a094b87c7 fc7013a0ba61 -> 306260565b56
+~ 00b9cbb9c3fa 98e51a8b4b2c -> d3216cad0bbf
+~ 1b591056894b c8cd59c1108f -> 726b7591f434
+~ 3269b0229eba 9f7dfe8a8ab0 -> cdb473448d4e
+~ 351fcb569f1a 3adf36a0aaec -> 1c8f4738066c
+~ 44b7939db2dd d55a343d2bc5 -> 1f51f392ac17
+~ 4d40193ef939 3db3054e5c30 -> 6f79e91daad3
+~ 4d40193ef939 986995ed6177 -> cbb1c0b45cf1
+~ 4d40193ef939 dd9f2e99bfc9 -> d7ac905d51ec
+~ 680bc1ed31e8 053ef52f3271 -> 006e84878bda
+~ 680bc1ed31e8 0654e0e5ef51 -> 00757a0800a4
+~ 680bc1ed31e8 0a626bf2c771 -> 014d36c80a71
+~ 680bc1ed31e8 0cade5833d0d -> 01861bc646a3
+~ 680bc1ed31e8 13d8207a6019 -> 04853be52bb2
+~ 680bc1ed31e8 1574c6291608 -> 07719e85f479
+~ 680bc1ed31e8 1a2382ac2486 -> 078443ddb0c8
+~ 680bc1ed31e8 1b8157df4cd8 -> 095e2efc3b39
+~ 680bc1ed31e8 1dc3fdfa4ef8 -> 0c1b783afc18
+~ 680bc1ed31e8 206a9f4b4cc4 -> 136da23d21f0
+~ 680bc1ed31e8 22f4bb918ed3 -> 15005228fbcd
+~ 680bc1ed31e8 2431f1ffceee -> 1945fd17bcdf
+~ 680bc1ed31e8 252e05cc0695 -> 1a97db554eea
+~ 680bc1ed31e8 27e05bf8b7c9 -> 1af6f52e9907
+~ 680bc1ed31e8 28db7a2d4107 -> 1dfa0a023df0
+~ 680bc1ed31e8 2985c92195f4 -> 1e5a4c189b2a
+~ 680bc1ed31e8 2a1a06e17073 -> 204b3fbf6372
+~ 680bc1ed31e8 2aefabd5d898 -> 2271d6764cd3
+~ 680bc1ed31e8 3694fd9e642f -> 28c1b4ec349a
+~ 680bc1ed31e8 383ae1750676 -> 28edfdee378c
+~ 680bc1ed31e8 38e186086e6c -> 2d6a63eb13fb
+~ 680bc1ed31e8 3af2ce3e4203 -> 2d94e476932a
+~ 680bc1ed31e8 3e6857efd1c1 -> 2d9da195615d
+~ 680bc1ed31e8 3f4c7d941ef7 -> 2dc62e5fb893
+~ 680bc1ed31e8 406bae70448d -> 2dcbded466eb
+~ 680bc1ed31e8 44f2e4a02c24 -> 2e590d3e86d8
+~ 680bc1ed31e8 491d75d58429 -> 2ed82f70c93b
+~ 680bc1ed31e8 498640c86cf4 -> 2f10ef9ddd9e
+~ 680bc1ed31e8 4e54d51efd5f -> 2f2f9182770e
+~ 680bc1ed31e8 50e35996e39e -> 3130c33d47cd
+~ 680bc1ed31e8 534e17758d96 -> 31c5848e8845
+~ 680bc1ed31e8 56a7b3a1eaeb -> 357ebd2f337d
+~ 680bc1ed31e8 575850b6616d -> 381f8097888c
+~ 680bc1ed31e8 592695c97150 -> 3e40d69fb7dc
+~ 680bc1ed31e8 5dbeb621240a -> 3eed0fae76d5
+~ 680bc1ed31e8 5ddeb1ffd03c -> 3f4f1d00dc9d
+~ 680bc1ed31e8 5eda6bcd6f7c -> 40fba549675b
+~ 680bc1ed31e8 63cdaaa0318b -> 413af01361d0
+~ 680bc1ed31e8 64e2cffa6475 -> 4203251cfa21
+~ 680bc1ed31e8 67c076da3186 -> 42cc758825dd
+~ 680bc1ed31e8 6b21bbb17789 -> 44b41758aced
+~ 680bc1ed31e8 707957d792a8 -> 470dac267530
+~ 680bc1ed31e8 70be4eed0120 -> 4729fb3ace54
+~ 680bc1ed31e8 7283909f9d13 -> 477489808da7
+~ 680bc1ed31e8 7307968df8c2 -> 4909c4888975
+~ 680bc1ed31e8 753006c65292 -> 4ce9f6d03d2c
+~ 680bc1ed31e8 76ff1e6b316d -> 4d03bf4660ce
+~ 680bc1ed31e8 775574187870 -> 4dafd466750d
+~ 680bc1ed31e8 77612dd73fc6 -> 4fcf79bcbfef
+~ 680bc1ed31e8 7baea9446e07 -> 51a92dc3d8e4
+~ 680bc1ed31e8 7d6e8ca5b74f -> 51f3f0eef0cd
+~ 680bc1ed31e8 7dbb3a10520b -> 52418b9f3ee3
+~ 680bc1ed31e8 81b2f1c7c5a9 -> 56b4d104bf3f
+~ 680bc1ed31e8 885701fdbd8f -> 577c317eaae0
+~ 680bc1ed31e8 8a038cce0ddb -> 590c6ff15b84
+~ 680bc1ed31e8 8a7f7a808a9a -> 59611f8e020b
+~ 680bc1ed31e8 8a8a8b47ff7c -> 5ca3641c5d7e
+~ 680bc1ed31e8 8ae2f936b479 -> 5cb126b86d62
+~ 680bc1ed31e8 8ae526f099cf -> 5d062da3c578
+~ 680bc1ed31e8 8c0022229acb -> 5f6fe06bf482
+~ 680bc1ed31e8 8c8ed96df1e8 -> 603ca3faeeba
+~ 680bc1ed31e8 8fe66914dd8e -> 62174592d7b4
+~ 680bc1ed31e8 941eecc30e71 -> 62cdaaa94ed6
+~ 680bc1ed31e8 957ff9d39544 -> 64a69fa4badf
+~ 680bc1ed31e8 998a6f93bceb -> 662b036a488f
+~ 680bc1ed31e8 a63f5cc80af5 -> 68fc4bdc2f8e
+~ 680bc1ed31e8 a65b2dd29984 -> 69988a89d639
+~ 680bc1ed31e8 a81bb245f990 -> 6b8b64d0769f
+~ 680bc1ed31e8 aa5ed9625920 -> 6c6ccb6542f6
+~ 680bc1ed31e8 aaae38c6cd97 -> 6cdbf5cf3ece
+~ 680bc1ed31e8 aafd7e76ee7c -> 6e350d2a9f75
+~ 680bc1ed31e8 abc27fa95461 -> 7135aafc5f5f
+~ 680bc1ed31e8 aef21d2879bc -> 71ac2b2a2e63
+~ 680bc1ed31e8 b0262b5b5813 -> 72af3f030af8
+~ 680bc1ed31e8 b1be7af09bd9 -> 751ccbbb202c
+~ 680bc1ed31e8 b4d88a57d0cc -> 773eb4957565
+~ 680bc1ed31e8 b6fd35fb1370 -> 79f7086ce4ab
+~ 680bc1ed31e8 ba934676125b -> 7a3a748f3d32
+~ 680bc1ed31e8 bee62612a339 -> 7b24205ee5f6
+~ 680bc1ed31e8 bf504ef3211f -> 7c34f322824e
+~ 680bc1ed31e8 bfca5d039cb4 -> 7c9c70c2684b
+~ 680bc1ed31e8 c097e8fd6371 -> 7cb30a2400c1
+~ 680bc1ed31e8 c367a903d5a1 -> 7d5c5c0ddfbc
+~ 680bc1ed31e8 c6f4b7d46ef0 -> 7ed2d637a42b
+~ 680bc1ed31e8 c92299956745 -> 80a4eec4a960
+~ 680bc1ed31e8 ca919661ff6a -> 82db73743d3f
+~ 680bc1ed31e8 d12d44756e39 -> 8862e92925a7
+~ 680bc1ed31e8 d589fa944e02 -> 89de519c7672
+~ 680bc1ed31e8 d619a57bc689 -> 8ace2773b97e
+~ 680bc1ed31e8 d72ebfd087c1 -> 8b7f4184557e
+~ 680bc1ed31e8 d7e87957a891 -> 8c4b1b6c83c6
+~ 680bc1ed31e8 da68768dceb7 -> 8cf5f3fa16f1
+~ 680bc1ed31e8 db7f63e90c43 -> 92143f214e4b
+~ 680bc1ed31e8 dcebd68fea64 -> 93497a1fcd72
+~ 680bc1ed31e8 e311d91c708a -> 95093e1e648e
+~ 680bc1ed31e8 e422f0ef1e01 -> 9b0ebbbf3251
+~ 680bc1ed31e8 e76c00c3ef11 -> 9b7f0f5eb5d5
+~ 680bc1ed31e8 e7ea319b28e9 -> 9f0a7dff2a57
+~ 680bc1ed31e8 e805bbcd6854 -> 9f39b11ab0eb
+~ 680bc1ed31e8 e897e357867e -> 9f4ecae49942
+~ 680bc1ed31e8 e90f9431e700 -> a0698f72dc21
+~ 680bc1ed31e8 eb03558ff0b7 -> a13252e90a90
+~ 680bc1ed31e8 ece99cc4fd27 -> a18e0af934f6
+~ 680bc1ed31e8 ef5d5de669f5 -> a3ccf4fea588
+~ 680bc1ed31e8 f3c0b1259708 -> a493251e068d
+~ 680bc1ed31e8 f85be75b8dae -> a54f3a8c4e8d
+~ 680bc1ed31e8 f93ee78cad93 -> a74dc33b0b0a
+~ 680bc1ed31e8 fd5bc773b9f8 -> a8f0ec3b1cc5
+~ 74d1d7d1e025 47ee72211120 -> 28d2147ee45e
+~ 90e57c95dab8 9ad7619d7c80 -> 4a31f3cfde69
+~ 9181448cd31d 10d14b1994a7 -> 6b0cad8159dc
+~ 92272162042b 6b2ee556b145 -> 00afd01fcc91
+~ 92272162042b 8d1d2d11a616 -> 18bca0776cd5
+~ a0430f6fab4d 0a16dc911f17 -> 4316dc81316c
+~ a0430f6fab4d 237255dc07ea -> a8eedceae637
+~ a084febd6291 f79d93a444ec -> 00797ac4f312
+~ ac0e3b955fff 93eb1a4fe392 -> e8bd55fa28b6
+~ cb847cf90c08 4013e28af487 -> 0acb3da6451d
+~ cb847cf90c08 4ae7f769cfd3 -> 113fdfcd7d47
+~ cb847cf90c08 807ee8bc8bc9 -> 1bcc1d8bfa9c
+~ cb847cf90c08 965d24603f90 -> 50bc1c9bd3b4
+~ cb847cf90c08 ae88187b2b12 -> 5e2fea5ca43b
+~ d27756d2c017 5af3f818d59a -> 56c64ac4b7b7
+~ e2209cd44a6e 06dd0fab879b -> 0108f8e155df
+~ e2209cd44a6e 0c09ddd28d02 -> 096a430787d5
+~ e2209cd44a6e 0d76876beb2d -> 0b963b8658b0
+~ e2209cd44a6e 0ee4b0da0b06 -> 0c76da1e41bc
+~ e2209cd44a6e 1ef99f7d3f71 -> 10d6373456c9
+~ e2209cd44a6e 211b78c74722 -> 156957fd1262
+~ e2209cd44a6e 2662d2dea8c5 -> 1a714d55249b
+~ e2209cd44a6e 44a50e5e1028 -> 1f915c40f0f6
+~ e2209cd44a6e 874ab8557ba9 -> 20b7bf377e05
+~ e2209cd44a6e 87ceaca3dbe5 -> 272f28e510c8
+~ e2209cd44a6e 8c5fc5f465b0 -> 3044849a6d2d
+~ e2209cd44a6e b5aef7a5d2b5 -> 3735f11e13bd
+~ e2209cd44a6e c1597db7630d -> 39fe198414e8
+~ e2209cd44a6e e3141584965b -> 3ba59bdf2952
+~ e3b7c60c48b3 2ebf608fdd3c -> 014cff33ea64
+~ e3b7c60c48b3 5a6f263ebea9 -> 2295be0caec6
+~ e3b7c60c48b3 a37eacf6caca -> 58c642acde0b
+~ e705202b9ac8 021005509e78 -> 01400dcea43e
+~ e705202b9ac8 20251e4101fb -> 019432574367
+~ e705202b9ac8 2a573ef8a562 -> 0e2b04e053cf
+~ e705202b9ac8 3e0be6139656 -> 184120bbff9f
+~ e705202b9ac8 6a26791fda04 -> 1e724d1a2939
+~ e705202b9ac8 6c9b9f5ed2e3 -> 276c9396b397
+~ e705202b9ac8 6dd53819f4e4 -> 2945529f9ebf
+~ e705202b9ac8 a87f20b41605 -> 2a80c06fef8e
+~ e705202b9ac8 b16fca5f91b5 -> 3013b004a047
+~ e705202b9ac8 b6da62192850 -> 37ec786b22a4
+~ e705202b9ac8 eccabd74386b -> 415a2b1bb6f3
+~ e705202b9ac8 f4428fae5b45 -> 46c5d0f27a78
+~ e97c26f6cb51 ce9957f68a6f -> c69de9a68a95
+undefined
+/home/daniebo/Desktop/rama-worktrees/arch-check-cca5d0199/packages/architecture-enforcement:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: tsx src/architecture-check-cli.ts
+[ELIFECYCLE] Command failed with exit code 1.

@@ -1,0 +1,12 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-products-a62/apps/www-reading-advantage
+
+
+ Test Files  4 passed (4)
+      Tests  36 passed (36)
+   Start at  20:28:21
+   Duration  3.77s (transform 336ms, setup 178ms, import 767ms, tests 669ms, environment 1.72s)
+
+VITEST=0
+TSC=0
+ESLINT=0

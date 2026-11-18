@@ -60,6 +60,7 @@ type ProductConfigList = readonly [
 ];
 
 const FEATURE_INDEXES = [0, 1, 2, 3] as const;
+const STORYTIME_FEATURE_INDEXES = [0, 3] as const;
 
 const productConfigs: ProductConfigList = [
   {
@@ -173,9 +174,14 @@ export default async function B2BSolutions() {
 
   const products = productConfigs.map((config) => {
     const title = t(`products.${config.key}.title`);
-    const features = FEATURE_INDEXES.map((featureIndex) =>
-      t(`products.${config.key}.features.${featureIndex}`),
-    );
+    const features =
+      config.key === "storytimeAdvantage"
+        ? STORYTIME_FEATURE_INDEXES.map((featureIndex) =>
+            t(`products.storytimeAdvantage.features.${featureIndex}`),
+          )
+        : FEATURE_INDEXES.map((featureIndex) =>
+            t(`products.${config.key}.features.${featureIndex}`),
+          );
     const gradeRange = t(`products.${config.key}.gradeRange`);
     const imageAlt = config.picture ? t(config.picture.altKey) : undefined;
 
@@ -347,18 +353,16 @@ export default async function B2BSolutions() {
                     className="animate-in fade-in zoom-in-95 duration-500"
                     style={{ "--delay": `${baseDelay + 50}ms` }}
                   >
-                    <div className="relative h-full flex flex-col items-center justify-center overflow-hidden p-8 rounded-2xl bg-white border border-sky-200 shadow-md hover:shadow-lg hover:-translate-y-2 transition-all duration-300">
-                      <div className="absolute inset-0 z-0">
-                        <Image
-                          src="/images/blended-learning.png"
-                          alt="Blended learning approach"
-                          fill
-                          sizes="(min-width: 1024px) 25vw, 100vw"
-                          className="object-cover"
-                        />
-                      </div>
-                      <div className="absolute inset-0 z-10 bg-gradient-to-br from-white/40 to-white/20" />
-                      <div className="relative z-20 text-center space-y-3 bg-white/80 backdrop-blur-xs rounded-2xl px-6 py-4 shadow-md border border-white/50">
+                    <div className="flex h-full flex-col overflow-hidden rounded-2xl bg-white border border-sky-200 shadow-md hover:shadow-lg hover:-translate-y-2 transition-all duration-300">
+                      <Image
+                        src="/images/blended-learning.png"
+                        alt="Blended learning approach"
+                        width={800}
+                        height={1200}
+                        sizes="(min-width: 1024px) 25vw, 100vw"
+                        className="h-auto w-full"
+                      />
+                      <div className="space-y-3 p-6 text-center">
                         <p className="text-lg font-semibold text-slate-800">
                           {t("seeSuccessStories")}
                         </p>

@@ -1,0 +1,33 @@
+Review B (security) log for www_tutor_calculator_20261117 Phase 3 at 6c22d6284dd47deeab35105c036bc549c67557aa.
+Provisional verdict was filed first per the brief; this log records the completed verification.
+
+HEAD: git rev-parse HEAD returns 6c22d6284dd47deeab35105c036bc549c67557aa; git status --porcelain is empty.
+Range: 81df01cf2e7c2954f4a2de1aaee593913a00bc75..6c22d6284dd47deeab35105c036bc549c67557aa (www app only).
+
+Checks run:
+- Read tutor-commission.ts (clamps, BigInt satang path, D-18 rule, tax half-up) and tutor-commission-calculator.tsx (readNumber, resizeLegs wiring, {n} substitution, --bar-width style).
+- Read both adversarial suites (module A1-A6 conservation, component hostile-locale and price attacks).
+- XSS grep over page, calculator, lib, locale files: no dangerouslySetInnerHTML, innerHTML, fetch, XHR, next/script, searchParam, cookies, headers. Clean.
+- Secrets/URL grep over the diff: only test helper names; no key, token, password, URL, or internal host. package.json and lockfile diffs empty.
+- Settlement comparison read-only: tax half-up (+50n) matches taxService.ts; D-18 zero payout matches settlementService.ts:536-548; gross truncation matches calculatePayoutMinor; rate branches match calculateCommissionInfo (base 0.5 default; page hardcodes it: B-P3-2).
+- Locale diff: shipped copy keeps example-not-promise wording in en/th/zh plus the illustration disclaimer; removed income lines were old test assertions.
+- Images: five new student-mobile webp files replace 070/062; blur rectangles all empty after review; 064 demo name accepted per brief.
+- A2 not applicable (no draft-to-published flip); A6 not applicable (tracks.md states no security resolution).
+- Not applicable with reason: auth/z, tenant scoping, persistence, migrations (no backend, session, DB, or TenantDB touch).
+- Targeted vitest reruns, --maxWorkers=1, no redirection, outputs read from tool results:
+  1. tutor-commission.test.ts + tutor-commission.adversarial.test.ts: 2 files, 57 tests, all pass.
+  2. tutor-commission-calculator.test.tsx + tutor-commission-calculator.adversarial.test.tsx: 2 files, 34 tests, all pass.
+- Findings: B-P3-1 Nit (unbounded leg count, per-leg DOM inputs, no cap); B-P3-2 Nit (hardcoded 0.5 base rate vs settlement env default). No blockers. No routed CONTEST items.
+
+MEASURE_AGENT_RESULT
+role: measure-review-b-security
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+commits: 6c22d6284
+tests_run: pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts src/lib/tutor-commission.adversarial.test.ts --reporter=dot --silent=true --maxWorkers=1 (2 files, 57 tests, pass); same form for src/components/marketing/tutor-commission-calculator.test.tsx + .adversarial.test.tsx (2 files, 34 tests, pass)
+files_changed: none (audit-only)
+plan_updates: none (audit-only)
+known_failures: none
+handoff: PASS with two nonblocking nits (B-P3-1 unbounded leg-count DOM growth, B-P3-2 hardcoded 0.5 base rate vs settlement env). No CONTEST or ESCALATE items were routed. Suggested Green follow-ups: cap leg count input; pin or source the 0.5 base rate.
+END_MEASURE_AGENT_RESULT

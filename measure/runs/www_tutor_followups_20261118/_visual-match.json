@@ -1,0 +1,218 @@
+[
+ {
+  "file": "en-hero-390.png",
+  "box": [
+   18,
+   844,
+   374,
+   1044
+  ],
+  "match_score": 9.63,
+  "rendered": [
+   356,
+   200
+  ],
+  "png": [
+   390,
+   1108
+  ]
+ },
+ {
+  "file": "en-become-a-tutor-390.png",
+  "box": [
+   18,
+   750,
+   374,
+   950
+  ],
+  "match_score": 8.67,
+  "rendered": [
+   356,
+   200
+  ],
+  "png": [
+   390,
+   1033
+  ]
+ },
+ {
+  "file": "en-hero-980.png",
+  "box": [
+   18,
+   676,
+   964,
+   1208
+  ],
+  "match_score": 3.95,
+  "rendered": [
+   946,
+   532
+  ],
+  "png": [
+   980,
+   1307
+  ]
+ },
+ {
+  "file": "en-become-a-tutor-980.png",
+  "box": [
+   18,
+   662,
+   964,
+   1194
+  ],
+  "match_score": 4.45,
+  "rendered": [
+   946,
+   532
+  ],
+  "png": [
+   980,
+   1308
+  ]
+ },
+ {
+  "file": "en-hero-1280.png",
+  "box": [
+   670,
+   234,
+   1264,
+   568
+  ],
+  "match_score": 6.84,
+  "rendered": [
+   594,
+   334
+  ],
+  "png": [
+   1280,
+   800
+  ]
+ },
+ {
+  "file": "en-become-a-tutor-1280.png",
+  "box": [
+   18,
+   236,
+   508,
+   512
+  ],
+  "match_score": 9.35,
+  "rendered": [
+   490,
+   276
+  ],
+  "png": [
+   1280,
+   751
+  ]
+ },
+ {
+  "file": "th-hero-390.png",
+  "box": [
+   16,
+   880,
+   372,
+   1080
+  ],
+  "match_score": 8.89,
+  "rendered": [
+   356,
+   200
+  ],
+  "png": [
+   390,
+   1146
+  ]
+ },
+ {
+  "file": "th-become-a-tutor-390.png",
+  "box": [
+   18,
+   660,
+   374,
+   860
+  ],
+  "match_score": 8.7,
+  "rendered": [
+   356,
+   200
+  ],
+  "png": [
+   390,
+   943
+  ]
+ },
+ {
+  "file": "th-hero-980.png",
+  "box": [
+   18,
+   676,
+   964,
+   1208
+  ],
+  "match_score": 3.95,
+  "rendered": [
+   946,
+   532
+  ],
+  "png": [
+   980,
+   1307
+  ]
+ },
+ {
+  "file": "th-become-a-tutor-980.png",
+  "box": [
+   18,
+   582,
+   964,
+   1114
+  ],
+  "match_score": 4.45,
+  "rendered": [
+   946,
+   532
+  ],
+  "png": [
+   980,
+   1228
+  ]
+ },
+ {
+  "file": "th-hero-1280.png",
+  "box": [
+   670,
+   264,
+   1264,
+   598
+  ],
+  "match_score": 5.81,
+  "rendered": [
+   594,
+   334
+  ],
+  "png": [
+   1280,
+   863
+  ]
+ },
+ {
+  "file": "th-become-a-tutor-1280.png",
+  "box": [
+   18,
+   184,
+   508,
+   460
+  ],
+  "match_score": 9.14,
+  "rendered": [
+   490,
+   276
+  ],
+  "png": [
+   1280,
+   646
+  ]
+ }
+]

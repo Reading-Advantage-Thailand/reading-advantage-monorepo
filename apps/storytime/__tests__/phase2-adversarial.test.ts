@@ -196,6 +196,7 @@ describe("the week contract rejects a hostile copy with its field path", () => {
 
   it("accepts a draft with a duplicate book kind, because only a published week needs one of each", () => {
     const draft = shipped("w02.json");
+    draft.meta.status = "draft";
     draft.books.push(structuredClone(draft.books[0]));
     expect(failPaths(draft)).toBeNull();
   });

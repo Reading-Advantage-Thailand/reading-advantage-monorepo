@@ -11,7 +11,9 @@ import { questionScreenShows, readAlongQuestions } from "../../../../../lib/ques
 // the same files by relative specifier, so the factories match in both runs. Only the
 // type-only import keeps the `@` form; types never resolve at runtime.
 import { parseStorytimeRoute } from "../../../../../lib/route-parse";
+import { stepMediaOf } from "../../../../../lib/teacher-media";
 import { requireUser } from "../../../../../lib/auth";
+import { teacherRoutesEnabled } from "../../../../../lib/teacher";
 import { signWeekMedia } from "../../../../../lib/media/sign";
 import { placeFor } from "../../../../../lib/look/places";
 import { Frame } from "../../../frame";
@@ -32,6 +34,14 @@ import { SpeakerButton } from "./speaker-button";
  *
  * `?part=book|decodable|song` names the part that opens first. A missing value, an empty value, an
  * unknown value, and a repeated value open the home view.
+ *
+ * `?day=1..5` names the day that a teacher button opened (plan task 6.2, round 10). Only a single
+ * value that matches `^[1-5]$` is a day; any other value, and any repeated value, is the same as
+ * no day. A valid day shows a day line from the message key `stDayLine`, and it opens the part of
+ * the first step of that day with a media part under rule D1 (`readalong` opens `book`,
+ * `decodable` opens `decodable`, `song` opens `song`). A valid `?part=` wins over the day; an
+ * unknown `?part=` counts as a missing one. The day line shows on the home view and on the part
+ * screens, so the teacher keeps the day context.
  *
  * The home view holds the three entry tiles with their pictures, the recorded label audio, the Thai
  * parent line, the three home words, the frame, the activity, and the sound of the week. Playback
@@ -111,6 +121,42 @@ function openPart(value: string | string[] | undefined): Part | null {
   return typeof value === "string" && (PARTS as readonly string[]).includes(value)
     ? (value as Part)
     : null;
+}
+
+/** The one-digit form of a day, `1` to `5`. */
+const DAY_PATTERN = /^[1-5]$/;
+
+/**
+ * Reads the `day` query value (plan task 6.2, round 10). Only a single value that matches
+ * `^[1-5]$` is a day; a missing, empty, padded, out-of-range, or repeated value is the same as
+ * no day, so the page keeps the output of the no-day request.
+ * @param value The raw query value.
+ * @returns The day number, or `null` for no day.
+ */
+function openDay(value: string | string[] | undefined): number | null {
+  return typeof value === "string" && DAY_PATTERN.test(value) ? Number(value) : null;
+}
+
+/**
+ * Reads the part that a day opens: the kind of the first step of that day with a media part
+ * under rule D1 (`readalong` opens `book`, `decodable` opens `decodable`, `song` opens `song`).
+ * A day with no script, or with no step that opens a player, opens the home view.
+ * @param day The day number, or `null` for no day.
+ * @param week The week.
+ * @returns The part of the day, or `null` for the home view.
+ */
+function dayPartOf(day: number | null, week: StorytimeWeek): Part | null {
+  if (day === null) return null;
+  const script = week.scripts.find((entry) => entry.day === day);
+  if (!script) return null;
+  for (const step of script.steps) {
+    const media = stepMediaOf(step, week);
+    if (!media) continue;
+    if (media.kind === "readalong") return "book";
+    if (media.kind === "decodable") return "decodable";
+    return "song";
+  }
+  return null;
 }
 
 /**
@@ -258,13 +304,16 @@ export default async function StorytimeWeekPage({
 }) {
   const { locale, level: levelSegment, week: weekSegment } = await params;
   const search = await searchParams;
-  await requireUser(`/${locale}/st/${levelSegment}/${weekSegment}${queryOf(search)}`);
+  const user = await requireUser(`/${locale}/st/${levelSegment}/${weekSegment}${queryOf(search)}`);
   const route = parseStorytimeRoute(routing.locales, locale, levelSegment, weekSegment);
   const loaded = route === null ? null : await loadVisibleWeek(route.level, route.week);
-  const part = openPart(search.part);
   const week = loaded ?? notFound();
+  // The effective part: a valid `?part=` wins over the day mapping; an unknown `?part=` counts
+  // as a missing one, so the day mapping applies (plan task 6.2, round 10).
+  const day = openDay(search.day);
+  const part = openPart(search.part) ?? dayPartOf(day, week);
   const translate = await getTranslations({ locale });
-  const t = (key: string) => translate(key);
+  const t = (key: string, values?: Record<string, string | number>) => translate(key, values);
   const readerLabels = {
     readToMe: t("playerReadToMe"),
     myTurn: t("playerMyTurn"),
@@ -286,7 +335,9 @@ export default async function StorytimeWeekPage({
   const decodableBook = week.books.find((entry) => entry.kind === "decodable");
 
   const home = week.home;
-  const parentLine = home?.line ? home.line.th.trim() : "";
+  const parentLine = home?.line
+    ? (locale === "th" ? home.line.th : (home.line.en ?? "")).trim()
+    : "";
   const homeWords = home?.words ?? [];
   const frame = week.focus.frame?.trim() ?? "";
   const activityText = home?.activity ? home.activity[locale === "th" ? "th" : "en"].trim() : "";
@@ -309,6 +360,15 @@ export default async function StorytimeWeekPage({
   }
 
   const weekHref = `/${locale}/st/${levelSegment}/${weekSegment}`;
+  // The teacher link of the home view (plan task 6.2, rounds 7 and 10): a teacher with the
+  // switch on sees one link to the teacher page of the same week. A family or class account, a
+  // part screen, and the switch off see none. The link shows on the home view only, so the
+  // rule reads the effective part: day 1 of w01 keeps the link, and a day that opens a part
+  // does not.
+  const teacherHref =
+    user.role === "teacher" && teacherRoutesEnabled() && part === null
+      ? `/${locale}/teacher/${route!.level}/${route!.week}`
+      : null;
   /** The per-device completion key of one part: `<level>:<week>:<part>`. */
   const doneKeyOf = (partName: string) => `${route!.level}:${route!.week}:${partName}`;
   // The look places of the part: `main` carries them as data attributes, so the CSS of
@@ -346,6 +406,13 @@ export default async function StorytimeWeekPage({
         variant={part === null || part === "song" ? "cover" : "band"}
         locale={locale === "th" ? "th" : "en"}
       />
+      {/* The day line of a valid `?day=` (plan task 6.2, round 10): the home view and the part
+          screens of the day both show it, so the teacher knows which day is open. */}
+      {day !== null ? (
+        <p className="text-lg font-semibold">
+          {t("stDayLine", { day })}
+        </p>
+      ) : null}
       {part === null ? (
         <>
           <section aria-label={t("homeChoosePart")}>
@@ -367,6 +434,14 @@ export default async function StorytimeWeekPage({
               ))}
             </ul>
           </section>
+          {teacherHref ? (
+            <Link
+              href={teacherHref}
+              className="inline-flex min-h-11 w-fit items-center rounded-2xl border border-[#92400e] bg-[#fcd34d] px-4 py-2 font-semibold"
+            >
+              {t("stTeacherViewLink")}
+            </Link>
+          ) : null}
           <section
             aria-label={t("homeParentHeading")}
             data-parent-panel
@@ -376,7 +451,7 @@ export default async function StorytimeWeekPage({
               {t("homeParentHeading")}
             </h2>
             {parentLine ? (
-              <p className="leading-7" lang="th">
+              <p className="leading-7" lang={locale === "th" ? "th" : "en"}>
                 {parentLine}
               </p>
             ) : null}
@@ -448,6 +523,7 @@ export default async function StorytimeWeekPage({
               questionLabels={questionLabels}
               mediaUrls={mediaUrls}
               doneKey={doneKeyOf("book")}
+              weekHref={weekHref}
             />
           ) : (
             <WeekHomeLink href={weekHref} label={t("homeChoosePart")} />
@@ -469,6 +545,7 @@ export default async function StorytimeWeekPage({
                 nextPage: t("decNextPage"),
                 audioError: t("decAudioError"),
                 playing: t("playerPlaying"),
+                playSentence: t("decPlaySentence"),
               }}
             />
           ) : (

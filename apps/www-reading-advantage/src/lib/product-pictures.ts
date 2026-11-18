@@ -33,6 +33,13 @@ export const productPictures = {
     height: 651,
     portrait: true,
   },
+  /** The printed Origins 3.1 cover, converted from the workbook PNG (spec D-19 item 3). */
+  primaryCover31: {
+    src: "/images/products/primary-origins-3-1-cover.webp",
+    width: 480,
+    height: 651,
+    portrait: true,
+  },
   primaryLesson: {
     src: "/images/products/primary-lesson-intro.webp",
     width: 944,
@@ -45,10 +52,71 @@ export const productPictures = {
     height: 651,
     portrait: true,
   },
+  /** The hero picture (spec D-2). */
+  tutorHero: {
+    src: "/images/tutor-advantage-hero-2026-11-06.webp",
+    width: 1920,
+    height: 1080,
+    portrait: false,
+  },
+  /** The classroom picture of the become-a-tutor block (spec D-3). */
+  tutorTeachClass: {
+    src: "/images/tutor-advantage-teach-class.webp",
+    width: 1920,
+    height: 1080,
+    portrait: false,
+  },
+  /** The Reedy preview of the Reedy block (spec D-19 item 5). */
+  reedyPreview: {
+    src: "/images/primary-advantage/reedy-preview.webp",
+    width: 1280,
+    height: 912,
+    portrait: false,
+  },
   tutorFlashcard: {
     src: "/images/products/tutor-flashcard.webp",
     width: 520,
     height: 647,
     portrait: true,
+  },
+} as const satisfies Record<string, ProductPictureFile>;
+
+/**
+ * The five Tutor Advantage student screens of the gallery (spec 6.2, task 3.4).
+ * Source set: `advantage-pr/assets/screenshots/tutor-advantage/dev-2026-11-16/`,
+ * version 2.0, 2026-11-17. Each file is a webp at its delivered size, made by
+ * `scripts/blur-tutor-screens.py`. The keys follow the gallery slot order of
+ * PR section 2. No tutor screen ships.
+ */
+export const tutorScreens = {
+  guidedWriting: {
+    src: "/images/products/tutor-advantage/student-mobile/040-screen.webp",
+    width: 520,
+    height: 1125,
+    portrait: false,
+  },
+  shortAnswer: {
+    src: "/images/products/tutor-advantage/student-mobile/002-screen.webp",
+    width: 520,
+    height: 1125,
+    portrait: false,
+  },
+  feedback: {
+    src: "/images/products/tutor-advantage/student-mobile/004-screen.webp",
+    width: 520,
+    height: 1125,
+    portrait: false,
+  },
+  selfReflection: {
+    src: "/images/products/tutor-advantage/student-mobile/052-screen.webp",
+    width: 520,
+    height: 1125,
+    portrait: false,
+  },
+  classRecord: {
+    src: "/images/products/tutor-advantage/student-mobile/064-screen.webp",
+    width: 520,
+    height: 1125,
+    portrait: false,
   },
 } as const satisfies Record<string, ProductPictureFile>;

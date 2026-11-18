@@ -1,0 +1,129 @@
+Measure Red — correction to task 1.3 (www_tutor_calculator_20261117)
+Role route: opencode-go/hy4-flash-free#high (ra-quota pick red)
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c (resolved, ancestor of role_base_sha)
+role_base_sha: 1a32da5b2a38c8e60ff9d6509786b8521a3ce988 (resolved, equals worktree HEAD at start)
+Worktree was clean at role_base_sha. No dirty paths to classify.
+
+Defect corrected
+  Green 1.4 reported that test 2 read leaves[pin.path.join(".")] and so looked up
+  "presets.0.name", while the test's own stringLeaves helper emits "presets[0].name"
+  for array indices. A spec 5.4 array therefore returned undefined at that lookup.
+  Green reverted its locale edit and the track blocked on the test.
+
+Change made (smallest option, array shape kept)
+  1. Added leafKey(path), which renders a traversal path as the bracket-indexed leaf
+     key stringLeaves emits: numeric segments become [n], other segments use dot form.
+  2. Refactored stringLeaves to accumulate path segments and emit keys through
+     leafKey, so the map and the pin lookups derive from one shared renderer.
+  3. Test 2 now reads leaves[leafKey(pin.path)] in en and th.
+  4. Added one self-check in the en pins case: every pin path must resolve to a
+     string in the en tree, with leafKey(pin.path) in the assertion message. It sits
+     after the count assertion, so the Red failure stays identical and a later path
+     typo fails at the pin table instead of as a copy mismatch.
+  No pinned string, coverage area, test case, or assertion was removed or weakened.
+  presets stays an array as spec 5.4 and 5.3 require.
+
+Exact pin path form settled on
+  Leaf-map key form: presets[0].name, presets[1].setup, presets[2].result (bracket form).
+  Traversal path form inside PINS: ["presets","0","name"] and so on, because read()
+  walks arrays with numeric string keys. leafKey() converts one to the other.
+
+Red command (run from the worktree)
+  bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --silent=true'
+  Runner reported RUN v4.1.8 in /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage
+
+Failure evidence (exit 1)
+  Test Files  1 failed (1)
+  Tests       10 failed | 8 passed (18)
+  Duration    709ms
+
+  The 10 failing names are unchanged from red-1.3-08fcd93b:
+   1. 1. the calculator block exists > exists in en, th, and zh
+   2. 2. en and th copy pinned word for word (AC-5) > holds all 34 string leaves in en
+   3. 2. en and th copy pinned word for word (AC-5) > holds all 34 string leaves in th
+   4. 3. key order and structure (AC-5) > keeps the spec 5.4 key order in en, th, and zh
+   5. 4. zh holds the English lines (D-10) > equals en at every pinned key path
+   6. 5. preset 3 draft of D-2a > pins the en draft name, setup, and result
+   7. 5. preset 3 draft of D-2a > pins the th draft name, setup, and result
+   8. 5. preset 3 draft of D-2a > pins the three chart draft labels in en and th
+   9. 7. price default of 3,000 (AC-8) > keeps 3,000 in the en price note
+  10. 7. price default of 3,000 (AC-8) > keeps 3,000 in the th price note
+
+  No path-resolution failure appears. Test 2 still stops at the unchanged count
+  assertion "expected +0 to be 34", so the self-check is not reached at Red. The
+  8 passing cases are the same positive controls and vacuous checks as before.
+
+Sanity check of the correction
+  A local check of leafKey(), stringLeaves(), and read() against a spec-shaped array
+  produced presets[0].name, presets[0].setup, presets[0].result, presets[1].name,
+  presets[2].result, and all resolved to strings. No locale file was edited.
+
+Commits
+  704f03c497cac94d735684b839ae0538f3882465
+  test(www-reading-advantage): align preset pin paths (track_id: www_tutor_calculator_20261117)
+  Pathspec: apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts
+  fb453f519402c2267b906e94f44c6490fa4941f6
+  docs(measure): record red 1.3 correction (track_id: www_tutor_calculator_20261117)
+  Pathspec: measure/tracks/www_tutor_calculator_20261117/plan.md
+
+Files changed in this role
+  apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts
+  measure/tracks/www_tutor_calculator_20261117/plan.md
+  measure/runs/www_tutor_calculator_20261117/red-1.3-fix-704f03c4.json
+  measure/runs/www_tutor_calculator_20261117/red-1.3-fix-704f03c4.log
+
+Remaining failure handed to Green (unchanged from red-1.3)
+  Add the calculator block to en, th, and zh in
+  apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts, after
+  tutorRole and before faq, with the spec 5.4 copy, presets as an array, the D-2a
+  preset 3 draft, the chart labels, and English text in zh. The 10 failing cases then pass.
+
+MEASURE_AGENT_RESULT
+{
+  "role": "measure-mid-red",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "task": "1.3",
+  "correction_of": "08fcd93b039f53d26447a9ec8590c17264397ec3",
+  "baseline_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "1a32da5b2a38c8e60ff9d6509786b8521a3ce988",
+  "resulting_head": "fb453f519402c2267b906e94f44c6490fa4941f6",
+  "verdict": "pass",
+  "commits": [
+    "704f03c497cac94d735684b839ae0538f3882465 test(www-reading-advantage): align preset pin paths (track_id: www_tutor_calculator_20261117)",
+    "fb453f519402c2267b906e94f44c6490fa4941f6 docs(measure): record red 1.3 correction (track_id: www_tutor_calculator_20261117)"
+  ],
+  "tests": {
+    "file": "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "authored_case_count": 18,
+    "red_exit_code": 1,
+    "test_files": "Test Files 1 failed (1)",
+    "tests_line": "Tests 10 failed | 8 passed (18)"
+  },
+  "files": [
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md",
+    "measure/runs/www_tutor_calculator_20261117/red-1.3-fix-704f03c4.json",
+    "measure/runs/www_tutor_calculator_20261117/red-1.3-fix-704f03c4.log"
+  ],
+  "pin_path_form": "Leaf keys use bracket form presets[0].name via leafKey(); PINS traversal paths stay [\"presets\",\"0\",\"name\"] for read().",
+  "failing_test_names": [
+    "1. the calculator block exists > exists in en, th, and zh",
+    "2. en and th copy pinned word for word (AC-5) > holds all 34 string leaves in en",
+    "2. en and th copy pinned word for word (AC-5) > holds all 34 string leaves in th",
+    "3. key order and structure (AC-5) > keeps the spec 5.4 key order in en, th, and zh",
+    "4. zh holds the English lines (D-10) > equals en at every pinned key path",
+    "5. preset 3 draft of D-2a > pins the en draft name, setup, and result",
+    "5. preset 3 draft of D-2a > pins the th draft name, setup, and result",
+    "5. preset 3 draft of D-2a > pins the three chart draft labels in en and th",
+    "7. price default of 3,000 (AC-8) > keeps 3,000 in the en price note",
+    "7. price default of 3,000 (AC-8) > keeps 3,000 in the th price note"
+  ],
+  "remaining_failures": [
+    "Add the spec 5.4 calculator block with an array presets shape to en, th, and zh so the 10 failing cases pass."
+  ]
+}
+RESULT: PASS

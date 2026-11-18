@@ -1,0 +1,75 @@
+Adversarial testing, Phase 3, www_tutor_calculator_20261117
+Role: measure-adversarial-testing. Route: claude-code/claude-sonnet-5-5#max.
+phase_base_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+audited_head_sha (the implementation): f85f63cf3ccfc1f03a62b63739b9144296df62a3
+commit_sha (the new tests): 9fc1292b914bb4a67bac3c8fa48e7a68762f3c0b
+Result file: measure/runs/www_tutor_calculator_20261117/adversarial-p3-f85f63cf3.json (status: pass)
+
+1. SCOPE
+Three new behavior test files, placed beside the code. No file reads production source as text. No file uses a regex on source.
+No file computes a hash. The only files read at run time are public image files inside the repository (header bytes).
+- apps/www-reading-advantage/src/lib/tutor-commission.settlement.adversarial.test.ts (37 tests)
+- apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx (30 tests)
+- apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.phase3.adversarial.test.tsx (25 tests)
+
+2. COMMANDS AND EXIT CODES
+- baseline at f85f63cf3 (13 gate and existing adversarial files): exit 0, 13 files, 202 tests
+- settlement file: exit 0, 37 tests
+- legs file: exit 0, 30 tests
+- page phase3 file: exit 0, 25 tests
+- mutants script (7 faults in scratch copies): exit 0, all 7 killed (section 4)
+- vitest, the 3 new files plus the 13 existing files, --reporter=dot --maxWorkers=1: exit 0, 16 files, 294 tests
+- tsc --noEmit -p .: first run exit 1 (a never[] typing error in my own new page test), second run exit 0
+- eslint on the 3 new files: exit 0
+- pnpm --filter www-reading-advantage lint (committed tree): exit 0
+- git commit with pathspecs: exit 0, 9fc1292b9
+- git status --short after the run: empty
+
+3. ROUTED GAPS
+A-P3-r2-1 (Add a leg, Remove a leg, empty leg-count field): closed by groups L1 to L4 and the random walk L6.
+The walk keeps rows, typed students, preset state (D-7), and every figure equal to the module after each action.
+C-P3-r2-3 (the literal {n}): closed by group P2. The page renders through the real next-intl engine.
+Each leg row reads Leg 1, Leg 2, ... in en and zh, and สาย 1, สาย 2, ... in th. Two in-test controls show the check can fail.
+Settlement parity: closed by groups S0 to S6 against an independent BigInt satang model of the settlement code.
+Image map (AC-22) and own bar (AC-23): closed by group P3 and group L5.
+No downline wording: closed by group P4 (page, three locales) and group L7 (calculator, en and th).
+
+4. MUTATION MATRIX (scratch copies, production untouched, deleted on exit)
+M-L1 readLegCount reads the field only             -> 5 of 30 tests fail (legs file)
+M-G1 own bar shows the payout before tax            -> 13 of 30 fail (legs file)
+M-G2 leg bar width is a share of the payout         -> 18 of 30 fail (legs file)
+M-T  tax truncated, not half up                     -> 9 of 37 fail (settlement file)
+M-D  D-18 removed                                   -> 5 of 37 fail (settlement file)
+M-R  gross rounded, not truncated                   -> 8 of 37 fail (settlement file)
+M-N  page passes { n: '1' } for legBar              -> 3 of 25 fail (page file; en, th, zh)
+Surviving mutants: none.
+
+5. FINDINGS (both nonblocking)
+F1 [Nit]: whole-baht volumes print as 435.00 for some satang prices (price 4.35, 100 students).
+   tutor-commission-calculator.tsx:86-91 and tutor-commission.ts:153,157,173. Probe fails with ['435.00','435.00'].
+   16,055 of 207,993 whole-baht products in a scan are affected. No money value is wrong.
+F2 [Nit]: a volume of 1e21 baht or more prints as 1e+21. Probe fails with '1e+21'.
+Probe file (gitignored): measure/runs/www_tutor_calculator_20261117/adversarial-p3-f85f63cf3-exposing-F1-F2.test.tsx.txt
+Probe run output: adversarial-p3-f85f63cf3-exposing-run.txt
+
+6. NOTES
+- The brief's commit subject has 102 characters. The commit uses a 98-character subject (the word 'the' is dropped).
+- No Playwright test was added. No routed gap asks for a layout or pixel claim.
+- Review C nits C-P3-r2-1 and C-P3-r2-2 stay open and unchanged.
+
+7. RERUN RULE
+Any later implementation commit invalidates this result and requires the Phase 3 adversarial gate to run again.
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+commits: 9fc1292b9
+tests_run: vitest 3 new files + 13 existing files --reporter=dot --maxWorkers=1: exit 0, 16 files, 294 tests; tsc --noEmit -p .: exit 0; pnpm --filter www-reading-advantage lint: exit 0; eslint on the 3 new files: exit 0; 7 scratch faults all killed
+files_changed: src/lib/tutor-commission.settlement.adversarial.test.ts; src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx; src/app/[locale]/(marketing)/products/tutor-advantage/page.phase3.adversarial.test.tsx
+plan_updates: none
+known_failures: none in the committed suite; F1 and F2 are nonblocking nits with an uncommitted probe in the run folder
+handoff: PASS. Route F1 and F2 (Nit) to Green for FIX or DECLINE; they change no money value. A later implementation commit needs a rerun of this gate.
+dispositions: none
+END_MEASURE_AGENT_RESULT

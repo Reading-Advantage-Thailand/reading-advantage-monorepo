@@ -1,0 +1,60 @@
+# Red log: P3 task 3.5c (AC-22 images) and F4 adversarial retry
+
+Session: Red · P3 T3.5c · www_tutor_calculator. Route opencode-go/deepseek-v4.1-flash.
+Repo: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator, branch feat/a63-tutor-calculator.
+phase_base_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75 (resolves to a commit).
+role_base_sha: a6434d513118455ce951ade7a79b1b7bada8650b (resolves to a commit; HEAD at start).
+
+## Steps
+
+- Step 0: plan.md committed alone as `89e53960f`. The staged file held Green r2's appended
+  " Done: <sha>" fields and the two `[~]` markers on tasks 3.5b and 3.6. The `[~]` markers are
+  part of the same uncommitted plan edit set. I changed neither. No other path was staged.
+- Step 1 (F4, FIX): the adversarial file contradicted D-18. The conservation helper required
+  `legPayouts + preTax === gross` for every input, and the "a million legs" case pinned preTax
+  89777083800, tax 2693312514, and net 87083771286. The helper now takes the input and applies
+  the identity only to an eligible input (clamped personal students of 1 or more, or no legs).
+  For an ineligible input it asserts preTax 0, tax 0, net 0, legPayouts at or below the gross,
+  and the leg rows equal to legPayouts. The million-legs case keeps personalStudents 0, gross
+  214277083800, legPayouts 124500000000, and the leg-row pins, and pins the three zero values.
+  A2 and A5 stay and follow from the helper. Commit `8edb5ff97`.
+  Baseline before the edit: `Test Files 1 failed (1)`, `Tests 3 failed | 20 passed (23)`.
+  After the edit: `Test Files 1 passed (1)`, `Tests 23 passed (23)`.
+- Step 2 (AC-22): spec D-19 and AC-22 added. Plan tasks 3.5c (`[x]` with Done `84df0eb89`) and
+  3.5d (`[ ]`) inserted after 3.5b. New test file
+  `src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx`. Commit
+  `84df0eb89` holds the test, the spec, and the plan task text. Commit `c9cb6fa0c` records the
+  Red evidence in the plan.
+
+## Red gate evidence
+
+Command: `cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter
+www-reading-advantage exec vitest run src/lib/tutor-commission.adversarial.test.ts
+src/lib/tutor-commission.test.ts
+"src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx"
+"src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx" --reporter=dot
+--maxWorkers=1`
+
+Exit 1. `Test Files 1 failed | 3 passed (4)`, `Tests 16 failed | 74 passed (90)`.
+The adversarial file, the module test, and `page.test.tsx` pass. The 16 failures are AC-22 image
+assertions only: hero file (3 locales), book card 1 file (3), Reedy file (3), become-a-tutor
+file (3), banned-file scan (3), and the missing `public/images/products/primary-origins-3-1-cover.webp`
+(1). The five gallery cases pass as a control, so the page wiring is proven. No failure is an
+import, syntax, or fixture error. `pnpm --filter www-reading-advantage exec tsc --noEmit -p .`
+exits 0. Full output: `measure/runs/www_tutor_calculator_20261117/red-p3-3.5c-vitest.txt`.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+baseline_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+role_base_sha: a6434d513118455ce951ade7a79b1b7bada8650b
+commits: 89e53960f, 8edb5ff97, 84df0eb89, c9cb6fa0c
+tests_run: adversarial exits 0 (23 passed); tutor-commission.test.ts and page.test.tsx pass; page.images.test.tsx exits 1 with 16 failed | 3 passed; tsc --noEmit exits 0
+files_changed: plan.md, spec.md, page.images.test.tsx, tutor-commission.adversarial.test.ts
+plan_updates: 3.5c Red complete with the Red command evidence; 3.5d added as [ ]; F4 retry note under 3.5a
+known_failures: AC-22 hero, three book cover files, Reedy, become-a-tutor, banned-file scan, and the missing public/images/products/primary-origins-3-1-cover.webp at 480x651
+handoff: The test commit header is 96 characters ("test(www): pin the image of each page block (track_id: www_tutor_calculator_20261117)") because the 102-character form in the brief exceeds the 100-character rule. Commit 89e53960f also carries Green r2's two [~] markers on tasks 3.5b and 3.6, which are part of the same uncommitted plan edit set. Green of 3.5d adds /images/tutor-advantage-hero.jpg to the hero and a 4:3 crop of it to the become-a-tutor block, the three cover files in books order, /images/primary-advantage/reedy-preview.webp with the approved alt, and the 480x651 Origins 3.1 cover; it removes every banned image and sets the D-19 alts in en and th, with zh equal to en.
+dispositions: F4=FIX
+END_MEASURE_AGENT_RESULT

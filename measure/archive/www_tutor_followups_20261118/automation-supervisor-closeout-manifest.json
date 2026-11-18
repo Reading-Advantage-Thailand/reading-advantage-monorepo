@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "role": "closeout",
+  "track_id": "www_tutor_followups_20261118",
+  "closeout_date": "2026-11-18",
+  "final_acceptance": {
+    "status": "pass",
+    "audited_head_sha": "383df188a33c2d4df68ed57583bdb01f0cb95c6a",
+    "result_file": "measure/runs/www_tutor_followups_20261118/final-acceptance-383df18.json",
+    "summary": "PASS at 383df188a for Phases 1 and 2 and task 3.1. The www gates hold at HEAD: lint, types, 80 test files with 2856 tests, build, the downline scan, and affected apps. No blocking finding exists. Review B is waived by the PM in writing and is not a pass. The tasks 1.7, 3.2, 3.3, 3.4, and C.1 were release steps of the orchestrator and closed after the acceptance.",
+    "provenance_note": "The audited head 383df188a is the first parent of the pre-closeout HEAD ac3886b4a. The commit ac3886b4a merges origin/master (3804ab55a) into the track branch before the www-only fast-forward push. Between the two commits no file under apps/www-reading-advantage/src, apps/www-reading-advantage/public, or the www package manifest changed. The push and the live checks ran at ac3886b4a."
+  },
+  "plan_tasks": {
+    "total": 19,
+    "complete": 19,
+    "blocked": 0,
+    "deferred": 0
+  },
+  "phase_summary": {
+    "phase_1": { "acceptance": "2026-11-18", "result": "phase-acceptance-383df18.json", "status": "complete" },
+    "phase_2": { "acceptance": "2026-11-18", "result": "phase-acceptance-383df18.json", "status": "complete" },
+    "phase_3": { "acceptance": "2026-11-18", "result": "final-acceptance-383df18.json", "status": "complete" }
+  },
+  "gates": [
+    { "name": "PROJECT_TESTS", "status": "pass", "summary": "heavy-run.sh www suite at 5e5990b42: 77 files, 2843 tests, exit 0. The final acceptance rerun at 383df188a: 80 files, 2856 tests, exit 0." },
+    { "name": "PROJECT_LINT", "status": "pass", "summary": "www lint exits 0 at 383df188a, recorded in final-acceptance-383df18.json." },
+    { "name": "TSC", "status": "pass", "summary": "pnpm --filter www-reading-advantage exec tsc --noEmit -p . exits 0 at the audited head." },
+    { "name": "BUILD", "status": "pass", "summary": "The first run exits 1 on the Next.js security advisory stop. The re-run exits 0." },
+    { "name": "DOWNLINE_SCAN", "status": "pass", "summary": "rg -n -i 'downline|ดาวน์ไลน์' over apps/www-reading-advantage/src exits 1 with no output." },
+    { "name": "AFFECTED_APPS", "status": "pass", "summary": "The affected-apps gate lists www-reading-advantage only, with the base 80ac554b426551e5749f0e2cd500cbbf0eb93530." },
+    { "name": "CD_WWW", "status": "pass", "summary": "Run 44254524617 for CD — www-reading-advantage ended with success for the pushed commit ac3886b4a." },
+    { "name": "LIVE_CHECKS", "status": "pass", "summary": "The closeout rerun on 2026-11-18: en, th, and zh /products/tutor-advantage answer 200. Each page holds tutor-advantage-hero-2026-11-06.webp and tutor-advantage-teach-class.webp. en and zh hold Commission of all legs and the new caption; th holds the Thai label and the Thai caption. No page holds tutor-advantage-hero.jpg, downline, ดาวน์ไลน์, or Tutor Advantage only." },
+    { "name": "PM_PAGE_CHECK", "status": "pass", "summary": "The PM sent PASS on 2026-11-18 with the words crops PASS for the folder of task 1.7. The th-980 heading under the sticky header is an element-capture artifact, so no retake runs." },
+    { "name": "REVIEW_B", "status": "waived", "summary": "The PM waived Review B in writing. The record is measure/runs/www_tutor_followups_20261118/review-b-waiver.md. The waiver is not a pass." },
+    { "name": "MEASURE_DOCTOR", "status": "bounded_exception", "summary": "bash measure/doctor.sh exits 1 at the architecture step with the line Analyzer input snapshot hash does not match current bytes. Steps 1 to 3 pass. The pin was stale before this track began. The owner is architecture_ci_input_pin_20261110. The PM waived it again on 2026-11-18, the same as the parent track closeout at commit 25c54f5fe." }
+  ],
+  "pm_exceptions": [
+    "Review B is waived by the PM in writing; the record is measure/runs/www_tutor_followups_20261118/review-b-waiver.md. It is a recorded waiver, not a pass.",
+    "Final acceptance runs on claude-code/claude-sonnet-5-5#max by PM exception, tag pm-exception, outside the ra-quota pick.",
+    "The doctor architecture step is waived again on 2026-11-18, as for the parent track closeout at commit 25c54f5fe."
+  ],
+  "final_acceptance_findings": {
+    "F1_doctor_architecture_pin": "bounded exception; recorded in the registry row, in this manifest, and in the closeout result.",
+    "F2_open_task_counts": "closed. The tasks 1.7, 3.2, 3.3, and 3.4 carry their Done SHAs, and task 3.2 no longer carries the [b] marker, so no task needs a deferred field.",
+    "F3_stale_registry_row": "fixed. The active row left the active section, and the archived row no longer says Two questions stay open.",
+    "F4_stale_track_records": "fixed. metadata.json holds status done with completed 2026-11-18 and its decision lines name the closed questions; spec-review.md records the pass at 3cc535884; the test-strategy base SHA now reads 80ac554b426551e5749f0e2cd500cbbf0eb93530.",
+    "F5_build_first_run": "known Next.js security advisory stop; the re-run exits 0.",
+    "F6_phase_3_acceptance": "Phase 3 holds the full www suite at 5e5990b42, the push, and the live checks; the final acceptance covers them.",
+    "F7_image_tests_read_the_locale_alt": "no action; the tests read the shipped locale values.",
+    "F8_th_980_sticky_header": "the PM PASS covers it; the heading under the sticky header is an element-capture artifact."
+  },
+  "provenance": {
+    "track_base_sha": "80ac554b426551e5749f0e2cd500cbbf0eb93530",
+    "pre_closeout_head_sha": "ac3886b4a37ba7d50551958bfd5de00da72d8b13",
+    "final_acceptance_audited_head_sha": "383df188a33c2d4df68ed57583bdb01f0cb95c6a",
+    "pushed_range": "3804ab55a..ac3886b4a",
+    "pushed_range_note": "The range ending at ac3886b4a is pushed to origin/master. The closeout commits are measure-only records and stay on the branch.",
+    "phase_acceptance_shas": [
+      "3cc535884",
+      "9a1e001fb",
+      "fa8ad4fd3",
+      "ad055b9e2",
+      "5e5990b42",
+      "e97e1d480",
+      "3eb492a5c",
+      "383df188a",
+      "ac3886b4a"
+    ],
+    "closeout_commit_sha": "a04a5745cfc2b7bc59686c0ec3185f27600305a8"
+  },
+  "commands": [
+    "git rev-parse HEAD -> ac3886b4a37ba7d50551958bfd5de00da72d8b13",
+    "bash measure/doctor.sh -> exit 1 at the architecture step; steps 1 to 3 pass",
+    "curl en, th, zh /products/tutor-advantage -> 200 each",
+    "rg A5 (plan false-claim) -> exit 1, no hit",
+    "rg A6 (registry overstatement) -> exit 1, no hit",
+    "rg www_tutor_followups tests/ -> exit 1, no reference, so the archive move breaks no test path (A9)",
+    "git mv measure/tracks/www_tutor_followups_20261118 measure/archive/www_tutor_followups_20261118 -> exit 0",
+    "git add -f measure/runs/www_tutor_followups_20261118 -> the evidence of the track, including the capture folders",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track www_tutor_followups_20261118 -> exit 0"
+  ],
+  "evidence_retained": [
+    "measure/runs/www_tutor_followups_20261118/final-acceptance-383df18.json and .log (the passing final acceptance)",
+    "measure/runs/www_tutor_followups_20261118/phase-acceptance-383df18.json and .log (the passing phase acceptance)",
+    "measure/runs/www_tutor_followups_20261118/review-b-waiver.md (the PM waiver of Review B)",
+    "measure/runs/www_tutor_followups_20261118/p1-captures/ (the twelve page-check captures and checks.json of task 1.7)",
+    "measure/runs/www_tutor_followups_20261118/live-page-check/ (the live page-check contact sheet of task 3.4)",
+    "measure/runs/www_tutor_followups_20261118/closeout-ac3886b.json and closeout-ac3886b.log (this closeout)"
+  ],
+  "artifact_cleanup": {
+    "deleted": [],
+    "note": "The orchestrator identified no bulky run artifact for deletion, so nothing was deleted. The capture folders of tasks 1.7 and 3.4 are committed with the archive move by the orchestrator order to force-add measure/runs/www_tutor_followups_20261118/."
+  },
+  "anti_pattern_audit": {
+    "A5_false_claim_text": "pass - rg over the archived plan.md exits 1, no hit",
+    "A6_registry_overstatement": "pass - rg over measure/tracks.md exits 1; the row states the gate output, the CD run, the page check, and the doctor waiver without overstatement",
+    "A9_archived_track_references": "pass - rg www_tutor_followups tests/ exits 1, no test hardcodes the active track path, so no test needs a track_dir_resolve helper"
+  },
+  "open_items_for_the_owner": [
+    "Daniel checks the Thai Reedy line on the live page; task 2.4 closed the code change, and the owner look check stays with Daniel.",
+    "The zh values equal the en values until the contracted Chinese speaker delivers.",
+    "measure/doctor.sh still exits 1 at the architecture step on the analyzer input snapshot pin, owner architecture_ci_input_pin_20261110."
+  ],
+  "changed_files": [
+    "measure/tracks.md",
+    "measure/archive/www_tutor_followups_20261118/",
+    "measure/runs/www_tutor_followups_20261118/"
+  ]
+}

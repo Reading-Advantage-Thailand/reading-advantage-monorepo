@@ -37,7 +37,7 @@ const weekDirectory = resolve(contentDirectory, "l2");
 /** The weeks of the release, from 1 to 8. */
 const ALL_WEEKS = [1, 2, 3, 4, 5, 6, 7, 8];
 
-/** The draft weeks that hold pictures and an approved images part, from 2 to 7. */
+/** The published weeks that hold pictures and an approved images part, from 2 to 7. */
 const PICTURE_WEEKS = [2, 3, 4, 5, 6, 7];
 
 /** The top-level parts that production owns; the contract keeps them as unknown values. */
@@ -166,7 +166,7 @@ describe("case 3 a published clone stays blocked until the approval parts say ap
   it("blocks a published clone of each picture week and names audio and song", async () => {
     let checked = 0;
     for (const week of PICTURE_WEEKS) {
-      const clone = published(week);
+      const clone = published(week, { audio: "draft", song: "draft" });
       expect(clone.approval.images.status, `w0${week} images part must be approved`).toBe("approved");
       expect(clone.approval.audio.status, `w0${week} audio part must be draft`).toBe("draft");
       expect(clone.approval.song.status, `w0${week} song part must be draft`).toBe("draft");
@@ -205,7 +205,7 @@ describe("case 3 a published clone stays blocked until the approval parts say ap
   });
 
   it("does not count an approval of another part for a media part", async () => {
-    const clone = published(2);
+    const clone = published(2, { audio: "draft", song: "draft" });
     for (const part of ["text", "thai", "scripts"]) {
       clone.approval[part] = { status: "approved", date: "2026-11-05", words: "fine" };
     }
@@ -262,20 +262,20 @@ describe("case 3 a published clone stays blocked until the approval parts say ap
 });
 
 describe("case 4 the draft switch never opens an unpublished week", () => {
-  it("keeps w02 to w08 closed with the switch on, and the reason stays draft", async () => {
+  it("keeps the draft w08 closed with the switch on, and the reason stays draft", async () => {
     process.env.STORYTIME_SHOW_DRAFT_MEDIA = "1";
     let checked = 0;
-    for (const week of [2, 3, 4, 5, 6, 7, 8]) {
+    for (const week of [8]) {
       const { visible, warnings } = await loadShipped(week);
       expect(visible, `w0${week} must stay closed with the switch on`).toBeNull();
       expect(warnings).toEqual([`storytime week st2/${week} blocked: draft`]);
       checked += 1;
     }
-    expect(`weeks_checked=${checked}`).toBe("weeks_checked=7");
+    expect(`weeks_checked=${checked}`).toBe("weeks_checked=1");
   });
 
   it("opens a published clone with draft audio and song only for the value 1", async () => {
-    const clone = published(2);
+    const clone = published(2, { audio: "draft", song: "draft" });
     process.env.STORYTIME_SHOW_DRAFT_MEDIA = "1";
     const open = await loadClone(2, clone);
     expect(open.visible, "the switch must open the draft media of a published week").not.toBeNull();
@@ -298,6 +298,7 @@ describe("case 4 the draft switch never opens an unpublished week", () => {
 
   it("does not let a draft clone with approved media parts open, with or without the switch", async () => {
     const clone = shipped(2);
+    clone.meta.status = "draft";
     clone.approval.audio.status = "approved";
     clone.approval.song.status = "approved";
     expect(clone.meta.status).toBe("draft");
@@ -395,10 +396,11 @@ describe("case 6 the print fields and the seventh approval part", () => {
 
   it("does not let an approved print part open a draft week or a week with draft audio", async () => {
     const clone = shipped(2);
+    clone.meta.status = "draft";
     clone.approval.print = { status: "approved", date: "2026-11-05", words: "fine" };
     clone.print = { ...clone.print };
     expect((await loadClone(2, clone)).visible, "a print approval must not publish a draft week").toBeNull();
-    const publishedClone = published(2);
+    const publishedClone = published(2, { audio: "draft", song: "draft" });
     publishedClone.approval.print = { status: "approved", date: "2026-11-05", words: "fine" };
     expect((await loadClone(2, publishedClone)).visible, "a print approval must not open the media lock").toBeNull();
   });
@@ -500,24 +502,27 @@ describe("case 8 a subset run at a new commit", () => {
       const name = `/l2/w0${week}.json`;
       expect(after.get(name), `${name} must keep the bytes of the source`).toBe(before.get(name));
       expect(JSON.parse(after.get(name)!).meta.status, `${name} must keep its status`).toBe(
-        week === 1 ? "published" : "draft",
+        week <= 7 ? "published" : "draft",
       );
     }
   });
 
-  it("reports eight week lines, one ready week, and seven not ready weeks", () => {
+  it("reports eight week lines, seven ready weeks, and one not ready week", () => {
     const root = seedRoot("report-root");
     const source = makeSource({});
     const run = receive(root, source.commit, source.directory);
     expect(run.code).toBe(0);
     const wrote = run.logs.filter((line) => /^Wrote apps\/storytime\/content\/l2\/w0\d\.json /.test(line));
     expect(wrote, "The run must write eight week lines (A4)").toHaveLength(8);
-    expect(wrote.filter((line) => line.endsWith("; ready)"))).toHaveLength(1);
-    expect(wrote.filter((line) => line.endsWith("; not ready)"))).toHaveLength(7);
+    expect(wrote.filter((line) => line.endsWith("; ready)"))).toHaveLength(7);
+    expect(wrote.filter((line) => line.endsWith("; not ready)"))).toHaveLength(1);
     expect(wrote[0]).toMatch(/w01\.json .*; ready\)$/);
     const notReady = run.logs.find((line) => line.startsWith("Not ready for the at-home app:")) ?? "";
-    expect(notReady.split(",")).toHaveLength(7);
-    expect(notReady).not.toContain("w01.json");
+    expect(notReady.split(",")).toHaveLength(1);
+    expect(notReady, "the not-ready line must name the draft week").toContain("w08.json");
+    for (const week of [1, 2, 3, 4, 5, 6, 7]) {
+      expect(notReady, `the not-ready line must name no published week`).not.toContain(`w0${week}.json`);
+    }
     const last = run.logs[run.logs.length - 1];
     const totals = last.match(/record 8 weeks; this run 8 weeks, (\d+) media files, (\d+) missing pictures\)$/);
     expect(totals, `the last line is ${last}`).not.toBeNull();
@@ -529,7 +534,7 @@ describe("case 8 a subset run at a new commit", () => {
 
   it("leaves a hostile published clone with draft media blocked from end to end", async () => {
     const root = seedRoot("hostile-publish-root");
-    const hostile = published(2);
+    const hostile = published(2, { audio: "draft", song: "draft" });
     const source = makeSource({ 2: `${JSON.stringify(hostile, null, 2)}\n` });
     const run = receive(root, source.commit, source.directory);
     expect(run.code, run.errors.join("\n")).toBe(0);

@@ -1,0 +1,123 @@
+MEASURE REVIEW C LOG
+track: www_tutor_calculator_20261117
+phase: P1 (money module and calculator component)
+role: measure-review-c
+route: opencode-go/muse-spark-1.3-contributor#high
+round: r2 (implementation changed after round 1 PASS)
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+role_base_sha: 64465455f7052cf3e01c3cfcaafc81da648f5f94
+audited_head_sha: d279b870341c067c33fc884ae8863b5428487c17
+verdict: PASS
+status: pass
+
+1. SCOPE
+
+Round 1 PASS audited 64465455f. Since then the adversarial suite exposed
+an overflow RangeError in the module, and the fix daa77805d changed the
+module only, with plan evidence d279b8703. This round re-checks the UX and
+API end-to-end contract: change confinement, route and page, copy, display,
+interaction, accessibility, the user-visible overflow consequence, and a
+test rerun. No browser run and no server start (PM load watch); I reasoned
+from the code plus measure/runs/www_tutor_calculator_20261117/p1-captures/p1-checks.json.
+
+2. FULL DIFF READ
+
+git diff 64465455f..d279b8703 --name-only lists 6 files:
+- apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.adversarial.test.tsx (new)
+- apps/www-reading-advantage/src/lib/tutor-commission.adversarial.test.ts (new)
+- apps/www-reading-advantage/src/lib/tutor-commission.ts (the fix)
+- measure/runs/www_tutor_calculator_20261117/adversarial-p1-61e614489.json (new)
+- measure/runs/www_tutor_calculator_20261117/adversarial-p1-61e614489.log (new)
+- measure/tracks/www_tutor_calculator_20261117/plan.md (evidence update)
+
+The product diff is exactly tutor-commission.ts, 7 insertions and 5
+deletions: toSatang returns 0n when baht * SATANG_PER_BAHT is not finite;
+ownVolume, each leg volume, and networkVolume pass through
+clampNonNegative; the stale preTax JSDoc now states the graph renders it
+as the tutor payout row (spec D-9 item 2). Diffs for
+tutor-commission-calculator.tsx, src/app, and messages are empty.
+
+3. CONTRACT RE-CHECK
+
+Route and page: round 1 pinned a unique section with id and testid
+commission-calculator and order ok in every p1-checks state. No file that
+owns the route, page, locale, component, CSS, or id changed, and
+p1-checks.json still reports 66 states with failuresCount 0.
+
+Copy: locale files are untouched; the component still renders only copy.*
+strings plus module figures.
+
+Display: formatMoney and formatRate are untouched. Each new clamp is a
+no-op for finite non-negative products, and the satang guard fires only
+on non-finite products, so normal inputs are bit-identical.
+
+Interaction: presets, min={0} inputs, edit-clearing, and the polite live
+region are untouched. A typed 1e307 price now renders zero money instead
+of throwing during render.
+
+Accessibility: no heading, label, live-region, or focus-ring code changed.
+
+4. OVERFLOW CONSEQUENCE
+
+readNumber("1e307") stays finite, so the value reaches calculateNetwork.
+ownVolume and networkVolume stay finite at 1e307 while toSatang returns 0n
+for the overflowing satang product, so gross, legPayouts, preTax, tax, and
+net are 0 and the satang conservation helper holds. Products that
+overflow to Infinity (1e306 x 1000) clamp to 0 through clampNonNegative.
+The component renders those module values directly, so displayed money
+matches the module at that input. The page disclaimer says every figure
+is an illustration and commission depends on the classes that run and are
+paid for, which covers a zero-money illustration for an absurd class
+price. One info note: at exactly-finite 1e307 the volume rows show
+formatMoney(1e307), the string "1e+307" (node check: Number.isInteger is
+true and toFixed(0) returns exponential). No crash and no NaN or Infinity
+text; the money rows show 0. No fix is required in this phase because the
+committed A6 contract pins finite money and conservation, not volume
+formatting at 1e307.
+
+5. TEST RERUN
+
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c
+'pnpm --filter www-reading-advantage exec vitest run
+src/lib/tutor-commission.test.ts
+src/lib/tutor-commission.adversarial.test.ts
+src/components/marketing/tutor-commission-calculator.adversarial.test.tsx
+--reporter=dot --silent=true'
+exit 0: Test Files 3 passed (3), Tests 65 passed (65) — module 27,
+module adversarial 23 including the previously red A6 case, component
+adversarial 15. Green evidence also records the full four-file gate at
+79 passed and check-types exit 0.
+
+6. FINDINGS
+
+Blocking: none. Nonblocking: one info note N1 (volume row shows
+"1e+307" at exactly-finite extremes; no crash; no action this phase). No
+CONTEST items arrived with this brief, so nothing was kept or withdrawn.
+
+7. ARTIFACTS
+
+- measure/runs/www_tutor_calculator_20261117/review-c-p1-r2-daa77805d.json
+- measure/runs/www_tutor_calculator_20261117/review-c-p1-r2-daa77805d.log (this file)
+
+Those two paths are the only write scope. No dispositions. No question tool.
+
+MEASURE_AGENT_RESULT
+task: review-c-p1-r2
+track: www_tutor_calculator_20261117
+phase: 1
+round: r2
+role: measure-review-c
+route: opencode-go/muse-spark-1.3-contributor#high
+verdict: PASS
+status: pass
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+role_base_sha: 64465455f7052cf3e01c3cfcaafc81da648f5f94
+audited_head_sha: d279b870341c067c33fc884ae8863b5428487c17
+commit_sha: d279b870341c067c33fc884ae8863b5428487c17
+result_file: measure/runs/www_tutor_calculator_20261117/review-c-p1-r2-daa77805d.json
+tests: heavy-run 3 files passed (3), 65 passed (65): module 27, module adversarial 23 including A6, component adversarial 15
+blocking_findings: 0
+nonblocking_findings: 1 (N1 info, volume row 1e+307 at exactly-finite extremes, no action)
+retry_recommendation: no_retry
+handoff: none
+END_MEASURE_AGENT_RESULT

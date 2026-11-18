@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "role": "measure-mid-red",
+  "subrole": "red-remediation-1",
+  "verdict": "pass",
+  "note": "Final. Review A CHANGES_REQUIRED remediation is complete. The four AC-9 component cases and the five clamp pins are present, the targeted command exits 0 with Test Files 2 passed (2) and Tests 41 passed (41), and the commit is recorded with both base shas. The extra Infinity clamp pin was added in this role to make the fourth clamp category conservation-safe as the brief requires. Build-graph was skipped under PM load watch.",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "task": "1.8",
+  "baseline_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "4e32f7c76710f0647aa712b74d55dc8618bc8076",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/hy4-flash-free#high (ra-quota pick red)",
+  "review_reference": {
+    "artifact": "measure/runs/www_tutor_calculator_20261117/review-a-p1-10dcf42a8.json",
+    "audited_head_sha": "10dcf42a8d88c90f8e02debae761196ef40f2ccd",
+    "verdict": "CHANGES_REQUIRED",
+    "findings_addressed": ["F1", "F2"]
+  },
+  "resulting_head": "64465455f7052cf3e01c3cfcaafc81da648f5f94",
+  "commits": [
+    {
+      "sha": "64465455f7052cf3e01c3cfcaafc81da648f5f94",
+      "short_sha": "64465455f",
+      "subject": "test(www): close review A gaps in tutor calculator (track_id: www_tutor_calculator_20261117)",
+      "subject_length": 92,
+      "files": [
+        "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+        "apps/www-reading-advantage/src/lib/tutor-commission.test.ts",
+        "measure/tracks/www_tutor_calculator_20261117/plan.md"
+      ]
+    }
+  ],
+  "test_files_owned": [
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+    "apps/www-reading-advantage/src/lib/tutor-commission.test.ts"
+  ],
+  "targeted_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx src/lib/tutor-commission.test.ts --reporter=dot --silent=true'",
+  "targeted_command_workdir": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "targeted_command_exit_code": 0,
+  "test_count": {
+    "test_files": "Test Files 2 passed (2)",
+    "tests": "Tests 41 passed (41)",
+    "exact_count": 41,
+    "component_cases": 14,
+    "module_cases": 27
+  },
+  "f1_ac9_component_cases": [
+    {
+      "name": "removes one input row and one graph row when the count drops from 3 to 2",
+      "proves": "leg-removal path; legStudentInputs and legRows drop from 3 to 2; networkGV 27,000 to 18,000 and downline 12,015 to 8,010; kills mutant M14"
+    },
+    {
+      "name": "shows four input rows and four graph rows at a count of 4",
+      "proves": "four-leg case; four inputs, four graph rows, fourth leg at 3 students; networkGV 36,000, gross 20,744.54, downline 16,020"
+    },
+    {
+      "name": "shows every preset 1 figure, its text, and only one pressed preset",
+      "proves": "preset index 1 figures (networkGV 24,000, gross 12,655.69, downline 8,010, tax 139.37, 4,645.69, 4,506.32), setup and result text, single aria-pressed state"
+    },
+    {
+      "name": "shows the preset 2 setup and result text",
+      "proves": "preset index 2 setup and result text"
+    }
+  ],
+  "f2_clamp_pins": [
+    "returns rate 0 for NaN and Infinity volume (commissionRate)",
+    "clamps Infinity inputs to finite, non-negative, conservation-safe money (calculateNetwork + expectSafeMoney)",
+    "returns all-zero money for a NaN price (calculateNetwork + expectSafeMoney)",
+    "clamps a NaN leg entry to zero students (calculateNetwork + expectSafeMoney)",
+    "clamps a negative price and a negative student count to zero (calculateNetwork + expectSafeMoney)"
+  ],
+  "figure_verification": {
+    "four_leg_network_volume": 36000,
+    "four_leg_gross": 20744.54,
+    "four_leg_downline": 16020,
+    "method": "Four legs of 3 students at the 3,000 price give 9,000 per leg; leg payout rate 0.445 gives 4,005 satang-truncated per leg, so four legs give 16,020. Gross 20,744.54 was supplied as verified and is pinned by the passing targeted run."
+  },
+  "anti_pattern_checks": {
+    "A3_digit_only_count": "No bare digit regex for a count. All row and preset counts use toHaveLength on a labeled integer.",
+    "A4_vacuous_pass": "No marker consistency check was written. No vacuous pass.",
+    "A7_over_broad_filter": "No rg -v exclusion list was written.",
+    "A9_archived_track_path": "No new test references a measure/tracks path."
+  },
+  "build_graph": {
+    "status": "skipped",
+    "reason": "PM load watch: scope graph work to the app or skip. No whole-repo scan was run."
+  },
+  "files_written": [
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+    "apps/www-reading-advantage/src/lib/tutor-commission.test.ts",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md",
+    "measure/runs/www_tutor_calculator_20261117/red-remediation-1-64465455f.json",
+    "measure/runs/www_tutor_calculator_20261117/red-remediation-1-64465455f.log"
+  ],
+  "constraints_held": [
+    "Baseline sha, phase sha, and role sha were supplied and each resolves to a commit",
+    "Only the two owned test files, one plan line, this commit, and the two result artifacts changed",
+    "No production source file was edited",
+    "Explicit pathspecs only; no git add -A, no git commit -a, no stash, and no reset",
+    "No disposition line, no question tool, no deploy, and no push",
+    "No whole-repo build-graph scan"
+  ],
+  "questions": [],
+  "remaining_failures": [],
+  "handoff_notes": [
+    "Review A F1 and F2 are closed by the four AC-9 component cases and the five F2 clamp pins.",
+    "Build-graph was skipped under PM load watch; the plan line records the scope note.",
+    "The result artifacts are named after this remediation commit short sha 64465455f."
+  ]
+}

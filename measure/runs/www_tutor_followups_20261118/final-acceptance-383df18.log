@@ -1,0 +1,81 @@
+# Final acceptance - www_tutor_followups_20261118, HEAD 383df18
+
+Role: measure-final-acceptance. Route: claude-code/claude-sonnet-5-5#max (PM exception, tag pm-exception, outside the ra-quota pick).
+Track base: 80ac554b426551e5749f0e2cd500cbbf0eb93530. Role base and audited HEAD: 383df188a33c2d4df68ed57583bdb01f0cb95c6a.
+Scope: the implemented content (Phases 1 and 2, task 3.1). Tasks 1.7, 3.2, 3.3, 3.4 and C.1 are release steps that the PM ordered after this acceptance. They are pending and owned by the orchestrator. They are not defects.
+
+## Verdict: PASS (no blocking finding)
+
+Eight nonblocking findings (F1 to F8) stay open. Each one is in final-acceptance-383df18.json.
+
+## Binding to HEAD
+
+- git rev-parse HEAD = 383df188a33c2d4df68ed57583bdb01f0cb95c6a. This equals the audited HEAD. git status --short is empty.
+- Ancestry holds for 80ac554b4, e97e1d480, 3eb492a5c and 383df188a, each against HEAD.
+- One passing phase-acceptance result exists: phase-acceptance-383df18.json (status pass, audited HEAD equals HEAD, Phase 1 and Phase 2 combined).
+- phase-acceptance-3eb492a.json is a FAIL (Review B missing). The PM waiver superseded it.
+- git diff --name-only 383df188a HEAD: empty.
+- git diff --name-only 3eb492a5c HEAD: review-b-waiver.md and plan.md only. Covered (plan and evidence files).
+- git diff --name-only e97e1d480 HEAD: three new adversarial test files under apps/, plus review-b-waiver.md and plan.md. The apps paths are new tests only (3 files, 273 insertions). The production code at HEAD equals the production code that Review A, Review C and the UX review audited at e97e1d480.
+
+## Spec check (read from the diff at HEAD)
+
+- D-2 and D-3: page.tsx line 195 uses productPictures.tutorHero with priority. page.tsx lines 329 to 336 use productPictures.tutorTeachClass. tutorSession is gone from product-pictures.ts.
+- D-4: both webp files are 1920 by 1080 (165522 and 190298 bytes, at or below 307200). The pixel difference against the own source is 1.5 and 1.7. Against the other source it is 59.7 and 59.6. SHA256SUMS in the handoff folder prints OK for both sources (evidence only).
+- D-1 and AC-2: the block class is aspect-video w-full object-cover. The 1920 by 1080 file fills a 16:9 box with no crop.
+- D-5, D-7, D-8, D-11: the locale diff holds the spec 5.1 to 5.6 strings in en, th and zh. The zh needsOwnStudents line is the PR draft with a draft comment. The zh values of the other items equal en. Only the th Reedy line changes. The old strings are gone.
+- D-6 and AC-5: tutor-commission.ts lines 207 to 214 return zero, needsOwnStudents, ownOnly or withLegs. The zero state wins when the network volume is 0. The component type, the page explain object and the render at line 472 follow.
+- D-9: each fact gate is recorded in spec section 8 and in the plan tasks.
+- D-10: the push waits for the PM page check. This is a pending release step.
+- AC-1 to AC-8 and AC-14 to AC-18 hold. AC-9 holds. AC-13 holds except its closeout clause. AC-10, AC-11 and AC-12 are pending release steps.
+
+## Gates at HEAD (all heavy commands ran through heavy-run.sh with no redirection)
+
+- lint: exit 0.
+- types (tsc --noEmit -p .): exit 0.
+- full www suite (vitest, --maxWorkers=1): exit 0. Test Files 80 passed (80). Tests 2856 passed (2856). This run happened before the brief limited further vitest jobs. No later vitest job ran.
+- build: first run exit 1 at the Next.js security-advisory stop (the known first-run result of green-1.6 and plan task 1.6). The re-run exits 0. git status stays empty.
+- downline scan: exit 1, no output.
+- affected-apps (base 80ac554b4, full 40-hex head): [www-reading-advantage].
+- doctor (bash measure/doctor.sh): exit 1 at the architecture step (finding F1). The pin was stale before the track began. The same failure is on record at the parent closeout. The owner is architecture_ci_input_pin_20261110.
+- PROJECT_LINT, PROJECT_CHECKS and PROJECT_TESTS are unset in this shell and measure/gates.json is absent. This role ran the equivalents from spec 6.1. The orchestrator must export the three variables for the mechanical role-gate.
+
+## Anti-pattern audit
+
+- A5: no PASS=N FAIL=0 text and no all checks pass text in this plan. Each Done line matches its log.
+- A6: the canonical detector finds no hit in measure/tracks.md. The row of this track understates the progress (finding F3). It does not overstate.
+- A9: no test in tests/*.sh or measure/tests/*.sh names this track or the archived parent track.
+
+## Test quality
+
+- Red failed first: red-1.2-2.1.log exits 1 with 39 failed tests on the new pins.
+- Green passed: the full suite exits 0 at HEAD.
+- The AC-17 and AC-18 tests carry guards against a vacuous pass.
+- The only file read in the new tests is inside the app folder. No test computes a hash. metadata.json holds no hash field.
+
+## Visual check
+
+- Both webp files show four faces, the Primary Advantage Origins 2 workbook and a phone with the student app.
+- The captures en-hero-390, en-hero-1280 and th-become-a-tutor-980 show the full 16:9 frame with no crop.
+- The UX review (12 section captures, 3 full pages, checks.json) records the correct files and alts, no overlap and no horizontal scroll.
+
+## Review B waiver
+
+review-b-waiver.md quotes the PM words exactly. The plan holds the waiver note. This is a recorded waiver. It is not a pass and not a defect.
+
+## Pending release steps (owner: orchestrator)
+
+Task 1.7 (send the captures to the PM), task 3.2 (PM page check, AC-10), task 3.3 (www-only fast-forward push, AC-11), task 3.4 (CD watch and live checks, AC-12), and closeout task C.1.
+
+MEASURE_AGENT_RESULT
+role: final-acceptance
+status: complete
+track: www_tutor_followups_20261118
+phase: track review
+commits: none
+tests_run: heavy-run lint exit 0; heavy-run tsc --noEmit -p . exit 0; heavy-run full www vitest --maxWorkers=1 exit 0 (80 files, 2856 tests); heavy-run build exit 1 on the first run (Next.js advisory stop) and exit 0 on the re-run; downline scan exit 1 no output; affected-apps [www-reading-advantage]; bash measure/doctor.sh exit 1 (pre-existing architecture pin, finding F1); A5, A6 and A9 detectors no hit
+files_changed: measure/runs/www_tutor_followups_20261118/final-acceptance-383df18.json; measure/runs/www_tutor_followups_20261118/final-acceptance-383df18.log
+plan_updates: none (gate-only role)
+known_failures: none blocking. Nonblocking: doctor exit 1 from the pre-existing architecture pin (F1); open tasks 1.7, 3.3, 3.4 and C.1 are counted by the mechanical role-gate, and task 3.2 has no deferred field (F2); stale tracks.md row and track records (F3, F4); first build run stops at the Next.js advisory (F5); no Phase 3 phase-acceptance result (F6)
+handoff: PASS for the implemented content at HEAD 383df18; route to the release steps (tasks 1.7, 3.2, 3.3, 3.4), then to measure-closeout. Question for the PM: the doctor gate exits 1 for the pre-existing architecture pin (owner architecture_ci_input_pin_20261110); does closeout waive it as for the parent track? Default: waive. Before the push, the orchestrator may refresh measure/tracks.md lines 48 to 50 (F3) and add deferred:pm to task 3.2 (F2). Closeout task C.1 must rewrite the registry row and correct the stale metadata and spec-review records (F3, F4). Keep release commits to plan.md and measure/runs evidence so that this acceptance stays covered. Export PROJECT_LINT, PROJECT_CHECKS and PROJECT_TESTS when you run the mechanical role-gate.
+END_MEASURE_AGENT_RESULT

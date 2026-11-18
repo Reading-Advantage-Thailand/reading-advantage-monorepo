@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "role": "measure-mid-red",
+  "verdict": "pass",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "task": "1.3",
+  "correction_of": "08fcd93b039f53d26447a9ec8590c17264397ec3",
+  "baseline_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "1a32da5b2a38c8e60ff9d6509786b8521a3ce988",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/hy4-flash-free#high (ra-quota pick red)",
+  "resulting_head": "fb453f519402c2267b906e94f44c6490fa4941f6",
+  "commits": [
+    {
+      "sha": "704f03c497cac94d735684b839ae0538f3882465",
+      "subject": "test(www-reading-advantage): align preset pin paths (track_id: www_tutor_calculator_20261117)",
+      "files": ["apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts"]
+    },
+    {
+      "sha": "fb453f519402c2267b906e94f44c6490fa4941f6",
+      "subject": "docs(measure): record red 1.3 correction (track_id: www_tutor_calculator_20261117)",
+      "files": ["measure/tracks/www_tutor_calculator_20261117/plan.md"]
+    }
+  ],
+  "test_file": "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+  "red_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --silent=true'",
+  "red_exit_code": 1,
+  "red_evidence": {
+    "test_files": "Test Files 1 failed (1)",
+    "tests": "Tests 10 failed | 8 passed (18)",
+    "vitest": "4.1.8",
+    "reason": "The calculator block is still absent; DICTS.en.calculator is undefined. The 10 original copy, order, identity, draft, chart, and price cases fail on the same assertions as before the correction.",
+    "self_check": "The new pin-path self-check sits after the unchanged count assertion in the en pins case. At Red the count assertion fails first, so no path-resolution failure is added and no new test name appears.",
+    "expected_failure": true
+  },
+  "failing_test_names": [
+    "1. the calculator block exists > exists in en, th, and zh",
+    "2. en and th copy pinned word for word (AC-5) > holds all 34 string leaves in en",
+    "2. en and th copy pinned word for word (AC-5) > holds all 34 string leaves in th",
+    "3. key order and structure (AC-5) > keeps the spec 5.4 key order in en, th, and zh",
+    "4. zh holds the English lines (D-10) > equals en at every pinned key path",
+    "5. preset 3 draft of D-2a > pins the en draft name, setup, and result",
+    "5. preset 3 draft of D-2a > pins the th draft name, setup, and result",
+    "5. preset 3 draft of D-2a > pins the three chart draft labels in en and th",
+    "7. price default of 3,000 (AC-8) > keeps 3,000 in the en price note",
+    "7. price default of 3,000 (AC-8) > keeps 3,000 in the th price note"
+  ],
+  "pin_path_form": "Leaf keys use bracket form presets[0].name, produced by leafKey() and shared with stringLeaves(). Traversal paths stay as segment arrays [\"presets\",\"0\",\"name\"] for read().",
+  "unchanged": [
+    "All 34 pinned strings in en and th and the zh identity pins",
+    "All eight coverage areas and all 18 test cases",
+    "Spec 5.4 array shape for presets",
+    "Every existing assertion"
+  ],
+  "files_written": [
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md",
+    "measure/runs/www_tutor_calculator_20261117/red-1.3-fix-704f03c4.json",
+    "measure/runs/www_tutor_calculator_20261117/red-1.3-fix-704f03c4.log"
+  ],
+  "constraints_held": [
+    "No locale, module, component, or page edit",
+    "No disposition line written",
+    "No question tool used",
+    "No deploy and no push",
+    "Explicit pathspecs only; no git add -A, no stash, no reset",
+    "Task 1.3 stays [x] with one correction line added under Done"
+  ],
+  "questions": []
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "track_id": "shadcn_lint_ratchet_20261115",
+  "status": "closed",
+  "completion_date": "2026-11-16",
+  "pre_closeout_head": "e502b81f0e141441820cbeb7482ab8621ed6952d",
+  "lane": "light lane, chore. The metadata lane is light, so the closeout gate does not require the final acceptance. This track ran no spec review, no review rounds, and no acceptance. PM order A-32 step 1 asked for the closeout only.",
+  "acceptance": {
+    "phase": "none; the light lane ran no phase acceptance",
+    "final": "none; the light lane ran no final acceptance",
+    "audited_head_sha": "e502b81f0e141441820cbeb7482ab8621ed6952d",
+    "status": "not required",
+    "note": "The audited head is the tip of origin/master. The track code is in a713c2c62 and earlier commits on origin/master."
+  },
+  "audits": {
+    "spec_review": "none; light lane",
+    "review_a": "none; light lane",
+    "adversarial": "none; light lane",
+    "ci_run": "run 43798094179 on e502b81f0, job \"Build, Lint, and Test\": step \"Install shadcn lint plugin\" success and step \"Shadcn lint ratchet\" success. The job failed later at the step \"Architecture boundary check\", which is PC-4 and another session owns it."
+  },
+  "commands": [
+    "git fetch origin; git worktree add /home/daniebo/Desktop/rama-worktrees/shadcn-closeout -b chore/shadcn-closeout origin/master (e502b81f0)",
+    "grep -rn shadcn_lint_ratchet tests/ scripts/ measure/ .github/ (no test path reference; no A9 change)",
+    "git mv measure/tracks/shadcn_lint_ratchet_20261115 measure/archive/shadcn_lint_ratchet_20261115 (exit 0)",
+    "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track shadcn_lint_ratchet_20261115 (exit 0, PASS; INFO: light lane, no final acceptance)",
+    "node scripts/ci/affected-apps.mjs --base e502b81f0e141441820cbeb7482ab8621ed6952d --head HEAD"
+  ],
+  "retained_evidence": [
+    "CI run 43798094179 on e502b81f0, job \"Build, Lint, and Test\" (GitHub, outside the repository)",
+    "measure/archive/shadcn_lint_ratchet_20261115/plan.md, section Closeout",
+    "measure/archive/shadcn_lint_ratchet_20261115/automation-supervisor-closeout-manifest.json"
+  ],
+  "findings_recorded_in_tech_debt": [],
+  "archive_path": "measure/archive/shadcn_lint_ratchet_20261115",
+  "test_reference_audit": "No test hardcodes measure/tracks/shadcn_lint_ratchet_20261115. One comment in scripts/ci/__tests__/shadcn-ratchet.test.mjs and one comment in .github/workflows/ci.yml name the track id and hold no path. No test update was required.",
+  "artifact_cleanup": "None. The track made no bulky artifact.",
+  "owner_gate": "The 9 plan tasks are complete. The PM order holds the push; this session pushes the measure closeout only. Fixing the 241 findings and moving the 36 local copies into packages/ui stays outside this track.",
+  "deviation": "This closeout ran in a Build session, not the measure-closeout subagent. The track ran no final acceptance, so the provenance-bound audited head rule does not apply."
+}

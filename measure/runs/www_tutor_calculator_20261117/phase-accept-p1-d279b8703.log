@@ -1,0 +1,112 @@
+# Phase 1 acceptance log — www_tutor_calculator_20261117
+
+Role: measure-phase-acceptance (Phase 1 only). Route: opencode-go/mimo-v2.6-flash.
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator, branch feat/a63-tutor-calculator.
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+role_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+audited_head_sha: d279b870341c067c33fc884ae8863b5428487c17
+Head check: `git rev-parse HEAD` = d279b870341c067c33fc884ae8863b5428487c17; `git status --porcelain` empty before and after the gates.
+Gate-only role: this run wrote no product file, no test, no plan, and no spec, and made no commit beyond the two result files below.
+
+## 1. Phase boundary
+
+Command: `git log --oneline 8862cf14cc6e9b11e62d08d5084288a4c294752c..d279b870341c067c33fc884ae8863b5428487c17`
+
+25 commits, all with `(track_id: www_tutor_calculator_20261117)`:
+
+- Red tests: 7eb6991fc, 08fcd93b0, 704f03c49 (correction), bcaf27d80, e42aa53fa (correction), 64465455f (review-A remediation), 61e614489 (adversarial probes).
+- Green implementation: 377e45b8c, 27f33b18e, 3786a1d29, f18b6dbbd, daa77805d (adversarial remediation fix).
+- Plan evidence: 21e23c2f2, 545a43a79, 1a32da5b2, fb453f519, 1142ecff9, 30e59c588, 62a65cbde, a8b78cf90, 4c4153b04, 10dcf42a8, 4e32f7c76, 418b4e7cb, d279b8703.
+
+Out-of-scope commits: none. Phase 2 work in range: none.
+Files changed in range (14): the nine spec 5.1 files, the two adversarial test files, plan.md, and the tracked adversarial-p1-61e614489.json/.log pair.
+No package.json or pnpm-lock.yaml change. No push, no deploy.
+Phase 2 artifacts absent at this head: no `public/images/products/tutor-advantage/`, no `tutor-screens.test.ts`, no `screens` locale block; both old live lines still present (D-13 for Phase 1).
+Note: measure/runs/ is gitignored (.gitignore:56), so most run artifacts are untracked by design; 64465455f's range and the tracked pair explain what git shows.
+
+## 2. Claim map (AC-1 to AC-12, Phase 1 scope)
+
+| AC | Applies | Proof | Exact | Plan-sentence only |
+|---|---|---|---|---|
+| AC-1 | yes | tutor-commission.test.ts:31-60 (six toFixed(4) pins, 0 and -5, 1e9 < 0.7143) | yes | no |
+| AC-2 | yes | tutor-commission.test.ts:74-145 (three presets to the satang, leg volume and payout) | yes | no |
+| AC-3 | yes | tutor-commission.test.ts:147-166 (801000+464569=1265569, 1201500+669444=1870944; preset 3 12015/6694.44/6493.61) | yes | no |
+| AC-4 | yes | tutor-commission.test.ts:196-215 ((0,0) and (100,150) floor; zero-payout tax and net 0) | yes | no |
+| AC-5 | yes | www-tutor-calculator.locale.test.ts:37-208, 305-371 (34 leaves en+th, key order, parity, zh==en, absent secondLevel keys) | yes | no |
+| AC-6 | no, Phase 2 task 2.3 | old lines present at :151 and :224 of the tutor locale file, as D-13 requires | n/a | no claim in Phase 1 |
+| AC-7 | yes | locale test:373-418 (D-2a drafts pinned; 5,884/5,707/22,714/9,889 absent with controls) | yes | no |
+| AC-8 | yes | locale test:421-447 (nine D-16 tokens with per-token controls; price 3,000 pinned) | yes | no |
+| AC-9 | yes | tutor-commission-calculator.test.tsx:104-287 (default paint, legs 0-4, removal, all three presets, D-5, D-7, aria-pressed, live region) | yes, with carried nit N1 (which leg the removal drops is unpinned) | no |
+| AC-10 | partial, Phase 1 part only | page.test.tsx:38-63 (section, anchor, order tutorRole -> tutor-calculator -> tutor-commitments) | yes for the Phase 1 part; tutor-screens clause belongs to task 2.2 | no over-claim |
+| AC-11 | yes | live gate rerun below (suite, types, lint, build) | yes | no |
+| AC-12 | yes | `git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json` exit 0 | yes | no |
+
+No Phase 1 AC rests on a plan sentence alone.
+
+## 3. Gates (one heavy job at a time, no build-graph scan)
+
+a. `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test --reporter=dot --silent=true'`
+   exit 0. Evidence: `Test Files  67 passed (67)` and `Tests  2580 passed (2580)`; marker `GATE_A_EXIT=0`. Run twice, identical counts.
+
+b. `pnpm turbo run check-types --filter=www-reading-advantage`
+   exit 0 (cache hit 799d0ce15b2edbdc). `pnpm turbo run check-types --filter=www-reading-advantage --force` exit 0 with `tsc --noEmit`. Markers `GATE_B_EXIT=0`, `GATE_B_FORCE_EXIT=0`.
+
+c. `pnpm --filter www-reading-advantage lint`
+   exit 0, no output (no shadcn/* error in a touched file). Marker `GATE_C_EXIT=0`.
+
+d. `git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json`
+   exit 0, no output. Marker `GATE_D_EXIT=0`.
+
+e. `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage build'`
+   attempt 1 exit 1: route table printed, then `Error [SecurityFatalError]: Your version of Next.js is affected by a known security vulnerability.` (the known nudge).
+   attempt 2 exit 0: `continuing after the upgrade reminder`, 17/17 static pages, no build error.
+   Markers `GATE_E_ATTEMPT1_EXIT=1`, `GATE_E_ATTEMPT2_EXIT=0`.
+
+Count reconciliation for the A5 check: plan 1.8 claims 65 files and 2533 tests at 4c4153b04; live run is 67 files and 2580 tests. 65 + 2 adversarial files = 67; 2533 + 9 remediation cases + 38 adversarial cases = 2580. The plan claim matches reality.
+
+## 4. Review and adversarial trail
+
+- review-a round 1 (review-a-p1-10dcf42a8.json, head 10dcf42a8): CHANGES_REQUIRED, F1 and F2. Remediation: commit 64465455f with red-remediation-1 evidence (targeted gate exit 0, `Test Files 2 passed (2)`, `Tests 41 passed (41)`). Re-run: review-a round 2 at 64465455f, PASS, 0 blocking.
+- adversarial round 1 (adversarial-p1-61e614489.json, head 61e614489): fail, F1 = A6 RangeError at tutor-commission.ts:96. Remediation: Green commit daa77805d (red command `1 failed | 22 passed` to `23 passed`; four-file gate 79/79 exit 0). Re-run: adversarial round 2 at d279b8703, PASS, 14 mutants all die, 9 probes 0 failures.
+- review-c round 1 (64465455f) PASS was invalidated in content by the later module fix daa77805d; review-c round 2 re-ran at d279b8703 and passed, so no stale verdict is accepted.
+- review-a round 3, review-c round 2, adversarial round 2, and ux-p1 all record audited_head_sha d279b8703, the current HEAD. No test-only commits follow them.
+- Review B: folded into Review A by test-strategy section 4. The round-1 artifact records the B probes; this audit re-ran them: 0 hits for fetch/XHR/dangerouslySetInnerHTML in the component and the page, no dependency change in the range, and the only inline styles set `--bar-width` (tutor-commission-calculator.tsx:335, :351).
+
+## 5. Independence and human evidence
+
+- All 25 commits share the machine git identity `Daniel Bo <bodangren@gmail.com>`; role attribution comes from the run artifacts. No artifact shows an audit role committing product or test code; the review and adversarial diff ranges confine them to measure/runs files.
+- Human evidence present and consistent: p1-captures/ holds 66 PNGs plus p1-checks.json (66 states, failuresCount 0); ux-p1-d279b8703/ holds 48 entries with 37 screenshots, 3 scripts, and 3 result JSON files. The UX run compared 60 shared state records with p1-checks.json and found 0 disagreements.
+- Carry-forward items are nits, not blockers: N1 (unpinned which-leg removal) sits in review-a r3 nonblocking_findings as open/carried; F4 (net as hero only) sits there as carried and is documented in plan 1.6; F3 (build-graph scan skipped under the PM load watch) sits there as carried to closeout.
+
+## 6. Anti-pattern checks (Phase 1)
+
+- A3: no digit-only count assertion anywhere; labeled integers only (`67 passed (67)`).
+- A4: every absence scan has an injected positive control; the aggregate suite has 0 failing files and 0 failing tests, so no stale red hides in it.
+- A5: every plan PASS claim re-ran at this head with the recorded exit codes.
+- A6: the tracks registry row says "new" and claims no resolution.
+- A7: banned-term filters are exact-literal substrings over the calculator block with no line exclusions.
+
+## 7. Verdict
+
+PASS. No blockers. Three info-level notes recorded in the JSON (adversarial r2 command-string typo `.ts` vs `.tsx`; a mislabeled test name at tutor-commission-calculator.test.tsx:260; Phase 2 "Done:" condition sentences that predate the phase base).
+
+Question for the orchestrator (from the build nudge, not run from this gate-only role): the build output asks once whether to run `next upgrade --agent=security` in the background in a separate git worktree.
+
+MEASURE_AGENT_RESULT
+{
+  "role": "measure-phase-acceptance",
+  "track": "www_tutor_calculator_20261117",
+  "phase": 1,
+  "verdict": "PASS",
+  "status": "pass",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "audited_head_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "tests": "pnpm --filter www-reading-advantage test --reporter=dot --silent=true exit 0: Test Files 67 passed (67), Tests 2580 passed (2580); check-types exit 0 (and --force exit 0); lint exit 0; shadcn ratchet diff exit 0; build attempt 1 exit 1 on the known Next.js security-advisory nudge, attempt 2 exit 0",
+  "artifacts": [
+    "measure/runs/www_tutor_calculator_20261117/phase-accept-p1-d279b8703.json",
+    "measure/runs/www_tutor_calculator_20261117/phase-accept-p1-d279b8703.log"
+  ],
+  "retry_recommendation": "none",
+  "route": "opencode-go/mimo-v2.6-flash"
+}

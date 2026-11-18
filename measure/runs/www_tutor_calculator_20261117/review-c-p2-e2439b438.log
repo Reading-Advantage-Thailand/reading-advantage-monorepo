@@ -1,0 +1,145 @@
+Measure Review C, Phase 2, track www_tutor_calculator_20261117.
+Route: opencode-go/mimo-v2.6-flash.
+Audited head: e2439b438511046b58ec8f3e734e655706c2ab8c.
+Phase base: d279b870341c067c33fc884ae8863b5428487c17.
+
+1. PROVENANCE
+
+git rev-parse HEAD in /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+returned e2439b438511046b58ec8f3e734e655706c2ab8c. git status --porcelain
+was empty at audit time. This is the first Review C round of Phase 2, so
+role_base_sha equals the phase base. The diff range is
+d279b870341c067c33fc884ae8863b5428487c17..e2439b438511046b58ec8f3e734e655706c2ab8c
+and it holds 11 files.
+
+2. CONTRACT APPLICABILITY
+
+Applicable. strategy-6c47d7fe sets review_c apply for Phase 2. The phase
+diff changes the tutor-advantage route page, its three locale dictionaries,
+and the picture manifest, so the route, copy, image, layout, and
+accessibility contracts all move.
+
+3. ROUTE AND PAGE CONTRACT (pass)
+
+The section order in page.tsx is tutorRole at 317, tutor-screens at 357,
+tutor-calculator at 382, tutor-commitments at 393, and faq at 421.
+data-testid="tutor-screens" occurs once in src, and the new section adds no
+id, so no duplicate id appears. routing.locales at src/i18n/routing.ts:4 is
+["en","th","zh"]. The diff name-status lists one route page only:
+products/tutor-advantage/page.tsx. The page test case at page.test.tsx:89
+pins the five-node order and passes in my rerun.
+
+4. COPY CONTRACT (pass)
+
+page.tsx:360-362 reads screens.eyebrow, screens.heading, and
+screens.description through getScopedI18n. page.tsx:121-122 reads
+screens.items.<i>.caption and alt by index. The section JSX holds no
+rendered literal; only a comment at 356 and a code comment at 114.
+The locale test describes 9 and 10 pin all nine screens leaves in en and th,
+assert the same key paths in en, th, and zh, and assert zh equals en. The
+Thai block sits at locales/pages/products/tutor-advantage.ts:485-495.
+
+5. IMAGE CONTRACT (pass, one info note)
+
+The three paths sit at product-pictures.ts:64, 70, and 76. `file` reports
+520x1125, 520x1125, and 1440x900 for the three webp files, which match the
+manifest width and height. The slot alt flows from screens.items.<i>.alt at
+page.tsx:122 into ProductPicture at page.tsx:370. The figcaption sits under
+the image inside the same figure at page.tsx:371-373. grep for tutorScreens
+and for the three file paths returns only product-pictures.ts, page.tsx,
+and the two tests. Card width against source width is note N1.
+
+6. GALLERY LAYOUT CONTRACT (pass)
+
+page.tsx:366-368 use grid grid-cols-1 gap-8 md:grid-cols-2, and the wide
+card carries md:col-span-2. Lines 357-379 use only SectionHeader and
+ProductPicture plus native ul, li, figure, and figcaption. No bracketed
+arbitrary Tailwind value appears. The colors are bg-site-page,
+border-site-border, and text-site-body plus accent text-emerald-800, the
+same accent as the sections at 206, 230, 334, 398, and 426. No new
+component: ProductPicture exists at the phase base.
+
+7. LIVE-COPY CONTRACT (pass)
+
+The locale diff replaces exactly tutorRole.points[3] and
+faq.items[5].answer in en, th, and zh and adds the screens block. Every
+other line of that file is context. The new values match spec 6.4 word for
+word, and zh takes the new English lines. grep for the old en line, the old
+th lines, and the old zh line exits 1 with no match. The locale test
+describe 11 pins both paths in en and th, pins zh equal to en, and scans
+for both old en lines with positive controls.
+
+8. ACCESSIBILITY WIRING (pass)
+
+SectionHeader renders an eyebrow p and an h2 at section-header.tsx:22-23.
+Every neighbor section on this page also uses h2, so the new section adds
+no heading level skip and no heading below h2. The three alt attributes are
+present and describe the screen; slot 2 alt is the spec D-15a draft at
+locales/pages/products/tutor-advantage.ts:163. The new section adds no id,
+and the ids become-a-tutor (page.tsx:317) and commission-calculator
+(page.tsx:383) stay unique. The hero fragment link at page.tsx:166 resolves
+to 317, page.test.tsx:50 asserts commission-calculator, header.tsx holds no
+fragment link, and route links such as pricing-table.tsx:146 still resolve
+because no route file changed.
+
+9. EVIDENCE AND TESTS (pass)
+
+Plan task 2.4 records the five gate exit codes as 0, 0, 0, 0, 0, the build
+exit 0 on its second attempt, and the app selector output
+["www-reading-advantage"]. The run artifacts green-2.1-320fc2fa1,
+green-2.2-e583e21b3, green-2.3-0a7ff97e5, and green-2.4-9befd67c3 hold the
+red exit 1 and green exit 0 commands for tasks 2.1 to 2.4. test-strategy.md
+was read with them. My rerun command:
+
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/__tests__/tutor-screens.test.ts src/__tests__/www-tutor-calculator.locale.test.ts "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx" src/__tests__/products-page-pictures.red.test.tsx --reporter=dot --silent=true'
+
+exit 0: Test Files 4 passed (4), Tests 65 passed (65), which is
+tutor-screens 7, locale 31, page 8, and inherited pictures 19.
+No server started. No build run. No build-graph scan.
+
+10. FINDINGS
+
+Blocking: none.
+Nonblocking: two info notes.
+N1: a phone card renders at 576 CSS px against a 520 px source at a 1280 px
+viewport, because the unlayered .container rule at globals.css:167-169 wins
+over max-w-6xl and sm:px-6. The upscale starts at 1169 px. The wide card
+stays under its source. test-strategy.md:259 records the same fact and
+states that Daniel accepts the softness. No action opens here.
+N2: test-strategy.md:39 and 56 promise a page-test case with locale "zh"
+that asserts the English placeholder. The delivered page test holds eight
+cases, all locale "en", and the i18n mock at src/test/setup.ts:45-52
+returns key paths, so no page case can assert it. The zh identity is proven
+at dictionary level by the locale test.
+
+No CONTEST items arrived with this brief, so nothing was kept or withdrawn.
+Payout arithmetic and blur evidence belong to Review A and were not
+audited. No aesthetics were judged.
+
+11. ARTIFACTS
+
+- measure/runs/www_tutor_calculator_20261117/review-c-p2-e2439b438.json
+- measure/runs/www_tutor_calculator_20261117/review-c-p2-e2439b438.log (this file)
+
+Those two paths are the only write scope. No product file, test, plan, or
+spec was changed. No dispositions. No question tool.
+
+MEASURE_AGENT_RESULT
+task: review-c-p2
+track: www_tutor_calculator_20261117
+phase: 2
+role: measure-review-c
+route: opencode-go/mimo-v2.6-flash
+verdict: PASS
+status: pass
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+audited_head_sha: e2439b438511046b58ec8f3e734e655706c2ab8c
+commit_sha: e2439b438511046b58ec8f3e734e655706c2ab8c
+result_file: measure/runs/www_tutor_calculator_20261117/review-c-p2-e2439b438.json
+tests: heavy-run 4 files passed (4), 65 passed (65): tutor-screens 7, locale 31, page 8, inherited pictures 19
+blocking_findings: 0
+nonblocking_findings: 2 (N1 info, phone card wider than its source at viewports of 1169 px and above, owner-accepted at test-strategy.md:259; N2 info, zh page case promised at test-strategy.md:56 is absent)
+retry_recommendation: no_retry
+handoff: none
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,52 @@
+# Review A (correctness) — www_tutor_followups_20261118, HEAD e97e1d4
+
+Role: measure-review-a-correctness. Route: opencode-go/muse-spark-1.3-contributor#high.
+Phase base: 80ac554b426551e5749f0e2cd500cbbf0eb93530. Audited HEAD: e97e1d48011327383aac95a843c243cc18673360 (git rev-parse HEAD matches).
+Scope: apps/www-reading-advantage diff plus measure track records only.
+
+## Verdict: provisional PASS
+
+No blocking findings. Two nits (stale plan line numbers; Phase-3 gates pending).
+
+## Correctness vs spec D-2..D-11 and AC-1..AC-18
+
+- D-2/D-4: hero webp probes (1920, 1080), 165522 bytes, matches spec probe.
+- D-3/D-4: teach-class webp probes (1920, 1080), 190298 bytes, matches spec probe.
+- D-3: manifest splits tutorSession into tutorHero and tutorTeachClass with true sizes (product-pictures.ts:56-69).
+- D-5: alt keys keep names; zh equals en for both alts (each en string occurs twice in the locale file).
+- D-6: explainVariant returns zero, needsOwnStudents, ownOnly, withLegs (tutor-commission.ts:207-213). The zero branch (network 0) stays first, so legs of 0 students still read zero.
+- D-7/D-11: en/th/zh needsOwnStudents, caption, and leg label match spec 5.1-5.3; zh draft comment present.
+- D-8: Thai Reedy line matches spec 5.4; en and zh lines unchanged.
+- AC-14: hero keeps priority (page.tsx:196-198). AC-2: block uses aspect-video (page.tsx:335).
+- AC-16: old hero jpg absent on disk; rg finds zero non-test references.
+- Every caller updated: component type (line 50), render (line 140, indexed read needs no change), page explain object (page.tsx:111), settlement helper settledVariant widened with coverage floor above 100.
+
+## Red remediations keep tests meaningful
+
+- b1f1c3cdc: settledVariant now names the four D-6 states; S1 control and 20000-sample parity pass.
+- 5e5990b42: Storytime guard narrowed to the retired set; python re check proves three retired shapes still fail the guard while the tutor hero passes.
+
+## Test meaning, A3, A4, A5
+
+- A4: AC-18 asserts bytes not null before header parse, so a missing file fails. AC-16/AC-17 iterate real page images.
+- A3: webpSize parses header fields; bound is the labeled integer 307_200.
+- A5: plan claims match logs (red exit 1, 39 failed/191 passed; green exit 0, 230 passed; task 3.1 exit 0, 2843 passed; gates log records the first-run build reminder then exit 0).
+- No new test hashes; no test reads outside the repo. Scope holds: diff touches only apps/www-reading-advantage and measure; affected-apps lists www-reading-advantage only.
+
+## Findings
+
+- F1 [Nit] plan-docs: locale line numbers drifted after insertions. Doc anchors only.
+- F2 [Nit] phase-3-gates: AC-10 captures, AC-11 push, AC-12 live checks pending. Expected; no push ran.
+
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_tutor_followups_20261118
+phase: Phase 1 + Phase 2 combined Red/Green pass
+commits: none (audit-only; range 80ac554b4..e97e1d4 reviewed)
+tests_run: heavy-run vitest settlement+red-pictures exit 0 (60 passed); locale+adversarial+lib exit 0 (79 passed); affected-apps lists www-reading-advantage only
+files_changed: measure/runs/www_tutor_followups_20261118/review-a-e97e1d4.json; measure/runs/www_tutor_followups_20261118/review-a-e97e1d4.log
+plan_updates: none (audit-only)
+known_failures: none in P1-P2 scope; Phase-3 tasks 1.7, 3.2, 3.3, 3.4 stay open
+handoff: P1-P2 code passes correctness review. Phase 3 stays with the orchestrator: task 1.7 captures, [b] gate 3.2 PM page check, then push 3.3 and live checks 3.4. No push has run. Question: none. Default: proceed to Review C / browser review.
+END_MEASURE_AGENT_RESULT

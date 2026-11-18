@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a",
+  "verdict": "CHANGES_REQUIRED",
+  "route": "opencode/glm-5.3-flash-free#high",
+  "note": "Phase 1 audit of the tutor commission calculator. The money algorithm is correct: an independent from-scratch implementation of spec section 3 and D-3 reproduces every pinned value, and executing the shipped module confirms it matches. The suite, types, lint, and ratchet gates were rerun live and match the plan's A5 claims. One blocker: the component test does not cover AC-9's leg-row removal and part of the preset coverage, so strategy mutant M14 survives.",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "6c47d7fe49398ac91b3703e47b15249d226294cf",
+  "audited_head_sha": "10dcf42a8d88c90f8e02debae761196ef40f2ccd",
+  "audited_head_is_head": false,
+  "head_note": "At audit start HEAD was 10dcf42a8 (confirmed by git rev-parse). Commit 4e32f7c76710f0647aa712b74d55dc8618bc8076 (task 1.9 checkpoint) landed during the audit; git show --stat confirms it touches only measure/tracks/www_tutor_calculator_20261117/plan.md (9 insertions, 1 deletion). No product, test, or config file changed after the audited head.",
+  "diff_range": "8862cf14cc6e9b11e62d08d5084288a4c294752c..10dcf42a8d88c90f8e02debae761196ef40f2ccd",
+  "files_audited": [
+    "apps/www-reading-advantage/src/lib/tutor-commission.ts",
+    "apps/www-reading-advantage/src/lib/tutor-commission.test.ts",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx",
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+    "apps/www-reading-advantage/src/app/[locale]/globals.css",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md"
+  ],
+  "independent_money_verification": {
+    "method": "A second implementation was written from the spec text only (node -e) and compared with the spec tables; the shipped module was then executed directly (node type-stripping import) and compared with the audit implementation. The module's own tests were not used as evidence.",
+    "six_rate_checks": "40.5000 / 42.5000 / 45.0000 / 50.0000 / 55.6065 / 60.6315 at 1,000 / 5,000 / 10,000 / 20,000 / 30,000 / 50,000 baht: both implementations match to four decimals.",
+    "preset_1": "ownVolume 12000, rate 46.0000%, gross 552000 satang (5,520), tax 16560 (165.60), net 535440 (5,354.40). Matches D-2.",
+    "preset_2": "networkVolume 24000, rate 52.7321%, gross 1265569 (12,655.69), legs 400500 each (4,005.00), legPayouts 801000 (8,010), preTax 464569 (4,645.69), tax 13937 (139.37), net 450632 (4,506.32). Conservation 801000 + 464569 = 1265569 holds. Matches D-2 and D-3.",
+    "preset_3": "networkVolume 33000, rate 56.6953%, gross 1870944 (18,709.44), legPayouts 1201500 (12,015), preTax 669444 (6,694.44), tax 20083 (200.83), net 649361 (6,493.61). Conservation 1201500 + 669444 = 1870944 holds. Matches D-2, D-2a, AC-3.",
+    "one_e9_case": "rate(1e9) = 0.714220275833..., rateUnits 714220276, gross satang 71422027600. The float product would give 71422027583 (a 17-satang gap), so the BigInt path is real, not decorative. Matches strategy R2/M1.",
+    "edges": "commissionRate: 0, -5, -0, NaN, Infinity all return 0. payoutAfterDeduction(0,0)=0, (100,150)=0, (5520,0)=5520. Zero input gives gross 0, tax 0, net 0. Fractional price (0.5) and fractional own students (2.5) truncate correctly.",
+    "adversarial_attacks": "All 13 attack inputs (negative/NaN/Infinity/fractional price, own, and leg entries; MAX_SAFE_INTEGER volume; a 1000-entry leg array) return finite non-negative money, and the conservation identity holds or the zero floor applies. resizeLegs([],1)=[3], 2.5 and -1 counts clamp, NaN count gives [].",
+    "monotonicity_argument": "rate is nondecreasing, so legPayouts <= gross always; the max(0, ...) floor is defensive only and conservation cannot break in range."
+  },
+  "gates_rerun_by_review": {
+    "www_test_suite": "exit 0, Test Files 65 passed (65), Tests 2533 passed (2533) — matches the plan 1.8 A5 claim exactly.",
+    "module_test": "exit 0, Test Files 1 passed (1), Tests 22 passed (22).",
+    "targeted_locale_component_page": "exit 0, Test Files 3 passed (3), Tests 34 passed (34).",
+    "check_types": "exit 0 with --force (real tsc run, no cache).",
+    "lint": "exit 0, no output, no new shadcn/* error.",
+    "ratchet": "git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json exit 0; file byte-unchanged (AC-12).",
+    "build": "not rerun by this review; the recorded artifact measure/runs/www_tutor_calculator_20261117/green-1.8-10dcf42a8.json shows exit 0 with a documented first-attempt Next.js advisory nudge and a retry exit 0."
+  },
+  "red_green_chain_check": "Commits verified with git show --stat: 7eb6991fc (module test Red, module absent) precedes 377e45b8c (module Green); 08fcd93b0 (locale test Red) precedes 27f33b18e (locale Green); bcaf27d80 (component test Red) precedes 3786a1d29 (component Green); f18b6dbbd (page wiring) carries both. Each Red commit adds only its test file, so the recorded import-failure causes are the real states. A5 evidence in plan 1.1 to 1.9 quotes exit codes and labeled counts and matches the rerun results.",
+  "security_probes": {
+    "summary": "All six folded Review B probes pass.",
+    "no_network_call": "No fetch, XMLHttpRequest, or remote next/dynamic in tutor-commission-calculator.tsx or tutor-commission.ts.",
+    "no_dangerous_html": "No dangerouslySetInnerHTML in any new file.",
+    "no_new_dependency": "apps/www-reading-advantage/package.json and pnpm-lock.yaml are unchanged in the audited range (git diff empty).",
+    "inline_style": "The only inline styles are two CSS custom properties, --bar-width, set from shareOfGross(): a clamped numeric ratio derived from module outputs. No user string reaches a style attribute. The globals.css @utility bar-width rule is the single allowed rule.",
+    "no_persistence_or_server_input": "No localStorage/sessionStorage, no URL parameters, no server action, no form post, no third-party script. All arithmetic is client-side over local state; nothing is sent anywhere.",
+    "no_income_promise": "The copy states 'Every figure is an example, not a promise of income', the disclaimer sits last, and the default paint shows 0 with the explain.zero line (D-6). The D-16 scan with positive controls holds the June claims out."
+  },
+  "component_checks": {
+    "figures_from_module": "Every displayed figure (ownGV, networkGV, rate, gross, downline, tax, net, leg volumes, leg payouts, graph you-row) comes from calculateNetwork(); no arithmetic is duplicated except the decorative rate curve, which reuses commissionRate() itself (sanctioned by D-11).",
+    "bar_math": "Leg bars use legPayout/gross and the you-bar uses preTax/gross; legPayouts + preTax = gross in satang, so the bars add to 100% of the gross exactly as D-9 item 2 requires.",
+    "state_derivation": "resizeLegs preserves existing leg values, appends 3 for new legs (D-6), drops on reduce; applyPreset resets price to 3000 (D-5); every input change sets presetIndex null (D-7); the default paint is 0/zero (D-6). Correct.",
+    "display_format": "formatMoney keeps whole baht for integer satang and two decimals otherwise (5,520 / 4,506.32); formatRate drops the trailing .0 (46% / 52.7%). Matches D-3 display rules."
+  },
+  "caller_checks": {
+    "page_wiring": "page.tsx builds calculatorCopy from getScopedI18n keys with the same key() cast pattern the page already uses for classTour/faq/books, and renders the section between tutorRole and commitments with data-testid tutor-calculator and the anchor #commission-calculator. The commitments section gained data-testid tutor-commitments, the Q2 default.",
+    "blast_radius": "The only callers of the new module and component are page.tsx and the three new test files (grep confirmed). No other page or component is affected; the diff stat lists exactly the ten planned files."
+  },
+  "blocking_findings": [
+    {
+      "id": "F1",
+      "severity": "blocker",
+      "file": "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx:121-142 and 145-209",
+      "ac": "AC-9 (spec.md:669-671)",
+      "defect": "The component test does not cover AC-9 fully. (a) AC-9 requires 'the leg count adding and removing one leg row', but the test only grows the count 0, 1, 2, 3 and never drives it down, so the removal path in the component is unpinned and strategy mutant M14 ('keep the leg rows after the leg count drops') survives. The strategy layer table (2.1) also names 'leg rows 0→4'; the 4-row case is untested and plan task 1.5 narrowed the AC wording to '0, 1, 2, 3' without a spec change. (b) AC-9 requires 'each preset's setup and result text and its figures', but preset index 1 has no figure, setup, or result assertion and preset index 2 has no setup or result text assertion.",
+      "smallest_fix": "Add three cases to the component test: (1) type the leg count 3 then 2 and assert legStudentInputs() and legRows() drop to 2; (2) a count of 4 shows four student rows and four graph rows; (3) click presetButton(1) and assert its figures (12,656-class figures: 12,655.69 gross and 4,506.32 net as displayed), setup, and result text. Plan task 1.5 wording may then match AC-9 again."
+    }
+  ],
+  "nonblocking_findings": [
+    {
+      "id": "F2",
+      "severity": "nonblocking",
+      "file": "apps/www-reading-advantage/src/lib/tutor-commission.test.ts (whole file)",
+      "defect": "The clamp rules of spec 5.2 item 1 are only tested through zero and negative volume (commissionRate). No test pins a NaN or Infinity price/volume, a NaN leg entry, or a fractional leg count of 2.5. The behavior is correct — this review executed the module on all of them and every result is finite, clamped, and conservation-safe — but the pin is missing, so a refactor that drops clampNonNegative's Number.isFinite check would pass the suite.",
+      "smallest_fix": "Add three assertions to tutor-commission.test.ts: commissionRate(NaN) === 0 and commissionRate(Infinity) === 0; calculateNetwork with price NaN returns all-zero money; calculateNetwork with studentsPerLeg [NaN] clamps the leg to 0 students."
+    },
+    {
+      "id": "F3",
+      "severity": "nonblocking",
+      "file": "measure/tracks/www_tutor_calculator_20261117/plan.md (task 1.9)",
+      "defect": "Strategy anti-pattern A10 (Phase 1 row) requires the checkpoint to run build-graph over the changed source files. No graph.db exists in the worktree and the plan carries no build-graph note. A fresh scan run by this review (/tmp/opencode/a63-graph.db) indexes all four new source files, so the cost is zero today; the risk is that a later role trusts a stale graph.",
+      "smallest_fix": "At the phase closeout, run build-graph scan (or update) into the worktree graph.db and record one line in the plan."
+    },
+    {
+      "id": "F4",
+      "severity": "nonblocking",
+      "file": "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx:171-178",
+      "defect": "Spec 5.3 item 6 lists a net row after tax; the component shows net only as the hero figure, and plan task 1.6 documents the choice in a note. The information is on the page and gross - downline - tax = net holds, so this is a documented spec deviation, not a hidden one.",
+      "smallest_fix": "None required for Phase 1. If Review C or the spec owner wants the literal row list, add one row with the net figure under the hero."
+    }
+  ],
+  "anti_pattern_checks": {
+    "A3_digit_only_count": "No bare-digit count assertions found. Counts are labeled: toHaveLength(3) on presets, PINS.length (34) with a comment, test file counts quoted as 'Test Files 65 passed (65)'.",
+    "A4_vacuous_pass": "The absence scans (D-16 claims, superseded figures, dropped keys) each carry a positive control that injects the value and proves the scan fires. No 'deliverable present' check passes on a missing deliverable: the locale test reads the production dictionary and would throw on a missing block.",
+    "A5_false_claim_text": "Every pass claim in plan tasks 1.1 to 1.9 quotes a command, an exit code, and labeled counts; the suite, types, lint, and ratchet claims were rerun live by this review and match. The build claim is artifact-backed and not contradicted.",
+    "changed_contracts_caller_coverage": "New exports (commissionRate, calculateNetwork, payoutAfterDeduction, explainVariant, resizeLegs, NETWORK_PRESETS, the component) all have callers in page.tsx or tests; the graph is otherwise empty because no graph.db exists (see F3)."
+  },
+  "retry_recommendation": "retry_implementation",
+  "handoff": "Route F1 to Green: add the three AC-9 component test cases named in the smallest_fix, rerun the component test file and the www suite, and record the evidence. F2 to F4 are optional hardening.",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "Independent reimplementation plus direct module execution reproduced all six rate pins, the three presets to the satang, both conservation sums, the 1e9 BigInt fingerprint (71422027600 vs float 71422027583), and all 13 adversarial inputs."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "String-pinned rates and satang fingerprints with positive controls are strong, but AC-9's removal case and preset-2 coverage are missing (tutor-commission-calculator.test.tsx:121-209), so mutant M14 survives."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The diff touches exactly the ten planned files; package.json and pnpm-lock.yaml are unchanged and the ratchet baseline is byte-identical."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "This review reran the suite (65 files / 2533 tests), types, lint, and ratchet live; plan claims quote exit codes and labeled counts that match; the build gate is artifact-backed."
+    }
+  ]
+}

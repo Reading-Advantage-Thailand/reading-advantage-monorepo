@@ -69,6 +69,13 @@ const PRIMARY_TEST_FILES = ["hooks/__tests__/use-read-along.test.tsx"];
 /** The baseline of the distinct read-along test file names of the Primary app and the package. */
 const BASELINE_DISTINCT_TEST_FILES = 10;
 
+/**
+ * The baseline of the read-along test files of the Primary app: `align`, `position`, and `profile`
+ * under `lib/read-along`, `read-along-passage` and `read-along-player` under
+ * `components/read-along`, and `use-read-along` under `hooks/__tests__`.
+ */
+const BASELINE_PRIMARY_TEST_FILES = 6;
+
 /** The tech-debt file of the repository. */
 const TECH_DEBT_FILE = resolve(REPO_ROOT, "measure/tech-debt.md");
 
@@ -225,6 +232,12 @@ describe("task 7.2 the Primary player comes from the shared package", () => {
     const distinct = new Set([...primaryNames, ...listTestFileNames(PACKAGE_DIR)]);
     console.log(`primary_read_along_tests=${primaryNames.length}`);
     console.log(`read_along_test_files_distinct=${distinct.size}`);
+    // The package alone holds the baseline of distinct names, so the distinct count cannot catch
+    // a deleted Primary test (review finding F1, task 7.9): the Primary count is its own floor.
+    expect(
+      primaryNames.length,
+      `primary_read_along_tests=${primaryNames.length} names=${primaryNames.join(",")}`,
+    ).toBeGreaterThanOrEqual(BASELINE_PRIMARY_TEST_FILES);
     expect(
       distinct.size,
       `primary_read_along_tests=${primaryNames.length} read_along_test_files_distinct=${distinct.size}`,

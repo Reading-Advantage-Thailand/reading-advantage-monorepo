@@ -41,7 +41,12 @@ describe("Phase 3 tiles and home card", () => {
 
   it("marks English and Thai text with the correct language", () => {
     expect(route, "English home text needs lang=en").toMatch(/lang=["']en["']/);
-    expect(route, "Thai home text needs lang=th").toMatch(/lang=["']th["']/);
+    // Commit 73c217cf0 bound the parent line and the activity to the locale, so the literal
+    // lang="th" is gone. The form `lang={locale === "th" ? "th" : "en"}` marks Thai on the th
+    // route. The render rows of phase3-home-render.test.tsx prove the rendered attribute.
+    expect(route, "Thai home text needs lang=th").toMatch(
+      /lang=["']th["']|lang=\{locale === ["']th["'] \? ["']th["'] : ["']en["']\}/,
+    );
   });
 
   it("uses the Sarabun font for Thai app text", () => {

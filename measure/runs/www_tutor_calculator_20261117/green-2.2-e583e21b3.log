@@ -1,0 +1,157 @@
+Green role log — task 2.2, track www_tutor_calculator_20261117
+================================================================
+
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17 (Phase 2)
+role_base_sha: 29ffa35423fc8131cc099d5b0462ebc286e13ae7 (clean at start)
+Route: opencode-go/deepseek-v4.1-flash. Substitution record: `ra-quota pick green` returns
+opencode-go/hy4-flash-free, the Red model family of this track, so it is excluded. Red stays hy4.
+
+Range check
+-----------
+`git merge-base --is-ancestor d279b8703 HEAD` -> yes. The range
+`d279b8703..29ffa3542` holds the two committed track changes of task 2.1 (320fc2fa1, 29ffa3542).
+Task 2.2 carries its own tests: the Red additions ran red in the worktree, then the
+implementation commit e583e21b3 carried tests and code. No committed Red test was edited after
+it landed.
+
+Step 1 — Red (tests first)
+--------------------------
+Files:
+  - apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx
+  - apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts
+
+Command:
+  bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+  www-reading-advantage exec vitest run
+  "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx"
+  src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --silent=true'
+
+Exit code: 1
+  Test Files  2 failed (2)
+  Tests  8 failed | 26 passed (34)
+
+The eight failures, each on the missing block or the missing section:
+  1. locale 9. exists in en, th, and zh — `expected undefined to be defined` (en.screens)
+  2. locale 9. sits after tutorRole and before calculator — `en screens index: expected -1 to be
+     greater than -1`
+  3. locale 10. holds all nine string leaves in en — `expected +0 to be 9`
+  4. locale 10. holds all nine string leaves in th — `expected +0 to be 9`
+  5. locale 10. uses the same string key paths in en, th, and zh — `expected +0 to be 9`
+  6. locale 10. keeps the zh values equal to the en values (D-10) — `expected undefined to be
+     'INSIDE THE APPS'`
+  7. page. renders three screen cards with the slot alt and caption in copy order —
+     `expect(received).toBeInTheDocument()` on the null `tutor-screens` section
+  8. page. places the screens gallery after the tutor role ... — `expect(received)
+     .toBeInTheDocument()` on the null `tutor-screens` section
+
+Two of my own new assertions could not hold in this harness, so I changed them and I say so:
+  - src/test/setup.ts mocks `getScopedI18n` to return `<scope>.<key>`. Literal copy cannot appear
+    in a page render. The page test now asserts each card's per-slot key path; the locale test
+    pins the literal en and th strings. No existing case was weakened.
+  - the FAQ section has no testid. The order case locates it through `#faq-question-0` and
+    `closest("section")`.
+
+Step 2 — Green (implementation)
+-------------------------------
+1. Locale file, en, th, and zh: the `screens` block sits after `tutorRole` and before
+   `calculator`, exactly as spec 6.3 prints the en block and the Thai table. `items[1].alt`
+   carries a code comment that cites D-15a in all three dictionaries. No value carries the word
+   "draft". The zh values equal the en values (D-10), and one comment above the zh block records
+   the placeholder rule.
+2. Page: `SectionHeader` with eyebrow, heading, and description, then one `ProductPicture` card
+   per `tutorScreens` slot in copy order with the slot `alt` and the caption under the picture.
+   The section carries `data-testid="tutor-screens"` and sits after the `tutorRole` section and
+   before the calculator section. Grid: `grid-cols-1` at base and `md:grid-cols-2`, with the wide
+   `classList` card at `md:col-span-2`. Shared parts only; theme colors only; no arbitrary value.
+
+Leaf count: the role brief says "the 12 new leaf strings". Spec 6.3 and plan task 2.2 hold nine:
+eyebrow, heading, description, and caption plus alt for each of three items. An extra invented
+string would be fabrication, so the test pins nine and asserts the count.
+
+Green command (the same one):
+  Exit code: 0
+  Test Files  2 passed (2)
+  Tests  34 passed (34)
+  (page 8 cases: 6 pre-existing plus 2 new; locale 26 cases: 18 pre-existing plus 8 new)
+
+Step 3 — Gates
+--------------
+  pnpm turbo run check-types --filter=www-reading-advantage  -> exit 0
+    (www-reading-advantage:check-types: $ tsc --noEmit; Tasks: 1 successful, 1 total)
+  pnpm --filter www-reading-advantage lint                  -> exit 0
+    (no output after `eslint .`, so no new `shadcn/*` error in a touched file)
+  git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json -> exit 0
+
+Build-graph: skipped under the PM load watch. No export, signature, or import edge changed;
+`screens` is a data key and the page adds no export.
+
+Step 4 — Commits
+----------------
+  e583e21b31b6a73c2d1e8ba1aa65ddc0053bd3d7
+    feat(www): add the tutor screens gallery and its copy (track_id: www_tutor_calculator_20261117)
+    locale file, page, page test, locale test
+  9314f07decb27045ddce7d4f87d105d458b9b290
+    docs(measure): record green 2.2 gallery evidence (track_id: www_tutor_calculator_20261117)
+    plan.md only
+
+Both commits use explicit pathspecs. `git status --short` is clean after them. The two result
+files sit under `measure/runs/`, which `.gitignore` line 56 ignores, so they stay local evidence.
+
+Tasks
+-----
+  [x] 2.2 — Done: e583e21b31b6a73c2d1e8ba1aa65ddc0053bd3d7, with the Red run, the Green run,
+       the types exit 0, and the lint exit 0 in the plan note.
+  [b] none in this task.
+
+Open items for the next role
+----------------------------
+  - Task 2.3 still changes `tutorRole.points[3]` and `faq.items[5].answer`; the old lines remain
+    on purpose.
+  - The four PR answers in the plan stay open: the `items[1].alt` draft (D-15a), the "Reedy
+    practice" clause, and the two captions without a picture.
+  - Question for the orchestrator: the brief said 12 new leaf strings; spec 6.3, plan 2.2, and
+    this evidence say nine. No action is needed unless the brief holds a different source.
+
+MEASURE_AGENT_RESULT
+{
+  "role": "measure-green",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "2",
+  "task": "2.2",
+  "phase_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "role_base_sha": "29ffa35423fc8131cc099d5b0462ebc286e13ae7",
+  "final_head": "9314f07decb27045ddce7d4f87d105d458b9b290",
+  "commits": [
+    "e583e21b31b6a73c2d1e8ba1aa65ddc0053bd3d7 feat(www): add the tutor screens gallery and its copy (track_id: www_tutor_calculator_20261117)",
+    "9314f07decb27045ddce7d4f87d105d458b9b290 docs(measure): record green 2.2 gallery evidence (track_id: www_tutor_calculator_20261117)"
+  ],
+  "tasks_flipped_to_x": [
+    { "task": "2.2", "evidence_sha": "e583e21b31b6a73c2d1e8ba1aa65ddc0053bd3d7" }
+  ],
+  "tasks_flipped_to_b": [],
+  "targeted_red_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run \"src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx\" src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --silent=true'",
+  "red_before": "exit 1; Test Files 2 failed (2); Tests 8 failed | 26 passed (34); the screens block and the tutor-screens section are absent",
+  "green_after": "exit 0; Test Files 2 passed (2); Tests 34 passed (34)",
+  "types_gate": "pnpm turbo run check-types --filter=www-reading-advantage; exit 0",
+  "lint_gate": "pnpm --filter www-reading-advantage lint; exit 0; no new shadcn/* error in a touched file",
+  "new_files": [],
+  "files_modified": [
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md"
+  ],
+  "result_files": [
+    "measure/runs/www_tutor_calculator_20261117/green-2.2-e583e21b3.json",
+    "measure/runs/www_tutor_calculator_20261117/green-2.2-e583e21b3.log"
+  ],
+  "build_graph": "skipped under the PM load watch; no export, signature, or import edge changed",
+  "handoff": "Task 2.2 done. The `screens` block is in en, th, and zh after tutorRole and before calculator; the gallery renders three ProductPicture cards with slot alt text and captions inside data-testid=\"tutor-screens\", between the tutorRole and calculator sections. Green command exit 0 with Tests 34 passed (34); types exit 0; lint exit 0. Next in the plan: task 2.3 (the two live lines, AC-6). Note for 2.3: tutorRole.points[3] and faq.items[5].answer are still the old lines on purpose. Open question 4 (the lessonPhases alt draft) stays with PR per D-15a. The brief said 12 new leaf strings; spec 6.3 and plan 2.2 hold nine, and the test pins nine.",
+  "verdict": "pass"
+}
+END_MEASURE_AGENT_RESULT
+
+RESULT: PASS

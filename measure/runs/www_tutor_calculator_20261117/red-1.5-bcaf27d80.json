@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "role": "measure-mid-red",
+  "verdict": "pass",
+  "note": "Final. Red command exits 1 for the expected reason: the component module does not exist. Ten authored cases are blocked at transform; none execute. No false Red from a missing dependency, syntax error, or passing test.",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "task": "1.5",
+  "baseline_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "1142ecff96513faaa77007453f11722aa3d86ad9",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/hy4-flash-free#high (ra-quota pick red)",
+  "resulting_head": "30e59c5888e6dc2d76e70661187d99e49d5256ed",
+  "commits": [
+    {
+      "sha": "bcaf27d8003a8f83ceb3dac6e24f3a28f989eb12",
+      "subject": "test(www-reading-advantage): pin calculator UI (track_id: www_tutor_calculator_20261117)",
+      "files": ["apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx"]
+    },
+    {
+      "sha": "30e59c5888e6dc2d76e70661187d99e49d5256ed",
+      "subject": "docs(measure): record red 1.5 evidence (track_id: www_tutor_calculator_20261117)",
+      "files": ["measure/tracks/www_tutor_calculator_20261117/plan.md"]
+    }
+  ],
+  "test_file": "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+  "imports": "{ en } from \"@/locales/pages/products/tutor-advantage\"; { TutorCommissionCalculator } from \"./tutor-commission-calculator\"",
+  "red_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx --reporter=dot --silent=true'",
+  "red_exit_code": 1,
+  "red_evidence": {
+    "test_files": "Test Files 1 failed (1)",
+    "tests": "Tests no tests",
+    "failure_reason": "The component module apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx does not exist at this commit. Vite fails the import at transform, so no test executes.",
+    "vitest_phase": "module resolution / transform; no test executes",
+    "expected_failure": true
+  },
+  "authored_test_case_count": 10,
+  "failing_test_names": [
+    "TutorCommissionCalculator first paint > shows the zero line and no income figures",
+    "TutorCommissionCalculator first paint > marks the result card as a polite live region",
+    "TutorCommissionCalculator first paint > labels every input and gives it a zero minimum",
+    "TutorCommissionCalculator leg rows > grows from 0 to 3 legs, one student row per leg, each new leg at 3",
+    "TutorCommissionCalculator presets > shows the preset 1 figures",
+    "TutorCommissionCalculator presets > shows the preset 3 figures and three leg rows in the graph",
+    "TutorCommissionCalculator presets > presses exactly one preset after a selection",
+    "TutorCommissionCalculator presets > shows the selected preset's setup and result text",
+    "TutorCommissionCalculator presets > clears the example text on edit but keeps the figures",
+    "TutorCommissionCalculator presets > defaults the price to 3,000 and restores it when a preset is picked"
+  ],
+  "passing_test_names": [],
+  "contracts_pinned": {
+    "ac9_default": "First paint shows the explain.zero line, at least one 0 figure, and none of the preset figures 5,520, 5,354.40, 18,709.44, or 6,493.61.",
+    "ac9_legs": "The leg count goes 0, 1, 2, 3; one labelled student input per leg; a new leg starts at 3 students; three leg rows appear in the graph.",
+    "ac9_presets": "Preset 1 shows 5,520 and 5,354.40. Preset 3 shows 18,709.44, 12,015, 6,694.44, and 6,493.61 with three leg rows.",
+    "ac9_states": "One preset has aria-pressed=true after a selection; the selected preset's setup and result text appear; an edit clears the example but keeps the figures; the result card is aria-live=polite; every input is labelled with min=0.",
+    "d5": "The price defaults to 3,000 and a preset restores 3,000 after a hand edit to 5,000.",
+    "d6": "No income figure and the zero line on first paint.",
+    "d7": "Editing an input after a preset clears the setup and result text and unpresses the preset while figures stay.",
+    "d9": "The graph holds one leg row per leg, named with chart.leg and the leg numeral."
+  },
+  "files_written": [
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md",
+    "measure/runs/www_tutor_calculator_20261117/red-1.5-bcaf27d80.json",
+    "measure/runs/www_tutor_calculator_20261117/red-1.5-bcaf27d80.log"
+  ],
+  "constraints_held": [
+    "Only the test file and the plan line were committed; no component, locale, page, package.json, or lockfile edit",
+    "The test reads no file outside the repository and computes no hash",
+    "String equality on formatted figures; no CSS-class selector and no snapshot test",
+    "userEvent drives all clicks and typing",
+    "Explicit pathspecs only; no git add -A, no stash, no reset",
+    "No disposition line, no question tool, no deploy, and no push"
+  ],
+  "questions": [],
+  "handoff_notes": [
+    "The test defines the component contract: a named export TutorCommissionCalculator takes a copy prop; preset buttons carry the en preset names; the number inputs carry the en input labels; each graph leg row reads chart.leg plus its numeral. Green implements to these queries.",
+    "No test executes at Red; all ten cases are blocked by the missing module. The Green run must show ten passing cases."
+  ]
+}

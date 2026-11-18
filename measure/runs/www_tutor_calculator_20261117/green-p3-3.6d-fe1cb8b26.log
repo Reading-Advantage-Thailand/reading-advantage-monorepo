@@ -1,0 +1,103 @@
+Green run log — task 3.6d — track www_tutor_calculator_20261117
+Phase: Phase 3 (audit remediation). Role: measure-jr-green.
+role_base_sha: fe1cb8b2662d761b472569d372d896fab00142fa
+Red commit: e0637db22 (confirmed ancestor of HEAD before edits).
+Red model: opencode-go/deepseek-v4.1-flash. No coder delegation used.
+
+Working tree at start: clean (git status --short empty).
+
+1. Red rerun (before edits)
+   Command: pnpm --filter www-reading-advantage exec vitest run
+     src/__tests__/www-tutor-reedy-claim.test.tsx --reporter=dot --maxWorkers=1
+   Result: exit 1. Tests 15 failed | 1 passed (16).
+   The Red test fails as committed. No committed test pins the old Reedy
+   strings or the old four-bullet list.
+
+2. Scan of forbidden paths (per-locale failure detail)
+   en page: reedyBlock.points.0, platformFeatures.features.2.description
+   en component: features.2.description
+   th page: reedyBlock.points.0, faq.items.3.answer,
+     platformFeatures.features.2.description
+   th component: features.2.description
+   zh page: reedyBlock.points.0, faq.items.3.answer,
+     platformFeatures.features.2.description
+   zh component: features.2.description
+
+3. Edits (deletion only, no new words)
+   src/locales/pages/products/tutor-advantage.ts
+   - deleted reedyBlock.points[0] in en, th, zh (arrays now hold 3 entries)
+   - set platformFeatures.features[2].description in en, th, zh to the
+     exact D-21 strings (deletion of the Tutor-Advantage-only clause)
+   - deleted the false clause in faq.items[3].answer in th and zh.
+     The immutable Red test scan pins these two paths. AC-24 requires
+     that no string in the file matches the six patterns. The en faq
+     answer stays: no pattern matches it, and the plan forbids other
+     copy changes.
+   src/locales/components/products/tutor-advantage.ts
+   - deleted the "only in Tutor Advantage" sentence in features[2]
+     .description in en, th, zh (exact D-21 strings)
+   page.tsx: reedyKeys = [0, 1, 2]
+
+4. Gates (after edits)
+   Gate 1 (targeted Red command + strategy files), exit 0:
+     Test Files 7 passed (7), Tests 104 passed (104)
+   Gate 2 (rg -l "reedyBlock|platformFeatures|Reedy" --glob '*.test.*',
+   paths made package-relative; the first run with repo-relative paths
+   matched no file and was discarded), exit 0:
+     Test Files 6 passed (6), Tests 266 passed (266)
+   tsc --noEmit -p . (in apps/www-reading-advantage), exit 0.
+   pnpm --filter www-reading-advantage lint (eslint .), exit 0.
+   build-graph: skipped. graph.db is untracked (chore(repo): stop
+   tracking graph.db) and the diff changes copy strings and one array
+   literal only. No export, import, signature, schema, or JSX change.
+
+5. Implementation commit: 0a0797355b0a9a91ed79326b0f3ce3e75d88a387
+   fix(www): delete the false reedy availability claim
+   (track_id: www_tutor_calculator_20261117)
+   Pathspecs: page.tsx, components locale file, pages locale file.
+   plan.md stays out of this commit. Plan evidence follows in a
+   separate commit.
+
+6. Plan-evidence commit: 2e440bbcb94135ad9bb5b8538b548f4b3f9ab354
+   docs(measure): record green p3 task 3.6d
+   (track_id: www_tutor_calculator_20261117)
+   plan.md alone. Task 3.6d is [x] with Done: 0a0797355b0a9a91ed79326b0f3ce3e75d88a387
+   and the four gate commands with exit codes.
+
+7. Scope and ancestry checks
+   phase_base_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+   role_base_sha: fe1cb8b2662d761b472569d372d896fab00142fa
+   Red commit e0637db22 sits after phase_base_sha and before HEAD.
+   Diff fe1cb8b26..2e440bbcb touches only the 3 implementation
+   files and plan.md. Final Green HEAD: 2e440bbcb94135ad9bb5b8538b548f4b3f9ab354.
+   Working tree clean. No [b] tasks. No new test files.
+
+8. Retry F6 (Red commit 28a621ce4 "catch the not-available reedy wording")
+   The Red test added patterns /not available in Primary Advantage/i and
+   /Reedy is not available/i plus the exact en faq answer pin.
+   Red rerun before the edit: exit 1. Tests 2 failed | 15 passed (17).
+   Both failures name faq.items.3.answer in en.
+
+   Edit (deletion only): removed " Reedy is not available in Primary
+   Advantage or Reading Advantage." from faq.items.3.answer in en,
+   src/locales/pages/products/tutor-advantage.ts. Answer now reads
+   "Students with an active Tutor Advantage class package, on the
+   lessons they finished.".
+
+   Gates after the edit, all exit 0:
+   - seven-file vitest command: 7 files, 105 tests
+   - rg-listed Reedy vitest command: 6 files, 267 tests
+   - pnpm --filter www-reading-advantage exec tsc --noEmit -p .: 0
+   - pnpm --filter www-reading-advantage lint: 0
+
+   Retry implementation commit:
+   5ca39dcfa2d4f24565e7067f18e0bcaa3250485f
+   fix(www): delete the not-available reedy sentence
+   (track_id: www_tutor_calculator_20261117)
+
+   Retry plan-evidence commit (plan.md alone):
+   5b6b10f091056d1198165ed492f3b84fcf57bda8
+   docs(measure): record green p3 task 3.6d retry
+   (track_id: www_tutor_calculator_20261117)
+   Final Green HEAD: 5b6b10f091056d1198165ed492f3b84fcf57bda8.
+   Working tree clean.

@@ -866,6 +866,9 @@ const WEEK_CONTRACT_PATH = resolve(app, "lib", "contracts", "week.ts");
 /** The loops module of the app, as an import URL for the mutants in the scratch folder. */
 const LOOPS_URL = pathToFileURL(resolve(app, "lib", "loops.ts")).href;
 
+/** The bounds module of the app, as an import URL for the mutants in the scratch folder. */
+const LIMITS_URL = pathToFileURL(resolve(app, "lib", "contracts", "limits.ts")).href;
+
 describe("Phase 5 adversarial media list and week contract", () => {
   it("holds no duplicated file row in the media list", () => {
     const violations = listViolations(readFileSync(LIST_PATH, "utf8"));
@@ -962,6 +965,14 @@ describe("Phase 5 adversarial media list and week contract", () => {
         from: 'import { loopsApproved, STORYTIME_LOOPS_PART } from "../loops";',
         to: `import { loopsApproved, STORYTIME_LOOPS_PART } from "${LOOPS_URL}";`,
       },
+      {
+        from: 'import { LEVEL_MAX, WEEK_MAX } from "./limits";',
+        to: `import { LEVEL_MAX, WEEK_MAX } from "${LIMITS_URL}";`,
+      },
+      {
+        from: 'export { LEVEL_MAX, WEEK_MAX } from "./limits";',
+        to: `export { LEVEL_MAX, WEEK_MAX } from "${LIMITS_URL}";`,
+      },
     ]);
     const mutant = await loadModulePath(mutantPath);
     const schema = mutant["imageSchema"] as typeof imageSchema;
@@ -1001,6 +1012,14 @@ describe("Phase 5 adversarial media list and week contract", () => {
       {
         from: 'import { loopsApproved, STORYTIME_LOOPS_PART } from "../loops";',
         to: `import { loopsApproved, STORYTIME_LOOPS_PART } from "${LOOPS_URL}";`,
+      },
+      {
+        from: 'import { LEVEL_MAX, WEEK_MAX } from "./limits";',
+        to: `import { LEVEL_MAX, WEEK_MAX } from "${LIMITS_URL}";`,
+      },
+      {
+        from: 'export { LEVEL_MAX, WEEK_MAX } from "./limits";',
+        to: `export { LEVEL_MAX, WEEK_MAX } from "${LIMITS_URL}";`,
       },
     ]);
     const mutant = await loadModulePath(mutantPath);

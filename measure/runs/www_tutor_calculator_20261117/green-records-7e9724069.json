@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "role": "measure-green",
+  "verdict": "pass",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "records",
+  "task": "records remediation: align measure/tracks.md, spec.md, test-strategy.md, and metadata.json with the shipped code and the PM decisions",
+  "role_base_sha": "7e9724069a0f013967fd22bc7bd6e2b341b7462c",
+  "final_head": "81df01cf2e7c2954f4a2de1aaee593913a00bc75",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "minimax-cn-coding-plan/MiniMax-M3.1-Flash (from `ra-quota pick green`; the free deepseek route is marked out until 21:03 ICT)",
+  "scope": "Documentation only. No product file and no test file changed. One commit holds the four record files.",
+  "gates": [
+    {
+      "name": "metadata JSON parse",
+      "command": "node -e \"JSON.parse(require('fs').readFileSync('measure/tracks/www_tutor_calculator_20261117/metadata.json','utf8'))\"",
+      "exit_code": 0,
+      "note": "The file holds no hash or checksum field."
+    },
+    {
+      "name": "whitespace check",
+      "command": "git diff --check",
+      "exit_code": 0,
+      "note": "Run before the commit and again after the last edit. No whitespace error."
+    }
+  ],
+  "commits": [
+    {
+      "sha": "81df01cf2e7c2954f4a2de1aaee593913a00bc75",
+      "subject": "docs(measure): align a-63 records with the shipped copy (track_id: www_tutor_calculator_20261117)",
+      "files": [
+        "measure/tracks.md",
+        "measure/tracks/www_tutor_calculator_20261117/metadata.json",
+        "measure/tracks/www_tutor_calculator_20261117/spec.md",
+        "measure/tracks/www_tutor_calculator_20261117/test-strategy.md"
+      ],
+      "note": "The subject of the brief was 101 characters. The commitlint rule header-max-length rejects it, so the subject drops the word `the` and stays at 97 characters."
+    }
+  ],
+  "records_changed": {
+    "measure/tracks.md": "The www Tutor Advantage row keeps `- [ ]`. The Status line names the Phase 1 acceptance `d279b8703`, the Phase 2 acceptance round 2 `94af2c15b`, the PM page-check PASS with F-1 fixed `6c0cf5de6`, the www-only push `a726b2be2` to origin/master, the CD run 44053703983 success, the live en, th, and zh pages of 2026-11-17, and the final acceptance and closeout next. The Owner, A-63, and Due 2026-11-21 fields stay. The Note line names the PR handoff v0.4 section 8 copy of task 2.7, the three gallery cards 070, 002, and 062, the key `shortAnswer` that replaces `lessonPhases`, and the PM drop of the network and earnings captions.",
+    "spec.md": "The preset table, the D-2 narrative, D-2a, D-9, D-15a, the 5.3 props, the 5.4 en block, the 5.4 Thai table, the 6.2 manifest key, the 6.3 screens block, the 6.3 Thai table, AC-3, AC-7, D-6, and the seven open questions now match the shipped code. D-2a, D-9, D-15a, and the open questions are marked resolved by PR v0.4 and are not deleted.",
+    "test-strategy.md": "Line 17 (R3 conservation sum), line 49 (preset 3 fingerprint), line 78 (preset 3 strings), line 81 (`shortAnswer`), line 122 (M4 mutant), and line 259 (the 11 % upscale) hold the shipped figures.",
+    "measure/tracks/www_tutor_calculator_20261117/metadata.json": "New file in the shape of `measure/tracks/architecture_ci_input_pin_20261110/metadata.json`: type feature, status in_progress, created 2026-11-17, author_model opencode-go/deepseek-v4.1-flash, owner chain, the six PM decisions, the constraints, and 20 estimated against 19 actual tasks. No hash or checksum field."
+  },
+  "shipped_figures": {
+    "preset_3_input": "price 3000, personalStudents 2, studentsPerLeg [4, 4, 4]",
+    "own_gv": "6,000",
+    "network_gv": "42,000",
+    "rate": "59.1273 %",
+    "gross": "24,833.45",
+    "leg_payouts": "16,560.00",
+    "payout_before_tax": "8,273.45",
+    "withholding_tax": "248.20",
+    "net": "8,025.25",
+    "conservation_satang": "1,656,000 + 827,345 = 2,483,345",
+    "note": "The PR handoff v0.4 file quotes gross 24,833.46 and net 8,025.26. The shipped module and its tests are the authority, and the D-3 truncation gives the values above."
+  },
+  "grep_report": {
+    "command": "grep -n \"lessonPhases\\|6,493.61\" measure/tracks/www_tutor_calculator_20261117/spec.md measure/tracks/www_tutor_calculator_20261117/test-strategy.md",
+    "exit_code": 0,
+    "hits": [
+      {
+        "file": "measure/tracks/www_tutor_calculator_20261117/spec.md",
+        "line": 115,
+        "text": "18,709.44",
+        "why_it_stays": "D-1 history note. It names the rejected direct-net variant, which paid level two twice."
+      },
+      {
+        "file": "measure/tracks/www_tutor_calculator_20261117/spec.md",
+        "line": 292,
+        "text": "lessonPhases",
+        "why_it_stays": "D-15a history note. It names the copy v0.1 alt text that PR v0.4 replaced."
+      },
+      {
+        "file": "measure/tracks/www_tutor_calculator_20261117/spec.md",
+        "line": 601,
+        "text": "lessonPhases",
+        "why_it_stays": "Section 6.3 history note. It names the copy file alt text that PR v0.4 replaced."
+      },
+      {
+        "file": "measure/tracks/www_tutor_calculator_20261117/spec.md",
+        "line": 675,
+        "text": "6,493.61 / 12,015",
+        "why_it_stays": "AC-7 note. It records that the shipped locale test does not check the superseded one-level draft figures, so the spec claims no such check."
+      }
+    ],
+    "test_strategy_hits": [],
+    "note": "The shipped locale test checks only `5,884`, `5,707`, `22,714`, and `9,889` as absent figures. The spec keeps that list and claims no more."
+  },
+  "authority": [
+    "apps/www-reading-advantage/src/lib/tutor-commission.ts",
+    "apps/www-reading-advantage/src/lib/tutor-commission.test.ts",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+    "apps/www-reading-advantage/src/lib/__tests__/tutor-screens.test.ts",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+    "~/Desktop/handoff/a63-tutor-www-calculator/www-tutor-advantage-calculator-handoff.md section 8"
+  ],
+  "residuals": [
+    "plan.md still lists four answered items under `Answers owed to PR`. The plan file is outside the four-file scope of this run, so the closeout role updates it.",
+    "test-strategy.md section 9 still lists Q1 to Q4 as open for the PM. Their documented defaults are the shipped behaviour, so no code follows from them."
+  ],
+  "push": "none",
+  "build": "not run",
+  "test_run": "not run",
+  "doctor": "not run",
+  "build_graph": "not run"
+}

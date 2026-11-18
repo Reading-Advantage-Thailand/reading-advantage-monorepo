@@ -176,8 +176,8 @@ describe("Phase 4 dry run of the three workflows on fake ranges", () => {
       const cdApps = matrixIds(apps, `${caseId} cd-apps`);
       const ciIds = matrixIds(ci, `${caseId} ci`);
       const cdWww = www.outputs.www ?? "missing";
-      const expectedWww = id === "www-reading-advantage" && mode === "direct" ? "yes" : "no";
-      const expectedApps = id !== "www-reading-advantage" && ["gated", "direct"].includes(mode) ? [id] : [];
+      const expectedWww = mode === "direct" ? "yes" : "no";
+      const expectedApps = mode === "gated" ? [id] : [];
       const gcloudCalls = www.gcloudCalls.length + apps.gcloudCalls.length + ci.gcloudCalls.length;
 
       const line =

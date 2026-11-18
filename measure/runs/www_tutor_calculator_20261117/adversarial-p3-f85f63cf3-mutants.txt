@@ -1,0 +1,15 @@
+== M-L1 readLegCount reads the field only (review A-P3-r2-1 regression)
+      Tests  5 failed | 25 passed (30)
+== M-G1 own bar shows the payout before tax (A-P3-1 regression)
+      Tests  13 failed | 17 passed (30)
+== M-G2 leg bar width is a share of the gross, not of the network volume
+      Tests  18 failed | 12 passed (30)
+== M-T tax truncated instead of half up
+      Tests  9 failed | 28 passed (37)
+== M-D D-18 removed (a tutor with legs and no own students is paid)
+      Tests  5 failed | 32 passed (37)
+== M-R gross rounded instead of truncated
+      Tests  8 failed | 29 passed (37)
+== M-N page passes { n: "1" } for legBar (review C-P3-r2-3)
+      Tests  3 failed | 22 passed (25)
+== mutants done

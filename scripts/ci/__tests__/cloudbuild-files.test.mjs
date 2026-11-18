@@ -2,7 +2,8 @@
  * Red tests for Phase 2 of the track `per_app_cicd_20261107`.
  *
  * The cases are F-01 to F-16 of `measure/tracks/per_app_cicd_20261107/test-strategy.md`
- * section P2.4, plus F-20 and F-21 of `measure/tracks/master_push_readiness_20261112/test-strategy.md`.
+ * section P2.4, plus F-20 and F-21 of `measure/tracks/master_push_readiness_20261112/test-strategy.md`
+ * and F-22 of plan task 3.1 of the same track.
  * They are artifact tests of the Cloud Build files and of the traffic
  * runbook. They never run Cloud Build.
  *
@@ -55,17 +56,32 @@ function guardRule(steps) {
 }
 
 describe("F: Cloud Build files", () => {
-  it("F-01 the primary push guards and migrates before deploying and restoring latest traffic", () => {
+  it("F-01 the primary push deploys a no-traffic tagged revision and holds no database step", () => {
     const doc = cloudbuild("apps/primary-advantage/cloudbuild.yaml");
     const steps = doc.steps ?? [];
-    must(steps.length >= 1, "push_steps=0");
-    const ids = ordered(doc, ["refuse-legacy-db", "migrate-db", "doctor-check", "deploy-cloudrun", "update-traffic"], "primary push");
-    must(guardRule(steps), "primary database steps bypass the legacy guard");
-    must(databaseSteps(doc).length === 3, "primary must retain its three database checks");
-    must(!stepText(deployStep(doc)).includes("--no-traffic"), "primary deploy still suppresses traffic");
-    const traffic = steps.find((step) => step.id === "update-traffic");
-    must(stepText(traffic).includes("--to-latest"), "primary does not restore latest-revision routing");
-    must(ids.at(-1) === "update-traffic", "primary traffic is not last");
+    const ids = stepIds(doc);
+    must(steps.length === 3, `push_steps=${steps.length} expected=3`);
+    must(
+      JSON.stringify(ids) === JSON.stringify(["build-image", "push-image", "deploy-cloudrun"]),
+      `push_steps=${ids.join(",")} expected=build-image,push-image,deploy-cloudrun`,
+    );
+    must(databaseSteps(doc).length === 0, `db_steps_found=${databaseSteps(doc).length}`);
+    must(!("availableSecrets" in doc), "primary push file declares availableSecrets");
+    const secretEnvSteps = steps.filter((step) => (step.secretEnv ?? []).length > 0);
+    must(secretEnvSteps.length === 0, `push_secret_env_steps=${secretEnvSteps.length}`);
+    const deploy = deployStep(doc);
+    const text = stepText(deploy);
+    must(text.includes("--no-traffic"), "primary deploy step holds no --no-traffic");
+    must(text.includes("--tag=pa-$${BUILD_ID:0:8}"), "primary deploy step holds no pa- tag");
+    must(
+      text.includes("--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"),
+      "primary deploy step lost its Cloud SQL instance",
+    );
+    const setSecrets = (text.match(/--set-secrets=/g) ?? []).length;
+    const setEnvVars = (text.match(/--set-env-vars=/g) ?? []).length;
+    must(setSecrets === 15, `deploy_set_secrets=${setSecrets} expected=15`);
+    must(setEnvVars === 3, `deploy_set_env_vars=${setEnvVars} expected=3`);
+    must(!ids.includes("update-traffic"), "primary push file moves traffic");
   });
 
   it("F-02 the guard rule on a fixture", () => {
@@ -165,9 +181,9 @@ describe("F: Cloud Build files", () => {
     }
   });
 
-  it("F-08 the 8 push files other than Primary and legacy reading hold no database step", () => {
-    const rows = readTable().filter((row) => !["primary-advantage", "reading-advantage"].includes(row.id));
-    must(rows.length === 8, `files_checked=${rows.length}`);
+  it("F-08 the 9 push files other than the legacy reading-advantage file hold no database step", () => {
+    const rows = readTable().filter((row) => row.id !== "reading-advantage");
+    must(rows.length === 9, `files_checked=${rows.length}`);
     const withSteps = [];
     for (const row of rows) {
       const doc = cloudbuild(String(row.cloudbuild));
@@ -178,7 +194,7 @@ describe("F: Cloud Build files", () => {
     }
     must(
       withSteps.length === 0,
-      `files_with_db_steps=${withSteps.length} files_checked=8: ${withSteps.join(",")}`,
+      `files_with_db_steps=${withSteps.length} files_checked=9: ${withSteps.join(",")}`,
     );
   });
 
@@ -406,8 +422,8 @@ describe("F: Cloud Build files", () => {
     const sections = [
       {
         id: "primary-advantage",
-        file: "apps/primary-advantage/cloudbuild.yaml",
-        steps: ["refuse-legacy-db", "migrate-db", "doctor-check", "deploy-cloudrun", "update-traffic"],
+        file: "apps/primary-advantage/cloudbuild-traffic.yaml",
+        steps: ["refuse-legacy-db", "migrate-db", "doctor-check", "update-traffic"],
       },
       {
         id: "accounts",
@@ -461,7 +477,7 @@ describe("F: Cloud Build files", () => {
       if (body === "") continue;
       if (!body.includes(section.file)) continue;
       if (section.steps.some((step) => !body.includes(step))) continue;
-      if (section.id === "primary-advantage" ? !body.includes("--to-latest") : !/old schema/i.test(body)) continue;
+      if (!/old schema/i.test(body)) continue;
       if (section.id === "codecamp-advantage") {
         const permissions = ["cloudscheduler.jobs.get", "cloudscheduler.jobs.create", "cloudscheduler.jobs.update"];
         const iamPermissions = permissions.filter((name) => body.includes(name)).length;
@@ -476,6 +492,27 @@ describe("F: Cloud Build files", () => {
       complete += 1;
     }
     must(complete === 6, `traffic_runbook_sections=${complete} ${incomplete.join("; ")}`);
+  });
+
+  it("F-22 every gated row deploys with no traffic and a tag and moves no traffic", () => {
+    const rows = readTable().filter((row) => row.mode === "gated");
+    must(rows.length === 6, `gated_rows=${rows.length} expected=6`);
+    for (const row of rows) {
+      const doc = cloudbuild(String(row.cloudbuild));
+      const steps = doc.steps ?? [];
+      const trafficSteps = steps.filter(
+        (step) => String(step.id ?? "") === "update-traffic" || stepText(step).includes("update-traffic"),
+      );
+      must(trafficSteps.length === 0, `${row.id}: push file holds update-traffic`);
+      const text = stepText(deployStep(doc));
+      must(text.includes("--no-traffic"), `${row.id}: deploy step holds no --no-traffic`);
+      must(/--tag=\S+/.test(text), `${row.id}: deploy step holds no --tag`);
+    }
+    const primary = rows.find((row) => row.id === "primary-advantage");
+    must(primary, "primary-advantage is not a gated row");
+    must(primary.tag === "pa-${BUILD_ID:0:8}", `primary tag=${primary.tag}`);
+    must(primary.tagPrefix === "pa", `primary tagPrefix=${primary.tagPrefix}`);
+    must(primary.tagLength === 11, `primary tagLength=${primary.tagLength}`);
   });
 
   it("F-19 the sales traffic file moves to the candidate of the pushed build", () => {

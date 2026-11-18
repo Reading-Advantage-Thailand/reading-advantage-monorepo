@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "PASS for the implemented content (Phases 1 and 2, task 3.1) at HEAD 383df188a33c2d4df68ed57583bdb01f0cb95c6a. HEAD equals the audited HEAD of the one passing phase-acceptance result. The code matches spec D-2 to D-11 and AC-1 to AC-9, AC-13 to AC-18. The www gates pass at HEAD: lint, types, 80 test files with 2856 tests, build (after the known first-run stop), the downline scan, and affected-apps. No blocking finding exists. Review B is waived by the PM in writing and is not a pass. Tasks 1.7, 3.2, 3.3, 3.4 and C.1 are pending release steps of the orchestrator, so AC-10, AC-11 and AC-12 are not yet verifiable. The doctor gate exits 1 for a pre-existing reason outside this track (F1).",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F1 [Nit] final-acceptance: bash measure/doctor.sh exits 1 at the architecture step with the line Analyzer input snapshot hash does not match current bytes. Steps 1 to 3 of the doctor pass. Rationale: the pin was stale before this track began. 49 tracked source files changed between the pin refresh a54b5741a and the track base 80ac554b4. The parent closeout recorded the same failure in measure/tracks.md line 1290. The owner is architecture_ci_input_pin_20261110, which starts not before 2026-11-21. This track did not cause the failure. The PM decides whether closeout waits or waives (default: waive, as for finding F7 of the parent track).",
+    "F2 [Nit] final-acceptance: The role-gate counts open tasks 1.7, 3.3, 3.4 and C.1 as non-deferred (read from track_incomplete in measure_interphase_checks.py), and task 3.2 is [b] with no trailing deferred:<owner> field. Rationale: the PM ordered these release steps and the closeout move after this acceptance. The gate cannot exit 0 until the tasks are [x]. The orchestrator may add deferred:pm to task 3.2 or finish the steps first.",
+    "F3 [Nit] final-acceptance: measure/tracks.md lines 48 to 50 are stale. The row says Status new, and it says Two questions stay open: the graph.caption fact gate and the hero alt. Spec section 10 closed all four questions, and plan tasks 1.1 and 2.5 are [x]. Rationale: the note understates the progress, so it is not an A6 overstatement. Closeout task C.1 rewrites the row. The push carries measure/**, so the orchestrator may refresh the row before the push.",
+    "F4 [Nit] final-acceptance: Four track records are stale or inexact. metadata.json holds status new and two decision lines that call Q2 and Q4 open. spec-review.md says the spec review did not run, but spec-review-3cc5358.json is a pass. test-strategy.md line 110 names the base SHA 80ac554b426551e5749f0e2cd500cbbf0eb375090a, while spec 6.1 and the gate run green-1.6 use 80ac554b426551e5749f0e2cd500cbbf0eb93530. The plan line numbers of tasks 2.3 to 2.5 drifted (Review A F1). Rationale: no gate used a wrong value. Closeout can correct or supersede these records.",
+    "F5 [Nit] final-acceptance: The first run of pnpm --filter www-reading-advantage build exits 1 at a Next.js security-advisory stop. The re-run exits 0. Rationale: green-1.6-ad055b9e2.log and plan task 1.6 record the same first-run result. The stop comes from the pinned Next.js 16.4.1. A framework upgrade is out of scope (spec section 7). The orchestrator should watch the CD build for the same stop.",
+    "F6 [Nit] final-acceptance: One passing phase-acceptance result exists, and it covers Phase 1 and Phase 2 combined (phase-acceptance-383df18.json). Phase 3 has no phase-acceptance result. The earlier result at 3eb492a5c is a FAIL because Review B was missing, and the PM waiver superseded it. Plan task 1.7 sits in the Phase 1 text and is [ ]. Rationale: the PM ordered tasks 1.7, 3.2, 3.3 and 3.4 after this acceptance. The PM may ask for a bounded Phase 3 check after task 3.4 (default: none).",
+    "F7 [Nit] final-acceptance: The changed image tests read the alt from the locale value (text(locale, heroExtra.imageAlt) and text(locale, tutorRole.alt)). Rationale: spec 4.6 prescribes this form. The command rg -n -F with the literal en alt text over the test files exits 1 with no hit, so no test pins the literal text. The literal text of spec 5.5 and 5.6 rests on the comparison of the locale file with the spec, done by Review A and by this role with a script.",
+    "F8 [Nit] final-acceptance: In th-become-a-tutor-980.png the sticky site header covers the heading of the section. Rationale: this is an element-capture artifact. The picture is complete and shows four faces, the workbook and the phone. The PM page check may ask for a recapture."
+  ],
+  "evidence": [
+    "git rev-parse HEAD = 383df188a33c2d4df68ed57583bdb01f0cb95c6a, equal to the brief audited HEAD. git status --short is empty (the folder measure/runs is ignored by .gitignore line 56, and only review-b-waiver.md is tracked there).",
+    "Ancestry: git merge-base --is-ancestor holds for 80ac554b4 (track base), e97e1d480, 3eb492a5c and 383df188a, each against HEAD. The baseline 80ac554b4 is an ancestor of 383df188a and of 3eb492a5c.",
+    "Phase-acceptance results: phase-acceptance-383df18.json is status pass with audited_head_sha 383df188a33c2d4df68ed57583bdb01f0cb95c6a, equal to HEAD. phase-acceptance-3eb492a.json is status fail (Review B missing) and is superseded. Exactly one passing result exists, for Phase 1 and Phase 2 combined.",
+    "Path diff, command: git diff --name-only 383df188a33c2d4df68ed57583bdb01f0cb95c6a HEAD. Output: empty. The latest result audits HEAD itself, so no later commit exists.",
+    "Path diff, command: git diff --name-only 3eb492a5c7616140ab1692308fe3b74ae8982399 HEAD. Output: measure/runs/www_tutor_followups_20261118/review-b-waiver.md and measure/tracks/www_tutor_followups_20261118/plan.md. These are evidence and plan files, so the later commit 383df188a is covered.",
+    "Path diff, command: git diff --name-only e97e1d48011327383aac95a843c243cc18673360 HEAD. Output: apps/www-reading-advantage/src/__tests__/www-tutor-followups.adversarial.test.ts, apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.followups.adversarial.test.tsx, apps/www-reading-advantage/src/lib/tutor-commission.followups.adversarial.test.ts, measure/runs/www_tutor_followups_20261118/review-b-waiver.md, measure/tracks/www_tutor_followups_20261118/plan.md. The three apps paths are new adversarial test files only. git diff --stat e97e1d480 HEAD -- apps/ shows 3 files and 273 insertions, so Review A, Review C, the adversarial run and the UX review at e97e1d480 still describe the production code at HEAD.",
+    "Track diff, command: git diff --name-status --no-renames 80ac554b426551e5749f0e2cd500cbbf0eb93530..HEAD. Output: 30 paths. 22 paths sit under apps/www-reading-advantage/ (2 added webp files, the deleted tutor-advantage-hero.jpg, 5 production files, 14 test files). 8 paths sit under measure/ (review-b-waiver.md, tracks.md, and the six files of the track folder). No dependency file and no lockfile changed. All 16 commits of the range carry the tag track_id www_tutor_followups_20261118.",
+    "Production diff read in full: page.tsx line 195 uses productPictures.tutorHero with priority kept (lines 195 to 198). page.tsx lines 329 to 336 use productPictures.tutorTeachClass for src, width and height, and the class is aspect-video w-full object-cover. product-pictures.ts replaces tutorSession with tutorHero and tutorTeachClass, both 1920 by 1080 webp. tutor-commission.ts lines 207 to 214 return zero, needsOwnStudents, ownOnly or withLegs. The calculator type at line 50 gains needsOwnStudents, and the render at line 472 reads copy.explain[variant].",
+    "Callers: rg for explainVariant outside tests finds only tutor-commission-calculator.tsx lines 17, 140 and 472 and the definition. rg for tutorSession and tutor-advantage-hero.jpg outside tests and outside the measure records finds no hit. The only test hits are the banned-file case at page.images.test.tsx lines 292 and 296.",
+    "Images, command: python3 -I with PIL over public/images. tutor-advantage-hero-2026-11-06.webp is WEBP (1920, 1080) with 165522 bytes. tutor-advantage-teach-class.webp is WEBP (1920, 1080) with 190298 bytes. Both are at or below 307200 bytes. The mean absolute pixel difference of each file against its own source is 1.513 and 1.677. Against the other source it is 59.652 and 59.615. So each file is the right picture. The source check sha256sum -c SHA256SUMS in the handoff folder printed OK for both sources and exited 0 (evidence only, no hash is stored).",
+    "Pictures viewed with the image reader: both webp files show four faces (one tutor, three children), the Primary Advantage Origins 2 workbook and a phone with the student app, and each alt of spec 5.5 and 5.6 matches its picture. The three captures en-hero-390.png, th-become-a-tutor-980.png and en-hero-1280.png show the full 16:9 frame with no crop.",
+    "Spec D-2 to D-11 against the diff: D-2 hero file, priority and alt key hold. D-3 two manifest entries hold. D-4 two files hold. D-5 alt keys keep their names and the zh values equal en. D-6 the fourth state holds, and the zero state wins when the network volume is 0. D-7 caption and label change in en, th and zh with zh equal to en. D-8 only the th Reedy value changes, and the en and zh values are unchanged. D-9 each fact gate is recorded in spec section 8 and the plan tasks. D-10 the push waits for the PM page check (pending). D-11 the zh needsOwnStudents line is the PR zh draft with a draft comment at the line above it.",
+    "Strings compared with the spec by script, command: python3 -I -c (reads spec.md and the locale file). Each of the 16 spec strings of sections 5.1 to 5.6 is found in its locale block (en, th, zh). That covers needsOwnStudents, legCommissionBar, caption, the new Thai Reedy line, tutorRole.alt and heroExtra.imageAlt. The first run showed one miss for the en label of section 5.2. A wrong line index in the script caused it, and a re-check with spec line 376 finds the text in the en key line and the zh key line. None of the 7 old strings remains in the locale file. The diff touches only the th Reedy line, so the en and zh Reedy lines stay.",
+    "AC-1 to AC-4 and AC-14 to AC-18: verified by the page code, the image probe, and the full suite at HEAD (page.images.test.tsx holds the AC-14, AC-15, AC-16, AC-17, AC-18 and aspect-video cases). AC-5 to AC-8: verified by tutor-commission.ts, the locale diff and the locale test (www-tutor-calculator.locale.test.ts deep-equals the calculator block in en, th and zh, with a CALC_ZH fixture).",
+    "AC-9, command results at HEAD: bash heavy-run.sh -c 'pnpm --filter www-reading-advantage lint' exit 0. bash heavy-run.sh -c 'pnpm --filter www-reading-advantage exec tsc --noEmit -p .' exit 0. bash heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot --silent=true' exit 0 with Test Files 80 passed (80) and Tests 2856 passed (2856). bash heavy-run.sh -c 'pnpm --filter www-reading-advantage build' exit 1 on the first run (Next.js security-advisory stop) and exit 0 on the re-run, with git status empty afterward. rg -n -i downline|ดาวน์ไลน์ over apps/www-reading-advantage/src without test files exit 1 with no output. node scripts/ci/affected-apps.mjs --base 80ac554b426551e5749f0e2cd500cbbf0eb93530 --head 383df188a33c2d4df68ed57583bdb01f0cb95c6a printed [www-reading-advantage] and exited 0.",
+    "AC-13: the added lines of the apps diff hold no match for createHash, sha256, crypto, checksum, /home/ or homedir (rg exit 1). The only file read in the new tests is join(process.cwd(), public, images, name) inside the app folder (page.images.test.tsx line 378). metadata.json holds no hash field. The two rg hits are decision text about SHA256SUMS as evidence only. git status is clean at HEAD. The closeout clause of AC-13 (git status clean at closeout) is pending.",
+    "Test quality: red-1.2-2.1.log exits 1 with 39 failed tests on the new pins only (Red). green-3.1-5e5990b42.log exits 0 with 77 files and 2843 tests. At HEAD the suite has 80 files and 2856 tests, which equals 2843 plus the 13 tests of the three adversarial files. The AC-18 test asserts the bytes are not null before it reads the header. The AC-17 test asserts the file list is not empty. The two stale tests that Red repaired at 5e5990b42 keep their meaning (the Storytime guard rejects the retired set and accepts the tutor hero).",
+    "Anti-patterns: A5 rg -n PASS=[0-9]+.*FAIL=0|all checks pass over measure/tracks/*/plan.md finds no hit in this plan, and every Done line of the plan matches its log (red-1.2-2.1.log, green-1.3-2.5.log, green-1.6-ad055b9e2.json, green-3.1-5e5990b42.log). A6 the canonical detector over measure/tracks.md exits 1 with no hit, and the registry note makes no claim about the adversarial state (see F3 for the stale text). A9 rg for www_tutor_followups and www_tutor_calculator in tests/*.sh and measure/tests/*.sh exits 1 with no hit, and the only tests/*.sh track paths are fixture_* folders that the tests create.",
+    "Plan SHAs: git cat-file -t returns commit and git merge-base --is-ancestor HEAD holds for c8d750d56, 3cc535884, 9a1e001fb, fa8ad4fd3, ad055b9e2 and 5e5990b42. Every [x] task names one of these SHAs. The marker census shows [x] for tasks 1.0 to 1.6, 2.1 to 2.6 and 3.1, [b] for task 3.2, and [ ] for tasks 1.7, 3.3, 3.4 and C.1.",
+    "Review B: measure/runs/www_tutor_followups_20261118/review-b-waiver.md quotes the PM words exactly and plan.md holds the waiver note. This is a recorded waiver, not a pass and not a defect.",
+    "Existing role evidence read: spec-review-3cc5358.json, strategy-3cc5358.log, review-a-e97e1d4, review-c-e97e1d4, adversarial-e97e1d4, ux-browser-review-e97e1d4 (12 section captures, 3 full-page captures, checks.json: ratio 1.7754 to 1.7800, correct currentSrc and alts, no overlap, no horizontal scroll, no console error), and phase-acceptance-383df18. Each verdict is right at HEAD.",
+    "Doctor, command: bash measure/doctor.sh. Output: three guard steps pass, then the architecture step fails with Analyzer input snapshot hash does not match current bytes, then ARCHITECTURE: step 4 exits 1 and DOCTOR exits 1. Pre-existing: git diff --name-only a54b5741a 80ac554b426551e5749f0e2cd500cbbf0eb93530 over apps, packages, services and integrations lists 49 source files, and a54b5741a is an ancestor of the track base.",
+    "PROJECT_LINT, PROJECT_CHECKS and PROJECT_TESTS are unset in this shell, and measure/gates.json is absent. This role ran their equivalents from spec 6.1: lint, tsc --noEmit and the full vitest suite. The orchestrator must export the three variables when it runs the mechanical role-gate.",
+    "Release steps pending and owned by the orchestrator, not defects: task 1.7 (send the crops to the PM), task 3.2 (PM page check, AC-10), task 3.3 (www-only fast-forward push, AC-11), task 3.4 (CD watch and live checks, AC-12), and closeout task C.1. No push ran and no deploy command ran."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git status --short",
+    "git merge-base --is-ancestor <sha> HEAD for 80ac554b4, e97e1d480, 3eb492a5c and 383df188a",
+    "git log --format=%H %s 80ac554b426551e5749f0e2cd500cbbf0eb93530..HEAD",
+    "git diff --stat 80ac554b426551e5749f0e2cd500cbbf0eb93530..HEAD",
+    "git diff --name-status --no-renames 80ac554b426551e5749f0e2cd500cbbf0eb93530..HEAD",
+    "git diff --name-only e97e1d48011327383aac95a843c243cc18673360 HEAD",
+    "git diff --name-only 3eb492a5c7616140ab1692308fe3b74ae8982399 HEAD",
+    "git diff --name-only 383df188a33c2d4df68ed57583bdb01f0cb95c6a HEAD",
+    "git diff 80ac554b426551e5749f0e2cd500cbbf0eb93530..HEAD -- page.tsx product-pictures.ts tutor-commission.ts tutor-commission-calculator.tsx the locale file and the changed test files",
+    "python3 -I (PIL probe and pixel difference of the two webp files against the two sources)",
+    "sha256sum -c SHA256SUMS in /home/daniebo/Desktop/handoff/a63-become-a-tutor (exit 0, evidence only)",
+    "rg -n tutorSession|tutor-advantage-hero\\.jpg over the repository without node_modules, .next, measure/runs and measure/archive",
+    "rg for hash, crypto and outside-repo reads over the added lines of the apps diff (exit 1)",
+    "bash measure/doctor.sh (exit 1, architecture step)",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage lint' (exit 0)",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec tsc --noEmit -p .' (exit 0)",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot --silent=true' (exit 0; 80 files, 2856 tests)",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage build' (first run exit 1, re-run exit 0)",
+    "rg -n -i \"downline|ดาวน์ไลน์\" apps/www-reading-advantage/src --glob '!**/*.test.*' (exit 1, no output)",
+    "node scripts/ci/affected-apps.mjs --base 80ac554b426551e5749f0e2cd500cbbf0eb93530 --head 383df188a33c2d4df68ed57583bdb01f0cb95c6a ([www-reading-advantage], exit 0)",
+    "rg A5, A6 and A9 detectors (A5, A6 and A9: exit 1, no hit for this track)"
+  ],
+  "changed_files": [
+    "measure/runs/www_tutor_followups_20261118/final-acceptance-383df18.json",
+    "measure/runs/www_tutor_followups_20261118/final-acceptance-383df18.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "role": "measure-final-acceptance",
+  "track": "www_tutor_followups_20261118",
+  "track_id": "www_tutor_followups_20261118",
+  "phase": "track review",
+  "baseline_sha": "80ac554b426551e5749f0e2cd500cbbf0eb93530",
+  "track_base_sha": "80ac554b426551e5749f0e2cd500cbbf0eb93530",
+  "phase_base_sha": "80ac554b426551e5749f0e2cd500cbbf0eb93530",
+  "role_base_sha": "383df188a33c2d4df68ed57583bdb01f0cb95c6a",
+  "audited_head_sha": "383df188a33c2d4df68ed57583bdb01f0cb95c6a",
+  "route": "claude-code/claude-sonnet-5-5#max",
+  "pm_exceptions": [
+    "Final acceptance runs on claude-code/claude-sonnet-5-5#max by PM exception (tag pm-exception), outside the ra-quota pick.",
+    "Review B is waived by the PM in writing (review-b-waiver.md). It is a recorded waiver, not a pass."
+  ],
+  "pending_release_steps": [
+    "1.7 send the captures to the PM (owner: orchestrator)",
+    "3.2 PM page check, AC-10 (owner: PM)",
+    "3.3 www-only fast-forward push, AC-11 (owner: orchestrator)",
+    "3.4 CD watch and live checks, AC-12 (owner: orchestrator)",
+    "C.1 closeout move and registry row (owner: closeout role)"
+  ],
+  "acceptance_criteria": {
+    "AC-1": "verified",
+    "AC-2": "verified",
+    "AC-3": "verified",
+    "AC-4": "verified",
+    "AC-5": "verified",
+    "AC-6": "verified",
+    "AC-7": "verified",
+    "AC-8": "verified",
+    "AC-9": "verified",
+    "AC-10": "pending_release_step",
+    "AC-11": "pending_release_step",
+    "AC-12": "pending_release_step",
+    "AC-13": "verified_except_closeout_clause",
+    "AC-14": "verified",
+    "AC-15": "verified",
+    "AC-16": "verified",
+    "AC-17": "verified",
+    "AC-18": "verified"
+  },
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "page.tsx:195 uses tutorHero with priority, page.tsx:329-336 uses tutorTeachClass with aspect-video, tutor-commission.ts:207-214 returns the four states, and the full suite passes 80 files with 2856 tests at HEAD."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "red-1.2-2.1.log exits 1 with 39 failed on the new pins and the AC-17 and AC-18 tests guard against vacuous passes, but the image tests read the alt from the locale value (page.images.test.tsx HERO and TUTOR maps), so the literal alt text has no independent pin."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --name-status 80ac554b4..HEAD lists 30 paths, all under apps/www-reading-advantage or measure, with no dependency or lockfile change."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Each claim cites a command result or a file line: gate exits at HEAD, the PIL probe of both webp files, the three path-diff commands, and the plan SHA checks."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "opencode-go/muse-spark-1.3-contributor#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "I re-checked tutor-commission.ts:207-214, page.tsx:195-198 and 329-336, the two webp probes, and the locale strings against spec 5.1 to 5.6, and the PASS verdict is right."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "opencode-go/muse-spark-1.3-contributor#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "I re-checked hero priority, aspect-video, distinct files per block and the old-file absence with rg and the full suite at HEAD, and the PASS verdict is right."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "opencode-go/muse-spark-1.3-contributor#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "The three adversarial files are inside the 80-file suite that exits 0 at HEAD with 2856 tests, and the PASS verdict is right."
+    }
+  ]
+}

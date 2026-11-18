@@ -12,7 +12,7 @@ export const en = {
         },
         {
             title: "Reedy Voice Practice",
-            description: "Your students practice speaking with Reedy on the lessons they finished. Reedy is live in Tutor Advantage only",
+            description: "Your students practice speaking with Reedy on the lessons they finished.",
         },
         {
             title: "Commission Model",
@@ -20,7 +20,8 @@ export const en = {
         }
     ],
     joinButton: "Join Our Network",
-    joinCaption: "Class packages for families start from 3,000 baht."
+    joinCaption: "Class packages for families start from 3,000 baht.",
+    imageAlt: "Tutor Advantage app showing a vocabulary flashcard for the word neighbour"
 }
 
 export const th = {
@@ -37,7 +38,7 @@ export const th = {
         },
         {
             title: "ฝึกพูดกับ Reedy",
-            description: "นักเรียนของคุณฝึกพูดกับ Reedy ในบทเรียนที่เรียนจบแล้ว Reedy ใช้ได้ใน Tutor Advantage เท่านั้น",
+            description: "นักเรียนของคุณฝึกพูดกับ Reedy ในบทเรียนที่เรียนจบแล้ว",
         },
         {
             title: "โมเดลคอมมิชชัน",
@@ -45,7 +46,8 @@ export const th = {
         }
     ],
     joinButton: "เข้าร่วมเครือข่ายของเรา",
-    joinCaption: "แพ็กเกจคลาสสำหรับครอบครัวเริ่มต้น 3,000 บาท"
+    joinCaption: "แพ็กเกจคลาสสำหรับครอบครัวเริ่มต้น 3,000 บาท",
+    imageAlt: "แอป Tutor Advantage แสดงบัตรคำศัพท์ของคำว่า neighbour"
 }
 
 export const zh = {
@@ -62,7 +64,7 @@ export const zh = {
         },
         {
             title: "Reedy 口语练习",
-            description: "您的学生在已完成的课程上与 Reedy 练习口语。Reedy 仅在 Tutor Advantage 中提供",
+            description: "您的学生在已完成的课程上与 Reedy 练习口语。",
         },
         {
             title: "佣金模式",
@@ -70,5 +72,6 @@ export const zh = {
         }
     ],
     joinButton: "加入我们的网络",
-    joinCaption: "面向家庭的课程包 3,000 泰铢起"
+    joinCaption: "面向家庭的课程包 3,000 泰铢起",
+    imageAlt: "Tutor Advantage 应用中的单词卡，显示单词 neighbour"
 }

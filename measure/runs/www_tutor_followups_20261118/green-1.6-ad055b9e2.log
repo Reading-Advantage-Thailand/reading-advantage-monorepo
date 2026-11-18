@@ -1,0 +1,55 @@
+# The five www app gates — tasks 1.6 and 2.6
+
+Track: www_tutor_followups_20261118
+Role: jr-green
+Head: ad055b9e263012a67ddfffd3ffb3fa7e0342f56a
+Date: 2026-11-18
+
+One file pair covers task 1.6 and task 2.6. Both tasks ran the same five gates at the same HEAD.
+
+## types
+
+exit=0
+
+## lint
+
+$ eslint .
+exit=0
+
+## build, first run
+
+exit=1
+Error [SecurityFatalError]: Your version of Next.js is affected by a known security vulnerability.
+
+**We strongly recommend you upgrade Next.js.**
+
+
+Cause: the Next.js security reminder stops the first build. The plan records this known first-run result.
+
+## build, re-run
+
+```
+$ next build
+▲ Next.js 16.4.1 (Turbopack)
+  Creating an optimized production build ...
+✓ Compiled successfully in 1139ms
+  Generating static pages using 11 workers (20/20) in 775ms
+├ ƒ /[locale]/products/tutor-advantage
+```
+exit=0
+
+## downline scan
+
+command: rg -n -i "downline|ดาวน์ไลน์" apps/www-reading-advantage/src --glob "!**/*.test.*"
+exit=1
+output: none
+
+## affected apps
+
+command: node scripts/ci/affected-apps.mjs --base 80ac554b426551e5749f0e2cd500cbbf0eb93530 --head ad055b9e263012a67ddfffd3ffb3fa7e0342f56a
+["www-reading-advantage"]
+exit=0
+
+## result
+
+pass: types exit 0; lint exit 0; build exit 0 on the re-run; downline scan exit 1 with no output; affected apps lists www-reading-advantage only.

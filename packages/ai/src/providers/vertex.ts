@@ -9,10 +9,13 @@ export interface VertexProviderConfig {
   project: string;
   /** Vertex AI location, for example "global". */
   location: string;
-  /** Service account client email. */
-  clientEmail: string;
-  /** Service account private key. Escaped "\\n" sequences become new lines. */
-  privateKey: string;
+  /** Service account client email. Optional when Application Default Credentials serve the call. */
+  clientEmail?: string;
+  /**
+   * Service account private key. Escaped "\\n" sequences become new lines.
+   * Optional when Application Default Credentials serve the call.
+   */
+  privateKey?: string;
   /** Default model for text/object generation. */
   model?: string;
 }
@@ -23,18 +26,26 @@ export interface VertexProviderConfig {
  */
 export class VertexProvider extends GoogleProvider {
   /**
-   * @param config Project, location, service account credentials, and default model.
+   * @param config Project, location, optional service account credentials, and default model.
+   *   When both credential values are present the client passes them to the
+   *   factory. When they are absent the client passes no `credentials` object,
+   *   so Application Default Credentials use the runtime service account (PM-3).
    */
   constructor(config: VertexProviderConfig) {
+    const hasKeyPair = Boolean(config.clientEmail && config.privateKey);
     const client = createVertex({
       project: config.project,
       location: config.location,
-      googleAuthOptions: {
-        credentials: {
-          client_email: config.clientEmail,
-          private_key: config.privateKey.replace(/\\n/g, "\n"),
-        },
-      },
+      ...(hasKeyPair
+        ? {
+            googleAuthOptions: {
+              credentials: {
+                client_email: config.clientEmail as string,
+                private_key: (config.privateKey as string).replace(/\\n/g, "\n"),
+              },
+            },
+          }
+        : {}),
     }) as unknown as GoogleModelFactory;
     super({ client, model: config.model, providerId: "vertex" });
   }

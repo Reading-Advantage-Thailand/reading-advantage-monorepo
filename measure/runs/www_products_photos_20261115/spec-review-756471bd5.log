@@ -1,0 +1,23 @@
+# Spec Review: www_products_photos_20261115
+
+Round 1 review subsections follow. Author model, date, reviewer, author response, and later rounds are written by the author.
+
+### What this track proposes
+The track restores real photos on the www products page at every viewport width and stops a repeat with tests. It fixes what is still wrong at HEAD: the text box that covers the blended-learning photo, the missing Tutor section picture, the squeezed pictures at 1024 px, and the covered home hero. It adds a Playwright e2e (each photo loaded, visible, at most 30 percent covered at 390, 980, 1024, and 1280 px, in en and th), a HeroSection unit test, and it wires the e2e into the www CI job.
+
+### How the current system works, per this spec
+Commit 8193625ca already removed the hidden xl:block wrapper from the products hero and added 8 product pictures, and those load at all four widths. The services/blended-learning photo stays covered by the See How We Report Results overlay, the Tutor section has no picture, and the home hero photo is 40 percent covered at 390 px. No workflow runs the www e2e specs on a push; the ci.yml affected job builds, lints, type-checks, and tests www-reading-advantage, and the www CD deploys on push without waiting for CI.
+
+### Findings
+- F1 [Blocker] spec.md AC-3 and plan.md Runner facts / task 1.2: the deploy-gate decision is left open and AC-3 omits the CD limit. Rationale: .github/workflows/cd-www-reading-advantage.yml line 81 shows the deploy job needs only the select job, so a red CI run does not stop a deploy; the plan itself states this fact, then writes "Task 1.2 decides whether the check also runs before the CD deploy." That is a design choice left to the implementer, and AC-3 as written ("a push that breaks it turns the job red") can be read as "the e2e stops a repeat," which is false for deploys. Daniel asked for tests that make sure this does not happen again. The spec must state the limit in AC-3 (red CI does not block CD; the PM page check in task 1.4 is the gate before Daniel gets the link) or the plan must add the CD gate now. Do not defer it to task 1.2.
+- F2 [Major] spec.md AC-1: the 120 x 120 minimum lets a shrunk picture escape every automated check. Rationale: the spec's own evidence at 1024 px says the Storytime card picture renders 160 x 108, and 108 is below the 120 minimum, so AC-1 does not count it as a photo at all; the load check, the visibility check, and the 30 percent cover check never run on it, and nothing checks aspect or size. A regression back to the squeezed 160 x 256 or 160 x 108 state passes the e2e that Daniel asked for. Lower the short-side minimum (for example 100 px) or add a per-picture size and proportion assertion in the products spec.
+- F3 [Nit] spec.md AC-1: the width list does not say why 1024 stays. Rationale: 980 and 1024 are 4 percent apart, and a future editor may drop one. Both are needed: 980 covers a phone in desktop view, and 1024 is the lg breakpoint where the squeezed program cards appear. Write one line that says so.
+- F4 [Nit] spec.md AC-4: "Primary parity-run2-2026-10-19 or a printed cover" leaves an asset choice to Green. Rationale: both files satisfy the AC, but naming one file removes the choice and keeps the review render check deterministic.
+
+MEASURE_AGENT_RESULT
+role: spec-review
+phase: track setup
+status: blocked
+summary: Verdict fail. 1 Blocker (F1 AC-3 omits the CD limit and task 1.2 leaves the gate open), 1 Major (F2 the 120x120 minimum lets a 160x108 picture escape AC-1), 2 Nits (F3, F4). Paraphrase, zoom-out, and zero-decision checks are recorded in the JSON; the plan otherwise fixes what Daniel saw and the tests run in CI.
+handoff: "Question for the owner, with a default. Q1: AC-3 and the CD gate. The www CD deploys on push and does not wait for CI, so a red e2e does not stop a deploy. Default: keep the gate as is, state the limit in AC-3 (red CI does not block CD; the PM page check in task 1.4 is the gate before Daniel gets the link), and change the plan so task 1.2 no longer decides it. Alternative: add a CD needs-CI gate. The author fixes F2, F3, F4 in spec.md in the same pass. Special points answered: (1) a 160x108 picture escapes AC-1 through the 120 px minimum (108 < 120), not the 5x5 grid; 1024 px is needed because the squeezed cards appear at the lg breakpoint and a phone desktop view sits at 980-1024 px. (2) The spec must state the limit or add a gate; today it does neither (F1). (3) The home hero at 390 px is in scope and the author's default is correct, because AC-1 applies to every marketing page hero at 390 px with a 30 percent cover limit."
+result: FAIL

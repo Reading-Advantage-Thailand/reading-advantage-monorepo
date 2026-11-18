@@ -166,7 +166,7 @@
       fill="rgba(251,113,133,.22)">PHYSICS</text>
 
 <!-- Static mastered prerequisite nodes -->
-<!-- Sunlight (GSE 38) -->
+<!-- Sunlight -->
 <g transform="translate(420,215)">
   <circle r="16" fill="#fb7185" filter="url(#glsSC)"/>
   <circle r="16" fill="#fb7185"/>
@@ -175,7 +175,7 @@
   <text class="f" x="0" y="32" text-anchor="middle" font-size="8.5" fill="rgba(255,255,255,.5)">Sunlight</text>
 </g>
 
-<!-- CO₂ (GSE 40) -->
+<!-- CO₂ -->
 <g transform="translate(418,305)">
   <circle r="15" fill="#fb7185"/>
   <circle r="20" fill="none" stroke="#fda4af" stroke-width="1.5"/>
@@ -183,7 +183,7 @@
   <text class="f" x="0" y="30" text-anchor="middle" font-size="8.5" fill="rgba(255,255,255,.5)">CO₂</text>
 </g>
 
-<!-- Water/H₂O (GSE 42) -->
+<!-- Water/H₂O -->
 <g transform="translate(468,348)">
   <circle r="14" fill="#fb7185"/>
   <circle r="18" fill="none" stroke="#fda4af" stroke-width="1.5"/>
@@ -204,7 +204,6 @@
 <circle cx="558" cy="258" r="36" fill="none" stroke="#fb7185" stroke-width="2.5" class="cn-burst"/>
 <text class="f" x="558" y="253" text-anchor="middle" font-size="9.5" font-weight="700" fill="#0a0f1e">Photo-</text>
 <text class="f" x="558" y="266" text-anchor="middle" font-size="9.5" font-weight="700" fill="#0a0f1e">synthesis</text>
-<text class="f" x="558" y="305" text-anchor="middle" font-size="8.5" fill="rgba(255,255,255,.4)">GSE 48</text>
 
 <!-- Child edges (flow) -->
 <path class="edge-flow" d="M584 240 Q616 218 636 210" fill="none" stroke="#fb7185" stroke-width="2" stroke-linecap="round"/>
@@ -218,7 +217,6 @@
 <circle cx="648" cy="208" r="16" fill="none" stroke="#fb7185" stroke-width="2.5" class="ripple1"/>
 <text class="f" x="648" y="204" text-anchor="middle" font-size="7.5" fill="rgba(10,10,20,.9)">Cellular</text>
 <text class="f" x="648" y="215" text-anchor="middle" font-size="7.5" fill="rgba(10,10,20,.9)">Respiration</text>
-<text class="f" x="648" y="232" text-anchor="middle" font-size="8" fill="rgba(255,255,255,.4)">GSE 52</text>
 
 <!-- Child 2: Food Chains -->
 <circle cx="652" cy="252" r="15" class="child2" filter="url(#glsSC)"/>
@@ -227,7 +225,6 @@
 <circle cx="652" cy="252" r="15" fill="none" stroke="#fb7185" stroke-width="2.5" class="ripple2"/>
 <text class="f" x="652" y="248" text-anchor="middle" font-size="8" fill="rgba(10,10,20,.9)">Food</text>
 <text class="f" x="652" y="259" text-anchor="middle" font-size="8" fill="rgba(10,10,20,.9)">Chains</text>
-<text class="f" x="652" y="276" text-anchor="middle" font-size="8" fill="rgba(255,255,255,.4)">GSE 50</text>
 
 <!-- Child 3: Carbon Cycle -->
 <circle cx="648" cy="294" r="14" class="child3" filter="url(#glsSC)"/>
@@ -236,7 +233,6 @@
 <circle cx="648" cy="294" r="14" fill="none" stroke="#fb7185" stroke-width="2.5" class="ripple3"/>
 <text class="f" x="648" y="290" text-anchor="middle" font-size="8" fill="rgba(10,10,20,.9)">Carbon</text>
 <text class="f" x="648" y="301" text-anchor="middle" font-size="8" fill="rgba(10,10,20,.9)">Cycle</text>
-<text class="f" x="648" y="316" text-anchor="middle" font-size="8" fill="rgba(255,255,255,.4)">GSE 54</text>
 
 <!-- Cross-discipline edge to physics node -->
 <path class="cross-edge" d="M664 208 Q690 208 706 218" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="4 4"/>

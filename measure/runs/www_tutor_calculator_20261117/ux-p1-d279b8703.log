@@ -1,0 +1,142 @@
+MEASURE UX BROWSER REVIEW LOG
+track: www_tutor_calculator_20261117
+phase: Phase 1 (the commission calculator)
+role: measure-ux-browser-review
+route: opencode-go/mimo-v2.6-flash (allowed Go route)
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+audited_head_sha: d279b870341c067c33fc884ae8863b5428487c17
+head_check: git rev-parse HEAD returns d279b870341c067c33fc884ae8863b5428487c17 and git status is clean at start and end
+verdict: PASS
+status: pass
+result_file: measure/runs/www_tutor_calculator_20261117/ux-p1-d279b8703.json
+capture_directory: measure/runs/www_tutor_calculator_20261117/ux-p1-d279b8703/
+
+1. SCOPE AND INPUTS READ
+
+Read spec 5.3, decisions D-5 to D-11, AC-9 to AC-11, plan task 1.8, and
+test-strategy section 4 (viewports 390/768/980/1280, locales en/th/zh).
+Read the exact phase diff from phase_base_sha to HEAD: page.tsx, globals.css,
+tutor-commission-calculator.tsx, tutor-commission.ts, the locale file, and
+their tests. PROJECT_DEV_URL is unset in this audit environment, so I served
+the audited build at http://127.0.0.1:3107, the port of task 1.8.
+
+2. SERVE
+
+The existing .next output was stale: BUILD_ID 08:50:42 predates the 09:35:57
+fix in tutor-commission.ts. I ran a fresh build through heavy-run. Attempt 1
+exits 1 on the known Next.js security-advisory nudge; attempt 2 exits 0.
+BUILD_ID is 2026-11-17 10:01:32 and no src file is newer than it.
+Four server jobs ran through heavy-run with HEAVY_ALLOW_SERVER=1, one at a
+time: server on PORT=3107 in the background, port wait, the check script,
+then kill. Every job prints SERVER_UP=1 and SCRIPT_EXIT=0 (the layout job
+first exited 1 on my own ReferenceError and passed on rerun). Port 3107
+refuses connections after every job. heavy-run status shows holder none and
+waiting 0. I stopped the server after the last job.
+
+3. CHECKS (one line per check, all pass)
+
+check 01: section order tutorRole < calculator < commitments < faq holds at 12/12 screens (compareDocumentPosition, faq found by its accordion buttons).
+check 02: no horizontal scroll at 390, 768, 980 and 1280 px in en, th and zh, in every state read (document scrollWidth against clientWidth).
+check 03: no clipped figure and no card text overflow: the overflow-hidden clip scan and the viewport-bleed scan report 0 offenders on every state read at every screen.
+check 04: default state at 12/12 screens shows 0 money, the explain.zero line, 0 pressed presets and 0 legs (spec D-6).
+check 05: presets 1 to 3 at 12/12 screens show exactly one aria-pressed button, price 3000 (D-5), the setup line, and the pinned figures 5,520/5,354.40, 12,655.69/8,010/139.37/4,506.32, 18,709.44/12,015/200.83/6,493.61.
+check 06: leg count 0 to 4 at 12/12 screens gives graph leg rows equal to the count, a new leg starts at 3 students, and the identity holds.
+check 07: hand edit (preset 2 then own students 5) at 12/12 screens gives 18,709.44 - 8,010 - 320.98 = 10,378.46 and clears aria-pressed (D-7).
+check 08: typed extreme price 1e307 in the default state at 12/12 screens shows zero money in every money row, rate 0%, no error string, no page error, and the input accepts the value.
+check 09: result rows read in spec order in en, th and zh; hero equals gross - downline - tax on all 120 state records; ownGV equals price x own students; networkGV equals price x (own + leg students); rate agrees with gross/network within 0.05pp; downline equals the sum of leg payouts; tax equals 3% of the pre-tax payout.
+check 10: graph bars agree with the numbers: each bar share is within 1% of payout/gross, the shares sum to about 100%, graph gross equals result gross, track widths are equal, and leg rows equal the leg count.
+check 11: the rate curve marks the current volume: the marker cx equals min(network volume, 500,000)/500,000 x 100 within 0.05 at every state, and the svg carries aria-hidden="true".
+check 12: keyboard only: Tab reaches the 3 presets and all 5 inputs at 12/12 screens; every calculator focus stop has the ring (box-shadow and :focus-visible); ArrowUp changes the leg count 0 to 1 and 2 to 3; the new leg row appears with 3 students; focus stays on the input with the ring visible.
+check 13: locale rendering: Thai script is present on all th screens; zh calculator text equals en text at all 4 widths (D-10); row labels are Thai on th and English on zh.
+check 14: target sizes and hero: preset buttons measure 44px and inputs 44px minimum at 12/12 screens; the hero figure is 36px at 390 px and 48px above.
+check 15: the result card carries aria-live="polite" and reports 7 subtree mutations after a figure change at every screen.
+check 16: no layout shift when a figure changes width: price 3,000 to 30,000 with a constant explain line moves card, notes, disclaimer and section by 0 px at 12/12 screens (ux-p1-layout-refocus.json, figures 12,000 to 120,000 and hero 5,354.40 to 76,614.04).
+check 17: accessibility names: at default and at preset 2, all inputs and all buttons carry accessible names, exactly one button reports pressed after a preset click and none at default, at 12/12 screens (ux-p1-a11y.json, offline recount of the stored nodes).
+check 18: no page error and no NaN/Infinity/undefined/Error string in the calculator on any state at any screen.
+check 19: agreement with p1-checks.json: 60 shared state records and 6 shared tab-path records compared, 0 disagreements.
+
+4. AGREEMENT WITH THE REFERENCE RUN
+
+My run agrees with measure/runs/www_tutor_calculator_20261117/p1-captures/
+p1-checks.json. I name no disagreement. Shared fields compared per state:
+gross, downline, tax, net, legSum, you, graphGross, graphLegRows, legCount,
+identityOk, graphOk, legRowsMatch, noHorizontalScroll, price, pressed list,
+legInputs and the 3-section order. The tab path reaches the same input ids
+and the same preset buttons at all 6 shared locale/width pairs. Scope
+differences only: my run adds 768 px, zh, aria-live, layout, extreme price
+and accessibility snapshots, which the reference does not cover.
+
+5. CAPTURES
+
+37 deliverable PNGs in the capture directory, named <locale>-<width>-<state>:
+12 default section shots (en, th, zh at 390/768/980/1280), 12 full-page
+default shots, 12 preset shots (en and th at 390 and 1280, preset 1/2/3),
+and en-390-keyboard-focus.png. The directory also holds 5 temporary
+band/crop PNGs that verify the focus screenshot by pixel sample, 3 run
+scripts and 3 result JSON files. I reviewed these screenshots by eye:
+en-390-default, en-1280-default, en-390-preset-3, en-1280-preset-3,
+th-390-default, th-1280-preset-3, zh-390-default, en-390-keyboard-focus.
+Visual hierarchy, spacing and card layout match the spec; the sticky site
+header overlaps the element shots, which is a capture artifact.
+
+6. HARNESS SELF-CORRECTIONS (transparency)
+
+The first main run printed 132 failures. All of them were bugs in my own
+check formulas: the downline check used gross - downline instead of the
+downline row; the rate check used the displayed 1-decimal rate instead of
+the implied rate; the keyboard bar count forgot the "Your payout" row; the
+layout disclaimer selector was scoped to the section. The corrected offline
+recount over the stored records reports 0 real issues (120 state records).
+The accessibility run summary counted the string "true" against boolean
+true and printed a false pressedButtons failure; the offline recount of the
+stored nodes reports 0 issues (12 screens). The focus screenshot first read
+as a preset state; pixel sample settles it: all three preset centers are
+white, the price input shows the ring rgb(6,95,70) and the focused selection.
+
+7. OPEN OBSERVATION (nonblocking, owner decides)
+
+F1: price typed 1e307 with 4 own students shows 4e+307 in the two volume
+rows while gross, downline, tax and net show 0. No error text and no page
+error appear. The required gate passes in the default state: price 1e307
+shows zero money in every money row. The huge volume matches the pinned
+module contract A6, which keeps networkVolume finite and gross at 0. This
+is recorded as nonblocking_findings[0] in the result JSON.
+
+8. HYGIENE
+
+No product file, test, plan or spec changed. git status stays clean. All
+writes stay in the capture directory and the two result files. The server
+is stopped and the heavy lock is free. No deploy and no push.
+
+MEASURE_AGENT_RESULT
+role: measure-ux-browser-review
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 1 (the commission calculator)
+commits: none
+capture_directory: measure/runs/www_tutor_calculator_20261117/ux-p1-d279b8703/
+check 01: section order tutorRole < calculator < commitments < faq at 12/12 screens - pass
+check 02: no horizontal scroll at 390/768/980/1280 px in en/th/zh in every state - pass
+check 03: no clipped figure and no card text overflow, 0 scan offenders - pass
+check 04: default state 0 money, zero line, no pressed preset, 0 legs at 12/12 screens - pass
+check 05: presets 1-3 pressed state, price 3000 (D-5), pinned figures at 12/12 screens - pass
+check 06: leg count 0-4, leg rows match, new leg starts at 3 students, identity holds - pass
+check 07: hand edit 18,709.44 - 8,010 - 320.98 = 10,378.46 and pressed cleared (D-7) - pass
+check 08: extreme price 1e307 default state shows zero money, no error, at 12/12 screens - pass
+check 09: result row order and gross - downline - tax = net on all 120 state records - pass
+check 10: graph bars within 1% of payout shares, sum about 100%, leg rows equal count - pass
+check 11: rate curve marker cx matches min(network, 500,000) and svg is aria-hidden - pass
+check 12: keyboard reaches 3 presets and 5 inputs, ArrowUp changes legs, ring visible - pass
+check 13: Thai renders, zh calculator copy equals en (D-10), labels localised - pass
+check 14: preset and input targets 44px, hero 36px at 390 and 48px above - pass
+check 15: result card aria-live=polite with 7 mutations after a figure change - pass
+check 16: 0 px layout shift on card, notes, disclaimer and section when figures widen - pass
+check 17: accessibility names on all inputs and buttons, one pressed button at preset 2 - pass
+check 18: no page error and no NaN/Infinity/undefined/Error string anywhere - pass
+check 19: agreement with p1-checks.json, 60 states and 6 tab paths, 0 disagreements - pass
+tests_run: build through heavy-run (attempt 1 exit 1 on the known security nudge, attempt 2 exit 0); ux-p1-check.mjs job SERVER_UP=1 SCRIPT_EXIT=0; ux-p1-layout-refocus.mjs job rerun SCRIPT_EXIT=0; ux-p1-a11y.mjs job SCRIPT_EXIT=0; offline recounts of ux-p1-checks.json (120 states, 0 issues) and ux-p1-a11y.json (12 screens, 0 issues)
+files_changed: measure/runs/www_tutor_calculator_20261117/ux-p1-d279b8703.json, measure/runs/www_tutor_calculator_20261117/ux-p1-d279b8703.log, measure/runs/www_tutor_calculator_20261117/ux-p1-d279b8703/ (37 deliverable screenshots, 5 temporary verification crops, 3 run scripts, 3 result JSON files)
+plan_updates: none
+known_failures: none blocking. One nonblocking observation F1: extreme price 1e307 with 4 own students shows 4e+307 in the volume rows while payout rows show 0; no error and no crash; the required zero-money gate passes in the default state; owner decides.
+handoff: Verdict PASS. My independent run agrees with p1-captures/p1-checks.json on all 60 shared states and all 6 shared tab paths; I name no disagreement. The first main run printed 132 failures that were my own check-formula bugs; the corrected recount reports 0 real issues, and the corrections are recorded in section 6. F1 stays nonblocking for the owner. PROJECT_DEV_URL was unset here; the audited build ran on port 3107 and is stopped. Phase 2 task 2.2 inserts the screens section between tutorRole and the calculator (D-8), so the 4-section order check must keep passing.
+END_MEASURE_AGENT_RESULT

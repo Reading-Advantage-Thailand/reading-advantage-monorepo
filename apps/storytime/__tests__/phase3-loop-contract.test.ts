@@ -28,8 +28,14 @@ const PREVIOUS_PIN = "cf30bb2eee55806bf8830b3a3e69e4f6044847e6";
 /** The A-42 draft pin that task 3.8 received. */
 const A_42_PIN = "cad0307cad31a3131dc3a06e9e773537a1a6219b";
 
-/** The pin of the release of 2026-11-20, after the r3 take of 2026-11-09 (plan task 3.2). */
-const RELEASE_PIN = "953f798ea309cc10abd5538c202e05ff31a2320d";
+/**
+ * The pin of the release of 2026-11-20, after Daniel approved weeks 2 to 7 (plan task 3.0b).
+ *
+ * The published pin (the Workbooks commit 1c5385a6e8a7243eaa102a3774cce7f2f0d80d8c) holds
+ * `meta.status` `published` in w01 to w07 and the approval parts of w02 to w07 approved.
+ * w08 stays a draft.
+ */
+const RELEASE_PIN = "1c5385a6e8a7243eaa102a3774cce7f2f0d80d8c";
 
 /** A week as plain JSON, for a broken copy. */
 type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any

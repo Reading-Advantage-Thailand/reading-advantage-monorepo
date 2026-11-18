@@ -16,7 +16,7 @@ export const en = {
         "priceNote": "The price adapts to the market.",
         "cta": "Ask about a class",
         "ctaTutor": "Become a tutor",
-        "imageAlt": "Students and a tutor around a table with a printed workbook and a tablet",
+        "imageAlt": "A tutor smiles at three schoolchildren at a small table in a bright classroom; a girl holds the Primary Advantage Origins 2 workbook, a boy the student app on a phone.",
         "factsLabel": "Tutor Advantage at a glance"
     },
     classTour: {
@@ -113,17 +113,17 @@ export const en = {
             {
                 "name": "Primary Advantage Origins 2",
                 "series": "Primary Advantage",
-                "alt": "Illustrated Primary Advantage workbook art"
+                "alt": "Primary Advantage Origins 2 book cover"
             },
             {
                 "name": "Primary Advantage Origins 3.1",
                 "series": "Primary Advantage",
-                "alt": "Warm illustrated Primary Advantage workbook art"
+                "alt": "Primary Advantage Origins 3.1 book cover"
             },
             {
                 "name": "Reading Advantage Origins 2",
                 "series": "Reading Advantage",
-                "alt": "Students in a classroom using a workbook and a tablet"
+                "alt": "Reading Advantage Origins 2 book cover"
             }
         ],
         "note": "Each workbook has 14 lessons and a digital twin."
@@ -133,12 +133,11 @@ export const en = {
         "heading": "Practice speaking English with Reedy",
         "description": "After a lesson, students can practice speaking English with Reedy, an AI voice coach, in the LINE student app. Reedy talks with them about the lesson in simple English, with short Thai hints.",
         "points": [
-            "Live in Tutor Advantage only. It is not in Primary Advantage or Reading Advantage.",
             "Open to students with an active class package, on the lessons they finished.",
             "After each practice, students see one thing they did well, one thing to try next time, and a sentence to say again.",
             "Before they start, students can check their microphone and get tips."
         ],
-        "alt": "Chibi Quest art of a clearing with an oak tree"
+        "alt": "Reedy, the speaking coach, is marked Preview. A wizard avatar stands in a forest next to a Start talking button."
     },
     tutorRole: {
         "eyebrow": "Become a tutor",
@@ -148,10 +147,73 @@ export const en = {
             "You teach the class. The class package is one workbook, about 25 hours of teaching.",
             "A unilevel commission model pays tutors for the classes they teach and for the tutors they bring into the network.",
             "Commission is calculated by the system and settled each month.",
-            "We do not publish income figures. Ask us for the details."
+            "The calculator on this page shows examples. Ask us about your own case."
         ],
         "cta": "Apply as a tutor",
-        "alt": "A tutor asking a student a question during a class"
+        "alt": "A tutor with three schoolchildren in a bright classroom; one holds the Primary Advantage Origins 2 workbook, another the student app on a phone.",
+    },
+    screens: {
+        "eyebrow": "INSIDE THE APPS",
+        "heading": "Inside the student app",
+        "description": "One lesson in the LINE student app, step by step. The app follows the printed workbook.",
+        "items": [
+            { "caption": "A writing task from the printed workbook: the student picks a sentence frame and writes the answer.", "alt": "Student app guided writing screen with sentence frames" },
+            { "caption": "The student types the answer in the app, on the same lesson as the printed page.", "alt": "Student app short-answer screen with the question and a typed answer" },
+            { "caption": "After the answer, the app shows the AI check and the points.", "alt": "Student app screen with the AI check and the points for one answer" },
+            { "caption": "At the end of the lesson, the student rates the effort and writes a note for the tutor.", "alt": "Student app end-of-lesson screen with the student's rating and a note for the tutor" },
+            { "caption": "The learning record: the lessons, the points, and today's class.", "alt": "Student app learning record with the lesson count, the points, and today's class" }
+        ]
+    },
+    calculator: {
+        "eyebrow": "THE COMMISSION CALCULATOR",
+        "heading": "See how one month's commission works",
+        "description": "The calculator uses the same formula as our settlement system. Choose the price, your students, and your legs, and see the month. Every figure is an example, not a promise of income.",
+        "volumeNote": "Volume is the class package price times the students who paid in the month.",
+        "rateNote": "The rate starts near 40% on a small volume. It passes 50% at 20,000 baht and approaches 71% at very high volume.",
+        "payoutNote": "Your payout is the rate times the network volume, minus the commission of each leg. 3% withholding tax comes off a positive payout.",
+        "inputs": {
+            "price": "Class package price (baht)",
+            "priceNote": "Default: 3,000 baht. The price adapts to the market.",
+            "ownStudents": "Personal students this month",
+            "legCount": "Legs with students",
+            "legStudents": "Students in this leg",
+            "addLeg": "Add a leg",
+            "removeLeg": "Remove a leg"
+        },
+        "results": {
+            "ownGV": "Your own volume",
+            "networkGV": "Network volume",
+            "rate": "Commission rate",
+            "gross": "Gross commission",
+            "legCommissions": "Leg commissions",
+            "tax": "Withholding tax (3%)",
+            "net": "Net payout"
+        },
+        "graph": {
+            "title": "How this month's payout is built",
+            "caption": "Each leg has its own bar: the volume it brings and the commission it earns on its own. Your payout before tax is your rate on the whole volume, minus the commissions of the legs.",
+            "ownBar": "Your own students",
+            "legBar": "Leg {n}",
+            "grossBar": "Gross at your rate",
+            "legCommissionBar": "Commission of all legs",
+            "netBar": "Your payout after 3% tax",
+            "axisBaht": "Baht",
+            "rateTitle": "Your rate for the network volume",
+            "rateAxis": "Rate",
+            "ratePoint": "This month"
+        },
+        "explain": {
+            "ownOnly": "No legs this month, so the whole gross amount is the payout.",
+            "withLegs": "Your rate applies to the whole network volume. The commission of each leg comes off, and 3% withholding tax comes off the rest.",
+            "zero": "Add students to see a month.",
+            "needsOwnStudents": "Your own class unlocks your network commission. Add at least one personal student this month, and your legs count toward your payout."
+        },
+        "presets": [
+            { "name": "A new tutor", "setup": "Four personal students, no legs.", "result": "12,000 baht of volume at a rate of 46%. The gross is 5,520 baht, and with no legs it is all payout. After 3% withholding tax: 5,354 baht." },
+            { "name": "A tutor with two legs", "setup": "Two personal students, and two legs with three students each.", "result": "24,000 baht of network volume at a rate of 52.7%. The gross is 12,656 baht, and the two legs earn 8,010 baht of it. The payout is 4,646 baht before tax, and 4,506 baht after 3% withholding tax." },
+            { "name": "A small team with three legs", "setup": "Two personal students, and three legs with four students each.", "result": "42,000 baht of network volume at a rate of 59.1%. The gross is 24,833 baht, and the three legs earn 16,560 baht of it. The payout is 8,273 baht before tax, and 8,025 baht after 3% withholding tax." }
+        ],
+        "disclaimer": "Every figure in these examples is an illustration. Commission depends on the classes that run and are paid for."
     },
     faq: {
         "eyebrow": "Questions",
@@ -171,7 +233,7 @@ export const en = {
             },
             {
                 "question": "Who can use Reedy voice practice?",
-                "answer": "Students with an active Tutor Advantage class package, on the lessons they finished. Reedy is not available in Primary Advantage or Reading Advantage."
+                "answer": "Students with an active Tutor Advantage class package, on the lessons they finished."
             },
             {
                 "question": "How does a lesson run?",
@@ -179,7 +241,7 @@ export const en = {
             },
             {
                 "question": "How do tutors earn?",
-                "answer": "Tutors earn commission under a unilevel commission model, and the system settles it monthly. We do not publish income figures. Use the contact page to ask about the details."
+                "answer": "Tutors earn commission under a unilevel commission model, and the system settles it monthly. The rate rises with the network volume of the month. The calculator on this page shows examples; the real figure comes from the classes that run and are paid for."
             }
         ]
     },
@@ -233,7 +295,7 @@ export const en = {
         features: [
             { title: "Printed Workbook", description: "One printed workbook of 14 lessons for each class package." },
             { title: "Digital Twin", description: "Every workbook has a digital version for practice between classes." },
-            { title: "Reedy Voice Practice", description: "Reedy voice practice is live in Tutor Advantage only. It is open to students with an active class package, on lessons they finished." },
+            { title: "Reedy Voice Practice", description: "Reedy voice practice is open to students with an active class package, on lessons they finished." },
             { title: "Flashcards and Games", description: "Each class adds flashcards, two games, a pair conversation, and a wrap-up." },
             { title: "Local Tutors", description: "A tutor in your community teaches the class in person." },
             { title: "Mastery Advantage", description: "Workbook content is tagged to the Mastery Advantage knowledge graph, which maps skills and schedules review." },
@@ -292,7 +354,7 @@ export const th = {
         "priceNote": "ราคาปรับตามตลาด",
         "cta": "สอบถามเรื่องคลาส",
         "ctaTutor": "สมัครเป็นติวเตอร์",
-        "imageAlt": "นักเรียนและติวเตอร์นั่งรอบโต๊ะพร้อมเวิร์กบุ๊กที่พิมพ์เป็นเล่มและแท็บเล็ต",
+        "imageAlt": "ติวเตอร์ยิ้มให้เด็กนักเรียนสามคนที่โต๊ะตัวเล็กในห้องเรียนที่สว่าง เด็กหญิงถือเวิร์กบุ๊ก Primary Advantage Origins 2 เด็กชายถือโทรศัพท์ที่เปิดแอปนักเรียน",
         "factsLabel": "Tutor Advantage โดยสรุป"
     },
     classTour: {
@@ -389,17 +451,17 @@ export const th = {
             {
                 "name": "Primary Advantage Origins 2",
                 "series": "Primary Advantage",
-                "alt": "ภาพประกอบเวิร์กบุ๊ก Primary Advantage"
+                "alt": "ปกหนังสือ Primary Advantage Origins 2"
             },
             {
                 "name": "Primary Advantage Origins 3.1",
                 "series": "Primary Advantage",
-                "alt": "ภาพประกอบโทนอุ่นของเวิร์กบุ๊ก Primary Advantage"
+                "alt": "ปกหนังสือ Primary Advantage Origins 3.1"
             },
             {
                 "name": "Reading Advantage Origins 2",
                 "series": "Reading Advantage",
-                "alt": "นักเรียนในห้องเรียนใช้เวิร์กบุ๊กและแท็บเล็ต"
+                "alt": "ปกหนังสือ Reading Advantage Origins 2"
             }
         ],
         "note": "เวิร์กบุ๊กแต่ละเล่มมี 14 บทเรียนและเวอร์ชันดิจิทัล"
@@ -409,12 +471,11 @@ export const th = {
         "heading": "ฝึกพูดภาษาอังกฤษกับ Reedy",
         "description": "หลังบทเรียน นักเรียนฝึกพูดภาษาอังกฤษกับ Reedy โค้ชเสียง AI ในแอปนักเรียนบน LINE Reedy คุยกับนักเรียนเรื่องบทเรียนด้วยภาษาอังกฤษง่ายๆ พร้อมคำใบ้ภาษาไทยสั้นๆ",
         "points": [
-            "ใช้ได้ใน Tutor Advantage เท่านั้น ไม่มีใน Primary Advantage หรือ Reading Advantage",
             "เปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว",
             "หลังฝึกแต่ละครั้ง นักเรียนเห็นสิ่งที่ทำได้ดีหนึ่งอย่าง สิ่งที่ควรลองครั้งหน้าหนึ่งอย่าง และประโยคหนึ่งประโยคให้พูดซ้ำ",
             "ก่อนเริ่ม นักเรียนตรวจไมโครโฟนและดูเคล็ดลับได้"
         ],
-        "alt": "ภาพ Chibi Quest ลานโล่งที่มีต้นโอ๊ก"
+        "alt": "รีดี้ โค้ชฝึกพูด มีป้ายทดลอง ตัวละครพ่อมดยืนอยู่ในป่าข้างปุ่มเริ่มพูดคุย"
     },
     tutorRole: {
         "eyebrow": "เป็นติวเตอร์",
@@ -424,10 +485,73 @@ export const th = {
             "คุณเป็นผู้สอนคลาส หนึ่งแพ็กเกจคลาสคือหนึ่งเวิร์กบุ๊ก ใช้เวลาสอนประมาณ 25 ชั่วโมง",
             "โมเดลคอมมิชชันแบบยูนิเลเวลจ่ายค่าคอมมิชชันให้ติวเตอร์ตามคลาสที่สอนและติวเตอร์ที่ชวนเข้าเครือข่าย",
             "ระบบคำนวณค่าคอมมิชชันและชำระทุกเดือน",
-            "เราไม่เผยแพร่ตัวเลขรายได้ สอบถามรายละเอียดได้"
+            "เครื่องคำนวณในหน้านี้แสดงตัวอย่าง ทักมาคุยกับเราเรื่องกรณีของคุณเองได้"
         ],
         "cta": "สมัครเป็นติวเตอร์",
-        "alt": "ติวเตอร์ถามคำถามนักเรียนระหว่างคลาส"
+        "alt": "ติวเตอร์กับเด็กนักเรียนสามคนในห้องเรียนที่สว่าง คนหนึ่งถือเวิร์กบุ๊ก Primary Advantage Origins 2 อีกคนถือโทรศัพท์ที่เปิดแอปนักเรียน",
+    },
+    screens: {
+        "eyebrow": "ภายในแอป",
+        "heading": "ในแอปของนักเรียน",
+        "description": "บทเรียนหนึ่งบทในแอปนักเรียนบน LINE ทีละขั้นตอน แอปทำตามเวิร์กบุ๊กที่พิมพ์เป็นเล่ม",
+        "items": [
+            { "caption": "โจทย์เขียนจากเวิร์กบุ๊กที่พิมพ์เป็นเล่ม นักเรียนเลือกโครงประโยค แล้วเขียนคำตอบเอง", "alt": "หน้าจอฝึกเขียนในแอปนักเรียน พร้อมโครงประโยคให้เลือก" },
+            { "caption": "นักเรียนพิมพ์คำตอบในแอป ในบทเดียวกับหน้าที่พิมพ์เป็นเล่ม", "alt": "หน้าจอตอบคำถามสั้นในแอปนักเรียน พร้อมคำถามและคำตอบที่พิมพ์ไว้" },
+            { "caption": "หลังตอบคำถาม แอปจะแสดงผลตรวจของ AI และคะแนนที่ได้", "alt": "หน้าจอแอปนักเรียนที่แสดงผลตรวจของ AI และคะแนนของคำตอบหนึ่งข้อ" },
+            { "caption": "ตอนท้ายบทเรียน นักเรียนให้คะแนนความตั้งใจของตัวเอง และเขียนข้อความถึงติวเตอร์", "alt": "หน้าจอท้ายบทเรียนในแอปนักเรียน ที่มีคะแนนที่นักเรียนให้ และข้อความถึงติวเตอร์" },
+            { "caption": "บันทึกการเรียนรู้: บทเรียนที่เรียนแล้ว คะแนนที่ได้ และคลาสของวันนี้", "alt": "หน้าจอบันทึกการเรียนรู้ในแอปนักเรียน ที่มีจำนวนบทเรียน คะแนนที่ได้ และคลาสของวันนี้" }
+        ]
+    },
+    calculator: {
+        "eyebrow": "เครื่องคำนวณค่าคอมมิชชัน",
+        "heading": "ดูว่าค่าคอมมิชชันของหนึ่งเดือนคิดอย่างไร",
+        "description": "เครื่องคำนวณนี้ใช้สูตรเดียวกับระบบสรุปยอดของเรา เลือกราคา จำนวนนักเรียนของคุณเอง และจำนวนสาย แล้วดูยอดของเดือนนั้น ตัวเลขทุกตัวเป็นตัวอย่าง ไม่ใช่คำสัญญาเรื่องรายได้",
+        "volumeNote": "ยอดรวม คือราคาแพ็กเกจคลาสคูณกับจำนวนนักเรียนที่จ่ายเงินในเดือนนั้น",
+        "rateNote": "อัตราเริ่มต้นใกล้ 40% เมื่อยอดรวมยังน้อย ผ่าน 50% ที่ 20,000 บาท และเข้าใกล้ 71% เมื่อยอดรวมสูงมาก",
+        "payoutNote": "เงินที่คุณได้รับ คืออัตราคูณกับยอดรวมของเครือข่าย หักด้วยค่าคอมมิชชันของแต่ละสาย แล้วหักภาษีหัก ณ ที่จ่าย 3% จากยอดที่เป็นบวก",
+        "inputs": {
+            "price": "ราคาแพ็กเกจคลาส (บาท)",
+            "priceNote": "ค่าเริ่มต้น 3,000 บาท ราคาปรับตามตลาด",
+            "ownStudents": "นักเรียนในคลาสของคุณเองเดือนนี้",
+            "legCount": "จำนวนสายที่มีนักเรียน",
+            "legStudents": "นักเรียนในสายนี้",
+            "addLeg": "เพิ่มสาย",
+            "removeLeg": "ลบสาย"
+        },
+        "results": {
+            "ownGV": "ยอดรวมของคุณเอง",
+            "networkGV": "ยอดรวมของเครือข่าย",
+            "rate": "อัตราค่าคอมมิชชัน",
+            "gross": "ค่าคอมมิชชันก่อนหัก",
+            "legCommissions": "ค่าคอมมิชชันของสาย",
+            "tax": "ภาษีหัก ณ ที่จ่าย (3%)",
+            "net": "เงินที่ได้รับสุทธิ"
+        },
+        "graph": {
+            "title": "ยอดจ่ายเดือนนี้ประกอบขึ้นอย่างไร",
+            "caption": "แต่ละสายมีแท่งของตัวเอง: ยอดที่สายนั้นพามา และค่าคอมมิชชันที่สายนั้นได้เอง ยอดจ่ายของคุณก่อนหักภาษี คืออัตราของคุณคูณกับยอดรวมทั้งเครือข่าย ลบด้วยค่าคอมมิชชันของทุกสาย",
+            "ownBar": "นักเรียนในคลาสของคุณเอง",
+            "legBar": "สาย {n}",
+            "grossBar": "ยอดก่อนหักตามอัตราของคุณ",
+            "legCommissionBar": "ค่าคอมมิชชันของทุกสาย",
+            "netBar": "ยอดจ่ายของคุณหลังหักภาษี 3%",
+            "axisBaht": "บาท",
+            "rateTitle": "อัตราของคุณตามยอดรวมของเครือข่าย",
+            "rateAxis": "อัตรา",
+            "ratePoint": "เดือนนี้"
+        },
+        "explain": {
+            "ownOnly": "เดือนนี้ไม่มีสาย เงินก่อนหักทั้งหมดจึงเป็นเงินที่คุณได้รับ",
+            "withLegs": "อัตราของคุณใช้กับยอดรวมทั้งเครือข่าย จากนั้นหักค่าคอมมิชชันของแต่ละสายออก และหักภาษีหัก ณ ที่จ่าย 3% จากยอดที่เหลือ",
+            "zero": "ใส่จำนวนนักเรียนเพื่อดูยอดของเดือน",
+            "needsOwnStudents": "คลาสของคุณเองปลดล็อกค่าคอมมิชชันจากเครือข่าย เพิ่มนักเรียนในคลาสของคุณเองอย่างน้อย 1 คนในเดือนนี้ สายของคุณก็นับเข้ายอดจ่ายของคุณ"
+        },
+        "presets": [
+            { "name": "ติวเตอร์ใหม่", "setup": "นักเรียนในคลาสของคุณเอง 4 คน ไม่มีสาย", "result": "ยอด 12,000 บาท ที่อัตรา 46% ยอดก่อนหักคือ 5,520 บาท และเพราะไม่มีสาย ทั้งหมดจึงเป็นยอดจ่าย หลังหักภาษีหัก ณ ที่จ่าย 3%: 5,354 บาท" },
+            { "name": "ติวเตอร์ที่มีสองสาย", "setup": "นักเรียนในคลาสของคุณเอง 2 คน และ 2 สาย สายละ 3 คน", "result": "ยอดรวมของเครือข่าย 24,000 บาท ที่อัตรา 52.7% ยอดก่อนหักคือ 12,656 บาท และสองสายได้ค่าคอมมิชชัน 8,010 บาทจากยอดนี้ ยอดจ่ายคือ 4,646 บาทก่อนหักภาษี และ 4,506 บาทหลังหักภาษีหัก ณ ที่จ่าย 3%" },
+            { "name": "ทีมเล็กที่มีสามสาย", "setup": "นักเรียนในคลาสของคุณเอง 2 คน และ 3 สาย สายละ 4 คน", "result": "ยอดรวมของเครือข่าย 42,000 บาท ที่อัตรา 59.1% ยอดก่อนหักคือ 24,833 บาท และสามสายได้ค่าคอมมิชชัน 16,560 บาทจากยอดนี้ ยอดจ่ายคือ 8,273 บาทก่อนหักภาษี และ 8,025 บาทหลังหักภาษีหัก ณ ที่จ่าย 3%" }
+        ],
+        "disclaimer": "ตัวเลขทุกตัวในตัวอย่างนี้เป็นการอธิบายให้เห็นภาพ ค่าคอมมิชชันขึ้นอยู่กับคลาสที่เปิดสอนและมีการจ่ายเงินจริง"
     },
     faq: {
         "eyebrow": "คำถาม",
@@ -447,7 +571,7 @@ export const th = {
             },
             {
                 "question": "ใครใช้การฝึกพูดกับ Reedy ได้บ้าง",
-                "answer": "นักเรียนที่มีแพ็กเกจคลาส Tutor Advantage ที่ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว Reedy ไม่มีใน Primary Advantage หรือ Reading Advantage"
+                "answer": "นักเรียนที่มีแพ็กเกจคลาส Tutor Advantage ที่ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว"
             },
             {
                 "question": "บทเรียนดำเนินอย่างไร",
@@ -455,7 +579,7 @@ export const th = {
             },
             {
                 "question": "ติวเตอร์ได้รายได้อย่างไร",
-                "answer": "ติวเตอร์ได้ค่าคอมมิชชันตามโมเดลคอมมิชชันแบบยูนิเลเวล และระบบชำระทุกเดือน เราไม่เผยแพร่ตัวเลขรายได้ สอบถามรายละเอียดได้ที่หน้าติดต่อ"
+                "answer": "ติวเตอร์ได้รับค่าคอมมิชชันตามโมเดลคอมมิชชันแบบยูนิเลเวล และระบบสรุปยอดให้ทุกเดือน อัตราจะสูงขึ้นตามยอดรวมของเครือข่ายในเดือนนั้น เครื่องคำนวณในหน้านี้แสดงตัวอย่าง ตัวเลขจริงมาจากคลาสที่เปิดสอนและมีการจ่ายเงินจริง"
             }
         ]
     },
@@ -509,7 +633,7 @@ export const th = {
         features: [
             { title: "เวิร์กบุ๊กพิมพ์เป็นเล่ม", description: "เวิร์กบุ๊กที่พิมพ์เป็นเล่มหนึ่งเล่ม 14 บทเรียนต่อหนึ่งแพ็กเกจคลาส" },
             { title: "เวอร์ชันดิจิทัล", description: "เวิร์กบุ๊กทุกเล่มมีเวอร์ชันดิจิทัลไว้ฝึกระหว่างคลาส" },
-            { title: "ฝึกพูดกับ Reedy", description: "การฝึกพูดกับ Reedy ใช้ได้ใน Tutor Advantage เท่านั้น สำหรับนักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่ และในบทเรียนที่เรียนจบแล้ว" },
+            { title: "ฝึกพูดกับ Reedy", description: "การฝึกพูดกับ Reedy เปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ยังใช้งานอยู่ใช้ได้ ในบทเรียนที่เรียนจบแล้ว" },
             { title: "แฟลชการ์ดและเกม", description: "ทุกคลาสมีแฟลชการ์ด เกมสองเกม การสนทนาเป็นคู่ และช่วงสรุป" },
             { title: "ติวเตอร์ในพื้นที่", description: "ติวเตอร์ในชุมชนของคุณสอนในคลาสแบบพบหน้า" },
             { title: "Mastery Advantage", description: "เนื้อหาในเวิร์กบุ๊กถูกติดแท็กกับกราฟความรู้ Mastery Advantage ซึ่งจัดทำแผนที่ทักษะและกำหนดเวลาทบทวน" },
@@ -568,7 +692,7 @@ export const zh = {
         "priceNote": "价格随市场调整。",
         "cta": "咨询课程",
         "ctaTutor": "成为导师",
-        "imageAlt": "学生和导师围坐在桌旁，桌上有印刷练习册和平板电脑",
+        "imageAlt": "A tutor smiles at three schoolchildren at a small table in a bright classroom; a girl holds the Primary Advantage Origins 2 workbook, a boy the student app on a phone.",
         "factsLabel": "Tutor Advantage 概览"
     },
     classTour: {
@@ -665,17 +789,17 @@ export const zh = {
             {
                 "name": "Primary Advantage Origins 2",
                 "series": "Primary Advantage",
-                "alt": "Primary Advantage 练习册插画"
+                "alt": "Primary Advantage Origins 2 book cover"
             },
             {
                 "name": "Primary Advantage Origins 3.1",
                 "series": "Primary Advantage",
-                "alt": "暖色调的 Primary Advantage 练习册插画"
+                "alt": "Primary Advantage Origins 3.1 book cover"
             },
             {
                 "name": "Reading Advantage Origins 2",
                 "series": "Reading Advantage",
-                "alt": "学生在教室里使用练习册和平板电脑"
+                "alt": "Reading Advantage Origins 2 book cover"
             }
         ],
         "note": "每本练习册有 14 节课和一个数字版本。"
@@ -685,12 +809,11 @@ export const zh = {
         "heading": "与 Reedy 练习英语口语",
         "description": "课后，学生可以在 LINE 学生应用中与 Reedy（一位 AI 语音教练）练习说英语。Reedy 用简单的英语和简短的泰语提示与学生谈论本课内容。",
         "points": [
-            "仅在 Tutor Advantage 中提供。Primary Advantage 和 Reading Advantage 中没有。",
             "面向持有有效课程包的学生，用于已完成的课程。",
             "每次练习后，学生会看到一件做得好的事、一件下次可以尝试的事，以及一个可以再说一遍的句子。",
             "开始前，学生可以检查麦克风并查看提示。"
         ],
-        "alt": "Chibi Quest 插画：有一棵橡树的林间空地"
+        "alt": "Reedy, the speaking coach, is marked Preview. A wizard avatar stands in a forest next to a Start talking button."
     },
     tutorRole: {
         "eyebrow": "成为导师",
@@ -700,10 +823,76 @@ export const zh = {
             "您负责授课。一个课程包对应一本练习册，约 25 小时的教学。",
             "多级（unilevel）佣金模式按导师所授课程以及带入网络的导师支付佣金。",
             "系统计算佣金，并按月结算。",
-            "我们不公布收入数字。欢迎来询问详情。"
+            "The calculator on this page shows examples. Ask us about your own case."
         ],
         "cta": "申请成为导师",
-        "alt": "导师在课堂上向学生提问"
+        "alt": "A tutor with three schoolchildren in a bright classroom; one holds the Primary Advantage Origins 2 workbook, another the student app on a phone.",
+    },
+    // D-10 placeholder: the screens block holds the English lines until the contracted Chinese speaker delivers.
+    screens: {
+        "eyebrow": "INSIDE THE APPS",
+        "heading": "Inside the student app",
+        "description": "One lesson in the LINE student app, step by step. The app follows the printed workbook.",
+        "items": [
+            { "caption": "A writing task from the printed workbook: the student picks a sentence frame and writes the answer.", "alt": "Student app guided writing screen with sentence frames" },
+            { "caption": "The student types the answer in the app, on the same lesson as the printed page.", "alt": "Student app short-answer screen with the question and a typed answer" },
+            { "caption": "After the answer, the app shows the AI check and the points.", "alt": "Student app screen with the AI check and the points for one answer" },
+            { "caption": "At the end of the lesson, the student rates the effort and writes a note for the tutor.", "alt": "Student app end-of-lesson screen with the student's rating and a note for the tutor" },
+            { "caption": "The learning record: the lessons, the points, and today's class.", "alt": "Student app learning record with the lesson count, the points, and today's class" }
+        ]
+    },
+    // D-10 placeholder: the calculator block holds the English lines until the contracted Chinese speaker delivers.
+    calculator: {
+        "eyebrow": "THE COMMISSION CALCULATOR",
+        "heading": "See how one month's commission works",
+        "description": "The calculator uses the same formula as our settlement system. Choose the price, your students, and your legs, and see the month. Every figure is an example, not a promise of income.",
+        "volumeNote": "Volume is the class package price times the students who paid in the month.",
+        "rateNote": "The rate starts near 40% on a small volume. It passes 50% at 20,000 baht and approaches 71% at very high volume.",
+        "payoutNote": "Your payout is the rate times the network volume, minus the commission of each leg. 3% withholding tax comes off a positive payout.",
+        "inputs": {
+            "price": "Class package price (baht)",
+            "priceNote": "Default: 3,000 baht. The price adapts to the market.",
+            "ownStudents": "Personal students this month",
+            "legCount": "Legs with students",
+            "legStudents": "Students in this leg",
+            "addLeg": "Add a leg",
+            "removeLeg": "Remove a leg"
+        },
+        "results": {
+            "ownGV": "Your own volume",
+            "networkGV": "Network volume",
+            "rate": "Commission rate",
+            "gross": "Gross commission",
+            "legCommissions": "Leg commissions",
+            "tax": "Withholding tax (3%)",
+            "net": "Net payout"
+        },
+        "graph": {
+            "title": "How this month's payout is built",
+            "caption": "Each leg has its own bar: the volume it brings and the commission it earns on its own. Your payout before tax is your rate on the whole volume, minus the commissions of the legs.",
+            "ownBar": "Your own students",
+            "legBar": "Leg {n}",
+            "grossBar": "Gross at your rate",
+            "legCommissionBar": "Commission of all legs",
+            "netBar": "Your payout after 3% tax",
+            "axisBaht": "Baht",
+            "rateTitle": "Your rate for the network volume",
+            "rateAxis": "Rate",
+            "ratePoint": "This month"
+        },
+        "explain": {
+            "ownOnly": "No legs this month, so the whole gross amount is the payout.",
+            "withLegs": "Your rate applies to the whole network volume. The commission of each leg comes off, and 3% withholding tax comes off the rest.",
+            "zero": "Add students to see a month.",
+            // D-11 draft: the PR zh line stays a draft until the contracted Chinese speaker checks it.
+            "needsOwnStudents": "您自己的班级是解锁网络佣金的关键。本月只要有至少一名您自己的学员，您各团队的业绩就会计入您的结算。"
+        },
+        "presets": [
+            { "name": "A new tutor", "setup": "Four personal students, no legs.", "result": "12,000 baht of volume at a rate of 46%. The gross is 5,520 baht, and with no legs it is all payout. After 3% withholding tax: 5,354 baht." },
+            { "name": "A tutor with two legs", "setup": "Two personal students, and two legs with three students each.", "result": "24,000 baht of network volume at a rate of 52.7%. The gross is 12,656 baht, and the two legs earn 8,010 baht of it. The payout is 4,646 baht before tax, and 4,506 baht after 3% withholding tax." },
+            { "name": "A small team with three legs", "setup": "Two personal students, and three legs with four students each.", "result": "42,000 baht of network volume at a rate of 59.1%. The gross is 24,833 baht, and the three legs earn 16,560 baht of it. The payout is 8,273 baht before tax, and 8,025 baht after 3% withholding tax." }
+        ],
+        "disclaimer": "Every figure in these examples is an illustration. Commission depends on the classes that run and are paid for."
     },
     faq: {
         "eyebrow": "常见问题",
@@ -723,7 +912,7 @@ export const zh = {
             },
             {
                 "question": "谁可以使用 Reedy 口语练习？",
-                "answer": "持有有效 Tutor Advantage 课程包的学生，用于已完成的课程。Primary Advantage 和 Reading Advantage 中没有 Reedy。"
+                "answer": "持有有效 Tutor Advantage 课程包的学生，用于已完成的课程。"
             },
             {
                 "question": "一节课如何进行？",
@@ -731,7 +920,7 @@ export const zh = {
             },
             {
                 "question": "导师如何获得收入？",
-                "answer": "导师按多级（unilevel）佣金模式获得佣金，系统按月结算。我们不公布收入数字。请通过联系页面咨询详情。"
+                "answer": "Tutors earn commission under a unilevel commission model, and the system settles it monthly. The rate rises with the network volume of the month. The calculator on this page shows examples; the real figure comes from the classes that run and are paid for."
             }
         ]
     },
@@ -785,7 +974,7 @@ export const zh = {
         features: [
             { title: "印刷练习册", description: "每个课程包配一本印刷练习册，共 14 节课。" },
             { title: "数字版本", description: "每本练习册都有数字版本，供课间练习。" },
-            { title: "Reedy 口语练习", description: "Reedy 口语练习仅在 Tutor Advantage 中提供，面向持有有效课程包的学生，用于已完成的课程。" },
+            { title: "Reedy 口语练习", description: "Reedy 口语练习面向持有有效课程包的学生，用于已完成的课程。" },
             { title: "单词卡与游戏", description: "每节课包含单词卡、两个游戏、双人对话和课堂总结。" },
             { title: "本地导师", description: "您所在社区的导师面对面授课。" },
             { title: "Mastery Advantage", description: "练习册内容已标记到 Mastery Advantage 知识图谱，该图谱梳理技能并安排复习。" },

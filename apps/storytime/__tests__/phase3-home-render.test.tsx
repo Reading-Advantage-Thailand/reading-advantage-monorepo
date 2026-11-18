@@ -123,3 +123,41 @@ describe("Phase 3 rendered alt attributes (finding F138)", () => {
     }
   });
 });
+
+/** The nearest `lang` attribute of an element. */
+function nearestLang(element: Element): string | null | undefined {
+  return element.closest("[lang]")?.getAttribute("lang");
+}
+
+describe("Phase 3 home text language (task 7.5, replaces the source scan of phase3-home-card)", () => {
+  it("marks the Thai parent line and the Thai activity lang=th, and the English home text lang=en, in th", async () => {
+    const week = cloneWeek();
+    const { container, previous } = await renderHome("th");
+    try {
+      const parent = screen.getByText(week.home!.line!.th.trim());
+      expect(nearestLang(parent), "the Thai parent line must carry lang=th").toBe("th");
+      const activity = screen.getByText(week.home!.activity!.th.trim());
+      expect(nearestLang(activity), "the Thai activity must carry lang=th").toBe("th");
+      const words = [...container.querySelectorAll('[data-parent-panel] ul[aria-label] > li > span')];
+      expect(`home_words_rendered=${words.length}`).toBe(`home_words_rendered=${week.home!.words.length}`);
+      for (const word of words) expect(nearestLang(word), `the home word ${word.textContent} must carry lang=en`).toBe("en");
+      const frame = screen.getByText(week.focus.frame!.trim());
+      expect(nearestLang(frame), "the frame must carry lang=en").toBe("en");
+    } finally {
+      document.documentElement.lang = previous;
+    }
+  });
+
+  it("marks the English parent line and the English activity lang=en in en", async () => {
+    const week = cloneWeek();
+    const { previous } = await renderHome("en");
+    try {
+      const parent = screen.getByText(week.home!.line!.en!.trim());
+      expect(nearestLang(parent), "the English parent line must carry lang=en").toBe("en");
+      const activity = screen.getByText(week.home!.activity!.en.trim());
+      expect(nearestLang(activity), "the English activity must carry lang=en").toBe("en");
+    } finally {
+      document.documentElement.lang = previous;
+    }
+  });
+});

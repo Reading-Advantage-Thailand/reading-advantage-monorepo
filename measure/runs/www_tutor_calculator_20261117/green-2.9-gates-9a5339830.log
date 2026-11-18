@@ -1,0 +1,103 @@
+Green gate confirmation log — track www_tutor_calculator_20261117, task 2.9
+Role: Measure Green (opencode-go/deepseek-v4.1-flash)
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+role_base_sha: 9a53398301ae2fbd41e7e95de8e36ce18d50b9b5
+phase_base_sha (Phase 2): d279b870341c067c33fc884ae8863b5428487c17
+Product change: none. This run records gates only.
+
+Pre-run state
+-------------
+$ git rev-parse HEAD
+9a53398301ae2fbd41e7e95de8e36ce18d50b9b5
+$ git status --short
+(no output; worktree clean)
+$ git rev-parse --abbrev-ref HEAD
+feat/a63-tutor-calculator
+$ git rev-parse --short d279b870341c067c33fc884ae8863b5428487c17
+d279b8703
+
+Phase range check: d279b8703 is an ancestor of HEAD. The committed Red change of task 2.9 is
+inside d279b8703..HEAD (commit 6c0cf5de6, "fix(www): label the tutor rate curve card"). No Red
+test was edited in this run.
+
+Gate 1 — whole-package suite
+----------------------------
+$ bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test --reporter=dot --silent=true'
+$ vitest run --reporter=dot --silent=true
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage
+....................................................................................
+ Test Files  71 passed (71)
+      Tests  2618 passed (2618)
+   Start at  15:36:31
+   Duration  60.81s (transform 1.16s, setup 2.81s, import 6.28s, tests 18.74s, environment 26.69s)
+EXIT_CODE=0
+
+The heavy runner reported no busy slot. One heavy job ran at a time.
+
+Gate 2 — types
+--------------
+$ pnpm turbo run check-types --filter=www-reading-advantage
+   • Packages in scope: www-reading-advantage
+   • Running check-types in 1 packages
+   • Remote caching disabled, using shared worktree cache
+www-reading-advantage:check-types: cache hit, replaying logs f8d9bd0a3c285a8b
+www-reading-advantage:check-types: $ tsc --noEmit
+ Tasks:    1 successful, 1 total
+Cached:    1 cached, 1 total
+  Time:    434ms >>> FULL TURBO
+EXIT_CODE=0
+
+The cache hit replays the logs of unchanged inputs. A forced rerun proves a live tsc pass:
+
+$ pnpm turbo run check-types --filter=www-reading-advantage --force
+www-reading-advantage:check-types: cache bypass, force executing f8d9bd0a3c285a8b
+www-reading-advantage:check-types: $ tsc --noEmit
+ Tasks:    1 successful, 1 total
+Cached:    0 cached, 1 total
+  Time:    4.015s
+EXIT_CODE=0
+
+Gate 3 — lint
+-------------
+$ pnpm --filter www-reading-advantage lint
+$ eslint .
+EXIT_CODE=0
+No error and no warning line after the command echo.
+
+Gate 4 — shadcn ratchet baseline
+--------------------------------
+$ git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json
+EXIT_CODE=0
+No diff.
+
+Gate 5 — affected-app selector
+------------------------------
+$ node scripts/ci/affected-apps.mjs --base ff028a7105ccd5de0c3e9534dd8536b7667e22de --head 9a5339830
+affected-apps: --head must be a 40-character lowercase hex commit id
+EXIT_CODE=2
+
+The brief gave the short head. Section 5.2 of the test strategy names this rule and requires the
+resolved full head. The same selector with the full head:
+
+$ node scripts/ci/affected-apps.mjs --base ff028a7105ccd5de0c3e9534dd8536b7667e22de --head 9a53398301ae2fbd41e7e95de8e36ce18d50b9b5
+["www-reading-advantage"]
+EXIT_CODE=0
+
+The selector prints one app id, as the strategy requires. The range is not measure-only, because
+the range holds product commits 320fc2fa1 through 6c0cf5de6.
+
+Build and server
+----------------
+This session ran no build and touched no server. The orchestrator rebuilt at this head: the first
+attempt exited 1 on the known Next.js security-advisory nudge, the retry exited 0. No build-graph
+scan and no doctor.sh ran.
+
+After the plan edit
+-------------------
+$ git status --short
+ M measure/tracks/www_tutor_calculator_20261117/plan.md
+The result files under measure/runs/ are gitignored (.gitignore line 56).
+
+Verdict: pass. The four product gates exit 0. Gate 5 as written exits 2 on the documented
+40-character rule, and its resolved-head form exits 0 with the one expected app id.

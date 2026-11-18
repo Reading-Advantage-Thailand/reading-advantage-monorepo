@@ -1,0 +1,21 @@
+Strategy run: www_tutor_followups_20261118
+Baseline at role start: 3cc535884979c784ee23d4dd6bba4a4eb375090a
+Spec-review verdict: pass (F1 Major recorded; corrected downline scan in strategy)
+Files read: measure/index.md, measure/tracks.md, spec.md, plan.md, metadata.json, anti-patterns.md, spec-review-3cc5358.json
+Graph: graph.db absent; build-graph binary present; used spec file paths as blast radius
+Strategy commit: 0711409791e7e27e5f8043ddc6dd3905c9ddd658 (docs(measure): add the test strategy)
+Phase base rule: orchestrator captures phase_base_sha = 0711409791e7e27e5f8043ddc6dd3905c9ddd658 after this commit
+Recommendation: one combined Red pass (tasks 1.2 + 2.1), one combined Green pass (tasks 1.3-1.5 + 2.2-2.5), one push at task 3.3
+
+MEASURE_AGENT_RESULT
+role: strategy
+status: complete
+track: www_tutor_followups_20261118
+phase: track setup and full-track strategy
+commits: 0711409
+tests_run: read-only (git rev-parse HEAD at start = 3cc5358; spec-review JSON = pass with F1 Major; no test execution in strategy role)
+files_changed: measure/tracks/www_tutor_followups_20261118/test-strategy.md (new, committed alone)
+plan_updates: none — plan.md left intact; strategy keeps all plan task ids
+known_failures: none in strategy scope; Red suites expected red until Green lands
+handoff: Orchestrator captures phase_base_sha 0711409791e7e27e5f8043ddc6dd3905c9ddd658 now; default question for orchestrator: proceed with combined Red pass on tasks 1.2 + 2.1? Options: yes-combined (default), no-separate-phases.
+END_MEASURE_AGENT_RESULT

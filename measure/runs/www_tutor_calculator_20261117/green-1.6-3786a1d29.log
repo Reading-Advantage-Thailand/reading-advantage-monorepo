@@ -1,0 +1,65 @@
+Measure Green · Phase 1 · task 1.6 · track www_tutor_calculator_20261117
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+role_base_sha: 30e59c5888e6dc2d76e70661187d99e49d5256ed
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+resulting_head: a8b78cf90f9e8d7ad2eb9c7ff1a2a0d8f5de8e9b
+verdict: pass
+commits:
+  3786a1d299929a5bb5f4912ccbffcb120bf0c66d feat(www): add tutor commission calculator UI (track_id: www_tutor_calculator_20261117)
+  a8b78cf90f9e8d7ad2eb9c7ff1a2a0d8f5de8e9b docs(measure): record green 1.6 evidence (track_id: www_tutor_calculator_20261117)
+plan_updates: task 1.6 [x], Done sha, and the net note.
+
+Red change inside phase_base_sha..HEAD: bcaf27d8003a8f83ceb3dac6e24f3a28f989eb12 and
+e42aa53fa0f00571b32a46f4c80fc4fb20b81958, both on
+apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx
+
+Targeted command:
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx --reporter=dot --silent=true'
+Exit code: 0
+Test Files 1 passed (1)
+Tests 10 passed (10)
+
+Gates:
+- check-types: pnpm turbo run check-types --filter=www-reading-advantage, exit 0
+- lint: pnpm --filter www-reading-advantage lint, exit 0, no new shadcn/* error in the touched files
+
+Product files changed by this role:
+- apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx (new, 402 lines)
+- apps/www-reading-advantage/src/app/[locale]/globals.css (one @utility bar-width rule, 6 lines added)
+
+Untouched: the Red test, src/lib/tutor-commission.ts, the locale file, the page, package.json,
+and the lockfile.
+
+Spec 5.3 and D-5 to D-11 check:
+- "use client", named export TutorCommissionCalculator, the copy prop of spec 5.3.
+- No arithmetic in the component; calculateNetwork, explainVariant, resizeLegs, commissionRate,
+  NETWORK_PRESETS, and CLASS_PRICE_DEFAULT all come from @/lib/tutor-commission.
+- SectionHeader, the preset row, the 12-column grid at lg (7 input columns, 5 result columns),
+  the preset setup under the buttons, the graph, the curve, the result panel, the explain line,
+  the notes, the disclaimer last.
+- Net is the hero only; the row list ends at withholding tax (Q2 decision, recorded in the plan).
+- D-5: a preset sets the price to 3,000. D-6: first paint is 0 students, 0 legs, the zero line.
+  D-7: an edit clears the preset text and keeps the figures.
+- D-9: one graph row per leg plus the tutor row; the bar width is the --bar-width CSS custom
+  property read by one globals.css utility; the tutor row shows the pre-tax payout.
+- D-11: the curve is aria-hidden with no alt and a dot at the current network volume.
+- aria-live="polite" on the result card; every input has a label and min="0"; a new leg starts
+  at 3 students.
+
+Q2 evidence: the D-7 assertion of e42aa53fa expects exactly two 15,000 nodes inside the
+result card; the ownGV row and the networkGV row supply them, and the graph sits outside the
+card.
+
+MEASURE_AGENT_RESULT
+role: measure-green
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 1
+commits: 3786a1d29, a8b78cf90
+tests_run: targeted component test exit 0 (Test Files 1 passed (1), Tests 10 passed (10)); pnpm turbo run check-types --filter=www-reading-advantage exit 0; pnpm --filter www-reading-advantage lint exit 0
+files_changed: apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx (new); apps/www-reading-advantage/src/app/[locale]/globals.css (one bar-width rule); measure/tracks/www_tutor_calculator_20261117/plan.md
+plan_updates: task 1.6 marked [x] with Done: 3786a1d299929a5bb5f4912ccbffcb120bf0c66d, plus the net note: spec 5.3 item 6 lists a net row, but the hero already carries the net figure, so the row list ends at withholding tax and the hero is the net
+known_failures: none
+handoff: Task 1.6 is complete at HEAD a8b78cf90. Task 1.7 is next: render the component on the tutor-advantage page with the calculator copy from getScopedI18n, inside a section with data-testid="tutor-calculator" and id="commission-calculator", after the tutorRole section and before commitments. The component takes the whole copy block as one prop and the page passes no arithmetic. The result card holds exactly one copy.results.net node, which the Red D-7 assertion depends on. Phase 1 ships no push (D-13).
+END_MEASURE_AGENT_RESULT

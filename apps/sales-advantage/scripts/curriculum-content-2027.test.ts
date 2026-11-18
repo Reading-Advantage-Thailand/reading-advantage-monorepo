@@ -128,7 +128,7 @@ const CLAIMS_CONDITIONS = [
   "5. Pearson, GSE, or YLE in a line to a parent or a school.",
   "6. A book name without the product name (\"Origins 2\" alone).",
   "7. An earnings figure in a family sale. Commission talk belongs to tutor recruitment only.",
-  "8. A Managed Service sale, or a date for Science, Math, Zhongwen, or Storytime Advantage, for a new edition, or for a pilot start. The May 2027 line in section 4 is the only date that a trainee may say.",
+  "8. A Managed Service sale, an exact day or any other date for Science, Math, Zhongwen, or Storytime Advantage, a date for a new edition, or a date for a pilot start. A trainee may say only the dates of the Dates paragraph in section 4: the May 2027 line, the 2027 school year for Science, Math, and Zhongwen Advantage, and November 2026 for Storytime Advantage.",
   "9. \"Leading\", \"best\", \"#1\", or a percentage with no source.",
 ];
 
@@ -484,7 +484,28 @@ type RepinRow = {
   source: string;
   newText: string[];
   oldText: string[];
+  /** The module of the one lesson that must hold the text, when the review scopes the row. */
+  lessonSlug?: string;
+  /** The title of the one lesson that must hold the text, when the review scopes the row. */
+  lessonTitle?: string;
+  /** The expiring fact that must hold the text, when the review scopes the row to a fact. */
+  expiringFact?: string;
 };
+
+/** The seed text that a re-pin row checks: the graph, one lesson, or one expiring fact. */
+function repinText(entry: RepinRow): string {
+  if (entry.expiringFact) {
+    const fact = SALES_CURRICULUM_EXPIRING_FACTS.find(
+      (row) => row.fact === entry.expiringFact,
+    );
+    if (!fact) throw new Error(`expiring fact missing: ${entry.expiringFact}`);
+    return fact.text;
+  }
+  if (entry.lessonSlug && entry.lessonTitle) {
+    return lessonTeachingText(entry.lessonSlug, entry.lessonTitle);
+  }
+  return allText();
+}
 
 /** The number of review rows that need a seed change. */
 export const REPIN_ROW_COUNT = 67;
@@ -897,8 +918,8 @@ export const REPIN_ROWS: RepinRow[] = [
     section: 13,
     id: "S13.7",
     source: "09-sales-enablement/sales-training-scope-2027.md",
-    newText: ["a Managed Service sale, or a date for Science, Math, Zhongwen, or Storytime Advantage, for a new edition, or for a pilot start"],
-    oldText: ["a Managed Service sale, or a date for Science, Math, or Zhongwen Advantage"],
+    newText: ["a Managed Service sale, an exact day or any other date for Science, Math, Zhongwen, or Storytime Advantage, a date for a new edition, or a date for a pilot start"],
+    oldText: ["a Managed Service sale, or a date for Science, Math, Zhongwen, or Storytime Advantage, for a new edition, or for a pilot start"],
   },
   {
     section: 13,
@@ -911,8 +932,8 @@ export const REPIN_ROWS: RepinRow[] = [
     section: 13,
     id: "S13.9",
     source: "09-sales-enablement/sales-training-scope-2027.md",
-    newText: ["8. A Managed Service sale, or a date for Science, Math, Zhongwen, or Storytime Advantage, for a new edition, or for a pilot start. The May 2027 line in section 4 is the only date that a trainee may say."],
-    oldText: ["8. A Managed Service sale, or a date for Science, Math, or Zhongwen Advantage."],
+    newText: ["8. A Managed Service sale, an exact day or any other date for Science, Math, Zhongwen, or Storytime Advantage, a date for a new edition, or a date for a pilot start. A trainee may say only the dates of the Dates paragraph in section 4: the May 2027 line, the 2027 school year for Science, Math, and Zhongwen Advantage, and November 2026 for Storytime Advantage."],
+    oldText: ["8. A Managed Service sale, or a date for Science, Math, Zhongwen, or Storytime Advantage, for a new edition, or for a pilot start. The May 2027 line in section 4 is the only date that a trainee may say.", "8. A Managed Service sale, or a date for Science, Math, or Zhongwen Advantage."],
   },
   {
     section: 13,
@@ -1012,6 +1033,175 @@ describe("S2 - the curriculum uses the advantage-pr 7eff8c10 source set", () => 
   );
 });
 
+// S2 re-pin rows for advantage-pr 609f962e6577e6a4c468dafb758d0cce81526b53.
+// One row per review row of review/repin-609f962e.md that needs a seed change.
+// The review holds 35 rows; 15 of them need a seed change. A row proves two
+// facts: the new source text holds, and the old text is gone. Several review
+// sections name one seed line with different document wordings. Every such row
+// demands the phrase that all candidate wordings hold ("2027 school year" and
+// "no other date" for Science, Math, and Zhongwen Advantage; "November 2026"
+// and "no exact day" for Storytime Advantage), so one correct seed edit
+// satisfies all of them.
+
+/** The number of 609f962e review rows that need a seed change. */
+export const REPIN_609_ROW_COUNT = 15;
+
+/** The 609f962e re-pin rows, grouped by review section. */
+export const REPIN_609_ROWS: RepinRow[] = [
+  {
+    section: 1,
+    id: "S1.1",
+    source: "09-sales-enablement/sales-training-scope-2027.md",
+    newText: ["2027 school year", "no other date"],
+    oldText: ["No date.", "Give no date (Q-PR-24)"],
+  },
+  {
+    section: 1,
+    id: "S1.2",
+    source: "09-sales-enablement/sales-training-scope-2027.md",
+    newText: ["November 2026", "no exact day"],
+    oldText: ["K–6 offer, no date"],
+  },
+  {
+    section: 1,
+    id: "S1.4",
+    source: "09-sales-enablement/sales-training-scope-2027.md",
+    newText: ["2027 school year", "no other date"],
+    oldText: ["No date.", "Give no date (Q-PR-24)"],
+  },
+  {
+    section: 1,
+    id: "S1.5",
+    source: "09-sales-enablement/sales-training-scope-2027.md",
+    newText: ["November 2026", "no exact day"],
+    oldText: ["K–6 offer, no date"],
+  },
+  {
+    section: 1,
+    id: "S1.6",
+    source: "09-sales-enablement/sales-training-scope-2027.md",
+    newText: ["8. A Managed Service sale, an exact day or any other date for Science, Math, Zhongwen, or Storytime Advantage, a date for a new edition, or a date for a pilot start. A trainee may say only the dates of the Dates paragraph in section 4: the May 2027 line, the 2027 school year for Science, Math, and Zhongwen Advantage, and November 2026 for Storytime Advantage."],
+    oldText: ["8. A Managed Service sale, or a date for Science, Math, Zhongwen, or Storytime Advantage, for a new edition, or for a pilot start. The May 2027 line in section 4 is the only date that a trainee may say."],
+  },
+  {
+    section: 1,
+    id: "S1.8",
+    source: "09-sales-enablement/sales-training-scope-2027.md",
+    expiringFact: "Public date for Science, Math, and Zhongwen Advantage (Q-PR-24)",
+    newText: ["2027 school year", "no other date"],
+    oldText: ["Science, Math, and Zhongwen Advantage (Q-PR-24)"],
+  },
+  {
+    section: 2,
+    id: "S2.1",
+    source: "09-sales-enablement/demo-scripts.md",
+    newText: ["2027 school year", "no other date"],
+    oldText: ["Give no date (Q-PR-24)"],
+  },
+  {
+    section: 2,
+    id: "S2.2",
+    source: "09-sales-enablement/demo-scripts.md",
+    newText: ["Name the 2027 school year for Science, Math, and Zhongwen Advantage. Give no other date for any product."],
+    oldText: ["Give no date for any of them."],
+  },
+  {
+    section: 2,
+    id: "S2.3",
+    source: "09-sales-enablement/demo-scripts.md",
+    lessonSlug: "product-knowledge-2027",
+    lessonTitle: 'Roleplay: "What Exactly Do You Sell?"',
+    newText: ["2027 school year", "no other date"],
+    oldText: ["Give no date (Q-PR-24)"],
+  },
+  {
+    section: 2,
+    id: "S2.4",
+    source: "09-sales-enablement/demo-scripts.md",
+    newText: ["Name the 2027 school year; give no other date."],
+    oldText: ["Give no date for Math Advantage."],
+  },
+  {
+    section: 4,
+    id: "S4.1",
+    source: "09-sales-enablement/distributor-rep-onboarding/faq.md",
+    newText: ["2027 school year", "no other date"],
+    oldText: ["No date.", "Give no date (Q-PR-24)"],
+  },
+  {
+    section: 4,
+    id: "S4.2",
+    source: "09-sales-enablement/distributor-rep-onboarding/faq.md",
+    newText: ["November 2026", "no exact day"],
+    oldText: ["K–6 offer, no date"],
+  },
+  {
+    section: 7,
+    id: "S7.1",
+    source: "09-sales-enablement/advantage-suite-at-a-glance.md",
+    newText: ["2027 school year", "no other date"],
+    oldText: ["No date.", "Give no date (Q-PR-24)"],
+  },
+  {
+    section: 7,
+    id: "S7.2",
+    source: "09-sales-enablement/advantage-suite-at-a-glance.md",
+    newText: ["2027 school year", "no other date"],
+    oldText: ["No date.", "Give no date (Q-PR-24)"],
+  },
+  {
+    section: 7,
+    id: "S7.3",
+    source: "09-sales-enablement/advantage-suite-at-a-glance.md",
+    newText: ["November 2026", "no exact day"],
+    oldText: ["K–6 offer, no date"],
+  },
+];
+
+/** The row count of every review section of the 609f962e re-pin review. */
+const REPIN_609_SECTION_COUNTS: Record<number, number> = {
+  1: 6,
+  2: 4,
+  3: 0,
+  4: 2,
+  5: 0,
+  6: 0,
+  7: 3,
+  8: 0,
+  9: 0,
+  10: 0,
+};
+
+describe("S2 - the curriculum uses the advantage-pr 609f962e source set", () => {
+  it("holds one row for every review row that needs a seed change", () => {
+    expect(REPIN_609_ROWS).toHaveLength(REPIN_609_ROW_COUNT);
+  });
+
+  it("counts the rows of every review section", () => {
+    const counts: Record<number, number> = {};
+    for (const section of Object.keys(REPIN_609_SECTION_COUNTS).map(Number)) {
+      counts[section] = 0;
+    }
+    for (const entry of REPIN_609_ROWS) {
+      counts[entry.section] = (counts[entry.section] ?? 0) + 1;
+    }
+    expect(counts).toEqual(REPIN_609_SECTION_COUNTS);
+  });
+
+  it.each(REPIN_609_ROWS)(
+    "section $section $id holds the new source text and drops the old text",
+    (entry: RepinRow) => {
+      const text = repinText(entry);
+      for (const value of entry.newText) {
+        expect(text, `${entry.id}: the new source text is missing`).toContain(value);
+      }
+      for (const value of entry.oldText) {
+        expect(text, `${entry.id}: the old text is still in the seed`).not.toContain(value);
+      }
+    },
+  );
+});
+
 /** One row of the review A repair: a text and the scope that must hold it. */
 type ScopedRow = {
   id: string;
@@ -1031,8 +1221,8 @@ export const REVIEW_A_ROWS: ScopedRow[] = [
   {
     id: "F2b-claims-condition-8",
     scope: "claims",
-    newText: ["8. A Managed Service sale, or a date for Science, Math, Zhongwen, or Storytime Advantage, for a new edition, or for a pilot start. The May 2027 line in section 4 is the only date that a trainee may say."],
-    oldText: ["8. A Managed Service sale, or a date for Science, Math, or Zhongwen Advantage."],
+    newText: ["8. A Managed Service sale, an exact day or any other date for Science, Math, Zhongwen, or Storytime Advantage, a date for a new edition, or a date for a pilot start. A trainee may say only the dates of the Dates paragraph in section 4: the May 2027 line, the 2027 school year for Science, Math, and Zhongwen Advantage, and November 2026 for Storytime Advantage."],
+    oldText: ["8. A Managed Service sale, or a date for Science, Math, Zhongwen, or Storytime Advantage, for a new edition, or for a pilot start. The May 2027 line in section 4 is the only date that a trainee may say."],
   },
   {
     id: "F2c-family-books",

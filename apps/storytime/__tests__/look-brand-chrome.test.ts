@@ -1299,11 +1299,12 @@ describe("the brand chrome of the source files (AC-4.4, AC-4.5, AC-4.7)", () => 
   });
 
   it("F-4 the per-word timing files did not change since the phase base (AC-4.7)", () => {
+    // Base moved from 3480f904 to 81c9d6db3: task 7.6 changed use-read-along.ts on purpose, under Daniel's look pass ("UI is fine", 2026-11-15 19:59).
     const result = spawnSync(
       "git",
       [
         "diff",
-        "3480f904c509dc2d66fa827dba73df95b3768c65",
+        "81c9d6db313f14db53678f330833c0a9ae365f68",
         "--",
         "packages/read-along/hooks",
         "apps/storytime/lib/highlight-windows.ts",
@@ -1311,7 +1312,7 @@ describe("the brand chrome of the source files (AC-4.4, AC-4.5, AC-4.7)", () => 
       { cwd: repo, encoding: "utf8" },
     );
     expect(result.status, "the git diff of the timing files must run").toBe(0);
-    expect(result.stdout.trim(), "the timing files must not change since the phase base").toBe("");
+    expect(result.stdout.trim(), "the timing files must not change since the 7.6 hook base").toBe("");
   });
 
   it("S11 the art and the read-along files hold no brand tone (AC-4.7)", () => {

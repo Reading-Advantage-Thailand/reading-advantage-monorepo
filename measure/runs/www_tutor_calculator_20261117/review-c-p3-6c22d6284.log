@@ -1,0 +1,108 @@
+Review C (UX and API end-to-end contract), Phase 3, track www_tutor_calculator_20261117.
+Role: measure-review-c-ux-api. Route: claude-code/claude-sonnet-5-5#max.
+audited_head_sha 6c22d6284dd47deeab35105c036bc549c67557aa. HEAD matches (git rev-parse HEAD).
+phase_base_sha 81df01cf2e7c2954f4a2de1aaee593913a00bc75. Diff: 81df01cf2..6c22d6284, 26 files.
+Contract applicability: applicable. The diff changes the route page, the three locale
+dictionaries, the picture manifest, the calculator component, and the commission module.
+
+VERDICT: FAIL. One blocker (C-P3-1). Three nits (C-P3-2, C-P3-3, C-P3-4).
+
+1. BLOCKER
+
+C-P3-1 [Blocker] review-c.
+File: apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx:115.
+The page calls key('calculator.graph.legBar') with no value. The string is 'Leg {n}'
+(locale file lines 197, 535, 875). Design rule 11 (docs/design-rules.md:28) requires a value:
+t(key, { n: '{n}' }).
+Real run, use-intl 4.13.0 createTranslator:
+- Development build (--conditions=development): the bare call returns the key path and reports
+  FORMATTING_ERROR 'The intl string context variable n was not provided'. Each leg row then reads
+  'pages.products.tutorAdvantage.calculator.graph.legBar' in en, th, and zh.
+- With { n: '{n}' } the call returns 'Leg {n}', and the component replaces {n} (component :386).
+- Production format-message module: the bare call returns 'Leg {n}' with no error. The label works
+  there only because of the build variant.
+legBar is the only placeholder string in the page dictionary, so the page has one bare placeholder.
+No test fails on the bare call. The translator mocks (src/test/setup.ts:45, restoreMock in
+page.test.tsx) ignore values.
+Precedent: commit b351f4f2e (nine dev console errors) and mastery-graph-labels.ts:13.
+Fix (Green): pass { n: '{n}' } for legBar, widen the key helper type to accept values, and add a
+page test whose translator mock throws on a missing placeholder value.
+
+2. NITS
+
+C-P3-2 [Nit] review-c. spec.md D-9 items 3 and 4 (lines 245-252) and the section 5.3 props block
+(lines 483-496) still name chart.legPayout, chart.legVolume, chart.yourPayout, directTutors, and
+downline. D-17 (lines 331-334) and AC-18 (lines 765-768) remove these keys. The code follows D-17.
+Owner: the spec owner.
+
+C-P3-3 [Nit] review-c. tutor-commission-calculator.tsx:163-168 resizes the legs on each change of
+the leg-count field. An empty field gives 0 (:108-111), so Backspace drops all leg rows and the
+typed leg students. The next digit restores 3 students per leg (tutor-commission.ts:220-231;
+module run: resizeLegs([4,5],0) = [] and resizeLegs([],2) = [3,3]). Code reading and module run
+only, not a browser.
+
+C-P3-4 [Nit] review-c. page.tsx:193 replaced the hero SiteImageView (it had priority) with
+ProductPicture, and product-picture.tsx:13-31 has no priority prop. next/image then sets
+loading=lazy on the hero picture. Add an optional priority prop and set it for the hero.
+Code reading only, not a browser.
+
+3. CHECKS THAT PASS
+
+- PR section 6 parity: 57 of 57 leaf keys in screens and calculator. en equals the parsed PR code
+  block (no missing key, no extra key, no value difference, same order). zh equals en. th has the
+  same keys in the same order.
+- Thai: 53 Thai table cells of PR sections 2, 3, and 5 occur exactly in th. The 7 that do not are
+  explained: needsOwnStudents (open item), chart.legVolume and chart.yourPayout (D-17), the two
+  drop reasons of PR 8.3, and the studentHome caption and alt (D-17).
+- Key use: page.tsx references 57 of 57 leaves. No missing key. No removed key (chart, downline,
+  secondLevel, directTutors, withDownline, twoLevels) in any locale. The component renders each
+  field.
+- Live lines tutorRole.points[3] and faq.items[5].answer equal PR section 5 in en and zh.
+- D-19 blocks and alts match in en, th, and zh. All ten image files exist at the manifest sizes
+  (hero 1024x1024, three covers 480x651, Reedy 1280x912, five screens 520x1125).
+- Gallery AC-19: five slots in order (040, 002, 004, 052, 064), PR alt and caption per slot.
+- Flow: presets 1 to 3 give net 5,354.4, 4,506.32, 8,025.25. Zero personal students with one leg of
+  3 gives net 0 and variant zero (D-18, AC-21). A leg count of 0 hides the leg fields (:312).
+  Add and remove leg work (:176-190). Each edit clears the preset.
+- Layout by class inspection: eslint exit 0, one accent (emerald), min-w-0 on both calculator
+  columns, one column at base for the leg rows and the gallery, covers and screens not cropped.
+- Tests: heavy-run vitest, 11 files, 172 tests passed. eslint on the five touched source files:
+  exit 0.
+
+4. JUDGEMENTS (NOT FINDINGS)
+
+- Rule 8, next/image at page.tsx:323-330 (become-a-tutor block): acceptable. It adds no image
+  component. ProductPicture has no crop mode, and D-19 item 6 needs a 4:3 crop.
+- Open copy item: calc.result.needsOwnStudents is not shipped (PM decision: explain.zero now).
+  With 0 personal students and legs, the page shows non-zero gross and leg commission rows, net 0,
+  and 'Add students to see a month.' The PR v0.5 line replaces it later. Its fact gate is pending.
+- A-P3-1 (ownBar shows result.preTax, component :404-417) is the same fact. Review A routed it as
+  FIX. Not repeated.
+- B-P3-1 (no leg-count cap, resizeLegs returned 2,000,000 entries) is the same fact. Review B
+  accepted it as no-fix. Not repeated.
+
+5. LIMITS
+
+I ran no browser, no server, and no build. The 390 px capture and the visual check belong to the
+UX browser role. page.tsx:144 sets overflow-x-hidden, which clamps overflow and does not prove that
+none exists. I did not judge payout arithmetic or aesthetics.
+
+6. ARTIFACTS
+
+- measure/runs/www_tutor_calculator_20261117/review-c-p3-6c22d6284.json
+- measure/runs/www_tutor_calculator_20261117/review-c-p3-6c22d6284.log (this file)
+Those two paths are the only write scope. No product file, test, plan, or spec changed. No commit.
+No question tool. No dispositions: the brief held no routed findings for this role.
+
+MEASURE_AGENT_RESULT
+role: measure-review-c-ux-api
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+commits: none
+tests_run: heavy-run vitest (page, tutor-commission, www-tutor-calculator.locale, tutor-screens; --maxWorkers=1) pass, 11 files, 172 tests; heavy-run eslint on 5 touched source files pass, exit 0; node use-intl check of bare {n} FAIL in the development build (FORMATTING_ERROR), pass in production
+files_changed: measure/runs/www_tutor_calculator_20261117/review-c-p3-6c22d6284.json, measure/runs/www_tutor_calculator_20261117/review-c-p3-6c22d6284.log
+plan_updates: none
+known_failures: C-P3-1 [Blocker]: page.tsx:115 passes graph.legBar without { n: '{n}' } (design rule 11); no test pins it
+handoff: Route C-P3-1 to Green (pass { n: '{n}' }, widen the key helper type, add a placeholder-strict page test). C-P3-2 goes to the spec owner. C-P3-3 and C-P3-4 are nits for Green. A-P3-1 and B-P3-1 stay with their own dispositions. The open needsOwnStudents copy item stays a follow-up after the PR fact gate. Re-review on the new HEAD.
+END_MEASURE_AGENT_RESULT

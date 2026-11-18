@@ -1,0 +1,195 @@
+MEASURE ADVERSARIAL TESTING LOG
+track: www_tutor_calculator_20261117
+phase: P1 (money module and calculator component)
+role: measure-adversarial-testing
+route: opencode/deepseek-v4.1-flash-free#high
+round: r1
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+role_base_sha: 64465455f7052cf3e01c3cfcaafc81da648f5f94
+pre_adversarial_head_sha: 64465455f7052cf3e01c3cfcaafc81da648f5f94
+audited_head_sha: 61e614489d3a5fce2dedb68b01fce3e4ee501518
+verdict: fail
+status: fail
+
+1. SCOPE
+
+I attacked the phase 1 implementation of the tutor calculator:
+- apps/www-reading-advantage/src/lib/tutor-commission.ts (money module)
+- apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx (component)
+
+Inputs read: spec.md (sections 3, 5.2, 5.3, D-1 to D-16, AC-1 to AC-12), test-strategy.md
+(mutant table M1 to M18), plan.md, the two existing test files, the product module, the
+component, and the locale and page tests.
+
+I changed no product code, no locale, no page, no CSS, and no existing test.
+
+2. WHAT I ADDED
+
+Two new test files, 902 lines, 38 cases:
+- apps/www-reading-advantage/src/lib/tutor-commission.adversarial.test.ts (23 cases)
+  A1 float leakage, A2 truncation and rate scale, A3 boundaries, A4 hostile clamps
+  (including 1e6 legs), A5 conservation, A6 overflow (the red case).
+- apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.adversarial.test.tsx
+  (15 cases) decimal leg count, clear on price edit, clear on leg edit, preset picked twice,
+  typed-versus-preset parity, price 0, negative price, 1e999 price, D-3 display and satang
+  reconciliation, graph bars sum 100, source guards, en/zh parity, page figures parity.
+
+Every money pin has a negative control inside the test. The test asserts the wrong value is
+wrong as well as the right value. No pin passes for a vacuous reason:
+- A1 asserts the raw float product is 1265570 and 71422027583.
+- A2 asserts the rounded product is 41813 and the 1e6 rate gives 1668195.
+- The tax grid counts the discriminating cells and requires the count above 0.
+- The D-3 matrix requires at least one rounding-mismatch cell.
+
+3. RUNS AND COUNTS
+
+Command: bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'
+
+component file:
+  pnpm --filter www-reading-advantage exec vitest run
+  src/components/marketing/tutor-commission-calculator.adversarial.test.tsx --reporter=dot
+  exit 0, Test Files 1 passed (1), Tests 15 passed (15)
+
+module file:
+  pnpm --filter www-reading-advantage exec vitest run
+  src/lib/tutor-commission.adversarial.test.ts --reporter=dot
+  exit 1, Test Files 1 failed (1), Tests 1 failed | 22 passed (23)
+  The single failure is deliberate. It exposes defect F1.
+
+existing pair:
+  pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts
+  src/components/marketing/tutor-commission-calculator.test.tsx --reporter=dot --silent=true
+  exit 0, Test Files 2 passed (2), Tests 41 passed (41)
+  This verifies the plan A5 claim of 41 tests in the two existing files.
+
+types:
+  pnpm turbo run check-types --filter=www-reading-advantage
+  exit 0
+
+Totals: 37 of 38 new cases pass. 1 case is red on purpose. The existing 41 cases pass.
+
+4. MUTATION EVIDENCE
+
+I did not mutate the repository. I copied the module to /tmp/opencode/adv-p1/mut/ and applied one
+change per copy. The driver /tmp/opencode/adv-p1/mut/driver.mjs printed the values below.
+make.mjs regenerates the eight mutant copies from base.ts.
+
+id                    mutant                                  measured wrong value                    pinned value
+M1                    flatSatang returns Math.round(rate*gv)  preset 2 gross 1265570; 1e9 71422027583 1265569; 71422027600
+M2                    round the satang product                preset 2 1265570; 1032 41813; 30000 1668194  1265569; 41812; 1668193
+M2b                   scale rate at 1e6 instead of 1e9        30000 1668195; 1e9 71422000000          1668193; 71422027600
+M3                    independent 70 percent payout           preset 2 payout 885898                  464569 (legs 801000, gross 1265569)
+M4                    June per-child override                 109757 satang per leg; 329271 three legs  400500 per leg; 1201500 three legs
+M5                    second level or net-of-tax leg          2403000 total; 388485 per leg           1201500 total; 400500 per leg
+M6                    drop the max(0, gross-paidBelow) floor  payoutAfterDeduction(100,150) = -50     0
+M7                    preset keeps typed price (D-5)          price input keeps 5000                  3000
+M8                    preset stays selected after edit (D-7)  aria-pressed true; setup and result stay  pressedPresetCount 0; setup and result absent
+M9                    append 0 students for a new leg         resizeLegs([],1) = [0]                  [3]
+M14                   drop a graph row or keep rows after drop row count stays at old leg count     2 rows at 2.5; 0 rows at 0.5; 4 bars
+M15                   drop aria-live or an input label        no live region or no accessible name   aria-live=polite card; labelled spinbuttons
+M_tax_float           Math.round(payout*0.03)                 4 satang on a 120 satang payout         3 satang
+M_conservation_float  sum legs and payout as baht Numbers   8010 + 4645.69 != 12655.69 in float     801000 + 464569 = 1265569 satang
+
+Fourteen mutants are killed by a measured discriminator.
+M10, M11, M16, M17, and M18 are out of scope for phase 1. They belong to phase 2 or to the locale test
+of task 1.3.
+
+5. DEFECT F1 (blocking, routed to Green)
+
+file: apps/www-reading-advantage/src/lib/tutor-commission.ts:96 (toSatang)
+Failing test: apps/www-reading-advantage/src/lib/tutor-commission.adversarial.test.ts > A6 finite
+input whose product overflows > a finite price whose volume overflows returns finite money instead of
+throwing.
+
+Exact failure:
+  RangeError: The number Infinity cannot be converted to a BigInt because it is not an integer
+  at toSatang src/lib/tutor-commission.ts:96
+  via flatSatang src/lib/tutor-commission.ts:106
+  via calculateNetwork src/lib/tutor-commission.ts:171
+
+Probe inputs that throw:
+  {price: 1e307, personalStudents: 1}
+  {price: 1e306, personalStudents: 1000}
+  {price: 1e306, studentsPerLeg: [1000]}
+  {price: Number.MAX_VALUE}
+
+Cause: a finite price times a finite count overflows to Infinity. toSatang calls BigInt(Infinity).
+The component price input has no max (tutor-commission-calculator.tsx:221). readNumber
+(tutor-commission-calculator.tsx:94) clamps only non-finite typed text. A typed 1e307 reaches
+calculateNetwork during render, so the calculator throws instead of showing a figure.
+
+Spec basis: spec 5.2 module rule 1 says a non-finite input becomes 0. Strategy 4.2 requires every
+attack case to return finite, non-negative money.
+
+Smallest fix:
+  - line 148: const ownVolume = clampNonNegative(price * personalStudents);
+  - line 152: const volume = clampNonNegative(price * students);
+  - line 169: const networkVolume = clampNonNegative(ownVolume + legVolume);
+  - toSatang head: if (!Number.isFinite(baht)) return 0n;
+No normal input changes value. The four probe inputs then return zero money, and the satang
+conservation helper holds.
+
+Severity is low. The input range is extreme. F1 blocks only because the gate holds a red test.
+If the PM judges a class price above 1e306 out of contract, the PM may waive F1. The one red case
+then moves to a known residual.
+
+6. NONBLOCKING NOTES
+
+N1 (info) tutor-commission.ts:57. The NetworkResult.preTax JSDoc says "not displayed". The payout
+graph renders preTax as the chart.you row (tutor-commission-calculator.tsx:345). Spec D-9 item 2
+requires the graph rows to sum to the gross. The row is correct. Only the doc sentence is stale.
+No fix is required in this phase.
+
+N2 (info) tutor-commission.ts:179. Above 2^53 satang the baht Number return cannot carry every
+satang. At 1e15 baht with one leg the integer path is exact (71428571200642857 satang). The
+returned Numbers recover 71428571200642860, 16 satang off. This is the Number return contract, not
+the integer rule. The exact pins live at 1e9 with a leg and at 1e15 own-only, where every value is
+a multiple of 16 and recovers exactly.
+
+7. NO-CHANGE CONFIRMATIONS
+
+- No product code changed.
+- No locale, page, or CSS changed.
+- No existing test was weakened or edited.
+- No new dependency. No lockfile change.
+- No deploy. No push.
+- I kept the failing test. I did not weaken it.
+
+8. ARTIFACTS
+
+- apps/www-reading-advantage/src/lib/tutor-commission.adversarial.test.ts (new, 23 cases)
+- apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.adversarial.test.tsx
+  (new, 15 cases)
+- measure/runs/www_tutor_calculator_20261117/adversarial-p1-61e614489.json
+- measure/runs/www_tutor_calculator_20261117/adversarial-p1-61e614489.log (this file)
+
+Test commit: 61e614489d3a5fce2dedb68b01fce3e4ee501518
+  test(www): add phase 1 adversarial calculator probes (track_id: www_tutor_calculator_20261117)
+
+9. RERUN RULE
+
+Phase 1 is local and unpushed (spec D-13). Any later implementation commit invalidates this result.
+The phase 1 adversarial gate must rerun after the Green fix.
+
+MEASURE_AGENT_RESULT
+task: adversarial-p1
+track: www_tutor_calculator_20261117
+phase: 1
+round: r1
+role: measure-adversarial-testing
+route: opencode/deepseek-v4.1-flash-free#high
+verdict: FAIL
+status: fail
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+role_base_sha: 64465455f7052cf3e01c3cfcaafc81da648f5f94
+pre_adversarial_head_sha: 64465455f7052cf3e01c3cfcaafc81da648f5f94
+audited_head_sha: 61e614489d3a5fce2dedb68b01fce3e4ee501518
+commit_sha: 61e614489d3a5fce2dedb68b01fce3e4ee501518
+result_file: measure/runs/www_tutor_calculator_20261117/adversarial-p1-61e614489.json
+tests: new 38 cases (37 passed, 1 intentionally red); existing pair 41 passed; component file exit 0; module file exit 1
+mutants: 14 killed by measured discriminators; 5 out of scope for phase 1
+blocking_findings: 1 (F1 toSatang RangeError on finite overflowing volume)
+nonblocking_findings: 2 (N1 stale preTax doc; N2 loss above 2^53 satang)
+retry_recommendation: route_to_green
+handoff: ROUTE TO GREEN F1; clamp the three volumes with clampNonNegative and return 0n from toSatang for non-finite baht; keep the red A6 case as written
+END_MEASURE_AGENT_RESULT

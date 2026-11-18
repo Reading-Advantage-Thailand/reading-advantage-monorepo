@@ -1,0 +1,24 @@
+Closeout run for www_tutor_calculator_20261117.
+Pre-closeout HEAD 3dbe8a4f87f96774caa44d0b5563287bb620e73c.
+Provenance: final-acceptance-3dbe8a4f8.json audited_head_sha equals the pre-closeout HEAD.
+
+Pre-closeout checks:
+- git rev-parse HEAD -> 3dbe8a4f87f96774caa44d0b5563287bb620e73c (equals audited_head_sha)
+- plan markers: no [~], no [ ], no [b] after C.1 closes; 36 of 36 tasks [x] with Done SHAs
+- A5 rg over plan.md -> exit 1, no hit
+- A6 rg over measure/tracks.md -> exit 1, no hit
+- A9 rg www_tutor_calculator tests/ -> exit 1, no reference
+
+Commands:
+- git mv measure/tracks/www_tutor_calculator_20261117 measure/archive/www_tutor_calculator_20261117 -> exit 0
+- git add measure/tracks.md measure/archive/www_tutor_calculator_20261117
+- find measure/runs/www_tutor_calculator_20261117 -maxdepth 1 -type f (json|log|txt) | xargs git add -f -> 148 files; PNG folders and *.mjs not staged
+- python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track www_tutor_calculator_20261117 -> exit 0 (PASS: closeout checks passed)
+
+Commits:
+- 25c54f5feeed1e52f7f79a3e38f5c5a011ba777d chore(measure): close out www_tutor_calculator (track_id: www_tutor_calculator_20261117)
+- record commit: adds the C.1 Done SHA, the manifest closeout_commit_sha, and this result; its SHA is reported to the orchestrator (it cannot appear in the file it carries).
+
+MEASURE_AGENT_RESULT
+{"role": "measure-closeout", "route": "opencode-go/mimo-v2.6-flash", "track": "www_tutor_calculator_20261117", "status": "pass", "summary": "Closeout passed. Provenance-bound audited_head_sha 3dbe8a4f87f96774caa44d0b5563287bb620e73c equals the pre-closeout HEAD. All 36 plan tasks are [x] with Done SHAs. The track moved to measure/archive/www_tutor_calculator_20261117, the registry row left the active section with the shipped state (five student screens 040, 002, 004, 052, 064; three phases; commit range ending at af78cfb43 pushed to origin/master; CD runs 44053703983 and 44142775630 success; gate output in measure/runs/www_tutor_calculator_20261117/; five open items for the PM's next www push), metadata.json is status done with completed 2026-11-18 and a superseding five-screen decision, the closeout manifest exists, and run evidence is committed with the archive move.", "commits": ["25c54f5feeed1e52f7f79a3e38f5c5a011ba777d"], "closeout_checker_exit": 0, "closeout_checker_output": "PASS: closeout checks passed", "app_paths_changed": false, "push": "not pushed; the orchestrator pushes"}
+END_MEASURE_AGENT_RESULT

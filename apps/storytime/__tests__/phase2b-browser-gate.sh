@@ -59,7 +59,7 @@ stop_group() {
 cleanup() {
   stop_group "$SERVER_PID" "$SERVER_PGID" "$SERVER_PORT"
   stop_group "$STORAGE_PID" "$STORAGE_PGID" "$STORAGE_PORT"
-  podman rm -f "$CONTAINER" >/dev/null 2>&1 || true
+  podman rm -f -v "$CONTAINER" >/dev/null 2>&1 || true
   rm -f "$PLAYWRIGHT"
   rm -rf "$TMP_DIR"
 }
@@ -107,10 +107,14 @@ fi
 REAL_DB_SUMMARY="$(grep -E '^[[:space:]]*Tests[[:space:]]' "$REAL_DB_LOG" | tail -1)"
 REAL_DB_TESTS="$(printf '%s' "$REAL_DB_SUMMARY" | grep -oE '\([0-9]+\)' | tr -dc '0-9' || true)"
 REAL_DB_FAILED="$(printf '%s' "$REAL_DB_SUMMARY" | grep -oE '[0-9]+ failed' | grep -oE '[0-9]+' || true)"
+REAL_DB_PASSED="$(printf '%s' "$REAL_DB_SUMMARY" | grep -oE '[0-9]+ passed' | grep -oE '[0-9]+' || true)"
 REAL_DB_TESTS="${REAL_DB_TESTS:-0}"
 REAL_DB_FAILED="${REAL_DB_FAILED:-0}"
+REAL_DB_PASSED="${REAL_DB_PASSED:-0}"
 echo "real_db_tests=$REAL_DB_TESTS real_db_failed=$REAL_DB_FAILED"
-if [ "$REAL_DB_RC" -eq 0 ]; then
+if [ "$REAL_DB_PASSED" -eq 0 ]; then
+  fail "The real-database run collected no passed row (empty collection: $REAL_DB_SUMMARY)"
+elif [ "$REAL_DB_RC" -eq 0 ]; then
   pass "The real-database races stay within the session caps and the rate limit"
 else
   fail "The real-database races exceed a session cap or lose a rate-limit count"

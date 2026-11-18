@@ -15,6 +15,13 @@
       "when": 1794216328989,
       "tag": "0001_intake_and_close_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794584274221,
+      "tag": "0002_year_file_facts",
+      "breakpoints": true
     }
   ]
 }

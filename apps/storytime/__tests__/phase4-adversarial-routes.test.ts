@@ -478,6 +478,17 @@ describe("Phase 4 adversarial: build and source facts of the flag", () => {
   });
 
   it("links to a teacher route from no source outside the teacher folder", () => {
+    // Round 7 amendment (task 6.2, PM 2026-11-14): the PM order puts a teacher link on the
+    // sign-in landing and on the /st pages. The four files below hold the only `/teacher`
+    // literals outside the teacher folder, and each renders its link behind the runtime flag
+    // check (`teacherRoutesEnabled`) and the role check; row 20 of the browser gate holds the
+    // matching "no link for the family" rows. Every other source stays out.
+    const allowed = new Set([
+      "app/[locale]/sign-in/page.tsx",
+      "app/[locale]/st/[level]/[week]/page.tsx",
+      "app/[locale]/st/page.tsx",
+      "app/api/auth/sign-in/route.ts",
+    ]);
     const sources = sourceFiles(resolve(APP, "app"), new Set(["node_modules", ".next", "teacher"]));
     expect(sources.length, `files_scanned=${sources.length}`).toBeGreaterThan(10);
     const hits: string[] = [];
@@ -487,6 +498,7 @@ describe("Phase 4 adversarial: build and source facts of the flag", () => {
         .split("\n")
         .filter((line) => !line.trim().startsWith("//"))
         .join("\n");
+      if (allowed.has(file.slice(APP.length + 1))) continue;
       if (/["'`][^"'`\n]*\/teacher\b/.test(code)) hits.push(file.slice(APP.length + 1));
     }
     expect(hits, `teacher_links=${hits.length}: a public page must not link to a flag-gated route`).toEqual([]);

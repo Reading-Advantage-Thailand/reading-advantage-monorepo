@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "role": "measure-green",
+  "verdict": "pass",
+  "note": "Final. Task 1.8 is a gate task with no Red test. The five Phase 1 gates exit 0, and the hand page check passes in en and th at 390, 980, and 1280 px. 66 captures and p1-checks.json are under measure/runs/www_tutor_calculator_20261117/p1-captures/. No product, test, or config file changed; the only commit is the plan-evidence update.",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "task": "1.8",
+  "baseline_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "4c4153b04700a3ada45934fcb3336cae84fcf4cc",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/deepseek-v4.1-flash (ra-quota pick green returns the Red family hy4, so it is excluded; this is the next allowed non-Red route)",
+  "resulting_head": "10dcf42a8d88c90f8e02debae761196ef40f2ccd",
+  "commits": [
+    {
+      "sha": "10dcf42a8d88c90f8e02debae761196ef40f2ccd",
+      "subject": "docs(measure): record green 1.8 gate evidence (track_id: www_tutor_calculator_20261117)",
+      "files": [
+        "measure/tracks/www_tutor_calculator_20261117/plan.md"
+      ]
+    }
+  ],
+  "red_change_inside_phase_base": {
+    "note": "Task 1.8 is a gate task and adds no Red test (test-strategy row 1.8: none). The committed Red tests of tasks 1.1, 1.3, 1.5, and 1.7 are inside phase_base_sha..HEAD (commits 7eb6991fc, 08fcd93b0, bcaf27d80, e42aa53fa, 704f03c49, and the page test in f18b6dbbd). The Red tests were treated as immutable and were not edited.",
+    "red_test_commits_in_range": [
+      "7eb6991fc test(www-reading-advantage): pin commission module",
+      "08fcd93b0 test(www-reading-advantage): pin calculator locale copy",
+      "704f03c49 test(www-reading-advantage): align preset pin paths",
+      "bcaf27d80 test(www-reading-advantage): pin calculator UI",
+      "e42aa53fa test(www-reading-advantage): scope D-7 figure assertion"
+    ]
+  },
+  "targeted_command": "none (gate task). The www test suite command is the gate.",
+  "targeted_result": {
+    "note": "No targeted Red command applies to a gate task. The full www suite below is the test gate."
+  },
+  "gates": {
+    "www_test_suite": {
+      "command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test --reporter=dot --silent=true'",
+      "exit_code": 0,
+      "test_files": "Test Files 65 passed (65)",
+      "tests": "Tests 2533 passed (2533)",
+      "duration": "55.68s"
+    },
+    "check_types": {
+      "command": "pnpm turbo run check-types --filter=www-reading-advantage",
+      "exit_code": 0,
+      "note": "The first run replays a cache hit on unchanged inputs. A forced rerun (--force) exits 0 with a real tsc --noEmit run.",
+      "forced_rerun_exit_code": 0
+    },
+    "lint": {
+      "command": "pnpm --filter www-reading-advantage lint",
+      "exit_code": 0,
+      "output": "no output",
+      "new_shadcn_errors_in_touched_files": "none"
+    },
+    "shadcn_ratchet": {
+      "command": "git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json",
+      "exit_code": 0
+    },
+    "build": {
+      "command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage build'",
+      "exit_code": 0,
+      "first_attempt": {
+        "exit_code": 1,
+        "cause": "The Next.js post-build security-advisory nudge: 'Error [SecurityFatalError]: Your version of Next.js is affected by a known security vulnerability.' The route table printed before the error. The message says to retry the same command to continue.",
+        "compile_error": false
+      },
+      "retry_exit_code": 0
+    }
+  },
+  "measure_doctor": {
+    "command": "bash measure/doctor.sh",
+    "run_as_gate": false,
+    "cause": "It fails on a pre-existing architecture snapshot hash mismatch that no file in this track touches, per the brief. It was not run as a gate here."
+  },
+  "page_check": {
+    "server": "pnpm --filter www-reading-advantage start on PORT=3107 (next start), then stopped after the run",
+    "locales": ["en", "th"],
+    "urls": ["/en/products/tutor-advantage", "/th/products/tutor-advantage"],
+    "widths": [390, 980, 1280],
+    "capture_dir": "measure/runs/www_tutor_calculator_20261117/p1-captures/",
+    "capture_count": 66,
+    "states_per_locale_width": ["default (+ full page)", "legs-0", "preset-1", "preset-2", "preset-3", "legs-1", "legs-2", "legs-3", "legs-4", "hand-edit"],
+    "naming": "<locale>-<width>-<state>.png, plus <locale>-<width>-default-full.png for the full page",
+    "results_file": "measure/runs/www_tutor_calculator_20261117/p1-captures/p1-checks.json"
+  },
+  "page_checks": {
+    "no_horizontal_scroll_390": {
+      "pass": true,
+      "note": "documentElement.scrollWidth <= clientWidth and body.scrollWidth <= innerWidth in every state, en and th."
+    },
+    "page_order": {
+      "pass": true,
+      "note": "#become-a-tutor before [data-testid=tutor-calculator] before [data-testid=tutor-commitments], asserted with compareDocumentPosition in every state."
+    },
+    "result_rows_add_up": {
+      "pass": true,
+      "identity": "gross - downline - tax = net",
+      "examples": {
+        "preset_1": "5,520.00 - 0 - 165.60 = 5,354.40",
+        "preset_2": "12,655.69 - 8,010.00 - 139.37 = 4,506.32",
+        "preset_3": "18,709.44 - 12,015.00 - 200.83 = 6,493.61"
+      }
+    },
+    "graph_rows_add_up_to_gross": {
+      "pass": true,
+      "examples": {
+        "preset_2": "4,005.00 + 4,005.00 + 4,645.69 = 12,655.69",
+        "preset_3": "4,005.00 + 4,005.00 + 4,005.00 + 6,694.44 = 18,709.44"
+      },
+      "note": "The graph legs plus the tutor row equal the gross in every state."
+    },
+    "graph_leg_rows_equal_leg_count": {
+      "pass": true,
+      "note": "Checked at leg counts 0, 1, 2, 3, and 4, in en and th at three widths."
+    },
+    "exactly_one_preset_pressed": {
+      "pass": true,
+      "note": "One pressed after each preset click. Zero pressed on the default state and after a hand edit (D-7)."
+    },
+    "price_returns_to_3000": {
+      "pass": true,
+      "note": "A typed price of 5,000 returns to 3,000 when a preset is picked, at both locales and all three widths."
+    },
+    "new_leg_starts_at_3": {
+      "pass": true,
+      "note": "Leg count 0 to 1 adds one leg row whose input reads 3."
+    },
+    "thai_text_renders": {
+      "pass": true,
+      "note": "The th calculator text holds Thai codepoints (U+0E00..U+0E7F) at 390, 980, and 1280 px. The Thai preset names and labels render in the captures with no missing glyphs."
+    },
+    "tab_path_reaches_every_input": {
+      "pass": true,
+      "note": "At two legs the Tab path reaches the three preset buttons and the five inputs: #tutor-price, #tutor-own-students, #tutor-direct-tutors, #tutor-leg-0-students, #tutor-leg-1-students. 29 presses at 390 and 980 px, 39 at 1280 px.",
+      "verified_at": "both locales and all three widths"
+    }
+  },
+  "files_changed_by_this_role": [
+    "measure/tracks/www_tutor_calculator_20261117/plan.md (task 1.8 marked [x] with the five exit codes, the capture directory, and one line per check)",
+    "measure/runs/www_tutor_calculator_20261117/green-1.8-10dcf42a8.json",
+    "measure/runs/www_tutor_calculator_20261117/green-1.8-10dcf42a8.log",
+    "measure/runs/www_tutor_calculator_20261117/p1-captures/ (66 PNGs and p1-checks.json; gitignored)"
+  ],
+  "files_intentionally_untouched": [
+    "apps/www-reading-advantage/src/lib/tutor-commission.ts",
+    "apps/www-reading-advantage/src/lib/tutor-commission.test.ts",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx",
+    "scripts/ci/shadcn-ratchet-baseline.json",
+    "package.json and pnpm-lock.yaml"
+  ],
+  "plan_marking": {
+    "task": "1.8",
+    "state": "[x]",
+    "evidence": "Done line records the five gate exit codes, the capture directory, and one line per check."
+  },
+  "constraints_held": [
+    "Only the plan file changed in the commit",
+    "Captures and result files stay under measure/runs (gitignored)",
+    "No product, test, or config edit",
+    "No committed Red test edited",
+    "Explicit pathspec only; no git add -A, no git commit -a, no stash, no reset",
+    "No disposition line, no question tool, no deploy, and no push"
+  ],
+  "known_failures": [],
+  "questions": [],
+  "handoff_notes": [
+    "Task 1.8 is done at HEAD 10dcf42a8. The Phase 1 gate block passes.",
+    "The build needs two attempts: the first exits 1 on the Next.js security-advisory nudge after the route table prints; the same command retried exits 0. No compile error appears.",
+    "Task 1.9 is the Phase 1 checkpoint. Phase 2 task 2.2 inserts the screens section between tutorRole and the calculator and must keep the order check passing.",
+    "The Next.js security advisory is pre-existing and outside this track. The owner can decide on the suggested `next upgrade --agent=security` separately."
+  ]
+}

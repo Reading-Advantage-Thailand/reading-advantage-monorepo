@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "curriculumId": "reading-advantage-sales-curriculum-v1",
-  "graphSha256": "d6ba52148ddd6674b0b667c78fa6967c5b5715237de8887639ca6e91136defdd",
+  "graphSha256": "547e70e1ae98ae6324b1cfb80a2be388aaeb1f2b715194bed0d05e07d79c8aa2",
   "source": {
     "repository": "advantage-pr",
-    "commit": "7eff8c106c7265b41d584c4ea997d65ea30dadfb",
+    "commit": "609f962e6577e6a4c468dafb758d0cce81526b53",
     "documents": [
       {
         "path": "09-sales-enablement/sales-training-scope-2027.md",
-        "sha256": "e7fae0af0faa0a49aea1a4f49ab7da9610f9a2d7d7c313942de2f84d2736be62"
+        "sha256": "33278ca7ec3ac159225116bc8dcf27e711d363c8adf2e8496fe355862c0435e9"
       },
       {
         "path": "09-sales-enablement/tutor-family-sales-playbook.md",
@@ -24,11 +24,11 @@
       },
       {
         "path": "09-sales-enablement/demo-scripts.md",
-        "sha256": "0d2fac1dab525015634aad23cac1b8af53902a863e9269eb7aa286ca1782b531"
+        "sha256": "3c917b6374cbea5d213bd64d6a417cc6cb79baffc6074cd56bf1412ed04a1959"
       },
       {
         "path": "09-sales-enablement/demo-scripts-checklist.md",
-        "sha256": "9ca9d7251a48c1881a4093549ba0f47fbddf941590c4302456c9f0f38e6146bb"
+        "sha256": "4e8313c9c21320fb89250ff486ff4794c01ffa155dd94558733cd4e77b0ab1da"
       },
       {
         "path": "09-sales-enablement/distributor-rep-onboarding/README.md",
@@ -36,7 +36,7 @@
       },
       {
         "path": "09-sales-enablement/distributor-rep-onboarding/faq.md",
-        "sha256": "31be0c5a33168003718baaed2978b88dd719ae0bf56968628f3b4e88b5a96cbe"
+        "sha256": "c8cf275500772d4b6d55556bfcafaa13492fe116ce887a2ca538268234f62449"
       },
       {
         "path": "09-sales-enablement/distributor-rep-onboarding/objection-handling-guide.md",
@@ -60,27 +60,27 @@
       },
       {
         "path": "09-sales-enablement/roi-calculator.md",
-        "sha256": "34e2e8d992c64f166ec53995d5bea2a6d816811147a4d2fe0f0c39f9e6c9c8a9"
+        "sha256": "9a8cac7b0d7e93ac054dc2c1654e948e33737146afb5d1efcc5a6ad5926684ae"
       },
       {
         "path": "09-sales-enablement/battle-cards/vs-tutor.md",
-        "sha256": "a7538c630bb5163e2286ae6e89d45ebbcc0ffe30f3568cd123aabb2e173602c1"
+        "sha256": "cf5c617821b9dce545921b54851b417555374522c18cd9bb7a8310427f6442a2"
       },
       {
         "path": "09-sales-enablement/advantage-suite-at-a-glance.md",
-        "sha256": "6aa5b08ba4213624653286de96e25297bb185be6423e2a5099fbbcfe5532823f"
+        "sha256": "02df9dfd52340dd2d60a053a82989e9cb566cea81d808905d608336697fca547"
       },
       {
         "path": "04-services/pricing.md",
-        "sha256": "74fc04005cbb49430a7bb9a9d00ba79042ad165b1e0b9c63c4b201602b5e92b2"
+        "sha256": "d163eb8cef8614e9be91be39673e45346e7965a67fc5eaa2ed2421cc0ec45ad4"
       },
       {
         "path": "02-brand/messaging-house.md",
-        "sha256": "fdd2884161e6a912712acd3ec1604d677e3371a500bc14f1cd288a97f8c7e255"
+        "sha256": "1a45f2cbb534bf7f820f26b42eeb19b577e47550950d14f931232b44377052e9"
       },
       {
         "path": "06-research-and-evidence/outcome-claims-policy.md",
-        "sha256": "697cf52b13366137269957d7fc74c26bb3e3320b07ed3b1c045761ec59068245"
+        "sha256": "51d650a75fe4e455a8dc99358a2463cd25d0c4de66a228f1b55136e6f8167b2c"
       },
       {
         "path": "15-business-applications/sales-advantage.md",

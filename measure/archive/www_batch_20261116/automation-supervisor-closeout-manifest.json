@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "track_id": "www_batch_20261116",
+  "status": "closed",
+  "completion_date": "2026-11-16",
+  "pre_closeout_head": "0c7d3485a7f4206f26795662e19c4815ecbe22ca",
+  "lane": "light lane, chore. The metadata lane is light, so the closeout gate does not require the final acceptance. This track ran no spec review, no review rounds, and no acceptance. The Monorepo orchestrator ordered the closeout only.",
+  "acceptance": {
+    "phase": "none; the light lane ran no phase acceptance",
+    "final": "none; the light lane ran no final acceptance",
+    "audited_head_sha": "9a9ae9aea",
+    "status": "not required",
+    "note": "The last code commit is 7843d864b. The commit 9a9ae9aea records the gate results of Phase 3."
+  },
+  "audits": {
+    "spec_review": "none; light lane",
+    "review_a": "none; light lane",
+    "adversarial": "none; light lane",
+    "ci_run": "CD runs 43798094094 and 43806994592 on origin/master, success",
+    "pm_page_check": "rows A and B PASSED 2026-11-16; the captures sit in ~/Desktop/handoff/page-check/20261116-1121/. The detail-page rows and the Science GSE labels wait for the PM re-check."
+  },
+  "live_check": "Orchestrator live check 2026-11-16 on the six detail URLs (en and th of Science, Math, and Zhongwen): HTTP 200 each. The visible text, the meta description, og:description, and twitter:description hold no \"It has no release date.\" and no Thai sentence, and no \"GSE\". The notify line reads \"<Product> is on our roadmap. We will keep your email for news.\".",
+  "commands": [
+    "git fetch origin; git worktree add /home/daniebo/Desktop/rama-worktrees/www-closeouts -b chore/www-closeouts origin/master (0c7d3485a)",
+    "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track www_batch_20261116",
+    "bash tests/orchestrator_marker_vocabulary.sh --track www_batch_20261116",
+    "git mv measure/tracks/www_batch_20261116 measure/archive/www_batch_20261116",
+    "node scripts/ci/affected-apps.mjs --base 0c7d3485a7f4206f26795662e19c4815ecbe22ca --head HEAD"
+  ],
+  "retained_evidence": [
+    "CD runs 43798094094 and 43806994592 (GitHub, outside the repository)",
+    "~/Desktop/handoff/page-check/20261116-1121/ (captures, outside the repository)",
+    "measure/archive/www_batch_20261116/plan.md, section Closeout",
+    "measure/archive/www_batch_20261116/automation-supervisor-closeout-manifest.json"
+  ],
+  "findings_recorded_in_tech_debt": [],
+  "archive_path": "measure/archive/www_batch_20261116",
+  "test_reference_audit": "No test hardcodes measure/tracks/www_batch_20261116. The locale test src/__tests__/www-batch-20261116.locale.test.ts names the track id in its file name and holds no measure path. No test change was required.",
+  "artifact_cleanup": "None. The track made no bulky artifact. The captures sit outside the repository in /tmp/opencode/www-batch-1116/ and ~/Desktop/handoff/page-check/20261116-1121/.",
+  "owner_gate": "Every plan task is complete. The PM runs the page-check of the detail-page rows and of the Science GSE labels. Daniel owns the look of the six pages.",
+  "deviation": "This closeout ran in a Build session, not the measure-closeout subagent. The track ran no final acceptance, so the provenance-bound audited head rule does not apply."
+}

@@ -1,0 +1,49 @@
+# Spec Review (round 2 re-review log): www_tutor_calculator_20261117
+
+Reviewer: spec-review subagent, opencode/glm-5.3-flash-free (substitution record: no spec-review role in ra-quota; author is opencode-go/deepseek-v4.1-flash, a different family).
+Reviewed HEAD: 6c47d7fe49398ac91b3703e47b15249d226294cf (equals audited_head_sha; previous round fb6bf7c0d).
+Diff scope: measure/tracks/www_tutor_calculator_20261117/spec.md and plan.md only (git show --stat confirms).
+
+## Round 2
+
+### What this track proposes
+The track adds two sections to the www Tutor Advantage page in en, th, and zh. Phase 1 builds a pure satang-exact commission module, a client calculator with three example presets, a one-level leg payout graph, and a decorative rate curve. Phase 2 adds a gallery of three blurred screenshots from the delivered set and replaces the two "We do not publish income figures" live lines with copy that points at the calculator examples. The zh block takes the English lines until the contracted Chinese speaker delivers. No push happens before the PM page-check, and no deploy command runs.
+
+### How the current system works, per this spec
+The page is a server component that reads copy with getScopedI18n from a locale file with en, th, and zh blocks. Its sections are hero, process, tutorRole, commitments, and faq; tutorRole.points[3] and faq.items[5].answer still say no income figures are published. A productPictures manifest and the ProductPicture and SectionHeader components already exist for other pages. The commission truth lives in the finance-mlm-service formula; this track re-implements it as a display-only pure module in the www app, with the rate curve and the 3% withholding tax.
+
+### Findings
+- F7 [Nit] spec.md 6.3 line 594: the evidence note quotes student-mobile/002 as showing "ขั้นที่ 8/18". The screen's own label reads "บันทึก 8/18" (record 8/18), and "18 ด้านล่าง" sits under the field. The corrected number 8/18 is right and the caption still fits; only the quoted word is not the screen's. Rationale: the note is the evidence for the caption fit, so the quote should match the screen; wording only, nothing the implementer builds.
+
+## Finding closure (F1-F6 from round 1)
+
+- F1 [Blocker] plan 2.1 manifest test unnamed — closed. Plan 2.1 Files now lists `src/lib/__tests__/tutor-screens.test.ts` (line 151), the Done line names it with its assertions (lines 170-174), and AC-13 names the same path (spec line 679). `apps/www-reading-advantage/src/lib/__tests__` exists with sibling tests. The three statements agree on the file and the assertions.
+- F2 [Major] slot-2 alt mislabels a student-app screen — closed. New D-15a (spec 292-300) marks the alt a draft and keeps PR's wording. The draft mark appears in both entries: the en code comment `// alt draft, see D-15a` (line 572) and the Thai row `... (draft, D-15a)` (line 588). Open question 7 and plan "Answers owed to PR" 4 route it to PR. No contradiction with 6.3 or AC-13.
+- F3 [Major] dangling "design rule 3/7/8" citations — closed. All three now resolve in `apps/www-reading-advantage/docs/design-rules.md`: the `shadcn/no-inline-styles` table row (line 13) for D-9, review-checklist item 7 (line 24) for D-11, and item 8 (line 25) for 6.3. No bare "design rule n" citation remains in either file.
+- F4 [Nit] conservation in baht floats — closed. AC-3 and plan 1.1 item 4 now pin the check in integer satang: 801,000 + 464,569 = 1,265,569 and 1,201,500 + 669,444 = 1,870,944, with the note that a baht-Number sum fails in float.
+- F5 [Nit] overbroad brief-match claim — closed. Spec line 143 now reads "Every money figure in the brief matches this table to the whole baht."
+- F6 [Nit] quoted phase number — closed as written. Line 594 now quotes 8/18; the image shows 8/18. The residual label-word mismatch is F7.
+
+## Regression pass
+
+- Money recheck (D-3 algorithm, rate scale 1e9, truncation, exact integer products under 2^53): six check rates reproduce to four decimals (40.5000, 42.5000, 45.0000, 50.0000, 55.6065, 60.6315); asymptote 71.4286%; rate at 1e9 = 71.422028% < 71.43%. Preset 1: 5,520.00 / 165.60 / 5,354.40. Preset 2: rate 52.7321%, gross 12,655.69, legs 8,010.00, payout 4,645.69, tax 139.37, net 4,506.32. Preset 3: rate 56.6953%, gross 18,709.44, legs 12,015.00, payout 6,694.44, tax 200.83, net 6,493.61. All match D-2.
+- New satang equalities: the module produces exactly 801,000 + 464,569 = 1,265,569 and 1,201,500 + 669,444 = 1,870,944, so AC-3 and plan 1.1 use figures D-2 produces. The baht float counterexample holds: 8010 + 4645.69 !== 12655.69.
+- D-3 reviewed-result line vs D-2: the new guard sentence (172-174) states preset 2 as 12,655.69 / 4,645.69 / 4,506.32 and names the raw-float rounding 12,655.70 / 4,645.70 / 4,506.33 as rejected. No contradiction; the rejected figures appear nowhere as accepted values.
+- D-15a and open question 7 vs 6.3 and AC-13: consistent. AC-13's "the copy's alt text" is the pinned draft string; D-15a says the locale test pins it as it stands.
+- Plan coherence: task 2.1's Files, Done, and AC-13 agree on the manifest test file; "Answers owed to PR" gained item 4 without disturbing items 1-3; gates, phase tables, and Out of scope are unchanged and consistent.
+
+## Verdict
+
+Nothing blocks Red. Verdict: PASS, with one new Nit (F7) for the author's next edit.
+
+MEASURE_AGENT_RESULT
+role: spec-review
+phase: track setup
+track: www_tutor_calculator_20261117
+round: 2
+head_sha: 6c47d7fe49398ac91b3703e47b15249d226294cf
+status: pass
+blocking_findings: none
+nonblocking_findings: F7 [Nit] spec.md 6.3 line 594 — the evidence quote's label word is "บันทึก 8/18" on the screen, not "ขั้นที่ 8/18"; the corrected number 8/18 is right and the caption still fits; wording only.
+retry_recommendation: none
+artifacts: measure/runs/www_tutor_calculator_20261117/spec-review-6c47d7fe.json, measure/runs/www_tutor_calculator_20261117/spec-review-6c47d7fe.log

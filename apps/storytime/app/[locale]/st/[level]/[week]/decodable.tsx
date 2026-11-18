@@ -5,11 +5,14 @@
  *
  * The sounds page shows the element, its graphemes, and its sound; a tap plays the recorded bank
  * clip. A tap on a decodable word asks `blendPlanForWord` how the word plays. A blend word plays
- * its graphemes from the phoneme bank in reading order, then its own word clip. Every other word
+ * its graphemes from the phoneme bank in reading order, then its own word clip. A blend word with
+ * an unsigned grapheme clip plays its own clip at once, with no empty source (finding B1 of task
+ * 6.2, round 5). Every other word
  * plays its own word clip. A word with no clip stays plain text, because a tap never plays a time
- * range of a longer file (Daniel's finding 2, 2026-11-13). A page with a sentence clip shows a
- * button that plays the whole sentence clip. The component never uses the phone voice (rule 10.5):
- * every sound is a recorded file.
+ * range of a longer file (Daniel's finding 2, 2026-11-13). A tricky word with no clip of the
+ * book plays the clip of the week map `focus.trickyWordClips` (task 6.2, round 3). A page with a
+ * sentence clip shows a button that plays the whole sentence clip. The component never uses the
+ * phone voice (rule 10.5): every sound is a recorded file.
  */
 import { mediaUrl } from "../../../../../lib/media/url";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
@@ -331,12 +334,28 @@ export function StorytimeDecodable({
   }
 
   /**
+   * Gives the clip file of one tricky word. The book map of the decodable holds the clip of a
+   * tricky word when the book names it, and the week map `focus.trickyWordClips` holds it
+   * otherwise (task 6.2, round 3). The lookup lower-cases the word, so a week that writes the
+   * tricky word `I` holds the clip under the key `i`.
+   * @param word The tricky word.
+   * @returns The clip file, or undefined when the word has no clip.
+   */
+  function trickyClipOf(word: string): string | undefined {
+    const clip = wordClipOf(word);
+    if (clip) return clip;
+    const clips = week.focus?.trickyWordClips ?? {};
+    const key = word.toLowerCase();
+    if (!Object.hasOwn(clips, key)) return undefined;
+    return clips[key];
+  }
+
+  /**
    * Plays the own clip of one word from its start. The clip is a whole file, so the playback
    * needs no stop and no seek (finding 2 of task 6.2).
-   * @param word The word from the page or the tricky-word list.
+   * @param file The clip file of the word.
    */
-  function playWordClip(word: string): void {
-    const file = wordClipOf(word);
+  function playWordClip(file: string | undefined): void {
     const target = wordRef.current;
     if (!file || !target) return;
     const url = mediaUrl(mediaUrls, file);
@@ -351,21 +370,26 @@ export function StorytimeDecodable({
 
   /**
    * Plays the grapheme clips of a blend word one at a time in reading order, then the own
-   * word clip after the last clip ends (spec FR-7, finding F120).
+   * word clip after the last clip ends (spec FR-7, finding F120). A grapheme clip with no
+   * signed URL (a key that the map holds with no value, or holds not at all) stops the
+   * lead-in: the word then plays its own clip at once, so no element plays an empty source
+   * (finding B1 of task 6.2, round 5).
    * @param graphemes The graphemes of the word, in reading order.
-   * @param word The whole word, played after the last clip ends.
-   * @returns `true` when every grapheme has a bank clip and the sequence started.
+   * @param file The own clip file of the word, played after the last clip ends.
+   * @returns `true` when every grapheme has a bank clip with a signed URL and the sequence
+   * started; `false` when a clip is missing or unsigned, so the caller plays the own clip.
    */
-  function playBlend(graphemes: string[], word: string): boolean {
+  function playBlend(graphemes: string[], file: string | undefined): boolean {
     const files: string[] = [];
     for (const grapheme of graphemes) {
-      const file = CLIP_BY_GRAPHEME.get(grapheme);
-      if (!file) return false;
-      files.push(file);
+      const bankFile = CLIP_BY_GRAPHEME.get(grapheme);
+      if (!bankFile) return false;
+      if (mediaUrl(mediaUrls, bankFile) === "") return false;
+      files.push(bankFile);
     }
     const generation = stopBlendSequence();
     soundOwnerRef.current = false;
-    runBlendSequence(files, word, generation).catch(() => setFailed(true));
+    runBlendSequence(files, file, generation).catch(() => setFailed(true));
     return true;
   }
 
@@ -375,10 +399,14 @@ export function StorytimeDecodable({
    * A second word tap, a sounds-page tap, or a page turn raises the generation number and stops
    * this sequence; the abort of its pending play shows no error alert.
    * @param files The clip files, in reading order.
-   * @param word The whole word.
+   * @param ownFile The own clip file of the word.
    * @param generation The generation of this sequence.
    */
-  async function runBlendSequence(files: string[], word: string, generation: number): Promise<void> {
+  async function runBlendSequence(
+    files: string[],
+    ownFile: string | undefined,
+    generation: number,
+  ): Promise<void> {
     setFailed(false);
     for (const file of files) {
       const target = phonemeRef.current;
@@ -394,7 +422,7 @@ export function StorytimeDecodable({
       }
     }
     if (blendGenerationRef.current !== generation) return;
-    playWordClip(word);
+    playWordClip(ownFile);
   }
 
   /**
@@ -436,11 +464,13 @@ export function StorytimeDecodable({
    * last clip ends; every other word plays its own clip at once (finding F120). A word with no
    * clip plays nothing, because the word is not a tap target.
    * @param word The word from the page or the tricky-word list.
+   * @param clip The clip file of the word, when the caller knows it.
    */
-  function onWordTap(word: string): void {
+  function onWordTap(word: string, clip?: string): void {
+    const file = clip ?? wordClipOf(word);
     const plan = blendPlanForWord(word, week);
-    if (plan.mode === "blend" && playBlend(plan.graphemes, word)) return;
-    playWordClip(word);
+    if (plan.mode === "blend" && playBlend(plan.graphemes, file)) return;
+    playWordClip(file);
   }
 
   const labels = labelsFor(locale, labelOverrides);
@@ -584,23 +614,26 @@ export function StorytimeDecodable({
               {labels.trickyWords}
             </h2>
             <ul className="flex flex-wrap gap-2">
-              {tricky.map((word) => (
-                <li key={word}>
-                  {wordClipOf(word) ? (
-                    <button
-                      type="button"
-                      onClick={() => onWordTap(word)}
-                      className="inline-flex min-h-12 min-w-[44px] items-center justify-center rounded-full border border-[#92400e] bg-[#fcd34d] px-4 text-[#92400e]"
-                    >
-                      {word}
-                    </button>
-                  ) : (
-                    <span className="inline-flex min-h-12 min-w-[44px] items-center justify-center px-4">
-                      {word}
-                    </span>
-                  )}
-                </li>
-              ))}
+              {tricky.map((word) => {
+                const clip = trickyClipOf(word);
+                return (
+                  <li key={word}>
+                    {clip ? (
+                      <button
+                        type="button"
+                        onClick={() => onWordTap(word, clip)}
+                        className="inline-flex min-h-12 min-w-[44px] items-center justify-center rounded-full border border-[#92400e] bg-[#fcd34d] px-4 text-[#92400e]"
+                      >
+                        {word}
+                      </button>
+                    ) : (
+                      <span className="inline-flex min-h-12 min-w-[44px] items-center justify-center px-4">
+                        {word}
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </section>
         ) : null}

@@ -1,0 +1,29 @@
+# Review A P3 r3 at af78cfb43 (www_tutor_calculator_20261117)
+
+Scope: git diff 9fc1292b9..af78cfb43. PM-1 Reedy claim removal (e0637db22, 0a0797355, 28a621ce4,
+5ca39dcfa) and the no-ff merge of origin/master 5211596e4.
+
+Result: PASS. No blocking finding. Three nits:
+- A-P3-r3-1: spec D-21 and AC-24 omit the FAQ deletions and the two retry patterns.
+- A-P3-r3-2: the plan cites red-p3-3.6c-vitest.txt for round 1; the retry overwrote it.
+- A-P3-r3-3: the th platformFeatures Reedy description has no verb after the deletion.
+
+Commands:
+- vitest (8 files, --maxWorkers=1): exit 0, Test Files 8 passed (8), Tests 260 passed (260).
+- tsc --noEmit -p .: exit 0.
+- The merge first-parent diff equals the 5211596e4 blog-post diff (5 files). No other app change.
+
+Artifact: measure/runs/www_tutor_calculator_20261117/review-a-p3-r3-af78cfb43.json
+
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+commits: none
+tests_run: vitest 8 files --maxWorkers=1 -> exit 0 (260 passed); tsc --noEmit -> exit 0
+files_changed: measure/runs/www_tutor_calculator_20261117/review-a-p3-r3-af78cfb43.json and .log
+plan_updates: none
+known_failures: none
+handoff: PASS at af78cfb43. Nits A-P3-r3-1 (spec D-21/AC-24 stale), A-P3-r3-2 (overwritten Red output), A-P3-r3-3 (th phrase with no verb) take FIX or DECLINE; none blocks.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,138 @@
+# Phase 2 acceptance log, round 2 — www_tutor_calculator_20261117
+
+Role: measure-phase-acceptance (Phase 2 only). Route: opencode-go/mimo-v2.6-flash.
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator, branch feat/a63-tutor-calculator.
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha: 94af2c15b5e4eaf393f696564c9eed3e689de057
+audited_head_sha: 94af2c15b5e4eaf393f696564c9eed3e689de057
+Head check: `git rev-parse HEAD` = 94af2c15b5e4eaf393f696564c9eed3e689de057, equal to role_base_sha; `git status --porcelain` empty at start and after every gate. Product head is 203bd5e78dceb9c1701ac708886915f340005d5e.
+Gate-only role: this run wrote no product file, no test, no plan, and no spec, and made no commit beyond the two result files below.
+
+## 1. Phase boundary
+
+Command: `git log --oneline d279b870341c067c33fc884ae8863b5428487c17..HEAD`
+
+Fifteen commits, all with `(track_id: www_tutor_calculator_20261117)`:
+
+- 320fc2fa1 feat(www): add the three blurred tutor screens — task 2.1.
+- 29ffa3542 docs(measure): record green 2.1 asset evidence — plan evidence.
+- e583e21b3 feat(www): add the tutor screens gallery and its copy — task 2.2.
+- 9314f07de docs(measure): record green 2.2 gallery evidence — plan evidence.
+- 0a7ff97e5 feat(www): update the two tutor income lines — task 2.3.
+- 9befd67c3 docs(measure): record green 2.3 locale evidence — plan evidence.
+- e2439b438 docs(measure): record phase 2 gate evidence — task 2.4, plan.md only.
+- 96887abe5 test(www): phase 2 tutor screens adversarial controls — adversarial test commit, 3 new test files.
+- d91e6c527 test(www): pin v0.4 s8 copy Red — task 2.7 Red, 6 test files plus plan.md.
+- 6c2d67161 docs(measure): record red 2.7 evidence — plan evidence.
+- 07a22294e test(www): pin preset 3 net as hero figure — task 2.7 Red correction, 1 test file.
+- 079e33f9e docs(measure): record red 2.7 fix evidence — plan evidence.
+- 7d94576c9 feat(www): apply PR v0.4 s8 tutor copy — task 2.7 Green, 5 product files.
+- 203bd5e78 docs(measure): record green 2.7 evidence — plan evidence.
+- 94af2c15b docs(measure): record green 2.8 gate evidence — plan evidence, plan.md only.
+
+Out-of-scope commits: none. Every commit is a Phase 2 task 2.0-2.8, its plan evidence, or the Phase 2 test commit. No package.json or pnpm-lock.yaml change in the range. No push, no deploy.
+
+HEAD advance rule: `git diff --name-only 203bd5e78..HEAD` returns one path, `measure/tracks/www_tutor_calculator_20261117/plan.md` (39 insertions). The single commit 94af2c15b is plan evidence only, so no implementation and no test content differs between the product head and the audited HEAD. I name that commit here rather than folding it silently into the rule.
+
+Scope of the product change in 96887abe5..203bd5e78 (12 files):
+
+- 5 product files: the tutor-advantage locale (the four PR items in en, th, zh, draft comments removed), tutor-commission.ts (preset 3 `studentsPerLeg` [3,3,3] to [4,4,4], one line), product-pictures.ts (manifest key `lessonPhases` to `shortAnswer`, one line), page.tsx (three `calculator.chart.*` reads plus the slot rename, 8 lines), tutor-commission-calculator.tsx (chart type plus three reads, key rename only).
+- 6 test files re-pinning the replaced keys, strings, figures and preset inputs.
+- plan.md (tasks 2.7 and 2.8 Done blocks).
+
+That is exactly the four PR items of handoff v0.4 section 8 (8.1 chart labels and preset 3, 8.2 shortAnswer slot, 8.3 dropped captions which change no code, 8.4 studentHome caption) plus the page wiring and the manifest rename. No image, no blur script, no dependency, no route, no id, no anchor changed.
+
+## 2. Claim map (Phase 2 scope)
+
+| AC | Status | Proof | Exact |
+|---|---|---|---|
+| AC-6 | met | locale test describe 11 at lines 600-636: exact new en and th pins at both paths, zh equals en, both old lines absent in all three dictionaries, injected positive control for each old line | yes |
+| AC-10 | met | page.test.tsx:72-99 (three cards, alt and caption per slot) and :101-125 (order tutorRole < tutor-screens < tutor-calculator < commitments < faq), plus locale describes 9-10 at 512-598 (nine leaves pinned, count asserted, parity, zh equals en, no draft marker) | yes |
+| AC-13 | met | tutor-screens.test.ts:36 (slot order), :39-49 (path, 520x1125 / 520x1125 / 1440x900, portrait false, existence, 1 MB cap) plus the three webp files (17928, 35422, 65094 bytes) plus page card render with copy alt; ADV-M1 parses the webp headers | yes, carried nit: no in-test wrong-path negative control |
+| AC-14 | met as recorded | plan task 2.1 Done: rectangle table with source and output grey mean and sd for all 8 boxes, four widened edges, one full-size review line per file; script RECTANGLES; Review A re-measured the same boxes | yes by AC wording (recorded review); no live pixel test exists by spec D-14 |
+| AC-15 | open, not met | plan task 2.5 is `[b]`; no page-check folder exists; the UX role gate is stale for the copy change and is not the PM page-check | no |
+| AC-16 (push) | open, not met | plan task 2.6 is `[ ]`; no push, no CD run, no HTTP status exists; the selector half runs here and exits 0 with `["www-reading-advantage"]` | no for the push; yes for the selector |
+
+All four implementation claims stay exact after the copy change. The copy delta touches only `screens.items`, `calculator.chart` and `calculator.presets[2]`; the two live lines at `tutorRole.points[3]` and `faq.items[5].answer` are byte-unchanged (locale lines 151, 232, 803, 886, all four matching spec 6.4). AC-13 and AC-14 are untouched by the delta: `git diff --name-status 96887abe5..203bd5e78` lists no webp and no blur script. AC-15 and AC-16 are reported open, not treated as met.
+
+## 3. Gates at the product head
+
+a. `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test --reporter=dot --silent=true'`
+   exit 0. Evidence: `Test Files  71 passed (71)`, `Tests  2617 passed (2617)`, Start 14:59:01, Duration 60.73s. The count matches the plan 2.8 claim of 71 files and 2617 tests. No failing file and no stale intentional-red test in the aggregate run. Run once as briefed; no busy slot, no retry.
+
+b. `pnpm turbo run check-types --filter=www-reading-advantage`
+   exit 0. Evidence: cache hit, replaying logs 710f6ee763968fac; `$ tsc --noEmit`; `Tasks: 1 successful, 1 total`. green-2.8 records the proving `--force` rerun at exit 0 for the same hash.
+
+c. `pnpm --filter www-reading-advantage lint`
+   exit 0. Evidence: output is only `$ eslint .`. No `shadcn/*` error anywhere.
+
+d. `git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json`
+   exit 0. No output. Baseline unchanged.
+
+e. Build: not run per the brief's instruction, recorded from green-2.8-203bd5e78.json. Attempt 1 exit 1 on the Next.js security-advisory nudge, attempt 2 exit 0. Build id `79VUEHlWBdmk6t_tXaU-p` at `2026-11-17 14:32:31 +0700`, prior id `O_4OqTZ0s7DFdhzVYcCKk` at 11:38. head_proof in the same artifact finds `Leg commission` and `A small team with three legs` in the built chunks and finds no `Leg share` and no `22,714`. The only commit after that build is 94af2c15b, which touches plan.md only.
+
+f. `node scripts/ci/affected-apps.mjs --base ff028a7105ccd5de0c3e9534dd8536b7667e22de --head 94af2c15b5e4eaf393f696564c9eed3e689de057`
+   exit 0. Output: `["www-reading-advantage"]`.
+
+## 4. Audit trail and staleness for the copy change
+
+Verdicts at this delta: review-a-p2-delta-203bd5e78.json PASS (2 nits), review-c-p2-delta-203bd5e78.json PASS (3 notes). Both cover 96887abe5..203bd5e78 and both target the same product content as this audited HEAD.
+
+Stale for the copy change:
+
+- review-a-p2-e2439b438.json (PASS): audited the pre-copy product. Superseded by the Review A delta, which re-reads every hunk, recomputes the money in node, and matches twenty strings to handoff v0.4 section 8.
+- review-c-p2-e2439b438.json (PASS): audited the pre-copy product. Superseded by the Review C delta, which re-checks wiring, key paths, D-10 parity, preset 3 flow, and the anchor and gallery regressions.
+- adversarial-p2-e2439b438.json (PASS, 15 controls): ran the pre-copy pins. Partially covered: d91e6c527 re-pins the adversarial files, its Red run fails 25 cases across 6 of 10 files on exactly the replaced keys, strings, figures and preset inputs, Review A's delta shows the new pins fail on old inputs by string mismatch, and my live suite runs every re-pinned adversarial test at exit 0. No adversarial verdict was re-issued at the copy-changed head.
+- ux-p2-96887abe5.json (PASS, 14 captures): stale. Its commands field records the reused 11:38 build, and its captures include `card-lesson-phases-1280`, the pre-rename slot, with the draft captions and the draft preset 3 text.
+
+Gap that nothing covers: no role has rendered the copy-changed build in a browser. The delta reviews are text and code reviews. I judge this nonblocking, not a missing required gate, because the delta changes no layout logic, id, anchor or breakpoint (page.tsx and the calculator change key names only, and every text-bearing row is `flex-wrap`); test-strategy 4.3 ends with "The PM page-check repeats the three required widths", which assigns the built-page look at 390, 980 and 1280 px to the open AC-15 gate on this exact build; the phase UX review exists and passed with its one finding routed to that same gate; and AC-15 must pass before any push. Optional smallest fix: one UX delta run against the served 14:32 build.
+
+Non-PASS verdicts and remediation (unchanged from round 1): review-a-p1 CHANGES_REQUIRED (F1-F4) -> 64465455f -> review-a-p1-r2 and r3 PASS at d279b8703; adversarial-p1 fail -> e42aa53fa, 704f03c4, daa77805d -> adversarial-p1-r2 PASS at d279b8703; green-1.4 BLOCKED (environment) -> green-1.4-27f33b18e pass. `git merge-base --is-ancestor` confirms d279b8703, e2439b438, 96887abe5 and 203bd5e78 are all ancestors of the audited head.
+
+## 5. Independence and carried nits
+
+No audit role edited product code: feat commits come only from Green tasks 2.1, 2.2, 2.3 and 2.7; the three test commits are Red and adversarial work; the six docs commits touch plan.md only. Review A, Review C, the adversarial role, the UX role and this acceptance wrote only under `measure/runs/`, which `.gitignore:56` ignores; `git status --porcelain` stayed empty. No human evidence invented: no page-check report, push, CD run id or HTTP status is claimed anywhere; plan tasks 2.5 and 2.6 stay `[b]` and `[ ]`; `measure/tracks.md:54-55` still says no push and that the push follows the PM page-check.
+
+This round's three nits are nonblocking. None blocks:
+
+- Review C N1 (test-strategy 49, 78, 81, 122 still name the superseded preset 3 figures and the retired `lessonPhases` key): strategy text drift only. Each row's pass criterion, the named command exiting 0, still holds, and plan task 2.7 records the re-pin. Smallest fix: one pass over those four rows by the orchestrator. No product file changes.
+- Review C N2 (graph rows show money, not student counts, by D-9): correct and by design. Spec D-9 item 3 defines a leg row as label, volume and payout; 12,000 equals four students at the 3,000 baht price, and the input rows show the count 4. No change.
+- Review C N3 / Review A N1 (handoff floats sit one satang above the truncating code): correct. The copy rounds to whole baht, so both readings give the same public line, and the truncating code of spec D-3 is untouched. Note the truncation basis if the handoff is ever revised. No change for this track.
+
+Carried from round 1, all still nonblocking: Review A N1 (manifest wrong-path negative control absent at tutor-screens.test.ts:45-49; ADV-M1..M4 and the 999-path fixture cover the vacuity question but not the strategy promise); Review C N1 (phone-card upscale, a page-check judgement routed to Daniel at task 2.5); Review C N2 (zh page case promised by strategy 39 and 56, absent; zh equals en holds at dictionary level); Phase 1 F3 (build-graph stale, documented skip); Phase 1 F4 (net row hero-only, documented in plan 1.6 and pinned through the heroValue helper in 07a22294e).
+
+New documentation-drift nit: spec 6.2 still names `lessonPhases`, spec 6.3 still holds the draft captions and the D-15a draft alt, spec AC-7 clause 1 still says the test holds the preset 3 draft of D-2a, and `measure/tracks.md:55` still calls preset 3 and the chart labels drafts. Plan task 2.7 records the supersession of D-2a, D-9, D-15a and the four v0.4 items, so no reader is misled about what shipped. None of these files is code and no test reads them. Closeout text only.
+
+## 6. Anti-pattern checks
+
+- A5: pass. Plan 2.0 claims 41 / 31 files and README 2.0 dated 2026-11-17; `ls` counts 41 and 31 and README lines 3-4 hold `Version: 2.0` and `Date: 2026-11-17`. Plan 2.7 claims a Red of 6 failed files and 25 failed tests of 140 and a Green of 10 files and 140 tests; red-2.7-d91e6c527.json records 6 failed of 10 files and 25 failed of 140 tests with exit 1, green-2.7-7d94576c9.json records 10 and 140 with three gates at exit 0. Plan 2.8 claims 71 / 2617, types 0, lint 0, ratchet 0, build 1 then 0, selector 0 with `["www-reading-advantage"]`; green-2.8-203bd5e78.json records those exit codes including `rejected_attempt_exit_codes` build_attempt_1 = 1 and selector_short_head = 2, and my live rerun gives 71 and 2617 at exit 0 with types 0, lint 0, ratchet 0 and the same selector. No `all checks pass` sentence exists in the plan. The `Done:` lines inside tasks 2.5 and 2.6 are definition-of-done text present at the phase base, not completion claims.
+- A3 (applies, contract tests changed): pass. No bare-digit matcher; the two regex hits are `not.toMatch(/\d\.\d{3,}/)` absence checks on first paint; sizes and counts are labeled integers.
+- A4 (applies): pass. Manifest existence check proven able to fail by Review A's 999-path fixture; screens leaf-count fails on 0 leaves; live-line and superseded-figure scans hold injected positive controls; Review A's delta executed the heroValue logic against a card without the net label and got the failure.
+- A6: not applicable, the diff does not touch measure/tracks.md. Spot-checked: the row overstates nothing. One stale conservative clause (`Preset 3 and the three chart labels are drafts`) is filed as drift, not overstatement.
+- A7: not applicable, the diff adds no filter. Spot-checked: ADV-C4 scans raw substrings with positive controls; old lines and superseded figures are exact literals.
+
+## 7. Open gates, named
+
+- AC-15, plan task 2.5 `[b]`: the PM page-check at 390, 980 and 1280 px with Daniel's Thai, on the build that holds the final copy. Open at this head. Owner: the PM, with Daniel.
+- AC-16 as the push, plan task 2.6 `[ ]`: the www-only push, the CD run and the three HTTP 200s. Open at this head. Owner: the PM/orchestrator after task 2.5.
+
+Question for the orchestrator, nonblocking: do you want a role-level UX delta run against the served 14:32 build before task 2.5, or do you accept the PM page-check as the browser look at the final copy? Default I applied: the PM page-check suffices, so this verdict passes.
+
+test-strategy.md section 3 assigns task 2.5 to track closeout and task 2.6 to closeout C.1, and names the task 2.4 block as the Phase 2 closeout gate. That block was re-run at the copy-changed head as task 2.8 and was rerun live here. This verdict covers the Phase 2 implementation and review gates only; it records AC-15 and AC-16 as open, not as met, and it does not mark the phase accepted in the plan.
+
+MEASURE_AGENT_RESULT
+role: measure-phase-acceptance
+track: www_tutor_calculator_20261117
+phase: 2
+round: 2
+verdict: PASS
+status: pass
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha: 94af2c15b5e4eaf393f696564c9eed3e689de057
+audited_head_sha: 94af2c15b5e4eaf393f696564c9eed3e689de057
+tests: heavy-run www suite exit 0 (Test Files 71 passed, Tests 2617 passed, 60.73s); check-types exit 0; lint exit 0; shadcn ratchet diff exit 0; build not run per brief with green-2.8 recording attempt 1 exit 1 then attempt 2 exit 0 at build id 79VUEHlWBdmk6t_tXaU-p and only a plan.md commit after it; affected-apps selector exit 0, ["www-reading-advantage"]
+artifacts: measure/runs/www_tutor_calculator_20261117/phase-accept-p2-r2-94af2c15b.json, measure/runs/www_tutor_calculator_20261117/phase-accept-p2-r2-94af2c15b.log
+open_gates: AC-15 PM page-check (task 2.5 [b], owner PM with Daniel) and AC-16 push (task 2.6 [ ]) are open and not covered by this verdict
+implementation_gate_closed: yes, with only the PM page-check and the push left; the four nonblocking findings (stale UX evidence for the copy change, no adversarial verdict at the copy-changed head, document drift, AC-15/AC-16 open) open no third gate
+retry_recommendation: no_retry
+END MEASURE_AGENT_RESULT

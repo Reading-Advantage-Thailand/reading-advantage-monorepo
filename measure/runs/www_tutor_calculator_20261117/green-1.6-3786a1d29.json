@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "role": "measure-green",
+  "verdict": "pass",
+  "note": "Final. The targeted Red command exits 0 with 10 passing cases against the new component. Types and lint exit 0 with no new shadcn/* error. Q2 is settled: net stays the hero only and the plan carries the note.",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "task": "1.6",
+  "baseline_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "30e59c5888e6dc2d76e70661187d99e49d5256ed",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/deepseek-v4.1-flash (ra-quota pick green returns the Red family, so it is excluded)",
+  "resulting_head": "a8b78cf90f9e8d7ad2eb9c7ff1a2a0d8f5de8e9b",
+  "commits": [
+    {
+      "sha": "3786a1d299929a5bb5f4912ccbffcb120bf0c66d",
+      "subject": "feat(www): add tutor commission calculator UI (track_id: www_tutor_calculator_20261117)",
+      "files": [
+        "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx",
+        "apps/www-reading-advantage/src/app/[locale]/globals.css"
+      ]
+    },
+    {
+      "sha": "a8b78cf90f9e8d7ad2eb9c7ff1a2a0d8f5de8e9b",
+      "subject": "docs(measure): record green 1.6 evidence (track_id: www_tutor_calculator_20261117)",
+      "files": ["measure/tracks/www_tutor_calculator_20261117/plan.md"]
+    }
+  ],
+  "red_change_inside_phase_base": {
+    "commits": [
+      "bcaf27d8003a8f83ceb3dac6e24f3a28f989eb12",
+      "e42aa53fa0f00571b32a46f4c80fc4fb20b81958"
+    ],
+    "file": "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+    "inside": true
+  },
+  "targeted_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx --reporter=dot --silent=true'",
+  "targeted_result": {
+    "exit_code": 0,
+    "test_files": "Test Files 1 passed (1)",
+    "tests": "Tests 10 passed (10)",
+    "passing_cases": 10,
+    "authored_cases": 10
+  },
+  "gates": {
+    "targeted_test_exit_code": 0,
+    "test_files": "Test Files 1 passed (1)",
+    "tests": "Tests 10 passed (10)",
+    "check_types": {
+      "command": "pnpm turbo run check-types --filter=www-reading-advantage",
+      "exit_code": 0
+    },
+    "lint": {
+      "command": "pnpm --filter www-reading-advantage lint",
+      "exit_code": 0,
+      "new_shadcn_errors_in_touched_files": "none"
+    }
+  },
+  "spec_5_3_check": {
+    "use_client_and_named_export": "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx starts with \"use client\" and exports TutorCommissionCalculator with the copy prop of spec 5.3.",
+    "arithmetic_source": "Every figure comes from @/lib/tutor-commission: calculateNetwork, explainVariant, resizeLegs, commissionRate, NETWORK_PRESETS, and CLASS_PRICE_DEFAULT. The component holds no commission arithmetic.",
+    "layout": "SectionHeader with eyebrow, heading, and description; the preset row; a 12-column grid at lg with seven columns of input cards and graph and five columns of results; the preset setup under the buttons; the payout graph and the rate curve; the result panel; the explain line; the notes; the disclaimer last.",
+    "net_is_the_hero": "The result card labels the hero with copy.results.net and shows the net amount. The row list ends at withholding tax, so copy.results.net appears once.",
+    "d5_price_reset": "applyPreset sets the price from NETWORK_PRESETS, which is 3,000 baht.",
+    "d6_first_paint": "The default state is price 3,000, 0 own students, and 0 legs. The card shows the explain.zero line and 0 figures.",
+    "d7_clear_on_edit": "Every input handler sets presetIndex to null, which hides the setup and result text and unpresses the presets. The figures stay.",
+    "d9_graph": "One row per leg plus the tutor row. Each row has a label, a bar, and the money figures. The bar width is a run-time value in the --bar-width CSS custom property, and one @utility bar-width rule in globals.css reads it. The tutor row shows the pre-tax payout, so the rows add up to the gross.",
+    "d11_rate_curve": "The SVG is aria-hidden with no alt text. The x axis runs 0 to 500,000 baht and a circle marks the current network volume.",
+    "live_region": "The result card carries aria-live=\"polite\".",
+    "inputs": "Every input has a label element with htmlFor, type=\"number\", and min={0}. A new leg starts at 3 students through resizeLegs and LEG_STUDENTS_DEFAULT.",
+    "design_rules": "Theme colors only (site neutrals and declared emerald shades), no arbitrary Tailwind value, no inline style except --bar-width, min-h-11 on the buttons and leg controls, and wrapping layouts at 390 px."
+  },
+  "files_changed_by_this_role": [
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx (new)",
+    "apps/www-reading-advantage/src/app/[locale]/globals.css (one @utility bar-width rule)",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md (task 1.6 marked [x] with the sha and the net note)",
+    "measure/runs/www_tutor_calculator_20261117/green-1.6-3786a1d29.json",
+    "measure/runs/www_tutor_calculator_20261117/green-1.6-3786a1d29.log"
+  ],
+  "files_intentionally_untouched": [
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+    "apps/www-reading-advantage/src/lib/tutor-commission.ts",
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+    "package.json and pnpm-lock.yaml"
+  ],
+  "plan_marking": {
+    "task": "1.6",
+    "state": "[x]",
+    "evidence": "Done: 3786a1d299929a5bb5f4912ccbffcb120bf0c66d.",
+    "note": "spec 5.3 item 6 lists a net row; the hero already carries the net figure, so the row list ends at withholding tax and the hero is the net."
+  },
+  "constraints_held": [
+    "No edit to the committed Red test, the module, the locale file, or the page",
+    "No dependency, package.json, or lockfile change",
+    "Bar width only through a CSS custom property and one @utility rule in globals.css",
+    "Explicit pathspecs only; no git add -A, no git commit -a, no stash, no reset",
+    "No disposition line, no question tool, no deploy, and no push",
+    "The plan commit comes after the implementation commit and carries its sha"
+  ],
+  "questions": [],
+  "handoff_notes": [
+    "Task 1.6 is done. Task 1.7 (wire the section on the page and pin the order) is next; it reads this component with the copy of spec 5.3 and passes no arithmetic.",
+    "The component takes the whole calculator copy block as one prop, so the page passes en/th/zh calculator values unchanged.",
+    "The result card holds exactly one copy.results.net node, which the D-7 assertion of Red commit e42aa53fa relies on: within(result).getAllByText(\"15,000\") equals the ownGV row plus the networkGV row.",
+    "The pre-tax payout appears in the graph's tutor row only, so the graph rows add up to the gross (preset 3: 12,015 + 6,694.44 = 18,709.44).",
+    "Phase 1 ships no push (D-13)."
+  ]
+}

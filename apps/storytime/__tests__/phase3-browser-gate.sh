@@ -44,7 +44,7 @@ stop_server_group() {
 
 cleanup() {
   stop_server_group
-  podman rm -f "$DB_CONTAINER" >/dev/null 2>&1 || true
+  podman rm -f -v "$DB_CONTAINER" >/dev/null 2>&1 || true
   rm -f "$PLAYWRIGHT"
   rm -rf "$TMP_DIR"
 }
@@ -323,7 +323,10 @@ const PNG_1X1 = Buffer.from(
 async function interceptMedia(pg) {
   // The signed URLs name the storage endpoint (here the origin of the server) and carry a
   // signature; the old `/media/` path rule stays for the keys that hold `/media/`.
-  await pg.route(url => url.pathname.includes('/media/') || url.searchParams.has('X-Amz-Signature'), route => {
+  // Build assets under `/_next/static/` are never stubbed: the two place pictures
+  // (meadow-p and path-p) are build assets there, and AC-5.3 counts their real bytes and
+  // then subtracts them.
+  await pg.route(url => (url.pathname.includes('/media/') && !url.pathname.startsWith('/_next/static/')) || url.searchParams.has('X-Amz-Signature'), route => {
     const path = new URL(route.request().url()).pathname;
     if (/\.mp3$/i.test(path)) return route.fulfill({ status: 200, contentType: 'audio/wav', body: WAV });
     // The built app serves no static media, so a page picture would 404 and take no layout
@@ -587,6 +590,29 @@ async function watchNetwork(page) {
     async close() { await cdp.detach(); },
   };
 }
+// The two place pictures (meadow-p and path-p) are build assets under
+// `/_next/static/media/`. AC-5.3 counts the first load without them (PM decision,
+// 2026-11-18): AC-4.7 keeps the approved place look, and the browser cache holds both
+// pictures after the first visit. The match reads the whole file stem, so the exclusion
+// cannot widen to another picture.
+function isPlacePicture(pathname) {
+  const name = pathname.split('/').pop() ?? '';
+  if (!/\.webp$/i.test(name)) return false;
+  const stem = name.split('.')[0];
+  return stem === 'meadow-p' || stem === 'path-p';
+}
+function firstLoadMeasure(network) {
+  const transfers = network.transfers.filter(r => !r.afterTap);
+  const withPlaces = transfers.reduce((sum, r) => sum + r.bytes, 0);
+  const places = transfers.filter(r => isPlacePicture(new URL(r.url).pathname));
+  const excludedBytes = places.reduce((sum, r) => sum + r.bytes, 0);
+  return {
+    withPlaces,
+    withoutPlaces: withPlaces - excludedBytes,
+    placeCount: places.length,
+    placePaths: places.map(r => new URL(r.url).pathname),
+  };
+}
 try {
   const selfTestPages = new Map([
     ['/button', '<!doctype html><button style="width:30px;height:30px">x</button>'],
@@ -695,11 +721,26 @@ try {
     await page.goto(`${base}/th/st/2/1`, { waitUntil: 'networkidle' });
     return { ok: true };
   });
-  const firstLoadBytes = await runCheck('AC-5.3 first-load transfer is at most 300000 bytes', async () => {
+  const firstLoad = await runCheck('AC-5.3 first load without the two place pictures is at most 300000 bytes', async () => {
     if (!network) throw new Error('CDP session is unavailable');
-    const bytes = network.transfers.filter(r => !r.afterTap).reduce((sum, r) => sum + r.bytes, 0);
-    console.log(`transferred_bytes_first_load=${bytes}`);
-    return { ok: bytes <= 300000, detail: `transferred_bytes_first_load=${bytes}`, value: bytes };
+    const measure = firstLoadMeasure(network);
+    console.log(`transferred_bytes_first_load_with_place_pictures=${measure.withPlaces}`);
+    console.log(`transferred_bytes_first_load=${measure.withoutPlaces}`);
+    console.log(`place_pictures_excluded=${measure.placeCount} (${measure.placePaths.join(', ')})`);
+    return {
+      ok: measure.withoutPlaces <= 300000,
+      detail: `transferred_bytes_first_load=${measure.withoutPlaces} (first load without the two place pictures)`,
+      value: measure,
+    };
+  });
+  await runCheck('AC-5.3 place pictures excluded: exactly two (meadow-p, path-p)', async () => {
+    if (!firstLoad) throw new Error('The first-load measure is unavailable');
+    console.log(`place_pictures_excluded=${firstLoad.placeCount} (${firstLoad.placePaths.join(', ')})`);
+    return {
+      ok: firstLoad.placeCount === 2,
+      detail: `place_pictures_excluded=${firstLoad.placeCount} (${firstLoad.placePaths.join(', ')})`,
+      value: firstLoad.placeCount,
+    };
   });
   const beforeTapMedia = await runCheck('AC-5.3 no audio or video request occurs before tap', async () => {
     if (!network) throw new Error('CDP session is unavailable');
@@ -764,11 +805,11 @@ try {
     await page.goto(`${base}/th/st/2/1?part=song`, { waitUntil: 'networkidle' });
     const value = await page.locator('.song-stage').evaluate(e => { const r=e.getBoundingClientRect(); return Math.round(r.width/r.height*1000); });
     console.log(`video_box_ratio_x1000_phone=${value}`);
-    // Look Phase 2 (Q23, R-GATE2): the cover card of AC-2.6 pins the phone song stage at
-    // 220 CSS px, so the 9:16 ratio row moves to the new measured shape. The stage spans the
-    // 328 px column at the 360 px viewport and stands 220 px high: 328/220 = 1491. Same
-    // tolerance (+-5), same row count, no weaker check; the height row below is unchanged.
-    return { ok: Math.abs(value-1491)<=5, detail: `video_box_ratio_x1000_phone=${value}` };
+    // Task 6.2, finding 3: the phone video fills the width of the screen in the 9:16 shape of
+    // the phone file, and the stage leaves the page padding on both sides. At the 360 px
+    // viewport the stage spans the 360 px screen and stands 640 px high: 360/640 = 563. Same
+    // tolerance (+-5), same row count, no weaker check; the height row below moves with it.
+    return { ok: Math.abs(value-563)<=5, detail: `video_box_ratio_x1000_phone=${value}` };
   });
   await runCheck('AC-8.2 phone video height', async () => {
     if (!page) throw new Error('Browser page is unavailable');
@@ -776,7 +817,10 @@ try {
     await page.goto(`${base}/th/st/2/1?part=song`, { waitUntil: 'networkidle' });
     const value = await page.locator('.song-stage').evaluate(e => Math.round(e.getBoundingClientRect().height/innerHeight*100));
     console.log(`video_box_height_pct_phone=${value}`);
-    return { ok: value<=75, detail: `video_box_height_pct_phone=${value}` };
+    // Task 6.2, finding 3: the height of the phone box stops at 82 percent of the viewport
+    // (the PM order), so the Play control and the active lyric line stay reachable. The
+    // measured value is 80 percent at the 360 x 800 viewport.
+    return { ok: value<=82, detail: `video_box_height_pct_phone=${value}` };
   });
   await runCheck('AC-8.2 laptop video box ratio', async () => {
     if (!page) throw new Error('Browser page is unavailable');
@@ -786,10 +830,10 @@ try {
     console.log(`video_box_ratio_x1000_laptop=${value}`);
     return { ok: Math.abs(value-1778)<=5, detail: `video_box_ratio_x1000_laptop=${value}` };
   });
-  // The song cap holds only in landscape below 500 px of height (finding F330): at a short
-  // portrait viewport the video keeps its full 9:16 box, so the orientation clause is load
-  // bearing. A deleted clause re-caps the box at 176 px here and this row fails.
-  await runCheck('song video is not capped at a short portrait viewport (390x400)', async () => {
+  // The landscape rule holds only in landscape below 500 px of height (finding F330): at a
+  // short portrait viewport the video keeps the portrait phone box, so the orientation clause
+  // is load bearing. A deleted clause gives the 711 px wide landscape box and this row fails.
+  await runCheck('the phone song video keeps the portrait box at a short portrait viewport (390x400)', async () => {
     if (!page) throw new Error('Browser page is unavailable');
     await page.setViewportSize({ width: 390, height: 400 });
     await page.goto(`${base}/th/st/2/1?part=song`, { waitUntil: 'networkidle' });
@@ -797,8 +841,11 @@ try {
       const r = e.getBoundingClientRect();
       return { height: Math.round(r.height), width: Math.round(r.width), ratio: Math.round(r.width / r.height * 1000) };
     });
-    console.log(`song_video_fullsize_short_portrait=${box.height > 177} (video_height_px=${box.height}, video_width_px=${box.width}, video_ratio_x1000=${box.ratio}, cap_px=176)`);
-    return { ok: box.height > 177, detail: `video_height_px=${box.height}, cap_px=176` };
+    // Task 6.2, finding 3: the portrait box is the full width of the screen and the height
+    // stops at 82 percent of the viewport, so 390 x 328 at the 390 x 400 viewport.
+    const ok = box.width <= 391 && box.height > 300;
+    console.log(`song_video_portrait_box_short_portrait=${ok} (video_height_px=${box.height}, video_width_px=${box.width}, video_ratio_x1000=${box.ratio}, cap_pct=82)`);
+    return { ok, detail: `video_height_px=${box.height}, video_width_px=${box.width}, cap_pct=82` };
   });
   // The P3.6 rows (findings F125, F121 live, F120 live, F123 live). Each row prints a labeled
   // value. Every rule that a synthetic page or value can exercise has a self-test in the
@@ -946,20 +993,33 @@ try {
     console.log(`landscape_controls_visible_question=${ok} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}, sections=${JSON.stringify(info.sections)})`);
     return { ok, detail: `control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}` };
   });
-  await runCheck('landscape_controls_visible on the end of the book at 844x390', async () => {
-    if (!page) throw new Error('Browser page is unavailable');
-    await page.goto(`${base}/th/st/2/4?part=book`, { waitUntil: 'networkidle' });
-    let reached = false;
+  // The end of the read-along book leaves for the week home page (Daniel's finding 1 of task
+  // 6.2). The old end view showed a copy of the week tiles, so the child came back to a ghost
+  // start page that was different to the first start page. The helper follows the book to its end
+  // and checks the new end: the URL holds no `part` and the week tiles show.
+  const reachWeekHomeAfterBook = async (locale) => {
+    await page.goto(`${base}/${locale}/st/2/4?part=book`, { waitUntil: 'networkidle' });
+    const nextLabel = locale === 'th' ? 'หน้าถัดไป' : 'Next page';
+    let home = false;
     for (let i = 0; i < 12; i += 1) {
-      if (await page.locator('[data-reader-end]').count()) { reached = true; break; }
-      const next = page.locator('button[aria-label="หน้าถัดไป"]');
+      if (!new URL(page.url()).searchParams.has('part')) { home = true; break; }
+      const next = page.locator(`button[aria-label="${nextLabel}"]`);
       if (!(await next.count()) || !(await next.isEnabled())) break;
       await next.click();
-      await page.waitForTimeout(120);
+      await page.waitForTimeout(150);
     }
-    if (!reached) reached = Boolean(await page.locator('[data-reader-end]').count());
-    if (!reached) throw new Error('the end of the book did not render');
-    const info = await controlBottomAtLandscape(page, '[data-reader-end] a');
+    if (!home) {
+      await page.waitForTimeout(300);
+      home = !new URL(page.url()).searchParams.has('part');
+    }
+    if (!home) throw new Error('the end of the book did not leave for the week home page');
+    const tiles = await page.locator('[data-week-tiles] a').count();
+    if (tiles < 3) throw new Error(`the week home page must show its tiles, found ${tiles}`);
+  };
+  await runCheck('landscape_controls_visible on the week home after the book end at 844x390', async () => {
+    if (!page) throw new Error('Browser page is unavailable');
+    await reachWeekHomeAfterBook('th');
+    const info = await controlBottomAtLandscape(page, '[data-week-tiles] a');
     const ok = info.count >= 3 && info.bottom > 0 && info.bottom <= info.viewport;
     console.log(`landscape_controls_visible_endofbook=${ok} (control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}, sections=${JSON.stringify(info.sections)})`);
     return { ok, detail: `control_bottom_px=${info.bottom}, controls_found=${info.count}, viewport_px=${info.viewport}` };
@@ -968,7 +1028,7 @@ try {
   // landscape_controls_visible on the week page tiles at 844x390 (finding F310, the F150
   // class): the entry tiles kept a column on the old layout, so the song tile ended below the
   // 390 px viewport and the child needed a scroll to reach it. The list uses the same
-  // landscape row as the end of the book (F282), so all tiles stay inside the viewport.
+  // landscape row as the old end view (F282), so all tiles stay inside the viewport.
   await runCheck('landscape_controls_visible on the week page at 844x390', async () => {
     if (!page) throw new Error('Browser page is unavailable');
     await page.goto(`${base}/th/st/2/1`, { waitUntil: 'networkidle' });
@@ -979,29 +1039,15 @@ try {
   });
 
   // The landscape tile rows hold a horizontal-fit rule (finding F320): every tile of the
-  // end-of-book row and of the week page row must end at or inside the right viewport edge at
-  // 844x390, in both locales, or a child must scroll sideways to reach a link. The
-  // bottom-edge rows cannot catch a sideways overflow, and the Thai labels of the fixture fit,
+  // week home row after the book end and of the week page row must end at or inside the right
+  // viewport edge at 844x390, in both locales, or a child must scroll sideways to reach a link.
+  // The bottom-edge rows cannot catch a sideways overflow, and the Thai labels of the fixture fit,
   // so the English route is measured too.
-  const reachEndOfBook = async (locale) => {
-    await page.goto(`${base}/${locale}/st/2/4?part=book`, { waitUntil: 'networkidle' });
-    const nextLabel = locale === 'th' ? 'หน้าถัดไป' : 'Next page';
-    let reached = false;
-    for (let i = 0; i < 12; i += 1) {
-      if (await page.locator('[data-reader-end]').count()) { reached = true; break; }
-      const next = page.locator(`button[aria-label="${nextLabel}"]`);
-      if (!(await next.count()) || !(await next.isEnabled())) break;
-      await next.click();
-      await page.waitForTimeout(120);
-    }
-    if (!reached) reached = Boolean(await page.locator('[data-reader-end]').count());
-    if (!reached) throw new Error('the end of the book did not render');
-  };
   for (const locale of ['th', 'en']) {
-    await runCheck(`landscape_row_right_edge on the end of the book at 844x390 (${locale})`, async () => {
+    await runCheck(`landscape_row_right_edge on the week home after the book end at 844x390 (${locale})`, async () => {
       if (!page) throw new Error('Browser page is unavailable');
-      await reachEndOfBook(locale);
-      const info = await controlRightAtLandscape(page, '[data-reader-end] a');
+      await reachWeekHomeAfterBook(locale);
+      const info = await controlRightAtLandscape(page, '[data-week-tiles] a');
       const ok = info.count >= 3 && info.right > 0 && info.right <= info.viewport;
       console.log(`landscape_row_right_edge_endofbook_${locale}=${ok} (control_right_px=${info.right}, controls_found=${info.count}, viewport_width_px=${info.viewport})`);
       return { ok, detail: `control_right_px=${info.right}, controls_found=${info.count}, viewport_width_px=${info.viewport}` };
@@ -1056,9 +1102,12 @@ try {
   await allControlsCheck('reader', async () => {
     await page.goto(`${base}/th/st/2/1?part=book`, { waitUntil: 'networkidle' });
   }, 9);
+  // The end of the book is the week home page (Daniel's finding 1 of task 6.2), so this row
+  // measures the child controls of that page. The sign-out form and the parent panel leave the
+  // count, as the week page row does.
   await allControlsCheck('endofbook', async () => {
-    await reachEndOfBook('th');
-  }, 3);
+    await reachWeekHomeAfterBook('th');
+  }, 3, '[data-week-tiles] [data-speaker] > button', `${SIGN_OUT_FORM}, [data-parent-panel]`);
   const openDecodable = async () => {
     await page.goto(`${base}/th/st/2/1?part=decodable`, { waitUntil: 'networkidle' });
   };

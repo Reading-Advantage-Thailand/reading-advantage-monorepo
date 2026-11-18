@@ -1,0 +1,146 @@
+=== Measure Red 1.5 evidence: www_tutor_calculator_20261117 ===
+
+Base values
+  phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+  role_base_sha:  1142ecff96513faaa77007453f11722aa3d86ad9
+  Both values resolve in the worktree. HEAD at role start equals role_base_sha.
+
+Working tree before edits
+  Clean. No dirty paths to classify. No generated, ignored, or unrelated user work was present.
+
+Test file authored
+  apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx
+  Ten cases with @testing-library/react, @testing-library/user-event, and jsdom.
+  Copy comes from en.calculator of @/locales/pages/products/tutor-advantage.
+  No CSS-class selector, no snapshot, no file read outside the repository, no hash.
+
+Red command
+  bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx --reporter=dot --silent=true'
+  exit code: 1
+
+Captured output (verbatim)
+  RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage
+
+  ⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+   FAIL  src/components/marketing/tutor-commission-calculator.test.tsx [ src/components/marketing/tutor-commission-calculator.test.tsx ]
+  Error: Failed to resolve import "./tutor-commission-calculator" from "src/components/marketing/tutor-commission-calculator.test.tsx". Does the file exist?
+    Plugin: vite:import-analysis
+    File: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx:10:42
+    8  |  import { afterEach, describe, expect, it } from "vitest";
+    9  |  import { en } from "@/locales/pages/products/tutor-advantage";
+    10 |  import { TutorCommissionCalculator } from "./tutor-commission-calculator";
+       |                                             ^
+    11 |  var _jsxFileName = "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage/src/componen...
+    12 |  import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
+   ❯ TransformPluginContext._formatLog ../../node_modules/vite/dist/node/chunks/node.js:30585:39
+   ❯ TransformPluginContext.error ../../node_modules/vite/dist/node/chunks/node.js:30582:14
+   ❯ normalizeUrl ../../node_modules/vite/dist/node/chunks/node.js:27607:18
+   ❯ ../../node_modules/vite/dist/node/chunks/node.js:27675:30
+   ❯ TransformPluginContext.transform ../../node_modules/vite/dist/node/chunks/node.js:27643:4
+   ❯ EnvironmentPluginContainer.transform ../../node_modules/vite/dist/node/chunks/node.js:30370:14
+   ❯ loadAndTransform ../../node_modules/vite/dist/node/chunks/node.js:20290:26
+
+  ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+   Test Files  1 failed (1)
+        Tests  no tests
+     Start at  08:28:15
+     Duration  718ms (transform 19ms, setup 60ms, import 0ms, tests 0ms, environment 459ms)
+
+  undefined
+  /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage:
+  [ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run src/components/marketing/tutor-commission-calculator.test.tsx '--reporter=dot' '--silent=true'
+
+Failure reason
+  The component module apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx
+  does not exist at this commit. Vite fails the import at transform, so no test executes.
+  This is the intended Red state for task 1.5. The failure is not a missing dependency, a
+  syntax error, or a test that passes at HEAD.
+
+Failing test names (10 authored; none execute because the import fails first)
+  1. TutorCommissionCalculator first paint > shows the zero line and no income figures
+  2. TutorCommissionCalculator first paint > marks the result card as a polite live region
+  3. TutorCommissionCalculator first paint > labels every input and gives it a zero minimum
+  4. TutorCommissionCalculator leg rows > grows from 0 to 3 legs, one student row per leg, each new leg at 3
+  5. TutorCommissionCalculator presets > shows the preset 1 figures
+  6. TutorCommissionCalculator presets > shows the preset 3 figures and three leg rows in the graph
+  7. TutorCommissionCalculator presets > presses exactly one preset after a selection
+  8. TutorCommissionCalculator presets > shows the selected preset's setup and result text
+  9. TutorCommissionCalculator presets > clears the example text on edit but keeps the figures
+  10. TutorCommissionCalculator presets > defaults the price to 3,000 and restores it when a preset is picked
+
+Contracts pinned (AC-9)
+  Default paint: the explain.zero line, a 0 figure, and no preset income figure.
+  Leg rows: the count goes 0, 1, 2, 3; one labelled student input per leg; a new leg at 3; three graph leg rows.
+  Presets: preset 1 shows 5,520 and 5,354.40; preset 3 shows 18,709.44, 12,015, 6,694.44, and 6,493.61.
+  States: one aria-pressed preset; setup and result text; D-7 clear on edit; aria-live=polite; labelled inputs with min=0.
+  D-5: the price defaults to 3,000 and a preset restores 3,000 after a hand edit to 5,000.
+
+Commits
+  bcaf27d8003a8f83ceb3dac6e24f3a28f989eb12 test(www-reading-advantage): pin calculator UI (track_id: www_tutor_calculator_20261117)
+  30e59c5888e6dc2d76e70661187d99e49d5256ed docs(measure): record red 1.5 evidence (track_id: www_tutor_calculator_20261117)
+
+Files changed in this role
+  apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx (new, 209 lines)
+  measure/tracks/www_tutor_calculator_20261117/plan.md (task 1.5 marked [x] with Done sha)
+  measure/runs/www_tutor_calculator_20261117/red-1.5-bcaf27d80.json (this run)
+  measure/runs/www_tutor_calculator_20261117/red-1.5-bcaf27d80.log (this log)
+
+Remaining failure handed to Green
+  Add apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx with a
+  named export TutorCommissionCalculator that takes the copy prop of spec 5.3. Implement preset
+  buttons, labelled number inputs with min=0, one student row per leg, the payout graph, the
+  result card with aria-live=polite, the explain line, and the D-5 and D-7 behaviour. The ten
+  cases then execute and must pass.
+
+Question for the orchestrator
+  None. No product decision or user input is needed for this Red step.
+
+MEASURE_AGENT_RESULT
+{
+  "role": "measure-mid-red",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "task": "1.5",
+  "baseline_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "1142ecff96513faaa77007453f11722aa3d86ad9",
+  "resulting_head": "30e59c5888e6dc2d76e70661187d99e49d5256ed",
+  "verdict": "pass",
+  "commits": [
+    "bcaf27d8003a8f83ceb3dac6e24f3a28f989eb12 test(www-reading-advantage): pin calculator UI (track_id: www_tutor_calculator_20261117)",
+    "30e59c5888e6dc2d76e70661187d99e49d5256ed docs(measure): record red 1.5 evidence (track_id: www_tutor_calculator_20261117)"
+  ],
+  "tests": {
+    "file": "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+    "authored_case_count": 10,
+    "red_exit_code": 1,
+    "test_files": "Test Files 1 failed (1)",
+    "tests_line": "Tests no tests"
+  },
+  "files": [
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md",
+    "measure/runs/www_tutor_calculator_20261117/red-1.5-bcaf27d80.json",
+    "measure/runs/www_tutor_calculator_20261117/red-1.5-bcaf27d80.log"
+  ],
+  "failure_reason": "The component module src/components/marketing/tutor-commission-calculator.tsx does not exist. Vite fails to resolve the import at transform, so all 10 authored cases are blocked and none execute.",
+  "failing_test_names": [
+    "TutorCommissionCalculator first paint > shows the zero line and no income figures",
+    "TutorCommissionCalculator first paint > marks the result card as a polite live region",
+    "TutorCommissionCalculator first paint > labels every input and gives it a zero minimum",
+    "TutorCommissionCalculator leg rows > grows from 0 to 3 legs, one student row per leg, each new leg at 3",
+    "TutorCommissionCalculator presets > shows the preset 1 figures",
+    "TutorCommissionCalculator presets > shows the preset 3 figures and three leg rows in the graph",
+    "TutorCommissionCalculator presets > presses exactly one preset after a selection",
+    "TutorCommissionCalculator presets > shows the selected preset's setup and result text",
+    "TutorCommissionCalculator presets > clears the example text on edit but keeps the figures",
+    "TutorCommissionCalculator presets > defaults the price to 3,000 and restores it when a preset is picked"
+  ],
+  "remaining_failures": [
+    "Add src/components/marketing/tutor-commission-calculator.tsx with the named export TutorCommissionCalculator and the spec 5.3 copy prop so the 10 cases execute and pass."
+  ],
+  "questions": []
+}
+RESULT: PASS

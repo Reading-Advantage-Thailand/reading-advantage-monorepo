@@ -1,0 +1,59 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage
+
+·x···········x···
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/www-tutor-reedy-claim.test.tsx > AC-24: no locale string says Reedy is not in Primary Advantage > en: the page dictionary holds no forbidden claim
+AssertionError: expected [ …(2) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "faq.items.3.answer: Students with an active Tutor Advantage class package, on the lessons they finished. Reedy is not available in Primary Advantage or Reading Advantage.",[39m
+[31m+   "faq.items.3.answer: Students with an active Tutor Advantage class package, on the lessons they finished. Reedy is not available in Primary Advantage or Reading Advantage.",[39m
+[31m+ ][39m
+
+ ❯ src/__tests__/www-tutor-reedy-claim.test.tsx:185:44
+    183|   for (const locale of LOCALES) {
+    184|     it(`${locale}: the page dictionary holds no forbidden claim`, () =…
+    185|       expect(forbiddenHits(PAGES[locale])).toEqual([]);
+       |                                            ^
+    186|     });
+    187|     it(`${locale}: the component dictionary holds no forbidden claim`,…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/__tests__/www-tutor-reedy-claim.test.tsx > AC-24: the FAQ answer drops the not-available clause > en: the Reedy FAQ answer is the package sentence only
+AssertionError: expected 'Students with an active Tutor Advanta…' to be 'Students with an active Tutor Advanta…' // Object.is equality
+
+Expected: [32m"Students with an active Tutor Advantage class package, on the lessons they finished."[39m
+Received: [31m"Students with an active Tutor Advantage class package, on the lessons they finished.[7m Reedy is not available in Primary Advantage or Reading Advantage.[27m"[39m
+
+ ❯ src/__tests__/www-tutor-reedy-claim.test.tsx:210:27
+    208|     const items = (PAGES.en.faq as Dict).items as Array<Dict>;
+    209|     const entry = items.find((item) => item.question === "Who can use …
+    210|     expect(entry?.answer).toBe(
+       |                           ^
+    211|       "Students with an active Tutor Advantage class package, on the l…
+    212|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 15 passed (17)
+   Start at  00:35:12
+   Duration  1.20s (transform 118ms, setup 73ms, import 228ms, tests 306ms, environment 432ms)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run src/__tests__/www-tutor-reedy-claim.test.tsx '--reporter=dot' '--maxWorkers=1'
+
+## tsc
+
+Command: pnpm --filter www-reading-advantage exec tsc --noEmit -p .
+Exit 0.

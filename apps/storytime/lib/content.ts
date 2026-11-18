@@ -189,3 +189,36 @@ export async function highestOpenWeeks(): Promise<Record<number, number | null>>
   }
   return open;
 }
+
+/**
+ * Gives the first week that a child may open (plan task 6.2, round 7, the teacher entry). The
+ * scan runs level 1 to `LEVEL_MAX` and week 1 to `WEEK_MAX` in order, so the first hit is the
+ * lowest open week of the lowest level that holds one. The rules of a week are the rules of
+ * `loadVisibleWeek` without the log: the readiness gate holds, the draft-media switch is
+ * honored, and the draft-week review switch is honored in the same way. The function writes no
+ * log, because the sign-in handler and the `/st` pages call it on every visit. A file that the
+ * read cannot open is skipped, so a broken file never blocks the entry.
+ * @returns The level and the week of the first open week, or `null` when no week is open.
+ */
+export async function firstOpenWeek(): Promise<{ level: number; week: number } | null> {
+  for (let level = 1; level <= LEVEL_MAX; level += 1) {
+    for (let week = 1; week <= WEEK_MAX; week += 1) {
+      let loaded: WeekLoad;
+      try {
+        loaded = await loadWeek(level, week);
+      } catch {
+        continue;
+      }
+      if (loaded.kind !== "ok") continue;
+      const review = showDraftWeeks() && loaded.week.meta.status !== "published";
+      const judged = review
+        ? { ...loaded.week, meta: { ...loaded.week.meta, status: "published" } }
+        : loaded.week;
+      const blocker = readinessBlocker(judged);
+      if (blocker === null || (blocker === "media_not_approved" && showDraftMedia())) {
+        return { level, week };
+      }
+    }
+  }
+  return null;
+}

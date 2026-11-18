@@ -122,6 +122,17 @@ export function mediaOf(week: StorytimeWeek): WeekMedia[] {
   });
 
   add(week.focus.element?.audio, "phoneme", MEDIA_RULES.phoneme);
+  // The three word clip maps of the week (task 6.2, round 3): the opening routine, the family
+  // words, and the tricky words. Each map holds the lower-case word to the whole clip file.
+  for (const clip of Object.values(week.opening?.wordClips ?? {})) {
+    add(clip, "word-clip", MEDIA_RULES.bookAudio);
+  }
+  for (const clip of Object.values(week.focus.family?.wordClips ?? {})) {
+    add(clip, "word-clip", MEDIA_RULES.bookAudio);
+  }
+  for (const clip of Object.values(week.focus.trickyWordClips ?? {})) {
+    add(clip, "word-clip", MEDIA_RULES.bookAudio);
+  }
   (week.focus.family?.words ?? []).forEach((word, wordIndex) => {
     picture(
       word.image,

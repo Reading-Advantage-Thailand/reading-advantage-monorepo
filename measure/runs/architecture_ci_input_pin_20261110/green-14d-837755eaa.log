@@ -1,0 +1,89 @@
+=== measure green run: task 1.4d ===
+session: Green · P1 T1.4d · architecture_ci_input_pin
+role: measure-jr-green
+track: architecture_ci_input_pin_20261110
+phase: phase 1: ci mode and the local pin refresh (target 2026-11-12)
+task: 1.4d (Green only: baseline the pre-existing v1 debt, spec D-11)
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: 837755eaa552bcc5a5c8f64c5f09bf16a6272eb7
+model: deepseek-v4.1-flash (opencode-go)
+red_model: MiniMax (Phase 1 Red family)
+started: 2026-11-18T17:44:16+0700
+status: in progress
+
+Pre-run checks:
+- HEAD is 837755eaa552bcc5a5c8f64c5f09bf16a6272eb7. It equals origin/master.
+- phase_base_sha 09168dc422ed48604b8f2f0cb9a23ad4d110543b is an ancestor of HEAD.
+- The committed Red change of Phase 1 is inside phase_base_sha..HEAD. Tasks 1.1, 1.2, 1.3, 1.4a, 1.4b, and 1.4c are ancestors: 90d492116, c10d18cbe, 45cedcfef, c8ba91d8c, e97505b3e, aa1d71335.
+- git status --short -- packages/architecture-enforcement is empty.
+- git status --short shows unrelated work outside this track. I do not stage it. The next-env.d.ts files stay unstaged.
+- MemAvailable is 20012 MB. The floor is 1500 MB.
+
+Plan of the plan, step by step:
+1. Check that the r9 preview (ed10bc39d) still matches the current tree.
+2. Run the acknowledged v1 baseline update through heavy-run.
+3. Require additions=332, removals=16, renames=161.
+4. Run architecture:baseline:validate through heavy-run. Expect exit 0.
+5. Run the four named test files. Expect exit 0.
+6. Commit only the two v1 baseline files.
+7. Mark 1.4d [x] with evidence.
+
+=== step 1: does the preview still match the current tree? ===
+- r9 preview measure/runs/architecture_ci_input_pin_20261110/r9-debt-preview.json holds report.status=debt-change, policyVersion=v1, additions=332, removals=16, renames=161, filesScanned=6868, findings=876.
+- The preview commit is ed10bc39d (2026-11-11).
+- Tracked source paths under apps, packages, services, and integrations that changed between ed10bc39d and HEAD: 538.
+- The v1 debt count moved after the preview. The ci_green_master_20261115 gate record on 2026-11-15 reports the same v1 comparison as debt-change with additions=337, removals=16, renames=161. That is 5 more additions than the r9 preview.
+- The v2 manifest pins also moved after the preview: the last pin refresh on master is a54b5741a (2026-11-15). 314 tracked source paths under apps, packages, services, and integrations changed between a54b5741a and HEAD.
+- Consequence: the input snapshot and the report hashes in analyzer-reconciliation.v2.json are stale at HEAD. checkArchitectureRepository validates that manifest before the debt comparison (architecture-check.ts:170-190). The plan step 2 command cannot reach the debt comparison until task 1.4 refreshes the pins, and a stale manifest is invalid under both policies (policy-selection.ts validates the protected v1 family and reads the v2 manifest).
+- The plan route is also blocked by the protected v1 artifact guard: writeArchitectureBaselines throws "Architecture <domain> baseline writes cannot target protected v1 artifacts" for the two v1 baseline paths (baseline-update.ts:246-252). The case baseline-update.test.ts:349 proves it. policy-selection.ts:58-64 validates the v1 family for every policy, so a forced v1 edit breaks policy selection.
+- Stop rule of the orchestrator: "if the debt set moved since ed10bc39d (new or missing entries), STOP and report the difference with counts - do not baseline a different set without an orchestrator decision." The debt set moved (additions 332 -> 337 at 2026-11-15, and 538 source paths changed since the preview). I stop the write.
+
+(The run log continues below with the one confirming read-only command.)
+
+=== guard check: the four named files, outside heavy-run ===
+command: CI=true pnpm exec vitest run --maxWorkers=1 packages/architecture-enforcement/src/__tests__/ratchet.test.ts packages/architecture-enforcement/src/__tests__/ratchet.red.test.ts packages/architecture-enforcement/src/__tests__/baseline-update.test.ts packages/architecture-enforcement/src/__tests__/baseline-validation.test.ts
+exit code: 0
+counts: test_files=4, tests_total=38, tests_failed=0, tests_skipped=0
+duration: 5.27 s
+- The v1 protection case baseline-update.test.ts:349 passes ("refuses protected v1 files"). That is the automated proof of finding F1.
+- The earlier stale implementation-tree failure of baseline-validation.test.ts does not appear at this HEAD. The pin refresh a54b5741a cleared it.
+- The ratchet cases pass. They prove that a new finding still fails against a written baseline (ratchet.red.test.ts:52 and ratchet.test.ts:97 and :120).
+
+=== decision ===
+I did not run the plan step 2 write command. Two reasons:
+1. The debt set moved after the r9 preview. The orchestrator stop rule holds: do not baseline a different set without an orchestrator decision.
+2. The plan route cannot write the v1 baselines. The guard throws before any write, and the v2 manifest pins are stale at HEAD, so the command cannot reach the debt comparison before task 1.4 refreshes the pins.
+
+No baseline file, no manifest, no source file, and no workflow file changed.
+git status --short -- packages/architecture-enforcement is empty after the run.
+
+=== task state ===
+Task 1.4d stays [ ]. The plan note records the block, the counts, and the two causes.
+Task 1.4 stays [~]. I did not start its series.
+Phase 1 does not move to acceptance.
+
+=== measure docs commit ===
+The commit holds two paths: measure/tracks/architecture_ci_input_pin_20261110/plan.md and this log.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: blocked
+track: architecture_ci_input_pin_20261110
+phase: phase 1: ci mode and the local pin refresh (target 2026-11-12)
+task: 1.4d
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: 837755eaa552bcc5a5c8f64c5f09bf16a6272eb7
+green_head: the measure docs commit that follows this block
+commits: one docs commit with plan.md and this log; no implementation commit
+tasks_flipped: none. Task 1.4d stays [ ] and task 1.4 stays [~].
+preview_check: r9 preview at ed10bc39d holds additions=332, removals=16, renames=161, filesScanned=6868, findings=876 under policy v1. The tree moved: 538 tracked source paths under apps, packages, services, and integrations changed between ed10bc39d and HEAD 837755eaa. The ci_green_master_20261115 gate record at 2026-11-15 reports additions=337, removals=16, renames=161 under policy v1, so additions moved by +5 at least. The exact count at HEAD is not measurable before a pin refresh, because the v2 manifest report hashes are stale and checkArchitectureRepository validates the manifest before the debt comparison.
+pin_state: the last master pin refresh is a54b5741a (2026-11-15). 314 tracked source paths changed after it. The v2 manifest input snapshot and report hashes are stale at HEAD. CI stops at that manifest before the debt step.
+route_state: the plan's v1 baseline write is blocked by design. writeArchitectureBaselines throws "Architecture <domain> baseline writes cannot target protected v1 artifacts" for database.v1.json and provider.v1.json (baseline-update.ts:246-252). The case baseline-update.test.ts:349 passes. policy-selection.ts:58-64 validates the v1 family for every policy. The v2 direct write also throws (baseline-update.ts:325-330).
+tests_run: CI=true pnpm exec vitest run --maxWorkers=1 on ratchet.test.ts, ratchet.red.test.ts, baseline-update.test.ts, and baseline-validation.test.ts -> exit 0, test_files=4, tests_total=38, tests_failed=0, tests_skipped=0
+files_changed: measure/tracks/architecture_ci_input_pin_20261110/plan.md (a block note under task 1.4d), measure/runs/architecture_ci_input_pin_20261110/green-14d-837755eaa.log (new). No baseline, manifest, source, workflow, or test file changed.
+plan_updates: task 1.4d keeps [ ] with a block note that names the moved debt set, the stale pins, finding F1, and the guard-check result. No task claims a pass.
+known_failures: no new test failure. The four named files pass 38 of 38 at this HEAD. The CI architecture step still fails on the stale manifest pins.
+deferred: none. This is not a human gate. It is an orchestrator and PM route decision.
+handoff: the orchestrator must settle two items before Green can run task 1.4d. (1) The debt scope moved after the PM decision D-11 of 2026-11-11. The r9 preview is 332 additions; the current tree has at least 337, and the exact set is unknown until a pin refresh. (2) The plan route (policy v1) cannot write the protected v1 baselines. The viable routes are (a) task 1.4 first: refresh the pins, then run a fresh read-only preview to measure the moved debt set, then a new PM scope decision, then a route that can write; or (b) adopt the unmerged chore/ci-green route, which repairs the v2 four-file reconcile route, applies a reviewed v2 re-baseline, refreshes pins, and runs CI under policy v2 (commits 41e320d9d, 2bda8baeb, 394ea0a50, 220e5886d, b0b82e873 on branch chore/ci-green). The default of this role is (a), because it changes no contract and follows the plan order for task 1.4, followed by a fresh PM decision on the moved counts.
+question: Which route should task 1.4d take, given that the debt set moved after the r9 preview and the plan v1 write is code-blocked? Options: (a) run task 1.4 (the pin refresh) first, then a fresh preview, then return to 1.4d with a new PM scope; (b) adopt the chore/ci-green v2 route (reconcile, reviewed v2 re-baseline, CI under policy v2); (c) hold 1.4d and the architecture CI step until the remediation track closes. For (a), confirm that task 1.4 may start before 1.4d despite the plan order. For any route, give the new addition count scope if it differs from 332.
+END_MEASURE_AGENT_RESULT

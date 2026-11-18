@@ -1,0 +1,29 @@
+# Cloud Build config of a review build of the Storytime app (plan task 6.2, round 8).
+#
+# It holds the build and push steps of cloudbuild.yaml only. The deploy of the pushed image
+# with no traffic and a revision tag is a separate step on Daniel's go; this config does not
+# deploy and does not move traffic. Do not add a deploy step, a secret, or env flags here.
+steps:
+  # Step 1: Build the Docker image from the monorepo root context.
+  - name: "gcr.io/cloud-builders/docker"
+    id: "build-image"
+    # The Dockerfile uses the cache mount syntax of BuildKit (RUN --mount=type=cache).
+    # This builder does not use BuildKit by default, so this step turns it on.
+    env: ["DOCKER_BUILDKIT=1"]
+    args:
+      - "build"
+      - "-f"
+      - "apps/storytime/Dockerfile"
+      - "-t"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/primary-advantage-repo/storytime-app:$BUILD_ID"
+      - "."
+
+  # Step 2: Push the image.
+  - name: "gcr.io/cloud-builders/docker"
+    id: "push-image"
+    args:
+      - "push"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/primary-advantage-repo/storytime-app:$BUILD_ID"
+
+options:
+  logging: CLOUD_LOGGING_ONLY

@@ -1,0 +1,219 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track_id": "www_tutor_calculator_20261117",
+  "phase": "P1",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "64465455f7052cf3e01c3cfcaafc81da648f5f94",
+  "pre_adversarial_head_sha": "64465455f7052cf3e01c3cfcaafc81da648f5f94",
+  "audited_head_sha": "61e614489d3a5fce2dedb68b01fce3e4ee501518",
+  "audited_head_is_head": true,
+  "head_note": "The audited head is the test commit. The artifact commit follows it and touches measure/runs only, so no product or test file changes after the audited head.",
+  "route": "opencode/deepseek-v4.1-flash-free#high",
+  "round": "r1",
+  "verdict": "fail",
+  "status": "fail",
+  "summary": "38 new adversarial cases in two new files. 37 pass; 1 is red on purpose and exposes a real defect: a finite price at or above about 1.8e306, or a finite price times a finite count that overflows, makes calculateNetwork throw RangeError in toSatang, so the client calculator crashes during render for a typed 1e307 price. The money algorithm itself is correct under every specified attack: float leakage, truncation order, the 1e9 rate scale, the 20,000 boundary, the 0.5/0.7 ceiling at 1e9 and 1e15, the 0 floor, one baht, NaN, Infinity, -Infinity, -0, fractional and negative leg counts, one million legs, empty legs, price 0, and the two zero-shaped networks. Conservation holds in integer satang for every one of them. Fourteen strategy mutants are killed by measured discriminators, and no existing test, product file, locale, or page changed. The plan's A5 claim of 41 tests in the two existing files is verified live.",
+  "new_test_files": [
+    "apps/www-reading-advantage/src/lib/tutor-commission.adversarial.test.ts",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.adversarial.test.tsx"
+  ],
+  "counts": {
+    "new_module_cases": 23,
+    "new_component_cases": 15,
+    "new_cases_total": 38,
+    "new_cases_passed": 37,
+    "new_cases_failed": 1,
+    "module_file_line": "Test Files 1 failed (1), Tests 1 failed | 22 passed (23)",
+    "component_file_line": "Test Files 1 passed (1), Tests 15 passed (15)",
+    "existing_pair_line": "Test Files 2 passed (2), Tests 41 passed (41)",
+    "existing_pair_matches_plan_a5_claim": true
+  },
+  "mutants": [
+    {
+      "id": "M1",
+      "mutant": "flatSatang returns Math.round(rate * gvSatang), the raw-float product",
+      "killed_by": "A1 float leakage: one billion baht keeps 71,422,027,600 satang where the float product gives 71,422,027,583",
+      "measured_wrong_value": "preset 2 gross 1265570; 1e9 gross 71422027583",
+      "pinned_value": "preset 2 gross 1265569; 1e9 gross 71422027600"
+    },
+    {
+      "id": "M2",
+      "mutant": "round the satang product instead of truncating it",
+      "killed_by": "A1 preset 2 pin and A2 the 1,032 baht pin (418.12 not 418.13)",
+      "measured_wrong_value": "preset 2 gross 1265570; 1032 gross 41813; 30000 gross 1668194",
+      "pinned_value": "1265569; 41812; 1668193"
+    },
+    {
+      "id": "M2b",
+      "mutant": "scale the rate at 1e6 instead of 1e9",
+      "killed_by": "A2 the rate is scaled at 1e9, not 1e6: 16,681.93 at 30,000 baht",
+      "measured_wrong_value": "30000 gross 1668195; 1e9 gross 71422000000",
+      "pinned_value": "1668193; 71422027600"
+    },
+    {
+      "id": "M3",
+      "mutant": "compute the payout independently of the leg sum (a 70 percent split)",
+      "killed_by": "A1 preset 2 payout pin and the A5 expectSatangConservation helper",
+      "measured_wrong_value": "preset 2 payout 885898 satang",
+      "pinned_value": "preset 2 payout 464569 satang, legs 801000, gross 1265569"
+    },
+    {
+      "id": "M4",
+      "mutant": "the June per-child override (r - r_child) * GV_child",
+      "killed_by": "A1/A2 leg pins: each preset leg pays 4,005.00 and preset 3 pays 12,015.00",
+      "measured_wrong_value": "per-child override gives 109757 satang per leg and 329271 for three legs",
+      "pinned_value": "400500 satang per leg and 1201500 for three legs"
+    },
+    {
+      "id": "M5",
+      "mutant": "pay a second level, or subtract a direct tutor's net payout",
+      "killed_by": "A1/A2 leg pins through the doubling and net-of-tax probes",
+      "measured_wrong_value": "doubling gives 2403000 satang total; paying net gives 388485 satang per leg",
+      "pinned_value": "1201500 total and 400500 per leg"
+    },
+    {
+      "id": "M6",
+      "mutant": "remove the max(0, gross - paidBelow) floor",
+      "killed_by": "A3 the payout floor holds at 0 baht and below",
+      "measured_wrong_value": "payoutAfterDeduction(100, 150) returns -50",
+      "pinned_value": "0"
+    },
+    {
+      "id": "M7",
+      "mutant": "let a preset keep a typed price (D-5)",
+      "killed_by": "Adversarial: presets > the same preset picked twice keeps one selection and one example (price after preset is 3,000); the existing preset price test also fails",
+      "measured_wrong_value": "price input keeps 5000",
+      "pinned_value": "price input 3000"
+    },
+    {
+      "id": "M8",
+      "mutant": "keep the preset selected after an edit (D-7)",
+      "killed_by": "two edit cases: a price edit clears the example; a leg-student edit clears the example",
+      "measured_wrong_value": "aria-pressed stays true and the setup/result text stays",
+      "pinned_value": "pressedPresetCount 0; setup and result absent; three buttons still render"
+    },
+    {
+      "id": "M9",
+      "mutant": "append 0 students for a new leg",
+      "killed_by": "A4 resizeLegs clamps a hostile count and hostile entries; Adversarial: leg count a decimal leg count keeps whole rows",
+      "measured_wrong_value": "resizeLegs([], 1) gives [0]",
+      "pinned_value": "[3]"
+    },
+    {
+      "id": "M14",
+      "mutant": "drop one graph row, or keep rows after the leg count drops",
+      "killed_by": "Adversarial: leg count (2 rows at 2.5, 0 rows at 0.5) and the graph bar count (4 bars at preset 3)",
+      "measured_wrong_value": "row count stays at the previous leg count",
+      "pinned_value": "legRows length 2 then 0; barWidths length 4"
+    },
+    {
+      "id": "M15",
+      "mutant": "remove aria-live or an input label",
+      "killed_by": "every component case: resultRegion() throws when the polite live region is absent; inputs are queried by accessible name",
+      "measured_wrong_value": "no live region or no accessible name",
+      "pinned_value": "aria-live=polite result card and labelled spinbuttons"
+    },
+    {
+      "id": "M_tax_float",
+      "mutant": "tax with Math.round(payout * 0.03) instead of (payout * 3n) / 100n",
+      "killed_by": "A1 the 3 percent tax truncates satang (GV 3 baht: 0.03 not 0.04) and the 240-case tax grid with a proven discriminator count",
+      "measured_wrong_value": "tax 4 satang on a 120 satang payout",
+      "pinned_value": "3 satang"
+    },
+    {
+      "id": "M_conservation_float_sum",
+      "mutant": "sum leg payouts and payout as baht Numbers",
+      "killed_by": "the A5 expectSatangConservation helper: leg rows, legs plus payout, tax, and net all compare in integer satang",
+      "measured_wrong_value": "8010 + 4645.69 !== 12655.69 in float",
+      "pinned_value": "801000 + 464569 = 1265569 satang"
+    }
+  ],
+  "mutants_out_of_scope": [
+    "M10 (zh translation), M11 (old live line), M16 (gallery order), M17 (en string), M18 (D-16 token) belong to phase 2 or to the locale test of task 1.3, not to the phase 1 money and component attack set."
+  ],
+  "blocking_findings": [
+    {
+      "id": "F1",
+      "severity": "low",
+      "file": "apps/www-reading-advantage/src/lib/tutor-commission.ts:96",
+      "ac": "spec 5.2 module rule 1 (a non-finite input becomes 0) and the strategy 4.2 rule that every attack case returns finite, non-negative money",
+      "defect": "A finite, positive price whose volume overflows makes toSatang call BigInt(Infinity) and throw RangeError. calculateNetwork({price:1e307, personalStudents:1}) throws, and so do {price:1e306, personalStudents:1000} (the product overflows) and {price:1e306, studentsPerLeg:[1000]}. The component price input has no max (tutor-commission-calculator.tsx:221) and readNumber (tutor-commission-calculator.tsx:94) clamps only non-finite typed text, so a typed 1e307 reaches calculateNetwork during render and the calculator throws instead of showing a figure.",
+      "failing_test": "apps/www-reading-advantage/src/lib/tutor-commission.adversarial.test.ts > A6 finite input whose product overflows > a finite price whose volume overflows returns finite money instead of throwing. Failure: RangeError: The number Infinity cannot be converted to a BigInt because it is not an integer, at toSatang src/lib/tutor-commission.ts:96 via flatSatang:106 and calculateNetwork:171.",
+      "smallest_fix": "Clamp every computed volume and guard the satang conversion: `const ownVolume = clampNonNegative(price * personalStudents);` at line 148, `const volume = clampNonNegative(price * students);` at line 152, `const networkVolume = clampNonNegative(ownVolume + legVolume);` at line 169, and `if (!Number.isFinite(baht)) return 0n;` at the head of toSatang. No normal input changes value; the four probe inputs then return 0 money and satisfy the satang conservation helper.",
+      "note": "Blocking only because the gate holds a red test. The input range is extreme; if the PM judges a class price above 1e306 out of contract, the PM may waive F1 and the one red case moves to a known residual."
+    }
+  ],
+  "nonblocking_findings": [
+    {
+      "id": "N1",
+      "severity": "info",
+      "file": "apps/www-reading-advantage/src/lib/tutor-commission.ts:57",
+      "defect": "The NetworkResult.preTax JSDoc says 'not displayed', but the payout graph renders it as the chart.you row (tutor-commission-calculator.tsx:345). Spec D-9 item 2 requires the graph rows to sum to the gross, so preTax is the correct row and only the doc sentence is stale.",
+      "smallest_fix": "None required for this phase; amend the sentence in a later docs pass with the spec owner."
+    },
+    {
+      "id": "N2",
+      "severity": "info",
+      "file": "apps/www-reading-advantage/src/lib/tutor-commission.ts:179",
+      "defect": "Above 2^53 satang the baht Number return cannot carry every satang. At 1e15 baht with one leg the integer path is exact (gross 71428571200642857 satang), but the returned Numbers recover 71428571200642860 for legs plus payout, 16 satang off. This is the Number return contract, not the integer rule.",
+      "smallest_fix": "None. The exact pins live at 1e9 with a leg and at 1e15 own-only, where every value is a multiple of 16 and recovers exactly."
+    }
+  ],
+  "evidence": [
+    "Module file run: Test Files 1 failed (1), Tests 1 failed | 22 passed (23), exit 1; the single failure is the A6 RangeError at toSatang line 96.",
+    "Component file run: Test Files 1 passed (1), Tests 15 passed (15), exit 0.",
+    "Existing pair run (A5 check of the plan's 41-test claim): Test Files 2 passed (2), Tests 41 passed (41), exit 0.",
+    "check-types for www-reading-advantage exits 0 with the two new files in the tree.",
+    "Mutant driver in /tmp/opencode/adv-p1/mut imported copies of the module with one change each: M1 preset 2 gross 1265570 and 1e9 gross 71422027583; M2 1265570 and 41813; M2b 30000 gross 1668195 and 1e9 gross 71422000000; M3 payout 885898; M5 legs 2403000; M6 payoutAfterDeduction(100,150) = -50; tax float 4 satang; M9 resizeLegs([],1) = [0].",
+    "Per-child override measured from the production commissionRate: (rate(33000) - rate(9000)) * 9000 = 1097.57 baht per leg, 329271 satang for three legs, against the pinned 1201500.",
+    "Positive controls inside the tests: A1 asserts the float product is 1265570 and 71422027583; A2 asserts the rounded product is 41813 and the 1e6 rate gives 1668195; the tax grid counts the discriminating cells and requires the count above 0; the D-3 matrix requires at least one rounding-mismatch cell.",
+    "The 1e6-leg case executes with 1,000,000 leg rows, gross 214277083800 satang, legs 124500000000, payout 89777083800, tax 2693312514, net 87083771286, and the satang identity holds.",
+    "The graph bars sum to 100.000 percent at preset 2 (three bars) and preset 3 (four bars), with the 4,005.00 per-leg and 4,645.69 tutor shares pinned.",
+    "The display cases parse every dd value and the hero: 1265569 - 801000 - 13937 = 450632 and 1870944 - 1201500 - 20083 = 649361, and neither locale copy produces a third decimal or a minus sign."
+  ],
+  "commands": [
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.adversarial.test.tsx --reporter=dot' -> exit 0, Tests 15 passed (15)",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.adversarial.test.ts --reporter=dot' -> exit 1, Tests 1 failed | 22 passed (23)",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts src/components/marketing/tutor-commission-calculator.test.tsx --reporter=dot --silent=true' -> exit 0, Tests 41 passed (41)",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm turbo run check-types --filter=www-reading-advantage' -> exit 0",
+    "node /tmp/opencode/adv-p1/mut/driver.mjs (eight mutated module copies, values quoted under evidence)",
+    "git commit 61e614489 (two new test files, pathspec only)"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/lib/tutor-commission.adversarial.test.ts",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.adversarial.test.tsx",
+    "measure/runs/www_tutor_calculator_20261117/adversarial-p1-61e614489.json",
+    "measure/runs/www_tutor_calculator_20261117/adversarial-p1-61e614489.log"
+  ],
+  "no_changes": [
+    "No product code, locale, page, CSS, or existing test changed.",
+    "No new dependency and no lockfile change.",
+    "No deploy and no push."
+  ],
+  "retry_recommendation": "route_to_green",
+  "handoff": "ROUTE TO GREEN: one defect, F1. calculateNetwork throws RangeError for a finite price whose volume overflows (1e307 x 1 student throws; 1e306 x 1000 throws; 1e306 with a leg of 1000 throws). The red test is committed on purpose in src/lib/tutor-commission.adversarial.test.ts (A6 group) and it must stay as written. Smallest fix: clamp the three computed volumes with clampNonNegative(price * personalStudents), clampNonNegative(price * students), and clampNonNegative(ownVolume + legVolume), and return 0n from toSatang when the baht value is not finite. Then the four probe inputs return zero money and the A6 case passes. Expected result: module file 23 passed, component file 15 passed, existing pair 41 passed. Any implementation commit invalidates this result and reruns the phase 1 adversarial gate. No question for the PM; if the PM judges a class price above 1e306 out of contract, waive F1 and record the one red case as a known residual instead.",
+  "confidence": "high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "Every specified attack returns the spec money and conserves satang, but calculateNetwork throws RangeError for a finite overflowing price at tutor-commission.ts:96."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "Each money pin carries a negative control, and eight mutated module copies produced the wrong values the tests pin (for example preset 2 gross 1265570 against 1265569)."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git status is clean after commit 61e614489; only the two new test files and the two run artifacts changed."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Four heavy-run command results with exact summary lines, a mutation driver with measured wrong values, and the failing RangeError with file:line."
+    }
+  ]
+}

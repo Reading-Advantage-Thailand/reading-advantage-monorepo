@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "role": "measure-mid-red",
+  "verdict": "pass",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "task": "1.3",
+  "baseline_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "545a43a798cfa9dd35de54e8efc8aec6ceb36ada",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/hy4-flash-free#high (ra-quota pick red)",
+  "resulting_head": "1a32da5b2a38c8e60ff9d6509786b8521a3ce988",
+  "commits": [
+    {
+      "sha": "08fcd93b039f53d26447a9ec8590c17264397ec3",
+      "subject": "test(www-reading-advantage): pin calculator locale copy (track_id: www_tutor_calculator_20261117)",
+      "files": ["apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts"]
+    },
+    {
+      "sha": "1a32da5b2a38c8e60ff9d6509786b8521a3ce988",
+      "subject": "docs(measure): record red 1.3 evidence (track_id: www_tutor_calculator_20261117)",
+      "files": ["measure/tracks/www_tutor_calculator_20261117/plan.md"]
+    }
+  ],
+  "test_file": "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+  "imports": "{ en, th, zh } from \"@/locales/pages/products/tutor-advantage\"",
+  "red_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --silent=true'",
+  "red_exit_code": 1,
+  "red_evidence": {
+    "test_files": "Test Files 1 failed (1)",
+    "tests": "Tests 10 failed | 8 passed (18)",
+    "failure_reason": "The calculator block is absent from the en, th, and zh dictionaries. DICTS.en.calculator is undefined, so the copy pins, key order, zh identity, D-2a draft, chart labels, and price notes all fail on undefined.",
+    "vitest_phase": "tests execute; 10 cases fail on assertions and 8 positive-control or vacuous checks pass",
+    "expected_failure": true
+  },
+  "authored_test_case_count": 18,
+  "failing_test_names": [
+    "1. the calculator block exists > exists in en, th, and zh",
+    "2. en and th copy pinned word for word (AC-5) > holds all 34 string leaves in en",
+    "2. en and th copy pinned word for word (AC-5) > holds all 34 string leaves in th",
+    "3. key order and structure (AC-5) > keeps the spec 5.4 key order in en, th, and zh",
+    "4. zh holds the English lines (D-10) > equals en at every pinned key path",
+    "5. preset 3 draft of D-2a > pins the en draft name, setup, and result",
+    "5. preset 3 draft of D-2a > pins the th draft name, setup, and result",
+    "5. preset 3 draft of D-2a > pins the three chart draft labels in en and th",
+    "7. price default of 3,000 (AC-8) > keeps 3,000 in the en price note",
+    "7. price default of 3,000 (AC-8) > keeps 3,000 in the th price note"
+  ],
+  "passing_test_names": [
+    "3. key order and structure (AC-5) > uses the same string key paths in en, th, and zh (vacuous at Red)",
+    "3. key order and structure (AC-5) > has no second-level keys (D-4)",
+    "3. key order and structure (AC-5) > detects each dropped key when it is injected (positive control)",
+    "4. zh holds the English lines (D-10) > equals the whole en leaf map (vacuous at Red)",
+    "6. superseded figures are absent (AC-7) > finds no 5,884, 5,707, 22,714, or 9,889 in any calculator block (vacuous at Red)",
+    "6. superseded figures are absent (AC-7) > detects each superseded figure when it is injected (positive control)",
+    "8. June claims are absent (D-16, AC-8) > finds no forbidden claim in any calculator block (vacuous at Red)",
+    "8. June claims are absent (D-16, AC-8) > fails on each forbidden claim when it is injected (positive control)"
+  ],
+  "contracts_pinned": {
+    "ac5": "34 string leaves of spec 5.4 pinned word for word in en and th; exact key order eyebrow, heading, description, volumeNote, rateNote, payoutNote, inputs, results, explain, chart, presets, disclaimer; no inputs.secondLevel, inputs.studentsSecondLevel, or explain.twoLevels",
+    "ac7": "D-2a preset 3 name, setup, and result pinned in en and th; three chart labels pinned; no 5,884, 5,707, 22,714, or 9,889 in any calculator block",
+    "ac8": "inputs.priceNote holds 3,000 in en and th; D-16 scan fails on annual, per year, hour, hourly, VAT, Tawi, no earning cap, salary, and teacher",
+    "d10": "zh matches en at every pinned key path and the whole en leaf map"
+  },
+  "translation_of_draft_markers": "The (draft) labels in the spec 5.4 th table are annotations, not string content. The th strings use the D-2a draft text and the chart labels without the suffix; D-2a gives the preset 3 values without it.",
+  "files_written": [
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md",
+    "measure/runs/www_tutor_calculator_20261117/red-1.3-08fcd93b.json",
+    "measure/runs/www_tutor_calculator_20261117/red-1.3-08fcd93b.log"
+  ],
+  "constraints_held": [
+    "No locale file, module, component, or page written",
+    "No file read outside the repository by the test",
+    "String equality only; no toMatchSnapshot and no hash",
+    "No disposition line written",
+    "No question tool used",
+    "No deploy and no push",
+    "Explicit pathspecs only; no git add -A, no stash, no reset"
+  ],
+  "questions": [
+    "Spec 5.4 th table prints (draft) on chart labels and preset 3 name and setup, while D-2a prints the same th values without it. This test treats (draft) as an annotation and pins the D-2a text. Shall Green keep the suffix out of the dictionary values?"
+  ]
+}

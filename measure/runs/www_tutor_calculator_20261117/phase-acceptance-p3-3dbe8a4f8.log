@@ -1,0 +1,69 @@
+# Phase acceptance log: www_tutor_calculator_20261117, Phase 3 record delta, HEAD 3dbe8a4f8
+
+Accepted HEAD (immutable): 3dbe8a4f87f96774caa44d0b5563287bb620e73c.
+`git rev-parse HEAD` returns the same SHA before and after the checks. The worktree
+is clean after the runs (only git-ignored `measure/runs/` writes).
+
+## Why this delta exists
+
+Final acceptance failed at 789511cb1 on F1 only: the record commits after af78cfb43
+(plan.md, spec.md, and now metadata.json) had no covering phase acceptance. The
+final role already checked the spec.md edit against the code and the tests and found
+it matches. This delta acceptance covers both record commits (789511cb1, 3dbe8a4f8).
+
+## Scope
+
+`git diff --name-only af78cfb43..3dbe8a4f8` lists only:
+- measure/tracks/www_tutor_calculator_20261117/metadata.json
+- measure/tracks/www_tutor_calculator_20261117/plan.md
+- measure/tracks/www_tutor_calculator_20261117/spec.md
+
+No apps/ path changed. Code gates are therefore unchanged since
+phase-acceptance-p3-af78cfb43.json, which this result cites for the full suite
+(77 files, 2827 tests, exit 0), lint (exit 0), downline scan (exit 1, no output),
+build (exit 0), and affected-apps (["www-reading-advantage"]).
+
+## Record checks against code and logs
+
+- Plan 3.7: round-1 artifacts review-a/b/c-p3-6c22d6284.json exist; round-2
+  review-a/b/c-p3-r2-f85f63cf3.json all pass; adversarial-p3-f85f63cf3.json passes
+  at f85f63cf3; prior acceptance phase-acceptance-p3-9fc1292b9.json passes;
+  round-3 review-a/c-p3-r3-af78cfb43.json pass at af78cfb43; model routes match
+  the artifacts (A opus, B muse-spark, C and adversarial sonnet, acceptance
+  muse-spark).
+- Plan 3.8: `git merge-base --is-ancestor af78cfb43 origin/master` is yes and
+  origin/master head is af78cfb43 (fast-forward from 5211596e4 as recorded). CD
+  run 44142775630 is recorded in final-acceptance-789511cb1.json.
+- Spec D-21/AC-24: the eight spec patterns equal
+  src/__tests__/www-tutor-reedy-claim.test.tsx lines 34-43 exactly, including
+  the two F6 retry patterns and the faq.items.3.answer deletion note.
+- Five screens: product-pictures.ts holds guidedWriting, shortAnswer, feedback,
+  selfReflection, and classRecord. No studentHome key ships on the tutor page.
+  needsOwnStudents appears nowhere in src, consistent with its open-item status.
+- Section 10: answers name d91e6c527 and handoff v0.4 section 8 items 8.1-8.4;
+  the five open items after af78cfb43 match in plan and spec.
+
+## Spot checks at the new HEAD
+
+- `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` Exit 0.
+- `pnpm --filter www-reading-advantage exec vitest run
+  src/__tests__/www-tutor-reedy-claim.test.tsx --reporter=dot --maxWorkers=1`
+  Exit 0: Test Files 1 passed (1), Tests 17 passed (17).
+
+## Verdict
+
+PASS. No blocking findings. Final-acceptance F1 is closed; rerun final acceptance
+at 3dbe8a4f8.
+
+MEASURE_AGENT_RESULT
+role: measure-phase-acceptance
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+commits: 789511cb1, 3dbe8a4f8
+tests_run: tsc exit 0; reedy-claim suite exit 0 (1 file, 17 tests); full gates cited from phase-acceptance-p3-af78cfb43.json (no app path changed)
+files_changed: measure/tracks/www_tutor_calculator_20261117/metadata.json, plan.md, spec.md
+plan_updates: none (gate-only role; the delta itself is the record update)
+known_failures: none
+handoff: PASS record delta at 3dbe8a4f8. F1 of final-acceptance-789511cb1 is closed. Rerun final acceptance at 3dbe8a4f8.
+END_MEASURE_AGENT_RESULT

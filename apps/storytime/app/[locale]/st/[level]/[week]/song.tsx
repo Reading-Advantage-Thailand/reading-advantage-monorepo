@@ -15,6 +15,11 @@
  * starts the song `videoLeadInSeconds` after the song audio, so the lyric lines light from the
  * video time minus that lead-in (AC-1.13); the audio-only fallback has no lead-in.
  *
+ * A tap on the video starts the song when it is paused and pauses it when it plays, so the child
+ * needs no scroll to reach the control on a phone. The play mark sits over the poster while the
+ * song is paused, and it is gone while the song plays (task 6.2, round 3). The Play button
+ * stays, and its label follows the state of the song.
+ *
  * The class screen of the teacher (plan task 4.5) caps the stage and bounds the lyric list, so
  * the open player fits the 1920x1080 and 1366x768 viewports with no page scroll. The lyric list
  * scrolls inside its bounded box. The at-home layout stays as it is.
@@ -54,7 +59,8 @@ interface StorytimeSongProps {
 
 /**
  * Picks the media files of the song for the screen that shows the player. The class screen is
- * 1920x1080, so it uses the regular pair and never the phone pair.
+ * 1920x1080, so it uses the regular pair and never the phone pair. A portrait phone uses the
+ * phone video and the phone poster; every other screen uses the regular pair.
  * @param song The song of the week.
  * @param phone `true` when the screen is a portrait phone.
  * @param classScreen `true` when the player shows on a class screen.
@@ -142,6 +148,16 @@ export function StorytimeSong({
   }
 
   /**
+   * Starts the song from the play mark. The mark stops the tap, so one tap on the mark never
+   * starts and pauses the song in one gesture.
+   * @param event The tap on the mark.
+   */
+  function onPlayMarkTap(event: SyntheticEvent<HTMLButtonElement>): void {
+    event.stopPropagation();
+    togglePlayback();
+  }
+
+  /**
    * Marks the lyric line whose time interval holds the current playback time.
    * @param event The time update of the media element.
    */
@@ -160,11 +176,11 @@ export function StorytimeSong({
 
   return (
     <div
-      className="flex flex-col gap-4"
+      className="song-part flex flex-col gap-4"
       data-mode={classScreen ? "class-screen" : undefined}
     >
       <div
-        className={classScreen ? "song-stage st-class-screen" : "song-stage"}
+        className={classScreen ? "song-stage st-class-screen relative" : "song-stage relative"}
         data-phone={phonePair ? "true" : "false"}
         style={
           poster && !framePlayed
@@ -178,12 +194,12 @@ export function StorytimeSong({
         }
       >
         {hasVideo ? (
-          // F280: a landscape screen below 500 px of height caps the stage so the play control
-          // stays inside the viewport; a short desktop window is landscape, so it gets the cap
-          // too (F350). The cap keeps the 16:9 shape. A portrait phone with a soft keyboard
-          // (short but not landscape) keeps the full-size box, and the measured phone 9:16 and
-          // laptop 16:9 boxes stay as they are. The important flags override the .song-stage
-          // video rule of globals.css.
+          // Task 6.2, finding 3: the box of the video follows the screen. A portrait phone uses
+          // the full width of the screen in the 9:16 shape of the phone file, and a landscape
+          // screen below 500 px of height uses the full height of the viewport (the rules sit in
+          // `app/look.css`). The class screen keeps the capped box of the lesson flow.
+          // Task 6.2, round 3: a tap on the video starts the song when it is paused, and pauses it
+          // when it plays, so the child needs no scroll to reach the control.
           <video
             ref={(node) => {
               mediaRef.current = node;
@@ -194,12 +210,12 @@ export function StorytimeSong({
             playsInline
             aria-label={song.title}
             style={framePlayed ? undefined : { background: "transparent" }}
+            onClick={togglePlayback}
             onTimeUpdate={onTimeUpdate}
             onPlaying={() => setFramePlayed(true)}
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
             onEnded={onEnded}
-            className="[@media(max-height:500px)_and_(orientation:landscape)]:h-44! [@media(max-height:500px)_and_(orientation:landscape)]:w-auto!"
           />
         ) : (
           <audio
@@ -215,6 +231,25 @@ export function StorytimeSong({
             onEnded={onEnded}
           />
         )}
+        {hasVideo && !playing && !classScreen ? (
+          // The play mark of the poster (task 6.2, round 3): the mark shows while the song is
+          // paused or ended, and it is gone while the song plays. The name of the mark is the
+          // play label, so a screen reader reads the same word as the button. The class screen
+          // keeps its own Play button beside the video, so the mark would be a second play
+          // control there; the mark belongs to the at-home phone, where the button sits under
+          // the video. Round 6, finding N2: the mark sits above the title band of the poster
+          // (the picture area between the logo and the title), so the title stays readable;
+          // `app/look.css` owns the place and the size of the mark.
+          <button
+            type="button"
+            data-play-mark
+            aria-label={labels.play}
+            onClick={onPlayMarkTap}
+            className="absolute flex items-center justify-center rounded-full bg-[#fcd34d] text-[#92400e] shadow-lg"
+          >
+            &#9654;
+          </button>
+        ) : null}
       </div>
       <button
         type="button"

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState, type RefObject } from "react";
 import type { StorytimeWeek } from "../../../../../../lib/contracts/week";
 import { loopsApproved } from "../../../../../../lib/loops";
-import { LanguageRuns } from "../../../../../../lib/teacher-lang";
+import { LanguageRuns, langOf } from "../../../../../../lib/teacher-lang";
 import { loopPanelsShow, loopsShow, stepTimeMinutes } from "../../../../../../lib/teacher-loops";
 import {
   shareShotsAt,
@@ -18,6 +18,9 @@ import {
   stepMediaOf,
   type StepMedia,
 } from "../../../../../../lib/teacher-media";
+import { mediaUrl } from "../../../../../../lib/media/url";
+import { clipOfWord } from "../../../../../../lib/word-clip";
+import { wordPieces } from "../../../../../../lib/word-pieces";
 import { StorytimeDecodable } from "../../../../st/[level]/[week]/decodable";
 import { StorytimeReader } from "../../../../st/[level]/[week]/reader";
 import { StorytimeSong } from "../../../../st/[level]/[week]/song";
@@ -266,6 +269,8 @@ export interface TeacherLessonFlowProps {
   locale: string;
   /** The signed media URL of each file name. */
   mediaUrls?: Record<string, string>;
+  /** The label of the link to the child page of the week; no label renders no link. */
+  childViewLabel?: string;
 }
 
 /**
@@ -790,6 +795,7 @@ export function TeacherLessonFlow({
   day,
   locale,
   mediaUrls = {},
+  childViewLabel,
 }: TeacherLessonFlowProps) {
   const [screen, setScreen] = useState(0);
   const [thai, setThai] = useState(false);
@@ -934,6 +940,17 @@ export function TeacherLessonFlow({
           >
             <span lang="en">Back to the week</span>
           </Link>
+          {/* The link to the child page of the same day (plan task 6.2, rounds 7 and 10): it
+              carries the day, so a tap opens that day's lesson and not day 1. No label renders
+              no link. */}
+          {childViewLabel ? (
+            <Link
+              href={`/${locale}/st/${week.meta.level}/${week.meta.week}?day=${day}`}
+              className="inline-flex min-h-11 items-center rounded-xl border border-[#92400e] bg-[#fcd34d] px-4 py-2 font-semibold text-[#92400e]"
+            >
+              {childViewLabel}
+            </Link>
+          ) : null}
         </div>
       </header>
 
@@ -947,15 +964,48 @@ export function TeacherLessonFlow({
             The opening routine
           </h2>
           <ol className="flex flex-col gap-2">
-            {openingPrompts.map((prompt, index) => (
-              <li
-                key={index}
-                className="rounded-2xl border border-[#92400e] p-4 text-lg"
-                lang={pickLang(prompt, thai)}
-              >
-                <LanguageRuns text={pick(prompt, thai)} lang={pickLang(prompt, thai)} />
-              </li>
-            ))}
+            {openingPrompts.map((prompt, index) => {
+              const lang = pickLang(prompt, thai);
+              const text = pick(prompt, thai);
+              return (
+                <li
+                  key={index}
+                  className="rounded-2xl border border-[#92400e] p-4 text-lg"
+                  lang={lang}
+                >
+                  {wordPieces(text).map((piece, pieceIndex) => {
+                    if (!piece.word) {
+                      const pieceLang = langOf(piece.text ?? "");
+                      return (
+                        <span key={pieceIndex} lang={pieceLang}>
+                          <LanguageRuns text={piece.text ?? ""} lang={pieceLang ?? lang} />
+                        </span>
+                      );
+                    }
+                    const wordLang = langOf(piece.word);
+                    const clip = clipOfWord(week.opening?.wordClips, piece.word);
+                    if (!clip) {
+                      return (
+                        <span key={pieceIndex} lang={wordLang}>
+                          {piece.word}
+                        </span>
+                      );
+                    }
+                    return (
+                      <button
+                        key={pieceIndex}
+                        type="button"
+                        onClick={() => playClip(mediaUrl(mediaUrls, clip))}
+                        className="min-h-11 min-w-11 rounded underline decoration-dotted underline-offset-2"
+                        lang={wordLang}
+                      >
+                        {piece.word}
+                      </button>
+                    );
+                  })}
+                </li>
+              );
+            })}
           </ol>
         </section>
       ) : null}

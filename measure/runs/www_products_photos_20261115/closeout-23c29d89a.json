@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "role": "measure-closeout",
+  "track": "www_products_photos_20261115",
+  "status": "pass",
+  "summary": "Closeout passes for track www_products_photos_20261115. The final acceptance passed at audited head 23c29d89acc30ca5515c4cf1b57d74bcc9104287, which equals the pre-closeout HEAD after a fast-forward merge. The Phase 1 acceptance passed at the same SHA. The plan holds 4 tasks: all 4 are done and each names a commit SHA. No in-progress task, no space marker, and no human-gated task remain. The track folder moved to measure/archive/www_products_photos_20261115. The registry row moved to the www subsection of the Archived Tracks section with the metadata description. The metadata status is done with the completion date 2026-11-16. Daniel passed the look with \"Ok\" at 2026-11-16 07:38 ICT, and the PM page-check passed at 2026-11-16 06:15. The closeout report records the AC-4 layout deviation, the AC-3a dormancy, and the routing of the 10 nonblocking findings. doctor.sh exits 1 on the external architecture manifest failure owned by ci_green_master_20261115, and the closeout does not record the doctor as green.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F3 [Medium, accepted residue] The 10 percent text-overlap rule has no recorded failing-first proof. A later adversarial round can build a pre-fix page and prove it.",
+    "F5 [Low] apps/www-reading-advantage/test-results/.last-run.json stays tracked by mistake. A later chore outside this track untracks it.",
+    "F7 [Medium, external] AC-3a stays dormant until src/lib/blog-blocks.test.ts:210 stops timing out; owner track ci_green_master_20261115.",
+    "F8 [Low] The report-results card stays stacked at every width, against AC-4. No text covers the photo, and the AC-1 rules pass at all four widths.",
+    "F10 [Medium, external] bash measure/doctor.sh exits 1 on the V2 reconciliation manifest hash; owner track ci_green_master_20261115. The three structural guard steps pass.",
+    "F4 [Low] The Green r4 log died with the deleted worktree www-w23-pin. The final acceptance re-verified its 38/38 claim by a W-23 regex replay."
+  ],
+  "evidence": [
+    "Provenance: git rev-parse HEAD printed 23c29d89acc30ca5515c4cf1b57d74bcc9104287 after the fast-forward, and the worktree was clean before the closeout edits.",
+    "Provenance: measure/runs/www_products_photos_20261115/final-acceptance-23c29d89a.json holds verdict pass, audited_head_sha 23c29d89acc30ca5515c4cf1b57d74bcc9104287, and an empty blocking_findings list.",
+    "Plan census: 4 task lines = 4 [x], 0 [b], 0 [~], 0 [ ]. Each done line names at least one commit SHA. bash tests/orchestrator_marker_vocabulary.sh --track www_products_photos_20261115 printed PASS with 1 plan checked.",
+    "Archive move: git mv measure/tracks/www_products_photos_20261115 measure/archive/www_products_photos_20261115 exited 0, and the active path no longer exists.",
+    "Closeout gate: python3 measure_interphase_checks.py closeout --repo . --track www_products_photos_20261115 printed 'PASS: closeout checks passed' with exit 0.",
+    "A5: the plan text matches the logs and the live runs. The one unlogged count (F4) stays recorded here and in the manifest.",
+    "A6: the old registry row understated the state; the new archived row names the final acceptance SHA, the look approval, the PM page-check, and the AC-3a carry, so it makes no overstatement.",
+    "A9: no test references this track id or its plan path. The three tests that define track_dir_resolve() check measure/archive/ first.",
+    "Approval: Daniel \"Ok\", Tasks, 2026-11-16 07:38 ICT (PM relay), recorded in plan task 1.4 and in the metadata deviation note."
+  ],
+  "commands": [
+    "git merge --ff-only 23c29d89acc30ca5515c4cf1b57d74bcc9104287 (fast-forward, exit 0)",
+    "bash tests/orchestrator_marker_vocabulary.sh --track www_products_photos_20261115 (PASS, exit 0)",
+    "git mv measure/tracks/www_products_photos_20261115 measure/archive/www_products_photos_20261115 (exit 0)",
+    "bash measure/doctor.sh (exit 1; architecture step only, external)",
+    "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track www_products_photos_20261115 (PASS, exit 0)",
+    "node scripts/ci/affected-apps.mjs --base 23c29d89acc30ca5515c4cf1b57d74bcc9104287 --head HEAD"
+  ],
+  "changed_files": [
+    "measure/tracks/www_products_photos_20261115/ (moved to measure/archive/www_products_photos_20261115/)",
+    "measure/archive/www_products_photos_20261115/plan.md",
+    "measure/archive/www_products_photos_20261115/metadata.json",
+    "measure/archive/www_products_photos_20261115/index.md",
+    "measure/archive/www_products_photos_20261115/closeout-report.md",
+    "measure/archive/www_products_photos_20261115/automation-supervisor-closeout-manifest.json",
+    "measure/tracks.md",
+    "measure/runs/www_products_photos_20261115/ (top-level files, committed with git add -f)"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "phase_base_sha": "23c29d89acc30ca5515c4cf1b57d74bcc9104287",
+  "role_base_sha": "23c29d89acc30ca5515c4cf1b57d74bcc9104287",
+  "audited_head_sha": "23c29d89acc30ca5515c4cf1b57d74bcc9104287"
+}

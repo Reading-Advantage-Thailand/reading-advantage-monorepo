@@ -1,0 +1,63 @@
+# Green 1.4 log — www_tutor_calculator_20261117 — BLOCKED
+
+Role base: 1a32da5b2a38c8e60ff9d6509786b8521a3ce988. Phase base: 8862cf14cc6e9b11e62d08d5084288a4c294752c.
+Red commit: 08fcd93b (www-tutor-calculator.locale.test.ts). Worktree started clean at role base.
+
+## 1. Targeted Red command rerun
+
+`bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts
+--reporter=dot --silent=true'`
+
+Red result: `Test Files 1 failed (1)`, `Tests 10 failed | 8 passed (18)`, exit 1. Confirms the
+Red evidence of plan task 1.3.
+
+## 2. Implementation attempt (reverted, not committed)
+
+Inserted the `calculator` block into en, th, and zh in
+`apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts`, after `tutorRole`
+and before `faq`, in the key order of spec 5.4, with `presets` as the array literal of spec 5.4
+and the D-2a values. No "(draft)" text in any value; draft comments on `chart` (D-9) and
+`presets[2]` (D-2a); D-10 comment above the zh block.
+
+Re-run of the same command: `Tests 2 failed | 16 passed (18)`, exit 1.
+
+The two failures are test 2 of the Red file:
+
+- "holds all 34 string leaves in en": `AssertionError: expected undefined to be 'A new tutor'`
+  at line 303, pin path `presets.0.name`.
+- "holds all 34 string leaves in th": `AssertionError: expected undefined to be 'ติวเตอร์ใหม่'`
+  at line 311, same cause.
+
+## 3. Why I stopped
+
+The Red test's own `stringLeaves` helper flattens array elements as `presets[0].name`
+(bracket notation). The pins of test 2 are looked up with `pin.path.join(".")`, so
+`["presets","0","name"]` becomes the key `presets.0.name` (dot notation). With `presets` as the
+array that spec 5.4 prints, the lookup misses and test 2 can never pass.
+
+Spec section 5.4 prints `presets: [ ... ]` as an array literal, and spec section 5.3 pins the
+component props as `presets: readonly { name: string; setup: string; result: string }[]`. Local
+style agrees: `faq.items`, `valuePropositions.features`, `steps`, and `stats` are arrays in the
+same dictionary file.
+
+The only shape that passes test 2 is an object keyed `"0"`, `"1"`, `"2"`. That shape satisfies
+all 18 tests, but it contradicts the spec's array contract and local style, and it would bake a
+non-array `presets` into the dictionary that tasks 1.6 and 1.7 then pin.
+
+Per the role contract, a committed Red test that contradicts the specification is immutable and
+Green stops. I reverted the locale edit; the worktree is clean at 1a32da5b2 with no commit.
+
+## 4. Question for the orchestrator
+
+Retry Red (Mid Red retry) with one of:
+
+1. Address the preset pins the way `stringLeaves` renders arrays: pin paths
+   `["presets[0]", "name"]` and so on, or
+2. Flatten arrays with dot indices inside `stringLeaves` so `presets.0.name` is the rendered
+   key, or
+3. Change the spec (5.3 and 5.4) to the object-keyed shape and let Green implement that shape.
+
+Options 1 and 2 keep the spec's array. Green implements to whichever Red contract survives.
+
+No code committed. No test file touched. No plan task flipped.
