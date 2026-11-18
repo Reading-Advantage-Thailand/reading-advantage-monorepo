@@ -103,7 +103,7 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
   exited 1 on the new expectations only. `tsc --noEmit -p .` exited 0. Evidence:
   `measure/runs/www_tutor_followups_20261118/red-1.2-2.1.log`.
 
-- [ ] 1.3 Green: convert the two sources to the delivered webp files. Test: AC-18.
+- [~] 1.3 Green: convert the two sources to the delivered webp files. Test: AC-18.
 
   Run the command of spec section 4.2 from the repository root. The outputs are
   `apps/www-reading-advantage/public/images/tutor-advantage-hero-2026-11-06.webp` and
@@ -116,7 +116,7 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
   The source check `sha256sum -c SHA256SUMS` in the picture folder exits 0 for both sources.
   Record the result. Add no hash field.
 
-- [ ] 1.4 Green: split the manifest and point the hero and the block at their files. Test: AC-1, AC-2, AC-3, AC-14, AC-15.
+- [~] 1.4 Green: split the manifest and point the hero and the block at their files. Test: AC-1, AC-2, AC-3, AC-14, AC-15.
 
   Files:
 
@@ -134,7 +134,7 @@ evidence, with no push. The picture work does not wait for `graph.caption` (spec
   Green command: the command of task 1.2 exits 0. Then
   `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0.
 
-- [ ] 1.5 Green: remove the old hero file. Test: AC-16.
+- [~] 1.5 Green: remove the old hero file. Test: AC-16.
 
   1. Run the scan of spec section 4.5:
      `rg -n "tutor-advantage-hero\.jpg" apps/www-reading-advantage/src --glob '!**/*.test.*'`.
@@ -210,7 +210,7 @@ items as failing tests.
   expectations only. `tsc --noEmit -p .` exited 0. Evidence:
   `measure/runs/www_tutor_followups_20261118/red-1.2-2.1.log`.
 
-- [ ] 2.2 Green: add the fourth explain state. Test: AC-5.
+- [~] 2.2 Green: add the fourth explain state. Test: AC-5.
 
   Files:
 
@@ -228,19 +228,19 @@ items as failing tests.
   Green command: the explain assertions of the Red command pass. The full locale file passes after
   task 2.5. Then `pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0.
 
-- [ ] 2.3 Green: change the leg-total label in three locales. Test: AC-7.
+- [~] 2.3 Green: change the leg-total label in three locales. Test: AC-7.
 
   File `src/locales/pages/products/tutor-advantage.ts`: `graph.legCommissionBar` at en 198, th
   535, and zh 874 takes the text of spec section 5.2.
 
-- [ ] 2.4 Green: change the Thai Reedy feature line. Test: AC-8.
+- [~] 2.4 Green: change the Thai Reedy feature line. Test: AC-8.
 
   File `src/locales/pages/products/tutor-advantage.ts:634`. The th value takes the New Thai of
   spec section 5.4. The en line 297 and the zh line 973 stay.
 
   Daniel checks this line on the live page after the push.
 
-- [ ] 2.5 Green: change `graph.caption` in three locales. Test: AC-6.
+- [~] 2.5 Green: change `graph.caption` in three locales. Test: AC-6.
 
   Gate record: PR handoff version 1.0 section 7 reads "Fact gate 2026-11-18 (the `graph.caption`
   line of v0.6): the first pass found one fault. The caption payout is the figure before tax, so
