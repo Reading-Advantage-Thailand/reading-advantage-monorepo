@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "role": "Review C: UX and API end-to-end contract",
+  "route": "opencode-go/glm-5.3#high",
+  "track_id": "architecture_ci_input_pin_20261110",
+  "phase": "Phase 1: CI mode and the local pin refresh (target 2026-11-12)",
+  "phase_base_sha": "09168dc422ed48604b8f2f0cb9a23ad4d110543b",
+  "role_base_sha": null,
+  "role_base_sha_note": "The brief supplied phase_base_sha and audited_head_sha only. The remediation diff 4ec3d5d2..3585c49a bounds this re-review; the phase contract was audited at 9619b954 and re-audited at 619aef753 (both pass).",
+  "audited_head_sha": "3585c49aae9e334496d8156902e70eda19d04f71",
+  "audited_head_current": true,
+  "contract_applicability": "applicable",
+  "applicability_reason": "The remediation diff 4ec3d5d2..3585c49a changes docs/architecture-enforcement.md (owner rule repositioned), architecture-pin-refresh-cli.ts (unsafe budget value), architecture-reconciliation.ts (gate keyed by path), and the review-gate test file. Both re-review points have changed code in the diff.",
+  "status": "pass",
+  "verdict": "pass",
+  "summary": "Both remediation points hold. The owner-rule docs fix (b9362c9d1) removes the false CLI claim and states the real contract: the accepted manifest binds an owner id matching [a-z][a-z0-9-]{0,63}, the acknowledged run enforces that pattern in committed-manifest validation, and the preview accepts any --owner value. Code verification confirms each clause: REVIEWER_ID_PATTERN at v2-manifest-validation.ts:104 matches the docs pattern exactly, the pattern is enforced at line 800 (accepted ownerBinding) and line 628 (reviews), the apply step reaches it through validateCommittedDocument -> validateAnalyzerReconciliationManifestV2 -> validateManifestShapeSync, and a live uppercase --owner preview exits 0. The huge budget value fix (36925e1f6) is verified live: --budget-s 99999999999999999999 prints '--budget-s must be a positive whole number of seconds: 99999999999999999999' and exits 2; Number.isSafeInteger also refuses Infinity from longer digit strings. The r2 nonblocking finding is withdrawn as fixed. The gate-by-path fix (ae29f456b) is not my finding but checks out: the gate now matches the staged manifest by destination path as well as id, and two new renamed-id tests pass. One new nonblocking finding: the unsafe-integer budget refusal has no test; no test file mentions isSafeInteger or a huge value.",
+  "commands": [
+    "git rev-parse HEAD; git status --porcelain (in /home/daniebo/.cache/arch-gate-3/reading-advantage-monorepo)",
+    "git log --oneline 4ec3d5d21..3585c49aa",
+    "git diff --stat 4ec3d5d21..3585c49aa",
+    "git diff 4ec3d5d21..3585c49aa -- docs/architecture-enforcement.md packages/architecture-enforcement/src/architecture-pin-refresh-cli.ts packages/architecture-enforcement/src/architecture-reconciliation.ts packages/architecture-enforcement/src/__tests__/architecture-review-gate.test.ts",
+    "git show --stat b9362c9d1 36925e1f6 ae29f456b",
+    "grep -rn '[a-z][a-z0-9-]' owner pattern in packages/architecture-enforcement/src (v2-manifest-validation.ts:104, :628, :800)",
+    "pnpm exec tsx src/architecture-pin-refresh-cli.ts --budget-s 99999999999999999999; --budget-s 0 (in arch-gate-3)",
+    "pnpm exec tsx src/architecture-reconciliation-cli.ts --policy v2 --owner 'Monorepo-Architecture' --rationale 'review c recheck' (in arch-gate-3)",
+    "grep -rn 'isSafeInteger|999999999' packages/architecture-enforcement/src/__tests__/ (no match)",
+    "CI=true pnpm exec vitest run architecture-review-gate.test.ts architecture-pin-refresh-budget.test.ts architecture-ci-input-pin.test.ts architecture-reconciliation-cli.test.ts --maxWorkers=1 (in arch-gate-3)",
+    "grep -n 'function validateAnalyzerReconciliationManifestV2Sync|REVIEWER_ID_PATTERN' src/v2-manifest-validation.ts"
+  ],
+  "changed_files": [
+    "docs/architecture-enforcement.md",
+    "measure/runs/architecture_ci_input_pin_20261110/green-rem2-4ec3d5d21.log",
+    "measure/tracks/architecture_ci_input_pin_20261110/plan.md",
+    "packages/architecture-enforcement/src/__tests__/architecture-review-gate.test.ts",
+    "packages/architecture-enforcement/src/architecture-pin-refresh-cli.ts",
+    "packages/architecture-enforcement/src/architecture-reconciliation.ts",
+    "packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json"
+  ],
+  "confidence": "high",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "The unsafe-integer budget refusal has no test. Commit 36925e1f6 adds the Number.isSafeInteger guard to architecture-pin-refresh-cli.ts but changes no test file. A grep across packages/architecture-enforcement/src/__tests__ finds no isSafeInteger and no huge-value case. The behavior is correct (verified live), but a future edit to the guard would not fail any test. Add one case to architecture-pin-refresh-budget.test.ts: reject ['--budget-s', '99999999999999999999'] with the value-naming message. Routed to Green."
+  ],
+  "evidence": [
+    "git rev-parse HEAD in /home/daniebo/.cache/arch-gate-3/reading-advantage-monorepo returns 3585c49aae9e334496d8156902e70eda19d04f71 and git status --porcelain is empty: the audited HEAD checkout is current and clean.",
+    "R2 nonblocking (owner case docs) withdrawn as fixed: docs/architecture-enforcement.md now says the accepted manifest binds an owner id matching `[a-z][a-z0-9-]{0,63}`, that the acknowledged run enforces the pattern in committed-manifest validation, and that the preview accepts any --owner value (commit b9362c9d1, docs-only). Every clause checks: REVIEWER_ID_PATTERN = /^[a-z][a-z0-9-]{0,63}$/ (v2-manifest-validation.ts:104) equals the docs pattern; it is enforced on accepted ownerBinding at line 800 and on reviews at line 628 inside validateManifestShapeSync, reached by the apply validate step (architecture-reconciliation.ts:1308 -> validateAnalyzerReconciliationManifestV2); a live preview with --owner 'Monorepo-Architecture' exits 0 and writes nothing.",
+    "Huge budget value fixed and verified live: 'tsx src/architecture-pin-refresh-cli.ts --budget-s 99999999999999999999' prints '--budget-s must be a positive whole number of seconds: 99999999999999999999' and exits 2; '--budget-s 0' keeps the same value-naming error (commit 36925e1f6 adds the Number.isSafeInteger guard, which also refuses Infinity from longer digit strings).",
+    "Gate-by-path fix (ae29f456b, another reviewer's scope) checks out from the same checkout: stagedManifestFromPreview now matches the replacement by id or by the manifest destination path (architecture-reconciliation.ts), and architecture-review-gate.test.ts adds it.each(['v2-manifest', 'ownership-map']) renamed-id refusal cases.",
+    "Tests at the audited HEAD: 'CI=true pnpm exec vitest run architecture-review-gate.test.ts architecture-pin-refresh-budget.test.ts architecture-ci-input-pin.test.ts architecture-reconciliation-cli.test.ts --maxWorkers=1' passes 36 of 36. The environmental repo-name assertion from the earlier rounds passes here because the checkout path ends in reading-advantage-monorepo.",
+    "New nonblocking finding evidence: 'git show --stat 36925e1f6' lists only architecture-pin-refresh-cli.ts; grep across packages/architecture-enforcement/src/__tests__ finds no isSafeInteger and no huge-value budget case."
+  ],
+  "retry_recommendation": "none",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "Both remediation points verified live at the audited HEAD: uppercase --owner preview exits 0 while the docs pattern is enforced at v2-manifest-validation.ts:800 through the apply validate step, and --budget-s 99999999999999999999 is refused with the value named (exit 2)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 3,
+      "evidence": "The gate-by-path fix has two new failing-case tests and the suite passes 36/36, but the Number.isSafeInteger budget guard from 36925e1f6 has no test at all (grep across src/__tests__ finds no huge-value case)."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "b9362c9d1 is docs-only, 36925e1f6 touches only the CLI guard, ae29f456b touches the gate and its tests; the other two commits are the track's own pin refresh and measure run logging."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every claim rests on a live command result in the clean checkout (three CLI runs, 36/36 vitest run) or a file:line chain (docs:54-56 to v2-manifest-validation.ts:104, :628, :800 via architecture-reconciliation.ts:1308)."
+    }
+  ]
+}

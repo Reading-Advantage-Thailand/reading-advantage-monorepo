@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "role": "final-acceptance",
+  "track_id": "architecture_ci_input_pin_20261110",
+  "phase": "Phase 1: CI mode and the local pin refresh (target 2026-11-12)",
+  "track_base_sha": "09168dc422ed48604b8f2f0cb9a23ad4d110543b",
+  "role_base_sha": "743e7ddc3d860f9d1c6c814523a2275f473dca0b",
+  "audited_head_sha": "743e7ddc3d860f9d1c6c814523a2275f473dca0b",
+  "status": "pass",
+  "summary": "Final acceptance passes at immutable HEAD 743e7ddc3d860f9d1c6c814523a2275f473dca0b. The single Phase 1 passing acceptance result targets the same current HEAD and its role gate passes. All 21 acceptance criteria have passing automated coverage in the 38-file, 415-test package suite, including the 20 pin-contract cases and 73 adversarial cases. Both policy-v2 architecture checks exit 0 with files=7013, findings=800, parseErrors=0, and debt 0/0/0. Lint, check-types, and Measure doctor exit 0. The track base and audited HEAD have the required ancestry, no later commit exists, all nine tasks carry commit evidence, and the A5, A6, and A9 audits pass. The deferred B-F2 follow-up and the closeout checkpoint append remain nonblocking.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 (deferred B-F2): plan.md:239-245 records that v2 review records must bind the real staged delta and that the frozen evidence paths must move. The manifest remains candidate with reviews=0 and a 255/15/162 staged delta, so later v2 reconcile writes stay refused, fail-closed.",
+    "N2 (closeout bookkeeping): the Phase 1 heading still needs [checkpoint: 743e7ddc3]. The gate-only acceptance role could not edit plan.md; closeout must append it.",
+    "N3 (carried documentation nits): docs/architecture-enforcement.md:54-57 quotes the accepted-manifest owner-binding pattern beside the reconcile --owner flag, whose schema also allows a leading digit and underscore. The same paragraph says the preview accepts every owner value, but preview validation rejects an invalid owner when a new baseline entry is built. Review A N1/N2 and Review B F5 record these documentation inaccuracies; the code is stricter and no unsafe write results.",
+    "N4 (carried gate seam): Review A at 619aef753 notes that applyArchitectureReconciliationForPolicy remains exported without assertReviewedStagedDelta. The only production caller routes through the gated applyArchitectureReconciliation, and repository-wide caller checks found no bypass. A future direct caller needs the same gate.",
+    "N5 (test-record gap): the two remediation test files added at a510c9492 and e52cefc53 have structural failing-first proof but no separately recorded Red run. Their assertions pass at HEAD, and later adversarial cases strengthened the budget and gate edges.",
+    "N6 (record wording): plan.md:250 says the renamed-id check had 2 failed and 4 skipped cases. The skipped cases were excluded by a name filter, not a code state. The Green log records the failing-first check, so the evidence remains valid."
+  ],
+  "evidence": [
+    "Provenance: main master HEAD and /home/daniebo/.cache/arch-gate-5/reading-advantage-monorepo HEAD both equal 743e7ddc3d860f9d1c6c814523a2275f473dca0b. The clean checkout has no status output and contains packages/backend/dist and packages/knowledge-space-core/dist.",
+    "Ancestry: git merge-base --is-ancestor 09168dc422ed48604b8f2f0cb9a23ad4d110543b 743e7ddc3d860f9d1c6c814523a2275f473dca0b exits 0. git merge-base --is-ancestor 743e7ddc3d860f9d1c6c814523a2275f473dca0b HEAD exits 0.",
+    "Later-commit coverage: git diff --name-only 743e7ddc3d860f9d1c6c814523a2275f473dca0b HEAD prints no path. The audited HEAD therefore equals current HEAD and no later commit needs an allowance.",
+    "Phase acceptance: exactly one passing phase-acceptance result exists for the only plan phase, phase-acceptance-743e7ddc3.json. Its log binds phase_base_sha 09168dc422ed48604b8f2f0cb9a23ad4d110543b to the same audited HEAD. The interphase phase-acceptance role gate prints PASS.",
+    "Final role gate: the interphase final-acceptance role gate reruns PROJECT_LINT, PROJECT_CHECKS, and PROJECT_TESTS through heavy-run and prints PASS for this result JSON and log.",
+    "Superseded failure: phase-acceptance-00dfbea9a.json failed only B1, the stale input snapshot. Commit dcf77dba5 changes one manifest path and moves only analyzerInputSnapshotSha256 and reviewSubjectSha256. The independent full policy-v2 check at 743e7ddc3 exits 0, proving B1 fixed.",
+    "Plan closeout state: plan.md has completed_markers=9, in_progress_markers=0, pending_markers=0, and blocked_markers=0. Each completed task names a commit. Every named completion commit is an ancestor of HEAD.",
+    "AC-1 to AC-5 and FR-6: architecture-ci-input-pin.test.ts:362-664 holds the positive control, both sync and async pin checks, the new-file report-hash failure, all narrow-skip guards, live CLI flag forwarding, environment rejection, all five refresh behaviors, canonical bytes, rollback, and documentation checks. The file exits 0 with 20 of 20 tests.",
+    "AC-6 to AC-8: architecture-analyzer-cost.test.ts:502-650 proves one binding walk per module, zero walk growth, first-declaration binding behavior, one projection and two passes for preview and write, the unchanged manifest key set, and the new-file report-hash failure. These cases pass inside the package suite.",
+    "AC-9 to AC-17: architecture-pin-refresh-resume.test.ts covers progress lines, store identity and discard reasons, budget exits, resume, split-versus-full byte equality, per-series cost counts, independent passes, and documentation. Both no-clock detectors exit 1, and the literal elapsed_s detector exits 1.",
+    "AC-18 to AC-21: inventory.test.ts:405-515 excludes app-level public assets, keeps the source control and all four near-miss paths, and checks the 15 manifest keys in order. These cases pass inside the package suite.",
+    "Full configured test gate: CI=true pnpm --filter @reading-advantage/architecture-enforcement test exits 0 in the clean checkout with 38 files and 415 tests, including 73 adversarial cases. The first attempt hit the external 120-second tool timeout; the identical rerun completed successfully in 125.96 seconds.",
+    "PROJECT_LINT: pnpm --filter @reading-advantage/architecture-enforcement lint exits 0 with 0 errors and one pre-existing prefer-const warning at architecture-pin-refresh-resume.test.ts:550.",
+    "PROJECT_CHECKS: pnpm --filter @reading-advantage/architecture-enforcement check-types exits 0 with no errors.",
+    "CI mode: pnpm architecture:check --skip-input-snapshot-pin --policy v2 exits 0 with files=7013, findings=800, parseErrors=0, additions=0, removals=0, and renames=0. No input snapshot error appears.",
+    "Local full check: pnpm architecture:check --policy v2 exits 0 with the same counts. The input snapshot pin remains active on this path.",
+    "CI wiring: .github/workflows/ci.yml runs pnpm architecture:check --skip-input-snapshot-pin --policy v2 under Architecture boundary check after building backend and knowledge-space-core. The root architecture:check script holds no flag, and the workflow runs no refresh or acknowledged reconcile command.",
+    "Measure doctor: bash measure/doctor.sh exits 0. Its three structural guards pass, and doctor.sh:29-32 intentionally accepts the plain-v1 boundary verdict without making that verdict the doctor exit code.",
+    "Manifest contract: the phase-base and audited manifests each hold 15 keys with no added key. The nine changed top-level fields are v2Artifacts, the two tree pins, analyzerInputSnapshotSha256, reportSha256s, reviewSubjectSha256, and the three staged delta lists. Protected v1 artifacts have an empty diff.",
+    "Scope: the exact track diff stays within the architecture package, its CI and root scripts, docs/architecture-enforcement.md, and Measure records, plus the planned v2 baseline data. No track commit touches packages/backend/turbo.json, packages/webhooks, or measure/archive/backend_architecture_enforcement_20260713. reconciliation-manifest.ts has no diff.",
+    "Caller and contract checks: repository-wide searches show validateInputSnapshotPin flows only from the check CLI through checkArchitectureRepository into both validators. newDebtMetadata flows through preview and apply to createUpdatedArchitectureBaselines. computeAnalyzerReconciliationEvidenceResumable has only the pin-refresh production caller. No external production caller bypasses the review gate.",
+    "A5: the final plan claims match reality: 415 tests with no failure, 20 pin tests with no failure, lint 0 errors and one warning, check-types 0, and both v2 checks with the recorded 7013/800/0 and 0/0/0 counts. Prior review A independently reproduced the earlier 71-test and 403-test claims at their HEADs.",
+    "A6: measure/tracks.md:77-80 names the actual CI flags and keeps the local pin and refresh command. It claims no completed acceptance or adversarial state beyond the evidence.",
+    "A9: the archived-track reference sweep over tests/*.sh reports archived_track_reference_violations=0. The track-test detector for measure/tracks or measure/runs exits 1 over all eight track-owned test files.",
+    "Review coverage: review A, review B, review C, and adversarial testing pass at 3585c49aa. The four later commits are two adversarial-test-only commits, the two-field pin refresh, and one Measure-only evidence commit. Phase acceptance verified and named that allowance; this audit rechecked the same paths and reran the full suite at current HEAD.",
+    "B-F2 state: the audited manifest holds acceptance.status=candidate, defaultPolicy=v1, reviews=0, baselineAdditions=255, baselineRemovals=15, and baselineRenames=162. Plan.md:239-245 records the follow-up because measure/tech-debt.md is at its 50-line cap."
+  ],
+  "commands": [
+    "git rev-parse HEAD (main and clean checkout) -> 743e7ddc3d860f9d1c6c814523a2275f473dca0b; clean checkout git status --short -> empty",
+    "git merge-base --is-ancestor 09168dc422ed48604b8f2f0cb9a23ad4d110543b 743e7ddc3d860f9d1c6c814523a2275f473dca0b -> exit 0",
+    "git merge-base --is-ancestor 743e7ddc3d860f9d1c6c814523a2275f473dca0b HEAD -> exit 0",
+    "git diff --name-only 743e7ddc3d860f9d1c6c814523a2275f473dca0b HEAD -> empty output",
+    "python3 measure_interphase_checks.py role-gate --role phase-acceptance --track architecture_ci_input_pin_20261110 --baseline 09168dc422ed48604b8f2f0cb9a23ad4d110543b --result-file phase-acceptance-743e7ddc3.json --log-file phase-acceptance-743e7ddc3.log -> PASS",
+    "PROJECT_LINT, PROJECT_CHECKS, PROJECT_TESTS, and MEASURE_HEAVY_RUN set; python3 measure_interphase_checks.py role-gate --role final-acceptance --track architecture_ci_input_pin_20261110 --baseline 09168dc422ed48604b8f2f0cb9a23ad4d110543b --result-file final-acceptance-743e7ddc3.json --log-file final-acceptance-743e7ddc3.log -> PASS",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash heavy-run.sh -c 'cd /home/daniebo/.cache/arch-gate-5/reading-advantage-monorepo && pnpm --filter @reading-advantage/architecture-enforcement lint' -> exit 0, 0 errors, 1 warning",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash heavy-run.sh -c 'cd /home/daniebo/.cache/arch-gate-5/reading-advantage-monorepo && pnpm --filter @reading-advantage/architecture-enforcement check-types' -> exit 0",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash heavy-run.sh -c 'cd /home/daniebo/.cache/arch-gate-5/reading-advantage-monorepo && CI=true pnpm --filter @reading-advantage/architecture-enforcement test' -> exit 0, 38 files, 415 tests, 0 failures",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash heavy-run.sh -c 'cd /home/daniebo/.cache/arch-gate-5/reading-advantage-monorepo && CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts --maxWorkers=1' -> exit 0, 20 of 20",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash heavy-run.sh -c 'cd /home/daniebo/.cache/arch-gate-5/reading-advantage-monorepo && pnpm architecture:check --policy v2' -> exit 0, files=7013, findings=800, parseErrors=0, debt 0/0/0",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash heavy-run.sh -c 'cd /home/daniebo/.cache/arch-gate-5/reading-advantage-monorepo && pnpm architecture:check --skip-input-snapshot-pin --policy v2' -> exit 0, same counts, no input snapshot error",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash heavy-run.sh -c 'cd /home/daniebo/.cache/arch-gate-5/reading-advantage-monorepo && bash measure/doctor.sh' -> exit 0, structural guards pass and the plain-v1 boundary verdict is recorded",
+    "git diff --name-only 09168dc422ed48604b8f2f0cb9a23ad4d110543b 743e7ddc3d860f9d1c6c814523a2275f473dca0b -- packages/backend/turbo.json packages/webhooks measure/archive/backend_architecture_enforcement_20260713 -> empty output",
+    "git diff --name-only 09168dc422ed48604b8f2f0cb9a23ad4d110543b 743e7ddc3d860f9d1c6c814523a2275f473dca0b -- packages/architecture-enforcement/src/reconciliation-manifest.ts -> empty output",
+    "rg no-clock patterns over architecture-analyzer-cost.test.ts and architecture-pin-refresh-resume.test.ts -> exit 1; rg elapsed_s=[0-9] over the resume file -> exit 1",
+    "rg 'measure/tracks|measure/runs' over the eight track-owned test files -> exit 1; tests/*.sh archived-track cross-check -> archived_track_reference_violations=0",
+    "node manifest read -> keys=15, status=candidate, defaultPolicy=v1, reviews=0, additions=255, removals=15, renames=162",
+    "git show --format= dcf77dba54b3785d4f66ab87ece17c53206a298b -- packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json -> only analyzerInputSnapshotSha256 and reviewSubjectSha256 moved",
+    "python3 plan marker and completion-SHA checks -> 9 [x], 0 [~], 0 [ ], 0 [b], every completion SHA ancestor_exit=0"
+  ],
+  "changed_files": [
+    "measure/runs/architecture_ci_input_pin_20261110/final-acceptance-743e7ddc3.json",
+    "measure/runs/architecture_ci_input_pin_20261110/final-acceptance-743e7ddc3.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "confidence": "high",
+  "retry_recommendation": "none",
+  "route": "kimi-code-plan-cn/k3.1-pro#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "All 21 acceptance criteria pass, and both live policy-v2 checks exit 0 with files=7013, findings=800, parseErrors=0, and debt 0/0/0."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The 415-test suite includes failing-first AC coverage and 73 adversarial cases, but a510c9492 and e52cefc53 lack separately recorded Red runs for two remediation test files."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The exact track diff contains only planned architecture, CI, documentation, baseline, and Measure paths; the archive, protected v1 files, backend turbo config, and webhooks stay unchanged."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every final claim has a command result or file:line, including 415 passing tests, both v2 checks, doctor exit 0, ancestry checks, empty path diffs, and manifest counts."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "opencode-go/glm-5.3#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "The 9619b9548 pass correctly verified the v2 port, live debt ratchet, protected v1 state, and plan counts; the current full suite and v2 checks confirm the same route."
+    },
+    {
+      "reviewer_role": "review-b",
+      "reviewer_route": "opencode-go/deepseek-v4.1-flash",
+      "agreed": true,
+      "score": 5,
+      "evidence": "The 9619b9548 fail correctly identified the unreviewed candidate-write blocker, which a510c9492 later closed with the review-record gate."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "opencode-go/glm-5.3#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "The 9619b9548 pass correctly found the CI documentation, budget-message, and reconcile-documentation gaps, all remediated before current HEAD."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "opencode-go/glm-5.3#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "The 358e8bfde fail correctly exposed the Infinity budget and renamed-id gate edges; the fixes and the later 73-case suite prove both closed."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "opencode-go/glm-5.3#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "The 619aef753 pass correctly verified gate placement, fail-closed B-F2 state, budget behavior, documentation, and pin shape."
+    },
+    {
+      "reviewer_role": "review-b",
+      "reviewer_route": "opencode-go/deepseek-v4.1-flash",
+      "agreed": true,
+      "score": 5,
+      "evidence": "The 619aef753 pass correctly withdrew F1 and kept B-F2 as a fail-closed follow-up, matching the current manifest and gate."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "opencode-go/glm-5.3#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "The 619aef753 pass correctly verified the revised command contract and identified the remaining owner-documentation issue."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "opencode-go/glm-5.3#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "The 3585c49aa pass correctly proved the path-keyed gate and safe-integer fix and precisely identified the two remaining owner-document inaccuracies."
+    },
+    {
+      "reviewer_role": "review-b",
+      "reviewer_route": "opencode-go/deepseek-v4.1-flash",
+      "agreed": true,
+      "score": 5,
+      "evidence": "The 3585c49aa pass correctly found no write bypass and kept the owner-document note and B-F2 follow-up with sound evidence."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "opencode-go/glm-5.3#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "The 3585c49aa pass verdict and missing-budget-test note were right, but its owner-document proof generalized a no-new-entry preview; Review A N1/N2 and Review B F5 provide the necessary qualification."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "opencode-go/glm-5.3#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "The 3585c49aa pass correctly verified both prior fixes and added 12 gate cases plus two safe-integer boundaries; all 73 cases pass at current HEAD."
+    }
+  ]
+}

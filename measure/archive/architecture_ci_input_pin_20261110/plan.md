@@ -19,7 +19,7 @@
 - Paths start at the monorepo root. At the end of the phase, run the phase check and append `[checkpoint: <sha>]` to the phase heading.
 - The CI-mode command stays red at the 1.2 and the 1.3 HEADs. It passes only after the 1.4 refresh. A non-zero exit at 1.2 or at 1.3 is the expected state, not a defect. Widening the skip to make it pass is a defect.
 
-## Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+## Phase 1: CI mode and the local pin refresh (target 2026-11-12) [checkpoint: 743e7ddc3]
 
 Blast radius: `packages/architecture-enforcement` and `.github/workflows/ci.yml:157`. The archive does not change. No app, no deploy, and no traffic rule changes.
 

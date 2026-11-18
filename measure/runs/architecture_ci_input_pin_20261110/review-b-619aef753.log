@@ -1,0 +1,63 @@
+Measure review B (security and data handling) — architecture_ci_input_pin_20261110
+Audited HEAD: 619aef7530baad0a028666c55e2f1ef9057fc733
+Phase base: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+Role base: 9619b95482833feae716bbe4182cbc8172787134
+Focus range: 9619b9548..619aef753
+Verdict: pass
+
+MEASURE_AGENT_RESULT
+role: measure-review-b (security and data handling)
+track_id: architecture_ci_input_pin_20261110
+phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+audited_head_sha: 619aef7530baad0a028666c55e2f1ef9057fc733
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: 9619b95482833feae716bbe4182cbc8172787134
+head_is_current: false (HEAD is 358e8bfde, one docs-only commit above the audited HEAD; it adds the green log and 14 plan lines only)
+security_applicability: applicable
+status: pass
+verdict: pass
+retry_recommendation: none
+route: opencode-go/deepseek-v4.1-flash
+
+security_points:
+  1 pass: .github/workflows/ci.yml:25-26 keeps permissions contents: read; the range 9619b9548..619aef753 changes no workflow file; no secret and no pull_request_target is added
+  2 pass_with_note: --expected-plan-hash still requires 64 lowercase hex; the new --budget-s message names the rejected value as data only (architecture-pin-refresh-cli.ts:113-125); F4 records the late --owner and --rationale check
+  3 pass: F1 fixed; the gate at architecture-reconciliation.ts:1214, called at :1264, throws for a candidate staged manifest with a non-empty delta and reviews=[]; the gate is before the guard and before the transaction
+  4 pass: the pin refresh at 619aef753 moves five pin fields only; the check with the pin exits 0 with additions=0; the four v1 binding files are unchanged
+  5 pass: the four V1_ARTIFACT_BINDINGS files are byte-identical from the phase base and from the role base to the audited HEAD
+
+blocking_findings: none
+
+nonblocking_findings:
+  F2 medium: v2-manifest-validation.ts:631 and :656-658 and :819 still bind empty staged-delta lists, so the v2 schema cannot hold a review record for the committed delta of 255 additions, 15 removals, and 162 renames. A later v2 reconcile stages the same non-empty delta, so the gate refuses every later v2 reconcile write. The refusal is fail-closed and safe. It blocks the reconcile route until the deferred B-F2 follow-up lands.
+  F4 low: the budget regex runs before Number(), and the new message interpolates the rejected value into a string only. No path and no shell call receives it, so there is no injection path. Green declined an early pattern check for --owner and --rationale.
+
+withdrawn:
+  F1 withdrawn: the new gate reads the staged manifest bytes from the fixed reconciliation-manifest replacement and refuses a candidate non-empty delta without reviews; architecture-review-gate.test.ts:141 proves the refusal by the exact new message, and :151, :164, :177 prove the passes; the targeted 3-file run passed 20 of 20
+  F3 withdrawn: measure/tracks.md:80 and docs/architecture-enforcement.md:131 now name --skip-input-snapshot-pin --policy v2, which matches .github/workflows/ci.yml:176
+
+fail_closed_judgement:
+  The committed manifest holds acceptance.status=candidate, reviews=[], baselineAdditions=255, baselineRemovals=15, baselineRenames=162. A later v2 reconcile stages the same non-empty delta, so the real apply throws the gate refusal. No unreviewed write can land, so the control is fail-closed and acceptable for security. The cost is availability of the reconcile route until the follow-up. The accepted bypass is not a hole: v2-manifest-validation.ts:774-779 requires all three reviews and :780-812 requires an owner receipt with exact bytes. A failed commit validation rolls back (policy-update-transaction.ts:788-820).
+
+A2: not_applicable: no draft to published status for a named subject. The analogous acceptance state is review-bound and owner-bound.
+A6: no security overstatement in measure/tracks.md. The docs line that the owner id holds a lower-case identifier overstates the late check; Review C records it.
+
+provenance:
+  - phase_base_sha 09168dc42, role_base_sha 9619b9548, and audited_head_sha 619aef753 all resolve; 619aef753 is an ancestor of HEAD 358e8bfde
+  - git log --oneline 9619b9548..619aef753 -> five remediation commits
+  - git diff --stat 9619b9548..619aef753 -> 8 files, 344 insertions, 9 deletions
+  - git diff 09168dc42..619aef753 of the four v1 binding files and v1-validation.ts is empty
+  - the committed manifest stays valid under the unchanged validator; the check exits 0 with additions=0
+  - no tenant, organization, secret, or personal data is in scope
+
+test_commands:
+  - CI=true pnpm exec vitest run architecture-review-gate.test.ts architecture-pin-refresh-budget.test.ts architecture-v2-route-14d.test.ts --maxWorkers=1 -> exit 0, 3 files, 20 tests passed (in /home/daniebo/.cache/arch-gate-2)
+  - CI=true pnpm exec vitest run reconciliation-manifest-v2.red.test.ts --maxWorkers=1 -> exit 0, 4 tests passed
+  - CI=true pnpm --filter @reading-advantage/architecture-enforcement test --maxWorkers=1 -> exit 1, 339 of 340 tests; the one failure is the environmental directory-name case at architecture-reconciliation-cli.test.ts:225
+  - CI=true pnpm architecture:check --policy v2 -> exit 0, clean (files=7012, findings=800, parseErrors=0), debt clean (additions=0, removals=0, renames=0)
+  - CI=true pnpm architecture:check --policy v2 --skip-input-snapshot-pin -> exit 0, same counts
+
+ratings: correctness 4, test_meaning 4, scope_discipline 5, evidence_quality 4
+END_MEASURE_AGENT_RESULT
+
+Notes: audit only. No repository file was edited. Tests ran in /home/daniebo/.cache/arch-gate-2 at 619aef753.

@@ -1,0 +1,89 @@
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+track: architecture_ci_input_pin_20261110
+phase heading: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: 3585c49aa
+audited_head_sha: 3585c49aa
+resulting_HEAD: 00dfbea9acfb3cdfe73b1cb6e04051c78dc90a9c
+commits:
+  3c4a15581db6808f62654b59ee0ef65b45a40a08 test(architecture): extend v2 route adversarial cases (track_id: architecture_ci_input_pin_20261110)
+  00dfbea9acfb3cdfe73b1cb6e04051c78dc90a9c test(architecture): fix the budget boundary rows (track_id: architecture_ci_input_pin_20261110)
+route: opencode-go/glm-5.3#high
+status: pass
+confidence: high
+retry_recommendation: none
+
+Re-run after the Green remediation round. Audited HEAD 3585c49aa
+(implementation 965079f05; fixes ae29f456b gate by path, 36925e1f6
+safe-integer budget, b9362c9d1 docs). The clean copy at
+/home/daniebo/.cache/arch-gate-3/reading-advantage-monorepo sits exactly at
+3585c49aa with packages installed; all runs happened there or in a new clean
+copy under ~/.cache (never /tmp).
+
+F1 re-check (budget, fixed): parsePinRefreshArguments now refuses a value
+whose Number() is not a safe integer (36925e1f6). The former red case
+budget_rejects_a_value_that_is_not_a_finite_whole_number passes. Two new
+boundary cases pin the edge: 9007199254740991 accepted,
+9007199254740992 refused with the value named.
+
+F2 re-check (gate, fixed): stagedManifestFromPreview now matches the
+replacement by the canonical id OR the manifest destination path (ae29f456b).
+The former renamed-id cases now hit the gate message.
+
+Original file re-run at the audited HEAD (arch-gate-3):
+CI=true pnpm exec vitest run <file> --maxWorkers=1 exits 0.
+tests_total=61, tests_failed=0, tests_passed=61.
+
+New path-match probes (tsx apply probes in the clean copy):
+- Canonical id with a dot-segment, double-slash, trailing-slash, or
+  capitalized path: the gate's id arm reads the staged bytes and refuses
+  with the gate message.
+- Renamed id with any of those path variants: the gate skips, and the exact
+  ordered destination guard refuses with 'V2 reconciliation write set is not
+  exact'. No write completes.
+- Swapped id and path (unreviewed bytes under id 'database-baseline' at the
+  manifest path, clean bytes under id 'reconciliation-manifest' at the
+  database path): the gate's find matches the manifest-path entry and refuses
+  with the gate message.
+- Non-json staged bytes under the canonical id and path: the gate throws a raw
+  JSON parse error. Fail-closed (observation O1).
+- The transaction re-derives every destination as
+  resolve(repoRoot, replacement.repositoryPath) and validates containment,
+  symbolic links, regular files, realpath canonicalization, and distinct
+  destinations (policy-update-transaction.ts:333-381), so a doctored plan
+  cannot redirect the write through its destination fields (observation O3).
+
+No probed combination completes a write. The remaining note (observation O2):
+the gate reads the first entry that matches by id or path, so a plan could
+hold clean bytes on a matching entry and unreviewed bytes elsewhere; the
+guard forces the four canonical paths in order and the per-document committed
+validation parses by id, so such a write still fails closed.
+
+Extended file (commits 3c4a15581 and 00dfbea9a):
+12 new gate cases (renamed id strengthened to the gate message, 4 path-variant
+rows under the canonical id, 4 renamed-id-at-path-variant guard rows, the
+swapped id and path case, the fail-closed non-json case) and 2 budget boundary
+cases. tests_total=73.
+
+Run at the final commit in a new clean copy
+(git worktree add --detach /home/daniebo/.cache/arch-gate-4 00dfbea9a,
+git -C confirmed the copy at the commit, install with the explicit store):
+CI=true pnpm exec vitest run <file> --maxWorkers=1 exits 0.
+tests_total=73, tests_failed=0, tests_passed=73, duration 2.85 s.
+check-types exits 0. lint exits 0 with the one pre-existing prefer-const
+warning in architecture-pin-refresh-resume.test.ts. The copy was removed
+after the run (git worktree remove, then prune).
+
+Scope and detectors:
+git show 965079f05 --stat reads 1 file changed, 5 insertions, 5 deletions
+(manifest_fields_changed=5).
+rg -n 'measure/tracks|measure/runs' <extended file> exits 1 (A9 clean).
+git diff --name-only 5062b170e..HEAD --
+measure/archive/backend_architecture_enforcement_20260713/ is empty
+(archive_changed_paths=0).
+The three dirty next-env.d.ts files in the main checkout were not touched.
+
+No production file was edited. Both findings of the prior round are fixed and
+verified; no new defect was found.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "agent": "measure-review-b",
+  "role": "security_and_data_handling",
+  "track_id": "architecture_ci_input_pin_20261110",
+  "phase": "Phase 1: CI mode and the local pin refresh (target 2026-11-12)",
+  "phase_base_sha": "09168dc422ed48604b8f2f0cb9a23ad4d110543b",
+  "role_base_sha": "4ec3d5d21453a46f998cef8bfd42578bd1669c46",
+  "audited_head_sha": "3585c49aae9e334496d8156902e70eda19d04f71",
+  "head_is_current": true,
+  "focus_range": "4ec3d5d21..3585c49aa",
+  "security_applicability": "applicable",
+  "status": "pass",
+  "verdict": "pass",
+  "summary": "The gate cannot be bypassed by a renamed replacement id. stagedManifestFromPreview now matches the manifest destination path as well as the canonical id, and two new gate rows prove the refusal for the ids v2-manifest and ownership-map by the exact gate message. Crafted previews that swap an id and a path still fail the ordered four-path write-set guard or the canonical fresh-preview equality before any write. The accepted bypass stays backed by the validator: accepted needs all three reviews and an owner receipt, and a failed commit validation rolls back. The budget input now requires Number.isSafeInteger after the strict digit regex. The value reaches arithmetic only, so no injection path exists. CI keeps contents: read and the range changes no workflow file. The committed manifest still holds candidate, reviews=[], and a delta of 255 additions, 15 removals, and 162 renames, so the gate refuses the later reconcile write; that refusal is fail-closed and safe, and the deferred B-F2 follow-up remains. One low documentation note: the preview does validate --owner when it builds a new entry. Audit only; no repository file was edited.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F5 low: docs/architecture-enforcement.md:55-57 says 'the preview accepts any --owner value'. The preview parses baselineEntrySchema for each new entry (architecture-reconciliation.ts:796-801, baseline-update.ts:132-137, contracts.ts:81), so an owner outside ^[a-z0-9][a-z0-9_-]*$ fails the preview when the candidate adds an entry. The claim holds only when no new entry is built. The code is stricter than the doc, so no unsafe value reaches the acknowledged run. The doc should say the preview accepts any --owner value when the candidate adds no new entry.",
+    "F2 medium (carried, unchanged): validateReviewSync and the owner-receipt check still bind empty staged-delta lists (packages/architecture-enforcement/src/v2-manifest-validation.ts:631 and :656-658 and :819). The v2 schema cannot hold a review record for the committed delta of 255 additions, 15 removals, and 162 renames, so the gate refuses every later v2 reconcile write. The refusal is fail-closed and safe; it blocks the reconcile route until the deferred follow-up lands, and the track plan records that follow-up."
+  ],
+  "security_points": [
+    "1 pass: .github/workflows/ci.yml:25-26 keeps permissions contents: read. git diff 4ec3d5d21..3585c49aa -- .github/workflows/ci.yml is empty. No secret and no pull_request_target is added.",
+    "2 pass_with_note: the budget parser keeps the strict ^[1-9]\\d*$ regex and adds Number.isSafeInteger (architecture-pin-refresh-cli.ts:114-134). The accepted value reaches budgetMs arithmetic only. The F5 doc note is about the owner value, not the budget.",
+    "3 pass: the gate now keys on the manifest destination path as well as the id (architecture-reconciliation.ts:1183-1197). Two rows prove the renamed-id refusal by the exact message. The ordered write-set guard and the fresh-preview equality still close the crafted-preview shapes.",
+    "4 pass: the accepted bypass is review-bound. v2-manifest-validation.ts:774-812 requires all three review records and an owner receipt with exact bytes. validateCommittedDocument runs in the transaction and rolls back on failure (policy-update-transaction.ts:788-820). A test proves 'Accepted' with a capital A is treated as candidate.",
+    "5 pass: the pin refresh at 965079f05 moves five pin fields. The check with the pin exits 0 at files=7013 with additions=0. The four V1_ARTIFACT_BINDINGS files are unchanged from the phase base."
+  ],
+  "evidence": [
+    "HEAD is 3585c49aae9e334496d8156902e70eda19d04f71 in the main repository and in the clean checkout /home/daniebo/.cache/arch-gate-3/reading-advantage-monorepo; the checkout status is clean.",
+    "git diff 4ec3d5d21..3585c49aa -- packages/ .github/ docs/ shows only the gate (8 lines), the budget parser (8 lines), one gate test (16 lines), the docs (6 lines), and the manifest pins (10 lines).",
+    "The gate now matches entry.id === 'reconciliation-manifest' || entry.repositoryPath === V2_RECONCILIATION_DESTINATION_PATHS[0] (architecture-reconciliation.ts:1183-1197). V2_RECONCILIATION_DESTINATION_PATHS[0] is the manifest path (policy-write-guard.ts:2-7).",
+    "architecture-review-gate.test.ts:178-189 adds two rows (v2-manifest, ownership-map) that assert the exact gate message for the manifest path. The adversarial file adds removals-only, renames-only, non-array reviews, and capitalized-accepted cases (architecture-v2-route-adversarial.test.ts:234-297).",
+    "No remaining bypass through a crafted preview: the guard requires the exact four destination paths in order (policy-write-guard.ts:30-38), the fresh preview must equal the reviewed preview by canonical JSON (architecture-reconciliation.ts:1284-1296), and the transaction rejects duplicate ids and paths (policy-update-transaction.ts:299-320).",
+    "The accepted bypass is not a consent hole: v2-manifest-validation.ts:774-779 requires reviews.length to equal REVIEW_ROLES.length and :780-812 requires an owner receipt with exact bytes.",
+    "The budget value flows only to budgetMs = budgetSeconds * 1000 and two numeric comparisons (architecture-pin-refresh-cli.ts:257-267). It reaches no path, shell, file, or network call. The error message interpolates the rejected value into a string only (architecture-pin-refresh-cli.ts:114-134).",
+    "The committed manifest holds acceptance.status=candidate, reviews=[], baselineAdditions=255, baselineRemovals=15, baselineRenames=162. A later v2 reconcile stages the same non-empty delta, so the gate refuses it; the refusal is fail-closed.",
+    "Both live checks exit 0 at files=7013, findings=800, parseErrors=0, additions=0, removals=0, renames=0.",
+    "git diff 09168dc42..3585c49aa of database.v1.json, provider.v1.json, ownership-map.v1.json, analyzer-reconciliation.v1.json, and v1-validation.ts is empty.",
+    "F5 evidence: baselineEntrySchema.parse runs for each new entry with owner: metadata.owner (baseline-update.ts:132-137), and ownerSchema enforces ^[a-z0-9][a-z0-9_-]*$ (contracts.ts:81).",
+    "No tenant, organization, secret, or personal data is in scope for this package."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> 3585c49aae9e334496d8156902e70eda19d04f71 (main repo and clean checkout)",
+    "git log --oneline -6 -> 3585c49aa, 965079f05, b9362c9d1, 36925e1f6, ae29f456b, 4ec3d5d21",
+    "git diff --stat 4ec3d5d21..3585c49aa -> 7 files, 231 insertions, 11 deletions",
+    "git diff 4ec3d5d21..3585c49aa -- packages/architecture-enforcement/src/architecture-reconciliation.ts packages/architecture-enforcement/src/architecture-pin-refresh-cli.ts packages/architecture-enforcement/src/__tests__/architecture-review-gate.test.ts docs/architecture-enforcement.md",
+    "git diff 4ec3d5d21..3585c49aa -- .github/workflows/ci.yml -> empty",
+    "CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-review-gate.test.ts packages/architecture-enforcement/src/__tests__/architecture-pin-refresh-budget.test.ts packages/architecture-enforcement/src/__tests__/architecture-v2-route-14d.test.ts --maxWorkers=1 -> exit 0, 3 files, 22 tests passed (in the clean checkout)",
+    "CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-v2-route-adversarial.test.ts --maxWorkers=1 -> exit 0, 61 tests passed",
+    "CI=true pnpm --filter @reading-advantage/architecture-enforcement test --maxWorkers=1 -> exit 0, 38 files, 403 tests passed",
+    "CI=true pnpm architecture:check --policy v2 -> exit 0, clean (files=7013, findings=800, parseErrors=0), debt clean (additions=0, removals=0, renames=0)",
+    "CI=true pnpm architecture:check --policy v2 --skip-input-snapshot-pin -> exit 0, same counts",
+    "node manifest count over analyzer-reconciliation.v2.json -> status=candidate, reviews=0, adds=255, rems=15, renames=162",
+    "git diff 09168dc42..3585c49aa -- the four v1 binding files and v1-validation.ts -> empty"
+  ],
+  "changed_files": [
+    "packages/architecture-enforcement/src/architecture-reconciliation.ts",
+    "packages/architecture-enforcement/src/architecture-pin-refresh-cli.ts",
+    "packages/architecture-enforcement/src/__tests__/architecture-review-gate.test.ts",
+    "packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json",
+    "docs/architecture-enforcement.md",
+    "measure/tracks/architecture_ci_input_pin_20261110/plan.md",
+    "measure/runs/architecture_ci_input_pin_20261110/green-rem2-4ec3d5d21.log"
+  ],
+  "confidence": "high",
+  "retry_recommendation": "none",
+  "route": "opencode-go/deepseek-v4.1-flash",
+  "data_flow_notes": [
+    "The only production writer of the four v2 artifacts is applyArchitectureReconciliation. The gate reads the staged manifest at the fixed destination path or the canonical id, before the write-set guard and before the transaction.",
+    "The preview builder always emits the four fixed ids and paths (architecture-reconciliation.ts:834-856). The fresh-preview canonical equality binds the reviewed preview to the repository state.",
+    "The pin refresh writes only the manifest and validates it before it keeps the bytes.",
+    "Persistence uses the exclusive transaction lock with a journal and rollback (policy-update-transaction.ts:692-839)."
+  ],
+  "consent_gate_a2": "not_applicable: no draft to published status for a named subject. The acceptance status stays candidate, and accepted requires all three reviews plus an owner receipt.",
+  "registry_check_a6": "no overstatement. The plan r2 block matches the measured counts (files=7013, suite 403, two renamed-id rows). The docs owner sentence is over-permissive, not a security overstatement; F5 records it.",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "the gate keys on id or path and the budget rejects unsafe integers; both live checks exit 0 at files=7013 with additions=0, and the 22 targeted tests pass."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "the two renamed-id rows assert the exact gate message and failed before the fix per the plan; the budget Red case failed at the role base and passes; the adversarial file holds 61 cases."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "the range touches only the gate, the budget parser, one test, the docs, the pins, and the evidence; .github and the v1 bindings are unchanged."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "I reproduced 22 targeted, 61 adversarial, and 403 suite tests plus both v2 checks, and the measured counts match the plan r2 block."
+    }
+  ],
+  "notes": "Audit only; no repository file was edited. Tests ran in /home/daniebo/.cache/arch-gate-3/reading-advantage-monorepo at 3585c49aa. HEAD equals the audited HEAD."
+}

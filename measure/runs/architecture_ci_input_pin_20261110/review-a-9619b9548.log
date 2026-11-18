@@ -1,0 +1,58 @@
+# Review A log · architecture_ci_input_pin_20261110 · Phase 1
+
+Reviewer: Measure Review A (correctness and architecture)
+Route: opencode-go/glm-5.3#high
+Date: 2026-11-18
+Track: architecture_ci_input_pin_20261110
+Phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: ac1d09869f7819f43666ffee2f8886d945175733
+audited_head_sha: 9619b95482833feae716bbe4182cbc8172787134
+Clean checkout used: /home/daniebo/.cache/arch-gate (git rev-parse HEAD = audited_head_sha, working tree clean)
+
+## Commands run
+
+- git rev-parse HEAD; git status --porcelain; git log/show/diff over the range and the upstream branch chore/ci-green.
+- CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-v2-route-14d.test.ts --maxWorkers=1 → exit 0, tests_total=12, tests_failed=0.
+- CI=true pnpm exec vitest run (architecture-ci-input-pin, reconciliation-manifest-v2.red, ratchet, ratchet.red) --maxWorkers=1 → exit 0, tests_total=35, tests_failed=0.
+- heavy-run 'pnpm architecture:check --skip-input-snapshot-pin --policy v2' → exit 0: "architecture check: clean (files=7010, findings=800, parseErrors=0)", "architecture debt: clean (additions=0, removals=0, renames=0)".
+- heavy-run 'pnpm architecture:check' → exit 1: "architecture debt: new-debt (additions=339, removals=15, renames=162)", output_lines=524.
+- heavy-run 'CI=true pnpm --filter @reading-advantage/architecture-enforcement test' → tests_total=332, tests_failed=1. The one failure asserts the repository directory name (/reading-advantage-monorepo$/) and fails only because the audit checkout folder is named arch-gate. The case predates the phase and no track commit touched it.
+- build-graph search ./graph.db computeAnalyzerInputSnapshotWithOverlay / computeV2ManifestReviewSubjectSha256 → both found (graph not stale for the port's new exports).
+- rg -n 'measure/tracks|measure/runs' over the track's own test files → exit 1 (clean).
+
+## Audit points
+
+1. Code port 133d5b596: architecture-reconciliation.ts and v2-manifest-validation.ts are byte-identical to the upstream final state at 220e5886d. The CLI file differs only in the documented newDebtMetadata shape. No stale data commit came along: none of 00953b1b6, 7d06b3838, 394ea0a50, 2bda8baeb, b0b82e873 is an ancestor of HEAD, and the port commit touches no config or data file. Callers are covered; the graph knows the new exports.
+2. Guarded test edits: edits 1 and 2 are byte-identical to upstream c6e3e4462. Edit 3 stayed out because v2-baseline-delta.test.ts does not exist on master; the Red file cases delta_staged_addition_validates and delta_staged_removal_of_v1_survivor_validates carry its fixture form. Meaning is kept; the removals/renames assertions in edit 2 are weaker than they could be (Array.isArray only, nit N1).
+3. CLI shape: parsed options carry newDebtMetadata { owner, rationale }, set only when both flags are present. Behavior equals upstream (upstream combined the two fields at run time). No production caller reads the removed fields.
+4. Data commit 863841016: manifest holds additions=255, removals=15, renames=162, keys=15, owner id daniel, acceptance candidate/defaultPolicy v1. The live v2 check exits 0 with 0/0/0. The ratchet holds at three layers: the ratchet unit case returns new-debt with the exact instanceKey; the route cases reject unexplained v2 entries; the live v1 plain check exits 1 on the same debt layer with additions=339. A direct mutation probe was denied by the audit sandbox (role guard blocks file writes), so the layered proof stands (nit N2). The protected v1 baselines hold an empty diff over the whole phase.
+5. CI step: "Architecture boundary check" runs pnpm architecture:check --skip-input-snapshot-pin --policy v2. The workflow holds no refresh, reconcile, or baseline command. The root script holds no flag.
+
+## Verdict
+
+PASS. No blocking findings. Three non-blocking notes (N1 weaker array assertions, N2 layered ratchet proof, N3 pre-existing directory-name test case). Every plan claim reproduced live matched exactly.
+
+MEASURE_AGENT_RESULT
+role: review-a
+axis: correctness and architecture
+route: opencode-go/glm-5.3#high
+track_id: architecture_ci_input_pin_20261110
+phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: ac1d09869f7819f43666ffee2f8886d945175733
+audited_head_sha: 9619b95482833feae716bbe4182cbc8172787134
+head_matches: true
+verdict: pass
+blocking_findings: []
+nonblocking_findings:
+  - "N1 (nit, guarded edit 2): reconciliation-manifest-v2.red.test.ts asserts only Array.isArray for baselineRemovals and baselineRenames, though the committed staged delta holds removals=15 and renames=162. The edit is upstream-identical and the delta consistency is guarded elsewhere (route delta cases, the live v2 check). The test could assert non-empty arrays for all three fields."
+  - "N2 (observation, ratchet coverage): no single automated case proves 'new finding plus refreshed pins makes the v2 check exit 1 with additions=1'. The ratchet is proven in layers: the ratchet unit case returns new-debt with the exact instanceKey, the route cases reject unexplained v2 entries, the live v1 plain check exits 1 on the same debt layer with additions=339, and the ac2 case keeps the report hash pin. A direct working-tree mutation probe was not possible because the audit sandbox denies file writes."
+  - "N3 (observation, pre-existing): architecture-reconciliation-cli.test.ts:225 asserts the repository directory name with /reading-advantage-monorepo$/, so it fails in a checkout folder with another name. The case predates the phase and no track commit touched it. My suite run read tests_total=332, tests_failed=1, and the one failure is this environmental case."
+retry_recommendation: none
+ratings:
+  - { axis: correctness, score: 5, evidence: "git diff 220e5886d 133d5b596 is empty for architecture-reconciliation.ts and v2-manifest-validation.ts; the live v2 check exits 0 with additions=0, removals=0, renames=0." }
+  - { axis: test_meaning, score: 4, evidence: "The route Red file holds 12 named cases with a positive control and three guards, all passing at HEAD; the direct end-to-end ratchet chain rests on layers, not one case." }
+  - { axis: scope_discipline, score: 5, evidence: "The 54 track commits touch only allowed paths; no upstream data commit is an ancestor of HEAD; the archive and the protected v1 baselines hold an empty diff." }
+  - { axis: evidence_quality, score: 5, evidence: "Every reproduced plan claim matched exactly: the 0/0/0 v2 check, the 339/15/162 v1 check with output_lines=524, the 20/20 pin test, the 12/12 route test, and the 2-field pin refresh diff at 7044e9aa5." }
+END_MEASURE_AGENT_RESULT

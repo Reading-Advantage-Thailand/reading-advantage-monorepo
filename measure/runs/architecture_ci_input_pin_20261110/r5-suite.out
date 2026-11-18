@@ -1,0 +1,54 @@
+heavy-run: lock wait over 600 s — priority p2 — holder PID 1270657: flock -w 1800 -E 201 /home/daniebo/Desktop/primary-parity-progress/heavy.lock /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh --locked -c cd /home/daniebo/Desktop/Workbooks/dashboard && CI=true npx vitest run __tests__/quest-cover-*.test.ts --maxWorkers=1 
+/home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh: line 447: /proc/1270657/cmdline: No such file or directory
+$ vitest run
+
+ RUN  v4.1.8 /home/daniebo/Desktop/reading-advantage-monorepo/packages/architecture-enforcement
+
+architecture pin refresh: analyzerInputSnapshotSha256: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef -> 0598694b87a8023b89ab10c9ac0b6b8809973049988e55402bdae48873812bdc
+architecture pin refresh: analyzerImplementationTreeSha256: eede2bc820f99a3c25851b5905dcdb651738389f47042059e01da146a045a155 -> eede2bc820f99a3c25851b5905dcdb651738389f47042059e01da146a045a155
+architecture pin refresh: implementationAndTestTreeSha256: b40e57f588e805e54bbfb937cec995620890e43d31ea644e7fe797d6793f79ad -> b40e57f588e805e54bbfb937cec995620890e43d31ea644e7fe797d6793f79ad
+architecture pin refresh: reportSha256s: ["56907a7964752793a2631b1233a2ca407867c5ae329b6ee1f878d2b3c06598c0","56907a7964752793a2631b1233a2ca407867c5ae329b6ee1f878d2b3c06598c0"] -> ["56907a7964752793a2631b1233a2ca407867c5ae329b6ee1f878d2b3c06598c0","56907a7964752793a2631b1233a2ca407867c5ae329b6ee1f878d2b3c06598c0"]
+architecture pin refresh: written
+architecture pin refresh: analyzerInputSnapshotSha256: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef -> 0598694b87a8023b89ab10c9ac0b6b8809973049988e55402bdae48873812bdc
+architecture pin refresh: analyzerImplementationTreeSha256: eede2bc820f99a3c25851b5905dcdb651738389f47042059e01da146a045a155 -> eede2bc820f99a3c25851b5905dcdb651738389f47042059e01da146a045a155
+architecture pin refresh: implementationAndTestTreeSha256: b40e57f588e805e54bbfb937cec995620890e43d31ea644e7fe797d6793f79ad -> b40e57f588e805e54bbfb937cec995620890e43d31ea644e7fe797d6793f79ad
+architecture pin refresh: reportSha256s: ["56907a7964752793a2631b1233a2ca407867c5ae329b6ee1f878d2b3c06598c0","56907a7964752793a2631b1233a2ca407867c5ae329b6ee1f878d2b3c06598c0"] -> ["56907a7964752793a2631b1233a2ca407867c5ae329b6ee1f878d2b3c06598c0","56907a7964752793a2631b1233a2ca407867c5ae329b6ee1f878d2b3c06598c0"]
+architecture pin refresh: preview only; rerun with --acknowledge to write
+ ❯ src/__tests__/baseline-validation.test.ts (11 tests | 1 failed) 6129ms
+     × rejects stale synchronous v2 implementation and input hashes 1094ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/baseline-validation.test.ts > committed architecture baseline validation > rejects stale synchronous v2 implementation and input hashes
+AssertionError: expected { valid: false, …(1) } to match object { valid: false, …(1) }
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  {[22m
+[2m    "errors": [[22m
+[32m-     "Analyzer input snapshot hash does not match current bytes",[39m
+[31m+     "Analyzer implementation tree hash does not match current bytes",[39m
+[2m    ],[22m
+[2m    "valid": false,[22m
+[2m  }[22m
+
+ ❯ src/__tests__/baseline-validation.test.ts:542:24
+    540|       ),
+    541|     });
+    542|     expect(staleInput).toMatchObject({
+       |                        ^
+    543|       valid: false,
+    544|       errors: expect.arrayContaining([
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 32 passed (33)
+      Tests  1 failed | 278 passed (279)
+   Start at  03:50:17
+   Duration  160.86s (transform 1.74s, setup 0ms, import 12.23s, tests 141.88s, environment 7ms)
+
+/home/daniebo/Desktop/reading-advantage-monorepo/packages/architecture-enforcement:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/architecture-enforcement@0.1.0 test: `vitest run`
+Exit status 1

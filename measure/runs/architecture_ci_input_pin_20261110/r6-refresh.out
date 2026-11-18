@@ -1,0 +1,3 @@
+$ pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/architecture-pin-refresh-cli.ts --acknowledge
+[ELIFECYCLE] Command failed.
+heavy-run: time limit 5400 s reached — job stopped (pid 1588966)

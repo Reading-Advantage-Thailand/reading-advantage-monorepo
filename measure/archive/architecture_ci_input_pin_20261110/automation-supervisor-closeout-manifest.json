@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "track_id": "architecture_ci_input_pin_20261110",
+  "role": "measure-closeout",
+  "status": "closed",
+  "completion_date": "2026-11-19",
+  "pre_closeout_head": "743e7ddc3d860f9d1c6c814523a2275f473dca0b",
+  "final_acceptance_audited_head_sha": "743e7ddc3d860f9d1c6c814523a2275f473dca0b",
+  "final_acceptance_head_equals_pre_closeout_head": true,
+  "role_base_sha": "743e7ddc3d860f9d1c6c814523a2275f473dca0b",
+  "track_base_sha": "09168dc422ed48604b8f2f0cb9a23ad4d110543b",
+  "lane": "Full lane: spec review, one phase with phase acceptance, reviews A/B/C, adversarial testing, and final acceptance.",
+  "archive_path": "measure/archive/architecture_ci_input_pin_20261110",
+  "audits": [
+    {
+      "role": "spec-review",
+      "phase": "spec",
+      "result_file": "measure/runs/architecture_ci_input_pin_20261110/spec-review-r2-791ef0057.json",
+      "log_file": "measure/runs/architecture_ci_input_pin_20261110/spec-review-r2-791ef0057.log",
+      "audited_head_sha": "791ef0057",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "phase-acceptance",
+      "phase": "Phase 1: CI mode and the local pin refresh (target 2026-11-12)",
+      "result_file": "measure/runs/architecture_ci_input_pin_20261110/phase-acceptance-743e7ddc3.json",
+      "log_file": "measure/runs/architecture_ci_input_pin_20261110/phase-acceptance-743e7ddc3.log",
+      "audited_head_sha": "743e7ddc3d860f9d1c6c814523a2275f473dca0b",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "final-acceptance",
+      "phase": "track",
+      "result_file": "measure/runs/architecture_ci_input_pin_20261110/final-acceptance-743e7ddc3.json",
+      "log_file": "measure/runs/architecture_ci_input_pin_20261110/final-acceptance-743e7ddc3.log",
+      "audited_head_sha": "743e7ddc3d860f9d1c6c814523a2275f473dca0b",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "review-a",
+      "phase": "Phase 1",
+      "result_file": "measure/runs/architecture_ci_input_pin_20261110/review-a-3585c49aa.json",
+      "log_file": "measure/runs/architecture_ci_input_pin_20261110/review-a-3585c49aa.log",
+      "audited_head_sha": "3585c49aa",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "review-b",
+      "phase": "Phase 1",
+      "result_file": "measure/runs/architecture_ci_input_pin_20261110/review-b-3585c49aa.json",
+      "log_file": "measure/runs/architecture_ci_input_pin_20261110/review-b-3585c49aa.log",
+      "audited_head_sha": "3585c49aa",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "review-c",
+      "phase": "Phase 1",
+      "result_file": "measure/runs/architecture_ci_input_pin_20261110/review-c-3585c49aa.json",
+      "log_file": "measure/runs/architecture_ci_input_pin_20261110/review-c-3585c49aa.log",
+      "audited_head_sha": "3585c49aa",
+      "status": "pass",
+      "blocking_findings": 0
+    },
+    {
+      "role": "adversarial-testing",
+      "phase": "Phase 1",
+      "result_file": "measure/runs/architecture_ci_input_pin_20261110/adversarial-3585c49aa.json",
+      "log_file": "measure/runs/architecture_ci_input_pin_20261110/adversarial-3585c49aa.log",
+      "audited_head_sha": "3585c49aa",
+      "status": "pass",
+      "blocking_findings": 0
+    }
+  ],
+  "superseded_audits": [
+    "spec-review-d81048bae.json/status=inconclusive, superseded by spec-review-r2-791ef0057.json",
+    "phase-acceptance-00dfbea9a.json/status=fail (B1 stale input snapshot), fixed by dcf77dba5 and superseded by phase-acceptance-743e7ddc3.json",
+    "review-b-9619b9548.json/status=fail (unreviewed candidate write), closed by the review-record gate of a510c9492",
+    "adversarial-358e8bfde.json/status=fail (Infinity budget, renamed-id gate edge), closed by 36925e1f6 and ae29f456b"
+  ],
+  "final_acceptance_rounds": [
+    {
+      "round": 1,
+      "file": "measure/runs/architecture_ci_input_pin_20261110/final-acceptance-743e7ddc3.json",
+      "status": "pass",
+      "note": "One passing round. Its role gate reran lint, check-types, and the package suite through heavy-run and printed PASS."
+    }
+  ],
+  "closeout_items": [
+    {
+      "id": "N2 of phase acceptance and N2 of final acceptance",
+      "file": "measure/archive/architecture_ci_input_pin_20261110/plan.md",
+      "action": "Appended [checkpoint: 743e7ddc3] to the heading '## Phase 1: CI mode and the local pin refresh (target 2026-11-12)'. The acceptance roles could not edit plan.md.",
+      "verified": "The archived plan heading now ends with [checkpoint: 743e7ddc3]."
+    },
+    {
+      "id": "registry",
+      "file": "measure/tracks.md",
+      "action": "Removed the active [ ] entry, added an archived [x] entry under '## Archived Tracks', and reworded the dependency note of architecture_identity_provider_debt_20261111 so the active section names no literal id of the closed track.",
+      "verified": "The closeout checker reports no active-registry hit for this track."
+    },
+    {
+      "id": "N1 of final acceptance (deferred B-F2)",
+      "file": "measure/tech-debt.md",
+      "action": "Added one concise Open row for the v2 review-record gap: status=candidate, reviews=0, and the committed 255/15/162 staged delta keep later v2 reconcile writes refused, fail-closed. The file stays at its 50-line cap after merging two resolved Done rows of 2026-10-20.",
+      "verified": "The B-F2 row is present and measure/tech-debt.md holds 50 lines."
+    }
+  ],
+  "commits": [
+    "chore(measure): close the architecture ci pin track (track_id: architecture_ci_input_pin_20261110) -- 98 characters. The orchestrator's literal wording was 104 characters, so 'input ' was removed to meet the 100-character header rule; the scope, meaning, and exact track_id stay. The commit carries the archive move, the checkpoint, the metadata, the closeout manifest, the registry, the tech-debt row, and measure/runs/architecture_ci_input_pin_20261110/. The resulting HEAD and commit SHA are recorded in closeout-743e7ddc3.log after the commit."
+  ],
+  "gate_commands": [
+    "git rev-parse HEAD -> 743e7ddc3d860f9d1c6c814523a2275f473dca0b (pre-closeout HEAD, equal to the final acceptance audited HEAD)",
+    "git mv measure/tracks/architecture_ci_input_pin_20261110 measure/archive/architecture_ci_input_pin_20261110 -> exit 0",
+    "python3 plan marker check over measure/archive/architecture_ci_input_pin_20261110/plan.md -> 9 [x], 0 [~], 0 [ ], 0 [b]",
+    "rg -n 'PASS=[0-9]+.*FAIL=0|all checks pass' measure/archive/architecture_ci_input_pin_20261110/plan.md -> no hit (A5)",
+    "rg -n 'completely fixed|fully solved|all (checks |tests )?pass' measure/tracks.md -> no hit (A6)",
+    "rg -n 'measure/tracks/([a-z_0-9-]+)/plan\\.md' tests/*.sh -> only fixture ids in tests/orchestrator_marker_vocabulary_cases.sh; no archived-track reference for this track (A9)",
+    "rg -n 'architecture_ci_input_pin_20261110' tests/ -> 8 string hits in tests/orchestrator_doctor_gate.sh expected-output clauses; no hardcoded plan path and no test edit needed (A9)",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo /home/daniebo/Desktop/reading-advantage-monorepo --track architecture_ci_input_pin_20261110 -> PASS",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo /home/daniebo/Desktop/reading-advantage-monorepo -> reported in closeout-743e7ddc3.log"
+  ],
+  "deferred_tasks": [],
+  "plan_state": {
+    "total_tasks": 9,
+    "done_tasks": 9,
+    "in_progress_tasks": 0,
+    "space_marker_tasks": 0,
+    "human_gate_tasks": 0,
+    "phase_checkpoints": [
+      "743e7ddc3"
+    ],
+    "note": "Every done task names a commit SHA. No task carries the pending marker, the in-progress marker, or the human-gate marker. The deferred B-F2 follow-up is a tech-debt row, not a plan task."
+  },
+  "retained_evidence": [
+    "measure/runs/architecture_ci_input_pin_20261110/ (the full run folder: red, green, spec review, review A/B/C, adversarial, phase acceptance, final acceptance, cost analyses, and this closeout)",
+    "measure/runs/architecture_ci_input_pin_20261110/phase-acceptance-743e7ddc3.json and .log",
+    "measure/runs/architecture_ci_input_pin_20261110/final-acceptance-743e7ddc3.json and .log",
+    "measure/runs/architecture_ci_input_pin_20261110/closeout-743e7ddc3.json and .log"
+  ],
+  "artifact_cleanup": "None. The orchestrator identified no bulky artifact for deletion. The whole run folder stays on disk and in the closeout commit.",
+  "anti_pattern_checks": {
+    "a5": "The archived plan holds no PASS=n, FAIL=0 text and no 'all checks pass' text. The detector returns no hit. The final acceptance at 743e7ddc3 independently reproduced the 415-test, 20-pin-test, zero-error lint and check-types, and 0/0/0 debt claims.",
+    "a6": "The archived registry entry states the adversarial pass at 3585c49aa with 73 cases and the deferred B-F2 fail-closed state. It claims no acceptance or adversarial state beyond the recorded results.",
+    "a9": "No test holds a hardcoded path measure/tracks/architecture_ci_input_pin_20261110/plan.md. The eight references in tests/orchestrator_doctor_gate.sh are expected-output strings about the track id, not paths, so the archive move breaks no test. No test edit was needed.",
+    "a13": "The move left no directory under measure/tracks/. The closeout checker confirms the archive exists and the active registry section names no literal id of this track."
+  },
+  "a9_comment_only_references": [
+    "tests/orchestrator_doctor_gate.sh:23-24,204,233,299,522,641,996 name the track id in expected owner-drift messages. They are strings, not file paths."
+  ],
+  "registry": {
+    "file": "measure/tracks.md",
+    "section": "Archived Tracks",
+    "link": "./archive/architecture_ci_input_pin_20261110/",
+    "description_matches_metadata": true,
+    "note": "The entry carries the [x] marker, the archive link, the metadata description verbatim, a status line with the acceptance head 743e7ddc3, and a note that states the adversarial state and the deferred B-F2 follow-up."
+  },
+  "metadata_updates": {
+    "file": "measure/archive/architecture_ci_input_pin_20261110/metadata.json",
+    "status": "done",
+    "completed": "2026-11-19",
+    "updated_at": "2026-11-19T00:00:00Z",
+    "actual_tasks": 9,
+    "description_unchanged": true
+  },
+  "lessons_learned_and_tech_debt": "lessons-learned.md: no update warranted; no new process lesson surfaced in closeout. tech-debt.md: the deferred B-F2 follow-up was added as one Open row; two resolved Done rows of 2026-10-20 were merged into one so the file stays at its 50-line cap.",
+  "owner_gate": "None. The plan holds no [b] human-gated task, so no deferred owner needs to be informed.",
+  "retry_recommendation": "none"
+}

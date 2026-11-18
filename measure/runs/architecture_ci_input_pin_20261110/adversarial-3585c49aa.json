@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Adversarial re-run after the Green remediation at audited HEAD 3585c49aa (implementation 965079f05; fixes ae29f456b gate by path, 36925e1f6 safe-integer budget, b9362c9d1 docs). F1 is fixed: parsePinRefreshArguments now refuses a value whose Number() is not a safe integer, so the former red case budget_rejects_a_value_that_is_not_a_finite_whole_number passes. F2 is fixed: stagedManifestFromPreview now matches the replacement by the canonical id OR the manifest destination path, and the former renamed-id cases now hit the gate message. The original 61 cases pass 61 of 61 in the clean copy at 3585c49aa. New probing of the path match found no bypass that completes a write: path variants under the canonical id hit the gate's id arm; a renamed id at a variant path is refused by the exact ordered destination guard; a swapped id and path hits the gate's path arm; non-json staged bytes fail closed; and the transaction re-derives each destination from repositoryPath and validates containment, symlinks, realpath canonicalization, and distinct destinations, so the plan's destination fields are not trusted inputs. The adversarial file gained 12 new gate cases and 2 budget boundary cases and now holds 73 cases, all passing at 00dfbea9a. No production file was edited.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "observations": [
+    "O1 (fail-closed, cosmetic): staged manifest bytes that are not valid JSON make the gate throw a raw JSON SyntaxError ('Unexpected token...' from JSON.parse inside stagedManifestFromPreview) instead of a controlled refusal message. The apply still rejects and no write happens; the committed case apply_fails_closed_on_non_json_staged_manifest_bytes pins the rejection.",
+    "O2 (defense-in-depth note, no write path): the gate reads the first replacement that matches the canonical id or the manifest path. A plan could place clean manifest-shaped bytes on a matching entry and unreviewed delta bytes on a non-matching entry at another canonical destination. No write completes: the exact ordered destination guard forces the four canonical paths in order, and validateCommittedDocument parses each committed document by its replacement id, so the unreviewed bytes fail the baseline schema, the domain check, or the unknown-id check during the transaction. Probing found no combination that reaches a completed write.",
+    "O3 (verification of the apply path): applyRepositoryFileTransaction re-derives every destination as resolve(repoRoot, replacement.repositoryPath) and validates repository containment, symbolic links, regular files, realpath canonicalization, and distinct canonical destinations (policy-update-transaction.ts:333-381). The plan's destination and canonicalDestination fields are preview-time facts, not trusted write inputs, so a doctored plan cannot redirect the write."
+  ],
+  "evidence": [
+    "Re-run of the committed adversarial file in the clean copy at the audited HEAD: cd /home/daniebo/.cache/arch-gate-3/reading-advantage-monorepo && CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-v2-route-adversarial.test.ts --maxWorkers=1 exits 0. tests_total=61, tests_failed=0, tests_passed=61. F1 and F2 from the prior round are both fixed at 3585c49aa.",
+    "Path-match probe (pnpm exec tsx probe-path.mts in the clean copy, eight apply probes): control_canonical, renamed_id_canonical_path, dot_segment_path, double_slash_path, trailing_slash_path, capitalized_path, and swapped_id_and_path all reject with 'V2 reconciliation refuses a staged baseline delta without a review record'; id_on_non_json rejects with a raw JSON parse error (observation O1).",
+    "Second path probe (four apply probes): a renamed id combined with a dot-segment, double-slash, trailing-slash, or capitalized path rejects with 'V2 reconciliation write set is not exact'. The gate skips those plans, and the exact ordered destination guard refuses them; no write completes.",
+    "Extended file at 00dfbea9a in a new clean copy at that commit (/home/daniebo/.cache/arch-gate-4, detached at 00dfbea9a, working tree clean, install with the explicit store): the same vitest command exits 0 with tests_total=73, tests_failed=0, tests_passed=73, duration 2.85 s. The 12 new gate cases are gate_refuses_a_renamed_replacement_id (2 rows, strengthened from the prior write-refusal pin to the gate message), gate_refuses_a_delta_staged_at_a_path_variant (4 rows: dot segment, double slash, trailing slash, capitalized root), write_guard_refuses_a_renamed_id_at_a_path_variant (4 rows), gate_refuses_a_swapped_id_and_path (1), and apply_fails_closed_on_non_json_staged_manifest_bytes (1). The 2 new budget cases pin the safe-integer boundary: 9007199254740991 accepted, 9007199254740992 refused with the value named.",
+    "pnpm --filter @reading-advantage/architecture-enforcement check-types at 00dfbea9a exits 0 (tsc --noEmit, no errors). pnpm --filter @reading-advantage/architecture-enforcement lint exits 0 with 0 errors and the one pre-existing prefer-const warning in architecture-pin-refresh-resume.test.ts.",
+    "Budget fix verification: git show 36925e1f6 adds the Number.isSafeInteger guard after the Number conversion, so the 400-digit probe value now throws '--budget-s must be a positive whole number of seconds'. Gate fix verification: git show ae29f456b extends stagedManifestFromPreview to match entry.repositoryPath === V2_RECONCILIATION_DESTINATION_PATHS[0] in addition to the canonical id, and Green added two renamed-id gate rows to architecture-review-gate.test.ts.",
+    "Scope and detectors: git show 965079f05 --stat reads 1 file changed, 5 insertions, 5 deletions, so the refreshed manifest keeps manifest_fields_changed=5. rg -n 'measure/tracks|measure/runs' over the extended test file exits 1 (A9 clean). git diff --name-only 5062b170e..HEAD -- measure/archive/backend_architecture_enforcement_20260713/ is empty (archive_changed_paths=0). The three dirty next-env.d.ts files in the main checkout were not touched; no clean copy was made under /tmp."
+  ],
+  "commands": [
+    "git -C /home/daniebo/.cache/arch-gate-3/reading-advantage-monorepo rev-parse HEAD (3585c49aa)",
+    "cd /home/daniebo/.cache/arch-gate-3/reading-advantage-monorepo && CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-v2-route-adversarial.test.ts --maxWorkers=1",
+    "pnpm exec tsx probe-path.mts (clean copy; eight apply probes over the new path match)",
+    "pnpm exec tsx probe-path2.mts (clean copy; four renamed-id-plus-path-variant probes)",
+    "git worktree add --detach /home/daniebo/.cache/arch-gate-4 00dfbea9a",
+    "pnpm install --frozen-lockfile --offline --store-dir /home/daniebo/.local/share/pnpm/store/v11 (in the arch-gate-4 copy)",
+    "cd /home/daniebo/.cache/arch-gate-4 && CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-v2-route-adversarial.test.ts --maxWorkers=1",
+    "pnpm --filter @reading-advantage/architecture-enforcement check-types (in the arch-gate-4 copy)",
+    "pnpm --filter @reading-advantage/architecture-enforcement lint (in the arch-gate-4 copy)",
+    "git commit -m 'test(architecture): extend v2 route adversarial cases (track_id: architecture_ci_input_pin_20261110)'",
+    "git commit -m 'test(architecture): fix the budget boundary rows (track_id: architecture_ci_input_pin_20261110)'",
+    "git worktree remove /home/daniebo/.cache/arch-gate-4 && git worktree prune"
+  ],
+  "changed_files": [
+    "packages/architecture-enforcement/src/__tests__/architecture-v2-route-adversarial.test.ts",
+    "measure/runs/architecture_ci_input_pin_20261110/adversarial-3585c49aa.json",
+    "measure/runs/architecture_ci_input_pin_20261110/adversarial-3585c49aa.log"
+  ],
+  "confidence": "high",
+  "retry_recommendation": "none",
+  "audited_head_sha": "3585c49aa",
+  "resulting_head_sha": "00dfbea9a",
+  "route": "opencode-go/glm-5.3#high",
+  "ratings": [
+    { "axis": "correctness", "score": 5, "evidence": "Both prior findings are fixed and verified by the re-run (61 of 61 at 3585c49aa); the new path-match probes over dot segments, double slashes, trailing slashes, case variants, id/path swaps, and non-json bytes found no combination that completes a write; the apply path re-derives and validates every destination (policy-update-transaction.ts:333-381)." },
+    { "axis": "test_meaning", "score": 5, "evidence": "F1 and F2 each had a failing-first case at the prior HEAD and pass now; the extended file pins the gate id arm, the gate path arm, the guard refusal, the safe-integer boundary, and the fail-closed non-json case with 73 of 73 passing at 00dfbea9a." },
+    { "axis": "scope_discipline", "score": 5, "evidence": "The Green fixes touch exactly the two production files named by the findings plus their own gate test rows and the docs (git show --stat ae29f456b, 36925e1f6, b9362c9d1); the pin refresh 965079f05 changes exactly 5 manifest values; the archive diff is empty." },
+    { "axis": "evidence_quality", "score": 5, "evidence": "Every claim of this round has a command result: the 61-case re-run exit 0, the twelve apply probes with their exact refusal messages, the 73-case run exit 0 at 00dfbea9a, check-types exit 0, lint exit 0, and the A9 detector exit 1." }
+  ]
+}

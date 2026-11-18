@@ -1,9 +1,10 @@
 {
   "track_id": "architecture_ci_input_pin_20261110",
   "type": "chore",
-  "status": "new",
+  "status": "done",
   "created_at": "2026-11-10T00:00:00Z",
-  "updated_at": "2026-11-10T00:00:00Z",
+  "updated_at": "2026-11-19T00:00:00Z",
+  "completed": "2026-11-19",
   "opened": "2026-11-10",
   "description": "Run the architecture boundary check in CI without the analyzer input snapshot pin comparison, keep the pin and its refresh as a local command, and prove that a new analyzed file that the manifest does not list fails through the report hash binding, with or without a boundary finding.",
   "author_model": "deepseek/deepseek-flash#high",
@@ -29,6 +30,6 @@
     "Do not touch packages/backend/turbo.json or packages/webhooks"
   ],
   "estimated_tasks": 5,
-  "actual_tasks": null,
+  "actual_tasks": 9,
   "deviation_notes": ""
 }

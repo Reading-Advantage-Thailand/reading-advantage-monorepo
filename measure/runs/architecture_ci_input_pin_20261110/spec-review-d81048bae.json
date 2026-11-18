@@ -1,0 +1,28 @@
+{
+  "role": "spec-review",
+  "phase": "track setup",
+  "track_id": "architecture_ci_input_pin_20261110",
+  "round": 1,
+  "role_base_sha": "d81048bae0074cbe9fda554bdccc2b326df5460a",
+  "audited_head_sha": "d81048bae0074cbe9fda554bdccc2b326df5460a",
+  "status": "inconclusive",
+  "retry_recommendation": "infrastructure_retry",
+  "cause": "stopped by the orchestrator for a PM slot order; review not complete",
+  "paraphrase": {
+    "proposes": "Review not complete. Provisional paraphrase from the spec only: the track adds a CI mode flag --skip-input-snapshot-pin to pnpm architecture:check so CI skips the analyzerInputSnapshotSha256 pin comparison, keeps every other manifest check, and adds a local refresh command pnpm architecture:pin:refresh that rewrites the five pinned manifest fields with --acknowledge.",
+    "current_system": "Review not complete. Provisional summary from the spec only: CI runs pnpm architecture:check at .github/workflows/ci.yml:157, which validates the v2 reconciliation manifest and fails when analyzerInputSnapshotSha256 differs from the current bytes of analyzed inputs; the pin was last refreshed by commit 221081178 on 2026-09-08."
+  },
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "checked_so_far": [
+    "Read the spec review standard at ~/.agents/skills/measure/references/spec-review.md (found; review rules loaded).",
+    "Read measure/tracks/architecture_ci_input_pin_20261110/spec.md in full (232 lines).",
+    "Read measure/tracks/architecture_ci_input_pin_20261110/plan.md in full (42 lines).",
+    "Read measure/tracks/architecture_ci_input_pin_20261110/index.md.",
+    "Confirmed shell tool is denied in this session; cited file:line verification (v2-manifest-validation.ts, architecture-check.ts, architecture-check-cli.ts, ci.yml, inventory.ts, analyzer.ts) not yet done.",
+    "HEAD equality check against role_base_sha d81048bae0074cbe9fda554bdccc2b326df5460a not yet done.",
+    "AC-2 sufficiency check, CI-mode narrowness check, and plan test-command heavy-run.sh rule check not yet done.",
+    "Author open question (refresh of all five manifest fields) not yet answered."
+  ],
+  "handoff": "Review stopped by orchestrator PM slot order before any cited file:line verification. Rerun as round 2 with the same inputs; none of the review checks listed in checked_so_far have been performed yet."
+}

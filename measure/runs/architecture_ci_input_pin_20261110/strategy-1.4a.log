@@ -1,0 +1,55 @@
+# Strategy amendment for task 1.4a
+
+Track: architecture_ci_input_pin_20261110. Role: Measure strategy. Date: 2026-11-11. Model: claude-sonnet-5-5.
+role_base_sha: 06fcbc4e91bc07a5023dd0234ad285ba6d4d2835
+Phase base (unchanged): 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+Commit: ebf7c6d152609e3336239153190900223371db56
+Header: docs(measure): add the refresh cost strategy rows (track_id: architecture_ci_input_pin_20261110)
+Path in the commit: measure/tracks/architecture_ci_input_pin_20261110/test-strategy.md (1 file; 112 insertions, 1 deletion).
+No run, no build, no node or tsx. Reads only. No /tmp scratch made.
+
+## What changed in the strategy file
+- Header: one `Amended` line (2026-11-11, model, cause D-7).
+- Section 1.1: two named files outside the wrapper; every wrapper call carries HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800.
+- New section P1.11: facts N1 to N7 (read), the Red command, 8 cases with proof and falsification condition, expected Red state
+  (tests_total=8, tests_failed=4, tests_passed=4), labeled counts, no-clock rule with detector, fixture rule, A3/A4/A5/A9/A12/A14/A15 rows,
+  Green gate (6 items), allowed paths, build-graph rule (heavy-run only), 1.4 rerun rule at the 1.4a HEAD, review table, limits of the tests.
+- Section 7: the 1.4a floors.
+
+## Findings that shaped the rows (read, not run)
+- N1: moduleSpecifierForBinding is private (analyzer.ts:1913). The walk count needs a seam: root walks of `ts.forEachChild` on the fixture SourceFile.
+- N2: node_modules/typescript/lib/typescript.js:22-25 defines members as getters without configurable. vi.spyOn(ts, "forEachChild") may fail.
+  The strategy names vi.mock("typescript", ...) as the fallback.
+- N3: V2_MANIFEST_KEYS is not exported (v2-manifest-validation.ts:92). AC-8 compares the key list before and after the refresh and uses the
+  strict validator (:572) as the oracle. A literal key list in the test would break A12.
+- N4/N5: projections are counted at `git archive`; passes are counted with a passthrough vi.mock of ../analyzer.js (call sites :878 and architecture-check.ts:210).
+- N6: the pin file runs the refresh in a child process (spawnSync, line 245-251). The cost file must call runArchitecturePinRefreshCli in-process.
+- M4 still holds: v2-manifest-validation.ts is in the analyzer implementation path list, so the 1.4a Green commit makes the pins stale again.
+
+## Questions for the orchestrator (defaults apply)
+- Q10. The PM example `walks_per_module=1` is stated as `walks_per_module<=1` plus `walk_growth=0`. Reason: other analyzer visitors walk the root
+  once per file, and an eager or a lazy store gives 0 or 1 binding walks. Default: use `<=1` and `walk_growth=0`. Both are labeled integers.
+- Q11. The spec AC-8 says "equals V2_MANIFEST_KEYS". The constant is private. Default: the test compares the key lists before and after the refresh
+  and requires the strict validator to accept them. No export is added. If the orchestrator wants the literal check, Green must export the constant
+  (an allowed-path change in the validator, which is already a Green path).
+- Q12. The Red role runs no package suite (the assignment names one Red command). The "only the new file fails" proof for the suite moves to the Green gate.
+  Default: as written.
+- Q13. No plan change is required. The plan rule "red at the 1.2 and 1.3 HEADs, passes only after the 1.4 refresh" already covers the 1.4a HEADs.
+- Q14. Risk of the 1.4 rerun: the analysis expects about 36 minutes if one pass stays at 18 minutes. The strategy tells the 1.4 role to stop at the cap,
+  record the exit code, and report. It never raises the cap.
+
+MEASURE_AGENT_RESULT
+status: done
+role: measure-strategy
+track: architecture_ci_input_pin_20261110
+task: 1.4a (strategy amendment)
+role_base_sha: 06fcbc4e91bc07a5023dd0234ad285ba6d4d2835
+commit: ebf7c6d152609e3336239153190900223371db56
+files_changed: measure/tracks/architecture_ci_input_pin_20261110/test-strategy.md
+phase_base_sha: unchanged, 09168dc422ed48604b8f2f0cb9a23ad4d110543b (Phase 1 already running; no new capture is needed for 1.4a)
+red_command: CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-analyzer-cost.test.ts
+red_expected: exit 1, tests_total=8, tests_failed=4, tests_passed=4 (AC-6 two cases and AC-7 two cases fail; positive control, ac6b, AC-8 two cases pass as characterization)
+risk: high
+reviews: Review A yes (task level); Review B, Review C, adversarial yes at phase level; browser review no
+handoff: Questions Q10 to Q14 in this log. Defaults apply. The plan needs no change.
+END_MEASURE_AGENT_RESULT

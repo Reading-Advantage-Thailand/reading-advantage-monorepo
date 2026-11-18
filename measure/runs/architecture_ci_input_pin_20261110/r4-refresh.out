@@ -1,0 +1,25 @@
+$ pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/architecture-pin-refresh-cli.ts --acknowledge
+
+<--- Last few GCs --->
+
+[1356635:0x3329a000]    47503 ms: Mark-Compact 1420.6 (1430.8) -> 1420.2 (1436.5) MB, pooled: 0 MB, 818.01 / 0.00 ms  (average mu = 0.404, current mu = 0.079) allocation failure; scavenge might not succeed
+[1356635:0x3329a000]    48349 ms: Mark-Compact (reduce) 1421.9 (1436.5) -> 1421.5 (1430.8) MB, pooled: 0 MB, 653.00 / 0.00 ms  (+ 0.0 ms in 0 steps since start of marking, biggest step 0.0 ms, walltime since start of marking 657 ms) (average mu = 0.332, c
+FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 0x75356c node::OOMErrorHandler(char const*, v8::OOMDetails const&) [/home/daniebo/.nvm/versions/node/v24.19.0/bin/node]
+ 2: 0xc52cd0  [/home/daniebo/.nvm/versions/node/v24.19.0/bin/node]
+ 3: 0xc52dbf  [/home/daniebo/.nvm/versions/node/v24.19.0/bin/node]
+ 4: 0xef6695  [/home/daniebo/.nvm/versions/node/v24.19.0/bin/node]
+ 5: 0xf07ffc  [/home/daniebo/.nvm/versions/node/v24.19.0/bin/node]
+ 6: 0xedd4b3  [/home/daniebo/.nvm/versions/node/v24.19.0/bin/node]
+ 7: 0xeb2604  [/home/daniebo/.nvm/versions/node/v24.19.0/bin/node]
+ 8: 0xe999d5  [/home/daniebo/.nvm/versions/node/v24.19.0/bin/node]
+ 9: 0x1248cae  [/home/daniebo/.nvm/versions/node/v24.19.0/bin/node]
+10: 0x124b1f2  [/home/daniebo/.nvm/versions/node/v24.19.0/bin/node]
+11: 0x139f185  [/home/daniebo/.nvm/versions/node/v24.19.0/bin/node]
+12: 0x1ab39b6  [/home/daniebo/.nvm/versions/node/v24.19.0/bin/node]
+undefined
+/home/daniebo/Desktop/reading-advantage-monorepo/packages/architecture-enforcement:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 134: tsx src/architecture-pin-refresh-cli.ts --acknowledge
+[ELIFECYCLE] Command failed with exit code 1.

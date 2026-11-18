@@ -1,0 +1,34 @@
+Round 4 of P1 for architecture_ci_input_pin_20261110. Light analysis only.
+
+Role base: 0a5b2bc425d908502069e18a00c1098b775c8828. Date 2026-11-11.
+No heavy run, no test run, no analyzer run, no code change, no commit.
+
+Analysis: measure/runs/architecture_ci_input_pin_20261110/pin-refresh-cost-analysis.md
+
+Summary of the read
+- One refresh makes `analyzer_passes=5` and `projections=5`: refresh CLI lines 152, 163, 166, and 200; v2-manifest-validation.ts lines 818, 843, 900, 996, 1009, 1010, and 1011.
+- The async validation computes the input snapshot at line 1009 even when the pin comparison is skipped. The guard at line 1026 covers only the comparison.
+- Likely super-linear step: `moduleSpecifierForBinding` (analyzer.ts:1913-1944) walks the whole source file, and `configuredTableResourceForExpression` calls it at line 1999 for every argument of every executable node in v2 (lines 2775 and 2856). The pattern is a full-file walk inside a per-node loop.
+- Secondary: `parseArchitectureModule` copies and filters all evidence per module (analyzer.ts:1408-1410, called at line 2511).
+- The ownership check is memoized, and the binding-origin worklist is bounded, so neither is the main cause.
+
+Recommendation
+- Fix the per-file walk with a module-facts index, and share one evidence run between the refresh and its validation. That takes the refresh from 5 passes and 5 projections to 2 passes and 1 projection. Keep the manifest fields and the AC-2 guard.
+
+Open question and default
+- Question: should the plan gain task 1.4a (Red first) for the per-file index and the shared evidence run, and should task 1.4 rerun after it?
+- Default: yes. Add 1.4a with the refresh under 1800 s as its gate, then rerun task 1.4.
+
+MEASURE_AGENT_RESULT
+role: green
+status: blocked
+track: architecture_ci_input_pin_20261110
+phase: P1
+role_base_sha: 0a5b2bc425d908502069e18a00c1098b775c8828
+commits: none in round 4
+tests_run: none in round 4
+files_changed: measure/runs/architecture_ci_input_pin_20261110/pin-refresh-cost-analysis.md (gitignored); no repository file
+plan_updates: none; the plan change is recommended as a new task 1.4a
+known_failures: the 1.4 refresh does not fit in the PM 30-minute heavy limit at the current cost; task 1.5 did not run
+handoff: recommendation: one-line: add task 1.4a (Red first) to index the per-module binding specifiers and share one evidence run between the refresh and its validation; then rerun 1.4 under 1800 s. Default: do that. Question: approve task 1.4a and the 1.4 rerun?
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "role": "review-a",
+  "axis": "correctness and architecture",
+  "route": "opencode-go/glm-5.3#high",
+  "track_id": "architecture_ci_input_pin_20261110",
+  "phase": "Phase 1: CI mode and the local pin refresh (target 2026-11-12)",
+  "phase_base_sha": "09168dc422ed48604b8f2f0cb9a23ad4d110543b",
+  "role_base_sha": "4ec3d5d21453a46f998cef8bfd42578bd1669c46",
+  "audited_head_sha": "3585c49aae9e334496d8156902e70eda19d04f71",
+  "head_matches": true,
+  "status": "pass",
+  "verdict": "pass",
+  "summary": "Audit of the r3 remediation range 4ec3d5d21..3585c49aa in a clean checkout at the audited HEAD. The gate hardening (ae29f456b) keys the staged-manifest lookup on the manifest destination path as well as the canonical replacement id, so a renamed id cannot skip the review gate; the first-match edge stays unreachable because the acknowledged apply also requires canonical byte-identity with the freshly recomputed preview (architecture-reconciliation.ts:1288-1294). The two new gate rows assert the exact refusal message and had a recorded failing-first check. The safe-integer budget fix (36925e1f6) refuses a digit string that Number() maps to Infinity, and its Red case budget_rejects_a_value_that_is_not_a_finite_whole_number sits in the adversarial file committed at the role base and structurally fails there. The pin refresh (965079f05) changes only pin values: one hunk, four values moved, analyzerImplementationTreeSha256 and every delta list, review, and acceptance field stayed. The plan evidence commit (3585c49aa) also fixes the earlier N3 wording. Reproduced: targeted 71 of 71 over 3 files, suite 38 files and 403 tests with 0 failures, check-types exit 0, lint 0 errors and 1 pre-existing warning, and the live v2 check exits 0 with files=7013, findings=800, parseErrors=0, additions=0, removals=0, renames=0. No blocking findings; two non-blocking notes, both about the docs owner paragraph (b9362c9d1).",
+  "commands": [
+    "git rev-parse HEAD (in /home/daniebo/.cache/arch-gate-3/reading-advantage-monorepo) -> 3585c49aae9e334496d8156902e70eda19d04f71, equal to audited_head_sha; git status --porcelain empty",
+    "git log --oneline 4ec3d5d21..3585c49aa -> 5 commits: ae29f456b, 36925e1f6, b9362c9d1, 965079f05, 3585c49aa",
+    "git diff --name-only 5062b170e..3585c49aa -- measure/archive/backend_architecture_enforcement_20260713/ -> empty",
+    "CI=true pnpm exec vitest run (architecture-v2-route-adversarial, architecture-review-gate, architecture-pin-refresh-budget) --maxWorkers=1 -> exit 0, test_files=3, tests=71, failed=0",
+    "CI=true pnpm --filter @reading-advantage/architecture-enforcement test -- --maxWorkers=1 -> exit 0, suite_files=38, suite_tests=403, tests_failed=0",
+    "pnpm --filter @reading-advantage/architecture-enforcement lint -> exit 0, errors=0, warnings=1 (pre-existing prefer-const in architecture-pin-refresh-resume.test.ts)",
+    "pnpm --filter @reading-advantage/architecture-enforcement check-types -> exit 0",
+    "pnpm architecture:check --policy v2 -> exit 0, clean (files=7013, findings=800, parseErrors=0), debt clean (additions=0, removals=0, renames=0)",
+    "node manifest count -> baselineAdditions=255, baselineRemovals=15, baselineRenames=162, reviews=0, keys=15, status=candidate, analyzerImplementationTreeSha256 prefix cb9c1431 (unchanged)",
+    "grep -n 'measure/tracks|measure/runs' over the three targeted test files -> exit 1",
+    "sed -n '775,815p' architecture-v2-route-adversarial.test.ts -> owner contract rows: refuses Daniel, accepts 0wn3r-1d and monorepo_arch, 'the owner contract must refuse the value before any write'"
+  ],
+  "changed_files": [
+    "packages/architecture-enforcement/src/architecture-reconciliation.ts",
+    "packages/architecture-enforcement/src/__tests__/architecture-review-gate.test.ts",
+    "packages/architecture-enforcement/src/architecture-pin-refresh-cli.ts",
+    "docs/architecture-enforcement.md",
+    "packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json",
+    "measure/tracks/architecture_ci_input_pin_20261110/plan.md",
+    "measure/runs/architecture_ci_input_pin_20261110/green-rem2-4ec3d5d21.log"
+  ],
+  "confidence": "high",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 (docs accuracy, b9362c9d1): the new owner paragraph quotes `[a-z][a-z0-9-]{0,63}` as the pattern for the reconcile `--owner` id, but that regex is the accepted-manifest ownerBinding pattern (REVIEWER_ID_PATTERN, v2-manifest-validation.ts:104). The owner value passed with `--owner` lands on staged baseline entries and is validated by OWNER_PATTERN `/^[a-z0-9][a-z0-9_-]*$/` (contracts.ts:7, baselineEntrySchema at :81,:313). The adversarial rows prove values the quoted pattern rejects are accepted: `new_debt_accepts_the_owner_value_0wn3r-1d` and `_monorepo_arch` (architecture-v2-route-adversarial.test.ts:798-810). The docs name the wrong contract for the flag they sit next to.",
+    "N2 (docs accuracy, same paragraph): 'the preview accepts any `--owner` value' is false when the delta holds new findings. previewArchitectureReconciliation calls createUpdatedArchitectureBaselines (architecture-reconciliation.ts:794-798), and reviewedEntryForFinding parses every new entry through baselineEntrySchema (baseline-update.ts:126-144), refusing a non-conforming owner before any write. The adversarial case title says exactly this ('the owner contract must refuse the value before any write'), and the 1.4d live evidence refused the owner 'Daniel' at the preview (`reconcile_preview_owner_capital=1`). The sentence is true only when no new finding needs the metadata. The underlying behavior is correct and pinned by tests; only the docs sentence overstates.",
+    "N3 (evidence wording, minor): the plan line for the renamed-id rows reads 'Both rows failed before the fix (2 failed, 4 skipped)'. The 4 skipped are the gate file's other cases under a name filter, not a state of the code. The green log step 3 describes the same check as a temporary restore of the base production file, so the failing-first property is real; the plan wording alone is ambiguous."
+  ],
+  "evidence": [
+    "Provenance: git rev-parse HEAD in /home/daniebo/.cache/arch-gate-3/reading-advantage-monorepo returns 3585c49aae9e334496d8156902e70eda19d04f71, equal to audited_head_sha; the tree is clean and the backend build artifacts exist.",
+    "Audit point 1 (gate by path, ae29f456b): stagedManifestFromPreview now matches entry.id === 'reconciliation-manifest' OR entry.repositoryPath === V2_RECONCILIATION_DESTINATION_PATHS[0] (architecture-reconciliation.ts:1186-1190). A preview that renames the id while staging manifest bytes at the manifest path can no longer skip the gate. The first-match edge (a doctored benign entry with the canonical id placed first) cannot reach a write: the acknowledged apply recomputes the canonical preview and requires byte-identity (architecture-reconciliation.ts:1286-1294), so any doctored plan is refused there regardless. The fix is correct defense-in-depth.",
+    "Audit point 1 (tests): architecture-review-gate.test.ts gains a manifestId fixture parameter and the case group 'refuses a staged delta under a renamed replacement id' with rows v2-manifest and ownership-map, both asserting the exact gate message. The green log step 3 records the failing-first check (base production restored, the two rows fail). The adversarial file also holds the rows renamed_replacement_id_cannot_complete_a_write with the any-refusal shape; both files pass at HEAD.",
+    "Audit point 2 (safe-integer budget, 36925e1f6): after the digit regex, Number(value) must pass Number.isSafeInteger, else the same '--budget-s must be a positive whole number of seconds: <value>' error (architecture-pin-refresh-cli.ts:121-130). The regex accepts a 400-digit string and Number() maps it to Infinity, so the old code set budgetSeconds=Infinity and the budget stop could never fire. The Red case budget_rejects_a_value_that_is_not_a_finite_whole_number (architecture-v2-route-adversarial.test.ts:954-961, committed at the role base 4ec3d5d21) asserts the throw and structurally fails at the base; the green log step 1 records the red run (61 cases, 1 failed). The fix edits no test file.",
+    "Audit point 3 (docs, b9362c9d1): the owner paragraph now scopes the pattern to the accepted manifest and names the acknowledged run as the enforcement point. Verified against the code: the argument parse accepts any --owner value (architecture-reconciliation-cli.ts:146-151 has no pattern check), and enforcement happens in baselineEntrySchema.parse during the preview computation, which both the preview and the acknowledged apply run. Two imprecisions remain; see N1 and N2. Docs only; no behavior change.",
+    "Audit point 4 (pin refresh, 965079f05): the diff holds one hunk in analyzer-reconciliation.v2.json with 5 insertions and 5 deletions. The moved values are analyzerInputSnapshotSha256, implementationAndTestTreeSha256, both reportSha256s entries, and reviewSubjectSha256. analyzerImplementationTreeSha256 stayed (cb9c1431..., confirmed at HEAD). Every delta list, reviews, and acceptance stayed: node counts give 255/15/162, reviews=0, keys=15, status=candidate. The claim 'changes only pin fields' holds.",
+    "Audit point 5 (plan evidence, 3585c49aa): the commit fixes the earlier N3 wording (the review subject joined the moved-value list of 619aef753) and records the r2 sub-block. Plan claims reproduced: targeted_files=3 and targeted_tests=71 (71 of 71), suite_files=38 and suite_tests=403 with tests_failed=0, check_types=0, lint_errors=0 and lint_warnings=1, files=7013, findings=800, parse_errors=0, additions=0, removals=0, renames=0. All match my runs exactly.",
+    "Live check: pnpm architecture:check --policy v2 at the audited HEAD exits 0 with 'clean (files=7013, findings=800, parseErrors=0)' and 'debt: clean (additions=0, removals=0, renames=0)', matching the green log gate table. The committed manifest is valid and the pins are consistent with current bytes.",
+    "Scope: the range 4ec3d5d21..3585c49aa holds exactly 5 commits touching 7 paths, all inside the declared blast radius plus the plan and the run log. The archive diff 5062b170e..3585c49aa is empty. No path under packages/backend/turbo.json or packages/webhooks.",
+    "A9: grep for 'measure/tracks|measure/runs' over the three targeted test files exits 1. The run log the evidence commit adds lives under measure/runs/, which is its place."
+  ],
+  "retry_recommendation": "none",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "The gate-by-path lookup closes the renamed-id seam and the byte-identity backstop keeps every doctored plan unwritable (architecture-reconciliation.ts:1186-1190, :1286-1294); the live v2 check at HEAD exits 0 with files=7013 and debt 0/0/0."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "The safe-integer Red case was committed at the role base and recorded failing (61 cases, 1 failed), the renamed-id rows had a recorded failing-first check, and my runs show 71 of 71 targeted and 403 of 403 suite cases passing."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git log 4ec3d5d21..3585c49aa holds exactly 5 commits over 7 paths inside the blast radius plus plan and run-log evidence; the archive diff is empty."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every reproduced plan claim matched exactly: 71/71 targeted, 38 files and 403 suite tests with 0 failures, lint 0 errors and the one pre-existing warning, check-types exit 0, and the v2 check with the same files/findings/debt counts."
+    }
+  ]
+}

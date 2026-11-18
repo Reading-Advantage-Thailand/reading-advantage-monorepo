@@ -1,0 +1,49 @@
+# Review C log — re-review of the second remediation round
+Route: opencode-go/glm-5.3#high
+Track: architecture_ci_input_pin_20261110
+Phase heading: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+Remediation range: 4ec3d5d21..3585c49aa
+Audited HEAD (immutable): 3585c49aae9e334496d8156902e70eda19d04f71
+Clean checkout: /home/daniebo/.cache/arch-gate-3/reading-advantage-monorepo
+  (rev-parse HEAD = 3585c49aae9e334496d8156902e70eda19d04f71, status clean)
+Result artifact: measure/runs/architecture_ci_input_pin_20261110/review-c-3585c49aa.json
+
+MEASURE_AGENT_RESULT
+Re-review of the second remediation round at audited HEAD
+3585c49aae9e334496d8156902e70eda19d04f71.
+Phase heading: "Phase 1: CI mode and the local pin refresh (target 2026-11-12)".
+
+Point 1: r2 nonblocking (owner case docs), commit b9362c9d1 — FIXED, withdrawn.
+- docs/architecture-enforcement.md now states the real contract: the accepted
+  manifest binds an owner id matching `[a-z][a-z0-9-]{0,63}`; the acknowledged
+  run enforces the pattern in committed-manifest validation; the preview accepts
+  any --owner value.
+- Code chain verified: REVIEWER_ID_PATTERN = /^[a-z][a-z0-9-]{0,63}$/
+  (v2-manifest-validation.ts:104) equals the docs pattern; enforced at line 800
+  (accepted ownerBinding) and line 628 (reviews) inside validateManifestShapeSync,
+  reached by the apply validate step (architecture-reconciliation.ts:1308).
+- Live: preview with --owner 'Monorepo-Architecture' exits 0 and writes nothing,
+  matching "the preview accepts any --owner value".
+
+Point 2: huge budget value, commit 36925e1f6 — FIXED, verified live.
+- Live: '--budget-s 99999999999999999999' prints '--budget-s must be a positive
+  whole number of seconds: 99999999999999999999' and exits 2. The
+  Number.isSafeInteger guard also refuses Infinity from longer digit strings.
+- Gap: no test covers the unsafe-integer case. Nonblocking finding, routed to Green.
+
+In-range item from another reviewer, checked but not owned:
+- ae29f456b gates the staged manifest by destination path as well as id;
+  two renamed-id test cases pass.
+
+Tests at the audited HEAD:
+- CI=true pnpm exec vitest run architecture-review-gate.test.ts
+  architecture-pin-refresh-budget.test.ts architecture-ci-input-pin.test.ts
+  architecture-reconciliation-cli.test.ts --maxWorkers=1: 36/36 pass.
+  The earlier environmental repo-name assertion passes here because the
+  checkout path ends in reading-advantage-monorepo.
+
+Blocking findings: none.
+Nonblocking findings: 1 (no test for the unsafe-integer budget refusal).
+Status: pass. Confidence: high. retry_recommendation: none.
+END_MEASURE_AGENT_RESULT

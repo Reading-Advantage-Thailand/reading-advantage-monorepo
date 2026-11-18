@@ -1,0 +1,103 @@
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+track: architecture_ci_input_pin_20261110
+phase heading: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: 358e8bfde
+audited_head_sha: 358e8bfde
+resulting_HEAD: 4ec3d5d21453a46f998cef8bfd42578bd1669c46
+commits: 4ec3d5d21453a46f998cef8bfd42578bd1669c46 test(architecture): add v2 route adversarial cases (track_id: architecture_ci_input_pin_20261110)
+route: opencode-go/glm-5.3#high
+status: fail
+confidence: high
+retry_recommendation: retry_implementation
+
+Attack surface, from the routing brief:
+(1) the review-record gate of applyArchitectureReconciliation;
+(2) the ratchet under --policy v2;
+(3) the reconcile CLI input (--owner, --rationale, --expected-plan-hash, --budget-s);
+(4) the CI step string.
+
+New file: packages/architecture-enforcement/src/__tests__/architecture-v2-route-adversarial.test.ts
+cases: tests_total=61, tests_failed=1, tests_passed=60
+
+Run: clean detached worktree of 358e8bfde
+(git worktree add --detach /tmp/opencode/arch-adv-358e8bfde HEAD), install with
+the explicit store (pnpm install --frozen-lockfile --offline
+--store-dir /home/daniebo/.local/share/pnpm/store/v11), test command
+CI=true pnpm exec vitest run <file> --maxWorkers=1, exit 1, duration 2.89 s.
+check-types exit 0. lint exit 0 with the one pre-existing prefer-const warning
+in architecture-pin-refresh-resume.test.ts. The worktree was removed after the
+run. The turbo build of @reading-advantage/backend and
+@reading-advantage/knowledge-space-core was not run: every case analyzes only
+temporary fixtures, and the committed manifest metadata is read synchronously
+with validateCurrentState false. The run completed with parse errors none.
+The three dirty next-env.d.ts files in the main checkout were not touched.
+
+Results by target:
+
+(1) Review-record gate. The refusal holds for a removals-only delta, a
+renames-only delta, a non-array reviews field, and a capitalized acceptance
+status 'Accepted'. The ungated re-export applyArchitectureReconciliationForPolicy
+is a pure predicate: it authorizes only the exact ordered four-path v2 set
+under policy 'v2' and refuses a swapped order, a missing path, policy 'v1',
+and the capitalized 'V2'. A v1 preview (no policy field, or policyVersion 'v1')
+cannot reach a v2 write. The unacknowledged path forwards acknowledge=false.
+Finding F2 (nonblocking, hardening): the gate finds the staged manifest by the
+replacement id 'reconciliation-manifest' only. Probe evidence: the same
+unreviewed candidate delta bytes under the id 'v2-manifest' or under the known
+id 'ownership-map' skip the gate and die later with 'Policy-aware
+reconciliation requires the committed artifact family'. The write never
+completes, because the fresh-preview equality check and the per-document
+committed validation both refuse doctored plans. Hardening: key
+stagedManifestFromPreview on the manifest destination path instead of only the
+replacement id. The committed case renamed_replacement_id_cannot_complete_a_write
+pins the end-to-end refusal.
+
+(2) Ratchet under --policy v2. A tracked production file importing
+'@reading-advantage/db' fails the check (status=debt-change, additions=1,
+exit code 1). The same finding baselined with owner and rationale stays clean
+(exit code 0). A second new file beside baselined debt fails with additions=1
+naming only the new file and removals=0. A manifest at the v2 path that stages
+the new finding as a baselineAddition does not mask it: the comparison counts
+only reviewed baseline files. The check CLI forwards --policy v2 and
+--skip-input-snapshot-pin to the checker.
+
+(3) Reconcile CLI input. The owner contract is enforced at the entry layer
+before any write: 'Daniel', 'Monorepo Architecture', 'monorepo/architecture',
+'monorepo.architecture', 'monorepo!', and '--acknowledge' are refused;
+'monorepo-architecture', 'monorepo_arch', and '0wn3r-1d' are accepted. The
+rationale bounds hold: 11 characters refused, 12 accepted, 1000 accepted,
+1001 refused, whitespace-only refused. The parser refuses five malformed
+--expected-plan-hash values, the unpaired --acknowledge and
+--expected-plan-hash forms, four invalid --policy forms, and the unpaired or
+valueless --owner/--rationale forms. Finding F1 (nonblocking, defect, route to
+Green): parsePinRefreshArguments accepts a --budget-s value that Number()
+maps to Infinity. The regex accepts a 400-digit run and the conversion has no
+finiteness bound, so budgetSeconds=Infinity, which violates FR-8.1 ('a
+positive whole number of seconds') and lets a run ignore its budget. The
+committed red case budget_rejects_a_value_that_is_not_a_finite_whole_number
+fails at HEAD and goes green when the parser rejects such values.
+
+(4) CI step string. The 'Architecture boundary check' step holds exactly one
+run line equal to 'run: pnpm architecture:check --skip-input-snapshot-pin
+--policy v2'. The 'Build architecture check inputs' step builds
+@reading-advantage/backend and @reading-advantage/knowledge-space-core and
+precedes the boundary step. The workflow holds zero architecture write
+commands (pin:refresh, reconcile, baseline:update, transaction:recover) and
+zero architecture lines with --acknowledge.
+
+Detectors and scope:
+rg -n 'measure/tracks|measure/runs' <test file> exits 1 (A9 clean).
+git diff --name-only 5062b170e..HEAD -- measure/archive/backend_architecture_enforcement_20260713/
+is empty (archive_changed_paths=0).
+git show 619aef753 --stat on the manifest reads 1 file changed, 5 insertions,
+5 deletions (manifest_fields_changed=5).
+
+Worktree note for the orchestrator: git worktree list also holds two
+pre-existing detached worktrees from earlier roles,
+/home/daniebo/.cache/arch-gate at 9619b9548 and /home/daniebo/.cache/arch-gate-2
+at 619aef753. They predate this run; they are not mine to remove.
+
+No production file was edited. The one defect routes to Green.
+END_MEASURE_AGENT_RESULT
