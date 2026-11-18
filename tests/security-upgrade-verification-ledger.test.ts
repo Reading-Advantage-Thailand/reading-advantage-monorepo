@@ -134,6 +134,12 @@ interface ResolvedRow {
 interface ValidateOptions {
   /** Reads a run log. It returns null when the file is absent. */
   readLog: (path: string) => string | null;
+  /**
+   * True when the run logs are local only. `measure/runs/` is gitignored, so a
+   * clean checkout holds no log. The row must then pass on the committed
+   * record alone. A log that is present is still checked in full.
+   */
+  logFileOptional?: boolean;
 }
 
 /** Returns the accepted row `package` values of an app folder. */
@@ -306,7 +312,9 @@ function validateRow(item: ResolvedRow, options: ValidateOptions): string[] {
       }
       const content = options.readLog(logPath);
       if (content === null) {
-        failures.push(`${label} package=${pkg} check=${check} class=pass log=${logLabel} reason=pass_row_log_missing`);
+        if (!options.logFileOptional) {
+          failures.push(`${label} package=${pkg} check=${check} class=pass log=${logLabel} reason=pass_row_log_missing`);
+        }
       } else {
         if (exitCode !== null && !content.includes(`exit_code=${exitCode}`)) {
           failures.push(
@@ -337,7 +345,7 @@ function validateRow(item: ResolvedRow, options: ValidateOptions): string[] {
         `${label} package=${pkg} check=${check} class=${cls} log=${logLabel} reason=log_outside_run_root expected_root=${LOG_ROOT}`,
       );
     }
-    if (options.readLog(logPath) === null) {
+    if (!options.logFileOptional && options.readLog(logPath) === null) {
       failures.push(`${label} package=${pkg} check=${check} class=${cls} log=${logLabel} reason=log_file_missing`);
     }
   }
@@ -495,6 +503,12 @@ function readRunLog(path: string): string | null {
   }
 }
 
+/** Returns the committed track folder. The archive folder comes first (A9). */
+function resolveTrackDir(): string {
+  const archived = resolve(ROOT, "measure/archive", TRACK_ID);
+  return existsSync(archived) ? archived : resolve(ROOT, "measure/tracks", TRACK_ID);
+}
+
 /** Returns the ledger path and the searched candidates. The archive path comes first (A9). */
 function resolveLedgerPath(): { path: string; candidates: string[] } {
   const candidates = [
@@ -570,6 +584,87 @@ function hasReason(failures: string[], reason: string): boolean {
   return failures.some((failure) => failure.includes(`reason=${reason}`));
 }
 
+/**
+ * The committed row set of the Phase 2 ledger. The PM decision of 2026-11-18
+ * makes the run logs local only, so this list is the committed evidence.
+ * Any lost row, changed class, or changed log path fails the check below.
+ */
+const LEDGER_ROW_FINGERPRINT = [
+  "0|accounting|check-types|pass|measure/runs/security_upgrade_20261026/p2/accounting-check-types.log",
+  "1|accounting|lint|pass|measure/runs/security_upgrade_20261026/p2/accounting-lint.log",
+  "2|accounting|test|pass|measure/runs/security_upgrade_20261026/p2/accounting-test.log",
+  "3|accounting|build|pass|measure/runs/security_upgrade_20261026/p2/accounting-build.log",
+  "4|accounts|check-types|pass|measure/runs/security_upgrade_20261026/p2/accounts-check-types.log",
+  "5|accounts|lint|pass|measure/runs/security_upgrade_20261026/p2/accounts-lint.log",
+  "6|accounts|test|pass|measure/runs/security_upgrade_20261026/p2/accounts-test.log",
+  "7|accounts|build|pass|measure/runs/security_upgrade_20261026/p2/accounts-build.log",
+  "8|workbooks|check-types|pass|measure/runs/security_upgrade_20261026/p2/workbooks-check-types.log",
+  "9|workbooks|lint|pass|measure/runs/security_upgrade_20261026/p2/workbooks-lint.log",
+  "10|workbooks|build|pass|measure/runs/security_upgrade_20261026/p2/workbooks-build.log",
+  "11|sales-advantage|check-types|pass|measure/runs/security_upgrade_20261026/p2/sales-advantage-check-types.log",
+  "12|sales-advantage|lint|pass|measure/runs/security_upgrade_20261026/p2/sales-advantage-lint.log",
+  "13|sales-advantage|build|pass|measure/runs/security_upgrade_20261026/p2/sales-advantage-build.log",
+  "14|storytime|check-types|pass|measure/runs/security_upgrade_20261026/p2/storytime-check-types.log",
+  "15|storytime|lint|pass|measure/runs/security_upgrade_20261026/p2/storytime-lint.log",
+  "16|storytime|test|pass|measure/runs/security_upgrade_20261026/p2/storytime-test.log",
+  "17|storytime|build|pass|measure/runs/security_upgrade_20261026/p2/storytime-build.log",
+  "18|marketing|check-types|pass|measure/runs/security_upgrade_20261026/p2/marketing-check-types.log",
+  "19|marketing|lint|pass|measure/runs/security_upgrade_20261026/p2/marketing-lint.log",
+  "20|marketing|test|pass|measure/runs/security_upgrade_20261026/p2/marketing-test.log",
+  "21|marketing|build|pass|measure/runs/security_upgrade_20261026/p2/marketing-build.log",
+  "22|codecamp-advantage|check-types|pass|measure/runs/security_upgrade_20261026/p2/codecamp-advantage-check-types.log",
+  "23|codecamp-advantage|lint|pass|measure/runs/security_upgrade_20261026/p2/codecamp-advantage-lint.log",
+  "24|codecamp-advantage|build|pass|measure/runs/security_upgrade_20261026/p2/codecamp-advantage-build.log",
+  "25|www-reading-advantage|check-types|pass|measure/runs/security_upgrade_20261026/p2/www-reading-advantage-check-types.log",
+  "26|www-reading-advantage|test|pass|measure/runs/security_upgrade_20261026/p2/www-reading-advantage-test.log",
+  "27|www-reading-advantage|build|pass|measure/runs/security_upgrade_20261026/p2/www-reading-advantage-build.log",
+  "28|@reading-advantage/api|check-types|pass|measure/runs/security_upgrade_20261026/p2/api-check-types.log",
+  "29|@reading-advantage/api|lint|pass|measure/runs/security_upgrade_20261026/p2/api-lint.log",
+  "30|@reading-advantage/api|build|pass|measure/runs/security_upgrade_20261026/p2/api-build.log",
+  "31|@reading-advantage/domain|check-types|pass|measure/runs/security_upgrade_20261026/p2/domain-check-types.log",
+  "32|@reading-advantage/domain|lint|pass|measure/runs/security_upgrade_20261026/p2/domain-lint.log",
+  "33|@reading-advantage/db|check-types|pass|measure/runs/security_upgrade_20261026/p2/db-check-types.log",
+  "34|@reading-advantage/db|lint|pass|measure/runs/security_upgrade_20261026/p2/db-lint.log",
+  "35|@reading-advantage/db|build|pass|measure/runs/security_upgrade_20261026/p2/db-build.log",
+  "36|@reading-advantage/auth|check-types|pass|measure/runs/security_upgrade_20261026/p2/auth-check-types.log",
+  "37|@reading-advantage/auth|lint|pass|measure/runs/security_upgrade_20261026/p2/auth-lint.log",
+  "38|@reading-advantage/auth|test|pass|measure/runs/security_upgrade_20261026/p2/auth-test.log",
+  "39|@reading-advantage/auth|build|pass|measure/runs/security_upgrade_20261026/p2/auth-build.log",
+  "40|@reading-advantage/backend|lint|pass|measure/runs/security_upgrade_20261026/p2/backend-lint.log",
+  "41|@reading-advantage/backend|build|pass|measure/runs/security_upgrade_20261026/p2/backend-build.log",
+  "42|@reading-advantage/ui|check-types|script-absent|null",
+  "43|@reading-advantage/ui|lint|pass|measure/runs/security_upgrade_20261026/p2/ui-lint.log",
+  "44|@reading-advantage/ui|test|pass|measure/runs/security_upgrade_20261026/p2/ui-test.log",
+  "45|@reading-advantage/ui|build|pass|measure/runs/security_upgrade_20261026/p2/ui-build.log",
+  "46|@reading-advantage/utils|check-types|script-absent|null",
+  "47|@reading-advantage/utils|lint|pass|measure/runs/security_upgrade_20261026/p2/utils-lint.log",
+  "48|@reading-advantage/utils|test|pass|measure/runs/security_upgrade_20261026/p2/utils-test.log",
+  "49|@reading-advantage/utils|build|pass|measure/runs/security_upgrade_20261026/p2/utils-build.log",
+  "50|@reading-advantage/activity-runtime|check-types|pass|measure/runs/security_upgrade_20261026/p2/activity-runtime-check-types.log",
+  "51|@reading-advantage/advantage-play-kit|check-types|pass|measure/runs/security_upgrade_20261026/p2/advantage-play-kit-check-types.log",
+  "52|@reading-advantage/advantage-play-kit-3d|check-types|pass|measure/runs/security_upgrade_20261026/p2/advantage-play-kit-3d-check-types.log",
+  "53|@reading-advantage/activity-react|check-types|pass|measure/runs/security_upgrade_20261026/p2/activity-react-check-types.log",
+  "54|@reading-advantage/auth-client|check-types|pass|measure/runs/security_upgrade_20261026/p2/auth-client-check-types.log",
+  "55|codecamp-advantage|test|predates-track|measure/runs/security_upgrade_20261026/p2/codecamp-advantage-test-green-r4.log",
+  "56|@reading-advantage/db|test|predates-track|measure/runs/security_upgrade_20261026/p2/db-test-r4.log",
+  "57|@reading-advantage/domain|build|pass|measure/runs/security_upgrade_20261026/p2/domain-build-r4.log",
+  "58|@reading-advantage/domain|test|pass|measure/runs/security_upgrade_20261026/p2/domain-test-r4.log",
+  "59|@reading-advantage/backend|check-types|predates-track|measure/runs/security_upgrade_20261026/p2/backend-check-types-r4.log",
+  "60|@reading-advantage/backend|test|predates-track|measure/runs/security_upgrade_20261026/p2/backend-test-r4.log",
+  "61|@reading-advantage/api|test|predates-track|measure/runs/security_upgrade_20261026/p2/api-test-r4.log",
+  "62|sales-advantage|test|predates-track|measure/runs/security_upgrade_20261026/p2/sales-advantage-test-r4.log",
+  "63|workbooks|test|predates-track|measure/runs/security_upgrade_20261026/p2/workbooks-test-r4.log",
+  "64|primary-advantage|lint|predates-track|measure/runs/security_upgrade_20261026/p2/primary-advantage-lint-r4.log",
+  "65|primary-advantage|test|predates-track|measure/runs/security_upgrade_20261026/p2/primary-advantage-test-r4.log",
+  "66|primary-advantage|check-types|pass|measure/runs/security_upgrade_20261026/p2/primary-advantage-check-types-r4.log",
+  "67|primary-advantage|build|pass|measure/runs/security_upgrade_20261026/p2/primary-advantage-build-r4.log",
+  "68|www-reading-advantage|lint|predates-track|measure/runs/security_upgrade_20261026/p2/www-reading-advantage-lint-r4.log",
+  "69|reading-advantage|check-types|predates-track|measure/runs/security_upgrade_20261026/p2/reading-advantage-check-types-r4.log",
+  "70|reading-advantage|lint|predates-track|measure/runs/security_upgrade_20261026/p2/reading-advantage-lint-r4.log",
+  "71|reading-advantage|test|predates-track|measure/runs/security_upgrade_20261026/p2/reading-advantage-test-r4.log",
+  "72|reading-advantage|build|pass|measure/runs/security_upgrade_20261026/p2/reading-advantage-build-r4.log",
+].join("\n");
+
 describe("phase 2 verification ledger", () => {
   it("holds one row for every matrix pair with the phase 2 class contract", () => {
     const { path, candidates } = resolveLedgerPath();
@@ -583,11 +678,36 @@ describe("phase 2 verification ledger", () => {
     } catch (error) {
       throw new Error(`verification-ledger: reason=ledger_is_not_json path=${relative(ROOT, path)} detail=${(error as Error).message}`);
     }
-    const failures = validateLedger(parsed, { readLog: readRunLog });
+    const failures = validateLedger(parsed, { readLog: readRunLog, logFileOptional: true });
     console.log(`verification-ledger summary: ${summarize(parsed)}`);
+    const planPath = resolve(resolveTrackDir(), "plan.md");
+    const plan = existsSync(planPath) ? readFileSync(planPath, "utf8") : "";
+    if (!plan.includes(`${LOG_ROOT}/p2/`)) {
+      failures.push("plan=absent-evidence the committed plan names no p2 log root");
+    }
+    if (!plan.includes("not run in CI")) {
+      failures.push("plan=absent-evidence the committed plan states no local-only rule");
+    }
     if (failures.length > 0) {
       throw new Error(`verification-ledger failures count=${failures.length}:\n${failures.join("\n")}`);
     }
+  });
+
+  it("holds the committed row set of the ledger and loses no row (A4)", () => {
+    const { path } = resolveLedgerPath();
+    if (!existsSync(path)) {
+      throw new Error(`verification-ledger: reason=ledger_file_absent path=${relative(ROOT, path)}`);
+    }
+    const parsed = JSON.parse(readFileSync(path, "utf8")) as unknown;
+    const rows = ledgerRows(parsed);
+    expect(rows.length).toBe(73);
+    const fingerprint = rows
+      .map((raw, index) => {
+        const row = raw as LedgerRow;
+        return [index, row.package, row.check, row.class, row.log ?? "null"].join("|");
+      })
+      .join("\n");
+    expect(fingerprint).toBe(LEDGER_ROW_FINGERPRINT);
   });
 });
 

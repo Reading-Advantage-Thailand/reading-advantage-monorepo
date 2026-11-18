@@ -146,6 +146,12 @@ interface ResolvedRow {
 interface PredatesContext {
   /** Reads a log. It returns null when the file is absent. */
   readLog: (path: string) => string | null;
+  /**
+   * True when the logs are local only. `measure/runs/` is gitignored, so a
+   * clean checkout holds no log. A row then passes on the committed record. A
+   * log that is present is still checked in full.
+   */
+  logFileOptional?: boolean;
   /** Reads the versions of a commit. It returns null when the commit is absent. */
   readCommitVersions: (sha: string) => { next: string | null; sharp: string | null } | null;
   /** The tech-debt rows that may own a ledger row. */
@@ -408,96 +414,98 @@ function checkPredatesRow(item: ResolvedRow, context: PredatesContext): string[]
     return failures;
   }
   const masterText = context.readLog(resolveLogPath(source));
-  if (masterText === null) {
+  if (masterText === null && !context.logFileOptional) {
     failures.push(`${label} source=${source} reason=predates_master_log_missing`);
     return failures;
   }
 
-  const masterSha = labeledValue(masterText, "master_sha");
-  if (masterSha === null) {
-    failures.push(`${label} source=${source} reason=predates_master_log_has_no_master_sha`);
-  } else {
-    const versions = context.readCommitVersions(masterSha);
-    if (versions === null) {
-      failures.push(`${label} master_sha=${masterSha} reason=predates_master_commit_is_absent`);
+  if (masterText !== null) {
+    const masterSha = labeledValue(masterText, "master_sha");
+    if (masterSha === null) {
+      failures.push(`${label} source=${source} reason=predates_master_log_has_no_master_sha`);
     } else {
-      const nextVersion = versions.next;
-      const sharpVersion = versions.sharp;
-      if (nextVersion === null || sharpVersion === null) {
-        failures.push(`${label} master_sha=${masterSha} reason=predates_master_commit_holds_no_lockfile_versions`);
+      const versions = context.readCommitVersions(masterSha);
+      if (versions === null) {
+        failures.push(`${label} master_sha=${masterSha} reason=predates_master_commit_is_absent`);
       } else {
-        if (compareVersions(nextVersion, POST_UPGRADE_NEXT) >= 0) {
+        const nextVersion = versions.next;
+        const sharpVersion = versions.sharp;
+        if (nextVersion === null || sharpVersion === null) {
+          failures.push(`${label} master_sha=${masterSha} reason=predates_master_commit_holds_no_lockfile_versions`);
+        } else {
+          if (compareVersions(nextVersion, POST_UPGRADE_NEXT) >= 0) {
+            failures.push(
+              `${label} master_sha=${masterSha} next=${nextVersion} reason=predates_master_sha_is_post_upgrade expected_next=${PRE_UPGRADE_NEXT}`,
+            );
+          }
+          if (compareVersions(sharpVersion, POST_UPGRADE_SHARP) >= 0) {
+            failures.push(
+              `${label} master_sha=${masterSha} sharp=${sharpVersion} reason=predates_master_sha_is_post_upgrade expected_sharp=${PRE_UPGRADE_SHARP}`,
+            );
+          }
+        }
+      }
+    }
+
+    const branchText = item.log === null ? null : context.readLog(resolveLogPath(item.log));
+    if (branchText === null) {
+      failures.push(`${label} log=${item.log ?? "<none>"} reason=predates_branch_log_missing`);
+    }
+
+    const testNames = labeledValue(item.evidence, "tests");
+    const singleTest = labeledValue(item.evidence, "test");
+    const names = testNames !== null ? testNames.split(",") : singleTest !== null ? [singleTest] : [];
+    const errorCount = labeledValue(item.evidence, "eslint_error_count");
+    const signature = labeledText(item.evidence, "first_error");
+
+    if (names.length === 0 && errorCount === null && signature === null) {
+      failures.push(`${label} reason=predates_row_names_no_failure`);
+      return failures;
+    }
+
+    for (const name of names) {
+      if (branchText !== null && !branchText.includes(name)) {
+        failures.push(`${label} test=${name} reason=predates_test_missing_on_branch`);
+      }
+      if (!masterText.includes(name)) {
+        failures.push(`${label} test=${name} reason=predates_test_missing_on_master`);
+      }
+    }
+
+    if (errorCount !== null) {
+      if (!/^\d+$/.test(errorCount)) {
+        failures.push(`${label} eslint_error_count=${errorCount} reason=predates_error_count_is_not_a_number`);
+      } else {
+        const expected = Number.parseInt(errorCount, 10);
+        const masterCount = logErrorCount(masterText);
+        if (masterCount === null) {
+          failures.push(`${label} eslint_error_count=${errorCount} reason=predates_master_log_shows_no_error_count`);
+        } else if (masterCount !== expected) {
           failures.push(
-            `${label} master_sha=${masterSha} next=${nextVersion} reason=predates_master_sha_is_post_upgrade expected_next=${PRE_UPGRADE_NEXT}`,
+            `${label} eslint_error_count=${errorCount} master_error_count=${masterCount} reason=predates_error_count_differs`,
           );
         }
-        if (compareVersions(sharpVersion, POST_UPGRADE_SHARP) >= 0) {
+        const branchCount = branchText === null ? null : logErrorCount(branchText);
+        if (branchCount !== null && branchCount !== expected) {
           failures.push(
-            `${label} master_sha=${masterSha} sharp=${sharpVersion} reason=predates_master_sha_is_post_upgrade expected_sharp=${PRE_UPGRADE_SHARP}`,
+            `${label} eslint_error_count=${errorCount} branch_error_count=${branchCount} reason=predates_branch_error_count_differs`,
           );
         }
       }
     }
-  }
 
-  const branchText = item.log === null ? null : context.readLog(resolveLogPath(item.log));
-  if (branchText === null) {
-    failures.push(`${label} log=${item.log ?? "<none>"} reason=predates_branch_log_missing`);
-  }
-
-  const testNames = labeledValue(item.evidence, "tests");
-  const singleTest = labeledValue(item.evidence, "test");
-  const names = testNames !== null ? testNames.split(",") : singleTest !== null ? [singleTest] : [];
-  const errorCount = labeledValue(item.evidence, "eslint_error_count");
-  const signature = labeledText(item.evidence, "first_error");
-
-  if (names.length === 0 && errorCount === null && signature === null) {
-    failures.push(`${label} reason=predates_row_names_no_failure`);
-    return failures;
-  }
-
-  for (const name of names) {
-    if (branchText !== null && !branchText.includes(name)) {
-      failures.push(`${label} test=${name} reason=predates_test_missing_on_branch`);
-    }
-    if (!masterText.includes(name)) {
-      failures.push(`${label} test=${name} reason=predates_test_missing_on_master`);
-    }
-  }
-
-  if (errorCount !== null) {
-    if (!/^\d+$/.test(errorCount)) {
-      failures.push(`${label} eslint_error_count=${errorCount} reason=predates_error_count_is_not_a_number`);
-    } else {
-      const expected = Number.parseInt(errorCount, 10);
-      const masterCount = logErrorCount(masterText);
-      if (masterCount === null) {
-        failures.push(`${label} eslint_error_count=${errorCount} reason=predates_master_log_shows_no_error_count`);
-      } else if (masterCount !== expected) {
-        failures.push(
-          `${label} eslint_error_count=${errorCount} master_error_count=${masterCount} reason=predates_error_count_differs`,
-        );
+    if (signature !== null && names.length === 0 && errorCount === null) {
+      if (branchText !== null && !signatureInLog(signature, branchText)) {
+        failures.push(`${label} first_error=${signature} reason=predates_signature_missing_on_branch`);
       }
-      const branchCount = branchText === null ? null : logErrorCount(branchText);
-      if (branchCount !== null && branchCount !== expected) {
-        failures.push(
-          `${label} eslint_error_count=${errorCount} branch_error_count=${branchCount} reason=predates_branch_error_count_differs`,
-        );
+      if (!signatureInLog(signature, masterText)) {
+        failures.push(`${label} first_error=${signature} reason=predates_signature_missing_on_master`);
       }
-    }
-  }
-
-  if (signature !== null && names.length === 0 && errorCount === null) {
-    if (branchText !== null && !signatureInLog(signature, branchText)) {
-      failures.push(`${label} first_error=${signature} reason=predates_signature_missing_on_branch`);
-    }
-    if (!signatureInLog(signature, masterText)) {
-      failures.push(`${label} first_error=${signature} reason=predates_signature_missing_on_master`);
     }
   }
 
   const recheckLog = labeledValue(item.evidence, "recheck_log");
-  if (recheckLog !== null && context.readLog(resolveLogPath(recheckLog)) === null) {
+  if (recheckLog !== null && context.readLog(resolveLogPath(recheckLog)) === null && !context.logFileOptional) {
     failures.push(`${label} recheck_log=${recheckLog} reason=predates_recheck_log_missing`);
   }
 
@@ -573,7 +581,11 @@ function checkPassLog(logText: string): string[] {
 }
 
 /** Checks the logs of every pass row of a ledger. */
-function checkPassLogs(ledger: unknown, readLog: (path: string) => string | null): string[] {
+function checkPassLogs(
+  ledger: unknown,
+  readLog: (path: string) => string | null,
+  logFileOptional = false,
+): string[] {
   const failures: string[] = [];
   for (const item of resolveRows(ledger)) {
     if (item.cls !== "pass") continue;
@@ -583,7 +595,9 @@ function checkPassLogs(ledger: unknown, readLog: (path: string) => string | null
     }
     const text = readLog(resolveLogPath(item.log));
     if (text === null) {
-      failures.push(`row=${item.index} package=${item.pkg} check=${item.check} reason=pass_log_missing`);
+      if (!logFileOptional) {
+        failures.push(`row=${item.index} package=${item.pkg} check=${item.check} reason=pass_log_missing`);
+      }
       continue;
     }
     for (const failure of checkPassLog(text)) {
@@ -838,6 +852,19 @@ const LEDGER_TEXT = existsSync(LEDGER.path) ? readFileSync(LEDGER.path, "utf8") 
 const LEDGER_JSON = LEDGER_TEXT ? (JSON.parse(LEDGER_TEXT) as unknown) : null;
 const TECH_DEBT_ENTRIES = readTechDebtEntries();
 
+/** The predates rows that name a master log which exists in this checkout. */
+const LOCAL_MASTER_LOGS = resolveRows(LEDGER_JSON)
+  .filter((item) => item.cls === "predates-track")
+  .filter((item) => {
+    const source = labeledValue(item.evidence, "source");
+    return source !== null && readRunLog(resolveLogPath(source)) !== null;
+  });
+
+/** The pass rows whose log exists in this checkout. */
+const LOCAL_PASS_LOGS = resolveRows(LEDGER_JSON)
+  .filter((item) => item.cls === "pass")
+  .filter((item) => item.log !== null && readRunLog(resolveLogPath(item.log)) !== null);
+
 /* -------------------------------------------------------------------------- */
 /* The tests                                                                  */
 /* -------------------------------------------------------------------------- */
@@ -845,6 +872,7 @@ const TECH_DEBT_ENTRIES = readTechDebtEntries();
 describe("the predates-track verdict of the amendment", () => {
   const context: PredatesContext = {
     readLog: readRunLog,
+    logFileOptional: true,
     readCommitVersions: readCommitVersions,
     techDebtEntries: TECH_DEBT_ENTRIES,
   };
@@ -959,10 +987,25 @@ describe("the predates-track verdict of the amendment", () => {
     }
   });
 
-  it("holds the master commit of every real predates row at the pre-upgrade versions", () => {
+  it("names a committed master source under the run root for every predates row", () => {
     const rows = resolveRows(LEDGER_JSON).filter((item) => item.cls === "predates-track");
-    const shas = new Set<string>();
+    expect(rows.length).toBe(13);
+    const failures: string[] = [];
     for (const item of rows) {
+      const label = `row=${item.index} package=${item.pkg} check=${item.check}`;
+      const source = labeledValue(item.evidence, "source");
+      if (source === null) {
+        failures.push(`${label} reason=predates_row_has_no_source`);
+      } else if (!source.startsWith(`${P2_ROOT}/`) || !source.endsWith(".log")) {
+        failures.push(`${label} source=${source} reason=predates_source_outside_run_root`);
+      }
+    }
+    expect(failures).toEqual([]);
+  });
+
+  it.skipIf(LOCAL_MASTER_LOGS.length === 0)("holds every local master log at the pre-upgrade versions", () => {
+    const shas = new Set<string>();
+    for (const item of LOCAL_MASTER_LOGS) {
       const source = labeledValue(item.evidence, "source");
       if (source === null) continue;
       const text = readRunLog(resolveLogPath(source));
@@ -1066,16 +1109,33 @@ describe("a pass row cannot hide a failure behind an exit code of zero", () => {
   });
 
   it("passes every pass row of the real ledger", () => {
-    const failures = checkPassLogs(LEDGER_JSON, readRunLog);
+    expect(resolveRows(LEDGER_JSON).filter((item) => item.cls === "pass").length).toBe(58);
+    const failures = checkPassLogs(LEDGER_JSON, readRunLog, true);
     if (failures.length > 0) {
       throw new Error(`pass log failures count=${failures.length}:\n${failures.join("\n")}`);
     }
   });
 
-  it("holds one exit code label in every pass log of the real ledger", () => {
+  it("names a committed log under the run root for every pass row", () => {
     const rows = resolveRows(LEDGER_JSON).filter((item) => item.cls === "pass");
-    expect(rows.length).toBeGreaterThan(0);
+    expect(rows.length).toBe(58);
+    const failures: string[] = [];
     for (const item of rows) {
+      const label = `row=${item.index} package=${item.pkg} check=${item.check}`;
+      if (item.log === null) {
+        failures.push(`${label} reason=pass_row_has_no_log`);
+      } else if (!item.log.startsWith(`${P2_ROOT}/`) || !item.log.endsWith(".log")) {
+        failures.push(`${label} log=${item.log} reason=log_outside_run_root`);
+      }
+      if (item.exitCode !== 0) {
+        failures.push(`${label} exit_code=${item.exitCode} reason=pass_row_exit_code_not_zero`);
+      }
+    }
+    expect(failures).toEqual([]);
+  });
+
+  it.skipIf(LOCAL_PASS_LOGS.length === 0)("holds one exit code label in every local pass log", () => {
+    for (const item of LOCAL_PASS_LOGS) {
       const text = item.log === null ? null : readRunLog(resolveLogPath(item.log));
       expect(text, `row=${item.index} package=${item.pkg}`).not.toBeNull();
       const labels = text?.match(/(?:^|\s)exit_code=(\S+)/g) ?? [];
