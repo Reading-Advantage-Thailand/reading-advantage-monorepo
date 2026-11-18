@@ -47,11 +47,7 @@ This file tracks all major tracks for the project.
 - [~] **Track: www daily blog posts of PR** — *created 2026-11-15*
   *Link: [./tracks/www_daily_blog_posts_20261115/](./tracks/www_daily_blog_posts_20261115/)*
   *Status: active, light lane; post 2026-11-15 (`a-five-year-old-reads-by-herself`) live; one task per post; the track stays open for later daily posts | Owner: Monorepo orchestrator | PM task A-61 follow-up*
-  *Note: PR's daily posts in en and th, written from `apps/www-reading-advantage/docs/blog-post-format.md` (track `www_blog_rich_format_20261115`). www-only push is standing-approved (Daniel 2026-11-15).*
-
-- [x] **Track: Primary class code: six hours** — *created 2026-11-12*
-  *Link: [./tracks/primary_class_code_six_hours_20261112/](./tracks/primary_class_code_six_hours_20261112/)*
-  *Status: complete; six-hour codes and automatic latest routing live, isolated production QA fixture created, actual Class sign-in screenshot captured (13:30 to19:30 Bangkok).*
+  *Note: PR's daily posts in en and th, written from `apps/www-reading-advantage/docs/blog-post-format.md` (track `www_blog_rich_format_20261115`, archived 2026-11-18). www-only push is standing-approved (Daniel 2026-11-15).*
 
 - [~] **Track: Security upgrade — Next.js, React, sharp and the critical and high npm fixes** — *created 2026-10-26*
   *Link: [./tracks/security_upgrade_20261026/](./tracks/security_upgrade_20261026/)*
@@ -679,6 +675,24 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 ---
 
 ## Archived Tracks
+
+- [x] **Track: www blog rich post format** — *created 2026-11-15, archived 2026-11-18*
+  *Link: [./archive/www_blog_rich_format_20261115/](./archive/www_blog_rich_format_20261115/)*
+  *Add inline images, YouTube embeds, short videos, galleries, pull quotes, callouts, and a draft flag to the www blog post format.*
+  *Status: done; 6 tasks; pushed `6e5f78fc4` and the www deploy run 43657768544 succeeded. The gate record at head `ad8f8408d`: the blog tests exit 0 (33 tests), the older blog tests exit 0 (1542 tests), the www type check exits 0, and the production build exits 0. The draft URL gives 404 in en and th | Feature, light lane, PM task A-61 (Daniel 2026-11-15) | www-only push*
+  *Note: Lint exits 1 with 146 errors, all in the tracked `public/experience/assets/` bundles and all present before this track. CI run 43657768588 failed on the same causes.*
+
+- [x] **Track: Primary class code: six hours** — *created 2026-11-12, archived 2026-11-18*
+  *Link: [./archive/primary_class_code_six_hours_20261112/](./archive/primary_class_code_six_hours_20261112/)*
+  *Extend Primary class sign-in codes to six hours, restore automatic push deployment and latest-revision traffic, and deploy to production.*
+  *Status: done; 8 tasks; the Class sign-in screen showed Open until 19:30 Bangkok on 2026-11-12; deploy `4455d10f3` (Cloud Build 3576b6bd-907b-4298-be16-40d0274ff71b, revision 00147-qaj); automatic Primary deployment restored at `2b8c25d9` (Cloud Build bf383284-a9cb-4ef0-8717-c02794cf40da, revision 00140-fhl at 100% latest traffic) | Fix, owner-authorized production release | 102 student-login domain tests and 38 Primary handler and class-control tests passed; separate review found no Critical, High, or Medium issue*
+  *Note: CI was red on the unchanged `@reading-advantage/backend` Company Identity route-binding test and on the architecture analyzer snapshot mismatch. Both causes existed before this track. No class mutation was performed; existing expiry rows keep their stored times.*
+
+- [x] **Track: Primary Objective Tags (T1 of the Primary Mastery Graph Program)** — *created 2026-10-06, archived 2026-11-18*
+  *Link: [./archive/primary_objective_tags_20261006/](./archive/primary_objective_tags_20261006/)*
+  *Link articles, questions, and glossary words to GSE objectives and vocabulary nodes: the objective key in code, three additive `primary_` tables (migration `0070`), importer writes, a backfill from the Workbooks `tags.json`, a coverage report, and read functions for the evidence pipeline (T2).*
+  *Status: done; 50 tasks; merged into `primary-parity-integration` (`bcc0ddbdc`, `5227d53b5`); the backfill ran on three rehearsals; the owner manual verification passed for every phase on 2026-10-26 21:15 (checks T1-P1 to T1-P4); evidence in `mastery-hand-checks-20261026.submissions.log` | Feature, program T1, program decisions approved 2026-10-06 | The registry line said the per-phase owner verification was open; this line corrects that record*
+  *Note: The follow-ups stay open in `tech-debt.md` (2026-10-06 row): the pre-existing `packages/db` test failures, the crude glossary stem, and the rerun of `pnpm backfill-primary-tags` after each ETL and Workbooks re-export.*
 
 - [x] **Track: Doctor gate repair** — *created 2026-11-12, archived 2026-11-13*
   *Link: [./archive/doctor_gate_repair_20261112/](./archive/doctor_gate_repair_20261112/)*
@@ -1618,9 +1632,6 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 - [ ] **Track: Primary Legacy Data Migration** *Link: [./tracks/primary_legacy_data_migration_20261004/](./tracks/primary_legacy_data_migration_20261004/)*
   ID map, ETL, Tutor compatibility views, old article links, teacher credentials with a forced password change.
 
-- [~] **Track: Primary Objective Tags (T1 of the Primary Mastery Graph Program)** (created 2026-10-06 after the owner approved the program decisions; branch `primary/lane-h-objective-tags`) *Link: [./tracks/primary_objective_tags_20261006/](./tracks/primary_objective_tags_20261006/)*
-  Objective key in code, three additive `primary_` link tables, the importer writes the links, a backfill from the Workbooks `tags.json` export, a coverage report, and read functions for the evidence pipeline. 2026-10-06: rebased onto `primary-parity-integration` (migration `0070`); phases 0-4 implemented and verified on the local database; merged into integration (bcc0ddbdc, 5227d53b5); the owner's manual verification per phase is open.
-
 - [~] **Track: Primary Mastery Evidence (T2 of the Primary Mastery Graph Program)** (created 2026-10-06 at the owner's request; lane-h; Phases 0-4 implemented and verified on a clone of the production copy the same day, 1361 evidence rows from 1065 legacy quiz rows; merged into integration 146e46261; the per-phase owner checks are open) *Link: [./tracks/primary_mastery_evidence_20261006/](./tracks/primary_mastery_evidence_20261006/)*
   `recordPrimaryEvidence`, the evidence policy as data (program 4.2), the question, flashcard, and game source adapters, the durable job, tenant scoping, and the evidence summary for calibration. Shadow mode: evidence only, no adaptation, no UI.
 
@@ -1718,10 +1729,6 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 - [ ] **Track: Master push readiness** — *created 2026-11-12*
   *Link: [./tracks/master_push_readiness_20261112/](./tracks/master_push_readiness_20261112/)*
   *Status: Phase 1 accepted 2026-11-13 at be528a025 (phase-acceptance pass, route opencode/minimax-m3.1-flash-free#high; nine nonblocking findings recorded in the plan; Review A and Review B pass at b7180a7f4, the adversarial run passes at a8a336ea8 with 10 of 10 mutants killed; PM decisions of 2026-11-13 07:20 recorded in the plan) | Chore, in-repo plan of PM assignment A-55 (master push of about 11-17), PM decisions 2 and 3 of 2026-11-12 | Owner chain: Daniel (owner; push word, traffic word) → Monorepo orchestrator (track owner) → PM orchestrator | Phase 1: move the codecamp scheduler step from the push file to the traffic file (default option B) | Tasks 1.7 (`deferred:pm`), 1.8 (`deferred:daniel-push`), and 1.9 (`deferred:push-list`) stay open; task 1.9 carries F602 and F701 as preconditions of the first codecamp traffic move | Phase 2 starts after the deploy word list goes to Daniel; it holds the 4 old Primary test failures and the 2 suites that do not load, not a push blocker | Deferred: `deferred:pm` for the Cloud Build scheduler IAM grant, `deferred:daniel-push` for the cd-apps run after the push (no run id yet)*
-
-- [x] **Track: www blog rich post format** — *created 2026-11-15, completed 2026-11-15*
-  *Link: [./tracks/www_blog_rich_format_20261115/](./tracks/www_blog_rich_format_20261115/)*
-  *Status: completed (pushed 6e5f78fc4, www deploy run 43657768544 success) | Feature, light lane, PM task A-61 | Inline images, YouTube, short video, galleries, pull quotes, callouts, and a draft flag for www blog posts; www-only push*
 
 - [ ] **Track: CI green on master** — *created 2026-11-15*
   *Link: [./tracks/ci_green_master_20261115/](./tracks/ci_green_master_20261115/)*
