@@ -2,14 +2,14 @@ export const en = {
   metadata: {
     title: "Storytime Advantage - English for Anuban 2 to P2 | Reading Advantage Thailand",
     description:
-      "Storytime Advantage is an English app for Anuban 2 to P2. It launches on 30 November 2026 with one sound, one song, and two books each week.",
+      "Storytime Advantage is an English app for Anuban 2 to P2, available now with one sound, one song, and two books each week.",
   },
   hero: {
     title: "Stories, Songs, and First Sounds",
     subtitle: "English for Anuban 2 to P2 (ages 4 to 8)",
     description:
       "A child taps a word and hears it. The class joins the song. Storytime Advantage brings one sound, one song, and two books to each week, on a phone at home and a screen in the classroom.",
-    comingSoon: "Launches 30 November 2026",
+    comingSoon: "Available now",
   },
   heroAlt: "Pip in a Storytime Advantage week 1 story picture",
   adaptiveEngine: {
@@ -108,7 +108,7 @@ export const en = {
   },
   cta: {
     heading: "Interested in Storytime Advantage?",
-    description: "The app launches on 30 November 2026. Ask us on LINE OA for the steps to join Storytime Advantage with your family or class.",
+    description: "The app is available now. Ask us on LINE OA for the steps to join Storytime Advantage with your family or class.",
     buttons: { joinWaitlist: "Contact Us", learnMore: "Learn More" },
   },
   eyebrows: {
@@ -135,14 +135,14 @@ export const th = {
   metadata: {
     title: "Storytime Advantage - ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 | Reading Advantage Thailand",
     description:
-      "Storytime Advantage เป็นแอปภาษาอังกฤษสำหรับเด็กอนุบาล 2 ถึง ป.2 เปิดตัววันที่ 30 พฤศจิกายน 2569 พร้อมหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มในแต่ละสัปดาห์",
+      "Storytime Advantage เป็นแอปภาษาอังกฤษสำหรับเด็กอนุบาล 2 ถึง ป.2 เปิดให้ใช้งานแล้ว พร้อมหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มในแต่ละสัปดาห์",
   },
   hero: {
     title: "นิทาน เพลง และเสียงแรกของภาษาอังกฤษ",
     subtitle: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 (อายุประมาณ 4 ถึง 8 ปี)",
     description:
       "เด็กคนหนึ่งแตะคำแล้วได้ยินเสียงอ่าน ทั้งชั้นร้องเพลงไปด้วยกัน Storytime Advantage นำหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มมาสู่ทุกสัปดาห์ บนโทรศัพท์ที่บ้านและจอในห้องเรียน",
-    comingSoon: "เปิดตัววันที่ 30 พฤศจิกายน 2569",
+    comingSoon: "เปิดให้ใช้งานแล้ว",
   },
   heroAlt: "Pip ในภาพประกอบเรื่องประจำสัปดาห์ที่ 1 ของ Storytime Advantage",
   adaptiveEngine: {
@@ -209,7 +209,7 @@ export const th = {
   },
   cta: {
     heading: "สนใจ Storytime Advantage ไหม",
-    description: "แอปเปิดตัววันที่ 30 พฤศจิกายน 2569 สอบถามขั้นตอนการเข้าร่วม Storytime Advantage สำหรับครอบครัวหรือชั้นเรียนของคุณได้ทาง LINE OA",
+    description: "แอปเปิดให้ใช้งานแล้ว สอบถามขั้นตอนการเข้าร่วม Storytime Advantage สำหรับครอบครัวหรือชั้นเรียนของคุณได้ทาง LINE OA",
     buttons: { joinWaitlist: "ติดต่อเรา", learnMore: "ดูข้อมูลเพิ่มเติม" },
   },
   eyebrows: {

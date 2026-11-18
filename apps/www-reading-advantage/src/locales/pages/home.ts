@@ -47,7 +47,7 @@ export const en = {
             roadmapLabel: "On our roadmap",
             roadmapNote: "These product lines are planned.",
             roadmapTag: "Planned",
-            storytimePreparingLabel: "Launches 30 November 2026",
+            storytimePreparingLabel: "Available Now",
         },
         schools: {
             imageAlt: "A teacher at the board while students work from printed workbooks and tablets.",
@@ -104,7 +104,7 @@ export const en = {
         eyebrow: "The suite",
         title: "Three live product lines. More on the roadmap.",
         description:
-            "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. Science, Math, Zhongwen, and STEM Advantage are on our roadmap. The first Storytime Advantage unit launches on 30 November 2026.",
+            "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. Science, Math, Zhongwen, and STEM Advantage are on our roadmap. The first Storytime Advantage unit is available now.",
     },
     mission: {
         title: "Student Success Is Our Mission",
@@ -272,7 +272,7 @@ export const th = {
             roadmapLabel: "อยู่ในแผนงานของเรา",
             roadmapNote: "สายผลิตภัณฑ์เหล่านี้อยู่ในแผน",
             roadmapTag: "อยู่ในแผน",
-            storytimePreparingLabel: "เปิดตัววันที่ 30 พฤศจิกายน 2569",
+            storytimePreparingLabel: "พร้อมใช้งานแล้ว",
         },
         schools: {
             imageAlt: "ครูยืนหน้ากระดานขณะที่นักเรียนเรียนจากสมุดงานที่พิมพ์และแท็บเล็ต",
@@ -329,7 +329,7 @@ export const th = {
         eyebrow: "ชุดผลิตภัณฑ์",
         title: "สามสายผลิตภัณฑ์ที่เปิดใช้งานแล้ว และอีกหลายสายอยู่ในแผนงาน",
         description:
-            "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก Science, Math, Zhongwen และ STEM Advantage อยู่ในแผนงาน หน่วยการเรียนรู้แรกของ Storytime Advantage เปิดตัววันที่ 30 พฤศจิกายน 2569",
+            "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก Science, Math, Zhongwen และ STEM Advantage อยู่ในแผนงาน หน่วยการเรียนรู้แรกของ Storytime Advantage พร้อมใช้งานแล้ว",
     },
     mission: {
         title: "ภารกิจของเราคือความสำเร็จของนักเรียน",
@@ -497,7 +497,7 @@ export const zh = {
             roadmapLabel: "路线图中",
             roadmapNote: "这些产品线在计划中，我们不给出日期。",
             roadmapTag: "计划中",
-            storytimePreparingLabel: "Launches 30 November 2026",
+            storytimePreparingLabel: "Available Now",
         },
         schools: {
             imageAlt: "老师站在黑板前，学生使用纸质练习册和平板电脑学习。",

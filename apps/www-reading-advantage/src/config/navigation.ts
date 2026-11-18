@@ -40,7 +40,7 @@ export const navigation: NavItem[] = [
       {
         title: "Storytime Advantage",
         href: "/products/storytime-advantage",
-        description: "English for Anuban 2 to P2; the first unit launches on 30 November 2026",
+        description: "English for Anuban 2 to P2; the first unit is available now",
       },
       {
         title: "CodeCamp Advantage",
