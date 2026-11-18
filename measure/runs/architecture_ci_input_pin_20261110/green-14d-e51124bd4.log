@@ -1,0 +1,256 @@
+# Green 1.4d (r2) — option 1, the v2 route
+
+Task 1.4d Green, sub-steps (b) code port and (c) data.
+
+- `phase_base_sha=09168dc422ed48604b8f2f0cb9a23ad4d110543b` resolves.
+- `role_base_sha=e51124bd4d3f8cf10f87649b1023d151ec334a81` resolves (HEAD at run time).
+- The Red commit `e51124bd4` sits inside `phase_base_sha..HEAD`.
+- Model: the plan names the DeepSeek family for Green. The route quota gave
+  MiniMax because the DeepSeek free route is limited until 22:54. This is a
+  substitution. The Red family of this phase is `opencode-go/hy4-flash-free`.
+- No question tool was used. Every default below was taken and recorded.
+
+## Task 1: the code port (sub-step b)
+
+Code commit: `133d5b5961c22ac9552dc36baaf616ee836575d8`.
+
+Paths in the commit:
+
+- `.github/workflows/ci.yml`
+- `packages/architecture-enforcement/src/v2-manifest-validation.ts`
+- `packages/architecture-enforcement/src/architecture-reconciliation.ts`
+- `packages/architecture-enforcement/src/architecture-reconciliation-cli.ts`
+- `packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts`
+- `packages/architecture-enforcement/src/__tests__/architecture-reconciliation-cli.test.ts`
+- `packages/architecture-enforcement/src/__tests__/reconciliation-manifest-v2.red.test.ts`
+
+### Source commits and their hunks
+
+| Upstream commit | Ported |
+| --- | --- |
+| `41e320d9d` | Production hunks of `architecture-reconciliation.ts`, `architecture-reconciliation-cli.ts`, and `v2-manifest-validation.ts`. |
+| `3aff7f243` | Production hunks of `architecture-reconciliation.ts` and `architecture-reconciliation-cli.ts`. |
+| `7ca865ae8` | Production hunks of `architecture-reconciliation.ts` and `v2-manifest-validation.ts`. |
+| `220e5886d` | The `ci.yml` boundary step. |
+| `c6e3e4462` | Guarded test edits 1 and 2. Guarded test edit 3 was not ported. |
+
+The data commits `00953b1b6`, `7d06b3838`, `394ea0a50`, `2bda8baeb`, and
+`b0b82e873` did not come in. Sub-step (c) regenerated the data on this tree.
+
+`v2-manifest-validation.ts` and `architecture-reconciliation.ts` are byte
+identical to their upstream state at `220e5886d`. The three files had no
+conflict with the current master code.
+
+### Guarded test edit 3 was not ported
+
+Guarded edit 3 targets `packages/architecture-enforcement/src/__tests__/v2-baseline-delta.test.ts`.
+That file is new in `41e320d9d`. It does not exist on master. Its `c6e3e4462`
+form is already carried by the committed Red file
+`packages/architecture-enforcement/src/__tests__/architecture-v2-route-14d.test.ts`:
+that file appends to the committed staged delta and picks a v1 survivor still
+present in v2. The Red log records the overlap. Green did not create a second
+copy of the same coverage.
+
+### The CLI option shape adaptation
+
+The upstream CLI returned separate `owner` and `rationale` fields. The committed
+Red test asserts one shape:
+
+```text
+expect(options).toMatchObject({ newDebtMetadata: { owner, rationale } });
+```
+
+Upstream's shape fails that assertion. The ported options carry
+`newDebtMetadata: NewDebtReviewMetadata` instead. The `--owner` and
+`--rationale` arguments, their pairing rule, and the forwarded value are
+unchanged.
+
+### The dependency arity test update
+
+The upstream commits changed the `apply` and `preview` dependency signatures to
+take a third argument. Upstream updated two assertions in
+`packages/architecture-enforcement/src/__tests__/architecture-reconciliation-cli.test.ts`.
+That port carries the same two assertions. A probe showed that Vitest
+`toHaveBeenCalledWith` does not match a trailing `undefined` argument, so the
+two assertions had to follow the signature.
+
+### The targeted Red command in the dirty main tree
+
+`CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-v2-route-14d.test.ts --maxWorkers=1`
+exits 1 in the main tree at the code commit. Counts: `tests_total=12`,
+`tests_failed=1`, `tests_passed=11`.
+
+The one failure is `preview_stages_current_delta_and_rebinds_four_files` with
+the message `Architecture reconciliation preview found analyzer errors`. The
+cause is the three unrelated dirty `next-env.d.ts` files, which the check reads
+as working-tree bytes. The ported preview now runs the analyzer, so the dirty
+files reach it. The main tree stayed untouched.
+
+### Lint
+
+`pnpm --filter @reading-advantage/architecture-enforcement lint` exits 0.
+`lint_errors=0`, `lint_warnings=1`. The one warning is the pre-existing
+`prefer-const` warning in the Red test file
+`architecture-pin-refresh-resume.test.ts`, which Green may not edit.
+
+### The pre-existing Red type error
+
+`pnpm --filter @reading-advantage/architecture-enforcement exec tsc --noEmit`
+fails at `packages/architecture-enforcement/src/__tests__/architecture-v2-route-14d.test.ts:302`.
+The `apply` mock widens `transactionOutcome.state` to `string`. The same error
+appears at the Red base `e51124bd4` with the three production files reverted,
+so the port did not cause it. Green did not edit the committed Red test.
+The defect is deferred to Red.
+
+## Tasks 2 and 3: the clean worktree, the targeted command, and the package suite
+
+The worktree ran at `/home/daniebo/.cache/green14d/reading-advantage-monorepo`.
+The folder name ends with `reading-advantage-monorepo` because one existing
+test asserts that name.
+
+- `git worktree add --detach <path> HEAD` at the code commit. Exit 0.
+- `pnpm install --frozen-lockfile --offline --config.manage-package-manager-versions=false`
+  exits 0. The plain offline form exited 1 because the store of the `/tmp`
+  filesystem holds no package. The worktree then moved from `/tmp` to the home
+  filesystem, and the store resolved to the populated one.
+- `pnpm turbo run build --filter=@reading-advantage/backend --filter=@reading-advantage/knowledge-space-core`
+  through heavy-run p2 exits 0. `build_tasks=6`, `build_cached=6`. The build
+  is required. Without it, the analyzer reported `parse_errors=6` because two
+  tsconfig path mappings point at build outputs.
+
+The targeted Red command in the clean worktree:
+`CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-v2-route-14d.test.ts --maxWorkers=1`
+exits 0. Counts: `tests_total=12`, `tests_failed=0`, `tests_passed=12`.
+
+The package suite at the code commit:
+`CI=true pnpm --filter @reading-advantage/architecture-enforcement exec vitest run --maxWorkers=1`
+through heavy-run p2 exits 1. Counts: `suite_files=35`, `suite_tests=332`,
+`tests_failed=2`, `tests_passed=330`.
+
+The two failures:
+
+1. `architecture-reconciliation-cli.test.ts` case "exercises repository
+   discovery and the production default boundaries" failed because the first
+   worktree name did not end with `reading-advantage-monorepo`. The worktree
+   was renamed. The case is a path assertion, not a behavior assertion.
+2. `reconciliation-manifest-v2.red.test.ts` case "binds committed lifecycle,
+   hashes, evidence, reviews, and staged baseline deltas" failed because the
+   committed manifest held no staged delta yet. The staged delta arrives with
+   the sub-step (c) data.
+
+The package suite at the data commit exits 0. Counts: `suite_files=35`,
+`suite_tests=332`, `tests_failed=0`, `tests_passed=332`.
+
+## Task 4: the data (sub-step c)
+
+Every command ran in the clean worktree through
+`HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<command>'`.
+One heavy job ran at a time.
+
+| Step | Command | Exit |
+| --- | --- | --- |
+| 1 | `pnpm architecture:pin:refresh --acknowledge --budget-s 1500` | `pin_refresh_first=0` |
+| 2a | `pnpm architecture:reconcile --policy v2 --owner Daniel --rationale "<rationale>" --format json` | `reconcile_preview_owner_capital=1` |
+| 2b | `pnpm architecture:reconcile --policy v2 --owner daniel --rationale "<rationale>" --format json` | `reconcile_preview=1` |
+| 3 | `pnpm architecture:reconcile --policy v2 --owner daniel --rationale "<rationale>" --acknowledge --expected-plan-hash <hash> --format json` | `reconcile_apply=0` |
+| 4 | `pnpm architecture:pin:refresh --acknowledge --budget-s 1500` | `pin_refresh_after_apply=0` |
+| 5a | `pnpm architecture:check --policy v2 --skip-input-snapshot-pin` | `check_skip_pin=0` |
+| 5b | `pnpm architecture:check --policy v2` | `check_policy_v2=0` |
+
+The rationale text stayed as the orchestrator wrote it: "pre-existing debt of
+other tracks, baselined by D-11 on the v2 route (option 1, default taken, no
+PM answer in 20 min)".
+
+### The owner default
+
+The owner `Daniel` was refused with exit 1. The error names the field
+`owner` and the rule `invalid_string`. The committed owner schema at
+`packages/architecture-enforcement/src/contracts.ts:7` and `:81` accepts only
+`/^[a-z0-9][a-z0-9_-]*$/`. The default is the lower-case form of the same
+owner: `daniel`. The rationale stayed unchanged.
+
+### The refresh series
+
+The first refresh exited 0 in one run. No run exited 3, so no second run of
+the series started. `modules_total=7010`. Pass 1 ended at `elapsed_s=17`, pass
+2 at `elapsed_s=31`, and the validate step at `elapsed_s=32`. No
+`checkpoint=discarded` line printed. The store was deleted after the write.
+
+The second refresh ran after the apply and changed no value. All five fields
+held their values before and after the run:
+
+- `analyzerInputSnapshotSha256`: `7f3b60c4279c3c0469bb380ca31398ef26daf631168c46125a51d0b2b6bff00d`
+- `analyzerImplementationTreeSha256`: `cb9c1431848cd13467d3e56aac09c958a31599eb186f8c0de6904113520fc91f`
+- `implementationAndTestTreeSha256`: `4d051f4a116a82d33ea3f5abb58ae7619761697bb9996c0b7fb0ecc09f07a064`
+- `reportSha256s`: `0067392b9ce910e9a2a9200e91c31d0bf6e8b09949dc980aa1514e81803a213e` twice
+
+The apply already pinned the post-state snapshot over the proposed bytes, so
+the second refresh confirmed that value.
+
+### The reconcile preview and apply
+
+The preview plan hash is
+`af3507fac7fe83ba0ee507ab68c78b19212255f31fe7e46ae482add4d9fa509f`.
+The transaction plan hash is
+`e21a964c9c489434b12eb74e68da5a59aa805be230b86bd4e0e2150283c390c7`.
+
+The preview counts: `database_entries=707`, `provider_entries=93`,
+`production_additions=255`, `exact_exception_additions=1`,
+`covered_test_findings=0`, `removals=15`, `renames=162`.
+
+The v1 preview held `v1_additions=339`, `v1_removals=15`, and
+`v1_renames=162`. The amendment default of the orchestrator allows the
+difference.
+
+The apply wrote three files. The ownership map bytes stayed unchanged.
+
+- `packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json`
+- `packages/architecture-enforcement/src/config/baselines/database.v2.json`
+- `packages/architecture-enforcement/src/config/baselines/provider.v2.json`
+
+### The two checks
+
+Both checks exit 0. Each report holds `files=7010`, `findings=800`,
+`parse_errors=0`, `additions=0`, `removals=0`, and `renames=0`.
+
+The local check with the pin passes, so the committed pin holds.
+
+### The committed manifest
+
+The manifest holds `baseline_additions=255`, `baseline_removals=15`, and
+`baseline_renames=162`. The `manifest_keys=15` set stays. The input snapshot
+pin is `7f3b60c4279c3c0469bb380ca31398ef26daf631168c46125a51d0b2b6bff00d`.
+
+## Task 5: the data commit and the plan evidence
+
+- Data commit: `86384101681de8b180c2fe363cd8658cab2112c9` with the subject
+  `chore(architecture): stage the reviewed v2 delta (track_id: architecture_ci_input_pin_20261110)`.
+- The plan evidence commit carries `measure/tracks/architecture_ci_input_pin_20261110/plan.md`
+  and this log. Task 1.4d carries the marker `[x]`.
+- The worktree was removed after the evidence was copied back.
+- The three dirty `next-env.d.ts` files stayed untouched. No push.
+
+MEASURE_AGENT_RESULT
+status: pass
+track: architecture_ci_input_pin_20261110
+phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+task: 1.4d
+role: green
+role_base_sha: e51124bd4d3f8cf10f87649b1023d151ec334a81
+baseline_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+resulting_HEAD: 86384101681de8b180c2fe363cd8658cab2112c9
+commits: ["133d5b5961c22ac9552dc36baaf616ee836575d8 feat(architecture): port the v2 reconcile route (track_id: architecture_ci_input_pin_20261110)", "86384101681de8b180c2fe363cd8658cab2112c9 chore(architecture): stage the reviewed v2 delta (track_id: architecture_ci_input_pin_20261110)"]
+tests: ["route_fixture_positive_control", "delta_staged_addition_validates", "delta_staged_removal_of_v1_survivor_validates", "delta_unexplained_baseline_rejected", "delta_unstaged_addition_rejected", "delta_malformed_record_rejected", "preview_stages_current_delta_and_rebinds_four_files", "cli_accepts_owner_and_rationale", "cli_forwards_review_metadata_to_apply", "apply_allows_reviewed_candidate_write", "overlay_pins_snapshot_over_proposed_bytes", "ci_runs_check_under_policy_v2_with_skip"]
+test_files: ["packages/architecture-enforcement/src/__tests__/architecture-v2-route-14d.test.ts"]
+test_counts: "tests_total=12, tests_failed=0, tests_passed=12"
+suite_counts: "suite_files=35, suite_tests=332, tests_failed=0, tests_passed=332"
+lint_counts: "lint_errors=0, lint_warnings=1"
+heavy_run_exit_codes: "install=0, build_backend_knowledge=0, targeted_red=0, pin_refresh_first=0, reconcile_preview_owner_capital=1, reconcile_preview=1, reconcile_apply=0, pin_refresh_after_apply=0, check_skip_pin=0, check_policy_v2=0, suite_code_stage=1, suite_data_stage=0"
+reconcile_plan_hash: af3507fac7fe83ba0ee507ab68c78b19212255f31fe7e46ae482add4d9fa509f
+transaction_plan_hash: e21a964c9c489434b12eb74e68da5a59aa805be230b86bd4e0e2150283c390c7
+final_counts: "database_entries=707, provider_entries=93, production_additions=255, exact_exception_additions=1, removals=15, renames=162, baseline_additions=255, baseline_removals=15, baseline_renames=162, manifest_keys=15, files=7010, findings=800, parse_errors=0, additions=0, removals=0, renames=0, modules_total=7010"
+new_files: []
+guarded_test_edits_not_ported: ["v2-baseline-delta.test.ts: the file is new in 41e320d9d and does not exist on master; its c6e3e4462 fixture form is already carried by the committed Red file architecture-v2-route-14d.test.ts"]
+deferred: packages/architecture-enforcement/src/__tests__/architecture-v2-route-14d.test.ts:302 — deferred:red (the Red apply mock widens transactionOutcome.state to string; the package check-types command fails on it at the Red base e51124bd4; Green did not edit the committed Red test)
+handoff: "Green 1.4d is done on the v2 route. The code port and the regenerated data are committed. The targeted Red command exits 0 with 12 of 12 cases. The package suite exits 0 with 332 of 332 cases at the data commit. Both architecture checks exit 0 under policy v2. The reconcile plan hash is af3507fac7fe83ba0ee507ab68c78b19212255f31fe7e46ae482add4d9fa509f. The staged delta holds 255 additions, 15 removals, and 162 renames. Three items need the orchestrator: (1) the deferred Red type error at architecture-v2-route-14d.test.ts:302 blocks the package check-types gate of task 1.5; (2) guarded edit 3 was not ported because v2-baseline-delta.test.ts does not exist on master; (3) the owner id is daniel because the committed owner schema accepts only a lower-case id. The next task is 1.4, which refreshes the pins again and runs the local full check. The three dirty next-env.d.ts files stayed untouched."
+END_MEASURE_AGENT_RESULT
