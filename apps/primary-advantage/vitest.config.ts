@@ -7,6 +7,11 @@ export default defineConfig({
       "@": path.resolve(__dirname, "."),
       // Next.js supplies `server-only` at build time; Vitest needs a module for it.
       "server-only": path.resolve(__dirname, "./lib/test/server-only-mock.ts"),
+      // The shared read-along package (task 7.2): the tsconfig paths point at
+      // `packages/read-along`, and Vitest needs the same mapping as an alias.
+      // The object form matches the package name exactly or as a `<name>/`
+      // prefix, so the package subpaths survive.
+      "@reading-advantage/read-along": path.resolve(__dirname, "../../packages/read-along"),
     },
   },
   test: {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { tokenizeWords } from "../align";
-import { classifySentence, profileArticles } from "../profile";
+import { tokenizeWords } from "@reading-advantage/read-along/lib/align";
+import { classifySentence, profileArticles } from "@reading-advantage/read-along/lib/profile";
 
 const sent = (sentence: string, words: string[]) => ({
   sentence,

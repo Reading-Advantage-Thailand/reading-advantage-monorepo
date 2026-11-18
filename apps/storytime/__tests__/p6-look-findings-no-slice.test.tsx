@@ -218,6 +218,8 @@ describe("every word tap plays the own clip of the word, whole (finding 2a)", ()
     const book = decodableOf(week);
     delete book.audio.wordClips.nurse;
     delete book.audio.wordClips.can;
+    // The shipped w01 now holds the tricky clip of `can` too, so the row removes it from its copy.
+    delete (week.focus as { trickyWordClips?: Record<string, string> }).trickyWordClips?.can;
     await renderDecodable(week);
     expect(screen.getByRole("button", { name: /^nest$/i }), "a word with a clip stays a button").toBeTruthy();
     const tricky = screen.getByRole("region", { name: "Tricky words" });

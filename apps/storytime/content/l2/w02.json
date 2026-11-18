@@ -8,9 +8,9 @@
     },
     "thai": {
       "status": "approved",
-      "date": "2026-11-05",
-      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines)",
-      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 80 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md)"
+      "date": "2026-11-15",
+      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines); \"Ok\" (2026-11-15 19:43 ICT; the 64 Thai rows of the Phase 14 change list)",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 80 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md); Google Tasks reply of Daniel, 2026-11-15 19:43 ICT, PM relay (THAI item: p14-change-list.md, 64 rows)"
     },
     "images": {
       "status": "approved",
@@ -19,16 +19,33 @@
       "source": "PM relay Tasks id TFBDbWRFTEItTy1kZGUzdw; PM relay of 2026-11-05 (owner answer on proof v15, Tasks id bmh2b1hqTFNCVEpDNks4VQ)"
     },
     "audio": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-18",
+      "words": "1. Ok",
+      "source": "Google Tasks reply of Daniel, 2026-11-18 05:36 ICT, item OGt2RXk4 under the gates item item d21OaG5l, PM relay; the approval page ~/Desktop/storytime-approval-w02-w07/review.json (36 rows: song, book audio, sentence clips, word clips, and scripts of weeks 2 to 7; 0 page submissions)"
     },
     "song": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-18",
+      "words": "1. Ok",
+      "source": "Google Tasks reply of Daniel, 2026-11-18 05:36 ICT, item OGt2RXk4 under the gates item item d21OaG5l, PM relay; the approval page ~/Desktop/storytime-approval-w02-w07/review.json (36 rows: song, book audio, sentence clips, word clips, and scripts of weeks 2 to 7; 0 page submissions)"
     },
     "scripts": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-18",
+      "words": "1. Ok",
+      "source": "Google Tasks reply of Daniel, 2026-11-18 05:36 ICT, item OGt2RXk4 under the gates item item d21OaG5l, PM relay; the approval page ~/Desktop/storytime-approval-w02-w07/review.json (36 rows: song, book audio, sentence clips, word clips, and scripts of weeks 2 to 7; 0 page submissions)"
+    },
+    "print": {
+      "status": "approved",
+      "date": "2026-11-16",
+      "words": "Pass"
     },
     "loops": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-15",
+      "words": "Approved",
+      "source": "Google Tasks, PM item YVJYeDVt, subtask bnJWSW5yUDNOVllzLWpvcA"
     }
   },
   "version": 1,
@@ -44,7 +61,7 @@
     "openingMinutes": 6,
     "title": "How Many?",
     "band": "Sprout",
-    "status": "draft"
+    "status": "published"
   },
   "focus": {
     "element": {
@@ -60,8 +77,14 @@
       "audio": "phonemes/daniel/26-a-short.mp3"
     },
     "paSkill": {
-      "en": "the first sound /a/ and the middle sound /a/; blend three sounds by ear",
-      "th": "ฟังเสียงแรกและเสียงกลาง /a/ และฟังแล้วผสม 3 เสียงเป็นคำ"
+      "en": "the first sound /a/; blend three sounds by ear",
+      "th": "ฟังเสียงแรก /a/ และฟังแล้วผสม 3 เสียงเป็นคำ"
+    },
+    "paStage": {
+      "stage": 1,
+      "positions": [
+        "first"
+      ]
     },
     "trickyWords": [
       "I",
@@ -166,22 +189,39 @@
           }
         }
       ],
-      "max": 10
+      "max": 10,
+      "wordClips": {
+        "eight": "l2/media/w02/words/wa-eight.mp3",
+        "five": "l2/media/w02/words/wa-five.mp3",
+        "four": "l2/media/w02/words/wa-four.mp3",
+        "nine": "l2/media/w02/words/wa-nine.mp3",
+        "one": "l2/media/w02/words/wa-one.mp3",
+        "seven": "l2/media/w02/words/wa-seven.mp3",
+        "six": "l2/media/w02/words/wa-six.mp3",
+        "ten": "l2/media/w02/words/wa-ten.mp3",
+        "three": "l2/media/w02/words/wa-three.mp3",
+        "two": "l2/media/w02/words/wa-two.mp3"
+      }
     },
     "wordWall": [
       "an",
       "Nan"
-    ]
+    ],
+    "trickyWordClips": {
+      "i": "l2/media/w02/words/wa-i.mp3",
+      "in": "l2/media/w02/words/wa-in.mp3",
+      "on": "l2/media/w02/words/wa-on.mp3"
+    }
   },
   "opening": {
     "pa": [
       {
-        "en": "\"Listen: apple. What is the first sound? /a/! Listen: cat. What is the middle sound? /a/!\"",
-        "th": "\"ฟัง: apple เสียงแรกคือเสียงอะไร? /a/! ฟัง: cat เสียงกลางคำคือเสียงอะไร? /a/!\""
+        "en": "\"Listen: nose. What is the first sound? Nnn! Listen: net. What is the first sound? Nnn!\"",
+        "th": "\"ฟัง: nose เสียงแรกคือเสียงอะไร? Nnn! ฟัง: net เสียงแรกคือเสียงอะไร? Nnn!\""
       },
       {
-        "en": "\"Listen: ant. What is the first sound? /a/! Listen: hat. What is the middle sound? /a/!\"",
-        "th": "\"ฟัง: ant เสียงแรกคือเสียงอะไร? /a/! ฟัง: hat เสียงกลางคำคือเสียงอะไร? /a/!\""
+        "en": "\"Listen: apple. What is the first sound? /a/! Listen: ant. What is the first sound? /a/!\"",
+        "th": "\"ฟัง: apple เสียงแรกคือเสียงอะไร? /a/! ฟัง: ant เสียงแรกคือเสียงอะไร? /a/!\""
       },
       {
         "en": "\"Listen: /k/ - /a/ - /t/. What is the word? Cat! Listen: /h/ - /a/ - /t/. What is the word? Hat!\"",
@@ -198,8 +238,8 @@
     ],
     "audio": [
       [
-        "phonemes/daniel/26-a-short.mp3",
-        "phonemes/daniel/26-a-short.mp3"
+        "phonemes/daniel/04-n.mp3",
+        "phonemes/daniel/04-n.mp3"
       ],
       [
         "phonemes/daniel/26-a-short.mp3",
@@ -229,7 +269,19 @@
         "phonemes/daniel/26-a-short.mp3",
         "phonemes/daniel/03-p.mp3"
       ]
-    ]
+    ],
+    "wordClips": {
+      "ant": "l2/media/w02/words/wa-ant.mp3",
+      "apple": "l2/media/w02/words/wa-apple.mp3",
+      "bag": "l2/media/w02/words/wa-bag.mp3",
+      "cat": "l2/media/w02/words/wa-cat.mp3",
+      "fan": "l2/media/w02/words/wa-fan.mp3",
+      "hat": "l2/media/w02/words/wa-hat.mp3",
+      "man": "l2/media/w02/words/wa-man.mp3",
+      "nap": "l2/media/w02/words/wa-nap.mp3",
+      "net": "l2/media/w02/words/wa-net.mp3",
+      "nose": "l2/media/w02/words/wa-nose.mp3"
+    }
   },
   "books": [
     {
@@ -988,7 +1040,73 @@
           "suns": "l2/media/w02/words/wa-suns.mp3",
           "three": "l2/media/w02/words/wa-three.mp3",
           "two": "l2/media/w02/words/wa-two.mp3"
-        }
+        },
+        "sentenceClips": [
+          {
+            "sentence": "How many suns?",
+            "file": "l2/media/w02/sentences/b0-s01.mp3"
+          },
+          {
+            "sentence": "One!",
+            "file": "l2/media/w02/sentences/b0-s02.mp3"
+          },
+          {
+            "sentence": "How many kites?",
+            "file": "l2/media/w02/sentences/b0-s03.mp3"
+          },
+          {
+            "sentence": "Two!",
+            "file": "l2/media/w02/sentences/b0-s04.mp3"
+          },
+          {
+            "sentence": "How many ducks?",
+            "file": "l2/media/w02/sentences/b0-s05.mp3"
+          },
+          {
+            "sentence": "Three!",
+            "file": "l2/media/w02/sentences/b0-s06.mp3"
+          },
+          {
+            "sentence": "How many birds?",
+            "file": "l2/media/w02/sentences/b0-s07.mp3"
+          },
+          {
+            "sentence": "Four!",
+            "file": "l2/media/w02/sentences/b0-s08.mp3"
+          },
+          {
+            "sentence": "How many balls?",
+            "file": "l2/media/w02/sentences/b0-s09.mp3"
+          },
+          {
+            "sentence": "Five!",
+            "file": "l2/media/w02/sentences/b0-s10.mp3"
+          },
+          {
+            "sentence": "How many friends?",
+            "file": "l2/media/w02/sentences/b0-s11.mp3"
+          },
+          {
+            "sentence": "Six!",
+            "file": "l2/media/w02/sentences/b0-s12.mp3"
+          },
+          {
+            "sentence": "How many cakes?",
+            "file": "l2/media/w02/sentences/b0-s13.mp3"
+          },
+          {
+            "sentence": "Seven!",
+            "file": "l2/media/w02/sentences/b0-s14.mp3"
+          },
+          {
+            "sentence": "How many cakes?",
+            "file": "l2/media/w02/sentences/b0-s15.mp3"
+          },
+          {
+            "sentence": "Oh no, Pip!",
+            "file": "l2/media/w02/sentences/b0-s16.mp3"
+          }
+        ]
       },
       "questions": [
         {
@@ -1466,7 +1584,41 @@
           "can": "l2/media/w02/words/wa-can.mp3",
           "i": "l2/media/w02/words/wa-i.mp3",
           "nan": "l2/media/w02/words/wa-nan.mp3"
-        }
+        },
+        "sentenceClips": [
+          {
+            "sentence": "Nan can.",
+            "file": "l2/media/w02/sentences/b1-s01.mp3"
+          },
+          {
+            "sentence": "Can I?",
+            "file": "l2/media/w02/sentences/b1-s02.mp3"
+          },
+          {
+            "sentence": "I can!",
+            "file": "l2/media/w02/sentences/b1-s03.mp3"
+          },
+          {
+            "sentence": "Nan can.",
+            "file": "l2/media/w02/sentences/b1-s04.mp3"
+          },
+          {
+            "sentence": "Can I?",
+            "file": "l2/media/w02/sentences/b1-s05.mp3"
+          },
+          {
+            "sentence": "I can!",
+            "file": "l2/media/w02/sentences/b1-s06.mp3"
+          },
+          {
+            "sentence": "Can Nan?",
+            "file": "l2/media/w02/sentences/b1-s07.mp3"
+          },
+          {
+            "sentence": "Nan and I can!",
+            "file": "l2/media/w02/sentences/b1-s08.mp3"
+          }
+        ]
       }
     }
   ],
@@ -2105,7 +2257,7 @@
             "teacherActions": [
               "Hold up one picture card at a time and say the word slowly.",
               "Say the first sound two times, short and quick: /a/, /a/, apple. Keep the sound short.",
-              "Mix the /a/ words with other words. Then say three words with /a/ in the middle: cat, hat, fan.",
+              "Mix the /a/ words with other words.",
               "When the script says /a/, say the short sound, as in \"apple\" (close to แอะ). When it says \"the letter a\", say the letter name \"ay\". The word a (a tricky word) says \"uh\"."
             ],
             "teacherLanguage": [
@@ -2113,7 +2265,7 @@
               "\"Is the first sound /a/? Thumbs up or thumbs down?\"",
               "\"Yes! Apple starts with /a/.\"",
               "\"Listen. Dog. Does dog start with /a/? No!\"",
-              "\"Now listen to the middle. /k/ - /a/ - /t/. Is /a/ in the middle? Yes!\""
+              "\"Listen. Ant. Does ant start with /a/? Yes!\""
             ],
             "studentActions": [
               "Children say each word after the teacher.",
@@ -2129,8 +2281,8 @@
             "th": "ใช้บัตรเพียง 4 ใบ (apple, ant, dog, sun) และพูดเสียงแรก 2 ครั้ง"
           },
           "harder": {
-            "en": "Say a word with /a/ in the middle: \"Hat.\" Children say the middle sound: \"/a/!\"",
-            "th": "พูดคำที่มี /a/ อยู่กลางคำ: \"Hat.\" เด็ก ๆ บอกเสียงกลาง: \"/a/!\""
+            "en": "A child says the first sound alone: \"Axe. /a/!\" Then the next child: \"Astronaut. /a/!\"",
+            "th": "เด็กบอกเสียงแรกด้วยตัวเองทีละคน: \"Axe. /a/!\" แล้วเด็กคนต่อไป: \"Astronaut. /a/!\""
           },
           "group": {
             "en": "Pairs: you hold up a card; partner A says the word, and partner B shows the thumbs.",
@@ -2138,14 +2290,13 @@
           },
           "materials": [
             "sound picture cards: apple, ant, axe, astronaut",
-            "picture cards: dog, sun, bus",
-            "picture cards: cat, hat, fan"
+            "picture cards: dog, sun, bus"
           ],
           "th": {
             "teacherActions": [
               "ชูบัตรภาพทีละใบ แล้วพูดคำช้า ๆ",
               "พูดเสียงแรก 2 ครั้ง สั้นและเร็ว: /a/, /a/, apple ออกเสียงให้สั้น",
-              "คละคำที่ขึ้นต้นด้วย /a/ กับคำอื่น จากนั้นพูดคำ 3 คำที่มี /a/ อยู่กลางคำ: cat, hat, fan",
+              "คละคำที่ขึ้นต้นด้วย /a/ กับคำอื่น",
               "เมื่อบทพูดเขียนว่า /a/ ให้ออกเสียงสั้นแบบใน \"apple\" (ใกล้กับเสียงสระ แอะ) เมื่อบทพูดเขียนว่า \"the letter a\" ให้พูดชื่อตัวอักษร \"ay\" (เอ) ส่วนคำว่า a (คำที่ต้องจำ) ออกเสียงว่า \"uh\" (คล้ายเสียง เออะ)"
             ],
             "teacherLanguage": [
@@ -2153,7 +2304,7 @@
               "\"เสียงแรกคือ /a/ ไหม? ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง?\"",
               "\"ใช่! Apple ขึ้นต้นด้วย /a/\"",
               "\"ฟัง dog คำว่า dog ขึ้นต้นด้วย /a/ ไหม? ไม่ใช่!\"",
-              "\"ทีนี้ฟังเสียงกลางคำ /k/ - /a/ - /t/ มี /a/ อยู่ตรงกลางไหม? ใช่!\""
+              "\"ฟัง ant คำว่า ant ขึ้นต้นด้วย /a/ ไหม? ใช่!\""
             ],
             "studentActions": [
               "เด็ก ๆ พูดแต่ละคำตามครู",
@@ -3957,19 +4108,19 @@
           "en": {
             "teacherActions": [
               "Part 1 (5 min): write \"How many?\" on the board. Show where the big letter and the question mark go.",
-              "Children trace \"How many?\" in the book. Then they count the ducks in the picture: three.",
+              "Children count the ducks in the picture: three. Then they trace \"How many?\" in the book.",
               "Stand-and-count break (at minute 5): all children stand up. Show some fingers and ask \"How many jumps?\" The class counts and jumps. Do it two times, then sit down.",
               "Part 2 (5 min): children draw one, two, or three balls in the empty box. They find the number word under the box (one, two, three) and trace it."
             ],
             "teacherLanguage": [
               "\"A big letter at the start. A question mark at the end of a question.\"",
-              "\"Trace the words: How many?\"",
               "\"Count the ducks. How many? Three!\"",
+              "\"Trace the words: How many?\"",
               "\"Stand up! How many jumps? One, two, three. Jump three times!\"",
               "\"Now draw one, two, or three balls. How many balls? Find the word and trace it.\""
             ],
             "studentActions": [
-              "Children trace the frame and count the ducks.",
+              "Children count the ducks and trace the frame.",
               "Children stand, count, and jump in the break.",
               "Children draw balls, then find and trace the number word."
             ],
@@ -3997,19 +4148,19 @@
           "th": {
             "teacherActions": [
               "ส่วนที่ 1 (5 นาที): เขียน \"How many?\" บนกระดาน ชี้ให้ดูว่าตัวพิมพ์ใหญ่และเครื่องหมายคำถาม (question mark) อยู่ที่ไหน",
-              "เด็ก ๆ ลากเส้นตาม \"How many?\" ในหนังสือ จากนั้นนับเป็ดในภาพ: three",
+              "เด็ก ๆ นับเป็ดในภาพ: three จากนั้นลากเส้นตาม \"How many?\" ในหนังสือ",
               "พักยืนนับ (เมื่อครบ 5 นาที): เด็กทุกคนยืนขึ้น ครูชูนิ้วแล้วถามว่า \"How many jumps?\" (กระโดดกี่ครั้ง) ทั้งชั้นนับและกระโดด ทำ 2 รอบ แล้วนั่งลง",
               "ส่วนที่ 2 (5 นาที): เด็ก ๆ วาดลูกบอล 1, 2 หรือ 3 ลูกในช่องว่าง แล้วหาคำศัพท์ตัวเลขที่ตรงกับจำนวนลูกบอลจากคำใต้ช่อง (one, two, three) และลากเส้นตามคำนั้น"
             ],
             "teacherLanguage": [
               "\"ใช้ตัวพิมพ์ใหญ่ที่ต้นประโยค ใส่เครื่องหมายคำถามที่ท้ายคำถาม\"",
-              "\"ลากเส้นตามคำ: How many?\"",
               "\"นับเป็ด How many? Three!\"",
+              "\"ลากเส้นตามคำ: How many?\"",
               "\"Stand up! (ยืนขึ้น) How many jumps? (กระโดดกี่ครั้ง) One, two, three. Jump three times! (กระโดด 3 ครั้ง)\"",
               "\"ทีนี้วาดลูกบอล 1, 2 หรือ 3 ลูก How many balls? (มีลูกบอลกี่ลูก) หาคำนั้นแล้วลากเส้นตาม\""
             ],
             "studentActions": [
-              "เด็ก ๆ ลากเส้นตามกรอบประโยคและนับเป็ด",
+              "เด็ก ๆ นับเป็ดและลากเส้นตามกรอบประโยค",
               "เด็ก ๆ ยืน นับ และกระโดดในช่วงพัก",
               "เด็ก ๆ วาดลูกบอล แล้วหาคำศัพท์ตัวเลขและลากเส้นตาม"
             ],
@@ -4149,14 +4300,15 @@
             "week": 1
           },
           {
-            "kind": "frame",
-            "text": "Hello, I am ___.",
-            "week": 1
+            "kind": "sound",
+            "text": "a",
+            "week": 2,
+            "audio": "phonemes/daniel/26-a-short.mp3"
           },
           {
             "kind": "tricky",
-            "text": "can",
-            "week": 1
+            "text": "I",
+            "week": 2
           }
         ],
         "ask": {
@@ -4523,14 +4675,15 @@
             "week": 1
           },
           {
-            "kind": "frame",
-            "text": "Hello, I am ___.",
-            "week": 1
+            "kind": "sound",
+            "text": "a",
+            "week": 2,
+            "audio": "phonemes/daniel/26-a-short.mp3"
           },
           {
             "kind": "tricky",
-            "text": "a",
-            "week": 1
+            "text": "on",
+            "week": 2
           }
         ],
         "ask": {
@@ -4832,7 +4985,6 @@
       "english.phonics.tricky.i",
       "english.phonics.tricky.in",
       "english.phonics.tricky.on",
-      "english.phonics.pa.medial-vowel.identify",
       "english.phonics.pattern.cvc-short-a"
     ],
     "reviewed": [

@@ -43,6 +43,12 @@ export default async function HomePage(): Promise<JSX.Element> {
           </p>
         </header>
 
+        <p>
+          <a className="text-primary underline" href="/filings">
+            Filings and year end
+          </a>
+        </p>
+
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           <NewSubmissionForm />
           <PendingSubmissionsList submissions={pendingOnly(submissions)} actorRole={actor.role} />

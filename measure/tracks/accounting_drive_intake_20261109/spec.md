@@ -130,7 +130,7 @@ The folder holds:
 - school sales invoices.
 
 **The first load scope (PM decision PM-5, 2026-11-09).** The first load covers
-January to October 2026 only. The folders `2024` and `2025` are not loaded. The
+January to October 2026 only. The load of the year files of 2024 and 2025 follows the first load (section 9b). The
 PM runs its own script on this machine on 2026-11-10 at 15:22 and sends a
 structure report by 2026-11-11 (PM-7). The report holds the document types, the
 fields, and the sample shapes. The report holds no real amount. The PM script
@@ -362,7 +362,9 @@ This section defines no hash. It defines the Drive file id and the byte compare 
 it catches a copy of one document under a new Drive file name or id (for example
 a byte-identical Google invoice that carries a new date in its file name). The
 decision adds no hash field, no checksum column, and no manifest. The month of a
-document comes from the document, not from the file name (section 9a).
+document comes from the document, not from the file name (section 9a). The PM of
+2026-11-13 13:25 wrote: "Q28 no hash, Drive file id + byte compare
+(sameEvidenceBytes): accepted; my 'hash' wording is withdrawn."
 
 ### 5.2 The data-out gate
 
@@ -444,7 +446,11 @@ match, or at the cap.
 - **The match target (Review A P3 F302).** A pass 1 match names its own
   submission id. A pass 2 match names `submissionId ?? duplicateOfSubmissionId`
   of the intake row. A pass 2 row that holds neither id (a failed row) is skipped
-  before the byte compare, and the scan continues. A third byte-equal copy of one
+  before the byte compare, and the scan continues. One exception exists: a
+  year-file row (status `parsed`, `submission_id` null, no duplicate id) stays a
+  candidate for a year-file lookup, and its match names the row itself through
+  `duplicate_of_intake_document_id` (section 9b, FR-28). A voucher lookup still
+  skips that row. A third byte-equal copy of one
   document is therefore a duplicate of the first submission, and no copy becomes
   a second submission.
 - **Past the cap.** Pass 1 stops at the cap. Pass 2 has no cap, because the size
@@ -678,7 +684,7 @@ same style. Every draft carries the extraction marker of section 5.3. Plan tasks
 | Document type (report name) | Parser | Contract | Source format | Read path (PM-4, D-13) | Fields (from the report) |
 |---|---|---|---|---|---|
 | payment voucher, workbook (`payment_voucher_xlsx`) | `parsePaymentVoucherSheet` | `paymentVoucherDraftSchema` | `.xlsx` workbook, 3 or 4 voucher worksheets and 1 guide worksheet | local; never Vertex | company name, form title, voucherNo, date, payee, paymentRef, netAmount, lines (docDate, docNo, description, amount), note, subtotal, deductionLabel, deductionRate, deductionAmount, netTotal (cells in note 3) |
-| payment voucher, payslip print (`payment_voucher_pdf`) | `parsePaymentVoucherPdf` | `paymentVoucherDraftSchema` | text PDF, 1 page for each payee | local; Vertex if no text layer | the same fields as the workbook. The PDF has no formula, so it shows the final numbers |
+| payment voucher, payslip print (`payment_voucher_pdf`) | `parsePaymentVoucherPdf` | `paymentVoucherDraftSchema` | text PDF; one payee on each page; a print can hold several pages. PM decision 2026-11-15: one draft for each page | local; Vertex if no text layer | the same fields as the workbook. The PDF has no formula, so it shows the final numbers |
 | Google Cloud and Workspace tax invoice (`cloud_tax_invoice`) | `parseCloudInvoice` | `cloudInvoiceDraftSchema` | text PDF, 2 pages (summary, line detail) | local; Vertex if no text layer (D-13) | invoiceNumber, gstRegNo, billTo, service, invoiceDate, billingId, periodStart, periodEnd, currency, subtotal, gstRate, gst, total. Workspace adds domain and a line (subscription, interval, quantity, amount). Cloud adds accountId and a line (description, amount) |
 | Google Cloud and Workspace payment receipt (`cloud_payment_receipt`) | `parseCloudPaymentReceipt` | `cloudPaymentReceiptDraftSchema` | text PDF, 1 page (browser print, short text layer) | local; Vertex if no text layer | documentTitle, paymentDate, amount, paymentNumber, paymentId (Cloud only), paidBy, paidTo, service, taxIdentificationNo, billingId, paymentMethod |
 | Google Cloud statement (`cloud_statement`) | `parseCloudStatement` | `cloudStatementDraftSchema` | text PDF, 2 pages | local; Vertex if no text layer | documentTitle, to, service, cloudAccountId, paymentsAccountId, paymentsProfileId, statementIssueDate, periodStart, periodEnd, startingBalance, totalNewActivity, totalPaymentsReceived, endingBalance, and the table PAYMENTS RECEIVED (date, description, amount) |
@@ -688,8 +694,8 @@ same style. Every draft carries the extraction marker of section 5.3. Plan tasks
 | school invoice, sheet (`school_invoice_sheet`) | `parseSchoolInvoiceSheet` | `schoolInvoiceDraftSchema` | Google Sheet, 4 tabs (`Receipt Term 1`, `ใบแจ้งหนี้`, `Term 1`, `Term 2`) | exported as `.xlsx`, then local; never Vertex (Q21) | documentTitle, invoiceNo or receiptNo, date, quotationRef, due, issuer block (company names, tax id, branch, contact), customerName, customerAddress, customerTaxId, students, lines (seq, description, unitPrice, quantity, total), subtotal, discounts (label, amount; one or two), netTotal (digits), netTotalInWords (Thai and English), payment block (bank, branch, accountName, accountNo), delivery block, vatNote, terms |
 | school invoice, PDF (`school_invoice_pdf`) | `parseSchoolInvoicePdf` | `schoolInvoiceDraftSchema` | text PDF, 1 page | local; Vertex if no text layer | the same fields as the sheet |
 | receipt (no real sample) | `parseReceipt` | `receiptDraftSchema` | PDF, JPEG, PNG | local text PDF; Vertex for a non-text PDF, a JPEG, and a PNG | no field list in the report (open item Q24) |
-| OpenAI invoice (no real sample) | `parseOpenAiInvoice` | `openAiInvoiceDraftSchema` | text PDF | local; Vertex if no text layer (D-13) | no field list in the report (open item Q24) |
-| withholding tax certificate (no real sample) | `parseWithholdingCertificate` | `withholdingCertificateDraftSchema` | text PDF | local; Vertex if no text layer | no field list in the report (open item Q24) |
+| OpenAI invoice (no real sample) | `parseOpenAiInvoice` | `openAiInvoiceDraftSchema` | text PDF (assumed format; no sample) | local; Vertex if no text layer (D-13) | no field list in the report (open item Q24) |
+| withholding tax certificate (no real sample) | `parseWithholdingCertificate` | `withholdingCertificateDraftSchema` | text PDF (assumed format; no sample) | local; Vertex if no text layer | no field list in the report (open item Q24) |
 
 The last three rows are synthetic: their fixtures are fake and each is marked "no
 real sample" (PM-12). The workbook reader and the text-PDF reader serve all rows.
@@ -724,11 +730,13 @@ real sample" (PM-12). The workbook reader and the text-PDF reader serve all rows
    social security); deductionRate H27 (0.03 or 0.05); deductionAmount I27;
    netTotal I28. The payment-method boxes are a drawing, so the reader cannot read
    which box is marked. The 4 signature labels hold no value. One variant has
-   several hourly-task lines and no salary line. A payee can have one allowance
-   line. The voucher number has two accepted forms (PM-10): `PV69/M-NNN`, where M
-   is the month number (January to August), and `PV69MM-NNN`, where MM is the
-   month in two digits (October). A gap in the number series is allowed (number
-   002 never appears), and the monthly close lists it (section 7).
+   several hourly-task lines and no salary line (the report fixture
+   `payment_voucher_xlsx_variant_hours.json`, a February file). A payee can have
+   one allowance line. The voucher number has two accepted forms (PM-10):
+   `PV69/M-NNN`, where M is the month number (January to August), and
+   `PV69MM-NNN`, where MM is the month in two digits (October). A gap in the
+   number series is allowed (number 002 never appears), and the monthly close
+   lists it (section 7).
 4. **The review list (PM-9).** The review list is the set of intake rows with
    status `failed` and a `failure_reason` that starts with `review:`. A file goes
    on the review list, and it writes no submission, in these cases: a required
@@ -790,9 +798,10 @@ real sample" (PM-12). The workbook reader and the text-PDF reader serve all rows
 - **What the poll reads.** The poll reads the top level of `Accounting`. From
   2027 it also reads the subfolder named for the current year. The poll never
   reads the `2024` and `2025` folders, and it never reads a subfolder of an
-  earlier year. The poll never writes in Drive (PM-14).
+  earlier year. The poll also skips the five year-file folders and their one
+  named parent `เอกสารบัญชีรายปี` (section 9b). The poll never writes in Drive (PM-14).
 - **The customer folder (PM-14).** A sub-folder of `Accounting` whose name is not a
-  year is a customer folder. Today it is `Boonyathat`, the folder of the one
+  year, is not in `YEAR_FILE_FOLDER_NAMES`, and is not `YEAR_FILE_PARENT_FOLDER_NAME` (section 9b) is a customer folder. Today it is `Boonyathat`, the folder of the one
   active school. The poll reads it, and its files are school invoices (revenue).
   A file in it needs no naming rule, and its month comes from the document. The
   app reads it and never writes into it (open item Q22).
@@ -807,9 +816,11 @@ real sample" (PM-12). The workbook reader and the text-PDF reader serve all rows
   amount in the name. Example: `2026-11_tax-invoice_google-cloud.pdf`.
 - **A voucher file name.** `ใบสำคัญจ่าย YYYY-MM.xlsx`. The name has one space
   after the Thai word, a four-digit year, a two-digit month from 01 to 12, and the
-  extension `.xlsx`. The month of that name is `YYYY-MM`. The name sets no
-  document type. The type comes from the MIME type and the worksheet layout
-  (PM-16, 2026-11-12).
+  extension `.xlsx`. The month key comes from the file name, except a voucher
+  whose date or number shows another month than its file name; that file goes on
+  the review list (report G4: the file name is the safer month key). The name
+  sets no document type. The type comes from the MIME type and the worksheet
+  layout (PM-16, 2026-11-12).
 - **Accepted types.** PDF, JPEG, PNG, the `.xlsx` workbook, and the school invoice
   Google Sheet. The document types are those of section 6: payment voucher
   (workbook or payslip PDF), Google Cloud and Workspace tax invoice, payment
@@ -821,9 +832,10 @@ real sample" (PM-12). The workbook reader and the text-PDF reader serve all rows
   skips the guide worksheet.
 - **The review list.** Some files need a person. The intake list marks them with
   the reason `review:`. They are: a workbook with no stored formula result, a
-  voucher whose date or number shows another month than the file name, a bank
-  statement that the app cannot open, and a PDF that Google Sheets made. The app
-  does not guess and writes no submission for them.
+  voucher whose date or number shows another month than the file name, a date that
+  the reader cannot read, a bank statement that the app cannot open, and a PDF
+  that Google Sheets made. The app does not guess and writes no submission for
+  them.
 - **The bank statement password.** Daniel enters the password once, at setup, into
   Secret Manager (`deferred:daniel`). The app opens the PDF in memory and stores
   no decrypted copy. You do not handle the password.
@@ -904,6 +916,7 @@ column, and no manifest is added. The PM wrote "file hash"; the Drive file id
 plus the byte compare gives the same guarantee, and the AGENTS.md hashing policy
 forbids a new hash field. This is an open note in section 14.3. The PM decision of
 2026-11-11 (PM-11) says "content hash" and holds the same reading (section 5.1).
+The PM of 2026-11-13 13:25 accepted this reading (Q28) and withdrew the word "hash".
 
 **The history marker.** A history row carries `is_history = true` and a
 `history_source` of `document`, `drive-folder`, or `drive-modified-date`. The value
@@ -926,9 +939,201 @@ PM structure report of 2026-11-11 (section 8). They are fakes only; no real
 document and no real amount enters git, a test, or a log. The fixtures of the
 three types with no real sample are synthetic and marked "no real sample" (PM-12).
 
-**The `2024` and `2025` folders.** Those folders come in a later phase, after the
-2026 import passes. That is the PM's order of work, not a scope cut. The start is
-`deferred:pm`.
+**The year files for 2024 and 2025.** Section 9b holds them. The PM ordered the
+start on 2026-11-13, so they are no longer a later phase.
+
+## 9b. The accountant year files for 2024 and 2025 (PM-24)
+
+Daniel ordered the load of the year files (Tasks, 2026-11-13 12:33), quoted
+exactly: "[a staff member] added the yearly financial reports for 2024 and 2025 to
+the accounting folder in Google drive. Please ingest". The PM ordered the start
+on 2026-11-13. This section replaces the last paragraph of section 9a ("a later
+phase, `deferred:pm`"). The 2026 voucher history of section 9a does not change.
+
+The year files are statutory filings and year-end statements. They are not
+vouchers. They create no submission, no approval, no CEO sign-off, and no
+monthly close.
+
+**What the PM scan found (read only, 2026-11-13).** The folder `Accounting` has
+five new subfolders. The scan found 118 PDF files, about 39 MB. This spec names a
+subfolder by its name and writes no Drive id (the repository is public).
+
+**The real layout (read only listing of 2026-11-14, plan tasks 10.7 and 10.12).**
+The short names of the 2026-11-13 scan were the names of that scan. The folders
+were renamed and moved before 2026-11-14. Four of the five folders now sit
+inside one parent folder, `เอกสารบัญชีรายปี` (0 PDF files, 4 subfolders). The
+parent is a direct child of the root. The listing found 118 PDF files in the five
+folders, the same total as the scan. The code constant `YEAR_FILE_FOLDER_NAMES`
+holds the five exact full names of the table. The code constant
+`YEAR_FILE_PARENT_FOLDER_NAME` holds the name of the one parent. The place column
+states the facts of 2026-11-14. It is not a rule for the walk: The place of a name is not required. The walk takes each of the five names from the root or from the parent. A name found in neither place stops the walk with `folder-missing`. A name found in both places, or twice in one place, stops the walk with `folder-duplicate`. A folder of the 2568 names in the root is read. The parent is required: a missing parent stops the walk with `folder-missing`, and a parent listed twice stops it with `folder-duplicate`. Both errors name the parent.
+
+| Subfolder name | Place | Files | What the PM scan saw |
+|---|---|---|---|
+| `Fwd: เอกสารปี 2567 (Fwd: Document from 2024)` | root | 9 | general ledger of 31.12.67, PND.1, PND.3, PND.50 receipt, and others |
+| `Fwd: เอกสารปี 2568 (Fwd: Document from 2025)` | inside `เอกสารบัญชีรายปี` | 35 | PND.53 monthly form, attachment, and receipt |
+| `Fwd: เอกสารปี 2568-1 (Fwd: Document Year 2025-1)` | inside `เอกสารบัญชีรายปี` | 10 | signed financial statement of year end 2568, สบช.3, PND.50 form and receipt |
+| `Fwd: เอกสารปี 2568-2 (Fwd: Document Year 2025-2)` | inside `เอกสารบัญชีรายปี` | 38 | PND.1 monthly forms and PND.1A |
+| `Fwd: เอกสารปี 2568-3 (Fwd: Document Year 2025-3)` | inside `เอกสารบัญชีรายปี` | 26 | PND.3 monthly forms |
+
+The folder names show no month. A subfolder name is never a source of a month
+or a type. The years in the names are Buddhist Era (BE). The app converts BE to
+CE with CE = BE - 543 (2567 is 2024, 2568 is 2025).
+
+**The document types and the facts the app keeps.** The type comes from the
+parser that matches the file text, never from the file name. Every amount is an
+integer in satang (minor units) or null when the text layer gives none. No fact
+is a payee name, a person name, a tax id, or an account number: the table holds
+only the facts below. Q27 is DECIDED (PM, 2026-11-13 13:25: "Q27 accepted"): the fake
+fixtures refine each list.
+
+| Document | Type key | Parser | Facts (besides the common facts) |
+|---|---|---|---|
+| PND.1 monthly withholding on salary | `wht-filing-pnd1` | `parseWhtFilingPnd1` | payeeCount, totalPaid, totalTaxWithheld, surcharge, totalRemitted |
+| PND.1A annual summary of PND.1 | `wht-filing-pnd1a` | `parseWhtFilingPnd1a` | payeeCount, totalPaid, totalTaxWithheld |
+| PND.3 monthly withholding on other income | `wht-filing-pnd3` (existing key) | `parseWhtFilingPnd3` (extended) | payeeCount, totalPaid, totalTaxWithheld, surcharge, totalRemitted |
+| PND.53 monthly withholding paid to a company | `wht-filing-pnd53` | `parseWhtFilingPnd53` | payeeCount, totalPaid, totalTaxWithheld, surcharge, totalRemitted |
+| PND.50 annual corporate income tax return | `corporate-tax-pnd50` | `parseCorporateTaxPnd50` | accountingPeriodStart, accountingPeriodEnd, netProfitOrLoss, taxPayable, taxPaid |
+| financial statement of the year end | `year-end-financial-statement` | `parseYearEndFinancialStatement` | statementDate, totalAssets, totalLiabilities, totalEquity, totalRevenue, netProfitOrLoss |
+| general ledger | `general-ledger` | `parseGeneralLedger` | periodStart, periodEnd, lineCount, totalDebit, totalCredit |
+| สบช.3 annual financial statement filing | `dbd-filing-sbor3` | `parseDbdFilingSbor3` | fiscalYear, statementDate, totalAssets, totalRevenue, netProfitOrLoss |
+
+**The common facts.** Each year file keeps these facts:
+
+- `formType`: the type key of the table.
+- `filingKind`: `form`, `attachment`, `receipt`, or `statement`. A PND form, its
+  attachment, and its payment receipt are three files with one period. The parser
+  reads the kind from the text.
+- `periodKind`: `month` or `year`.
+- `periodStart` and `periodEnd`: dates in CE, read from the document.
+- `taxYear`: the CE year of the period end.
+- `sourceMonth`: `YYYY-MM` of the period end. The intake row keeps it in
+  `source_month` (FR-3).
+- the extraction marker of section 5.3.
+
+The Drive file id is not a stored fact of the year file. The intake row holds it
+in `drive_file_id` at run time, and it is the idempotency key (section 5.1).
+
+**The month rule for the year files.** The month comes from the document only.
+The year files have no folder fallback and no `modifiedTime` fallback, because
+the files were all added on one day and a subfolder name shows no month. A file
+whose period the parser cannot read is listed in the dry-run report and is not
+imported. `history_source` of a year-file row is always `document`.
+
+**Where the facts live.** A year file writes one intake row in
+`accounting_intake_documents` (FR-3) with `is_history = true`,
+`history_source = document`, `status = parsed`, `submission_id` null, and the
+private evidence reference of the PDF. The facts go in one new table
+`accounting_year_file_facts`, one row for each intake row (FR-28). The table is
+classified `EXEMPT` in `packages/domain/src/tenant-registry.ts`.
+
+**The file identity and the duplicates (the hashing reading).** The PM order says
+"file hash" and "duplicates by hash". This section adds no hash field, no
+checksum column, and no manifest (AGENTS.md hashing policy; section 5.1, PM-11).
+The file identity is the Drive file id. The duplicate check is the byte compare
+`sameEvidenceBytes` (section 5.5), with the stored `evidence_byte_size` as the
+filter. This reading is DECIDED (Q28, PM, 2026-11-13 13:25).
+
+- A year file is never compared with a submission. Pass 1 of section 5.5 is not
+  used for a year file, because no year file is a submission.
+- A year file takes pass 2 only: the intake rows with the same byte length, then
+  `sameEvidenceBytes`. A pass 2 row that names no submission is still a candidate
+  when it is a year-file row (FR-28). This is the year-file exception that
+  section 5.5 records.
+- A byte-equal second file writes one intake row with `status = duplicate` and
+  `duplicate_of_intake_document_id` set (FR-28). It writes no facts row.
+- **The display of a year-file duplicate row.** The row has no submission id. The
+  intake list shows the label `duplicate` and no link to a submission. It shows
+  the serial position of the first row as plain text through
+  `duplicate_of_intake_document_id`, and it renders no approve or reject action.
+  A voucher duplicate keeps the link of section 5.5.
+- A voucher candidate does not match a year-file row. Section 5.5 already skips a
+  pass 2 row that names no submission, so no voucher becomes a duplicate of a
+  year file.
+
+**The subfolder walk.** Today the poll reads the top level of `Accounting`, the
+customer folders, and, from 2027, the subfolder of the current year (section 9).
+The walk is two levels deep through the one named parent (DECIDED, section 14.9).
+The poll of the root does not change: it reads the same files, with the same
+naming rule. Two things change.
+
+1. A new walk reads the five year-file folders. The walk is one input of the one
+   `intakeDriveDocument` history mode, not a second intake function. It reads the
+   direct children of the root. It picks the folders whose exact full names are
+   in the code constant `YEAR_FILE_FOLDER_NAMES` (the five full names of the
+   table). It also picks the one folder whose exact name is
+   `YEAR_FILE_PARENT_FOLDER_NAME` (`เอกสารบัญชีรายปี`), and it reads the direct
+   children of that parent, with the same exact-name pick. The match is exact
+   only: no prefix match and no partial match. The walk reads the PDF files
+   directly inside each of the five folders. It reads no PDF directly inside the
+   parent. It does not go deeper than these two levels. The walk enforces the
+   20 MB limit (section 9, "Size limit") on the downloaded body of each file, not only on the
+   size that the listing states. The text-layer read of each file has a per-file
+   timeout (Review B finding F1001, plan task 10.13). The walk is one function. The import and the dry-run both call it, so
+   no second walk exists. It resolves each folder id at run time by listing the root, so no
+   folder id enters the repository, a test, a log line, or a report. A listed
+   folder that is not in the constant is skipped. The place of a name is not
+   required. The walk takes each name from the root or from the parent. A name
+   found in neither place stops the walk with `folder-missing`. A name found in
+   both places, or twice in one place, stops the walk with `folder-duplicate`.
+   The parent is required. A missing parent stops the walk with `folder-missing`.
+   A parent listed twice stops the walk with `folder-duplicate`. Both errors name
+   the parent.
+2. The customer-folder rule of section 9 ("a sub-folder whose name is not a year
+   is a customer folder") would read the five year-file folders and the parent as
+   customer folders. It would parse their PDFs as school invoices. The rule
+   therefore skips every name in `YEAR_FILE_FOLDER_NAMES` and the name
+   `YEAR_FILE_PARENT_FOLDER_NAME`. This is the only change in the poll, and it
+   only removes six names from its reach. A test pins it. This change is
+   DECIDED (Q29, PM, 2026-11-13 13:25: "Q29 the poll skips the 5 subfolder names:
+   accepted"). The PM order of 2026-11-14 adds the parent to the skip list
+   (section 14.9).
+
+The Drive port stays read only (PM-14). The walk writes nothing in Drive.
+
+**The dry-run structure report.** The dry-run runs first, on this machine, with
+the same ports and the same walk function as the import, and no write. It writes no row in the accounting
+database, makes no call to the evidence store, and makes no model call for a text
+PDF. A PDF with no text layer is listed in the report. It goes to Vertex only in
+the production import, under the A-52 rule for scans that is already approved.
+The dry-run calls no model. The dry-run uses the same walk, so it has the same
+limits: the 20 MB limit on the downloaded body and the per-file timeout of the
+text-layer read (F1001). A file above the limit, or a file that times out, is
+listed with a visible reason and stops nothing else. The report has, for each file:
+
+- a serial `file-NNN`, the full folder name, and the byte length;
+- the type key or `unmatched`;
+- the filing kind and the period, or `period-unreadable`;
+- the text layer: `yes` or `no`;
+- the fact names that the parser read (names only, no value);
+- the duplicate group number, from an in-memory byte compare of the files of the
+  run (byte length first, then the byte-equality rule of section 5.4, applied in
+  memory; the dry-run calls no evidence store).
+
+The report ends with the counts: files by folder, by type, by period, with a
+text layer, without a text layer, unmatched, and duplicate groups. The report
+holds no amount, no tax id, no payee, no person name, no file name, and no Drive
+id. It goes to `measure/runs/accounting_drive_intake_20261109/` outside git. The
+log holds one count line per subfolder and type, with the same limits. The date
+of the report is 2026-11-14 18:00. The summary goes to the PM.
+
+**Where the year files show in the app.** One read-only view, "Filings and year
+end", at `apps/accounting/app/filings/page.tsx`. It groups the facts rows by tax
+year and by form type. Each row shows the period, the filing kind, the facts
+that exist, the history marker (section 9a), and a link to the private evidence
+through the same guarded read as the intake list. The view has no close, so it
+does not call `canReadMonthlyClose`, which needs a close object. It uses a new
+check, `canReadYearFiles(actor)`: the OWNER and the ACCOUNTANT read the view (the
+permission `accounting:monthly-close:read` for any close). The CEO is refused,
+because the CEO reads locked closes and approved items only, and a year file is
+neither. The view has no edit, no approve, no reject, and no delete control.
+
+**The production import.** It runs with the history import phase, after the
+accounting deploy, on Daniel's word (`deferred:daniel`, plan task 10.10). The
+dry-run report goes to the PM first. The import runs the same `history` mode
+with the year-file walk. It uses only the files that the dry-run lists as
+matched with a readable period. This rests on the one walk function: the import
+and the dry-run list the same files.
 
 ## 10. Functional requirements
 
@@ -1210,6 +1415,64 @@ three types with no real sample are synthetic and marked "no real sample" (PM-12
   the Drive port has no write call (PM-14). The monthly close lists the items of
   PM-10 and PM-15 and changes no value.
 
+- **FR-28.** A new table `accounting_year_file_facts` holds one row for each
+  year file that the history mode reads with the year-file walk (section 9b).
+  Columns: `id` uuid primary key default random; `intake_document_id` uuid not
+  null, unique, references `accounting_intake_documents`; `form_type` text not
+  null (the seven type keys and `wht-filing-pnd3`); `filing_kind` text not null
+  (`form`, `attachment`, `receipt`, `statement`); `period_kind` text not null
+  (`month`, `year`); `period_start` date not null; `period_end` date not null;
+  `tax_year` integer not null; `facts` jsonb not null (the named facts of the
+  section 9b table, each an integer in satang or a date or an integer count; no
+  payee, no person name, no tax id, no account number, no hash). The table is
+  classified `EXEMPT` in `packages/domain/src/tenant-registry.ts`. The intake
+  table gains `duplicate_of_intake_document_id` uuid null. The intake contract
+  accepts `status = duplicate` with exactly one of `duplicate_of_submission_id`
+  and `duplicate_of_intake_document_id`. With neither or both, it fails. The
+  migration also adds the seven new type keys to the `document_type` check. A
+  year-file row has `submission_id` null, `is_history = true`, and
+  `history_source = document`. A year file creates no submission, no audit row of
+  action `submit`, and no close row. The duplicate check of a year file runs pass
+  2 only (section 9b). A year-file row stays a pass 2 candidate, although it names
+  no submission (section 5.5). The intake list shows a year-file duplicate row with
+  the label `duplicate`, no submission link, and the first row as plain text through
+  `duplicate_of_intake_document_id`, and with no approve or reject action. No hash field, no checksum column, and no manifest is
+  added.
+- **FR-29.** The subfolder walk is one input of the one `intakeDriveDocument`
+  history mode. It reads the PDF files directly inside each of the five folders
+  whose exact full name is in the code constant `YEAR_FILE_FOLDER_NAMES`. The
+  walk takes each of the five names from the root or from the one parent whose
+  exact name is `YEAR_FILE_PARENT_FOLDER_NAME`. The walk resolves each folder id at run time
+  from the listing of the root and of the parent, goes two levels deep only, uses
+  exact name match only (no prefix match), reads no PDF directly inside the
+  parent, and writes nothing in Drive. It enforces the 20 MB limit on the
+  downloaded body, and the text-layer read has a per-file timeout (F1001). The import and `dryRunAccountingYearFiles` call this one walk
+  function. A name found in neither place stops the walk with `folder-missing`. A name
+  found in both places, or twice, stops it with `folder-duplicate`. The parent is
+  required: a missing parent stops the walk with `folder-missing`, and a parent
+  listed twice stops it with `folder-duplicate`, both naming the parent. The customer-folder rule of the poll skips every
+  name in the constant and the parent name. The poll of the root otherwise reads the same files with
+  the same naming rule. No Drive id enters the repository, a test, a log line, or
+  a report.
+- **FR-30.** `dryRunAccountingYearFiles` calls the walk of FR-29, lists the year
+  files, and writes the
+  report of section 9b: a serial, the full folder name, the byte length, the type
+  key or `unmatched`, the filing kind, the period, the text layer, the fact names,
+  and the duplicate group (an in-memory byte compare: byte length first, then the
+  byte-equality rule of section 5.4), then the counts. It writes the report to
+  `measure/runs/accounting_drive_intake_20261109/` outside git and one count log
+  line per subfolder and type. It writes no database row, calls no evidence store,
+  and calls no model for a text PDF. A PDF with no text layer is listed and is not
+  sent to a model by the dry-run. The report and the log hold no amount, no tax
+  id, no payee, no person name, no file name, and no Drive id.
+- **FR-31.** The view "Filings and year end" at `apps/accounting/app/filings` is
+  read only. It shows the facts rows by tax year and form type with the history
+  marker and a link to the private evidence, and it has no edit, approve, reject,
+  or delete control. The check `canReadYearFiles(actor)` gates it: the OWNER and
+  the ACCOUNTANT read it, and the CEO and every other role are refused. The production
+  write of the year files runs only after the deploy, on Daniel's word
+  (`deferred:daniel`).
+
 ## 11. Non-functional requirements
 
 - Business logic lives in the backend module. Route handlers stay thin
@@ -1418,6 +1681,52 @@ Each criterion has an automated test that can falsify it.
     it writes no intake row and one count log line, because 13 is not a month
     (PM-16).
 
+48. Given the fake text of a PND.1, PND.1A, PND.3, PND.53, PND.50, a financial
+    statement, a general ledger, and a สบช.3 (fixtures marked "no real sample"
+    where none exists), when the parser runs, then it returns the type key, the
+    filing kind, the period in CE converted from BE, and the facts of the section
+    9b table with amounts in satang. Given a text with no readable period, then
+    the file is `unmatched` for the reason `period-unreadable`, and no row is
+    written (section 9b, FR-28).
+49. Given a fake root listing with the one root year-file folder, the parent
+    folder with four year-file folders inside it, a customer folder, an unnamed
+    folder, and a folder with a name that only starts like a full name, when the
+    year-file walk runs, then it reads the PDFs directly inside the five folders
+    only, it reads no PDF directly inside the parent, it reads nothing deeper, it
+    matches no prefix, and it writes nothing in Drive. Given a listing with a 2568
+    folder in the root, then the walk reads it. Given a listing with one of the
+    five names in neither the root nor the parent, then the walk stops with
+    `folder-missing`. Given a name in both places, or twice, then the walk stops
+    with `folder-duplicate`. Given a listing with no parent, then the walk stops
+    with `folder-missing`, and given a parent listed twice, then it stops with
+    `folder-duplicate`, both naming the parent. Given
+    a file whose downloaded body is above 20 MB, or a text-layer read that passes
+    the timeout, then the file is listed with a visible reason (F1001). Given the
+    same listing, when the poll runs, then it reads the root and the customer
+    folder as before and reads none of the five folders and not the parent
+    (FR-29).
+50. Given a fake run of the year-file dry-run, when the test reads the database
+    fake, the evidence store fake, the model fake, the report, and the log lines,
+    then the database and the evidence store have no call, a text PDF causes no
+    model call, a PDF with no text layer is listed and causes no model call, and
+    the report and the log hold no amount, no tax id, no payee, no file name, and
+    no Drive id. Given two byte-equal files, then the report shows one duplicate
+    group (FR-30).
+51. Given a year file imported twice, when the history mode runs again, then it
+    adds no row. Given a second Drive file with equal bytes, then it writes one
+    intake row with `status = duplicate` and `duplicate_of_intake_document_id`
+    set, and no facts row. Given a voucher candidate with the bytes of a year
+    file, then it does not become a duplicate of the year file. Given a year
+    file, then the code adds no submission row, no audit row of action `submit`,
+    no close row, and no hash field (FR-28). Given the intake list with a
+    year-file duplicate row, then it shows the label `duplicate`, no submission
+    link, the first row as plain text, and no approve or reject action.
+52. Given facts rows of two tax years, when an OWNER or an ACCOUNTANT opens the
+    view "Filings and year end", then it lists the rows by tax year and form type
+    with the history marker and shows no edit, approve, reject, or delete control.
+    Given a CEO, a STAFF, or a CONTRACTOR, then the view returns a refusal
+    (FR-31, `canReadYearFiles`).
+
 ## 13. Out of scope
 
 - The monthly invoice pull job. The PM builds it in `advantage-pr`
@@ -1427,9 +1736,11 @@ Each criterion has an automated test that can falsify it.
 - The deploy and the traffic move (`deferred:daniel`).
 - The Primary Advantage `PA-INV` source and the Storytime receipts, until the PM
   names the source (`deferred:pm`).
-- A load of the `2024` and `2025` folders in this phase. PM order of work
-  (PM-7): those folders come in a later phase, after the 2026 import passes, with
-  a `deferred:pm` start.
+- A posting, a tax computation, or a reconciliation from the year-file amounts.
+  The year-end view is read only (section 9b).
+- Files deeper than the two levels of the year-file walk, any PDF directly inside the
+  parent `เอกสารบัญชีรายปี`, and any file in the
+  folders `2024` and `2025` (DECIDED, Q30, PM, 2026-11-13 13:25).
 - The double-entry ledger, the chart of accounts, VAT, withholding tax, and the
   tax invoices. `accounting_app_foundation_20260820` owns them.
 - A new Cloud SQL instance. The accounting database stays on the shared instance
@@ -1842,6 +2153,7 @@ stops for no item in this list.
   manifest. This track therefore adds none (PM-7). If the PM still wants a hash,
   the change needs a new PM answer and a stop under the hashing policy. The PM
   decision of 2026-11-11 (PM-11) says "content hash" and gets the same reading.
+  The PM of 2026-11-13 13:25 accepted the same reading for the year files (Q28).
 - **Q14. How does the parser read the date forms? (G6)**
   Default: one reader for each form of section 8, note 5. A Buddhist Era year
   converts to a Gregorian year by subtracting 543. A date that no reader can read
@@ -2108,6 +2420,74 @@ PM-22 replaces the pass 1 source of section 5.5 and the member
 `listRecentWithEvidence` of section 5.8. PM-23 adds one `deferred:pm` IAM setup
 item. No other decision of section 14 changes.
 
+### 14.8 PM order of 2026-11-13 (the year files) (DECIDED)
+
+The PM answered on 2026-11-13 13:25, quoted exactly: "Q28 no hash, Drive file id +
+byte compare (sameEvidenceBytes): accepted; my 'hash' wording is withdrawn. Q29 the
+poll skips the 5 subfolder names: accepted. Q30 old 2024/2025 folders not read:
+accepted. Q27 accepted. Task 10.10 is deferred:daniel only for his deploy word; the
+rest is deferred:pm."
+
+
+- **PM-24 (the year files for 2024 and 2025). DECIDED (PM, 2026-11-13).** The
+  owner order (Tasks, 2026-11-13 12:33) is quoted in section 9b. The PM added
+  "accountant year files 2024 and 2025" to the A-52 history import, and ordered a
+  dry-run structure report on this machine for 2026-11-14 18:00. The production
+  import runs with the history import phase after the accounting deploy, on
+  Daniel's word (`deferred:daniel`). The order of work: after the Storytime 15:00
+  link. Sections 9b, FR-28 to FR-31, criteria 48 to 52, plan Phase 10. The
+  `deferred:pm` start gate of the old Phase 10 is removed. Task 10.10 is
+  `deferred:daniel` for Daniel's deploy word only; the rest of it is
+  `deferred:pm` (PM, 2026-11-13 13:25).
+- **Q27. Which facts does each year-file type hold? DECIDED (PM, 2026-11-13 13:25).** Default: the lists of the
+  section 9b table. The fake fixtures of Red task 10.1 refine a list, and a
+  change of a list needs no new decision when it only adds or removes a fact of
+  the same kind.
+- **Q28. The PM order says "file hash" and "duplicates by hash". DECIDED (PM, 2026-11-13 13:25).** Default: no
+  hash. The file identity is the Drive file id, and the duplicate check is the byte
+  compare `sameEvidenceBytes` with `evidence_byte_size` as the filter. The reason
+  is AGENTS.md "Hashing and Provenance Policy", spec section 5.1, and the PM-11
+  precedent.
+- **Q29. The poll change. DECIDED (PM, 2026-11-13 13:25).** Default: the customer-folder rule skips the five names
+  of `YEAR_FILE_FOLDER_NAMES`. Without it the poll reads the five subfolders as
+  customer folders (school invoices). The PM order says the poll of the root stays
+  unchanged; this skip is the one needed exception and it removes reach only.
+- **Q30. The old folders `2024` and `2025`. DECIDED (PM, 2026-11-13 13:25).** Default: the walk does not read
+  them. The PM scan names five subfolders only. If those two folders hold year
+  files, the PM adds their names to the constant and the walk reads them.
+
+**Effect on earlier rules.** PM-24 replaces the last paragraph of section 9a, the
+"later phase" bullet of section 13, and the `deferred:pm` start of the old
+Phase 10. The poll of the root and the 2026 voucher history do not change. No
+other decision of section 14 changes.
+
+### 14.9 PM order of 2026-11-14 (the real folder layout) (DECIDED)
+
+The read-only listing of 2026-11-14 (plan tasks 10.7 and 10.12) found the real
+layout of the year-file folders. The root `Accounting` holds these direct
+children: the folder `Fwd: เอกสารปี 2567 (Fwd: Document from 2024)` (9 PDF
+files), the parent folder `เอกสารบัญชีรายปี` (0 PDF files, 4 subfolders), the
+customer folder, `2024`, `2025`, and root PDF files. Inside `เอกสารบัญชีรายปี`
+are four folders: `Fwd: เอกสารปี 2568 (Fwd: Document from 2025)` (35),
+`Fwd: เอกสารปี 2568-1 (Fwd: Document Year 2025-1)` (10),
+`Fwd: เอกสารปี 2568-2 (Fwd: Document Year 2025-2)` (38), and
+`Fwd: เอกสารปี 2568-3 (Fwd: Document Year 2025-3)` (26). The total is 118 PDF
+files, equal to the old table. The short names of section 9b were the names of
+the 2026-11-13 scan.
+
+The PM decided on 2026-11-14 04:2x, quoted exactly: "A-52 year-file folders: your
+default: the five exact full names, a two-level walk through the one named parent
+เอกสารบัญชีรายปี, PDFs only directly inside the five, AND the parent in the poll
+skip list. No prefix match."
+
+- **Effect.** Section 9b, FR-29, FR-30, and criterion 49 follow this decision. The
+  constant `YEAR_FILE_PARENT_FOLDER_NAME` holds the parent name. Q29 and Q30 keep
+  their quotes. The Q29 skip list grows from five names to five names and the
+  parent. Q30 does not change.
+- **F1001 (Review B, plan task 10.13).** The walk enforces the 20 MB limit on the
+  downloaded body, and the text-layer read has a per-file timeout. The dry-run
+  uses the same walk, so it has the same limits.
+
 ## 15. Deferred tasks
 
 | Task | Owner | Reason |
@@ -2124,4 +2504,5 @@ item. No other decision of section 14 changes.
 | The bank statement password in Secret Manager | `deferred:daniel` | Daniel enters it once at setup, at deploy time (PM-13); the spec holds no value |
 | The production history write for January to October 2026 | `deferred:daniel` | The dry-run report goes to Daniel first; the write runs on his word |
 | Known limit: a submission typed by hand in the app has no intake row, so pass 2 of the content-duplicate lookup does not cover it; pass 1 reads the newest 500 submissions of the company and covers it there; a hand-made submission older than the newest 500 submissions is not found | stated limit (D-33, PM-22) | A backfill of the hand-made submissions is out of scope; the intake table is new and starts full |
+| The production import of the year files for 2024 and 2025 | `deferred:daniel` for Daniel's deploy word only; the rest is `deferred:pm` | The dry-run report goes to the PM first; the import runs after the deploy, on Daniel's word (PM-24, PM answer of 2026-11-13 13:25, plan task 10.10) |
 | The deploy and the traffic move | `deferred:daniel` | Daniel's word |

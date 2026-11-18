@@ -5,7 +5,7 @@ import {
   splitDisplayWords,
   tokenizeWords,
   type ReadAlongSentence,
-} from "../align";
+} from "@reading-advantage/read-along/lib/align";
 import audioDropped from "./fixtures/audio-dropped.json";
 import contraction from "./fixtures/contraction.json";
 import curlyQuote from "./fixtures/curly-quote.json";

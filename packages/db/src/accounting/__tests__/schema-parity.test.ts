@@ -42,7 +42,7 @@ function tableContract(table: PgTable): unknown {
 }
 
 describe("Accounting schema entrypoint parity", () => {
-  it("exports exactly the six Accounting tables", () => {
+  it("exports exactly the seven Accounting tables", () => {
     const exported = Object.keys(accountingSchema).filter((key) =>
       key.startsWith("accounting"),
     );
@@ -54,6 +54,7 @@ describe("Accounting schema entrypoint parity", () => {
         "accountingMonthlyCloses",
         "accountingMonthlyCloseAuditEvents",
         "accountingIntakeLeases",
+        "accountingYearFileFacts",
       ]),
     );
   });

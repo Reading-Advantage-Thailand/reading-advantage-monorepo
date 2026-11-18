@@ -197,8 +197,10 @@ describe("Phase 4 teacher lesson flow (AC-9.2)", () => {
         expect(screenText, `${place}: the screen must show the step title`).toContain(
           step.title.en,
         );
+        // The approved pin approves the loops of w01, so the screen shows
+        // `loopMinutes ?? minutes` (AC-13.7; the approved content of strategy P2).
         expect(screenText, `${place}: the screen must show the step time`).toContain(
-          `${step.minutes} min`,
+          `${step.loopMinutes ?? step.minutes} min`,
         );
         for (const heading of STEP_HEADINGS) {
           expect(screenText, `${place}: the screen must show the heading "${heading}"`).toContain(

@@ -1,0 +1,34 @@
+# The upload of a review build of the Storytime app (plan task 6.2, round 8).
+#
+# It keeps only what the storytime image needs: apps/storytime, packages, the root manifests,
+# and the lock and workspace files. Gitignore has a strict rule: no rule re-includes a file
+# below an ignored folder. So this file uses /apps/* plus !/apps/storytime, and never a bare *.
+# The CD build does not use this file; it uses the root .gcloudignore.
+/*
+!/apps
+/apps/*
+!/apps/storytime
+!/packages
+!/package.json
+!/pnpm-lock.yaml
+!/pnpm-workspace.yaml
+!/turbo.json
+!/.pnpmfile.cjs
+**/node_modules
+**/.next
+**/.env
+**/.env.*
+**/*.pem
+**/*.key
+**/credentials*.json
+**/*.p12
+**/*.pfx
+**/service-account*.json
+**/*-key.json
+**/.npmrc
+**/.netrc
+**/.docker/
+**/id_rsa*
+**/id_ed25519*
+**/id_ecdsa*
+**/*.ppk

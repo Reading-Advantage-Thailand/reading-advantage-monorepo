@@ -105,6 +105,8 @@ const IMAGE_ASSERTIONS = [
   "adds exactly one new stage named runner-bundle and no new final stage",
   "bundles app/lib/intake-runner.ts into dist/intake-runner.mjs",
   "holds a full bundle command with no --packages=external",
+  "starts the runner-bundle stage FROM the stage that runs the workspace package build",
+  "builds the esbuild stage on a stage chain that includes the workspace package build stage",
   "uses the same absolute path for the bundle outfile and the web stage COPY source",
   "adds exactly one COPY line to the web stage and copies no node_modules for the bundle",
   "creates the Cloud Run job accounting-intake-poll on the same image with the node command",
@@ -211,6 +213,24 @@ function readLastStageText(): string {
   const last = matches[matches.length - 1];
   if (last === undefined || last.index === undefined) return "";
   return dockerfile.slice(last.index);
+}
+
+/**
+ * Reads every stage of the Dockerfile with its base and its body text.
+ * @returns The stages in the order of the file.
+ */
+function readStages(): { name: string; base: string; text: string }[] {
+  const matches = [
+    ...dockerfile.matchAll(/^FROM\s+(?<base>\S+)(?:\s+AS\s+(?<name>\S+))?\s*$/gmu),
+  ];
+  return matches.map((match, index) => {
+    const end = matches[index + 1]?.index ?? dockerfile.length;
+    return {
+      name: match.groups?.name ?? "",
+      base: match.groups?.base ?? "",
+      text: dockerfile.slice(match.index ?? 0, end),
+    };
+  });
 }
 
 /**
@@ -354,6 +374,44 @@ describe("the accounting image", () => {
     expect(bundleCommand).toContain("--banner:js=");
     expect(bundleCommand).toContain("createRequire");
     expect(bundleCommand).not.toContain("--packages=external");
+  });
+
+  it("starts the runner-bundle stage FROM the stage that runs the workspace package build", () => {
+    const stages = readStages();
+    const buildStage = stages.find((stage) =>
+      stage.text.includes("pnpm turbo run build --filter=accounting"),
+    );
+    expect(buildStage?.name, "The stage that runs the turbo build").toBeTruthy();
+    const bundleStage = stages.find((stage) => stage.name === "runner-bundle");
+    expect(bundleStage, "The runner-bundle stage").toBeDefined();
+    expect(
+      bundleStage?.base,
+      "The runner-bundle stage must start FROM the stage that builds the workspace packages",
+    ).toBe(buildStage?.name);
+  });
+
+  it("builds the esbuild stage on a stage chain that includes the workspace package build stage", () => {
+    const stages = readStages();
+    const buildStage = stages.find((stage) =>
+      stage.text.includes("pnpm turbo run build --filter=accounting"),
+    );
+    expect(buildStage?.name, "The stage that runs the turbo build").toBeTruthy();
+    const esbuildStage = stages.find(
+      (stage) =>
+        stage.text.includes("esbuild") &&
+        stage.text.includes("app/lib/intake-runner.ts"),
+    );
+    expect(esbuildStage, "The stage that runs esbuild on the runner").toBeDefined();
+    const chain: string[] = [];
+    let current = esbuildStage?.name ?? "";
+    while (current !== "" && !chain.includes(current)) {
+      chain.push(current);
+      current = stages.find((stage) => stage.name === current)?.base ?? "";
+    }
+    expect(
+      chain,
+      "The esbuild stage must descend from the stage that builds the workspace packages",
+    ).toContain(buildStage?.name);
   });
 
   it("uses the same absolute path for the bundle outfile and the web stage COPY source", () => {

@@ -10,7 +10,7 @@ set -uo pipefail
 # Rows (each prints PASS: or FAIL: with labeled values):
 #   1 captures    SCREENS x VIEWPORTS x LOCALES (24): console_errors, broken_pictures, tap_under_48,
 #                 clipped_text, page_overflow, and contrast_fail are all 0.
-#   2 hero        song_stage_height_px 220 to 240, hero_band_height_px_phone 92 to 100,
+#   2 hero        song_stage_height_px 685 to 700, hero_band_height_px_phone 92 to 100,
 #                 hero_band_height_px_tablet 116 to 124, and the first-view rules.
 #   3 frame       the game bar shows the route level and week; the plaque holds the week title;
 #                 a 60-character title stays inside the plaque (Range text box against the plaque
@@ -52,9 +52,17 @@ set -uo pipefail
 #                 fallback, the sign-in page, and the join page: console_errors=0,
 #                 tap_under_48=0, page_overflow=0, chrome_contrast_min of 4.5 or more, and
 #                 chrome_brand_pairs of 1 or more (decision 1).
+#  20 teacher entry  (task 6.2 round 7, PM 2026-11-14) at 390x844 and 1440x900, with a teacher
+#                 account and a family account that sign in through the page with no `next`:
+#                 the teacher lands on /th/teacher/2/1 (the first open week of the fixture), the
+#                 family lands on /th/st (`teacher_entry_landing_path_*`); the teacher week page and
+#                 the teacher day page hold a visible link of 44 px or more to /th/st/2/1; the /th/st
+#                 page and the /th/st/2/1 page hold a visible link to /th/teacher/2/1 for the
+#                 teacher and no link to /teacher/ for the family; the link labels are Thai on /th
+#                 and English on /en; each link opens its page; no page scrolls sideways.
 # No row plays a recording (M21). The song row sets currentTime and fires timeupdate (Q33).
 # A headless run is not phone evidence. The gate reads no file under ~/Desktop/handoff except the
-# Phase 1 media root (STORYTIME_GATE_MEDIA_ROOT, default handoff/w01-storytime-app-package-r2).
+# Phase 1 media root (STORYTIME_GATE_MEDIA_ROOT, default handoff/w01-storytime-app-package-r5).
 #
 # `--self-test` runs the verdict self-test only (no build, no database, no server).
 # The whole run (Postgres, build, server, Playwright) is one heavy-run job. Without --locked the
@@ -83,14 +91,14 @@ STORAGE_PGID=""
 STORAGE_PORT_RUN=""
 FIXTURE="$TMP_DIR/content"
 PLAYWRIGHT="$APP/.next/look-phase2-browser-gate-$$.mjs"
-MEDIA_ROOT="${STORYTIME_GATE_MEDIA_ROOT:-$HOME/Desktop/handoff/w01-storytime-app-package-r2}"
+MEDIA_ROOT="${STORYTIME_GATE_MEDIA_ROOT:-$HOME/Desktop/handoff/w01-storytime-app-package-r5}"
 
 # The capture matrix of AC-2.2: 4 screens x 3 viewports x 2 locales = 24 captures.
 SCREENS=(week reader song decodable)
 VIEWPORTS=(390x844 1024x768 844x390)
 LOCALES=(th en)
 # The extra rows of P2.4 that the check list names.
-EXTRA_ROWS=(question not_found sign_in join)
+EXTRA_ROWS=(question not_found sign_in join teacher_entry)
 CAPTURES=$(( ${#SCREENS[@]} * ${#VIEWPORTS[@]} * ${#LOCALES[@]} ))
 echo "captures=$CAPTURES"
 if [ "$CAPTURES" -ne 24 ]; then fail "The capture matrix holds $CAPTURES captures, not 24 (captures=$CAPTURES)"; fi
@@ -119,7 +127,7 @@ stop_group() {
 cleanup() {
   stop_group "$SERVER_PID" "$SERVER_PGID" "$SERVER_PORT"
   stop_group "$STORAGE_PID" "$STORAGE_PGID" "$STORAGE_PORT_RUN"
-  podman rm -f "$CONTAINER" >/dev/null 2>&1 || true
+  podman rm -f -v "$CONTAINER" >/dev/null 2>&1 || true
   rm -f "$PLAYWRIGHT"
   rm -rf "$TMP_DIR"
 }
@@ -466,7 +474,7 @@ const goodCapture = { console_errors: 0, broken_pictures: 0, tap_under_48: 0, cl
 const mutants = [
   countVerdict(23) === false,
   pinVerdict(172, 92, 100) === false,
-  pinVerdict(172, 220, 240) === false,
+  pinVerdict(650, 685, 700) === false,
   pinVerdict(Number.NaN, 92, 100) === false,
   rowsVerdict(0) === false,
   captureVerdict({ ...goodCapture, tap_under_48: 1 }) === false,
@@ -548,7 +556,7 @@ const mutants = [
   brandTeacherVerdict({ ...goodBrandTeacher, chrome_brand_pairs: 0 }) === false,
 ];
 const controls = [
-  countVerdict(24), pinVerdict(96, 92, 100), pinVerdict(230, 220, 240), pinVerdict(120, 116, 124),
+  countVerdict(24), pinVerdict(96, 92, 100), pinVerdict(692, 685, 700), pinVerdict(120, 116, 124),
   rowsVerdict(3), captureVerdict(goodCapture), edgeVerdict(10, 10),
   fontVerdict(2, 10), fontVerdict(2, 2),
   motionOffender("none", "none", "0.15s") === false,
@@ -791,7 +799,11 @@ const SONG_LINE_TIME = (() => {
   try {
     const week = JSON.parse(fs.readFileSync(`${fixtureDir}/l2/w01.json`, "utf8"));
     const times = week.song.times ?? [];
-    return times.length > 1 ? Number(times[1].startTime) + 0.01 : 12;
+    // The song component subtracts `videoLeadInSeconds` from currentTime (the video starts the
+    // song audio late), so the gate must add the lead-in to line 1. Gate repair, task 6.2
+    // round 7 (9 song rows failed with the plain startTime against the r5 fixture).
+    const leadIn = Number(week.song.videoLeadInSeconds) || 0;
+    return times.length > 1 ? Number(times[1].startTime) + leadIn + 0.01 : 12;
   } catch { return 12; }
 })();
 
@@ -944,6 +956,7 @@ async function firstView(page) {
       stage: height(document.querySelector(".song-stage")),
       play_bottom: bottom(document.querySelector(".song-stage ~ button")),
       line_bottom: bottom(document.querySelector('li[data-line-index="1"][aria-current="true"]')),
+      page_height: Math.round(document.documentElement.scrollHeight),
       arrows_found: (prev ? 1 : 0) + (next ? 1 : 0),
       arrows_bottom: Math.max(prev ? bottom(prev) : NONE, next ? bottom(next) : NONE),
       audio_found: audio.length,
@@ -959,12 +972,15 @@ await guarded("row 2 hero", async () => {
   const phoneContext = await makeContext(phone);
   for (const locale of LOCALES) {
     const page = await phoneContext.newPage();
-    // Song: the cover card is 220 to 240 px; Play and the active line sit in the first view.
+    // Song (task 6.2, finding 3): the phone video fills the width of the screen in the 9:16
+    // shape, so the stage is 685 to 700 px high at 390x844. The Play control and the active
+    // lyric line stay inside the page, so a scroll reaches them, and the lyrics may sit
+    // under the lower edge (PM order).
     const song = await openScreen(page, locale, "song");
     const s = await firstView(page);
     row(`hero song ${locale} 390x844`,
-      pinVerdict(s.stage, 220, 240) && s.play_bottom <= 844 && s.line_bottom <= 844 && song.activeLine === 1,
-      `song_stage_height_px=${s.stage} play_bottom_px=${s.play_bottom} active_line_bottom_px=${s.line_bottom} active_line_index=${song.activeLine}`);
+      pinVerdict(s.stage, 685, 700) && s.play_bottom <= s.page_height && s.line_bottom <= s.page_height && song.activeLine === 1,
+      `song_stage_height_px=${s.stage} play_bottom_px=${s.play_bottom} active_line_bottom_px=${s.line_bottom} page_height_px=${s.page_height} active_line_index=${song.activeLine}`);
     // Decodable: the band is 92 to 100 px; the arrows sit in the first view.
     await openScreen(page, locale, "decodable");
     const d = await firstView(page);
@@ -2727,6 +2743,227 @@ await guarded("row 19 brand focus", async () => {
   row("brand focus total", cases === FOCUS_TARGETS.length && failures === 0,
     "brand_focus_cases=" + cases + " brand_focus_failures=" + failures
     + (sample ? " first=" + sample : ""));
+});
+
+// ---- Row 20: the teacher entry (task 6.2 round 7, PM order points 1 to 4). ----
+/** The two viewports of the PM order. */
+const ENTRY_VIEWPORTS = [
+  { text: "390x844", width: 390, height: 844, phone: true },
+  { text: "1440x900", width: 1440, height: 900, phone: false },
+];
+/** The first open week of the gate fixture: the shipped w01 of level 2 (every other week is a level 3 clone). */
+const ENTRY_WEEK = "2/1";
+const THAI_SCRIPT = /[฀-๿]/;
+/** The smallest side of a link that a finger taps. */
+const ENTRY_TAP_MIN_PX = 44;
+
+/**
+ * The verdict of one link of the teacher entry.
+ * @param link The link as the page reads it, or `undefined` when no link holds the address.
+ * @param thai `true` when the label must hold Thai script, `false` when it must hold none.
+ * @returns `true` when the link is found, visible, labeled in the right script, and 44 px or more.
+ */
+function entryLinkVerdict(link, thai) {
+  if (!link || link.visible !== true) return false;
+  if (typeof link.text !== "string" || link.text.trim().length === 0) return false;
+  if (THAI_SCRIPT.test(link.text) !== thai) return false;
+  return Math.min(link.w, link.h) >= ENTRY_TAP_MIN_PX;
+}
+/**
+ * The verdict of a landing: the exact path, no sideways scroll.
+ * @param landing The landing facts.
+ * @param expected The expected pathname.
+ * @returns `true` when the browser ended on the expected path and the page fits the width.
+ */
+function entryLandingVerdict(landing, expected) {
+  return landing.path === expected && landing.overflow === 0;
+}
+/** Reads the links of a page with their boxes. */
+async function readEntryLinks(page) {
+  return page.evaluate(() => [...document.querySelectorAll("a[href]")].map((a) => {
+    const rect = a.getBoundingClientRect();
+    const style = getComputedStyle(a);
+    return {
+      href: a.getAttribute("href") ?? "",
+      text: (a.textContent ?? "").trim(),
+      w: Math.round(rect.width),
+      h: Math.round(rect.height),
+      visible: rect.width > 0 && rect.height > 0 && style.visibility !== "hidden" && style.display !== "none",
+    };
+  }));
+}
+/** Reads the horizontal overflow of the page in pixels (0 when the page fits). */
+async function readEntryOverflow(page) {
+  return page.evaluate(() => Math.max(0, Math.round(document.documentElement.scrollWidth) - Math.round(window.innerWidth)));
+}
+/** Opens a context at one viewport, signs one account in through the page with no next, and gives the page. */
+async function signInThroughPage(vp, user, password, locale) {
+  const context = await browser.newContext({
+    viewport: { width: vp.width, height: vp.height },
+    deviceScaleFactor: vp.phone ? 2 : 1,
+    isMobile: vp.phone,
+    hasTouch: vp.phone,
+    reducedMotion: "reduce",
+  });
+  const page = await context.newPage();
+  await page.goto(`${base}/${locale}/sign-in`, { waitUntil: "domcontentloaded" });
+  await page.fill('input[name="username"]', user);
+  await page.fill('input[name="password"]', password);
+  await Promise.all([
+    page.waitForURL((url) => !url.pathname.endsWith("/sign-in"), { timeout: 20000 }),
+    page.click('button[type="submit"]'),
+  ]);
+  await settle(page);
+  return { context, page };
+}
+/** Opens one path in the signed-in page and reads its links and overflow. */
+async function entryVisit(page, path) {
+  const response = await page.goto(base + path, { waitUntil: "load" });
+  await settle(page);
+  return { status: response ? response.status() : 0, path: new URL(page.url()).pathname, links: await readEntryLinks(page), overflow: await readEntryOverflow(page) };
+}
+/** Counts the links of a page that point into the teacher view. */
+const teacherLinkCount = (links) => links.filter((link) => link.href.includes("/teacher/")).length;
+
+await guarded("teacher_entry verdict self-check", async () => {
+  const good = { href: "/th/st/2/1", text: "ดูหน้าเด็ก", w: 120, h: 48, visible: true };
+  const mutants = [
+    undefined,
+    { ...good, visible: false },
+    { ...good, text: "" },
+    { ...good, text: "Child view" },
+    { ...good, h: 30 },
+    { ...good, w: 30 },
+  ];
+  const rejected = mutants.filter((link) => !entryLinkVerdict(link, true)).length;
+  const english = entryLinkVerdict({ ...good, text: "Child view" }, false);
+  const thaiOnEn = entryLinkVerdict(good, false);
+  const landingGood = entryLandingVerdict({ path: "/th/teacher/2/1", overflow: 0 }, "/th/teacher/2/1");
+  const landingBad = [
+    entryLandingVerdict({ path: "/th/st", overflow: 0 }, "/th/teacher/2/1"),
+    entryLandingVerdict({ path: "/th/teacher/2/1", overflow: 12 }, "/th/teacher/2/1"),
+  ].filter(Boolean).length;
+  const good3 = entryLinkVerdict(good, true) && english && !thaiOnEn && landingGood && landingBad === 0;
+  emit("teacher_entry_mutants_rejected", rejected);
+  row("teacher_entry verdict self-check the verdicts reject the broken links and landings", good3 && rejected === mutants.length,
+    "teacher_entry_mutants_rejected=" + rejected + " teacher_entry_mutants_checked=" + mutants.length);
+});
+
+await guarded("teacher_entry rows", async () => {
+  const teacherPass = passwordFor(TEACHER_USER);
+  const familyPass = passwordFor(USER);
+  if (teacherPass === "" || familyPass === "") {
+    row("teacher_entry accounts the card list holds both accounts", false, "teacher_entry_accounts=0");
+    return;
+  }
+  // Each account signs in 2 times through the page at th and 1 time at en: the account limit is 5
+  // attempts for 15 minutes, and row 1 or row 18 holds one more sign-in of the same account.
+  for (const vp of ENTRY_VIEWPORTS) {
+    // ---- the teacher, th ----
+    {
+      const { context, page } = await signInThroughPage(vp, TEACHER_USER, teacherPass, "th");
+      try {
+        const landingLinks = await readEntryLinks(page);
+        const landing = { path: new URL(page.url()).pathname, overflow: await readEntryOverflow(page) };
+        const childOnWeek = landingLinks.find((link) => link.href === `/th/st/${ENTRY_WEEK}`);
+        row(`teacher_entry landing teacher th ${vp.text}`, entryLandingVerdict(landing, `/th/teacher/${ENTRY_WEEK}`),
+          `teacher_entry_landing_path_${vp.text}=${landing.path} expected=/th/teacher/${ENTRY_WEEK} page_overflow=${landing.overflow}`);
+        row(`teacher_entry child link on the teacher week th ${vp.text}`, entryLinkVerdict(childOnWeek, true),
+          `child_link_found=${childOnWeek ? 1 : 0} text=${JSON.stringify(childOnWeek?.text ?? "")} min_side_px=${childOnWeek ? Math.min(childOnWeek.w, childOnWeek.h) : 0} visible=${childOnWeek?.visible ? 1 : 0}`);
+
+        const day = await entryVisit(page, `/th/teacher/${ENTRY_WEEK}/1`);
+        // Round 10 (PM 2026-11-14): the day page button opens that day, so day 1 holds ?day=1.
+        const childOnDay = day.links.find((link) => link.href === `/th/st/${ENTRY_WEEK}?day=1`);
+        row(`teacher_entry child link on the teacher day th ${vp.text}`, day.status === 200 && entryLinkVerdict(childOnDay, true) && day.overflow === 0,
+          `status=${day.status} child_link_found=${childOnDay ? 1 : 0} text=${JSON.stringify(childOnDay?.text ?? "")} page_overflow=${day.overflow}`);
+
+        const st = await entryVisit(page, "/th/st");
+        const teacherOnSt = st.links.find((link) => link.href === `/th/teacher/${ENTRY_WEEK}`);
+        row(`teacher_entry teacher link on /th/st ${vp.text}`, st.status === 200 && entryLinkVerdict(teacherOnSt, true) && st.overflow === 0,
+          `status=${st.status} teacher_link_found=${teacherOnSt ? 1 : 0} text=${JSON.stringify(teacherOnSt?.text ?? "")} page_overflow=${st.overflow}`);
+
+        const week = await entryVisit(page, `/th/st/${ENTRY_WEEK}`);
+        const teacherOnWeek = week.links.find((link) => link.href === `/th/teacher/${ENTRY_WEEK}`);
+        row(`teacher_entry teacher link on the child week th ${vp.text}`, week.status === 200 && entryLinkVerdict(teacherOnWeek, true) && week.overflow === 0,
+          `status=${week.status} teacher_link_found=${teacherOnWeek ? 1 : 0} text=${JSON.stringify(teacherOnWeek?.text ?? "")} page_overflow=${week.overflow}`);
+
+        // Each link opens its page.
+        await page.goto(`${base}/th/st`, { waitUntil: "load" });
+        const toTeacher = page.locator(`a[href="/th/teacher/${ENTRY_WEEK}"]`).first();
+        let clickedTeacher = "";
+        if ((await toTeacher.count()) > 0) {
+          await Promise.all([page.waitForURL((url) => url.pathname.includes("/teacher/"), { timeout: 15000 }).catch(() => {}), toTeacher.click()]);
+          clickedTeacher = new URL(page.url()).pathname;
+        }
+        let clickedChild = "";
+        const toChild = page.locator(`a[href="/th/st/${ENTRY_WEEK}"]`).first();
+        if (clickedTeacher !== "" && (await toChild.count()) > 0) {
+          await Promise.all([page.waitForURL((url) => url.pathname.startsWith("/th/st/"), { timeout: 15000 }).catch(() => {}), toChild.click()]);
+          clickedChild = new URL(page.url()).pathname;
+        }
+        row(`teacher_entry each link opens its page th ${vp.text}`, clickedTeacher === `/th/teacher/${ENTRY_WEEK}` && clickedChild === `/th/st/${ENTRY_WEEK}`,
+          `teacher_link_opens=${clickedTeacher || "none"} child_link_opens=${clickedChild || "none"}`);
+      } finally {
+        await page.close();
+        await context.close();
+      }
+    }
+
+    // ---- the family account, th ----
+    {
+      const { context, page } = await signInThroughPage(vp, USER, familyPass, "th");
+      try {
+        const landing = { path: new URL(page.url()).pathname, overflow: await readEntryOverflow(page) };
+        const onLanding = teacherLinkCount(await readEntryLinks(page));
+        const week = await entryVisit(page, `/th/st/${ENTRY_WEEK}`);
+        const part = await entryVisit(page, `/th/st/${ENTRY_WEEK}?part=book`);
+        const teacherLinks = onLanding + teacherLinkCount(week.links) + teacherLinkCount(part.links);
+        row(`teacher_entry landing family th ${vp.text}`, entryLandingVerdict(landing, "/th/st"),
+          `teacher_entry_landing_path_${vp.text}=${landing.path} expected=/th/st page_overflow=${landing.overflow}`);
+        row(`teacher_entry no teacher link for the family th ${vp.text}`, week.status === 200 && part.status === 200 && teacherLinks === 0,
+          `family_teacher_links=${teacherLinks} (st=${onLanding}, week=${teacherLinkCount(week.links)}, part=${teacherLinkCount(part.links)}) week_status=${week.status} part_status=${part.status}`);
+      } finally {
+        await page.close();
+        await context.close();
+      }
+    }
+  }
+
+  // ---- English, one sign-in for each account at 390x844 ----
+  const phone = ENTRY_VIEWPORTS[0];
+  {
+    const { context, page } = await signInThroughPage(phone, TEACHER_USER, teacherPass, "en");
+    try {
+      const landing = { path: new URL(page.url()).pathname, overflow: await readEntryOverflow(page) };
+      const links = await readEntryLinks(page);
+      const child = links.find((link) => link.href === `/en/st/${ENTRY_WEEK}`);
+      const st = await entryVisit(page, "/en/st");
+      const teacherOnSt = st.links.find((link) => link.href === `/en/teacher/${ENTRY_WEEK}`);
+      const week = await entryVisit(page, `/en/st/${ENTRY_WEEK}`);
+      const teacherOnWeek = week.links.find((link) => link.href === `/en/teacher/${ENTRY_WEEK}`);
+      row("teacher_entry landing teacher en 390x844", entryLandingVerdict(landing, `/en/teacher/${ENTRY_WEEK}`),
+        `teacher_entry_landing_path_en=${landing.path} expected=/en/teacher/${ENTRY_WEEK} page_overflow=${landing.overflow}`);
+      row("teacher_entry labels are English on /en 390x844",
+        entryLinkVerdict(child, false) && entryLinkVerdict(teacherOnSt, false) && entryLinkVerdict(teacherOnWeek, false),
+        `child_text=${JSON.stringify(child?.text ?? "")} st_text=${JSON.stringify(teacherOnSt?.text ?? "")} week_text=${JSON.stringify(teacherOnWeek?.text ?? "")}`);
+    } finally {
+      await page.close();
+      await context.close();
+    }
+  }
+  {
+    const { context, page } = await signInThroughPage(phone, USER, familyPass, "en");
+    try {
+      const landing = { path: new URL(page.url()).pathname, overflow: await readEntryOverflow(page) };
+      const week = await entryVisit(page, `/en/st/${ENTRY_WEEK}`);
+      const teacherLinks = teacherLinkCount(await readEntryLinks(page)) + teacherLinkCount(week.links);
+      row("teacher_entry family en 390x844 lands on /en/st and sees no teacher link", entryLandingVerdict(landing, "/en/st") && teacherLinks === 0,
+        `teacher_entry_landing_path_en_family=${landing.path} family_teacher_links=${teacherLinks}`);
+    } finally {
+      await page.close();
+      await context.close();
+    }
+  }
 });
 
 row("row count the rows ran", rowsVerdict(rowCount), `row_count=${rowCount}`);

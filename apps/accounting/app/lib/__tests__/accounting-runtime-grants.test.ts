@@ -2,14 +2,20 @@
  * Red test for the Accounting runtime grants (FR-12a).
  *
  * The test reads `apps/accounting/scripts/accounting-runtime-grants.sql` as an
- * artifact and asserts the six table grants and the append-only close audit
+ * artifact and asserts the seven table grants and the append-only close audit
  * rule. It does not hold the runtime role; the runtime probe proves the grants
  * on the live database.
+ *
+ * Red retry r3 (plan task 10.3, orchestrator default, recorded deviation): the
+ * new table `accounting_year_file_facts` of FR-28 joins the contract with
+ * SELECT and INSERT only. FR-12a: a new table needs an explicit reviewed grant
+ * before the runtime probe passes. No UPDATE and no DELETE: the facts rows are
+ * immutable once the year-file history write lands.
  *
  * Anti-pattern coverage:
  * - A2: the close audit grant is checked as an exact privilege list, not by a
  *   broad word match.
- * - A3: counts are labeled integers (`grant_statements=6`, `grant_cases=6`).
+ * - A3: counts are labeled integers (`grant_statements=7`, `grant_cases=7`).
  * - A4: the expected case count is asserted before the grant checks run.
  * - A5: every failure names the table whose grant is missing.
  * - A7: the append-only check reads one named table; it uses no bare English
@@ -55,6 +61,7 @@ const EXPECTED_GRANTS: Readonly<Record<string, readonly string[]>> = {
   accounting_monthly_closes: ["SELECT", "INSERT", "UPDATE"],
   accounting_monthly_close_audit_events: ["SELECT", "INSERT"],
   accounting_intake_leases: ["SELECT", "INSERT", "UPDATE", "DELETE"],
+  accounting_year_file_facts: ["SELECT", "INSERT"],
 };
 
 const NEW_TABLES = [
@@ -62,6 +69,7 @@ const NEW_TABLES = [
   "accounting_monthly_closes",
   "accounting_monthly_close_audit_events",
   "accounting_intake_leases",
+  "accounting_year_file_facts",
 ] as const;
 
 const EXISTING_TABLES = [
@@ -70,11 +78,11 @@ const EXISTING_TABLES = [
 ] as const;
 
 const EXPECTED_GRANT_COUNT = Object.keys(EXPECTED_GRANTS).length;
-const GRANT_CASES = 6;
+const GRANT_CASES = 7;
 
-if (EXPECTED_GRANT_COUNT !== 6) {
+if (EXPECTED_GRANT_COUNT !== 7) {
   throw new Error(
-    `grant_statements=${EXPECTED_GRANT_COUNT} is wrong; FR-12a names six table grants.`,
+    `grant_statements=${EXPECTED_GRANT_COUNT} is wrong; FR-12a names seven table grants.`,
   );
 }
 
@@ -84,22 +92,22 @@ function grantsFor(table: string): readonly GrantStatement[] {
 }
 
 describe("Accounting runtime grants at the Red base", () => {
-  it("plans six grant statements and at least five grant cases (grant_cases=6)", () => {
-    expect(EXPECTED_GRANT_COUNT, "grant_statements=6").toBe(6);
+  it("plans seven grant statements and at least five grant cases (grant_cases=7)", () => {
+    expect(EXPECTED_GRANT_COUNT, "grant_statements=7").toBe(7);
     expect(
       GRANT_CASES,
       `grant_cases=${GRANT_CASES} — the floor is 5.`,
     ).toBeGreaterThanOrEqual(5);
   });
 
-  it("holds exactly six table grants (grant_statements=6)", () => {
+  it("holds exactly seven table grants (grant_statements=7)", () => {
     expect(
       grants.length,
-      `grant_statements=${grants.length} — expected 6: the two existing grants and the four new grants of FR-12a.`,
-    ).toBe(6);
+      `grant_statements=${grants.length} — expected 7: the two existing grants and the five new grants of FR-12a.`,
+    ).toBe(7);
   });
 
-  it("grants the four new tables their least privilege", () => {
+  it("grants the five new tables their least privilege", () => {
     const failures: string[] = [];
     for (const table of NEW_TABLES) {
       const tableGrants = grantsFor(table);
@@ -120,8 +128,31 @@ describe("Accounting runtime grants at the Red base", () => {
     expect(
       failures,
       `grant_statements=${grants.length}; ${failures.join("; ")}. ` +
-        `FR-12a adds four grants after the two existing grants.`,
+        `FR-12a adds five grants after the two existing grants.`,
     ).toEqual([]);
+  });
+
+  it("keeps the year-file facts table read-and-insert only (year_file_facts_grant=2)", () => {
+    const factsGrants = grantsFor("accounting_year_file_facts");
+    expect(
+      factsGrants.length,
+      "missing grant for accounting_year_file_facts (FR-12a, FR-28)",
+    ).toBeGreaterThan(0);
+    const privileges = factsGrants.flatMap(
+      (statement) => statement.privileges,
+    );
+    expect(
+      [...privileges].sort(),
+      "accounting_year_file_facts must hold SELECT and INSERT only",
+    ).toEqual(["INSERT", "SELECT"]);
+    expect(
+      privileges.includes("UPDATE"),
+      "the year-file facts table must hold no UPDATE grant",
+    ).toBe(false);
+    expect(
+      privileges.includes("DELETE"),
+      "the year-file facts table must hold no DELETE grant",
+    ).toBe(false);
   });
 
   it("keeps the close audit table append-only", () => {
@@ -162,14 +193,14 @@ describe("Accounting runtime grants at the Red base", () => {
     }
   });
 
-  it("grants no table outside the six-table contract", () => {
+  it("grants no table outside the seven-table contract", () => {
     const allowedTables = new Set(Object.keys(EXPECTED_GRANTS));
     const unexpected = grants
       .map((statement) => statement.table)
       .filter((table) => !allowedTables.has(table));
     expect(
       unexpected,
-      "the grants file must grant only the six tables of FR-12a",
+      "the grants file must grant only the seven tables of FR-12a",
     ).toEqual([]);
   });
 

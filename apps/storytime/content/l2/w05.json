@@ -8,9 +8,9 @@
     },
     "thai": {
       "status": "approved",
-      "date": "2026-11-05",
-      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines)",
-      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 82 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md)"
+      "date": "2026-11-15",
+      "words": "\"Approved\" (2026-11-05 21:4x ICT; the 3 color-own-book Thai lines); \"Ok\" (2026-11-15 19:43 ICT; the 64 Thai rows of the Phase 14 change list)",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 82 (2026-10-22); PM relay of 2026-11-05 (owner answer on the color-own-book Thai lines, ~/Desktop/handoff/storytime-color-own-book/lines-2026-11-05.md); Google Tasks reply of Daniel, 2026-11-15 19:43 ICT, PM relay (THAI item: p14-change-list.md, 64 rows)"
     },
     "images": {
       "status": "approved",
@@ -19,16 +19,33 @@
       "source": "PM relay Tasks id TFBDbWRFTEItTy1kZGUzdw; PM relay of 2026-11-05 (owner answer on proof v15, Tasks id bmh2b1hqTFNCVEpDNks4VQ)"
     },
     "audio": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-18",
+      "words": "1. Ok",
+      "source": "Google Tasks reply of Daniel, 2026-11-18 05:36 ICT, item OGt2RXk4 under the gates item item d21OaG5l, PM relay; the approval page ~/Desktop/storytime-approval-w02-w07/review.json (36 rows: song, book audio, sentence clips, word clips, and scripts of weeks 2 to 7; 0 page submissions)"
     },
     "song": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-18",
+      "words": "1. Ok",
+      "source": "Google Tasks reply of Daniel, 2026-11-18 05:36 ICT, item OGt2RXk4 under the gates item item d21OaG5l, PM relay; the approval page ~/Desktop/storytime-approval-w02-w07/review.json (36 rows: song, book audio, sentence clips, word clips, and scripts of weeks 2 to 7; 0 page submissions)"
     },
     "scripts": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-18",
+      "words": "1. Ok",
+      "source": "Google Tasks reply of Daniel, 2026-11-18 05:36 ICT, item OGt2RXk4 under the gates item item d21OaG5l, PM relay; the approval page ~/Desktop/storytime-approval-w02-w07/review.json (36 rows: song, book audio, sentence clips, word clips, and scripts of weeks 2 to 7; 0 page submissions)"
+    },
+    "print": {
+      "status": "approved",
+      "date": "2026-11-16",
+      "words": "Pass"
     },
     "loops": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-15",
+      "words": "Approved",
+      "source": "Google Tasks, PM item YVJYeDVt, subtask bnJWSW5yUDNOVllzLWpvcA"
     }
   },
   "version": 1,
@@ -44,7 +61,7 @@
     "openingMinutes": 6,
     "title": "I Have Two",
     "band": "Sprout",
-    "status": "draft"
+    "status": "published"
   },
   "focus": {
     "element": {
@@ -60,8 +77,14 @@
       "audio": "phonemes/daniel/01-s.mp3"
     },
     "paSkill": {
-      "en": "the first sound sss and the last sound sss; blend three sounds by ear",
-      "th": "ฟังเสียงแรก sss และเสียงสุดท้าย sss และฟังแล้วผสม 3 เสียงเป็นคำ"
+      "en": "the first sound sss; blend three sounds by ear",
+      "th": "ฟังเสียงแรก sss และฟังแล้วผสม 3 เสียงเป็นคำ"
+    },
+    "paStage": {
+      "stage": 1,
+      "positions": [
+        "first"
+      ]
     },
     "trickyWords": [
       "off",
@@ -150,7 +173,16 @@
             "file": "l2/media/w05/family/feet.jpg"
           }
         }
-      ]
+      ],
+      "wordClips": {
+        "arms": "l2/media/w05/words/wa-arms.mp3",
+        "ears": "l2/media/w05/words/wa-ears.mp3",
+        "eyes": "l2/media/w05/words/wa-eyes.mp3",
+        "feet": "l2/media/w05/words/wa-feet.mp3",
+        "hands": "l2/media/w05/words/wa-hands.mp3",
+        "legs": "l2/media/w05/words/wa-legs.mp3",
+        "nose": "l2/media/w05/words/wa-nose.mp3"
+      }
     },
     "wordWall": [
       "an",
@@ -162,17 +194,22 @@
       "map",
       "Pam",
       "Sam"
-    ]
+    ],
+    "trickyWordClips": {
+      "off": "l2/media/w05/words/wa-off.mp3",
+      "saw": "l2/media/w05/words/wa-saw.mp3",
+      "with": "l2/media/w05/words/wa-with.mp3"
+    }
   },
   "opening": {
     "pa": [
       {
-        "en": "\"Listen: sun. What is the first sound? Sss! Listen: bus. What is the last sound? Sss!\"",
-        "th": "\"ฟัง: sun เสียงแรกคือเสียงอะไร? Sss! ฟัง: bus เสียงสุดท้ายคือเสียงอะไร? Sss!\""
+        "en": "\"Listen: map. What is the first sound? Mmm! Listen: pan. What is the first sound? /p/!\"",
+        "th": "\"ฟัง: map เสียงแรกคือเสียงอะไร? Mmm! ฟัง: pan เสียงแรกคือเสียงอะไร? /p/!\""
       },
       {
-        "en": "\"Listen: sock. What is the first sound? Sss! Listen: dress. What is the last sound? Sss!\"",
-        "th": "\"ฟัง: sock เสียงแรกคือเสียงอะไร? Sss! ฟัง: dress เสียงสุดท้ายคือเสียงอะไร? Sss!\""
+        "en": "\"Listen: sun. What is the first sound? Sss! Listen: sock. What is the first sound? Sss!\"",
+        "th": "\"ฟัง: sun เสียงแรกคือเสียงอะไร? Sss! ฟัง: sock เสียงแรกคือเสียงอะไร? Sss!\""
       },
       {
         "en": "\"Listen: sss - /a/ - mmm. What is the word? Sam! Listen: sss - /u/ - nnn. What is the word? Sun!\"",
@@ -189,8 +226,8 @@
     ],
     "audio": [
       [
-        "phonemes/daniel/01-s.mp3",
-        "phonemes/daniel/01-s.mp3"
+        "phonemes/daniel/05-m.mp3",
+        "phonemes/daniel/03-p.mp3"
       ],
       [
         "phonemes/daniel/01-s.mp3",
@@ -220,7 +257,17 @@
         "phonemes/daniel/29-o-short.mp3",
         "phonemes/daniel/08-c-k.mp3"
       ]
-    ]
+    ],
+    "wordClips": {
+      "bus": "l2/media/w05/words/wa-bus.mp3",
+      "map": "l2/media/w05/words/wa-map.mp3",
+      "pan": "l2/media/w05/words/wa-pan.mp3",
+      "sad": "l2/media/w05/words/wa-sad.mp3",
+      "sam": "l2/media/w05/words/wa-sam.mp3",
+      "sit": "l2/media/w05/words/wa-sit.mp3",
+      "sock": "l2/media/w05/words/wa-sock.mp3",
+      "sun": "l2/media/w05/words/wa-sun.mp3"
+    }
   },
   "books": [
     {
@@ -806,7 +853,41 @@
           "nose": "l2/media/w05/words/wa-nose.mp3",
           "one": "l2/media/w05/words/wa-one.mp3",
           "two": "l2/media/w05/words/wa-two.mp3"
-        }
+        },
+        "sentenceClips": [
+          {
+            "sentence": "I have two eyes.",
+            "file": "l2/media/w05/sentences/b0-s01.mp3"
+          },
+          {
+            "sentence": "I have two ears.",
+            "file": "l2/media/w05/sentences/b0-s02.mp3"
+          },
+          {
+            "sentence": "I have two hands.",
+            "file": "l2/media/w05/sentences/b0-s03.mp3"
+          },
+          {
+            "sentence": "I have two arms.",
+            "file": "l2/media/w05/sentences/b0-s04.mp3"
+          },
+          {
+            "sentence": "I have two legs.",
+            "file": "l2/media/w05/sentences/b0-s05.mp3"
+          },
+          {
+            "sentence": "I have two feet.",
+            "file": "l2/media/w05/sentences/b0-s06.mp3"
+          },
+          {
+            "sentence": "I have one nose.",
+            "file": "l2/media/w05/sentences/b0-s07.mp3"
+          },
+          {
+            "sentence": "I have four legs!",
+            "file": "l2/media/w05/sentences/b0-s08.mp3"
+          }
+        ]
       },
       "questions": [
         {
@@ -1462,7 +1543,41 @@
           "sam": "l2/media/w05/words/wa-sam.mp3",
           "saw": "l2/media/w05/words/wa-saw.mp3",
           "with": "l2/media/w05/words/wa-with.mp3"
-        }
+        },
+        "sentenceClips": [
+          {
+            "sentence": "Sam saw Pam.",
+            "file": "l2/media/w05/sentences/b1-s01.mp3"
+          },
+          {
+            "sentence": "Sam can get Pam.",
+            "file": "l2/media/w05/sentences/b1-s02.mp3"
+          },
+          {
+            "sentence": "Sam is with Pam.",
+            "file": "l2/media/w05/sentences/b1-s03.mp3"
+          },
+          {
+            "sentence": "Pam is in a pan!",
+            "file": "l2/media/w05/sentences/b1-s04.mp3"
+          },
+          {
+            "sentence": "Pam is on a map!",
+            "file": "l2/media/w05/sentences/b1-s05.mp3"
+          },
+          {
+            "sentence": "Pam is on Sam!",
+            "file": "l2/media/w05/sentences/b1-s06.mp3"
+          },
+          {
+            "sentence": "Pam is off Sam!",
+            "file": "l2/media/w05/sentences/b1-s07.mp3"
+          },
+          {
+            "sentence": "Sam, Nan, and Pam nap.",
+            "file": "l2/media/w05/sentences/b1-s08.mp3"
+          }
+        ]
       }
     }
   ],
@@ -2357,14 +2472,14 @@
               "When the script says sss, say the sound: a long hiss. When it says \"the letter s\", say the letter name \"es\".",
               "Hold up one picture card at a time and say the word slowly.",
               "Stretch the first sound: sssun.",
-              "Mix the sss words with other words. Then say three words with sss at the end: bus, dress, horse."
+              "Mix the sss words with other words."
             ],
             "teacherLanguage": [
               "\"Listen. Sssun. Sun.\"",
               "\"Is the first sound sss? Thumbs up or thumbs down?\"",
               "\"Yes! Sssun starts with sss.\"",
               "\"Listen. Cat. Does cat start with sss? No!\"",
-              "\"Now listen to the end. Busss. Is sss at the end? Yes!\""
+              "\"Listen. Sock. Does sock start with sss? Yes!\""
             ],
             "studentActions": [
               "Children say each word after the teacher.",
@@ -2372,9 +2487,7 @@
             ],
             "watchFor": [
               "Children who say \"suh\" or \"sa\": the sound is sss, with no vowel at the end.",
-              "Children who copy a friend's thumbs: ask them alone with one more card.",
-              "Children who say \"but\" for \"bus\": keep the hiss at the end: busss.",
-              "In Thai, ส at the end of a word sounds like /t/. In English, sss at the end of a word stays a hiss."
+              "Children who copy a friend's thumbs: ask them alone with one more card."
             ]
           },
           "easier": {
@@ -2382,8 +2495,8 @@
             "th": "ใช้บัตรเพียง 4 ใบ (sun, sock, cat, dog) และพูดเสียงแรก 2 ครั้ง"
           },
           "harder": {
-            "en": "Say a word with sss at the end: \"Bus.\" Children say the last sound: \"Sss!\"",
-            "th": "พูดคำที่มี sss อยู่ท้ายคำ: \"Bus.\" เด็ก ๆ บอกเสียงสุดท้าย: \"Sss!\""
+            "en": "A child says the first sound alone: \"Sofa. Sss!\" Then the next child: \"Sandwich. Sss!\"",
+            "th": "เด็กบอกเสียงแรกด้วยตัวเองทีละคน: \"Sofa. Sss!\" แล้วเด็กคนต่อไป: \"Sandwich. Sss!\""
           },
           "group": {
             "en": "Pairs: you hold up a card; partner A says the word, and partner B shows the thumbs.",
@@ -2391,22 +2504,21 @@
           },
           "materials": [
             "sound picture cards: sun, sock, sofa, sandwich",
-            "picture cards: cat, dog, pen",
-            "picture cards: bus, dress, horse"
+            "picture cards: cat, dog, pen"
           ],
           "th": {
             "teacherActions": [
               "เมื่อบทพูดเขียนว่า sss ให้ออกเสียงลมลอดฟันยาว ๆ เมื่อบทพูดเขียนว่า \"the letter s\" ให้พูดชื่อตัวอักษร \"es\" (เอส)",
               "ชูบัตรภาพทีละใบ แล้วพูดคำช้า ๆ",
               "ลากเสียงแรกให้ยาว: sssun",
-              "คละคำที่ขึ้นต้นด้วย sss กับคำอื่น จากนั้นพูดคำ 3 คำที่มี sss อยู่ท้ายคำ: bus, dress, horse"
+              "คละคำที่ขึ้นต้นด้วย sss กับคำอื่น"
             ],
             "teacherLanguage": [
               "\"ฟัง Sssun, sun\"",
               "\"เสียงแรกคือ sss ไหม? ยกนิ้วโป้งขึ้นหรือคว่ำนิ้วโป้งลง?\"",
               "\"ใช่! Sssun ขึ้นต้นด้วย sss\"",
               "\"ฟัง cat คำว่า cat ขึ้นต้นด้วย sss ไหม? ไม่ใช่!\"",
-              "\"ทีนี้ฟังเสียงท้ายคำ Busss มี sss อยู่ท้ายคำไหม? ใช่!\""
+              "\"ฟัง sock คำว่า sock ขึ้นต้นด้วย sss ไหม? ใช่!\""
             ],
             "studentActions": [
               "เด็ก ๆ พูดแต่ละคำตามครู",
@@ -2414,9 +2526,7 @@
             ],
             "watchFor": [
               "เด็กที่ออกเสียงเป็น \"suh\" (เซอะ) หรือ \"sa\" (ซะ): เสียงที่ถูกคือ sss ไม่มีสระตามหลัง",
-              "เด็กที่ทำนิ้วโป้งตามเพื่อน: ให้เด็กคนนั้นตอบคนเดียวด้วยบัตรอีก 1 ใบ",
-              "เด็กที่ออกเสียง \"bus\" เป็น \"but\": ให้คงเสียงลมลอดฟันไว้ที่ท้ายคำ: busss",
-              "ในภาษาไทย ส ที่เป็นตัวสะกดออกเสียงเหมือน /t/ (แม่กด) แต่ในภาษาอังกฤษ sss ที่ท้ายคำยังคงเป็นเสียงลมลอดฟัน"
+              "เด็กที่ทำนิ้วโป้งตามเพื่อน: ให้เด็กคนนั้นตอบคนเดียวด้วยบัตรอีก 1 ใบ"
             ]
           },
           "soundLoop": {
@@ -2766,8 +2876,8 @@
             "th": "อ่านคำบนผนังคำศัพท์พร้อมทั้งชั้น 2 ครั้ง"
           },
           "harder": {
-            "en": "A child reads one word on the wall alone, then says its last sound.",
-            "th": "เด็กคนหนึ่งอ่านคำ 1 คำบนผนังคำศัพท์ด้วยตัวเอง แล้วบอกเสียงสุดท้ายของคำนั้น"
+            "en": "A child reads one word on the wall alone, then says its first sound.",
+            "th": "เด็กคนหนึ่งอ่านคำ 1 คำบนผนังคำศัพท์ด้วยตัวเอง แล้วบอกเสียงแรกของคำนั้น"
           },
           "group": {
             "en": "Whole class: one child points, and the class reads.",
@@ -4206,19 +4316,19 @@
           "en": {
             "teacherActions": [
               "Part 1 (5 min): write \"I have two ___.\" on the board. Show where the big letter and the full stop go. \"I\" is always a big letter.",
-              "Children trace \"I have two eyes.\" in the book. Then they draw their two eyes in the face above it.",
+              "Children draw their two eyes in the face. Then they trace \"I have two eyes.\" below it.",
               "Stand-and-move break (at minute 5): all children stand up. Say \"Show me two hands!\", then \"Stamp two feet!\" The class does it and says \"I have two hands!\" and \"I have two feet!\" Then they sit down.",
               "Part 2 (5 min): in the second box, children draw two hands, two ears, or two feet. They find the word under the box (hands, ears, feet) and trace it."
             ],
             "teacherLanguage": [
               "\"A big letter I. A full stop at the end.\"",
-              "\"Trace the words: I have two eyes.\"",
               "\"Draw your eyes in the face.\"",
+              "\"Trace the words: I have two eyes.\"",
               "\"Stand up! Show me two hands! I have two hands!\"",
               "\"Now draw two hands, two ears, or two feet. Find the word and trace it.\""
             ],
             "studentActions": [
-              "Children trace the frame and draw the eyes.",
+              "Children draw the eyes and trace the frame.",
               "Children stand, move, and say the frame in the break.",
               "Children draw a second picture, then find and trace the body word."
             ],
@@ -4246,19 +4356,19 @@
           "th": {
             "teacherActions": [
               "ส่วนที่ 1 (5 นาที): เขียน \"I have two ___.\" บนกระดาน ชี้ให้ดูว่าตัวพิมพ์ใหญ่และจุด (full stop) อยู่ที่ไหน \"I\" เป็นตัวพิมพ์ใหญ่เสมอ",
-              "เด็ก ๆ ลากเส้นตาม \"I have two eyes.\" ในหนังสือ จากนั้นวาดตา 2 ข้างของตัวเองลงในใบหน้าที่อยู่เหนือประโยค",
+              "เด็ก ๆ วาดตา 2 ข้างของตัวเองลงในใบหน้า จากนั้นลากเส้นตาม \"I have two eyes.\" ที่อยู่ใต้ใบหน้า",
               "พักยืนขยับตัว (เมื่อครบ 5 นาที): เด็กทุกคนยืนขึ้น ครูพูดว่า \"Show me two hands!\" (ชูมือ 2 ข้าง) แล้วพูดว่า \"Stamp two feet!\" (กระทืบเท้า 2 ข้าง) ทั้งชั้นทำตามและพูดว่า \"I have two hands!\" และ \"I have two feet!\" แล้วนั่งลง",
               "ส่วนที่ 2 (5 นาที): ในช่องที่สอง เด็ก ๆ วาดมือ 2 ข้าง หู 2 ข้าง หรือเท้า 2 ข้าง แล้วหาคำใต้ช่องที่ตรงกับภาพ (hands, ears, feet) และลากเส้นตามคำนั้น"
             ],
             "teacherLanguage": [
               "\"I ตัวพิมพ์ใหญ่ ใส่จุดที่ท้ายประโยค\"",
-              "\"ลากเส้นตามคำ: I have two eyes.\"",
               "\"วาดตาของหนูลงในใบหน้า\"",
+              "\"ลากเส้นตามคำ: I have two eyes.\"",
               "\"Stand up! (ยืนขึ้น) Show me two hands! (ชูมือ 2 ข้าง) I have two hands!\"",
               "\"ทีนี้วาดมือ 2 ข้าง หู 2 ข้าง หรือเท้า 2 ข้าง หาคำนั้นแล้วลากเส้นตาม\""
             ],
             "studentActions": [
-              "เด็ก ๆ ลากเส้นตามกรอบประโยค และวาดตา",
+              "เด็ก ๆ วาดตาและลากเส้นตามกรอบประโยค",
               "เด็ก ๆ ยืน ขยับตัว และพูดกรอบประโยคในช่วงพัก",
               "เด็ก ๆ วาดภาพที่สอง แล้วหาคำศัพท์ส่วนของร่างกายและลากเส้นตาม"
             ],
@@ -4394,14 +4504,15 @@
             "audio": "phonemes/daniel/03-p.mp3"
           },
           {
-            "kind": "tricky",
-            "text": "get",
-            "week": 3
+            "kind": "sound",
+            "text": "s",
+            "week": 5,
+            "audio": "phonemes/daniel/01-s.mp3"
           },
           {
             "kind": "tricky",
-            "text": "a",
-            "week": 1
+            "text": "off",
+            "week": 5
           },
           {
             "kind": "frame",
@@ -4449,7 +4560,7 @@
             "teacherActions": [
               "Show the four centers and the group signs. Send each group to its first center.",
               "Groups 1 and 2 start at the picture sort and the karaoke corner; groups 3 and 4 at the book corner and the letter cards.",
-              "Hold up each sound picture card and say the word with the class: sun, sock, sofa, sandwich, bus, dress."
+              "Hold up each sound picture card and say the word with the class: sun, sock, sofa, sandwich."
             ],
             "teacherLanguage": [
               "\"Group 1, go to the picture sort. Group 2, the karaoke corner.\"",
@@ -4477,13 +4588,13 @@
           "materials": [
             "center cards",
             "group signs",
-            "sound picture cards: sun, sock, sofa, sandwich, bus, dress"
+            "sound picture cards: sun, sock, sofa, sandwich"
           ],
           "th": {
             "teacherActions": [
               "แนะนำมุมกิจกรรม 4 มุมและป้ายกลุ่ม ส่งแต่ละกลุ่มไปที่มุมกิจกรรมแรกของกลุ่ม",
               "กลุ่ม 1 และ 2 เริ่มที่มุมแยกภาพและมุมคาราโอเกะ กลุ่ม 3 และ 4 เริ่มที่มุมหนังสือและมุมบัตรตัวอักษร",
-              "ชูบัตรภาพประจำเสียงแต่ละใบ และพูดคำพร้อมทั้งชั้น: sun, sock, sofa, sandwich, bus, dress"
+              "ชูบัตรภาพประจำเสียงแต่ละใบ และพูดคำพร้อมทั้งชั้น: sun, sock, sofa, sandwich"
             ],
             "teacherLanguage": [
               "\"กลุ่ม 1 ไปที่มุมแยกภาพ กลุ่ม 2 ไปมุมคาราโอเกะ\"",
@@ -4506,7 +4617,7 @@
           "minutes": 7,
           "en": {
             "teacherActions": [
-              "Groups work at their center. Picture sort: sort the picture cards into \"sss at the start or the end\" and \"no sss\". Letter cards: build the words \"Sam\" and \"map\", and read them. Book corner: read the ten books of weeks 1 to 5. Karaoke corner: sing with the karaoke videos on the tablet, with the sound low.",
+              "Groups work at their center. Picture sort: sort the picture cards into \"sss at the start\" and \"not sss\". Letter cards: build the words \"Sam\" and \"map\", and read them. Book corner: read the ten books of weeks 1 to 5. Karaoke corner: sing with the karaoke videos on the tablet, with the sound low.",
               "Sit at the reading-record table with the first two children on the record sheet list. Each child reads \"Sam and Pam\"; mark the record sheet."
             ],
             "teacherLanguage": [
@@ -4534,8 +4645,8 @@
             "th": "4 กลุ่ม ครูอยู่กับเด็ก 2 คน"
           },
           "materials": [
-            "sorting mat: sss / no sss",
-            "sound picture cards: sun, sock, sofa, sandwich, bus, dress",
+            "sorting mat: sss / not sss",
+            "sound picture cards: sun, sock, sofa, sandwich",
             "picture cards: cat, dog, pen",
             "workmats (class set)",
             "letter cards (class set): s, n, a, p, m",
@@ -4546,7 +4657,7 @@
           ],
           "th": {
             "teacherActions": [
-              "แต่ละกลุ่มทำกิจกรรมที่มุมของตัวเอง มุมแยกภาพ: แยกบัตรภาพเป็นกองที่มีเสียง sss ที่ต้นคำหรือท้ายคำ และกองที่ไม่มีเสียง sss มุมบัตรตัวอักษร: ต่อคำ \"Sam\" และ \"map\" แล้วอ่าน มุมหนังสือ: อ่านหนังสือ 10 เล่มของสัปดาห์ที่ 1 ถึง 5 มุมคาราโอเกะ: ร้องเพลงตามวิดีโอคาราโอเกะบนแท็บเล็ต โดยเปิดเสียงเบา",
+              "แต่ละกลุ่มทำกิจกรรมที่มุมของตัวเอง มุมแยกภาพ: แยกบัตรภาพเป็นกองที่ขึ้นต้นด้วย sss และกองที่ไม่ได้ขึ้นต้นด้วย sss มุมบัตรตัวอักษร: ต่อคำ \"Sam\" และ \"map\" แล้วอ่าน มุมหนังสือ: อ่านหนังสือ 10 เล่มของสัปดาห์ที่ 1 ถึง 5 มุมคาราโอเกะ: ร้องเพลงตามวิดีโอคาราโอเกะบนแท็บเล็ต โดยเปิดเสียงเบา",
               "นั่งที่โต๊ะบันทึกการอ่านกับเด็ก 2 คนแรกในรายชื่อของแบบบันทึกผล เด็กแต่ละคนอ่าน \"Sam and Pam\" แล้วบันทึกในแบบบันทึกผล"
             ],
             "teacherLanguage": [
@@ -4769,14 +4880,15 @@
             "audio": "phonemes/daniel/04-n.mp3"
           },
           {
-            "kind": "tricky",
-            "text": "a",
-            "week": 1
+            "kind": "sound",
+            "text": "s",
+            "week": 5,
+            "audio": "phonemes/daniel/01-s.mp3"
           },
           {
             "kind": "tricky",
-            "text": "and",
-            "week": 1
+            "text": "saw",
+            "week": 5
           },
           {
             "kind": "frame",
@@ -5261,8 +5373,7 @@
       "english.phonics.tricky.i",
       "english.phonics.tricky.in",
       "english.phonics.tricky.on",
-      "english.phonics.pa.initial-sound.identify",
-      "english.phonics.pa.final-sound.identify"
+      "english.phonics.pa.initial-sound.identify"
     ]
   },
   "print": {

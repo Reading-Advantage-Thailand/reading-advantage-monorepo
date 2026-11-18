@@ -38,6 +38,15 @@ export interface WeekReadiness {
   approval?: unknown;
 }
 
+/**
+ * A week that the readiness rule reads.
+ *
+ * The rule reads the status of the meta part, the pages of the books, and the status of the three
+ * media parts. A week of another shape holds no published status, so the rule reads it as a draft
+ * week. The rule reads the week and never changes it.
+ */
+export type ReadinessWeek = WeekReadiness | Record<string, unknown>;
+
 /** The media parts of a week whose approval decides readiness (spec FR-5, AC-5.5). */
 export const MEDIA_APPROVAL_PARTS = ["images", "audio", "song"] as const;
 
@@ -85,17 +94,32 @@ export function missingPagePictures(week: WeekReadiness): string[] {
 }
 
 /**
+ * Reads the status of a week.
+ *
+ * A week of another shape holds no status, so the rule reads it as a draft week.
+ * @param week The week.
+ * @returns The status text of the meta part, or an empty string when the week holds none.
+ */
+function statusOf(week: ReadinessWeek): string {
+  if (!week || typeof week !== "object") return "";
+  const meta = (week as { meta?: { status?: unknown } }).meta;
+  if (!meta || typeof meta !== "object") return "";
+  return typeof meta.status === "string" ? meta.status : "";
+}
+
+/**
  * Gives the reason that keeps a week out of the at-home app.
  * @param week The week.
  * @returns `draft` for a week that is not published, `missing_picture` for a published week with
  * a page picture without a file, `media_not_approved` for a published week whose images, audio, or
  * song part is not approved, and `null` for a ready week.
  */
-export function readinessBlocker(week: WeekReadiness): WeekBlocker | null {
-  if (week.meta.status !== "published") return "draft";
-  if (!week.books || week.books.length === 0) return "missing_picture";
-  if (missingPagePictures(week).length > 0) return "missing_picture";
-  return mediaPartsNotApproved(week).length > 0 ? "media_not_approved" : null;
+export function readinessBlocker(week: ReadinessWeek): WeekBlocker | null {
+  if (statusOf(week) !== "published") return "draft";
+  const readiness = week as WeekReadiness;
+  if (!readiness.books || readiness.books.length === 0) return "missing_picture";
+  if (missingPagePictures(readiness).length > 0) return "missing_picture";
+  return mediaPartsNotApproved(readiness).length > 0 ? "media_not_approved" : null;
 }
 
 /**
@@ -104,6 +128,6 @@ export function readinessBlocker(week: WeekReadiness): WeekBlocker | null {
  * @returns `true` when the week is published, every book page picture has a file, and the images,
  * audio, and song parts are each approved.
  */
-export function isWeekReady(week: WeekReadiness): boolean {
+export function isWeekReady(week: ReadinessWeek): boolean {
   return readinessBlocker(week) === null;
 }

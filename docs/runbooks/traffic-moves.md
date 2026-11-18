@@ -1,14 +1,14 @@
-# Runbook: Primary automatic releases and manual traffic moves
+# Runbook: Manual traffic moves for the gated apps
 
-Primary Advantage deploys automatically after an affected push to `master`, as authorized by
-the owner on 2026-11-12 in track `primary_class_code_six_hours_20261112`. Its push build checks
-and migrates the Primary database, deploys the app, and restores traffic to the latest revision.
-This supersedes decision D1 of `per_app_cicd_20261107` for Primary only.
+Primary Advantage is a gated app again from 2026-11-18. The PM order of 2026-11-18 says:
+"It's an app that has no traffic. Who cares if it's deployed or not?" This supersedes the
+direct mode of 2026-11-12, which came from track `primary_class_code_six_hours_20261112`.
+Decision D1 of `per_app_cicd_20261107` applies to Primary again.
 
-The other gated apps keep decisions D1, D2, and D7: their push builds deploy with `--no-traffic`
-and a tag, without production database steps or a traffic move. A person starts their traffic
-files by hand on Daniel's word. The Primary traffic file remains a manual fallback. No GitHub
-workflow runs a `cloudbuild-traffic.yaml` file.
+Every gated app keeps decisions D1, D2, and D7. Its push build deploys with `--no-traffic`
+and a tag. The push build holds no production database step and moves no traffic. A person
+starts the traffic file by hand on Daniel's word. No GitHub workflow runs a
+`cloudbuild-traffic.yaml` file.
 
 ## Rules for every manual traffic file
 
@@ -35,43 +35,27 @@ workflow runs a `cloudbuild-traffic.yaml` file.
 
 ## primary-advantage
 
-### Automatic push release
+### Gated push
 
-File: `apps/primary-advantage/cloudbuild.yaml`. Project: `primary-advantage`.
-An affected push to the default branch `master` runs this file through `CD — apps`.
-Primary is a direct deployment in `scripts/ci/apps.json`; the other app modes are unchanged.
+File: `apps/primary-advantage/cloudbuild.yaml`. Project: `primary-advantage`. An affected push
+to the default branch `master` runs this file through `CD — apps`. Primary is a gated
+deployment in `scripts/ci/apps.json`.
 
-Steps, in order: `build-image`, `push-image`, `refuse-legacy-db`, `migrate-db`, `doctor-check`,
-`deploy-cloudrun`, `update-traffic`.
+Steps, in order: `build-image`, `push-image`, `deploy-cloudrun`.
 
-- `refuse-legacy-db` runs before any migration and refuses the legacy database that Tutor reads.
-- The database steps keep the separate `PRIMARY_V2_DATABASE_URL` secret and the Cloud SQL proxy.
-- `doctor-check` requires `0074_primary_help_events` before deployment.
-- The app deploys after the database checks pass. A failed step stops the remaining steps.
-- The final `update-traffic` uses `--to-latest`. This restores the automatic latest-revision
-  routing policy even when an earlier manual release pinned traffic to a specific revision.
-- A normal push needs no tag or separate traffic run. Database migrations are not undone by a
-  later deployment failure or rollback.
+- The deploy step holds `--no-traffic` and the tag `--tag=pa-$${BUILD_ID:0:8}`.
+- The tag is `pa-` plus the first 8 characters of the build id.
+- The push holds no database step and moves no traffic.
+- The new revision must start against the old schema.
 
-Verify the resulting revision and traffic after the build succeeds:
+### Manual traffic move
 
-```
-gcloud run services describe primary-advantage-app --region=asia-southeast1 --project=primary-advantage --format='json(status.latestReadyRevisionName,status.traffic)'
-```
+File: `apps/primary-advantage/cloudbuild-traffic.yaml`. Project: `primary-advantage`. A person
+starts this file by hand, on Daniel's word. The file runs the database steps and then moves the
+traffic to the revision that the push built. The new revision must start against the old schema.
 
-The serving traffic entry should send 100 percent to the latest revision. Confirm the public
-app and the changed behavior before calling the release complete.
-
-### Manual fallback for a tagged candidate
-
-File: `apps/primary-advantage/cloudbuild-traffic.yaml`. Project: `primary-advantage`.
-Use this file only for an intentional manual promotion of a tagged candidate, such as a revision
-created before automatic deployment was restored. It retains its release-source binding and
-database gates. The candidate must start against the old schema.
-
-Substitutions: `_RELEASE_COMMIT_SHA`, the candidate release commit, and `_TAG`, its tag,
-for example `pa-1a2b3c4d`. This fallback sends traffic to that tag. The next successful automatic
-push release restores `--to-latest` routing.
+Substitutions: `_RELEASE_COMMIT_SHA`, the release commit, and `_TAG`, the tag of the push build,
+for example `pa-1a2b3c4d`. The file sends 100 percent of the traffic to that tag.
 
 Steps, in order: `bind-release-source`, `refuse-legacy-db`, `migrate-db`, `doctor-check`,
 `update-traffic`.
@@ -99,17 +83,27 @@ Steps, in order: `bind-release-source`, `refuse-legacy-db`, `migrate-db`, `docto
 - `refuse-legacy-db` is a read-only guard. It refuses to migrate the legacy Primary database
   that Tutor reads.
 - `doctor-check` keeps its argument `--required-migration 0074_primary_help_events`.
+- `update-traffic` runs last. It sends 100 percent of the traffic to the tag `_TAG`.
 
-Find an earlier candidate tag:
+Find the tag after a push:
 
-- For a candidate created by the former no-traffic push build, read the build id in the GitHub Actions log (step `Submit Cloud Build`). `_TAG` is `pa-` plus the first 8 characters of that id.
-- Or list past builds and find the original no-traffic build of that candidate. Automatic
-  push builds do not create a `pa-` tag:
+- Read the build id in the GitHub Actions run `CD — apps` of that push. The step
+  `Submit Cloud Build` prints it. `_TAG` is `pa-` plus the first 8 characters of that id.
+- Or list past builds and find the no-traffic build of the candidate:
   `gcloud builds list --project=primary-advantage --limit=5 --format='table(id,createTime,status)'`.
 - Check that the revision exists with this tag. Read the tag list of the service:
   `gcloud run services describe primary-advantage-app --region=asia-southeast1 --project=primary-advantage --format="value(status.traffic.extract(tag).flatten())"`.
   List the newest revisions with
   `gcloud run revisions list --service=primary-advantage-app --region=asia-southeast1 --project=primary-advantage --limit=5 --format='table(metadata.name,metadata.creationTimestamp)'`.
+
+Verify the revision and the traffic after the move succeeds:
+
+```
+gcloud run services describe primary-advantage-app --region=asia-southeast1 --project=primary-advantage --format='json(status.latestReadyRevisionName,status.traffic)'
+```
+
+The serving traffic entry should send 100 percent to the tagged revision. Confirm the public app
+and the changed behavior before calling the release complete.
 
 ## accounts
 

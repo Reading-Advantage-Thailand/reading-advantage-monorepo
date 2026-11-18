@@ -1,7 +1,7 @@
 name: CD — apps
 
-# Primary deploys live after its database checks. Other gated apps keep their
-# separate manual traffic step. This workflow selects only affected apps.
+# Every app in this workflow deploys a tagged revision with no traffic (gated). A traffic move is a
+# separate manual step on Daniel's word. www is the only direct app (cd-www-reading-advantage.yml).
 on:
   push:
     branches:

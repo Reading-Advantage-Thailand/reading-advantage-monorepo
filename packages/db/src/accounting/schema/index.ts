@@ -3,8 +3,10 @@ import {
   boolean,
   char,
   check,
+  date,
   index,
   integer,
+  jsonb,
   pgTable,
   text,
   timestamp,
@@ -165,6 +167,7 @@ export const accountingIntakeDocuments = pgTable(
     status: text("status").default("pending").notNull(),
     submissionId: uuid("submission_id"),
     duplicateOfSubmissionId: uuid("duplicate_of_submission_id"),
+    duplicateOfIntakeDocumentId: uuid("duplicate_of_intake_document_id"),
     evidenceReference: text("evidence_reference"),
     extraction: text("extraction"),
     failureReason: text("failure_reason"),
@@ -184,7 +187,7 @@ export const accountingIntakeDocuments = pgTable(
   (table) => [
     check(
       "accounting_intake_documents_document_type_check",
-      sql`${table.documentType} IN ('receipt', 'tax-invoice', 'bank-statement', 'payroll-sheet', 'withholding-certificate', 'payment-voucher-sheet', 'cloud-invoice', 'openai-invoice')`,
+      sql`${table.documentType} IN ('receipt', 'tax-invoice', 'bank-statement', 'payroll-sheet', 'withholding-certificate', 'payment-voucher-sheet', 'cloud-invoice', 'openai-invoice', 'wht-filing-pnd1', 'wht-filing-pnd1a', 'wht-filing-pnd3', 'wht-filing-pnd53', 'corporate-tax-pnd50', 'year-end-financial-statement', 'general-ledger', 'dbd-filing-sbor3')`,
     ),
     check(
       "accounting_intake_documents_status_check",
@@ -200,7 +203,7 @@ export const accountingIntakeDocuments = pgTable(
     ),
     check(
       "accounting_intake_documents_history_source_check",
-      sql`(${table.isHistory} = false AND ${table.historySource} IS NULL) OR (${table.isHistory} = true AND ${table.historySource} IN ('drive-folder', 'drive-modified-date'))`,
+      sql`(${table.isHistory} = false AND ${table.historySource} IS NULL) OR (${table.isHistory} = true AND ${table.historySource} IN ('drive-folder', 'drive-modified-date', 'document'))`,
     ),
     check(
       "accounting_intake_documents_evidence_byte_size_check",
@@ -217,6 +220,48 @@ export const accountingIntakeDocuments = pgTable(
     uniqueIndex("accounting_intake_documents_scope_company_file_idx").on(
       table.scopeCompanyId,
       table.driveFileId,
+    ),
+  ],
+);
+
+/**
+ * One facts row for each accountant year file (FR-28, spec section 9b).
+ *
+ * A year file is a filing, not a voucher: its intake row names no submission,
+ * and this row keeps the facts that the parser read from its text. The table
+ * holds no payee, person name, tax id, account number, or hash, and
+ * `intake_document_id` is unique, so one year file gives one facts row.
+ */
+export const accountingYearFileFacts = pgTable(
+  "accounting_year_file_facts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    intakeDocumentId: uuid("intake_document_id")
+      .notNull()
+      .references(() => accountingIntakeDocuments.id),
+    formType: text("form_type").notNull(),
+    filingKind: text("filing_kind").notNull(),
+    periodKind: text("period_kind").notNull(),
+    periodStart: date("period_start", { mode: "string" }).notNull(),
+    periodEnd: date("period_end", { mode: "string" }).notNull(),
+    taxYear: integer("tax_year").notNull(),
+    facts: jsonb("facts").notNull(),
+  },
+  (table) => [
+    check(
+      "accounting_year_file_facts_form_type_check",
+      sql`${table.formType} IN ('wht-filing-pnd1', 'wht-filing-pnd1a', 'wht-filing-pnd3', 'wht-filing-pnd53', 'corporate-tax-pnd50', 'year-end-financial-statement', 'general-ledger', 'dbd-filing-sbor3')`,
+    ),
+    check(
+      "accounting_year_file_facts_filing_kind_check",
+      sql`${table.filingKind} IN ('form', 'attachment', 'receipt', 'statement')`,
+    ),
+    check(
+      "accounting_year_file_facts_period_kind_check",
+      sql`${table.periodKind} IN ('month', 'year')`,
+    ),
+    uniqueIndex("accounting_year_file_facts_intake_document_idx").on(
+      table.intakeDocumentId,
     ),
   ],
 );

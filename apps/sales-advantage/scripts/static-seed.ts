@@ -72,7 +72,7 @@ export const SALES_CURRICULUM_EXPIRING_FACTS = Object.freeze([
   },
   {
     fact: "Public date for Science, Math, and Zhongwen Advantage (Q-PR-24)",
-    text: "Science, Math, and Zhongwen Advantage (Q-PR-24)",
+    text: "Name the 2027 school year; give no other date",
     checkIn: "advantage-pr 09-sales-enablement/sales-training-scope-2027.md §8",
   },
   {
@@ -117,7 +117,7 @@ function claimsCriterion(
 ): RubricCriterion {
   return {
     criterion:
-      `Claims: ${focus} The trainee makes none of these claims: a guarantee or a promise of an outcome (including "รับประกัน" or any percentage gain); false urgency; a promise of Read Along with Reedy, or Tutor Advantage called an AI tutor; a book that is not printed, or a level above book level 4 or above A2; Pearson, GSE, or YLE in a line to a parent or a school; a book name without the product name; ${CHANNEL_CLAIMS[channel]}; a Managed Service sale, or a date for Science, Math, Zhongwen, or Storytime Advantage, for a new edition, or for a pilot start; "leading", "best", "#1", or a percentage with no source. Score 100 when the trainee makes none of these claims; score 0 for any one of them.`,
+      `Claims: ${focus} The trainee makes none of these claims: a guarantee or a promise of an outcome (including "รับประกัน" or any percentage gain); false urgency; a promise of Read Along with Reedy, or Tutor Advantage called an AI tutor; a book that is not printed, or a level above book level 4 or above A2; Pearson, GSE, or YLE in a line to a parent or a school; a book name without the product name; ${CHANNEL_CLAIMS[channel]}; a Managed Service sale, an exact day or any other date for Science, Math, Zhongwen, or Storytime Advantage, a date for a new edition, or a date for a pilot start; "leading", "best", "#1", or a percentage with no source. Score 100 when the trainee makes none of these claims; score 0 for any one of them.`,
     weight,
     passingScore: 90,
     sourceRef: CLAIMS_SOURCE_REF,
@@ -981,8 +981,8 @@ Tutor Advantage is the company focus through May 2027.
 
 - **Live:** Primary Advantage, Tutor Advantage, and CodeCamp Advantage (adult bootcamp).
 - **Reading Advantage:** not offered to schools now; its books are now in Tutor Advantage classes.
-- **Science, Math, and Zhongwen Advantage (Q-PR-24):** each is its own app, built from the Primary Advantage base app. Show them at the visit. No date.
-- **K–6 offer, no date:** Storytime Advantage for Anuban 2 to P2 is part of the K–6 offer shown at the visits.
+- **Each its own app, built from the Primary Advantage base app, aimed at primary schools in the 2027 school year:** Science, Math, and Zhongwen Advantage. Show them at the visit. Give no other date.
+- **K–6 offer:** Storytime Advantage for Anuban 2 to P2 is part of the K–6 offer shown at the visits. It goes live in November 2026; give no exact day.
 - **Planned, no date:** STEM Advantage.
 
 Do not give a date for any of these lines.
@@ -1068,7 +1068,7 @@ Every roleplay in this course has a claims criterion with passingScore 90. One v
 5. Pearson, GSE, or YLE in a line to a parent or a school.
 6. A book name without the product name ("Origins 2" alone).
 7. An earnings figure in a family sale. Commission talk belongs to tutor recruitment only.
-8. A Managed Service sale, or a date for Science, Math, Zhongwen, or Storytime Advantage, for a new edition, or for a pilot start. The May 2027 line in section 4 is the only date that a trainee may say.
+8. A Managed Service sale, an exact day or any other date for Science, Math, Zhongwen, or Storytime Advantage, a date for a new edition, or a date for a pilot start. A trainee may say only the dates of the Dates paragraph in section 4: the May 2027 line, the 2027 school year for Science, Math, and Zhongwen Advantage, and November 2026 for Storytime Advantage.
 9. "Leading", "best", "#1", or a percentage with no source.
 
 In tutor recruitment, item 7 changes: commission talk is allowed, but a promise of income fails, and every baht figure must be a labeled example from the commission formula. In a school sale, item 7 is: a discount, a free period, or a promised response time.
@@ -1088,7 +1088,7 @@ In tutor recruitment, item 7 changes: commission talk is allowed, but a promise 
 
 **Parent facts:** Tutor Advantage is a tutor-led class network. It is not an AI tutor. A local tutor teaches a small group from a printed book. Reedy voice practice is live in Tutor Advantage for students with an active class package, on lessons they completed. Read Along with Reedy is in development and not available.
 
-**School facts:** For schools, we sell Primary Advantage with Blended Learning (or App-Only). We do not offer a secondary program to schools now; families of secondary students can join a Tutor Advantage class with the Reading Advantage books. Managed Service: "Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready." Science, Math, and Zhongwen Advantage: each is its own app, built from the Primary Advantage base app. Show them at the visit. Give no date (Q-PR-24).
+**School facts:** For schools, we sell Primary Advantage with Blended Learning (or App-Only). We do not offer a secondary program to schools now; families of secondary students can join a Tutor Advantage class with the Reading Advantage books. Managed Service: "Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready." Science, Math, and Zhongwen Advantage: each is its own app, built from the Primary Advantage base app. Show them at the visit. Name the 2027 school year; give no other date.
 
 **Success standard:** The buyer has a correct picture of what is live, and agrees one next step.`,
         order: 3,
@@ -1114,7 +1114,7 @@ In tutor recruitment, item 7 changes: commission talk is allowed, but a promise 
             situation:
               "After a short demo, Director Anong asks three questions: 'Can you also run the English program for our secondary section? Can your company send teachers to run the whole English department? And when does your Math program start?'",
             objective:
-              "Answer each question honestly. Primary Advantage is for primary grades; there is no secondary program for schools now, and families of secondary students can join Tutor Advantage. For the second question, say the Managed Service line only: 'Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready.' Give no date for Math Advantage. Then return to her primary-section need.",
+              "Answer each question honestly. Primary Advantage is for primary grades; there is no secondary program for schools now, and families of secondary students can join Tutor Advantage. For the second question, say the Managed Service line only: 'Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready.' Name the 2027 school year; give no other date. Then return to her primary-section need.",
             prospectContext:
               "Anong is interested and decisive. She will sign quickly if the trainee says yes to everything, so a weak trainee over-promises.",
             rubric: productRubric("school"),
@@ -2230,8 +2230,8 @@ In the recruitment roleplays, commission talk is allowed: say each baht figure a
 - Quote App-Only ~1,000 THB/student/year and Blended Learning ~1,500 THB/student/year only.
 - The pilot is **one grade level for one semester**. It has no free term and no discount. Daniel agrees the pilot start with each school.
 - **Managed Service:** one line only, and only if the school asks: "Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready." Never pre-sell it, and never name a school count.
-- **Science, Math, and Zhongwen Advantage:** each is its own app, built from the Primary Advantage base app. Show them at the visit. Give no date (Q-PR-24).
-- **K–6 scope for the school visits:** Storytime Advantage (Anuban 2 to P2), Primary Advantage (P3 to P6), and Science, Math, and Zhongwen Advantage, each its own app, built from the Primary Advantage base app. Give no date for any of them.
+- **Science, Math, and Zhongwen Advantage:** each is its own app, built from the Primary Advantage base app. Show them at the visit. Name the 2027 school year; give no other date.
+- **K–6 scope for the school visits:** Storytime Advantage (Anuban 2 to P2), Primary Advantage (P3 to P6), and Science, Math, and Zhongwen Advantage, each its own app, built from the Primary Advantage base app. Name the 2027 school year for Science, Math, and Zhongwen Advantage. Give no other date for any product.
 - Show only features that are live in the Primary Advantage production app on the day of the demo. The new build is live since the cutover of 2026-10-20. Check the scope §8 before each demo. Reedy Preview in Primary Advantage is in the live build since the cutover of 2026-10-20.
 - Name Boonyathat, or show its data, only with the school's written consent (Q-SE-03).
 

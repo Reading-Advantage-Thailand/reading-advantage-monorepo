@@ -2,9 +2,10 @@
 
 > **Track:** `storytime_at_home_release_20261106` · **Spec:** [spec.md](./spec.md) · **Plan:** [plan.md](./plan.md)
 > **Parent strategy:** [storytime_app_rebuild_20261025/test-strategy.md](../storytime_app_rebuild_20261025/test-strategy.md) (sections 1, P2, and P3 apply).
-> **Scope:** Phase 1 in full. Phase 2b in full (section P2b, written 2026-11-07 at role base `1da5f7968`, text of `7cd1fc067`). Phases 2 and 3 as an outline (sections P2 and P3 below).
+> **Scope:** Phase 1 in full. Phase 2b in full (section P2b, written 2026-11-07 at role base `1da5f7968`, text of `7cd1fc067`). Phase 2 in full (section P2, written 2026-11-16 at role base `a9c7a6c76`). Phase 3 as an outline (section P3 below).
 > **Written:** 2026-11-06 at role base `6716a1546`. Model: claude-code/claude-sonnet-5-5 (PM rule: no Opus).
 > **Facts:** each "measured" fact below was read on 2026-11-06 at `6716a1546`. No heavy job ran. Red and Green must measure again.
+> **Amended:** 2026-11-14 at role base `a008631d9`. Model: claude-code/claude-sonnet-5-5. Item 4 of the Phase 3 "After the word" list now names the labels of `printed-urls-live.ts` (review C finding C1006). PM decision 2026-11-14 19:00.
 
 ## 1. Rules for every phase of this track
 
@@ -788,29 +789,189 @@ Falsification: case 4 with the proxy rule moved after `FILE_PATH` must show a le
 | Q10 | Hardening note of the plan: split `storytime_migration` and `storytime_runtime`. | Out of scope for Phase 2b. The migrate script reads the URL from an environment variable, so the split needs no code change later. |
 | Q11 | M18: `pnpm architecture:check` already fails at the base (stale reconciliation manifest). | Out of scope for this track. The orchestrator reports it to the PM. This phase compares the failure message before and after and does not repair it. |
 
-## P2: Approved A-42 pin (outline)
+## P2: Approved A-42 pin
 
-**Risk: high.** External data decides what children see. An approved flag without Daniel's check is an A2 fault. The strategy refresh for this phase
-runs after the Phase 1 checkpoint and after the approved pin arrives (target 2026-11-17 to 2026-11-19).
+**Risk: high.** External data decides what children see. A wrong claim that a week is approved is an A2 fault, and it ships content Daniel did not pass.
+The pin also adds 72 read-along sentence clips, and the current contract cannot read the two weeks that hold two sentences on one page. A silent drop of
+those clips signs no URL and shows no sound. Source: spec FR-2 and AC-2.1, plan tasks 2.1 and 2.2, PM hand-off of 2026-11-16, Workbooks pin `70278a9b`.
 
-- **Start:** the Phase 1 heading carries `[checkpoint: <sha>]`. The date and the PM hand-off of the approved pin exist. The orchestrator captures a new
-  `phase_base_sha` by `git rev-parse HEAD` at that point.
-- **Red command (shape):** `cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/phase3-approved-pin.test.ts __tests__/phase3-loop-contract.test.ts __tests__/release-receipt-pin.test.ts __tests__/release-weeks-readiness.test.ts`, inside the `HEAVY` wrapper.
-  The new file `phase3-approved-pin.test.ts` holds the parent rows: `approved_weeks=8`, a valid `date`, non-empty `words` that differ from the draft text,
-  and the commit equal to the PM hand-off (parent P3.8, task 3.10).
-- **Edits in the same commit as the new pin:** the pin constant of `phase3-loop-contract.test.ts`, the pin case R1 of `release-receipt-pin.test.ts`,
-  and the cases W1, W3, and W6 of `release-weeks-readiness.test.ts` if the statuses or contents change (row F7). Each edit gets one line of reason.
-- **Green and closeout gate:** the receiver at the approved pin exits 0 for weeks 1 to 8; the second run and `git diff --exit-code apps/storytime/content` exit 0,
-  bound to the Phase 2 receipt commit by the path-history check of section P1.5; `phase3-approved-pin.test.ts` and `phase3-loop-contract.test.ts` exit 0;
-  `phase1-quality-gates.sh` exits 0; the targeted Green command exits 0 with the new file count; `tsc` and ESLint exit 0.
-- **Byte-equal and hand-off checks:** repeat tasks 1.2 and 1.6 for every changed folder. The approved weeks arrive as new hand-off folders. Use the manifest and
-  `cmp` rules as in Phase 1. Media still stay out of the repository.
-- **Special risks:** (1) the readiness result for w02 to w07 changes if the pin sets `published` and approves audio and song: the 404 rows of W1 become
-  200 rows by Daniel's approval, and Phase 3 must deploy only the weeks that Daniel passed; (2) the loops part `approval.loops` needs `date` and `words`
-  when approved (parent AC-13.2); (3) a closed enum in the loops fields (row F14) stops the task.
-- **Anti-patterns:** A2 (the receiver never writes `approved`; a test counts `approved_weeks=8`), A3, A4, A5, A15, A16.
-- **Reviews:** Review A on the diff: yes. Review B: no (no new input surface). Review C: no. Adversarial: a small round on an approved loops part without
-  `words`, and on a draft clone at the approved pin. Browser review: no. The parent Task 3.10 closeout gate is the base of this phase check.
+| Task | Risk | Reason |
+|---|---|---|
+| 2.1 Red | high | A wrong approval row gives false trust, and a wrong clip row hides a lost clip. |
+| 2.1 receiver and contract | high | The new `sentenceClips` rule and the pin write decide what the app serves. |
+| 2.2 Phase check | high | It is the only gate that proves the receipt, the media list, and the readiness together. |
+
+### P2.0 Role base, start gate, and capture
+
+- Role base of this strategy: `a9c7a6c760d5f917e7e7672a3bbae0978f1d6a38`. The facts below were read on 2026-11-16 at this base. No receiver run happened.
+- Start gate: the Phase 1 heading carries `[checkpoint: 811f05f36]` and the Phase 2b heading carries `[checkpoint: 4bca5a504]`. The PM hand-off of the
+  approved pin exists, and `git -C ~/Desktop/Workbooks cat-file -t 70278a9beb8ef7314d98df80e0462892a0ca5019` prints `commit`.
+- `phase_base_sha` = `a9c7a6c760d5f917e7e7672a3bbae0978f1d6a38`, as the orchestrator captured it now. The orchestrator confirms it with `git rev-parse HEAD`
+  AFTER the commit of this strategy and BEFORE the Red role starts. A SHA from before the strategy commit is not valid. The orchestrator records the full
+  SHA in the Red evidence.
+
+### P2.1 Measured facts (2026-11-16, role base `a9c7a6c76`, read-only)
+
+| # | Fact | How measured |
+|---|---|---|
+| M1 | Workbooks pin `70278a9beb8ef7314d98df80e0462892a0ca5019` is a commit, dated 2026-11-16 00:59 +0700, after `e8549b2e` (2026-11-15 23:58). | `git show -s`, `git cat-file`. |
+| M2 | The 7 hand-off folders are at source commit `e8549b2e`: `w01-storytime-app-package-r6` and `w02` to `w07-storytime-app-package-r5`. Each `MANIFEST.txt` holds `workbooks-commit: e8549b2e49cb7a29afdb11fd5b11d342273901fb`. | `head` of each `MANIFEST.txt`. |
+| M3 | The pin week files equal the hand-off week files except 4 keys: `.approval.loops.status`, `.approval.loops.date`, `.approval.loops.words`, and `.approval.loops.source`. 4 keys for each of 7 weeks. | Python deep compare of every leaf. |
+| M4 | Every shipped week w01 to w08 holds `approval.loops` `approved` with `date` 2026-11-15, `words` "Approved", and the Tasks source. `approval.thai` holds the same 4 keys. | `git show 70278a9b:…` parsed. |
+| M5 | Read-along `books[0].audio.sentenceClips` counts: 8, 16, 8, 8, 8, 8, and 16 for w01 to w07. The total is 72. Decodable `books[1].audio.sentenceClips` counts 8 each; the total is 56. | Read the 7 hand-off week files. |
+| M6 | In every book, `sentenceClips[i].sentence` equals `audio.sentences[i].sentence` after `trim`, in order. Every file is unique and matches `l2/media/w<nn>/sentences/b<book>-s<jj>.mp3` with `jj = i + 1`. | Same read, index by index. |
+| M7 | **The contract fails w02 and w07 today.** `bookSchema` matches array entries to **pages**. w02 and w07 read-along pages hold 2 sentences on each page (`How many suns? One!`), 16 sentences over 8 pages, so 8 entries name no page and parse fails: `books.0.audio.sentenceClips: no page of the book holds the sentence …`. w01 and w03 to w06 parse. | `tsx` probe with `weekSchema.safeParse` on the 7 files. |
+| M8 | `mediaOf` lists 16 sentence clips for a parsing week (8 read-along and 8 decodable). The read-along clips of w02 and w07 are unreachable while parse fails. | Probe with `mediaOf`. |
+| M9 | The receiver target for weeks 1 to 8: `8 weeks, 677 media files, 0 missing pictures`. Media by week: 94, 113, 90, 90, 98, 89, and 103; w08 holds 0 books and 0 media. | `mediaPathsOf` outside `approval`, de-duplicated. |
+| M10 | The shipped w01 holds 86 media paths outside `approval`; the w01 r6 pin holds 94. The test `login-media-sign.test.ts` expects `signed_map_size_expected=86`. | Probe; read the test. |
+| M11 | w01 is `published`; w02 to w08 are `draft`. w08 holds 0 books. The loops approval does not change `meta.status`. | Pin parse. |
+| M12 | The loops approval schema already requires `date` and a non-empty `words` when the status is `approved`. The pin satisfies both. A closed enum on `meta.status` (`draft`, `published`) holds. | Read `week.ts`; probe. |
+| M13 | `p6-r4-handoff-shapes.test.tsx` and `phase3-media-coverage.test.ts` exit 0 at the base with 31 tests. The first file reads the old r5/r4 folders and expects 56 sentence clips. | One `heavy-run.sh` job. |
+
+### P2.2 Red command (task 2.1) and expected failures
+
+One job. Red writes 3 new files and edits 4 existing files.
+
+```bash
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 --reporter=dot --silent=true __tests__/phase3-approved-pin.test.ts __tests__/phase3-sentence-clips-contract.test.ts __tests__/phase3-sentence-clips-media.test.ts __tests__/phase3-loop-contract.test.ts __tests__/release-receipt-pin.test.ts __tests__/release-weeks-readiness.test.ts; echo EXIT=$?'
+```
+
+Expected: exit 1; `files_failed=5 of 6`; `release-weeks-readiness.test.ts` passes as the characterization file (its statuses and picture counts do not
+change). The output holds no `Cannot find module` and no `ENOENT`. A Red failure is an assertion with a message. A test that passes besides the
+characterization rows is vacuous (A4).
+
+**Approved pin rows (`phase3-approved-pin.test.ts`, new).**
+
+| ID | Row | Expected at base | After Green |
+|---|---|---|---|
+| P1 | Every shipped week holds `approval.loops.status` `approved` | `approved_weeks=0` | `approved_weeks=8` |
+| P2 | The date is a valid ISO date and equals 2026-11-15 | `loops_date_valid=0` | `loops_date_valid=8` |
+| P3 | `words` is non-empty, trimmed, and not a draft word | `loops_words_nonempty=0` | `loops_words_nonempty=8` |
+| P4 | `source` names the Tasks item | `loops_source_present=0` | `loops_source_present=8` |
+| P5 | `source.json.commit` equals the PM pin and is 40 hex | fail, old pin | `pin=70278a9b…`, `full_pin=1` |
+| P6 | The loops approval does not open a draft week: `loadVisibleWeek` returns `null` with reason `draft` | rows fail on the pin read | `loops_approved_draft_weeks=7` |
+| P7 | w08: 0 books, `draft`, loops approved, `isWeekReady` false | loops row fails | `w08_books=0 w08_ready=0 w08_loops=approved` |
+| P8 | Statuses: `published_weeks=1`, `draft_weeks=7`; a published clone of w02 is ready (positive control) | passes (statuses already hold) | unchanged |
+
+**Sentence-clips contract rows (`phase3-sentence-clips-contract.test.ts`, new).**
+
+| ID | Row | Expected at base | After Green |
+|---|---|---|---|
+| S1 | Every pin week parses | w02 and w07 fail (M7) | `weeks_parsed=8` |
+| S2 | Every book holds `sentenceClips` | w02/w07 fail | `books_with_sentence_clips=14` |
+| S3 | Count equals `audio.sentences.length` for each book | fail on w02/w07 | `book_clip_count_mismatches=0` |
+| S4 | Entry `i.sentence` equals `audio.sentences[i].sentence` after trim | fail | `order_mismatches=0` |
+| S5 | File shape, book prefix, and uniqueness | fail | `file_shape_mismatches=0 clip_files_unique=128` |
+| S6 | Each broken copy fails with an issue that names `sentenceClips`: count −1, count +1, two entries swapped, one wrong sentence, a duplicate file, `../`, an absolute path, a URL, and a `b1-` file on book 0 | rows pass (the shape is refused for another reason) | `refusals=9` |
+| S7 | The receiver keeps the source text unchanged | fail | `source_text_unchanged=7` |
+| S8 | The map form stays accepted (legacy row of `p6-r4`) | passes | `map_form_accepted=1` |
+
+**Sentence-clips media rows (`phase3-sentence-clips-media.test.ts`, new).**
+
+| ID | Row | Expected at base | After Green |
+|---|---|---|---|
+| M1 | `mediaOf` lists the read-along clips of the 7 weeks | w02/w07 fail; 48 of 72 | `readalong_clips_listed=72` |
+| M2 | `mediaOf` lists the decodable clips | fail (w02/w07) | `decodable_clips_listed=56` |
+| M3 | Every media path of the pin week is listed (independent walk) | claim fails | `mediaof_uncovered=0` |
+| M4 | Each of the 72 files exists in its hand-off folder | fail | `clip_files_present=72` |
+| M5 | Each of the 72 files has a `MANIFEST.txt` line with a 64-hex sha256 | fail | `manifest_lines_found=72` |
+| M6 | The repository holds no media file under `apps/storytime/content` | passes; the check asserts `files_scanned > 0` | `media_files_in_content=0` |
+| M7 | `signWeekMedia` signs the 8 read-along clips of the shipped w01 and 94 paths in all | fail, 86 | `signed_map_size=94 readalong_clips_signed=8` |
+
+### P2.3 Same-commit pin edits (row F7)
+
+Each edit gets one line of reason in the receipt commit.
+
+| File | Edit | Reason |
+|---|---|---|
+| `release-receipt-pin.test.ts` | `RELEASE_PIN` `fa47ca23…` to `70278a9b…`; doc comment | The source record names the approved pin. |
+| `phase3-loop-contract.test.ts` | `RELEASE_PIN` to `70278a9b…`; doc comment | The source record names the approved pin. |
+| `login-media-sign.test.ts` | `signed_map_size_expected` 86 to 94; the old-pin control recomputed | w01 r6 adds 8 read-along clips; the signer signs every media path. |
+| `p6-r4-handoff-shapes.test.tsx` | Folder names `r5`/`r4` to `r6`/`r5`; `sentence_files_listed` 56 to 128; the two stray-entry rows accept the count message | The new hand-off adds read-along clips; a count rule names the counts first. |
+| `release-weeks-readiness.test.ts` | No edit | Statuses and picture counts hold; the added clips change no readiness result. |
+| `phase3-media-coverage.test.ts` | No edit expected | If it names a new uncovered path, `mediaOf` misses a path: stop (parent row F14). |
+
+### P2.4 Green command and closeout gate (task 2.2)
+
+**Receiver (one job).**
+
+```bash
+HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && node_modules/.bin/tsx apps/storytime/scripts/receive-weeks.ts --commit 70278a9beb8ef7314d98df80e0462892a0ca5019 --weeks 1-8'
+```
+
+Expected exit 0; the last line reads `record 8 weeks; this run 8 weeks, 677 media files, 0 missing pictures` (M9). The run writes 9 paths: the 8 week
+files and `source.json`. Commit the receipt, then run it again. The second run exits 0, and `git diff --exit-code apps/storytime/content` exits 0.
+
+**Targeted command.** The command of P2.2. Expected exit 0; `files=6`; `tests_failed=0 tests_skipped=0`; `tests_passed = base_count + new_tests`.
+Green records `base_count` once before the receipt and `new_tests` from the new files alone (A4, A5). A lower count means a deleted or skipped test.
+
+**Closeout gate.**
+
+1. The targeted command exits 0 with the counts above. `tsc --noEmit` in `apps/storytime` exits 0. ESLint on the changed files exits 0.
+2. The receiver exits 0 with the M9 line. The second run and `git diff --exit-code apps/storytime/content` exit 0.
+3. `sha256sum -c MANIFEST.txt` exits 0 in each of the 7 folders; the run prints `folders_checked=7`. No role uses `--strict`.
+4. Every received week equals `git show 70278a9b:content/storytime/l2/w<nn>.json` byte for byte: `weeks_equal_pin=8`.
+5. The hand-off folder week differs from the pin week only at the 4 `approval.loops` keys: `handoff_diff_keys=28`, and every key sits under
+   `approval.loops`. The folders are the source of the media only.
+6. `readalong_clips_listed=72`, `decodable_clips_listed=56`, `clip_files_present=72`, `manifest_lines_found=72`, `media_files_in_content=0`.
+7. `phase1-quality-gates.sh` exits 0 (`PASS=2, FAIL=0`).
+8. `rg -n "measure/tracks" apps/storytime/__tests__` exits 1 (A9; exit 2 fails). `rg -n "primary-app-storage" apps/storytime/app
+   apps/storytime/lib apps/storytime/scripts` exits 1.
+9. `git worktree list | wc -l` equals the count at the capture (A16).
+10. `build-graph update ./graph.db <changed files>` runs once if the phase changes an export (A10).
+11. Review A, the adversarial record, and the phase acceptance. The checkpoint follows them.
+
+### P2.5 Byte-equal, MANIFEST, and media checks
+
+- The byte-equal check is an artifact test. It uses `git show` and `cmp`, not the receiver code. Each of the 8 received files must equal the pin file.
+- The same check against the hand-off folder is a **4-key** check, not a byte check: the pin adds `approval.loops`. Quote the 4 keys and the count 28.
+  A byte diff against the folder is expected and is not a fault. The folder supplies the media.
+- The media check runs `sha256sum -c MANIFEST.txt` in each folder once (light work, section 1.1). The 72 new clip files must be entries of their
+  `MANIFEST.txt`. The test M5 reads the lines; the shell run verifies the bytes.
+- The repository holds no media. `git status --porcelain apps/storytime/content` lists 9 paths (`content_files_changed=9`), and
+  `git ls-files apps/storytime/content | rg -c '\.(mp3|wav|m4a|jpg|jpeg|png|mp4|webp|gif)$'` prints `0` (A14: exit 1 on `rg -c` with no hit is the pass).
+
+### P2.6 Special risks
+
+1. **A draft week with approved loops must stay draft.** The pin approves the loops of all 8 weeks, but only w01 is `published`. `loadVisibleWeek` must
+   return `null` with reason `draft` for w02 to w08, and `STORYTIME_SHOW_DRAFT_MEDIA=1` must not open them. P6 and P7 assert this with a positive
+   control (a published clone is ready). A failure here ships weeks Daniel did not pass.
+2. **The loops approval needs `date` and `words`.** The schema refuses an approved part without them. A missing value stops the task and goes to the PM;
+   no role invents a date or words.
+3. **A closed enum stops the task.** `meta.status` accepts only `draft` and `published`, and the question, book, song, position, and band enums stay closed.
+   A new value in the pin stops the task and goes to the PM (row F14).
+4. **The two-sentence page is the main Green work.** w02 and w07 read-along hold 16 sentence clips over 8 pages. The page match of the contract must
+   become an `audio.sentences` order match. A page-based rule drops 16 clips and fails the receipt.
+5. **w08 has no app package.** Run the receiver at the pin for w08; it writes the pin file (0 books, `draft`, loops approved) and no media. Do not
+   expect a folder.
+
+### P2.7 Anti-patterns
+
+| ID | Defense in P2 | Falsification condition |
+|---|---|---|
+| A2 | The receiver never writes `approved`. A test counts `approved_weeks=8` from the shipped files, and P6 proves the approval opens no draft week. Each refusal row has a broken copy, and M6 has a positive control. | A week with `approval.loops` draft passes P1, or an approved draft week answers 200. |
+| A3 | Every count is a labeled integer: `approved_weeks=8`, `readalong_clips_listed=72`, `signed_map_size=94`. The check parses the integer after the label. | A bare number or a commit id passes a count check. |
+| A4 | Each loop asserts its input set is not empty: `weeks_parsed=8` before the loop rows, `clip_files_present > 0` before the manifest rows, `media_files_in_content` only after `files_scanned > 0`. | A run over zero weeks or zero clips exits 0. |
+| A5 | Each plan note quotes the exit code and the labeled counts. A skipped row is "skipped", not "passed". | The note says "pass" and the cited command exits non-zero. |
+| A15 | No new hash or receipt. The only hash step is the PM-named `sha256sum -c`. `source.json` holds no hash key. | A new manifest, checksum field, or hash of a generated file appears. |
+| A16 | Work in the shared master tree; scratch folders under `/tmp`; no worktree. | `git worktree list` shows an extra entry after the phase. |
+
+### P2.8 Review applicability
+
+| Review | Applies | Reason |
+|---|---|---|
+| Review A (diff) | Yes | The receipt, the contract change, and the same-commit edits need a full read. |
+| Review B (security) | Yes, small | The signed map of w01 grows from 86 to 94 paths. **Call: yes**, because the map content changes even though the surface does not widen (same private bucket, same 6-hour expiry, same session gate, no unsigned fallback). The review reads the signer and the media list only. |
+| Review C (UX/API) | No | No UI change; the read-along renders no new control. |
+| Adversarial | Yes, small | Four cases: an approved loops part without `words`; a draft clone at the pin with approved loops (must stay 404); a clip count or order mismatch; a clip file missing from the hand-off folder. |
+| Browser review | No | No UI change in this phase, and the read-along clips get no button now. The first user-facing proof is Phase 3 after the upload. |
+
+### P2.9 Open questions and defaults
+
+| # | Item | Default |
+|---|---|---|
+| Q-P2a | The legacy map form of `sentenceClips` (page number to file) in the `p6-r4` rows. | The map form stays accepted. The new order rule applies to the array form only. |
+| Q-P2b | A read-along clip button in this phase. | No button. The spec puts display work out of scope; this phase lists, signs, and serves the clips only. |
 
 ## P3: At-home deploy (outline)
 
@@ -826,7 +987,7 @@ runs after the Phase 1 checkpoint and after the approved pin arrives (target 202
      of each folder against the bucket download, with the labeled count `bucket_files_ok=<n>`. It adds no new hash file.
   3. The environment of the deployed revision holds no `STORYTIME_SHOW_DRAFT_MEDIA` (AC-3.3). The record names the command (for example
      `gcloud run revisions describe … --format='value(spec.containers[0].env)'`) and the result `draft_switch_set=0`.
-  4. After Daniel moves the traffic: each printed URL of the published weeks answers 200 on the live domain (AC-3.4, `urls_ok=<n>`).
+  4. After Daniel moves the traffic: run `apps/storytime/scripts/checks/printed-urls-live.ts` once with one family session cookie in `STORYTIME_CHECK_COOKIE` (never printed). The check passes when `urls_rendered=<n>` equals `urls_checked=<n>`, `urls_failed=0`, and the exit code is 0 (AC-3.4).
 - **Server and client in one job:** a local `next start` check runs as one `HEAVY` job with `trap 'kill $SERVER_PID' EXIT`.
 - **Anti-patterns:** A1 and A8 (the gate is the structured marker, not prose), A3, A4 (a 404 check lists 7 weeks first), A5, A6 (the registry names a deploy
   state only after AC-3.1 and AC-3.4 pass, with the revision and Daniel's word), A16.

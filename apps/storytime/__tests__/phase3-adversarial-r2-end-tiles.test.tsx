@@ -2,10 +2,11 @@
 /**
  * Phase 3 adversarial round 2: the end-of-book way back with hostile tiles (finding F149).
  *
- * The end view renders `WeekTileLinks` only when the caller passes tiles. This case runs the
- * two edges: no tile at all, and a tile set where one tile carries a picture file and the next
- * carries none. The finished line must always show, a tile picture must land on the media base,
- * and a tile without a picture must render no `img`.
+ * The end view used to render `WeekTileLinks` with the tiles of the caller. The end of the book
+ * now leaves for the week home page and shows no tile copy (Daniel's finding 1 of task 6.2). This
+ * case runs the two edges: no tile at all, and a tile set where one tile carries a picture file
+ * and the next carries none. The finished line must always show, and no tile of the set may reach
+ * the end of the book.
  */
 import "@testing-library/jest-dom/vitest";
 // The media of a week now comes from the signed map of the page. The mock keeps the old URLs of
@@ -59,7 +60,7 @@ async function renderEnd(tiles?: QuestionTile[]) {
 }
 
 describe("Phase 3 adversarial end-of-book way back", () => {
-  it("shows the finished line with no tiles and renders a picture tile only when it has a file", async () => {
+  it("shows the finished line and no copy of the week tiles at the end of the book", async () => {
     const empty = await renderEnd([]);
     expect(
       empty.container.querySelectorAll("a"),
@@ -79,19 +80,13 @@ describe("Phase 3 adversarial end-of-book way back", () => {
       { id: "song", href: "?part=song", label: "Song", pictureAlt: "cover" },
     ];
     const withPicture = await renderEnd(tiles);
-    const images = [...withPicture.container.querySelectorAll("img")];
-    expect(images, "the first tile carries the picture of the tile set").toHaveLength(1);
-    expect(images[0], "the tile picture must land on the signed URL").toHaveAttribute(
-      "src",
-      "https://storage.googleapis.com/storytime-app-media/review/book-1.jpg",
-    );
-    expect(images[0], "the tile picture must keep its alt text").toHaveAttribute(
-      "alt",
-      "cover",
-    );
     expect(
       withPicture.container.querySelectorAll("a"),
-      "every tile must stay a link",
-    ).toHaveLength(3);
+      "the end of the book must show no tile link (finding 1 of task 6.2)",
+    ).toHaveLength(0);
+    expect(
+      withPicture.container.querySelectorAll("img"),
+      "the end of the book must show no tile picture (finding 1 of task 6.2)",
+    ).toHaveLength(0);
   });
 });

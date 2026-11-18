@@ -15,7 +15,8 @@ export interface ReadAlongState {
   isPlaying: boolean;
   /** Sets the position at once, for example after a tap. */
   select: (position: ReadAlongPosition) => void;
-  /** Clears the position, for example when the player closes. */
+  /** Clears the position, for example when the player closes. The late `pause` and `seeked`
+   * events of that stop mark no word again; the mark returns on `play` or on a `select` call. */
   reset: () => void;
 }
 
@@ -35,6 +36,10 @@ export function useReadAlong({
   const [position, setPosition] = useState<ReadAlongPosition>(NO_POSITION);
   const [isPlaying, setIsPlaying] = useState(false);
   const positionRef = useRef<ReadAlongPosition>(NO_POSITION);
+  // True between a `reset()` and the next `play` or `select`: a browser queues the `pause` and
+  // `seeked` events of a stop after the host call, and their sync would mark a word again
+  // (task 7.6, finding F2). A plain `pause` with no reset keeps its mark (Primary behavior).
+  const suppressSyncRef = useRef(false);
   const sentencesRef = useRef(sentences);
   const frameRef = useRef<number | null>(null);
 
@@ -43,11 +48,15 @@ export function useReadAlong({
   }, [sentences]);
 
   const select = useCallback((next: ReadAlongPosition) => {
+    suppressSyncRef.current = false;
     positionRef.current = next;
     setPosition(next);
   }, []);
 
-  const reset = useCallback(() => select(NO_POSITION), [select]);
+  const reset = useCallback(() => {
+    select(NO_POSITION);
+    suppressSyncRef.current = true;
+  }, [select]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -57,8 +66,10 @@ export function useReadAlong({
       const next = findPosition(sentencesRef.current, audio.currentTime, positionRef.current);
       if (next !== positionRef.current) select(next);
     };
-    // A cold element reports time 0; wait for the metadata before a paused sync.
+    // A cold element reports time 0; wait for the metadata before a paused sync. After a reset,
+    // the late events of that stop do not sync (task 7.6, finding F2).
     const syncIfLoaded = () => {
+      if (suppressSyncRef.current) return;
       if (audio.readyState >= 1) sync();
     };
     const stop = () => {
@@ -68,10 +79,13 @@ export function useReadAlong({
       }
     };
     const tick = () => {
-      sync();
+      // After a reset, a frame that runs before the late `pause` event must not mark a word
+      // again (task 7.6, finding F2, green retry r2). The mark returns on `play` or `select`.
+      if (!suppressSyncRef.current) sync();
       frameRef.current = requestAnimationFrame(tick);
     };
     const onPlay = () => {
+      suppressSyncRef.current = false;
       setIsPlaying(true);
       stop();
       frameRef.current = requestAnimationFrame(tick);
@@ -84,7 +98,10 @@ export function useReadAlong({
     const onEnded = () => {
       stop();
       setIsPlaying(false);
-      select(NO_POSITION);
+      // Clear the position without `select`, so a reset at the media end keeps its suppression
+      // (task 7.9, finding F2 of Review A): the late `seeked` after that reset marks no word.
+      positionRef.current = NO_POSITION;
+      setPosition(NO_POSITION);
     };
 
     audio.addEventListener("play", onPlay);

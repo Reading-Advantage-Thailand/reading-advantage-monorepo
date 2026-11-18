@@ -3,8 +3,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { BucketImage } from "@/components/ui/bucket-image";
 import { useLocale, useTranslations } from "next-intl";
 import { Languages } from "lucide-react";
-import { ReadAlongPassage } from "@/components/read-along/read-along-passage";
-import { ReadAlongPlayer } from "@/components/read-along/read-along-player";
+import { ReadAlongPassage } from "@reading-advantage/read-along/components/read-along/read-along-passage";
+import { ReadAlongPlayer } from "@reading-advantage/read-along/components/read-along/read-along-player";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -13,15 +13,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 import { useFollowScroll } from "@/hooks/use-follow-scroll";
-import { useReadAlong } from "@/hooks/use-read-along";
-import { parseSentences } from "@/lib/read-along/align";
-import { seekTimeForWord } from "@/lib/read-along/position";
-import { seekOrWait } from "@/lib/read-along/seek";
+import { useReadAlong } from "@reading-advantage/read-along/hooks/use-read-along";
+import { useReadAlongPlayerSkin } from "@/hooks/use-player-skin";
+import { parseSentences } from "@reading-advantage/read-along/lib/align";
+import { seekTimeForWord } from "@reading-advantage/read-along/lib/position";
+import { seekOrWait } from "@reading-advantage/read-along/lib/seek";
 import { getAudioUrl } from "@/lib/storage-config";
 import { toTranslationLanguage } from "@/lib/translation-language";
 import { cn } from "@/lib/utils";
 import { rpgButton } from "@/components/rpg/chrome";
+import { HIGHLIGHT_CLASSES } from "@/lib/audio-highlight";
 
 type ChapterContentProps = {
   /** The chapter title, used for the picture alt text. */
@@ -65,6 +73,7 @@ export function ChapterContent({
   imageUrl,
   imageAlt,
 }: ChapterContentProps) {
+  const { labels, chrome } = useReadAlongPlayerSkin();
   const locale = useLocale();
   const t = useTranslations("Components");
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -259,10 +268,19 @@ export function ChapterContent({
         position={position}
         active={togglePlayer}
         currentSentenceRef={currentSentenceRef}
+        highlightClasses={HIGHLIGHT_CLASSES}
         onWordTap={handleWordTap}
         onTranslate={handleTranslateClick}
-        translateLabel={t("translate")}
-        translateDisabled={currentSentenceIndex === -1}
+        renderSentenceMenu={(sentenceIndex, view, onTranslate) => (
+          <ContextMenu>
+            <ContextMenuTrigger>{view}</ContextMenuTrigger>
+            <ContextMenuContent className="w-50">
+              <ContextMenuItem inset disabled={currentSentenceIndex === -1} onClick={onTranslate}>
+                {t("translate")}
+              </ContextMenuItem>
+            </ContextMenuContent>
+          </ContextMenu>
+        )}
       />
 
       {togglePlayer && (
@@ -276,6 +294,8 @@ export function ChapterContent({
             onPlayPause={handlePlayPause}
             onPlaySentence={handlePlaySentence}
             onSpeedChange={handleSpeedTime}
+            labels={labels}
+            chrome={chrome}
           >
             {isTranslateOpen && translate && (
               <p aria-live="polite" className="text-center text-sm text-[#fff4dc]">

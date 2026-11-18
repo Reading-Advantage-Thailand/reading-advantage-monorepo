@@ -9,7 +9,8 @@ Source of truth: `advantage-pr/AGENTS.md`, `08-strategy/product-strategy-2026-20
 4. Tutor Advantage is a tutor-led class network that sells the printed books. It is not an AI tutor app. Add a Tutor hero on the home page beside the current message.
 5. Blended Learning and Managed Service carry no stale dates. Managed Service is not pre-sold.
 6. Scale is honest: 1 active school (Primary Advantage); no school uses Reading Advantage.
-7. Reedy voice practice appears only on the Tutor Advantage page.
+7. Reedy voice practice appears only on the Tutor Advantage page and the Primary Advantage page. In Primary Advantage, Reedy is a Preview activity at the end of each lesson. No copy names Reedy in Reading Advantage, and no copy describes Read Along with Reedy as live.
+   Amended 2026-11-18 (PM order): the old rule said "Tutor Advantage page" only. That is false since the Primary cutover of 2026-10-20, because Reedy Preview is live in Primary (track primary_reedy_preview_20261003, archived).
 8. Mastery Advantage: live in CodeCamp Advantage, entering Primary Advantage through tagged content.
 9. Same changes in en, th and zh. Daniel checks the Thai.
 10. Primary Advantage files are in scope after commit d7f6609c7. Do not touch the `experience` section.

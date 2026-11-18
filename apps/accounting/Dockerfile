@@ -24,7 +24,7 @@ ENV NODE_ENV=production
 
 RUN pnpm turbo run build --filter=accounting
 
-FROM deps AS runner-bundle
+FROM builder AS runner-bundle
 
 RUN pnpm --filter accounting exec esbuild app/lib/intake-runner.ts \
     --bundle --platform=node --format=esm --target=node22 \

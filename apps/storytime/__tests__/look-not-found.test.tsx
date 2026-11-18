@@ -322,7 +322,7 @@ describe("Task 1.1 404 week-not-open view (AC-1.1, AC-1.2)", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     const open = await highestOpenWeeks();
     expect(warn, "highestOpenWeeks must write no log").toHaveBeenCalledTimes(0);
-    expect(open, "the shipped content has week 1 open and week 2 draft").toEqual({ 2: 1 });
+    expect(open, "the shipped content has week 7 open and week 8 draft").toEqual({ 2: 7 });
     warn.mockRestore();
 
     const quiet = vi.spyOn(console, "warn").mockImplementation(() => undefined);

@@ -21,8 +21,15 @@ const app = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const contentDirectory = resolve(app, "content");
 const weekDirectory = resolve(contentDirectory, "l2");
 
-/** The pin of the at-home release of 2026-11-20, after the r3 take of 2026-11-09 (task 3.2). */
-const RELEASE_PIN = "953f798ea309cc10abd5538c202e05ff31a2320d";
+/**
+ * The pin of the at-home release of 2026-11-20, after Daniel approved weeks 2 to 7
+ * (plan task 3.0b).
+ *
+ * The published pin (the Workbooks commit 1c5385a6e8a7243eaa102a3774cce7f2f0d80d8c) holds
+ * `meta.status` `published` in w01 to w07 and the three approval parts `audio`, `song`, and
+ * `scripts` approved in w02 to w07. w08 stays a draft.
+ */
+const RELEASE_PIN = "1c5385a6e8a7243eaa102a3774cce7f2f0d80d8c";
 
 /** The eight week files that the source record lists, in the order of the week. */
 const EXPECTED_FILES = [

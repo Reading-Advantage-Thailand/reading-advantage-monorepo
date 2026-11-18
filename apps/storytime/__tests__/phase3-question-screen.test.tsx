@@ -531,14 +531,13 @@ describe("Phase 3 Storytime question screen", () => {
       container.textContent,
       "the right tap on the last question must end the screen",
     ).not.toContain(questions[0].ask.en);
-    expect(linkHrefs(container), "the end must show the three tiles of the week page").toEqual([
-      "?part=book",
-      "?part=decodable",
-      "?part=song",
-    ]);
+    expect(
+      linkHrefs(container),
+      "the end must show no copy of the week tiles (finding 1 of task 6.2)",
+    ).toEqual([]);
   });
 
-  it("shows the three tiles of the week page at the end of the screen", async () => {
+  it("shows no copy of the week tiles at the end of the screen", async () => {
     const copy = approvedWeek();
     const book = readAlongBook(copy);
     const questions = readAlongQuestions(copy);
@@ -547,14 +546,13 @@ describe("Phase 3 Storytime question screen", () => {
     const skip = screen.queryByRole("button", { name: questionLabels.skip });
     expect(skip, "the question screen must show the skip control").not.toBeNull();
     fireEvent.click(skip as HTMLElement);
-    expect(linkHrefs(container), "the end must show the three tiles of the week page").toEqual([
-      "?part=book",
-      "?part=decodable",
-      "?part=song",
-    ]);
-    expect(container.textContent, "the end must show the tile labels").toContain("Read-along");
-    expect(container.textContent, "the end must show the tile labels").toContain("Decodable");
-    expect(container.textContent, "the end must show the tile labels").toContain("Song");
+    expect(
+      linkHrefs(container),
+      "the end must show no copy of the week tiles (finding 1 of task 6.2)",
+    ).toEqual([]);
+    expect(container.textContent, "the end must show no tile label").not.toContain("Read-along");
+    expect(container.textContent, "the end must show no tile label").not.toContain("Decodable");
+    expect(container.textContent, "the end must show no tile label").not.toContain("Song");
   });
 
   it("leads to the question screen in the slow mode", async () => {

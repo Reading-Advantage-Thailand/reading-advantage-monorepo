@@ -85,7 +85,7 @@ describe("VertexProvider", () => {
     expect(client).toBeInstanceOf(VertexProvider);
   });
 
-  it("throws ProviderNotConfiguredError when a credential is missing", () => {
+  it("builds without a key pair and throws ProviderNotConfiguredError only without a project", () => {
     const saved = { ...process.env };
     delete process.env.VERTEX_CLIENT_EMAIL;
     delete process.env.VERTEX_PRIVATE_KEY;
@@ -93,6 +93,9 @@ describe("VertexProvider", () => {
     try {
       expect(() =>
         createAIClient({ provider: "vertex", project: "p", location: "global" })
+      ).not.toThrow();
+      expect(() =>
+        createAIClient({ provider: "vertex", location: "global" })
       ).toThrow(ProviderNotConfiguredError);
     } finally {
       process.env = saved;

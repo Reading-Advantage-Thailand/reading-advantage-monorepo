@@ -36,9 +36,9 @@ COOKIE=""
 TMP_DIR="$(mktemp -d -t storytime-p4smoke-XXXXXX)"
 
 cleanup() {
-  [ -n "$C1" ] && podman rm -f "$C1" >/dev/null 2>&1
-  [ -n "$C2" ] && podman rm -f "$C2" >/dev/null 2>&1
-  podman rm -f "$DB_CONTAINER" >/dev/null 2>&1 || true
+  [ -n "$C1" ] && podman rm -f -v "$C1" >/dev/null 2>&1
+  [ -n "$C2" ] && podman rm -f -v "$C2" >/dev/null 2>&1
+  podman rm -f -v "$DB_CONTAINER" >/dev/null 2>&1 || true
   rm -rf "$TMP_DIR"
 }
 trap cleanup EXIT INT TERM

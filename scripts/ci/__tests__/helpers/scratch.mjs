@@ -59,8 +59,10 @@ export const TABLE_ROWS = [
     project: "primary-advantage",
     region: "asia-southeast1",
     cloudbuild: "apps/primary-advantage/cloudbuild.yaml",
-    mode: "direct",
-    tagPrefix: "",
+    mode: "gated",
+    tagPrefix: "pa",
+    tag: "pa-${BUILD_ID:0:8}",
+    tagLength: 11,
   },
   {
     id: "storytime",

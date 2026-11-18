@@ -322,25 +322,46 @@ describe("adversarial word clips (K1-K7)", () => {
     // The r3 take of 2026-11-09 (plan task 3.2) gives the read-along book 12 clips, so the week
     // of this fixture holds 14 clip files: the 12 read-along clips and the 2 decodable clips.
     // The old pin was decodable_clips_listed=2, when only the decodable book held clips (R-EDIT3).
+    // Task 6.2, round 3: the received week holds the three Workbooks word maps (the opening
+    // routine, the family words, and the tricky words), so the fixture holds 15 more clip files
+    // and the pin is 29.
     expect(
       `decodable_clips_listed=${clips.length}`,
       `the receiver must list every clip file with kind word-clip, listed ${clips.length}`,
-    ).toBe("decodable_clips_listed=14");
+    ).toBe("decodable_clips_listed=29");
     expect(
       `listed_distinct_clips=${new Set(clips.map((entry) => entry.file)).size}`,
       "every clip file must be listed once",
-    ).toBe("listed_distinct_clips=14");
+    ).toBe("listed_distinct_clips=29");
+    // Task 6.2, round 3: the received week holds the three Workbooks word maps, so the list holds
+    // 29 clip files: the 12 read-along clips, the 2 decodable clips of the fixture, and the 15
+    // clips of the opening routine, the family words, and the tricky words.
     expect(clips.map((entry) => entry.file).sort(), "the listed files must hold both decodable clips").toEqual([
+      "l2/media/w01/words/wa-a.mp3",
       "l2/media/w01/words/wa-am.mp3",
+      "l2/media/w01/words/wa-and.mp3",
       "l2/media/w01/words/wa-ben.mp3",
+      "l2/media/w01/words/wa-boy.mp3",
+      "l2/media/w01/words/wa-can.mp3",
+      "l2/media/w01/words/wa-fan.mp3",
+      "l2/media/w01/words/wa-friend.mp3",
+      "l2/media/w01/words/wa-girl.mp3",
+      "l2/media/w01/words/wa-goodbye.mp3",
       "l2/media/w01/words/wa-hello.mp3",
+      "l2/media/w01/words/wa-hen.mp3",
       "l2/media/w01/words/wa-i.mp3",
       "l2/media/w01/words/wa-may.mp3",
       "l2/media/w01/words/wa-mia.mp3",
       "l2/media/w01/words/wa-nan.mp3",
+      "l2/media/w01/words/wa-nest.mp3",
+      "l2/media/w01/words/wa-net.mp3",
+      "l2/media/w01/words/wa-nose.mp3",
+      "l2/media/w01/words/wa-nut.mp3",
       "l2/media/w01/words/wa-pat.mp3",
+      "l2/media/w01/words/wa-pen.mp3",
       "l2/media/w01/words/wa-pip.mp3",
       "l2/media/w01/words/wa-sam.mp3",
+      "l2/media/w01/words/wa-sun.mp3",
       "l2/media/w01/words/wa-teacher.mp3",
       "l2/media/w01/words/wa-your.mp3",
       "words/cat.mp3",
