@@ -41,6 +41,11 @@ Track: `www_daily_blog_posts_20261115` (light lane). One task per post.
   this session. Pushed `bebaf8509` to master (`d782cc169..bebaf8509`). CD run 44962570177: success.
   12 of 12 page checks passed. The 11-23 post still gave 404. Contact sheet:
   https://drive.google.com/drive/folders/1crx5RlJse2NdLBobxMLtF6WFCdRYxHB2.
+- [x] 1.8 Post `she-taps-nest-and-hears-it`, 2026-11-23 (PREPARE only; the orchestrator pushes on
+  2026-11-23 because `blog.ts` has no date gate): verify the hand-off manifest, copy the en and th
+  posts and the two images, run the gates (five blog vitest files, www build, local render captures
+  at 1280 and 390, en and th). Ninth commit on `www/daily-posts-1116-1117`. No push from this
+  session.
 - [x] 1.2 Fault: the reading time ignored the prose inside rich blocks and Thai script, so the daily
   post showed 4 min in en and 1 min in th. `calculateReadingTime` now counts figure captions,
   callout titles and text, and pull quotes, skips block keys, paths, alt text, and screen-reader
@@ -114,3 +119,21 @@ Track: `www_daily_blog_posts_20261115` (light lane). One task per post.
   with a blurred fill. The recording shows the Thai student home on the English page too. The
   `2026-11-18-my-words.webp` figure is a 1279x300 banner crop, so at 390 px its app text is small.
 - Open: the orchestrator pushes `73daa201f` on 2026-11-18 and captures the live pages.
+
+## Gate record (2026-11-18, 2026-11-23 post, PREPARE only, no push)
+
+- Hand-off `~/Desktop/handoff/blog/2026-11-23/MANIFEST.txt`: `sha256sum -c` gives 6 of 6 lines OK.
+- Bytes: `post.md` and `post.th.md` match the hand-off posts with `cmp`. The two images in
+  `public/blog/` give the manifest sha256. Frontmatter date is `2026-11-23` in en and th.
+- Five blog vitest files (`blog`, `blog-blocks`, `blog-draft`, `blog-posts-validation`,
+  `blog-locale`, `--maxWorkers=1`) through heavy-run: exit 0, 1813 tests.
+- `pnpm build` in the www app through heavy-run: exit 0 after one retry. The first call exits 1 on
+  the Next.js security reminder.
+- Local render (`next start` of that build, port 3423) at 1280 px and 390 px, en and th: HTTP 200,
+  both images load (naturalWidth above 0), reading time "3 min read" en and "2 นาทีในการอ่าน" th,
+  horizontal overflow 0 px. Captures and `checks.json` in `/tmp/opencode/daily-post-1123/`.
+- `node scripts/ci/affected-apps.mjs --base 40419d4bc1f3a712f295acd7a6fc8939c8b6d69a --head
+  <this commit>` (the merge base of HEAD and `origin/master`) gives `["www-reading-advantage"]`,
+  exit 0. The zero base gives the same. The `origin/master` tip `ac1d0986` is ahead of the branch
+  point, and this branch is not rebased, so a run against that tip lists 10 apps.
+- Open: the orchestrator pushes this commit on 2026-11-23 and captures the live pages.
