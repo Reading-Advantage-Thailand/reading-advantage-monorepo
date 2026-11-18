@@ -1,0 +1,133 @@
+# Green log — task 1.4 pin refresh series
+
+Role: Measure Green, model opencode-go/deepseek-v4.1-flash (DeepSeek family).
+Session: Green · P1 T1.4 · architecture_ci_input_pin.
+Task: `measure/tracks/architecture_ci_input_pin_20261110/plan.md` task 1.4.
+Date: 2026-11-18 (Asia/Bangkok, +0700).
+
+## PM decision that changes the order
+
+PM decision 2026-11-18 on the 1.4d stop (`green-14d-837755eaa.log`), route (a), word for word:
+
+> "pin refresh first"
+
+Task 1.4 runs before task 1.4d. The PM approves the change of order. The quote is recorded in
+plan.md under task 1.4d.
+
+## Preconditions
+
+- `git status --short -- packages/architecture-enforcement` is empty (spec OQ-4). Checked at
+  the start of the session and again before the first run.
+- `git rev-parse HEAD` = `008e0b76f04d46a8b0dc5218f4fe86e1c0dc06f7` before the first run.
+- `.cache/architecture-pin-refresh/` held no `checkpoint.json`, so the series started with an
+  empty store.
+
+## Run 1 (series run 1)
+
+Command:
+`HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm architecture:pin:refresh --acknowledge --budget-s 1500'`
+
+- start = 2026-11-18T18:51:28+07:00
+- end = 2026-11-18T18:52:07+07:00
+- exit = 0
+- HEAD at start = `008e0b76f04d46a8b0dc5218f4fe86e1c0dc06f7`
+- HEAD at end = `853fc78bd16ccb7456e18cc97d9f4367e838d62f`
+- store = empty at start; `step=store elapsed_s=0` printed no `checkpoint=` line
+- steps: `projection` 1 s, `prelude pass=1` 11 s, `prelude pass=2` 27 s (16 s), `combine` 32 s,
+  `input_snapshot` 33 s, `trees` 33 s, `validate` 33 s
+- `modules_total` = 7009 for both passes. Pass 1 ended at `elapsed_s=17`; pass 2 ended at
+  `elapsed_s=32`. Batch size 250, 29 batch lines each pass.
+- `partial` line: none. `checkpoint=discarded`: none.
+- store after the run: deleted, because the manifest write succeeded (FR-8.4).
+
+The module count is 7009, not the 6866 that plan task 1.4c expected. Cause: master took more
+analyzed files between 2026-11-11 and 2026-11-18 (new apps and files, for example the accounting
+app). The plan records the real count, and task 1.4 records it.
+
+HEAD moved while the run was open. The commit is `853fc78bd`
+(`docs(measure): add the storytime media-list fixture task`, `storytime_app_rebuild_20261025`),
+and it changes one file, `measure/tracks/storytime_app_rebuild_20261025/plan.md`. `measure/` is
+not an analyzer source root, so the projection bytes did not change and the run printed no
+`checkpoint=discarded reason=head_changed`. The store is valid at that HEAD too.
+
+## Manifest commit
+
+Five pin fields are in scope (spec D-3). Three changed; two stayed:
+
+| Field | Old | New |
+| --- | --- | --- |
+| `analyzerInputSnapshotSha256` | `50a6a5299d02…` | `eedf59b68418…` |
+| `analyzerImplementationTreeSha256` | `1ad7a5d1f21d…` | unchanged |
+| `implementationAndTestTreeSha256` | `ae7ccdc4d9e6…` | unchanged |
+| `reportSha256s` | `49cc867370a6…` (twice) | `233f6dc22300…` (twice) |
+| `reviewSubjectSha256` | `d6ac12196cda…` | `cf46802f708a…` |
+
+Commit `98c0a553a` holds one path:
+`packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json`.
+Message: `chore(architecture): refresh the v2 manifest pins (track_id: architecture_ci_input_pin_20261110)`.
+`git diff --stat` = 1 file changed, 4 insertions, 4 deletions. The 15-key set of `V2_MANIFEST_KEYS`
+stays.
+
+## Full check (the gate that did not pass)
+
+Command:
+`HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm architecture:check'`
+
+- start = 2026-11-18T18:52:29+07:00
+- end = 2026-11-18T18:53:24+07:00
+- exit = 1 (the CLI exits 2; `pnpm` maps it to 1, and heavy-run reports 1)
+- HEAD = `98c0a553a8f3d0b9454acf5175ddf15c8c4f51a0` at start and at end; unchanged
+- output: `architecture check: analysis-error (files=7009, findings=884, parseErrors=1)`
+- the one parse error: `MODULE_RESOLUTION_ERROR apps/accounting/next-env.d.ts:4:1`
+- the debt comparison did not run, so this run holds no additions, removals, or renames count
+
+Cause (read-only inspection):
+
+- Three `next-env.d.ts` files carry uncommitted working-tree edits from a dev server:
+  `apps/accounting/next-env.d.ts` (modified 2026-11-13 05:46), `apps/marketing/next-env.d.ts`
+  (modified 2026-11-06 01:10), and `apps/activity-vinext-fixture/next-env.d.ts` (modified
+  2026-11-06 01:12). The whole-worktree status holds these three modified files and no other
+  modified file.
+- The working-tree form of `apps/accounting/next-env.d.ts` adds
+  `import "./.next/types/root-params.d.ts";` at line 4. `apps/accounting/.next/types/` does not
+  exist in this checkout.
+- `nextGeneratedRouteTypeTarget` (`packages/architecture-enforcement/src/analyzer.ts:415-426`)
+  accepts only `next-env.d.ts` imports that match `^\./\.next\/(?:dev\/)?types\/routes\.d\.ts$`.
+  A `root-params.d.ts` import therefore fails to resolve and becomes a parse error.
+- `checkArchitectureRepository` (`architecture-check.ts:200-229`) reads working-tree bytes for
+  the analysis. The refresh and the manifest validation read the projection, which takes HEAD
+  bytes for every path outside `packages/architecture-enforcement`. That is why the refresh and
+  its validate step passed and this check does not.
+
+The working-tree edits are unrelated to this track. This role does not restore, stash, or commit
+them. The gate needs one of two decisions: restore the three generated files, or accept a check
+on HEAD bytes. Task 1.4 stays `[~]`.
+
+## Pin test (the task's test command)
+
+Command: `CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts`
+
+- exit = 0
+- `tests_total=20`, `tests_failed=0`, `tests_passed=20`, `test_files=1`
+- duration 17.89 s, at 2026-11-18T18:54:20+07:00, HEAD `98c0a553a`
+
+## Files added by this task
+
+- `measure/runs/architecture_ci_input_pin_20261110/green-14-008e0b76f.log` (this log)
+
+No source file changed. No test file changed. The archive did not change.
+
+## Result
+
+MEASURE_AGENT_RESULT
+role: green
+status: blocked
+track: architecture_ci_input_pin_20261110
+phase: Phase 1, task 1.4
+commits: 98c0a553a (the five-field pin refresh); the plan-evidence commit that carries this log
+tests_run: `pnpm architecture:pin:refresh --acknowledge --budget-s 1500` through heavy-run p2 exits 0 (series run 1 of 1); `CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts` exits 0 with tests_total=20 and tests_failed=0; `pnpm architecture:check` through heavy-run p2 exits 1 with analysis-error
+files_changed: packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json (implementation, committed); measure/tracks/architecture_ci_input_pin_20261110/plan.md and this log (evidence)
+plan_updates: task 1.4 round 9 note (run facts, the manifest commit, the analysis-error stop); task 1.4d amendment that records the PM decision of 2026-11-18, word for word "pin refresh first", and the order change
+known_failures: `pnpm architecture:check` exits 1 with `analysis-error (files=7009, findings=884, parseErrors=1)` and `MODULE_RESOLUTION_ERROR apps/accounting/next-env.d.ts:4:1`. Cause: three uncommitted generated `next-env.d.ts` files hold an import of `./.next/types/root-params.d.ts`, which `nextGeneratedRouteTypeTarget` does not accept. No additions, removals, or renames count was produced.
+handoff: The pin refresh is done and committed at `98c0a553a`, so the v2 pins are current at that HEAD. Task 1.4 stays `[~]`: the full check cannot pass while the working tree holds the three unrelated dirty generated files. The orchestrator must choose one route. ROUTE A: allow this role to restore the three tracked generated files with `git checkout -- apps/accounting/next-env.d.ts apps/marketing/next-env.d.ts apps/activity-vinext-fixture/next-env.d.ts` (they are written by a dev server and say "This file should not be edited"), then rerun the check to get the exit code and the v1 debt counts for the 1.4d scope. ROUTE B: accept the check on HEAD bytes in a temporary worktree at `98c0a553a`. ROUTE C: extend the analyzer Next-import whitelist to `root-params.d.ts`, which needs its own Red test and a new task. Task 1.4d then runs its steps 2 to 6 on a clean tree. The PM quote "pin refresh first" is recorded in plan.md under task 1.4d.
+END_MEASURE_AGENT_RESULT
