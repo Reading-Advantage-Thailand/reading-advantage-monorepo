@@ -302,7 +302,7 @@ function commandDependencies() {
     apply: vi.fn(async () => ({
       summary: preview.summary,
       transactionOutcome: {
-        state: "committed",
+        state: "committed" as const,
         planHash: preview.transactionPlan.planHash,
       },
     })),
