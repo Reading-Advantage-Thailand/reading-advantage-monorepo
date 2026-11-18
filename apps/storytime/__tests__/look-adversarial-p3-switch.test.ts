@@ -5,11 +5,12 @@
  *
  * The switch is the server environment value STORYTIME_REVIEW_DRAFT_WEEKS, and only the exact
  * string "1" turns it on (lib/content.ts showDraftWeeks). These cases attack the value matrix,
- * the client-name lookalike, and the weeks that must never open: w02 holds draft media approval
- * and w08 holds no books.
+ * the client-name lookalike, and the weeks that must never open: w08 is the draft week of the
+ * shipped content, and a clone with draft media approval stays closed under the switch.
  */
-import { readFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 
@@ -56,7 +57,41 @@ function loadWeek(file: string): LoadedWeek {
   return JSON.parse(readFileSync(resolve(app, "content", "l2", file), "utf8")) as LoadedWeek;
 }
 
-afterEach(clearEnv);
+/** The scratch content folders of the file; the test removes them after each case. */
+const scratch: string[] = [];
+
+/**
+ * Loads one clone with the loader of the app in a scratch content folder.
+ *
+ * The shipped weeks w01 to w07 are published and ready, so the case that needs a draft week with
+ * draft media approval writes a clone of w02 into a scratch folder. The test never writes in
+ * `apps/storytime/content`.
+ * @param week The week of the level.
+ * @param clone The clone to load.
+ * @returns The visible week, or null when the week stays closed.
+ */
+async function loadClone(week: number, clone: unknown): Promise<unknown> {
+  const directory = mkdtempSync(join(tmpdir(), "storytime-switch-"));
+  scratch.push(directory);
+  mkdirSync(resolve(directory, "l2"), { recursive: true });
+  writeFileSync(
+    resolve(directory, "l2", `w${String(week).padStart(2, "0")}.json`),
+    JSON.stringify(clone),
+  );
+  const previous = process.env.STORYTIME_CONTENT_DIR;
+  process.env.STORYTIME_CONTENT_DIR = directory;
+  try {
+    return await loadVisibleWeek(2, week);
+  } finally {
+    if (previous === undefined) delete process.env.STORYTIME_CONTENT_DIR;
+    else process.env.STORYTIME_CONTENT_DIR = previous;
+  }
+}
+
+afterEach(() => {
+  clearEnv();
+  for (const directory of scratch.splice(0)) rmSync(directory, { recursive: true, force: true });
+});
 
 describe("the switch value matrix", () => {
   it.each([
@@ -94,15 +129,19 @@ describe("the switch value matrix", () => {
 });
 
 describe("the draft weeks under the switch", () => {
-  it("keeps w02 closed with the switch off, because its status is draft", async () => {
+  it("keeps w08 closed with the switch off, because its status is draft", async () => {
     clearEnv();
-    expect(await loadVisibleWeek(2, 2), "a draft week stays closed without the switch").toBeNull();
+    expect(await loadVisibleWeek(2, 8), "a draft week stays closed without the switch").toBeNull();
   });
 
-  it("keeps w02 closed with the switch on, because its media approval is draft", async () => {
+  it("keeps a draft clone with draft media approval closed with the switch on", async () => {
     process.env[DRAFT_WEEKS_ENV] = "1";
+    const clone = loadWeek("w02.json");
+    clone.meta.status = "draft";
+    clone.approval.audio.status = "draft";
+    clone.approval.song.status = "draft";
     expect(
-      await loadVisibleWeek(2, 2),
+      await loadClone(2, clone),
       "the switch lifts only the draft blocker; unapproved media stays closed",
     ).toBeNull();
   });
@@ -115,6 +154,7 @@ describe("the draft weeks under the switch", () => {
   it("flags the draft media approval of w02", () => {
     const week = loadWeek("w02.json");
     week.meta.status = "published";
+    week.approval.audio.status = "draft";
     expect(readinessBlocker(week), "draft audio approval blocks the week").toBe("media_not_approved");
   });
 

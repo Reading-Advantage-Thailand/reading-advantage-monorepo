@@ -12,7 +12,8 @@
 //     (the flag `--content-folder <path>` names another folder, so a test can use a fake folder)
 //     and the `home.songUrl` and `home.readAlongUrl` fields of the PUBLISHED weeks only (AC-2.3,
 //     spec.md:108). A draft week answers 404 on the live domain (spec.md:101), so the script never
-//     requests a draft week. Today one week is published, so the run requests 2 URLs.
+//     requests a draft week. Each published week holds two printed URLs, so the run requests two
+//     URLs for each published week.
 //   - The base URL is `https://storytime.reading-advantage.com` by default. The flag
 //     `--base-url <url>` sets another base URL, so a test can use a local fake server. The flag
 //     `--revision <label>` sets the revision label of the run.
@@ -707,9 +708,10 @@ describe("task 7.4 the AC-2.3 script of the printed URLs", () => {
   });
 
   it("exits 3 for one rendered and one guarded URL, and exits 1 when one URL failed and one is guarded", async () => {
-    const expected = publishedUrls();
-    expect(expected.length).toBe(2);
-    const [first, second] = expected;
+    // The row needs a run with exactly two printed URLs, so it uses a fake folder with one
+    // published week. The real content holds seven published weeks and fourteen printed URLs.
+    const folder = fakeContent([{ status: "published", level: 9, week: 1 }]);
+    const [first, second] = ["/th/st/9/1?part=song", "/th/st/9/1?part=book"];
     const mixed = await startFakeServer((request) =>
       request.url === first ? { status: 200, body: weekPageBody() } : { status: 307, location: signInLocation(request.url) },
     );
@@ -717,12 +719,12 @@ describe("task 7.4 the AC-2.3 script of the printed URLs", () => {
       request.url === first ? { status: 404, body: "not found" } : { status: 307, location: signInLocation(request.url) },
     );
     try {
-      const mixedRun = await runScript(mixed.baseUrl, "red-test-revision");
+      const mixedRun = await runScript(mixed.baseUrl, "red-test-revision", { contentFolder: folder });
       expect(summaryCounts(mixedRun.output), mixedRun.output).toEqual({ checked: 2, rendered: 1, guarded: 1, failed: 0 });
       expect(classOf(mixedRun.output, first)).toBe("rendered");
       expect(classOf(mixedRun.output, second)).toBe("guarded");
       expect(mixedRun.code, `exit ${mixedRun.code}\n${mixedRun.output}`).toBe(3);
-      const brokenRun = await runScript(broken.baseUrl, "red-test-revision");
+      const brokenRun = await runScript(broken.baseUrl, "red-test-revision", { contentFolder: folder });
       expect(summaryCounts(brokenRun.output), brokenRun.output).toEqual({ checked: 2, rendered: 0, guarded: 1, failed: 1 });
       expect(brokenRun.code, `exit ${brokenRun.code}\n${brokenRun.output}`).toBe(1);
     } finally {

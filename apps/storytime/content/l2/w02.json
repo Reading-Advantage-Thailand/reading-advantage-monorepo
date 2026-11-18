@@ -19,13 +19,27 @@
       "source": "PM relay Tasks id TFBDbWRFTEItTy1kZGUzdw; PM relay of 2026-11-05 (owner answer on proof v15, Tasks id bmh2b1hqTFNCVEpDNks4VQ)"
     },
     "audio": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-18",
+      "words": "1. Ok",
+      "source": "Google Tasks reply of Daniel, 2026-11-18 05:36 ICT, item OGt2RXk4 under the gates item item d21OaG5l, PM relay; the approval page ~/Desktop/storytime-approval-w02-w07/review.json (36 rows: song, book audio, sentence clips, word clips, and scripts of weeks 2 to 7; 0 page submissions)"
     },
     "song": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-18",
+      "words": "1. Ok",
+      "source": "Google Tasks reply of Daniel, 2026-11-18 05:36 ICT, item OGt2RXk4 under the gates item item d21OaG5l, PM relay; the approval page ~/Desktop/storytime-approval-w02-w07/review.json (36 rows: song, book audio, sentence clips, word clips, and scripts of weeks 2 to 7; 0 page submissions)"
     },
     "scripts": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-18",
+      "words": "1. Ok",
+      "source": "Google Tasks reply of Daniel, 2026-11-18 05:36 ICT, item OGt2RXk4 under the gates item item d21OaG5l, PM relay; the approval page ~/Desktop/storytime-approval-w02-w07/review.json (36 rows: song, book audio, sentence clips, word clips, and scripts of weeks 2 to 7; 0 page submissions)"
+    },
+    "print": {
+      "status": "approved",
+      "date": "2026-11-16",
+      "words": "Pass"
     },
     "loops": {
       "status": "approved",
@@ -47,7 +61,7 @@
     "openingMinutes": 6,
     "title": "How Many?",
     "band": "Sprout",
-    "status": "draft"
+    "status": "published"
   },
   "focus": {
     "element": {

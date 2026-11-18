@@ -502,24 +502,27 @@ describe("case 8 a subset run at a new commit", () => {
       const name = `/l2/w0${week}.json`;
       expect(after.get(name), `${name} must keep the bytes of the source`).toBe(before.get(name));
       expect(JSON.parse(after.get(name)!).meta.status, `${name} must keep its status`).toBe(
-        week === 1 ? "published" : "draft",
+        week <= 7 ? "published" : "draft",
       );
     }
   });
 
-  it("reports eight week lines, one ready week, and seven not ready weeks", () => {
+  it("reports eight week lines, seven ready weeks, and one not ready week", () => {
     const root = seedRoot("report-root");
     const source = makeSource({});
     const run = receive(root, source.commit, source.directory);
     expect(run.code).toBe(0);
     const wrote = run.logs.filter((line) => /^Wrote apps\/storytime\/content\/l2\/w0\d\.json /.test(line));
     expect(wrote, "The run must write eight week lines (A4)").toHaveLength(8);
-    expect(wrote.filter((line) => line.endsWith("; ready)"))).toHaveLength(1);
-    expect(wrote.filter((line) => line.endsWith("; not ready)"))).toHaveLength(7);
+    expect(wrote.filter((line) => line.endsWith("; ready)"))).toHaveLength(7);
+    expect(wrote.filter((line) => line.endsWith("; not ready)"))).toHaveLength(1);
     expect(wrote[0]).toMatch(/w01\.json .*; ready\)$/);
     const notReady = run.logs.find((line) => line.startsWith("Not ready for the at-home app:")) ?? "";
-    expect(notReady.split(",")).toHaveLength(7);
-    expect(notReady).not.toContain("w01.json");
+    expect(notReady.split(",")).toHaveLength(1);
+    expect(notReady, "the not-ready line must name the draft week").toContain("w08.json");
+    for (const week of [1, 2, 3, 4, 5, 6, 7]) {
+      expect(notReady, `the not-ready line must name no published week`).not.toContain(`w0${week}.json`);
+    }
     const last = run.logs[run.logs.length - 1];
     const totals = last.match(/record 8 weeks; this run 8 weeks, (\d+) media files, (\d+) missing pictures\)$/);
     expect(totals, `the last line is ${last}`).not.toBeNull();
