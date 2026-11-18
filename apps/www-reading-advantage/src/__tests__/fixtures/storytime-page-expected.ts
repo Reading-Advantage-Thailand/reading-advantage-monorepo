@@ -270,7 +270,6 @@ export const OLD_STOCK_REFERENCES = [
 
 export const BANNED_COPY = [
   "app is live",
-  "app is available",
   "now available",
   "scheduler",
   "in production",

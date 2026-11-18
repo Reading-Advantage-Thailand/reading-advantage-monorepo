@@ -69,12 +69,12 @@ const ROW_A = [
   },
 ] as const;
 
-/** Row B of the change list v1.39, superseded in part by the INTERIM copy of the row of 2026-11-16: the Storytime Advantage launch on 30 November 2026. */
+/** Row B of the change list v1.39, superseded in part by the INTERIM copy of the row of 2026-11-16: the Storytime Advantage launch on 30 November 2026. The LAUNCH copy of the batch of 2026-11-30 supersedes the interim lines below, except hero.description, which has no LAUNCH line. */
 const ROW_B = [
   {
     key: "pages.products.storytimeAdvantage.metadata.description",
-    en: "Storytime Advantage is an English app for Anuban 2 to P2. It launches on 30 November 2026 with one sound, one song, and two books each week.",
-    th: "Storytime Advantage เป็นแอปภาษาอังกฤษสำหรับเด็กอนุบาล 2 ถึง ป.2 เปิดตัววันที่ 30 พฤศจิกายน 2569 พร้อมหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มในแต่ละสัปดาห์",
+    en: "Storytime Advantage is an English app for Anuban 2 to P2, available now with one sound, one song, and two books each week.",
+    th: "Storytime Advantage เป็นแอปภาษาอังกฤษสำหรับเด็กอนุบาล 2 ถึง ป.2 เปิดให้ใช้งานแล้ว พร้อมหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มในแต่ละสัปดาห์",
     old: {
       en: "The first unit is being prepared, with a printed student book and QR-linked digital parts.",
       th: "กำลังจัดเตรียมหน่วยการเรียนรู้แรก",
@@ -88,14 +88,14 @@ const ROW_B = [
   },
   {
     key: "pages.products.storytimeAdvantage.hero.comingSoon",
-    en: "Launches 30 November 2026",
-    th: "เปิดตัววันที่ 30 พฤศจิกายน 2569",
+    en: "Available now",
+    th: "เปิดให้ใช้งานแล้ว",
     old: { en: "In Preparation", th: "กำลังจัดเตรียม" },
   },
   {
     key: "pages.products.storytimeAdvantage.cta.description",
-    en: "The app launches on 30 November 2026. Ask us on LINE OA for the steps to join Storytime Advantage with your family or class.",
-    th: "แอปเปิดตัววันที่ 30 พฤศจิกายน 2569 สอบถามขั้นตอนการเข้าร่วม Storytime Advantage สำหรับครอบครัวหรือชั้นเรียนของคุณได้ทาง LINE OA",
+    en: "The app is available now. Ask us on LINE OA for the steps to join Storytime Advantage with your family or class.",
+    th: "แอปเปิดให้ใช้งานแล้ว สอบถามขั้นตอนการเข้าร่วม Storytime Advantage สำหรับครอบครัวหรือชั้นเรียนของคุณได้ทาง LINE OA",
     old: {
       en: "The first unit is being prepared. Contact us to discuss Storytime Advantage.",
       th: "กำลังจัดเตรียมหน่วยการเรียนรู้แรก",
@@ -103,32 +103,32 @@ const ROW_B = [
   },
   {
     key: "components.common.navigation.itemsDescription.storytimeAdvantage",
-    en: "English for Anuban 2 to P2; the first unit launches on 30 November 2026",
-    th: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569",
+    en: "English for Anuban 2 to P2; the first unit is available now",
+    th: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 หน่วยการเรียนรู้แรกพร้อมใช้งานแล้ว",
     old: { en: "the first unit is being prepared", th: "กำลังจัดเตรียมหน่วยการเรียนรู้แรก" },
   },
   {
     key: "components.products.b2bSolutions.products.storytimeAdvantage.badge",
-    en: "Launches 30 November 2026",
-    th: "เปิดตัววันที่ 30 พฤศจิกายน 2569",
+    en: "Available Now",
+    th: "พร้อมใช้งานแล้ว",
     old: { en: "First unit being prepared", th: "กำลังจัดเตรียมหน่วยแรก" },
   },
   {
     key: "pages.home.v2.products.storytimePreparingLabel",
-    en: "Launches 30 November 2026",
-    th: "เปิดตัววันที่ 30 พฤศจิกายน 2569",
+    en: "Available Now",
+    th: "พร้อมใช้งานแล้ว",
     old: { en: "First unit being prepared", th: "กำลังจัดเตรียมหน่วยแรก" },
   },
   {
     key: "pages.home.suite.description",
-    en: "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. Science, Math, Zhongwen, and STEM Advantage are on our roadmap. The first Storytime Advantage unit launches on 30 November 2026.",
-    th: "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก Science, Math, Zhongwen และ STEM Advantage อยู่ในแผนงาน หน่วยการเรียนรู้แรกของ Storytime Advantage เปิดตัววันที่ 30 พฤศจิกายน 2569",
+    en: "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. Science, Math, Zhongwen, and STEM Advantage are on our roadmap. The first Storytime Advantage unit is available now.",
+    th: "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก Science, Math, Zhongwen และ STEM Advantage อยู่ในแผนงาน หน่วยการเรียนรู้แรกของ Storytime Advantage พร้อมใช้งานแล้ว",
     old: { en: "The first Storytime Advantage unit is being prepared.", th: "กำลังจัดเตรียมหน่วยการเรียนรู้แรกของ Storytime Advantage" },
   },
   {
     key: "pages.products.overview.gradeBands.storytime.description",
-    en: "Storytime Advantage is an English app for Anuban 2 to P2, ages 4 to 8. Each week brings one sound, one song, and two books to a phone at home or a classroom screen. The app launches on 30 November 2026.",
-    th: "Storytime Advantage เป็นแอปภาษาอังกฤษสำหรับเด็กอนุบาล 2 ถึง ป.2 อายุ 4 ถึง 8 ปี แต่ละสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม บนโทรศัพท์ที่บ้านหรือจอในห้องเรียน แอปเปิดตัววันที่ 30 พฤศจิกายน 2569",
+    en: "Storytime Advantage is an English app for Anuban 2 to P2, ages 4 to 8. Each week brings one sound, one song, and two books to a phone at home or a classroom screen. The app is available now.",
+    th: "Storytime Advantage เป็นแอปภาษาอังกฤษสำหรับเด็กอนุบาล 2 ถึง ป.2 อายุ 4 ถึง 8 ปี แต่ละสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม บนโทรศัพท์ที่บ้านหรือจอในห้องเรียน แอปเปิดให้ใช้งานแล้ว",
     old: { en: "The first unit is being prepared.", th: "กำลังจัดเตรียมหน่วยการเรียนรู้แรก" },
   },
 ] as const;
