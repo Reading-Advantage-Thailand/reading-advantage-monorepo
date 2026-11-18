@@ -62,10 +62,17 @@ import {
 } from "./workspace-resolution.js";
 import { V1_ARTIFACT_BINDINGS } from "./v1-validation.js";
 import {
+  computeAnalyzerInputSnapshotWithOverlay,
+  computeV2ManifestReviewSubjectSha256,
   validateAnalyzerReconciliationManifestV2,
   validateAnalyzerReconciliationManifestV2Sync,
   V2_TENANT_REGISTRY_EXCEPTION_ID,
 } from "./v2-manifest-validation.js";
+import { checkArchitectureRepository } from "./architecture-check.js";
+import {
+  createUpdatedArchitectureBaselines,
+  type NewDebtReviewMetadata,
+} from "./baseline-update.js";
 
 /** Fixed version-controlled policy path participating in reconciliation. */
 export const ARCHITECTURE_OWNERSHIP_MAP_PATH =
@@ -210,6 +217,8 @@ export interface PreviewArchitectureReconciliationOptions {
   policyVersion?: ArchitecturePolicyVersion;
   /** Optional dependency overrides used by isolated tests. */
   dependencies?: Partial<ArchitectureReconciliationDependencies>;
+  /** Optional accountable owner and rationale for genuinely new entries. */
+  newDebtMetadata?: NewDebtReviewMetadata;
 }
 
 /** Inputs accepted by the explicitly acknowledged reconciliation apply. */
@@ -222,6 +231,8 @@ export interface ApplyArchitectureReconciliationOptions {
   expectedReconciliationPlanHash: string;
   /** Optional dependency overrides used by isolated tests. */
   dependencies?: Partial<ArchitectureReconciliationDependencies>;
+  /** Optional accountable owner and rationale for genuinely new entries. */
+  newDebtMetadata?: NewDebtReviewMetadata;
 }
 
 /** Result of applying or declining the exact reconciliation preview. */
@@ -591,6 +602,7 @@ function createSummary(input: {
   validation: AnalyzerReconciliationValidationSummary;
   config: ArchitectureConfig;
   exactExceptions: readonly ExactException[];
+  stagedDelta: { removals: number; renames: number };
 }): ArchitectureReconciliationSummary {
   return {
     schemaVersion: 1,
@@ -623,24 +635,112 @@ function createSummary(input: {
       productionAdditions: input.validation.productionAdditions,
       exactExceptionAdditions: input.validation.exactExceptionAdditions,
       coveredTestFindings: input.validation.coveredTestFindings,
-      removals: 0,
-      renames: 0,
+      removals: input.stagedDelta.removals,
+      renames: input.stagedDelta.renames,
     },
   };
 }
 
 /** Builds a policy-aware v2 preview over the exact four v2 destinations. */
+/** One staged move from a frozen v1 instance key to its current entry. */
+interface StagedBaselineRename {
+  semanticKey: string;
+  previousInstanceKey: string;
+  entry: BaselineEntry;
+}
+
+/**
+ * Computes the cumulative staged delta of the current baselines against the
+ * frozen v1 anchor. Renames pair a moved v1 instance key with its current
+ * entry, removals drop v1 keys that no longer exist, and additions hold every
+ * current entry that no v1 identity explains.
+ * @param v1Anchor Frozen v1 database and provider baselines.
+ * @param current Updated v2 database and provider baselines.
+ * @returns Deterministic additions, removals, and renames for the manifest.
+ */
+function stagedDeltaAgainstV1(
+  v1Anchor: ArchitectureBaselines,
+  current: ArchitectureBaselines,
+): {
+  additions: BaselineEntry[];
+  removals: string[];
+  renames: StagedBaselineRename[];
+} {
+  const additions: BaselineEntry[] = [];
+  const removals: string[] = [];
+  const renames: StagedBaselineRename[] = [];
+  const byInstance = (entries: readonly BaselineEntry[]): Map<string, BaselineEntry> =>
+    new Map(entries.map((entry) => [entry.instanceKey, entry]));
+  const groupBySemantic = (entries: readonly BaselineEntry[]): Map<string, BaselineEntry[]> => {
+    const groups = new Map<string, BaselineEntry[]>();
+    for (const entry of entries) {
+      const group = groups.get(entry.semanticKey) ?? [];
+      group.push(entry);
+      groups.set(entry.semanticKey, group);
+    }
+    for (const group of groups.values()) {
+      group.sort((left, right) =>
+        compareStableStrings(left.instanceKey, right.instanceKey),
+      );
+    }
+    return groups;
+  };
+  for (const domain of ["database", "provider"] as const) {
+    const v1Entries = v1Anchor[domain].entries;
+    const currentEntries = current[domain].entries;
+    const currentByInstance = byInstance(currentEntries);
+    const v1ByInstance = byInstance(v1Entries);
+    const unmatchedV1 = v1Entries.filter(
+      (entry) => !currentByInstance.has(entry.instanceKey),
+    );
+    const unmatchedCurrent = currentEntries.filter(
+      (entry) => !v1ByInstance.has(entry.instanceKey),
+    );
+    const v1Groups = groupBySemantic(unmatchedV1);
+    const currentGroups = groupBySemantic(unmatchedCurrent);
+    const pairedCurrent = new Set<string>();
+    const pairedV1 = new Set<string>();
+    for (const [semanticKey, v1Group] of v1Groups) {
+      const currentGroup = currentGroups.get(semanticKey) ?? [];
+      const pairedCount = Math.min(v1Group.length, currentGroup.length);
+      for (let index = 0; index < pairedCount; index += 1) {
+        const previous = v1Group[index]!;
+        const next = currentGroup[index]!;
+        renames.push({
+          semanticKey,
+          previousInstanceKey: previous.instanceKey,
+          entry: next,
+        });
+        pairedV1.add(previous.instanceKey);
+        pairedCurrent.add(next.instanceKey);
+      }
+    }
+    for (const entry of unmatchedV1) {
+      if (!pairedV1.has(entry.instanceKey)) removals.push(entry.instanceKey);
+    }
+    for (const entry of unmatchedCurrent) {
+      if (!pairedCurrent.has(entry.instanceKey)) additions.push(entry);
+    }
+  }
+  removals.sort(compareStableStrings);
+  renames.sort((left, right) =>
+    compareStableStrings(left.previousInstanceKey, right.previousInstanceKey),
+  );
+  return { additions, removals, renames };
+}
+
 async function previewV2ArchitectureReconciliation(input: {
   repoRoot: string;
   dependencies: ArchitectureReconciliationDependencies;
   selection: ReturnType<typeof selectArchitecturePolicy>;
+  newDebtMetadata?: NewDebtReviewMetadata;
 }): Promise<ArchitectureReconciliationPreview> {
   const manifestSource = await readRepositoryFile(
     input.repoRoot,
     "packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json",
     input.dependencies.fileOperations,
   );
-  const manifest = JSON.parse(manifestSource) as {
+  const manifest = JSON.parse(manifestSource) as Record<string, unknown> & {
     analyzerImplementationTreeSha256: string;
     implementationAndTestTreeSha256: string;
     analyzerInputSnapshotSha256: string;
@@ -655,38 +755,112 @@ async function previewV2ArchitectureReconciliation(input: {
       ),
     ),
   );
+  const ownershipContents = contents[1]!;
+  const config = architectureConfigSchema.parse(JSON.parse(ownershipContents));
   const databaseBaseline = architectureBaselineSchema.parse(
     JSON.parse(contents[2]!),
   );
   const providerBaseline = architectureBaselineSchema.parse(
     JSON.parse(contents[3]!),
   );
+  const v1Anchor: ArchitectureBaselines = {
+    database: architectureBaselineSchema.parse(
+      JSON.parse(
+        await readRepositoryFile(
+          input.repoRoot,
+          "packages/architecture-enforcement/src/config/baselines/database.v1.json",
+          input.dependencies.fileOperations,
+        ),
+      ),
+    ),
+    provider: architectureBaselineSchema.parse(
+      JSON.parse(
+        await readRepositoryFile(
+          input.repoRoot,
+          "packages/architecture-enforcement/src/config/baselines/provider.v1.json",
+          input.dependencies.fileOperations,
+        ),
+      ),
+    ),
+  };
+  const report = await checkArchitectureRepository({
+    repoRoot: input.repoRoot,
+    policyVersion: "v2",
+    skipInputSnapshotPin: true,
+  });
+  if (report.status === "analysis-error") {
+    throw new Error(
+      "Architecture reconciliation preview found analyzer errors",
+    );
+  }
+  const updated = createUpdatedArchitectureBaselines({
+    config,
+    baselines: { database: databaseBaseline, provider: providerBaseline },
+    findings: report.findings,
+    ...(input.newDebtMetadata ? { newDebtMetadata: input.newDebtMetadata } : {}),
+  });
+  const delta = stagedDeltaAgainstV1(v1Anchor, updated);
+  const serializedDatabase = serializeArchitectureBaseline(updated.database);
+  const serializedProvider = serializeArchitectureBaseline(updated.provider);
+  const newManifest: Record<string, unknown> = {
+    ...manifest,
+    baselineAdditions: delta.additions,
+    baselineRemovals: delta.removals,
+    baselineRenames: delta.renames,
+    v2Artifacts: manifest.v2Artifacts.map((reference) => {
+      if (reference.path === V2_RECONCILIATION_DESTINATION_PATHS[2]) {
+        return { ...reference, sha256: textSha256(serializedDatabase) };
+      }
+      if (reference.path === V2_RECONCILIATION_DESTINATION_PATHS[3]) {
+        return { ...reference, sha256: textSha256(serializedProvider) };
+      }
+      return reference;
+    }),
+  };
+  const proposedSnapshot = await computeAnalyzerInputSnapshotWithOverlay(
+    input.repoRoot,
+    new Map([
+      [V2_RECONCILIATION_DESTINATION_PATHS[1], ownershipContents],
+      [V2_RECONCILIATION_DESTINATION_PATHS[2], serializedDatabase],
+      [V2_RECONCILIATION_DESTINATION_PATHS[3], serializedProvider],
+    ]),
+  );
+  newManifest.analyzerInputSnapshotSha256 = proposedSnapshot;
+  newManifest.reviewSubjectSha256 = computeV2ManifestReviewSubjectSha256(
+    newManifest,
+  );
+  const manifestContents = `${JSON.stringify(newManifest, null, 2)}\n`;
+  const manifestHash = textSha256(manifestSource);
   const transactionPlan = await input.dependencies.previewTransaction({
     repoRoot: input.repoRoot,
-    replacements: V2_RECONCILIATION_DESTINATION_PATHS.map(
-      (repositoryPath, index) => ({
-        id:
-          index === 0
-            ? "reconciliation-manifest"
-            : index === 1
-              ? "ownership-map"
-              : index === 2
-                ? "database-baseline"
-                : "provider-baseline",
-        repositoryPath,
-        contents: contents[index]!,
-      }),
-    ),
+    replacements: V2_RECONCILIATION_DESTINATION_PATHS.map((path, index) => ({
+      id:
+        index === 0
+          ? "reconciliation-manifest"
+          : index === 1
+            ? "ownership-map"
+            : index === 2
+              ? "database-baseline"
+              : "provider-baseline",
+      repositoryPath: path,
+      contents:
+        index === 0
+          ? manifestContents
+          : index === 1
+            ? ownershipContents
+            : index === 2
+              ? serializedDatabase
+              : serializedProvider,
+    })),
     fileOperations: input.dependencies.fileOperations,
   });
-  const manifestHash = textSha256(manifestSource);
   const reconciliationPlanHash = computeReconciliationPlanHash({
     manifestHash,
     transactionPlanHash: transactionPlan.planHash,
     analyzerImplementationTreeHash: manifest.analyzerImplementationTreeSha256,
     reconciliationImplementationTreeHash:
       manifest.implementationAndTestTreeSha256,
-    architectureInputSnapshotHash: manifest.analyzerInputSnapshotSha256,
+    architectureInputSnapshotHash: proposedSnapshot,
   });
   const addedException = input.selection.config.exactExceptions.find(
     (exception) => exception.id === V2_TENANT_REGISTRY_EXCEPTION_ID,
@@ -696,9 +870,9 @@ async function previewV2ArchitectureReconciliation(input: {
     manifestSha256: manifestHash,
     sourceBaseSha: V1_MANIFEST_SHA256,
     analyzerCommitSha: "v2-candidate",
-    databaseEntries: databaseBaseline.entries.length,
-    providerEntries: providerBaseline.entries.length,
-    productionAdditions: 0,
+    databaseEntries: updated.database.entries.length,
+    providerEntries: updated.provider.entries.length,
+    productionAdditions: delta.additions.length,
     exactExceptionAdditions: addedException ? 1 : 0,
     coveredTestFindings: 0,
   };
@@ -709,10 +883,14 @@ async function previewV2ArchitectureReconciliation(input: {
     analyzerImplementationTreeHash: manifest.analyzerImplementationTreeSha256,
     reconciliationImplementationTreeHash:
       manifest.implementationAndTestTreeSha256,
-    architectureInputSnapshotHash: manifest.analyzerInputSnapshotSha256,
+    architectureInputSnapshotHash: proposedSnapshot,
     validation,
     config: input.selection.config,
     exactExceptions: addedException ? [addedException] : [],
+    stagedDelta: {
+      removals: delta.removals.length,
+      renames: delta.renames.length,
+    },
   });
   return {
     schemaVersion: 1,
@@ -747,6 +925,9 @@ export async function previewArchitectureReconciliation(
       repoRoot: options.repoRoot,
       dependencies,
       selection: policy.selection,
+      ...(options.newDebtMetadata
+        ? { newDebtMetadata: options.newDebtMetadata }
+        : {}),
     });
   }
   const manifestSource = await readRepositoryFile(
@@ -943,6 +1124,7 @@ export async function previewArchitectureReconciliation(
     validation,
     config,
     exactExceptions: addedExceptions,
+    stagedDelta: { removals: 0, renames: 0 },
   });
   return {
     schemaVersion: 1,
@@ -1026,11 +1208,6 @@ export async function applyArchitectureReconciliation(
   }
 
   if (options.preview.policyVersion === "v2") {
-    if (options.preview.policyStatus !== "accepted") {
-      throw new Error(
-        "Candidate v2 reconciliation cannot write before acceptance",
-      );
-    }
     const guard = await applyArchitectureReconciliationForPolicy({
       policyVersion: "v2",
       repoRoot: options.preview.transactionPlan.repoRoot,
@@ -1049,6 +1226,9 @@ export async function applyArchitectureReconciliation(
     repoRoot,
     ...(options.preview.policyVersion
       ? { policyVersion: options.preview.policyVersion }
+      : {}),
+    ...(options.newDebtMetadata
+      ? { newDebtMetadata: options.newDebtMetadata }
       : {}),
     dependencies,
   });

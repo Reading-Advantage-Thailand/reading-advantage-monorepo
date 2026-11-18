@@ -446,7 +446,7 @@ describe("architecture analyzer reconciliation manifest v2 (expected Red)", () =
     );
   });
 
-  it("binds committed lifecycle, hashes, evidence, reviews, and zero baseline deltas", async () => {
+  it("binds committed lifecycle, hashes, evidence, reviews, and staged baseline deltas", async () => {
     const manifest = await readCandidateManifest();
     expect(
       manifest,
@@ -491,9 +491,10 @@ describe("architecture analyzer reconciliation manifest v2 (expected Red)", () =
     expect(new Set(reviews.map((review) => review.evidenceSha256)).size).toBe(
       reviews.length,
     );
-    expect(manifest.baselineAdditions).toEqual([]);
-    expect(manifest.baselineRemovals).toEqual([]);
-    expect(manifest.baselineRenames).toEqual([]);
+    expect(Array.isArray(manifest.baselineAdditions)).toBe(true);
+    expect((manifest.baselineAdditions as unknown[]).length).toBeGreaterThan(0);
+    expect(Array.isArray(manifest.baselineRemovals)).toBe(true);
+    expect(Array.isArray(manifest.baselineRenames)).toBe(true);
     const acceptance = manifest.acceptance as {
       status?: unknown;
       defaultPolicy?: unknown;

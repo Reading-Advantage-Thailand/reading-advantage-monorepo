@@ -173,7 +173,7 @@ jobs:
         run: pnpm turbo run build --filter=@reading-advantage/backend --filter=@reading-advantage/knowledge-space-core
 
       - name: Architecture boundary check
-        run: pnpm architecture:check --skip-input-snapshot-pin
+        run: pnpm architecture:check --skip-input-snapshot-pin --policy v2
 
       - name: Tenant and provider architecture guards
         run: |
