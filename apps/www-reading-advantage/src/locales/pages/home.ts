@@ -497,7 +497,7 @@ export const zh = {
                 meta: "约 12 至 15 周。",
             },
             roadmapLabel: "路线图中",
-            roadmapNote: "这些产品线在计划中，我们不给出日期。",
+            roadmapNote: "在2027学年，泰国小学开设 Science Advantage、Math Advantage 和 Zhongwen Advantage，配套练习册和应用。",
             roadmapTag: "计划中",
             roadmapTag2027: "2027 school year",
             storytimePreparingLabel: "Launches 30 November 2026",
