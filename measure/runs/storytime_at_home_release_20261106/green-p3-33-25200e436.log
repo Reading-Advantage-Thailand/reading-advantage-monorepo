@@ -152,3 +152,71 @@ handoff: The signed-in home page holds the Storytime look, and the browser gate 
 dispositions: none
 blocked: none
 END_MEASURE_AGENT_RESULT
+
+## Green r2: the language tags (Review A N1, N2, N3)
+
+role_base_sha: c98a3721910c54f4934077981d6214528d4f91a7
+date: 2026-11-19
+model: opencode-go/deepseek-v4.1-flash
+
+### The fixes
+
+- N1: the plaque `h1` of a page that passes `bar` takes the page locale, so the Thai home heading
+  is tagged `th`. A route page keeps `lang="en"`, because the week titles are English.
+- N2: the label `p` of a page that passes `bar` is tagged `en`, because the home bar text
+  "Storytime Advantage" is English. A route page keeps the interface locale of its localized label.
+- Both rules read `hasBar` in `apps/storytime/app/[locale]/frame.tsx`. The week-page output is
+  unchanged: `labelLang=locale` and `titleLang="en"` on the route branch.
+- N3: the targeted run adds `look-brand-chrome.test.tsx`, `look-council-r1.test.tsx`, and
+  `look-adversarial-p2.test.tsx`.
+
+### Green r2 checks
+
+| Check | Result |
+|---|---|
+| 6-file targeted run (Red file, look-assets, look-frame, 3 N3 files) | exit 0, `Test Files 6 passed (6)`, `Tests 65 passed (65)` |
+| `pnpm --filter storytime exec tsc --noEmit` | exit 0 |
+| ESLint on `app/[locale]/frame.tsx` | exit 0 |
+| Browser gate | not run: a `lang` attribute changes no pixel; the picture check passed at `c98a37219` |
+
+### Open conflict for a Mid Red retry
+
+`apps/storytime/__tests__/look-adversarial-p2b.test.tsx` is a fourth direct `Frame` importer,
+outside the named N3 set. Its H5 and H9 cases treat `/st` as a page without a place and fail with
+`fallback: main is reached by the rule main[data-place]`. The same 2 cases fail at the role base
+`c98a37219` (`Tests 2 failed | 7 passed (9)`), because task 3.3 supersedes that premise. Green did
+not edit the committed test. The file needs a Mid Red retry before the phase gate can pass.
+
+### Green r2 commits
+
+- `cc85afebf1a0da7cf0a06d2054ad5b6dd86f7790` —
+  `fix(storytime): tag the home plaque language (track_id: storytime_at_home_release_20261106)`
+  (91 characters). The frame file is the only path.
+- The plan evidence commit follows this log and names `cc85afebf`. Task 3.3 stays `[~]`.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: storytime_at_home_release_20261106
+phase: Phase 3: At-home deploy
+baseline_sha: 950d6eebf0148b6df05baf678d2b674b3271d171
+role_base_sha: c98a3721910c54f4934077981d6214528d4f91a7
+resulting_HEAD: cc85afebf1a0da7cf0a06d2054ad5b6dd86f7790
+commits: cc85afebf (implementation), then the plan-evidence commit
+review_findings: N1 fixed, N2 fixed, N3 fixed
+tests_run:
+  - CI=true pnpm --filter storytime exec vitest run --maxWorkers=1 __tests__/phase3-home-look-red.test.ts __tests__/look-assets.test.ts __tests__/look-frame.test.tsx __tests__/look-brand-chrome.test.tsx __tests__/look-council-r1.test.tsx __tests__/look-adversarial-p2.test.tsx — exit 0; files=6 passed; tests=65 passed
+  - pnpm --filter storytime exec tsc --noEmit — exit 0
+  - eslint "app/[locale]/frame.tsx" — exit 0
+  - browser gate — not run: a lang attribute changes no pixel; the picture check passed at c98a37219
+files_changed:
+  - apps/storytime/app/[locale]/frame.tsx
+week_page_output: unchanged (route branch keeps labelLang=locale and titleLang="en")
+known_failures: apps/storytime/__tests__/look-adversarial-p2b.test.tsx H5 and H9 fail at role base c98a37219 and after the fix (2 failed | 7 passed); its plain-page rule treats /st as holding no place, which task 3.3 supersedes; the committed test needs a Mid Red retry and was not edited
+plan_updates: 3.3 keeps [~]; the plan gains the Green r2 evidence and the open p2b conflict
+tasks_flipped_to_x: none
+tasks_flipped_to_b: none
+handoff: N1, N2, and N3 are fixed and the targeted 6-file set, tsc, and ESLint pass. Route the look-adversarial-p2b H5/H9 contradiction to a Mid Red retry; Green must not edit that committed test.
+dispositions: N1=FIX; N2=FIX; N3=FIX
+blocked: none for N1, N2, and N3; look-adversarial-p2b needs a Mid Red retry before the phase gate
+END_MEASURE_AGENT_RESULT
