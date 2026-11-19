@@ -3,7 +3,9 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { requireUser } from "../../../lib/auth";
 import * as content from "../../../lib/content";
+import { placeFor } from "../../../lib/look/places";
 import { teacherRoutesEnabled } from "../../../lib/teacher";
+import { Frame } from "../frame";
 
 /**
  * The return fallback of the at-home app (design section 2, AC-4.1).
@@ -11,6 +13,10 @@ import { teacherRoutesEnabled } from "../../../lib/teacher";
  * A scan that names no week, or a sign-in with a `next` that the return-path check rejects,
  * ends here. The page asks the visitor to scan the book code and shows no week content. A
  * visitor without a session goes to the sign-in page first.
+ *
+ * The page holds the Storytime look (plan task 3.3): the home place of `placeFor` paints the
+ * ground, and the shared frame renders the hero window. The heading sits on the frame plaque
+ * and the instruction sits in a cream card, so the copy stays and reads on the painted ground.
  *
  * A teacher with the switch on sees one link to the teacher page of the first open week
  * (plan task 6.2, round 7, PM point 3). A family or class account sees no teacher link. A
@@ -50,11 +56,30 @@ export default async function StorytimeFallbackPage({
   }
   const translate = await getTranslations({ locale });
   const t = (key: string) => translate(key);
+  const places = placeFor(null);
+  const interfaceLocale = locale === "th" ? "th" : "en";
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-6 p-6">
-      <h1 className="text-2xl font-semibold">{t("stFallbackHeading")}</h1>
-      <p className="leading-7">{t("stFallbackLine")}</p>
+    <main
+      className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-6 p-6"
+      data-place={places.place}
+      data-hero={places.hero}
+    >
+      {/* The shared frame of the week pages renders the hero window here too. The home page has
+          no route level and week, so the label reads the app name and the plaque reads the
+          heading of the fallback. */}
+      <Frame
+        bar="Storytime Advantage"
+        title={t("stFallbackHeading")}
+        variant="cover"
+        locale={interfaceLocale}
+      />
+      <p
+        className="rounded-2xl border-4 border-[#92400e] bg-[#fffaf0] p-4 leading-7"
+        lang={interfaceLocale}
+      >
+        {t("stFallbackLine")}
+      </p>
       {teacherHref ? (
         <Link
           href={teacherHref}
