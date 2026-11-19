@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "role": "measure-green",
+  "verdict": "pass",
+  "verdict_basis": "confirmed after the gates at cd72047c2 and the plan commit a726b2be2",
+  "kind": "gate-confirmation",
+  "product_change": false,
+  "track": "www_tutor_calculator_20261117",
+  "phase": "2",
+  "task": "2.6 pre-push gate run at the merge head",
+  "phase_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "role_base_sha": "cd72047c299c03cd5f502b0480cda5ed4692098d",
+  "gate_head": "cd72047c299c03cd5f502b0480cda5ed4692098d",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/deepseek-v4.1-flash (substitution record: `ra-quota pick green` returns opencode-go/hy4-flash-free, the Red family of this track, so it is excluded)",
+  "worktree_clean_before_edit": true,
+  "red_change_in_range": {
+    "commit": "6c0cf5de65ea092a28bf1246dff8a6fb57df7ce4",
+    "range": "d279b870341c067c33fc884ae8863b5428487c17..cd72047c299c03cd5f502b0480cda5ed4692098d",
+    "confirmed": true
+  },
+  "origin_master_sha": "59821e80b347375d7cb90e30420a958158a47885",
+  "origin_master_moved": false,
+  "gates": [
+    {
+      "n": 1,
+      "command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test --reporter=dot --silent=true'",
+      "exit_code": 0,
+      "test_files": "Test Files 71 passed (71)",
+      "tests": "Tests 2647 passed (2647)",
+      "duration": "60.52s",
+      "started_at": "16:08:56",
+      "note": "29 above the 2618 of task 2.9. No control run at the pre-merge head, so the cause is not claimed."
+    },
+    {
+      "n": 2,
+      "command": "pnpm turbo run check-types --filter=www-reading-advantage",
+      "exit_code": 0,
+      "evidence": "cache miss, executing d4bf8bc1de537863; tsc --noEmit; 3.913s; 1 successful, 1 total",
+      "note": "A live tsc run at this head, not a cache replay."
+    },
+    {
+      "n": 3,
+      "command": "pnpm --filter www-reading-advantage lint",
+      "exit_code": 0,
+      "evidence": "No output after `$ eslint .`."
+    },
+    {
+      "n": 4,
+      "command": "git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json",
+      "exit_code": 0,
+      "evidence": "No diff."
+    },
+    {
+      "n": 5,
+      "command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage build'",
+      "exit_code": 1,
+      "attempt": 1,
+      "evidence": "Route table printed, then Error [SecurityFatalError]: Your version of Next.js is affected by a known security vulnerability. next upgrade --agent=security --internal-nudge-id=1393b458-d2d5-443c-a951-4726de43950d"
+    },
+    {
+      "n": 5,
+      "command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage build'",
+      "exit_code": 0,
+      "attempt": 2,
+      "evidence": "Route table printed, build finished, no fatal error."
+    },
+    {
+      "n": 6,
+      "command": "node scripts/ci/affected-apps.mjs --base 59821e80b347375d7cb90e30420a958158a47885 --head cd72047c299c03cd5f502b0480cda5ed4692098d",
+      "exit_code": 0,
+      "output": "[\"www-reading-advantage\"]",
+      "note": "Full 40-hex ids, so the short-id rule of test-strategy section 5.2 does not apply and no deviation was needed."
+    }
+  ],
+  "daily_post_check": {
+    "brief_path": "apps/www-reading-advantage/public/blog/posts/en/nobody-interrupts-her-while-she-reads.md",
+    "brief_path_exists": false,
+    "actual_path": "apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/posts/en/nobody-interrupts-her-while-she-reads.md",
+    "git_log": "59821e80b feat(www): add the 2026-11-17 daily post (track_id: www_daily_blog_posts_20261115)",
+    "present_in_head": true,
+    "image": {
+      "path": "apps/www-reading-advantage/public/blog/2026-11-17-reading-time.webp",
+      "present_in_head": true,
+      "bytes": 308298
+    },
+    "verdict": "survived the merge"
+  },
+  "files_added": [],
+  "files_modified": [
+    "measure/tracks/www_tutor_calculator_20261117/plan.md"
+  ],
+  "plan_evidence_commit": "a726b2be2b3771934e2d518f21b42f91d6882fc8",
+  "final_head": "a726b2be2b3771934e2d518f21b42f91d6882fc8",
+  "final_worktree_clean": true,
+  "tasks_flipped": {},
+  "tasks_still_open": {
+    "2.6": "Plan text appended; the task stays [~] because the push and the live URL check are not done."
+  },
+  "tasks_deferred": {},
+  "constraints_held": [
+    "No product file changed",
+    "No push, no deploy, no server start on port 3120",
+    "No build-graph scan and no doctor.sh",
+    "No disposition line and no question tool",
+    "Explicit pathspec commit of the plan file only",
+    "One heavy job at a time"
+  ],
+  "questions": []
+}

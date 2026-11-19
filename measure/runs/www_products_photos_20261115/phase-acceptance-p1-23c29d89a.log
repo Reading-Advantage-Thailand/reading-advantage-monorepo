@@ -1,0 +1,19 @@
+MEASURE_AGENT_RESULT
+role: measure-phase-acceptance
+track_id: www_products_photos_20261115
+phase: Phase 1: Photo checks, then the remaining fixes
+audited_head_sha: 23c29d89acc30ca5515c4cf1b57d74bcc9104287
+phase_base_sha: 40419d4bc1f3a712f295acd7a6fc8939c8b6d69a
+route: bailian-token-plan/qwen3.8-max#high
+round: r1
+verdict: pass
+status: pass
+blocking_findings: 0
+nonblocking_findings: 6 (F1 stale plan line "PM page check pending"; F2 stale tracks.md status; F3 carried text-rule failing-first proof gap; F4 Green r4 log lost with its worktree; F5 tracked test-results/.last-run.json; F6 Review A model on the banned staffing list)
+summary: AC-1, AC-2, and AC-3 verified at 23c29d89a (tip of origin/master). Tasks 1.1-1.4 all [x] with SHAs. Red logs show failing-first runs (18 failed at 40419d4bc; 2 failed at d43334ba6; hero unit test 1 failed at 8193625ca^). Green gates read 56 passed EXIT=0. Review A r1 pass at d43334ba6; Review A r2 pass at ac1e54efd. W-23 closed: the pin b906affcce14559ad1aafd4ab0e942779e9f58b1 equals refs/tags/v4^{} of pnpm/action-setup, a W-23 regex replay on both CD workflows gives 12 uses lines and 0 unpinned, and CI run 43771969916 passed the CI selector tests step at 23c29d89a. CD run 43721191756 at ac1e54efd succeeded with 56 passed in the e2e step before the deploy. PM page-check artifact verified on disk (20261116-0615: 8 photos each on /en and /th products at 390/980/1280, hidden [], covered [], textOver []). The plan test strategy required no adversarial round and no UX browser review; the live check and the PM page-check cover the UX concern. A3/A4/A6/A7 not applicable: the phase diff touches no framework contract tests, filters, or tracks registry. A5 verified against logs and live run data.
+accepted_commits_after_review_a_r2: fe891bc3e (plan doc), 3de3846cf (other-track blog content), bbe4c3561 (one-line pin, mechanically verified), 23c29d89a (plan doc)
+retry_recommendation: none
+handoff: Verdict pass at the accepted HEAD 23c29d89a. Findings F1-F6 are nonblocking; F1 and F2 go to closeout as doc updates, F3 keeps the cheap failing-first proof open, F4 asks that future role logs stay committed in measure/runs/, F5 untracks test-results/.last-run.json in a later chore, F6 is an orchestrator staffing note. Next: final acceptance (light-lane exception) and closeout.
+confidence: high
+END_MEASURE_AGENT_RESULT
+RESULT: PASS

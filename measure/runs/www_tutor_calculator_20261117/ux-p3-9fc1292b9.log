@@ -1,0 +1,40 @@
+UX Browser P3 recapture final log — www_tutor_calculator_20261117
+Audited HEAD: 9fc1292b914bb4a67bac3c8fa48e7a68762f3c0b (confirmed current with git rev-parse HEAD at role start; phase acceptance PASS)
+Phase base: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+Role base: 9fc1292b914bb4a67bac3c8fa48e7a68762f3c0b (clean worktree, no commits during role)
+Verdict: PASS (confidence high)
+PNG folder: /tmp/opencode/a63-p3-blocks-9fc1292b9/ (39 PNGs + checks.json)
+
+Method
+- Served the existing .next production build of 9fc1292b9 with `pnpm exec next start -p 3432`. No rebuild.
+- The agent-browser CLI is not installed here, so the role followed the skill workflow (open, snapshot, click, fill, element screenshot) through Playwright 1.61 driving system Chrome. webbridge_status is not_run; all evidence sits in the JSON webbridge_evidence.
+- Capture script ux-p3-capture2.mjs kept in this runs folder: 36 base crops (en/th x 390/980/1280 x blocks 1 hero, 2 books, 3 reedy, 4 become-a-tutor, 5 gallery, 6 calculator) plus en-1280-6-calculator-p1/p2/p3 after each preset.
+- Viewed crops: calculator p1 and p3 at 1280, hero at 1280.
+
+Changes since the first run, all confirmed
+1. The graph own bar shows the own students' volume: 12,000 in preset 1, 6,000 in presets 2 and 3.
+2. The hero img loads with loading=eager.
+3. The leg rows read "Leg 1", "Leg 2" (and "Leg 3" in preset 3).
+
+Other checks
+- Nets stay 5,354.40 / 4,506.32 / 8,025.25 for presets 1-3.
+- Overflow is 0 px at 390, 980, and 1280 in en and th.
+- No zero-naturalWidth image in any crop; no downline text on the page.
+- Books keep the three covers in order at natural 480x651; gallery keeps 040, 002, 004, 052, 064 at natural 520x1125; hero and become-a-tutor keep the hero photo; Reedy keeps reedy-preview.webp.
+- Text over images stays readable in the viewed crops.
+
+Server
+- Started on port 3432 (PID 410618), stopped with `kill 410618` by PID; `ss -ltnp | grep 3432` confirms no listener remains.
+
+MEASURE_AGENT_RESULT
+role: measure-ux-browser-review
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+commits: none
+tests_run: none (audit-only role; browser verification only)
+files_changed: measure/runs/www_tutor_calculator_20261117/ux-p3-9fc1292b9.json, measure/runs/www_tutor_calculator_20261117/ux-p3-9fc1292b9.log, capture scripts ux-p3-capture2.mjs and ux-p3-probe4.mjs in the same runs folder
+plan_updates: none
+known_failures: none
+handoff: PASS. 39 PNGs and checks.json sit in /tmp/opencode/a63-p3-blocks-9fc1292b9/. Own-bar volumes, eager hero, and Leg 1-3 labels all check out. Nothing needs Green.
+END_MEASURE_AGENT_RESULT

@@ -35,6 +35,23 @@ export function splitThaiRuns(text: string): TextRun[] {
 }
 
 /**
+ * The language of one text: the language of its own script.
+ *
+ * A Thai text reads with the Thai voice, and an English text with the English voice. A line
+ * that mixes the two scripts holds a run of the other script, and that run keeps the voice of
+ * its own script (review finding F671, and the lang rule of the Phase 4 adversarial test).
+ * @param text The text of the piece.
+ * @returns "th" for a Thai text, "en" for an English text, and undefined for a text of no letters.
+ */
+export function langOf(text: string): "en" | "th" | undefined {
+  const thai = (text.match(/[\u0E00-\u0E7F]/g) ?? []).length;
+  const latin = (text.match(/[A-Za-z]/g) ?? []).length;
+  if (thai > 0 && thai / (thai + latin) >= 0.2) return "th";
+  if (latin > 0) return "en";
+  return undefined;
+}
+
+/**
  * Renders a text in one language, and wraps every Thai run of an English text in a span with
  * `lang="th"` (review finding F671).
  *

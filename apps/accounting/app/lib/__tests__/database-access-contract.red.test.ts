@@ -31,6 +31,7 @@ describe("Accounting database access contracts", () => {
       "GRANT SELECT, INSERT, UPDATE ON TABLE accounting_submissions TO accounting_runtime;",
       "GRANT SELECT, INSERT ON TABLE accounting_submission_audit_events TO accounting_runtime;",
       "GRANT SELECT, INSERT, UPDATE ON TABLE accounting_intake_documents TO accounting_runtime;",
+      "GRANT SELECT, INSERT ON TABLE accounting_year_file_facts TO accounting_runtime;",
       "GRANT SELECT, INSERT, UPDATE ON TABLE accounting_monthly_closes TO accounting_runtime;",
       "GRANT SELECT, INSERT ON TABLE accounting_monthly_close_audit_events TO accounting_runtime;",
       "GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE accounting_intake_leases TO accounting_runtime;",

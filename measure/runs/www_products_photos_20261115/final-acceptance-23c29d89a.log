@@ -1,0 +1,24 @@
+MEASURE_AGENT_RESULT
+role: measure-final-acceptance
+track_id: www_products_photos_20261115
+phase: track
+audited_head_sha: 23c29d89acc30ca5515c4cf1b57d74bcc9104287
+track_base_sha: 705a9ad601a77d94cb9cec57fb7d03519ed6c898
+role_base_sha: fe891bc3e614b6b33a2e6e31f394ae05ea015d0e
+route: opencode-go/deepseek-v4.1-flash
+round: r1
+verdict: pass
+status: pass
+blocking_findings: 0
+nonblocking_findings: 10 (F1 stale plan line "PM page check pending"; F2 stale tracks.md status; F3 text-rule failing-first proof gap; F4 Green r4 log lost; F5 tracked test-results/.last-run.json; F6 staffing note; F7 AC-3a dormant behind the blog-blocks timeout; F8 AC-4 stacked-card deviation; F9 owner look recorded; F10 doctor.sh exits 1 on the architecture manifest, external)
+summary: Track A-62 passes final acceptance at 23c29d89a, the tip of origin/master. AC-1 and AC-2 hold by the spec content and by red and green logs. AC-3b holds live: CD run 43721191756 at ac1e54efd succeeded in 15m25s with 56 passed in the photo e2e step before the deploy. AC-3a is wired and correct but dormant, because the earlier unit-test step fails on src/lib/blog-blocks.test.ts:210 (5000 ms timeout) on every www push; the orchestrator routed that carry to track ci_green_master_20261115 and classified it nonblocking. AC-4 holds: no text covers a photo, the Tutor section carries a real app picture, the pictures keep their natural ratio, and the new files come from the handoff set with no photograph of a real child. Tasks 1.1 to 1.4 are [x] with commit SHAs. Every role result binds to an ancestor HEAD: spec-review r2 40419d4bc pass, review-a r1 d43334ba6 pass, review-a r2 ac1e54efd pass, phase-acceptance r1 23c29d89a pass (mechanical role-gate rerun PASS). The worktree checkout fe891bc3e is 3 commits behind the audited tip; the two later track commits are the one-line W-23 pin and one plan line. A5 checked against logs and live run data; A6 registry line understates and closeout rewrites it; A9 finds no reference to an archived track in tests/*.sh.
+path_diff_checkout_to_audited_head: git diff --name-only fe891bc3e 23c29d89a -> .github/workflows/cd-www-reading-advantage.yml (W-23 pin, commit bbe4c3561), 3 blog binaries and 2 blog posts (commit 3de3846cf, track www_daily_blog_posts_20261115), measure/tracks/www_products_photos_20261115/plan.md; no unreviewed track path follows the checkout
+path_diff_range: git diff --stat fe891bc3e 23c29d89a -> 7 files changed, 154 insertions, 1 deletion
+w23_replay: uses_lines=12 unpinned=[] PASS=true at 23c29d89a; the same test at the checkout reads 37 passed and 1 failed (unpinned pnpm/action-setup@v4), the by-design lag
+gates: hero-section unit test 7 passed, exit 0; pnpm exec tsc --noEmit in apps/www-reading-advantage exit 0; cd-workflows.test.mjs at the checkout 37 passed and 1 failed (W-23, by design); full e2e skipped because CD run 43721191756 ran it; configured PROJECT_LINT, PROJECT_CHECKS, and PROJECT_TESTS are not set in this session, so the equivalent www checks above stand as the record
+doctor_exit: 1 (marker, catalog, marker-vocabulary, and deferred-review checks pass; the architecture step fails with "V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes"; the same step failed in ci.yml run 43771969916 at the audited HEAD, spec.md puts it out of scope for track ci_green_master_20261115, and this track changes no path under packages/)
+retry_recommendation: none
+handoff: Verdict pass. Route to measure-closeout for the archive move. Closeout owns F1, F2, and F8 and records F4 and F3 as accepted residue. Route F7 and F10 to track ci_green_master_20261115 (fix the blog-blocks timeout, confirm the three www photo-e2e steps in ci.yml run, and repair the architecture manifest so doctor exits 0). Route F5 to a later chore outside this track. F6 is a staffing note. Daniel's look answer is recorded as "Ok" in Tasks at 2026-11-16 07:38 ICT.
+confidence: high
+END_MEASURE_AGENT_RESULT
+RESULT: PASS

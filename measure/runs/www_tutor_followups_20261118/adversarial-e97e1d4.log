@@ -1,0 +1,43 @@
+# Adversarial · P1-P2 · www_tutor_followups_20261118, HEAD e97e1d4
+
+Role: measure-adversarial-testing. Route: opencode-go/muse-spark-1.3-contributor#high.
+Phase base: 80ac554b426551e5749f0e2cd500cbbf0eb93530. Audited HEAD: e97e1d48011327383aac95a843c243cc18673360.
+Scope: bounded probes only, per test-strategy.md. No production edit.
+
+## Verdict: provisional PASS
+
+No blocking finding. Three new adversarial files hold 13 tests. All pass.
+
+## Probes
+
+- Variant bounds: own 0 with leg [0] reads zero; own 0 with leg [1] reads needsOwnStudents with net 0.
+- Network 0 wins: negative price with legs and -0 price with a leg read zero.
+- Hand-built -0 network volume with legs reads zero; control with 9000 reads needsOwnStudents.
+- Zh draft: zh needsOwnStudents holds Chinese and differs from en; caption, legCommissionBar, heroAlt and tutorAlt equal en.
+- Storytime guard: narrowed patterns reject 2026-11-06 directory paths and accept the tutor hero suffix; no manifest entry trips them.
+- Preset images: content files stay distinct after each preset in en, th and zh; hero and teach-class stay present.
+
+## Anti-pattern checks
+
+- A4: all-[~] fixture verdict is INCOMPLETE, not PASS; plan markers are [x] and [b] only.
+- A7: downline scanner keeps hits beside never and do not; P4 control passes.
+- A5: plan.md holds no PASS=N FAIL=0 or all checks pass claim; cited suites exit 0.
+
+## Tests
+
+- heavy-run vitest on the 3 new files: 3 passed, 13 passed.
+- tsc --noEmit -p .: exit 0.
+- P4 control keeps-a-hit: 1 passed.
+
+MEASURE_AGENT_RESULT
+role: adversarial-testing
+status: pass
+track: www_tutor_followups_20261118
+phase: Phase 1 + Phase 2 combined adversarial testing
+commits: 3eb492a5c7616140ab1692308fe3b74ae8982399 (3 adversarial test files, no production edit)
+tests_run: heavy-run vitest 3 new files exit 0 (3 files passed, 13 tests passed); tsc --noEmit -p . exit 0; page.phase3 P4 control keeps-a-hit passed
+files_changed: apps/www-reading-advantage/src/lib/tutor-commission.followups.adversarial.test.ts; apps/www-reading-advantage/src/__tests__/www-tutor-followups.adversarial.test.ts; apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.followups.adversarial.test.tsx; measure/runs/www_tutor_followups_20261118/adversarial-e97e1d4.json; measure/runs/www_tutor_followups_20261118/adversarial-e97e1d4.log
+plan_updates: none (adversarial-only; no production edit)
+known_failures: none in adversarial scope; Phase-3 tasks 1.7, 3.2, 3.3, 3.4 stay open
+handoff: No implementation defect was exposed, so no work routes to Green. Phase 3 stays with the orchestrator: task 1.7 captures, [b] gate 3.2 PM page check, then push 3.3 and live checks 3.4. Question: none. Default: proceed to phase acceptance.
+END_MEASURE_AGENT_RESULT

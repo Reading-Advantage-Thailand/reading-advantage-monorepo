@@ -25,12 +25,12 @@ export const EXPECTED_META = {
   en: {
     title: "Storytime Advantage - English for Anuban 2 to P2 | Reading Advantage Thailand",
     description:
-      "Storytime Advantage is an English program for Anuban 2 to P2: one sound, one song, and two books each week. The first unit is being prepared, with a printed student book and QR-linked digital parts.",
+      "Storytime Advantage is an English app for Anuban 2 to P2. It launches on 30 November 2026 with one sound, one song, and two books each week.",
   },
   th: {
     title: "Storytime Advantage - ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 | Reading Advantage Thailand",
     description:
-      "Storytime Advantage คือหลักสูตรภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม กำลังจัดเตรียมหน่วยการเรียนรู้แรก พร้อมหนังสือนักเรียนฉบับพิมพ์และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด",
+      "Storytime Advantage เป็นแอปภาษาอังกฤษสำหรับเด็กอนุบาล 2 ถึง ป.2 เปิดตัววันที่ 30 พฤศจิกายน 2569 พร้อมหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มในแต่ละสัปดาห์",
   },
 } as const;
 
@@ -47,57 +47,51 @@ export const EXPECTED_AUX_COPY = {
 
 export const LABEL_COPY = {
   en: {
-    badge: "First unit being prepared",
+    badge: "Launches 30 November 2026",
     gradeRange: "English program for Anuban 2 to P2",
     features: [
       "One sound, one song, and two books each week",
-      "Every lesson printed in full for the class teacher",
-      "A Storytime Advantage student book with small readers inside",
       "QR links open the song and books",
     ],
-    navigation: "English for Anuban 2 to P2; the first unit is being prepared",
-    home: "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. Science, Math, Zhongwen, and STEM Advantage are on our roadmap, with no dates. The first Storytime Advantage unit is being prepared.",
+    navigation: "English for Anuban 2 to P2; the first unit launches on 30 November 2026",
+    home: "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. Science, Math, Zhongwen, and STEM Advantage are on our roadmap. The first Storytime Advantage unit launches on 30 November 2026.",
   },
   th: {
-    badge: "กำลังจัดเตรียมหน่วยแรก",
+    badge: "เปิดตัววันที่ 30 พฤศจิกายน 2569",
     gradeRange: "หลักสูตรภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2",
     features: [
       "หนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มต่อสัปดาห์",
-      "ทุกคาบมีแผนการสอนครบ",
-      "หนังสือนักเรียน Storytime Advantage พร้อมหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน",
       "คิวอาร์โค้ดเปิดเพลงและหนังสือ",
     ],
-    navigation: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 กำลังจัดเตรียมหน่วยการเรียนรู้แรก",
-    home: "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก Science, Math, Zhongwen และ STEM Advantage อยู่ในแผนงาน ยังไม่มีกำหนดวันเปิดตัว กำลังจัดเตรียมหน่วยการเรียนรู้แรกของ Storytime Advantage",
+    navigation: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569",
+    home: "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก Science, Math, Zhongwen และ STEM Advantage อยู่ในแผนงาน หน่วยการเรียนรู้แรกของ Storytime Advantage เปิดตัววันที่ 30 พฤศจิกายน 2569",
   },
   zh: {
-    badge: "首个单元准备中",
+    badge: "Launches 30 November 2026",
     gradeRange: "面向 Anuban 2 至 P2 的英语课程",
     features: [
       "每周一个发音、一首歌和两本书",
-      "每节课均有完整教学脚本",
-      "Storytime Advantage 学生用书内含小读本",
       "二维码可打开歌曲和书籍",
     ],
-    navigation: "面向 Anuban 2 至 P2 的英语课程，正在准备第一个单元",
-    home: "Primary Advantage、Reading Advantage 和 CodeCamp Advantage 已上线。Mastery Advantage 在 CodeCamp Advantage 中运行，并通过带标签的内容进入 Primary Advantage。Science、Math、Zhongwen 和 STEM Advantage 在路线图中，暂无日期。Storytime Advantage 的第一个单元正在准备中。",
+    navigation: "English for Anuban 2 to P2; the first unit launches on 30 November 2026",
+    home: "Primary Advantage、Reading Advantage 和 CodeCamp Advantage 已上线。Mastery Advantage 在 CodeCamp Advantage 中运行，并通过带标签的内容进入 Primary Advantage。Science、Math、Zhongwen 和 STEM Advantage 在路线图中，暂无日期。",
   },
 } as const;
 
 export const OVERVIEW_LABEL_COPY = {
   en: {
     gradeRange: "English for Anuban 2 to P2",
-    description: "Storytime Advantage is an English program for kindergarten and early primary. Each week has one sound, one song, and two books, and every lesson is printed in full for the class teacher. The first unit is being prepared.",
+    description: "Storytime Advantage is an English app for Anuban 2 to P2, ages 4 to 8. Each week brings one sound, one song, and two books to a phone at home or a classroom screen. The app launches on 30 November 2026.",
     ctaLabel: "Explore Storytime",
   },
   th: {
     gradeRange: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2",
-    description: "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษสำหรับชั้นอนุบาลและประถมต้น ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ทุกคาบมีแผนการสอนครบ กำลังจัดเตรียมหน่วยการเรียนรู้แรก",
+    description: "Storytime Advantage เป็นแอปภาษาอังกฤษสำหรับเด็กอนุบาล 2 ถึง ป.2 อายุ 4 ถึง 8 ปี แต่ละสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม บนโทรศัพท์ที่บ้านหรือจอในห้องเรียน แอปเปิดตัววันที่ 30 พฤศจิกายน 2569",
     ctaLabel: "สำรวจ Storytime",
   },
   zh: {
     gradeRange: "面向 Anuban 2 至 P2 的英语课程",
-    description: "Storytime Advantage 是面向 Anuban 2 至 P2 的英语课程。每周有一个发音、一首歌和两本书，每节课都为班级教师提供完整的印刷教学脚本。第一个单元正在准备中。",
+    description: "Storytime Advantage 是面向 Anuban 2 至 P2 的英语课程。每周有一个发音、一首歌和两本书。",
     ctaLabel: "了解 Storytime",
   },
 } as const;
@@ -153,39 +147,39 @@ export interface ExpectedCopy {
  */
 export const PAGE_COPY: Readonly<Record<(typeof CONTAINER_IDS)[number], readonly ExpectedCopy[]>> = {
   "st-hero": [
-    { key: "hero.comingSoon", en: "In Preparation", th: "กำลังจัดเตรียม" },
+    { key: "hero.comingSoon", en: "Launches 30 November 2026", th: "เปิดตัววันที่ 30 พฤศจิกายน 2569" },
     { key: "hero.title", en: "Stories, Songs, and First Sounds", th: "นิทาน เพลง และเสียงแรกของภาษาอังกฤษ" },
     { key: "hero.subtitle", en: "English for Anuban 2 to P2 (ages 4 to 8)", th: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 (อายุประมาณ 4 ถึง 8 ปี)" },
-    { key: "hero.description", en: "Storytime Advantage is an English program for kindergarten and early primary. Each week has one sound, one song, and two books, and every lesson is printed in full for the class teacher. The first unit is being prepared.", th: "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษสำหรับชั้นอนุบาลและประถมต้น ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ทุกคาบมีแผนการสอนครบ กำลังจัดเตรียมหน่วยการเรียนรู้แรก พร้อมหนังสือนักเรียนฉบับพิมพ์และส่วนดิจิทัลที่เชื่อมด้วยคิวอาร์โค้ด" },
+    { key: "hero.description", en: "A child taps a word and hears it. The class joins the song. Storytime Advantage brings one sound, one song, and two books to each week, on a phone at home and a screen in the classroom.", th: "เด็กคนหนึ่งแตะคำแล้วได้ยินเสียงอ่าน ทั้งชั้นร้องเพลงไปด้วยกัน Storytime Advantage นำหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่มมาสู่ทุกสัปดาห์ บนโทรศัพท์ที่บ้านและจอในห้องเรียน" },
   ],
   "st-section-1": [
     { key: "adaptiveEngine.eyebrow", en: "Mastery Advantage", th: "Mastery Advantage" },
     { key: "adaptiveEngine.heading", en: "Every Item on One Skill Map", th: "ทุกรายการอยู่บนแผนผังทักษะเดียวกัน" },
-    { key: "adaptiveEngine.description", en: "Every sound, word, and sentence frame is tagged to the Mastery Advantage skill map, in the same English map as the Primary Advantage books. The printed review strips bring each item back on a fixed schedule.", th: "ทุกเสียง ทุกคำ และทุกรูปประโยค ผูกกับแผนผังทักษะ Mastery Advantage ในแผนผังภาษาอังกฤษเดียวกับหนังสือ Primary Advantage แถบทบทวนที่พิมพ์ไว้นำแต่ละรายการกลับมาทบทวนตามตารางที่กำหนด" },
+    { key: "adaptiveEngine.description", en: "Every sound, word, and sentence frame is tagged to the Mastery Advantage skill map, the same English map used by the Primary Advantage books.", th: "ทุกเสียง ทุกคำ และทุกรูปประโยค ผูกกับแผนผังทักษะ Mastery Advantage ซึ่งเป็นแผนผังภาษาอังกฤษเดียวกับที่ใช้ในหนังสือ Primary Advantage" },
   ],
   "st-section-2": [
     { key: "eyebrows.keyFeatures", en: "WHAT IS IN THE PROGRAM", th: "สิ่งที่มีในหลักสูตร" },
-    { key: "keyFeatures.heading", en: "What Is in the First Unit", th: "สิ่งที่มีในหน่วยแรก" },
-    { key: "keyFeatures.features.0.title", en: "In Print", th: "ฉบับพิมพ์" },
-    { key: "keyFeatures.features.0.points.0", en: "One A4 Storytime Advantage, Level 2, Unit 1, Student Book for weeks 1 to 8. Small reader books sit inside it. Children tear them out, fold them, and staple them. No scissors are needed.", th: "หนังสือนักเรียน Storytime Advantage, Level 2, Unit 1, Student Book ขนาด A4 หนึ่งเล่ม สำหรับสัปดาห์ที่ 1 ถึง 8 มีหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน เด็กฉีกออก พับ และเย็บเล่มย่อยแต่ละเล่มได้โดยไม่ต้องใช้กรรไกร" },
-    { key: "keyFeatures.features.0.points.1", en: "A Thai-only teacher book, with five lesson scripts a week", th: "คู่มือครูภาษาไทย พร้อมแผนการสอนสัปดาห์ละ 5 คาบ" },
-    { key: "keyFeatures.features.0.points.2", en: "Color reader files for the teacher to print on A3 and lead the class", th: "ไฟล์หนังสือฝึกอ่านสีสำหรับครูพิมพ์ลงกระดาษ A3 เพื่อใช้สอนในชั้นเรียน" },
-    { key: "keyFeatures.features.0.points.3", en: "A review strip for each day", th: "แถบทบทวนประจำวัน" },
-    { key: "keyFeatures.features.1.title", en: "By QR Code, With No Login", th: "ผ่านคิวอาร์โค้ด ไม่ต้องเข้าสู่ระบบ" },
-    { key: "keyFeatures.features.1.points.0", en: "The song of the week, with a video", th: "เพลงประจำสัปดาห์พร้อมวิดีโอ" },
-    { key: "keyFeatures.features.1.points.1", en: "The read-along book, with \"read to me\" and \"I read\"", th: "หนังสืออ่านตามพร้อมโหมด \"อ่านให้ฟัง\" และ \"ฉันอ่านเอง\"" },
-    { key: "keyFeatures.features.1.points.2", en: "The decodable book, with words to tap and hear", th: "หนังสือฝึกอ่านที่แตะคำเพื่อฟังเสียงได้" },
-    { key: "keyFeatures.features.1.points.3", en: "A 5-minute home activity in Thai", th: "กิจกรรมที่บ้านภาษาไทย ใช้เวลาห้านาที" },
+    { key: "keyFeatures.heading", en: "Inside the Storytime Advantage App", th: "สิ่งที่มีในแอป Storytime Advantage" },
+    { key: "keyFeatures.features.0.title", en: "Two Books Every Week", th: "หนังสือสองเล่มทุกสัปดาห์" },
+    { key: "keyFeatures.features.0.points.0", en: "The read-along book reads to your child page by page.", th: "หนังสืออ่านตามอ่านให้ลูกฟังทีละหน้า" },
+    { key: "keyFeatures.features.0.points.1", en: "Choose “Read to me” or “I read”, and tap any word to hear it.", th: "เลือก “อ่านให้ฟัง” หรือ “ฉันอ่านเอง” แล้วแตะคำใดก็ได้เพื่อฟังเสียงอ่าน" },
+    { key: "keyFeatures.features.0.points.2", en: "Choose slow mode when your child wants a slower reading speed.", th: "เลือกโหมดอ่านช้าเมื่อลูกต้องการฟังเสียงอ่านที่ช้าลง" },
+    { key: "keyFeatures.features.0.points.3", en: "The decodable book introduces first sounds, with words to tap and hear.", th: "หนังสือฝึกอ่านแบบถอดเสียงแนะนำเสียงแรก ๆ พร้อมคำให้เด็กแตะเพื่อฟังเสียงอ่าน" },
+    { key: "keyFeatures.features.1.title", en: "One Sign-In, Then Storytime", th: "เข้าสู่ระบบครั้งเดียว แล้วอ่านนิทานได้เลย" },
+    { key: "keyFeatures.features.1.points.0", en: "Open on a phone at home or a screen in the classroom.", th: "เปิดบนโทรศัพท์ที่บ้านหรือจอในห้องเรียน" },
+    { key: "keyFeatures.features.1.points.1", en: "A parent, or the teacher for the class, signs in on the first visit.", th: "ผู้ปกครอง หรือครูประจำชั้น เข้าสู่ระบบเมื่อเปิดใช้ครั้งแรก" },
+    { key: "keyFeatures.features.1.points.2", en: "The device then stays signed in.", th: "จากนั้นอุปกรณ์จะยังคงเข้าสู่ระบบไว้" },
+    { key: "keyFeatures.features.1.points.3", en: "The week’s song comes with a video.", th: "เพลงประจำสัปดาห์มาพร้อมวิดีโอ" },
   ],
   "st-section-3": [
     { key: "eyebrows.k3Curriculum", en: "ANUBAN 2 TO P2", th: "อนุบาล 2 ถึง ป.2" },
     { key: "coreValue.heading", en: "One Sound, One Song, Two Books a Week", th: "หนึ่งเสียง หนึ่งเพลง หนังสือสองเล่ม ทุกสัปดาห์" },
-    { key: "coreValue.features.0.title", en: "Lessons Printed in Full", th: "แผนการสอนครบทุกขั้นตอน" },
-    { key: "coreValue.features.0.description", en: "Five 30-minute lessons a week in Anuban. Each step gives what the teacher does and the English the teacher says, with the Thai beside it.", th: "หนังสือนักเรียนและคู่มือครูจัดเนื้อหาสำหรับการสอนแต่ละสัปดาห์" },
-    { key: "coreValue.features.1.title", en: "One Sound a Week", th: "ฝึกอ่านจากหนังสือ" },
-    { key: "coreValue.features.1.description", en: "Each week teaches one letter sound, with a recorded pure sound, a hand action, and words that start with the sound.", th: "หนังสือหนึ่งเล่มมีเรื่องอ่านตามและหนังสือฝึกอ่านที่ใช้เสียงและคำตามบทเรียน" },
-    { key: "coreValue.features.2.title", en: "A Link to Home", th: "เชื่อมต่อกับบ้านด้วยคิวอาร์โค้ด" },
-    { key: "coreValue.features.2.description", en: "A Thai home card each week, with QR codes that open the song and the books on a phone.", th: "บัตรกิจกรรมที่บ้านภาษาไทยมีคิวอาร์โค้ดที่เปิดเพลงและหนังสือบนโทรศัพท์ได้" },
+    { key: "coreValue.features.0.title", en: "A Story You Can Hear", th: "นิทานที่ฟังได้" },
+    { key: "coreValue.features.0.description", en: "The read-along book reads page by page. Children can choose “Read to me” or “I read”, tap a word, or select slow mode.", th: "หนังสืออ่านตามอ่านให้ฟังทีละหน้า เด็กเลือก “อ่านให้ฟัง” หรือ “ฉันอ่านเอง” แตะคำเพื่อฟังเสียงอ่าน หรือเลือกโหมดอ่านช้าได้" },
+    { key: "coreValue.features.1.title", en: "One Sound a Week", th: "หนึ่งเสียงในแต่ละสัปดาห์" },
+    { key: "coreValue.features.1.description", en: "The decodable book introduces first sounds and gives children words to tap and hear.", th: "หนังสือฝึกอ่านแบบถอดเสียงแนะนำเสียงแรก ๆ และมีคำให้เด็กแตะเพื่อฟังเสียงอ่าน" },
+    { key: "coreValue.features.2.title", en: "A Link to Home", th: "เชื่อมต่อกับบ้าน" },
+    { key: "coreValue.features.2.description", en: "Each weekly Thai parent page includes the sound, three words, one sentence, and a 5-minute home activity.", th: "หน้าสำหรับผู้ปกครองภาษาไทยในแต่ละสัปดาห์มีเสียงประจำสัปดาห์ สามคำ หนึ่งประโยค และกิจกรรมที่บ้าน 5 นาที" },
     { key: "song.heading", en: SONG_COPY.en.heading, th: SONG_COPY.th.heading, zh: SONG_COPY.zh.heading },
     { key: "song.text", en: SONG_COPY.en.text, th: SONG_COPY.th.text, zh: SONG_COPY.zh.text },
     { key: "song.playLabel", en: SONG_COPY.en.playLabel, th: SONG_COPY.th.playLabel, zh: SONG_COPY.zh.playLabel },
@@ -193,30 +187,30 @@ export const PAGE_COPY: Readonly<Record<(typeof CONTAINER_IDS)[number], readonly
   "st-section-4": [
     { key: "eyebrows.teacherResources", en: "FOR THE TEACHER", th: "สำหรับครู" },
     { key: "teacherTools.heading", en: "For the Teacher", th: "สำหรับครู" },
-    { key: "teacherTools.tools.0.title", en: "Printed Scripts", th: "คู่มือครูฉบับพิมพ์" },
-    { key: "teacherTools.tools.0.description", en: "The teacher reads the script. There is no lesson planning.", th: "ครูอ่านตามแผนการสอนที่จัดเตรียมไว้" },
-    { key: "teacherTools.tools.1.title", en: "Review Strips", th: "แถบทบทวน" },
-    { key: "teacherTools.tools.1.description", en: "Each sound and word comes back on a fixed schedule, in 4 minutes or less a day.", th: "แถบทบทวนช่วยให้ครูนำเสียงและคำกลับมาทบทวนตามแผน" },
-    { key: "teacherTools.tools.2.title", en: "Friday Check", th: "การตรวจประจำสัปดาห์" },
-    { key: "teacherTools.tools.2.description", en: "A 3-minute picture check tells the teacher which sounds and words to bring back.", th: "การตรวจด้วยภาพช่วยให้ครูเห็นเสียงและคำที่ควรนำมาทบทวน" },
+    { key: "teacherTools.tools.0.title", en: "The Classroom Screen", th: "จอในห้องเรียน" },
+    { key: "teacherTools.tools.0.description", en: "Open the app on your classroom screen. Share the story and play the week’s song video with the class.", th: "เปิดแอปบนจอในห้องเรียน เพื่อใช้นิทานและเล่นวิดีโอเพลงประจำสัปดาห์ร่วมกับเด็กทั้งชั้น" },
+    { key: "teacherTools.tools.1.title", en: "Hear the Page, Hear the Word", th: "ฟังทั้งหน้า ฟังทีละคำ" },
+    { key: "teacherTools.tools.1.description", en: "Play the read-aloud page by page. Tap a word to hear it, or choose slow mode.", th: "เปิดเสียงอ่านทีละหน้า แตะคำเพื่อฟังเสียงอ่าน หรือเลือกโหมดอ่านช้า" },
+    { key: "teacherTools.tools.2.title", en: "A Clear Weekly Rhythm", th: "จังหวะการเรียนรู้รายสัปดาห์ที่ชัดเจน" },
+    { key: "teacherTools.tools.2.description", en: "One sound, one song, and two books give your class a shared focus. Sign in once, and the classroom device stays signed in.", th: "หนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ช่วยให้ทั้งชั้นมีจุดเน้นร่วมกันในแต่ละสัปดาห์ เข้าสู่ระบบเพียงครั้งเดียว จากนั้นอุปกรณ์ในห้องเรียนจะยังคงเข้าสู่ระบบไว้" },
   ],
   "st-section-5": [
     { key: "eyebrows.frequentlyAskedQuestions", en: "FREQUENTLY ASKED QUESTIONS", th: "คำถามที่พบบ่อย" },
     { key: "faq.heading", en: "Frequently Asked Questions", th: "คำถามที่พบบ่อย" },
-    { key: "faq.questions.0.question", en: "What is in the first unit?", th: "ในหน่วยแรกมีอะไรบ้าง" },
-    { key: "faq.questions.0.answer", en: "One A4 student book for weeks 1 to 8, with small reader books inside it; a teacher book in Thai; color reader files the teacher prints on A3; and the song and books by QR code. Contact us to discuss the first unit.", th: "หนังสือนักเรียน A4 หนึ่งเล่มสำหรับสัปดาห์ที่ 1 ถึง 8 พร้อมหนังสือฝึกอ่านเล่มเล็กอยู่ด้านใน คู่มือครูภาษาไทย ไฟล์หนังสือฝึกอ่านสีที่ครูพิมพ์ลงกระดาษ A3 และเพลงกับหนังสือที่เปิดด้วยคิวอาร์โค้ด ติดต่อเราเพื่อพูดคุยเกี่ยวกับหน่วยแรก" },
-    { key: "faq.questions.1.question", en: "Do we need computers or an app?", th: "ต้องใช้คอมพิวเตอร์หรือแอปไหม" },
-    { key: "faq.questions.1.answer", en: "No. The program is printed. The songs and the books open on a phone or a classroom screen by QR code, with no app and no login.", th: "ไม่ต้องใช้ โปรแกรมเป็นสื่อสิ่งพิมพ์ เพลงและหนังสือเปิดได้บนโทรศัพท์หรือจอในห้องเรียนด้วยคิวอาร์โค้ด โดยไม่ต้องใช้แอปและไม่ต้องเข้าสู่ระบบ" },
+    { key: "faq.questions.0.question", en: "What does each week include?", th: "แต่ละสัปดาห์มีอะไรบ้าง" },
+    { key: "faq.questions.0.answer", en: "Each week brings one sound, one song with a video, and two books: a read-along book and a decodable book. Children can hear pages and tap words. Parents also receive a short Thai page with a 5-minute home activity.", th: "แต่ละสัปดาห์มีหนึ่งเสียง หนึ่งเพลงพร้อมวิดีโอ และหนังสือสองเล่ม ได้แก่ หนังสืออ่านตามและหนังสือฝึกอ่านแบบถอดเสียง เด็กฟังเสียงอ่านทีละหน้าและแตะคำเพื่อฟังเสียงอ่านได้ ผู้ปกครองยังได้รับหน้าข้อมูลภาษาไทยสั้น ๆ พร้อมกิจกรรมที่บ้าน 5 นาที" },
+    { key: "faq.questions.1.question", en: "What do we need to open Storytime Advantage?", th: "ต้องใช้อะไรเพื่อเปิด Storytime Advantage" },
+    { key: "faq.questions.1.answer", en: "A phone at home or a screen in the classroom. A parent, or the teacher for the class, signs in on the first visit. The device then stays signed in.", th: "โทรศัพท์ที่บ้านหรือจอในห้องเรียน ผู้ปกครอง หรือครูประจำชั้น เข้าสู่ระบบเมื่อเปิดใช้ครั้งแรก จากนั้นอุปกรณ์จะยังคงเข้าสู่ระบบไว้" },
     { key: "faq.questions.2.question", en: "Our kindergarten teachers are not English teachers. Can they teach it?", th: "ครูอนุบาลที่ไม่ใช่ครูภาษาอังกฤษสอนได้ไหม" },
-    { key: "faq.questions.2.answer", en: "Yes. Every lesson is printed in full: what the teacher does, the English the teacher says with the Thai beside it, what the children do, and what to watch.", th: "ได้ คู่มือครูมีแผนการสอนและข้อความภาษาอังกฤษที่ใช้สอน พร้อมความหมายภาษาไทยและสิ่งที่เด็กทำในแต่ละขั้นตอน" },
+    { key: "faq.questions.2.answer", en: "Yes. The app supplies the English audio. The read-along book reads page by page, and each word can be heard with a tap. Teachers can also use slow mode and the song video with the class.", th: "ได้ แอปมีเสียงอ่านภาษาอังกฤษให้ หนังสืออ่านตามอ่านให้ฟังทีละหน้า และแตะคำใดก็ได้เพื่อฟังเสียงอ่าน ครูยังใช้โหมดอ่านช้าและวิดีโอเพลงกับเด็กทั้งชั้นได้" },
     { key: "faq.questions.3.question", en: "Who is Storytime Advantage for?", th: "Storytime Advantage เหมาะกับใคร" },
-    { key: "faq.questions.3.answer", en: "Children from Anuban 2 to P2, about ages 4 to 8, and their class teachers. Parents join through the weekly home card.", th: "เด็กอนุบาล 2 ถึง ป.2 อายุประมาณ 4 ถึง 8 ปี และครูประจำชั้น ผู้ปกครองร่วมกิจกรรมที่บ้านได้ผ่านบัตรประจำสัปดาห์" },
+    { key: "faq.questions.3.answer", en: "Storytime Advantage is for children from Anuban 2 to P2, ages 4 to 8. Schools open it on a classroom screen, and families open it on a phone at home. A weekly Thai parent page includes a 5-minute home activity.", th: "Storytime Advantage เหมาะสำหรับเด็กอนุบาล 2 ถึง ป.2 อายุ 4 ถึง 8 ปี โรงเรียนเปิดใช้บนจอในห้องเรียน และครอบครัวเปิดใช้บนโทรศัพท์ที่บ้าน หน้าสำหรับผู้ปกครองภาษาไทยประจำสัปดาห์มีกิจกรรมที่บ้าน 5 นาที" },
     { key: "faq.questions.4.question", en: "What happens after P2?", th: "หลังจาก ป.2 แล้วเรียนอะไรต่อ" },
     { key: "faq.questions.4.answer", en: "Storytime Advantage: Anuban 2 to P2. Primary Advantage from P3. A P3 class without phonics runs the Primary catch-up module.", th: "Storytime Advantage: Anuban 2 to P2. Primary Advantage from P3. A P3 class without phonics runs the Primary catch-up module." },
   ],
   "st-cta": [
     { key: "cta.heading", en: "Interested in Storytime Advantage?", th: "สนใจ Storytime Advantage ไหม" },
-    { key: "cta.description", en: "The first unit is being prepared. Contact us to discuss Storytime Advantage.", th: "กำลังจัดเตรียมหน่วยการเรียนรู้แรก ติดต่อเราเพื่อพูดคุยเกี่ยวกับ Storytime Advantage" },
+    { key: "cta.description", en: "The app launches on 30 November 2026. Ask us on LINE OA for the steps to join Storytime Advantage with your family or class.", th: "แอปเปิดตัววันที่ 30 พฤศจิกายน 2569 สอบถามขั้นตอนการเข้าร่วม Storytime Advantage สำหรับครอบครัวหรือชั้นเรียนของคุณได้ทาง LINE OA" },
     { key: "cta.buttons.joinWaitlist", en: "Contact Us", th: "ติดต่อเรา", href: "/contact" },
     { key: "cta.buttons.learnMore", en: "Learn More", th: "ดูข้อมูลเพิ่มเติม", href: "/contact" },
   ],
@@ -341,4 +335,23 @@ export type ClaimTermName = (typeof CLAIM_TERMS)[number]["name"];
  */
 export function findClaimTerms(text: string): ClaimTermName[] {
   return CLAIM_TERMS.filter(({ pattern }) => pattern.test(text)).map(({ name }) => name);
+}
+
+/**
+ * The one approved public date of the batch of 2026-11-16 (Daniel, Google Tasks, 2026-11-16 05:07 ICT).
+ * Every other date stays a claim hit.
+ */
+export const APPROVED_DATES = {
+  en: "30 November 2026",
+  th: "30 พฤศจิกายน 2569",
+} as const;
+
+/**
+ * Finds the claim terms of a text after it clears the approved public date.
+ * @param text The text to scan.
+ * @returns The names of the term classes that the text still holds, in scanner order.
+ */
+export function findUnapprovedClaimTerms(text: string): ClaimTermName[] {
+  const cleared = text.split(APPROVED_DATES.en).join("").split(APPROVED_DATES.th).join("");
+  return findClaimTerms(cleared);
 }

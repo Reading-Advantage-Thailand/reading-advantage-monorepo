@@ -4,6 +4,8 @@ import Image from "next/image";
 import { Network, Brain, GraduationCap, Clock, ArrowRight } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { siteLogos } from "@/lib/site-assets";
+import ProductPicture from "@/components/products/product-picture";
+import { productPictures } from "@/lib/product-pictures";
 
 export default async function TutorAdvantage() {
   const t = await getScopedI18n("components.products.tutorAdvantage");
@@ -64,6 +66,14 @@ export default async function TutorAdvantage() {
             <p className="text-xl text-emerald-800 leading-relaxed max-w-3xl mx-auto">
               {t("description")}
             </p>
+          </div>
+
+          {/* Real app screen */}
+          <div className="mb-10 relative z-10">
+            <ProductPicture
+              picture={productPictures.tutorFlashcard}
+              alt={t("imageAlt")}
+            />
           </div>
 
           {/* Features grid */}

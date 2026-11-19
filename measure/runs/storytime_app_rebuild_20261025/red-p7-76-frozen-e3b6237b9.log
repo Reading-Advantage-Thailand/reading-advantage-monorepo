@@ -1,0 +1,33 @@
+# Red P7 T7.6 — frozen-file row base
+
+Session: Red · P7 T7.6 · storytime_app_rebuild (frozen-file row). Route opencode-go/deepseek-v4.1-flash.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+track: storytime_app_rebuild_20261025
+phase: 7
+task: 7.6
+status: pass
+baseline_sha: 3480f904c509dc2d66fa827dba73df95b3768c65
+role_base_sha: e3b6237b916588ae6a23e9006073a173227e5fd6
+agent_model: opencode-go/deepseek-v4.1-flash
+resulting_head: bdc1beda2 (test) then the docs commit at HEAD (it carries this log; a SHA cannot name itself)
+commits: bdc1beda2 (test); HEAD (plan.md sub-line and this log, subject "docs(storytime): record the 7.6 frozen-file base move")
+tests_changed: apps/storytime/__tests__/look-brand-chrome.test.ts (row F-4 only)
+files: apps/storytime/__tests__/look-brand-chrome.test.ts; measure/tracks/storytime_app_rebuild_20261025/plan.md; this log
+defect: row "F-4 the per-word timing files did not change since the phase base (AC-4.7)" ran `git diff 3480f904c509dc2d66fa827dba73df95b3768c65 -- packages/read-along/hooks apps/storytime/lib/highlight-windows.ts` and failed. Task 7.6 changed packages/read-along/hooks/use-read-along.ts on purpose (61e8a7db0, then 19fa72a97 and 81c9d6db3). The row comes from the archived look track storytime_look_20261107. It failed since 61e8a7db0 and no gate reported it.
+git_log_evidence: `git log 3480f904..HEAD -- packages/read-along/hooks apps/storytime/lib/highlight-windows.ts` lists exactly three commits, and no other commit:
+  81c9d6db3 2026-11-14 fix(storytime): guard the rollback and upload secrets (track_id: storytime_app_rebuild_20261025)
+  19fa72a97 2026-11-14 fix(storytime): hold the frame loop after a reset too (track_id: storytime_app_rebuild_20261025)
+  61e8a7db0 2026-11-14 fix(storytime): clear the word mark after a mode stop (track_id: storytime_app_rebuild_20261025)
+  `git show --stat` for each commit lists one file only: packages/read-along/hooks/use-read-along.ts (15+/3-, 3+/1-, 4+/1-). apps/storytime/lib/highlight-windows.ts did not change. No commit outside the three touched the two paths.
+change: the row base is now 81c9d6db313f14db53678f330833c0a9ae365f68 (the last of the three commits, the reviewed 7.x head of the file). The assertion stays, so the files must not change after that base. One comment line names the reason: task 7.6 changed the hook on purpose, under Daniel's look pass ("UI is fine", 2026-11-15 19:59). The expect message now reads "since the 7.6 hook base". No production file changed.
+red_before: exit 1. One failure only, F-4, at the stdout assertion. 1 failed, 28 passed. Output /tmp/opencode/red-p7-76-frozen-before.txt.
+green_after: exit 0. 29 passed, 2 files. Output /tmp/opencode/red-p7-76-frozen-after.txt.
+commands: heavy-run (bash ~/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '...'), foreground. cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm --filter storytime exec vitest run --maxWorkers=1 --reporter=dot --silent=true __tests__/look-brand-chrome.test.ts. The filter matches two files: look-brand-chrome.test.ts and look-brand-chrome.test.tsx.
+commit_note: the requested subject "test(storytime): move the timing-file base to the 7.6 hook (track_id: storytime_app_rebuild_20261025)" is 102 characters. @commitlint/config-conventional limits the header to 100, so the commit subject is "test(storytime): timing-file base at 7.6 hook (track_id: storytime_app_rebuild_20261025)" (88 characters). The track_id reference stays.
+dirty_paths: before the edit, `git status --short` showed modified apps/*/next-env.d.ts (generated, never staged), modified measure/tracks/primary_in_app_help_20261023/plan.md (forbidden, never staged), and untracked scratch folders (.tmp, t/, test-results/, and others). All are unrelated to this work and stay untouched. Pathspec commits only.
+notes: baseline_sha is the phase base that the row names, 3480f904. The Phase 7 base in plan.md is 1f278e78c5fdceebc3e8a75a282a21536f95415a; this run changed no file under that scope except the test row. The role base e3b6237b9 holds no commit from this role; `git log --oneline e3b6237b9..HEAD` lists only bdc1beda2 before the docs commit. No push.
+handoff: none. The row now tracks the 7.6 hook. A later task that changes packages/read-along/hooks or apps/storytime/lib/highlight-windows.ts must fail this row by design and must move the base with a review note.
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

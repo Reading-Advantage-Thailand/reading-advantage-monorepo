@@ -94,7 +94,7 @@ const PICTURED_PRODUCT_KEYS: readonly string[] = [
 const EXPECTED_B2B_KEYS = [
   ...B2B_RENDER_ORDER.flatMap((productKey) => [
     `products.${productKey}.title`,
-    ...PRODUCT_FEATURE_INDEXES.map(
+    ...(productKey === "storytimeAdvantage" ? [0, 3] : PRODUCT_FEATURE_INDEXES).map(
       (featureIndex) => `products.${productKey}.features.${featureIndex}`,
     ),
     `products.${productKey}.gradeRange`,
@@ -330,7 +330,9 @@ describe("Phase 3 Group B locale contracts", () => {
         expect(product.title).toBeTruthy();
         expect(product.badge).toBeTruthy();
         expect(product.gradeRange).toBeTruthy();
-        expect(Object.keys(product.features)).toEqual(["0", "1", "2", "3"]);
+        expect(Object.keys(product.features)).toEqual(
+          productKey === "storytimeAdvantage" ? ["0", "3"] : ["0", "1", "2", "3"],
+        );
         expect(Object.values(product.features).every(Boolean)).toBe(true);
       }
     }

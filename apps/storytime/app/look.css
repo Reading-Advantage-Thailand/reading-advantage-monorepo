@@ -60,7 +60,10 @@ main > a {
 /* ---- The week page column and its painted ground. ---- */
 main[data-place] {
   isolation: isolate;
-  padding: 0 16px 36px;
+  /* The page padding. A box that reaches both screen edges (the phone song stage) adds this
+   * value to its width and takes it back on both sides. */
+  --st-page-pad: 16px;
+  padding: 0 var(--st-page-pad) 36px;
   gap: 20px;
   color: var(--st-ink);
 }
@@ -607,16 +610,22 @@ main[data-place] button:active:not(:disabled) {
   border-radius: 22px;
   box-shadow: 0 0 0 4px var(--st-brown), 0 0 0 7px var(--st-amber), 0 12px 0 7px rgba(58, 24, 4, 0.3);
 }
-/* The phone cover card (AC-2.6, task 2.3a): 220 CSS px high, so the gold Play button and
- * the active lyric line show in the first view. The video fills the card at its 9:16 shape;
- * the framed poster window of AC-1.4 stays until the video plays a frame. */
+/* The phone song box (task 6.2, finding 3): the video fills the width of the screen in the 9:16
+ * shape of the phone file, so the child sees the whole song frame. The stage leaves the page
+ * padding on both sides, so the video reaches the screen edges. The height comes from the shape
+ * of the video and stops at 82 percent of the viewport, so the Play control and the active
+ * lyric line stay reachable. No pixel height is pinned. */
 .song-stage[data-phone="true"] {
-  height: 220px;
+  width: calc(100% + 2 * var(--st-page-pad));
+  margin-left: calc(-1 * var(--st-page-pad));
+  margin-right: calc(-1 * var(--st-page-pad));
   align-items: center;
 }
 .song-stage[data-phone="true"] video {
-  width: auto;
-  height: 100%;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 9 / 16;
+  max-height: 82dvh;
 }
 [data-part="song"] ol {
   gap: 0;
@@ -727,7 +736,8 @@ main[data-place] button:active:not(:disabled) {
 /* ---- Wider screens. ---- */
 @media (min-width: 640px) {
   main[data-place] {
-    padding-inline: 24px;
+    --st-page-pad: 24px;
+    padding-inline: var(--st-page-pad);
   }
   header[data-hero] {
     margin-inline: -24px;
@@ -853,5 +863,101 @@ main[data-place] button:active:not(:disabled) {
   [data-part="decodable"] div > section[aria-label]:last-child button {
     min-height: 48px;
     font-size: 20px;
+    padding-inline: 10px;
+  }
+  /* The decodable of a short screen (task 6.2, round 3): the page arrows, the sentence button,
+   * and the tricky words share one row, and every control must end inside the fold. The gap of
+   * the part shrinks, and the labels of the row keep a slimmer padding and a smaller font, so
+   * the arrows and the tricky words stay on one line. */
+  [data-part="decodable"] > div {
+    gap: 8px;
+  }
+  [data-part="decodable"] > div > div > button,
+  [data-part="decodable"] > div > div > div > button,
+  [data-part="decodable"] div > section[aria-label]:last-child button {
+    /* 48 px, not 44 px: the capture rows hold a 48 px tap floor (`tap_under_48`), and the 44 px
+     * arrows failed 2 landscape capture rows (gate repair, task 6.2 round 7). */
+    min-width: 48px;
+    padding-inline: 8px;
+    font-size: 16px;
+  }
+}
+
+/* The play mark of the song poster (task 6.2, round 3): a big amber disc with the play
+ * triangle, so a child sees the mark on the poster before the song starts. The mark sits over
+ * the video, and the house button style would make it a small brown plaque, so the rule sets
+ * the size, the fill, and the ring of the mark.
+ * Round 6, finding N2 (PM 2026-11-14): the centred mark covered the title of the poster. The
+ * mark now sits above the title band, in the picture area between the logo and the title: the
+ * bottom edge of the box rests at 38 percent of the video box from the top (`bottom: 62%`), and
+ * the box stays 60 px, so the title is readable at 390x844, 844x390, and 1440x900. The box
+ * shadows paint 4 px past the ring and 6 px more down, so the box keeps more than 10 px of air
+ * over the band top (the poster title is 43 percent from the top on the wide poster and 41
+ * percent on the phone poster). The mark keeps the horizontal centring through
+ * `translate: -50% 0`, so the house press rule cannot slide it. */
+main[data-place] button[data-play-mark] {
+  min-width: 60px;
+  min-height: 60px;
+  padding: 0;
+  font-size: 30px;
+  line-height: 1;
+  color: var(--st-brown);
+  text-shadow: none;
+  background-color: var(--st-amber);
+  border: 4px solid #fff;
+  border-radius: 999px;
+  box-shadow: 0 0 0 4px var(--st-brown), 0 6px 0 4px rgba(58, 24, 4, 0.35);
+  left: 50%;
+  bottom: 62%;
+  translate: -50% 0;
+}
+
+/* The press of the mark (task 6.2, round 4, finding B1): the house :active rule sets
+ * `translate: 0 3px`, and that would replace the own translate of the mark, so a mouse press
+ * moves the mark off the pointer and the release lands on the video. The pressed state keeps
+ * the translate of the mark, so the centre does not move, and the press shows in the drop
+ * shadow instead. Round 6: the translate is now `-50% 0`, in step with the place above the
+ * title band. */
+main[data-place] button[data-play-mark]:active:not(:disabled) {
+  translate: -50% 0;
+  box-shadow: 0 0 0 4px var(--st-brown), 0 3px 0 4px rgba(58, 24, 4, 0.35);
+}
+
+/* ---- A landscape screen below 500 px of height: the song video fills the height of the
+ * viewport (task 6.2, finding 3), so the child sees the whole song frame. The play control
+ * sits beside the video, so every child control still ends inside the fold (findings F280 and
+ * F360). The video keeps its 16:9 shape, and the lyric list moves under the row. The
+ * orientation clause is load bearing: a short portrait viewport keeps the portrait phone box
+ * (finding F330). ---- */
+@media (max-height: 500px) and (orientation: landscape) {
+  .song-part {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    justify-content: center;
+    column-gap: 16px;
+  }
+  .song-part > .song-stage {
+    grid-area: 1 / 1;
+  }
+  /* The Play button (N1 of the browser check of 2026-11-13): the label of the button stays on
+   * one line, and the button takes the width of that line, so the label never passes the border
+   * of the button. The label of the Thai button is the longest one, and the smaller font keeps
+   * the button beside the video inside the fold. */
+  [data-part="song"] > div > button {
+    grid-area: 1 / 2;
+    width: max-content;
+    white-space: nowrap;
+    padding-inline: 10px;
+    font-size: 20px;
+  }
+  .song-part > ol {
+    grid-area: 2 / 1 / 3 / -1;
+  }
+  .song-stage video {
+    width: calc(100dvh * 16 / 9);
+    height: 100dvh;
+    max-height: none;
+    max-width: none;
   }
 }

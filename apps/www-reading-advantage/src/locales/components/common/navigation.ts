@@ -15,7 +15,7 @@ export const en = {
         scienceAdvantage: "Hands-on science education",
         stemAdvantage: "Integrated STEM learning platform",
         zhongwenAdvantage: "Chinese language learning platform",
-        storytimeAdvantage: "English for Anuban 2 to P2; the first unit is being prepared",
+        storytimeAdvantage: "English for Anuban 2 to P2; the first unit launches on 30 November 2026",
         codecampAdvantage: "Learn coding through projects",
         tutorAdvantage: "Online tutoring platform",
     }
@@ -38,7 +38,7 @@ export const th = {
         scienceAdvantage: "การศึกษาวิทยาศาสตร์แบบปฏิสัมพันธ์",
         stemAdvantage: "แพลตฟอร์มการเรียนรู้ STEM ที่รวมอยู่",
         zhongwenAdvantage: "แพลตฟอร์มการเรียนภาษาจีน",
-        storytimeAdvantage: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 กำลังจัดเตรียมหน่วยการเรียนรู้แรก",
+        storytimeAdvantage: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569",
         codecampAdvantage: "เรียนการเขียนโค้ดผ่านโปรเจค",
         tutorAdvantage: "แพลตฟอร์มติวเตอร์ออนไลน์",
     }
@@ -61,7 +61,7 @@ export const zh = {
         scienceAdvantage: "实践科学教育",
         stemAdvantage: "综合 STEM 学习平台",
         zhongwenAdvantage: "中文学习平台",
-        storytimeAdvantage: "面向 Anuban 2 至 P2 的英语课程，正在准备第一个单元",
+        storytimeAdvantage: "English for Anuban 2 to P2; the first unit launches on 30 November 2026",
         codecampAdvantage: "通过项目学习编码",
         tutorAdvantage: "在线辅导平台",
     }

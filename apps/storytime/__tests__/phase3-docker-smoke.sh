@@ -5,7 +5,7 @@ set -uo pipefail
 # The image is built once and runs three checks.
 # Run 1 (production content): a draft week answers 404 with the reason draft, the
 # image lists the received weeks w01 to w08, and the shipped w01 answers with its
-# true state (ready at the pin 82f88853, so HTTP 200).
+# true state (ready at the pin 1c5385a6, so HTTP 200).
 # Run 1b (a broken clone mounted): a published week with a page picture without a
 # file answers 404 with the reason missing_picture. The strategy names this reason
 # for st2/1; the shipped w01 grew page picture files at the w01 approval take, so
@@ -195,7 +195,7 @@ cleanup() {
   for c in "$C1" "$C2" "$C3"; do
     [ -n "$c" ] && "${SMOKE_PODMAN[@]}" rm -f "$c" >/dev/null 2>&1
   done
-  podman rm -f "$DB_CONTAINER" >/dev/null 2>&1 || true
+  podman rm -f -v "$DB_CONTAINER" >/dev/null 2>&1 || true
   rm -rf "$TMP_DIR"
 }
 trap cleanup EXIT INT TERM
@@ -420,20 +420,20 @@ if [ -n "$C1" ]; then
   else
     fail "The stranger proxy Location names the bind address or is missing: status=$STRANGER_HOST_STATUS location=$STRANGER_LOCATION"
   fi
-  STATUS_D="$(status_of "http://127.0.0.1:$PORT1/th/st/2/2" "$SESSION_COOKIE")"
+  STATUS_D="$(status_of "http://127.0.0.1:$PORT1/th/st/2/8" "$SESSION_COOKIE")"
   if [ "$STATUS_D" = "404" ]; then
     pass "The draft week returns HTTP 404"
   else
     fail "Expected HTTP 404 for the draft week; got $STATUS_D"
   fi
-  if "${SMOKE_PODMAN[@]}" logs "$C1" 2>&1 | grep -q "st2/2 blocked: draft"; then
-    pass "The container log names draft for st2/2"
+  if "${SMOKE_PODMAN[@]}" logs "$C1" 2>&1 | grep -q "st2/8 blocked: draft"; then
+    pass "The container log names draft for st2/8"
   else
-    fail "The container log does not name draft for st2/2"
+    fail "The container log does not name draft for st2/8"
   fi
   STATUS_R="$(status_of "http://127.0.0.1:$PORT1/th/st/2/1" "$SESSION_COOKIE")"
   if [ "$STATUS_R" = "200" ]; then
-    pass "The shipped w01 answers HTTP 200 (ready at the pin 82f88853)"
+    pass "The shipped w01 answers HTTP 200 (ready at the pin 1c5385a6)"
   else
     fail "Expected HTTP 200 for the shipped w01; got $STATUS_R"
   fi

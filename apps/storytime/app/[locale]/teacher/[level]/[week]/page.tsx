@@ -71,6 +71,15 @@ export default async function TeacherWeekPage({
   const loaded = route === null ? null : await loadWeek(route.level, route.week);
   if (loaded === null || loaded.kind !== "ok") notFound();
 
+  const translate = await getTranslations({ locale });
+  const t = (key: string) => translate(key);
   const mediaUrls = await signWeekMedia(loaded.week, {});
-  return <TeacherWeekView week={loaded.week} locale={locale} mediaUrls={mediaUrls} />;
+  return (
+    <TeacherWeekView
+      week={loaded.week}
+      locale={locale}
+      mediaUrls={mediaUrls}
+      childViewLabel={t("teacherChildViewLink")}
+    />
+  );
 }

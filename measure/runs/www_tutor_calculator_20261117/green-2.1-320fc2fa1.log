@@ -1,0 +1,115 @@
+Task 2.1: the three blurred Tutor Advantage screens and the manifest entries
+Track: www_tutor_calculator_20261117
+Role base: d279b870341c067c33fc884ae8863b5428487c17
+Phase base: d279b870341c067c33fc884ae8863b5428487c17
+Resulting head: 29ffa35423fc8131cc099d5b0462ebc286e13ae7
+Route: opencode-go/deepseek-v4.1-flash
+Verdict: pass
+
+Task shape
+Task 2.1 carries its own test. The test was written first, run red, then the code was written, then
+the test ran green.
+
+Red run
+Command: bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+www-reading-advantage exec vitest run src/lib/__tests__/tutor-screens.test.ts --reporter=dot
+--silent=true'
+Exit code: 1
+Output: Test Files 1 failed (1); Tests 7 failed (7); Duration 666ms
+Cause: the module held no tutorScreens export, so the seven cases failed on the undefined value
+(TypeError: Cannot read properties of undefined (reading 'studentHome')).
+
+Green run
+Command: the same command.
+Exit code: 0
+Output: Test Files 1 passed (1); Tests 7 passed (7); Duration 654ms
+
+What the test pins
+- Object.keys(tutorScreens) equals ["studentHome", "lessonPhases", "classList"].
+- studentHome is /images/products/tutor-advantage/student-mobile/070-screen.webp, 520 x 1125,
+  portrait false.
+- lessonPhases is .../student-mobile/002-screen.webp, 520 x 1125, portrait false.
+- classList is .../tutor-desktop/062-screen.webp, 1440 x 900, portrait false.
+- Each src starts with /images/products/tutor-advantage/.
+- Each file exists under public/ and is 1 MB or less.
+
+Blur script
+File: apps/www-reading-advantage/scripts/blur-tutor-screens.py
+It takes --source and --out. It holds one rectangle list per used file. It applies a Gaussian blur
+of radius 12 to each rectangle and saves the webp at the delivered size with quality 85. It keeps
+the set's folder and file names. It prints each output path. It reads the handoff folder only.
+Run: python3 apps/www-reading-advantage/scripts/blur-tutor-screens.py --source
+~/Desktop/handoff/a63-tutor-www-calculator/screens --out
+apps/www-reading-advantage/public/images/products/tutor-advantage
+It printed the three output paths. The three files are 35,422, 17,928, and 65,094 bytes.
+
+Delivered box adjustments (measured, not guessed)
+The delivered boxes left glyph pixels outside the blur in four places. A full-size pixel scan found
+the glyph bounds, and four edges were widened. The plan records the same four lines.
+1. 070 hero x1: 269 to 303. The "3.1" ends at x 301; the delivered box stopped at the "3".
+2. 070 bubble y1: 227 to 234. The "g" descender ends at y 232.
+3. 062 title x1: 547 to 553. The final "1" ends at x 550 and left a visible stroke.
+4. 062 dropdown x0: 391 to 395. The "1:" colon ends at x 392 and must stay.
+
+Blur verification by measurement
+Grey mean and standard deviation of each box, source PNG against output webp:
+
+| File | Box | Source mean | Source sd | Output mean | Output sd |
+|---|---|---|---|---|---|
+| student-mobile/070 | (34,121,182,152) | 220.97 | 66.96 | 226.43 | 7.01 |
+| student-mobile/070 | (110,198,233,234) | 224.94 | 68.36 | 229.82 | 10.47 |
+| student-mobile/070 | (137,351,303,388) | 208.65 | 83.77 | 215.22 | 9.35 |
+| student-mobile/070 | (118,923,247,953) | 213.59 | 78.43 | 220.60 | 7.80 |
+| tutor-desktop/062 | (395,95,553,134) | 213.74 | 79.66 | 219.52 | 9.66 |
+| tutor-desktop/062 | (393,132,485,157) | 235.19 | 45.59 | 233.49 | 4.71 |
+| tutor-desktop/062 | (395,390,487,419) | 230.63 | 59.08 | 235.29 | 5.13 |
+| tutor-desktop/062 | (1085,341,1173,364) | 235.47 | 43.96 | 240.55 | 4.59 |
+
+student-mobile/002 holds no box and shows no class name. Output sizes equal the delivered sizes:
+520 x 1125 for both phone screens and 1440 x 900 for the wide screen.
+
+Gates, each with its exit code
+1. Products-page picture test
+   Command: bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+   www-reading-advantage exec vitest run src/__tests__/products-page-pictures.red.test.tsx
+   --reporter=dot --silent=true'
+   Exit code: 0. Test Files 1 passed (1); Tests 19 passed (19).
+2. Types
+   Command: pnpm turbo run check-types --filter=www-reading-advantage
+   Exit code: 0.
+3. Lint
+   Command: pnpm --filter www-reading-advantage lint
+   Exit code: 0. Output: ./eslint with no error.
+
+Manifest
+tutorScreens is a sibling export in src/lib/product-pictures.ts, in slot order, with a JSDoc that
+names the source set (handoff a63-tutor-www-calculator/screens, version 2.0, 2026-11-17) and spec
+6.2. Spec 6.2 says "into productPictures". That object is as const satisfies Record<string,
+ProductPictureFile>, and the products-page test runs statSync on every value. A nested object breaks
+both, so the sibling export is the recorded deviation.
+
+Plan update
+Task 2.1 is marked [x] with Done: 320fc2fa1. The Done block records both runs, the three exit codes,
+the two deviations, the blur table, and one review line per file. The Phase 1 acceptance line is
+added after task 1.9. Commit: 29ffa3542 docs(measure): record green 2.1 asset evidence (track_id:
+www_tutor_calculator_20261117). Only the plan file is in that commit.
+
+No build-graph scan ran (PM load watch). The change adds no structural TypeScript signature.
+
+MEASURE_AGENT_RESULT
+role: measure-green
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 2
+task: 2.1
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+commits: 320fc2fa1 (implementation), 29ffa3542 (plan evidence)
+resulting_head: 29ffa35423fc8131cc099d5b0462ebc286e13ae7
+tests_run: red exit 1 (Test Files 1 failed (1), Tests 7 failed (7), no tutorScreens export); green exit 0 (Test Files 1 passed (1), Tests 7 passed (7)); products-page picture test exit 0 (Tests 19 passed (19)); check-types exit 0; lint exit 0
+files_changed: apps/www-reading-advantage/src/lib/__tests__/tutor-screens.test.ts (new); apps/www-reading-advantage/scripts/blur-tutor-screens.py (new); apps/www-reading-advantage/public/images/products/tutor-advantage/student-mobile/070-screen.webp (new); apps/www-reading-advantage/public/images/products/tutor-advantage/student-mobile/002-screen.webp (new); apps/www-reading-advantage/public/images/products/tutor-advantage/tutor-desktop/062-screen.webp (new); apps/www-reading-advantage/src/lib/product-pictures.ts; measure/tracks/www_tutor_calculator_20261117/plan.md
+plan_updates: task 2.1 marked [x] with the implementation SHA, both runs, the three exit codes, the two deviations, the blur table, and one review line per file; Phase 1 acceptance line added after task 1.9
+blur_verification: eight boxes measured, every box drops from source sd 43.96-83.77 to output sd 4.59-10.47; four delivered edges widened because glyph pixels stayed outside the blur
+known_failures: none. No whole-repo build-graph scan ran (PM load watch). No deploy and no push.
+handoff: Task 2.1 is done at HEAD 29ffa3542. Reviewers scope: the new test, the new script, the three webp files, and the tutorScreens export. Task 2.2 must render the gallery from tutorScreens, not from productPictures. The delivered blur boxes were too tight in four places; the plan and this log name each widened edge and the glyph bound that drove it.
+END_MEASURE_AGENT_RESULT

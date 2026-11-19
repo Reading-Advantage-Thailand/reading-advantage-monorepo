@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Independent browser review of /en, /th and /zh /products/tutor-advantage at 390, 768, 980 and 1280 px on a fresh build of audited head d279b8703. Every required check passed: section order, no horizontal scroll, no clipped figures, default/preset/leg/hand-edit/extreme-price states, on-screen arithmetic, graph and rate-curve agreement, keyboard path and focus ring, locale rendering, aria-live announcements, no layout shift, and accessibility names. One nonblocking edge-case observation is open.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F1 (minor, 12 screens, state extreme-price-students-4): price typed 1e307 with 4 own students shows 4e+307 in the rows 'Your own volume' and 'Network volume', while gross, downline, tax and net show 0. No error text appears and no page error is thrown. The required gate passes in the default state: price 1e307 shows zero money in every money row and no error. The huge volume matches the pinned module contract A6, which keeps networkVolume finite and gross at 0. Owner decides whether the volume rows need a zero or a formatted cap."
+  ],
+  "evidence": [
+    "Capture directory: measure/runs/www_tutor_calculator_20261117/ux-p1-d279b8703/ (37 PNG screenshots, 3 run scripts, 3 result JSON files, plus temporary band/crop PNGs from focus-screenshot verification)",
+    "measure/runs/www_tutor_calculator_20261117/ux-p1-d279b8703/ux-p1-checks.json - main run: 12 screens, 132 state records, 60 interaction records, page checks, agreement block",
+    "measure/runs/www_tutor_calculator_20261117/ux-p1-d279b8703/ux-p1-layout-refocus.json - layout re-check with a corrected disclaimer selector: allNoShift true, allFigureChanged true, allExplainSame true at 12 screens; hero 5,354.40 to 76,614.04 and rows 12,000 to 120,000 with 0 px delta on card, notes, disclaimer and section",
+    "measure/runs/www_tutor_calculator_20261117/ux-p1-d279b8703/ux-p1-a11y.json - 24 accessibility snapshots (default and preset-2 per screen): all 5 inputs carry accessible names, all buttons carry names, exactly one pressed button after a preset click and none at default, at all 12 screens (offline recount of the stored nodes: 0 issues; the run summary counted the string 'true' against boolean true and reported a false failure)",
+    "measure/runs/www_tutor_calculator_20261117/ux-p1-d279b8703/en-390-keyboard-focus.png - keyboard focus on the price input; pixel sample shows all three preset centers white (no pressed preset after reload) and the focus ring rgb(6,95,70) around the focused input",
+    "Comparison with measure/runs/www_tutor_calculator_20261117/p1-captures/p1-checks.json: 60 shared state records and 6 shared tab-path records compared, 0 disagreements; my run adds 768 px and zh which the reference does not cover",
+    "Screenshots reviewed by eye: en-390-default, en-1280-default, en-390-preset-3, en-1280-preset-3, th-390-default, th-1280-preset-3, zh-390-default, en-390-keyboard-focus"
+  ],
+  "commands": [
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage build' - attempt 1 exit 1 on the known Next.js security-advisory nudge, attempt 2 exit 0; BUILD_ID 2026-11-17 10:01:32 with no src file newer",
+    "HEAVY_ALLOW_SERVER=1 bash heavy-run.sh -c 'server on PORT=3107 + node ux-p1-check.mjs + stop server' - SERVER_UP=1, SCRIPT_EXIT=0, 36 screenshots plus ux-p1-checks.json",
+    "HEAVY_ALLOW_SERVER=1 bash heavy-run.sh -c 'server + node ux-p1-layout-refocus.mjs + stop server' - attempt 1 SCRIPT_EXIT=1 on a harness ReferenceError, attempt 2 SCRIPT_EXIT=0",
+    "HEAVY_ALLOW_SERVER=1 bash heavy-run.sh -c 'server + node ux-p1-a11y.mjs + stop server' - SERVER_UP=1, SCRIPT_EXIT=0; its summary printed a false pressedButtons failure that the offline recount of ux-p1-a11y.json corrects to 0 issues",
+    "Port 3107 refused connections after every job; heavy-run status shows holder none and waiting 0; git status stays clean because all writes stay in the capture directory and the two result files"
+  ],
+  "changed_files": [
+    "measure/runs/www_tutor_calculator_20261117/ux-p1-d279b8703.json (this result)",
+    "measure/runs/www_tutor_calculator_20261117/ux-p1-d279b8703.log (this log)",
+    "measure/runs/www_tutor_calculator_20261117/ux-p1-d279b8703/ (capture directory: 37 deliverable screenshots, 5 temporary verification crops, 3 run scripts, 3 result JSON files)"
+  ],
+  "retry_recommendation": "escalate_human",
+  "confidence": "high",
+  "ux_applicability": "applicable",
+  "webbridge_status": "not_run",
+  "webbridge_evidence": {
+    "screenshots": [
+      "37 PNGs named <locale>-<width>-<state>.png: default section and full page for en, th, zh at 390/768/980/1280, preset-1/2/3 for en and th at 390 and 1280, plus en-390-keyboard-focus.png"
+    ],
+    "accessibility_snapshots": [
+      "ux-p1-a11y.json - CDP Accessibility.getFullAXTree at default and preset-2 for each of the 12 screens; input and button names, pressed state, offline recount 0 issues"
+    ],
+    "interactions": [
+      "tab-path: 3 preset buttons and all 5 inputs reached at all 12 screens; focus ring visible on every calculator focus stop",
+      "keyboard-leg-count: ArrowUp changes the leg count 0 to 1 and 2 to 3; the new leg row appears with 3 students; focus and ring stay",
+      "aria-live-announce: 7 subtree mutations inside the aria-live result card per screen after a figure change",
+      "layout-shift-figure-width: figure change 12,000 to 120,000 with a constant explain line gives 0 px delta on card, notes, disclaimer and section at all 12 screens",
+      "browser: Playwright Chromium 1.61.0 (real browser); Kimi WebBridge not used"
+    ]
+  }
+}

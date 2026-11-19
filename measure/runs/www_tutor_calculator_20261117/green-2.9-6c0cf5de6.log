@@ -1,0 +1,174 @@
+MEASURE GREEN — PHASE 2, TASK 2.9 (PM PAGE-CHECK F-1)
+Track: www_tutor_calculator_20261117
+Phase: 2
+Task: 2.9 (show graph.rateTitle and graph.ratePoint on the rate-curve card)
+Date: 2026-11-17
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+Route: opencode-go/deepseek-v4.1-flash
+  (substitution record: ra-quota pick green returns opencode-go/hy4-flash-free, the Red family
+  of this track, so it is excluded)
+
+BASES AND RANGE
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha:  94af2c15b5e4eaf393f696564c9eed3e689de057
+start HEAD:     94af2c15b5e4eaf393f696564c9eed3e689de057
+final HEAD:     9a53398301ae2fbd41e7e95de8e36ce18d50b9b5
+
+`git status --short` before the first edit: empty. Branch clean at role_base_sha.
+`git merge-base --is-ancestor d279b8703 HEAD` exits 0.
+`git merge-base --is-ancestor 94af2c15b HEAD` exits 0.
+`git merge-base --is-ancestor 6c0cf5de6 HEAD` exits 0.
+
+RED-STEP NOTE
+The brief states that task 2.9 carries its own test: this session wrote the component case
+first, ran it red with the locale and the component unchanged, then implemented. The Red case
+is committed inside 6c0cf5de6 together with the implementation, because the brief asks for one
+implementation commit. The Phase 2 Red changes of tasks 2.2, 2.3 and 2.7 are already inside
+phase_base_sha..HEAD.
+
+RED RUN
+Command:
+  bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter
+  www-reading-advantage exec vitest run
+  src/components/marketing/tutor-commission-calculator.test.tsx
+  src/__tests__/www-tutor-calculator.locale.test.ts
+  src/components/marketing/tutor-commission-calculator.adversarial.test.tsx --reporter=dot
+  --silent=true'
+Exit: 1
+Evidence:
+  RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage
+  FAIL  src/components/marketing/tutor-commission-calculator.test.tsx > TutorCommissionCalculator
+        rate curve card > shows the rate title, the month point with the rate, and keeps the
+        curve aria-hidden
+  TypeError: Cannot read properties of undefined (reading 'rateTitle')
+  Test Files  1 failed | 2 passed (3)
+       Tests  1 failed | 60 passed (61)
+    Duration  3.38s
+Cause: the `graph` block was absent from the locale, so `copy.graph` was undefined. The other
+60 cases passed, so the failure belongs to the new case only.
+
+IMPLEMENTATION (commit 6c0cf5de6)
+- `src/locales/pages/products/tutor-advantage.ts`: `graph: { rateTitle, ratePoint }` in the
+  `calculator` block of en, th and zh, after `chart`. en: "Your rate for the network volume" /
+  "This month". th: "อัตราของคุณตามยอดรวมของเครือข่าย" / "เดือนนี้". zh equals en at both paths
+  (D-10); the one placeholder comment above the zh calculator block is unchanged.
+- `src/components/marketing/tutor-commission-calculator.tsx`: an `h3` with
+  `copy.graph.rateTitle` at the top of the rate card, and a line below the curve that reads
+  `<ratePoint> · <formatRate(result.rate)>`. The SVG keeps `aria-hidden="true"` (D-11).
+  Theme colours only (`text-site-navy`, `text-site-body`, `text-emerald-900`).
+- `src/components/marketing/tutor-commission-calculator.test.tsx`: one new case with preset 3.
+  It finds the aria-hidden SVG, takes its card, asserts the `h3` name, asserts the point line
+  text is exactly "This month · 59.1%", and asserts the SVG keeps `aria-hidden="true"`. Every
+  existing case is unchanged.
+- `src/__tests__/www-tutor-calculator.locale.test.ts`: `graph` joins KEY_ORDER after `chart`,
+  two pins (en and th) join PINS, and the two leaf-count titles read 36. No pinned string
+  changed.
+- `src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx`: the two `graph` strings
+  pass through `calculatorCopy`. The page builds that object key by key, so the pass-through is
+  required for the live page and for check-types. This file was not in the fix brief's list.
+
+GREEN RUN
+Command: the same command as the Red run.
+Exit: 0
+Evidence:
+  RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage
+  Test Files  3 passed (3)
+       Tests  61 passed (61)
+    Duration  3.38s
+
+TYPES
+Command: pnpm turbo run check-types --filter=www-reading-advantage
+Exit: 0
+Evidence:
+  www-reading-advantage:check-types: cache miss, executing f8d9bd0a3c285a8b
+  www-reading-advantage:check-types: $ tsc --noEmit
+  Tasks:    1 successful, 1 total
+  Time:     7.028s
+
+LINT
+Command: pnpm --filter www-reading-advantage lint
+Exit: 0
+Evidence:
+  $ eslint .
+  (no further output)
+No `shadcn/*` error appears in any touched file.
+
+USER-READ TEXT AT PRESET 3
+Heading: "Your rate for the network volume"
+Line under the curve: "This month · 59.1%"
+
+COMMITS
+6c0cf5de65ea092a28bf1246dff8a6fb57df7ce4
+  fix(www): label the tutor rate curve card (track_id: www_tutor_calculator_20261117)
+  apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts
+  apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx
+  apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx
+  apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts
+  apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx
+9a53398301ae2fbd41e7e95de8e36ce18d50b9b5
+  docs(measure): record green 2.9 page-check fix (track_id: www_tutor_calculator_20261117)
+  measure/tracks/www_tutor_calculator_20261117/plan.md
+
+NOT RUN
+- No app build and no server start: the brief says the orchestrator rebuilds and no session
+  may touch the server on port 3120.
+- No build-graph scan.
+- No deploy, no push.
+- No dependency and no lockfile change.
+
+MEASURE_AGENT_RESULT
+status: pass
+role: measure-green
+track: www_tutor_calculator_20261117
+phase: 2
+task: 2.9
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha: 94af2c15b5e4eaf393f696564c9eed3e689de057
+module_commit: 6c0cf5de65ea092a28bf1246dff8a6fb57df7ce4
+plan_evidence_commit: 9a53398301ae2fbd41e7e95de8e36ce18d50b9b5
+final_head: 9a53398301ae2fbd41e7e95de8e36ce18d50b9b5
+red_run:
+  exit_code: 1
+  test_files: 1 failed | 2 passed (3)
+  tests: 1 failed | 60 passed (61)
+  failing_name: TutorCommissionCalculator rate curve card > shows the rate title, the month
+    point with the rate, and keeps the curve aria-hidden
+  cause: "TypeError: Cannot read properties of undefined (reading 'rateTitle')"
+green_run:
+  exit_code: 0
+  test_files: 3 passed (3)
+  tests: 61 passed (61)
+type_exit_code: 0
+lint_exit_code: 0
+tasks_done:
+  - 2.9
+tasks_deferred: none
+files_added: none
+files_modified:
+  - apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts
+  - apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx
+  - apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx
+  - apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts
+  - apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx
+  - measure/tracks/www_tutor_calculator_20261117/plan.md
+user_read_text: 'Your rate for the network volume / This month · 59.1%'
+handoff: |
+  Task 2.9 is complete and answers PM page-check finding F-1 of a63-20261117-1500.
+
+  What a reviewer should scope:
+  1. The locale file: two keys in three dictionaries. zh equals en (D-10).
+  2. The component: one h3 and one text line on the rate card. The SVG stays aria-hidden.
+  3. The component test: one new case. Existing cases unchanged.
+  4. The locale test: `graph` in KEY_ORDER and two new pins. No existing pinned string changed.
+  5. page.tsx: the two-string pass-through. The fix brief's file list did not name this file,
+     but the page builds `calculatorCopy` key by key and needs it for the live page and for
+     check-types. Please accept this as the minimum correct wiring.
+
+  Caveat on the test count: the locale test title now says 36 leaves, not 34, because the two
+  graph strings are new leaves. The assertion reads PINS.length, so the number is honest.
+
+  Next for the orchestrator: rebuild the app and rerun the PM page check on the rate card.
+  This session started no server and touched no process on port 3120.
+questions: none
+END_MEASURE_AGENT_RESULT

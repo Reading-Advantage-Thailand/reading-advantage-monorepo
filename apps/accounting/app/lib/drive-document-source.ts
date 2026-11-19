@@ -1,17 +1,17 @@
 /**
  * Google Drive adapter of the intake poll (FR-11, spec section 5).
  *
- * The adapter is read-only: it lists the intake folder, downloads the bytes of
- * a binary file, and exports a native Google Sheet as an `.xlsx` workbook. It
+ * The adapter is read-only: it lists the intake folder and, for the year-file
+ * walk, one folder at a time, downloads the bytes of a binary file, and exports a native Google Sheet as an `.xlsx` workbook. It
  * holds no create, update, delete, or copy call. It authenticates with
  * Application Default Credentials on the Cloud Run runtime service account and
  * holds no key file.
  */
-import type { drive_v3 } from "googleapis";
+import type { Auth, drive_v3 } from "googleapis";
 
 import type {
-  AccountingDocumentSourcePort,
   AccountingDriveFile,
+  AccountingYearFileSourcePort,
 } from "@reading-advantage/backend/accounting";
 
 /** MIME type of an `.xlsx` workbook. */
@@ -55,6 +55,17 @@ function toBytes(data: ArrayBuffer | Uint8Array): Uint8Array {
 }
 
 /**
+ * Escapes one folder id for the Drive query language. A backslash is escaped
+ * first and a single quote second, so the query keeps one balanced string
+ * (Review B r2 F309).
+ * @param folderId Trusted folder id of the intake folder.
+ * @returns The escaped folder id.
+ */
+function escapeDriveQueryValue(folderId: string): string {
+  return folderId.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+}
+
+/**
  * Lists one Drive folder, following the page token to the end.
  * @param drive Authenticated Drive client.
  * @param folderId Folder id to list.
@@ -68,7 +79,7 @@ async function listFolderEntries(
   let pageToken: string | undefined;
   do {
     const response = await drive.files.list({
-      q: `'${folderId}' in parents and trashed = false`,
+      q: `'${escapeDriveQueryValue(folderId)}' in parents and trashed = false`,
       fields: "nextPageToken, files(id, name, mimeType, size, modifiedTime)",
       pageSize: 1000,
       supportsAllDrives: true,
@@ -100,34 +111,42 @@ async function listFolderEntries(
 }
 
 /**
- * Builds the authenticated Drive client on Application Default Credentials.
- * The `googleapis` package loads on first use, so a module that imports this
- * adapter and reads the folder id pays no provider import cost (D-27).
+ * Builds the authenticated Drive client. It uses the given auth client, or
+ * Application Default Credentials when none is given. The `googleapis`
+ * package loads on first use, so a module that imports this adapter and reads
+ * the folder id pays no provider import cost (D-27).
+ * @param auth Optional auth client, such as an impersonated client of the dry run.
  * @returns The authenticated Drive client.
  */
-async function createDriveClient(): Promise<drive_v3.Drive> {
+async function createDriveClient(
+  auth?: Auth.OAuth2Client,
+): Promise<drive_v3.Drive> {
   const { google } = await import("googleapis");
   return google.drive({
     version: "v3",
-    auth: new google.auth.GoogleAuth({
-      scopes: ["https://www.googleapis.com/auth/drive.readonly"],
-    }),
+    auth:
+      auth ??
+      new google.auth.GoogleAuth({
+        scopes: ["https://www.googleapis.com/auth/drive.readonly"],
+      }),
   });
 }
 
 /**
- * Builds the read-only Drive port of the intake poll.
- * @param input Optional injected Drive client and clock year; tests and the
- *   runner leave them absent.
+ * Builds the read-only Drive port of the intake poll and the year-file walk.
+ * @param input Optional injected Drive client or auth client; tests and the
+ *   Cloud Run runtime leave them absent. The year-file dry run gives an
+ *   impersonated auth client.
  * @returns The Drive port.
  */
 export function createDriveDocumentSource(input?: {
   readonly drive?: drive_v3.Drive;
-}): Promise<AccountingDocumentSourcePort> {
+  readonly auth?: Auth.OAuth2Client;
+}): Promise<AccountingYearFileSourcePort> {
   const drivePromise =
     input?.drive !== undefined
       ? Promise.resolve(input.drive)
-      : createDriveClient();
+      : createDriveClient(input?.auth);
   return drivePromise.then((drive) => ({
     /**
      * Lists the top level of the intake folder and, from 2027, the subfolder
@@ -164,6 +183,28 @@ export function createDriveDocumentSource(input?: {
             ? {}
             : { modifiedTime: entry.modifiedTime }),
         }));
+    },
+
+    /**
+     * Lists the entries directly inside one folder, folders included. The
+     * year-file walk calls it for the root and for each named subfolder; it
+     * reads one level and writes nothing (spec section 9b).
+     * @param request Folder id of the folder to list.
+     * @returns The files and folders of the listing.
+     */
+    async listFolderEntries(request: {
+      readonly folderId: string;
+    }): Promise<readonly AccountingDriveFile[]> {
+      const entries = await listFolderEntries(drive, request.folderId);
+      return entries.map((entry) => ({
+        id: entry.id,
+        name: entry.name,
+        mimeType: entry.mimeType,
+        ...(entry.byteSize === undefined ? {} : { byteSize: entry.byteSize }),
+        ...(entry.modifiedTime === undefined
+          ? {}
+          : { modifiedTime: entry.modifiedTime }),
+      }));
     },
 
     /**

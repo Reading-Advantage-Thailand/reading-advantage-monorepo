@@ -19,14 +19,22 @@ import { fetchArticleActivity } from "@/actions/article";
 import { usePreviewSave } from "@/components/student/student-view-provider";
 import { BucketImage } from "@/components/ui/bucket-image";
 import { getArticleImageUrl, getAudioUrl } from "@/lib/storage-config";
-import { seekTimeForWord } from "@/lib/read-along/position";
-import { seekOrWait } from "@/lib/read-along/seek";
-import { parseSentences } from "@/lib/read-along/align";
-import { ReadAlongPassage } from "@/components/read-along/read-along-passage";
-import { ReadAlongPlayer } from "@/components/read-along/read-along-player";
+import { HIGHLIGHT_CLASSES } from "@/lib/audio-highlight";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
+import { parseSentences } from "@reading-advantage/read-along/lib/align";
+import { seekTimeForWord } from "@reading-advantage/read-along/lib/position";
+import { seekOrWait } from "@reading-advantage/read-along/lib/seek";
+import { ReadAlongPassage } from "@reading-advantage/read-along/components/read-along/read-along-passage";
+import { ReadAlongPlayer } from "@reading-advantage/read-along/components/read-along/read-along-player";
 import { rpgButton } from "@/components/rpg/chrome";
 import { useFollowScroll } from "@/hooks/use-follow-scroll";
-import { useReadAlong } from "@/hooks/use-read-along";
+import { useReadAlong } from "@reading-advantage/read-along/hooks/use-read-along";
+import { useReadAlongPlayerSkin } from "@/hooks/use-player-skin";
 import { toTranslationLanguage } from "@/lib/translation-language";
 
 type Props = {
@@ -41,6 +49,7 @@ const SUPPORTED_LANGUAGES = {
 };
 
 export default function ArticleContent({ article }: Props) {
+  const { labels, chrome } = useReadAlongPlayerSkin();
   const locale = useLocale();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const currentSentenceRef = useRef<HTMLSpanElement | null>(null);
@@ -313,6 +322,7 @@ export default function ArticleContent({ article }: Props) {
         position={position}
         active={togglePlayer}
         currentSentenceRef={currentSentenceRef}
+        highlightClasses={HIGHLIGHT_CLASSES}
         renderBlockMedia={(blockIndex) => (
           <BucketImage
             className="rounded-lg shadow-xl"
@@ -324,8 +334,20 @@ export default function ArticleContent({ article }: Props) {
         )}
         onWordTap={handleWordTap}
         onTranslate={handleTranslateClick}
-        translateLabel={t("translate")}
-        translateDisabled={loading || currentSentenceIndex === -1}
+        renderSentenceMenu={(sentenceIndex, view, onTranslate) => (
+          <ContextMenu>
+            <ContextMenuTrigger>{view}</ContextMenuTrigger>
+            <ContextMenuContent className="w-50">
+              <ContextMenuItem
+                inset
+                disabled={loading || currentSentenceIndex === -1}
+                onClick={onTranslate}
+              >
+                {t("translate")}
+              </ContextMenuItem>
+            </ContextMenuContent>
+          </ContextMenu>
+        )}
       />
 
       {togglePlayer && (
@@ -340,6 +362,8 @@ export default function ArticleContent({ article }: Props) {
             onPlayPause={handlePlayPause}
             onPlaySentence={handlePlaySentence}
             onSpeedChange={handleSpeedTime}
+            labels={labels}
+            chrome={chrome}
           >
             {isTranslateOpen && translate && (
               <p aria-live="polite" className="text-center text-sm text-[#fff4dc]">

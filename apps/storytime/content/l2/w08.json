@@ -8,8 +8,9 @@
     },
     "thai": {
       "status": "approved",
-      "date": "2026-10-22",
-      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 155"
+      "date": "2026-11-15",
+      "words": "\"Ok\" (2026-11-15 19:43 ICT; the 64 Thai rows of the Phase 14 change list)",
+      "source": "reading-advantage-monorepo 2ae13a4c6 measure/tracks/storytime_advantage_program_20261021/plan.md line 155; Google Tasks reply of Daniel, 2026-11-15 19:43 ICT, PM relay (THAI item: p14-change-list.md, 64 rows)"
     },
     "images": {
       "status": "draft"
@@ -23,8 +24,16 @@
     "scripts": {
       "status": "draft"
     },
+    "print": {
+      "status": "approved",
+      "date": "2026-11-16",
+      "words": "Pass"
+    },
     "loops": {
-      "status": "draft"
+      "status": "approved",
+      "date": "2026-11-15",
+      "words": "Approved",
+      "source": "Google Tasks, PM item YVJYeDVt, subtask bnJWSW5yUDNOVllzLWpvcA"
     }
   },
   "version": 1,
@@ -44,8 +53,14 @@
   },
   "focus": {
     "paSkill": {
-      "en": "the mixed sound game over the seven sounds: first sounds, last sounds, and blends by ear",
-      "th": "เกมเสียงแบบคละครบทั้ง 7 เสียง: เสียงแรก เสียงสุดท้าย และฟังแล้วผสมเสียงเป็นคำ"
+      "en": "the mixed sound game over the seven sounds: first sounds and blends by ear",
+      "th": "เกมเสียงแบบคละครบทั้ง 7 เสียง: เสียงแรก และฟังแล้วผสมเสียงเป็นคำ"
+    },
+    "paStage": {
+      "stage": 1,
+      "positions": [
+        "first"
+      ]
     },
     "trickyWords": [],
     "frame": "Hello, I am ___. / How many? One, two... / It is ___. / This is my ___. / I have two ___. / I can see a ___. / Is it a ___? Yes/No.",
@@ -143,16 +158,16 @@
         "th": "\"ฟัง: pen เสียงแรกคือเสียงอะไร? /p/! ฟัง: mmm - /a/ - /p/ คำนี้คือคำอะไร? Map!\""
       },
       {
-        "en": "\"Listen: bus. What is the last sound? Sss! Listen: /t/ - /a/ - /p/. What is the word? Tap!\"",
-        "th": "\"ฟัง: bus เสียงสุดท้ายคือเสียงอะไร? Sss! ฟัง: /t/ - /a/ - /p/ คำนี้คือคำอะไร? Tap!\""
+        "en": "\"Listen: sun. What is the first sound? Sss! Listen: /t/ - /a/ - /p/. What is the word? Tap!\"",
+        "th": "\"ฟัง: sun เสียงแรกคือเสียงอะไร? Sss! ฟัง: /t/ - /a/ - /p/ คำนี้คือคำอะไร? Tap!\""
       },
       {
         "en": "\"Listen: octopus. What is the first sound? /o/! Listen: /p/ - /o/ - /t/. What is the word? Pot!\"",
         "th": "\"ฟัง: octopus เสียงแรกคือเสียงอะไร? /o/! ฟัง: /p/ - /o/ - /t/ คำนี้คือคำอะไร? Pot!\""
       },
       {
-        "en": "\"Listen: cat. What is the last sound? /t/! Listen: mmm - /o/ - mmm. What is the word? Mom!\"",
-        "th": "\"ฟัง: cat เสียงสุดท้ายคือเสียงอะไร? /t/! ฟัง: mmm - /o/ - mmm คำนี้คือคำอะไร? Mom!\""
+        "en": "\"Listen: ten. What is the first sound? /t/! Listen: mmm - /o/ - mmm. What is the word? Mom!\"",
+        "th": "\"ฟัง: ten เสียงแรกคือเสียงอะไร? /t/! ฟัง: mmm - /o/ - mmm คำนี้คือคำอะไร? Mom!\""
       }
     ],
     "audio": [
@@ -235,14 +250,13 @@
           "en": {
             "teacherActions": [
               "Children open the student book at the Benchmark 1 page. Each child works alone.",
-              "Rows 1 to 4: say the three pictures of the row two times, then the sound. Children circle the picture that starts with the sound.",
-              "Rows 5 to 8: say the three pictures of the row two times, then the sound. Children circle the picture that ends with the sound.",
+              "Rows 1 to 8: say the three pictures of the row two times, then the sound. Children circle the picture that starts with the sound.",
               "Boxes 9 to 15: say each sound two times. Children write its letter in the box. Say the sound, not the letter name.",
               "Collect the books. After the lesson, mark the page and write the two scores in the class record sheet."
             ],
             "teacherLanguage": [
               "\"Row 1: nest, cup, bed. Which one starts with nnn? Circle it.\"",
-              "\"Row 5: cat, sun, bed. Which one ends with /t/? Circle it.\"",
+              "\"Row 5: drum, ten, fish. Which one starts with /t/? Circle it.\"",
               "\"Box 9. Listen: mmm, mmm. Write the letter for mmm.\"",
               "\"Pencils down. Close your books.\""
             ],
@@ -274,14 +288,13 @@
           "th": {
             "teacherActions": [
               "เด็ก ๆ เปิดหนังสือนักเรียนที่หน้าการประเมินครั้งที่ 1 เด็กแต่ละคนทำคนเดียว",
-              "แถว 1 ถึง 4: พูดชื่อภาพทั้ง 3 ภาพของแถวนั้น 2 ครั้ง แล้วพูดเสียง เด็ก ๆ วงกลมภาพที่ขึ้นต้นด้วยเสียงนั้น",
-              "แถว 5 ถึง 8: พูดชื่อภาพทั้ง 3 ภาพของแถวนั้น 2 ครั้ง แล้วพูดเสียง เด็ก ๆ วงกลมภาพที่ลงท้ายด้วยเสียงนั้น",
+              "แถว 1 ถึง 8: พูดชื่อภาพทั้ง 3 ภาพของแถวนั้น 2 ครั้ง แล้วพูดเสียง เด็ก ๆ วงกลมภาพที่ขึ้นต้นด้วยเสียงนั้น",
               "ช่อง 9 ถึง 15: ออกเสียงแต่ละเสียง 2 ครั้ง เด็ก ๆ เขียนตัวอักษรของเสียงนั้นในช่อง ให้ออกเสียง ไม่ใช่พูดชื่อตัวอักษร",
               "เก็บหนังสือ แล้วหลังเลิกคาบ ให้ตรวจหน้านั้นและเขียนคะแนนทั้ง 2 ส่วนลงในแบบบันทึกผลทั้งชั้น"
             ],
             "teacherLanguage": [
               "\"แถว 1: nest, cup, bed คำไหนขึ้นต้นด้วย nnn? วงกลมไว้\"",
-              "\"แถว 5: cat, sun, bed คำไหนลงท้ายด้วย /t/? วงกลมไว้\"",
+              "\"แถว 5: drum, ten, fish คำไหนขึ้นต้นด้วย /t/? วงกลมไว้\"",
               "\"ช่อง 9 ฟัง: mmm, mmm เขียนตัวอักษรของเสียง mmm\"",
               "\"วางดินสอ ปิดหนังสือ\""
             ],
@@ -503,7 +516,7 @@
               "Big book: pairs echo read \"Paint!\" and \"My Family\" on the class tablet from the QR page.",
               "Decodables: pairs read \"The Pan\" and \"Pam\", with a finger under the words.",
               "Workmat: build and read the word cards pan, nap, am, man, map, Pam with the letter cards.",
-              "Paper: review page 2 in the student book, then one earlier review page that the child has not done.",
+              "Paper: review page 2 and the page after it in the student book, then one earlier review page that the child has not done.",
               "Sit at the check table with the next three children on the record sheet list: 3 minutes each (see Benchmark 1 in this book)."
             ],
             "teacherLanguage": [
@@ -550,7 +563,7 @@
               "มุมหนังสือเล่มใหญ่: เด็กจับคู่กันอ่านตามหนังสือ \"Paint!\" และ \"My Family\" บนแท็บเล็ตของห้อง โดยเปิดหน้าเว็บจากคิวอาร์โค้ด",
               "มุมหนังสือฝึกสะกดอ่าน: เด็กจับคู่กันอ่าน \"The Pan\" และ \"Pam\" โดยวางนิ้วใต้คำ",
               "มุมแผ่นรองกิจกรรม: ใช้บัตรตัวอักษรต่อคำตามบัตรคำ pan, nap, am, man, map, Pam แล้วอ่านคำ",
-              "มุมใบงาน: ทำหน้าทบทวน 2 ในหนังสือนักเรียน แล้วทำหน้าทบทวนของวันก่อน ๆ ที่เด็กยังไม่ได้ทำอีก 1 หน้า",
+              "มุมใบงาน: ทำหน้าทบทวน 2 และหน้าถัดไปในหนังสือนักเรียน แล้วทำหน้าทบทวนของวันก่อน ๆ ที่เด็กยังไม่ได้ทำอีก 1 หน้า",
               "นั่งที่โต๊ะประเมินกับเด็ก 3 คนถัดไปในรายชื่อของแบบบันทึกผล: คนละ 3 นาที (ดูการประเมินครั้งที่ 1 ในคู่มือครูเล่มนี้)"
             ],
             "teacherLanguage": [
@@ -761,7 +774,7 @@
               "Big book: pairs echo read \"I Have Two\" and \"I Can See\" on the class tablet from the QR page.",
               "Decodables: pairs read \"Sam and Pam\" and \"Tap, Tap!\", with a finger under the words.",
               "Workmat: build and read the word cards Sam, sat, mat, tap, Pat with the letter cards.",
-              "Paper: review page 3 in the student book, then one earlier review page that the child has not done.",
+              "Paper: review page 3 and the page after it in the student book, then one earlier review page that the child has not done.",
               "Sit at the check table with the next three children on the record sheet list: 3 minutes each (see Benchmark 1 in this book)."
             ],
             "teacherLanguage": [
@@ -808,7 +821,7 @@
               "มุมหนังสือเล่มใหญ่: เด็กจับคู่กันอ่านตามหนังสือ \"I Have Two\" และ \"I Can See\" บนแท็บเล็ตของห้อง โดยเปิดหน้าเว็บจากคิวอาร์โค้ด",
               "มุมหนังสือฝึกสะกดอ่าน: เด็กจับคู่กันอ่าน \"Sam and Pam\" และ \"Tap, Tap!\" โดยวางนิ้วใต้คำ",
               "มุมแผ่นรองกิจกรรม: ใช้บัตรตัวอักษรต่อคำตามบัตรคำ Sam, sat, mat, tap, Pat แล้วอ่านคำ",
-              "มุมใบงาน: ทำหน้าทบทวน 3 ในหนังสือนักเรียน แล้วทำหน้าทบทวนของวันก่อน ๆ ที่เด็กยังไม่ได้ทำอีก 1 หน้า",
+              "มุมใบงาน: ทำหน้าทบทวน 3 และหน้าถัดไปในหนังสือนักเรียน แล้วทำหน้าทบทวนของวันก่อน ๆ ที่เด็กยังไม่ได้ทำอีก 1 หน้า",
               "นั่งที่โต๊ะประเมินกับเด็ก 3 คนถัดไปในรายชื่อของแบบบันทึกผล: คนละ 3 นาที (ดูการประเมินครั้งที่ 1 ในคู่มือครูเล่มนี้)"
             ],
             "teacherLanguage": [
@@ -1019,7 +1032,7 @@
               "Big book: pairs echo read \"Is It a Ball?\" and the read-along of the weakest week (from the Friday checks) on the class tablet from the QR page.",
               "Decodables: pairs read \"The Top\" and the decodable of the weakest week, with a finger under the words.",
               "Workmat: build and read the word cards on, top, pot, Tom, and the word cards of the weakest week, with the letter cards.",
-              "Paper: review page 4 in the student book, then one earlier review page that the child has not done.",
+              "Paper: review page 4 and the page after it in the student book, then one earlier review page that the child has not done.",
               "Sit at the check table with the next three children on the record sheet list: 3 minutes each (see Benchmark 1 in this book)."
             ],
             "teacherLanguage": [
@@ -1068,7 +1081,7 @@
               "มุมหนังสือเล่มใหญ่: เด็กจับคู่กันอ่านตามหนังสือ \"Is It a Ball?\" และหนังสืออ่านตามของสัปดาห์ที่ทั้งชั้นทำคะแนนได้ต่ำที่สุด (จากการตรวจสอบวันศุกร์) บนแท็บเล็ตของห้อง โดยเปิดหน้าเว็บจากคิวอาร์โค้ด",
               "มุมหนังสือฝึกสะกดอ่าน: เด็กจับคู่กันอ่าน \"The Top\" และหนังสือฝึกสะกดอ่านของสัปดาห์ที่ทั้งชั้นทำคะแนนได้ต่ำที่สุด โดยวางนิ้วใต้คำ",
               "มุมแผ่นรองกิจกรรม: ใช้บัตรตัวอักษรต่อคำตามบัตรคำ on, top, pot, Tom และบัตรคำของสัปดาห์ที่ทั้งชั้นทำคะแนนได้ต่ำที่สุด แล้วอ่านคำ",
-              "มุมใบงาน: ทำหน้าทบทวน 4 ในหนังสือนักเรียน แล้วทำหน้าทบทวนของวันก่อน ๆ ที่เด็กยังไม่ได้ทำอีก 1 หน้า",
+              "มุมใบงาน: ทำหน้าทบทวน 4 และหน้าถัดไปในหนังสือนักเรียน แล้วทำหน้าทบทวนของวันก่อน ๆ ที่เด็กยังไม่ได้ทำอีก 1 หน้า",
               "นั่งที่โต๊ะประเมินกับเด็ก 3 คนถัดไปในรายชื่อของแบบบันทึกผล: คนละ 3 นาที (ดูการประเมินครั้งที่ 1 ในคู่มือครูเล่มนี้)"
             ],
             "teacherLanguage": [
@@ -1283,7 +1296,7 @@
               "Big book: each pair chooses two read-alongs of unit 1 and echo reads them on the class tablet from the QR page.",
               "Decodables: each pair chooses two decodables of unit 1 and reads them, with a finger under the words.",
               "Workmat: build and read the word cards of unit 1 with the seven letter cards of the unit.",
-              "Paper: review page 5 in the student book, then one earlier review page that the child has not done.",
+              "Paper: review page 5 and the page after it in the student book, then one earlier review page that the child has not done.",
               "Sit at the check table with the next three children on the record sheet list: 3 minutes each (see Benchmark 1 in this book)."
             ],
             "teacherLanguage": [
@@ -1330,7 +1343,7 @@
               "มุมหนังสือเล่มใหญ่: แต่ละคู่เลือกหนังสืออ่านตาม 2 เล่มของหน่วยที่ 1 แล้วอ่านตามบนแท็บเล็ตของห้อง โดยเปิดหน้าเว็บจากคิวอาร์โค้ด",
               "มุมหนังสือฝึกสะกดอ่าน: แต่ละคู่เลือกหนังสือฝึกสะกดอ่าน 2 เล่มของหน่วยที่ 1 แล้วอ่าน โดยวางนิ้วใต้คำ",
               "มุมแผ่นรองกิจกรรม: ใช้บัตรตัวอักษร 7 ใบของหน่วยนี้ต่อคำตามบัตรคำของหน่วยที่ 1 แล้วอ่านคำ",
-              "มุมใบงาน: ทำหน้าทบทวน 5 ในหนังสือนักเรียน แล้วทำหน้าทบทวนของวันก่อน ๆ ที่เด็กยังไม่ได้ทำอีก 1 หน้า",
+              "มุมใบงาน: ทำหน้าทบทวน 5 และหน้าถัดไปในหนังสือนักเรียน แล้วทำหน้าทบทวนของวันก่อน ๆ ที่เด็กยังไม่ได้ทำอีก 1 หน้า",
               "นั่งที่โต๊ะประเมินกับเด็ก 3 คนถัดไปในรายชื่อของแบบบันทึกผล: คนละ 3 นาที (ดูการประเมินครั้งที่ 1 ในคู่มือครูเล่มนี้)"
             ],
             "teacherLanguage": [
@@ -1960,7 +1973,37 @@
               }
             ]
           }
-        ]
+        ],
+        "paperMore": {
+          "pairs": [
+            {
+              "text": "Nan can get a pan.",
+              "picture": "l2-w03-story-page-nan-can-get-a-pan"
+            },
+            {
+              "text": "A nap in the pan!",
+              "picture": "l2-w03-story-page-a-nap-in-the-pan"
+            },
+            {
+              "text": "Pam is on a map.",
+              "picture": "l2-w04-story-page-pam-is-on-a-map"
+            },
+            {
+              "text": "This is the man!",
+              "picture": "l2-w04-story-page-this-is-the-man"
+            }
+          ],
+          "pictureOrder": [
+            2,
+            0,
+            3,
+            1
+          ],
+          "read": {
+            "text": "Can I get the pan?",
+            "picture": "l2-w03-story-page-can-i-get-the-pan"
+          }
+        }
       },
       {
         "day": 3,
@@ -2021,7 +2064,37 @@
               }
             ]
           }
-        ]
+        ],
+        "paperMore": {
+          "pairs": [
+            {
+              "text": "Sam saw Pam.",
+              "picture": "l2-w05-story-page-sam-saw-pam"
+            },
+            {
+              "text": "Pam is off Sam!",
+              "picture": "l2-w05-story-page-pam-is-off-sam"
+            },
+            {
+              "text": "Pat can see a map.",
+              "picture": "l2-w06-story-page-pat-can-see-a-map"
+            },
+            {
+              "text": "Pip sat on the mat!",
+              "picture": "l2-w06-story-page-pip-sat-on-the-mat"
+            }
+          ],
+          "pictureOrder": [
+            1,
+            3,
+            0,
+            2
+          ],
+          "read": {
+            "text": "Sam can see a pan.",
+            "picture": "l2-w06-story-page-sam-can-see-a-pan"
+          }
+        }
       },
       {
         "day": 4,
@@ -2085,7 +2158,37 @@
               }
             ]
           }
-        ]
+        ],
+        "paperMore": {
+          "pairs": [
+            {
+              "text": "Tom can see a top.",
+              "picture": "l2-w07-story-page-tom-can-see-a-top"
+            },
+            {
+              "text": "The top on a mat.",
+              "picture": "l2-w07-story-page-the-top-on-a-mat"
+            },
+            {
+              "text": "The top is on Mom!",
+              "picture": "l2-w07-story-page-the-top-is-on-mom"
+            },
+            {
+              "text": "Run, Tom, run!",
+              "picture": "l2-w07-story-page-run-tom-run"
+            }
+          ],
+          "pictureOrder": [
+            3,
+            2,
+            1,
+            0
+          ],
+          "read": {
+            "text": "Can Tom see the top?",
+            "picture": "l2-w07-story-page-can-tom-see-the-top"
+          }
+        }
       },
       {
         "day": 5,
@@ -2173,7 +2276,37 @@
               }
             ]
           }
-        ]
+        ],
+        "paperMore": {
+          "pairs": [
+            {
+              "text": "Nan and I can!",
+              "picture": "l2-w02-story-page-nan-and-i-can"
+            },
+            {
+              "text": "A pan on Nan!",
+              "picture": "l2-w03-story-page-a-pan-on-nan"
+            },
+            {
+              "text": "Sam can get Pam.",
+              "picture": "l2-w05-story-page-sam-can-get-pam"
+            },
+            {
+              "text": "Tom can get the top.",
+              "picture": "l2-w07-story-page-tom-can-get-the-top"
+            }
+          ],
+          "pictureOrder": [
+            1,
+            0,
+            3,
+            2
+          ],
+          "read": {
+            "text": "Pam can nap.",
+            "picture": "l2-w04-story-page-pam-can-nap"
+          }
+        }
       }
     ]
   },
@@ -2228,46 +2361,42 @@
         {
           "kind": "circle-picture",
           "sound": "/t/",
-          "position": "last",
           "pictures": [
-            "cat",
-            "sun",
-            "bed"
+            "drum",
+            "ten",
+            "fish"
           ],
-          "answer": "cat"
+          "answer": "ten"
         },
         {
           "kind": "circle-picture",
           "sound": "/m/",
-          "position": "last",
           "pictures": [
-            "drum",
             "dog",
-            "bus"
+            "bus",
+            "milk"
           ],
-          "answer": "drum"
+          "answer": "milk"
+        },
+        {
+          "kind": "circle-picture",
+          "sound": "/a/",
+          "pictures": [
+            "fish",
+            "ant",
+            "dog"
+          ],
+          "answer": "ant"
         },
         {
           "kind": "circle-picture",
           "sound": "/n/",
-          "position": "last",
           "pictures": [
-            "sun",
-            "cup",
-            "hat"
+            "hat",
+            "net",
+            "cup"
           ],
-          "answer": "sun"
-        },
-        {
-          "kind": "circle-picture",
-          "sound": "/p/",
-          "position": "last",
-          "pictures": [
-            "cup",
-            "bed",
-            "fish"
-          ],
-          "answer": "cup"
+          "answer": "net"
         },
         {
           "kind": "write-letter",
@@ -2577,7 +2706,6 @@
       "english.phonics.tricky.and",
       "english.phonics.tricky.can",
       "english.phonics.pa.initial-sound.identify",
-      "english.phonics.pa.final-sound.identify",
       "english.phonics.pa.phoneme.blend-2-3",
       "english.phonics.gpc.a.short-a",
       "english.phonics.phoneme.short-a",
@@ -2587,7 +2715,6 @@
       "english.phonics.tricky.i",
       "english.phonics.tricky.in",
       "english.phonics.tricky.on",
-      "english.phonics.pa.medial-vowel.identify",
       "english.phonics.pattern.cvc-short-a",
       "english.phonics.gpc.p.p",
       "english.phonics.phoneme.p",

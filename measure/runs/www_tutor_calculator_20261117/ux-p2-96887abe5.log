@@ -1,0 +1,100 @@
+MEASURE UX BROWSER REVIEW LOG
+track: www_tutor_calculator_20261117
+phase: Phase 2 (the screens gallery and the live copy)
+role: measure-ux-browser-review
+route: opencode-go/muse-spark-1.3-contributor
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha: 96887abe595b7d17927787521c3bc8edcb2ed440
+audited_head_sha: 96887abe595b7d17927787521c3bc8edcb2ed440
+head_check: git rev-parse HEAD returns 96887abe595b7d17927787521c3bc8edcb2ed440 at start and end; git status --porcelain empty; audited HEAD is current
+verdict: PASS
+status: pass
+result_file: measure/runs/www_tutor_calculator_20261117/ux-p2-96887abe5.json
+capture_directory: measure/runs/www_tutor_calculator_20261117/ux-p2-96887abe5/
+
+1. SCOPE AND INPUTS READ
+
+Read spec sections 6.1 to 6.4, D-10, D-14, D-15, AC-10, AC-13, AC-15, plan tasks
+2.1 to 2.5, and test-strategy section 4. Read the exact user-facing phase diff
+(d279b8703..HEAD): three webp assets, the blur script, product-pictures.ts,
+page.tsx gallery section, the locale file, and test files only. PROJECT_DEV_URL
+is unset, so I served the audited build at 127.0.0.1:3111/3112/3113.
+
+2. SERVE
+
+Reused the task 2.4 .next build: BUILD_ID timestamp 2026-11-17 11:38 is newer
+than every gallery asset and page source, and 9befd67c3..HEAD holds only test
+files and plan.md. No fresh build was run. Served with normal
+`pnpm --filter www-reading-advantage start` on free ports 3111, 3112, 3113,
+one server at a time. All servers stopped at the end; no listener remains.
+
+3. CHECKS (one line per check)
+
+check 01: section order become-a-tutor < tutor-screens < tutor-calculator <
+  tutor-commitments < faq holds at 12/12 screens and in the full section-top
+  list (4732 < 7408 < 8695 < 9198 at en-1280).
+check 02: no horizontal scroll at 390, 768, 980 and 1280 px in en, th and zh
+  (document scrollWidth against clientWidth); inner-overflow scan at 1280
+  reports 0 elements wider than the viewport.
+check 03: three gallery cards in copy order at every screen; grid columns read
+  [358,358,358] at 390, [352,352,736] at 768, [458,458,948] at 980,
+  [608,608,1248] at 1280: one column at 390, two half-width phone cards plus
+  the full-row wide card at md and above.
+check 04: every caption sits directly under its picture (capBelow on all 36
+  cards); every image carries non-empty alt text (en 39/45/51 chars, th
+  37/40/40 chars).
+check 05: sharpness at 1280: phone cards render 574 CSS px against a 520 px
+  source (about 10% upscale), the wide card 1214 CSS px against 1440 px
+  (downscale). The 2x card captures show crisp app text, icons and mascot
+  with no visible softness at 100% zoom. Judgement: the upscale does not
+  block the PM page check; the PM judges sharpness at task 2.5.
+check 06: the class name "Reading 3.1" is not legible anywhere on the three
+  pictures at 390, 980 or 1280 at 100% zoom; blurred regions read as smooth
+  smudges; the string appears nowhere in the DOM text.
+check 07: the Thai page reads correctly (Thai eyebrow, heading, description,
+  captions, alts at all widths); the zh page shows the English gallery copy
+  by design (zh captions byte-equal en captions, D-10).
+check 08: the calculator below the gallery still behaves: preset 1 gives rows
+  12,000 / 12,000 / 46% / 5,520 / 0 / 165.60 with hero 5,354.40 in en, th and
+  zh, so gross minus downline minus tax equals net (5520 - 0 - 165.6 =
+  5354.4 holds in all three locales).
+check 09: images do not shift layout when they load: gallery and calculator
+  section tops move 0 px between domcontentloaded and post-image-load on all
+  12 screens (zh-768 shows 0.3 px subpixel rounding with CLS 0); summed
+  layout-shift entries are 0 everywhere; all three images carry width and
+  height attributes.
+
+4. COMPARISON WITH THE PHASE 1 EVIDENCE
+
+Phase 1 passed the calculator, which the Phase 2 diff does not touch (the
+calculator component, module, and CSS rule are absent from d279b8703..HEAD).
+The preset-1 figures and identity re-verified here match the Phase 1 pins, so
+the gallery changed nothing the earlier review had passed. The gallery adds
+one section between become-a-tutor and tutor-calculator; the order check
+confirms the calculator, commitments, and faq anchors sit where Phase 1 left
+them. Phase 1 observation F1 (extreme-price volume rows) is untouched by
+this phase and stays with its owner.
+
+5. CAPTURE ARTIFACT NOTE (not a finding)
+
+The fixed site header paints across the middle of the gallery element
+screenshots because the element scrolled under it; full-page shots show the
+header only at the top. Capture artifact, not a page defect.
+
+MEASURE_AGENT_RESULT
+{
+  "status": "pass",
+  "verdict": "PASS",
+  "phase_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "role_base_sha": "96887abe595b7d17927787521c3bc8edcb2ed440",
+  "audited_head_sha": "96887abe595b7d17927787521c3bc8edcb2ed440",
+  "audited_head_is_head": true,
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 (info): phone cards render 574 CSS px vs a 520 px source at 1280 px (about 10% upscale); crisp at 100% zoom in the 2x captures; does not block the page check, PM judges at task 2.5",
+    "N2 (info): fixed-header band across element captures is a Playwright element-screenshot artifact, not a page defect"
+  ],
+  "capture_directory": "measure/runs/www_tutor_calculator_20261117/ux-p2-96887abe5/",
+  "result_file": "measure/runs/www_tutor_calculator_20261117/ux-p2-96887abe5.json",
+  "retry_recommendation": "escalate_human"
+}

@@ -7,3 +7,4 @@ export * from "./permissions.js";
 export * from "./postgres-monthly-close-repository.js";
 export * from "./submissions.js";
 export * from "./postgres-submission-repository.js";
+export * from "./year-files.js";

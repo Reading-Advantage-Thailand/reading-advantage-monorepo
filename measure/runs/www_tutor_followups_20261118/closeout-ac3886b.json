@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "role": "measure-closeout",
+  "track": "www_tutor_followups_20261118",
+  "phase": "closeout",
+  "route": "minimax-cn-coding-plan/MiniMax-M3.1-Flash",
+  "audited_head_sha": "ac3886b4a37ba7d50551958bfd5de00da72d8b13",
+  "status": "pass",
+  "summary": "PASS at closeout. The final acceptance result file holds status pass with audited_head_sha 383df188a33c2d4df68ed57583bdb01f0cb95c6a. That SHA is the first parent of the pre-closeout HEAD ac3886b4a, which merges origin/master into the track branch before the www-only fast-forward push; no file under apps/www-reading-advantage/src, apps/www-reading-advantage/public, or the www package manifest changed between the two. All 19 plan tasks are [x] with Done SHAs; no [~], no [ ], and no [b] task remains. The track moved to measure/archive/www_tutor_followups_20261118, the registry row left the active section and now carries the shipped state, metadata.json says status done with completed 2026-11-18, the closeout manifest exists, and the closeout checker exits 0. A5, A6, and A9 checks show no hit. The run evidence of the track is committed with the archive move.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 [Nit] The doctor gate exits 1 at the architecture step on the analyzer input snapshot pin, owner architecture_ci_input_pin_20261110. The failure predates this track. The PM waived it again on 2026-11-18, the same as the parent track closeout at commit 25c54f5fe. The registry row and the manifest record it as a bounded exception, not a closeout blocker.",
+    "N2 [Nit] The provenance-bound audited_head_sha of the final acceptance is 383df188a and the pre-closeout HEAD is ac3886b4a, so the two SHAs differ. The difference is the orchestrator-directed merge of origin/master into the branch before the push, and no www source file changed because of it.",
+    "N3 [Nit] The closeout log and audit JSON cannot hold the SHA of the record commit that carries them; the record commit SHA goes to the orchestrator in the final message."
+  ],
+  "evidence": [
+    "Provenance: measure/runs/www_tutor_followups_20261118/final-acceptance-383df18.json holds status pass and audited_head_sha 383df188a33c2d4df68ed57583bdb01f0cb95c6a; git rev-list --parents gives ac3886b4a as a merge of 383df188a and 3804ab55a.",
+    "Tree check: git diff --name-only 383df188a ac3886b4a -- apps/www-reading-advantage/src apps/www-reading-advantage/public apps/www-reading-advantage/package.json returns no file, so the audited www code is the pushed www code.",
+    "Pre-closeout plan state: the archived plan.md holds 19 checkbox tasks, all [x], and each carries a Done SHA. The [b] marker of task 3.2 left with the PM PASS, so no task needs a deferred field.",
+    "A5: rg -n -e 'PASS=[0-9]+.*FAIL=0|all checks pass' over the archived plan.md -> exit 1, no hit.",
+    "A6: rg -n -e 'API-key encryption (was )?resolved|encryption.*resolved|completely fixed|fully solved|all (checks |tests )?pass' over measure/tracks.md -> exit 1, no hit.",
+    "A9: rg www_tutor_followups tests/ -> exit 1, no test hardcodes the track path, so the archive move breaks no test and no test needs a track_dir_resolve helper.",
+    "Closeout move: git mv measure/tracks/www_tutor_followups_20261118 measure/archive/www_tutor_followups_20261118; the active section of measure/tracks.md no longer names the track, and the archived row links ./archive/www_tutor_followups_20261118/.",
+    "Registry description: the line after the archive link equals the collapsed metadata.json description, as the checker verifies.",
+    "metadata.json: status done, completed 2026-11-18, actual_tasks 19, and the decision lines name the closed questions Q1 to Q4.",
+    "spec-review.md: the record now names the pass at 3cc535884 and the corrected downline scan of the test strategy.",
+    "Live rerun on 2026-11-18: curl answers 200 for en, th, and zh /products/tutor-advantage; each page holds tutor-advantage-hero-2026-11-06.webp and tutor-advantage-teach-class.webp; en and zh hold Commission of all legs and the new caption; th holds the Thai label and the Thai caption; no page holds tutor-advantage-hero.jpg, downline, ดาวน์ไลน์, or Tutor Advantage only.",
+    "Doctor: bash measure/doctor.sh exits 1 at the architecture step with the line Analyzer input snapshot hash does not match current bytes; steps 1 to 3 pass.",
+    "Closeout checker: python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track www_tutor_followups_20261118 -> exit 0 (PASS: closeout checks passed).",
+    "No apps/** file changed; both closeout commits touch measure/ paths only."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> ac3886b4a37ba7d50551958bfd5de00da72d8b13",
+    "bash measure/doctor.sh -> exit 1 at the architecture step; steps 1 to 3 pass",
+    "curl -s -o /dev/null -w '%{http_code}' for en, th, zh /products/tutor-advantage -> 200 each",
+    "git mv measure/tracks/www_tutor_followups_20261118 measure/archive/www_tutor_followups_20261118 -> exit 0",
+    "rg A5, A6, A9 -> exit 1 each, no hit",
+    "git add -f measure/runs/www_tutor_followups_20261118 -> the run evidence of the track, with the capture folders",
+    "python3 measure_interphase_checks.py closeout --repo . --track www_tutor_followups_20261118 -> exit 0 (PASS: closeout checks passed)"
+  ],
+  "changed_files": [
+    "measure/tracks.md",
+    "measure/archive/www_tutor_followups_20261118/plan.md",
+    "measure/archive/www_tutor_followups_20261118/metadata.json",
+    "measure/archive/www_tutor_followups_20261118/spec-review.md",
+    "measure/archive/www_tutor_followups_20261118/test-strategy.md",
+    "measure/archive/www_tutor_followups_20261118/automation-supervisor-closeout-manifest.json",
+    "measure/runs/www_tutor_followups_20261118/closeout-ac3886b.json",
+    "measure/runs/www_tutor_followups_20261118/closeout-ac3886b.log"
+  ],
+  "commits": [
+    "a04a5745cfc2b7bc59686c0ec3185f27600305a8"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

@@ -1,0 +1,87 @@
+Task 1.8: Phase 1 gates and the hand page check
+Track: www_tutor_calculator_20261117
+Role base: 4c4153b04700a3ada45934fcb3336cae84fcf4cc
+Phase base: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+Resulting head: 10dcf42a8d88c90f8e02debae761196ef40f2ccd
+Verdict: pass
+
+Task shape
+Task 1.8 is a gate task. It adds no Red test (test-strategy row 1.8: "none (gate task)"). The
+committed Red tests of tasks 1.1, 1.3, 1.5, and 1.7 are inside phase_base_sha..HEAD and were not
+edited. Their commits: 7eb6991fc, 08fcd93b0, 704f03c49, bcaf27d80, e42aa53fa. The page order
+cases of task 1.7 came with f18b6dbbd.
+
+The five gates, in order, each with its exit code
+1. www test suite
+   Command: bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test --reporter=dot --silent=true'
+   Exit code: 0
+   Output: Test Files 65 passed (65); Tests 2533 passed (2533); Duration 55.68s
+2. Types
+   Command: pnpm turbo run check-types --filter=www-reading-advantage
+   Exit code: 0
+   Note: the first run replays a cache hit on unchanged inputs. A rerun with --force executes
+   tsc --noEmit and exits 0.
+3. Lint
+   Command: pnpm --filter www-reading-advantage lint
+   Exit code: 0
+   Output: no output. No shadcn/* error in a file this track touched.
+4. Ratchet
+   Command: git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json
+   Exit code: 0
+5. Build
+   Command: bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage build'
+   First attempt exit code: 1
+   First attempt output: the route table prints, then "Error [SecurityFatalError]: Your version of
+   Next.js is affected by a known security vulnerability." The message says to retry the same
+   command to continue. There is no compile error.
+   Retry exit code: 0
+
+measure/doctor.sh was not run as a gate here. It fails on a pre-existing architecture snapshot hash
+mismatch that no file in this track touches, per the brief.
+
+Hand page check
+Server: pnpm --filter www-reading-advantage start on PORT=3107 (next start). It answers 200 on
+/en/products/tutor-advantage and /th/products/tutor-advantage, then the server is stopped.
+Script: /tmp/opencode/p1-check.mjs (outside the repository), importing @playwright/test 1.61.0.
+Capture directory: measure/runs/www_tutor_calculator_20261117/p1-captures/
+Captures: 66 PNGs plus p1-checks.json. Every locale and width has: default (section and full
+page), legs-0, preset-1, preset-2, preset-3, legs-1, legs-2, legs-3, legs-4, and hand-edit.
+Names: <locale>-<width>-<state>.png.
+
+Checks, all true in en and th at 390, 980, and 1280 px
+- No horizontal scroll at 390 px in every state.
+- Page order: #become-a-tutor then [data-testid=tutor-calculator] then
+  [data-testid=tutor-commitments] (compareDocumentPosition).
+- Result rows add up (gross - downline - tax = net):
+  preset 1: 5,520.00 - 0 - 165.60 = 5,354.40
+  preset 2: 12,655.69 - 8,010.00 - 139.37 = 4,506.32
+  preset 3: 18,709.44 - 12,015.00 - 200.83 = 6,493.61
+- Graph rows add up to the gross:
+  preset 2: 4,005.00 + 4,005.00 + 4,645.69 = 12,655.69
+  preset 3: 4,005.00 + 4,005.00 + 4,005.00 + 6,694.44 = 18,709.44
+- Graph leg rows equal the leg count at 0, 1, 2, 3, and 4.
+- Exactly one preset is pressed after a click. None is pressed on the default state and after a
+  hand edit (D-7).
+- A typed price of 5,000 returns to 3,000 when a preset is picked (D-5).
+- A new leg starts at 3 students.
+- Thai text renders in the calculator (Thai codepoints present, no missing glyphs in the captures).
+- The Tab path reaches the three preset buttons and the five inputs at two legs. 29 presses at
+  390 and 980 px, 39 at 1280 px.
+
+Plan update
+Task 1.8 is marked [x]. Its Done line records the five exit codes, the capture directory, and one
+line per check. Commit: 10dcf42a8 docs(measure): record green 1.8 gate evidence
+(track_id: www_tutor_calculator_20261117). Only the plan file is in the commit.
+
+MEASURE_AGENT_RESULT
+role: measure-green
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 1
+commits: 10dcf42a8
+tests_run: www suite exit 0 (Test Files 65 passed (65), Tests 2533 passed (2533)); check-types exit 0 (forced rerun exit 0); lint exit 0 with no output; ratchet git diff --exit-code exit 0; build exit 0 on the second attempt (first attempt exit 1 on the Next.js security-advisory nudge, no compile error). Hand page check: 66 captures under measure/runs/www_tutor_calculator_20261117/p1-captures/, and p1-checks.json reports 0 failures.
+files_changed: measure/tracks/www_tutor_calculator_20261117/plan.md
+plan_updates: task 1.8 marked [x] with the five gate exit codes, the capture directory measure/runs/www_tutor_calculator_20261117/p1-captures/, and one line per page check
+known_failures: none. measure/doctor.sh was not run as a gate: a pre-existing architecture snapshot hash mismatch fails it, and no file in this track touches that check. The Next.js build prints a security-advisory nudge on the first attempt; the retry exits 0.
+handoff: Task 1.8 is complete at HEAD 10dcf42a8. Phase 1 ships no push (D-13). Task 1.9 is the Phase 1 checkpoint. Phase 2 task 2.2 inserts the screens section between tutorRole and the calculator (spec D-8) and must keep the order check passing. The captures show the result rows adding up (gross - downline - tax = net) and the graph rows adding to the gross. The Thai page renders with no missing glyphs. The Next.js security advisory is pre-existing and outside this track; the owner can decide on the suggested `next upgrade --agent=security` separately.
+END_MEASURE_AGENT_RESULT

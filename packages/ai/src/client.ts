@@ -61,20 +61,19 @@ export function createAIClient(config: AIConfig): AIClientWithProvenance {
     }
 
     case "vertex": {
-      const clientEmail = parsed.clientEmail ?? process.env.VERTEX_CLIENT_EMAIL;
-      const privateKey = parsed.privateKey ?? process.env.VERTEX_PRIVATE_KEY;
       const project = parsed.project ?? process.env.PROJECT_ID;
-      if (!clientEmail || !privateKey || !project) {
+      if (!project) {
         throw new ProviderNotConfiguredError(
           "vertex",
-          "project (PROJECT_ID), VERTEX_CLIENT_EMAIL, and VERTEX_PRIVATE_KEY must be set"
+          "project (PROJECT_ID) must be set; VERTEX_CLIENT_EMAIL and VERTEX_PRIVATE_KEY are optional for Application Default Credentials"
         );
       }
+      const clientEmail = parsed.clientEmail ?? process.env.VERTEX_CLIENT_EMAIL;
+      const privateKey = parsed.privateKey ?? process.env.VERTEX_PRIVATE_KEY;
       return new VertexProvider({
         project,
         location: parsed.location ?? "global",
-        clientEmail,
-        privateKey,
+        ...(clientEmail && privateKey ? { clientEmail, privateKey } : {}),
         model: parsed.model,
       });
     }

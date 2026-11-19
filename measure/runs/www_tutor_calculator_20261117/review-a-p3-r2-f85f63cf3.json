@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)",
+  "baseline_sha": "81df01cf2e7c2954f4a2de1aaee593913a00bc75",
+  "phase_base_sha": "81df01cf2e7c2954f4a2de1aaee593913a00bc75",
+  "role_base_sha": "6c22d6284dd47deeab35105c036bc549c67557aa",
+  "audited_head_sha": "f85f63cf3ccfc1f03a62b63739b9144296df62a3",
+  "status": "pass",
+  "summary": "All five round-1 FIX items are correct at f85f63cf3. The graph.ownBar row shows the own students' volume (12,000, 6,000, 6,000), and the bars are shares of the network volume. The legBar value, the cleared leg-count field, and the eager hero are fixed. Spec D-20 quotes PR section 3 line 123 exactly, and no assertion was weakened beyond D-20. Two nits stay: the new readLegCount branch and the add and remove leg buttons have no test, and three spec lines keep removed names.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "A-P3-r2-1 [Nit] review-a: Green added readLegCount (apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx:185-197), which makes the add and remove leg buttons use the row count while the leg-count field is empty. No test covers this branch. No test file in src clicks the copy.inputs.addLeg or copy.inputs.removeLeg buttons at all (rg 'addLeg|removeLeg' in *.test.* finds only the locale strings in www-tutor-calculator.locale.test.ts:39-40,112-113). A change back to readNumber(legCountText) would drop the typed legs after a cleared field, and the suite would stay green. Disposition proposal: FIX in a later Red task (one case: clear the field, click the add button, expect 3 rows with the typed 5 and 7), or DECLINE with a recorded reason.",
+    "A-P3-r2-2 [Nit] review-a: Three live spec lines keep names that D-17 removed. D-10 (measure/tracks/www_tutor_calculator_20261117/spec.md:264-265) says 'the three chart labels'; D-1 (spec.md:111) says 'one downline deduction row'; the NetworkResult type comment (spec.md:468) says 'the downline deduction'. The round-1 A-P3-3 lines (D-9 items 3-4, section 5.3 items 4 and 6, AC-10, AC-13) are all fixed. Disposition proposal: FIX in the next spec edit, or DECLINE as text with no behavior effect."
+  ],
+  "evidence": [
+    "HEAD check: git rev-parse HEAD = f85f63cf3ccfc1f03a62b63739b9144296df62a3 = audited_head_sha.",
+    "A-P3-1 closed: tutor-commission-calculator.tsx:415 shows formatMoney(result.ownVolume) under graph.ownBar; the leg bars (line 405) and the own bar (line 421) use shareOfNetwork, which divides by result.networkVolume (lines 147-151). tutor-commission.ts:174 sets networkVolume = own volume + sum of leg volumes, so the bars add up to 100%.",
+    "A-P3-1 tests: tutor-commission-calculator.test.tsx 'TutorCommissionCalculator own bar (spec D-20, AC-23)' has one case per preset (12,000, 6,000, 6,000). red-p3-3.6a-vitest.txt shows each case failed first with 5,520, 4,645.69, and 8,273.45 received.",
+    "Leg row text matches D-9 item 3: legBar label with the numeral, the leg volume, then the leg payout as bold text (tutor-commission-calculator.tsx:389-399).",
+    "a03605b02 is not a weakening: it replaces hasFigure('8,273.45') and hasFigure('4,645.69') toBe(true) with the graph.netBar totals (8,025.25 and 4,506.32) and toBe(false) for the pre-tax figures. D-20 (spec.md:421) says 'The payout before tax has no row in the graph', and spec.md:469 says preTax is 'not displayed'. Gross, leg commissions, tax, and hero net stay pinned in the same cases.",
+    "Adversarial bar-sum change is stronger, not weaker: it pins each width as a volume share (9000/24000, 6000/24000; 12000/42000 x3, 6000/42000), keeps the sum-to-100 check for both presets, and adds the three graph totals per preset. The old gross-share pins conflict with D-20.",
+    "D-20 (spec.md:413-415) quotes PR handoff www-tutor-advantage-calculator-handoff.md:123 word for word. AC-23 (spec.md:808-816) lists the own bar figures, the network-volume bar sum, the three totals, the {n} value, the cleared field, and the eager hero.",
+    "C-P3-1 closed: page.tsx:116 calls key('calculator.graph.legBar', { n: '{n}' }), which is the exact form of design-rules.md:28 rule 11; the client replaces {n} per leg (tutor-commission-calculator.tsx:392). page.placeholders.test.tsx has a positive control (trace.checked contains calculator.graph.legBar) and failed first in en, th, and zh with 'calculator.graph.legBar: {n}'.",
+    "C-P3-3 closed: onLegCountChange skips the resize for an empty field (tutor-commission-calculator.tsx:166-169); the result reads legTexts (line 136-140), so the rows on screen and the computed legs stay equal while the field is empty. The 'leg count field (AC-23)' case failed first with 0 rows and now restores 5 and 7.",
+    "A-P3-4 closed: next 16.4.1 get-img-props.js:236 and 446 leave loading undefined when priority is set, so Green's loading='eager' is needed for the attribute; priority with loading='eager' raises no error (only loading='lazy' with priority throws, line 306). site-image.tsx:26 uses the same priority-to-eager pattern. Other ProductPicture callers pass no priority and stay lazy.",
+    "A-P3-5 closed: plan.md task 3.6 now reads 'be506e211... (gate head); record 6c22d6284'.",
+    "Plan truth: 3.6a Done 8aa9002ad and 3.6b Done a3e02f457 resolve and are ancestors of HEAD; 8aa9002ad and a03605b02 touch tests, plan, and spec only; a3e02f457 touches only page.tsx, tutor-commission-calculator.tsx, and product-picture.tsx, so 'No other assertion moves' is true for Green.",
+    "A5 check: the plan 3.6b gate 1 claim '7 files, 102 tests' equals the reviewer run of the same command (Test Files 7 passed (7), Tests 102 passed (102)). The tsc claim matches the reviewer tsc run (exit 0). The 9-failed Red claim matches green-p3-3.6b-24dbaa05.log section 1 and red-p3-3.6a-vitest.txt.",
+    "Reviewer wider run at HEAD: 10 files (the 7 gate files plus tutor-commission.test.ts, tutor-commission.adversarial.test.ts, www-tutor-calculator.locale.test.ts): Test Files 10 passed (10), Tests 180 passed (180).",
+    "No new test reads production source as text or computes a hash: the new cases render the component or the page and read the DOM."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git log --oneline 6c22d6284..HEAD",
+    "git diff 6c22d6284..f85f63cf3 (apps and measure)",
+    "git show --stat 8aa9002ad 24dbaa050 a03605b02 a3e02f457 f85f63cf3",
+    "pnpm exec vitest run <7 gate files> --reporter=dot --maxWorkers=1 -> exit 0, Test Files 7 passed (7), Tests 102 passed (102)",
+    "pnpm exec vitest run <10 files> --reporter=dot --maxWorkers=1 -> exit 0, Test Files 10 passed (10), Tests 180 passed (180)",
+    "pnpm exec tsc --noEmit -p . -> exit 0",
+    "grep of next 16.4.1 dist/shared/lib/get-img-props.js for priority and loading",
+    "grep of the PR handoff www-tutor-advantage-calculator-handoff.md for graph keys and line 123",
+    "rg 'addLeg|removeLeg' src --glob '*.test.*'",
+    "git merge-base --is-ancestor <plan Done SHAs> HEAD"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.adversarial.test.tsx",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx",
+    "apps/www-reading-advantage/src/components/products/product-picture.tsx",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md",
+    "measure/tracks/www_tutor_calculator_20261117/spec.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "claude-code/claude-opus-5-5[1m]#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "tutor-commission-calculator.tsx:415 shows the own volume and lines 147-151 divide by the network volume, which equals own plus legs (tutor-commission.ts:174)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "Each AC-23 case failed first (red-p3-3.6a-vitest.txt), but the readLegCount branch at tutor-commission-calculator.tsx:185-197 has no test."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "a3e02f457 changes only the three files that the five findings name."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The plan 3.6b gate claim '7 files, 102 tests' equals the reviewer run of the same command, and the Red failures are recorded with received values."
+    }
+  ]
+}

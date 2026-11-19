@@ -1,0 +1,143 @@
+# Red log: Phase 3 task 3.6c (false Reedy claim)
+
+Role: measure-mid-red. Model: opencode-go/deepseek-v4.1-flash.
+Track: `www_tutor_calculator_20261117`.
+Phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation).
+`phase_base_sha`: 81df01cf2e7c2954f4a2de1aaee593913a00bc75.
+`role_base_sha`: 9fc1292b914bb4a67bac3c8fa48e7a68762f3c0b (HEAD at start; working tree clean).
+Finding in: PM page check of 2026-11-18, finding PM-1 (FIX).
+
+## Work
+
+The PM finding says the Reedy bullet "Live in Tutor Advantage only. It is not in Primary
+Advantage or Reading Advantage." is false: Reedy Preview is live in Primary Advantage since the
+2026-10-20 cutover, and the PR copy has no such line. The PM order deletes the bullet in en and
+th and adds a test that no locale string says Reedy is "not in Primary". The orchestrator extends
+the order to the same claim in the two `platformFeatures` descriptions and to the zh bullet, by
+deletion only.
+
+Test added: `src/__tests__/www-tutor-reedy-claim.test.tsx`.
+
+1. It walks every string value of both imported locale modules (pages and components) in en, th,
+   and zh, and fails on each pattern of D-21.
+2. It pins the six new strings of D-21.
+3. It renders the page with the real dictionaries and asserts the Reedy block shows exactly the
+   three remaining bullets in en, th, and zh.
+4. One control case proves the scan rejects one probe per forbidden pattern.
+
+No production file changed. No test reads production source as text. No test computes a hash.
+
+Committed tests that pin the old Reedy strings or the old bullet count: none. `page.images.test.tsx`
+reads `reedyBlock.alt` only and `page.phase3.adversarial.test.tsx` reads `reedyBlock.alt` only, so
+neither moves. No committed test needed an update.
+
+## Red run
+
+Command:
+
+```
+cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-reedy-claim.test.tsx --reporter=dot --maxWorkers=1
+```
+
+Result: exit 1, `Test Files 1 failed (1)`, 15 failed and 1 passed. Every failure is an AC-24
+assertion:
+
+1. page dictionary en: three forbidden hits (bullet and platformFeatures).
+2. component dictionary en: one hit.
+3. page dictionary th: four hits.
+4. component dictionary th: one hit.
+5. page dictionary zh: four hits.
+6. component dictionary zh: one hit.
+7. page Reedy description en: still "live in Tutor Advantage only".
+8. component Reedy description en: still "Reedy is live in Tutor Advantage only".
+9. page Reedy description th: still "ใช้ได้ใน Tutor Advantage เท่านั้น".
+10. component Reedy description th: still "Reedy ใช้ได้ใน Tutor Advantage เท่านั้น".
+11. page Reedy description zh: still "仅在 Tutor Advantage 中提供".
+12. component Reedy description zh: still "Reedy 仅在 Tutor Advantage 中提供".
+13. Reedy block en: four bullets, expected three.
+14. Reedy block th: four bullets, expected three.
+15. Reedy block zh: four bullets, expected three.
+
+The probe control passes. No failure is an import, syntax, or fixture error.
+`pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0.
+Full output: `measure/runs/www_tutor_calculator_20261117/red-p3-3.6c-vitest.txt`.
+
+## Spec and plan
+
+- New D-21 quotes finding PM-1 and records the six deleted clauses, by deletion only.
+- New AC-24 covers the scan, the six new strings, and the three rendered bullets.
+- Plan tasks 3.6c ([x], Done `e0637db22`) and 3.6d ([ ]) sit after 3.6b.
+
+## Commits
+
+- `e0637db22` `test(www): pin the removal of the false reedy claim (track_id: www_tutor_calculator_20261117)`.
+- docs commit: `docs(measure): record red p3 task 3.6c (track_id: www_tutor_calculator_20261117)`.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+baseline_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+role_base_sha: 9fc1292b914bb4a67bac3c8fa48e7a68762f3c0b
+resulting_head: fe1cb8b2662d761b472569d372d896fab00142fa
+commits: e0637db22, fe1cb8b26
+tests_run: pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-reedy-claim.test.tsx --reporter=dot --maxWorkers=1 -> exit 1, 15 failed | 1 passed, every failure an AC-24 assertion; pnpm exec tsc --noEmit -p . -> exit 0
+files_changed: src/__tests__/www-tutor-reedy-claim.test.tsx (new); measure/tracks/www_tutor_calculator_20261117/spec.md; measure/tracks/www_tutor_calculator_20261117/plan.md
+plan_updates: tasks 3.6c [x] with Done e0637db22 and the Red evidence, and 3.6d [ ] with the Green scope; spec D-21 and AC-24 added
+known_failures: page and component dictionaries each hold the false claim in en, th, zh; the six new Reedy descriptions; the Reedy block shows four bullets in en, th, zh
+handoff: Green task 3.6d deletes reedyBlock.points.0 in en, th, zh, removes the Tutor-Advantage-only clause from the Reedy platformFeatures entry in both locale files and all three locales, and keeps reedyKeys at three entries. Re-run the Red command and expect exit 0.
+dispositions: PM-1=FIX
+END_MEASURE_AGENT_RESULT
+
+## RETRY F6
+
+The orchestrator found the missed form at `src/locales/pages/products/tutor-advantage.ts:235`, the
+en FAQ answer "Who can use Reedy voice practice?": "Students with an active Tutor Advantage class
+package, on the lessons they finished. Reedy is not available in Primary Advantage or Reading
+Advantage." This is the same false claim.
+
+Change in `src/__tests__/www-tutor-reedy-claim.test.tsx` only:
+
+- The forbidden list adds `/not available in Primary Advantage/i` and `/Reedy is not available/i`;
+  both run on every string of both modules in en, th, and zh.
+- The probe control now proves one probe per forbidden pattern, with a probe for the new wording.
+- New case: the en FAQ answer is exactly "Students with an active Tutor Advantage class package, on
+  the lessons they finished."
+
+No production file changed.
+
+Red run, command:
+
+```
+cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-reedy-claim.test.tsx --reporter=dot --maxWorkers=1
+```
+
+Exit 1, `Test Files 1 failed (1)`, 2 failed and 15 passed. Only the two new en assertions fail:
+
+1. en page dictionary: the FAQ answer holds two forbidden hits (both new patterns).
+2. en FAQ pin: the answer still carries the not-available sentence.
+
+The probe control and the other 14 cases pass. No failure is an import, syntax, or fixture error.
+`pnpm --filter www-reading-advantage exec tsc --noEmit -p .` exits 0. Output:
+`measure/runs/www_tutor_calculator_20261117/red-p3-3.6c-vitest.txt`.
+
+Commit: `28a621ce4` `test(www): catch the not-available reedy wording (track_id: www_tutor_calculator_20261117)`.
+Resulting HEAD: `28a621ce453defa6e7e20522f412f3fba2dcb141`. The working tree is clean.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+baseline_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+role_base_sha: 2e440bbcb94135ad9bb5b8538b548f4b3f9ab354
+resulting_head: 28a621ce453defa6e7e20522f412f3fba2dcb141
+commits: 28a621ce4
+tests_run: pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-reedy-claim.test.tsx --reporter=dot --maxWorkers=1 -> exit 1, 2 failed | 15 passed, both failures the new en assertions; pnpm exec tsc --noEmit -p . -> exit 0
+files_changed: src/__tests__/www-tutor-reedy-claim.test.tsx
+plan_updates: none (retry F6 changes one test file only)
+known_failures: en page dictionary FAQ answer holds the not-available claim; the en FAQ answer is not the pinned sentence
+handoff: Green 3.6d retry deletes " Reedy is not available in Primary Advantage or Reading Advantage." from the en FAQ answer at locales/pages/products/tutor-advantage.ts:235 and touches nothing else. Re-run the Red command and expect exit 0.
+dispositions: PM-1=FIX
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a",
+  "round": 2,
+  "verdict": "PASS",
+  "route": "opencode/glm-5.3-flash-free#high",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "4e32f7c76710f0647aa712b74d55dc8618bc8076",
+  "audited_head_sha": "64465455f7052cf3e01c3cfcaafc81da648f5f94",
+  "audited_head_is_head": true,
+  "diff_range": "10dcf42a8d88c90f8e02debae761196ef40f2ccd..64465455f7052cf3e01c3cfcaafc81da648f5f94",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 tutor-commission-calculator.test.tsx:158-176 | the removal test cannot tell which leg row is dropped (all legs hold 3); smallest fix: type a distinct value into leg 1 before dropping, assert the survivor",
+    "N2 tutor-commission.test.ts:238-248 | the fractional leg-count floor (2.5 to 2) is unpinned; smallest fix: expect(resizeLegs([2, 4], 2.5)).toEqual([2, 4])",
+    "F3 carried from round 1 | plan.md:215 | build-graph scan still not run, documented skip under PM load watch; smallest fix: run the scan at phase closeout",
+    "F4 carried from round 1 | tutor-commission-calculator.tsx:171-178 | net row shows as hero only, documented deviation in plan 1.6; no Phase 1 fix required"
+  ],
+  "round1_outcomes": {
+    "F1": "withdrawn: closed (all four prescribed AC-9 cases present and mutation-checked)",
+    "F2": "withdrawn: closed (three prescribed clamp pins plus Infinity and negative extras present)",
+    "F3": "open (carried as nonblocking)",
+    "F4": "open (carried as nonblocking)"
+  },
+  "evidence": [
+    "F1 closed: the four cases at test.tsx:158-176, 178-191, 260-279, 281-287 fail on M14, a slice cap, wrong preset 1 inputs, and stale preset 2 text; AC-9 is now covered clause by clause",
+    "F2 closed: the pins at tutor-commission.test.ts:263-336 match module execution (rateNaN 0, rateInf 0, all-zero money on NaN/Infinity/negative inputs, leg [NaN] clamps to students 0)",
+    "figures: recomputed from the spec 3 formula and executed on the shipped module: 3-to-2 drop 27,000/12,015 to 18,000/8,010; four legs GV 36,000 rate 57.6237% gross 20,744.54 downline 16,020; preset 1 24,000 / 12,655.69 / 8,010 / 139.37 / 4,645.69 / 4,506.32",
+    "regression: git diff --stat 10dcf42a8..64465455f lists two test files and plan.md only; no product source changed since round 1",
+    "gate rerun: heavy-run on the two targeted files exits 0 with Test Files 2 passed (2), Tests 41 passed (41), matching plan.md:215 exactly",
+    "count check: module 22 + 5 new = 27, component 14 = 41, consistent with the live run"
+  ],
+  "retry_recommendation": "none",
+  "handoff": "No blocker. F3, F4, N1, and N2 are optional hardening notes for Review C or a later phase.",
+  "ratings": [
+    {"axis": "correctness", "score": 5, "evidence": "Every new pinned figure was recomputed from the formula and reproduced by executing the shipped module; no product file changed since round 1."},
+    {"axis": "test_meaning", "score": 4, "evidence": "Live rerun 41 passed (41) and each new case fails on a named mutant, but the which-leg and fractional-floor pins are still missing (N1, N2)."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "The remediation diff is exactly two test files (+167 lines) and one plan line group."},
+    {"axis": "evidence_quality", "score": 5, "evidence": "The plan's remediation claim was reproduced live through heavy-run; every figure claim carries a command result or file:line."}
+  ]
+}

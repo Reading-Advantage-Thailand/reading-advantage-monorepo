@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "PASS: the hero and #become-a-tutor blocks render the new 16:9 pictures correctly in en and th at 390, 980, and 1280 px. Twelve section captures and three full-page en captures exist in p1-captures with checks.json. All 12 captures: currentSrc shows the correct webp (tutor-advantage-hero-2026-11-06.webp in the hero, tutor-advantage-teach-class.webp in the block), natural size 1920x1080, rendered ratio 16:9 within 2 percent (1.7754-1.7800), alt matches spec 5.5/5.6 in en and th, no text overlaps the picture, and document scrollWidth equals innerWidth at every width (no horizontal scroll at 390). Visual review confirms four faces and the Origins 2 workbook in all 12 section pictures with no crop; template match of each rendered box against the source webp scores 3.95-9.63 of 255 mean absolute difference. No page errors and no console errors were recorded. The hero anchor click at en-1280 lands with sectionTop=96 (below the sticky header).",
+  "role": "measure-ux-browser-review",
+  "track_id": "www_tutor_followups_20261118",
+  "phase": "Phase 1 + Phase 2 combined (plan task 1.7 page-check evidence and UX review)",
+  "phase_base_sha": "80ac554b426551e5749f0e2cd500cbbf0eb93530",
+  "role_base_sha": "e97e1d48011327383aac95a843c243cc18673360",
+  "audited_head_sha": "e97e1d48011327383aac95a843c243cc18673360",
+  "audited_head_is_current": false,
+  "head_at_capture": "3eb492a5c (test-only advance: three adversarial test files under apps/www-reading-advantage/src, no user-facing file changed since e97e1d480; the captured page is the audited page)",
+  "project_dev_url": "http://127.0.0.1:3107",
+  "ux_applicability": "applicable",
+  "webbridge_status": "not_run",
+  "webbridge_evidence": {
+    "screenshots": [
+      "measure/runs/www_tutor_followups_20261118/p1-captures/en-hero-390.png",
+      "measure/runs/www_tutor_followups_20261118/p1-captures/en-hero-980.png",
+      "measure/runs/www_tutor_followups_20261118/p1-captures/en-hero-1280.png",
+      "measure/runs/www_tutor_followups_20261118/p1-captures/en-become-a-tutor-390.png",
+      "measure/runs/www_tutor_followups_20261118/p1-captures/en-become-a-tutor-980.png",
+      "measure/runs/www_tutor_followups_20261118/p1-captures/en-become-a-tutor-1280.png",
+      "measure/runs/www_tutor_followups_20261118/p1-captures/th-hero-390.png",
+      "measure/runs/www_tutor_followups_20261118/p1-captures/th-hero-980.png",
+      "measure/runs/www_tutor_followups_20261118/p1-captures/th-hero-1280.png",
+      "measure/runs/www_tutor_followups_20261118/p1-captures/th-become-a-tutor-390.png",
+      "measure/runs/www_tutor_followups_20261118/p1-captures/th-become-a-tutor-980.png",
+      "measure/runs/www_tutor_followups_20261118/p1-captures/th-become-a-tutor-1280.png",
+      "measure/runs/www_tutor_followups_20261118/p1-captures/en-full-390.png",
+      "measure/runs/www_tutor_followups_20261118/p1-captures/en-full-980.png",
+      "measure/runs/www_tutor_followups_20261118/p1-captures/en-full-1280.png",
+      "measure/runs/www_tutor_followups_20261118/_visual-sheet-hero.png",
+      "measure/runs/www_tutor_followups_20261118/_visual-sheet-block.png"
+    ],
+    "accessibility_snapshots": [
+      "en-1280 hero aria snapshot: heading 'Tutor-Led English Classes for Families', Live Now badge, price block 'From 3,000 baht per class package', two links (Ask about a class, Become a tutor), picture with the delivered hero alt (full YAML in p1-captures/checks.json aria_snapshots)",
+      "en-1280 become-a-tutor aria snapshot: eyebrow 'BECOME A TUTOR', heading 'Teach a class in your community', four bullet list items, 'Apply as tutor' link, picture with the delivered tutorRole alt (full YAML in checks.json aria_snapshots)",
+      "th-1280 hero aria snapshot: heading 'คลาสภาษาอังกฤษสำหรับครอบครัว สอนโดยติวเตอร์' with the Thai hero alt (full YAML in checks.json aria_snapshots)",
+      "th-1280 become-a-tutor aria snapshot: heading 'สอนคลาสในชุมชนของคุณ' with the Thai tutorRole alt (full YAML in checks.json aria_snapshots)"
+    ],
+    "interactions": [
+      "Clicked the hero anchor link a[href='#become-a-tutor'] at en-1280: hash=#become-a-tutor, sectionTop=96 (below the sticky header, scroll-mt-24 works), inView=true",
+      "Scroll pass through en and th pages at 390/980/1280 to load lazy images before every capture; both target pictures reached complete with naturalWidth>0",
+      "Read currentSrc, naturalWidth/naturalHeight, clientWidth/clientHeight, and alt of both pictures per locale and width (all values in p1-captures/checks.json)"
+    ]
+  },
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F1 [Info] environment: the heavy-run job shape used ../../node_modules/.bin/next instead of ./node_modules/.bin/next (pnpm nodeLinker=hoisted puts binaries at the repo root; the app-level .bin does not exist) and ran the capture client from measure/runs/www_tutor_followups_20261118/ux-capture-followups.mjs instead of /tmp/opencode/ (the sandbox denies /tmp file creation). Both are path substitutions only; the job still ran exactly once with build retry, background server with trap kill, wait loop, and capture client. Rationale: mechanical necessity, no scope or product change."
+  ],
+  "evidence": [
+    "Audited head: git rev-parse HEAD returned e97e1d48011327383aac95a843c243cc18673360 at role start, equal to role_base_sha. HEAD later advanced to 3eb492a5c, a test-only commit (three adversarial test files: www-tutor-followups.adversarial.test.ts, page.followups.adversarial.test.tsx, tutor-commission.followups.adversarial.test.ts) with no user-facing file change, so the captured page is the audited page. phase_base_sha is 80ac554b426551e5749f0e2cd500cbbf0eb93530.",
+    "Routing artifacts read: spec.md (sections 4.3, 5.5, 5.6, AC-10, AC-14, AC-15), plan.md (task 1.7 and tasks 1.2-3.4), test-strategy.md (Review C and browser review rows), metadata.json, and the exact user-facing phase diff (git diff 80ac554b4..e97e1d480: page.tsx hero and block picture lines, product-pictures.ts manifest, locale alts, two new webp files, old hero jpg deleted).",
+    "One heavy-run job executed the PM's shape: (pnpm build || pnpm build) passed on the retry after the known Next.js security reminder, the server started on port 3107 with trap kill, and the capture client printed captures=12 fullpage=3 failures=0 and ALL AUTOMATED CHECKS PASSED.",
+    "p1-captures/checks.json holds 12 section captures plus 3 full-page entries. Every section capture: src_ok=true (hero currentSrc ends tutor-advantage-hero-2026-11-06.webp, block ends tutor-advantage-teach-class.webp), naturalWidth=1920 and naturalHeight=1080, rendered ratio between 1.7754 and 1.7800 (inside 2 percent of 16:9 = 1.7778), alt_ok=true against the spec 5.5/5.6 strings read live from the locale file, overlap=false (no text box intersects the picture box), scroll_ok=true at 390, 980, and 1280.",
+    "Captured headings verified per file: en hero 'Tutor-Led English Classes for Families', en block 'Teach a class in your community', th hero 'คลาสภาษาอังกฤษสำหรับครอบครัว สอนโดยติวเตอร์', th block 'สอนคลาสในชุมชนของคุณ'.",
+    "Visual review of all 12 section PNGs via two self-labeled contact sheets (_visual-sheet-hero.png, _visual-sheet-block.png): four faces (tutor plus three children) and the Origins 2 workbook are visible in every cell, and no text overlaps any picture. faces_and_book_visible is true for all 12 entries in checks.json.",
+    "Picture-box fidelity: each rendered box was located in its PNG by template match against the source webp; mean absolute difference 3.95-9.63 of 255 across all 12 (measure/runs/www_tutor_followups_20261118/_visual-match.json), so the rendered box is pixel-faithful to the 1920x1080 source and no crop hides content.",
+    "page_errors and console_errors are empty arrays in checks.json for all six page loads.",
+    "Interaction evidence: hero anchor click at en-1280 lands at sectionTop=96 with inView=true, so the sticky header does not cover the anchored heading.",
+    "Full-page en captures exist at 390, 980, and 1280 (en-full-390.png, en-full-980.png, en-full-1280.png), each recording the same scroll_ok=true result.",
+    "The direct image-read tool mis-attributed some single-file reads in this session (a 390x400 crop request displayed unrelated content, contradicting PIL pixel stats of the named file). The reviewer compensated with self-labeled contact sheets whose embedded filename labels and sheet titles authenticate the served image, plus programmatic PIL color profiling and source template matching that independently confirm which file is which. No finding depends on an unauthenticated image read."
+  ],
+  "commands": [
+    "git rev-parse HEAD, git log --oneline -5, git diff --name-only e97e1d480..HEAD (read)",
+    "read measure/tracks/www_tutor_followups_20261118/{spec.md,plan.md,test-strategy.md,metadata.json} and the phase diff of page.tsx and product-pictures.ts (read)",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd .../apps/www-reading-advantage && (pnpm build || pnpm build) && { ../../node_modules/.bin/next start -p 3107 & S=$!; trap \"kill $S\" EXIT; for i in $(seq 60); do curl ...; sleep 1; done; node .../ux-capture-followups.mjs; }' (one job; capture client exited 0, 0 failed checks)",
+    "python3 _visual_review.py (template match of 12 picture boxes against source webps, built two self-labeled contact sheets, deleted the two _verify*.png temp crops and the failed _build_sheets.py)",
+    "python3 one-liner setting faces_and_book_visible=true for all 12 captures and adding visual_review to p1-captures/checks.json",
+    "ls p1-captures and the run folder (cleanup verified: no _verify files remain)"
+  ],
+  "changed_files": [
+    "measure/runs/www_tutor_followups_20261118/ux-browser-review-e97e1d4.json (this result)",
+    "measure/runs/www_tutor_followups_20261118/ux-browser-review-e97e1d4.log (this log)",
+    "measure/runs/www_tutor_followups_20261118/ux-capture-followups.mjs (capture client)",
+    "measure/runs/www_tutor_followups_20261118/p1-captures/ (15 PNGs, checks.json with faces_and_book_visible set)",
+    "measure/runs/www_tutor_followups_20261118/_visual_review.py, _visual-match.json, _visual-sheet-hero.png, _visual-sheet-block.png (visual-review method and evidence)",
+    "measure/runs/www_tutor_followups_20261118/_visual-sheet-hero.png and _visual-sheet-block.png (self-labeled visual evidence)"
+  ],
+  "spec_violations": [],
+  "plan_violations": [],
+  "test_violations": [],
+  "ux_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "questions": []
+}

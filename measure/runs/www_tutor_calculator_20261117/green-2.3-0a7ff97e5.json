@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "role": "measure-green",
+  "verdict": "pass",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "2",
+  "task": "2.3 (carries its own test change: Red first, then Green, both runs recorded)",
+  "phase_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "role_base_sha": "9314f07decb27045ddce7d4f87d105d458b9b290",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/deepseek-v4.1-flash (substitution record: ra-quota pick green returns opencode-go/hy4-flash-free, the Red family of this track, so it is excluded)",
+  "resulting_head_module_commit": "0a7ff97e596643212b52c3b9bf8fb7703e0628b2",
+  "commits": [
+    {
+      "sha": "0a7ff97e596643212b52c3b9bf8fb7703e0628b2",
+      "subject": "feat(www): update the two tutor income lines (track_id: www_tutor_calculator_20261117)",
+      "files": [
+        "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+        "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts"
+      ]
+    },
+    {
+      "sha": "9befd67c3ab8df69dbed087b24a882f6189b444c",
+      "subject": "docs(measure): record green 2.3 locale evidence (track_id: www_tutor_calculator_20261117)",
+      "files": [
+        "measure/tracks/www_tutor_calculator_20261117/plan.md"
+      ]
+    }
+  ],
+  "phase_range_check": {
+    "range": "d279b870341c067c33fc884ae8863b5428487c17..HEAD",
+    "phase_base_is_ancestor": true,
+    "commits_before_this_task": [
+      "320fc2fa176b2c2e40eab09c2d208ede98945370",
+      "29ffa35423fc8131cc099d5b0462ebc286e13ae7",
+      "e583e21b31b6a73c2d1e8ba1aa65ddc0053bd3d7",
+      "9314f07decb27045ddce7d4f87d105d458b9b290"
+    ],
+    "note": "Task 2.3 carries its own test change: the Red additions ran red before the copy change, and both landed in 0a7ff97e5. No separate Red commit exists for this task."
+  },
+  "red_test_files": [
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts"
+  ],
+  "red_command": "pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --silent=true",
+  "red_exit_code": 1,
+  "red_evidence": {
+    "test_files": "Test Files 1 failed (1)",
+    "tests": "Tests 4 failed | 27 passed (31)",
+    "failures": [
+      "11. the two live lines (AC-6, spec 6.4) > holds the new en copy at both paths",
+      "11. the two live lines (AC-6, spec 6.4) > holds the new th copy at both paths",
+      "11. the two live lines (AC-6, spec 6.4) > keeps the zh values equal to the en values (D-10)",
+      "11. the two live lines (AC-6, spec 6.4) > finds neither old en line in any dictionary"
+    ],
+    "cause": "`tutorRole.points[3]` and `faq.items[5].answer` still held the old en and th copy, and zh still held the old Chinese translations. The absent scan named both old en lines at those two paths."
+  },
+  "green_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --silent=true'",
+  "green_exit_code": 0,
+  "green_evidence": {
+    "test_files": "Test Files 1 passed (1)",
+    "tests": "Tests 31 passed (31)",
+    "breakdown": "26 pre-existing cases plus 5 new cases in block 11"
+  },
+  "grep_command": "grep -n \"We do not publish income figures\" apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+  "grep_exit_code": 1,
+  "grep_evidence": "No output: neither old en line remains in the locale file.",
+  "types_command": "pnpm turbo run check-types --filter=www-reading-advantage",
+  "types_exit_code": 0,
+  "files_added": [],
+  "files_modified": [
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md"
+  ],
+  "locale_change_summary": {
+    "paths": [
+      "tutorRole.points[3]",
+      "faq.items[5].answer"
+    ],
+    "en": "Spec 6.4 strings, word for word",
+    "th": "Spec 6.4 strings, word for word",
+    "zh": "The new English lines (D-10)",
+    "unchanged": "Every other key in the file, including the calculator block, the screens block, and the rest of each changed field",
+    "leaf_count_note": "Two string leaves changed in each of three dictionaries; no key added or removed."
+  },
+  "test_change_summary": {
+    "file": "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "block": "11. the two live lines (AC-6, spec 6.4)",
+    "cases": [
+      "holds the new en copy at both paths",
+      "holds the new th copy at both paths",
+      "keeps the zh values equal to the en values (D-10)",
+      "finds neither old en line in any dictionary",
+      "detects each old line when it is injected (positive control)"
+    ],
+    "weakened_existing_case": false,
+    "note": "The header comment now names spec 6.4 beside 5.4 and 6.3. No earlier case changed."
+  },
+  "build_graph": "Skipped under the PM load watch. No export, signature, or import edge changed: two string values and one test block moved.",
+  "constraints_held": [
+    "Only the locale file, the locale test, the plan file, and the two result files changed",
+    "No change to the calculator block, the screens block, the page, the component, or the module",
+    "No dependency or lockfile change",
+    "No whole-repo build-graph scan",
+    "No deploy and no push",
+    "No disposition line and no question tool",
+    "Explicit pathspecs only; no git add -A, no stash, no reset",
+    "Result files under measure/runs are gitignored; no plan task fakes a test result"
+  ],
+  "questions": [],
+  "final_head": "9befd67c3ab8df69dbed087b24a882f6189b444c",
+  "plan_task_2_3_marked": true,
+  "plan_task_2_3_sha": "0a7ff97e596643212b52c3b9bf8fb7703e0628b2",
+  "plan_evidence_commit": "9befd67c3ab8df69dbed087b24a882f6189b444c"
+}

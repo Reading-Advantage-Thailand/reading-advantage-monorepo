@@ -1,12 +1,12 @@
 export const en = {
     metadata: {
         title: "STEM Advantage - On Our Roadmap | Reading Advantage Thailand",
-        description: "STEM Advantage is on the Reading Advantage product roadmap — planned K-12 coding and STEM book line. No launch date.",
+        description: "STEM Advantage is on the Reading Advantage product roadmap — planned K-12 coding and STEM book line.",
     },
     hero: {
         title: "K-12 Coding and STEM, Planned",
         subtitle: "A Planned Coding and STEM Book Line",
-        description: "STEM Advantage is on our product roadmap — planned K-12 coding and STEM book line with no release date. Not to be confused with CodeCamp Advantage, our live adult bootcamp.",
+        description: "STEM Advantage is on our product roadmap — planned K-12 coding and STEM book line. Not to be confused with CodeCamp Advantage, our live adult bootcamp.",
         comingSoon: "On Our Roadmap",
     },
     heroAlt: "Digital STEM workspace",
@@ -97,7 +97,7 @@ export const en = {
     },
     cta: {
         heading: "Get Started with STEM Advantage",
-        description: "STEM Advantage is on our roadmap. It has no release date. Tell us what you need.",
+        description: "STEM Advantage is on our roadmap. Tell us what you need.",
         buttons: {
             earlyAccess: "Tell Us You Are Interested",
             partnerships: "School Partnerships",
@@ -120,12 +120,12 @@ export const en = {
 export const th = {
     metadata: {
         title: "STEM Advantage - อยู่ในแผนงาน | Reading Advantage Thailand",
-        description: "STEM Advantage อยู่ในแผนงานผลิตภัณฑ์ของ Reading Advantage — ชุดหนังสือการเขียนโค้ดและ STEM ที่วางแผนไว้ ยังไม่มีกำหนดวันเปิดตัว",
+        description: "STEM Advantage อยู่ในแผนงานผลิตภัณฑ์ของ Reading Advantage — ชุดหนังสือการเขียนโค้ดและ STEM ที่วางแผนไว้",
     },
     hero: {
         title: "การเขียนโค้ดและ STEM สำหรับ K-12 ในแผนงาน",
         subtitle: "ชุดหนังสือการเขียนโค้ดและ STEM ที่วางแผนไว้",
-        description: "STEM Advantage อยู่ในแผนงานผลิตภัณฑ์ของเรา — ชุดหนังสือการเขียนโค้ดและ STEM สำหรับ K-12 ที่วางแผนไว้ ยังไม่มีกำหนดวันเปิดตัว ไม่ใช่ CodeCamp Advantage ซึ่งเป็นบูตแคมป์สำหรับผู้ใหญ่ที่เปิดให้บริการแล้ว",
+        description: "STEM Advantage อยู่ในแผนงานผลิตภัณฑ์ของเรา — ชุดหนังสือการเขียนโค้ดและ STEM สำหรับ K-12 ที่วางแผนไว้ ไม่ใช่ CodeCamp Advantage ซึ่งเป็นบูตแคมป์สำหรับผู้ใหญ่ที่เปิดให้บริการแล้ว",
         comingSoon: "อยู่ในแผนงาน",
     },
     heroAlt: "พื้นที่ทำงาน STEM ดิจิทัล",
@@ -216,7 +216,7 @@ export const th = {
     },
     cta: {
         heading: "เริ่มต้นกับ STEM Advantage",
-        description: "STEM Advantage อยู่ในแผนงานของเรา ยังไม่มีกำหนดวันเปิดตัว บอกเราว่าคุณต้องการอะไร",
+        description: "STEM Advantage อยู่ในแผนงานของเรา บอกเราว่าคุณต้องการอะไร",
         buttons: {
             earlyAccess: "บอกเราว่าคุณสนใจ",
             partnerships: "พันธมิตรกับโรงเรียน",

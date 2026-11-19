@@ -1,0 +1,51 @@
+Review A (correctness and architecture), Phase 3, track www_tutor_calculator_20261117.
+Route: claude-code/claude-opus-5-5[1m]#high
+audited_head_sha 6c22d6284dd47deeab35105c036bc549c67557aa. HEAD matches.
+phase_base_sha 81df01cf2e7c2954f4a2de1aaee593913a00bc75. role_base_sha 81df01cf2e7c2954f4a2de1aaee593913a00bc75.
+Scope: git diff 81df01cf2..6c22d6284 (15 commits, 26 files).
+
+Verdict: FAIL. One blocker needs a decision. Result JSON: review-a-p3-6c22d6284.json.
+
+Checks that pass:
+- Module equals settlement: truncated gross (commissionService.ts:67-71), half-up tax
+  (taxService.ts:4), and the D-18 zero payout (settlementService.ts:536-548).
+- en, th, and zh calculator and screens blocks equal PR section 6 (zh = en). No downline,
+  v0.1, or v0.2 string remains.
+- Five gallery slots at 520x1125 in PR section 2 order. The six D-19 blocks show the named
+  files and alts. The new Origins 3.1 cover is 480x651.
+- 8edb5ff97 is sound. The helper keeps conservation for eligible inputs and asserts the D-18
+  zero values for ineligible inputs.
+- Plan Done SHAs resolve and are ancestors of HEAD. Gate claims match green-p3-3.6-gates.txt.
+- Reviewer run: 12 targeted files, Test Files 12 passed (12), Tests 194 passed (194).
+
+Open items:
+- (a) Rejected. See A-P3-1.
+- (b) Accepted. PR section 3 has no payout-before-tax key.
+- (c) Accepted at this head per D-18. PR v0.5 now has the line (fact gate pending). See A-P3-2.
+- (d) Accepted. No second image component was added. Nine sibling pages use next/image.
+
+Findings:
+- A-P3-1 [Blocker] graph.ownBar "Your own students" shows preTax (4,645.69 in preset 2;
+  own volume 6,000). PR section 3 line 123 and section 8.1 line 307 disagree with this map.
+  D-9 and the adversarial pin (tutor-commission-calculator.adversarial.test.tsx:328-344) need
+  a decision. Proposal: ESCALATE.
+- A-P3-2 [Nit] PR v0.5 delivered calc.result.needsOwnStudents. Proposal: ESCALATE to the PM.
+- A-P3-3 [Nit] spec.md D-9, 5.3, AC-10, AC-13 keep removed keys and old counts. Proposal: FIX.
+- A-P3-4 [Nit] The hero lost the priority hint (page.tsx:193). Proposal: FIX or DECLINE.
+- A-P3-5 [Nit] Plan 3.6 names the gate head be506e211, not the record commit. Proposal: FIX or DECLINE.
+
+Process note: one reviewer vitest command used "2>&1 | tail -15". This is a shell
+redirection that the role rules forbid. It did not change the result.
+
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: blocked
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+commits: none
+tests_run: pnpm --filter www-reading-advantage exec vitest run <12 targeted files> --reporter=dot --maxWorkers=1 -> pass (12 files, 194 tests)
+files_changed: measure/runs/www_tutor_calculator_20261117/review-a-p3-6c22d6284.json, measure/runs/www_tutor_calculator_20261117/review-a-p3-6c22d6284.log
+plan_updates: none
+known_failures: none in tests; A-P3-1 blocker open
+handoff: Question for the user or PM (A-P3-1): what does the graph row "Your own students" (graph.ownBar) show? Option 1 (recommended): the own students' volume (6,000 in preset 2), like the leg rows; the tutor payout shows under graph.netBar; Red changes D-9 and the bars-add-up-to-gross pin. Option 2: keep a payout-share bar and ask PR for a new label key. Option 3: accept the present map ("Your own students 4,645.69"). Also decide A-P3-2: ship calc.result.needsOwnStudents of PR v0.5 now, or after its fact gate.
+END_MEASURE_AGENT_RESULT

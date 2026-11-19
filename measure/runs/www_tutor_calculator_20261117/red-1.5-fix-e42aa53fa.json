@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "role": "measure-mid-red",
+  "verdict": "pass",
+  "note": "Final. The D-7 figure assertion now scopes to the results region and expects exactly two 15,000 matches, one for results.ownGV and one for results.networkGV. With the uncommitted spec-conformant component present, the targeted command reports 10 passed. Every other assertion, case name, and the copy import are unchanged. Both uncommitted Green files were left untouched.",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "1",
+  "task": "1.5",
+  "baseline_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "phase_base_sha": "8862cf14cc6e9b11e62d08d5084288a4c294752c",
+  "role_base_sha": "1142ecff96513faaa77007453f11722aa3d86ad9",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/hy4-flash-free#high (ra-quota pick red)",
+  "resulting_head": "62a65cbde2cd9cf9cf531ef9c78a6fe9eb1ebde6",
+  "commits": [
+    {
+      "sha": "e42aa53fa0f00571b32a46f4c80fc4fb20b81958",
+      "subject": "test(www-reading-advantage): scope D-7 figure assertion (track_id: www_tutor_calculator_20261117)",
+      "files": ["apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx"]
+    },
+    {
+      "sha": "62a65cbde2cd9cf9cf531ef9c78a6fe9eb1ebde6",
+      "subject": "docs(measure): record red 1.5 correction (track_id: www_tutor_calculator_20261117)",
+      "files": ["measure/tracks/www_tutor_calculator_20261117/plan.md"]
+    }
+  ],
+  "test_file": "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+  "targeted_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/components/marketing/tutor-commission-calculator.test.tsx --reporter=dot --silent=true'",
+  "targeted_command_workdir": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "targeted_command_exit_code": 0,
+  "test_count": {
+    "test_files": "Test Files 1 passed (1)",
+    "tests": "Tests 10 passed (10)",
+    "exact_count": 10
+  },
+  "correction": {
+    "case": "TutorCommissionCalculator presets > clears the example text on edit but keeps the figures",
+    "line_before": "test.tsx:193  expect(screen.queryByText(\"15,000\")).not.toBeNull();",
+    "line_after": "const results = resultRegion(); expect(within(results).getAllByText(\"15,000\")).toHaveLength(2);",
+    "defect": "A single-element queryByText cannot pass because spec 5.3 item 6 and D-3 render 15,000 twice, in the results.ownGV row and the results.networkGV row.",
+    "fix": "Scope the figure check to the polite live-region result card and assert exactly two matches. Own volume and network volume each contribute one match.",
+    "meaning_kept": "The example figure 15,000 is still required after an edit; the assertion is stronger because it proves both spec rows render it.",
+    "other_cases_changed": false,
+    "copy_import_changed": false
+  },
+  "uncommitted_green_files_left_untouched": [
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx (new, untracked)",
+    "apps/www-reading-advantage/src/app/[locale]/globals.css (modified, one bar-width utility rule)"
+  ],
+  "files_written": [
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md",
+    "measure/runs/www_tutor_calculator_20261117/red-1.5-fix-e42aa53fa.json",
+    "measure/runs/www_tutor_calculator_20261117/red-1.5-fix-e42aa53fa.log"
+  ],
+  "constraints_held": [
+    "Only the test file and the plan correction line were committed; both Green implementation files stayed uncommitted and untouched",
+    "Explicit pathspecs only; no git add -A, no git commit -a, no stash, and no reset",
+    "Every other assertion, case name, and the copy import are unchanged",
+    "The figure check is scoped to the results region and requires exactly two matches, not a bare truthiness check",
+    "No disposition line, no question tool, no deploy, and no push"
+  ],
+  "questions": [],
+  "remaining_failures": [],
+  "handoff_notes": [
+    "The D-7 assertion is now satisfiable by a spec-conformant component. Green task 1.6 can proceed with the two uncommitted implementation files.",
+    "Q2 from green-1.6 is unchanged and out of this correction scope: test.tsx:106 getByText(copy.results.net) allows one node while spec 5.3 item 6 names both a net hero and a net row. The current build renders net as the hero only, so that case passes."
+  ]
+}

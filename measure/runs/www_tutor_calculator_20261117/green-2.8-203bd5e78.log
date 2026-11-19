@@ -1,0 +1,235 @@
+MEASURE GREEN — PHASE 2 GATE RUN AT THE COPY-CHANGED HEAD (task 2.8)
+Track: www_tutor_calculator_20261117
+Phase: 2
+Task: 2.8 (gate run only; no product code change)
+Date: 2026-11-17
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+Route: opencode-go/deepseek-v4.1-flash
+  (substitution record: ra-quota pick green returns opencode-go/hy4-flash-free, the Red family
+  of this track, so it is excluded)
+
+BASES AND RANGE
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha:  203bd5e78dceb9c1701ac708886915f340005d5e
+gate HEAD:      203bd5e78dceb9c1701ac708886915f340005d5e
+git status --short before the first edit: empty. Branch clean at the gate HEAD.
+
+Range d279b8703..203bd5e78 holds 14 commits:
+  320fc2fa1 feat(www): add the three blurred tutor screens
+  29ffa3542 docs(measure): record green 2.1 asset evidence
+  e583e21b3 feat(www): add the tutor screens gallery and its copy
+  9314f07de docs(measure): record green 2.2 gallery evidence
+  0a7ff97e5 feat(www): update the two tutor income lines
+  9befd67c3 docs(measure): record green 2.3 locale evidence
+  e2439b438 docs(measure): record phase 2 gate evidence
+  96887abe5 test(www): phase 2 tutor screens adversarial controls
+  d91e6c527 test(www): pin v0.4 s8 copy Red
+  6c2d67161 docs(measure): record red 2.7 evidence
+  07a22294e test(www): pin preset 3 net as hero figure
+  079e33f9e docs(measure): record red 2.7 fix evidence
+  7d94576c9 feat(www): apply PR v0.4 s8 tutor copy
+  203bd5e78 docs(measure): record green 2.7 evidence
+
+`git merge-base --is-ancestor d279b8703 HEAD` exits 0. `git merge-base --is-ancestor 203bd5e78
+HEAD` exits 0. The committed Phase 2 Red change (d91e6c527, 07a22294e, 96887abe5) is inside
+phase_base_sha..HEAD.
+
+RED-STEP NOTE
+Task 2.8 is a gate task. test-strategy section 3 marks gate tasks with `none (gate task)`, so
+2.8 has no Red test of its own. The Red contract of task 2.7 is re-run at this head below and
+exits 0, so the Red tests no longer fail for the intended reason: task 2.7 implemented the
+v0.4 section 8 copy at commit 7d94576c9.
+
+GATE 1 — WWW TEST SUITE
+Command: bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test --reporter=dot --silent=true'
+Exit: 0
+Evidence:
+  RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage
+  Test Files  71 passed (71)
+       Tests  2617 passed (2617)
+    Duration  61.17s (transform 1.13s, setup 2.81s, import 6.26s, tests 18.85s,
+              environment 26.96s)
+
+GATE 2 — TYPES
+Command: pnpm turbo run check-types --filter=www-reading-advantage
+Exit: 0
+Evidence:
+  www-reading-advantage:check-types: cache hit, replaying logs 710f6ee763968fac
+  www-reading-advantage:check-types: $ tsc --noEmit
+  Tasks:    1 successful, 1 total
+  Time:     429ms >>> FULL TURBO
+Proving rerun (same inputs, cache bypassed):
+Command: pnpm turbo run check-types --filter=www-reading-advantage --force
+Exit: 0
+Evidence:
+  www-reading-advantage:check-types: cache bypass, force executing 710f6ee763968fac
+  Tasks:    1 successful, 1 total
+  Time:     4.146s
+
+GATE 3 — LINT
+Command: pnpm --filter www-reading-advantage lint
+Exit: 0
+Evidence:
+  $ eslint .
+  (no further output: zero lint errors and zero lint warnings)
+
+shadcn/* check: `grep -c shadcn` over the lint log prints 0, so no `shadcn/*` error exists in
+any file. It therefore exists in no file this track touched. Touched files under
+apps/www-reading-advantage in the phase range:
+  src/__tests__/www-tutor-calculator.locale.test.ts
+  src/__tests__/www-tutor-screens-copy.adversarial.test.ts
+  src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx
+  src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx
+  src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx
+  src/components/marketing/tutor-commission-calculator.adversarial.test.tsx
+  src/components/marketing/tutor-commission-calculator.test.tsx
+  src/components/marketing/tutor-commission-calculator.tsx
+  src/lib/__tests__/tutor-screens.adversarial.test.ts
+  src/lib/__tests__/tutor-screens.test.ts
+  src/lib/product-pictures.ts
+  src/lib/tutor-commission.test.ts
+  src/lib/tutor-commission.ts
+  src/locales/pages/products/tutor-advantage.ts
+  scripts/blur-tutor-screens.py
+  (plus three webp files under public/images/products/tutor-advantage/)
+
+GATE 4 — SHADCN RATCHET BASELINE
+Command: git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json
+Exit: 0
+Evidence: no diff. The baseline file is byte-unchanged from HEAD.
+
+GATE 5 — BUILD
+Command: bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage build'
+Attempt 1 exit: 1
+Evidence (attempt 1):
+  ✓ Compiled successfully in 1848ms
+  The route table printed, including `ƒ /[locale]/products/tutor-advantage`
+  > Build error occurred
+  Error [SecurityFatalError]: Your version of Next.js is affected by a known security
+  vulnerability.
+  [ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] www-reading-advantage@0.1.0 build: `next build`
+  Exit status 1
+Attempt 2 exit: 0
+Evidence (attempt 2):
+  ✓ Compiled successfully in 306ms
+  The route table printed, including `ƒ /[locale]/products/tutor-advantage`
+  ⚠ Your version of Next.js is affected by a known security vulnerability. This command is
+  continuing after the upgrade reminder.
+  Reference: https://registry.npmjs.org/-/npm/v1/security/advisories/bulk
+Note: this is the known Next.js security-advisory nudge. It exits 1 once and 0 on the retry.
+Both attempts printed the same route table. The build output is required: the PM page check
+runs against it.
+
+GATE 6 — APP SELECTOR
+Literal brief command: node scripts/ci/affected-apps.mjs --base ff028a7105ccd5de0c3e9534dd8536b7667e22de --head 203bd5e78
+Exit: 2
+Evidence: affected-apps: --head must be a 40-character lowercase hex commit id
+Resolved command: node scripts/ci/affected-apps.mjs --base ff028a7105ccd5de0c3e9534dd8536b7667e22de --head 203bd5e78dceb9c1701ac708886915f340005d5e
+Exit: 0
+Output: ["www-reading-advantage"]
+Note: test-strategy section 5.2 states the 40-character rule. Task 2.4 recorded the same
+deviation for the base. The resolved full head is the same commit as 203bd5e78.
+
+TARGETED RE-RUN OF THE TASK 2.7 RED CONTRACT
+Command: bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts src/lib/tutor-commission.adversarial.test.ts src/components/marketing/tutor-commission-calculator.test.tsx src/components/marketing/tutor-commission-calculator.adversarial.test.tsx src/__tests__/www-tutor-calculator.locale.test.ts src/__tests__/www-tutor-screens-copy.adversarial.test.ts src/lib/__tests__/tutor-screens.test.ts src/lib/__tests__/tutor-screens.adversarial.test.ts "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx" --reporter=dot --silent=true'
+Exit: 0
+Evidence:
+  Test Files  10 passed (10)
+       Tests  140 passed (140)
+    Duration  8.19s
+
+BUILD OUTPUT PROOF (this head)
+`cat .next/BUILD_ID` prints: 79VUEHlWBdmk6t_tXaU-p
+`stat .next/BUILD_ID` prints: 2026-11-17 14:32:31.799360059 +0700 .next/BUILD_ID
+`stat .next` prints:          2026-11-17 14:32:36.603325603 +0700 .next
+`date` prints:                Tue Nov 17 02:33:06 PM +07 2026
+Prior build (before gate 5):  O_4OqTZ0s7DFdhzVYcCKk at 2026-11-17 11:38:13 +0700
+The id changed and the mtime is 35 seconds before the clock, so the build is new.
+
+Content probes in the build:
+  grep -rq "Leg commission" .next              exit 0 (present)
+  grep -rq "A small team with three legs" .next exit 0 (present)
+  grep -rq "Leg share" .next                    exit 1 (absent, as required)
+  grep -rq "22,714" .next                       exit 1 (absent, as required)
+The v0.4 section 8 strings are inside
+.next/server/chunks/ssr/0_8h_ww-reading-advantage_src_locales_pages_products_tutor-advantage_ts_0v9nn2v62496f._.js
+and .next/static/chunks/3opwcy33bm7o5.js.
+
+PLAN AND COMMIT
+Plan task 2.8 added after task 2.7 and marked [x].
+Commit: 94af2c15b5e4eaf393f696564c9eed3e689de057
+Subject: docs(measure): record green 2.8 gate evidence (track_id: www_tutor_calculator_20261117)
+Subject length: 87 characters.
+Files: measure/tracks/www_tutor_calculator_20261117/plan.md only (1 file changed, 39
+insertions, 0 deletions). Pathspec commit. No git add -A, no stash, no reset.
+
+NOT RUN
+- bash measure/doctor.sh: a pre-existing architecture snapshot hash mismatch fails it, outside
+  this track. The brief excludes it.
+- build-graph scan: no product file changed in task 2.8. The brief excludes it.
+- Server start, page check, deploy, push: the orchestrator serves the page after this task.
+
+CONSTRAINTS HELD
+- Only the plan file is in the commit. Result files under measure/runs are gitignored.
+- No committed Red test was edited.
+- No product code changed.
+- No disposition line, because the brief routes no finding.
+- No question tool. Questions are in the result block.
+- Every exit code in the plan and in this log is the observed code.
+
+MEASURE_AGENT_RESULT
+status: pass
+verdict: pass
+track: www_tutor_calculator_20261117
+phase: 2
+task: 2.8
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha: 203bd5e78dceb9c1701ac708886915f340005d5e
+gate_head: 203bd5e78dceb9c1701ac708886915f340005d5e
+implementation_commit: none (task 2.8 changes no product code)
+plan_evidence_commit: 94af2c15b5e4eaf393f696564c9eed3e689de057
+final_head: 94af2c15b5e4eaf393f696564c9eed3e689de057
+tasks_done:
+  - 2.8
+gates:
+  www_test_suite: pass (exit 0, 71 files, 2617 tests)
+  types: pass (exit 0 cache hit; forced rerun exit 0)
+  lint: pass (exit 0, no output, no shadcn/* error anywhere)
+  shadcn_ratchet: pass (exit 0, baseline file byte-unchanged)
+  build: pass on retry (attempt 1 exit 1 on the Next.js nudge, attempt 2 exit 0)
+  app_selector: pass with the resolved full head (exit 0, ["www-reading-advantage"]);
+    the 9-character head exits 2
+  targeted_2_7_contract: pass (exit 0, 10 files, 140 tests)
+six_exit_codes: [0, 0, 0, 0, 1 then 0, 2 then 0]
+accepted_exit_codes: [0, 0, 0, 0, 0, 0]
+test_count: 71 files, 2617 tests
+selector_output: ["www-reading-advantage"]
+build_id: 79VUEHlWBdmk6t_tXaU-p at 2026-11-17 14:32:31 +0700 (clock 14:33:06)
+files_changed:
+  - measure/tracks/www_tutor_calculator_20261117/plan.md
+files_added: none (the three webp files and the blur script landed in task 2.1)
+handoff: |
+  Task 2.8 is complete. The six Phase 2 gates pass at HEAD 203bd5e78, the head that carries
+  the v0.4 section 8 copy, and the plan records each exit code. The build is fresh and holds
+  the new strings, so the PM page check can run against .next.
+
+  Reviewer scope: the plan text of task 2.8 only. No product file, no test file, and no locale
+  file changed in this commit.
+
+  Points for the orchestrator:
+  1. The brief named --head 203bd5e78. The selector accepts only 40 hex characters, so that
+     form exits 2. The resolved full head 203bd5e78dceb9c1701ac708886915f340005d5e exits 0 and
+     prints ["www-reading-advantage"]. test-strategy section 5.2 states the rule, and task 2.4
+     recorded the same deviation for the base. This is a reporting detail, not a gate failure.
+  2. The Next.js build nudge asks once for a permission decision on an upgrade. This session
+     ran no upgrade, no deploy, and no push.
+  3. The test count rose from 68 files and 2602 tests at task 2.4 to 71 files and 2617 tests.
+     The three adversarial files and the task 2.7 pins account for the difference.
+
+  Next: task 2.5, the PM page-check at 390, 980, and 1280 px. It stays [b] and belongs to the
+  PM, with Daniel on the Thai. Task 2.6 and closeout C.1 follow it.
+questions:
+  - "The build printed the Next.js security nudge: would you like `next upgrade --agent=security --internal-nudge-id=a7a53f5c-1936-4fed-afe7-93fed25a1317` run in the background in a separate Git worktree? This session ran no upgrade."
+  - "Confirm that the full-head selector run is the accepted reading of gate 6, since the brief's 9-character head exits 2."
+END_MEASURE_AGENT_RESULT

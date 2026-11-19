@@ -1,0 +1,160 @@
+# Red run log: storytime_at_home_release_20261106, Phase 3, task 3.0
+
+role: measure-mid-red
+track: storytime_at_home_release_20261106
+phase: Phase 3: At-home deploy
+phase_base_sha: 53d76ea9ee6856fa3d617bf46b8e49487b2dc39c
+role_base_sha: 53d76ea9ee6856fa3d617bf46b8e49487b2dc39c
+model: opencode-go/deepseek-v4.1-flash (route substitution; the planned Green family is Muse)
+date: 2026-11-16
+
+Both base values resolve. `git rev-parse 53d76ea9ee6856fa3d617bf46b8e49487b2dc39c` prints the
+full value, and HEAD was `53d76ea9e` at the start. The heading of Phase 2 carries
+`[checkpoint: 7b0ec07ab]`, so a `[~]` task in Phase 3 is allowed.
+
+## Dirty paths at the start (`git status --short`)
+
+| Path | Class | Action |
+|---|---|---|
+| `apps/accounting/next-env.d.ts`, `apps/activity-vinext-fixture/next-env.d.ts`, `apps/marketing/next-env.d.ts` | generated / ignorable | not staged |
+| `measure/tracks/primary_in_app_help_20261023/plan.md` | unrelated user work | not staged |
+| `.agents/skills/game-mapping/`, `.antigravitycli/`, `.generated/`, `.opencode/goals/state.json.sessions/`, `.pnpm-store/`, `.qa-tmp/`, `.reasonix/`, `.tmp/`, `.tmp-playwright/`, `apps/advantage-games/test-results/`, `test-results/` | generated / ignorable | left alone |
+| `apps/primary-advantage/cloudbuild-backfill.yaml`, `apps/primary-advantage/scripts/seed-qa-users.ts`, `packages/db/scripts/seed-qa-users.ts`, `apps/science-advantage/lib/ci-gates/wave5-phase-8-de-prisma.test.ts`, `div.absolute.top-4.right-4.z-10`, `docs/deployment/tutor-switch-brief.md`, `listGameLearningContent`, `probe-tmp.mjs`, `t/` | unrelated user work | left alone |
+
+At the stale-row fix the tree also holds Green's uncommitted edit of
+`apps/storytime/lib/join-copy.ts` (11 insertions, 10 deletions). This role did not touch, stage, or
+revert that file. Each commit of this run uses a pathspec. No push.
+
+## Task 3.0 order and source
+
+PM order, 2026-11-16: the approved "How to join" copy goes into `apps/storytime/lib/join-copy.ts`
+and ships with the 11-20 Phase 3 deploy. The source is
+`~/Desktop/handoff/storytime-join-page-copy-2026-11-16/app-join-page-copy.md`.
+
+- `sha256sum -c MANIFEST.txt` in that folder exits 0 (MANIFEST OK, checked once by hand).
+- The version line reads `**Version:** 0.3`. The MANIFEST line names source commit `93662024`.
+- Daniel checked the Thai TH-171 to TH-176 (Google Tasks, 2026-11-16 07:36 ICT). No zh copy:
+  Daniel, Google Tasks, 2026-11-16 07:34 ICT, "We are not doing Chinese support for Storytime".
+
+## Red rows
+
+File: `apps/storytime/__tests__/phase3-join-copy-approved.test.ts` (new). The expected English and
+the expected Thai blocks are constants in the file, copied byte for byte from table (a) on
+2026-11-16, with one comment line that names the source. The test reads no file outside the
+repository and holds no hash.
+
+| Row | Contract | At the base |
+|---|---|---|
+| English | each of the 6 English constants equals `JOIN_COPY.en` | PASS |
+| Thai | each of the 6 Thai constants equals `JOIN_COPY.th` | PASS |
+| order | the keys of `en` and `th` follow the table order | PASS |
+| status | `JOIN_COPY.status === "approved"` | FAIL (`draft`) |
+| version | `JOIN_COPY.version` names 0.3 and drops 0.1 | FAIL (`0.1`) |
+| no zh | no `zh` key; `joinCopy("zh")` equals the English | PASS |
+| marker | the th and en HTML holds the heading and no `data-draft` and no `joinDraftMarker` text | FAIL (the th HTML holds `data-draft`) |
+
+The 4 passing rows hold the match on purpose: the English and the Thai did not change since v0.1,
+so the copy file already carries the v0.3 words. The task is not satisfied at the base, because the
+status, the version, and the marker are the deliverable. Each row also asserts that the constant
+table holds 6 keys with a non-empty cell, so no row passes on an empty fixture.
+
+## Fixture fix after review
+
+The first version of the test (`ffad3ae78`) parsed the hand-off table at run time and pinned its
+sha256. The orchestrator named two defects: the test needs `~/Desktop`, which CI does not have, and
+the sha check is a new provenance hash, which the root AGENTS.md policy forbids. Test commit
+`d726bc42a` removes both. The blocks are pinned as constants with the source comment. No row was
+weakened; the count drops by one, because the sha row is gone.
+
+## Stale row fix after review
+
+Row 1 of `login-join-page.test.tsx` checked `toContain("<locale>:")`. That text reached the HTML
+only through the draft marker, which renders the mocked translation `th:joinDraftMarker`. With the
+approved status the marker is gone, so the row contradicted the spec. Test commit `a5aaac66b`
+changes the row to two checks: the HTML holds the heading of `JOIN_COPY` for that locale, and the
+HTML holds no `joinDraftMarker` key. The row keeps one reason comment (pin-bound row F7).
+
+The row fails at the base for the right reason. At the base (`d726bc42a`, before Green's edit) the
+th render held `<p data-draft="true" class="rounded-xl border border-amber-500 p-3">th:joinDraftMarker</p>`,
+as the run at that commit shows. So `.not.toContain("joinDraftMarker")` fails there, and the heading
+check passes. The bad check ran in a stash: a stash would move Green's uncommitted work, and the
+order forbids it. The base render is the evidence.
+
+## Edited old row
+
+- `apps/storytime/__tests__/login-join-page.test.tsx`, the case "marks the copy as draft and shows a
+  visible draft marker" (now "marks the copy as approved and shows no draft marker"). Reason (one
+  line, in the file): the pin-bound row F7 of the parent strategy; task 3.0 moves the status to
+  "approved", so the old draft pin contradicts its own copy. The file JSDoc follows the same change.
+
+## RED_TEST_COMMAND
+
+```
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm --filter storytime exec vitest run --maxWorkers=1 --reporter=dot --silent=true __tests__/phase3-join-copy-approved.test.ts __tests__/login-join-page.test.tsx'
+```
+
+Run A (Red, at `d726bc42a`, no Green edit): exit 1. `Test Files 2 failed (2)`,
+`Tests 4 failed | 7 passed (11)`. The output holds no `ENOENT`, no `Cannot find`, no `SyntaxError`,
+no skipped test, and no todo test. Every failure is an assertion.
+
+The 4 failed cases:
+
+1. `login-join-page.test.tsx` > "marks the copy as approved and shows no draft marker": expected
+   `'draft'` to be `'approved'`.
+2. `phase3-join-copy-approved.test.ts` > "marks the copy approved": expected `'draft'` to be
+   `'approved'`.
+3. `phase3-join-copy-approved.test.ts` > "names hand-off 0.3 and drops 0.1": expected `'0.1'` to
+   match `/0\.3/`.
+4. `phase3-join-copy-approved.test.ts` > "shows no draft marker when the status is approved": the th
+   HTML holds `<p data-draft="true" ...>th:joinDraftMarker</p>`.
+
+Run B (row fix, at `a5aaac66b`, with Green's uncommitted `join-copy.ts` in the tree): exit 0.
+`Test Files 2 passed (2)`, `Tests 11 passed (11)`, duration 929 ms. The row and all other rows pass
+on the approved copy.
+
+## Gates
+
+- ESLint on `__tests__/phase3-join-copy-approved.test.ts` and `__tests__/login-join-page.test.tsx`:
+  exit 0, no output.
+- `pnpm exec prettier --check __tests__/login-join-page.test.tsx`: exit 1, and the same check on the
+  HEAD copy of that file also exits 1, so the format gap is older than this run. The added lines
+  follow the file's current style, and no reformat was made.
+- `pnpm exec tsc --noEmit -p .` in `apps/storytime`: exit 0 after the fixture fix. The stale-row fix
+  adds one typed import of the copy module.
+
+## Commits
+
+- `ffad3ae78f7df65c6370e35238183e607436c774` — `test(storytime): pin the approved how-to-join copy`.
+- `d726bc42a3674d20aff338f9fa067dd2dbafa9e7` — `test(storytime): pin the join copy without desktop`
+  (97 characters; the given text is 106).
+- `1796e16303a6a61a91d6b89c8b4a6b2901c31e91` — `docs(storytime): record the 3.0 red fix`.
+- `a5aaac66b60cc545d0c04ec650115f96b2eb1d37` — `test(storytime): fix the stale join page row`
+  (91 characters; the given text is 109). The test file is the only path.
+- `f88c444d743000508152037f1798a8ba43406291` — `docs(storytime): record the 3.0 row fix`. The plan is
+  the only path, as ordered.
+
+## Green hand-off
+
+Green's edit of `apps/storytime/lib/join-copy.ts` is in the working tree and is not committed:
+`status: "approved"`, a `version` that names 0.3, and the JSDoc rewrite. The copy lines stay byte
+for byte. Run the command above: exit 0 with 11 passed. The test needs no hand-off folder.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+baseline_sha: 53d76ea9ee6856fa3d617bf46b8e49487b2dc39c
+role_base_sha: 53d76ea9ee6856fa3d617bf46b8e49487b2dc39c
+track: storytime_at_home_release_20261106
+phase: Phase 3: At-home deploy
+resulting_head: f88c444d743000508152037f1798a8ba43406291
+commits: ffad3ae78f7df65c6370e35238183e607436c774 (first test pin), d726bc42a3674d20aff338f9fa067dd2dbafa9e7 (pin without the desktop file), 1796e16303a6a61a91d6b89c8b4a6b2901c31e91 (first docs), a5aaac66b60cc545d0c04ec650115f96b2eb1d37 (stale row fix), f88c444d743000508152037f1798a8ba43406291 (docs, plan only)
+tests_run: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/reading-advantage-monorepo && CI=true pnpm --filter storytime exec vitest run --maxWorkers=1 --reporter=dot --silent=true __tests__/phase3-join-copy-approved.test.ts __tests__/login-join-page.test.tsx'; run A (Red, no Green edit) exit 1, files=2 failed_tests=4 passed_tests=7 total_tests=11; run B (row fix, Green edit in the tree) exit 0, files=2 failed_tests=0 passed_tests=11 total_tests=11; ESLint exit 0
+files_changed: apps/storytime/__tests__/login-join-page.test.tsx (this fix), apps/storytime/__tests__/phase3-join-copy-approved.test.ts, measure/tracks/storytime_at_home_release_20261106/plan.md, measure/runs/storytime_at_home_release_20261106/red-p3-30-53d76ea9e.log (updated, not committed, because the docs commit held the plan only)
+plan_updates: 3.0 [~] keeps the Red evidence, the Red-fix line, and the row-fix line
+known_failures: none in the current tree; the Red state was 4 rows (status in two files, version, draft marker) and Green's uncommitted edit clears them
+handoff: Green commits apps/storytime/lib/join-copy.ts (status, version, JSDoc) after its own gates. Do not reformat login-join-page.test.tsx as part of that work; its prettier gap is older than this run.
+dispositions: none
+blocked: none
+END_MEASURE_AGENT_RESULT
+
+RESULT: PASS

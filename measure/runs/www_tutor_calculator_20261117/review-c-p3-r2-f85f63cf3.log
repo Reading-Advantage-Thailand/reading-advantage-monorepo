@@ -1,0 +1,120 @@
+Review C (UX and API end-to-end contract), Phase 3 re-review r2, track www_tutor_calculator_20261117.
+Role: measure-review-c-ux-api. Route: claude-code/claude-sonnet-5-5#max.
+audited_head_sha f85f63cf3ccfc1f03a62b63739b9144296df62a3. HEAD matches (git rev-parse HEAD). git status --short printed nothing.
+phase_base_sha 81df01cf2e7c2954f4a2de1aaee593913a00bc75. role_base_sha 6c22d6284dd47deeab35105c036bc549c67557aa.
+Delta: 6c22d6284..f85f63cf3, 9 files. No locale file changed.
+Contract applicability: applicable. The delta moves the route page, the calculator, the picture component, and the spec.
+
+VERDICT: PASS. No blocking finding. Three nonblocking nits (C-P3-r2-1, C-P3-r2-2, C-P3-r2-3).
+
+1. ROUND 1 ITEMS
+
+C-P3-1 [Blocker], FIXED.
+- page.tsx:116 is key('calculator.graph.legBar', { n: '{n}' }). The key helper type at page.tsx:64 takes an
+  optional values object.
+- Real use-intl 4.13.0 createTranslator, node --conditions=development, on en, th, and zh:
+  the bare call still returns the key path and reports 1 error (the round 1 failure, reproduced).
+  The page call returns 'Leg {n}', 'สาย {n}', and 'Leg {n}' and adds no error.
+  Without the development condition, both calls return the same strings.
+- page.placeholders.test.tsx covers en, th, and zh. Each case uses a translator that resolves the real
+  dictionary and records a placeholder with no value, and each case requires that calculator.graph.legBar
+  was examined. red-p3-3.6a-vitest.txt shows the three cases failing with 'calculator.graph.legBar: {n}'
+  before the fix. They pass now.
+- legBar is still the only placeholder string (locale file lines 197, 535, 875; the file is not in the delta).
+
+C-P3-2 [Nit], FIXED.
+- spec.md D-9 items 2 to 4 use graph.legBar, graph.ownBar, the volume share, and the three totals.
+- The section 5.3 props block equals the component type (inputs 7, results 7, explain 3, graph 11 keys).
+- No chart.legPayout, chart.legVolume, or chart.yourPayout remains. directTutors, studentsPerDirect, and
+  downline remain only in removal statements (spec.md lines 335, 604-605, 757, 789).
+- D-20 and AC-23 agree with the code.
+
+C-P3-3 [Nit], FIXED.
+- tutor-commission-calculator.tsx:163-171 skips the resize when the field text is empty.
+- readLegCount (:186-187) gives the row count to Add leg (:191) and Remove leg (:196) while the field is empty.
+- The test 'keeps the leg rows and the typed students when the field is cleared' passes. The old code gave
+  3 and 3 where the test expects 5 and 7.
+
+C-P3-4 [Nit], FIXED.
+- product-picture.tsx:8 adds an optional priority prop. :23-24 pass priority and loading='eager'.
+  page.tsx:194-198 sets priority for the hero.
+- Next 16.4.1 (get-img-props.js:306-313) throws only for priority with loading='lazy' and for preload with
+  priority. The pair is legal. Next 16.4.1 drops the loading attribute for priority alone, so the explicit
+  eager value is needed for the test.
+- The test 'AC-23: the hero image is the eager largest image' passes.
+
+A-P3-1 (own bar), FIXED.
+- :415 shows result.ownVolume under graph.ownBar: 12,000 for preset 1, 6,000 for presets 2 and 3.
+- The bar widths (:405, :421) use shareOfNetwork. The own bar and the leg bars sum to 100 percent
+  (adversarial test: preset 2 gives 9000, 9000, 6000 of 24000; preset 3 gives 12000 three times and 6000 of 42000).
+- The totals keep gross, leg commissions, and net: 12,655.69 / 8,010 / 4,506.32 and 24,833.45 / 16,560 / 8,025.25.
+  The pre-tax figures 8,273.45 and 4,645.69 no longer show on screen.
+
+2. PR SECTION 3 LINE 123 AND SECTION 6 KEYS
+
+- Each leg row shows a bar, the leg volume (:396), and the leg commission (:399). The own students show as
+  one bar (:413-421). The gross, the leg commissions, and the payout after leg commissions and 3 percent tax
+  show as totals (:428-442). Spec D-9 and D-20 record the totals under the bars. Judgement: accepted.
+- The dictionary holds the 11 graph keys of PR section 6 in the PR order. The page passes all 11
+  (page.tsx:112-123). The component reads all 11.
+- Node run: 230 leaf keys in en, th, and zh, same keys, same order. page.tsx references 190 keys. None is
+  missing in any locale. All 57 calculator and screens leaves are referenced. The component reads all 35
+  non-preset calculator leaves (explain.* through copy.explain[variant] at :472).
+
+3. NITS (NONBLOCKING)
+
+C-P3-r2-1 [Nit]. product-picture.tsx:25 gives each non-portrait picture the hint
+'(min-width: 1024px) 25vw, 100vw'. Phase 3 moved the hero and the Reedy picture onto it.
+The hero column is lg:col-span-6 (page.tsx:192, picture :194), about 44 to 45 percent of the viewport at
+1024 to 1280 px. The Reedy column is lg:col-span-5 (page.tsx:289, picture :291), about 34 to 37 percent.
+The phase base set 50vw (hero) and 40vw (Reedy) (git show 81df01cf2, page.tsx lines 182 and 286).
+At lg and wider the browser picks a candidate about half as wide as the slot, so both pictures can look soft.
+Fix: an optional sizes prop on ProductPicture, 50vw for the hero and 40vw for Reedy.
+Code reading and layout arithmetic only, not a browser. These lines did not change in the remediation.
+
+C-P3-r2-2 [Nit]. tutor-commission-calculator.tsx:434-436 shows graph.legCommissionBar ('Commission of each
+leg') beside result.legPayouts, the sum of all legs. At preset 2 it reads 8,010 while each leg row shows
+4,005 (:399). The adversarial test pins the sum (:350, :363). The results card names the same sum
+'Leg commissions' (:214). Owner: the PR copy owner and the spec owner. Option: label the total with
+results.legCommissions, or use legCommissionBar for the per-leg figure.
+
+C-P3-r2-3 [Nit]. page.placeholders.test.tsx:76 checks only that a value exists. A page call with
+{ n: '1' } passes the test, but each leg row would read 'Leg 1' because the component finds no '{n}'
+(tutor-commission-calculator.tsx:393). Rule 11 asks for the literal { n: '{n}' }. Add an assertion that the
+value for calculator.graph.legBar equals { n: '{n}' }. Code reading only, no mutation run.
+
+4. CHECKS
+
+- heavy-run vitest (products/tutor-advantage/page, tutor-commission, www-tutor-calculator.locale,
+  tutor-screens; --maxWorkers=1): 12 files, 180 tests passed, exit 0. Round 1 had 11 files and 172 tests.
+  The delta adds 1 file and 8 tests.
+- heavy-run eslint on 10 touched files (shadcn rules are errors): exit 0. The ratchet baseline file is not
+  in the delta (AC-12).
+- Rule 8 and rule 11 of docs/design-rules.md hold.
+
+5. LIMITS
+
+I ran no browser, no server, and no build. The 390 px capture and the real hero paint belong to the UX browser
+role. C-P3-r2-1 and C-P3-r2-3 rest on code reading. One early shell call was rejected by the role guard,
+because I wrote a stray redirection. I re-ran it without the redirection. Open copy item
+calc.result.needsOwnStudents and B-P3-1 (no leg-count cap) are unchanged and stay as before.
+
+6. ARTIFACTS
+
+- measure/runs/www_tutor_calculator_20261117/review-c-p3-r2-f85f63cf3.json
+- measure/runs/www_tutor_calculator_20261117/review-c-p3-r2-f85f63cf3.log (this file)
+Those two paths are the only write scope. No product file, test, plan, or spec changed. No commit.
+No question tool. The brief held no CONTEST item, so no finding is withdrawn or kept.
+
+MEASURE_AGENT_RESULT
+role: measure-review-c-ux-api
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+commits: none
+tests_run: heavy-run vitest (page, tutor-commission, www-tutor-calculator.locale, tutor-screens; --maxWorkers=1) pass, 12 files, 180 tests; heavy-run eslint on 10 touched files pass, exit 0; node use-intl dev and production check of the page legBar call pass in en, th, zh; node key parity run pass (230 leaves, 190 referenced, 0 missing, 0 unused of 57)
+files_changed: measure/runs/www_tutor_calculator_20261117/review-c-p3-r2-f85f63cf3.json, measure/runs/www_tutor_calculator_20261117/review-c-p3-r2-f85f63cf3.log
+plan_updates: none
+known_failures: none blocking; nits C-P3-r2-1 (ProductPicture sizes hint 25vw for the hero and Reedy), C-P3-r2-2 (legCommissionBar label over the leg sum), C-P3-r2-3 (placeholder test does not pin the literal {n})
+handoff: Review C passes Phase 3 on f85f63cf3 with no blocker. C-P3-1 to C-P3-4 and A-P3-1 are verified fixed. Optional follow-ups: Green takes C-P3-r2-1 and C-P3-r2-3; the PR copy owner and the spec owner decide C-P3-r2-2. The 390 px capture and the hero paint stay with the UX browser role.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,201 @@
+# Red pass: tasks 1.2 + 2.1 — track www_tutor_followups_20261118
+
+Role: mid-red. Role base SHA: 071140979 (branch feat/www-tutor-followups).
+Phase base per plan: 80ac554b426551e5749f0e2cd500cbbf0eb93530.
+
+## Work
+
+Environment: the worktree had no node_modules. `pnpm install --frozen-lockfile
+--prefer-offline` ran through heavy-run before the tests (no lockfile change;
+pnpm-lock.yaml is unchanged in git status).
+
+Test edits (commit `9a1e001fb`, nine test files):
+
+1. `page.images.test.tsx`: HERO pins `/images/tutor-advantage-hero-2026-11-06.webp`
+   with `text(locale, "heroExtra.imageAlt")`; new TUTOR map pins
+   `/images/tutor-advantage-teach-class.webp` with `text(locale, "tutorRole.alt")`;
+   the become-a-tutor case takes TUTOR (AC-15); new cases AC-16, AC-17 (with the
+   `imgFile` helper, `/media/brand/` excluded), AC-18 (1920 by 1080, at or below
+   307200 bytes, no hash), AC-2 (`aspect-video`, not `aspect-4/3`); en equals zh
+   alt pins.
+2. `page.phase3.adversarial.test.tsx`: `expectedContentImages` lines 352/357 take
+   the two new files; the preload case expects the new hero webp in
+   `imagesrcset`.
+3. `www-tutor-calculator.locale.test.ts`: `CALC_EN` and `CALC_TH` gain
+   `explain.needsOwnStudents` (spec 5.1), `graph.legCommissionBar` (spec 5.2), and
+   `graph.caption` (spec 5.3). A new `CALC_ZH` holds CALC_EN with the zh draft
+   explain line of spec 5.1 (D-11); the zh deep-equal case takes `CALC_ZH`.
+4. `tutor-commission.adversarial.test.ts`: new case "legs with students and no own
+   students name needsOwnStudents". The `-0` case at line 384 keeps `zero`
+   (network volume 0 stays the first branch of D-6); changing it would be a red
+   that no Green can pass.
+5. `tutor-commission.test.ts`: the two legs-without-own-students cases (old lines
+   385 and 403) take `needsOwnStudents` (orchestrator answer 2026-11-18). The
+   leg-of-0-students and no-legs cases keep `zero`.
+6. `tutor-commission.settlement.adversarial.test.ts`: line 613 takes
+   `needsOwnStudents` for an unpaid tutor with legs and a volume.
+7. `www-tutor-reedy-claim.test.tsx`: `PAGE_REEDY.th` takes the New Thai of spec
+   5.4, byte for byte.
+8. `tutor-commission-calculator.test.tsx`: the three legs-without-own-students
+   cases assert the `needsOwnStudents` line behind a missing-key guard, so the Red
+   failure is a clean assertion; the first-paint zero-volume case at line 137
+   keeps `copy.explain.zero`.
+9. `tutor-commission-calculator.adversarial.test.tsx`: new needsOwnStudents case;
+   the price-0 case at line 253 keeps `zero`.
+
+## Red command
+
+`bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm
+--filter www-reading-advantage exec vitest run "src/app/[locale]/(marketing)/
+products/tutor-advantage/page.images.test.tsx"
+"src/app/[locale]/(marketing)/products/tutor-advantage/page.phase3.adversarial.test.tsx"
+src/__tests__/www-tutor-calculator.locale.test.ts
+src/lib/tutor-commission.adversarial.test.ts src/lib/tutor-commission.test.ts
+src/lib/tutor-commission.settlement.adversarial.test.ts
+src/__tests__/www-tutor-reedy-claim.test.tsx
+src/components/marketing/tutor-commission-calculator.test.tsx
+src/components/marketing/tutor-commission-calculator.adversarial.test.tsx
+--reporter=dot --silent=true --maxWorkers=1'`
+
+Result: exit 1. 39 failed, 191 passed (230 total). Every failure is a pinned new
+expectation: the old file shown (AC-14/AC-15), the new files missing (AC-18), the
+shared file (AC-17, phase3 image map), `aspect-4/3` (AC-2), the old hero preload,
+the missing `needsOwnStudents` key/state (locale deep-equals, the three lib
+files, the two component files), the old caption and leg label, and the old Thai
+Reedy line. No failure is an import, syntax, or type error.
+
+`tsc --noEmit -p .` exited 0 with no output: no new type errors.
+
+## Commits
+
+- `9a1e001fb` — test(www): pin the new tutor pictures and the PR copy (track_id:
+  www_tutor_followups_20261118) — nine test files, pathspec commit.
+- `6d09d2c37` — chore(measure): record the red pass (track_id:
+  www_tutor_followups_20261118) — plan.md, pathspec commit.
+
+`git status` is clean. pnpm-lock.yaml is unchanged and node_modules is not in the
+commits.
+
+## Expected red state until Green
+
+The 39 failures turn green in tasks 1.3-1.5 and 2.2-2.5. Falsification: restore
+one old string, file, or class and the matching case fails. The zh deep-equal
+turns green only when zh takes the zh draft explain line (D-11), so `CALC_ZH`
+holds that one override.
+
+## Handoff to Green
+
+- `explainVariant` gains the `needsOwnStudents` union member (task 2.2). The
+  render at `tutor-commission-calculator.tsx:472` needs no change.
+- The locale test compares zh against `CALC_ZH`; every other zh value stays
+  `CALC_EN`.
+- No test file needs a change in Green. `productPictures` splits per task 1.4;
+  the tests already pin the split.
+- No push and no deploy before the PM page check (tasks 3.2, 3.3).
+
+MEASURE_AGENT_RESULT
+role: mid-red
+status: complete
+track: www_tutor_followups_20261118
+phase: Phase 1 task 1.2 + Phase 2 task 2.1 (one combined Red pass)
+baseline_sha: 071140979 (role base; phase base per plan: 80ac554b426551e5749f0e2cd500cbbf0eb93530)
+head: 6d09d2c37
+commits: 9a1e001fb (tests), 6d09d2c37 (plan record)
+tests_run: combined Red command through heavy-run, exit 1; 39 failed / 191 passed, all failures on the new expectations only; tsc --noEmit -p . exit 0
+files_changed: page.images.test.tsx; page.phase3.adversarial.test.tsx; www-tutor-calculator.locale.test.ts; www-tutor-reedy-claim.test.tsx; tutor-commission-calculator.test.tsx; tutor-commission-calculator.adversarial.test.tsx; tutor-commission.adversarial.test.ts; tutor-commission.test.ts; tutor-commission.settlement.adversarial.test.ts; plan.md; this log
+known_failures: the 39 expected red failures listed above; they are the Green set of tasks 1.3-1.5 and 2.2-2.5
+handoff: Green starts at task 1.3 (convert the two sources) then task 1.4 (manifest split, page.tsx, locale alts) and task 1.5 (old-file scan and removal), then tasks 2.2-2.5 (needsOwnStudents state, leg label, Thai Reedy line, caption). Green commands: task 1.2 Red command exits 0, then tsc --noEmit exits 0. No push before the PM page check.
+END_MEASURE_AGENT_RESULT
+
+## Red remediation F-G1 (blocker from Green, HEAD fa8ad4fd3)
+
+Finding: `tutor-commission.settlement.adversarial.test.ts` contradicted spec D-6
+inside one file. The helper `settledVariant` returned `zero` for own volume 0
+with legs, and line 438 pinned `zero` for own 0 and legs [3], while line 613
+pinned `needsOwnStudents` for the same shape. Nine parity failures printed
+`variant: module needsOwnStudents settlement zero`.
+
+Fix (commit `b1f1c3cdc`, this file only):
+
+1. `settledVariant` now returns the four D-6 states: `zero` only when the
+   network volume is 0; `needsOwnStudents` when the own volume is 0 with legs
+   that carry volume; `ownOnly` and `withLegs` as before. The JSDoc names the
+   four states and cites spec D-6.
+2. Line 438 expects `needsOwnStudents`; its comment says settlement still names
+   needsOwnStudents.
+3. The random-parity `coverage` object gains the `needsOwnStudents` key, with a
+   branch-reach floor above 100, so the sample proves the new branch.
+
+Scan of the whole file: no other case pins the old 3-state rule for that shape
+(line 613 already took `needsOwnStudents`; line 617 checks `not.toBe("zero")`,
+which both states satisfy).
+
+Verification: `pnpm --filter www-reading-advantage exec vitest run
+src/lib/tutor-commission.settlement.adversarial.test.ts --reporter=dot
+--silent=true --maxWorkers=1` through heavy-run exits 0, 37 passed (37).
+`tsc --noEmit -p .` exits 0. Commit header: the orchestrator message was 102
+characters, so the commit uses `test(www): align the settlement variant
+(track_id: www_tutor_followups_20261118)`.
+
+MEASURE_AGENT_RESULT
+role: mid-red
+status: complete
+track: www_tutor_followups_20261118
+phase: Red remediation F-G1 (settlement variant vs spec D-6)
+baseline_sha: 071140979 (role base; phase base per plan: 80ac554b426551e5749f0e2cd500cbbf0eb93530)
+head: b1f1c3cdc
+commits: 9a1e001fb (Red tests), 6d09d2c37 (plan record), b1f1c3cdc (F-G1 remediation)
+tests_run: targeted settlement command through heavy-run, exit 0, 37 passed (37); tsc --noEmit -p . exit 0
+files_changed: tutor-commission.settlement.adversarial.test.ts; this log
+known_failures: none in remediation scope; the 39 expected red failures of the Red pass remain the Green set of tasks 1.3-1.5 and 2.2-2.5
+handoff: Green continues with no test-side blocker; the settlement parity file now agrees with spec D-6 at every case.
+END_MEASURE_AGENT_RESULT
+
+## Red remediation F-G2 + F-G3 (blockers from the task 3.1 www gate, HEAD e6ee343dd)
+
+Two stale tests contradicted the new spec.
+
+### F-G2 — products-page-pictures.red.test.tsx (track www_products_images_20261115)
+
+The guard at line 69 rejected any productPictures src matching /2026-11-06/. It
+now hits the spec-mandated /images/tutor-advantage-hero-2026-11-06.webp (spec
+D-2/D-3 of www_tutor_followups_20261118). Fix (commit `5e5990b42`, this file
+only): the guard rejects only the retired Storytime set — a directory segment
+ending in 2026-11-06 (`/2026-11-06\//`, which matches the
+storytime-cover-options-2026-11-06 handoff set named in
+measure/archive/storytime_look_20261107/test-strategy.md M39) or a storytime
+cover file stamped with that date (`storytime.*2026-11-06|cover-options-
+2026-11-06`). The tutor hero carries the date only as a file suffix, so the
+guard accepts it. One comment line names spec D-2 of www_tutor_followups_20261118.
+A node check proved each pattern: the three retired-set shapes fail the guard,
+the tutor hero passes it.
+
+### F-G3 — tutor-commission-calculator.legs.adversarial.test.tsx
+
+Line 161 filtered on ["ownOnly", "withLegs", "zero"]; it now takes the four D-6
+states in spec order (["zero", "needsOwnStudents", "ownOnly", "withLegs"]).
+Lines 609 and 618 expected ["zero"] for legs without own students; both take
+["needsOwnStudents"] (spec D-6). The test title at line 602 said "the zero
+line"; it now says "the needsOwnStudents line". Scan of the whole file: line 614
+(["withLegs"] for an own student typed) is correct per D-6; no other three-state
+pin of that shape exists.
+
+Verification: `pnpm --filter www-reading-advantage exec vitest run
+src/__tests__/products-page-pictures.red.test.tsx
+src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx
+--reporter=dot --silent=true --maxWorkers=1` through heavy-run exits 0, 53
+passed (53). `tsc --noEmit -p .` exits 0.
+
+MEASURE_AGENT_RESULT
+role: mid-red
+status: complete
+track: www_tutor_followups_20261118
+phase: Red remediation F-G2 + F-G3 (www suite gate, task 3.1)
+baseline_sha: 071140979 (role base; phase base per plan: 80ac554b426551e5749f0e2cd500cbbf0eb93530)
+head: 5e5990b42
+commits: 9a1e001fb (Red tests), 6d09d2c37 (plan record), b1f1c3cdc (F-G1), 5e5990b42 (F-G2 + F-G3)
+tests_run: two-file targeted command through heavy-run, exit 0, 53 passed (53); tsc --noEmit -p . exit 0
+files_changed: products-page-pictures.red.test.tsx; tutor-commission-calculator.legs.adversarial.test.tsx; this log (gitignored)
+known_failures: none in remediation scope; the www suite gate (task 3.1) is unblocked
+handoff: the www suite reruns at task 3.1 with no stale-test blocker; the 39 expected red failures of the Red pass remain the Green set of tasks 1.3-1.5 and 2.2-2.5.
+END_MEASURE_AGENT_RESULT

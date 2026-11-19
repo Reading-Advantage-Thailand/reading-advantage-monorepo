@@ -631,6 +631,12 @@ main {
   width: var(--pct, 0%);
 }
 
+/* Tutor calculator payout-graph bar width (track www_tutor_calculator_20261117, spec D-9).
+   The component sets --bar-width from the row's share of the gross. */
+@utility bar-width {
+  width: var(--bar-width, 0%);
+}
+
 @utility transition-paint {
   transition:
     fill 0.5s,

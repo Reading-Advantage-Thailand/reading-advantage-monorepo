@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "role": "measure-green",
+  "status": "pass",
+  "verdict": "pass",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "2",
+  "task": "2.7 (apply PR v0.4 section 8 final lines)",
+  "phase_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "role_base_sha": "6c2d67161f9f86ee371901a3abf0648fb37341c6",
+  "gate_head": "6c2d67161f9f86ee371901a3abf0648fb37341c6",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/deepseek-v4.1-flash (substitution record: ra-quota pick green returns opencode-go/hy4-flash-free, the Red family of this track, so it is excluded)",
+  "resulting_head_module_commit": "7d94576c9018ddcd1c394837d40dad0f61076830",
+  "plan_evidence_commit": "203bd5e78dceb9c1701ac708886915f340005d5e",
+  "final_head": "203bd5e78dceb9c1701ac708886915f340005d5e",
+  "commits": [
+    {
+      "sha": "7d94576c9018ddcd1c394837d40dad0f61076830",
+      "subject": "feat(www): apply PR v0.4 s8 tutor copy (track_id: www_tutor_calculator_20261117)",
+      "files": [
+        "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+        "apps/www-reading-advantage/src/lib/tutor-commission.ts",
+        "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx",
+        "apps/www-reading-advantage/src/lib/product-pictures.ts",
+        "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx"
+      ],
+      "note": "page.tsx is the fifth product file: it needs the three chart copy keys and tutorScreens.shortAnswer so check-types and the page render pass after the manifest rename."
+    },
+    {
+      "sha": "203bd5e78dceb9c1701ac708886915f340005d5e",
+      "subject": "docs(measure): record green 2.7 evidence (track_id: www_tutor_calculator_20261117)",
+      "files": [
+        "measure/tracks/www_tutor_calculator_20261117/plan.md"
+      ]
+    }
+  ],
+  "phase_range_check": {
+    "range": "d279b870341c067c33fc884ae8863b5428487c17..6c2d67161",
+    "phase_base_is_ancestor": true,
+    "committed_red_change_in_range": true,
+    "commits_in_range": [
+      "d91e6c52780603158b2fa912bf4898a3255e3929",
+      "6c2d67161f9f86ee371901a3abf0648fb37341c6",
+      "07a22294e46824e0a3be4ebdacfde1a4405c2ff4",
+      "079e33f9eaa69a05f9ff7d8c7a12b8ae6dbf658c"
+    ],
+    "note": "d91e6c527 pins the v0.4 section 8 Red copy. 07a22294e corrected the preset 3 net pin to the hero figure. Both Red changes are inside d279b8703..HEAD."
+  },
+  "red_test_files": [
+    "apps/www-reading-advantage/src/lib/tutor-commission.test.ts",
+    "apps/www-reading-advantage/src/lib/tutor-commission.adversarial.test.ts",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.adversarial.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-screens-copy.adversarial.test.ts",
+    "apps/www-reading-advantage/src/lib/__tests__/tutor-screens.test.ts",
+    "apps/www-reading-advantage/src/lib/__tests__/tutor-screens.adversarial.test.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx"
+  ],
+  "red_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts src/lib/tutor-commission.adversarial.test.ts src/components/marketing/tutor-commission-calculator.test.tsx src/components/marketing/tutor-commission-calculator.adversarial.test.tsx src/__tests__/www-tutor-calculator.locale.test.ts src/__tests__/www-tutor-screens-copy.adversarial.test.ts src/lib/__tests__/tutor-screens.test.ts src/lib/__tests__/tutor-screens.adversarial.test.ts \"src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx\" \"src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx\" --reporter=dot --silent=true'",
+  "red_exit_code": 1,
+  "red_evidence": "Before the edit: Test Files 6 failed | 4 passed (10); Tests 25 failed | 115 passed (140).",
+  "green_command": "same ten-file command",
+  "green_exit_code": 0,
+  "green_evidence": "Test Files 10 passed (10); Tests 140 passed (140); Duration 8.30s.",
+  "gates": [
+    {
+      "gate": 1,
+      "name": "ten-file targeted suite",
+      "command": "heavy-run ten-file vitest command",
+      "exit_code": 0,
+      "evidence": "Test Files 10 passed (10); Tests 140 passed (140); 8.30s"
+    },
+    {
+      "gate": 2,
+      "name": "types",
+      "command": "pnpm turbo run check-types --filter=www-reading-advantage",
+      "exit_code": 0,
+      "evidence": "cache miss, executing 710f6ee763968fac; $ tsc --noEmit; 1 successful, 1 total; 4.494s"
+    },
+    {
+      "gate": 3,
+      "name": "lint",
+      "command": "pnpm --filter www-reading-advantage lint",
+      "exit_code": 0,
+      "evidence": "$ eslint . with no further output; zero lint errors and zero warnings; no shadcn/* error in a touched file"
+    }
+  ],
+  "five_exit_codes": [0, 0, 0],
+  "test_count": {
+    "test_files": 10,
+    "tests": 140,
+    "passed": 140,
+    "failed": 0
+  },
+  "files_added": [],
+  "files_modified": [
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+    "apps/www-reading-advantage/src/lib/tutor-commission.ts",
+    "apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx",
+    "apps/www-reading-advantage/src/lib/product-pictures.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md"
+  ],
+  "uncommitted": false,
+  "constraints_held": [
+    "No committed Red test edited",
+    "No dependency and no lockfile change",
+    "No build, no build-graph scan, no deploy, no push",
+    "No disposition line and no question tool",
+    "Explicit pathspecs only; no git add -A, no stash, no reset",
+    "Result files under measure/runs are gitignored"
+  ],
+  "known_failures": [],
+  "questions": [],
+  "handoff": "Task 2.7 is complete on final HEAD 203bd5e78. The ten-file targeted suite passes 140 of 140, types and lint exit 0, and no shadcn/* error appears in a touched file. The implementation commit 7d94576c9 holds the four named product files plus page.tsx, which needed the three chart copy keys and tutorScreens.shortAnswer so check-types and the page render pass after the manifest rename. The plan commit 203bd5e78 marks task 2.7 [x] with the implementation sha and both run results. Reviewers scope: the five product files in 7d94576c9 and the plan text of task 2.7. Task 2.5 stays [b] with the PM page-check, and task 2.6 stays open."
+}

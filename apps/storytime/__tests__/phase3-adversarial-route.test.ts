@@ -125,12 +125,12 @@ describe("Phase 3 adversarial entry route", () => {
   it("answers not-found for a draft week reached through part=book", async () => {
     await expect(
       StorytimeWeekPage({
-        params: Promise.resolve({ locale: "th", level: "2", week: "2" }),
+        params: Promise.resolve({ locale: "th", level: "2", week: "8" }),
         searchParams: Promise.resolve({ part: "book" }),
       }),
       "a draft week must stay not-found when the query names a part",
     ).rejects.toThrow("NOT_FOUND");
-    expect(loaderMocks.loadVisibleWeek).toHaveBeenCalledWith(2, 2);
+    expect(loaderMocks.loadVisibleWeek).toHaveBeenCalledWith(2, 8);
     expect(navMocks.notFound).toHaveBeenCalledTimes(1);
   });
 

@@ -1,0 +1,58 @@
+# Green record: Phase 3 tasks 3.7 and 3.8
+
+Role: measure-jr-green. Session: Green · P3 T3.7-3.8 record · www_tutor_calculator.
+Track: `www_tutor_calculator_20261117`.
+Phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation).
+Route: opencode-go/mimo-v2.6-flash (record only; no production or test edit).
+Record base HEAD: af78cfb4380b9b482fe86132c30dfbbfbebef81d (equals origin/master).
+
+Work done: record edits in `measure/tracks/www_tutor_calculator_20261117/plan.md` and
+`spec.md` only.
+
+1. plan.md task 3.7 set to `[x]` with `Done: af78cfb4380b9b482fe86132c30dfbbfbebef81d`.
+   Evidence recorded: round 1 review A FAIL, review B PASS, review C FAIL at `6c22d6284`
+   (`review-{a,b,c}-p3-6c22d6284.json`); round 2 reviews A, B, C PASS at `f85f63cf3`;
+   adversarial PASS at `9fc1292b9` (`adversarial-p3-f85f63cf3.json`); phase acceptance PASS at
+   `9fc1292b9`; PM page check PASS WITH ONE FIX (PM-1, fixed in tasks 3.6c and 3.6d); round 3
+   reviews A and C PASS at `af78cfb43` (review B not applicable); phase acceptance PASS at
+   `af78cfb43` (`phase-acceptance-p3-af78cfb43.json`). Gate exits at `af78cfb43`: www suite OOM
+   then exit 0, tsc exit 0, lint exit 0, downline scan exit 1 with no output, build exit 1 with
+   a Next.js security reminder then exit 0, app selector `["www-reading-advantage"]`. Model
+   routes: review A `claude-opus-5-5`, review B `muse-spark-1.3`, review C and adversarial
+   `claude-sonnet-5-5`, phase acceptance `muse-spark-1.3`.
+2. plan.md task 3.8 set to `[x]` with the same Done SHA. Evidence recorded: `af78cfb43` pushed
+   to `origin/master` as a fast-forward from `5211596e4`, www and measure paths only; GitHub
+   Actions run "CD — www-reading-advantage" 44142775630 success; `/en`, `/th`,
+   `/zh/products/tutor-advantage` answer 200; live HTML holds "Inside the student app", "Your
+   own students", `primary-origins-3-1-cover`, `tutor-advantage-hero`, and holds no "Tutor
+   Advantage only", no "downline", no "Tutor Advantage เท่านั้น" (2026-11-18). Open after the
+   push: `calc.result.needsOwnStudents` in the next push after its PR fact gate; a PR for a
+   better `graph.legCommissionBar` label; Daniel picks the become-a-tutor picture.
+3. plan.md task 3.6c note: `red-p3-3.6c-vitest.txt` holds the retry run, and the first run is
+   in `red-p3-3.6c-9fc1292b9.log`.
+4. spec.md record nits: "downline deduction" at the result row and the `legPayouts` comment
+   replaced by "leg commissions"; "the three chart labels" in D-10 and open question 1 replaced
+   by "the three graph labels".
+5. spec.md D-21: added the three `faq.items.3.answer` deletions and the two retry patterns
+   `/not available in Primary Advantage/i` and `/Reedy is not available/i`. spec.md AC-24 now
+   lists the eight patterns of `src/__tests__/www-tutor-reedy-claim.test.tsx`.
+
+`bash measure/doctor.sh` fails at the architecture step with "Analyzer input snapshot hash does
+not match current bytes". The same failure occurs at clean HEAD with the edits stashed, so the
+failure is pre-existing and outside this record change.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+record_base_sha: af78cfb4380b9b482fe86132c30dfbbfbebef81d
+resulting_head: 789511cb1e24ae8244316bb684a088998c1a5a67
+commits: 789511cb1e24ae8244316bb684a088998c1a5a67
+files_changed: measure/tracks/www_tutor_calculator_20261117/plan.md, measure/tracks/www_tutor_calculator_20261117/spec.md
+plan_updates: tasks 3.7 and 3.8 set to [x] with Done af78cfb4380b9b482fe86132c30dfbbfbebef81d; task 3.6c output-file note
+tests_run: none (record-only change; no test edit and no production edit)
+known_failures: measure/doctor.sh architecture step fails on a pre-existing analyzer input snapshot mismatch, reproduced at clean HEAD
+handoff: This record commit is not pushed. Tasks 3.7 and 3.8 carry Done af78cfb4380b9b482fe86132c30dfbbfbebef81d in plan.md. Review roles audit commit 789511cb1e24ae8244316bb684a088998c1a5a67. Tasks C.1 and the closeout stay open for the closeout steward.
+dispositions: none
+END_MEASURE_AGENT_RESULT

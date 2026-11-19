@@ -3,7 +3,7 @@ import "@testing-library/jest-dom/vitest";
 import { cleanup, fireEvent, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderWithMessages } from "@/components/__tests__/helpers/render-with-messages";
-import { nextSpeed, READ_ALONG_SPEEDS, ReadAlongPlayer } from "../read-along-player";
+import { nextSpeed, READ_ALONG_SPEEDS, ReadAlongPlayer } from "@reading-advantage/read-along/components/read-along/read-along-player";
 
 afterEach(cleanup);
 

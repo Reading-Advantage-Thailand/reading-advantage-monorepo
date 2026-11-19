@@ -24,12 +24,12 @@ const WEEK_FILES = [
 /** The status of each shipped week. The source repository holds these states (spec section 2.4). */
 const EXPECTED_STATUS: Record<string, string> = {
   "w01.json": "published",
-  "w02.json": "draft",
-  "w03.json": "draft",
-  "w04.json": "draft",
-  "w05.json": "draft",
-  "w06.json": "draft",
-  "w07.json": "draft",
+  "w02.json": "published",
+  "w03.json": "published",
+  "w04.json": "published",
+  "w05.json": "published",
+  "w06.json": "published",
+  "w07.json": "published",
   "w08.json": "draft",
 };
 

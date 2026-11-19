@@ -1,0 +1,116 @@
+Green P3 r2 · www_tutor_calculator_20261117 · role_base_sha eccc7c2a6dfd48383ca3bca61392e901928f3104
+
+Working dir: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+phase_base_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+role_base_sha: eccc7c2a6dfd48383ca3bca61392e901928f3104
+Red model: opencode-go/deepseek-v4.1-flash (Red commit a48aa764d)
+Earlier Green model: minimax-cn-coding-plan/MiniMax-M3.1-Flash (032abe9f4)
+No coder sub-delegation in this run.
+
+Red commit inside phase_base_sha..HEAD: a48aa764db15ae64a55ca99c92dfe05cf23d4d9d
+(git merge-base --is-ancestor confirms 81df01cf2..a48aa764d and a48aa764d..HEAD).
+
+Resume state at start: uncommitted edits left by interrupted Green r1 in
+apps/www-reading-advantage/src/lib/tutor-commission.ts (the D-18 rule) and
+measure/tracks/www_tutor_calculator_20261117/plan.md (3.5b and 3.6 marked [~]).
+Kept and reviewed; not reverted.
+
+== Step 1: task 3.5b ==
+
+Spec D-18 and AC-21 read. The rule: when the clamped personal student count is 0
+and the leg count is 1 or more, the payout before tax, the tax, and the net are 0,
+and explainVariant returns "zero". The network volume, the rate, the gross, and the
+leg commissions keep their values.
+
+Red baseline of the Red commit a48aa764d (measure/runs/.../red-p3-3.5a-vitest.txt):
+exit 1, Test Files 2 failed (2), Tests 5 failed | 47 passed (52).
+
+The targeted command no longer fails at the start of this run, because the
+interrupted r1 run had already written the D-18 production rule into the working
+tree. The rule is the smallest change that satisfies the Red contract:
+calculateNetwork forces preTaxSatang to 0n when personalStudents === 0 and
+legRows.length >= 1, after the leg deduction and before the tax; explainVariant
+returns "zero" when ownVolume === 0 and legs.length >= 1. No test file was edited.
+No component change was needed: the component renders copy.explain[variant].
+
+Command:
+  pnpm --filter www-reading-advantage exec vitest run
+  src/lib/tutor-commission.test.ts
+  src/components/marketing/tutor-commission-calculator.test.tsx
+  --reporter=dot --maxWorkers=1
+Exit 0. Test Files 2 passed (2). Tests 52 passed (52).
+
+Implementation commit: a6434d513118455ce951ade7a79b1b7bada8650b
+Pathspec: apps/www-reading-advantage/src/lib/tutor-commission.ts only.
+
+== Step 2: plan record ==
+
+The jr-green feedback "some completed [x] tasks lack commit SHA evidence" comes from
+measure_interphase_checks.py:388, which reads the `- [x]` task line and looks for
+`\\b[0-9a-f]{7,40}\\b` on that line. Every `- [x]` task line of this plan put the SHA
+in the body only, so with_sha was 0 for all three phases.
+
+Fix: append ` Done: <full sha>` to each of the 25 `- [x]` task lines that had no hex
+token on the line. The SHA names the commit that did the task's work, taken from the
+body record, from `git log --oneline -- <paths>`, and from the commit subject. No other
+text changed. The `[~]` marks of 3.5b and 3.6 from the interrupted r1 run are kept.
+
+SHA per task line:
+ 1.1 7eb6991fc85fbd0e833a193e35101ddd2b172915   1.2 377e45b8c87d13adf1f1b3365829581cb60964b1
+ 1.3 08fcd93b039f53d26447a9ec8590c17264397ec3   1.4 27f33b18e7198d498f6f2008740c38077cb1dfaf
+ 1.5 bcaf27d8003a8f83ceb3dac6e24f3a28f989eb12   1.6 3786a1d299929a5bb5f4912ccbffcb120bf0c66d
+ 1.7 f18b6dbbd6e0af3e2d9bdb8e1f96b39d6267947b   1.8 10dcf42a8d88c90f8e02debae761196ef40f2ccd
+ 1.9 4e32f7c76710f0647aa712b74d55dc8618bc8076   2.0 fb6bf7c0d86033dfb6b055796b4988a424997064
+ 2.1 320fc2fa176b2c2e40eab09c2d208ede98945370   2.2 e583e21b31b6a73c2d1e8ba1aa65ddc0053bd3d7
+ 2.3 0a7ff97e596643212b52c3b9bf8fb7703e0628b2   2.4 e2439b438511046b58ec8f3e734e655706c2ab8c
+ 2.7 7d94576c9018ddcd1c394837d40dad0f61076830   2.8 94af2c15b5e4eaf393f696564c9eed3e689de057
+ 2.9 6c0cf5de65ea092a28bf1246dff8a6fb57df7ce4   2.5 7e9724069a0f013967fd22bc7bd6e2b341b7462c
+ 2.6 a726b2be2b3771934e2d518f21b42f91d6882fc8   3.1 8d8f1c01cc6dfc7ff8fd85afa6c623300a9bf9d1
+ 3.2 032abe9f4e4a3f4734e52cb38133b72c1db5d50b   3.3 032abe9f4e4a3f4734e52cb38133b72c1db5d50b
+ 3.4 032abe9f4e4a3f4734e52cb38133b72c1db5d50b   3.5 032abe9f4e4a3f4734e52cb38133b72c1db5d50b
+ 3.5a a48aa764db15ae64a55ca99c92dfe05cf23d4d9d
+
+phase_counts after the edit: Phase 1 complete=9 with_sha=9; Phase 2 complete=10
+with_sha=10; Phase 3 complete=6 with_sha=6. Every SHA resolves with
+`git cat-file -e <sha>^{commit}`.
+
+== Step 3: task 3.6 gates ==
+
+Pending. Full gate output goes to
+measure/runs/www_tutor_calculator_20261117/green-p3-3.6-gates.txt.
+
+== Result block (provisional) ==
+
+MEASURE_AGENT_RESULT
+status: pass
+role: measure-green
+track: www_tutor_calculator_20261117
+phase: 3
+task: 3.5b
+phase_base_sha: 81df01cf2e7c2954f4a2de1aaee593913a00bc75
+role_base_sha: eccc7c2a6dfd48383ca3bca61392e901928f3104
+module_commit: a6434d513118455ce951ade7a79b1b7bada8650b
+plan_evidence_commit: pending
+final_head: pending
+red_run:
+-  exit_code: 1
+  test_files: 2 failed (2)
+  tests: 5 failed | 47 passed (52)
+  cause: the D-18 zero payout rule was absent
+green_run:
+-  exit_code: 0
+  test_files: 2 passed (2)
+  tests: 52 passed (52)
+tasks_done:
+- 3.5b (pending plan evidence)
+tasks_deferred: none
+files_modified:
+- apps/www-reading-advantage/src/lib/tutor-commission.ts
+files_unchanged_tests:
+- no committed Red test file was edited
+handoff: |
+  Step 1 is done. The targeted Red command exits 0 after the D-18 rule was
+  committed at a6434d513. Steps 2 and 3 are pending; this block will be updated.
+questions: none
+END_MEASURE_AGENT_RESULT

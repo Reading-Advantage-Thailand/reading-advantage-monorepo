@@ -200,7 +200,7 @@ describe("Sales curriculum release contract", () => {
       lesson.title === "One Catalogue, Two Channels"
     )!;
     productLesson.content = productLesson.content.replace(
-      "- **K–6 offer, no date:** Storytime Advantage for Anuban 2 to P2 is part of the K–6 offer shown at the visits.",
+      "- **K–6 offer:** Storytime Advantage for Anuban 2 to P2 is part of the K–6 offer shown at the visits. It goes live in November 2026; give no exact day.",
       "- **Live:** Storytime Advantage for Anuban 2 to P2.",
     );
 

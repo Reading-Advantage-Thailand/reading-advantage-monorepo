@@ -1,0 +1,107 @@
+# Green, Phase 3, task 3.5d — www_tutor_calculator_20261117
+
+Role: measure-jr-green. Session: Green · P3 T3.5d · www_tutor_calculator.
+Repo: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator, branch feat/a63-tutor-calculator.
+Red model of this phase: opencode-go/deepseek-v4.1-flash (Red 84df0eb89). No coder sub-delegation.
+
+## Base check
+
+- `git rev-parse HEAD` at start: c9cb6fa0c2b25bc95f66dd281b08502d7ffb3c19 (role_base_sha).
+- `phase_base_sha`: 81df01cf2e7c2954f4a2de1aaee593913a00bc75 (Phase 3 header of plan.md).
+- `git merge-base --is-ancestor 81df01cf2 84df0eb89` → yes, so the Red change sits inside
+  `phase_base_sha..HEAD`. `git merge-base --is-ancestor 84df0eb89 HEAD` → yes.
+- `git status --short` at start: clean. The worktree stayed clean of other work.
+
+## Read before the edit
+
+- spec D-19 (spec.md:366) and AC-22 (spec.md:783).
+- Red test `src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx` (323 lines).
+- `apps/www-reading-advantage/docs/design-rules.md`.
+- plan task 3.5d was marked `[~]` before any product file moved.
+
+## Red rerun (before the implementation)
+
+Command:
+
+```
+cd /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator && pnpm --filter www-reading-advantage exec vitest run "src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx" "src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx" src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --maxWorkers=1
+```
+
+Exit 1. `Test Files 1 failed | 3 passed (4)`, `Tests 16 failed | 43 passed (59)`.
+The 16 failures are the hero file (3), book card 1 file (3), the Reedy file (3), the
+become-a-tutor file (3), the banned-file scan (3), and the missing Origins 3.1 cover (1).
+No failure is an import, syntax, or fixture error.
+
+## Implementation
+
+1. Cover conversion (read-only source, output under the app):
+
+```
+python3 -I -c "from PIL import Image; Image.open('/home/daniebo/Desktop/Workbooks/assets/PA-Origins-3.1-Front Cover.png').convert('RGB').resize((480,651), Image.LANCZOS).save('apps/www-reading-advantage/public/images/products/primary-origins-3-1-cover.webp','WEBP',quality=90)"
+```
+
+Output: 480 x 651, WEBP, 146660 bytes. Nothing was written to /home/daniebo/Desktop/Workbooks.
+
+2. `src/lib/product-pictures.ts`: added `primaryCover31`, `tutorSession`, and `reedyPreview`
+   with a JSDoc line on each. `primaryCover` and `readingCover` are reused.
+
+3. `page.tsx` (products/tutor-advantage): hero uses `tutorSession`; the three cards use
+   `primaryCover`, `primaryCover31`, `readingCover` in the `books.items` order, each cover
+   whole; the Reedy block uses `reedyPreview`; the become-a-tutor block shows a 4:3 crop of
+   `tutorSession` (`aspect-4/3 w-full object-cover`). `BOOK_ART` is gone, and so are the
+   `siteImages.classroomSmallGroup`, `siteImages.chibiOakClearing`, and
+   `siteImages.tutorQuestion` uses. The asset files and the registry entries stay.
+
+4. `src/locales/pages/products/tutor-advantage.ts`: the D-19 alts are set in en and th, and
+   zh takes the en values, at `heroExtra.imageAlt`, `books.items.0..2.alt`,
+   `reedyBlock.alt`, and `tutorRole.alt`. No other string moved.
+
+## Gates at the implementation commit 9647b32c6
+
+Exit codes 0, 0, and 0.
+
+1. The four-file command above: exit 0, `Test Files 4 passed (4)`, `Tests 59 passed (59)`.
+2. `pnpm --filter www-reading-advantage exec tsc --noEmit -p .`: exit 0.
+3. `pnpm --filter www-reading-advantage lint`: exit 0, no output, so no `shadcn/*` error in a
+   touched file.
+
+Extra check: `pnpm --filter www-reading-advantage exec vitest run
+src/__tests__/products-page-pictures.red.test.tsx --reporter=dot --maxWorkers=1` exit 0,
+`Tests 22 passed (22)`. That file stats every `productPictures` entry, so the three new
+entries are covered.
+
+## Deviations
+
+- The become-a-tutor block uses `next/image` on `productPictures.tutorSession`, not
+  `SiteImageView`. `SiteImageView` needs a `SiteImage` with an 800w and a 1600w file, and this
+  photo has one 1024px file, so its `srcSet` would advertise widths the file does not have.
+  The `next/image` form is the pattern of the sibling product pages (primary, science,
+  storytime, math, codecamp, stem, zhongwen). No new image component was added.
+- The hero keeps `ProductPicture` and drops the `priority` hint. `next.config.ts` sets
+  `images.unoptimized: true`, so one file ships either way.
+- `build-graph` was not run. The brief's allowed commands do not include it, and no export,
+  signature, or import edge changed.
+
+## Commits
+
+- Implementation: 9647b32c6e103e01496c524256b85c9b835e8363
+  `fix(www): show the right image in each tutor page block (track_id: www_tutor_calculator_20261117)`
+  (4 files, pathspec add only).
+- Plan evidence: be506e211ec9f18d16bd9e21c607dd08afc52678
+  `docs(measure): record green p3 task 3.5d (track_id: www_tutor_calculator_20261117)`
+  (plan.md alone).
+
+New files: `apps/www-reading-advantage/public/images/products/primary-origins-3-1-cover.webp`.
+
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: www_tutor_calculator_20261117
+phase: Phase 3: PR final copy, student gallery, and settlement tax (audit remediation)
+commits: 9647b32c6, be506e211
+tests_run: Red rerun of the four-file command exit 1 (Test Files 1 failed | 3 passed (4), Tests 16 failed | 43 passed (59)); after implementation the same command exit 0 (Test Files 4 passed (4), Tests 59 passed (59)); pnpm --filter www-reading-advantage exec tsc --noEmit -p . exit 0; pnpm --filter www-reading-advantage lint exit 0 with no output; extra products-page-pictures.red.test.tsx exit 0 (Tests 22 passed (22))
+files_changed: apps/www-reading-advantage/public/images/products/primary-origins-3-1-cover.webp (new), apps/www-reading-advantage/src/lib/product-pictures.ts, apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx, apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts, measure/tracks/www_tutor_calculator_20261117/plan.md
+plan_updates: task 3.5d moved [~] to [x] with Done: 9647b32c6e103e01496c524256b85c9b835e8363 and the three gate commands with exit codes; committed alone in be506e211
+known_failures: none
+handoff: Tasks flipped to [x]: 3.5d only, evidence 9647b32c6 (plan record be506e211). No task was marked [b]. phase_base_sha 81df01cf2e7c2954f4a2de1aaee593913a00bc75; role_base_sha c9cb6fa0c2b25bc95f66dd281b08502d7ffb3c19; the committed Red change 84df0eb89 sits inside phase_base_sha..HEAD; final Green HEAD be506e211ec9f18d16bd9e21c607dd08afc52678 (implementation 9647b32c6). Targeted Red command output: exit 1, Test Files 1 failed | 3 passed (4), Tests 16 failed | 43 passed (59), the 16 failures are the hero file (3 locales), book card 1 file (3), the Reedy file (3), the become-a-tutor file (3), the banned-file scan (3), and the missing Origins 3.1 cover (1); no failure is an import, syntax, or fixture error. New file for review scope: apps/www-reading-advantage/public/images/products/primary-origins-3-1-cover.webp (480x651, quality 90, 146660 bytes). Deviation to judge: the become-a-tutor 4:3 crop uses next/image on productPictures.tutorSession because SiteImageView needs an 800w/1600w SiteImage and this photo has one 1024px file; no new image component was added. The hero drops the priority hint under images.unoptimized. build-graph was not run because the allowed commands do not include it. Task 3.6 gates were not run here beyond the four named files.
+END_MEASURE_AGENT_RESULT

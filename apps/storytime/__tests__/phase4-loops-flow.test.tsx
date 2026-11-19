@@ -222,6 +222,18 @@ function approvedClone(source: StorytimeWeek = week): StorytimeWeek {
   return copy;
 }
 
+/**
+ * Deep-clones the shipped week and sets its loops part to draft (the approved pin ships an
+ * approved part, so the draft week is a clone), then checks the contract.
+ * @returns The draft clone.
+ */
+function draftClone(): StorytimeWeek {
+  const copy = structuredClone(week);
+  copy.approval = { ...(copy.approval ?? {}), loops: { status: "draft" } };
+  expectWeek(copy, "the draft clone");
+  return copy;
+}
+
 /** Deep-clones an approved week and sets its level, then checks the contract (A4). */
 function levelClone(level: 1 | 2 | 3 | 4): StorytimeWeek {
   const copy = approvedClone();
@@ -446,12 +458,13 @@ describe("Phase 4 teacher loops in the lesson flow (AC-13.7, AC-13.8)", () => {
     ).toBeGreaterThan(0);
   });
 
-  it("shows no loop and the step minutes on the shipped draft week (characterization: passes at HEAD)", async () => {
-    const total = week.scripts.reduce((sum, script) => sum + script.steps.length, 0);
+  it("shows no loop and the step minutes on a draft clone of the shipped week", async () => {
+    const draft = draftClone();
+    const total = draft.scripts.reduce((sum, script) => sum + script.steps.length, 0);
     expect(total, `total_steps=${total}: the shipped week must hold steps`).toBeGreaterThan(0);
 
     const screens: ScreenState[] = [];
-    for (const day of DAYS) screens.push(...(await walkDay(day, week)));
+    for (const day of DAYS) screens.push(...(await walkDay(day, draft)));
     expect(
       screens.length,
       `screens=${screens.length}: the draft walk must cover every step of the five days`,
@@ -888,7 +901,7 @@ describe("Phase 4 teacher loops in the lesson flow (AC-13.7, AC-13.8)", () => {
       "the approved A5 must show its minutes 2 min",
     ).toContain("2 min");
 
-    const draftDay = await walkDay(1, week);
+    const draftDay = await walkDay(1, draftClone());
     expect(
       screenAt(draftDay, "A1").text,
       "the draft A1 must show its minutes 4 min",

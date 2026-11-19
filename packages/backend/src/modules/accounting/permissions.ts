@@ -45,6 +45,12 @@ const CLOSE_OPENER_ROLES: ReadonlySet<string> = new Set([
 /** Roles that sign and lock a monthly close. */
 const CLOSE_SIGNER_ROLES: ReadonlySet<string> = new Set(["CEO"]);
 
+/** Roles that read the year-file rows of the company (FR-31). */
+const YEAR_FILE_READER_ROLES: ReadonlySet<string> = new Set([
+  "OWNER",
+  "ACCOUNTANT",
+]);
+
 /** Returns true when the actor holds one of the listed roles.
  * @param actor Caller derived from the session.
  * @param roles Role set that holds the permission.
@@ -178,6 +184,16 @@ export function canSignMonthlyClose(actor: AccountingActor): boolean {
  */
 export function canLockMonthlyClose(actor: AccountingActor): boolean {
   return holds(actor, CLOSE_SIGNER_ROLES);
+}
+
+/**
+ * Decides whether the actor reads the year-file rows of the company. The
+ * check reads the role only; a display name never opens the view.
+ * @param actor Caller derived from the session.
+ * @returns True for OWNER and ACCOUNTANT.
+ */
+export function canReadYearFiles(actor: AccountingActor): boolean {
+  return holds(actor, YEAR_FILE_READER_ROLES);
 }
 
 /**

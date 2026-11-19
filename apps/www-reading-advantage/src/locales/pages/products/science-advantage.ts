@@ -122,7 +122,7 @@ export const en = {
   cta: {
     heading: "Interested in Science Advantage?",
     description:
-      "Science Advantage is on our roadmap. It has no release date. Contact us to tell us what you need.",
+      "Science Advantage is on our roadmap. Contact us to tell us what you need.",
     buttons: {
       requestDemo: "Request Demo",
       contactSales: "Contact Sales",
@@ -162,7 +162,7 @@ export const en = {
   },
   waitlist: {
     heading: "Tell Us You Are Interested",
-    description: "Science Advantage has no release date. We will keep your email for news.",
+    description: "Science Advantage is on our roadmap. We will keep your email for news.",
     form: {
       placeholder: "Enter your email",
       button: "Send",
@@ -304,7 +304,7 @@ export const th = {
   cta: {
     heading: "สนใจ Science Advantage หรือไม่?",
     description:
-      "Science Advantage อยู่ในแผนงานของเรา และยังไม่มีกำหนดวันเปิดตัว ติดต่อเราเพื่อบอกสิ่งที่คุณต้องการ",
+      "Science Advantage อยู่ในแผนงานของเรา ติดต่อเราเพื่อบอกสิ่งที่คุณต้องการ",
     buttons: {
       requestDemo: "ขอสาธิต",
       contactSales: "ติดต่อฝ่ายขาย",
@@ -344,7 +344,7 @@ export const th = {
   },
   waitlist: {
     heading: "บอกเราว่าคุณสนใจ",
-    description: "Science Advantage ยังไม่มีกำหนดวันเปิดตัว เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
+    description: "Science Advantage อยู่ในแผนงานของเรา เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
     form: {
       placeholder: "กรอกอีเมลของคุณ",
       button: "บอกเราว่าคุณสนใจ",

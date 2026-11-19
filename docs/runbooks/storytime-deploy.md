@@ -46,14 +46,49 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
    Phase 3. From Phase 3 on, the printed path answers 200. Daniel reads the check result and
    gives the go for the traffic step.
 
-4. Move the traffic to the new revision. Only Daniel's go starts a traffic move:
+4. Move the traffic to the new revision. Only Daniel's go starts a traffic move. Before the
+   traffic move, run the live traffic guard from the monorepo root. The guard reads the JSON of
+   the read-only describe commands. It checks the environment of every container of the target
+   revision and of the service, and it fails while a review switch is still set. A guard failure
+   stops the step:
+
+   ```
+   node_modules/.bin/tsx apps/storytime/scripts/review/live-traffic-guard.ts --revision storytime-app-<revision>
+   ```
+
+   Exit 0 means the target revision and the service hold no review switch. Exit 1 names the
+   switch that is still set. Do not move the traffic after exit 1. Clear the switch from the
+   service template first (the removal line below), or give the traffic move up.
+
+   The build sets no environment flag, so every new revision takes the environment of the
+   service template. While the template still holds a review switch, a live deploy must remove
+   it. Print the removal argument:
+
+   ```
+   node_modules/.bin/tsx apps/storytime/scripts/review/live-traffic-guard.ts --print-remove-arg
+   ```
+
+   The printed text is the whole `--remove-env-vars` argument with the review switch names:
+   `--remove-env-vars=STORYTIME_REVIEW_DRAFT_WEEKS,STORYTIME_SHOW_DRAFT_MEDIA,STORYTIME_TEACHER_ROUTES`.
+   The argument removes only these three names, and it never adds a name: a variable that the
+   service does not set stays unset. A live deploy that clears the template adds that text to
+   the env-removal command of the
+   teacher flag section above, the same way: the live revision image pinned with its digest,
+   no traffic, and a new tag. Then check the tag URL of that revision, and only Daniel's go
+   starts the traffic move:
 
    ```
    gcloud run services update-traffic storytime-app --project primary-advantage --region asia-southeast1 --to-revisions=storytime-app-<revision>=100
    ```
 
 5. Rollback. Daniel gives the go for the rollback. A rollback is a traffic move to the previous
-   revision, not a new deploy:
+   revision, not a new deploy. Run the guard against the previous revision first:
+
+   ```
+   node_modules/.bin/tsx apps/storytime/scripts/review/live-traffic-guard.ts --revision <previous-revision>
+   ```
+
+   A guard failure stops the rollback. Do not move the traffic after exit 1.
 
    ```
    gcloud run services update-traffic storytime-app --project primary-advantage --region asia-southeast1 --to-revisions=<previous-revision>=100
@@ -65,7 +100,18 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
 ## Facts
 
 - The service answers the printed paths `/<locale>/st/<level>/<week>` for the locales `th` and `en`.
-- The build needs no database and no secrets (milestone 1).
+- The Cloud Build build of `apps/storytime/cloudbuild.yaml` runs three steps: `build-image`
+  builds the image, `push-image` pushes it to `asia-southeast1-docker.pkg.dev/$PROJECT_ID/primary-advantage-repo`,
+  and `deploy-cloudrun` deploys a new revision of the `storytime-app` service in `asia-southeast1`
+  with `--no-traffic` and the revision tag `st-<the first 8 characters of BUILD_ID>`. The traffic
+  move stays a separate runbook step (step 4). The build needs no database and no secrets
+  (milestone 1): every page that reads the account store or the media signer renders at request
+  time (`export const dynamic`). The runtime does: the service
+  needs the account store `STORYTIME_DATABASE_URL` (`apps/storytime/lib/auth/store.ts`), the
+  signer key pair `STORYTIME_STORAGE_ACCESS_KEY` and `STORYTIME_STORAGE_SECRET_KEY`, and the
+  private media bucket `STORYTIME_MEDIA_BASE=gs://storytime-app-media`
+  (`apps/storytime/lib/media/sign.ts`). Set the values through Secret Manager; this runbook holds
+  no secret value.
 - The image repository is `primary-advantage-repo`; the image name is `storytime-app`.
 
 ## The teacher routes flag (2026-11-11)
@@ -132,7 +178,9 @@ Steps 1 and 2 below apply only when the workflow did not run for the commit. The
      gcloud run revisions describe <live revision> --project primary-advantage --region asia-southeast1 --format='value(spec.containers[0].env.name)'
      ```
 
-     The compare prints the variable names, not their values. Each command prints one line
+     The compare prints the variable names, not their values. The three review switches
+     `STORYTIME_REVIEW_DRAFT_WEEKS`, `STORYTIME_SHOW_DRAFT_MEDIA`, and
+     `STORYTIME_TEACHER_ROUTES` are absent on the live revision. Each command prints one line
      with the names separated by `;`. The names compare shows that no env name differs
      except `STORYTIME_TEACHER_ROUTES`. If another name differs, stop, give no traffic
      step, and report the difference to Daniel. The flag state shows only through the 200 or 404
@@ -161,11 +209,18 @@ These facts come from the test deploy of 2026-11-07. The tag rule below is in th
   The archive held 154 files (about 3 MB): `package.json`, `pnpm-lock.yaml`,
   `pnpm-workspace.yaml`, `turbo.json`, `.pnpmfile.cjs`, `.dockerignore`, `apps/storytime`,
   `packages/config`, and `packages/read-along`.
-- The service needs the environment variable
-  `STORYTIME_MEDIA_BASE=https://storage.googleapis.com/primary-app-storage/storytime-app`.
-  It was set on 2026-11-07.
-- The media of the new app sit under `gs://primary-app-storage/storytime-app/`. They have public
-  read until the login phase.
+- The service needs the environment variable `STORYTIME_MEDIA_BASE=gs://storytime-app-media`.
+  The signer (`apps/storytime/lib/media/sign.ts`) accepts only this `gs://` base of the private
+  bucket `storytime-app-media`: a `https://` base, or a base of any other bucket, makes the
+  signing throw. The old test deploy of 2026-11-07 used the public base
+  `https://storage.googleapis.com/primary-app-storage/storytime-app`; the signer of the current
+  app rejects that form.
+- The service needs the signer key pair `STORYTIME_STORAGE_ACCESS_KEY` and
+  `STORYTIME_STORAGE_SECRET_KEY` (`apps/storytime/lib/media/sign.ts`). Never write the values in
+  this runbook.
+- The media sit in the private bucket `gs://storytime-app-media/` with no public read. Every
+  media URL is a signed URL that the server builds after the session check, so a stranger never
+  gets a URL.
 - The ingress was `internal`: every public address answered 404. The ingress is now `all`.
   The rollback is `--ingress=internal`.
 - The traffic must not move to `storytime-app-00008-tmb` (the rejected build) while the ingress

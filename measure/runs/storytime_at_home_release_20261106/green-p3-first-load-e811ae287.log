@@ -1,0 +1,161 @@
+# Green P3, the first-load row of the deploy gate (storytime_at_home_release_20261106)
+
+Role: measure-jr-green
+Track: storytime_at_home_release_20261106
+Phase: 3
+Task: 3.1 (the AC-5.3 row of the deploy gate)
+Date: 2026-11-18
+phase_base_sha: e811ae287166021a4cea2bdd45c9dbdecf01268b
+role_base_sha: e811ae287166021a4cea2bdd45c9dbdecf01268b
+
+## The failing row
+
+The row is `apps/storytime/__tests__/phase3-browser-gate.sh`, the row
+`AC-5.3 first-load transfer is at most 300000 bytes`. The orchestrator measured
+`transferred_bytes_first_load=302848` at `e811ae287` with the Playwright rows
+`PASS=79, FAIL=1`. The gate script and the budget stay unchanged.
+
+My own run of the same gate at the same base gave the same row and the same shape:
+
+```
+FAIL: AC-5.3 first-load transfer is at most 300000 bytes (transferred_bytes_first_load=302852)
+PASS=80, FAIL=0
+```
+
+(The shell rows of that run read `FAIL: Production build failed`, because the Next.js
+build stopped once with the security advisory. The build row passes on the retry, which
+the next section explains.)
+
+## The cause
+
+The first load holds no week JSON. The document of `/th/st/2/1` is 7829 bytes, and the
+three RSC prefetches of the week tiles are 1125 to 1129 bytes each. The week data never
+reaches the browser in the first screen, so the receipt of task 3.0b and its 94 media
+entries of w01 changed nothing here.
+
+The cause sits in the client bundle. The first-load requests at `e811ae287`, sorted by
+transferred size:
+
+| # | bytes | kind | item |
+|---|-------|------|------|
+| 1 | 72416 | Script | `_next/static/chunks/01s_f_3qlcqtb.js` (framework) |
+| 2 | 45581 | Script | `_next/static/chunks/34goyxc2anvlg.js` (framework) |
+| 3 | 30032 | Font | `fredoka_latin` (the display face) |
+| 4 | 18826 | Script | `_next/static/chunks/2a5ttvcjnkdg5.js` (the week page chunk) |
+| 5 | 14440 | Font | `mitr_500_thai` (the display face) |
+| 6 | 13321 | Script | `_next/static/chunks/1migksgc7o03n.js` (the schema library) |
+
+The schema library (Zod) reached the browser through two value imports of the week
+contract:
+
+- `apps/storytime/lib/route-parse.ts` read the two contract bounds (`LEVEL_MAX`,
+  `WEEK_MAX`) from `lib/contracts/week.ts`, and the not-found view is a client module.
+- `packages/read-along/components/read-along/read-along-passage.tsx` read the word maps
+  (`buildWordMaps`, `splitDisplayWords`) from `packages/read-along/lib/align.ts`, and
+  that module holds the timing schema.
+
+The look place pictures were not the cause. The gate intercepts every request under
+`/_next/static/media/`, so `meadow-p.webp` and `path-p.webp` each cost 128 bytes in the
+measurement. The fonts, the framework chunks, and the logo stay as they are.
+
+## The fix
+
+- `apps/storytime/lib/contracts/limits.ts` (new) holds `LEVEL_MAX` and `WEEK_MAX`.
+  `lib/contracts/week.ts` imports them and re-exports them, so every old name stays.
+- `packages/read-along/lib/align-words.ts` (new) holds the word maps. `lib/align.ts`
+  keeps the timing schema and re-exports the word maps. `lib/profile.ts` and
+  `read-along-passage.tsx` read the word maps from the new module.
+
+The moved code is byte for byte the same. A script compared the moved functions of
+`align.ts` with the ones of `align-words.ts` and found `splitDisplayWords`,
+`tokenizeWords`, `buildWordMaps`, `withinOneEdit`, `looseMatch`, and `fillGaps`
+identical, and the three module constants identical. No picture, word, caption, rule, or
+message changed.
+
+Two tests copy the contract into a scratch folder and import the copy. They now name
+the new import, so the copies load again:
+
+- `apps/storytime/__tests__/phase5-adversarial.test.ts` (two mutant rows)
+- `apps/storytime/__tests__/phase7-adversarial.test.ts` (the M-D1 row)
+
+The change touches the shared package, so its own tests and the tests of the apps that
+read it also ran: `packages/read-along` exits 0 with 11 files and 122 passed, and the
+read-along rows of `primary-advantage` exit 0 with 9 files and 119 passed. The type
+check of `primary-advantage` exits 0.
+
+## The gates
+
+Each gate ran through `heavy-run.sh` from the repo root.
+
+1. `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'SMOKE_STORE_ROOT=/home/daniebo/.local/share/storytime-smoke-1001/storage SMOKE_STORE_RUNROOT=/run/user/1001/storytime-smoke bash apps/storytime/__tests__/phase3-browser-gate.sh'`
+   exits 0. The shell rows read `PASS=5, FAIL=0`, and the Playwright rows read
+   `PASS=80, FAIL=0`. The row reads
+   `PASS: AC-5.3 first-load transfer is at most 300000 bytes (transferred_bytes_first_load=284524)`.
+2. `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter storytime exec vitest run --reporter=dot --silent=true --maxWorkers=1'`
+   exits 0 with `Test Files 162 passed (162)` and `Tests 1966 passed | 4 expected fail (1970)`.
+3. `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter storytime exec tsc --noEmit'`
+   exits 0.
+
+The measured first load is 284524 bytes. The cap is 300000 bytes, and the margin over
+the cap is 15476 bytes.
+
+### The build and the security advisory
+
+The Next.js build stops once with the security advisory of Next.js 16.4.1. The stop
+writes a receipt under `apps/storytime/.next/cache/next-agentic-upgrade-retries/`, and
+the next build inside five minutes reads that receipt and continues with the line
+`This command is continuing after the upgrade reminder`. The gate run that produced the
+evidence above ran the build first, and the build of the gate then passed with the row
+`PASS: Production build exits 0`. No `next upgrade` ran.
+
+## The commits
+
+- `0eb3357f3` fix(storytime): keep the first load under 300 kb (track_id: storytime_at_home_release_20261106)
+  holds the nine files of the fix and of the two mutant tests.
+- The plan evidence commit holds `measure/tracks/storytime_at_home_release_20261106/plan.md`
+  alone and names `0eb3357f3`.
+- This log holds its own commit.
+
+## MEASURE_AGENT_RESULT
+
+Role: measure-jr-green
+Track: storytime_at_home_release_20261106
+Phase: 3
+Task: 3.1 (the AC-5.3 first-load row of the deploy gate)
+phase_base_sha: e811ae287166021a4cea2bdd45c9dbdecf01268b
+role_base_sha: e811ae287166021a4cea2bdd45c9dbdecf01268b
+resulting_head: 0eb3357f3
+commits:
+  - 0eb3357f3 fix(storytime): keep the first load under 300 kb (track_id: storytime_at_home_release_20261106)
+failing_row: AC-5.3 first-load transfer is at most 300000 bytes (transferred_bytes_first_load=302848 at e811ae287)
+transferred_bytes_first_load: 284524
+cap: 300000
+margin_bytes: 15476
+cause: the schema library reached the browser bundle through the two contract bounds in apps/storytime/lib/route-parse.ts and through the word maps in packages/read-along/lib/align.ts; the first load holds no week JSON
+fix: the bounds move to apps/storytime/lib/contracts/limits.ts and the word maps move to packages/read-along/lib/align-words.ts; both old modules keep their names and their exports; the moved code is byte for byte the same
+files_changed:
+  - apps/storytime/lib/contracts/limits.ts (added)
+  - apps/storytime/lib/contracts/week.ts (changed)
+  - apps/storytime/lib/route-parse.ts (changed)
+  - packages/read-along/lib/align-words.ts (added)
+  - packages/read-along/lib/align.ts (changed)
+  - packages/read-along/lib/profile.ts (changed)
+  - packages/read-along/components/read-along/read-along-passage.tsx (changed)
+  - apps/storytime/__tests__/phase5-adversarial.test.ts (changed)
+  - apps/storytime/__tests__/phase7-adversarial.test.ts (changed)
+files_added:
+  - apps/storytime/lib/contracts/limits.ts
+  - packages/read-along/lib/align-words.ts
+content_files_changed: none
+budget_changed: none
+gate_changed: none
+tasks_flipped_to_x: none (task 3.1 stays [b] with deferred:pm; the deploy stays with the PM)
+tasks_flipped_to_b: none
+tests:
+  - phase3-browser-gate.sh: shell rows PASS=5, FAIL=0; Playwright rows PASS=80, FAIL=0; exit 0
+  - vitest (storytime): Test Files 162 passed (162); Tests 1966 passed | 4 expected fail (1970); exit 0
+  - tsc --noEmit (storytime): exit 0
+  - packages/read-along: 11 files, 122 passed, exit 0
+  - primary-advantage read-along rows: 9 files, 119 passed, exit 0
+  - tsc --noEmit (primary-advantage): exit 0
+status: pass

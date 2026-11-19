@@ -1,0 +1,95 @@
+MEASURE GREEN · www_tutor_calculator_20261117 · Phase 2 · task 2.3
+Track: measure/tracks/www_tutor_calculator_20261117
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha:  9314f07decb27045ddce7d4f87d105d458b9b290
+Route: opencode-go/deepseek-v4.1-flash (Red family excluded: opencode-go/hy4-flash-free)
+
+RED (test extended first)
+Command: pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --silent=true
+Exit: 1
+Evidence:
+  Test Files  1 failed (1)
+  Tests  4 failed | 27 passed (31)
+Failures (block 11):
+  - holds the new en copy at both paths
+  - holds the new th copy at both paths
+  - keeps the zh values equal to the en values (D-10)
+  - finds neither old en line in any dictionary
+Cause: both paths still held the old en and th copy, and zh still held the old Chinese lines.
+
+IMPLEMENTATION COMMIT
+0a7ff97e596643212b52c3b9bf8fb7703e0628b2
+feat(www): update the two tutor income lines (track_id: www_tutor_calculator_20261117)
+Files: apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts
+       apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts
+
+GREEN
+Command: bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --silent=true'
+Exit: 0
+Evidence:
+  Test Files  1 passed (1)
+  Tests  31 passed (31)
+  Duration  699ms
+
+GREP
+Command: grep -n "We do not publish income figures" apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts
+Output: (none)
+Exit: 1
+
+TYPES
+Command: pnpm turbo run check-types --filter=www-reading-advantage
+Exit: 0
+Evidence: Tasks: 1 successful, 1 total
+
+PLAN EVIDENCE COMMIT
+9befd67c3ab8df69dbed087b24a882f6189b444c
+docs(measure): record green 2.3 locale evidence (track_id: www_tutor_calculator_20261117)
+
+TASK MARKERS
+[x] 2.3 Done: 0a7ff97e596643212b52c3b9bf8fb7703e0628b2
+No [b] marker added in this task.
+
+FILES ADDED
+None in the repository. Two run files under measure/runs (gitignored):
+  measure/runs/www_tutor_calculator_20261117/green-2.3-0a7ff97e5.json
+  measure/runs/www_tutor_calculator_20261117/green-2.3-0a7ff97e5.log
+
+FINAL GREEN HEAD
+9befd67c3ab8df69dbed087b24a882f6189b444c
+git status --short: clean
+
+MEASURE_AGENT_RESULT
+status: pass
+verdict: pass
+track: www_tutor_calculator_20261117
+phase: 2
+task: 2.3
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha: 9314f07decb27045ddce7d4f87d105d458b9b290
+implementation_commit: 0a7ff97e596643212b52c3b9bf8fb7703e0628b2
+plan_evidence_commit: 9befd67c3ab8df69dbed087b24a882f6189b444c
+final_head: 9befd67c3ab8df69dbed087b24a882f6189b444c
+tasks_done:
+  - 2.3
+gates:
+  red: fail (4 failed | 27 passed of 31)
+  green: pass (31 passed)
+  grep_old_line: no hit (exit 1)
+  types: pass (exit 0)
+files_changed:
+  - apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts
+  - apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts
+  - measure/tracks/www_tutor_calculator_20261117/plan.md
+handoff: |
+  Task 2.3 is complete. Two live lines changed in en, th, and zh as spec 6.4 prints them.
+  The zh values take the new English lines under D-10.
+  Next: task 2.4 runs the Phase 2 gates.
+  Reviewer scope: two changed string leaves in each of three dictionaries, the new block 11
+  in the locale test, and the plan evidence. The calculator block, the screens block, the
+  page, the component, and the module are untouched.
+  answer to the earlier leaf-count question: nine new screens leaf strings is the contract;
+  no change was made to that block.
+questions: []
+END_MEASURE_AGENT_RESULT

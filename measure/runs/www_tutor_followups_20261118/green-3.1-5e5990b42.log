@@ -1,0 +1,20 @@
+# Full www suite — task 3.1
+
+Track: www_tutor_followups_20261118
+Role: jr-green
+Head: 5e5990b428e69ef4bb2d5523ac64c1ba257085ca
+Date: 2026-11-18
+Command: bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1'
+
+Result: exit 0 on the first run. No exit 143 OOM happened, so no re-run was needed.
+
+Counts: Test Files 77 passed (77). Tests 2843 passed (2843).
+
+The run includes the two test files that Red repaired at 5e5990b42:
+products-page-pictures.red.test.tsx and tutor-commission-calculator.legs.adversarial.test.tsx.
+
+## Raw summary
+ Test Files  77 passed (77)
+      Tests  2843 passed (2843)
+   Start at  08:17:25
+   Duration  77.88s (transform 1.25s, setup 3.13s, import 7.18s, tests 30.43s, environment 30.16s)

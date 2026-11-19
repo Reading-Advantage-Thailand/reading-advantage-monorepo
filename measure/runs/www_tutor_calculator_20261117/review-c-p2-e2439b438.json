@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-c",
+  "track": "www_tutor_calculator_20261117",
+  "phase": 2,
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/mimo-v2.6-flash",
+  "phase_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "role_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "audited_head_sha": "e2439b438511046b58ec8f3e734e655706c2ab8c",
+  "audited_head_is_head": true,
+  "head_note": "git rev-parse HEAD returned e2439b438511046b58ec8f3e734e655706c2ab8c and git status --porcelain was empty at audit time. This is the first Review C round for Phase 2, so role_base_sha equals the phase base and the audited range covers the whole Phase 2 diff.",
+  "diff_range": "d279b870341c067c33fc884ae8863b5428487c17..e2439b438511046b58ec8f3e734e655706c2ab8c",
+  "contract_applicability": "applicable: strategy-6c47d7fe sets review_c apply for Phase 2, and the phase diff changes the tutor-advantage route page, its three locale dictionaries, and the picture manifest, so the route, copy, image, layout, and accessibility contracts all move.",
+  "verdict": "PASS",
+  "retry_recommendation": "no_retry",
+  "checks": [
+    {
+      "item": "Route and page contract",
+      "status": "pass",
+      "evidence": "git diff --name-status over the range lists 11 files; the only route page is apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx. Section order in that file is tutorRole 317, tutor-screens 357, tutor-calculator 382, tutor-commitments 393, faq 421. data-testid=\"tutor-screens\" occurs once in src, the new section adds no id, so no duplicate id appears. routing.locales in src/i18n/routing.ts is [\"en\",\"th\",\"zh\"] and the one [locale] page serves all three. No middleware, config, or other page changed in the range."
+    },
+    {
+      "item": "Copy contract",
+      "status": "pass",
+      "evidence": "page.tsx:360-362 reads screens.eyebrow, screens.heading, and screens.description through getScopedI18n, and page.tsx:121-122 reads screens.items.<i>.caption and alt by index; the section JSX holds no rendered literal, only a comment at 356 and a code comment at 114. The locale test describes 9 and 10 pin all nine screens leaves in en and th, assert the same key paths in en, th, and zh, and assert zh equals en. The th dictionary carries the Thai values at locales/pages/products/tutor-advantage.ts:485-495. My rerun of that test passes."
+    },
+    {
+      "item": "Image contract",
+      "status": "pass",
+      "evidence": "product-pictures.ts:64,70,76 hold the three tutorScreens paths under /images/products/tutor-advantage/. file reports 520x1125, 520x1125, and 1440x900 for the three webp files, which match the manifest width and height. page.tsx:370 passes the slot alt into ProductPicture and page.tsx:371-373 places the figcaption under the image inside the same figure. grep for tutorScreens and for the three file paths returns only product-pictures.ts, page.tsx, and the two tests, so no other page consumes them. Card width against source width is recorded as N1."
+    },
+    {
+      "item": "Gallery layout contract",
+      "status": "pass",
+      "evidence": "page.tsx:366-368 use grid grid-cols-1 gap-8 md:grid-cols-2 with md:col-span-2 on the wide card, so one column at 390 px, two half-width phone cards at md, and the wide card spans the row. Lines 357-379 use only SectionHeader and ProductPicture plus native ul, li, figure, and figcaption, hold no bracketed arbitrary Tailwind value, and use theme colors bg-site-page, border-site-border, and text-site-body plus accent text-emerald-800, the same accent as the sections at 206, 230, 334, 398, and 426. No new component: ProductPicture exists at the phase base."
+    },
+    {
+      "item": "Live-copy contract",
+      "status": "pass",
+      "evidence": "The locale diff replaces exactly tutorRole.points[3] and faq.items[5].answer in en, th, and zh and adds the screens block; every other line is context. The new values match spec 6.4 word for word, and zh takes the new English lines. grep for the old en line, the old th lines, and the old zh line exits 1 with no match. The locale test describe 11 pins both paths in en and th, pins zh equal to en, and scans for both old en lines with positive controls. My rerun passes."
+    },
+    {
+      "item": "Accessibility wiring",
+      "status": "pass",
+      "evidence": "SectionHeader renders an eyebrow p and an h2 (section-header.tsx:22-23), and every neighbor section on this page also uses h2, so the new section adds no level skip and no heading below h2. The three alt attributes are present and describe the screen; slot 2 alt is the spec D-15a draft at locales/pages/products/tutor-advantage.ts:163. The new section adds no id, and the ids become-a-tutor (page.tsx:317) and commission-calculator (page.tsx:383) stay unique. The hero fragment link at page.tsx:166 resolves to 317, page.test.tsx:50 asserts commission-calculator, header.tsx holds no fragment link, and the route links such as pricing-table.tsx:146 still resolve because no route file changed."
+    },
+    {
+      "item": "Evidence",
+      "status": "pass",
+      "evidence": "Plan task 2.4 records the five gate exit codes as 0, 0, 0, 0, 0, the build exit 0 on its second attempt, and the app selector output [\"www-reading-advantage\"]. The run artifacts green-2.1-320fc2fa1, green-2.2-e583e21b3, green-2.3-0a7ff97e5, and green-2.4-9befd67c3 hold the red exit 1 and green exit 0 commands for tasks 2.1 to 2.4. I started no server, ran no build, and ran no build-graph scan."
+    },
+    {
+      "item": "Test rerun",
+      "status": "pass",
+      "evidence": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/__tests__/tutor-screens.test.ts src/__tests__/www-tutor-calculator.locale.test.ts \"src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx\" src/__tests__/products-page-pictures.red.test.tsx --reporter=dot --silent=true' exits 0: Test Files 4 passed (4), Tests 65 passed (65), which is tutor-screens 7, locale 31, page 8, and inherited pictures 19."
+    }
+  ],
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "N1",
+      "severity": "info",
+      "file": "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx:358 via apps/www-reading-advantage/src/app/[locale]/globals.css:167",
+      "defect": "The delivered sizes are correct, but a phone card still renders wider than its 520 px source at wide viewports. The section wrapper at page.tsx:358 carries container max-w-6xl px-4 sm:px-6, yet the unlayered .container rule at globals.css:167-169 sets max-width 80rem and padding-inline 1rem and sits outside the @layer utilities block (built CSS 3y0lyxyiqzjmp.css: layer utilities spans bytes 13037-155295, custom .container starts at 157091), so it wins over max-w-6xl and sm:px-6. The phone image then measures 576 CSS px at a 1280 px viewport against a 520 px source, and it first exceeds the source at 1169 px. ProductPicture's shared sizes hint (min-width: 1024px) 25vw, 100vw declares 320 px at 1280, so the browser fetches a smaller variant than the slot. The wide card stays at 1216 px under its 1440 px source and never upscales. The strategy records this as residual risk 3, and plan task 2.5 checks that the three screens are sharp at 1280 px.",
+      "smallest_fix": "No code change required this phase: task 2.5 judges sharpness at 1280 px. If Daniel flags softness, pass a gallery-specific sizes value or cap the phone card width with an existing shared token; do not add an arbitrary Tailwind value.",
+      "note": "Not a manifest defect and not a Phase 2 regression: the container rule is app-wide and predates this track. test-strategy.md section 8.1 item 3 records the same fact and states that Daniel accepts the softness, so no action opens here."
+    },
+    {
+      "id": "N2",
+      "severity": "info",
+      "file": "measure/tracks/www_tutor_calculator_20261117/test-strategy.md:39 and test-strategy.md:56",
+      "defect": "The test strategy promises a page-test case with locale \"zh\" that asserts the English placeholder inside tutor-calculator, and it lists that proof under the page layer. The delivered page test holds eight cases and every one renders locale \"en\"; the i18n mock at src/test/setup.ts:45-52 returns key paths and ignores the locale, so no page case can assert the zh placeholder. The zh identity is proven only at dictionary level by the locale test.",
+      "smallest_fix": "The orchestrator either drops the zh-page-case sentence from test-strategy.md sections 2.1 and 2.3, or adds the case after the mock becomes locale-aware. No product code changes.",
+      "note": "The claim itself holds: zh equals en for calculator, screens, and both live lines, which the locale test pins. This is a strategy-to-test wording gap, not a render defect."
+    }
+  ],
+  "files_audited": [
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx",
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+    "apps/www-reading-advantage/src/lib/product-pictures.ts",
+    "apps/www-reading-advantage/src/lib/__tests__/tutor-screens.test.ts",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "apps/www-reading-advantage/src/components/products/product-picture.tsx",
+    "apps/www-reading-advantage/src/components/marketing/section-header.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/globals.css",
+    "apps/www-reading-advantage/.next/static/chunks/3y0lyxyiqzjmp.css",
+    "apps/www-reading-advantage/public/images/products/tutor-advantage/student-mobile/070-screen.webp",
+    "apps/www-reading-advantage/public/images/products/tutor-advantage/student-mobile/002-screen.webp",
+    "apps/www-reading-advantage/public/images/products/tutor-advantage/tutor-desktop/062-screen.webp",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md",
+    "measure/tracks/www_tutor_calculator_20261117/spec.md",
+    "measure/tracks/www_tutor_calculator_20261117/test-strategy.md",
+    "measure/runs/www_tutor_calculator_20261117/green-2.1-320fc2fa1.json",
+    "measure/runs/www_tutor_calculator_20261117/green-2.2-e583e21b3.json",
+    "measure/runs/www_tutor_calculator_20261117/green-2.3-0a7ff97e5.json",
+    "measure/runs/www_tutor_calculator_20261117/green-2.4-9befd67c3.json"
+  ],
+  "tests_rerun_by_review": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/__tests__/tutor-screens.test.ts src/__tests__/www-tutor-calculator.locale.test.ts \"src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx\" src/__tests__/products-page-pictures.red.test.tsx --reporter=dot --silent=true' exits 0: Test Files 4 passed (4), Tests 65 passed (65) (tutor-screens 7, locale 31, page 8, inherited pictures 19).",
+  "note": "Review C Phase 2 audit of the gallery wiring and the user-flow contract. The route order, the locale copy path, the manifest and alt wiring, the layout classes, the two live lines, and the heading and anchor wiring all hold at e2439b43. Two info notes carry no gate impact: N1 is the phone-card upscale at wide viewports, which test-strategy.md:259 records as owner-accepted; N2 is the zh page case that test-strategy.md promises and no page test holds. No CONTEST items arrived with this brief, so nothing was kept or withdrawn. Payout arithmetic and blur evidence belong to Review A and were not audited, and no aesthetics were judged.",
+  "handoff": "none",
+  "anti_pattern_checks": [],
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "page.tsx:317-421 renders the five sections in the spec order and the locale pins match spec 6.3 and 6.4, but a phone card measures 576 CSS px against a 520 px source at 1280 px (N1)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "Red and green pairs with positive-control probes cover order, copy, and manifest (green-2.2 red_exit_code 1, green-2.3 red_exit_code 1), while the gallery widths and sharpness have no test and the zh page case promised at test-strategy.md:56 is absent (N2)."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --name-status over d279b870..e2439b4 lists 11 files: three webp, one script, five track source or test files, and plan.md, with no other route or page touched."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every claim cites a file:line, a git command result, a built-CSS byte offset, or my heavy-run result of 4 files and 65 tests passed."
+    }
+  ]
+}

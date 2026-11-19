@@ -1,0 +1,52 @@
+# Phase acceptance P1-P2 final log
+
+Track: www_tutor_followups_20261118. Phases 1 and 2 combined per test-strategy.md.
+Phase base: 80ac554b426551e5749f0e2cd500cbbf0eb93530.
+Audited HEAD: 3eb492a5c7616140ab1692308fe3b74ae8982399 (current; git status clean).
+
+## Gate inventory
+
+Present: Review A PASS (review-a-e97e1d4.json, audited e97e1d480), Review C PASS
+(review-c-e97e1d4.json, audited e97e1d480), adversarial PASS
+(adversarial-e97e1d4.json, audited e97e1d480), UX browser review PASS
+(ux-browser-review-e97e1d4.json, audited e97e1d480, p1-captures with 12 crops,
+3 full pages, and checks.json).
+Missing: Review B. No review-b file exists in the run folder.
+
+Test-only advance: e97e1d480..3eb492a5c touches only three test files
+(www-tutor-followups.adversarial.test.ts, page.followups.adversarial.test.tsx,
+tutor-commission.followups.adversarial.test.ts). Prior results still apply.
+
+## Work verified
+
+P1 tasks 1.0-1.6 are [x] with SHAs; P2 tasks 2.1-2.6 are [x] with SHAs; task
+3.1 is [x] at 5e5990b42. Tasks 1.7, 3.3, 3.4 are [ ]; task 3.2 is [b] PM page
+check. Phase 3 stays with the orchestrator.
+
+Implementation: product-pictures.ts tutorHero and tutorTeachClass hold true
+1920x1080 sizes; page.tsx hero and block wire the new files with priority and
+aspect-video; old hero jpg is absent; tutor-commission.ts gains
+needsOwnStudents; locale en/th/zh holds the four copy items; Thai Reedy line
+matches spec 5.4.
+
+Anti-patterns: A3 labeled parse holds; A4 no vacuous pass; A5 no false claim;
+A6 no registry overstatement for this track; A7 narrow downline scan exits 1
+with no output.
+
+## Commands run
+
+All heavy commands ran through heavy-run.sh with no redirection. Light reads
+used rg and git directly.
+
+MEASURE_AGENT_RESULT
+role: phase-acceptance
+status: blocked
+track: www_tutor_followups_20261118
+phase: Phase 1 + Phase 2 combined (per test-strategy.md)
+commits: none
+tests_run: heavy-run vitest 3 followup adversarial files exit 0 (3 files passed, 13 tests passed); heavy-run vitest page.images plus calculator locale exit 0 (2 files passed, 54 tests passed); heavy-run tsc --noEmit -p . exit 0; rg A5 plan scan no hit; rg downline scan exit 1 no output
+files_changed: measure/runs/www_tutor_followups_20261118/phase-acceptance-3eb492a.json; measure/runs/www_tutor_followups_20261118/phase-acceptance-3eb492a.log
+plan_updates: none (gate-only role)
+known_failures: Review B has not run
+handoff: Question: Who runs Review B and on which route? Options: (a) the PM names an allowed Review B route and the orchestrator runs Review B on HEAD 3eb492a5c, then reruns phase acceptance; (b) the PM waives Review B in writing with a reason, then phase acceptance reruns. Default: proceed with (a). Phase-3 tasks 1.7 captures handoff, 3.2 PM page check, 3.3 push, and 3.4 live checks stay open and belong to the orchestrator.
+END_MEASURE_AGENT_RESULT

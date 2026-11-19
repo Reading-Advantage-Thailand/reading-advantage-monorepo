@@ -162,6 +162,18 @@ function approvedClone(source: StorytimeWeek = week): StorytimeWeek {
 }
 
 /**
+ * Deep-clones the shipped week and sets its loops part to draft (the approved pin ships an
+ * approved part, so the draft week is a clone), then checks the contract.
+ * @returns The draft clone.
+ */
+function draftClone(): StorytimeWeek {
+  const copy = structuredClone(week);
+  copy.approval = { ...(copy.approval ?? {}), loops: { status: "draft" } };
+  expectWeek(copy, "the draft clone");
+  return copy;
+}
+
+/**
  * Builds the signed URL map of every media path in a week.
  * @param source The week.
  * @returns A signed URL for each string that names a media file.
@@ -326,7 +338,7 @@ describe("Phase 4 adversarial: the loops of task 4.6", () => {
     delete noPart.approval?.loops;
     expectWeek(noPart, "the clone with no loops part");
     for (const [label, source] of [
-      ["draft", week],
+      ["draft", draftClone()],
       ["absent", noPart],
     ] as const) {
       const facts = walkWeek(source);
@@ -389,7 +401,7 @@ describe("Phase 4 adversarial: the loops of task 4.6", () => {
     const a5 = stepOf(week, 1, "A5");
     expect(a5.loopMinutes, "A5 of the shipped week must hold no loopMinutes").toBeUndefined();
     expect(a5.minutes, "A5 must hold minutes above 0").toBeGreaterThan(0);
-    const draft = structuredClone(week);
+    const draft = draftClone();
     stepOf(draft, 1, "A5").loopMinutes = 0;
     expectWeek(draft, "the draft clone with loopMinutes 0");
     const approved = approvedClone(draft);
@@ -427,7 +439,7 @@ describe("Phase 4 adversarial: the loops of task 4.6", () => {
     scriptOf(copy, 2).recall!.items.pop();
     const parsed = weekSchema.safeParse(copy);
     expect(parsed.success, "an approved week with four recall cards must fail the contract").toBe(false);
-    const draft = structuredClone(week);
+    const draft = draftClone();
     scriptOf(draft, 2).recall!.items.pop();
     expect(weekSchema.safeParse(draft).success, "the same change on a draft week must pass (control)").toBe(true);
   });
@@ -443,7 +455,7 @@ describe("Phase 4 adversarial: the share moment of task 4.6a", () => {
 
     const noPart = structuredClone(week);
     delete noPart.approval?.loops;
-    for (const [label, source] of [["draft", week], ["absent", noPart]] as const) {
+    for (const [label, source] of [["draft", draftClone()], ["absent", noPart]] as const) {
       const facts = walkWeek(source);
       const shown = facts.reduce((sum, entry) => sum + entry.shares, 0);
       expect(facts.length, `screens=${facts.length}`).toBeGreaterThan(20);

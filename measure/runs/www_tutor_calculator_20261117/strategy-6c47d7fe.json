@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "role": "measure-strategy",
+  "track": "www_tutor_calculator_20261117",
+  "status": "pass",
+  "role_base_sha": "6c47d7fe49398ac91b3703e47b15249d226294cf",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/deepseek-v4.1-flash",
+  "summary": "Both phases are planned with a targeted Red command, a Green gate, and a closeout gate per plan task. Phase 1 is risk high, because the money rule of D-3 is two truncation steps over a BigInt product and a float slip is silent. Phase 2 is risk medium, because its code is a manifest entry and a section, and its highest-severity risk (a used screen shows the development class name) is human-gated by D-14. The strategy pins the six rates as strings from (rate * 100).toFixed(4), the three presets to the satang, the two conservation equalities in integer satang, and a 1e9-volume satang pin that separates the BigInt path (71,422,027,600) from the float path (71,422,027,583). Review B does not apply as a separate role: the surface is a static public page with client-side arithmetic, no auth, no persistence, and no server input; six security probes fold into Review A. Review C applies to both phases. Four questions go to the PM, and the manifest shape carries a default.",
+  "phases": [
+    {
+      "id": "1",
+      "name": "The commission calculator",
+      "risk": "high",
+      "risk_reason": "Money determinism under D-3, the conservation identity, and the zero floor are silent-failure surfaces; the calculator renders on a live public page after the single Phase 2 push.",
+      "red_command": "pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts src/__tests__/www-tutor-calculator.locale.test.ts src/components/marketing/tutor-commission-calculator.test.tsx \"src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx\" --silent=true",
+      "green_gate": "Each task's targeted vitest command exits 0, and the inherited src/__tests__/products-page-pictures.red.test.tsx exits 0.",
+      "closeout_gate": "pnpm --filter www-reading-advantage test --reporter=dot --silent=true; pnpm turbo run check-types --filter=www-reading-advantage; pnpm --filter www-reading-advantage lint; git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json; pnpm --filter www-reading-advantage build (all through heavy-run.sh)",
+      "review_a": "apply",
+      "review_b": "probes folded into Review A",
+      "review_c": "apply",
+      "adversarial": "apply",
+      "browser_review": "apply",
+      "anti_patterns": ["A3", "A4", "A5", "A6", "A7", "A10", "A15"]
+    },
+    {
+      "id": "2",
+      "name": "The screens gallery and the live copy",
+      "risk": "medium",
+      "risk_reason": "Code risk is a manifest entry, a section, and two strings. The high-severity part (a screen shows the development class name) has no automated falsifier by D-14 and is carried by the per-file blur review and the PM page-check. The two changed live lines are the public-claim risk.",
+      "red_command": "pnpm --filter www-reading-advantage exec vitest run src/lib/__tests__/tutor-screens.test.ts src/__tests__/www-tutor-calculator.locale.test.ts \"src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx\" --silent=true",
+      "green_gate": "The same targeted set exits 0, and the inherited picture test exits 0 over the three new manifest values.",
+      "closeout_gate": "The five Phase 1 gates again, then node scripts/ci/affected-apps.mjs --base ff028a7105ccd5de0c3e9534dd8536b7667e22de --head <full HEAD> must print [\"www-reading-advantage\"].",
+      "review_a": "apply",
+      "review_b": "probes folded into Review A",
+      "review_c": "apply",
+      "adversarial": "apply",
+      "browser_review": "apply",
+      "anti_patterns": ["A3", "A4", "A5", "A6", "A7", "A9", "A10", "A12", "A13", "A14", "A16"]
+    }
+  ],
+  "gates": {
+    "install_pre_gate": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm install --frozen-lockfile', then git diff --exit-code pnpm-lock.yaml. The worktree has no node_modules, so the first filtered vitest exits EACCES without this step.",
+    "targeted_phase_1": ["src/lib/tutor-commission.test.ts", "src/__tests__/www-tutor-calculator.locale.test.ts", "src/components/marketing/tutor-commission-calculator.test.tsx", "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx"],
+    "targeted_phase_2": ["src/lib/__tests__/tutor-screens.test.ts", "src/__tests__/www-tutor-calculator.locale.test.ts", "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx"],
+    "selector": "node scripts/ci/affected-apps.mjs --base ff028a7105ccd5de0c3e9534dd8536b7667e22de --head <40-character HEAD>. The script exits 2 unless both ids are 40 characters; a 9-character base and a measure-only range do not produce evidence.",
+    "aggregate_suite": "pnpm --filter www-reading-advantage test runs legacy .red.test.ts files that are green at the base. The track adds no always-red file, so the gate must exit 0. A baseline run at phase_base_sha records test_files and tests as labeled integers and the failing file names.",
+    "no_deploy": "No deploy command and no Cloud Run change. One www-only push after the PM page-check, standing approval read per D-13 and open question 5."
+  },
+  "money_facts_measured": {
+    "rates_four_decimals": ["40.5000", "42.5000", "45.0000", "50.0000", "55.6065", "60.6315"],
+    "preset_1_satang": {"gross": 552000, "leg_payouts": 0, "payout": 552000, "tax": 16560, "net": 535440},
+    "preset_2_satang": {"gross": 1265569, "leg_payouts": 801000, "payout": 464569, "tax": 13937, "net": 450632},
+    "preset_3_satang": {"gross": 1870944, "leg_payouts": 1201500, "payout": 669444, "tax": 20083, "net": 649361},
+    "large_volume_1e9": {"rate_percent": "71.422028", "bigint_satang": 71422027600, "float_satang": 71422027583, "gap_satang": 17},
+    "pinning_method": "(commissionRate(V) * 100).toFixed(4) compared as a string; never toBeCloseTo.",
+    "rejected_float_preset_2": {"gross": 12655.70, "payout": 4645.70, "net": 4506.33}
+  },
+  "review_gates": {
+    "review_a": {"applies": true, "reason": "P1 carries the money algorithm, the BigInt truncation, and the copy fidelity; P2 carries the manifest shape, the asset paths, the DOM order, and the absence of the old live lines."},
+    "review_b": {"applies": false, "folded_probes": 6, "reason": "Static public page, client-side arithmetic over local state, no auth, no session, no persistence, no server input, no new dependency, no external fetch. Probes: no network call, no dangerouslySetInnerHTML, no dependency or lockfile change, the only inline style is a numeric CSS custom property, the push is one app, nothing is stored."},
+    "review_c": {"applies": true, "reason": "New public contract: calculator.* and screens.* key paths, the tutorScreens export, the two data-testids, the DOM order, the accessibility states, and the two live lines."},
+    "adversarial": {"applies": true, "mutants": 18, "surviving_mutant_is_finding": true},
+    "browser_review": {"applies": true, "viewports": [390, 768, 980, 1280], "locales": ["en", "th", "zh"]}
+  },
+  "human_checks": [
+    {"check": "Thai lines on the built page", "owner": "Daniel", "evidence": "PM page-check report, task 2.5"},
+    {"check": "Page-check at 390, 980, 1280 px in three locales", "owner": "PM", "evidence": "~/Desktop/handoff/page-check/<stamp>/"},
+    {"check": "Six screenshot use rules, one line per used file", "owner": "Green role of 2.1, confirmed by the PM", "evidence": "One line per file plus one full-size look per saved copy"},
+    {"check": "Blur rectangles per file", "owner": "Green role of 2.1", "evidence": "070 holds Reading 3.1 in four places, 062 in four places, 002 none; blur_rectangles=0 for 002"},
+    {"check": "Push word, because the push starts the CD deploy", "owner": "Daniel with the PM", "evidence": "Task 2.6 note"}
+  ],
+  "dismissed_nits": [
+    "Spec-review round 2 F7: student-mobile/002-screen.png shows the spec's quote (ขั้นที่ 8/18). No build effect; recorded so no role reopens it."
+  ],
+  "architecture_guardrails": [
+    "productPictures is as const satisfies Record<string, ProductPictureFile>, and products-page-pictures.red.test.tsx:59 stats every value, so the tutor screens are a sibling export, not a nested entry.",
+    "The calculator is a client component with server props (D-12): no next-intl or @/locales import inside it, asserted over the source file.",
+    "One inline style, a CSS custom property for the run-time bar width, is the only style the component may hold.",
+    "The commitments section has no testid today; task 1.7 adds data-testid=\"tutor-commitments\" as the order anchor.",
+    "No new dependency and no pnpm-lock.yaml change; the shadcn ratchet stays at lintWarnings 241 and copies 36."
+  ],
+  "residual_risks": [
+    "A later translator edit breaks the zh-equals-en identity; only a later test run catches it.",
+    "The shared CD pipeline can fail for reasons outside this range.",
+    "520 px phone sources are upscaled at 1280 px; no test asserts sharpness.",
+    "The decorative rate curve's shape is not asserted; only the text figures are.",
+    "The module is not compared to finance-mlm-service; the pins come from the spec.",
+    "The no-JavaScript state is not asserted.",
+    "graph.db freshness depends on the one checkpoint command."
+  ],
+  "phase_base_sha": {
+    "embedded": null,
+    "capture_point_phase_1": "git rev-parse HEAD immediately after the commit of this strategy and its two run files, before the first Red role writes a test file.",
+    "capture_point_phase_2": "git rev-parse HEAD after the Phase 1 checkpoint commit (task 1.9) and before task 2.1.",
+    "note": "6c47d7fe49398ac91b3703e47b15249d226294cf is the role base and is an ancestor of the strategy commit, so it is not a valid phase base."
+  },
+  "open_questions": [
+    {"id": "Q1", "question": "Spec 6.2 puts the manifest entries into productPictures. productPictures is as const satisfies Record<string, ProductPictureFile>, and the inherited picture test stats every value, so a nested tutorScreens entry breaks the type and throws. Sibling export, or another file?", "default": "A sibling export const tutorScreens in src/lib/product-pictures.ts, same entry shape, slot order, portrait false."},
+    {"id": "Q2", "question": "May task 1.7 add data-testid=\"tutor-commitments\" to the existing commitments section as the order anchor?", "default": "Yes, testid only, no visual change."},
+    {"id": "Q3", "question": "Are the D-5 price reset and the D-7 clear assertions of task 1.5 required? They have no acceptance criterion.", "default": "Keep both; they are the only falsifiers for D-5 and D-7."},
+    {"id": "Q4", "question": "Is the Phase 1 checkpoint commit the Phase 2 capture point, or does the install pre-gate move it?", "default": "Capture after the Phase 1 checkpoint commit and before task 2.1; the pre-gate does not move the base."}
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "changed_files": [
+    "measure/tracks/www_tutor_calculator_20261117/test-strategy.md",
+    "measure/runs/www_tutor_calculator_20261117/strategy-6c47d7fe.json",
+    "measure/runs/www_tutor_calculator_20261117/strategy-6c47d7fe.log"
+  ],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

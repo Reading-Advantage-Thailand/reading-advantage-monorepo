@@ -1,0 +1,94 @@
+Measure adversarial testing — Phase 2
+Role: measure-adversarial-testing
+Track: www_tutor_calculator_20261117
+Route: opencode-go/hy4-flash-free#high (allowed Go route; implementation author is opencode-go/deepseek-v4.1-flash, a different family)
+
+PROVENANCE
+- Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator (branch feat/a63-tutor-calculator)
+- pre-adversarial HEAD (clean): e2439b438511046b58ec8f3e734e655706c2ab8c
+- phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+- role_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+- audited_head_sha: e2439b438511046b58ec8f3e734e655706c2ab8c
+- Phase 2 diff under audit: d279b8703..e2439b438 (3 webp, blur script, manifest, page, locale, 2 tests, plan).
+- No product code, locale copy, page, CSS, script, or existing test was edited.
+
+1. CONTROLS ADDED (three NEW files, 15 cases)
+File: src/lib/__tests__/tutor-screens.adversarial.test.ts
+- ADV-M1 declared width/height equals the real webp VP8 pixel size, parsed from header bytes.
+- ADV-M2 no two tutorScreens slots share one src.
+- ADV-M3 every src stays under /images/products/tutor-advantage/ with no traversal and its file is at most 1 MB.
+- ADV-M4 slot order is studentHome, lessonPhases, classList and every portrait flag is false.
+- ADV-A1 every repository image file is webp by extension and RIFF/WEBP magic, non-zero bytes, no source PNG.
+File: src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx
+- ADV-G1 every rendered screen card has a non-empty alt.
+- ADV-G2 each card alt and figcaption match its own slot index with no cross-slot swap.
+- ADV-G3 section order is tutorRole then tutor-screens then tutor-calculator then tutor-commitments.
+- ADV-G4 the gallery renders exactly three cards and one section, with no fourth card.
+- ADV-G5 production source consumers of tutorScreens are only product-pictures.ts and the tutor page.
+File: src/__tests__/www-tutor-screens-copy.adversarial.test.ts
+- ADV-C1 no screens leaf is empty or whitespace in en, th, or zh.
+- ADV-C2 en and th screens captions differ with no untranslated placeholder.
+- ADV-C3 zh screens and the two new live lines equal en at every path (D-10).
+- ADV-C4 the two retired income lines are absent anywhere in the tutor locale file, with vacuity and filter-word positive controls.
+- ADV-C5 screens key-path parity holds across en, th, zh and screens.items lengths are equal at 3.
+
+2. GATES (one heavy job at a time, from the worktree)
+New files only:
+  bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/__tests__/tutor-screens.adversarial.test.ts "src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx" src/__tests__/www-tutor-screens-copy.adversarial.test.ts --reporter=dot --silent=true'
+  Result: Test Files 3 passed (3); Tests 15 passed (15); exit 0.
+Combined with the three existing Phase 2 test files:
+  bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/__tests__/tutor-screens.test.ts src/__tests__/www-tutor-calculator.locale.test.ts "src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx" src/lib/__tests__/tutor-screens.adversarial.test.ts "src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx" src/__tests__/www-tutor-screens-copy.adversarial.test.ts --reporter=dot --silent=true'
+  Result: Test Files 6 passed (6); Tests 61 passed (61); exit 0. Existing tests still pass.
+Authoring note: the first new-files run failed only on a wrong expected path prefix in my own ADV-G5 case
+("src/..." not "app/..."). I corrected that expectation in my own new file; no assertion was weakened and
+no product code changed. The corrected run passed 15/15.
+
+3. SPOT CHECKS
+- webp header parse: student-mobile/070 520x1125, student-mobile/002 520x1125, tutor-desktop/062 1440x900. All match the manifest declarations.
+- grep -rln tutorScreens under src: product-pictures.ts, tutor-advantage/page.tsx, and test files only. ADV-G5 holds.
+- grep for both retired income lines in the locale file: no match, exit 1. ADV-C4 holds.
+- ADV-C2 caveat: spec 6.3 creates no en/th equality, so no exception was needed. The only spec-sanctioned equality is D-10 (zh equals en), asserted in ADV-C3, so an untranslated zh placeholder is intended.
+- A9 check: no new test reads a measure/tracks, measure/runs, or measure/archive path.
+
+4. DEFECTS
+None exposed. No ROUTE TO GREEN item. No real defect was found; every control passes on the delivered implementation.
+
+5. REVIEW C N1 JUDGEMENT
+N1 describes a real visual effect: at viewports of 1169 px and above a phone card renders about 576 CSS px
+wide against a 520 px source, so the browser upscales roughly 11 percent. It is not a sharpness defect that a
+test or a copy change must fix. Spec D-14 states a vitest cannot read pixels, and 520 px is the largest delivered
+phone source, so no code change here adds detail. Spec open question 6 and test-strategy section 8.1 record that
+Daniel accepts the softness or PR captures again. N1 is a page-check judgement for the PM in task 2.5, or an
+owner decision to recapture. No Playwright sharpness test was added.
+
+6. COMMIT
+Subject: test(www): phase 2 tutor screens adversarial controls (track_id: www_tutor_calculator_20261117)
+Explicit pathspecs: the three new adversarial test files only. SHA: 96887abe595b7d17927787521c3bc8edcb2ed440.
+The run artifacts in measure/runs/ are gitignored; they are written to disk and read from there.
+
+7. RERUN RULE
+Any subsequent implementation commit invalidates this result and requires the Phase 2 adversarial gate to rerun.
+
+MEASURE_AGENT_RESULT
+task: adversarial-p2
+track: www_tutor_calculator_20261117
+phase: 2
+role: measure-adversarial-testing
+route: opencode-go/hy4-flash-free#high
+verdict: PASS
+status: pass
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+pre_adversarial_head_sha: e2439b438511046b58ec8f3e734e655706c2ab8c
+audited_head_sha: e2439b438511046b58ec8f3e734e655706c2ab8c
+commit_sha: 96887abe595b7d17927787521c3bc8edcb2ed440
+result_file: measure/runs/www_tutor_calculator_20261117/adversarial-p2-e2439b438.json
+controls: 15 added across 3 new files, all PASS; 0 failures
+tests: new files gate 3 files / 15 tests passed exit 0; combined gate 6 files / 61 tests passed exit 0
+defects_exposed: 0
+blocking_findings: 0
+nonblocking_findings: 0
+retry_recommendation: none
+n1_judgement: page-check judgement for the PM in task 2.5 or an owner recapture decision, not a test or copy fix
+handoff: PASS. Fifteen negative controls pass on the delivered Phase 2 implementation; no product defect exposed. No question for the PM.
+END_MEASURE_AGENT_RESULT

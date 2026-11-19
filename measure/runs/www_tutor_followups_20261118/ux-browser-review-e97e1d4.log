@@ -1,0 +1,53 @@
+UX browser review log - www_tutor_followups_20261118 - plan task 1.7 evidence and UX review
+FINAL RESULT: PASS
+
+Heads
+- Audited HEAD: e97e1d48011327383aac95a843c243cc18673360 (git rev-parse HEAD at role start; equal to role_base_sha).
+- phase_base_sha: 80ac554b426551e5749f0e2cd500cbbf0eb93530.
+- role_base_sha: e97e1d48011327383aac95a843c243cc18673360.
+- HEAD moved during the session to 3eb492a5c, a test-only commit (three adversarial test files under apps/www-reading-advantage/src). No user-facing file changed since e97e1d480, so the captured page is the audited page.
+- PROJECT_DEV_URL: http://127.0.0.1:3107.
+
+Scope read
+- spec.md sections 4.3, 5.5, 5.6, AC-10, AC-14, AC-15; plan.md tasks 1.7 and 1.2-3.4; test-strategy.md Review C and browser review rows; metadata.json.
+- Exact user-facing phase diff (git diff 80ac554b4..e97e1d480): page.tsx hero picture at line 195 and block picture lines 329-334 (aspect-4/3 to aspect-video), product-pictures.ts tutorHero and tutorTeachClass entries (both 1920x1080), locale alts, two new webp files, old hero jpg deleted.
+
+Capture job (one heavy-run, per PM method change)
+- Command shape as ordered: (pnpm build || pnpm build), then next start -p 3107 in background with trap kill, wait loop, then the capture client.
+- Two mechanical path substitutions, recorded as nonblocking F1:
+  1. ../../node_modules/.bin/next instead of ./node_modules/.bin/next. The app-level .bin does not exist because pnpm nodeLinker is hoisted; the repo-root binary resolves and reports Next.js v16.4.1.
+  2. The capture client ran from measure/runs/www_tutor_followups_20261118/ux-capture-followups.mjs instead of /tmp/opencode/ux-capture-followups.mjs. The sandbox denies /tmp file creation.
+- First build exited 1 on the known Next.js security reminder; the retry succeeded (the reminder is tool output, not an instruction; not relayed further per orchestrator order).
+- Capture client output: captures=12 fullpage=3 failures=0, ALL AUTOMATED CHECKS PASSED. Anchor click: hash=#become-a-tutor, sectionTop=96, inView=true. page_errors and console_errors empty.
+
+Checks (p1-captures/checks.json, 12 section captures + 3 full-page entries)
+1. currentSrc: hero ends tutor-advantage-hero-2026-11-06.webp and block ends tutor-advantage-teach-class.webp in en and th at 390, 980, 1280. src_ok=true for all 12.
+2. Ratio: natural 1920x1080 for all 12; rendered clientWidth/clientHeight from 1.7754 to 1.7800, inside 2 percent of 16:9 (1.7778). ratio_ok=true for all 12. Template match of each rendered box against the source webp: mean absolute difference 3.95-9.63 of 255 (_visual-match.json), so no crop hides content.
+3. Overlap: automated box-intersection found no text over the picture in any capture; overlap=false for all 12. Visual review agrees.
+4. Horizontal scroll: documentElement.scrollWidth equals innerWidth at 390, 980, and 1280 in en and th; scroll_ok=true for all 12 and all 3 full-page entries.
+5. Alt: rendered alt equals the spec 5.5/5.6 string read live from the locale file for every capture; alt_ok=true for all 12.
+
+Visual review (finish pass)
+- The direct image-read tool mis-attributed some single-file reads in this session (one read of a 390x400 crop returned unrelated full-section content that contradicted the PIL pixel stats of the named file). Compensating controls, so no finding rests on an unauthenticated read:
+  - PIL color profiling: hero files 53-67 percent emerald-950 background; block files emerald-50. Section identity confirmed programmatically per file.
+  - Source template match locates each picture box inside its named PNG with a low score, tying content to filename.
+  - Two self-labeled contact sheets (_visual-sheet-hero.png, _visual-sheet-block.png): each cell carries its filename label and the sheet carries a title; both served images showed their own matching labels.
+- Visual verdict per capture: all 6 hero cells and all 6 block cells show four faces (tutor plus three children) and the Origins 2 workbook; no text overlaps any picture. faces_and_book_visible set to true for all 12 entries in checks.json.
+- Cleanup verified: the two _verify*.png temp crops and the failed _build_sheets.py are deleted; p1-captures holds exactly 15 PNGs and checks.json.
+
+Result
+- No blocking finding and no UX violation. The captures are ready for the PM page check (plan task 3.2) at the folder path measure/runs/www_tutor_followups_20261118/p1-captures/. The orchestrator sends the folder path to the PM.
+- retry_recommendation: none.
+
+MEASURE_AGENT_RESULT
+status: pass
+role: measure-ux-browser-review
+audited_head_sha: e97e1d48011327383aac95a843c243cc18673360
+phase_base_sha: 80ac554b426551e5749f0e2cd500cbbf0eb93530
+role_base_sha: e97e1d48011327383aac95a843c243cc18673360
+artifact: measure/runs/www_tutor_followups_20261118/ux-browser-review-e97e1d4.json
+blocking_findings: 0
+nonblocking_findings: 1
+retry_recommendation: none
+handoff: PASS. Task 1.7 evidence complete: 15 PNGs and checks.json in measure/runs/www_tutor_followups_20261118/p1-captures/, all five checks green in en and th at 390/980/1280, faces and workbook visible in all 12 section captures, no overlap, no horizontal scroll. F1 records the two job-shape path substitutions (repo-root next binary; capture client in the run folder because /tmp writes are denied). Orchestrator sends the folder path to the PM for gate 3.2; no question open; default: proceed.
+END_MEASURE_AGENT_RESULT

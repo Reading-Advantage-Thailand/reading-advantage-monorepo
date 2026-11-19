@@ -7,7 +7,7 @@ export const en = {
         storytime: {
             title: "Storytime Advantage",
             gradeRange: "English for Anuban 2 to P2",
-            description: "Storytime Advantage is an English program for kindergarten and early primary. Each week has one sound, one song, and two books, and every lesson is printed in full for the class teacher. The first unit is being prepared.",
+            description: "Storytime Advantage is an English app for Anuban 2 to P2, ages 4 to 8. Each week brings one sound, one song, and two books to a phone at home or a classroom screen. The app launches on 30 November 2026.",
             ctaLabel: "Explore Storytime",
             imageAlt: "Storytime Advantage reader page: the drawn character Pat waves hello in a classroom",
         },
@@ -47,7 +47,7 @@ export const th = {
         storytime: {
             title: "Storytime Advantage",
             gradeRange: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2",
-            description: "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษสำหรับชั้นอนุบาลและประถมต้น ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม ทุกคาบมีแผนการสอนครบ กำลังจัดเตรียมหน่วยการเรียนรู้แรก",
+            description: "Storytime Advantage เป็นแอปภาษาอังกฤษสำหรับเด็กอนุบาล 2 ถึง ป.2 อายุ 4 ถึง 8 ปี แต่ละสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม บนโทรศัพท์ที่บ้านหรือจอในห้องเรียน แอปเปิดตัววันที่ 30 พฤศจิกายน 2569",
             ctaLabel: "สำรวจ Storytime",
             imageAlt: "หน้าหนังสืออ่านของ Storytime Advantage: ตัวการ์ตูน Pat โบกมือทักทายในห้องเรียน",
         },
@@ -87,7 +87,7 @@ export const zh = {
         storytime: {
             title: "Storytime Advantage",
             gradeRange: "面向 Anuban 2 至 P2 的英语课程",
-            description: "Storytime Advantage 是面向 Anuban 2 至 P2 的英语课程。每周有一个发音、一首歌和两本书，每节课都为班级教师提供完整的印刷教学脚本。第一个单元正在准备中。",
+            description: "Storytime Advantage 是面向 Anuban 2 至 P2 的英语课程。每周有一个发音、一首歌和两本书。",
             ctaLabel: "了解 Storytime",
             imageAlt: "Storytime Advantage 阅读页面：卡通人物 Pat 在教室里挥手问好",
         },

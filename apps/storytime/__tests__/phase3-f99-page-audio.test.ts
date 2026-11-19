@@ -109,6 +109,9 @@ describe("AC-13.5 the page-audio coverage check", () => {
   it("accepts a published book with an empty sentences list", () => {
     const week = publishedWeek();
     week.books[0].audio.sentences = [];
+    // The clip rule of the approved pin holds one clip per sentence, so an empty sentence list
+    // holds no clip (strategy P2.2, row S3).
+    week.books[0].audio.sentenceClips = [];
     failureOf(week, "a published book with an empty sentences list");
   });
 

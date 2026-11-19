@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "role": "measure-green",
+  "verdict": "pass",
+  "note": "Final. Task 2.1 wrote its own Red test, ran it red at exit 1, implemented the blur script, the three webp files, and the tutorScreens export, and ran it green at exit 0 (7 of 7). The products-page picture test still passes (19 of 19), check-types exits 0, and lint exits 0. Two commits: the implementation and the plan evidence.",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "2",
+  "task": "2.1",
+  "baseline_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "phase_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "role_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/deepseek-v4.1-flash (ra-quota pick green returns opencode-go/hy4-flash-free, the Red family of this track, so it is excluded; this is the next allowed non-Red route)",
+  "resulting_head": "29ffa35423fc8131cc099d5b0462ebc286e13ae7",
+  "commits": [
+    {
+      "sha": "320fc2fa176b2c2e40eab09c2d208ede98945370",
+      "subject": "feat(www): add the three blurred tutor screens (track_id: www_tutor_calculator_20261117)",
+      "files": [
+        "apps/www-reading-advantage/src/lib/__tests__/tutor-screens.test.ts",
+        "apps/www-reading-advantage/scripts/blur-tutor-screens.py",
+        "apps/www-reading-advantage/public/images/products/tutor-advantage/student-mobile/070-screen.webp",
+        "apps/www-reading-advantage/public/images/products/tutor-advantage/student-mobile/002-screen.webp",
+        "apps/www-reading-advantage/public/images/products/tutor-advantage/tutor-desktop/062-screen.webp",
+        "apps/www-reading-advantage/src/lib/product-pictures.ts"
+      ]
+    },
+    {
+      "sha": "29ffa35423fc8131cc099d5b0462ebc286e13ae7",
+      "subject": "docs(measure): record green 2.1 asset evidence (track_id: www_tutor_calculator_20261117)",
+      "files": [
+        "measure/tracks/www_tutor_calculator_20261117/plan.md"
+      ]
+    }
+  ],
+  "red_change_inside_phase_base": {
+    "note": "Task 2.1 writes its own Red test inside this Green role, so its test is outside phase_base_sha..HEAD by design. The earlier Red tests of Phase 1 are inside the range and were not edited. No committed Red test was edited: the products-page picture test was read only and still passes.",
+    "red_test_commits_in_range": [
+      "7eb6991fc test(www-reading-advantage): pin commission module",
+      "08fcd93b0 test(www-reading-advantage): pin calculator locale copy",
+      "704f03c49 test(www-reading-advantage): align preset pin paths",
+      "bcaf27d80 test(www-reading-advantage): pin calculator UI",
+      "e42aa53fa test(www-reading-advantage): scope D-7 figure assertion"
+    ]
+  },
+  "targeted_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/__tests__/tutor-screens.test.ts --reporter=dot --silent=true'",
+  "targeted_result": {
+    "red_exit_code": 1,
+    "red_test_files": "Test Files 1 failed (1)",
+    "red_tests": "Tests 7 failed (7)",
+    "red_cause": "The module held no tutorScreens export: TypeError: Cannot read properties of undefined (reading 'studentHome')",
+    "green_exit_code": 0,
+    "green_test_files": "Test Files 1 passed (1)",
+    "green_tests": "Tests 7 passed (7)"
+  },
+  "blur_verification": {
+    "method": "Grey mean and standard deviation of each box, source PNG against output webp. A blurred box drops to a low standard deviation.",
+    "rows": [
+      { "file": "student-mobile/070", "box": [34, 121, 182, 152], "source_mean": 220.97, "source_sd": 66.96, "output_mean": 226.43, "output_sd": 7.01 },
+      { "file": "student-mobile/070", "box": [110, 198, 233, 234], "source_mean": 224.94, "source_sd": 68.36, "output_mean": 229.82, "output_sd": 10.47 },
+      { "file": "student-mobile/070", "box": [137, 351, 303, 388], "source_mean": 208.65, "source_sd": 83.77, "output_mean": 215.22, "output_sd": 9.35 },
+      { "file": "student-mobile/070", "box": [118, 923, 247, 953], "source_mean": 213.59, "source_sd": 78.43, "output_mean": 220.60, "output_sd": 7.80 },
+      { "file": "tutor-desktop/062", "box": [395, 95, 553, 134], "source_mean": 213.74, "source_sd": 79.66, "output_mean": 219.52, "output_sd": 9.66 },
+      { "file": "tutor-desktop/062", "box": [393, 132, 485, 157], "source_mean": 235.19, "source_sd": 45.59, "output_mean": 233.49, "output_sd": 4.71 },
+      { "file": "tutor-desktop/062", "box": [395, 390, 487, 419], "source_mean": 230.63, "source_sd": 59.08, "output_mean": 235.29, "output_sd": 5.13 },
+      { "file": "tutor-desktop/062", "box": [1085, 341, 1173, 364], "source_mean": 235.47, "source_sd": 43.96, "output_mean": 240.55, "output_sd": 4.59 }
+    ],
+    "note": "Every box loses its glyph contrast. student-mobile/002 holds no box and shows no class name."
+  },
+  "delivered_box_adjustments": [
+    { "file": "student-mobile/070", "field": "hero x1", "delivered": 269, "used": 303, "reason": "The hero \"3.1\" ends at x 301; the delivered box stopped at the start of the \"3\"." },
+    { "file": "student-mobile/070", "field": "bubble y1", "delivered": 227, "used": 234, "reason": "The bubble \"g\" descender ends at y 232; the delivered box cut it." },
+    { "file": "tutor-desktop/062", "field": "title x1", "delivered": 547, "used": 553, "reason": "The title \"1\" ends at x 550; the delivered box left its right stroke visible." },
+    { "file": "tutor-desktop/062", "field": "dropdown x0", "delivered": 391, "used": 395, "reason": "The \"1:\" colon ends at x 392 and must stay; the delivered box covered 1 px of it." }
+  ],
+  "gates": {
+    "products_page_picture_test": {
+      "command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/__tests__/products-page-pictures.red.test.tsx --reporter=dot --silent=true'",
+      "exit_code": 0,
+      "test_files": "Test Files 1 passed (1)",
+      "tests": "Tests 19 passed (19)"
+    },
+    "check_types": {
+      "command": "pnpm turbo run check-types --filter=www-reading-advantage",
+      "exit_code": 0
+    },
+    "lint": {
+      "command": "pnpm --filter www-reading-advantage lint",
+      "exit_code": 0,
+      "output": "no output"
+    }
+  },
+  "measure_doctor": {
+    "run_as_gate": false,
+    "cause": "Not required by the task brief; the strategy gate is the targeted test and the three commands."
+  },
+  "build_graph": {
+    "run": false,
+    "cause": "The task brief forbids a whole-repo build-graph scan under the PM load watch. The change adds no structural TypeScript signature."
+  },
+  "files_changed_by_this_role": [
+    "apps/www-reading-advantage/src/lib/__tests__/tutor-screens.test.ts (new)",
+    "apps/www-reading-advantage/scripts/blur-tutor-screens.py (new)",
+    "apps/www-reading-advantage/public/images/products/tutor-advantage/student-mobile/070-screen.webp (new)",
+    "apps/www-reading-advantage/public/images/products/tutor-advantage/student-mobile/002-screen.webp (new)",
+    "apps/www-reading-advantage/public/images/products/tutor-advantage/tutor-desktop/062-screen.webp (new)",
+    "apps/www-reading-advantage/src/lib/product-pictures.ts (tutorScreens added)",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md (task 2.1 marked [x], Phase 1 acceptance line added)",
+    "measure/runs/www_tutor_calculator_20261117/green-2.1-320fc2fa1.json (gitignored)",
+    "measure/runs/www_tutor_calculator_20261117/green-2.1-320fc2fa1.log (gitignored)"
+  ],
+  "files_intentionally_untouched": [
+    "apps/www-reading-advantage/src/__tests__/products-page-pictures.red.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+    "package.json and pnpm-lock.yaml",
+    "scripts/ci/shadcn-ratchet-baseline.json"
+  ],
+  "plan_marking": {
+    "task": "2.1",
+    "state": "[x]",
+    "evidence": "Done line records the implementation commit, both runs, the three exit codes, the two deviations, the blur table, and one review line per file."
+  },
+  "constraints_held": [
+    "Only the new test, the new script, the three webp files, product-pictures.ts, the plan file, and the two result files changed",
+    "No dependency or lockfile change",
+    "No whole-repo build-graph scan (PM load watch): skipped",
+    "No source screenshot enters the repository beyond the three webp files",
+    "No deploy and no push",
+    "No disposition line and no question tool",
+    "Explicit pathspecs only; no git add -A, no git commit -a, no stash, no reset"
+  ],
+  "known_failures": [],
+  "questions": [],
+  "handoff_notes": [
+    "Task 2.1 is done at HEAD 29ffa3542. Reviewers scope: the new test, the new script, the three webp files, and the tutorScreens export.",
+    "The delivered blur boxes were too tight in four places. Four edges were widened after a full-size pixel measurement; the plan and the delivered_box_adjustments field record each edge and the glyph bound that drove it.",
+    "Task 2.2 must render the gallery from tutorScreens, because productPictures holds only flat picture entries and the existing picture test stats every value."
+  ]
+}

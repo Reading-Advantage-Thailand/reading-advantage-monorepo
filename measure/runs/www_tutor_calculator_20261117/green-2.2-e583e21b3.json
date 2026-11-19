@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "role": "measure-green",
+  "verdict": "pass",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "2",
+  "task": "2.2 (carries its own tests: Red first, then Green, both runs recorded)",
+  "phase_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "role_base_sha": "29ffa35423fc8131cc099d5b0462ebc286e13ae7",
+  "branch": "feat/a63-tutor-calculator",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator",
+  "route": "opencode-go/deepseek-v4.1-flash (substitution record: ra-quota pick green returns opencode-go/hy4-flash-free, the Red model family of this track, so it is excluded; Red stays hy4)",
+  "resulting_head_module_commit": "e583e21b31b6a73c2d1e8ba1aa65ddc0053bd3d7",
+  "commits": [
+    {
+      "sha": "e583e21b31b6a73c2d1e8ba1aa65ddc0053bd3d7",
+      "subject": "feat(www): add the tutor screens gallery and its copy (track_id: www_tutor_calculator_20261117)",
+      "files": [
+        "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+        "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+        "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx",
+        "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts"
+      ]
+    },
+    {
+      "sha": "9314f07decb27045ddce7d4f87d105d458b9b290",
+      "subject": "docs(measure): record green 2.2 gallery evidence (track_id: www_tutor_calculator_20261117)",
+      "files": [
+        "measure/tracks/www_tutor_calculator_20261117/plan.md"
+      ]
+    }
+  ],
+  "phase_range_check": {
+    "range": "d279b870341c067c33fc884ae8863b5428487c17..HEAD",
+    "phase_base_is_ancestor": true,
+    "commits_before_this_task": [
+      "320fc2fa176b2c2e40eab09c2d208ede98945370",
+      "29ffa35423fc8131cc099d5b0462ebc286e13ae7"
+    ],
+    "note": "Task 2.2 carries its own tests: the Red additions ran red before the implementation commit, and both landed in e583e21b3. No separate Red commit exists for this task."
+  },
+  "red_test_files": [
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts"
+  ],
+  "red_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run \"src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx\" src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --silent=true'",
+  "red_exit_code": 1,
+  "red_evidence": {
+    "test_files": "Test Files 2 failed (2)",
+    "tests": "Tests 8 failed | 26 passed (34)",
+    "failures": [
+      "locale: 9. the screens block exists > exists in en, th, and zh (expected undefined to be defined)",
+      "locale: 9. sits after tutorRole and before calculator in every dictionary (en screens index: expected -1 to be greater than -1)",
+      "locale: 10. holds all nine string leaves in en (expected +0 to be 9)",
+      "locale: 10. holds all nine string leaves in th (expected +0 to be 9)",
+      "locale: 10. uses the same string key paths in en, th, and zh (expected +0 to be 9)",
+      "locale: 10. keeps the zh values equal to the en values (expected undefined to be 'INSIDE THE APPS')",
+      "page: renders three screen cards with the slot alt and caption in copy order (tutor-screens section null)",
+      "page: places the screens gallery after the tutor role and before the calculator, the commitments, and the faq (tutor-screens section null)"
+    ],
+    "cause": "The `screens` block is absent from all three dictionaries and page.tsx has no `data-testid=\"tutor-screens\"` section."
+  },
+  "green_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run \"src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx\" src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot --silent=true'",
+  "green_exit_code": 0,
+  "green_evidence": {
+    "test_files": "Test Files 2 passed (2)",
+    "tests": "Tests 34 passed (34)",
+    "breakdown": "page 8 cases (6 pre-existing + 2 new), locale 26 cases (18 pre-existing + 8 new)"
+  },
+  "types_command": "pnpm turbo run check-types --filter=www-reading-advantage",
+  "types_exit_code": 0,
+  "lint_command": "pnpm --filter www-reading-advantage lint",
+  "lint_exit_code": 0,
+  "lint_evidence": "No output after `eslint .`, so no new `shadcn/*` error in a touched file.",
+  "ratchet_command": "git diff --exit-code scripts/ci/shadcn-ratchet-baseline.json",
+  "ratchet_exit_code": 0,
+  "files_added": [],
+  "files_modified": [
+    "apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "measure/tracks/www_tutor_calculator_20261117/plan.md"
+  ],
+  "locale_block_summary": {
+    "placement": "after tutorRole and before calculator in en, th, and zh",
+    "key_order": "eyebrow, heading, description, items (three slots of caption and alt)",
+    "string_leaf_count": 9,
+    "leaf_count_note": "The role brief says `the 12 new leaf strings`; spec 6.3 and plan task 2.2 hold nine. The test pins nine and asserts the leaf count, so an extra invented string would fail.",
+    "zh": "equal to en at every key path (D-10), with one code comment above the zh block",
+    "draft_comment": "items[1].alt carries a D-15a code comment in all three dictionaries; no value carries the word draft"
+  },
+  "page_section_summary": {
+    "testid": "tutor-screens",
+    "position": "after #become-a-tutor and before tutor-calculator, tutor-commitments, and the faq section",
+    "parts": "SectionHeader plus one ProductPicture card per tutorScreens slot, caption under the picture",
+    "grid": "grid-cols-1 at base and md:grid-cols-2, with the wide classList card at md:col-span-2"
+  },
+  "test_assertion_change": {
+    "file": "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx",
+    "reason": "src/test/setup.ts mocks getScopedI18n to return `<scope>.<key>`, so the literal caption and alt cannot appear in the page test. The page test now asserts the per-slot key path of each card, and the locale test pins the literal en and th strings.",
+    "weakened_existing_case": false
+  },
+  "build_graph": "Skipped under the PM load watch. No export, signature, or import graph changed: `screens` is a data key and the page adds no export.",
+  "constraints_held": [
+    "Only the locale file, the page, the two test files, the plan file, and the two result files changed",
+    "No change to the calculator component, the module, product-pictures.ts, the manifest test, or another page",
+    "No dependency, lockfile, or ratchet-baseline change",
+    "No whole-repo build-graph scan",
+    "No deploy and no push",
+    "No disposition line and no question tool",
+    "Explicit pathspecs only; no git add -A, no stash, no reset"
+  ],
+  "questions": [],
+  "final_head": "9314f07decb27045ddce7d4f87d105d458b9b290",
+  "plan_task_2_2_marked": true,
+  "plan_task_2_2_sha": "e583e21b31b6a73c2d1e8ba1aa65ddc0053bd3d7",
+  "plan_evidence_commit": "9314f07decb27045ddce7d4f87d105d458b9b290"
+}

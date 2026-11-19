@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "role": "measure-spec-review",
+  "track_id": "www_products_photos_20261115",
+  "phase": "track setup",
+  "audited_head_sha": "756471bd546703ac437209e179f0cd970c2a6fd2",
+  "route": "kimi-code-plan-cn/kimi-for-coding#high",
+  "round": "r1",
+  "verdict": "fail",
+  "status": "fail",
+  "summary": "The track fixes the products page photos and adds a regression e2e, a unit test, and CI wiring. The root-cause analysis matches the code, the reuse is right, and the plan is almost fully deterministic. One Blocker: the plan defers the deploy-gate decision to task 1.2 and AC-3 omits the fact that www CD does not wait for CI, so a red e2e does not stop a deploy. One Major: the 120 x 120 photo minimum lets a shrunk picture escape every automated check. Two Nits.",
+  "blocking_findings": [
+    "F1 [Blocker] spec.md AC-3 and plan.md Runner facts / task 1.2: the deploy-gate decision is left open and AC-3 omits the CD limit. Rationale: .github/workflows/cd-www-reading-advantage.yml line 81 shows the deploy job needs only the select job, so a red CI run does not stop a deploy; the plan itself states this fact, then writes \"Task 1.2 decides whether the check also runs before the CD deploy.\" That is a design choice left to the implementer, and AC-3 as written (\"a push that breaks it turns the job red\") can be read as \"the e2e stops a repeat,\" which is false for deploys. Daniel asked for tests that make sure this does not happen again. The spec must state the limit in AC-3 (red CI does not block CD; the PM page check in task 1.4 is the gate before Daniel gets the link) or the plan must add the CD gate now. Do not defer it to task 1.2."
+  ],
+  "nonblocking_findings": [
+    "F2 [Major] spec.md AC-1: the 120 x 120 minimum lets a shrunk picture escape every automated check. Rationale: the spec's own evidence at 1024 px says the Storytime card picture renders 160 x 108, and 108 is below the 120 minimum, so AC-1 does not count it as a photo at all; the load check, the visibility check, and the 30 percent cover check never run on it, and nothing checks aspect or size. A regression back to the squeezed 160 x 256 or 160 x 108 state passes the e2e that Daniel asked for. Lower the short-side minimum (for example 100 px) or add a per-picture size and proportion assertion in the products spec.",
+    "F3 [Nit] spec.md AC-1: the width list does not say why 1024 stays. Rationale: 980 and 1024 are 4 percent apart, and a future editor may drop one. Both are needed: 980 covers a phone in desktop view, and 1024 is the lg breakpoint where the squeezed program cards appear. Write one line that says so.",
+    "F4 [Nit] spec.md AC-4: \"Primary parity-run2-2026-10-19 or a printed cover\" leaves an asset choice to Green. Rationale: both files satisfy the AC, but naming one file removes the choice and keeps the review render check deterministic."
+  ],
+  "evidence": [
+    "HEAD is 756471bd546703ac437209e179f0cd970c2a6fd2 and equals audited_head_sha. 8193625ca is an ancestor of HEAD; the deviation note (hero fix and product pictures pushed before Red) holds.",
+    "Standard read at /home/daniebo/.agents/skills/measure/references/spec-review.md. No contracts.md exists; the audit schema follows the previous spec-review JSON in measure/runs.",
+    "Root cause 1 holds in code history: hero-section.tsx at 8193625ca^ wrapped floatingImage in hidden xl:block; the current hero-section.tsx (lines 276 to 288) renders it without any hidden class, so AC-2 has a real assertion target.",
+    "Root cause 2 holds: apps/www-reading-advantage/src/app/[locale]/(marketing)/services/blended-learning/page.tsx line 98 uses /images/blended-learning.png, and the spec evidence says the overlay covers it at every width.",
+    "products/page.tsx renders HeroSection with floatingImage /images/small-group.png and ProductPicture for all four grade bands from src/lib/product-pictures.ts; the 8 product pictures of 8193625ca exist under public/images/products/.",
+    "AC-3 facts hold: scripts/ci/apps.json lists www-reading-advantage as a row; ci.yml job affected (line 205) runs pnpm turbo run build lint check-types test --filter=${{ matrix.id }}... and no workflow runs the e2e specs on a push; capture-real-logos.yml is dispatch only.",
+    "CD fact holds: cd-www-reading-advantage.yml deploy job (line 81) needs only select, so CD does not wait for CI. This is the basis of F1.",
+    "Special point 1 (grid and minimum): a 160 x 108 picture escapes AC-1 through the 120 x 120 minimum (108 < 120), not through grid resolution; a 5 x 5 grid on a 160 px wide image still has 32 px cells. The 1024 px width is needed: the squeezed cards appear at the lg breakpoint (1024 px) and a phone in desktop view sits at 980 to 1024 px. Keep all four widths; write the reason (F3).",
+    "Special point 2 (CI vs CD): the spec must state the limit or add a gate. Today it does neither: AC-3 claims only a red job, and the plan defers the gate to task 1.2. See F1.",
+    "Special point 3 (home hero at 390 px): in scope, and the author's default is correct. AC-1 applies to every marketing page with a hero at 390 px with a 30 percent cover limit, so the home hero at 40 percent covered fails AC-1 until fixed; AC-4 lists it. No finding.",
+    "Zoom-out: the fix is the root problem, not a symptom; no speculative feature; reuse is right (playwright.config.ts with BASE_URL skip, the e2e/ folder, HeroSection, ProductPicture, product-pictures.ts); new logic sits in the app e2e folder and the ci.yml affected job; AC-1 stays at test-design level, which a deterministic e2e needs.",
+    "Zero-decision: file paths are named (e2e/photos.spec.ts, hero-section.test.tsx, products-page-pictures.red.test.tsx, the affected job, next start -p 3123, channel chrome). The only open choices are the CD gate (F1) and the primary asset (F4).",
+    "Test-strategy commands are concrete (heavy-run.sh, next build, next start -p 3123, BASE_URL). The Facts-to-check list covers the decorative-image exclusion."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git merge-base --is-ancestor 8193625ca HEAD",
+    "read: measure/tracks/www_products_photos_20261115/spec.md, plan.md",
+    "read: apps/www-reading-advantage/src/components/marketing/hero-section.tsx",
+    "read: apps/www-reading-advantage/src/app/[locale]/(marketing)/products/page.tsx",
+    "read: apps/www-reading-advantage/playwright.config.ts",
+    "read: .github/workflows/ci.yml, .github/workflows/cd-www-reading-advantage.yml",
+    "read: apps/www-reading-advantage/src/components/products/product-picture.tsx, src/lib/product-pictures.ts",
+    "grep: scripts/ci/apps.json, services/blended-learning/page.tsx"
+  ],
+  "changed_files": [
+    "measure/runs/www_products_photos_20261115/spec-review-756471bd5.json",
+    "measure/runs/www_products_photos_20261115/spec-review-756471bd5.log"
+  ],
+  "retry_recommendation": "escalate_human",
+  "handoff": "Verdict fail: 1 Blocker (F1), 1 Major (F2), 2 Nits (F3, F4). Question for the owner, with a default. Q1: AC-3 and the CD gate. The www CD deploys on push and does not wait for CI, so a red e2e does not stop a deploy. Default: keep the gate as is, state the limit in AC-3 (red CI does not block CD; the PM page check in task 1.4 is the gate before Daniel gets the link), and change the plan so task 1.2 no longer decides it. Alternative: add a CD needs-CI gate. The author fixes F2, F3, F4 in spec.md in the same pass.",
+  "confidence": "high",
+  "paraphrase": {
+    "proposes": "The track restores real photos on the www products page at every viewport width and stops a repeat with tests. It fixes what is still wrong at HEAD: the text box that covers the blended-learning photo, the missing Tutor section picture, the squeezed pictures at 1024 px, and the covered home hero. It adds a Playwright e2e (each photo loaded, visible, at most 30 percent covered at 390, 980, 1024, and 1280 px, in en and th), a HeroSection unit test, and it wires the e2e into the www CI job.",
+    "current_system": "Commit 8193625ca already removed the hidden xl:block wrapper from the products hero and added 8 product pictures, and those load at all four widths. The services/blended-learning photo stays covered by the See How We Report Results overlay, the Tutor section has no picture, and the home hero photo is 40 percent covered at 390 px. No workflow runs the www e2e specs on a push; the ci.yml affected job builds, lints, type-checks, and tests www-reading-advantage, and the www CD deploys on push without waiting for CI."
+  }
+}

@@ -1,0 +1,160 @@
+=== Measure Green record-only: close tasks 2.5 and 2.6 ===
+Track: www_tutor_calculator_20261117
+Phase: 2
+Tasks: 2.5 (PM page-check), 2.6 (www-only push and live pages)
+Role: measure-green
+Route: opencode-go/deepseek-v4.1-flash
+Substitution record: `ra-quota pick green` returned
+opencode/deepseek-v4.1-flash-free#high, which failed to start with "Free usage limit reached",
+so this allowed Go route of the same family is used.
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha: a726b2be2b3771934e2d518f21b42f91d6882fc8
+Product change: none. No test change. Plan evidence only.
+
+Pre-run state
+-------------
+$ git rev-parse HEAD
+a726b2be2b3771934e2d518f21b42f91d6882fc8
+$ git status --short
+(no output; worktree clean)
+$ git rev-parse --abbrev-ref HEAD
+feat/a63-tutor-calculator
+
+Phase range check
+-----------------
+$ git merge-base --is-ancestor d279b870341c067c33fc884ae8863b5428487c17 HEAD; echo $?
+0
+$ git rev-list --count d279b870341c067c33fc884ae8863b5428487c17..HEAD
+21
+$ git log --oneline -1 6c0cf5de6
+6c0cf5de6 fix(www): label the tutor rate curve card (track_id: www_tutor_calculator_20261117)
+
+The Phase 2 base is an ancestor of HEAD, and the committed Red change 6c0cf5de6 sits inside
+d279b8703..a726b2be2. No Red test was read for edit and none was modified.
+
+Gates this session: none, by brief
+----------------------------------
+The brief is record-only. The orchestrator verified the PM PASS, the F-1 recheck, the push, the
+CD run, and the four live HTTP results today, and instructed this session not to re-derive them
+and not to run gates. This session ran no test, no build, no doctor.sh, no build-graph scan, no
+server, no push, and no deploy. No "all checks pass" claim is made here from this session's work.
+
+Evidence recorded, task 2.5
+---------------------------
+Source: ~/Desktop/handoff/page-check/a63-20261117-1500/report.md
+  Line 5: "Verdict: PASS with one fix (F-1). After F-1, the PM checks the rate-curve card again,
+  then task 2.6 (www-only push) may run."
+  Table: section order PASS, no horizontal scroll PASS, three sharp screens with the class name
+  blurred PASS, calculator figures and rows PASS at preset 3 (gross 24,833.45, legs 3 x 5,520 =
+  16,560, payout 8,273.45, tax 248.20, net 8,025.25), zh placeholder ACCEPTED (PM).
+  F-1 fix commit 6c0cf5de65ea092a28bf1246dff8a6fb57df7ce4.
+  Section "Recheck F-1 (worktree 6c0cf5de6)": PASS, title "Your rate for the network volume" and
+  "This month · 59.1%" in en and th, zh shows the English line (D-10), no sideways scroll.
+The PM closed task 2.5 in writing on 2026-11-17.
+
+Evidence recorded, task 2.6
+---------------------------
+  Branch head and origin/master: a726b2be2b3771934e2d518f21b42f91d6882fc8.
+  Push kind: fast-forward from 59821e80b; no force; no tags.
+  $ git diff --name-only 59821e80b..a726b2be2 | cut -d/ -f1-2 | sort -u
+  apps/www-reading-advantage
+  measure/runs
+  measure/tracks
+  measure/tracks.md
+  The app files are www-only; the rest is measure evidence.
+  CD workflow "CD — www-reading-advantage", run 44053703983, conclusion success:
+  https://github.com/Reading-Advantage-Thailand/reading-advantage-monorepo/actions/runs/44053703983
+  Live pages after the deploy:
+    /en/products/tutor-advantage  200  "Your rate for the network volume"
+    /th/products/tutor-advantage  200  "อัตราของคุณตามยอดรวมของเครือข่าย"
+    /zh/products/tutor-advantage  200  English lines (D-10)
+    /blog/nobody-interrupts-her-while-she-reads  307 to
+      /en/blog/nobody-interrupts-her-while-she-reads, then 200
+  The next start server on port 3120 is stopped; no process listens.
+
+Plan update
+-----------
+  Task 2.5: marker [b] to [x]. One added paragraph after "Gate owner: the PM, with Daniel on the
+  Thai." records the PM verdict, the report path, the F-1 fix commit, and the F-1 recheck PASS.
+  Task 2.6: marker [~] to [x]. One added paragraph after the task's last existing line records
+  the head, the fast-forward base, the no-force and no-tags statement, the range check, the CD
+  run, and the four live HTTP results.
+  No other line changed. No track archive move. No closeout metadata change.
+
+$ git diff --stat
+ measure/tracks/www_tutor_calculator_20261117/plan.md | 27 ++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
+
+Commit
+------
+$ git commit -m "docs(measure): close tasks 2.5 and 2.6 (track_id: www_tutor_calculator_20261117)" -- measure/tracks/www_tutor_calculator_20261117/plan.md
+[feat/a63-tutor-calculator 7e9724069] docs(measure): close tasks 2.5 and 2.6 (track_id: www_tutor_calculator_20261117)
+ 1 file changed, 25 insertions(+), 2 deletions(-)
+
+Full sha: 7e9724069a0f013967fd22bc7bd6e2b341b7462c
+Subject length: 80 characters.
+One file in the commit. apps/www-reading-advantage/next-env.d.ts is not staged and not tracked as
+modified.
+
+$ git status --short
+(no output; worktree clean)
+
+The plan file is the whole change, so this one commit is the plan-evidence commit. No separate
+implementation commit exists, because no product or test file changed.
+
+New files for reviewer scope
+----------------------------
+  - measure/runs/www_tutor_calculator_20261117/green-record-2.5-2.6-a726b2be2.json (gitignored)
+  - measure/runs/www_tutor_calculator_20261117/green-record-2.5-2.6-a726b2be2.log (this log,
+    gitignored)
+No new tracked file.
+
+Handoff to the review roles
+---------------------------
+  - Tasks flipped to [x]: 2.5 (PM PASS report a63-20261117-1500; F-1 fixed in 6c0cf5de6 and
+    rechecked PASS) and 2.6 (push a726b2be2, CD run 44053703983 success, four live HTTP results).
+    Evidence commit 7e9724069a0f013967fd22bc7bd6e2b341b7462c.
+  - Tasks flipped to [b]: none. Tasks deferred: none.
+  - Targeted Red command output: none this round. This record-only round ran no test, because it
+    changed no product and no test file, and the brief forbade gates.
+  - Immutable phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17.
+  - Final Green HEAD: 7e9724069a0f013967fd22bc7bd6e2b341b7462c.
+  - Open: closeout task C.1 (archive move, registry row, closeout record) stays with the
+    closeout steward. The four "Answers owed to PR" items stay with the PM.
+
+Questions: none.
+
+MEASURE_AGENT_RESULT
+{
+  "role": "measure-green",
+  "track": "www_tutor_calculator_20261117",
+  "phase": "2",
+  "tasks": ["2.5", "2.6"],
+  "phase_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "role_base_sha": "a726b2be2b3771934e2d518f21b42f91d6882fc8",
+  "final_head": "7e9724069a0f013967fd22bc7bd6e2b341b7462c",
+  "commits": [
+    "7e9724069a0f013967fd22bc7bd6e2b341b7462c docs(measure): close tasks 2.5 and 2.6 (track_id: www_tutor_calculator_20261117)"
+  ],
+  "tasks_flipped_to_x": [
+    { "task": "2.5", "evidence": "PM PASS report ~/Desktop/handoff/page-check/a63-20261117-1500/report.md; F-1 fixed in 6c0cf5de65ea092a28bf1246dff8a6fb57df7ce4 and rechecked PASS" },
+    { "task": "2.6", "evidence": "push a726b2be2b3771934e2d518f21b42f91d6882fc8, fast-forward from 59821e80b, CD run 44053703983 success, live 200 en/th/zh, post 307 then 200" }
+  ],
+  "tasks_flipped_to_b": [],
+  "targeted_red_command": null,
+  "targeted_red_note": "Record-only round: no product file and no test file changed, and the brief forbade gates; this session ran no test command.",
+  "new_files": [],
+  "files_modified": [
+    "measure/tracks/www_tutor_calculator_20261117/plan.md"
+  ],
+  "result_files": [
+    "measure/runs/www_tutor_calculator_20261117/green-record-2.5-2.6-a726b2be2.json",
+    "measure/runs/www_tutor_calculator_20261117/green-record-2.5-2.6-a726b2be2.log"
+  ],
+  "dispositions": "none (no routed findings in this brief)",
+  "handoff": "Tasks 2.5 and 2.6 are [x] with evidence in commit 7e9724069. Task 2.5 records the PM PASS report a63-20261117-1500, the F-1 fix 6c0cf5de6, and the F-1 recheck PASS. Task 2.6 records the push a726b2be2 as a fast-forward from 59821e80b with no force and no tags, CD run 44053703983 success, and the live HTTP results for en, th, zh, and the daily post. Only the plan file changed in the commit. Next: closeout C.1 (archive move, registry row, closeout record) with the closeout steward, and the four PR answers stay with the PM.",
+  "verdict": "pass"
+}
+END_MEASURE_AGENT_RESULT

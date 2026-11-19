@@ -1,0 +1,121 @@
+MEASURE REVIEW A LOG — round 3 (post-fix re-audit)
+track: www_tutor_calculator_20261117
+phase: P1 (commission money module + calculator component)
+role: measure-review-a
+route: opencode-go/muse-spark-1.3-contributor#high
+round: r3
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+role_base_sha: 64465455f7052cf3e01c3cfcaafc81da648f5f94
+audited_head_sha: d279b870341c067c33fc884ae8863b5428487c17
+verdict: PASS
+status: pass
+
+1. SCOPE
+
+Round 2 PASS audited 64465455f. Since then the adversarial role (61e614489)
+exposed a RangeError (finite price times count overflowed to Infinity and
+reached BigInt), and Green fixed it in daa77805d plus plan evidence d279b8703.
+This audit covers the exact range 64465455f..d279b8703:
+- apps/www-reading-advantage/src/lib/tutor-commission.ts (+7/-5)
+- two new adversarial test files (module 502 lines, component 400 lines)
+- adversarial JSON/log artifacts and an 18-line plan note.
+No component, locale, page, config, or lockfile file changed.
+
+2. FIX CORRECTNESS (tutor-commission.ts)
+
+The product diff is exactly the adversarial smallest fix plus the stale
+preTax JSDoc correction (N1 doc). Three volumes now pass through
+clampNonNegative (ownVolume line 150, each leg volume line 154,
+networkVolume line 171); toSatang (lines 95-99) returns 0n when the satang
+product is not finite. flatSatang, commissionRate, TAX_PERCENT, and
+payoutAfterDeduction are untouched.
+- No normal input changes value: each new clamp is a no-op for finite
+  positive products, and the satang guard fires only on a non-finite
+  product (baht magnitude above ~1.8e306). Preset outputs are bit-identical
+  to the round-2 pins (see section 3).
+- The guard hides no real money: only absurd magnitudes reach it; every
+  realistic class price and student count takes the identical old path.
+- The truncation rule did not move: the BigInt (rateUnits * gvSatang) /
+  RATE_SCALE division and the (preTax * 3n) / 100n tax are byte-identical.
+- Conservation holds everywhere: clamped states are all-zero satang, and
+  the A5 attack matrix plus the four overflow probes all satisfy
+  legs + payout = gross, tax = floor(3%), net = payout - tax.
+
+3. RECOMPUTE (independent arithmetic, then shipped-module execution)
+
+From-scratch spec-3 formula with BigInt D-3 truncation (node -e):
+- Six rate pins: 40.5000, 42.5000, 45.0000, 50.0000, 55.6065, 60.6315. All OK.
+- Gross satang: GV 12,000 -> 552000; 24,000 -> 1265569; 33,000 -> 1870944.
+- Leg 9,000 -> 400500 satang (4,005.00).
+- Preset 2: preTax 464569, tax 13937, net 450632; 801000 + 464569 = 1265569.
+- Preset 3: preTax 669444, tax 20083, net 649361; 1201500 + 669444 = 1870944.
+- 1e9: gross 71422027600 satang; float product 71422027583 (17 off, the R2 gap).
+Shipped module execution (node --experimental-strip-types):
+- p1: gross 552000, preTax 552000, tax 16560, net 535440, GV 12000, 46.0000%.
+- p2: 1265569 / 801000 / 464569 / 13937 / 450632. p3: 1870944 / 1201500 /
+  669444 / 20083 / 649361. Conservation true on both, all three legs.
+- Four overflow probes, none throws: 1e307 x 1 student, 1e306 x 1000
+  students, 1e306 with a leg of 1000, Number.MAX_VALUE x 1 — all return
+  finite volumes with gross/legPayouts/preTax/tax/net at 0 satang and the
+  satang identity true. Four finite zero-money returns as required.
+
+4. GATE RERUN (one heavy job, no graph scan)
+
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c
+'pnpm --filter www-reading-advantage exec vitest run
+src/lib/tutor-commission.test.ts
+src/lib/tutor-commission.adversarial.test.ts
+src/components/marketing/tutor-commission-calculator.test.tsx
+src/components/marketing/tutor-commission-calculator.adversarial.test.tsx
+--reporter=dot --silent=true'
+exit 0: Test Files 4 passed (4), Tests 79 passed (79), Duration 4.20s.
+Per-file it( counts by grep: 27 + 23 + 14 + 15 = 79, matching the plan
+claim (module 27, module adversarial 23, component 14, component
+adversarial 15) word for word. A5 verified: no false-claim text.
+
+5. CARRIED ITEMS (N1, N2, F3, F4)
+
+- N1 which-leg-dropped: OPEN, unchanged. The removal test still uses three
+  identical 3-student legs; nothing in this range touches it.
+- N2 fractional leg count: CLOSED. The adversarial range pins the floor:
+  [2.9] -> 2 students, [2.5,-1,NaN] -> [2,0,0], resizeLegs([], 2.9) = [3,3].
+- F3 graph scan: IMPROVED, carried to closeout. Green ran the incremental
+  build-graph update (1 file, 25 nodes, 24 edges, no whole-repo scan under
+  PM load watch); this review ran no scan per its brief.
+- F4 net hero: OPEN, unchanged. Component untouched; documented deviation.
+
+6. ANTI-PATTERN CHECKS
+
+- A4: no new deliverable-present check; conservation helpers throw on
+  absence and A6 asserts finite zero money. No vacuous pass.
+- A3: all counts are labeled integers reproduced live. No digit-only match.
+- Framework-wide checks not triggered: no orchestration script, contract
+  test, or registry change in range.
+
+7. ARTIFACTS
+
+- measure/runs/www_tutor_calculator_20261117/review-a-p1-r3-daa77805d.json
+- measure/runs/www_tutor_calculator_20261117/review-a-p1-r3-daa77805d.log (this file)
+
+No production, test, plan, or registry file was edited. No commit.
+
+MEASURE_AGENT_RESULT
+task: review-a-p1-r3
+track: www_tutor_calculator_20261117
+phase: 1
+round: r3
+role: measure-review-a
+route: opencode-go/muse-spark-1.3-contributor#high
+verdict: PASS
+status: pass
+phase_base_sha: 8862cf14cc6e9b11e62d08d5084288a4c294752c
+role_base_sha: 64465455f7052cf3e01c3cfcaafc81da648f5f94
+audited_head_sha: d279b870341c067c33fc884ae8863b5428487c17
+commit_sha: d279b870341c067c33fc884ae8863b5428487c17
+result_file: measure/runs/www_tutor_calculator_20261117/review-a-p1-r3-daa77805d.json
+tests: four-file gate exit 0, Test Files 4 passed (4), Tests 79 passed (79) (27+23+14+15)
+blocking_findings: 0
+nonblocking_findings: 4 (N1 open, N2 closed, F3 closeout carry, F4 open)
+retry_recommendation: none
+handoff: No blocker. N2 closes in this run; N1 (which-leg pin) and F4 (documented net-row deviation) carry unchanged; F3 carries to the phase closeout graph step. No dispositions.
+END_MEASURE_AGENT_RESULT

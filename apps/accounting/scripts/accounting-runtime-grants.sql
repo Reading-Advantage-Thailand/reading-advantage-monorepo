@@ -137,6 +137,8 @@ GRANT SELECT, INSERT, UPDATE ON TABLE accounting_submissions TO accounting_runti
 GRANT SELECT, INSERT ON TABLE accounting_submission_audit_events TO accounting_runtime;
 -- The intake poll writes one row per Drive file and moves its status.
 GRANT SELECT, INSERT, UPDATE ON TABLE accounting_intake_documents TO accounting_runtime;
+-- The year-file import writes one facts row for each year file; it is never updated (FR-28).
+GRANT SELECT, INSERT ON TABLE accounting_year_file_facts TO accounting_runtime;
 -- The app opens a close, then signs and locks it in one call (spec section 7).
 GRANT SELECT, INSERT, UPDATE ON TABLE accounting_monthly_closes TO accounting_runtime;
 -- The close audit trail is append-only for the runtime role: SELECT and INSERT only.

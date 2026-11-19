@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track_id": "www_tutor_calculator_20261117",
+  "phase": "P2",
+  "phase_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "role_base_sha": "d279b870341c067c33fc884ae8863b5428487c17",
+  "pre_adversarial_head_sha": "e2439b438511046b58ec8f3e734e655706c2ab8c",
+  "audited_head_sha": "e2439b438511046b58ec8f3e734e655706c2ab8c",
+  "audited_head_is_head": true,
+  "head_note": "The audited head is the clean checkout at e2439b438. git status --porcelain was empty before the new test files were added. The Phase 2 diff under audit is d279b8703..e2439b438. No product code, locale copy, page, or existing test was edited. The only source changes are three new adversarial test files plus this run folder.",
+  "route": "opencode-go/hy4-flash-free#high",
+  "verdict": "PASS",
+  "status": "pass",
+  "provisional": false,
+  "summary": "Added 15 risk-based negative controls in three NEW vitest files. Each control passes on the delivered implementation and fails on a wrong or hostile one. No real defect was exposed; no existing test, product code, locale copy, or page was edited. The three new files pass 15/15. A combined gate with the three existing Phase 2 test files passes 61/61, proving the new controls coexist with the existing suite.",
+  "gate": {
+    "new_files_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/__tests__/tutor-screens.adversarial.test.ts \"src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx\" src/__tests__/www-tutor-screens-copy.adversarial.test.ts --reporter=dot --silent=true'",
+    "new_files": 3,
+    "new_files_passed": 3,
+    "new_tests": 15,
+    "new_tests_passed": 15,
+    "new_tests_failed": 0,
+    "new_gate_exit": 0,
+    "combined_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/lib/__tests__/tutor-screens.test.ts src/__tests__/www-tutor-calculator.locale.test.ts \"src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx\" src/lib/__tests__/tutor-screens.adversarial.test.ts \"src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx\" src/__tests__/www-tutor-screens-copy.adversarial.test.ts --reporter=dot --silent=true'",
+    "combined_files": 6,
+    "combined_files_passed": 6,
+    "combined_tests": 61,
+    "combined_tests_passed": 61,
+    "combined_gate_exit": 0,
+    "note": "One first run failed solely on a wrong expected path prefix in my new ADV-G5 case (relative path is 'src/...', not 'app/...'). I corrected that expectation in my own new file. This was a test-authoring error, not a product defect, and no assertion was weakened. The corrected run passed 15/15."
+  },
+  "controls": [
+    {"id": "ADV-M1", "file": "tutor-screens.adversarial.test.ts", "claim": "Declared width/height equals the real webp VP8 pixel size, parsed from header bytes", "verdict": "PASS"},
+    {"id": "ADV-M2", "file": "tutor-screens.adversarial.test.ts", "claim": "No two tutorScreens slots share one src", "verdict": "PASS"},
+    {"id": "ADV-M3", "file": "tutor-screens.adversarial.test.ts", "claim": "Every src stays under /images/products/tutor-advantage/ with no traversal and its file is at most 1 MB", "verdict": "PASS"},
+    {"id": "ADV-M4", "file": "tutor-screens.adversarial.test.ts", "claim": "Slot order is studentHome, lessonPhases, classList and every portrait flag is false", "verdict": "PASS"},
+    {"id": "ADV-A1", "file": "tutor-screens.adversarial.test.ts", "claim": "Every repository image file is webp by extension and RIFF/WEBP magic, non-zero bytes, with no source PNG", "verdict": "PASS"},
+    {"id": "ADV-G1", "file": "page.adversarial.test.tsx", "claim": "Every rendered screen card has a non-empty alt", "verdict": "PASS"},
+    {"id": "ADV-G2", "file": "page.adversarial.test.tsx", "claim": "Each card alt and figcaption match its own slot index with no cross-slot swap", "verdict": "PASS"},
+    {"id": "ADV-G3", "file": "page.adversarial.test.tsx", "claim": "Section order is tutorRole then tutor-screens then tutor-calculator then tutor-commitments", "verdict": "PASS"},
+    {"id": "ADV-G4", "file": "page.adversarial.test.tsx", "claim": "The gallery renders exactly three cards and one section, with no fourth card", "verdict": "PASS"},
+    {"id": "ADV-G5", "file": "page.adversarial.test.tsx", "claim": "Production source consumers of tutorScreens are only product-pictures.ts and the tutor-advantage page", "verdict": "PASS"},
+    {"id": "ADV-C1", "file": "www-tutor-screens-copy.adversarial.test.ts", "claim": "No screens leaf is empty or whitespace in en, th, or zh", "verdict": "PASS"},
+    {"id": "ADV-C2", "file": "www-tutor-screens-copy.adversarial.test.ts", "claim": "En and th screens captions differ with no untranslated placeholder", "verdict": "PASS"},
+    {"id": "ADV-C3", "file": "www-tutor-screens-copy.adversarial.test.ts", "claim": "Zh screens and the two new live lines equal en at every path (D-10)", "verdict": "PASS"},
+    {"id": "ADV-C4", "file": "www-tutor-screens-copy.adversarial.test.ts", "claim": "The two retired income lines are absent anywhere in the tutor locale file, with a vacuity and filter-word positive control", "verdict": "PASS"},
+    {"id": "ADV-C5", "file": "www-tutor-screens-copy.adversarial.test.ts", "claim": "Screens key-path parity holds across en, th, zh and screens.items lengths are equal at 3", "verdict": "PASS"}
+  ],
+  "control_total": 15,
+  "control_failures": 0,
+  "caveats": [
+    "ADV-C2 compares en and th and requires every screens leaf to differ. No exception was needed. Spec 6.3 creates no en/th equality. The only spec-sanctioned cross-locale equality is D-10 (zh equals en), which ADV-C3 asserts, so an untranslated zh placeholder is the intended state and not a defect.",
+    "ADV-C4 searches the whole locale file with raw substring inclusion and no line filter, so a retired line beside 'do not' or 'never' is still caught. The positive-control assertions prove the predicate fires.",
+    "A9 check: no new test reads a measure/tracks, measure/runs, or measure/archive path. The source scan in ADV-G5 reads only files under the app's src directory."
+  ],
+  "n1_judgement": "Review C's N1 describes a real visual effect: at viewports of 1169 px and above a phone card renders about 576 CSS px wide against a 520 px source, so the browser upscales roughly 11 percent. This is not a sharpness defect that a test or a copy change must fix. Spec D-14 states a vitest cannot read pixels, and 520 px is the largest delivered phone source, so no code change here can add detail. Spec open question 6 and test-strategy section 8.1 record that Daniel accepts the softness or PR captures again. N1 is therefore a page-check judgement for the PM in task 2.5, or an owner decision to recapture. No Playwright sharpness test was added.",
+  "defects_exposed": [],
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "route_to_green": [],
+  "files_added": [
+    "apps/www-reading-advantage/src/lib/__tests__/tutor-screens.adversarial.test.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-screens-copy.adversarial.test.ts"
+  ],
+  "no_changes": [
+    "No product code, locale copy, page, CSS, script, or existing test file was edited.",
+    "No deploy, no push, no build-graph scan, and no build was run.",
+    "One heavy job ran at a time under the PM load watch."
+  ],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "evidence": [
+    "New files gate: Test Files 3 passed (3), Tests 15 passed (15), exit 0.",
+    "Combined gate: Test Files 6 passed (6), Tests 61 passed (61), exit 0.",
+    "webp header parse of the three files returns 520x1125, 520x1125, and 1440x900, matching the manifest declarations.",
+    "grep -rln tutorScreens under src returns only product-pictures.ts, the tutor-advantage page.tsx, and test files, matching ADV-G5.",
+    "grep for the two retired income lines in the locale file exits 1 with no match."
+  ],
+  "ratings": [
+    {"axis": "correctness", "score": 4, "evidence": "All 15 controls pass: manifest sizes match real webp bytes, slot order and copy match spec 6.2 to 6.4, and both retired lines are absent. The only gap is Review C N1, a 520 px to 576 px upscale above 1169 px that is a PM page-check judgement, not a wiring defect."},
+    {"axis": "test_meaning", "score": 4, "evidence": "Fifteen negative controls are built to fail on wrong implementations, with a vacuity and filter-word positive control in ADV-C4; they are additive kill tests rather than failing-first red stages."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "Only three new test files and two run artifacts were written; git status shows no change to product code, locale copy, page, or any existing test."},
+    {"axis": "evidence_quality", "score": 5, "evidence": "Gate counts (3 files 15 tests, 6 files 61 tests), header-byte dimensions, the ADV-G5 source scan, and the retired-line grep are all measured command results."}
+  ]
+}

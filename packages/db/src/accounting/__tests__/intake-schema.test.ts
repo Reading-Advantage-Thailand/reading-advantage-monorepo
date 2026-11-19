@@ -49,6 +49,11 @@ const EXPECTED_TABLES: readonly ExpectedTable[] = [
       { name: "status", sqlType: "text", notNull: true },
       { name: "submission_id", sqlType: "uuid", notNull: false },
       { name: "duplicate_of_submission_id", sqlType: "uuid", notNull: false },
+      {
+        name: "duplicate_of_intake_document_id",
+        sqlType: "uuid",
+        notNull: false,
+      },
       { name: "evidence_reference", sqlType: "text", notNull: false },
       { name: "extraction", sqlType: "text", notNull: false },
       { name: "failure_reason", sqlType: "text", notNull: false },

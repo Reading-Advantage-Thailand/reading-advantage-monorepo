@@ -1,0 +1,80 @@
+# measure-strategy run — www_tutor_calculator_20261117
+
+2026-11-17. Route opencode-go/deepseek-v4.1-flash. Retry after the previous attempt hit its step limit.
+Worktree /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator, branch feat/a63-tutor-calculator.
+Role base 6c47d7fe49398ac91b3703e47b15249d226294cf.
+
+## Work done
+
+1. Read measure/index.md, measure/tracks.md (registry row), the track spec.md and plan.md, and
+   measure/anti-patterns.md (A1 to A16).
+2. Read the real surface: src/lib/product-pictures.ts (as const satisfies, line 17 and the type
+   clause at the end), src/__tests__/products-page-pictures.red.test.tsx (the value loop at line
+   59), the tutor page and its page.test.tsx, the tutor-advantage locale file (export en/th/zh at
+   lines 1, 277, 553), the shadcn ratchet baseline (241 warnings, 36 copies), the selector
+   scripts/ci/affected-apps.mjs (40-character regex, exit 2 otherwise).
+3. Confirmed the worktree has no node_modules (root and app), so the first filtered vitest exits
+   EACCES. The install pre-gate is recorded.
+4. Recomputed the money facts with exact integer arithmetic:
+   - six rates 40.5000, 42.5000, 45.0000, 50.0000, 55.6065, 60.6315 (percent, four decimals);
+   - preset 1 gross 552,000 satang, payout 552,000, tax 16,560, net 535,440;
+   - preset 2 gross 1,265,569, leg payouts 801,000, payout 464,569, tax 13,937, net 450,632;
+   - preset 3 gross 1,870,944, leg payouts 1,201,500, payout 669,444, tax 20,083, net 649,361;
+   - GV 1e9: rate 71.422028 %, BigInt path 71,422,027,600 satang, float path 71,422,027,583,
+     gap 17 satang.
+5. Wrote the strategy with the seven required blocks plus the per-phase anti-pattern coverage:
+   ranked risk list, test layers, Red/Green mapping per plan task, review gates with reasons,
+   gate commands per phase, anti-pattern coverage, human checks, residual risks and the
+   phase_base_sha capture point.
+6. Assigned Phase 1 risk high and Phase 2 risk medium. Review B does not apply as a separate role
+   (static public page, client arithmetic, no auth, no persistence, no server input); six probes
+   fold into Review A. Review C applies to both phases. Adversarial testing applies with 18 named
+   mutants. Browser review applies at 390, 768, 980, and 1280 px in three locales.
+7. The strategy embeds no phase_base_sha. It names the capture point: immediately after the commit
+   of the strategy and its run files, before the first Red role writes a test file; Phase 2 is
+   captured after the Phase 1 checkpoint commit.
+
+## Deliverables
+
+- measure/tracks/www_tutor_calculator_20261117/test-strategy.md (new)
+- measure/runs/www_tutor_calculator_20261117/strategy-6c47d7fe.json (new)
+- measure/runs/www_tutor_calculator_20261117/strategy-6c47d7fe.log (this file)
+
+No product source, no spec.md, and no plan.md was edited. Tests named by the strategy read no file
+outside the repository and compute no hash.
+
+## Open questions sent to the PM
+
+- Q1 Manifest shape: spec 6.2 says "into productPictures"; productPictures is
+  `as const satisfies Record<string, ProductPictureFile>` and the inherited picture test stats each
+  value, so a nested entry breaks the type and throws. Default: a sibling `export const tutorScreens`.
+- Q2 Add `data-testid="tutor-commitments"` to the existing commitments section as the order anchor.
+- Q3 Keep the D-5 price-reset and D-7 clear assertions, which have no acceptance criterion.
+- Q4 Phase 2 capture point: after the Phase 1 checkpoint commit and before task 2.1.
+
+## Verification
+
+- The strategy file exists and names a Red command, a Green gate, and a closeout gate for every
+  task of both phases.
+- The JSON parses (checked with `node -e JSON.parse`).
+- The dismissal of spec-review F7 is recorded: student-mobile/002 shows the spec's quote.
+
+```text
+MEASURE_AGENT_RESULT
+role: measure-strategy
+track: www_tutor_calculator_20261117
+status: pass
+role_base_sha: 6c47d7fe49398ac91b3703e47b15249d226294cf
+artifacts:
+  - measure/tracks/www_tutor_calculator_20261117/test-strategy.md
+  - measure/runs/www_tutor_calculator_20261117/strategy-6c47d7fe.json
+  - measure/runs/www_tutor_calculator_20261117/strategy-6c47d7fe.log
+phase_risk: phase 1 high; phase 2 medium; closeout low
+review_gates: review A applies to both phases; review B folded into A (6 probes); review C applies to both; adversarial applies (18 mutants); browser review applies (390/768/980/1280 px, en/th/zh)
+gates: install pre-gate (pnpm install --frozen-lockfile), targeted vitest per task, whole-package suite, check-types, lint, shadcn ratchet diff, build through heavy-run.sh, selector with the full 40-character base ff028a7105ccd5de0c3e9534dd8536b7667e22de, PM page-check, one www-only push after it
+phase_base_sha: not embedded; capture with `git rev-parse HEAD` right after the strategy commit, before the first Red role
+handoff: Strategy committed. Next role is the orchestrator capturing phase_base_sha, then measure-mid-red for task 1.1. The PM must answer Q1 (manifest shape) before task 2.1; the default is a sibling `tutorScreens` export.
+status: pass
+```
+
+RESULT: PASS

@@ -1,0 +1,89 @@
+Final acceptance, track www_tutor_calculator_20261117
+Audited HEAD: 789511cb1e24ae8244316bb684a088998c1a5a67 (unchanged from the start to the end of the run)
+Route: claude-code/claude-sonnet-5-5#max
+Verdict: FAIL, with one blocker (F1). Every gate passes at HEAD.
+
+## Blocker F1: the later commit 789511cb1 is not covered
+
+The latest phase-acceptance result audits af78cfb43. HEAD is 789511cb1.
+Command: git diff --name-only af78cfb43 HEAD
+Output:
+  measure/tracks/www_tutor_calculator_20261117/plan.md
+  measure/tracks/www_tutor_calculator_20261117/spec.md
+plan.md is a plan file. spec.md is a track path, and it is not a plan file or an evidence file.
+The role rule says: when a later commit is not covered, do not pass final acceptance.
+Fix: run a phase-acceptance delta at 789511cb1, then run final acceptance again at the same HEAD.
+This role checked the spec.md edit against the code and the tests. The edit matches them:
+AC-24 names eight patterns, and www-tutor-reedy-claim.test.tsx lines 35 to 42 hold those eight;
+faq.items.3.answer keeps the package sentence in en, th, and zh; the wording changes match the shipped keys.
+
+## Gates (command and exit code)
+
+1. PROJECT_TESTS: bash heavy-run.sh -c 'cd <worktree> && pnpm --filter www-reading-advantage test -- --maxWorkers=1'
+   Exit 0. Test Files 77 passed (77). Tests 2827 passed (2827).
+   A first background run printed the same counts. The tool did not show its exit code, so a foreground rerun gives it.
+2. PROJECT_CHECKS: pnpm --filter www-reading-advantage exec tsc --noEmit -p .   Exit 0.
+3. PROJECT_LINT: pnpm --filter www-reading-advantage lint   Exit 0.
+4. Build: bash heavy-run.sh -c 'cd <worktree> && pnpm --filter www-reading-advantage build'
+   First run exit 1: the Next.js security-reminder nudge, after the compile, the TypeScript step, and the route table printed.
+   One re-run exit 0. The route table lists /[locale]/products/tutor-advantage.
+5. App selector: node scripts/ci/affected-apps.mjs --base ff028a710... --head 789511cb1...   Prints ["www-reading-advantage"], exit 0.
+6. Ratchet: git diff --exit-code ff028a710..HEAD -- scripts/ci/shadcn-ratchet-baseline.json   Exit 0. lintWarnings 241, copies 36.
+7. Downline scan: rg -n -i 'downline|ดาวน์ไลน์' apps/www-reading-advantage/src --glob '!**/*.test.*'   Exit 1, no hit.
+8. Live URLs: curl -sIL https://www.reading-advantage.com/{en,th,zh}/products/tutor-advantage   HTTP/2 200 for each, curl exit 0.
+9. Deploy: origin/master = af78cfb43. CD run 44142775630: completed, success, headSha af78cfb43.
+10. bash measure/doctor.sh   Exit 1 at the architecture step (see F7). Steps 1 to 3 pass.
+11. Independent check script (final-acceptance-789511cb1-check.mjs)   Exit 0, ALL CHECKS PASS. The first run flagged A3 only
+    because the script used a wrong floor of 60 keys. The correct count is 57. The script was fixed and rerun.
+
+## Independent check results
+
+A1 en screens and calculator are deep-equal to PR v0.4 section 6. A2 zh equals en. A3 th equals the Thai column of
+PR v0.4 sections 2 and 3 (57 of 57 leaves). A4 th has no extra leaf.
+B1 calculateNetwork equals an independent BigInt model of the settlement source on 20,660 inputs, with 0 mismatches.
+B2 half-up tax differs from truncated tax on 9,568 of them. B3 the no-own-students rule changes the payout on 1,121 of them.
+B4 price 1,007 gives tax 12.24 and net 395.63. B5 preset nets are 5,354.40, 4,506.32, and 8,025.25.
+
+## Closeout readiness
+
+- Plan tasks: 36, with 35 marked [x]. Each of the 35 has a Done SHA that is an ancestor of HEAD. C.1 is open (F2).
+- A5: no claim in this plan.md. A6: no overstatement in tracks.md, but the track note is stale (F4). A9: no tests/*.sh reference.
+- doctor.sh exits 1: the analyzer input pin was stale before this track began (F7). The brief accepts this known failure.
+
+## PM audit rows (copy, gallery, tax, source-text tests, D-8)
+
+All five rows are resolved. Copy = PR v0.4 section 6 (A1 to A4). Gallery = five student screens (files 040, 002, 004, 052,
+064 at 520x1125, live HTML shows exactly five). Tax half up as taxService.ts:4 (B1 to B4). The three source-text-read tests
+no longer read source (rg exit 1). The D-8 evidence files are git-ignored by design: .gitignore:56 ignores measure/runs/,
+and only four run files are tracked.
+
+## Nonblocking findings
+
+F2 role-gate counts C.1. F3 PR handoff is v0.6 and has four deltas against the live v0.4 copy. F4 registry row is stale.
+F5 record drift in spec.md, plan.md, and metadata.json. F6 the Thai check by Daniel has no artifact. F7 doctor pin.
+F8 two passing phase results for P2 and P3. F9 four open reviewer nits. The full text is in the result JSON.
+
+MEASURE_AGENT_RESULT
+role: measure-final-acceptance
+status: complete
+track: www_tutor_calculator_20261117
+phase: track review
+commits: none
+tests_run: www suite via heavy-run exit 0 (77 files, 2827 tests); tsc exit 0; lint exit 0; build exit 1 (Next.js security-reminder nudge) then exit 0 on one re-run; affected-apps ["www-reading-advantage"] exit 0; ratchet diff exit 0; downline scan exit 1 no hit; curl en, th, zh HTTP 200 (exit 0); doctor.sh exit 1 (pre-existing architecture pin); independent check script exit 0 (20,660 inputs, 0 mismatches)
+files_changed: measure/runs/www_tutor_calculator_20261117/final-acceptance-789511cb1.json, final-acceptance-789511cb1.log, final-acceptance-789511cb1-check.mjs
+plan_updates: none (gate-only role)
+known_failures: F1 [Blocker] the later commit 789511cb1 changes spec.md and is not covered; nonblocking: doctor.sh exit 1 (F7), role-gate counts task C.1 (F2)
+handoff: FAIL at 789511cb1 with one blocker (F1). Run a phase-acceptance delta at 789511cb1 (two doc files; the spec.md edit was pre-checked against the code and the tests), then rerun final acceptance at the same HEAD. All gates pass and the five PM audit rows are resolved. For closeout fix the registry row, spec section 10 questions 2, 3, and 4, the phase list, metadata.json, and the plan section Answers owed to PR. The PM decides one next www push for the four PR v0.6 deltas.
+END_MEASURE_AGENT_RESULT
+
+## Role-gate output (run after the files above existed; HEAD stayed 789511cb1)
+
+Command: env PROJECT_TESTS='pnpm --filter www-reading-advantage exec vitest run src/lib/tutor-commission.test.ts --maxWorkers=1' PROJECT_CHECKS='pnpm --filter www-reading-advantage exec tsc --noEmit -p .' PROJECT_LINT='pnpm --filter www-reading-advantage lint' python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py role-gate --repo . --role final-acceptance --track www_tutor_calculator_20261117 --phase "track review" --baseline 81df01cf2e7c2954f4a2de1aaee593913a00bc75 --result-file measure/runs/www_tutor_calculator_20261117/final-acceptance-789511cb1.json --log-file measure/runs/www_tutor_calculator_20261117/final-acceptance-789511cb1.log
+
+Output, exit code 1:
+FAIL: audit status must be pass, got 'fail'; F1 [Blocker] final-acceptance: The later commit 789511cb1 is not covered. The latest phase-acceptance result, phase-acceptance-p3-af78cfb43.json, audits af78cfb43, and HEAD is 789511cb1. The command git diff --name-only af78cfb43 HEAD lists measure/tracks/www_tutor_calculator_20261117/plan.md and measure/tracks/www_tutor_calculator_20261117/spec.md. The file spec.md is a track path, and it is not a plan file or an evidence file. Rationale: the role rule passes a later commit only when the diff lists no track path or lists only plan files and evidence files. Fix: run a phase-acceptance delta at 789511cb1 that covers the spec.md edit, then run final acceptance again at the same HEAD. This role checked the spec.md edit against the code and the tests, and the edit matches them (see the evidence list).
+FAIL: track still has 1 non-deferred incomplete tasks
+
+Reading of the output: the gate found the result block and no dispositions error. The three configured gate commands
+(PROJECT_LINT, PROJECT_CHECKS, PROJECT_TESTS) passed, because the gate printed no failure line for them.
+The first failure line repeats blocker F1. The second failure line is task C.1, the closeout move (finding F2).

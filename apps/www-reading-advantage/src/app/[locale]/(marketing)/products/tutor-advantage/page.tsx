@@ -1,19 +1,28 @@
 import { Metadata } from "next";
+import Image from "next/image";
 import { Link } from "@/locales/navigation";
 import { ArrowRight, Check, Mic } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { buildMarketingMetadata } from "@/lib/seo";
-import { siteImages, siteLogos } from "@/lib/site-assets";
-import { SiteImageView } from "@/components/marketing/site-image";
+import { siteLogos } from "@/lib/site-assets";
 import { SectionHeader } from "@/components/marketing/section-header";
 import { TutorClassStepper } from "@/components/marketing/tutor-class-stepper";
+import { TutorCommissionCalculator } from "@/components/marketing/tutor-commission-calculator";
+import ProductPicture from "@/components/products/product-picture";
+import { productPictures, tutorScreens } from "@/lib/product-pictures";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { FAQAccordion } from "@/components/ui/faq-accordion";
 
 const PRINTED_STEPS = 13;
 const PHASE_COUNT = 18;
-const BOOK_ART = [siteImages.primaryBook, siteImages.primaryBookWarm, siteImages.classroomStudentsApp];
 const BOOK_LOGOS = [siteLogos.primary.color, siteLogos.primary.color, siteLogos.reading.color];
+
+/** The three covers in the books.items order; each cover shows whole (spec D-19 item 2). */
+const BOOK_COVERS = [
+  productPictures.primaryCover,
+  productPictures.primaryCover31,
+  productPictures.readingCover,
+];
 
 /**
  * Builds metadata for the localized Tutor Advantage route.
@@ -51,7 +60,8 @@ export default async function TutorAdvantage({
   await params;
   const t = await getScopedI18n("pages.products.tutorAdvantage");
   // Indexed keys are built at run time, so the typed key union does not apply.
-  const key = t as unknown as (k: string) => string;
+  // A value object lets rule 11 pass a literal placeholder for the client to fill.
+  const key = t as unknown as (k: string, values?: Record<string, unknown>) => string;
 
   const phases = Array.from({ length: PHASE_COUNT }, (_, i) => ({
     title: key(`classTour.phases.${i}.title`),
@@ -67,7 +77,70 @@ export default async function TutorAdvantage({
     alt: key(`books.items.${i}.alt`),
   }));
   const roleKeys = [0, 1, 2, 3];
-  const reedyKeys = [0, 1, 2, 3];
+  const reedyKeys = [0, 1, 2];
+  const calculatorCopy = {
+    eyebrow: key("calculator.eyebrow"),
+    heading: key("calculator.heading"),
+    description: key("calculator.description"),
+    volumeNote: key("calculator.volumeNote"),
+    rateNote: key("calculator.rateNote"),
+    payoutNote: key("calculator.payoutNote"),
+    disclaimer: key("calculator.disclaimer"),
+    inputs: {
+      price: key("calculator.inputs.price"),
+      priceNote: key("calculator.inputs.priceNote"),
+      ownStudents: key("calculator.inputs.ownStudents"),
+      legCount: key("calculator.inputs.legCount"),
+      legStudents: key("calculator.inputs.legStudents"),
+      addLeg: key("calculator.inputs.addLeg"),
+      removeLeg: key("calculator.inputs.removeLeg"),
+    },
+    results: {
+      ownGV: key("calculator.results.ownGV"),
+      networkGV: key("calculator.results.networkGV"),
+      rate: key("calculator.results.rate"),
+      gross: key("calculator.results.gross"),
+      legCommissions: key("calculator.results.legCommissions"),
+      tax: key("calculator.results.tax"),
+      net: key("calculator.results.net"),
+    },
+    explain: {
+      ownOnly: key("calculator.explain.ownOnly"),
+      withLegs: key("calculator.explain.withLegs"),
+      zero: key("calculator.explain.zero"),
+      needsOwnStudents: key("calculator.explain.needsOwnStudents"),
+    },
+    graph: {
+      title: key("calculator.graph.title"),
+      caption: key("calculator.graph.caption"),
+      ownBar: key("calculator.graph.ownBar"),
+      legBar: key("calculator.graph.legBar", { n: "{n}" }),
+      grossBar: key("calculator.graph.grossBar"),
+      legCommissionBar: key("calculator.graph.legCommissionBar"),
+      netBar: key("calculator.graph.netBar"),
+      axisBaht: key("calculator.graph.axisBaht"),
+      rateTitle: key("calculator.graph.rateTitle"),
+      rateAxis: key("calculator.graph.rateAxis"),
+      ratePoint: key("calculator.graph.ratePoint"),
+    },
+    presets: [0, 1, 2].map((i) => ({
+      name: key(`calculator.presets.${i}.name`),
+      setup: key(`calculator.presets.${i}.setup`),
+      result: key(`calculator.presets.${i}.result`),
+    })),
+  };
+  // Gallery slots in copy order; every slot is a phone screen of the student app (spec 6.3).
+  const screenCards = [
+    tutorScreens.guidedWriting,
+    tutorScreens.shortAnswer,
+    tutorScreens.feedback,
+    tutorScreens.selfReflection,
+    tutorScreens.classRecord,
+  ].map((picture, i) => ({
+    picture,
+    caption: key(`screens.items.${i}.caption`),
+    alt: key(`screens.items.${i}.alt`),
+  }));
 
   return (
     <main className="overflow-x-hidden bg-site-page">
@@ -119,12 +192,10 @@ export default async function TutorAdvantage({
           </div>
           <div className="lg:col-span-6">
             <div className="overflow-hidden rounded-4xl border border-white/20 shadow-2xl">
-              <SiteImageView
-                image={siteImages.classroomSmallGroup}
+              <ProductPicture
+                picture={productPictures.tutorHero}
                 alt={t("heroExtra.imageAlt")}
-                sizes="(max-width: 1024px) 100vw, 50vw"
                 priority
-                className="h-auto w-full"
               />
             </div>
           </div>
@@ -183,12 +254,7 @@ export default async function TutorAdvantage({
                 key={book.name}
                 className="overflow-hidden rounded-3xl border border-emerald-200 bg-white shadow-sm"
               >
-                <SiteImageView
-                  image={BOOK_ART[i]}
-                  alt={book.alt}
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="aspect-4/3 w-full object-cover"
-                />
+                <ProductPicture picture={BOOK_COVERS[i]} alt={book.alt} />
                 <div className="p-6">
                   <img src={BOOK_LOGOS[i]} alt="" className="mb-4 h-8 w-auto" />
                   <h3 className="text-xl font-semibold text-slate-900">{book.name}</h3>
@@ -223,12 +289,7 @@ export default async function TutorAdvantage({
           </div>
           <div className="lg:col-span-5">
             <div className="overflow-hidden rounded-3xl border border-white/20 shadow-2xl">
-              <SiteImageView
-                image={siteImages.chibiOakClearing}
-                alt={t("reedyBlock.alt")}
-                sizes="(max-width: 1024px) 100vw, 40vw"
-                className="h-auto w-full"
-              />
+              <ProductPicture picture={productPictures.reedyPreview} alt={t("reedyBlock.alt")} />
             </div>
           </div>
         </div>
@@ -265,11 +326,13 @@ export default async function TutorAdvantage({
         <div className="container mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-12">
           <div className="order-2 lg:order-1 lg:col-span-5">
             <div className="overflow-hidden rounded-3xl border border-emerald-200 shadow-lg">
-              <SiteImageView
-                image={siteImages.tutorQuestion}
+              <Image
+                src={productPictures.tutorTeachClass.src}
                 alt={t("tutorRole.alt")}
+                width={productPictures.tutorTeachClass.width}
+                height={productPictures.tutorTeachClass.height}
                 sizes="(max-width: 1024px) 100vw, 40vw"
-                className="h-auto w-full"
+                className="aspect-video w-full object-cover"
               />
             </div>
           </div>
@@ -300,8 +363,44 @@ export default async function TutorAdvantage({
         </div>
       </section>
 
+      {/* Inside the apps */}
+      <section data-testid="tutor-screens" className="bg-site-page py-20 md:py-28">
+        <div className="container mx-auto max-w-6xl px-4 sm:px-6">
+          <SectionHeader
+            eyebrow={t("screens.eyebrow")}
+            title={t("screens.heading")}
+            description={t("screens.description")}
+            accent="text-emerald-800"
+            className="mb-12"
+          />
+          <ul className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {screenCards.map((card) => (
+              <li key={card.picture.src}>
+                <figure className="overflow-hidden rounded-3xl border border-site-border bg-white p-4 shadow-sm">
+                  <ProductPicture picture={card.picture} alt={card.alt} />
+                  <figcaption className="mt-4 text-base leading-relaxed text-site-body">
+                    {card.caption}
+                  </figcaption>
+                </figure>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Commission calculator */}
+      <section
+        id="commission-calculator"
+        data-testid="tutor-calculator"
+        className="scroll-mt-24 bg-white py-20 md:py-28"
+      >
+        <div className="container mx-auto max-w-6xl px-4 sm:px-6">
+          <TutorCommissionCalculator copy={calculatorCopy} />
+        </div>
+      </section>
+
       {/* Honest basics */}
-      <section className="py-20 md:py-24">
+      <section className="py-20 md:py-24" data-testid="tutor-commitments">
         <div className="container mx-auto max-w-6xl px-4 sm:px-6">
           <SectionHeader
             eyebrow={t("commitments.eyebrow")}

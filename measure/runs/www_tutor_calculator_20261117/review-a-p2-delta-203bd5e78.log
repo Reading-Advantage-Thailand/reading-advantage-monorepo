@@ -1,0 +1,17 @@
+Review A delta log: Phase 2 PR copy (96887abe5..203bd5e78), track www_tutor_calculator_20261117.
+HEAD 203bd5e78 verified clean. Phase base d279b8703 resolves.
+Money: node recompute of {3000, 2, [4,4,4]} gives 42,000 / 59.1273% / 24,833.45 / 16,560 / 8,273.45 / 248.20 / 8,025.25. All pins match.
+Copy: chart labels, preset 3, shortAnswer, studentHome match handoff v0.4 s8 in en and th. zh equals en. Draft comments gone.
+Wiring: shortAnswer rename is complete. page.tsx change is the four-line minimum. No stale consumer.
+Tests: heroValue pin proves the displayed hero and fails on a missing figure (A4 fixture demo). Pins fail on old inputs. Live rerun: tutor-commission.test.ts 27/27 exit 0.
+Verdict: PASS, no blockers, two nits (handoff 1-satang float note; duplicated heroValue helper).
+MEASURE_AGENT_RESULT
+status: pass
+verdict: PASS
+blocking_findings: 0
+nonblocking_findings: 2
+retry_recommendation: none
+result_path: measure/runs/www_tutor_calculator_20261117/review-a-p2-delta-203bd5e78.json
+audited_head_sha: 203bd5e78dceb9c1701ac708886915f340005d5e
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+route: opencode-go/muse-spark-1.3-contributor#high

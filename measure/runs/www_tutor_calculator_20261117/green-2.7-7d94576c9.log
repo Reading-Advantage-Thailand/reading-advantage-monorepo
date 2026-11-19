@@ -1,0 +1,115 @@
+MEASURE GREEN — PHASE 2 TASK 2.7 (PR v0.4 section 8 final lines)
+Track: www_tutor_calculator_20261117
+Phase: 2
+Task: 2.7
+Date: 2026-11-17
+Worktree: /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator
+Branch: feat/a63-tutor-calculator
+Route: opencode-go/deepseek-v4.1-flash
+  (substitution record: ra-quota pick green returns opencode-go/hy4-flash-free, the Red family
+  of this track, so it is excluded)
+
+BASES AND RANGE
+phase_base_sha: d279b870341c067c33fc884ae8863b5428487c17
+role_base_sha:  6c2d67161f9f86ee371901a3abf0648fb37341c6
+final HEAD:     203bd5e78dceb9c1701ac708886915f340005d5e
+The committed Red change is inside d279b8703..HEAD:
+  d91e6c527 test(www): pin v0.4 s8 copy Red
+  6c2d67161 docs(measure): record red 2.7 evidence
+  07a22294e test(www): pin preset 3 net as hero figure
+  079e33f9e docs(measure): record red 2.7 fix evidence
+git status --short was empty before the first edit. The five Green files were unchanged since
+the blocked attempt.
+
+IMPLEMENTATION (commit 7d94576c9)
+1. locales/pages/products/tutor-advantage.ts, en, th, and zh:
+   - chart keys became chart.legVolume, chart.legPayout, chart.yourPayout with the section 8.1
+     en and th lines; the draft comments are removed.
+   - preset 3 name, setup, and result became the section 8.1 en and th lines; the draft comment
+     is removed.
+   - screens.items[0] took the section 8.4 studentHome caption and alt; screens.items[1] took
+     the section 8.2 shortAnswer caption and alt; the D-15a draft comment is removed.
+   - zh keeps the English values at every changed path. The two D-10 placeholder comments stay.
+2. lib/tutor-commission.ts: NETWORK_PRESETS[2] is now
+   { price: CLASS_PRICE_DEFAULT, personalStudents: 2, studentsPerLeg: [4, 4, 4] }.
+3. components/marketing/tutor-commission-calculator.tsx: the chart prop type and the three
+   reads use legVolume, legPayout, and yourPayout.
+4. lib/product-pictures.ts: the manifest key lessonPhases became shortAnswer; order, size, and
+   portrait: false are unchanged.
+5. app/[locale]/(marketing)/products/tutor-advantage/page.tsx: the fifth product file. Its
+   chart copy keys became the three new keys, and the gallery reads tutorScreens.shortAnswer.
+   Without these two edits, the manifest rename breaks check-types and the page render.
+
+RED RERUN (BEFORE THE EDIT)
+Command: the ten-file heavy-run vitest command of the brief.
+Exit: 1
+Evidence: Test Files 6 failed | 4 passed (10); Tests 25 failed | 115 passed (140).
+The provisional Green attempt stopped at one Red pin. Red commit 07a22294e fixed it: the preset 3
+net assertion now reads the hero figure through a heroValue() helper and expects 8,025.25. The
+adversarial six-dd pins are untouched. No product file changed for the correction.
+
+GREEN GATE
+Command: the same ten-file heavy-run vitest command.
+Exit: 0
+Evidence:
+  RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/a63-tutor-calculator/apps/www-reading-advantage
+  Test Files  10 passed (10)
+       Tests  140 passed (140)
+    Duration  8.30s (transform 175ms, setup 413ms, import 633ms, tests 2.06s, environment 4.25s)
+
+GATE 2 — TYPES
+Command: pnpm turbo run check-types --filter=www-reading-advantage
+Exit: 0
+Evidence: cache miss, executing 710f6ee763968fac; $ tsc --noEmit; 1 successful, 1 total; 4.494s
+
+GATE 3 — LINT
+Command: pnpm --filter www-reading-advantage lint
+Exit: 0
+Evidence: $ eslint . with no further output. Zero lint errors and zero warnings, so no
+shadcn/* error in any touched file.
+
+COMMITS
+7d94576c9018ddcd1c394837d40dad0f61076830
+  feat(www): apply PR v0.4 s8 tutor copy (track_id: www_tutor_calculator_20261117)
+  Subject length 82 characters. Five files:
+  - apps/www-reading-advantage/src/locales/pages/products/tutor-advantage.ts
+  - apps/www-reading-advantage/src/lib/tutor-commission.ts
+  - apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.tsx
+  - apps/www-reading-advantage/src/lib/product-pictures.ts
+  - apps/www-reading-advantage/src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx
+203bd5e78dceb9c1701ac708886915f340005d5e
+  docs(measure): record green 2.7 evidence (track_id: www_tutor_calculator_20261117)
+  Subject length 87 characters. Files: measure/tracks/www_tutor_calculator_20261117/plan.md
+  only. The plan marks task 2.7 [x] with Done: 7d94576c9 and both run results.
+
+NOT RUN
+No build, no build-graph scan, no deploy, no push, per the brief.
+
+PLAN MARKERS
+[x] 2.7 Done: 7d94576c9. Ten-file gate: Test Files 10 passed (10); Tests 140 passed (140).
+      Types exit 0; lint exit 0.
+No task flipped to [b] in this task. Task 2.5 stays [b] with the PM page-check.
+
+FINAL GREEN HEAD
+203bd5e78dceb9c1701ac708886915f340005d5e
+git status --short: clean
+
+MEASURE_AGENT_RESULT
+role: measure-green
+status: complete
+track: www_tutor_calculator_20261117
+phase: 2
+commits: 7d94576c9, 203bd5e78
+tests_run: ten-file targeted suite exit 0 (10 files, 140 passed); check-types exit 0; lint exit 0
+files_changed: tutor-advantage.ts (locale), tutor-commission.ts, tutor-commission-calculator.tsx, product-pictures.ts, page.tsx; plan.md
+plan_updates: task 2.7 marked [x] with Done: 7d94576c9 and both run results
+known_failures: none
+handoff: |
+  Task 2.7 is complete on final HEAD 203bd5e78. The ten-file targeted suite passes 140 of 140,
+  types and lint exit 0, and no shadcn/* error appears in a touched file.
+  Reviewer scope: the five product files in 7d94576c9 and the plan text of task 2.7.
+  The implementation commit holds the four named product files plus page.tsx, which needed the
+  three chart copy keys and tutorScreens.shortAnswer so check-types and the page render pass
+  after the manifest rename.
+  Next: task 2.5 stays [b] with the PM page-check, and task 2.6 stays open.
+END_MEASURE_AGENT_RESULT
