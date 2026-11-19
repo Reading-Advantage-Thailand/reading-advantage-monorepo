@@ -202,6 +202,8 @@
 
   Adversarial limitation — the guard reads the package key before the last at sign. The key `next@npm:next@16.2.9` names the package `next@npm:next`, so an aliased copy stays outside the floor of next when a good copy is also present. The workspace override pins next to the exact version 16.4.1, so pnpm cannot write this key form. The limitation is nonblocking.
 
+  Correction (Review B Phase 4, NB-1, 2026-11-19) — the sentence "No unclassified high finding remains" is false. `follow-redirects@1.16.1` keeps GHSA-mrwp-f3q8-3g9p open at the phase base and at HEAD. Task 4.5 raises the guard floor to 1.16.2. Green must resolve the lockfile. The track does not close on the task 2.14 claim.
+
 ## Phase 3: Redeploy list and merge
 
 - [x] 3.1 Write `docs/deployment/security-upgrade-2026-10.md`. It names each of the ten Cloud Run services. Each covered entry gives the app folder, the commit, the order of the deploy and one check after the deploy. The order puts the lowest-traffic covered services first. `primary-advantage-app` goes last among the covered services, because it carries the most traffic. `reading-advantage-web` is "NOT COVERED by this commit; do not deploy apps/reading-advantage to this service". Its entry gives the reason, the source of its live image, and the owner of its patch. Its entry gives no commit, no order, and no check. Test: AC-6. (0cd9d88b5)
