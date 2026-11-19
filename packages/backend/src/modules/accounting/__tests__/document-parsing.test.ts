@@ -908,6 +908,7 @@ describe("remaining spec section 6 read paths", () => {
           A1: "Test Company Ltd.",
           A2: "ใบแจ้งหนี้ / INVOICE",
           B5: "PA-INV-FAKE-001",
+          A10: "Date: 15 Oct 2026",
         } as Record<string, string | number | null>,
       }),
     );
@@ -915,6 +916,7 @@ describe("remaining spec section 6 read paths", () => {
     const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
     expect(draft["extraction"]).toBe("local-text");
     expect(draft["invoiceNo"]).toBe("PA-INV-FAKE-001");
+    expect(draft["date"]).toBe("2026-10-15");
   });
 
   it("reads a withholding certificate from its text layer locally", () => {
@@ -1000,9 +1002,10 @@ describe("A601 label boundary with unequal money", () => {
   it("reads unequal school subtotal and net total exactly", () => {
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
-      text: "Test invoice PA-INV-FAKE-009\nSubtotal: 50,000.00\nTotal: 30,000.00",
+      text: "Test invoice PA-INV-FAKE-009\nDate: 15 ต.ค. 2569\nSubtotal: 50,000.00\nTotal: 30,000.00",
     }) as Record<string, unknown>;
     const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["date"]).toBe("2026-10-15");
     expect(draft["subtotal"]).toBe("5000000");
     expect(draft["netTotal"]).toBe("3000000");
   });
@@ -1159,6 +1162,7 @@ describe("A606 school invoice sheet fields", () => {
             A1: "Test Company Ltd.",
             A2: "ใบเสร็จรับเงิน / RECEIPT",
             B5: "PA-REC-FAKE-001-T1",
+            A10: "Date: 15 Oct 2026",
           } as Record<string, string | number | null>,
         },
       ],
@@ -1166,6 +1170,7 @@ describe("A606 school invoice sheet fields", () => {
     const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
     expect(draft["receiptNo"]).toBe("PA-REC-FAKE-001-T1");
     expect(draft["invoiceNo"]).toBeNull();
+    expect(draft["date"]).toBe("2026-10-15");
   });
 
   it("reads the invoice date or returns the review result", () => {
@@ -1805,12 +1810,14 @@ describe("A620 currency on every section 8 draft", () => {
             A1: "Test School Company Ltd.",
             A2: "ใบแจ้งหนี้ / INVOICE",
             B5: "PA-INV-FAKE-004-T2",
+            A10: "Date: 15 Oct 2026",
             A23: "Currency: THB",
           } as Record<string, string | number | null>,
         },
       ],
     }) as Record<string, unknown>;
     const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["date"]).toBe("2026-10-15");
     expect(draft["currency"]).toBe("THB");
   });
 
@@ -1821,10 +1828,12 @@ describe("A620 currency on every section 8 draft", () => {
         "Test School Company Ltd.",
         "ใบแจ้งหนี้ / INVOICE",
         "No: PA-INV-FAKE-005-T2",
+        "Date: 15 ต.ค. 2569",
         "Total: THB 30,000.00",
       ].join("\n"),
     }) as Record<string, unknown>;
     const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["date"]).toBe("2026-10-15");
     expect(draft["currency"]).toBe("THB");
   });
 
