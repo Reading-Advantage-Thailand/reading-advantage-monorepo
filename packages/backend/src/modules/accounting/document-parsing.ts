@@ -1,3 +1,17 @@
+/**
+ * Document parsers of spec section 8 and the two local binary readers
+ * (plan tasks 6.1 and 6.2, Phase 10 year-file helpers above).
+ *
+ * Reader output limits (Review B B601 and B602, 2026-11-19). The intake size
+ * limit is 20 MB, so a file below that limit can still inflate to gigabytes.
+ * Both inflate calls therefore take a fixed output limit, and the PDF text
+ * stops at a fixed character count:
+ * - `MAX_ZIP_ENTRY_BYTES` = 8 MiB: one `.xlsx` part after inflation.
+ * - `MAX_PDF_INFLATE_BYTES` = 8 MiB: one PDF FlateDecode stream after inflation.
+ * - `MAX_PDF_TEXT_CHARS` = 1,048,576: the whole extracted PDF text layer.
+ * A part or stream above its limit gives no text, and no parser then builds a
+ * draft. Both numbers sit inside the 20 MB intake limit.
+ */
 import { inflateRawSync, inflateSync } from "node:zlib";
 
 import { z } from "zod";
@@ -587,13 +601,49 @@ export function parseMonthlyWhtFiling(
 }
 
 /**
- * Parses a PND.3 monthly withholding filing on other income, with its
- * attachment and its payment receipt. The filing kind comes from the text.
- * @param input The text layer of the file.
- * @returns The parsed filing, or unmatched with `period-unreadable`.
+ * Result of the PND.3 parser: the Phase 10 year-file result, extended with the
+ * section 8 filing-sheet draft when the text holds its header (A602).
  */
-export function parseWhtFilingPnd3(input: YearFileParseInput): YearFileParseResult {
-  return parseMonthlyWhtFiling(normalizeDigits(input.text), "wht-filing-pnd3");
+export type WhtFilingPnd3ParseResult = YearFileParseResult & {
+  readonly draft?: WhtFilingPnd3Draft;
+};
+
+/**
+ * Parses a PND.3 monthly withholding filing on other income, with its
+ * attachment and its payment receipt. The filing kind comes from the text. The
+ * Phase 10 year-file contract stays: status, period, tax year, source month,
+ * and facts keep their meaning (spec section 9b). When the text holds the
+ * section 8 filing-sheet header, the result also carries the draft that
+ * `whtFilingPnd3DraftSchema` validates (A602). A sheet with a header but no
+ * Phase 10 period takes its month from the first dated payee row.
+ * @param input The text layer of the file.
+ * @returns The parsed filing with its optional draft, or unmatched with
+ *   `period-unreadable`.
+ */
+export function parseWhtFilingPnd3(
+  input: YearFileParseInput,
+): WhtFilingPnd3ParseResult {
+  const text = normalizeDigits(input.text);
+  const base = parseMonthlyWhtFiling(text, "wht-filing-pnd3");
+  const draft = readWhtFilingPnd3Draft(text);
+  if (draft === null) return base;
+  if (base.status === "parsed") return { ...base, draft };
+  const range = pnd3DraftMonthRange(draft);
+  if (range === null) return base;
+  return {
+    status: "parsed",
+    unmatchedReason: null,
+    typeKey: "wht-filing-pnd3",
+    filingKind: readWhtFilingKind(text),
+    periodKind: "month",
+    periodStart: range.start,
+    periodEnd: range.end,
+    taxYear: Number(range.end.slice(0, 4)),
+    sourceMonth: range.end.slice(0, 7),
+    extraction: "local-text",
+    facts: readMonthlyWhtFacts(text),
+    draft,
+  };
 }
 
 /*
@@ -602,21 +652,6 @@ export function parseWhtFilingPnd3(input: YearFileParseInput): YearFileParseResu
  * keep their behavior; this block adds the thirteen parser rows of the
  * structure report of 2026-11-11 and the eleven draft schemas.
  */
-
-/**
- * Named error of a parser whose rules are not filled in yet (plan task 6.1).
- * A parser throws it instead of returning a silent row (open item Q4).
- */
-export class ParsingRulesPending extends Error {
-  /**
-   * Builds the error for one parser name.
-   * @param parserName The parser export that has no rules yet.
-   */
-  constructor(parserName: string) {
-    super(`${parserName} has no parsing rules yet`);
-    this.name = "ParsingRulesPending";
-  }
-}
 
 /** Result of a readable document: the draft that passed its schema. */
 export type ParsedDocument<TDraft> = {
@@ -721,8 +756,11 @@ const draftTextField = z.string().min(1).max(2048);
 /** A text field that a document may not hold. */
 const optionalDraftTextField = draftTextField.nullable();
 
-/** Money as digit text in exact minor units (spec section 2.1). */
-const draftMoneySchema = z.string().regex(/^-?\d+$/u);
+/**
+ * Money as digit text in exact minor units (spec section 2.1). The 18-digit
+ * maximum stops a hostile cell from growing without bound (Review B B605).
+ */
+export const draftMoneySchema = z.string().regex(/^-?\d+$/u).max(18);
 
 /** Money that a document may not hold. */
 const optionalDraftMoneySchema = draftMoneySchema.nullable();
@@ -864,6 +902,20 @@ function readForeignDate(raw: string | null): string | null {
  * @param value A number cell, or money text such as `THB 1,000.00` or `RMB10000`.
  * @returns The minor units as digit text, or null when the value is not money.
  */
+/**
+ * Builds digit text without leading zeros; a zero amount drops the sign
+ * (A612). A nonzero amount keeps its minus sign.
+ * @param minor The digit text before normalization.
+ * @param negative Whether the source carries a minus sign.
+ * @returns The normalized minor units.
+ */
+function normalizeMinorUnits(minor: string, negative: boolean): string {
+  const stripped = minor.replace(/^0+(?=\d)/u, "");
+  const normalized = stripped === "" ? "0" : stripped;
+  if (negative && /[1-9]/u.test(normalized)) return `-${normalized}`;
+  return normalized;
+}
+
 function toMinorUnits(value: string | number | null | undefined): string | null {
   if (value === null || value === undefined) return null;
   if (typeof value === "number") {
@@ -881,40 +933,71 @@ function toMinorUnits(value: string | number | null | undefined): string | null 
   if (whole === "") return null;
   if (/[^0]/u.test(fraction.slice(2))) return null;
   const minor = `${whole}${fraction.slice(0, 2).padEnd(2, "0")}`;
-  return negative ? `-${minor}` : minor;
+  return normalizeMinorUnits(minor, negative);
 }
 
 /**
- * Reads the text after a colon label on one line.
+ * Builds the label pattern with word limits on both sides. The limits stop
+ * `Total` from matching inside `Subtotal` (A601) and `To` from matching
+ * `Total`. A negative lookbehind is used because a word boundary has no
+ * meaning next to a Thai label.
+ * @param labelSource Regex source of the label.
+ * @returns The bounded label source.
+ */
+function boundedLabel(labelSource: string): string {
+  return `(?<![A-Za-z0-9_])(?:${labelSource})(?![A-Za-z0-9_])`;
+}
+
+/**
+ * Cuts a captured value at the second column of a printed line. The structure
+ * report prints two columns on one line, separated by two or more spaces
+ * (A603).
+ * @param value The captured rest of the line.
+ * @returns The first column, trimmed.
+ */
+function firstPrintedColumn(value: string): string {
+  return (value.split(/[ \t]{2,}/u)[0] ?? "").trim();
+}
+
+/**
+ * Reads the text after a label on one line. The colon is optional, because the
+ * report prints some labels without one (A603, A607).
  * @param text Normalized document text.
  * @param labelSource Regex source of the label.
  * @returns The trimmed value, or null when the label is absent or empty.
  */
 function readLabeledText(text: string, labelSource: string): string | null {
   const pattern = new RegExp(
-    `(?:${labelSource})[ \\t]*[:：][ \\t]*([^\\n]+)`,
+    `${boundedLabel(labelSource)}[ \\t]*[:：]?[ \\t]*([^\\n]+)`,
     "iu",
   );
   const match = pattern.exec(text);
   if (match === null) return null;
-  const value = (match[1] ?? "").trim();
+  const value = firstPrintedColumn(match[1] ?? "");
   return value === "" ? null : value;
 }
 
 /**
- * Reads the first money value that follows a label and its optional currency.
+ * Reads the first money value that follows a label, its optional parenthetical
+ * rate, an optional colon, and an optional currency. A minus sign may stand
+ * before the currency, as in `-THB 5,000.00` (A604).
  * @param text Normalized document text.
  * @param labelSource Regex source of the money label.
  * @returns The minor units as digit text, or null when no amount follows.
  */
 function readLabeledMoney(text: string, labelSource: string): string | null {
   const pattern = new RegExp(
-    `(?:${labelSource})[ \\t]*(?:\\([^)\\n]*\\))?[ \\t]*[:：]?[ \\t]*(?:[A-Z]{3}[ \\t]*|[฿$][ \\t]*)?(-?\\(?[\\d,]+(?:\\.\\d+)?\\)?)`,
+    `${boundedLabel(labelSource)}[ \\t]*(?:\\([^)\\n]*\\))?[ \\t]*[:：]?[ \\t]*` +
+      `(-?)[ \\t]*(?:[A-Z]{3}[ \\t]*|[฿$][ \\t]*)?(-?\\(?[\\d,]+(?:\\.\\d+)?\\)?)`,
     "iu",
   );
   const match = pattern.exec(text);
   if (match === null) return null;
-  return toMinorUnits(match[1] ?? "");
+  const sign = match[1] === "-" ? "-" : "";
+  const amount = toMinorUnits(match[2] ?? "");
+  if (amount === null) return null;
+  if (sign === "-" && amount !== "0") return amount.startsWith("-") ? amount : `-${amount}`;
+  return amount;
 }
 
 /**
@@ -1105,6 +1188,126 @@ export const whtFilingPnd3DraftSchema = z.object({
 /** Validated draft of one PND.3 filing sheet. */
 export type WhtFilingPnd3Draft = z.infer<typeof whtFilingPnd3DraftSchema>;
 
+/**
+ * Reads a PND.3 amount that prints baht and satang in two text cells, as
+ * `10,000 00` (structure report section 3.5).
+ * @param value The two-cell amount text.
+ * @returns The minor units as digit text, or null when no amount exists.
+ */
+function toTwoCellMinorUnits(value: string): string | null {
+  const twoCell = /^([\d,]+)[ \t]+(\d{2})$/u.exec(value.trim());
+  if (twoCell !== null) {
+    return toMinorUnits(`${twoCell[1] ?? ""}.${twoCell[2] ?? ""}`);
+  }
+  return toMinorUnits(value);
+}
+
+/**
+ * Reads the payee rows of a PND.3 filing sheet. Each row starts with its
+ * sequence number and prints its cells separated by two or more spaces.
+ * @param text Normalized document text.
+ * @returns The payee rows of the draft.
+ */
+function readPnd3Rows(text: string): WhtFilingPnd3Draft["rows"] {
+  const rows: WhtFilingPnd3Draft["rows"] = [];
+  for (const line of text.split(/\r?\n/u)) {
+    const trimmed = line.trim();
+    if (/^Total\b/iu.test(trimmed)) continue;
+    const parts = trimmed.split(/[ \t]{2,}/u);
+    if (parts.length < 8) continue;
+    const seq = Number(parts[0]);
+    if (!Number.isInteger(seq) || seq < 1) continue;
+    const rate = Number(parts[5]);
+    const condition = Number(parts[8]);
+    rows.push({
+      seq,
+      payeeTaxId: parts[1] ?? null,
+      payeeName: parts[2] ?? null,
+      payeeAddress: null,
+      paymentDate: readBuddhistNumericDate(parts[3] ?? null),
+      incomeType: parts[4] ?? null,
+      taxRatePercent: Number.isFinite(rate) ? rate : null,
+      amountPaid: toTwoCellMinorUnits(parts[6] ?? ""),
+      taxWithheld: toTwoCellMinorUnits(parts[7] ?? ""),
+      condition: Number.isInteger(condition) ? condition : null,
+    });
+  }
+  return rows;
+}
+
+/**
+ * Reads the totals row of a PND.3 filing sheet.
+ * @param text Normalized document text.
+ * @returns The total amount paid and the total tax withheld.
+ */
+function readPnd3Totals(text: string): {
+  readonly amountPaid: string | null;
+  readonly taxWithheld: string | null;
+} {
+  for (const line of text.split(/\r?\n/u)) {
+    const match =
+      /^Total[ \t]{2,}([\d,]+[ \t]+\d{2})[ \t]{2,}([\d,]+[ \t]+\d{2})[ \t]*$/iu.exec(
+        line.trim(),
+      );
+    if (match === null) continue;
+    return {
+      amountPaid: toTwoCellMinorUnits(match[1] ?? ""),
+      taxWithheld: toTwoCellMinorUnits(match[2] ?? ""),
+    };
+  }
+  return { amountPaid: null, taxWithheld: null };
+}
+
+/**
+ * Reads the section 8 draft of a PND.3 filing sheet. The header must be
+ * present; otherwise the text is not a filing sheet of this shape (A602).
+ * @param text Normalized document text.
+ * @returns The draft, or null when the header is absent.
+ */
+function readWhtFilingPnd3Draft(text: string): WhtFilingPnd3Draft | null {
+  const referenceNumber =
+    /Reference[ \t]*[:：][ \t]*([A-Z][0-9]{12})/iu.exec(text)?.[1] ?? null;
+  const withholderTaxId =
+    /Withholder tax id[ \t]*[:：][ \t]*([0-9-]+)/iu.exec(text)?.[1] ?? null;
+  if (referenceNumber === null && withholderTaxId === null) return null;
+  const withholderBranch =
+    /Withholder tax id[^\n]*?Branch[ \t]*[:：][ \t]*(\S+)/iu.exec(text)?.[1] ??
+    /Branch[ \t]*[:：][ \t]*(\S+)/iu.exec(text)?.[1] ??
+    null;
+  const sheet = /Sheet[ \t]*(\d+)[ \t]*of[ \t]*(\d+)/iu.exec(text);
+  const totals = readPnd3Totals(text);
+  return {
+    referenceNumber,
+    withholderTaxId,
+    withholderBranch,
+    sheetNo: sheet?.[1] ?? null,
+    sheetsTotal: sheet?.[2] ?? null,
+    rows: readPnd3Rows(text),
+    totalAmountPaid: totals.amountPaid,
+    totalTaxWithheld: totals.taxWithheld,
+    extraction: "local-text",
+  };
+}
+
+/**
+ * Returns the month range of the first dated payee row of a PND.3 draft.
+ * @param draft The PND.3 draft.
+ * @returns The first-to-last-day range, or null when no row holds a date.
+ */
+function pnd3DraftMonthRange(draft: WhtFilingPnd3Draft): DateRange | null {
+  for (const row of draft.rows) {
+    if (row.paymentDate === null || row.paymentDate === undefined) continue;
+    const year = Number(row.paymentDate.slice(0, 4));
+    const month = Number(row.paymentDate.slice(5, 7));
+    if (!Number.isInteger(year) || !Number.isInteger(month)) continue;
+    return {
+      start: isoDate(year, month, 1),
+      end: isoDate(year, month, daysInMonth(year, month)),
+    };
+  }
+  return null;
+}
+
 /** Draft of an encrypted bank statement; the report knows no field (PM-13). */
 export const bankStatementDraftSchema = z.object({
   extraction: accountingExtractionSchema,
@@ -1249,6 +1452,21 @@ const ZIP_CENTRAL_SIGNATURE = 0x02014b50;
 const ZIP_LOCAL_SIGNATURE = 0x04034b50;
 
 /**
+ * Largest one `.xlsx` part after inflation: 8 MiB. A larger part gives no
+ * text, so a ZIP bomb yields a review result and never a draft (B602).
+ */
+export const MAX_ZIP_ENTRY_BYTES = 8 * 1024 * 1024;
+
+/**
+ * Largest one PDF FlateDecode stream after inflation: 8 MiB. A larger stream
+ * gives no text, so a PDF bomb yields a review result and never a draft (B601).
+ */
+export const MAX_PDF_INFLATE_BYTES = 8 * 1024 * 1024;
+
+/** Largest whole PDF text layer: 1,048,576 characters (B601). */
+const MAX_PDF_TEXT_CHARS = 1024 * 1024;
+
+/**
  * Reads the central directory of a ZIP archive.
  * @param buffer The archive bytes.
  * @returns The entries, or an empty list when the archive is not a ZIP.
@@ -1292,21 +1510,62 @@ function readZipEntries(buffer: Buffer): readonly ZipEntry[] {
 function readZipEntry(buffer: Buffer, entry: ZipEntry): string | null {
   if (entry.localOffset + 30 > buffer.length) return null;
   if (buffer.readUInt32LE(entry.localOffset) !== ZIP_LOCAL_SIGNATURE) return null;
+  if (entry.compressedSize > MAX_ZIP_ENTRY_BYTES) return null;
   const nameLength = buffer.readUInt16LE(entry.localOffset + 26);
   const extraLength = buffer.readUInt16LE(entry.localOffset + 28);
   const start = entry.localOffset + 30 + nameLength + extraLength;
-  const data = buffer.subarray(start, start + entry.compressedSize);
-  if (entry.method === 0) return data.toString("utf8");
+  const end = start + entry.compressedSize;
+  if (end > buffer.length) return null;
+  const data = buffer.subarray(start, end);
+  if (entry.method === 0) {
+    if (data.length > MAX_ZIP_ENTRY_BYTES) return null;
+    return data.toString("utf8");
+  }
   if (entry.method !== 8) return null;
   try {
-    return inflateRawSync(data).toString("utf8");
+    return inflateRawSync(data, { maxOutputLength: MAX_ZIP_ENTRY_BYTES }).toString(
+      "utf8",
+    );
   } catch {
     return null;
   }
 }
 
 /**
- * Decodes the XML entities that an `.xlsx` part may carry.
+ * Returns true when a numeric XML character reference names a real Unicode
+ * code point: 0 to 0x10FFFF and outside the surrogate range (B604, A608).
+ * @param codePoint The parsed reference value.
+ * @returns True for a code point that a JS string can hold.
+ */
+function isValidCodePoint(codePoint: number): boolean {
+  return (
+    Number.isInteger(codePoint) &&
+    codePoint >= 0 &&
+    codePoint <= 0x10ffff &&
+    (codePoint < 0xd800 || codePoint > 0xdfff)
+  );
+}
+
+/**
+ * Returns true when an XML part holds a numeric character reference outside
+ * the Unicode range. Such a part is treated as hostile (B604).
+ * @param xml Raw XML text.
+ * @returns True for one or more invalid references.
+ */
+function hasInvalidCharacterReference(xml: string): boolean {
+  for (const match of xml.matchAll(/&#x([0-9a-fA-F]+);/gu)) {
+    if (!isValidCodePoint(Number.parseInt(match[1] ?? "", 16))) return true;
+  }
+  for (const match of xml.matchAll(/&#(\d+);/gu)) {
+    if (!isValidCodePoint(Number(match[1] ?? ""))) return true;
+  }
+  return false;
+}
+
+/**
+ * Decodes the XML entities that an `.xlsx` part may carry. A numeric reference
+ * outside the Unicode range keeps its literal text and never raises (B604,
+ * A608).
  * @param text Raw XML text.
  * @returns The decoded text.
  */
@@ -1316,22 +1575,26 @@ function decodeXmlEntities(text: string): string {
     .replace(/&gt;/gu, ">")
     .replace(/&quot;/gu, '"')
     .replace(/&apos;/gu, "'")
-    .replace(/&#x([0-9a-fA-F]+);/gu, (_match, hex: string) =>
-      String.fromCodePoint(Number.parseInt(hex, 16)),
-    )
-    .replace(/&#(\d+);/gu, (_match, decimal: string) =>
-      String.fromCodePoint(Number(decimal)),
-    )
+    .replace(/&#x([0-9a-fA-F]+);/gu, (match, hex: string) => {
+      const codePoint = Number.parseInt(hex, 16);
+      return isValidCodePoint(codePoint) ? String.fromCodePoint(codePoint) : match;
+    })
+    .replace(/&#(\d+);/gu, (match, decimal: string) => {
+      const codePoint = Number(decimal);
+      return isValidCodePoint(codePoint) ? String.fromCodePoint(codePoint) : match;
+    })
     .replace(/&amp;/gu, "&");
 }
 
 /**
  * Reads the shared strings of an `.xlsx` workbook.
  * @param xml The `xl/sharedStrings.xml` text, or null when the part is absent.
- * @returns The shared strings in index order.
+ * @returns The shared strings in index order, or null when the part holds a
+ *   character reference outside the Unicode range (B604).
  */
-function readSharedStrings(xml: string | null): readonly string[] {
+function readSharedStrings(xml: string | null): readonly string[] | null {
   if (xml === null) return [];
+  if (hasInvalidCharacterReference(xml)) return null;
   const strings: string[] = [];
   const itemPattern = /<si\b[^>]*>([\s\S]*?)<\/si>/gu;
   let item: RegExpExecArray | null = itemPattern.exec(xml);
@@ -1460,9 +1723,12 @@ function readWorksheetCells(
 /**
  * Reads an `.xlsx` workbook: every worksheet in workbook order, with the stored
  * values of its cells. The reader calculates no formula; a formula cell without
- * a stored result holds no value (PM-8, PM-9).
+ * a stored result holds no value (PM-8, PM-9). A part above the inflate limit
+ * (B602) or a character reference outside the Unicode range (B604) gives an
+ * empty workbook and no draft.
  * @param bytes The workbook bytes.
- * @returns The worksheets; an empty list when the bytes are not a workbook.
+ * @returns The worksheets; an empty list when the bytes are not a workbook or
+ *   a part is hostile.
  */
 export function readWorkbook(bytes: Uint8Array): Workbook {
   const buffer = Buffer.from(bytes);
@@ -1473,6 +1739,7 @@ export function readWorkbook(bytes: Uint8Array): Workbook {
     return entry === undefined ? null : readZipEntry(buffer, entry);
   };
   const sharedStrings = readSharedStrings(readPart("xl/sharedStrings.xml"));
+  if (sharedStrings === null) return { worksheets: [] };
   const relationships = readWorkbookRelationships(
     readPart("xl/_rels/workbook.xml.rels") ?? "",
   );
@@ -1756,10 +2023,14 @@ function extractPdfContentText(content: string): string | null {
 /**
  * Reads the text layer of a PDF on this machine. The reader inflates the
  * content streams and decodes their text operators; it holds no decryption and
- * no CID font map, so an encrypted PDF and a scan give null. A caller then
- * treats the file as a non-text PDF and routes it to the model path (D-13).
+ * no CID font map, so an encrypted PDF and a scan give null. Each FlateDecode
+ * stream stops at `MAX_PDF_INFLATE_BYTES` and the whole text stops at
+ * `MAX_PDF_TEXT_CHARS`, so an inflate bomb gives null text and never a partial
+ * draft (B601). A caller then treats the file as a non-text PDF and routes it
+ * to the model path (D-13).
  * @param bytes The PDF bytes.
- * @returns The page count and the text layer, or null text when none exists.
+ * @returns The page count and the text layer, or null text when none exists or
+ *   a limit is exceeded.
  */
 export function readTextPdf(bytes: Uint8Array): TextPdfReadResult {
   const source = Buffer.from(bytes).toString("latin1");
@@ -1777,12 +2048,17 @@ export function readTextPdf(bytes: Uint8Array): TextPdfReadResult {
       let content: string | null = null;
       if (/\/FlateDecode/u.test(dictionary)) {
         try {
-          content = inflateSync(raw).toString("latin1");
+          content = inflateSync(raw, {
+            maxOutputLength: MAX_PDF_INFLATE_BYTES,
+          }).toString("latin1");
         } catch {
           content = null;
         }
       } else {
         content = raw.toString("latin1");
+      }
+      if (content !== null && content.length > MAX_PDF_TEXT_CHARS) {
+        return { pageCount, text: null };
       }
       if (content !== null) {
         const text = extractPdfContentText(content);
@@ -1793,6 +2069,7 @@ export function readTextPdf(bytes: Uint8Array): TextPdfReadResult {
     match = streamPattern.exec(source);
   }
   const text = texts.join("\n").trim();
+  if (text.length > MAX_PDF_TEXT_CHARS) return { pageCount, text: null };
   return { pageCount, text: text === "" ? null : text };
 }
 
@@ -1934,6 +2211,47 @@ export function parsePaymentVoucherSheet(input: {
 }
 
 /**
+ * Reads the top amount of a payslip print: the money at the end of the
+ * `จำนวนเงิน` line that is not the `จำนวนเงินรวม` subtotal (A605).
+ * @param block One page of the payslip text.
+ * @returns The minor units as digit text, or null when the line is absent.
+ */
+function readPaymentVoucherTopAmount(block: string): string | null {
+  for (const line of block.split(/\r?\n/u)) {
+    if (!/จำนวนเงิน/u.test(line) || /จำนวนเงินรวม/u.test(line)) continue;
+    const amount = /(-?[\d,]+(?:\.\d{2})?)[ \t]*$/u.exec(line.trim())?.[1];
+    if (amount !== undefined) return toMinorUnits(amount);
+  }
+  return null;
+}
+
+/**
+ * Reads the line rows of a payslip print: a date, a description, and an amount
+ * on one line, as `31/10/2569 Salary 10,000.00` (A605).
+ * @param block One page of the payslip text.
+ * @returns The line rows of the draft.
+ */
+function readPaymentVoucherPdfLines(
+  block: string,
+): PaymentVoucherDraft["lines"] {
+  const lines: PaymentVoucherDraft["lines"] = [];
+  for (const line of block.split(/\r?\n/u)) {
+    const match =
+      /^(\d{1,2}\/\d{1,2}\/\d{4})[ \t]+(.+?)[ \t]+(-?[\d,]+(?:\.\d{2}))[ \t]*$/u.exec(
+        line.trim(),
+      );
+    if (match === null) continue;
+    lines.push({
+      docDate: readBuddhistNumericDate(match[1] ?? null),
+      docNo: null,
+      description: (match[2] ?? "").trim(),
+      amount: toMinorUnits(match[3] ?? null),
+    });
+  }
+  return lines;
+}
+
+/**
  * Parses the text layer of a payment voucher payslip print. Each page that
  * carries the form title becomes one draft (PM decision 2026-11-15); `draft`
  * is the first page and `drafts` holds every page. A document with no text
@@ -1970,7 +2288,15 @@ export function parsePaymentVoucherPdf(input: {
           /\b(\d{1,2}\/\d{1,2}\/\d{4})\b/u.exec(block)?.[1] ??
           null,
       );
-    const netAmount = readLabeledMoney(block, "Net|Net total|คงเหลือสุทธิ");
+    const deductionLine =
+      /(?:หัก ณ ที่จ่าย|Social)[ \t]*[^\n]*/iu.exec(block)?.[0] ?? null;
+    const deductionRateText =
+      deductionLine === null ? null : /([\d.]+)[ \t]*%/u.exec(deductionLine)?.[1] ?? null;
+    const deductionRate =
+      deductionRateText === null ? null : Number(deductionRateText) / 100;
+    const netAmount =
+      readPaymentVoucherTopAmount(block) ??
+      readLabeledMoney(block, "Net|Net total|คงเหลือสุทธิ");
     drafts.push({
       companyName: lines[start - 1]?.trim() ?? null,
       formTitle: lines[start]?.trim() ?? null,
@@ -1980,13 +2306,21 @@ export function parsePaymentVoucherPdf(input: {
       paymentRef: /PP:[ \t]*\d{10}/u.exec(block)?.[0] ?? null,
       netAmount,
       currency: readCurrency(block),
-      lines: [],
+      lines: readPaymentVoucherPdfLines(block),
       note: null,
-      subtotal: readLabeledMoney(block, "จำนวนเงินรวม"),
-      deductionLabel: /(?:หัก ณ ที่จ่าย|Social)[ \t]*[^\n]*/u.exec(block)?.[0] ?? null,
-      deductionRate: null,
-      deductionAmount: readLabeledMoney(block, "หัก ณ ที่จ่าย|Social"),
-      netTotal: netAmount,
+      subtotal: readLabeledMoney(block, "จำนวนเงินรวม|Subtotal"),
+      deductionLabel: deductionLine,
+      deductionRate,
+      deductionAmount:
+        deductionLine === null
+          ? readLabeledMoney(block, "หัก ณ ที่จ่าย|Social")
+          : toMinorUnits(
+              /(-?[\d,]+(?:\.\d{2})?)[ \t]*$/u.exec(deductionLine)?.[1] ?? null,
+            ),
+      netTotal:
+        readLabeledMoney(block, "คงเหลือสุทธิ|Net total") ??
+        readLabeledMoney(block, "Net") ??
+        netAmount,
       extraction: "local-text",
     });
   });
@@ -1997,8 +2331,35 @@ export function parsePaymentVoucherPdf(input: {
 }
 
 /**
- * Parses the text layer of a Google Cloud or Workspace tax invoice. A document
- * with no text layer needs the model read path (D-13).
+ * Reads the line rows of a cloud tax invoice. The Cloud page prints one line
+ * as `Description: <text>   <amount>` (structure report section 4.2, A603).
+ * @param text Normalized document text.
+ * @returns The line rows of the draft.
+ */
+function readCloudInvoiceLines(text: string): CloudInvoiceDraft["lines"] {
+  const lines: CloudInvoiceDraft["lines"] = [];
+  for (const line of text.split(/\r?\n/u)) {
+    const match =
+      /^Description[ \t]*[:：][ \t]*(.+?)[ \t]{2,}(-?[\d,]+(?:\.\d{2}))[ \t]*$/iu.exec(
+        line.trim(),
+      );
+    if (match === null) continue;
+    lines.push({
+      description: (match[1] ?? "").trim(),
+      subscription: null,
+      interval: null,
+      quantity: null,
+      amount: toMinorUnits(match[2] ?? null),
+    });
+  }
+  return lines;
+}
+
+/**
+ * Parses the text layer of a Google Cloud or Workspace tax invoice. The parser
+ * reads the report sample layout, where a second column follows two spaces and
+ * the detail labels carry no colon (A603). A document with no text layer needs
+ * the model read path (D-13).
  * @param input The text layer, or null when the PDF has none.
  * @returns The parsed draft, the review result, or `needs-model`.
  */
@@ -2017,7 +2378,10 @@ export function parseCloudInvoice(input: {
   );
   const draft: CloudInvoiceDraft = {
     invoiceNumber,
-    gstRegNo: readLabeledText(text, "GST Reg No\\.?|GST reg no\\.?|GST registration number"),
+    gstRegNo: readLabeledText(
+      text,
+      "GST Reg No\\.?|GST reg no\\.?|GST registration number",
+    ),
     billTo: readLabeledText(text, "Bill to"),
     service: readLabeledText(text, "Service|Details"),
     invoiceDate: readEnglishDate(readLabeledText(text, "Invoice date")),
@@ -2031,15 +2395,37 @@ export function parseCloudInvoice(input: {
     total: readLabeledMoney(text, "Total(?: in [A-Z]{3})?"),
     domain: readLabeledText(text, "Domain"),
     accountId: readLabeledText(text, "Account ID|Cloud account ID"),
-    lines: [],
+    lines: readCloudInvoiceLines(text),
     extraction: "local-text",
   };
   return parsedIfValid(cloudInvoiceDraftSchema, draft);
 }
 
 /**
- * Parses the text layer of a Google Cloud or Workspace payment receipt. A
- * document with no text layer needs the model read path.
+ * Reads a standalone money line, such as the `THB 5,000.00` line of the Cloud
+ * receipt (structure report section 3.3, A607).
+ * @param text Normalized document text.
+ * @returns The minor units as digit text, or null when no line stands alone.
+ */
+function readStandaloneMoney(text: string): string | null {
+  for (const line of text.split(/\r?\n/u)) {
+    const trimmed = line.trim();
+    if (trimmed === "") continue;
+    const match =
+      /^(?:[A-Z]{3}[ \t]*|[฿$][ \t]*)?(-?[\d,]+(?:\.\d{1,2})?)$/u.exec(trimmed);
+    if (match === null) continue;
+    const amount = toMinorUnits(match[1] ?? null);
+    if (amount !== null) return amount;
+  }
+  return null;
+}
+
+/**
+ * Parses the text layer of a Google Cloud or Workspace payment receipt. Both
+ * report layouts are read: the Cloud layout puts the date after
+ * `Amount received on` and the amount on its own line, and the Workspace
+ * layout puts the date after `Payment date` with no colon (A607). A document
+ * with no text layer needs the model read path.
  * @param input The text layer, or null when the PDF has none.
  * @returns The parsed draft or `needs-model`.
  */
@@ -2055,7 +2441,9 @@ export function parseCloudPaymentReceipt(input: {
         readLabeledText(text, "Amount received on") ??
           readLabeledText(text, "Payment date"),
       ) ?? readIsoDate(text),
-    amount: readLabeledMoney(text, "Amount(?: received)?"),
+    amount:
+      readLabeledMoney(text, "Amount(?: received)?") ??
+      readStandaloneMoney(text),
     paymentNumber:
       /(?:Payment receipt|Payment number|Payment No\.?)[ \t]*[:：]?[ \t]*([A-Z0-9][A-Z0-9-]*)/iu.exec(
         text,
@@ -2073,8 +2461,47 @@ export function parseCloudPaymentReceipt(input: {
 }
 
 /**
- * Parses the text layer of a Google Cloud statement. A document with no text
- * layer needs the model read path.
+ * Reads the PAYMENTS RECEIVED table of a statement. Each row prints
+ * `Mon d`, a description, and a negative amount. The year comes from the
+ * statement period (structure report section 3.4, A604).
+ * @param text Normalized document text.
+ * @param year CE year of the statement period, or null when the text gives none.
+ * @returns The payment rows of the draft.
+ */
+function readStatementPayments(
+  text: string,
+  year: number | null,
+): CloudStatementDraft["payments"] {
+  const payments: CloudStatementDraft["payments"] = [];
+  const lines = text.split(/\r?\n/u);
+  const start = lines.findIndex((line) => /PAYMENTS RECEIVED/iu.test(line));
+  if (start === -1 || year === null) return payments;
+  for (const line of lines.slice(start + 1)) {
+    const match =
+      /^([A-Za-z]{3,9})[ \t]+(\d{1,2})\b(.*?)(-?[\d,]+(?:\.\d{2}))[ \t]*$/u.exec(
+        line.trim(),
+      );
+    if (match === null) continue;
+    const month = englishMonthNumber(match[1] ?? "");
+    const date =
+      month === null
+        ? null
+        : checkedIsoDate(year, month, Number(match[2]));
+    if (date === null) continue;
+    const description = (match[3] ?? "").trim();
+    payments.push({
+      date,
+      description: description === "" ? null : description,
+      amount: toMinorUnits(match[4] ?? null),
+    });
+  }
+  return payments;
+}
+
+/**
+ * Parses the text layer of a Google Cloud statement. The parser reads the
+ * minus-before-currency total and the PAYMENTS RECEIVED rows of the report
+ * (A604). A document with no text layer needs the model read path.
  * @param input The text layer, or null when the PDF has none.
  * @returns The parsed draft or `needs-model`.
  */
@@ -2083,6 +2510,16 @@ export function parseCloudStatement(input: {
 }): DocumentParseResult<CloudStatementDraft> {
   if (input.text === null) return { status: "needs-model" };
   const text = normalizeDigits(input.text);
+  const periodEnd = readEnglishDate(readLabeledText(text, "Period end"));
+  const statementIssueDate = readEnglishDate(
+    readLabeledText(text, "Statement date|Issue date"),
+  );
+  const paymentsYear =
+    periodEnd !== null
+      ? Number(periodEnd.slice(0, 4))
+      : statementIssueDate !== null
+        ? Number(statementIssueDate.slice(0, 4))
+        : null;
   const draft: CloudStatementDraft = {
     documentTitle: /Statement/iu.exec(text)?.[0] ?? null,
     to: readLabeledText(text, "To|Bill to"),
@@ -2090,9 +2527,9 @@ export function parseCloudStatement(input: {
     cloudAccountId: readLabeledText(text, "Cloud account ID|Account ID"),
     paymentsAccountId: readLabeledText(text, "Payments account ID"),
     paymentsProfileId: readLabeledText(text, "Payments profile ID"),
-    statementIssueDate: readEnglishDate(readLabeledText(text, "Statement date|Issue date")),
+    statementIssueDate,
     periodStart: readEnglishDate(readLabeledText(text, "Period start")),
-    periodEnd: readEnglishDate(readLabeledText(text, "Period end")),
+    periodEnd,
     startingBalance: readLabeledMoney(text, "Starting balance"),
     totalNewActivity: readLabeledMoney(text, "Total new activity"),
     totalPaymentsReceived: readLabeledMoney(text, "Total payments received"),
@@ -2102,24 +2539,81 @@ export function parseCloudStatement(input: {
         /ending[ \t]+balance[ \t]*[:：]?[ \t]*(-?[\d,]+(?:\.\d+)?)/iu.exec(text)?.[1] ??
           null,
       ),
-    payments: [],
+    payments: readStatementPayments(text, paymentsYear),
     extraction: "local-text",
   };
   return parsedIfValid(cloudStatementDraftSchema, draft);
 }
 
 /**
- * Parses the text layer of a foreign vendor invoice. The workbook form of this
- * type reaches the parsers through the workbook reader; this parser reads the
- * same text cells. A document with no text layer needs the model read path.
- * @param input The text layer, or null when the workbook text is absent.
+ * Converts the column letters of one cell reference to a number.
+ * @param letters The column letters, such as `AB`.
+ * @returns The one-based column number.
+ */
+function columnNumber(letters: string): number {
+  let value = 0;
+  for (const character of letters.toUpperCase()) {
+    value = value * 26 + (character.codePointAt(0) ?? 65) - 64;
+  }
+  return value;
+}
+
+/**
+ * Converts the stored cells of one worksheet to text in sheet order: row by
+ * row, and left to right inside a row. The foreign vendor invoice is a free
+ * layout with merged text blocks, so its cells are flattened before the text
+ * parser reads them (A616).
+ * @param cells The stored cell values of the worksheet.
+ * @returns The flattened text.
+ */
+function workbookCellsToText(
+  cells: Readonly<Record<string, WorkbookCellValue>>,
+): string {
+  const entries: Array<{
+    readonly row: number;
+    readonly column: number;
+    readonly order: number;
+    readonly value: string;
+  }> = [];
+  Object.entries(cells).forEach(([reference, value], order) => {
+    if (value === null || value === undefined) return;
+    const text = String(value);
+    if (text.trim() === "") return;
+    const match = /^([A-Za-z]+)(\d+)$/u.exec(reference);
+    if (match === null) return;
+    entries.push({
+      row: Number(match[2]),
+      column: columnNumber(match[1] ?? ""),
+      order,
+      value: text,
+    });
+  });
+  entries.sort(
+    (left, right) =>
+      left.row - right.row ||
+      left.column - right.column ||
+      left.order - right.order,
+  );
+  return entries.map((entry) => entry.value).join("\n");
+}
+
+/**
+ * Parses a foreign vendor invoice from its workbook cells or its text. The
+ * workbook form is a free layout with merged text blocks, so its cells are
+ * flattened in sheet order (A616). A document with no text layer needs the
+ * model read path.
+ * @param input The workbook cells or the text layer, or null when both are absent.
  * @returns The parsed draft or `needs-model`.
  */
 export function parseForeignVendorInvoice(input: {
-  readonly text: string | null;
+  readonly text?: string | null;
+  readonly cells?: Readonly<Record<string, WorkbookCellValue>>;
 }): DocumentParseResult<ForeignVendorInvoiceDraft> {
-  if (input.text === null) return { status: "needs-model" };
-  const text = normalizeDigits(input.text);
+  const source =
+    input.cells === undefined ? (input.text ?? null) : workbookCellsToText(input.cells);
+  if (source === null) return { status: "needs-model" };
+  if (source.trim() === "") return reviewDocument(REVIEW_MISSING_STORED_RESULT);
+  const text = normalizeDigits(source);
   const lines = text
     .split(/\r?\n/u)
     .map((line) => line.trim())
@@ -2146,17 +2640,195 @@ export function parseForeignVendorInvoice(input: {
     quantity: /(\d+)[ \t]*copies?/iu.exec(text)?.[1] ?? null,
     unitPrice: amounts.length > 1 ? `RMB${amounts[0] ?? ""}` : null,
     amount: amounts.length === 0 ? null : toMinorUnits(amounts[amounts.length - 1] ?? ""),
-    currency: /\bRMB\b/iu.test(text) ? "RMB" : readCurrency(text),
+    currency: /\bRMB/iu.test(text) ? "RMB" : readCurrency(text),
     extraction: "local-text",
   };
   return parsedIfValid(foreignVendorInvoiceDraftSchema, draft);
 }
 
+/** One stored cell of a worksheet with its sheet position. */
+type PositionedCell = {
+  readonly row: number;
+  readonly column: number;
+  readonly value: string;
+};
+
+/**
+ * Lists the stored cells of one worksheet in sheet order: row by row, and left
+ * to right inside a row. A null or empty cell is left out.
+ * @param cells The stored cell values of the worksheet.
+ * @returns The positioned cells.
+ */
+function positionedCells(
+  cells: Readonly<Record<string, WorkbookCellValue>>,
+): readonly PositionedCell[] {
+  const positioned: PositionedCell[] = [];
+  for (const [reference, value] of Object.entries(cells)) {
+    if (value === null || value === undefined) continue;
+    const text = String(value).trim();
+    if (text === "") continue;
+    const match = /^([A-Za-z]+)(\d+)$/u.exec(reference);
+    if (match === null) continue;
+    positioned.push({
+      row: Number(match[2]),
+      column: columnNumber(match[1] ?? ""),
+      value: text,
+    });
+  }
+  return positioned.sort(
+    (left, right) => left.row - right.row || left.column - right.column,
+  );
+}
+
+/**
+ * Reads the text after a colon label from the cells of one worksheet.
+ * @param cells The stored cell values of the worksheet.
+ * @param labelSource Regex source of the label.
+ * @returns The trimmed value, or null when no cell holds the label.
+ */
+function readLabeledCellText(
+  cells: Readonly<Record<string, WorkbookCellValue>>,
+  labelSource: string,
+): string | null {
+  const pattern = new RegExp(
+    `${boundedLabel(labelSource)}[ \\t]*[:：][ \\t]*(.+)$`,
+    "iu",
+  );
+  for (const cell of positionedCells(cells)) {
+    const match = pattern.exec(cell.value);
+    if (match === null) continue;
+    const value = (match[1] ?? "").trim();
+    if (value !== "") return value;
+  }
+  return null;
+}
+
+/**
+ * Reads money after a colon label from the cells of one worksheet.
+ * @param cells The stored cell values of the worksheet.
+ * @param labelSource Regex source of the label.
+ * @returns The minor units as digit text, or null when no cell holds money.
+ */
+function readLabeledCellMoney(
+  cells: Readonly<Record<string, WorkbookCellValue>>,
+  labelSource: string,
+): string | null {
+  return toMinorUnits(readLabeledCellText(cells, labelSource));
+}
+
+/**
+ * Reads a count from label text such as `100` or `1,000`.
+ * @param value The label value, or null.
+ * @returns The count, or null when the text holds no number.
+ */
+function countText(value: string | null): number | null {
+  if (value === null) return null;
+  const match = /(\d[\d,]*)/u.exec(value);
+  return match === null ? null : Number((match[1] ?? "").replace(/,/gu, ""));
+}
+
+/**
+ * Reads the discount rows of a school invoice from its cells. A discount cell
+ * prints its label and its amount with a colon (A606).
+ * @param cells The stored cell values of the worksheet.
+ * @returns The discount rows of the draft.
+ */
+function readSchoolDiscountsFromCells(
+  cells: Readonly<Record<string, WorkbookCellValue>>,
+): SchoolInvoiceDraft["discounts"] {
+  const discounts: SchoolInvoiceDraft["discounts"] = [];
+  for (const cell of positionedCells(cells)) {
+    const match =
+      /^(.*?discount.*?)[ \t]*[:：][ \t]*(-?[\d,]+(?:\.\d{2})?)$/iu.exec(
+        cell.value,
+      );
+    if (match === null) continue;
+    discounts.push({
+      label: (match[1] ?? "").trim(),
+      amount: toMinorUnits(match[2] ?? null),
+    });
+  }
+  return discounts;
+}
+
+/**
+ * Reads the payment block of a school invoice sheet from the row that holds the
+ * bank label (A606).
+ * @param cells The stored cell values of the worksheet.
+ * @returns The payment block, or null when the sheet holds no bank row.
+ */
+function readSchoolPaymentFromCells(
+  cells: Readonly<Record<string, WorkbookCellValue>>,
+): SchoolInvoiceDraft["payment"] {
+  const positioned = positionedCells(cells);
+  const bankCell = positioned.find((cell) =>
+    /^Bank[ \t]*[:：]/iu.test(cell.value),
+  );
+  if (bankCell === undefined) return null;
+  const row = positioned.filter((cell) => cell.row === bankCell.row);
+  const firstField = (pattern: RegExp): string | null => {
+    for (const cell of row) {
+      const match = pattern.exec(cell.value);
+      if (match !== null) return (match[1] ?? "").trim();
+    }
+    return null;
+  };
+  const accountText = firstField(/^Account[ \t]*[:：][ \t]*(.+)$/iu) ?? "";
+  const account = /^(.*?)[ \t]+([\d-]{5,})$/u.exec(accountText);
+  return {
+    bank: firstField(/^Bank[ \t]*[:：][ \t]*(.+)$/iu),
+    branch: firstField(/^Branch[ \t]*[:：][ \t]*(\S+)$/iu),
+    accountName: account === null ? null : (account[1] ?? "").trim(),
+    accountNo: account === null ? null : (account[2] ?? "").trim(),
+  };
+}
+
+/**
+ * Reads the line rows of a school invoice sheet: the description sits in
+ * column A, and the unit price, the quantity, and the total sit in columns B
+ * to D of the same row (A606).
+ * @param cells The stored cell values of the worksheet.
+ * @returns The line rows of the draft.
+ */
+function readSchoolLinesFromCells(
+  cells: Readonly<Record<string, WorkbookCellValue>>,
+): SchoolInvoiceDraft["lines"] {
+  const positioned = positionedCells(cells);
+  const rows = new Map<number, Map<number, string>>();
+  for (const cell of positioned) {
+    const row = rows.get(cell.row) ?? new Map<number, string>();
+    row.set(cell.column, cell.value);
+    rows.set(cell.row, row);
+  }
+  const lines: SchoolInvoiceDraft["lines"] = [];
+  for (const rowNumber of [...rows.keys()].sort((left, right) => left - right)) {
+    const row = rows.get(rowNumber);
+    if (row === undefined) continue;
+    const description = row.get(1);
+    if (description === undefined || /[:：]/u.test(description)) continue;
+    const unitPrice = row.get(2);
+    const quantity = row.get(3);
+    const total = row.get(4);
+    if (unitPrice === undefined && quantity === undefined && total === undefined) {
+      continue;
+    }
+    lines.push({
+      seq: lines.length + 1,
+      description,
+      unitPrice: unitPrice ?? null,
+      quantity: quantity ?? null,
+      total: total ?? null,
+    });
+  }
+  return lines;
+}
+
 /**
  * Parses the four-tab school invoice sheet. The adapter exports the Google
  * Sheet as `.xlsx`, the workbook reader reads all four tabs, and this parser
- * reads each tab that holds a title or a document number (open item Q21). The
- * tab text never goes to the model path.
+ * reads each tab that holds a title or a document number (open item Q21). Each
+ * field of spec section 8 is read from its labeled cell; a field the tab does
+ * not print stays null (A606). The tab text never goes to the model path.
  * @param input The worksheets read from the exported workbook.
  * @returns The parsed drafts, or the review result when no tab is readable.
  */
@@ -2181,26 +2853,29 @@ export function parseSchoolInvoiceSheet(input: {
       documentTitle,
       invoiceNo: number !== null && !isReceipt ? number : null,
       receiptNo: number !== null && isReceipt ? number : null,
-      date: null,
-      quotationRef: null,
-      due: null,
+      date: readEnglishDate(readLabeledCellText(worksheet.cells, "Date")),
+      quotationRef: readLabeledCellText(
+        worksheet.cells,
+        "Quotation(?: No\\.?| Ref(?:erence)?)?",
+      ),
+      due: readEnglishDate(readLabeledCellText(worksheet.cells, "Due")),
       issuerCompanyNames: readCellText(worksheet.cells, "A1"),
-      issuerTaxId: null,
-      issuerBranch: null,
-      issuerContact: null,
-      customerName: null,
-      customerAddress: null,
-      customerTaxId: null,
-      students: null,
-      lines: [],
-      subtotal: null,
-      discounts: [],
-      netTotal: null,
-      netTotalInWords: null,
-      payment: null,
-      delivery: null,
-      vatNote: null,
-      terms: null,
+      issuerTaxId: readLabeledCellText(worksheet.cells, "Issuer Tax ID"),
+      issuerBranch: readLabeledCellText(worksheet.cells, "Branch"),
+      issuerContact: readLabeledCellText(worksheet.cells, "Contact"),
+      customerName: readLabeledCellText(worksheet.cells, "Customer"),
+      customerAddress: readLabeledCellText(worksheet.cells, "Address"),
+      customerTaxId: readLabeledCellText(worksheet.cells, "Customer Tax ID"),
+      students: countText(readLabeledCellText(worksheet.cells, "Students")),
+      lines: readSchoolLinesFromCells(worksheet.cells),
+      subtotal: readLabeledCellMoney(worksheet.cells, "Subtotal|Sub-total"),
+      discounts: readSchoolDiscountsFromCells(worksheet.cells),
+      netTotal: readLabeledCellMoney(worksheet.cells, "Total|Net total"),
+      netTotalInWords: readLabeledCellText(worksheet.cells, "Total in words"),
+      payment: readSchoolPaymentFromCells(worksheet.cells),
+      delivery: readLabeledCellText(worksheet.cells, "Delivery"),
+      vatNote: readLabeledCellText(worksheet.cells, "VAT"),
+      terms: readLabeledCellText(worksheet.cells, "Terms"),
       extraction: "local-text",
     });
   }
@@ -2210,9 +2885,102 @@ export function parseSchoolInvoiceSheet(input: {
 }
 
 /**
- * Parses the text layer of a school invoice PDF. The LibreOffice print has a
- * clean layer; the Google Sheets print has a broken Thai layer, and the
- * intake puts that file on the review list (open item Q21).
+ * Reads the first non-empty line of a document text.
+ * @param text Normalized document text.
+ * @returns The first line, or null when the text is empty.
+ */
+function firstTextLine(text: string): string | null {
+  for (const line of text.split(/\r?\n/u)) {
+    const trimmed = line.trim();
+    if (trimmed !== "") return trimmed;
+  }
+  return null;
+}
+
+/**
+ * Reads the discount rows of a school invoice PDF. A discount line prints its
+ * label and its amount with a colon (A606).
+ * @param text Normalized document text.
+ * @returns The discount rows of the draft.
+ */
+function readSchoolDiscountsFromText(
+  text: string,
+): SchoolInvoiceDraft["discounts"] {
+  const discounts: SchoolInvoiceDraft["discounts"] = [];
+  for (const line of text.split(/\r?\n/u)) {
+    const match =
+      /^(.*?discount.*?)[ \t]*[:：][ \t]*(-?[\d,]+(?:\.\d{2})?)[ \t]*$/iu.exec(
+        line.trim(),
+      );
+    if (match === null) continue;
+    discounts.push({
+      label: (match[1] ?? "").trim(),
+      amount: toMinorUnits(match[2] ?? null),
+    });
+  }
+  return discounts;
+}
+
+/**
+ * Reads the payment block of a school invoice PDF from its bank line (A606).
+ * @param text Normalized document text.
+ * @returns The payment block, or null when the text holds no bank line.
+ */
+function readSchoolPaymentFromText(
+  text: string,
+): SchoolInvoiceDraft["payment"] {
+  const line = text
+    .split(/\r?\n/u)
+    .find((candidate) => /(?:^|\s)Bank[ \t]*[:：]/iu.test(candidate));
+  if (line === undefined) return null;
+  const bank =
+    /Bank[ \t]*[:：][ \t]*(.+?)(?=[ \t]+(?:Branch|Account)\b|$)/iu.exec(line)?.[1]?.trim() ??
+    null;
+  const branch = /Branch[ \t]*[:：][ \t]*(\S+)/iu.exec(line)?.[1] ?? null;
+  const accountText =
+    /Account[ \t]*[:：][ \t]*(.+)$/iu.exec(line)?.[1]?.trim() ?? "";
+  const account = /^(.*?)[ \t]+([\d-]{5,})$/u.exec(accountText);
+  return {
+    bank,
+    branch,
+    accountName: account === null ? null : (account[1] ?? "").trim(),
+    accountNo: account === null ? null : (account[2] ?? "").trim(),
+  };
+}
+
+/**
+ * Reads the line rows of a school invoice PDF, as
+ * `1 App licence per student 500.00 x 100 = 50,000.00` (A606).
+ * @param text Normalized document text.
+ * @returns The line rows of the draft.
+ */
+function readSchoolLinesFromText(
+  text: string,
+): SchoolInvoiceDraft["lines"] {
+  const lines: SchoolInvoiceDraft["lines"] = [];
+  for (const line of text.split(/\r?\n/u)) {
+    const match =
+      /^(\d+)[ \t]+(.+?)[ \t]+([\d,]+(?:\.\d{2}))[ \t]*x[ \t]*(\d+)[ \t]*=[ \t]*([\d,]+(?:\.\d{2}))[ \t]*$/iu.exec(
+        line.trim(),
+      );
+    if (match === null) continue;
+    lines.push({
+      seq: Number(match[1]),
+      description: (match[2] ?? "").trim(),
+      unitPrice: match[3] ?? null,
+      quantity: match[4] ?? null,
+      total: match[5] ?? null,
+    });
+  }
+  return lines;
+}
+
+/**
+ * Parses the text layer of a school invoice PDF. The parser reads every field
+ * of spec section 8 that the print shows; the title match ignores case, so an
+ * uppercase `INVOICE` is read (A606). The LibreOffice print has a clean layer;
+ * the Google Sheets print has a broken Thai layer, and the intake puts that
+ * file on the review list (open item Q21).
  * @param input The text layer, or null when the PDF has none.
  * @returns The parsed draft, the review result, or `needs-model`.
  */
@@ -2225,35 +2993,39 @@ export function parseSchoolInvoicePdf(input: {
     /\bPA-(?:INV|REC)-[0-9A-Za-z]+(?:-[0-9A-Za-z]+)*/iu.exec(text)?.[0] ?? null;
   if (number === null) return reviewDocument(REVIEW_MISSING_STORED_RESULT);
   const isReceipt = /ใบเสร็จรับเงิน|\breceipt\b/iu.test(text);
+  const dateText = readLabeledText(text, "Date");
+  const dueText = readLabeledText(text, "Due|Due date");
   const draft: SchoolInvoiceDraft = {
-    documentTitle: /\b(?:Invoice|Receipt)\b/u.exec(text)?.[0] ?? null,
+    documentTitle: /\b(?:Invoice|Receipt)\b/iu.exec(text)?.[0] ?? null,
     invoiceNo: isReceipt ? null : number,
     receiptNo: isReceipt ? number : null,
-    date:
-      readThaiShortDate(
-        /(\d{1,2}[ \t]*[^\s]+[ \t]*\d{4})/u.exec(text)?.[1] ?? null,
-      ) ?? readEnglishDate(text),
-    quotationRef: readLabeledText(text, "Quotation|Quotation No\\.?"),
-    due: readThaiShortDate(readLabeledText(text, "Due|Due date")),
-    issuerCompanyNames: null,
-    issuerTaxId: null,
-    issuerBranch: null,
-    issuerContact: null,
+    date: readEnglishDate(dateText) ?? readThaiShortDate(dateText),
+    quotationRef: readLabeledText(
+      text,
+      "Quotation(?: No\\.?| Ref(?:erence)?)?",
+    ),
+    due: readEnglishDate(dueText) ?? readThaiShortDate(dueText),
+    issuerCompanyNames: firstTextLine(text),
+    issuerTaxId: readLabeledText(text, "Issuer Tax ID"),
+    issuerBranch: readLabeledText(text, "Branch"),
+    issuerContact: readLabeledText(text, "Contact"),
     customerName: readLabeledText(text, "Customer|Bill to"),
-    customerAddress: null,
-    customerTaxId: null,
-    students: null,
-    lines: [],
-    subtotal: readLabeledMoney(text, "Subtotal"),
-    discounts: [],
+    customerAddress: readLabeledText(text, "Address"),
+    customerTaxId: readLabeledText(text, "Customer Tax ID"),
+    students: countText(readLabeledText(text, "Students")),
+    lines: readSchoolLinesFromText(text),
+    subtotal: readLabeledMoney(text, "Subtotal|Sub-total"),
+    discounts: readSchoolDiscountsFromText(text),
     netTotal:
       readLabeledMoney(text, "Total|Net total") ??
-      toMinorUnits(/\btotal[ \t]*[:：]?[ \t]*(-?[\d,]+(?:\.\d+)?)/iu.exec(text)?.[1] ?? null),
+      toMinorUnits(
+        /\btotal[ \t]*[:：]?[ \t]*(-?[\d,]+(?:\.\d+)?)/iu.exec(text)?.[1] ?? null,
+      ),
     netTotalInWords: readLabeledText(text, "Total in words"),
-    payment: null,
-    delivery: null,
-    vatNote: null,
-    terms: null,
+    payment: readSchoolPaymentFromText(text),
+    delivery: readLabeledText(text, "Delivery"),
+    vatNote: readLabeledText(text, "VAT"),
+    terms: readLabeledText(text, "Terms"),
     extraction: "local-text",
   };
   return parsedIfValid(schoolInvoiceDraftSchema, draft);
