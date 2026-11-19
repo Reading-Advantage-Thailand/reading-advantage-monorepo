@@ -2699,6 +2699,73 @@ const BARE_THAI_DATE_LINE =
 const BARE_ENGLISH_DATE_LINE =
   /^([A-Za-z]{3,9}[ \t]+\d{1,2},?[ \t]+\d{4}|\d{1,2}[ \t]+[A-Za-z]{3,9}[ \t]+\d{4})$/u;
 
+/** The Thai code point range, which ends a Thai label as a letter ends one (B620). */
+const THAI_LETTER_RANGE = "\\u0E00-\\u0E7F";
+
+/**
+ * The date labels that may carry the document date of a school invoice (B620).
+ * A longer label comes first, so `วันที่ออก` wins over `วันที่`. A `dated` label
+ * is the form of the local-text PDF fixture.
+ */
+const DOCUMENT_DATE_LABEL_SOURCE =
+  "invoice[ \\t]+date|issue[ \\t]+date|dated|" +
+  "วันที่ออกใบแจ้งหนี้|วันที่ออกใบกำกับภาษี|วันที่ออก|ลงวันที่|วันที่|date";
+
+/**
+ * Builds the whole-label boundary of the document date labels. A payment, due,
+ * or delivery word before `date` blocks the label, and a Thai label stops at
+ * the end of its own word, so `วันที่` never matches inside `วันที่ส่งของ`
+ * (B620).
+ * @returns The label boundary regex source.
+ */
+function documentDateLabelSource(): string {
+  return (
+    `(?<!(?:payment|due|delivery)[ \\t]+)` +
+    `(?<![A-Za-z0-9_${THAI_LETTER_RANGE}])` +
+    `(?:${DOCUMENT_DATE_LABEL_SOURCE})` +
+    `(?![A-Za-z0-9_${THAI_LETTER_RANGE}])`
+  );
+}
+
+/**
+ * Reads the text after an accepted document date label of a document text. A
+ * date next to a payment, due, or delivery label supplies nothing (B620).
+ * @param text Normalized document text.
+ * @returns The label value, or null when no accepted label is present.
+ */
+function readDocumentDateText(text: string): string | null {
+  const pattern = new RegExp(
+    `${documentDateLabelSource()}[ \\t]*[:：]?[ \\t]*([^\\n]+)`,
+    "iu",
+  );
+  const match = pattern.exec(text);
+  if (match === null) return null;
+  const value = firstPrintedColumn(match[1] ?? "");
+  return value === "" ? null : value;
+}
+
+/**
+ * Reads the document date after an accepted label in the cells of one
+ * worksheet. A payment, due, or delivery label supplies nothing (B620).
+ * @param cells The stored cell values of the worksheet.
+ * @returns The label value, or null when no accepted label is present.
+ */
+function readDocumentDateCellText(
+  cells: Readonly<Record<string, WorkbookCellValue>>,
+): string | null {
+  const pattern = new RegExp(
+    `${documentDateLabelSource()}[ \\t]*[:：][ \\t]*(.+)$`,
+    "iu",
+  );
+  for (const cell of positionedCells(cells)) {
+    const match = pattern.exec(cell.value);
+    if (match === null) continue;
+    const value = (match[1] ?? "").trim();
+    if (value !== "") return value;
+  }
+  return null;
+}
+
 /**
  * Reads a date from a line that holds nothing else. The school print may
  * show a bare date without a label (A621).
@@ -2731,14 +2798,20 @@ function readBareDateText(text: string): string | null {
 }
 
 /**
- * Reads the first bare date cell of a worksheet (A621).
+ * Reads the first bare date cell on a row that also holds the document title or
+ * the document number. A bare date on another row supplies nothing (B620).
  * @param cells The stored cell values of the worksheet.
- * @returns The CE ISO date, or null when no cell holds a bare date.
+ * @param anchorRows The rows of the document title and the document number.
+ * @returns The CE ISO date, or null when no anchor row holds a bare date.
  */
-function readBareDateCells(
+function readBareDateBesideCells(
   cells: Readonly<Record<string, WorkbookCellValue>>,
+  anchorRows: readonly number[],
 ): string | null {
+  const rows = new Set(anchorRows);
+  if (rows.size === 0) return null;
   for (const cell of positionedCells(cells)) {
+    if (!rows.has(cell.row)) continue;
     const date = readBareDateLine(cell.value);
     if (date !== null) return date;
   }
@@ -2914,11 +2987,19 @@ export function parseSchoolInvoiceSheet(input: {
     const isReceipt =
       documentTitle !== null &&
       /ใบเสร็จรับเงิน|receipt/iu.test(documentTitle);
-    const dateText = readLabeledCellText(worksheet.cells, "Date");
+    const dateText = readDocumentDateCellText(worksheet.cells);
+    const anchorRows: number[] = [];
+    if (documentTitle !== null) anchorRows.push(2);
+    if (number !== null) {
+      const numberRow = positionedCells(worksheet.cells).find((cell) =>
+        cell.value.includes(number),
+      )?.row;
+      anchorRows.push(numberRow ?? 5);
+    }
     const date =
       readEnglishDate(dateText) ??
       readThaiShortDate(dateText) ??
-      readBareDateCells(worksheet.cells);
+      readBareDateBesideCells(worksheet.cells, anchorRows);
     if (date === null) return reviewDocument(REVIEW_UNREADABLE);
     drafts.push({
       documentTitle,
@@ -3065,14 +3146,12 @@ export function parseSchoolInvoicePdf(input: {
     /\bPA-(?:INV|REC)-[0-9A-Za-z]+(?:-[0-9A-Za-z]+)*/iu.exec(text)?.[0] ?? null;
   if (number === null) return reviewDocument(REVIEW_MISSING_STORED_RESULT);
   const isReceipt = /ใบเสร็จรับเงิน|\breceipt\b/iu.test(text);
-  const dateText = readLabeledText(text, "Date");
+  const dateText = readDocumentDateText(text);
   const dueText = readLabeledText(text, "Due|Due date");
   const date =
     readEnglishDate(dateText) ??
     readThaiShortDate(dateText) ??
-    readBareDateText(text) ??
-    readThaiShortDate(text) ??
-    readEnglishDate(text);
+    readBareDateText(text);
   if (date === null) return reviewDocument(REVIEW_UNREADABLE);
   const draft: SchoolInvoiceDraft = {
     documentTitle: /\b(?:Invoice|Receipt)\b/iu.exec(text)?.[0] ?? null,
