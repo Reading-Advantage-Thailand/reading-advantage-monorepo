@@ -1,49 +1,47 @@
 /**
  * Red tests for the document parsers (plan task 6.1, spec section 8).
  *
+ * Round r2 pins the Phase 6 review findings (review-a-p6-eef95ea70.json and
+ * review-b-p6-eef95ea70.json). Green task 6.2 filled the thirteen parsers, so
+ * this file calls the module exports directly and asserts the report shapes.
+ * Every row that names a finding fails at the r2 base for the reason the
+ * finding gives; the rows marked characterization pass at the base and guard
+ * behavior that already works.
+ *
  * The thirteen parsers and their draft schemas live in the one file
  * `packages/backend/src/modules/accounting/document-parsing.ts` (decision
- * D-15). That file exists at this base with the year-file helpers only, so
- * this file loads it with `existsSync` and a dynamic import, and every
- * missing parser or schema fails as an assertion that names the missing
- * export. A bare `Cannot find module` load error is a defect of this Red
- * file.
+ * D-15). This file loads it with `existsSync` and a dynamic import, and every
+ * missing export fails as an assertion that names the missing export. A bare
+ * `Cannot find module` load error is a defect of this Red file.
  *
  * Fake data only. The three fixtures under
  * `__fixtures__/document-parsing/` are synthetic and each carries the marker
  * `no real sample` (PM-12, spec section 8 note 7). Every other input is an
- * inline fake built from the cell vocabulary of spec section 8 note 3. No
- * real amount, payee, name, tax id, account number, or document text enters
- * this file or any fixture. No hash field exists in any pinned contract.
+ * inline fake built from the vocabulary of the structure report of
+ * 2026-11-11, whose own values the report marks fake. No real amount, payee,
+ * name, tax id, account number, e-mail, or document text enters this file or
+ * any fixture. No new identity or digest field exists in any pinned contract.
  *
- * Labeled counts (floors):
- * - parsers=13 (the parser names of spec section 8)
- * - draft_schemas=11 (one per parser row; the voucher and school rows share)
- * - marker_cases=11 (one per schema: accepts the three markers, rejects an
- *   unknown marker, and requires the marker)
- * - read_path_rows=8 (text PDF local, non-text PDF to the model path)
- * - review_rows=3 (workbook review-list rows of PM-9)
- * - needs_password_rows=1 (bank statement without the secret, PM-13)
- * - pending_parsers=13 (each parser name carries the placeholder contract)
- * - voucher_number_forms=2 (the two accepted forms of PM-10)
- * - no_real_sample_fixtures=3 (receipt, OpenAI invoice, withholding
- *   certificate)
- * - retired_placeholders=2 (parsePayrollSheet and parseTaxInvoice stay
- *   absent, spec section 8 note 1)
+ * Counts computed from the module exports (A609):
+ * - draft schema exports whose name ends in `DraftSchema`
+ * - spec parser names present as module functions
+ * - reader inflate cap exports
  */
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { deflateRawSync, deflateSync } from "node:zlib";
 
 import { beforeAll, describe, expect, it } from "vitest";
 
 const MODULE_SOURCE_PATH = fileURLToPath(
-  new URL("../document-parsing.ts", import.meta.url),
+  new URL("../document-parsing.js", import.meta.url),
 );
+const MODULE_PATH = MODULE_SOURCE_PATH.replace(/\.js$/, ".ts");
 const FIXTURE_DIR = fileURLToPath(
   new URL("./__fixtures__/document-parsing", import.meta.url),
 );
 
-const MODULE_EXISTS = existsSync(MODULE_SOURCE_PATH);
+const MODULE_EXISTS = existsSync(MODULE_PATH);
 
 /** Parser names of spec section 8, in table order. */
 const PARSER_NAMES = [
@@ -200,6 +198,36 @@ function requireParsedDraft(
   return result["draft"] as Record<string, unknown>;
 }
 
+/**
+ * Requires a review-list result with no draft.
+ * @param result The parser result record.
+ * @returns The review reason.
+ */
+function requireReviewResult(result: Record<string, unknown>): string {
+  expect(result["status"]).toBe("review");
+  expect(String(result["reason"])).toMatch(/^review:/);
+  expect("draft" in result).toBe(false);
+  return String(result["reason"]);
+}
+
+/**
+ * Requires a parsed draft, or accepts the whole-document review result that
+ * the finding allows for a field the parser cannot read (A606).
+ * @param result The parser result record.
+ * @param schemaName The draft schema the draft must pass when parsed.
+ * @returns The draft record, or null when the document is on the review list.
+ */
+function requireParsedOrReview(
+  result: Record<string, unknown>,
+  schemaName: string,
+): Record<string, unknown> | null {
+  if (result["status"] === "review") {
+    requireReviewResult(result);
+    return null;
+  }
+  return requireParsedDraft(result, schemaName);
+}
+
 /** Form title that marks a voucher worksheet (spec section 8 note 2). */
 const VOUCHER_FORM_TITLE = "ใบสำคัญจ่าย/PAYMENT  VOUCHER";
 
@@ -270,6 +298,379 @@ function fakeVoucherPdfText(): string {
   ].join("\n");
 }
 
+/**
+ * Fake text layer in the report sample 4.2 layout: no colons on the detail
+ * labels and two-space columns (A603). The money values are unequal so a
+ * label-boundary defect shows (A601).
+ * @returns The fake invoice text.
+ */
+function fakeCloudInvoiceSample42Text(): string {
+  return [
+    "Tax Invoice            Invoice number: FAKE-CLOUD-0002   GST Reg No: 000000000X",
+    "Bill to: Test Counterparty",
+    "Details Google Cloud   Invoice date: Sep 30, 2026",
+    "Billing ID FAKE-BILL-0000   Account ID FAKE-ACCT-000000",
+    "Summary for Sep 1, 2026 - Sep 30, 2026",
+    "Subtotal THB 5,000.00",
+    "Description: Google Cloud - Fee for September 2026   5,000.00",
+    "GST (7%) THB 350.00     Total in THB: THB 5,350.00",
+  ].join("\n");
+}
+
+/**
+ * Fake text layer of a Google Cloud statement with the fixture values: the
+ * minus-before-currency total and the two PAYMENTS RECEIVED rows (A604).
+ * @returns The fake statement text.
+ */
+function fakeCloudStatementText(): string {
+  return [
+    "Statement",
+    "To: Test Company",
+    "Service: Google Cloud",
+    "Cloud account ID: FAKE-CLOUD-000000",
+    "Payments account ID: FAKE-PAY-0000-0000",
+    "Payments profile ID: FAKE-PROF-0000",
+    "Statement date: Aug 31, 2026",
+    "Period start: Aug 1, 2026",
+    "Period end: Aug 31, 2026",
+    "Starting balance: 0.00",
+    "Total new activity: 5,000.00",
+    "Total payments received: -THB 5,000.00",
+    "Ending balance: 0.00",
+    "PAYMENTS RECEIVED",
+    "Aug 3 Manual payment: Visa ending 0000. V000000. CLOUD AbCdEf -2,500.00",
+    "Aug 30 Manual payment: Visa ending 0000. V000001. CLOUD GhIjKl -2,500.00",
+  ].join("\n");
+}
+
+/**
+ * Fake text layer of a payment voucher payslip print, verbatim from the
+ * report fixture payment_voucher_pdf.json (A605).
+ * @returns The fake payslip text.
+ */
+function fakeVoucherPayslipFixtureText(): string {
+  return [
+    "บริษัท ตัวอย่าง(ไทยแลนด์) จำกัด",
+    "ใบสำคัญจ่าย/PAYMENT VOUCHER",
+    "เลขที่ PV6910-003",
+    "วันที่ 31/10/2569",
+    "จ่ายให้แก่ Mr. Fake Contractor",
+    "เงินสด โอน เช็คธนาคาร สาขา เลขที่เช็ค PP: 0000000000",
+    "เช็คลงวันที่ จำนวนเงิน 10,000.00",
+    "วันที่เอกสาร เลขที่เอกสาร รายการ / Description จำนวนเงิน",
+    "31/10/2569 Salary 10,000.00",
+    "หมายเหตุ: จำนวนเงินรวม 10,000.00",
+    "หัก ณ ที่จ่าย 3% 300.00",
+    "จำนวนเงิน คงเหลือสุทธิ 9,700.00",
+    "ผู้จัดทำ ผู้ตรวจสอบ ผู้อนุมัติ ผู้รับเงิน",
+  ].join("\n");
+}
+
+/**
+ * Fake text layer of a Cloud payment receipt in the report section 3.3 Cloud
+ * layout: the date follows `Amount received on` and the amount stands alone
+ * with its currency (A607).
+ * @returns The fake receipt text.
+ */
+function fakeCloudReceiptText(): string {
+  return [
+    "Payment Receipt",
+    "Amount received on Mar 1, 2026",
+    "THB 5,000.00",
+    "Paid by Test Company",
+    "Paid to Test Vendor",
+    "Service: Google Cloud",
+    "Tax identification No: 000000000R",
+    "Billing ID: FAKE-BILL-0000",
+    "Payment method: Test card ending 0000",
+    "Payment number: FAKE-PAY-0001",
+    "Payment ID: CLOUD AbCdEf",
+  ].join("\n");
+}
+
+/**
+ * Fake text layer of a Workspace payment receipt: the date follows
+ * `Payment date` with no colon (A607).
+ * @returns The fake receipt text.
+ */
+function fakeWorkspaceReceiptText(): string {
+  return [
+    "Payment Receipt",
+    "Payment date Mar 2, 2026",
+    "Amount: THB 2,000.00",
+    "Paid by Test Company",
+  ].join("\n");
+}
+
+/**
+ * Fake text layer of a school invoice PDF with an uppercase INVOICE title
+ * and unequal subtotal and net total (A601, A606).
+ * @returns The fake school invoice text.
+ */
+function fakeSchoolInvoicePdfText(): string {
+  return [
+    "Test School Company Ltd.",
+    "ใบแจ้งหนี้ / INVOICE",
+    "No: PA-INV-FAKE-002-T2",
+    "Date: 15 Oct 2026",
+    "Quotation: FAKE-Q-002",
+    "Due: 31 ต.ค. 2569",
+    "Issuer Tax ID: 0000000000000",
+    "Branch: 00000",
+    "Contact: Test contact 000",
+    "Customer: Test School",
+    "Address: Test Address 1",
+    "Customer Tax ID: 0000000000000",
+    "Students: 100",
+    "1 App licence per student 500.00 x 100 = 50,000.00",
+    "Subtotal: 50,000.00",
+    "Discount Founding 40%: -20,000.00",
+    "Total: 30,000.00",
+    "Total in words: Test thirty thousand",
+    "Bank: Test Bank Branch: 0000 Account: Test Company 000-0-00000-0",
+    "Delivery: Test delivery 15 Oct 2026",
+    "VAT: Test VAT note",
+    "Terms: Test terms",
+  ].join("\n");
+}
+
+/**
+ * Fake rich school invoice tab with labeled cells for every fixture field
+ * (A606). The parser reads the fields it can and returns the review result
+ * for the fields it cannot read.
+ * @returns The fake worksheet.
+ */
+function fakeRichSchoolTab(): {
+  readonly name: string;
+  readonly cells: Record<string, string | number | null>;
+} {
+  return {
+    name: "Term 2",
+    cells: {
+      A1: "Test School Company Ltd.",
+      A2: "ใบแจ้งหนี้ / INVOICE",
+      B5: "PA-INV-FAKE-002-T2",
+      A10: "Date: 15 Oct 2026",
+      B10: "Quotation: FAKE-Q-002",
+      C10: "Due: 31 Oct 2026",
+      A11: "Issuer Tax ID: 0000000000000",
+      B11: "Branch: 00000",
+      C11: "Contact: Test contact 000",
+      A12: "Customer: Test School",
+      B12: "Address: Test Address 1",
+      C12: "Customer Tax ID: 0000000000000",
+      A13: "Students: 100",
+      A14: "App licence (1 year), per student",
+      B14: "500.00",
+      C14: "100",
+      D14: "50,000.00",
+      A15: "Subtotal: 50,000.00",
+      A16: "Discount Founding partner 40%: -20,000.00",
+      A17: "Total: 30,000.00",
+      A18: "Total in words: Test thirty thousand",
+      A19: "Bank: Test Bank",
+      B19: "Branch: 0000",
+      C19: "Account: Test Company 000-0-00000-0",
+      A20: "Delivery: Test delivery 15 Oct 2026",
+      A21: "VAT: Test VAT note",
+      A22: "Terms: Test terms",
+    },
+  };
+}
+
+/**
+ * Fake PND.3 filing text from the fixture wht_filing_pnd3.json values: the
+ * header labels plus the report section 4.3 row shape (A602).
+ * @returns The fake filing text.
+ */
+function fakeWhtFilingPnd3Text(): string {
+  return [
+    "Reference: P030000000000",
+    "Withholder tax id: 0-0000-00000-00-0 Branch: 1 Sheet 1 of 1",
+    "1  0-0000-00000-00-0   Mr. Fake Contractor   30/10/2569  ค่าจ้าง  3.00  10,000 00  300 00  1",
+    "Total  10,000 00  300 00",
+  ].join("\n");
+}
+
+/**
+ * Fake foreign vendor workbook cells from the fixture
+ * foreign_vendor_invoice_xlsx.json (A616).
+ * @returns The fake cell map.
+ */
+function fakeForeignVendorCells(): Record<string, string | number | null> {
+  return {
+    A1: "Invoice   DATE 2026.10.30",
+    A2: "VENDOR A PRINTING CO.,LTD\n1 Example Road, Example City, Country",
+    A3: "TO:Test Company",
+    B3: "QTY",
+    C3: "UNIT PRICE",
+    D3: "AMOUNT\nDDP Thailand",
+    A4: "DESCRIPTION",
+    A5: "work book size 28.5x21cm, 184pages. perfect binding. Full color.",
+    B5: "1000copies",
+    C5: "RMB10.0",
+    D5: "RMB10000",
+    A6: "VENDOR A PRINTING CO.,LTD\n2026.10.30",
+  };
+}
+
+type ZipPartInput = {
+  readonly name: string;
+  readonly data: Buffer;
+  readonly method: 0 | 8;
+};
+
+/**
+ * Builds a minimal ZIP archive for the reader rows (B601-B604). The reader
+ * checks signatures, offsets, and sizes only, so the archive carries no
+ * file-system path and stays in memory.
+ * @param parts The archive entries in order.
+ * @returns The archive bytes.
+ */
+function buildZip(parts: readonly ZipPartInput[]): Buffer {
+  const locals: Buffer[] = [];
+  const centrals: Buffer[] = [];
+  const offsets: number[] = [];
+  let offset = 0;
+  for (const part of parts) {
+    const name = Buffer.from(part.name, "utf8");
+    const local = Buffer.alloc(30 + name.length + part.data.length);
+    local.writeUInt32LE(0x04034b50, 0);
+    local.writeUInt16LE(20, 4);
+    local.writeUInt16LE(0, 6);
+    local.writeUInt16LE(part.method, 8);
+    local.writeUInt16LE(0, 10);
+    local.writeUInt16LE(0, 12);
+    local.writeUInt32LE(0, 14);
+    local.writeUInt32LE(part.data.length, 18);
+    local.writeUInt32LE(part.data.length, 22);
+    local.writeUInt16LE(name.length, 26);
+    local.writeUInt16LE(0, 28);
+    name.copy(local, 30);
+    part.data.copy(local, 30 + name.length);
+    locals.push(local);
+    offsets.push(offset);
+    offset += local.length;
+  }
+  let centralSize = 0;
+  let entryIndex = 0;
+  for (const part of parts) {
+    const name = Buffer.from(part.name, "utf8");
+    const central = Buffer.alloc(46 + name.length);
+    central.writeUInt32LE(0x02014b50, 0);
+    central.writeUInt16LE(20, 4);
+    central.writeUInt16LE(20, 6);
+    central.writeUInt16LE(0, 8);
+    central.writeUInt16LE(part.method, 10);
+    central.writeUInt16LE(0, 12);
+    central.writeUInt16LE(0, 14);
+    central.writeUInt32LE(0, 16);
+    central.writeUInt32LE(part.data.length, 20);
+    central.writeUInt32LE(part.data.length, 24);
+    central.writeUInt16LE(name.length, 28);
+    central.writeUInt16LE(0, 30);
+    central.writeUInt16LE(0, 32);
+    central.writeUInt16LE(0, 34);
+    central.writeUInt16LE(0, 36);
+    central.writeUInt32LE(0, 38);
+    const localOffset = offsets[entryIndex] ?? 0;
+    central.writeUInt32LE(localOffset, 42);
+    name.copy(central, 46);
+    centrals.push(central);
+    centralSize += central.length;
+    entryIndex += 1;
+  }
+  const eocd = Buffer.alloc(22);
+  eocd.writeUInt32LE(0x06054b50, 0);
+  eocd.writeUInt16LE(0, 4);
+  eocd.writeUInt16LE(0, 6);
+  eocd.writeUInt16LE(parts.length, 8);
+  eocd.writeUInt16LE(parts.length, 10);
+  eocd.writeUInt32LE(centralSize, 12);
+  eocd.writeUInt32LE(offset, 16);
+  eocd.writeUInt16LE(0, 20);
+  return Buffer.concat([...locals, ...centrals, eocd]);
+}
+
+/**
+ * Builds a minimal `.xlsx` workbook with stored parts for the reader rows.
+ * @param sheets The sheet names, targets, and worksheet XML in order.
+ * @param sharedStrings The shared-strings XML, or null for no part.
+ * @param deflatedTargets Targets stored deflated, for the inflate-cap row.
+ * @returns The workbook bytes.
+ */
+function buildWorkbookZip(
+  sheets: readonly { readonly name: string; readonly target: string }[],
+  sheetXml: Readonly<Record<string, string>>,
+  sharedStrings: string | null,
+  deflatedTargets: readonly string[] = [],
+): Buffer {
+  const parts: ZipPartInput[] = [];
+  if (sharedStrings !== null) {
+    parts.push({
+      name: "xl/sharedStrings.xml",
+      data: Buffer.from(sharedStrings, "utf8"),
+      method: 0,
+    });
+  }
+  const rels = sheets
+    .map(
+      (sheet, index) =>
+        `<Relationship Id="rId${index + 1}" Target="${sheet.target}"/>`,
+    )
+    .join("");
+  parts.push({
+    name: "xl/_rels/workbook.xml.rels",
+    data: Buffer.from(
+      `<Relationships>${rels}</Relationships>`,
+      "utf8",
+    ),
+    method: 0,
+  });
+  const sheetTags = sheets
+    .map(
+      (sheet, index) =>
+        `<sheet name="${sheet.name}" r:id="rId${index + 1}"/>`,
+    )
+    .join("");
+  parts.push({
+    name: "xl/workbook.xml",
+    data: Buffer.from(`<workbook><sheets>${sheetTags}</sheets></workbook>`, "utf8"),
+    method: 0,
+  });
+  for (const sheet of sheets) {
+    const xml = sheetXml[sheet.target] ?? "";
+    const raw = Buffer.from(xml, "utf8");
+    const deflated = deflatedTargets.includes(sheet.target);
+    parts.push({
+      name: `xl/${sheet.target}`,
+      data: deflated ? deflateRawSync(raw) : raw,
+      method: deflated ? 8 : 0,
+    });
+  }
+  return buildZip(parts);
+}
+
+/**
+ * Builds a minimal PDF with one FlateDecode content stream for the reader
+ * rows (B601). The stream dictionary sits inside the 400-character window
+ * the reader scans, and the page object feeds the page count.
+ * @param payload The raw bytes the content stream carries after inflation.
+ * @returns The PDF bytes.
+ */
+function buildFlatePdf(payload: Buffer): Buffer {
+  const header = Buffer.from(
+    "%PDF-1.4\n1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n" +
+      "2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n" +
+      "3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] " +
+      "/Contents 4 0 R /Resources << >> >>\nendobj\n" +
+      `4 0 obj\n<< /Length ${payload.length} /Filter /FlateDecode >>\nstream\r\n`,
+    "latin1",
+  );
+  const footer = Buffer.from("\r\nendstream\nendobj\ntrailer\n<< /Root 1 0 R >>\n", "latin1");
+  return Buffer.concat([header, payload, footer]);
+}
+
 beforeAll(async () => {
   if (MODULE_EXISTS) {
     documentParsing = (await import(
@@ -279,16 +680,8 @@ beforeAll(async () => {
 });
 
 describe("parser and schema surface (spec section 8)", () => {
-  it("names parsers=13 parser exports", () => {
-    expect(PARSER_NAMES.length).toBe(13);
-  });
-
-  it("names draft_schemas=11 draft schema exports", () => {
-    expect(SCHEMA_NAMES.length).toBe(11);
-  });
-
   it.each(PARSER_NAMES)(
-    "exports the pending parser %s",
+    "exports the parser %s",
     (name) => {
       requireParser(name);
     },
@@ -301,8 +694,18 @@ describe("parser and schema surface (spec section 8)", () => {
     },
   );
 
-  it("exports the named error ParsingRulesPending", () => {
-    requireExport("ParsingRulesPending");
+  it("counts every draft schema export from the module", () => {
+    const schemas = Object.keys(documentParsing).filter((name) =>
+      name.endsWith("DraftSchema"),
+    );
+    expect(schemas.length).toBe(11);
+  });
+
+  it("covers every spec parser name with a module export", () => {
+    const present = PARSER_NAMES.filter(
+      (name) => typeof documentParsing[name] === "function",
+    );
+    expect(present.length).toBe(PARSER_NAMES.length);
   });
 
   it.each(RETIRED_NAMES)(
@@ -317,44 +720,7 @@ describe("parser and schema surface (spec section 8)", () => {
   );
 });
 
-describe("ParsingRulesPending placeholder (plan task 6.1 sub-row 1)", () => {
-  /**
-   * Test double for the placeholder contract: until task 6.2 fills a parser
-   * in, the parser throws the named error instead of a silent row (Q4). The
-   * real parsers replace the double one parser at a time.
-   */
-  class ParsingRulesPendingDouble extends Error {
-    constructor(parser: string) {
-      super(
-        `${parser} has no parsing rules yet; task 6.2 fills it in ` +
-          `from the structure report of 2026-11-11.`,
-      );
-      this.name = "ParsingRulesPending";
-    }
-  }
-
-  it.each(PARSER_NAMES)(
-    "pending parser %s throws ParsingRulesPending",
-    (name) => {
-      const pending = (): never => {
-        throw new ParsingRulesPendingDouble(name);
-      };
-      expect(() => pending()).toThrowError(ParsingRulesPendingDouble);
-      try {
-        pending();
-      } catch (error) {
-        expect((error as Error).name).toBe("ParsingRulesPending");
-        expect((error as Error).message).toContain(name);
-      }
-    },
-  );
-});
-
 describe("extraction marker (plan task 6.1)", () => {
-  it("names marker_cases=11 schema marker rows", () => {
-    expect(SCHEMA_NAMES.length).toBe(11);
-  });
-
   it.each(SCHEMA_NAMES)(
     "schema %s holds the marker and rejects an unknown marker",
     (name) => {
@@ -369,18 +735,6 @@ describe("extraction marker (plan task 6.1)", () => {
 });
 
 describe("payment voucher workbook reader (PM-8, PM-9)", () => {
-  it("names review_rows=3 workbook review rows", () => {
-    expect([
-      "missing stored result",
-      "guide worksheet",
-      "month mismatch",
-    ]).toHaveLength(3);
-  });
-
-  it("names voucher_number_forms=2 accepted voucher number forms", () => {
-    expect(["PV69/M-NNN", "PV69MM-NNN"]).toHaveLength(2);
-  });
-
   it("parses a complete fake voucher sheet with the first number form", () => {
     const parse = requireParser("parsePaymentVoucherSheet");
     const result = parse({
@@ -406,9 +760,7 @@ describe("payment voucher workbook reader (PM-8, PM-9)", () => {
     const cells = fakeVoucherCells("PV69/10-003", "31/10/2569");
     cells["I10"] = null;
     const result = parse({ cells }) as Record<string, unknown>;
-    expect(result["status"]).toBe("review");
-    expect(String(result["reason"])).toMatch(/^review:/);
-    expect("draft" in result).toBe(false);
+    requireReviewResult(result);
   });
 
   it("gives a review-list result and no draft for the guide worksheet", () => {
@@ -417,9 +769,7 @@ describe("payment voucher workbook reader (PM-8, PM-9)", () => {
       string,
       unknown
     >;
-    expect(result["status"]).toBe("review");
-    expect(String(result["reason"])).toMatch(/^review:/);
-    expect("draft" in result).toBe(false);
+    requireReviewResult(result);
   });
 
   it("gives a review-list result and no draft when the voucher month differs from the file-name month", () => {
@@ -428,26 +778,11 @@ describe("payment voucher workbook reader (PM-8, PM-9)", () => {
       cells: fakeVoucherCells("PV69/9-004", "15/09/2569"),
       fileNameMonth: "2026-10",
     }) as Record<string, unknown>;
-    expect(result["status"]).toBe("review");
-    expect(String(result["reason"])).toMatch(/^review:/);
-    expect("draft" in result).toBe(false);
+    requireReviewResult(result);
   });
 });
 
 describe("cloud and OpenAI invoice read paths (D-13)", () => {
-  it("names read_path_rows=8 local and model read rows", () => {
-    expect([
-      "cloud text",
-      "cloud non-text",
-      "openai text",
-      "openai non-text",
-      "voucher pdf text",
-      "voucher pdf non-text",
-      "receipt text",
-      "receipt non-text",
-    ]).toHaveLength(8);
-  });
-
   it("reads a text cloud invoice locally", () => {
     const parse = requireParser("parseCloudInvoice");
     const result = parse({ text: fakeCloudInvoiceText() }) as Record<
@@ -601,19 +936,11 @@ describe("remaining spec section 6 read paths", () => {
     requireParser("parseWhtFilingPnd3");
   });
 
-  it("names needs_password_rows=1 bank statement row without the secret", () => {
-    expect(["bank statement without the secret"]).toHaveLength(1);
-  });
-
   it("gives needs_password and no draft for a bank statement without the secret", () => {
     const parse = requireParser("parseBankStatement");
     const result = parse({ passwordHeld: false }) as Record<string, unknown>;
     expect(result["status"]).toBe("needs-password");
     expect("draft" in result).toBe(false);
-  });
-
-  it("names no_real_sample_fixtures=3 synthetic fixtures", () => {
-    expect(NO_REAL_SAMPLE_FIXTURES).toHaveLength(3);
   });
 
   it.each(NO_REAL_SAMPLE_FIXTURES)(
@@ -623,4 +950,891 @@ describe("remaining spec section 6 read paths", () => {
       expect(fixture["_marker"]).toBe("no real sample");
     },
   );
+});
+
+describe("A601 label boundary with unequal money", () => {
+  it("reads the OpenAI fixture subtotal, tax, and total exactly", () => {
+    const parse = requireParser("parseOpenAiInvoice");
+    const fixture = readNoRealSampleFixture("openai-invoice.no-real-sample.json");
+    const result = parse({ text: String(fixture["text"]) }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "openAiInvoiceDraftSchema");
+    expect(draft["invoiceNumber"]).toBe("OPENAI-FAKE-0001");
+    expect(draft["invoiceDate"]).toBe("2026-10-01");
+    expect(draft["periodStart"]).toBe("2026-09-01");
+    expect(draft["periodEnd"]).toBe("2026-09-30");
+    expect(draft["currency"]).toBe("USD");
+    expect(draft["subtotal"]).toBe("1000");
+    expect(draft["tax"]).toBe("70");
+    expect(draft["total"]).toBe("1070");
+  });
+
+  it("reads unequal school subtotal and net total exactly", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const result = parse({
+      text: "Test invoice PA-INV-FAKE-009\nSubtotal: 50,000.00\nTotal: 30,000.00",
+    }) as Record<string, unknown>;
+    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["subtotal"]).toBe("5000000");
+    expect(draft["netTotal"]).toBe("3000000");
+  });
+});
+
+describe("A602 PND.3 section 8 draft on the extended parser", () => {
+  it("extends parseWhtFilingPnd3 with the fixture-validated section 8 draft", () => {
+    const parse = requireParser("parseWhtFilingPnd3");
+    const result = parse({ text: fakeWhtFilingPnd3Text() }) as Record<
+      string,
+      unknown
+    >;
+    expect(result["status"]).toBe("parsed");
+    const draft = requireParsedDraft(result, "whtFilingPnd3DraftSchema");
+    expect(draft["extraction"]).toBe("local-text");
+    expect(draft["referenceNumber"]).toBe("P030000000000");
+    expect(draft["withholderTaxId"]).toBe("0-0000-00000-00-0");
+    expect(draft["withholderBranch"]).toBe("1");
+    expect(draft["sheetNo"]).toBe("1");
+    expect(draft["sheetsTotal"]).toBe("1");
+    expect(draft["totalAmountPaid"]).toBe("1000000");
+    expect(draft["totalTaxWithheld"]).toBe("30000");
+    const rows = draft["rows"] as ReadonlyArray<Record<string, unknown>>;
+    expect(rows.length).toBe(1);
+    const row = rows[0] ?? {};
+    expect(row["seq"]).toBe(1);
+    expect(row["payeeTaxId"]).toBe("0-0000-00000-00-0");
+    expect(row["payeeName"]).toBe("Mr. Fake Contractor");
+    expect(row["payeeAddress"] ?? null).toBeNull();
+    expect(row["paymentDate"]).toBe("2026-10-31");
+    expect(row["incomeType"]).toBe("ค่าจ้าง");
+    expect(row["taxRatePercent"]).toBe(3);
+    expect(row["amountPaid"]).toBe("1000000");
+    expect(row["taxWithheld"]).toBe("30000");
+    expect(row["condition"]).toBe(1);
+  });
+});
+
+describe("A603 cloud invoice in the report sample 4.2 layout", () => {
+  it("reads every field of the two-space-column sample", () => {
+    const parse = requireParser("parseCloudInvoice");
+    const result = parse({ text: fakeCloudInvoiceSample42Text() }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "cloudInvoiceDraftSchema");
+    expect(draft["extraction"]).toBe("local-text");
+    expect(draft["invoiceNumber"]).toBe("FAKE-CLOUD-0002");
+    expect(draft["gstRegNo"]).toBe("000000000X");
+    expect(draft["billTo"]).toBe("Test Counterparty");
+    expect(draft["service"]).toBe("Google Cloud");
+    expect(draft["invoiceDate"]).toBe("2026-09-30");
+    expect(draft["billingId"]).toBe("FAKE-BILL-0000");
+    expect(draft["accountId"]).toBe("FAKE-ACCT-000000");
+    expect(draft["periodStart"]).toBe("2026-09-01");
+    expect(draft["periodEnd"]).toBe("2026-09-30");
+    expect(draft["currency"]).toBe("THB");
+    expect(draft["subtotal"]).toBe("500000");
+    expect(draft["gstRate"]).toBe("7%");
+    expect(draft["gst"]).toBe("35000");
+    expect(draft["total"]).toBe("535000");
+    const lines = draft["lines"] as ReadonlyArray<Record<string, unknown>>;
+    expect(lines.length).toBeGreaterThan(0);
+    const line = lines[0] ?? {};
+    expect(String(line["description"] ?? "")).toContain("Google Cloud");
+    expect(line["amount"]).toBe("500000");
+  });
+});
+
+describe("A604 cloud statement with the fixture values", () => {
+  it("reads every field and both payment rows", () => {
+    const parse = requireParser("parseCloudStatement");
+    const result = parse({ text: fakeCloudStatementText() }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "cloudStatementDraftSchema");
+    expect(draft["extraction"]).toBe("local-text");
+    expect(draft["documentTitle"]).toBe("Statement");
+    expect(draft["to"]).toBe("Test Company");
+    expect(draft["service"]).toBe("Google Cloud");
+    expect(draft["cloudAccountId"]).toBe("FAKE-CLOUD-000000");
+    expect(draft["paymentsAccountId"]).toBe("FAKE-PAY-0000-0000");
+    expect(draft["paymentsProfileId"]).toBe("FAKE-PROF-0000");
+    expect(draft["statementIssueDate"]).toBe("2026-08-31");
+    expect(draft["periodStart"]).toBe("2026-08-01");
+    expect(draft["periodEnd"]).toBe("2026-08-31");
+    expect(draft["startingBalance"]).toBe("0");
+    expect(draft["totalNewActivity"]).toBe("500000");
+    expect(draft["totalPaymentsReceived"]).toBe("-500000");
+    expect(draft["endingBalance"]).toBe("0");
+    const payments = draft["payments"] as ReadonlyArray<
+      Record<string, unknown>
+    >;
+    expect(payments.length).toBe(2);
+    const first = payments[0] ?? {};
+    expect(first["date"]).toBe("2026-08-03");
+    expect(String(first["description"] ?? "")).toContain("Visa ending 0000");
+    expect(first["amount"]).toBe("-250000");
+    const second = payments[1] ?? {};
+    expect(second["date"]).toBe("2026-08-30");
+    expect(second["amount"]).toBe("-250000");
+  });
+});
+
+describe("A605 payment voucher PDF from the report fixture", () => {
+  it("reads the payslip print verbatim with separate net figures", () => {
+    const parse = requireParser("parsePaymentVoucherPdf");
+    const result = parse({ text: fakeVoucherPayslipFixtureText() }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "paymentVoucherDraftSchema");
+    expect(draft["extraction"]).toBe("local-text");
+    expect(draft["companyName"]).toBe("บริษัท ตัวอย่าง(ไทยแลนด์) จำกัด");
+    expect(draft["voucherNo"]).toBe("PV6910-003");
+    expect(draft["date"]).toBe("2026-10-31");
+    expect(draft["payee"]).toBe("Mr. Fake Contractor");
+    expect(draft["paymentRef"]).toBe("PP: 0000000000");
+    expect(draft["netAmount"]).toBe("1000000");
+    expect(draft["subtotal"]).toBe("1000000");
+    expect(String(draft["deductionLabel"] ?? "")).toContain("หัก ณ ที่จ่าย");
+    expect(draft["deductionRate"]).toBe(0.03);
+    expect(draft["deductionAmount"]).toBe("30000");
+    expect(draft["netTotal"]).toBe("970000");
+    const lines = draft["lines"] as ReadonlyArray<Record<string, unknown>>;
+    expect(lines.length).toBe(1);
+    const line = lines[0] ?? {};
+    expect(line["docDate"]).toBe("2026-10-31");
+    expect(line["description"]).toBe("Salary");
+    expect(line["amount"]).toBe("1000000");
+  });
+});
+
+describe("A606 school invoice sheet fields", () => {
+  it("reads the document title and the invoice number from the tab", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const result = parse({ worksheets: [fakeRichSchoolTab()] }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["documentTitle"]).toBe("ใบแจ้งหนี้ / INVOICE");
+    expect(draft["invoiceNo"]).toBe("PA-INV-FAKE-002-T2");
+  });
+
+  it("reads the receipt number from a receipt tab", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const result = parse({
+      worksheets: [
+        {
+          name: "Receipt Term 1",
+          cells: {
+            A1: "Test Company Ltd.",
+            A2: "ใบเสร็จรับเงิน / RECEIPT",
+            B5: "PA-REC-FAKE-001-T1",
+          } as Record<string, string | number | null>,
+        },
+      ],
+    }) as Record<string, unknown>;
+    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["receiptNo"]).toBe("PA-REC-FAKE-001-T1");
+    expect(draft["invoiceNo"]).toBeNull();
+  });
+
+  it("reads the invoice date or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["date"]).toBe("2026-10-15");
+  });
+
+  it("reads the quotation reference or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["quotationRef"]).toBe("FAKE-Q-002");
+  });
+
+  it("reads the due date or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["due"]).toBe("2026-10-31");
+  });
+
+  it("reads the issuer company names from the tab", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const result = parse({ worksheets: [fakeRichSchoolTab()] }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["issuerCompanyNames"]).toBe("Test School Company Ltd.");
+  });
+
+  it("reads the issuer tax id or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["issuerTaxId"]).toBe("0000000000000");
+  });
+
+  it("reads the issuer branch or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["issuerBranch"]).toBe("00000");
+  });
+
+  it("reads the issuer contact or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["issuerContact"]).toBe("Test contact 000");
+  });
+
+  it("reads the customer name or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["customerName"]).toBe("Test School");
+  });
+
+  it("reads the customer address or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["customerAddress"]).toBe("Test Address 1");
+  });
+
+  it("reads the customer tax id or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["customerTaxId"]).toBe("0000000000000");
+  });
+
+  it("reads the student count or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["students"]).toBe(100);
+  });
+
+  it("reads the invoice lines or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) {
+      const lines = draft["lines"] as ReadonlyArray<Record<string, unknown>>;
+      expect(lines.length).toBeGreaterThan(0);
+      expect(String(lines[0]?.["description"] ?? "")).toContain("licence");
+    }
+  });
+
+  it("reads the subtotal or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["subtotal"]).toBe("5000000");
+  });
+
+  it("reads the discounts or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) {
+      const discounts = draft["discounts"] as ReadonlyArray<
+        Record<string, unknown>
+      >;
+      expect(discounts.length).toBeGreaterThan(0);
+      expect(discounts[0]?.["amount"]).toBe("-2000000");
+    }
+  });
+
+  it("reads the net total or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["netTotal"]).toBe("3000000");
+  });
+
+  it("reads the net total in words or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null)
+      expect(draft["netTotalInWords"]).toBe("Test thirty thousand");
+  });
+
+  it("reads the payment block or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) {
+      const payment = draft["payment"] as Record<string, unknown> | null;
+      expect(payment).not.toBeNull();
+      expect(payment?.["bank"]).toBe("Test Bank");
+    }
+  });
+
+  it("reads the delivery block or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null)
+      expect(String(draft["delivery"] ?? "")).toContain("delivery");
+  });
+
+  it("reads the VAT note or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["vatNote"]).toBe("Test VAT note");
+  });
+
+  it("reads the terms or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const draft = requireParsedOrReview(
+      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["terms"]).toBe("Test terms");
+  });
+});
+
+describe("A606 school invoice PDF fields", () => {
+  it("reads the uppercase INVOICE title", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const result = parse({ text: fakeSchoolInvoicePdfText() }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(String(draft["documentTitle"] ?? "")).toMatch(/invoice/iu);
+  });
+
+  it("reads the invoice number and date", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const result = parse({ text: fakeSchoolInvoicePdfText() }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["invoiceNo"]).toBe("PA-INV-FAKE-002-T2");
+    expect(draft["date"]).toBe("2026-10-15");
+  });
+
+  it("reads the quotation reference", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const result = parse({ text: fakeSchoolInvoicePdfText() }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["quotationRef"]).toBe("FAKE-Q-002");
+  });
+
+  it("reads the due date", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const result = parse({ text: fakeSchoolInvoicePdfText() }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["due"]).toBe("2026-10-31");
+  });
+
+  it("reads the customer name", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const result = parse({ text: fakeSchoolInvoicePdfText() }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["customerName"]).toBe("Test School");
+  });
+
+  it("reads the subtotal and the net total exactly", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const result = parse({ text: fakeSchoolInvoicePdfText() }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["subtotal"]).toBe("5000000");
+    expect(draft["netTotal"]).toBe("3000000");
+  });
+
+  it("reads the net total in words", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const result = parse({ text: fakeSchoolInvoicePdfText() }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["netTotalInWords"]).toBe("Test thirty thousand");
+  });
+
+  it("reads the issuer tax id or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const draft = requireParsedOrReview(
+      parse({ text: fakeSchoolInvoicePdfText() }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["issuerTaxId"]).toBe("0000000000000");
+  });
+
+  it("reads the issuer branch or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const draft = requireParsedOrReview(
+      parse({ text: fakeSchoolInvoicePdfText() }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["issuerBranch"]).toBe("00000");
+  });
+
+  it("reads the issuer contact or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const draft = requireParsedOrReview(
+      parse({ text: fakeSchoolInvoicePdfText() }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["issuerContact"]).toBe("Test contact 000");
+  });
+
+  it("reads the customer address or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const draft = requireParsedOrReview(
+      parse({ text: fakeSchoolInvoicePdfText() }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["customerAddress"]).toBe("Test Address 1");
+  });
+
+  it("reads the customer tax id or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const draft = requireParsedOrReview(
+      parse({ text: fakeSchoolInvoicePdfText() }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["customerTaxId"]).toBe("0000000000000");
+  });
+
+  it("reads the student count or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const draft = requireParsedOrReview(
+      parse({ text: fakeSchoolInvoicePdfText() }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["students"]).toBe(100);
+  });
+
+  it("reads the invoice lines or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const draft = requireParsedOrReview(
+      parse({ text: fakeSchoolInvoicePdfText() }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) {
+      const lines = draft["lines"] as ReadonlyArray<Record<string, unknown>>;
+      expect(lines.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("reads the discounts or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const draft = requireParsedOrReview(
+      parse({ text: fakeSchoolInvoicePdfText() }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) {
+      const discounts = draft["discounts"] as ReadonlyArray<
+        Record<string, unknown>
+      >;
+      expect(discounts.length).toBeGreaterThan(0);
+      expect(discounts[0]?.["amount"]).toBe("-2000000");
+    }
+  });
+
+  it("reads the payment block or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const draft = requireParsedOrReview(
+      parse({ text: fakeSchoolInvoicePdfText() }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) {
+      const payment = draft["payment"] as Record<string, unknown> | null;
+      expect(payment).not.toBeNull();
+      expect(payment?.["bank"]).toBe("Test Bank");
+    }
+  });
+
+  it("reads the delivery block or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const draft = requireParsedOrReview(
+      parse({ text: fakeSchoolInvoicePdfText() }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null)
+      expect(String(draft["delivery"] ?? "")).toContain("delivery");
+  });
+
+  it("reads the VAT note or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const draft = requireParsedOrReview(
+      parse({ text: fakeSchoolInvoicePdfText() }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["vatNote"]).toBe("Test VAT note");
+  });
+
+  it("reads the terms or returns the review result", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const draft = requireParsedOrReview(
+      parse({ text: fakeSchoolInvoicePdfText() }) as Record<string, unknown>,
+      "schoolInvoiceDraftSchema",
+    );
+    if (draft !== null) expect(draft["terms"]).toBe("Test terms");
+  });
+});
+
+describe("A607 cloud payment receipt layouts", () => {
+  it("reads the Cloud layout with Amount received on and the standalone THB line", () => {
+    const parse = requireParser("parseCloudPaymentReceipt");
+    const result = parse({ text: fakeCloudReceiptText() }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "cloudPaymentReceiptDraftSchema");
+    expect(draft["extraction"]).toBe("local-text");
+    expect(draft["documentTitle"]).toBe("Payment Receipt");
+    expect(draft["paymentDate"]).toBe("2026-03-01");
+    expect(draft["amount"]).toBe("500000");
+    expect(draft["paidBy"]).toBe("Test Company");
+    expect(draft["paidTo"]).toBe("Test Vendor");
+    expect(draft["service"]).toBe("Google Cloud");
+    expect(draft["taxIdentificationNo"]).toBe("000000000R");
+    expect(draft["billingId"]).toBe("FAKE-BILL-0000");
+    expect(draft["paymentMethod"]).toBe("Test card ending 0000");
+    expect(draft["paymentNumber"]).toBe("FAKE-PAY-0001");
+    expect(draft["paymentId"]).toBe("CLOUD AbCdEf");
+  });
+
+  it("reads the Workspace layout with Payment date and no colon", () => {
+    const parse = requireParser("parseCloudPaymentReceipt");
+    const result = parse({ text: fakeWorkspaceReceiptText() }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "cloudPaymentReceiptDraftSchema");
+    expect(draft["paymentDate"]).toBe("2026-03-02");
+    expect(draft["amount"]).toBe("200000");
+  });
+});
+
+describe("A612 minor units without leading zeros", () => {
+  it("reads a zero balance as 0", () => {
+    const parse = requireParser("parseCloudStatement");
+    const result = parse({
+      text: "Statement\nStarting balance: 0.00",
+    }) as Record<string, unknown>;
+    const draft = requireParsedDraft(result, "cloudStatementDraftSchema");
+    expect(draft["startingBalance"]).toBe("0");
+  });
+
+  it("reads 0.70 as 70", () => {
+    const parse = requireParser("parseOpenAiInvoice");
+    const fixture = readNoRealSampleFixture("openai-invoice.no-real-sample.json");
+    const result = parse({ text: String(fixture["text"]) }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "openAiInvoiceDraftSchema");
+    expect(draft["tax"]).toBe("70");
+  });
+
+  it("reads a negative zero balance as 0", () => {
+    const parse = requireParser("parseCloudStatement");
+    const result = parse({
+      text: "Statement\nEnding balance: -0.00",
+    }) as Record<string, unknown>;
+    const draft = requireParsedDraft(result, "cloudStatementDraftSchema");
+    expect(draft["endingBalance"]).toBe("0");
+  });
+
+  it("keeps the minus sign of a nonzero negative balance", () => {
+    const parse = requireParser("parseCloudStatement");
+    const result = parse({
+      text: "Statement\nEnding balance: -5,000.00",
+    }) as Record<string, unknown>;
+    const draft = requireParsedDraft(result, "cloudStatementDraftSchema");
+    expect(draft["endingBalance"]).toBe("-500000");
+  });
+});
+
+describe("A616 foreign vendor invoice from the workbook cells", () => {
+  it("flattens the fixture cells in sheet order", () => {
+    const parse = requireParser("parseForeignVendorInvoice");
+    const result = parse({ cells: fakeForeignVendorCells() }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "foreignVendorInvoiceDraftSchema");
+    expect(draft["extraction"]).toBe("local-text");
+    expect(draft["invoiceDate"]).toBe("2026-10-30");
+    expect(draft["vendor"]).toBe("VENDOR A PRINTING CO.,LTD");
+    expect(draft["billTo"]).toBe("Test Company");
+    expect(draft["description"]).toContain("work book");
+    expect(draft["quantity"]).toBe("1000");
+    expect(draft["unitPrice"]).toBe("RMB10.0");
+    expect(draft["amount"]).toBe("1000000");
+    expect(draft["currency"]).toBe("RMB");
+  });
+});
+
+describe("B601 B602 reader inflate caps", () => {
+  it("exports the ZIP entry inflate cap", () => {
+    const cap = requireExport("MAX_ZIP_ENTRY_BYTES");
+    expect(typeof cap).toBe("number");
+    expect(cap as number).toBeGreaterThan(0);
+    expect(cap as number).toBeLessThanOrEqual(20 * 1024 * 1024);
+  });
+
+  it("exports the PDF inflate cap", () => {
+    const cap = requireExport("MAX_PDF_INFLATE_BYTES");
+    expect(typeof cap).toBe("number");
+    expect(cap as number).toBeGreaterThan(0);
+    expect(cap as number).toBeLessThanOrEqual(20 * 1024 * 1024);
+  });
+
+  it("returns an empty workbook when a sheet part inflates past the ZIP cap", () => {
+    const cap =
+      typeof documentParsing["MAX_ZIP_ENTRY_BYTES"] === "number"
+        ? (documentParsing["MAX_ZIP_ENTRY_BYTES"] as number)
+        : 2 * 1024 * 1024;
+    const readWorkbook = requireParser("readWorkbook") as (
+      input: unknown,
+    ) => { readonly worksheets: ReadonlyArray<unknown> };
+    const padding = "0".repeat(cap + 64 * 1024);
+    const sheetXml =
+      `<worksheet><sheetData><row r="1">` +
+      `<c r="A1" t="inlineStr"><is><t>Bomb</t></is></c></row>` +
+      `<!--${padding}--></sheetData></worksheet>`;
+    const bytes = buildWorkbookZip(
+      [{ name: "Bomb", target: "worksheets/sheet1.xml" }],
+      { "worksheets/sheet1.xml": sheetXml },
+      null,
+      ["worksheets/sheet1.xml"],
+    );
+    const workbook = readWorkbook(new Uint8Array(bytes));
+    expect(workbook.worksheets).toHaveLength(0);
+  });
+
+  it("returns null text when a FlateDecode stream inflates past the PDF cap", () => {
+    const cap =
+      typeof documentParsing["MAX_PDF_INFLATE_BYTES"] === "number"
+        ? (documentParsing["MAX_PDF_INFLATE_BYTES"] as number)
+        : 2 * 1024 * 1024;
+    const readTextPdf = requireParser("readTextPdf") as (
+      input: unknown,
+    ) => { readonly pageCount: number; readonly text: string | null };
+    const repeats = Math.ceil((cap + 64 * 1024) / 7);
+    const payload = deflateSync(Buffer.from(`BT\n${"(V) Tj\n".repeat(repeats)}ET\n`, "utf8"));
+    const result = readTextPdf(new Uint8Array(buildFlatePdf(payload)));
+    expect(result.text).toBeNull();
+  });
+});
+
+describe("B604 hostile XML character reference (A608)", () => {
+  it("keeps the literal text of a reference above 0x10FFFF without raising", () => {
+    const readWorkbook = requireParser("readWorkbook") as (
+      input: unknown,
+    ) => {
+      readonly worksheets: ReadonlyArray<{
+        readonly cells: Record<string, unknown>;
+      }>;
+    };
+    const bytes = buildWorkbookZip(
+      [{ name: "Hostile", target: "worksheets/sheet1.xml" }],
+      {
+        "worksheets/sheet1.xml":
+          `<worksheet><sheetData><row r="1">` +
+          `<c r="A2" t="s"><v>0</v></c></row></sheetData></worksheet>`,
+      },
+      `<sst><si><t>A&#x110FFFF;B</t></si><si><t>C&#999999999999;D</t></si></sst>`,
+    );
+    const workbook = readWorkbook(new Uint8Array(bytes));
+    expect(workbook.worksheets).toHaveLength(0);
+  });
+});
+
+describe("B605 draft money length cap", () => {
+  it("rejects a digit string longer than the cap and accepts normal money", () => {
+    const schema = requireSchema("draftMoneySchema");
+    expect(schema.safeParse("9".repeat(30)).success).toBe(false);
+    expect(schema.safeParse("500000").success).toBe(true);
+    expect(schema.safeParse("0").success).toBe(true);
+  });
+});
+
+describe("B603 reader characterization rows", () => {
+  it("returns an empty workbook for a malformed ZIP without raising", () => {
+    const readWorkbook = requireParser("readWorkbook") as (
+      input: unknown,
+    ) => { readonly worksheets: ReadonlyArray<unknown> };
+    const workbook = readWorkbook(
+      new Uint8Array(Buffer.from("not a zip archive", "utf8")),
+    );
+    expect(workbook.worksheets).toHaveLength(0);
+  });
+
+  it("returns null text for bytes with no PDF structure without raising", () => {
+    const readTextPdf = requireParser("readTextPdf") as (
+      input: unknown,
+    ) => { readonly pageCount: number; readonly text: string | null };
+    const result = readTextPdf(
+      new Uint8Array(Buffer.from("not a pdf file", "utf8")),
+    );
+    expect(result.pageCount).toBe(0);
+    expect(result.text).toBeNull();
+  });
+
+  it("reads one text line from a minimal text PDF", () => {
+    const readTextPdf = requireParser("readTextPdf") as (
+      input: unknown,
+    ) => { readonly pageCount: number; readonly text: string | null };
+    const payload = deflateSync(Buffer.from("BT (Hi) Tj ET", "utf8"));
+    const result = readTextPdf(new Uint8Array(buildFlatePdf(payload)));
+    expect(result.pageCount).toBe(1);
+    expect(result.text).toBe("Hi");
+  });
+
+  it("skips the guide worksheet of a generated workbook", () => {
+    const readWorkbook = requireParser("readWorkbook") as (
+      input: unknown,
+    ) => {
+      readonly worksheets: ReadonlyArray<{
+        readonly name: string;
+        readonly cells: Record<string, string | number | null>;
+      }>;
+    };
+    const readVouchers = requireParser("readVoucherWorksheets") as (
+      input: unknown,
+    ) => {
+      readonly vouchers: ReadonlyArray<{
+        readonly name: string;
+        readonly cells: Record<string, string | number | null>;
+      }>;
+      readonly skipped: ReadonlyArray<string>;
+    };
+    const voucherXml =
+      `<worksheet><sheetData>` +
+      `<row r="1"><c r="A1" t="inlineStr"><is><t>Test Company Ltd.</t></is></c></row>` +
+      `<row r="2"><c r="A2" t="inlineStr"><is><t>${VOUCHER_FORM_TITLE}</t></is></c></row>` +
+      `<row r="3"><c r="I3" t="inlineStr"><is><t>PV69/10-001</t></is></c></row>` +
+      `<row r="4"><c r="I4" t="inlineStr"><is><t>31/10/2569</t></is></c></row>` +
+      `<row r="5"><c r="B5" t="inlineStr"><is><t>Test Counterparty</t></is></c></row>` +
+      `<row r="26"><c r="I26"><v>20000</v></c><c r="I28"><v>19400</v></c></row>` +
+      `</sheetData></worksheet>`;
+    const guideXml =
+      `<worksheet><sheetData>` +
+      `<row r="1"><c r="A1" t="inlineStr"><is><t>Test guide</t></is></c></row>` +
+      `<row r="2"><c r="A2" t="inlineStr"><is><t>Test SOP text</t></is></c></row>` +
+      `</sheetData></worksheet>`;
+    const bytes = buildWorkbookZip(
+      [
+        { name: "Test Payee", target: "worksheets/sheet1.xml" },
+        { name: "Guide", target: "worksheets/sheet2.xml" },
+      ],
+      {
+        "worksheets/sheet1.xml": voucherXml,
+        "worksheets/sheet2.xml": guideXml,
+      },
+      null,
+    );
+    const workbook = readWorkbook(new Uint8Array(bytes));
+    const selected = readVouchers(workbook);
+    expect(selected.vouchers).toHaveLength(1);
+    expect(selected.vouchers[0]?.name).toBe("Test Payee");
+    expect(selected.skipped).toEqual(["Guide"]);
+    const parse = requireParser("parsePaymentVoucherSheet");
+    const result = parse({
+      cells: selected.vouchers[0]?.cells ?? {},
+    }) as Record<string, unknown>;
+    const draft = requireParsedDraft(result, "paymentVoucherDraftSchema");
+    expect(draft["voucherNo"]).toBe("PV69/10-001");
+  });
+
+  it("reviews a formula cell with no cached value in a generated workbook", () => {
+    const readWorkbook = requireParser("readWorkbook") as (
+      input: unknown,
+    ) => {
+      readonly worksheets: ReadonlyArray<{
+        readonly name: string;
+        readonly cells: Record<string, string | number | null>;
+      }>;
+    };
+    const sheetXml =
+      `<worksheet><sheetData>` +
+      `<row r="2"><c r="A2" t="inlineStr"><is><t>${VOUCHER_FORM_TITLE}</t></is></c></row>` +
+      `<row r="3"><c r="I3" t="inlineStr"><is><t>PV69/10-005</t></is></c></row>` +
+      `<row r="4"><c r="I4" t="inlineStr"><is><t>31/10/2569</t></is></c></row>` +
+      `<row r="5"><c r="B5" t="inlineStr"><is><t>Test Counterparty</t></is></c></row>` +
+      `<row r="10"><c r="A10" t="inlineStr"><is><t>31/10/2569</t></is></c>` +
+      `<c r="D10" t="inlineStr"><is><t>Test service line</t></is></c>` +
+      `<c r="I10"><v>20000</v></c></row>` +
+      `<row r="26"><c r="I26"><f>SUM(I10:I25)</f></c>` +
+      `<c r="I28"><v>19400</v></c></row>` +
+      `</sheetData></worksheet>`;
+    const bytes = buildWorkbookZip(
+      [{ name: "Test Payee", target: "worksheets/sheet1.xml" }],
+      { "worksheets/sheet1.xml": sheetXml },
+      null,
+    );
+    const workbook = readWorkbook(new Uint8Array(bytes));
+    expect(workbook.worksheets).toHaveLength(1);
+    const parse = requireParser("parsePaymentVoucherSheet");
+    const result = parse({
+      cells: workbook.worksheets[0]?.cells ?? {},
+    }) as Record<string, unknown>;
+    requireReviewResult(result);
+  });
 });
