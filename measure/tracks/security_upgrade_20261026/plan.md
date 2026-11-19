@@ -244,7 +244,7 @@
 
 The merge into the local `master` happens after the Phase 1 and Phase 2 checks pass. The reviews must find no open critical or high defect. The merge stops and reports to Daniel when a check fails.
 
-## Phase 4: Next.js 16.4.6 patch (after 2026-11-20)
+## Phase 4: Next.js 16.4.6 patch (after 2026-11-20) [checkpoint: 55d5dba98]
 
 PM decision (2026-11-18): the pinned `next` 16.4.1 is inside the range of two moderate advisories. The latest 16.4 patch is 16.4.6 (`npm view next@16.4 version`). The upgrade lands after 2026-11-20. No deploy happens without Daniel's word. The branch is `security/next-16-4-6`; its base is `837755eaa`.
 
