@@ -6,7 +6,8 @@
  * The strategy names these surfaces: the viewports 320x568, 568x320, and 1440x900 with a 200
  * percent zoom, a 60-character English and Thai title in the plaque, a missing logo file, a
  * shared rule that catches a text input or the red alert, a page with no panel, the 403 page and
- * the `/st` fallback. The remediation rounds add the fitted plaque font at extreme
+ * the teacher week page. Task 3.3 gives the `/st` fallback a place, so `/st` leaves the plain set;
+ * H5 pins that new premise. The remediation rounds add the fitted plaque font at extreme
  * `--title-chars` values, the `[tabindex]` part of the focus rule on the read-along words (Review
  * C nit C3-F1), and the focus ring against a control box shadow.
  *
@@ -426,12 +427,14 @@ async function renderPlainPage(name: string): Promise<HTMLElement> {
     return render(<Forbidden heading="No" line="Teachers only" link="Teacher sign-in" href="/en/sign-in" />)
       .container;
   }
-  if (name === "fallback") {
-    const pagePath = "../app/[locale]/st/page";
-    const { default: Page } = (await import(/* @vite-ignore */ pagePath)) as {
-      default: (props: { params: Promise<{ locale: string }> }) => Promise<ReactElement>;
+  if (name === "teacher-week") {
+    // A real page with a main and no data-place. It replaces the old `/st` fallback probe, which
+    // task 3.3 moved into the placed set. The teacher view keeps the cream-body intent alive.
+    const viewPath = "../app/[locale]/teacher/[level]/[week]/week-view";
+    const { TeacherWeekView } = (await import(/* @vite-ignore */ viewPath)) as {
+      TeacherWeekView: ComponentType<{ week: StorytimeWeek; locale: string }>;
     };
-    return render(await Page({ params: Promise.resolve({ locale: "en" }) })).container;
+    return render(<TeacherWeekView week={shipped} locale="en" />).container;
   }
   if (name === "sign-in") {
     const pagePath = "../app/[locale]/sign-in/page";
@@ -470,8 +473,21 @@ async function renderPlainPage(name: string): Promise<HTMLElement> {
   return render(<NotFoundView openWeeks={{ 2: 3 }} locale="en" />).container;
 }
 
-/** The plain pages of the reach cases. */
-const PLAIN_PAGES = ["403", "fallback", "sign-in", "join", "404-week", "404-stranger"] as const;
+/**
+ * Renders the signed-in home page. Task 3.3 gives it the place ground and the shared frame, so it
+ * is no longer a plain page. H5 uses this render to pin that premise.
+ * @returns The container of the render.
+ */
+async function renderHomePage(): Promise<HTMLElement> {
+  const pagePath = "../app/[locale]/st/page";
+  const { default: Page } = (await import(/* @vite-ignore */ pagePath)) as {
+    default: (props: { params: Promise<{ locale: string }> }) => Promise<ReactElement>;
+  };
+  return render(await Page({ params: Promise.resolve({ locale: "en" }) })).container;
+}
+
+/** The plain pages of the reach cases. None holds a `data-place`. */
+const PLAIN_PAGES = ["403", "teacher-week", "sign-in", "join", "404-week", "404-stranger"] as const;
 
 /**
  * Collects the shared-rule violations over every plain page for one style sheet.
@@ -678,6 +694,15 @@ describe("adversarial brand chrome cases of Phase 2b", () => {
     expect(`unreadable_selectors=${unreadable.count}`, "every selector part must be readable").toBe(
       "unreadable_selectors=0",
     );
+    // Task 3.3 premise: the signed-in home page now carries a place and the shared frame, so it
+    // left the plain set. This row keeps the new premise under test instead of dropping it.
+    const home = await renderHomePage();
+    expect(
+      home.querySelector("main")?.getAttribute("data-place"),
+      "the /st main carries a look place (task 3.3)",
+    ).toMatch(/^(meadow|grove|oak|trail|path)$/);
+    expect(home.querySelector("header[data-hero]"), "the /st page carries the shared frame").not.toBeNull();
+    cleanup();
     expect(result.violations.join(" | "), "the shared rules on the plain pages").toBe("");
   });
 
@@ -789,6 +814,8 @@ describe("adversarial brand chrome cases of Phase 2b", () => {
       "a main heading rule": `${css}\nmain > h1 { text-transform: uppercase; }`,
       "a draft note rule": `${css}\n[data-draft] { background: #fcd34d; }`,
     };
+    // The plain set no longer holds /st (task 3.3 gave it a place), so a clean sheet is clean over
+    // the pages that still hold no place. The home premise itself is pinned in H5.
     const clean = await sharedRuleViolations(css);
     expect(clean.violations.join(" | "), "the shipped sheet is clean").toBe("");
     let rejected = 0;
