@@ -671,6 +671,32 @@ function buildFlatePdf(payload: Buffer): Buffer {
   return Buffer.concat([header, payload, footer]);
 }
 
+/**
+ * Builds a minimal PDF with two FlateDecode content streams for the B610
+ * row: one normal stream and one stream that inflates past the cap. Each
+ * dictionary sits inside the 400-character window the reader scans.
+ * @param normalPayload The raw bytes of the normal stream after inflation.
+ * @param bombPayload The raw bytes of the over-cap stream after inflation.
+ * @returns The PDF bytes.
+ */
+function buildTwoStreamFlatePdf(normalPayload: Buffer, bombPayload: Buffer): Buffer {
+  const header = Buffer.from(
+    "%PDF-1.4\n1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n" +
+      "2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n" +
+      "3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] " +
+      "/Contents [4 0 R 5 0 R] /Resources << >> >>\nendobj\n" +
+      `4 0 obj\n<< /Length ${normalPayload.length} /Filter /FlateDecode >>\nstream\r\n`,
+    "latin1",
+  );
+  const middle = Buffer.from(
+    `\r\nendstream\nendobj\n5 0 obj\n<< /Length ${bombPayload.length} ` +
+      "/Filter /FlateDecode >>\nstream\r\n",
+    "latin1",
+  );
+  const footer = Buffer.from("\r\nendstream\nendobj\ntrailer\n<< /Root 1 0 R >>\n", "latin1");
+  return Buffer.concat([header, normalPayload, middle, bombPayload, footer]);
+}
+
 beforeAll(async () => {
   if (MODULE_EXISTS) {
     documentParsing = (await import(
@@ -1684,7 +1710,7 @@ describe("B601 B602 reader inflate caps", () => {
 });
 
 describe("B604 hostile XML character reference (A608)", () => {
-  it("keeps the literal text of a reference above 0x10FFFF without raising", () => {
+  it("drops a hostile shared-strings part without raising", () => {
     const readWorkbook = requireParser("readWorkbook") as (
       input: unknown,
     ) => {
@@ -1704,6 +1730,29 @@ describe("B604 hostile XML character reference (A608)", () => {
     const workbook = readWorkbook(new Uint8Array(bytes));
     expect(workbook.worksheets).toHaveLength(0);
   });
+
+  it("keeps the literal text of an inline-string hostile reference without raising", () => {
+    const readWorkbook = requireParser("readWorkbook") as (
+      input: unknown,
+    ) => {
+      readonly worksheets: ReadonlyArray<{
+        readonly cells: Record<string, unknown>;
+      }>;
+    };
+    const bytes = buildWorkbookZip(
+      [{ name: "Inline", target: "worksheets/sheet1.xml" }],
+      {
+        "worksheets/sheet1.xml":
+          `<worksheet><sheetData><row r="1">` +
+          `<c r="A2" t="inlineStr"><is><t>A&#x110FFFF;B</t></is></c>` +
+          `</row></sheetData></worksheet>`,
+      },
+      null,
+    );
+    const workbook = readWorkbook(new Uint8Array(bytes));
+    expect(workbook.worksheets).toHaveLength(1);
+    expect(workbook.worksheets[0]?.cells["A2"]).toBe("A&#x110FFFF;B");
+  });
 });
 
 describe("B605 draft money length cap", () => {
@@ -1712,6 +1761,224 @@ describe("B605 draft money length cap", () => {
     expect(schema.safeParse("9".repeat(30)).success).toBe(false);
     expect(schema.safeParse("500000").success).toBe(true);
     expect(schema.safeParse("0").success).toBe(true);
+  });
+});
+
+describe("A620 currency on every section 8 draft", () => {
+  it("reads the payment receipt currency from the printed text", () => {
+    const parse = requireParser("parseCloudPaymentReceipt");
+    const result = parse({ text: fakeCloudReceiptText() }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "cloudPaymentReceiptDraftSchema");
+    expect(draft["currency"]).toBe("THB");
+  });
+
+  it("reads the statement currency from the printed text", () => {
+    const parse = requireParser("parseCloudStatement");
+    const result = parse({ text: fakeCloudStatementText() }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "cloudStatementDraftSchema");
+    expect(draft["currency"]).toBe("THB");
+  });
+
+  it("holds THB for the PND.3 sheet whose print carries no prefix", () => {
+    const parse = requireParser("parseWhtFilingPnd3");
+    const result = parse({ text: fakeWhtFilingPnd3Text() }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(result, "whtFilingPnd3DraftSchema");
+    expect(draft["currency"]).toBe("THB");
+  });
+
+  it("reads the school sheet currency from the printed text", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const result = parse({
+      worksheets: [
+        {
+          name: "Term 2",
+          cells: {
+            A1: "Test School Company Ltd.",
+            A2: "ใบแจ้งหนี้ / INVOICE",
+            B5: "PA-INV-FAKE-004-T2",
+            A23: "Currency: THB",
+          } as Record<string, string | number | null>,
+        },
+      ],
+    }) as Record<string, unknown>;
+    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["currency"]).toBe("THB");
+  });
+
+  it("reads the school PDF currency from the printed text", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const result = parse({
+      text: [
+        "Test School Company Ltd.",
+        "ใบแจ้งหนี้ / INVOICE",
+        "No: PA-INV-FAKE-005-T2",
+        "Total: THB 30,000.00",
+      ].join("\n"),
+    }) as Record<string, unknown>;
+    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["currency"]).toBe("THB");
+  });
+
+  it("holds THB for the withholding certificate whose Thai form prints no prefix", () => {
+    const parse = requireParser("parseWithholdingCertificate");
+    const fixture = readNoRealSampleFixture(
+      "withholding-certificate.no-real-sample.json",
+    );
+    const result = parse({ text: String(fixture["text"]) }) as Record<
+      string,
+      unknown
+    >;
+    const draft = requireParsedDraft(
+      result,
+      "withholdingCertificateDraftSchema",
+    );
+    expect(draft["currency"]).toBe("THB");
+  });
+});
+
+describe("A621 school dates with no label and no date", () => {
+  it("reads an unlabeled Thai school date line as the document date", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const result = parse({
+      text: [
+        "Test School Company Ltd.",
+        "ใบแจ้งหนี้ / INVOICE",
+        "No: PA-INV-FAKE-003-T2",
+        "15 ต.ค. 2569",
+      ].join("\n"),
+    }) as Record<string, unknown>;
+    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["date"]).toBe("2026-10-15");
+  });
+
+  it("returns review unreadable for a school sheet tab with no date", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const result = parse({
+      worksheets: [
+        {
+          name: "Term 2",
+          cells: {
+            A1: "Test School Company Ltd.",
+            A2: "ใบแจ้งหนี้ / INVOICE",
+            B5: "PA-INV-FAKE-006-T2",
+          } as Record<string, string | number | null>,
+        },
+      ],
+    }) as Record<string, unknown>;
+    expect(result["status"]).toBe("review");
+    expect(result["reason"]).toBe("review:unreadable");
+    expect("draft" in result).toBe(false);
+  });
+
+  it("returns review unreadable for a school PDF with no readable date", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const result = parse({
+      text: [
+        "Test School Company Ltd.",
+        "ใบแจ้งหนี้ / INVOICE",
+        "No: PA-INV-FAKE-007-T2",
+        "Customer: Test School",
+      ].join("\n"),
+    }) as Record<string, unknown>;
+    expect(result["status"]).toBe("review");
+    expect(result["reason"]).toBe("review:unreadable");
+    expect("draft" in result).toBe(false);
+  });
+});
+
+describe("B610 two streams with one over the PDF cap", () => {
+  it("returns null text when the second stream inflates past the cap", () => {
+    const cap =
+      typeof documentParsing["MAX_PDF_INFLATE_BYTES"] === "number"
+        ? (documentParsing["MAX_PDF_INFLATE_BYTES"] as number)
+        : 2 * 1024 * 1024;
+    const readTextPdf = requireParser("readTextPdf") as (
+      input: unknown,
+    ) => { readonly pageCount: number; readonly text: string | null };
+    const normal = deflateSync(Buffer.from("BT (Hi) Tj ET", "utf8"));
+    const bomb = deflateSync(Buffer.alloc(cap + 64 * 1024, 0));
+    const result = readTextPdf(
+      new Uint8Array(buildTwoStreamFlatePdf(normal, bomb)),
+    );
+    expect(result.text === null).toBe(true);
+  });
+});
+
+describe("B611 two sheets with one over the ZIP cap", () => {
+  it("returns no worksheet when one sheet part inflates past the cap", () => {
+    const cap =
+      typeof documentParsing["MAX_ZIP_ENTRY_BYTES"] === "number"
+        ? (documentParsing["MAX_ZIP_ENTRY_BYTES"] as number)
+        : 2 * 1024 * 1024;
+    const readWorkbook = requireParser("readWorkbook") as (
+      input: unknown,
+    ) => {
+      readonly worksheets: ReadonlyArray<{
+        readonly name: string;
+        readonly cells: Record<string, string | number | null>;
+      }>;
+    };
+    const readVouchers = requireParser("readVoucherWorksheets") as (
+      input: unknown,
+    ) => {
+      readonly vouchers: ReadonlyArray<{ readonly name: string }>;
+      readonly skipped: ReadonlyArray<string>;
+    };
+    const padding = "0".repeat(cap + 64 * 1024);
+    const bombXml =
+      `<worksheet><sheetData><row r="1">` +
+      `<c r="A1" t="inlineStr"><is><t>Bomb</t></is></c></row>` +
+      `<!--${padding}--></sheetData></worksheet>`;
+    const goodXml =
+      `<worksheet><sheetData>` +
+      `<row r="1"><c r="A1" t="inlineStr"><is><t>Test Company Ltd.</t></is></c></row>` +
+      `<row r="2"><c r="A2" t="inlineStr"><is><t>${VOUCHER_FORM_TITLE}</t></is></c></row>` +
+      `<row r="3"><c r="I3" t="inlineStr"><is><t>PV69/10-001</t></is></c></row>` +
+      `<row r="4"><c r="I4" t="inlineStr"><is><t>31/10/2569</t></is></c></row>` +
+      `<row r="5"><c r="B5" t="inlineStr"><is><t>Test Counterparty</t></is></c></row>` +
+      `<row r="26"><c r="I26"><v>20000</v></c><c r="I28"><v>19400</v></c></row>` +
+      `</sheetData></worksheet>`;
+    const bytes = buildWorkbookZip(
+      [
+        { name: "Good", target: "worksheets/sheet1.xml" },
+        { name: "Bomb", target: "worksheets/sheet2.xml" },
+      ],
+      {
+        "worksheets/sheet1.xml": goodXml,
+        "worksheets/sheet2.xml": bombXml,
+      },
+      null,
+      ["worksheets/sheet2.xml"],
+    );
+    const workbook = readWorkbook(new Uint8Array(bytes));
+    expect(workbook.worksheets).toHaveLength(0);
+    expect(readVouchers(workbook).vouchers).toHaveLength(0);
+  });
+});
+
+describe("B612 whole-text PDF cap", () => {
+  it("returns null text when the text layer exceeds the cap", () => {
+    const cap = requireExport("MAX_PDF_TEXT_CHARS") as number;
+    expect(typeof cap).toBe("number");
+    expect(cap).toBeGreaterThan(0);
+    const readTextPdf = requireParser("readTextPdf") as (
+      input: unknown,
+    ) => { readonly pageCount: number; readonly text: string | null };
+    const repeats = Math.ceil((cap + 1024) / 7);
+    const payload = deflateSync(
+      Buffer.from(`BT\n${"(V) Tj\n".repeat(repeats)}ET\n`, "utf8"),
+    );
+    const result = readTextPdf(new Uint8Array(buildFlatePdf(payload)));
+    expect(result.text === null).toBe(true);
   });
 });
 
