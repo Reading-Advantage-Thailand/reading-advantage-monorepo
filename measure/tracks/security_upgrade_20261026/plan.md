@@ -17,15 +17,15 @@
 
 ## Phase 0: The audit (done on 2026-10-26)
 
-- [x] 0.1 Run `pnpm audit --json` from the repository root. Record the totals: 8 critical, 93 high, 91 moderate, 13 low, 0 info. Test: the totals in [audit-2026-10-26.md](./audit-2026-10-26.md) §1.1.
-- [x] 0.2 Fetch the Next.js blog post of 2026-10-14. Quote the fixed versions 16.4.1 (Active LTS) and 15.5.28 (Maintenance LTS). Record that the page loads. Test: audit §2.1.
-- [x] 0.3 Read the two upstream React advisories. Record the patched versions 19.0.9, 19.1.10, 19.2.9 and 19.3.1 for the `react-server-dom-*` family. Test: audit §3.
-- [x] 0.4 Record the locked version of `sharp`, the three sharp advisories and the fixed version 0.35.5. Test: audit §4.
-- [x] 0.5 Check the lockfile against eight public lists of malicious releases. One list holds the 300 npm malware advisories of the GitHub Advisory Database for October 2026. Record no hit. Test: audit §5.
-- [x] 0.6 Record where `vinext` 0.2.0 is used, its advisories and the latest version 1.3.1. Test: audit §6.
-- [x] 0.7 Record the Node 22 security releases of October 2026 and the base image of each Dockerfile. Test: audit §7.
-- [x] 0.8 List the MAJOR bumps with the reason they stay out of scope. Test: audit §8.
-- [x] 0.9 List every Cloud Run service. Give its app folder, its Dockerfile, its Cloud Build file and its use of `next`, `sharp` and `vinext`. Test: audit §9.
+- [x] 0.1 Run `pnpm audit --json` from the repository root. Record the totals: 8 critical, 93 high, 91 moderate, 13 low, 0 info. Test: the totals in [audit-2026-10-26.md](./audit-2026-10-26.md) §1.1. (a64616a4d)
+- [x] 0.2 Fetch the Next.js blog post of 2026-10-14. Quote the fixed versions 16.4.1 (Active LTS) and 15.5.28 (Maintenance LTS). Record that the page loads. Test: audit §2.1. (a64616a4d)
+- [x] 0.3 Read the two upstream React advisories. Record the patched versions 19.0.9, 19.1.10, 19.2.9 and 19.3.1 for the `react-server-dom-*` family. Test: audit §3. (a64616a4d)
+- [x] 0.4 Record the locked version of `sharp`, the three sharp advisories and the fixed version 0.35.5. Test: audit §4. (a64616a4d)
+- [x] 0.5 Check the lockfile against eight public lists of malicious releases. One list holds the 300 npm malware advisories of the GitHub Advisory Database for October 2026. Record no hit. Test: audit §5. (a64616a4d)
+- [x] 0.6 Record where `vinext` 0.2.0 is used, its advisories and the latest version 1.3.1. Test: audit §6. (a64616a4d)
+- [x] 0.7 Record the Node 22 security releases of October 2026 and the base image of each Dockerfile. Test: audit §7. (a64616a4d)
+- [x] 0.8 List the MAJOR bumps with the reason they stay out of scope. Test: audit §8. (a64616a4d)
+- [x] 0.9 List every Cloud Run service. Give its app folder, its Dockerfile, its Cloud Build file and its use of `next`, `sharp` and `vinext`. Test: audit §9. (a64616a4d)
 
 ## Phase 1: Version guard and upgrade
 
