@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "track_id": "security_upgrade_20261026",
+  "status": "closed",
+  "completion_date": "2026-11-19",
+  "pre_closeout_head": "b8967c11773e1fa6a6c75e9318293835639918d5",
+  "role_base_sha": "b8967c11773e1fa6a6c75e9318293835639918d5",
+  "audited_head_sha": "b8967c11773e1fa6a6c75e9318293835639918d5",
+  "track_base_sha": "b652086981ff0c32f81cc43ff2b286e960a5b902",
+  "branch": "security/next-16-4-6",
+  "resulting_head": "the closeout commit on branch security/next-16-4-6; the full SHA is in closeout-b8967c117.log and the role's final reply",
+  "acceptance": {
+    "phase": "phase acceptance P4 passed at 55d5dba98 (phase-acceptance-p4-55d5dba98.json); later commits 4e24d209a and b8967c117 touch plan.md only",
+    "final": "final acceptance passed at b8967c11773e1fa6a6c75e9318293835639918d5 (final-acceptance-b8967c117.json); zero blocking findings",
+    "provenance_check": "the provenance-bound audited_head_sha of the final acceptance equals the pre-closeout HEAD b8967c11773e1fa6a6c75e9318293835639918d5; git status --short was empty before closeout",
+    "tasks": "44 tasks [x], zero [~], zero [ ], zero [b]; every task line carries a resolvable commit SHA ancestor of HEAD"
+  },
+  "audits": {
+    "review_a": "pass at 3aca2726f and 5450fa6c8 (review-a-p4-3aca2726f.json, review-a-p4-5450fa6c8.json)",
+    "review_b": "pass at 3aca2726f and 5450fa6c8 (review-b-p4-3aca2726f.json, review-b-p4-5450fa6c8.json); NB-1 was resolved by c88189fe9; NB-2 to NB-5 carried and recorded below",
+    "adversarial": "pass at 5450fa6c8 (adversarial-p4-5450fa6c8.json); 207 passed and 2 skipped on this checkout, 209 passed and 0 skipped where local p2 logs exist; NB-1 declined by PM default",
+    "track_suite": "pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-*.test.ts exits 0; 5 files, 207 passed and 2 skipped",
+    "audit": "pnpm audit --json exits 1 because advisories remain; critical 0, high 15, moderate 59, low 7; all 15 high findings sit in the open-major or no-fix register; no advisory names next or follow-redirects",
+    "anti_patterns": "A5: no false-claim text in the plan (rg for PASS=[0-9]+.*FAIL=0 and all checks pass finds no match). A6: the archived registry entry states only recorded facts and names no security state as resolved. A9: see test_reference_audit."
+  },
+  "commands": [
+    "git rev-parse HEAD (b8967c11773e1fa6a6c75e9318293835639918d5); git status --short (empty)",
+    "grep of plan.md markers: 44 [x], 0 [~], 0 [ ], 0 [b]",
+    "git mv measure/tracks/security_upgrade_20261026 measure/archive/security_upgrade_20261026",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo /home/daniebo/Desktop/rama-worktrees/security-next-1646",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo /home/daniebo/Desktop/rama-worktrees/security-next-1646 --track security_upgrade_20261026 -> exit 1 only on the missing GENERATED_CHECK_COMMAND / measure/gates.json (no canonical command exists in this repository; final-acceptance N2 records the same unset-gate condition)",
+    "HEAVY_PRIORITY=p2 heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-adversarial.test.ts' -> exit 0; 58 passed",
+    "HEAVY_PRIORITY=p2 heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-redeploy-list.test.ts' -> exit 0; 36 passed"
+  ],
+  "retained_evidence": [
+    "measure/runs/security_upgrade_20261026/ (all result JSONs and logs, force-added because .gitignore:56 ignores measure/runs/)",
+    "measure/archive/security_upgrade_20261026/plan.md (44 tasks with commit evidence)",
+    "measure/archive/security_upgrade_20261026/spec.md (FR-2 and AC-2 amended 2026-11-19)",
+    "measure/archive/security_upgrade_20261026/verification-ledger.json (73 rows: 58 pass, 13 predates-track, 2 script-absent)",
+    "measure/archive/security_upgrade_20261026/audit-2026-10-26.md",
+    "measure/archive/security_upgrade_20261026/pm-report-20261029.md",
+    "measure/runs/security_upgrade_20261026/closeout-b8967c117.json and closeout-b8967c117.log"
+  ],
+  "owner_gates": {
+    "redeploy": "NOT DONE. The redeploy of the apps on next 16.4.6 waits for Daniel's word. No push, no deploy, no Cloud Build job and no gcloud command ran in this track.",
+    "merge": "NOT DONE on this branch. Nothing merges into master before 2026-11-20. The 16.4.6 patch sits unmerged, unpushed and undeployed at closeout.",
+    "redeploy_list": "docs/deployment/security-upgrade-2026-10.md still pins merge commit 3a10dd68ca6cb36301f1a9246b22c7e9685a7040 (next 16.4.1) and does not name 16.4.6. Its opening paragraph still says the list waits for Daniel's approval of the push of master. The 16.4.6 build comes from master after this branch merges, after 2026-11-20. The document was not edited in closeout.",
+    "architecture_pin": "After the merge the owner runs pnpm architecture:pin:refresh. bash measure/doctor.sh exits 1 at step 4 with 'Analyzer input snapshot hash does not match current bytes'; the same command exits 1 with the same line at the base 837755eaa. The pin file and measure/doctor.sh did not change between the base and HEAD."
+  },
+  "pm_confirmed_defaults": [
+    "Review B NB-2 stays record-only: the science-advantage direct dependency keeps baseline-browser-mapping 2.10.38 and its moderate advisory open; no fix in this track (PM 2026-11-18).",
+    "Review B NB-3 stays a method limit: the base comparison worktree shares node_modules with the 16.4.6 tree, so it isolates source changes only; the eight predates-track causes were re-checked at HEAD (PM 2026-11-18).",
+    "Review B NB-4 stays committed-evidence-only: the 73 ledger rows keep committed-evidence checks and LEDGER_ROW_FINGERPRINT; a clean checkout cannot verify the exit_code labels of the 58 pass rows (PM 2026-11-18).",
+    "Adversarial NB-1 stays declined: the 16.4.5-canary.1 prerelease passes the floor comparator, but no vulnerable version passes; optional hardening was not taken (PM default 2026-11-19).",
+    "Review B NB-5: the stale registry status row at measure/tracks.md:54 was corrected in closeout by PM default; the archived entry now records the Phase 4 scope and the owner gates."
+  ],
+  "final_acceptance_nonblocking_findings": [
+    "N1 doctor: bash measure/doctor.sh exits 1 at the architecture step; the same result at base 837755eaa. The owner refreshes the pin after the merge with pnpm architecture:pin:refresh.",
+    "N2 gates: PROJECT_LINT, PROJECT_CHECKS and PROJECT_TESTS were unset and measure/gates.json was absent; the final-acceptance role ran the track suite, pnpm audit and three app suites in their place.",
+    "N3 phase-acceptance coverage: only phase-acceptance-p4-55d5dba98.json exists on this machine; Phases 0 to 3 results are absent because measure/runs/ is gitignored and the first worktree no longer exists.",
+    "N4 spec text: FR-2 and AC-2 named next 16.4.1 while the lockfile and 12 manifests hold 16.4.6. Closeout amended both texts on 2026-11-19 with an explicit Phase 4 amendment note.",
+    "N5 registry: measure/tracks.md:54 named Phase 1 as next and metadata showed status active with actual_tasks null. Closeout moved the entry to Archived Tracks and set status done, completed 2026-11-19 and actual_tasks 44.",
+    "N6 redeploy list: the document pins the 16.4.1 merge commit; see owner_gates.redeploy_list. PM statement recorded in the archived registry note and here.",
+    "N7 build coverage: task 4.3 re-ran the Next build for storytime and www-reading-advantage only; the reading-advantage Jest suite passed 152 suites and 1063 tests; the redeploy Cloud Build step is the next build gate.",
+    "N8 skipped rows: two it.skipIf rows skip on this checkout because Phase 2 logs under p2/ are absent, per the PM decision of 2026-11-18; the adversarial result records 209 passed and 0 skipped when a local log exists.",
+    "N9 stale ledger rows: tech-debt.md:41 and the Phase 2 ledger list workbooks and reading-advantage as predates-track failures while both suites now pass (266 and 1063 tests). The rows stay valid history for AC-5; no tech-debt edit was made (see tech_debt_cap).",
+    "N10 recorded defaults: Review B NB-2, NB-3 and NB-4 and adversarial NB-1 are recorded in pm_confirmed_defaults.",
+    "N11 scope: commit 7ca3e7b7e changed one test outside the planned set, apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-13-production-readiness-report.test.ts; plan line 161 records the test-only change."
+  ],
+  "spec_amendments": "spec.md FR-2 and AC-2 now state next 16.4.6 with a 2026-11-19 Phase 4 amendment note. The final acceptance audited the 16.4.1 text; the amendment uses only evidence cited by that acceptance (12 manifests and pnpm-lock.yaml hold 16.4.6, AC-8 floor 16.4.5). metadata.json target_versions.next is 16.4.6; metadata.description keeps the opening scope.",
+  "registry_fix": "The active entry at measure/tracks.md:52 to 55 was removed, including the stale 'Phase 1 (version guard and upgrade) next' line. A new [x] entry sits under '## Archived Tracks' with the 16.4.6 patch state, the post-2026-11-20 merge gate and Daniel's redeploy gate. The description line equals metadata.json description.",
+  "findings_recorded_in_tech_debt": [],
+  "tech_debt_cap": "No line was added to measure/tech-debt.md. The file holds 51 lines and its cap is 50, enforced by packages/auth/src/__tests__/phase-7-closeout.test.ts; plan line 335 already records the same decision. The closeout items are recorded here instead. lessons-learned.md was not changed because no new non-obvious lesson emerged that is not already in the archived plan.",
+  "archive_path": "measure/archive/security_upgrade_20261026",
+  "test_reference_audit": "A9: tests/security-upgrade-adversarial.test.ts read the audit file from a single hardcoded measure/tracks/security_upgrade_20261026 path at module load; archiving would break it. The test now prefers measure/archive/security_upgrade_20261026/audit-2026-10-26.md and falls back to the tracks path. tests/security-upgrade-redeploy-list.test.ts uses git log on the old plan path; after the move git returns the deletion commit, an ancestor that does not touch the lockfile, so its assertion still holds. The other two track-id string literals are negative fixtures and read no file. No tests/*.sh test hardcodes this track id. Both tests were re-run in real mode after the move through heavy-run.sh with vitest --maxWorkers=1: adversarial 58 passed exit 0, redeploy-list 36 passed exit 0. The audit subagent can re-run the track suite to confirm.",
+  "artifact_cleanup": "None deleted. The force-added measure/runs/security_upgrade_20261026/ content is the retained final-acceptance, phase-acceptance, review, adversarial, red and green evidence. No bulky artifact was identified for deletion, and the orchestrator did not name one.",
+  "related_result": "measure/runs/security_upgrade_20261026/closeout-b8967c117.json"
+}

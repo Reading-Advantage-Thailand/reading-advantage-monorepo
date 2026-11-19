@@ -1,0 +1,119 @@
+# Red log — track security_upgrade_20261026, Phase 4.1
+
+- Date: 2026-11-18
+- Role: Measure Red
+- Model: opencode-go/deepseek-v4.1-flash
+- Track: security_upgrade_20261026
+- Phase: 4 (Next.js 16.4.6 patch, after 2026-11-20), task 4.1
+- Worktree: /home/daniebo/Desktop/rama-worktrees/security-next-1646
+- Branch: security/next-16-4-6
+- phase_base_sha: 837755eaa552bcc5a5c8f64c5f09bf16a6272eb7 (origin/master)
+- role_base_sha: 837755eaa552bcc5a5c8f64c5f09bf16a6272eb7
+- Red commit: 3cda368230fd9281a5ffb9a18ec5c67f9512d6d7
+- Result: RED (expected fail)
+
+## Install
+
+Command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm install --frozen-lockfile --offline'`
+
+- exit_code=0, 2.6s, all 49 workspace projects, 2112 packages.
+- The worktree held no node_modules before this step.
+
+## Red command
+
+`bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-version-guard.test.ts'`
+
+- exit_code=1
+- Tests: 2 failed | 34 passed (36)
+
+### Failure 1 — new Phase 4.1 test, the expected Red
+
+`FAIL tests/security-upgrade-version-guard.test.ts > next 16.4.5 patch floor > every app and the lockfile resolve next at 16.4.5 or later (GHSA-mfr8-8qww-v76h, GHSA-vc7v-qv4w-wrv8)`
+
+`Error: next patch floor failures (12):`
+
+- `manifest=apps/accounting/package.json declared=16.4.1 floor=16.4.5`
+- `manifest=apps/accounts/package.json declared=16.4.1 floor=16.4.5`
+- `manifest=apps/advantage-games/package.json declared=16.4.1 floor=16.4.5`
+- `manifest=apps/codecamp-advantage/package.json declared=16.4.1 floor=16.4.5`
+- `manifest=apps/primary-advantage/package.json declared=16.4.1 floor=16.4.5`
+- `manifest=apps/reading-advantage/package.json declared=16.4.1 floor=16.4.5`
+- `manifest=apps/sales-advantage/package.json declared=16.4.1 floor=16.4.5`
+- `manifest=apps/science-advantage/package.json declared=16.4.1 floor=16.4.5`
+- `manifest=apps/storytime/package.json declared=16.4.1 floor=16.4.5`
+- `manifest=apps/workbooks/package.json declared=16.4.1 floor=16.4.5`
+- `manifest=apps/www-reading-advantage/package.json declared=16.4.1 floor=16.4.5`
+- `lockfile=next locked=16.4.1 floor=16.4.5`
+
+Reason: the pinned 16.4.1 sits below the 16.4.5 floor of both advisories. This is the intended Red.
+
+### Failure 2 — pre-existing, not caused by this task
+
+`FAIL tests/security-upgrade-version-guard.test.ts > live version guard > fails while any locked version sits below the fixed version of a critical or high advisory`
+
+`Error: version-guard failures (1): advisory=GHSA-5p2g-fcmc-qvqq GHSA-w3rx-r6r6-pgpr missing_line=image-size 2.`
+
+Reason: the lockfile holds no `image-size` 2.x key. This matches task 4.4 and the closeout log of 2026-11-18. It is not a Phase 4.1 defect.
+
+## The five track test files at HEAD
+
+Command: same wrapper with `tests/security-upgrade-adversarial.test.ts tests/security-upgrade-p2-adversarial.test.ts tests/security-upgrade-redeploy-list.test.ts tests/security-upgrade-verification-ledger.test.ts tests/security-upgrade-version-guard.test.ts`.
+
+- exit_code=1
+- Tests: 9 failed | 181 passed (190)
+- 8 failures predate this task; 1 is the new Phase 4.1 test.
+- Red files: `security-upgrade-adversarial.test.ts`, `security-upgrade-p2-adversarial.test.ts`, `security-upgrade-verification-ledger.test.ts`, `security-upgrade-version-guard.test.ts`.
+- Passing file: `security-upgrade-redeploy-list.test.ts`.
+- Failing tests beyond the two named above:
+  - `security-upgrade-adversarial.test.ts > the real guard implementation runs on a synthetic bad fixture > passes the real lockfile of the repository`
+  - `security-upgrade-p2-adversarial.test.ts > the predates-track verdict of the amendment > passes every predates row of the real ledger`
+  - `security-upgrade-p2-adversarial.test.ts > the predates-track verdict of the amendment > holds the master commit of every real predates row at the pre-upgrade versions`
+  - `security-upgrade-p2-adversarial.test.ts > a pass row cannot hide a failure behind an exit code of zero > passes every pass row of the real ledger`
+  - `security-upgrade-p2-adversarial.test.ts > a pass row cannot hide a failure behind an exit code of zero > holds one exit code label in every pass log of the real ledger`
+  - `security-upgrade-p2-adversarial.test.ts > the real guard code fails the false passes of the guard > passes the real lockfile of the repository`
+  - `security-upgrade-verification-ledger.test.ts > phase 2 verification ledger > holds one row for every matrix pair with the phase 2 class contract`
+
+## Test contract added
+
+The test asserts the input set first: at least one app manifest declares `next`, and the lockfile holds at least one `next` package key (A4). It then requires every declared range floor and every locked `next` version to be 16.4.5 or later. A synthetic fixture proves the boundary (16.4.4 fails, 16.4.5 passes) and the A4 empty-set paths. No hash is used.
+
+## Files
+
+- `tests/security-upgrade-version-guard.test.ts` (modified)
+- `measure/tracks/security_upgrade_20261026/plan.md` (Phase 4 added)
+- `measure/tracks/security_upgrade_20261026/spec.md` (AC-8 added)
+- `measure/runs/security_upgrade_20261026/red-p4-41-837755eaa.log` (this file)
+
+## Remaining failures for Green
+
+1. The Phase 4.1 test fails until `next` is 16.4.5 or later in every app and in `pnpm-lock.yaml`.
+2. Task 4.4 stays open: the `image-size` floor and the ledger/adversarial row drift stay red after the next bump.
+
+MEASURE_AGENT_RESULT
+{
+  "role": "measure-red",
+  "result": "PASS",
+  "track": "security_upgrade_20261026",
+  "phase": "4.1",
+  "baseline_sha": "837755eaa552bcc5a5c8f64c5f09bf16a6272eb7",
+  "role_base_sha": "837755eaa552bcc5a5c8f64c5f09bf16a6272eb7",
+  "head": "3cda368230fd9281a5ffb9a18ec5c67f9512d6d7",
+  "branch": "security/next-16-4-6",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/security-next-1646",
+  "commits": ["3cda368230fd9281a5ffb9a18ec5c67f9512d6d7"],
+  "tests_added": ["tests/security-upgrade-version-guard.test.ts > next 16.4.5 patch floor"],
+  "files": [
+    "tests/security-upgrade-version-guard.test.ts",
+    "measure/tracks/security_upgrade_20261026/plan.md",
+    "measure/tracks/security_upgrade_20261026/spec.md"
+  ],
+  "red_command": "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-version-guard.test.ts'",
+  "red_exit_code": 1,
+  "red_result": "2 failed | 34 passed (36)",
+  "remaining_failures": [
+    "next 16.4.5 patch floor > every app and the lockfile resolve next at 16.4.5 or later: 11 manifests at 16.4.1; lockfile next@16.4.1",
+    "live version guard > fails while any locked version sits below the fixed version of a critical or high advisory: image-size 2. floor absent (pre-existing, task 4.4)"
+  ],
+  "push": false,
+  "merge": false
+}

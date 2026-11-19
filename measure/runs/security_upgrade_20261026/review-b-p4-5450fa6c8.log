@@ -1,0 +1,77 @@
+Review B · P4 · security_upgrade_20261026 · r2 (re-review after the NB-1 fix)
+
+Phase heading: Phase 4: Next.js 16.4.6 patch (after 2026-11-20)
+Audited HEAD: 5450fa6c83a9f50bd262d91e2432a7b131194690
+phase_base_sha: 3aca2726f515201d804da75b2d159c25cd107efe
+role_base_sha: 5450fa6c83a9f50bd262d91e2432a7b131194690
+Route: minimax-cn-coding-plan/MiniMax-M3#high
+Worktree: /home/daniebo/Desktop/rama-worktrees/security-next-1646
+Branch: security/next-16-4-6
+
+Provenance
+----------
+git rev-parse HEAD returned 5450fa6c83a9f50bd262d91e2432a7b131194690.
+git rev-parse security/next-16-4-6 returned the same SHA. git status --porcelain
+was empty. The audited HEAD is current. The range 3aca2726f..5450fa6c8 holds 5
+commits and 7 changed files.
+
+NB-1 closed
+-----------
+The lockfile diff adds follow-redirects@1.16.2, removes follow-redirects@1.16.1,
+and changes one common block, the overrides default. No other name or version
+pair moved. All 5 follow-redirects occurrences in the lockfile read 1.16.2, and
+the packages section parses to 1.16.2 only, with no copy below the floor.
+npm view follow-redirects@1.16.2 dist.integrity equals the lockfile value
+sha512-/kVP2U8z596Ia0gwFrwyIeo74ta5aVmSeU1FfAUMAmcEP5EP7zydmag3SLiN64NaRKef3lxsq7i/g7ltJQDGow==.
+node_modules holds follow-redirects 1.16.2, so the install matches the lockfile.
+The guard entry at tests/security-upgrade-guard-list.ts:227 and the committed
+audit row at audit-2026-10-26.md:57 carry the same three advisory ids and the
+same 1.16.2 floor. The audit table keeps all 87 rows. The new test proves the
+floor both ways.
+
+Audit
+-----
+Full audit at HEAD: critical 0, high 15, moderate 59, low 7. Zero
+follow-redirects findings. The 15 high advisories are the earlier set of 16
+minus the follow-redirects one, so the fix opens no new critical or high.
+Audit with --prod at HEAD: critical 0, high 11, moderate 52, low 6. Zero
+follow-redirects findings.
+
+Audit-row update hides nothing
+------------------------------
+The follow-redirects row keeps the historical 1.16.0 to 1.16.1 pair and adds
+the 1.16.1 to 1.16.2 pair with a dated correction note. That matches the
+extract-zip row convention. Only that row changed in the file. The plan task
+2.14 correction states that the old sentence was false and that the track does
+not close on it. The correction is accurate at HEAD.
+
+Other surfaces
+--------------
+No CI, workflow, secret or deploy path appears in the range. Nothing was
+pushed. The guard contract allows the added override key because the package
+has a floor row, the value is exact, it stays on the floored line and it meets
+the floor. A2 does not apply. A6 does not fire; the registry row is stale.
+
+Test run
+--------
+Command: pnpm exec vitest run --config vitest.config.ts --maxWorkers=1
+tests/security-upgrade-*.test.ts through heavy-run.sh.
+Result: exit 0. 5 files passed. 195 passed and 2 skipped of 197.
+
+Carried findings
+----------------
+NB-2, NB-3, NB-4 and NB-5 are unchanged by this range and are carried. NB-1 is
+closed and is omitted from the findings list.
+
+MEASURE_AGENT_RESULT
+role: review-b-security
+status: complete
+track: security_upgrade_20261026
+phase: Phase 4: Next.js 16.4.6 patch (after 2026-11-20)
+commits: none (audit-only role, no commit)
+tests_run: pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-*.test.ts through heavy-run.sh -> exit 0, 195 passed and 2 skipped of 197; pnpm audit --json at HEAD -> critical 0, high 15, zero follow-redirects findings; pnpm audit --prod --json at HEAD -> critical 0, high 11, zero follow-redirects findings; npm view follow-redirects@1.16.2 dist.integrity -> matches the lockfile
+files_changed: measure/runs/security_upgrade_20261026/review-b-p4-5450fa6c8.json (new), measure/runs/security_upgrade_20261026/review-b-p4-5450fa6c8.log (new)
+plan_updates: none
+known_failures: none
+handoff: The NB-1 fix passes Review B. The advisory is closed in every lockfile resolution, the lockfile diff holds only follow-redirects keys, the registry integrity matches, the audit shows high 15 with zero follow-redirects findings and no new critical or high, and the committed audit row hides nothing. Four findings are carried: NB-2, the baseline-browser-mapping 2.10.38 copy stays through apps/science-advantage/package.json:97; NB-3, the base comparison worktree still shares node_modules with the 16.4.6 tree; NB-4, the committed-evidence rewrite leaves the 58 pass rows unverified in a clean checkout; NB-5, measure/tracks.md:54 still names Phase 1 as next. Each kept item carries the CONTEST kept marker. The orchestrator should send the four kept items to the user. retry_recommendation is escalate_human.
+END_MEASURE_AGENT_RESULT

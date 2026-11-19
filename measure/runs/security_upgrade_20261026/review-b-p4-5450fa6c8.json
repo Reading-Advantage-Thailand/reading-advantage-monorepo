@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "role": "review-b-security",
+  "track": "security_upgrade_20261026",
+  "phase": "Phase 4: Next.js 16.4.6 patch (after 2026-11-20)",
+  "baseline_sha": "3aca2726f515201d804da75b2d159c25cd107efe",
+  "audited_head_sha": "5450fa6c83a9f50bd262d91e2432a7b131194690",
+  "applicability": "applicable",
+  "status": "pass",
+  "summary": "Pass. The NB-1 fix is correct and complete. Audited HEAD 5450fa6c83a9f50bd262d91e2432a7b131194690 equals the branch tip and the working tree is clean. The range 3aca2726f..5450fa6c8 holds 5 commits and 7 files. The lockfile diff adds follow-redirects@1.16.2 and removes follow-redirects@1.16.1, and changes nothing else. Every follow-redirects resolution in the lockfile reads 1.16.2, so the advisory is closed in every resolution. The registry integrity matches the lockfile. The audit at HEAD reports critical 0 and high 15, one fewer than before, and zero follow-redirects findings. The remaining 15 high advisories are the same set as before minus the follow-redirects one, so the fix opens no new critical or high. The guard entry and the committed audit row carry the same three advisory ids and the same 1.16.2 floor, and the audit table keeps all 87 rows. The committed-evidence rewrite, the base-comparison method and the registry row are unchanged, so NB-2, NB-3, NB-4 and NB-5 are carried. Nothing was pushed.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "NB-2: The recorded baseline-browser-mapping move left a vulnerable copy in the tree. The move from 2.10.38 to 2.11.33 applies to the next and browserslist snapshots only. apps/science-advantage/package.json:97 declares baseline-browser-mapping ^2.8.32 directly, and pnpm-lock.yaml still resolves that importer to 2.10.38. The moderate advisory for baseline-browser-mapping stays open at HEAD, exactly as at the phase base. The task 4.2 plan text records the move and does not claim that the advisory closed. Route: raise the science-advantage direct dependency or add an override in a follow-up task so the 2.10.38 copy leaves the tree. | CONTEST kept: the fix changed only follow-redirects; baseline-browser-mapping@2.10.38 stays locked through apps/science-advantage/package.json:97 and its moderate advisory stays open.",
+    "NB-3: The base comparison worktree isolates source changes only. /home/daniebo/.cache/security-baseline-837755eaa links node_modules to the 16.4.6 worktree, so next resolves to 16.4.6 there. The eight predates-track reproductions compare base source against the new dependency versions. The comparison cannot by itself exclude a failure caused by the dependency bump. The eight enumerated causes are source, fixture, build-output or environment issues. The storytime failures read the absent gitignored file measure/runs/storytime_app_rebuild_20261025/media-list-w01.md, which is absent in the base copy too. The classification is credible, but the plan sentence \"No failure is caused by 16.4.6\" rests on the causes, not on the base runs. Route: qualify that sentence, or run one dependency-accurate base with next 16.4.1 installed. | CONTEST kept: the fix changed no app source and no base comparison; the base worktree still shares node_modules with the 16.4.6 tree, so the method limit stands.",
+    "NB-4: The committed-evidence rewrite lowers the CI-verifiable evidence for the Phase 2 matrix. A missing run log is now acceptable for all 73 ledger rows, including the 58 pass rows and the 13 predates-track master comparisons. The 73 rows stay pinned by LEDGER_ROW_FINGERPRINT. The two local-log checks still run in full when a log exists. No package version floor reads measure/runs, so no vulnerable package is hidden. The PM decision of 2026-11-18 authorizes the rewrite. Route: keep the rewrite, and record in the plan that a clean checkout cannot verify the exit_code labels of the 58 pass rows. | CONTEST kept: the fix changed no ledger row, no test and no plan rule; the 58 pass rows stay unverified in a clean checkout.",
+    "NB-5: The track registry row is stale. measure/tracks.md:54 still reads \"Phase 1 (version guard and upgrade) next\" while task 4.5 is closed. The row understates progress and claims no resolved security state, so A6 fires no overstatement. Route: refresh the status row, and add the Phase 4 scope plus the follow-redirects and baseline-browser-mapping follow-ups before the track closes. | CONTEST kept: measure/tracks.md:54 still names Phase 1 as next; the fix did not refresh the registry row."
+  ],
+  "evidence": [
+    "Provenance: git rev-parse HEAD = 5450fa6c83a9f50bd262d91e2432a7b131194690; git rev-parse security/next-16-4-6 = the same SHA; git status --porcelain is empty. The audited HEAD is current.",
+    "NB-1 closed: the range 3aca2726f..5450fa6c8 holds 5 commits and 7 changed files: pnpm-lock.yaml, pnpm-workspace.yaml, tests/security-upgrade-guard-list.ts, tests/security-upgrade-version-guard.test.ts, plan.md, audit-2026-10-26.md, test-strategy.md. No CI, workflow, secret or deploy path appears.",
+    "NB-1 closed: a key-by-key lockfile diff gives one added key, follow-redirects@1.16.2, one removed key, follow-redirects@1.16.1, and one changed common block, the overrides default. No other name or version pair moved.",
+    "NB-1 closed: all 5 follow-redirects occurrences in pnpm-lock.yaml read 1.16.2. The packages section parses to follow-redirects 1.16.2 only, with no copy below the floor. next still parses to 16.4.6 only.",
+    "NB-1 closed: npm view follow-redirects@1.16.2 dist.integrity equals the lockfile value sha512-/kVP2U8z596Ia0gwFrwyIeo74ta5aVmSeU1FfAUMAmcEP5EP7zydmag3SLiN64NaRKef3lxsq7i/g7ltJQDGow==. node_modules holds follow-redirects 1.16.2, so the install matches the lockfile.",
+    "NB-1 closed: the audit at HEAD, full, reports critical 0, high 15, moderate 59, low 7. The audit at HEAD, --prod, reports critical 0, high 11, moderate 52, low 6. Both report zero follow-redirects findings.",
+    "NB-1 closed: the 15 remaining high advisories are the earlier set of 16 minus the follow-redirects one. No new critical or high advisory appears at HEAD.",
+    "NB-1 closed: the guard entry at tests/security-upgrade-guard-list.ts:227 holds fixedVersion 1.16.2 and the ids GHSA-8r9p-f939-6h3c, GHSA-q3jh-wrc6-jgq8 and GHSA-mrwp-f3q8-3g9p. The committed audit row at audit-2026-10-26.md:57 holds the same three ids and the same 1.16.2 fixed version. The two sources agree.",
+    "Audit-row update hides nothing: the audit table holds 87 rows at both 3aca2726f and 5450fa6c8, and only the follow-redirects row changed. The row keeps the historical 1.16.0 to 1.16.1 pair and adds the 1.16.1 to 1.16.2 pair with a dated correction note, matching the extract-zip row convention.",
+    "Guard contract holds: evaluateOverrideContract at tests/security-upgrade-version-guard.test.ts:183 allows an added override key when the package has a floor row, the value is exact, it stays on the floored line and it meets the floor. follow-redirects 1.16.2 satisfies all four.",
+    "Test suite: pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-*.test.ts exits 0 with 5 files passed, 195 passed and 2 skipped of 197. The new test 'keeps the follow-redirects 1.16.2 floor: 1.16.1 fails and 1.16.2 passes' proves the floor both ways.",
+    "Plan task 2.14 correction: the plan now states that the sentence 'No unclassified high finding remains' is false, names GHSA-mrwp-f3q8-3g9p, and says the track does not close on the task 2.14 claim. The correction is accurate at HEAD.",
+    "No push: git ls-remote --heads origin security/next-16-4-6 returns nothing.",
+    "NB-2 carried: baseline-browser-mapping@2.10.38 and 2.11.33 both stay in the lockfile, and apps/science-advantage/package.json:97 still declares ^2.8.32.",
+    "NB-3 carried: node_modules at /home/daniebo/.cache/security-baseline-837755eaa is still a symlink to the 16.4.6 worktree.",
+    "NB-4 carried: the ledger, its fingerprint and the plan rules are unchanged in the range.",
+    "NB-5 carried: measure/tracks.md:54 still reads 'Phase 1 (version guard and upgrade) next'."
+  ],
+  "commands": [
+    "git -C /home/daniebo/Desktop/rama-worktrees/security-next-1646 rev-parse HEAD && git rev-parse security/next-16-4-6 && git status --porcelain",
+    "git -C /home/daniebo/Desktop/rama-worktrees/security-next-1646 log --oneline --no-decorate 3aca2726f..5450fa6c83a9f50bd262d91e2432a7b131194690",
+    "git -C /home/daniebo/Desktop/rama-worktrees/security-next-1646 diff --stat 3aca2726f..5450fa6c83a9f50bd262d91e2432a7b131194690",
+    "git -C /home/daniebo/Desktop/rama-worktrees/security-next-1646 diff 3aca2726f..5450fa6c8 -- pnpm-lock.yaml pnpm-workspace.yaml tests/security-upgrade-guard-list.ts tests/security-upgrade-version-guard.test.ts",
+    "python3 lockfile key diff over git show 3aca2726f:pnpm-lock.yaml and git show 5450fa6c8:pnpm-lock.yaml",
+    "grep -n 'follow-redirects' pnpm-lock.yaml",
+    "npm view follow-redirects@1.16.2 dist.integrity",
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-*.test.ts' -> exit 0, 195 passed and 2 skipped of 197",
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm audit --json' -> critical 0, high 15, zero follow-redirects findings",
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm audit --prod --json' -> critical 0, high 11, zero follow-redirects findings",
+    "git -C /home/daniebo/Desktop/rama-worktrees/security-next-1646 ls-remote --heads origin security/next-16-4-6"
+  ],
+  "changed_files": [
+    "measure/tracks/security_upgrade_20261026/audit-2026-10-26.md",
+    "measure/tracks/security_upgrade_20261026/plan.md",
+    "measure/tracks/security_upgrade_20261026/test-strategy.md",
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml",
+    "tests/security-upgrade-guard-list.ts",
+    "tests/security-upgrade-version-guard.test.ts"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "escalate_human",
+  "confidence": "high",
+  "route": "minimax-cn-coding-plan/MiniMax-M3#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "Task 4.5 holds: the guard floor is 1.16.2, every lockfile resolution reads 1.16.2, and the audit reports zero follow-redirects findings."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "The new test 'keeps the follow-redirects 1.16.2 floor: 1.16.1 fails and 1.16.2 passes' fails 1.16.1 and passes 1.16.2, and the suite exits 0 with 195 passed."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The lockfile diff adds follow-redirects@1.16.2 and removes follow-redirects@1.16.1, and changes no other name or version pair."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "The fix records the audit row, the guard list, the test and the install deviation, and the plan task 2.14 correction is accurate at HEAD."
+    }
+  ]
+}

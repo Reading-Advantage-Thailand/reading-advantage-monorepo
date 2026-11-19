@@ -1,0 +1,30 @@
+Adversarial audit log — track security_upgrade_20261026
+Phase heading: Phase 4: Next.js 16.4.6 patch (after 2026-11-20)
+Audited HEAD (immutable): 5450fa6c83a9f50bd262d91e2432a7b131194690
+role_base_sha: 5450fa6c83a9f50bd262d91e2432a7b131194690
+resulting_HEAD: 55d5dba98c46ad33c359842420a3d228c7cffd25
+commits: 55d5dba98 test(security): add phase 4 adversarial cases (track_id: security_upgrade_20261026)
+Route: opencode-go/glm-5.3#high
+Reviews A and B passed at the audited HEAD (review-a-p4-5450fa6c8, review-b-p4-5450fa6c8).
+
+Probe groups and outcomes:
+1. next 16.4.5 floor. Peer-suffixed next@16.4.4(...) fails the floor (peer suffix stripped, locked=16.4.4). Prerelease 16.4.5-canary.1 is admitted by the floor comparator (compare=1) — nonblocking finding NB-1; the vulnerable-side canary 16.4.4-canary.1 fails (compare=-1) and the resolved-copies checker fails any dirty copy as version_is_not_clean, so the suite gate stays fail-closed. A second next copy under a nested importer or in the snapshots section passes the AC-8 row in isolation — nonblocking finding NB-2; a valid pnpm lockfile cannot hold that state, and new tests now run the importer and snapshot checks at the 16.4.5 floor.
+2. follow-redirects override. A ^1.16.2 range fails as not an exact version. 1.16.10 admits above the 1.16.2 floor by numeric compare (a string compare would flip it). A missing override with a lockfile 1.16.1 copy fails the floor; a workspace that drops the override while the lockfile keeps it fails the lockfile-overrides check. No false pass.
+3. Committed evidence and the ABSENT_BY_DESIGN image-size row. A present image-size@2.0.2 fails the 2.0.3 floor (committed fixture; the live lockfile holds zero image-size keys). The two it.skipIf local-log rows executed with logs present (probe run: 209 passed, 0 skipped, master sha verified against git) and skipped with no logs (gate run: 207 passed, 2 skipped). New fixtures pin that a present log is checked in full under the optional-logs rule. No vacuous pass.
+4. Pin at or above floor. A required pin of 17.0.0 above the 16.4.1 floor on another major passes the hygiene check, by design per plan task 4.4; the live workspace contract still pins next exactly 16.4.6. No security false pass; outcome recorded.
+
+MEASURE_AGENT_RESULT
+schema_version: 1
+status: pass
+summary: Four probe groups ran against the Phase 4 changes at HEAD 5450fa6c8: the next 16.4.5 floor, the follow-redirects 1.16.2 override, the committed-evidence rewrite with the ABSENT_BY_DESIGN image-size row, and the pin-at-or-above-floor rule. No probe exposed a false pass of the gate. Thirteen new tests were committed at 55d5dba98; the suite exits 0 (207 passed, 2 skipped on the clean checkout; 209 passed, 0 skipped with local logs).
+blocking_findings: none
+nonblocking_findings: NB-1 the 16.4.5 floor comparator admits a fixed-side prerelease (16.4.5-canary.1, compare=1) while strict semver places it below the floor; no vulnerable version passes (range ends at 16.4.4, 16.4.4-canary.1 fails, and the resolved-copies checker fails dirty copies as version_is_not_clean); route to Green as optional hardening. NB-2 evaluateNextPatchFloor scans packages: keys and app manifests only, so a snapshot-only or importer-only 16.4.4 copy passes that row; a valid pnpm lockfile cannot hold that state and new tests now cover snapshots and importers at the 16.4.5 floor. NB-3 the p2 guard-harness extractBlock could not load a function with a type literal in its parameter list; it failed loudly, never silently; fixed inside the test commit.
+evidence: peer-suffixed 16.4.4 fails with lockfile=next locked=16.4.4 floor=16.4.5; comparator measurements 16.4.5-canary.1=1, 16.4.4-canary.1=-1, 17.0.0 vs 16.4.1=1, 1.16.10 vs 1.16.2=1 (string compare -1); follow-redirects 1.16.1 copy fails fixed=1.16.2 and lockfile pnpm-lock.yaml:333 holds the override pin; image-size grep count 0 and a present 2.0.2 fails the committed fixture at tests/security-upgrade-version-guard.test.ts:546-554; probe run with local logs 209 passed 0 skipped against master sha 280388e205815ce0fcb5a9a72e6e561519843b8d (git shows next 16.2.9, sharp 0.34.5); gate run 207 passed 2 skipped, exit 0.
+commands: heavy-run vitest tests/security-upgrade-*.test.ts twice (exit 0 both); node -e comparator probes; git cat-file -e 280388e205815ce0fcb5a9a72e6e561519843b8d; grep -c image-size@ pnpm-lock.yaml (0); git commit 55d5dba98.
+changed_files: tests/security-upgrade-adversarial.test.ts, tests/security-upgrade-p2-adversarial.test.ts, tests/security-upgrade-verification-ledger.test.ts, measure/runs/security_upgrade_20261026/adversarial-p4-5450fa6c8.json, measure/runs/security_upgrade_20261026/adversarial-p4-5450fa6c8.log
+confidence: high
+retry_recommendation: none
+audited_head_sha: 5450fa6c83a9f50bd262d91e2432a7b131194690
+route: opencode-go/glm-5.3#high
+ratings: correctness 5 (every probed boundary behaves per spec; suite exit 0 twice); test_meaning 5 (13 new tests, each a failing-first synthetic fixture plus a real-input pass); scope_discipline 5 (git diff --stat names only the three tests/security-upgrade-*.test.ts files); evidence_quality 5 (each claim cites a command result or a file:line)
+END_MEASURE_AGENT_RESULT

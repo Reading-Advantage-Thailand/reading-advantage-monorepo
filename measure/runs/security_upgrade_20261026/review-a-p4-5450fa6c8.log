@@ -1,0 +1,44 @@
+# Review A (r2) — security_upgrade_20261026, task 4.5
+
+Date: 2026-11-19
+Phase heading: Phase 4: Next.js 16.4.6 patch (after 2026-11-20)
+Audited HEAD: 5450fa6c83a9f50bd262d91e2432a7b131194690
+Range: 3aca2726f..5450fa6c8 (task 4.5, Review B P4 NB-1: follow-redirects floor 1.16.2)
+Route: opencode-go/glm-5.3#high
+Result artifact: measure/runs/security_upgrade_20261026/review-a-p4-5450fa6c8.json
+
+## Checks
+
+- HEAD matches the audited SHA; the tree is clean; 3aca2726f is an ancestor.
+- Scope: five commits touch only the guard-list data, one version-guard test row, pnpm-workspace.yaml, pnpm-lock.yaml, the audit .md row, the test-strategy floor table and plan.md. Green commit c88189fe9 edited no test file.
+- Red cannot pass on nothing: the fixture row asserts fixedVersion ["1.16.2"], the new advisory id, and that 1.16.1 fails with labeled output while 1.16.2 passes; a missing guard entry fails the row. The live guard failed at bed0405a8 and again at 788720ddd with "package=follow-redirects locked=1.16.1 fixed=1.16.2" (red log).
+- Green audit-row edit is data, not a weakened test: checkAuditAgainstGuard (tests/security-upgrade-adversarial.test.ts:703) enforces that the audit fixed list holds the guard floor and that every guard advisory id appears in the audit row. Green restored that data; the enforcement stayed.
+- FR-2 contract: the override adds "follow-redirects: 1.16.2" — an exact same-major pin that meets a guard floor. The ten required pins are unchanged. The lockfile diff names only follow-redirects keys.
+- Live at HEAD (heavy-run): the track suite exits 0 — 5 files, 195 passed, 2 skipped of 197; pnpm audit --json gives critical 0, high 15, moderate 59, low 7, zero follow-redirects names and zero GHSA-mrwp-f3q8-3g9p hits. Both match the plan claims.
+- The 2.14 correction commit touches plan.md only and withdraws the false "No unclassified high finding remains" claim.
+
+## Findings
+
+Blocking: none.
+
+Nonblocking (full text in the result JSON):
+- N1: the plan's Gate 2 sentence "The Red run failed 1 of 197 on the audit row" describes a working-tree state during Green; at the committed Red HEAD the suite holds at least two red rows (the live guard row and the audit-consistency row).
+- N2: the first dependent of the lockfile fix is @revideo/vite-plugin@0.10.4, not @revideo/ffmpeg as the plan and green log name; the count and versions are correct.
+
+MEASURE_AGENT_RESULT
+  role: measure-review-a
+  track: security_upgrade_20261026
+  phase: Phase 4: Next.js 16.4.6 patch (after 2026-11-20)
+  task: review-a-p4-45
+  status: pass
+  phase_base_sha: 3aca2726f
+  role_base_sha: 3aca2726f
+  audited_head_sha: 5450fa6c83a9f50bd262d91e2432a7b131194690
+  route: opencode-go/glm-5.3#high
+  blocking_findings: 0
+  nonblocking_findings: 2
+  confidence: high
+  retry_recommendation: none
+  ratings: correctness=5, test_meaning=5, scope_discipline=5, evidence_quality=4
+  result_artifact: measure/runs/security_upgrade_20261026/review-a-p4-5450fa6c8.json
+END_MEASURE_AGENT_RESULT

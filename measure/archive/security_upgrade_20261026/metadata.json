@@ -1,9 +1,10 @@
 {
   "track_id": "security_upgrade_20261026",
   "type": "chore",
-  "status": "active",
+  "status": "done",
+  "completed": "2026-11-19",
   "created_at": "2026-10-26T00:00:00Z",
-  "updated_at": "2026-10-26T00:00:00Z",
+  "updated_at": "2026-11-19T00:00:00Z",
   "opened": "2026-10-26",
   "due": "2026-10-27",
   "priority": "top",
@@ -41,7 +42,7 @@
     ]
   },
   "target_versions": {
-    "next": "16.4.1",
+    "next": "16.4.6",
     "react": "19.2.9",
     "react-dom": "19.2.9",
     "sharp": "0.35.5 or later"
@@ -71,6 +72,6 @@
     "dependency_upgrade_hardening_20260607 (archived; set the next 16.2.9 and react 19.2.7 pins)"
   ],
   "estimated_tasks": 33,
-  "actual_tasks": null,
-  "deviation_notes": "Opened 2026-10-26 by the Monorepo orchestrator on the PM orchestrator's order (assignment A-21). The audit ran first and is in audit-2026-10-26.md. One PM fact needed a correction: apps/reading-advantage/Dockerfile uses node:20.18."
+  "actual_tasks": 44,
+  "deviation_notes": "Opened 2026-10-26 by the Monorepo orchestrator on the PM orchestrator's order (assignment A-21). The audit ran first and is in audit-2026-10-26.md. One PM fact needed a correction: apps/reading-advantage/Dockerfile uses node:20.18. Phase 4 (2026-11-19) raised the resolved next version from 16.4.1 to 16.4.6; the description keeps the opening scope. All 44 tasks are done. Final acceptance passed at b8967c11773e1fa6a6c75e9318293835639918d5. The 16.4.6 patch is unmerged, unpushed and undeployed at closeout; the merge waits until after 2026-11-20 and the redeploy waits for Daniel's word."
 }

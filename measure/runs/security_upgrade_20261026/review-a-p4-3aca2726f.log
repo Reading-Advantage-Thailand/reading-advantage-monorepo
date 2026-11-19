@@ -1,0 +1,69 @@
+# Review A — security_upgrade_20261026, Phase 4
+
+Date: 2026-11-19
+Phase heading: Phase 4: Next.js 16.4.6 patch (after 2026-11-20)
+Audited HEAD: 3aca2726f515201d804da75b2d159c25cd107efe
+phase_base_sha: 837755eaa
+Branch: security/next-16-4-6
+Route: opencode-go/glm-5.3#high
+Result artifact: measure/runs/security_upgrade_20261026/review-a-p4-3aca2726f.json
+
+## Scope checked
+
+1. Manifests and lockfile resolve next 16.4.6; only next-family pairs plus the two recorded transitive moves changed.
+2. The Red rewrites of task 4.4 (committed-evidence rows, ABSENT_BY_DESIGN image-size, pin-at-or-above-floor) keep test meaning and cannot pass on nothing.
+3. The task 4.3 evidence: every failing check is truly predates-track; no failure hides a 16.4.6 defect.
+4. The two builds print Next.js 16.4.6 and no SecurityFatalError.
+5. The plan claims nothing beyond the evidence.
+
+## Verified live (through heavy-run.sh)
+
+- Audit suite: pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-*.test.ts. Exit 0. Five files passed; 194 passed, 2 skipped of 196. The two skipped rows are the local-log rows of the PM decision of 2026-11-18 (tests/security-upgrade-p2-adversarial.test.ts:1006 and :1137).
+- Base spot-check: NODE_OPTIONS=--max-old-space-size=6144 pnpm --filter reading-advantage run check-types at /home/daniebo/.cache/security-baseline-837755eaa. Exit 1. Exactly 14 TS errors: 9 static-asset TS2307 plus 5 source/test type errors. This matches the plan claim word for word. Class predates-track confirmed.
+- storytime next build prints "▲ Next.js 16.4.6 (Turbopack)". No SecurityFatalError.
+- www-reading-advantage next build prints the same banner. No SecurityFatalError.
+
+## Verified from the range diff (837755eaa..3aca2726f)
+
+- Twelve manifests declare next 16.4.6: the eleven apps and packages/api. overrides.next is 16.4.6 in pnpm-workspace.yaml. apps/reading-advantage moved @next/env 16.2.9 to 16.4.6.
+- The lockfile holds 12 removed keys and 10 added keys. Every added key is next-family at 16.4.6. The two transitive moves are caniuse-lite 1.0.30001799 to 1.0.30001819 and baseline-browser-mapping 2.10.38 to 2.11.33. Peer-suffixed snapshot keys (next-intl, nuqs, onborda, @sentry/nextjs, @unpic/react, @vercel/analytics, vinext) renamed with the same versions. No other package version changed. One content-only hunk exists: the deprecated field of @smithy/core@3.25.1 was re-serialized (nonblocking N1).
+- No app source file changed. The apps/ diff holds 11 package.json files only. No Dockerfile, Cloud Build file, or CI file changed. No merge, no push, no deploy.
+- Red-first proof: at 837755eaa every one of the eleven apps declared next 16.4.1, so the task 4.1 floor row failed before the bump and passes after it.
+- image-size: the base lockfile holds no image-size@ packages key (grep count 0). The guard row keeps both advisory ids and the 2.0.3 floor with requirePresent: false, and a new row proves image-size@2.0.2 still fails. The absent-row rule fails any requirePresent: false row whose package is not in ABSENT_BY_DESIGN.
+- Ledger fail-closed: an absent ledger throws (reason=ledger_file_absent); the fingerprint row pins the 73 rows by package|check|class|log; the p2-adversarial rows pin 13 predates rows and 58 pass rows. A lost row, a changed class, or a changed log path fails. No vacuous pass.
+- Pin rule: checkGuardList fails a pin below a floor row and the new row feeds next=16.4.0 to prove it.
+
+## Verified predates-track claims
+
+- reading-advantage check-types: live base run reproduces exactly 14 errors (above).
+- science-advantage: nothing listens on 127.0.0.1:5432, so the ECONNREFUSED failure is environmental.
+- storytime: measure/runs/storytime_app_rebuild_20261025/media-list-w01.md is absent in both trees and gitignored; the two phase5 test files read it; those test bytes are identical at base.
+- accounting, advantage-games, codecamp-advantage, primary-advantage: the named failure causes (the "Plan task 7.2" contract test, the jest moduleNameMapper to the absent packages/db/dist/storytime path, the session-expiry prod-smoke tests, the direct db import in app/api/v1/help/events/route.ts:3) all exist in app sources that the range did not touch. No failure text names a next-family version.
+- doctor: the architecture pin manifest is byte-identical at base and HEAD, so the step-4 mismatch predates the phase.
+
+## Findings
+
+Blocking: none.
+
+Nonblocking (full text in the result JSON):
+- N1: the @smithy/core@3.25.1 deprecated-field re-serialization is a content-only lockfile change that the plan prose does not name.
+- N2: the plan sentence "Every pair is a next family member" is true for the 10 added keys but not for the 12 removed keys (caniuse-lite@1.0.30001799 is among them). The next sentence names the transitive moves correctly.
+- N3: the ledger test's plan-substring check ("not run in CI") is loose; it sits behind the exact 73-row fingerprint row and cannot pass vacuously on its own.
+
+MEASURE_AGENT_RESULT
+  role: measure-review-a
+  track: security_upgrade_20261026
+  phase: Phase 4: Next.js 16.4.6 patch (after 2026-11-20)
+  task: review-a-p4
+  status: pass
+  phase_base_sha: 837755eaa
+  role_base_sha: 837755eaa
+  audited_head_sha: 3aca2726f515201d804da75b2d159c25cd107efe
+  route: opencode-go/glm-5.3#high
+  blocking_findings: 0
+  nonblocking_findings: 3
+  confidence: high
+  retry_recommendation: none
+  ratings: correctness=5, test_meaning=5, scope_discipline=5, evidence_quality=4
+  result_artifact: measure/runs/security_upgrade_20261026/review-a-p4-3aca2726f.json
+END_MEASURE_AGENT_RESULT

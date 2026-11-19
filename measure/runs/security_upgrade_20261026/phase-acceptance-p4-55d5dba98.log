@@ -1,0 +1,25 @@
+# Phase acceptance — security_upgrade_20261026, Phase 4: Next.js 16.4.6 patch (after 2026-11-20)
+
+Worktree: /home/daniebo/Desktop/rama-worktrees/security-next-1646
+Branch: security/next-16-4-6
+phase_base_sha: 837755eaa
+audited HEAD: 55d5dba98c46ad33c359842420a3d228c7cffd25
+
+MEASURE_AGENT_RESULT
+  role: measure-phase-acceptance
+  track: security_upgrade_20261026
+  phase: Phase 4: Next.js 16.4.6 patch (after 2026-11-20)
+  phase_base_sha: 837755eaa
+  role_base_sha: 837755eaa
+  audited_head_sha: 55d5dba98c46ad33c359842420a3d228c7cffd25
+  status: pass
+  summary: PASS at audited HEAD 55d5dba98. All five 4.x tasks are [x] with SHAs that are ancestors of HEAD (3cda36823, b9f071ea0, da5acef00, 85dbf19ae, c88189fe9). Review A, Review B and the adversarial probe pass at 5450fa6c8; the only commit between that HEAD and the audited HEAD, 55d5dba98, touches only test files (the 13 adversarial cases), so the prerequisite results apply and this acceptance records the exact HEAD it accepted. Live gates re-run at HEAD through heavy-run.sh: the track suite exits 0 (5 files, 207 passed, 2 skipped of 209); pnpm audit --json reports critical 0, high 15, moderate 59, low 7 with zero next and zero follow-redirects advisories, and the high set is a strict subset of the phase-base set (base: critical 0, high 16, moderate 61, low 7; the base-only high is GHSA-mrwp-f3q8-3g9p, and the base also holds the two moderate next advisories that AC-8 closes); a live storytime build prints Next.js 16.4.6 (Turbopack) with no SecurityFatalError, and the www build is covered by the Green 4.3 log and Review A's live rerun. Twelve manifests pin next 16.4.6; the lockfile holds only next@16.4.6 and follow-redirects@1.16.2; the overrides pin next 16.4.6 and follow-redirects 1.16.2; the guard list, audit table and strategy floor hold the corrected 1.16.2 row with GHSA-mrwp-f3q8-3g9p. The predates-track classes hold: the storytime failures read a gitignored file absent at the base too, and Review A reproduced the reading-advantage 14-error check-types at the base copy. A3 and A4 concerns are absent or guarded in the phase diff; A6 and A7 concerns are absent (the registry claims no Phase 4 resolution; no banned-term filter changed). The plan claims nothing beyond the evidence. No push, no merge, no deploy.
+  blocking_findings: none
+  nonblocking_findings:
+    - "[checkpoint: 55d5dba98] — the acceptance role may not edit plan.md; the orchestrator records this checkpoint line in measure/tracks/security_upgrade_20261026/plan.md."
+    - "Adversarial NB-1 (prerelease 16.4.5-canary.1 admitted by the floor comparator): no vulnerable version passes; orchestrator default 2026-11-19 DECLINE as optional hardening; recorded, not fixed."
+    - "Adversarial NB-2 (snapshot-only or importer-only next copy outside the floor scan): a valid pnpm lockfile cannot hold that state; recorded, not fixed."
+    - "Review B NB-2..NB-5, PM-confirmed defaults 2026-11-19: NB-2 record only; NB-3 method limit; NB-4 committed-evidence-only (PM 2026-11-18); NB-5 closeout fixes measure/tracks.md:54 (the registry entry still reads 'Phase 1 next'; stale, not an overstatement)."
+    - "The measure/runs/ evidence logs are gitignored and local-only; the two it.skipIf rows skip on a clean checkout by the PM decision of 2026-11-18, and the adversarial run proved they execute in full when a local log exists (209 passed, 0 skipped)."
+  retry_recommendation: none
+END_MEASURE_AGENT_RESULT

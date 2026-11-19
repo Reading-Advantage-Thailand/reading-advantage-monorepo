@@ -1,0 +1,153 @@
+Review B · P4 · security_upgrade_20261026
+
+Phase heading: Phase 4: Next.js 16.4.6 patch (after 2026-11-20)
+Audited HEAD: 3aca2726f515201d804da75b2d159c25cd107efe
+phase_base_sha: 837755eaa552bcc5a5c8f64c5f09bf16a6272eb7
+role_base_sha: 3aca2726f515201d804da75b2d159c25cd107efe
+Route: minimax-cn-coding-plan/MiniMax-M3#high
+Worktree: /home/daniebo/Desktop/rama-worktrees/security-next-1646
+Branch: security/next-16-4-6
+
+Scope of this review
+--------------------
+Narrow security review of the Phase 4 diff only. The diff holds 21 files. The
+plan sets the goal: keep zero in-scope critical and high advisories, and do not
+relabel an upgrade defect as predates-track. The role is audit-only. No file was
+edited except the two result artifacts under measure/runs/.
+
+Provenance
+----------
+git rev-parse HEAD returned 3aca2726f515201d804da75b2d159c25cd107efe.
+git rev-parse security/next-16-4-6 returned the same SHA, so the branch tip is the
+audited HEAD. git status --porcelain was empty. The audited HEAD is current.
+git log --oneline 837755eaa..3aca2726f holds 8 commits, each named with the
+track id. phase_base_sha resolves to 837755eaa552bcc5a5c8f64c5f09bf16a6272eb7.
+
+Check 1 · Both advisories fixed in every lockfile resolution
+------------------------------------------------------------
+The packages section of pnpm-lock.yaml at HEAD parses to one next version, 16.4.6.
+The snapshots section holds next@16.4.6 with two peer suffixes and no other next
+key. The whole file holds 24 next@ occurrences and every one of them reads
+16.4.6. No next key below 16.4.5 remains.
+The only next-family keys below 16.4.5 are @next/eslint-plugin-next@16.0.0 and
+@next/mdx@16.2.9. Both are unchanged at the phase base. Neither package is the
+subject of either advisory, so neither is in scope.
+npm view next@16.4 version lists 16.4.0 through 16.4.6. The registry publishes
+16.4.5 and 16.4.6.
+At the phase base the audit holds two next advisories with the ranges
+>=16.3.0 <=16.4.4 and >=16.2.0 <=16.4.4. Both name 16.4.5 as the patched
+version. At HEAD the audit reports zero next advisories.
+Verdict: closed.
+
+Check 2 · No in-scope critical or high at HEAD versus the base
+---------------------------------------------------------------
+Full audit at HEAD: critical 0, high 16, moderate 59, low 7.
+Full audit at the phase base: critical 0, high 16, moderate 61, low 7.
+The high advisory ID sets are identical. A paired run in one command shows that
+the HEAD moderate set equals the base moderate set minus exactly the two next
+advisories.
+Audit with --prod at HEAD: critical 0, high 12, moderate 52.
+Audit with --prod at the phase base: critical 0, high 12, moderate 55.
+The high advisory ID sets are identical there too.
+Verdict: the Phase 4 diff opens no critical or high advisory and closes the two
+moderate advisories of this phase. One high finding, follow-redirects, stays open
+at the base and at HEAD. See nonblocking finding NB-1.
+
+Check 3 · Lockfile scope and registry integrity
+------------------------------------------------
+A key-by-key diff of the packages section gives 10 added keys and 12 removed
+keys. Every added key is next family at 16.4.6. Every removed key is next
+family at 16.4.1 or 16.2.9, plus caniuse-lite@1.0.30001799. No other package
+name enters the tree.
+baseline-browser-mapping@2.11.33 already existed at the phase base, so the
+recorded move added no package. The caniuse-lite copy 1.0.30001799 leaves the
+tree and 1.0.30001819 remains.
+The snapshots section shows the same set. The only non-next change in the whole
+lockfile is the @smithy/core@3.25.1 deprecation text. That package keeps the
+same version and the same integrity hash.
+All 2316 package resolutions carry a sha512 integrity. No resolution uses a
+tarball, directory or git form.
+The registry integrity matches the lockfile value for next@16.4.6, @next/env
+16.4.6 and three @next/swc binaries.
+Verdict: clean. The baseline-browser-mapping copy 2.10.38 stays in the tree
+through a science-advantage direct dependency. See nonblocking finding NB-2.
+
+Check 4 · image-size ABSENT_BY_DESIGN and the committed-evidence rewrite
+------------------------------------------------------------------------
+The lockfile holds no image-size package key at HEAD or at the phase base, and
+node_modules/.pnpm holds no image-size copy. pnpm-workspace.yaml:128 keeps the
+image-size override at 2.0.3, so a returning copy resolves at the floor.
+evaluateGuard at tests/security-upgrade-version-guard.test.ts:113 checks the
+floor for a present copy regardless of requirePresent. The new test "keeps the
+image-size 2.0.3 floor for a copy that returns" fails locked=2.0.2 and passes
+2.0.3. The guard list hygiene test rejects a requirePresent false on any
+package outside ABSENT_BY_DESIGN.
+The committed-evidence rewrite changes log presence only. The ledger JSON is
+tracked. LEDGER_ROW_FINGERPRINT pins 73 rows by index, package, check, class and
+log. The plan must name the p2 log root and the "not run in CI" rule. The two
+local-log checks still run in full when a log exists.
+Every version floor reads committed files: pnpm-lock.yaml, the app manifests and
+pnpm-workspace.yaml. No floor reads measure/runs.
+Verdict: neither change hides a vulnerable package. The rewrite does lower the
+CI-verifiable evidence for the Phase 2 matrix. See nonblocking finding NB-4.
+
+Check 5 · No CI, workflow, secret or deploy file changed, nothing pushed
+---------------------------------------------------------------------------
+git diff --name-only over the phase range lists 21 files. No path matches
+.github, workflows, .env, secret, cloudbuild, Dockerfile, .npmrc, .circleci or
+Jenkinsfile. The 13 manifest changes are 12 next lines and 1 @next/env line.
+pnpm-workspace.yaml changes one override line.
+git ls-remote --heads origin security/next-16-4-6 returns nothing, and the
+refs/heads/security/* pattern returns nothing. The branch was never pushed.
+Verdict: clean.
+
+Other security surfaces
+-----------------------
+A2 does not apply. The diff holds no draft to published status flip and no
+consent or anonymization logic. The only published hit is a supply-chain
+comment about a package publish date.
+A6 does not fire. measure/tracks.md:52-55 claims no resolved security state
+for this track. The row is stale. See nonblocking finding NB-5.
+Secret handling: packages/storage/src/drivers/s3.ts:41 builds the S3 client with
+no custom logger. The new @smithy/core deprecation text concerns a custom
+logger redaction bug, so it does not reach this code path.
+Auth, tenant scoping, injection, persistence, migration and error handling: the
+diff changes no application source file. The only runtime change is the next
+patch version inside the framework.
+
+Upgrade defect check
+--------------------
+The phase check recorded eight failing commands with the class predates-track.
+I checked the classification instead of accepting it. The base comparison
+worktree at /home/daniebo/.cache/security-baseline-837755eaa links node_modules
+to the 16.4.6 worktree, so next resolves to 16.4.6 there. The comparison
+isolates source changes only and cannot by itself exclude a failure caused by
+the dependency bump.
+The eight enumerated causes are source, fixture, build-output or environment
+issues. The storytime failures read the absent gitignored file
+measure/runs/storytime_app_rebuild_20261025/media-list-w01.md, which is absent
+in the base copy too. The science-advantage failure is a refused local Postgres
+connection. The accounting failure asserts a component another task creates.
+The advantage-games and codecamp failures point at absent build output.
+Verdict: no upgrade defect found, and the base method is weaker than the plan
+sentence claims. See nonblocking finding NB-3.
+
+Test run
+--------
+Command: pnpm exec vitest run --config vitest.config.ts --maxWorkers=1
+tests/security-upgrade-*.test.ts through heavy-run.sh.
+Result: exit 0. 5 files passed. 194 passed and 2 skipped of 196.
+The 2 skipped rows are the local-log rows of the PM decision of 2026-11-18.
+
+MEASURE_AGENT_RESULT
+role: review-b-security
+status: complete
+track: security_upgrade_20261026
+phase: Phase 4: Next.js 16.4.6 patch (after 2026-11-20)
+commits: none (audit-only role, no commit)
+tests_run: pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-*.test.ts through heavy-run.sh -> exit 0, 194 passed and 2 skipped of 196; pnpm audit --prod --json at HEAD -> critical 0, high 12; pnpm audit --prod --json at /home/daniebo/.cache/security-baseline-837755eaa -> critical 0, high 12; pnpm audit --json at HEAD -> critical 0, high 16, zero next advisories; pnpm audit --json at the phase base -> critical 0, high 16, two next advisories open
+files_changed: measure/runs/security_upgrade_20261026/review-b-p4-3aca2726f.json (new), measure/runs/security_upgrade_20261026/review-b-p4-3aca2726f.log (new)
+plan_updates: none
+known_failures: none
+handoff: The Phase 4 gate passes for Review B. Both in-scope advisories are closed in every lockfile resolution, the audit shows no new critical or high against the phase base, the lockfile adds only the next family, no CI, workflow, secret or deploy file changed, and nothing was pushed. Five nonblocking findings need a PM decision before the track closes. NB-1 is the material one: follow-redirects@1.16.1 keeps one unclassified high advisory open at the phase base and at HEAD, because the guard floor of 1.16.1 sits below the published fix of 1.16.2. The plan sentence at task 2.14, "No unclassified high finding remains", is false at HEAD. The fix needs a lockfile refresh past the next family, so the PM owns the scope. NB-2: the baseline-browser-mapping 2.10.38 copy stays through apps/science-advantage/package.json:97. NB-3: the base comparison worktree shares node_modules with the 16.4.6 worktree, so it isolates source only. NB-4: the committed-evidence rewrite leaves the 58 pass rows unverified in a clean checkout. NB-5: measure/tracks.md:54 still names Phase 1 as next. No CONTEST item applies because no earlier Review B artifact exists for this phase. retry_recommendation is escalate_human.
+END_MEASURE_AGENT_RESULT

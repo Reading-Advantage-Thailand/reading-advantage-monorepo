@@ -49,11 +49,6 @@ This file tracks all major tracks for the project.
   *Status: active, light lane; post 2026-11-15 (`a-five-year-old-reads-by-herself`) live; one task per post; the track stays open for later daily posts | Owner: Monorepo orchestrator | PM task A-61 follow-up*
   *Note: PR's daily posts in en and th, written from `apps/www-reading-advantage/docs/blog-post-format.md` (track `www_blog_rich_format_20261115`, archived 2026-11-18). www-only push is standing-approved (Daniel 2026-11-15).*
 
-- [~] **Track: Security upgrade — Next.js, React, sharp and the critical and high npm fixes** — *created 2026-10-26*
-  *Link: [./tracks/security_upgrade_20261026/](./tracks/security_upgrade_20261026/)*
-  *Status: active, opened 2026-10-26; audit done; Phase 1 (version guard and upgrade) next | Owner: Monorepo orchestrator | PM assignment A-21 | Due 2026-10-27 | Priority: TOP*
-  *Note: Daniel 2026-10-26: "Somebad CVEs came out on NePM this week. We need an audit and update with redeploy ASAP." `pnpm audit --json` reports 8 critical and 93 high advisories over 32 packages. Targets: next 16.4.1, react and react-dom 19.2.9, sharp 0.35.5 or later, plus every patch and minor fix. The audit file is [audit-2026-10-26.md](./tracks/security_upgrade_20261026/audit-2026-10-26.md). The supply chain check found no hit. Push and deploy stay with Daniel's team.*
-
 - [~] **Track: Primary In-App Help (What's New videos)** — *created 2026-10-23*
   *Link: [./tracks/primary_in_app_help_20261023/](./tracks/primary_in_app_help_20261023/)*
   *Status: live 2026-10-23 on revision 00141-nuh (in master); D5 open; plan approved 2026-10-23; owner decisions recorded (both hosts, all videos approved, sign-in help, plays log in the system role) | Priority: next, after the Boonyathat deploy*
@@ -675,6 +670,12 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 ---
 
 ## Archived Tracks
+
+- [x] **Track: Security upgrade — Next.js, React, sharp and the critical and high npm fixes** — *created 2026-10-26, archived 2026-11-19*
+  *Link: [./archive/security_upgrade_20261026/](./archive/security_upgrade_20261026/)*
+  *Upgrade next to 16.4.1, react and react-dom to 19.2.9, sharp to 0.35.5 or later, and every other critical or high npm fix that is a patch or a minor bump. Add a version-guard test that reads pnpm-lock.yaml. Verify each deployed app. Write the redeploy list. Merge to the local master. Push and deploy stay with Daniel's team.*
+  *Status: done; 44 tasks; final acceptance at b8967c11773e1fa6a6c75e9318293835639918d5 passed on 2026-11-19; the track suite exits 0 with 207 passed and 2 skipped; pnpm audit reports critical 0 and high 15, all in the open-major and no-fix register | Chore, PM assignment A-21 | Phase 4 raised next to 16.4.6 on branch security/next-16-4-6; that patch is unmerged, unpushed and undeployed. The merge waits until after 2026-11-20 and the redeploy waits for Daniel's word.*
+  *Note: The redeploy list docs/deployment/security-upgrade-2026-10.md still names merge commit 3a10dd68c (next 16.4.1); the 16.4.6 build comes from master after this branch merges. After the merge the owner runs pnpm architecture:pin:refresh because doctor exits 1 at the architecture step, the same result at the base. The 2026-10-26 registry row named Phase 1 as next; closeout corrects it under the PM default. Findings N1 to N11 stay in the closeout manifest and the archived plan.*
 
 - [x] **Track: www blog rich post format** — *created 2026-11-15, archived 2026-11-18*
   *Link: [./archive/www_blog_rich_format_20261115/](./archive/www_blog_rich_format_20261115/)*

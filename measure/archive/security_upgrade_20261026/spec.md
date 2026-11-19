@@ -60,9 +60,11 @@ A test reads `pnpm-lock.yaml` and checks the locked version of each package in t
 
 ### FR-2: The `next` upgrade
 
-`next` resolves to 16.4.1 in every workspace unit. The `overrides` block in `pnpm-workspace.yaml` holds the version, because every unit resolves `next` through it.
+`next` resolves to 16.4.6 in every workspace unit. The `overrides` block in `pnpm-workspace.yaml` holds the version, because every unit resolves `next` through it.
 
 The direct dependency entries in each `package.json` change to the same version, so the manifest states the version that the lockfile holds.
+
+Amendment 2026-11-19 (Phase 4): Phase 1 opened with 16.4.1. Phase 4 raised the pin to 16.4.6, which sits above the 16.4.1 advisory floor and the 16.4.5 floor of AC-8. The guard rule compares a pin at or above a floor, not for exact equality. The 16.4.6 pin is unmerged and undeployed at closeout.
 
 ### FR-3: The React upgrade
 
@@ -132,7 +134,7 @@ The branch merges into the local `master` after the tests and the reviews pass. 
 | ID | Criterion |
 | --- | --- |
 | AC-1 | The version-guard test fails on the pre-upgrade lockfile and passes on the post-upgrade lockfile. The failure message names the advisory, the locked version and the fixed version. |
-| AC-2 | `pnpm-lock.yaml` holds `next` 16.4.1, `react` 19.2.9, `react-dom` 19.2.9 and `sharp` 0.35.5 or later. |
+| AC-2 | `pnpm-lock.yaml` holds `next` 16.4.6, `react` 19.2.9, `react-dom` 19.2.9 and `sharp` 0.35.5 or later. Amendment 2026-11-19: the Phase 1 text named 16.4.1; Phase 4 raised the resolved version to 16.4.6 under AC-8. |
 | AC-3 | Every package in FR-5 and every transitive package in section 10.2 of the audit sits at its fixed version in the lockfile. |
 | AC-4 | `pnpm audit --json` reports zero critical advisories and zero high advisories for the packages in scope. The nine MAJOR bumps of section 6 and the two no-fix packages stay open. The report names them. |
 | AC-5 | Each of the ten app folders of the Phase 2 matrix passes `check-types`, `lint`, `test` and `build`. A check that fails meets this criterion only when it fails in the same way on `master` before the upgrade, its ledger row has the class `predates-track`, a master-comparison log names the same failing tests or the same error count, and `measure/tech-debt.md` names an owner for it. The upgrade adds no new failure. The live Reading service stays outside this criterion. Plan task 1.9 holds the coverage boundary. |

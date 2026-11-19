@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Re-review of task 4.5 (follow-redirects floor 1.16.2, Review B P4 NB-1) on range 3aca2726f..5450fa6c8, audited HEAD 5450fa6c83a9f50bd262d91e2432a7b131194690. HEAD matches and the tree is clean. The Red commit raised the guard floor to 1.16.2, added GHSA-mrwp-f3q8-3g9p, and added a fixture row that proves 1.16.1 fails and 1.16.2 passes; the live guard row failed at the Red HEAD with the exact labeled message, so the Red row cannot pass on nothing. Green changed only the override (follow-redirects: 1.16.2, an exact same-major pin that meets a guard floor, per the FR-2 contract), the lockfile (only follow-redirects keys), and the committed audit row — data that the adversarial test reads and enforces in both directions; no test was weakened. Live verification at HEAD: the track suite passes (5 files, 195 passed, 2 skipped of 197) and pnpm audit --json shows zero follow-redirects advisories, zero GHSA-mrwp-f3q8-3g9p hits, critical 0, high 15 (the Red base held 16). The 2.14 correction commit touches plan.md only. No blocking finding; two minor evidence-wording notes.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 (evidence wording, minor): The plan's Gate 2 sentence 'The Red run failed 1 of 197 on the audit row' describes a working-tree state during Green: the lockfile already held 1.16.2 while the audit .md still held 1.16.1. At the committed Red HEAD 788720ddd the suite holds at least two red rows, not one: the live guard row (the Red log itself records the rerun at 788720ddd failing 1 of 38 with locked=1.16.1 fixed=1.16.2) and the audit-consistency row (checkAuditAgainstGuard fails floor=1.16.2 against audit_fixed=1.16.1 and the missing GHSA-mrwp-f3q8-3g9p id). The committed gates are unaffected; the label is imprecise.",
+    "N2 (naming, minor): The plan and the green log name '@revideo/ffmpeg' as the first dependent that moved with the lockfile fix. The lockfile shows the dependent is '@revideo/vite-plugin@0.10.4' (pnpm-lock.yaml snapshot at line ~18185; @revideo/ffmpeg is a sibling dependency in the same block). The changed-pair count (two dependent references plus the package entry, snapshot key and override line) is correct; only the parent name is wrong."
+  ],
+  "evidence": [
+    "Provenance: git rev-parse HEAD = 5450fa6c83a9f50bd262d91e2432a7b131194690 on branch security/next-16-4-6; the tree is clean; 3aca2726f is an ancestor.",
+    "Range scope: the five commits touch only tests/security-upgrade-guard-list.ts, tests/security-upgrade-version-guard.test.ts, pnpm-workspace.yaml, pnpm-lock.yaml, audit-2026-10-26.md, test-strategy.md and plan.md (git show --name-only per commit). Green commit c88189fe9 touched only the audit .md, the lockfile and the workspace yaml: no Red test file was edited.",
+    "Red cannot pass on nothing: the fixture row (version-guard test, 'keeps the follow-redirects 1.16.2 floor: 1.16.1 fails and 1.16.2 passes') asserts the guard entry holds fixedVersion ['1.16.2'], contains GHSA-mrwp-f3q8-3g9p, fails 1.16.1 with the labels package=, locked=1.16.1, fixed=1.16.2, and passes 1.16.2. A missing guard entry fails entry.map(...).toEqual(['1.16.2']). The live row reads the real lockfile; the Red log records exit_code=1, 1 failed of 38 at bed0405a8 and again at 788720ddd, with the exact message 'advisory=GHSA-8r9p-f939-6h3c GHSA-q3jh-wrc6-jgq8 GHSA-mrwp-f3q8-3g9p package=follow-redirects locked=1.16.1 fixed=1.16.2'.",
+    "Green edit is data, not a weakened test: tests/security-upgrade-adversarial.test.ts:703 checkAuditAgainstGuard enforces that the audit row's fixed list includes the guard floor and that every guard advisory id appears in the audit row. After the Red floor raise, the committed audit row (1.16.1, two ids) fails that check; Green's edit to audit-2026-10-26.md (fixed 1.16.2 pair, new id, dated correction note) restores the data. No adversarial or guard test row was changed by Green (commit file list).",
+    "FR-2 override contract: pnpm-workspace.yaml adds 'follow-redirects: 1.16.2' to the overrides block — an exact pin on the floored major that meets the 1.16.2 floor and has a guard floor row. The ten required pins are unchanged. The suite's override-contract row accepts exactly this shape, proven live by the suite passing.",
+    "Lockfile: the range diff names only follow-redirects — the override line, the package entry 1.16.1 to 1.16.2 with new integrity, two dependent references (@revideo/vite-plugin and axios@1.20.0), and the snapshot key. No other name or version pair changed.",
+    "Live suite at HEAD (through heavy-run): pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-*.test.ts. Exit 0. Five files passed; 195 passed, 2 skipped of 197. This matches the plan Gate 2 claim; the two skips remain the PM-approved local-log rows.",
+    "Live audit at HEAD (through heavy-run): pnpm audit --json summarized with node. Totals critical 0, high 15, moderate 59, low 7. Zero vulnerability names match follow-redirects; zero advisory hits for GHSA-mrwp-f3q8-3g9p. This matches the plan Gate 3 claim (Red base held high 16).",
+    "2.14 correction: commit 788720ddd touches plan.md only; it adds the Correction note that the sentence 'No unclassified high finding remains' was false at 3aca2726f, and the plan no longer rests the closeout on it. No test was changed by that commit."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git status --short; git log --oneline 3aca2726f..5450fa6c8; git show --name-only per commit",
+    "git diff 3aca2726f..5450fa6c8 -- tests/ pnpm-workspace.yaml pnpm-lock.yaml measure/tracks/security_upgrade_20261026/",
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-*.test.ts' (exit 0; 195 passed, 2 skipped of 197)",
+    "HEAVY_PRIORITY=p2 ... heavy-run.sh -c 'cd ... && timeout 540 pnpm audit --json | node -e ...' (critical 0, high 15, moderate 59, low 7; follow-redirects names 0; GHSA-mrwp hits 0)",
+    "sed -n '18170,18185p' pnpm-lock.yaml (dependent is @revideo/vite-plugin@0.10.4)",
+    "Read measure/runs/security_upgrade_20261026/red-p4-45-3aca2726f.log and green-p4-45-788720ddd.log"
+  ],
+  "changed_files": [
+    "measure/tracks/security_upgrade_20261026/audit-2026-10-26.md",
+    "measure/tracks/security_upgrade_20261026/plan.md",
+    "measure/tracks/security_upgrade_20261026/test-strategy.md",
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml",
+    "tests/security-upgrade-guard-list.ts",
+    "tests/security-upgrade-version-guard.test.ts"
+  ],
+  "confidence": "high",
+  "retry_recommendation": "none",
+  "audited_head_sha": "5450fa6c83a9f50bd262d91e2432a7b131194690",
+  "route": "opencode-go/glm-5.3#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "The guard floor is 1.16.2, the override and the lockfile resolve follow-redirects 1.16.2, and the live pnpm audit at HEAD shows zero follow-redirects advisories and high 15 (base held 16)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "The Red run failed first at bed0405a8 and again at 788720ddd with 'locked=1.16.1 fixed=1.16.2' (red-p4-45 log); the fixture row proves 1.16.1 fails and 1.16.2 passes; the adversarial audit-consistency check enforces the corrected audit data in both directions; the suite is green at HEAD (195 passed, 2 skipped of 197)."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The five commits touch only the guard-list data, one test row, the override, the lockfile, the audit .md row, the strategy floor table and the plan; no app source, no Dockerfile, no CI file, no Red test edit by Green."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "The suite and the audit totals were re-verified live and match the plan; two prose items are imprecise: the Gate-2 'Red run' sentence (nonblocking N1) and the @revideo/ffmpeg dependent name (nonblocking N2)."
+    }
+  ]
+}

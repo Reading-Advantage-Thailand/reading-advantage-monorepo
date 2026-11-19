@@ -17,7 +17,7 @@
  * The synthetic fixture is the proof that the checker can fail.
  */
 import { beforeAll, describe, expect, it } from "vitest";
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
@@ -28,7 +28,16 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const GUARD_TEST_PATH = resolve(ROOT, "tests/security-upgrade-version-guard.test.ts");
 const LOCKFILE_PATH = resolve(ROOT, "pnpm-lock.yaml");
 const WORKSPACE_PATH = resolve(ROOT, "pnpm-workspace.yaml");
-const AUDIT_PATH = resolve(ROOT, "measure/tracks/security_upgrade_20261026/audit-2026-10-26.md");
+// A9: prefer the archived track path, then the active path. The audit file
+// moves to measure/archive/ on closeout, so a single active-path read breaks.
+const AUDIT_CANDIDATES = [
+  "measure/archive/security_upgrade_20261026/audit-2026-10-26.md",
+  "measure/tracks/security_upgrade_20261026/audit-2026-10-26.md",
+];
+const AUDIT_PATH = resolve(
+  ROOT,
+  AUDIT_CANDIDATES.find((candidate) => existsSync(resolve(ROOT, candidate))) ?? AUDIT_CANDIDATES[0],
+);
 
 const PHASE_BASE_SHA = "24471e25ab76881b637e6caa36a15870a6894491";
 const GREEN_GATE_BASE_SHA = "a64616a4d0a71497cfcdedfee1d55d21146833b4";

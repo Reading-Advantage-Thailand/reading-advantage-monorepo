@@ -1,0 +1,86 @@
+# Red run — security_upgrade_20261026, task 4.4 (Phase 4)
+
+Date: 2026-11-18
+Worktree: /home/daniebo/Desktop/rama-worktrees/security-next-1646
+Branch: security/next-16-4-6
+phase_base_sha: 7edee3db2 (orchestrator-supplied, resolves)
+role_base_sha: 7edee3db2 (orchestrator-supplied, resolves; worktree clean at start)
+Red commits: 5547a340c (stale guard rows), 85dbf19ae (committed evidence only)
+Note: the orchestrator named HEAD 7edee3db2 and gave no separate sha. Both roles use that value.
+
+## Command
+
+bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-*.test.ts'
+
+## Results
+
+Before:  exit_code=1 — 13 failed, 177 passed of 190 (4 files failed, 1 passed).
+After:   exit_code=0 — 194 passed, 2 skipped of 196 (5 files passed).
+
+The two skipped rows are the local-log rows of the PM decision of 2026-11-18.
+
+## Per-row decisions
+
+TEST stale — the `next` pin. Commit b9f071ea0 (task 4.2 Green) moved
+`overrides.next` from 16.4.1 to 16.4.6, per FR-2 and AC-8. Five rows held 16.4.1:
+`REQUIRED_OVERRIDE_PINS.next` in security-upgrade-version-guard.test.ts and
+security-upgrade-p2-adversarial.test.ts, `STRATEGY_REQUIRED_PINS.next` in
+security-upgrade-adversarial.test.ts, the `expected=16.4.1` label, and the
+guard-list rule `pin equals floor`. The last rule is now `pin at or above floor`,
+because 16.4.6 sits above the 16.4.1 advisory floor. A new row proves that a pin
+below the floor still fails. PM decision 2026-11-18: confirmed.
+
+TEST stale — the `image-size` 2. floor. `pnpm why image-size` prints no
+dependent. The base commit 837755eaa also held no `image-size@` key; only the
+override line `image-size: 2.0.3` exists. The row keeps both advisory ids
+(GHSA-5p2g-fcmc-qvqq, GHSA-w3rx-r6r6-pgpr) and the 2.0.3 floor. It moved to
+`ABSENT_BY_DESIGN` with `requirePresent: false`. A new row proves that
+`image-size@2.0.2` still fails the floor. PM decision 2026-11-18: confirmed.
+
+PM decision — "Reclassify the 5 rows as \"not run in CI: evidence in ignored
+measure/runs/ (local only)\"; Red rewrites them to check committed evidence
+only". The five rows now read the committed ledger and the committed plan only.
+A log that exists in the checkout is still checked in full. `it.skipIf` marks the
+two local-log rows when no log is present. A new row pins the 73 ledger rows by
+`package|check|class|log`, so a lost or changed row fails.
+
+## Storytime note (no fix)
+
+Ten failures name the absent `measure/runs/storytime_app_rebuild_20261025/media-list-w01.md`.
+`apps/storytime/__tests__/phase5-media-list.test.ts` and
+`apps/storytime/__tests__/phase5-adversarial.test.ts` read that path, and the path
+is gitignored. A test whose verdict depends on an ignored file is a defect. Owner:
+storytime_app_rebuild_20261025.
+
+## Tech debt
+
+`measure/tech-debt.md` holds 51 lines. Its cap is 50, enforced by
+`packages/auth/src/__tests__/phase-7-closeout.test.ts`. The new row does not fit.
+The entry stays in plan.md task 4.4 only.
+
+MEASURE_AGENT_RESULT:
+  role: measure-red
+  track: security_upgrade_20261026
+  phase: 4
+  task: 4.4
+  status: ok
+  baseline_sha: 7edee3db2
+  role_base_sha: 7edee3db2
+  head_sha: 85dbf19ae
+  commits:
+    - 5547a340c test(security): update the stale guard rows (track_id: security_upgrade_20261026)
+    - 85dbf19ae test(security): check committed evidence only (track_id: security_upgrade_20261026)
+  files:
+    - tests/security-upgrade-version-guard.test.ts
+    - tests/security-upgrade-adversarial.test.ts
+    - tests/security-upgrade-p2-adversarial.test.ts
+    - tests/security-upgrade-guard-list.ts
+    - tests/security-upgrade-verification-ledger.test.ts
+    - measure/tracks/security_upgrade_20261026/plan.md
+  tests:
+    - name: security-upgrade suite
+      exit_code: 0
+      before: 13 failed, 177 passed of 190
+      after: 194 passed, 2 skipped of 196
+      files: 5 passed
+  remaining_failures: none

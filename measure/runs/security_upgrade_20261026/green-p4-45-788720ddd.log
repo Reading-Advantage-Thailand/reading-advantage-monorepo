@@ -1,0 +1,38 @@
+# Green run — security_upgrade_20261026, task 4.5 (Phase 4)
+
+Worktree: /home/daniebo/Desktop/rama-worktrees/security-next-1646
+Branch: security/next-16-4-6
+phase_base_sha: 3aca2726f515201d804da75b2d159c25cd107efe
+role_base_sha: 788720ddd22927420373074e0e1912e13dfaa595
+baseline_sha: 3aca2726f515201d804da75b2d159c25cd107efe
+resulting_HEAD: 5450fa6c83a9f50bd262d91e2432a7b131194690
+
+MEASURE_AGENT_RESULT
+  role: measure-green
+  track: security_upgrade_20261026
+  phase: Phase 4: Next.js 16.4.6 patch (after 2026-11-20)
+  task: 4.5
+  status: ok
+  phase_base_sha: 3aca2726f515201d804da75b2d159c25cd107efe
+  role_base_sha: 788720ddd22927420373074e0e1912e13dfaa595
+  baseline_sha: 3aca2726f515201d804da75b2d159c25cd107efe
+  resulting_HEAD: 5450fa6c83a9f50bd262d91e2432a7b131194690
+  commits:
+    - c88189fe9 fix(security): resolve follow-redirects 1.16.2 (track_id: security_upgrade_20261026)
+    - 5450fa6c8 docs(measure): record phase 4.5 green evidence (track_id: security_upgrade_20261026)
+  exit_codes:
+    guard_red: 1 (1 failed, 37 passed of 38; locked=1.16.1 fixed=1.16.2)
+    install_first: 124 (install printed "Done in 5m 20.1s"; hang guard stopped the registry retry)
+    install_prefer_offline: 0 (Already up to date)
+    install_frozen_offline: 0 (Already up to date)
+    guard_green: 0 (38 passed of 38)
+    track_suite_red: 1 (1 failed on the audit row, 194 passed, 2 skipped of 197)
+    track_suite_green: 0 (5 files passed; 195 passed, 2 skipped of 197)
+    guard_final_HEAD: 0 (38 passed of 38)
+    track_suite_final_HEAD: 0 (5 files passed; 195 passed, 2 skipped of 197)
+    audit_json: 1 (advisories remain; critical 0, high 15, moderate 59, low 7; baseline high 16)
+  lockfile_diff: only follow-redirects keys (override, package entry, two dependent references, snapshot key)
+  audit_ghsa_mrwp_f3q8_3g9p: absent
+  merge_push_deploy: none
+  dispositions: none
+END_MEASURE_AGENT_RESULT

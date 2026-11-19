@@ -1,0 +1,36 @@
+# Green run — security_upgrade_20261026, task 4.3 (Phase 4)
+
+Worktree: /home/daniebo/Desktop/rama-worktrees/security-next-1646
+Branch: security/next-16-4-6
+phase_base_sha: 837755eaa
+role_base_sha: 85dbf19ae
+baseline_sha: 837755eaa (clean worktree at /home/daniebo/.cache/security-baseline-837755eaa)
+resulting_HEAD: 3aca2726f515201d804da75b2d159c25cd107efe
+
+MEASURE_AGENT_RESULT
+  role: measure-green
+  track: security_upgrade_20261026
+  phase: Phase 4: Next.js 16.4.6 patch (after 2026-11-20)
+  task: 4.3
+  status: ok
+  phase_base_sha: 837755eaa
+  role_base_sha: 85dbf19ae
+  baseline_sha: 837755eaa
+  resulting_HEAD: 3aca2726f515201d804da75b2d159c25cd107efe
+  commits:
+    - da5acef00 docs(measure): record the phase 4 check (track_id: security_upgrade_20261026)
+    - 3aca2726f docs(measure): add the phase 4 task shas (track_id: security_upgrade_20261026)
+  exit_codes:
+    track_suite_initial: 0 (5 files passed; 194 passed, 2 skipped of 196)
+    track_suite_final_HEAD: 0 (5 files passed; 194 passed, 2 skipped of 196)
+    check_types: 10 pass, 1 predates-track (reading-advantage, 14 errors)
+    app_test_suites: 4 pass, 7 predates-track
+    next_builds: 2 pass (storytime, www-reading-advantage), Next.js 16.4.6, no SecurityFatalError
+    base_comparison: 8 failing commands reproduced with identical exit codes and counts at 837755eaa
+    doctor: 1 (predates-track; identical at 837755eaa)
+  fix_commits: 0 (no 16.4.6-caused failure)
+  new_files:
+    - measure/runs/security_upgrade_20261026/green-p4-43-85dbf19ae.log (local evidence, gitignored)
+  merge_push_deploy: none
+  dispositions: none
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase 4 acceptance PASSES at audited HEAD 55d5dba98c46ad33c359842420a3d228c7cffd25 (branch security/next-16-4-6, phase_base_sha 837755eaa). All five 4.x tasks are [x] with SHAs that resolve and are ancestors of HEAD. The latest Review A, Review B and adversarial results pass at 5450fa6c8; the only commit between that HEAD and the audited HEAD, 55d5dba98, touches only test files, so the prerequisite results apply and this acceptance records the exact HEAD it accepted. Live gates at HEAD: the track suite (pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-*.test.ts) exits 0 with 5 files, 207 passed and 2 skipped of 209; pnpm audit --json reports critical 0, high 15, moderate 59, low 7, with zero next advisories and zero follow-redirects advisories, and the high set is a strict subset of the phase-base set (the only base-only high is GHSA-mrwp-f3q8-3g9p, closed by task 4.5; the base also held the two moderate next advisories GHSA-mfr8-8qww-v76h and GHSA-vc7v-qv4w-wrv8 that AC-8 closes); a live storytime build prints Next.js 16.4.6 (Turbopack) and compiles with no SecurityFatalError. Manifest and lockfile checks: 12 manifests pin next 16.4.6 (11 apps plus packages/api), apps/reading-advantage pins @next/env 16.4.6, the lockfile holds only next@16.4.6 and follow-redirects@1.16.2, and the overrides block pins next 16.4.6 and follow-redirects 1.16.2. The predates-track classes hold: the storytime suite failures read measure/runs/storytime_app_rebuild_20261025/media-list-w01.md, which is gitignored and absent at the phase base too, and Review A reproduced the reading-advantage 14-error check-types at the base copy. The plan claims nothing beyond the evidence; every exit-code claim I re-ran matched. No blocking finding.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "[checkpoint: 55d5dba98] — the acceptance role may not edit plan.md. The orchestrator should record this checkpoint line in measure/tracks/security_upgrade_20261026/plan.md at the Phase 4 heading.",
+    "Adversarial NB-1 (prerelease): evaluateNextPatchFloor admits a fixed-side prerelease string (16.4.5-canary.1 compares above the 16.4.5 floor through the localeCompare fallback). No vulnerable version passes: the advisory range ends at 16.4.4, a vulnerable-side canary fails the floor, and the resolved-copies checker fails dirty copies. Orchestrator default (2026-11-19): DECLINE as optional hardening; recorded, not fixed.",
+    "Adversarial NB-2 (scan scope): evaluateNextPatchFloor scans packages: keys and app manifests only, so a next@16.4.4 copy that appears only in the snapshots: section or only as an importer resolution would pass the AC-8 row. A valid pnpm lockfile cannot hold that state, because such a copy must reference a packages: key that the row fails. Recorded, not fixed.",
+    "Review B NB-2..NB-5, PM-confirmed defaults (2026-11-19): NB-2 (baseline-browser-mapping move) record only; NB-3 method limit accepted; NB-4 committed-evidence-only rows confirmed by the PM on 2026-11-18; NB-5 the closeout fixes measure/tracks.md:54, whose security_upgrade_20261026 entry still reads 'Phase 1 next' (stale, not an overstatement: the registry claims no Phase 4 resolution).",
+    "The measure/runs/ evidence logs (red-p4-*, green-p4-*, review-*, adversarial-*) are gitignored and local-only. The PM decision of 2026-11-18 reclassified the five ledger rows to committed evidence only, so the two it.skipIf rows skip on a clean checkout. The closeout must not mistake the 2 skips for missing coverage; with local logs present the adversarial run reported 209 passed, 0 skipped."
+  ],
+  "evidence": [
+    "Prerequisite heads: review-a-p4-5450fa6c8.json and review-b-p4-5450fa6c8.json record status pass at audited_head_sha 5450fa6c83a9f50bd262d91e2432a7b131194690; adversarial-p4-5450fa6c8.json records status pass with 13 committed test cases; review-a-p4-3aca2726f.json and review-b-p4-3aca2726f.json cover the earlier range and also pass.",
+    "Test-only commit between the prerequisite HEAD and the audited HEAD: git diff --name-only 5450fa6c8..55d5dba98 lists only tests/security-upgrade-adversarial.test.ts, tests/security-upgrade-p2-adversarial.test.ts, tests/security-upgrade-verification-ledger.test.ts. This acceptance accepts exactly 55d5dba98 and names 55d5dba98 as the test-only commit it allowed.",
+    "All five 4.x task SHAs resolve and are ancestors of HEAD: 3cda36823 (4.1 Red), b9f071ea0 (4.2 Green), da5acef00 (4.3), 85dbf19ae (4.4), c88189fe9 (4.5); git merge-base --is-ancestor returned true for each. The working tree is clean (git status --short --untracked-files=no is empty).",
+    "Live gate 1, track suite at HEAD through heavy-run.sh: 'pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-*.test.ts' — Test Files 5 passed (5), Tests 207 passed, 2 skipped (209), exit 0. The two skips are the PM-approved local-log rows. This matches the adversarial result's clean-checkout count (207 passed, 2 skipped).",
+    "Live gate 2, audit at HEAD through heavy-run.sh: 'pnpm audit --json' — AUDIT_EXIT=1 (advisories remain, as at the base), totals critical 0, high 15, moderate 59, low 7, info 0. The module_name histogram of the full JSON holds no 'next' and no 'follow-redirects' entry. This matches the plan task 4.5 Gate 3 claim exactly.",
+    "Live gate 2, audit at the phase base through heavy-run.sh at the clean copy /home/daniebo/.cache/security-baseline-837755eaa (HEAD verified 837755eaa): totals critical 0, high 16, moderate 61, low 7. The high set holds the same 14 unique GHSAs as HEAD plus GHSA-mrwp-f3q8-3g9p (follow-redirects 1.16.1); the moderate set additionally holds GHSA-mfr8-8qww-v76h and GHSA-vc7v-qv4w-wrv8 on next 16.4.1. So HEAD adds no critical or high advisory versus the base and closes all three target advisories.",
+    "Live gate 3, build at HEAD through heavy-run.sh: 'pnpm --filter storytime exec next build' — prints '▲ Next.js 16.4.6 (Turbopack)', compiles successfully, generates all static pages, and holds no SecurityFatalError line. The www-reading-advantage build claim is covered by green-p4-43-85dbf19ae.log and by Review A's live rerun of both builds.",
+    "Manifest check: grep '\"next\": \"16.4.6\"' over apps/*/package.json and packages/*/package.json finds 12 files (11 apps plus packages/api); apps/reading-advantage/package.json pins @next/env 16.4.6; no next 16.4.1 pin remains; pnpm-workspace.yaml overrides hold next: 16.4.6 (line 118) and follow-redirects: 1.16.2 (line 130); REQUIRED_OVERRIDE_PINS.next is 16.4.6 in tests/security-upgrade-version-guard.test.ts.",
+    "Lockfile check: pnpm-lock.yaml holds exactly one next@16.4.6: package key and no other next@16.x key; follow-redirects appears only at 1.16.2 (package key and snapshot key).",
+    "Guard floor records agree: tests/security-upgrade-guard-list.ts:227-228 lists follow-redirects advisoryIds GHSA-8r9p-f939-6h3c, GHSA-q3jh-wrc6-jgq8, GHSA-mrwp-f3q8-3g9p with fixed 1.16.2; measure/tracks/security_upgrade_20261026/audit-2026-10-26.md:57 holds the 2026-11-19 correction; test-strategy.md:198 holds the 1.16.2 floor.",
+    "A3 (digit-only count) not present in the phase diff: the ledger count row uses rows.length toBe 73 (tests/security-upgrade-verification-ledger.test.ts:703) and a labeled summarize() count string, not an rg -q '[0-9]+' style check.",
+    "A4 (vacuous pass) guarded in the phase diff: evaluateNextPatchFloor fails on an empty app set and an empty lockfile set (tests/security-upgrade-version-guard.test.ts 'apps=0' and 'lockfile=0' failure labels), and no changed test claims a plan-marker consistency check.",
+    "A5 (false-claim text): every plan exit-code claim re-checked — task 4.4 gate (194 passed, 2 skipped of 196, log red-p4-44-7edee3db2.log), task 4.5 gates (guard 38 of 38; suite 195 passed, 2 skipped of 197 at 5450fa6c8, log green-p4-45-788720ddd.log; audit totals critical 0 high 15 moderate 59 low 7) — all match, and the final-HEAD counts (207 passed, 2 skipped) follow the adversarial test-only commit.",
+    "A6 (registry overstatement) not present: measure/tracks.md holds no Phase 4 resolution claim; its security_upgrade_20261026 entry still reads 'Phase 1 next', which is the known closeout item NB-5 (measure/tracks.md:54) already routed to the orchestrator.",
+    "A7 (over-broad filter) not present: the phase diff changes no banned-term filter; the redeploy-list forbidden-string test is unchanged in this range, and the changed FAILURE_MARKERS rows in tests/security-upgrade-p2-adversarial.test.ts only add failure conditions to pass logs, so they cannot drop real hits.",
+    "Predates-track spot check: apps/storytime/__tests__/phase5-media-list.test.ts:38 reads measure/runs/storytime_app_rebuild_20261025/media-list-w01.md; the file is absent in this worktree and git cat-file -e fails at the phase base 837755eaa; .gitignore:56 ignores measure/runs/, so the storytime suite failures the plan classes as predates-track reproduce at the base. Review A additionally reproduced the reading-advantage 14-error check-types at the base copy through heavy-run.",
+    "Red and Green logs match the plan claims: red-p4-41-837755eaa.log (2 failed, 34 passed), red-p4-44-7edee3db2.log, red-p4-45-3aca2726f.log (1 failed, 37 passed, locked=1.16.1 fixed=1.16.2), green-p4-42-207d2e67e.log (storytime build exit 0, prints Next.js 16.4.6, no SecurityFatalError), green-p4-43-85dbf19ae.log, green-p4-45-788720ddd.log (guard 38 of 38; suite 195 passed, 2 skipped of 197).",
+    "No push, no merge, no deploy: nothing merges before 2026-11-20 and Daniel owns the deploy gate; the branch is security/next-16-4-6 and no merge or push occurred in this phase range (git log 837755eaa..55d5dba98 holds only the 14 track commits)."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> 55d5dba98c46ad33c359842420a3d228c7cffd25",
+    "git status --short --untracked-files=no -> clean",
+    "git rev-parse 837755eaa 3cda36823 b9f071ea0 da5acef00 85dbf19ae c88189fe9 bed0405a8 788720ddd 5450fa6c8 -> all resolve",
+    "git merge-base --is-ancestor <each task sha> HEAD -> all true",
+    "git diff --name-only 5450fa6c8..55d5dba98 -> three test files only",
+    "git diff --stat 837755eaa..55d5dba98 -> 23 files (manifests, lockfile, workspace, tests, track records)",
+    "grep -rn '\"next\": \"16.4.6\"' apps/*/package.json packages/*/package.json -> 12 files",
+    "grep -n 'next@16\\.' pnpm-lock.yaml; grep -n 'follow-redirects@' pnpm-lock.yaml -> only next@16.4.6 and follow-redirects@1.16.2",
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-*.test.ts' -> exit 0; 5 files passed; 207 passed, 2 skipped of 209",
+    "same wrapper with 'pnpm audit --json' at the worktree HEAD -> AUDIT_EXIT=1; critical 0, high 15, moderate 59, low 7; no next, no follow-redirects advisory",
+    "same wrapper with 'pnpm audit --json' at /home/daniebo/.cache/security-baseline-837755eaa -> AUDIT_EXIT=1; critical 0, high 16, moderate 61, low 7; includes next 16.4.1 (GHSA-mfr8-8qww-v76h, GHSA-vc7v-qv4w-wrv8) and follow-redirects 1.16.1 (GHSA-mrwp-f3q8-3g9p)",
+    "same wrapper with 'pnpm --filter storytime exec next build' -> exit 0; prints '▲ Next.js 16.4.6 (Turbopack)'; no SecurityFatalError",
+    "grep of the saved audit outputs: HEAD high GHSAs are a strict subset of the base high GHSAs; the only base-only high is GHSA-mrwp-f3q8-3g9p; critical count 0 on both sides"
+  ],
+  "changed_files": [
+    "apps/accounting/package.json",
+    "apps/accounts/package.json",
+    "apps/advantage-games/package.json",
+    "apps/codecamp-advantage/package.json",
+    "apps/primary-advantage/package.json",
+    "apps/reading-advantage/package.json",
+    "apps/sales-advantage/package.json",
+    "apps/science-advantage/package.json",
+    "apps/storytime/package.json",
+    "apps/workbooks/package.json",
+    "apps/www-reading-advantage/package.json",
+    "packages/api/package.json",
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml",
+    "tests/security-upgrade-adversarial.test.ts",
+    "tests/security-upgrade-p2-adversarial.test.ts",
+    "tests/security-upgrade-verification-ledger.test.ts",
+    "tests/security-upgrade-version-guard.test.ts",
+    "tests/security-upgrade-guard-list.ts",
+    "measure/tracks/security_upgrade_20261026/plan.md",
+    "measure/tracks/security_upgrade_20261026/spec.md",
+    "measure/tracks/security_upgrade_20261026/test-strategy.md",
+    "measure/tracks/security_upgrade_20261026/audit-2026-10-26.md"
+  ],
+  "confidence": "high",
+  "retry_recommendation": "none",
+  "audited_head_sha": "55d5dba98c46ad33c359842420a3d228c7cffd25",
+  "route": "opencode-go/glm-5.3#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "Live at HEAD: the track suite exits 0 (207 passed, 2 skipped), pnpm audit reports no next and no follow-redirects advisory with high 15 (base 16), and the storytime build prints Next.js 16.4.6 with no SecurityFatalError."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "Each task holds a failing-first Red log (red-p4-41: 11 app manifests red; red-p4-45: locked=1.16.1 fixed=1.16.2), the AC-8 row fails on empty app and lockfile sets, and the adversarial run added 13 fail-closed probe cases at 55d5dba98."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --stat 837755eaa..55d5dba98 shows 23 files: the 12 next-pinning manifests, pnpm-workspace.yaml, pnpm-lock.yaml, the five track test files and four track record files, exactly the plan scope; no Dockerfile or Cloud Build file changed."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every claim I checked has a command result: suite run, two audit runs (HEAD and the base copy at /home/daniebo/.cache/security-baseline-837755eaa), one build run, lockfile greps at exact line numbers, and the prerequisite result JSONs."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "opencode-go/glm-5.3#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "review-a-p4-5450fa6c8.json: pass at 5450fa6c8; its claims (lockfile key moves, storytime and www builds printing 16.4.6, reading-advantage 14 base errors) all match what I re-ran or re-read."
+    },
+    {
+      "reviewer_role": "review-b",
+      "reviewer_route": "minimax-cn-coding-plan/MiniMax-M3#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "review-b-p4-5450fa6c8.json: pass; its NB-1 became task 4.5 and my audit runs confirm the fix (follow-redirects gone, high 16 to 15); its lockfile-diff claim matches git show c88189fe9."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "opencode-go/glm-5.3#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "adversarial-p4-5450fa6c8.json: pass; its 13 cases are committed at 55d5dba98 and my suite run at HEAD confirms the clean-checkout count (207 passed, 2 skipped) it reported; its NB-1 prerelease fact is real but fail-closed."
+    }
+  ]
+}

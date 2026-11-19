@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Review A audit of Phase 4 (Next.js 16.4.6 patch) on branch security/next-16-4-6, phase_base_sha 837755eaa, audited HEAD 3aca2726f515201d804da75b2d159c25cd107efe. HEAD matches the audited SHA and the tree is clean. (1) Eleven app manifests and packages/api declare next 16.4.6; overrides.next is 16.4.6; the lockfile diff holds 12 removed keys and 10 added keys, all next-family except the two recorded transitive moves (caniuse-lite 1.0.30001799 to 1.0.30001819, baseline-browser-mapping 2.10.38 to 2.11.33); no other package version changed. (2) The Red rewrites keep test meaning: the 73-row ledger fingerprint, the fail-closed absent-ledger rows, the pin-at-or-above-floor rule with a below-floor failure row, and the image-size ABSENT_BY_DESIGN row with a 2.0.2-still-fails row cannot pass on nothing; the two skipped rows are exactly the PM-approved local-log rows. (3) Spot-checks at the base copy confirm the predates-track evidence: reading-advantage check-types reproduces exactly 14 errors at base, Postgres is down so the science ECONNREFUSED is environmental, and the storytime fixture is absent in both trees while no app source file changed in the range. (4) Live storytime and www-reading-advantage next builds both print Next.js 16.4.6 with no SecurityFatalError. (5) The plan claims nothing beyond the evidence; every exit-code claim I re-ran matched. No blocking finding.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 (evidence gap, minor): The lockfile diff also re-serializes the deprecated field of @smithy/core@3.25.1 (same version, block-scalar reformat). The plan task 4.2 says 'No other package version changed', which is literally true, but the lockfile summary does not name this content-only byte change. No version or resolution changed; the change is inert.",
+    "N2 (wording, minor): Plan task 4.2 says the 22 changed pairs are all next-family members. The 10 added keys are all next-family; the 12 removed keys include caniuse-lite@1.0.30001799. The two transitive moves are named correctly in the next sentence, so the record is recoverable; only the first sentence is imprecise.",
+    "N3 (loose auxiliary check): tests/security-upgrade-verification-ledger.test.ts checks the plan with a substring (plan.includes('not run in CI')). Any occurrence passes. The check sits behind the exact 73-row fingerprint row, so it cannot produce a vacuous pass on its own. A future row could pin the PM decision sentence instead."
+  ],
+  "evidence": [
+    "Provenance: git rev-parse HEAD = 3aca2726f515201d804da75b2d159c25cd107efe; git branch --show-current = security/next-16-4-6; git merge-base 837755eaa HEAD = 837755eaa. The audited range is 837755eaa..3aca2726f.",
+    "Manifests: apps/accounting, accounts, advantage-games, codecamp-advantage, primary-advantage, reading-advantage, sales-advantage, science-advantage, storytime, workbooks, www-reading-advantage and packages/api each hold \"next\": \"16.4.6\" (grep over all workspace package.json). pnpm-workspace.yaml overrides.next is 16.4.6 (line 118). apps/reading-advantage moved @next/env 16.2.9 to 16.4.6.",
+    "Lockfile pairs: the diff at 2-space key indent holds 12 removed keys (next@16.4.1, @next/env@16.4.1, @next/env@16.2.9, eight @next/swc-*@16.4.1, caniuse-lite@1.0.30001799) and 10 added keys (next@16.4.6, @next/env@16.4.6, eight @next/swc-*@16.4.6). The caniuse-lite and baseline-browser-mapping references moved with the next range. The peer-suffixed snapshot keys (next-intl, nuqs, onborda, @sentry/nextjs, @unpic/react, @vercel/analytics, vinext) are key renames only: their versions stayed. No other name@version key changed. One content-only hunk: the deprecated field of @smithy/core@3.25.1 was re-serialized (nonblocking N1).",
+    "Audit suite (live, through heavy-run): pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-*.test.ts. Result: 5 files passed, 194 passed and 2 skipped of 196, exit 0. This matches the plan claims of task 4.3 and task 4.4 gate.",
+    "The two skipped rows are it.skipIf rows at tests/security-upgrade-p2-adversarial.test.ts:1006 and :1137, gated on LOCAL_MASTER_LOGS and LOCAL_PASS_LOGS. measure/runs/security_upgrade_20261026/p2/ is absent in this worktree, so both skip. These are the two local-log rows of the PM decision of 2026-11-18. No other skipIf exists in the five test files.",
+    "A4 fail-closed: tests/security-upgrade-verification-ledger.test.ts:673 throws reason=ledger_file_absent when the ledger is missing; the fingerprint row (lines 686-703) throws on an absent ledger and pins rows.length to 73 with the exact package|check|class|log fingerprint, so a lost row, a changed class, or a changed log path fails. The p2-adversarial rows assert exactly 13 predates rows and exactly 58 pass rows, so a missing ledger yields zero rows and fails.",
+    "Red-first proof: git show 837755eaa:apps/<each>/package.json holds \"next\": \"16.4.1\" for all eleven apps, so the task 4.1 row 'every app and the lockfile resolve next at 16.4.5 or later' failed before the bump and passes after it. The live row also fails on an empty app set (apps=0) and an empty lockfile set (lockfile=0) by code in evaluateNextPatchFloor.",
+    "image-size ABSENT_BY_DESIGN: git show 837755eaa:pnpm-lock.yaml holds no image-size@ packages key (grep count 0); only the override reference 'image-size: 2.0.3' exists. The guard row keeps both advisory ids and the 2.0.3 floor with requirePresent: false, and the new row proves image-size@2.0.2 still fails the floor (tests/security-upgrade-version-guard.test.ts, 'keeps the image-size 2.0.3 floor for a copy that returns').",
+    "Pin-at-or-above-floor rewrite: checkGuardList now fails only a pin below a floor row, and the new row 'fails a required pin that sits below its floor' feeds next=16.4.0 and expects failure (tests/security-upgrade-adversarial.test.ts). The absent-row rule fails any requirePresent:false row whose package is not in ABSENT_BY_DESIGN, proven by the synthetic sharp row.",
+    "Base spot-check 1 (live, through heavy-run at /home/daniebo/.cache/security-baseline-837755eaa): NODE_OPTIONS=--max-old-space-size=6144 pnpm --filter reading-advantage run check-types exited 1 with exactly 14 TS errors: 9 static-asset TS2307 declarations (book.tsx 2, toaster.tsx 7) and 5 source/test type errors (page.test.tsx 2, routes.test.ts 2, StudentCartridgeHost.tsx 1). This matches the plan claim '14 TS errors: 9 static-asset declarations and 5 source/test type errors'. Class predates-track confirmed.",
+    "Base spot-check 2 (live): no process listens on 127.0.0.1:5432, so the science-advantage ECONNREFUSED failure is environmental and predates the track.",
+    "Base spot-check 3 (live): measure/runs/storytime_app_rebuild_20261025/media-list-w01.md is absent in both this worktree and the base copy, .gitignore ignores measure/runs/, and apps/storytime/__tests__/phase5-media-list.test.ts:38 and phase5-adversarial.test.ts:51 read that path. No file under apps/ changed in the range except package.json (git diff --name-only over apps/ lists 11 manifests only), so the failing test bytes are identical at base.",
+    "Other predates-track claims (static): accounting's failing test apps/accounting/app/_components/intake-documents-list.test.tsx holds the 'Plan task 7.2' contract; apps/advantage-games/jest.config.ts maps @reading-advantage/db(/.*)?$ to packages/db/dist and packages/db/dist/storytime/ is absent; codecamp's phase-3 and phase-10 prod-smoke tests hold the session-expiry contract; apps/primary-advantage/app/api/v1/help/events/route.ts:3 imports @reading-advantage/db directly. All these app sources are byte-identical at base; no failure text names a next-family version.",
+    "Doctor claim: packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json is byte-identical at base and HEAD (sha256 match), and the file is outside the phase diff, so the step-4 pin mismatch predates the phase.",
+    "Builds (live, through heavy-run): pnpm --filter storytime exec next build prints '▲ Next.js 16.4.6 (Turbopack)' with no SecurityFatalError; pnpm --filter www-reading-advantage exec next build prints the same banner with no SecurityFatalError. Both match the plan claim of task 4.3.",
+    "Scope: the range touches only 11 app package.json files, packages/api/package.json, pnpm-workspace.yaml, pnpm-lock.yaml, five tests/security-upgrade-* files, plan.md and spec.md. No Dockerfile, no Cloud Build file, no CI file, no app source file, no push, no merge, no deploy in the range.",
+    "Spec: AC-8 was added (spec.md) and requires next at 16.4.5 or later with empty-set failure; the installed next is 16.4.6 (node_modules/next/package.json) and both moderate advisories name ranges that end at 16.4.4."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git branch --show-current; git merge-base 837755eaa HEAD",
+    "git diff --stat 837755eaa..3aca2726f515201d804da75b2d159c25cd107efe",
+    "git diff 837755eaa..3aca2726f515201d804da75b2d159c25cd107efe -- pnpm-lock.yaml (key-level pair extraction with sed/sort/uniq)",
+    "HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-*.test.ts'",
+    "HEAVY_PRIORITY=p2 ... heavy-run.sh -c 'cd /home/daniebo/.cache/security-baseline-837755eaa && NODE_OPTIONS=--max-old-space-size=6144 timeout 1700 pnpm --filter reading-advantage run check-types' (exit 1, 14 errors)",
+    "HEAVY_PRIORITY=p2 ... heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && timeout 2300 pnpm --filter storytime exec next build' (banner Next.js 16.4.6, no SecurityFatalError)",
+    "HEAVY_PRIORITY=p2 ... heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && timeout 2300 pnpm --filter www-reading-advantage exec next build' (banner Next.js 16.4.6, no SecurityFatalError)",
+    "git show 837755eaa:apps/<app>/package.json (next pin 16.4.1 for all eleven apps); git show 837755eaa:pnpm-lock.yaml | grep -c image-size@ (0)",
+    "sha256sum of packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json at base and HEAD (identical)"
+  ],
+  "changed_files": [
+    "apps/accounting/package.json",
+    "apps/accounts/package.json",
+    "apps/advantage-games/package.json",
+    "apps/codecamp-advantage/package.json",
+    "apps/primary-advantage/package.json",
+    "apps/reading-advantage/package.json",
+    "apps/sales-advantage/package.json",
+    "apps/science-advantage/package.json",
+    "apps/storytime/package.json",
+    "apps/workbooks/package.json",
+    "apps/www-reading-advantage/package.json",
+    "packages/api/package.json",
+    "pnpm-workspace.yaml",
+    "pnpm-lock.yaml",
+    "tests/security-upgrade-adversarial.test.ts",
+    "tests/security-upgrade-guard-list.ts",
+    "tests/security-upgrade-p2-adversarial.test.ts",
+    "tests/security-upgrade-verification-ledger.test.ts",
+    "tests/security-upgrade-version-guard.test.ts",
+    "measure/tracks/security_upgrade_20261026/plan.md",
+    "measure/tracks/security_upgrade_20261026/spec.md"
+  ],
+  "confidence": "high",
+  "retry_recommendation": "none",
+  "audited_head_sha": "3aca2726f515201d804da75b2d159c25cd107efe",
+  "route": "opencode-go/glm-5.3#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "Eleven apps and packages/api resolve next 16.4.6 in manifests and the lockfile; both live builds print Next.js 16.4.6; the base spot-check of reading-advantage check-types reproduces exactly the 14 claimed errors."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "The 4.1 floor row failed first on 11 manifests at base 837755eaa (all declared 16.4.1, verified by git show); the ledger fingerprint pins all 73 rows; refutation rows prove a below-floor pin, an undocumented absent row, and image-size@2.0.2 each fail; the two skips are the PM-approved local-log rows."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --name-only over the range lists only manifests, pnpm-workspace.yaml, pnpm-lock.yaml, the five security-upgrade test files, plan.md and spec.md; no app source, Dockerfile, Cloud Build or CI file changed."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Every re-run claim matched: the suite (194 passed, 2 skipped, exit 0), the two build banners, and the base 14-error check-types; the raw heavy logs of the Green run are local-only under gitignored measure/runs, so a few 4.3 counts rest on the committed plan and green log rather than committed raw output."
+    }
+  ]
+}

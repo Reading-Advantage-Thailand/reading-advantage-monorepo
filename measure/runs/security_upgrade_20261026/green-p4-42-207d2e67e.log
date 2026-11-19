@@ -1,0 +1,193 @@
+# Green log — track security_upgrade_20261026, Phase 4 task 4.2
+
+- Date: 2026-11-18
+- Role: Measure Green
+- Model: minimax-cn-coding-plan/MiniMax-M3.1-Flash (route: ra-quota pick green)
+- Red model of this phase: opencode-go/deepseek-v4.1-flash (independent of Green)
+- Session: Green · P4 T4.2 · security_upgrade
+- Track: security_upgrade_20261026
+- Phase: 4 (Next.js 16.4.6 patch, after 2026-11-20), task 4.2
+- Worktree: /home/daniebo/Desktop/rama-worktrees/security-next-1646
+- Branch: security/next-16-4-6
+- phase_base_sha: 837755eaa552bcc5a5c8f64c5f09bf16a6272eb7
+- role_base_sha: 837755eaa552bcc5a5c8f64c5f09bf16a6272eb7
+- Red commit: 3cda368230fd9281a5ffb9a18ec5c67f9512d6d7
+- Green start HEAD: 207d2e67e64648f6b7de4032a2289a8eb958b67c
+- Implementation commit: b9f071ea0279e48fe55d4c131e67149a668333cf
+- Plan evidence commit: 7edee3db2
+- Final HEAD: 7edee3db2
+- Result: the AC-8 floor row passes. Two rows of the version-guard file still fail. Both belong to task 4.4.
+
+## The Red command before the change
+
+`bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-version-guard.test.ts'`
+
+- exit_code=1, 2 failed and 34 passed of 36.
+- The AC-8 row failed on 11 app manifests and one lockfile entry. The second failure was the `image-size` 2. floor.
+
+## The change
+
+`overrides.next` moves from 16.4.1 to 16.4.6 in `pnpm-workspace.yaml`. Spec FR-2 puts the
+resolution version in that block. Twelve manifests declare `next` 16.4.6: the eleven app
+manifests of the Red run and `packages/api`. `apps/reading-advantage` pins `@next/env` 16.2.9;
+that pin moves to 16.4.6.
+
+No eslint-config-next change. Four apps declare it through the catalog range `^16.0.0`. The
+range already allows 16.4.6, so the catalog stays. `apps/www-reading-advantage` declares
+`@next/mdx` with the range `^16.2.9`. It stays too.
+
+### Changed package.json files
+
+1. apps/accounting/package.json
+2. apps/accounts/package.json
+3. apps/advantage-games/package.json
+4. apps/codecamp-advantage/package.json
+5. apps/primary-advantage/package.json
+6. apps/reading-advantage/package.json (also `@next/env` 16.2.9 to 16.4.6)
+7. apps/sales-advantage/package.json
+8. apps/science-advantage/package.json
+9. apps/storytime/package.json
+10. apps/workbooks/package.json
+11. apps/www-reading-advantage/package.json
+12. packages/api/package.json
+
+Other changed files: `pnpm-workspace.yaml`, `pnpm-lock.yaml`, and `plan.md` (plan evidence).
+
+## Install
+
+Command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm install --no-frozen-lockfile'`
+
+- The first run used the frozen lockfile and was refused: `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`.
+- The second run exited 0 in 16m 48.6s. No retry was needed.
+- Registry errors appeared as warnings and recovered on their own.
+
+### Lockfile change count
+
+- changed name and version pairs: 22 (12 pairs left, 10 pairs came in)
+- diff stat: 116 insertions, 124 deletions
+- Every pair is a next family member: `next`, `@next/env`, eight `@next/swc-*` binaries.
+- Two existing pairs moved with the next dependency ranges: `caniuse-lite` 1.0.30001799 to
+  1.0.30001819 and `baseline-browser-mapping` 2.10.38 to 2.11.33.
+- No other package version changed.
+
+## Gates, one at a time, each through heavy-run.sh
+
+### Gate 1 — the version guard
+
+Command: `pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-version-guard.test.ts`
+
+- exit_code=1. 34 passed, 2 failed of 36.
+- PASS: `next 16.4.5 patch floor > every app and the lockfile resolve next at 16.4.5 or later`.
+- FAIL row 1: `live version guard > fails while any locked version sits below the fixed version
+  of a critical or high advisory`. Message: `advisory=GHSA-5p2g-fcmc-qvqq GHSA-w3rx-r6r6-pgpr
+  missing_line=image-size 2.`. Red at the base commit. Task 4.4 owns it.
+- FAIL row 2: `workspace contract > keeps the ten override pins exact and allows only a same-line
+  floor pin`. Message: `key=next expected=16.4.1 actual=16.4.6`. The committed Red file holds the
+  constant `REQUIRED_OVERRIDE_PINS.next = "16.4.1"`. That constant and the AC-8 floor cannot both
+  hold. Green did not edit the Red file. Task 4.4 owns the constant.
+
+### Gate 2a — the storytime build
+
+Command: `pnpm --filter storytime exec next build`
+
+- exit_code=0. The build prints `Next.js 16.4.6 (Turbopack)`. No line holds `SecurityFatalError`.
+- The first run exited 1 with `Module not found: Can't resolve '@reading-advantage/storage'`. The
+  fresh worktree held no package build output. `pnpm turbo run build --concurrency=1
+  --filter="storytime^..."` exited 0 with 6 tasks. The second build run exited 0.
+
+### Gate 2b — the storytime test suite
+
+Command: `pnpm --filter storytime exec vitest run --reporter=dot --silent=true --maxWorkers=1`
+
+- exit_code=1. 2 files failed and 160 passed of 162. 10 tests failed, 1956 passed, 4 expected
+  fail of 1970.
+- All ten failures name one absent file: `measure/runs/storytime_app_rebuild_20261025/media-list-w01.md`.
+  That file is absent at the base commit 837755eaa too.
+- Failing files: `apps/storytime/__tests__/phase5-media-list.test.ts` and
+  `apps/storytime/__tests__/phase5-adversarial.test.ts`. Class: predates-track. Owner: the track
+  `storytime_app_rebuild_20261025`.
+
+### Gate 2c — the storytime type check
+
+Command: `pnpm --filter storytime exec tsc --noEmit` — exit_code=0.
+
+### Gate 3 — the primary type check
+
+Command: `pnpm --filter primary-advantage exec tsc --noEmit` — exit_code=0.
+
+- No local Primary Next build ran. The machine rule forbids it.
+- The first run exited 1 with TS2307 for `@reading-advantage/domain/*` and `@reading-advantage/ai/*`.
+  The fresh worktree held no package build output. `pnpm turbo run build --concurrency=1
+  --filter="primary-advantage^..."` exited 0 with 24 tasks. The second run exited 0.
+
+## Doctor
+
+`bash measure/doctor.sh` exits 1 at step 4 (architecture). The failure predates this task.
+
+- The same command fails with the same message on a clean tree at the base commit 837755eaa.
+- The committed pin `analyzerInputSnapshotSha256` is `50a6a5299d0259130f7294a11b02f57792a4bc6e31cf1b44774428692972e4dd`.
+- The base tree hash is `eedf59b684181eb6b715db900adb55981ddb7723d3a5d167da7b4b48f53bf0a2`.
+- The tree hash after this commit is `f844c65b615825a81706949716920ef43aaf0ef1377ee9b755b3124ba52cea02`.
+- A second stale field appears with `--skip-input-snapshot-pin`: `Analyzer report hashes do not
+  match current byte-identical reports`.
+- The owner refreshes the manifest with `pnpm architecture:pin:refresh`. Green did not change it.
+
+## Tasks
+
+- 4.2 flipped to `[x]`. Evidence commit `7edee3db2`, implementation commit `b9f071ea0`.
+- 4.3 stays `[ ]`. It belongs to the phase check.
+- 4.4 stays `[ ]`. It owns the two red rows of the version-guard file.
+
+No push, no merge, and no deploy happened.
+
+MEASURE_AGENT_RESULT
+{
+  "role": "measure-green",
+  "result": "PASS",
+  "track": "security_upgrade_20261026",
+  "phase": "4.2",
+  "baseline_sha": "837755eaa552bcc5a5c8f64c5f09bf16a6272eb7",
+  "role_base_sha": "837755eaa552bcc5a5c8f64c5f09bf16a6272eb7",
+  "red_sha": "3cda368230fd9281a5ffb9a18ec5c67f9512d6d7",
+  "implementation_sha": "b9f071ea0279e48fe55d4c131e67149a668333cf",
+  "plan_evidence_sha": "7edee3db2",
+  "head": "7edee3db2",
+  "branch": "security/next-16-4-6",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/security-next-1646",
+  "tasks_marked_x": ["4.2"],
+  "tasks_marked_b": [],
+  "changed_package_json": [
+    "apps/accounting/package.json",
+    "apps/accounts/package.json",
+    "apps/advantage-games/package.json",
+    "apps/codecamp-advantage/package.json",
+    "apps/primary-advantage/package.json",
+    "apps/reading-advantage/package.json",
+    "apps/sales-advantage/package.json",
+    "apps/science-advantage/package.json",
+    "apps/storytime/package.json",
+    "apps/workbooks/package.json",
+    "apps/www-reading-advantage/package.json",
+    "packages/api/package.json"
+  ],
+  "other_changed_files": ["pnpm-workspace.yaml", "pnpm-lock.yaml", "measure/tracks/security_upgrade_20261026/plan.md"],
+  "lockfile_changed_name_version_pairs": 22,
+  "gates": [
+    {"name": "version-guard", "command": "pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-version-guard.test.ts", "exit_code": 1, "passed": 34, "failed": 2, "ac8_row": "pass"},
+    {"name": "storytime-build", "command": "pnpm --filter storytime exec next build", "exit_code": 0, "security_fatal_error": false},
+    {"name": "storytime-test", "command": "pnpm --filter storytime exec vitest run --reporter=dot --silent=true --maxWorkers=1", "exit_code": 1, "passed": 1956, "failed": 10, "class": "predates-track"},
+    {"name": "storytime-tsc", "command": "pnpm --filter storytime exec tsc --noEmit", "exit_code": 0},
+    {"name": "primary-tsc", "command": "pnpm --filter primary-advantage exec tsc --noEmit", "exit_code": 0},
+    {"name": "doctor", "command": "bash measure/doctor.sh", "exit_code": 1, "class": "predates-track"}
+  ],
+  "remaining_failures": [
+    "live version guard: missing_line=image-size 2. (red at the base commit; task 4.4)",
+    "keeps the ten override pins exact: key=next expected=16.4.1 actual=16.4.6 (stale Red constant; task 4.4)",
+    "storytime suite: 10 failures from the absent measure/runs/storytime_app_rebuild_20261025/media-list-w01.md (absent at the base commit)",
+    "doctor step 4: architecture manifest stale at the base commit; the owner runs pnpm architecture:pin:refresh"
+  ],
+  "new_files": [],
+  "push": false,
+  "merge": false,
+  "deploy": false
+}

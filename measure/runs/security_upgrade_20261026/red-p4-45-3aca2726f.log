@@ -1,0 +1,97 @@
+# Red run — security_upgrade_20261026, task 4.5 (Phase 4)
+
+Status: final.
+
+Date: 2026-11-19
+Worktree: /home/daniebo/Desktop/rama-worktrees/security-next-1646
+Branch: security/next-16-4-6
+Phase: Phase 4: Next.js 16.4.6 patch (after 2026-11-20)
+Task: 4.5 (Review B Phase 4, NB-1)
+phase_base_sha: 837755eaa552bcc5a5c8f64c5f09bf16a6272eb7 (supplied; resolves)
+role_base_sha: 3aca2726f515201d804da75b2d159c25cd107efe (supplied; resolves; worktree clean at start)
+
+## Scope
+
+Review B Phase 4 (NB-1) reports that `follow-redirects@1.16.1` keeps one
+unclassified high advisory open at the phase base and at HEAD. The guard floor
+1.16.1 sat one patch below the published fix 1.16.2. Task 2.14 of the plan says
+"No unclassified high finding remains", and that sentence is false at HEAD.
+
+This round raises the guard floor to 1.16.2 and adds the advisory id
+GHSA-mrwp-f3q8-3g9p (npm audit id 1244003; vulnerable `>=1.16.0 <=1.16.1`;
+patched `>=1.16.2`; read from `pnpm audit --json`). The advisory text is not
+reproduced.
+
+## Files
+
+- `tests/security-upgrade-guard-list.ts` — the follow-redirects floor row moves
+  from 1.16.1 to 1.16.2, and the advisory list gains GHSA-mrwp-f3q8-3g9p.
+- `tests/security-upgrade-version-guard.test.ts` — a new row proves that
+  1.16.1 fails the floor and 1.16.2 passes it.
+- `measure/tracks/security_upgrade_20261026/test-strategy.md` — the floor table
+  row moves to 1.16.2 and names the new advisory id.
+
+## Command
+
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-version-guard.test.ts'
+
+## Result
+
+exit_code=1 — 1 failed, 37 passed of 38 (1 test file failed).
+
+The one failure is the live version guard. Its message reads:
+
+    version-guard failures (1):
+    advisory=GHSA-8r9p-f939-6h3c GHSA-q3jh-wrc6-jgq8 GHSA-mrwp-f3q8-3g9p package=follow-redirects locked=1.16.1 fixed=1.16.2
+
+The new fixture row `keeps the follow-redirects 1.16.2 floor: 1.16.1 fails and
+1.16.2 passes` passes. The live guard fails for the expected reason: the
+lockfile resolves `follow-redirects@1.16.1`, one patch below the 1.16.2 floor.
+
+This is not a pass. Green must resolve the lockfile to 1.16.2 or later.
+
+## Post-commit confirmation
+
+The same command ran again at `resulting_HEAD` 788720ddd. exit_code=1.
+Result: 1 failed, 37 passed of 38. The failing row and its message are the same:
+
+    package=follow-redirects locked=1.16.1 fixed=1.16.2
+
+## Noise check
+
+No import error, no config error, and no unrelated failing row. The 37 other
+rows pass.
+
+## Commit checks
+
+- role_base_sha 3aca2726f is an ancestor of HEAD. The branch holds three commits
+  after the role base, all named with the track id.
+- Commit headers: 88, 75 and 77 characters. All stay below 100 characters.
+- Every commit names explicit pathspecs. No `apps/*/next-env.d.ts` file is
+  staged. The working tree is clean after the commits.
+- No push, no merge, no deploy.
+
+MEASURE_AGENT_RESULT
+role: measure-red
+track: security_upgrade_20261026
+phase: Phase 4: Next.js 16.4.6 patch (after 2026-11-20)
+task: 4.5
+status: ok
+baseline_sha: 837755eaa552bcc5a5c8f64c5f09bf16a6272eb7
+phase_base_sha: 837755eaa552bcc5a5c8f64c5f09bf16a6272eb7
+role_base_sha: 3aca2726f515201d804da75b2d159c25cd107efe
+resulting_HEAD: 788720ddd22927420373074e0e1912e13dfaa595
+commits:
+  - bed0405a8 test(security): pin the follow-redirects fix floor (track_id: security_upgrade_20261026)
+  - bdf1fdb05 docs(security): record the 4.5 Red run (track_id: security_upgrade_20261026)
+  - 788720ddd docs(security): correct the 2.14 audit claim (track_id: security_upgrade_20261026)
+files:
+  - tests/security-upgrade-guard-list.ts
+  - tests/security-upgrade-version-guard.test.ts
+  - measure/tracks/security_upgrade_20261026/test-strategy.md
+  - measure/tracks/security_upgrade_20261026/plan.md
+red_command: HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-version-guard.test.ts'
+exit_code: 1
+counts: 1 failed, 37 passed of 38; 1 test file failed
+remaining_failures: live version guard (follow-redirects locked=1.16.1 fixed=1.16.2, advisory GHSA-mrwp-f3q8-3g9p)
+END_MEASURE_AGENT_RESULT
