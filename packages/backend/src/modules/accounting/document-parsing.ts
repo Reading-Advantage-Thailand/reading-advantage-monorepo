@@ -2261,10 +2261,21 @@ function readPaymentVoucherPdfLines(
 }
 
 /**
+ * The own date field of a payment voucher payslip print, anchored to its line
+ * (A642). The field may follow `Date` or `วันที่`.
+ */
+const VOUCHER_DATE_FIELD =
+  /^[ \t]*(?:Date|วันที่)[ \t]*[:：]?[ \t]*(\d{1,2}\/\d{1,2}\/\d{4})/imu;
+
+/** The own date label of a payment voucher payslip print, with no value read (A642). */
+const VOUCHER_DATE_LABEL = /^[ \t]*(?:Date\b|วันที่(?=[ \t:：]|$))/imu;
+
+/**
  * Parses the text layer of a payment voucher payslip print. Each page that
  * carries the form title becomes one draft (PM decision 2026-11-15); `draft`
- * is the first page and `drafts` holds every page. A document with no text
- * layer needs the model read path (D-13).
+ * is the first page and `drafts` holds every page. The date comes only from the
+ * own date field, and an unreadable own field goes to the review list (A642). A
+ * document with no text layer needs the model read path (D-13).
  * @param input The text layer, or null when the PDF has none.
  * @returns The parsed drafts, the review result, or `needs-model`.
  */
@@ -2281,6 +2292,7 @@ export function parsePaymentVoucherPdf(input: {
   });
   if (starts.length === 0) return reviewDocument(REVIEW_GUIDE_WORKSHEET);
   const drafts: PaymentVoucherDraft[] = [];
+  let unreadableDate = false;
   starts.forEach((start, index) => {
     const block = lines.slice(start, starts[index + 1] ?? lines.length).join("\n");
     const voucherNo =
@@ -2291,12 +2303,13 @@ export function parsePaymentVoucherPdf(input: {
       /(?:Payee|จ่ายให้แก่)[ \t]*[:：]?[ \t]*([^\n]+)/iu.exec(block)?.[1]?.trim() ??
       null;
     if (voucherNo === null || payee === null) return;
-    const date =
-      readBuddhistNumericDate(
-        /(?:Date|วันที่)[ \t]*[:：]?[ \t]*(\d{1,2}\/\d{1,2}\/\d{4})/iu.exec(block)?.[1] ??
-          /\b(\d{1,2}\/\d{1,2}\/\d{4})\b/u.exec(block)?.[1] ??
-          null,
-      );
+    const date = readBuddhistNumericDate(
+      VOUCHER_DATE_FIELD.exec(block)?.[1] ?? null,
+    );
+    if (date === null && VOUCHER_DATE_LABEL.test(block)) {
+      unreadableDate = true;
+      return;
+    }
     const deductionLine =
       /(?:หัก ณ ที่จ่าย|Social)[ \t]*[^\n]*/iu.exec(block)?.[0] ?? null;
     const deductionRateText =
@@ -2333,6 +2346,7 @@ export function parsePaymentVoucherPdf(input: {
       extraction: "local-text",
     });
   });
+  if (unreadableDate) return reviewDocument(REVIEW_UNREADABLE);
   if (drafts.length === 0) return reviewDocument(REVIEW_MISSING_STORED_RESULT);
   const [first] = drafts;
   if (first === undefined) return reviewDocument(REVIEW_UNREADABLE);
@@ -2433,8 +2447,9 @@ function readStandaloneMoney(text: string): string | null {
  * Parses the text layer of a Google Cloud or Workspace payment receipt. Both
  * report layouts are read: the Cloud layout puts the date after
  * `Amount received on` and the amount on its own line, and the Workspace
- * layout puts the date after `Payment date` with no colon (A607). A document
- * with no text layer needs the model read path.
+ * layout puts the date after `Payment date` with no colon (A607). The date
+ * comes only from those two own fields, and an unreadable own field goes to the
+ * review list (A642). A document with no text layer needs the model read path.
  * @param input The text layer, or null when the PDF has none.
  * @returns The parsed draft or `needs-model`.
  */
@@ -2443,13 +2458,17 @@ export function parseCloudPaymentReceipt(input: {
 }): DocumentParseResult<CloudPaymentReceiptDraft> {
   if (input.text === null) return { status: "needs-model" };
   const text = normalizeDigits(input.text);
+  const paymentDateText =
+    readLabeledText(text, "Amount received on") ??
+    readLabeledText(text, "Payment date");
+  const paymentDate =
+    readEnglishDate(paymentDateText) ?? readIsoDate(paymentDateText);
+  if (paymentDateText !== null && paymentDate === null) {
+    return reviewDocument(REVIEW_UNREADABLE);
+  }
   const draft: CloudPaymentReceiptDraft = {
     documentTitle: /Payment[ \t]+Receipt/iu.exec(text)?.[0] ?? null,
-    paymentDate:
-      readEnglishDate(
-        readLabeledText(text, "Amount received on") ??
-          readLabeledText(text, "Payment date"),
-      ) ?? readIsoDate(text),
+    paymentDate,
     amount:
       readLabeledMoney(text, "Amount(?: received)?") ??
       readStandaloneMoney(text),
@@ -2611,8 +2630,9 @@ function workbookCellsToText(
 /**
  * Parses a foreign vendor invoice from its workbook cells or its text. The
  * workbook form is a free layout with merged text blocks, so its cells are
- * flattened in sheet order (A616). A document with no text layer needs the
- * model read path.
+ * flattened in sheet order (A616). The invoice date comes only from the own
+ * DATE field, and a document with no own date goes to the review list (A642).
+ * A document with no text layer needs the model read path.
  * @param input The workbook cells or the text layer, or null when both are absent.
  * @returns The parsed draft or `needs-model`.
  */
@@ -2640,10 +2660,16 @@ export function parseForeignVendorInvoice(input: {
     (match) => match[1] ?? "",
   );
   const descriptionLine = lines.findIndex((line) => /^DESCRIPTION\b/iu.test(line));
+  const dateField = new RegExp(
+    `${excludedDateFieldBoundarySource()}` +
+      `(?<![A-Za-z0-9_])DATE(?![A-Za-z0-9_])[ \\t]*[:：]?[ \\t]*` +
+      `(\\d{4}\\.\\d{2}\\.\\d{2})`,
+    "iu",
+  ).exec(text);
+  const invoiceDate = readForeignDate(dateField?.[1] ?? null);
+  if (invoiceDate === null) return reviewDocument(REVIEW_UNREADABLE);
   const draft: ForeignVendorInvoiceDraft = {
-    invoiceDate:
-      readForeignDate(/DATE[ \t]*(\d{4}\.\d{2}\.\d{2})/iu.exec(text)?.[1] ?? null) ??
-      readForeignDate(readLabeledText(text, "Date")),
+    invoiceDate,
     vendor,
     billTo: readLabeledText(text, "TO|Bill to"),
     description:
@@ -2699,37 +2725,53 @@ const BARE_THAI_DATE_LINE =
 const BARE_ENGLISH_DATE_LINE =
   /^([A-Za-z]{3,9}[ \t]+\d{1,2},?[ \t]+\d{4}|\d{1,2}[ \t]+[A-Za-z]{3,9}[ \t]+\d{4})$/u;
 
-/** The Thai code point range, which ends a Thai label as a letter ends one (B620). */
+/** The Thai code point range, which ends a Thai label as a letter ends one (A641). */
 const THAI_LETTER_RANGE = "\\u0E00-\\u0E7F";
 
+/** Characters that continue a longer English or Thai word after a label. */
+const LABEL_TAIL = `A-Za-z0-9_${THAI_LETTER_RANGE}`;
+
 /**
- * The date labels that may carry the document date of a school invoice (B620).
- * A longer label comes first, so `วันที่ออก` wins over `วันที่`. A `dated` label
- * is the form of the local-text PDF fixture.
+ * The date labels that may carry the document date of a school invoice. This
+ * is the exact PM set (A640); a longer Thai label comes first, so `วันที่ออก`
+ * wins over `วันที่`.
  */
 const DOCUMENT_DATE_LABEL_SOURCE =
-  "invoice[ \\t]+date|issue[ \\t]+date|dated|" +
+  "invoice[ \\t]+date|issue[ \\t]+date|" +
   "วันที่ออกใบแจ้งหนี้|วันที่ออกใบกำกับภาษี|วันที่ออก|ลงวันที่|วันที่|date";
 
 /**
- * Builds the whole-label boundary of the document date labels. A payment, due,
- * or delivery word before `date` blocks the label, and a Thai label stops at
- * the end of its own word, so `วันที่` never matches inside `วันที่ส่งของ`
- * (B620).
- * @returns The label boundary regex source.
+ * Builds the boundary that blocks a payment, due, or delivery field before a
+ * date label. The field may use whitespace, a colon, or a hyphen, so
+ * `Payment-date:` and `Delivery: Date:` supply nothing (A641).
+ * @returns The excluded-field boundary regex source.
+ */
+function excludedDateFieldBoundarySource(): string {
+  return (
+    `(?<!(?:payment|due|delivery)[ \\t]+)` +
+    `(?<!(?:payment|due|delivery)[ \\t]*[:：-][ \\t]*)`
+  );
+}
+
+/**
+ * Builds the document date label with its whole-word boundaries. A payment,
+ * due, or delivery field before the label blocks it (A641), and a Thai label
+ * stops at the end of its own word, so `วันที่` never matches inside
+ * `วันที่ส่งของ`.
+ * @returns The label regex source.
  */
 function documentDateLabelSource(): string {
   return (
-    `(?<!(?:payment|due|delivery)[ \\t]+)` +
-    `(?<![A-Za-z0-9_${THAI_LETTER_RANGE}])` +
+    `${excludedDateFieldBoundarySource()}` +
+    `(?<![${LABEL_TAIL}-])` +
     `(?:${DOCUMENT_DATE_LABEL_SOURCE})` +
-    `(?![A-Za-z0-9_${THAI_LETTER_RANGE}])`
+    `(?![${LABEL_TAIL}])`
   );
 }
 
 /**
  * Reads the text after an accepted document date label of a document text. A
- * date next to a payment, due, or delivery label supplies nothing (B620).
+ * date next to a payment, due, or delivery field supplies nothing (A641).
  * @param text Normalized document text.
  * @returns The label value, or null when no accepted label is present.
  */
@@ -2746,7 +2788,8 @@ function readDocumentDateText(text: string): string | null {
 
 /**
  * Reads the document date after an accepted label in the cells of one
- * worksheet. A payment, due, or delivery label supplies nothing (B620).
+ * worksheet. A date next to a payment, due, or delivery field supplies
+ * nothing (A641).
  * @param cells The stored cell values of the worksheet.
  * @returns The label value, or null when no accepted label is present.
  */
@@ -2767,8 +2810,8 @@ function readDocumentDateCellText(
 }
 
 /**
- * Reads a date from a line that holds nothing else. The school print may
- * show a bare date without a label (A621).
+ * Reads a date from a line that holds nothing else. The sheet print may show a
+ * bare date without a label beside the title or the number (B620).
  * @param line One line of text or one cell value.
  * @returns The CE ISO date, or null when the line is not a bare date.
  */
@@ -2781,19 +2824,6 @@ function readBareDateLine(line: string): string | null {
   }
   const english = BARE_ENGLISH_DATE_LINE.exec(trimmed);
   if (english !== null) return readEnglishDate(english[1] ?? null);
-  return null;
-}
-
-/**
- * Reads the first bare date line of a document text (A621).
- * @param text Normalized document text.
- * @returns The CE ISO date, or null when no line holds a bare date.
- */
-function readBareDateText(text: string): string | null {
-  for (const line of text.split(/\r?\n/u)) {
-    const date = readBareDateLine(line);
-    if (date !== null) return date;
-  }
   return null;
 }
 
@@ -3150,8 +3180,7 @@ export function parseSchoolInvoicePdf(input: {
   const dueText = readLabeledText(text, "Due|Due date");
   const date =
     readEnglishDate(dateText) ??
-    readThaiShortDate(dateText) ??
-    readBareDateText(text);
+    readThaiShortDate(dateText);
   if (date === null) return reviewDocument(REVIEW_UNREADABLE);
   const draft: SchoolInvoiceDraft = {
     documentTitle: /\b(?:Invoice|Receipt)\b/iu.exec(text)?.[0] ?? null,
