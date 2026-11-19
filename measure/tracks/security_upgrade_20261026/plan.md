@@ -334,6 +334,14 @@ Reachability finding (2026-11-18): no file in `apps/` or `packages/` uses `use c
 
   Gate — exit_code=0. Command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-*.test.ts'`. Result: 5 files passed; 194 tests passed and 2 skipped of 196. The two skipped rows are the local-log rows of the PM decision. Log=`measure/runs/security_upgrade_20261026/red-p4-44-7edee3db2.log`.
 
+- [~] 4.5 Raise the follow-redirects floor to the fixed 1.16.2 (Review B P4 NB-1) and resolve it in the lockfile. Test: AC-8. Advisory GHSA-mrwp-f3q8-3g9p; vulnerable `>=1.16.0 <=1.16.1`; patched `>=1.16.2`.
+
+  Evidence — Red run, exit_code=1. Command: `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-version-guard.test.ts'`. phase_base_sha=837755eaa; role_base_sha=3aca2726f; Red commit=bed0405a8; log=`measure/runs/security_upgrade_20261026/red-p4-45-3aca2726f.log`. Result: 1 failed, 37 passed of 38; 1 test file failed. The live version guard fails with `advisory=GHSA-8r9p-f939-6h3c GHSA-q3jh-wrc6-jgq8 GHSA-mrwp-f3q8-3g9p package=follow-redirects locked=1.16.1 fixed=1.16.2`. The new fixture row `keeps the follow-redirects 1.16.2 floor: 1.16.1 fails and 1.16.2 passes` passes. This is not a pass.
+
+  Advisory read — `pnpm audit --json` at `3aca2726f` reports npm id 1244003, GHSA-mrwp-f3q8-3g9p, vulnerable `>=1.16.0 <=1.16.1`, patched `>=1.16.2`. Totals: critical 0, high 16, moderate 59, low 7. The advisory text is not reproduced.
+
+  Guard row location — the floor data lives in `tests/security-upgrade-guard-list.ts`, which `tests/security-upgrade-version-guard.test.ts` imports. FR-1 keeps the guard list in one file. The 1.16.1 floor is now 1.16.2 and the advisory list holds the new id. The proof row lives in the named test file. The floor table of `test-strategy.md` moves to 1.16.2 with the new id.
+
 ## Out of scope
 
 - Push, deploy, Cloud Build job, `gcloud` command.
