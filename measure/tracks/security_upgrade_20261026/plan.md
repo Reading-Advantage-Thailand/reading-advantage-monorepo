@@ -336,13 +336,27 @@ Reachability finding (2026-11-18): no file in `apps/` or `packages/` uses `use c
 
   Gate — exit_code=0. Command: `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-*.test.ts'`. Result: 5 files passed; 194 tests passed and 2 skipped of 196. The two skipped rows are the local-log rows of the PM decision. Log=`measure/runs/security_upgrade_20261026/red-p4-44-7edee3db2.log`.
 
-- [~] 4.5 Raise the follow-redirects floor to the fixed 1.16.2 (Review B P4 NB-1) and resolve it in the lockfile. Test: AC-8. Advisory GHSA-mrwp-f3q8-3g9p; vulnerable `>=1.16.0 <=1.16.1`; patched `>=1.16.2`.
+- [x] 4.5 Raise the follow-redirects floor to the fixed 1.16.2 (Review B P4 NB-1) and resolve it in the lockfile. Test: AC-8. Advisory GHSA-mrwp-f3q8-3g9p; vulnerable `>=1.16.0 <=1.16.1`; patched `>=1.16.2`. (c88189fe9)
 
   Evidence — Red run, exit_code=1. Command: `HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/security-next-1646 && pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-version-guard.test.ts'`. phase_base_sha=837755eaa; role_base_sha=3aca2726f; Red commit=bed0405a8; log=`measure/runs/security_upgrade_20261026/red-p4-45-3aca2726f.log`. Result: 1 failed, 37 passed of 38; 1 test file failed. The live version guard fails with `advisory=GHSA-8r9p-f939-6h3c GHSA-q3jh-wrc6-jgq8 GHSA-mrwp-f3q8-3g9p package=follow-redirects locked=1.16.1 fixed=1.16.2`. The new fixture row `keeps the follow-redirects 1.16.2 floor: 1.16.1 fails and 1.16.2 passes` passes. This is not a pass.
 
   Advisory read — `pnpm audit --json` at `3aca2726f` reports npm id 1244003, GHSA-mrwp-f3q8-3g9p, vulnerable `>=1.16.0 <=1.16.1`, patched `>=1.16.2`. Totals: critical 0, high 16, moderate 59, low 7. The advisory text is not reproduced.
 
   Guard row location — the floor data lives in `tests/security-upgrade-guard-list.ts`, which `tests/security-upgrade-version-guard.test.ts` imports. FR-1 keeps the guard list in one file. The 1.16.1 floor is now 1.16.2 and the advisory list holds the new id. The proof row lives in the named test file. The floor table of `test-strategy.md` moves to 1.16.2 with the new id.
+
+  Green evidence — phase_base_sha=3aca2726f; role_base_sha=788720ddd; fix commit `c88189fe9`. The change adds `follow-redirects: 1.16.2` to the `overrides` block of `pnpm-workspace.yaml`. FR-2 puts the resolution version in that block. The guard contract allows an added key that names a guard floor, holds an exact version, stays on the floored major and meets the floor. No required pin changed. No floor was lowered. No Red file was edited.
+
+  Lockfile — `pnpm install --no-frozen-lockfile` through heavy-run printed `Done in 5m 20.1s`, then hung on a registry GET error 23 for `@esbuild/android-arm64` 0.25.12. The heavy-run hang guard returned 124. A second run with `--prefer-offline` exited 0 with `Already up to date`. `pnpm install --frozen-lockfile --offline` exited 0. `node_modules/.modules.yaml` exists. The lockfile diff names only `follow-redirects`: the override line, the package entry 1.16.1→1.16.2 with its integrity, two dependent references (`@revideo/ffmpeg` and `axios@1.20.0`) and the snapshot key. No other name or version pair changed.
+
+  Audit row — the committed audit row still held the 1.16.1 fixed version and the two old advisory ids. The fix commit adds `GHSA-mrwp-f3q8-3g9p` and the 1.16.1→1.16.2 PATCH pair with a 2026-11-19 correction note. The historical 1.16.0→1.16.1 pair stays.
+
+  Gate 1 — `pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-version-guard.test.ts` through heavy-run; exit_code=0; 38 passed of 38. The Red run failed 1 of 38 with `locked=1.16.1 fixed=1.16.2`.
+
+  Gate 2 — `pnpm exec vitest run --config vitest.config.ts --maxWorkers=1 tests/security-upgrade-*.test.ts` through heavy-run; exit_code=0; 5 files passed; 195 passed and 2 skipped of 197. The Red run failed 1 of 197 on the audit row.
+
+  Gate 3 — `pnpm audit --json` through heavy-run; npm exit_code=1 because advisories remain, as at the base. The JSON holds zero hits for `GHSA-mrwp-f3q8-3g9p` and zero for `follow-redirects`. Totals: critical 0, high 15, moderate 59, low 7. The Red base held critical 0, high 16, moderate 59, low 7. No new critical or high advisory.
+
+  No push, no merge and no deploy. Log: `measure/runs/security_upgrade_20261026/green-p4-45-788720ddd.log`.
 
 ## Out of scope
 
