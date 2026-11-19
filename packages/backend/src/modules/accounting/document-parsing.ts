@@ -9,8 +9,9 @@
  * - `MAX_ZIP_ENTRY_BYTES` = 8 MiB: one `.xlsx` part after inflation.
  * - `MAX_PDF_INFLATE_BYTES` = 8 MiB: one PDF FlateDecode stream after inflation.
  * - `MAX_PDF_TEXT_CHARS` = 1,048,576: the whole extracted PDF text layer.
- * A part or stream above its limit gives no text, and no parser then builds a
- * draft. Both numbers sit inside the 20 MB intake limit.
+ * A part or stream above its limit fails the whole read: a PDF gives no text
+ * and a workbook gives no worksheet, so no parser builds a partial draft.
+ * The three numbers sit inside the 20 MB intake limit.
  */
 import { inflateRawSync, inflateSync } from "node:zlib";
 
@@ -1121,6 +1122,7 @@ export const cloudPaymentReceiptDraftSchema = z.object({
   taxIdentificationNo: optionalDraftTextField,
   billingId: optionalDraftTextField,
   paymentMethod: optionalDraftTextField,
+  currency: optionalDraftCurrencySchema,
   extraction: accountingExtractionSchema,
 });
 
@@ -1152,6 +1154,7 @@ export const cloudStatementDraftSchema = z.object({
   totalPaymentsReceived: optionalDraftMoneySchema,
   endingBalance: optionalDraftMoneySchema,
   payments: z.array(cloudStatementPaymentSchema),
+  currency: optionalDraftCurrencySchema,
   extraction: accountingExtractionSchema,
 });
 
@@ -1182,6 +1185,7 @@ export const whtFilingPnd3DraftSchema = z.object({
   rows: z.array(whtFilingPnd3RowSchema),
   totalAmountPaid: optionalDraftMoneySchema,
   totalTaxWithheld: optionalDraftMoneySchema,
+  currency: optionalDraftCurrencySchema,
   extraction: accountingExtractionSchema,
 });
 
@@ -1285,6 +1289,7 @@ function readWhtFilingPnd3Draft(text: string): WhtFilingPnd3Draft | null {
     rows: readPnd3Rows(text),
     totalAmountPaid: totals.amountPaid,
     totalTaxWithheld: totals.taxWithheld,
+    currency: "THB",
     extraction: "local-text",
   };
 }
@@ -1382,6 +1387,7 @@ export const schoolInvoiceDraftSchema = z.object({
   delivery: optionalDraftTextField,
   vatNote: optionalDraftTextField,
   terms: optionalDraftTextField,
+  currency: optionalDraftCurrencySchema,
   extraction: accountingExtractionSchema,
 });
 
@@ -1426,6 +1432,7 @@ export const withholdingCertificateDraftSchema = z.object({
   incomeType: optionalDraftTextField,
   amountPaid: optionalDraftMoneySchema,
   taxWithheld: optionalDraftMoneySchema,
+  currency: optionalDraftCurrencySchema,
   extraction: accountingExtractionSchema,
 });
 
@@ -1463,8 +1470,8 @@ export const MAX_ZIP_ENTRY_BYTES = 8 * 1024 * 1024;
  */
 export const MAX_PDF_INFLATE_BYTES = 8 * 1024 * 1024;
 
-/** Largest whole PDF text layer: 1,048,576 characters (B601). */
-const MAX_PDF_TEXT_CHARS = 1024 * 1024;
+/** Largest whole PDF text layer: 1,048,576 characters (B601, B612). */
+export const MAX_PDF_TEXT_CHARS = 1024 * 1024;
 
 /**
  * Reads the central directory of a ZIP archive.
@@ -1724,11 +1731,12 @@ function readWorksheetCells(
  * Reads an `.xlsx` workbook: every worksheet in workbook order, with the stored
  * values of its cells. The reader calculates no formula; a formula cell without
  * a stored result holds no value (PM-8, PM-9). A part above the inflate limit
- * (B602) or a character reference outside the Unicode range (B604) gives an
- * empty workbook and no draft.
+ * (B602), a worksheet part that cannot be read (B611), or a character reference
+ * outside the Unicode range (B604) gives an empty workbook and no partial
+ * draft.
  * @param bytes The workbook bytes.
  * @returns The worksheets; an empty list when the bytes are not a workbook or
- *   a part is hostile.
+ *   a part is hostile or unreadable.
  */
 export function readWorkbook(bytes: Uint8Array): Workbook {
   const buffer = Buffer.from(bytes);
@@ -1747,14 +1755,14 @@ export function readWorkbook(bytes: Uint8Array): Workbook {
   const worksheets: WorkbookWorksheet[] = [];
   for (const sheet of sheets) {
     const target = relationships.get(sheet.relId);
-    if (target === undefined) continue;
+    if (target === undefined) return { worksheets: [] };
     const path = target.startsWith("/")
       ? target.slice(1)
       : target.startsWith("xl/")
         ? target
         : `xl/${target}`;
     const xml = readPart(path);
-    if (xml === null) continue;
+    if (xml === null) return { worksheets: [] };
     worksheets.push({ name: sheet.name, cells: readWorksheetCells(xml, sharedStrings) });
   }
   return { worksheets };
@@ -2025,9 +2033,10 @@ function extractPdfContentText(content: string): string | null {
  * content streams and decodes their text operators; it holds no decryption and
  * no CID font map, so an encrypted PDF and a scan give null. Each FlateDecode
  * stream stops at `MAX_PDF_INFLATE_BYTES` and the whole text stops at
- * `MAX_PDF_TEXT_CHARS`, so an inflate bomb gives null text and never a partial
- * draft (B601). A caller then treats the file as a non-text PDF and routes it
- * to the model path (D-13).
+ * `MAX_PDF_TEXT_CHARS`. A stream that fails to inflate or passes its limit
+ * fails the whole read, so an inflate bomb gives null text and never a partial
+ * draft (B601, B610). A caller then treats the file as a non-text PDF and
+ * routes it to the model path (D-13).
  * @param bytes The PDF bytes.
  * @returns The page count and the text layer, or null text when none exists or
  *   a limit is exceeded.
@@ -2052,7 +2061,7 @@ export function readTextPdf(bytes: Uint8Array): TextPdfReadResult {
             maxOutputLength: MAX_PDF_INFLATE_BYTES,
           }).toString("latin1");
         } catch {
-          content = null;
+          return { pageCount, text: null };
         }
       } else {
         content = raw.toString("latin1");
@@ -2455,6 +2464,7 @@ export function parseCloudPaymentReceipt(input: {
     taxIdentificationNo: readLabeledText(text, "Tax identification No\\.?|Tax ID"),
     billingId: readLabeledText(text, "Billing ID"),
     paymentMethod: readLabeledText(text, "Payment method"),
+    currency: readCurrency(text),
     extraction: "local-text",
   };
   return parsedIfValid(cloudPaymentReceiptDraftSchema, draft);
@@ -2540,6 +2550,7 @@ export function parseCloudStatement(input: {
           null,
       ),
     payments: readStatementPayments(text, paymentsYear),
+    currency: readCurrency(text),
     extraction: "local-text",
   };
   return parsedIfValid(cloudStatementDraftSchema, draft);
@@ -2678,6 +2689,60 @@ function positionedCells(
   return positioned.sort(
     (left, right) => left.row - right.row || left.column - right.column,
   );
+}
+
+/** A whole line that holds only a Thai short-month date. */
+const BARE_THAI_DATE_LINE =
+  /^(\d{1,2}[ \t]*[^\s]+[ \t]*\d{4})$/u;
+
+/** A whole line that holds only an English date. */
+const BARE_ENGLISH_DATE_LINE =
+  /^([A-Za-z]{3,9}[ \t]+\d{1,2},?[ \t]+\d{4}|\d{1,2}[ \t]+[A-Za-z]{3,9}[ \t]+\d{4})$/u;
+
+/**
+ * Reads a date from a line that holds nothing else. The school print may
+ * show a bare date without a label (A621).
+ * @param line One line of text or one cell value.
+ * @returns The CE ISO date, or null when the line is not a bare date.
+ */
+function readBareDateLine(line: string): string | null {
+  const trimmed = line.trim();
+  const thai = BARE_THAI_DATE_LINE.exec(trimmed);
+  if (thai !== null) {
+    const date = readThaiShortDate(thai[1] ?? null);
+    if (date !== null) return date;
+  }
+  const english = BARE_ENGLISH_DATE_LINE.exec(trimmed);
+  if (english !== null) return readEnglishDate(english[1] ?? null);
+  return null;
+}
+
+/**
+ * Reads the first bare date line of a document text (A621).
+ * @param text Normalized document text.
+ * @returns The CE ISO date, or null when no line holds a bare date.
+ */
+function readBareDateText(text: string): string | null {
+  for (const line of text.split(/\r?\n/u)) {
+    const date = readBareDateLine(line);
+    if (date !== null) return date;
+  }
+  return null;
+}
+
+/**
+ * Reads the first bare date cell of a worksheet (A621).
+ * @param cells The stored cell values of the worksheet.
+ * @returns The CE ISO date, or null when no cell holds a bare date.
+ */
+function readBareDateCells(
+  cells: Readonly<Record<string, WorkbookCellValue>>,
+): string | null {
+  for (const cell of positionedCells(cells)) {
+    const date = readBareDateLine(cell.value);
+    if (date !== null) return date;
+  }
+  return null;
 }
 
 /**
@@ -2849,11 +2914,17 @@ export function parseSchoolInvoiceSheet(input: {
     const isReceipt =
       documentTitle !== null &&
       /ใบเสร็จรับเงิน|receipt/iu.test(documentTitle);
+    const dateText = readLabeledCellText(worksheet.cells, "Date");
+    const date =
+      readEnglishDate(dateText) ??
+      readThaiShortDate(dateText) ??
+      readBareDateCells(worksheet.cells);
+    if (date === null) return reviewDocument(REVIEW_UNREADABLE);
     drafts.push({
       documentTitle,
       invoiceNo: number !== null && !isReceipt ? number : null,
       receiptNo: number !== null && isReceipt ? number : null,
-      date: readEnglishDate(readLabeledCellText(worksheet.cells, "Date")),
+      date,
       quotationRef: readLabeledCellText(
         worksheet.cells,
         "Quotation(?: No\\.?| Ref(?:erence)?)?",
@@ -2876,6 +2947,7 @@ export function parseSchoolInvoiceSheet(input: {
       delivery: readLabeledCellText(worksheet.cells, "Delivery"),
       vatNote: readLabeledCellText(worksheet.cells, "VAT"),
       terms: readLabeledCellText(worksheet.cells, "Terms"),
+      currency: readCurrency(workbookCellsToText(worksheet.cells)),
       extraction: "local-text",
     });
   }
@@ -2995,11 +3067,18 @@ export function parseSchoolInvoicePdf(input: {
   const isReceipt = /ใบเสร็จรับเงิน|\breceipt\b/iu.test(text);
   const dateText = readLabeledText(text, "Date");
   const dueText = readLabeledText(text, "Due|Due date");
+  const date =
+    readEnglishDate(dateText) ??
+    readThaiShortDate(dateText) ??
+    readBareDateText(text) ??
+    readThaiShortDate(text) ??
+    readEnglishDate(text);
+  if (date === null) return reviewDocument(REVIEW_UNREADABLE);
   const draft: SchoolInvoiceDraft = {
     documentTitle: /\b(?:Invoice|Receipt)\b/iu.exec(text)?.[0] ?? null,
     invoiceNo: isReceipt ? null : number,
     receiptNo: isReceipt ? number : null,
-    date: readEnglishDate(dateText) ?? readThaiShortDate(dateText),
+    date,
     quotationRef: readLabeledText(
       text,
       "Quotation(?: No\\.?| Ref(?:erence)?)?",
@@ -3026,6 +3105,7 @@ export function parseSchoolInvoicePdf(input: {
     delivery: readLabeledText(text, "Delivery"),
     vatNote: readLabeledText(text, "VAT"),
     terms: readLabeledText(text, "Terms"),
+    currency: readCurrency(text),
     extraction: "local-text",
   };
   return parsedIfValid(schoolInvoiceDraftSchema, draft);
@@ -3121,6 +3201,7 @@ export function parseWithholdingCertificate(input: {
     incomeType: readLabeledText(text, "Income type"),
     amountPaid: readLabeledMoney(text, "Amount paid"),
     taxWithheld: readLabeledMoney(text, "Tax withheld"),
+    currency: "THB",
     extraction: "local-text",
   };
   return parsedIfValid(withholdingCertificateDraftSchema, draft);
