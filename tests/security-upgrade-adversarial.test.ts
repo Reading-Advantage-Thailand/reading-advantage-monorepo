@@ -38,6 +38,24 @@ const AUDITED_HEAD_SHA = "7236ae2c7eacfb0ffe535700c2b8a965cc1615f1";
 const CORE_PACKAGES = ["next", "react", "react-dom", "sharp"];
 
 /**
+ * The next patch floor of the two moderate Next.js advisories of November
+ * 2026 (GHSA-mfr8-8qww-v76h and GHSA-vc7v-qv4w-wrv8). The first fixed patch
+ * is 16.4.5. The guard test holds the same floor in NEXT_PATCH_FLOOR.
+ */
+const NEXT_PATCH_FLOOR = "16.4.5";
+
+/**
+ * Returns the guard entries with the next floor raised to the November patch
+ * floor. The Phase 1 floor row of next stays at 16.4.1; this raised copy is
+ * the adversarial view of AC-8.
+ */
+function nextPatchFloorEntries(): GuardEntry[] {
+  return GUARD_ENTRIES.map((entry) =>
+    entry.packageName === "next" ? { ...entry, fixedVersion: NEXT_PATCH_FLOOR } : entry,
+  );
+}
+
+/**
  * The override pins that the strategy names. The strategy fixes these values.
  * The values of `next`, `react`, `react-dom` and `vite` also sit in the guard
  * list. The rule in the guard list hygiene check compares both sources.
@@ -1052,6 +1070,86 @@ describe("every importer resolves a version at or above its floor", () => {
   });
 });
 
+describe("the November 16.4.5 patch floor covers every resolved next copy and importer", () => {
+  it("fails a second next copy below the 16.4.5 floor in the snapshots section", () => {
+    const text = [
+      "packages:",
+      "",
+      "  next@16.4.6:",
+      "    resolution: {integrity: sha512-x}",
+      "",
+      "  react@19.2.9:",
+      "    resolution: {integrity: sha512-r}",
+      "",
+      "  react-dom@19.2.9:",
+      "    resolution: {integrity: sha512-rd}",
+      "",
+      "  sharp@0.35.5:",
+      "    resolution: {integrity: sha512-s}",
+      "",
+      "snapshots:",
+      "",
+      "  next@16.4.4(@types/node@20.19.43):",
+      "    dependencies:",
+      "      '@types/node': 20.19.43",
+      "",
+    ].join("\n");
+    const failures = checkResolvedCopies(text, nextPatchFloorEntries());
+    expect(failures.join("\n")).toContain("locked=16.4.4");
+    expect(failures.join("\n")).toContain("fixed=16.4.5");
+    expect(failures.join("\n")).toContain("section=snapshots");
+  });
+
+  it("fails an importer that resolves a second next copy below the 16.4.5 floor", () => {
+    const text = [
+      "importers:",
+      "",
+      "  apps/marketing:",
+      "    dependencies:",
+      "      next:",
+      "        specifier: 16.4.6",
+      "        version: 16.4.4",
+      "",
+      "packages:",
+      "",
+      "  next@16.4.6:",
+      "    resolution: {integrity: sha512-x}",
+      "",
+    ].join("\n");
+    const failures = checkImporterVersions(text, nextPatchFloorEntries());
+    expect(failures.join("\n")).toContain("importer=apps/marketing");
+    expect(failures.join("\n")).toContain("locked=16.4.4");
+    expect(failures.join("\n")).toContain("fixed=16.4.5");
+  });
+
+  it("marks a prerelease next copy as not clean under the 16.4.5 floor", () => {
+    const text = [
+      "packages:",
+      "",
+      "  next@16.4.5-canary.1:",
+      "    resolution: {integrity: sha512-x}",
+      "",
+      "  react@19.2.9:",
+      "    resolution: {integrity: sha512-r}",
+      "",
+      "  react-dom@19.2.9:",
+      "    resolution: {integrity: sha512-rd}",
+      "",
+      "  sharp@0.35.5:",
+      "    resolution: {integrity: sha512-s}",
+      "",
+    ].join("\n");
+    const failures = checkResolvedCopies(text, nextPatchFloorEntries());
+    expect(failures.join("\n")).toContain("package=next");
+    expect(failures.join("\n")).toContain("version_is_not_clean");
+  });
+
+  it("passes the real lockfile of the repository under the 16.4.5 patch floor", () => {
+    expect(checkResolvedCopies(LOCKFILE_TEXT, nextPatchFloorEntries())).toEqual([]);
+    expect(checkImporterVersions(LOCKFILE_TEXT, nextPatchFloorEntries())).toEqual([]);
+  });
+});
+
 describe("every override holds an exact pin at or above its floor", () => {
   it("fails a synthetic override that sits below a floor", () => {
     const failures = checkOverrides({ ...WORKSPACE_OVERRIDES, sharp: "0.34.5" });
@@ -1244,6 +1342,19 @@ describe("the lockfile holds the overrides of the workspace file", () => {
     const failures = checkLockfileOverrides(LOCKFILE_TEXT, { ...WORKSPACE_OVERRIDES, next: "16.5.0" });
     expect(failures.length).toBe(1);
     expect(failures.join("\n")).toContain("key=next");
+  });
+
+  it("fails a workspace that lost the follow-redirects override while the lockfile keeps it", () => {
+    // Task 4.5 added `follow-redirects: 1.16.2` to the workspace overrides.
+    // The lockfile overrides block must not keep a pin that the workspace
+    // dropped, or the lockfile would resolve against a stale contract.
+    const withoutFollowRedirects = { ...WORKSPACE_OVERRIDES };
+    delete withoutFollowRedirects["follow-redirects"];
+    const failures = checkLockfileOverrides(LOCKFILE_TEXT, withoutFollowRedirects);
+    expect(failures.length).toBe(1);
+    expect(failures.join("\n")).toContain("key=follow-redirects");
+    expect(failures.join("\n")).toContain("workspace=missing");
+    expect(failures.join("\n")).toContain("lockfile=1.16.2");
   });
 
   it("passes the real lockfile and the real workspace file", () => {

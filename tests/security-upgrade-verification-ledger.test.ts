@@ -790,6 +790,18 @@ describe("ledger refutation fixtures", () => {
     expect(hasReason(failures, "pass_row_log_has_no_exit_code")).toBe(true);
   });
 
+  it("a present log is checked in full even when the logs are local only", () => {
+    // The live call marks the run logs optional because `measure/runs/` is
+    // gitignored. A log that exists in the checkout must still pass the full
+    // content check. The optional flag relaxes only the absence of a log.
+    const { ledger, logs } = buildGoodLedger();
+    const row = rowOf(ledger, "accounting", "check-types");
+    logs.set(resolve(ROOT, row.log as string), "command=fixture\nexit_code=1\n");
+    const failures = validateLedger(ledger, { readLog: syntheticReader(logs), logFileOptional: true });
+    expect(hasReason(failures, "pass_row_log_has_no_exit_code")).toBe(true);
+    expect(failures.join("\n")).toContain("package=accounting");
+  });
+
   it("a pass row whose log sits outside the run root fails", () => {
     const { ledger, logs } = buildGoodLedger();
     const row = rowOf(ledger, "storytime", "check-types");

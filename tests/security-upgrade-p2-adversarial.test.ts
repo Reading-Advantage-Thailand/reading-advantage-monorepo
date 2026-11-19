@@ -665,17 +665,41 @@ const GUARD_FUNCTION_NAMES = [
   "evaluateGuard",
   "parseFlatBlock",
   "evaluateOverrideContract",
+  "declaredFloor",
+  "evaluateNextPatchFloor",
 ];
 
-/** Extracts a top level block from the source of the guard test. */
+/**
+ * Extracts a top level block from the source of the guard test. The block
+ * starts at the header line and ends at the matching closing brace. The
+ * parameter list is scanned first, so a type literal brace inside the
+ * parameter list is not mistaken for the body brace.
+ */
 function extractBlock(src: string, header: string): string {
   const at = src.indexOf(header);
   if (at === -1) throw new Error(`the guard source holds no block ${header}`);
   const lineStart = src.lastIndexOf("\n", at) + 1;
-  const bodyStart = src.indexOf("{", at);
-  if (bodyStart === -1) throw new Error(`the guard source holds no body for ${header}`);
+  let braceStart = -1;
+  const parenAt = src.indexOf("(", at);
+  const equalsAt = src.indexOf("=", at);
+  if (parenAt !== -1 && (equalsAt === -1 || parenAt < equalsAt)) {
+    let depth = 0;
+    for (let i = parenAt; i < src.length; i++) {
+      if (src[i] === "(") depth++;
+      else if (src[i] === ")") {
+        depth--;
+        if (depth === 0) {
+          braceStart = src.indexOf("{", i);
+          break;
+        }
+      }
+    }
+  } else if (equalsAt !== -1) {
+    braceStart = src.indexOf("{", equalsAt);
+  }
+  if (braceStart === -1) throw new Error(`the guard source holds no body for ${header}`);
   let depth = 0;
-  for (let i = bodyStart; i < src.length; i++) {
+  for (let i = braceStart; i < src.length; i++) {
     if (src[i] === "{") depth++;
     else if (src[i] === "}") {
       depth--;
@@ -683,6 +707,13 @@ function extractBlock(src: string, header: string): string {
     }
   }
   throw new Error(`the guard source holds no end for ${header}`);
+}
+
+/** Extracts a one-line const statement from the source of the guard test. */
+function extractConstLine(src: string, name: string): string {
+  const line = src.split(/\r?\n/).find((candidate) => candidate.trim().startsWith(`const ${name} =`));
+  if (line === undefined) throw new Error(`the guard source holds no const ${name}`);
+  return line.trim();
 }
 
 /**
@@ -693,6 +724,7 @@ function extractBlock(src: string, header: string): string {
 function loadGuardImplementation(): Record<string, unknown> {
   const src = readFileSync(GUARD_TEST_PATH, "utf8");
   const parts = GUARD_FUNCTION_NAMES.map((name) => extractBlock(src, `function ${name}(`));
+  parts.push(extractConstLine(src, "NEXT_PATCH_FLOOR"));
   const code = parts.join("\n\n");
   const require = createRequire(import.meta.url);
   const ts = require("typescript") as typeof import("typescript");
@@ -700,7 +732,7 @@ function loadGuardImplementation(): Record<string, unknown> {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
   }).outputText.replace(/^\s*export\s*\{\s*\}\s*;?\s*$/m, "");
   const factory = new Function(
-    `${transpiled}\nreturn { ${GUARD_FUNCTION_NAMES.join(", ")} };`,
+    `${transpiled}\nreturn { ${GUARD_FUNCTION_NAMES.join(", ")}, NEXT_PATCH_FLOOR };`,
   ) as () => Record<string, unknown>;
   return factory();
 }
@@ -716,6 +748,13 @@ type GuardImplementation = {
     required: Record<string, string>,
     entries: GuardEntry[],
   ) => string[];
+  declaredFloor: (value: string) => string;
+  evaluateNextPatchFloor: (
+    manifests: Array<{ file: string; declared: string | undefined }>,
+    lockedNext: string[],
+  ) => string[];
+  compareVersions: (a: string, b: string) => number;
+  NEXT_PATCH_FLOOR: string;
 };
 
 /** The ten override pins that the guard contract requires. */
@@ -1108,6 +1147,17 @@ describe("a pass row cannot hide a failure behind an exit code of zero", () => {
     expect(checkPassLog("command=next build\nexit_code=0\n")).toEqual([]);
   });
 
+  it("checks a local pass log in full even when the logs are optional", () => {
+    // A checkout that holds the local logs must not get a lighter check. The
+    // optional flag only relaxes the absence of a log, never its content.
+    const { ledger, logs } = buildGoodLedger();
+    const row = rowOf(ledger, "accounting", "check-types");
+    logs.set(resolve(ROOT, row.log as string), "command=fixture\nexit_code=0\n Test Files  1 failed (1)\n");
+    const failures = checkPassLogs(ledger, syntheticReader(logs), true);
+    expect(hasReason(failures, "pass_log_holds_failure_summary")).toBe(true);
+    expect(failures.join("\n")).toContain("package=accounting");
+  });
+
   it("passes every pass row of the real ledger", () => {
     expect(resolveRows(LEDGER_JSON).filter((item) => item.cls === "pass").length).toBe(58);
     const failures = checkPassLogs(LEDGER_JSON, readRunLog, true);
@@ -1169,7 +1219,7 @@ describe("the real guard code fails the false passes of the guard", () => {
 
   beforeAll(() => {
     const loaded = loadGuardImplementation();
-    for (const name of GUARD_FUNCTION_NAMES) {
+    for (const name of [...GUARD_FUNCTION_NAMES, "NEXT_PATCH_FLOOR"]) {
       if (loaded[name] === undefined) throw new Error(`the guard source holds no ${name}`);
     }
     guard = loaded as unknown as GuardImplementation;
@@ -1261,6 +1311,63 @@ describe("the real guard code fails the false passes of the guard", () => {
     const failures = guard.evaluateGuard(locked, entries);
     expect(failures).toEqual([]);
     expect(locked.get("next")).toEqual(["16.4.1"]);
+  });
+
+  it("fails a peer-suffixed next@16.4.4 key against the 16.4.5 patch floor", () => {
+    const text = [
+      "packages:",
+      "",
+      "  next@16.4.4(@types/node@20.19.43):",
+      "    resolution: {integrity: sha512-x}",
+      "",
+    ].join("\n");
+    const locked = guard.parseLockedVersions(guard.extractPackagesSection(text));
+    const lockedNext = locked.get("next") ?? [];
+    expect(lockedNext).toEqual(["16.4.4"]);
+    const message = guard.evaluateNextPatchFloor([], lockedNext).join("\n");
+    expect(message).toContain("lockfile=next");
+    expect(message).toContain("locked=16.4.4");
+    expect(message).toContain("floor=16.4.5");
+  });
+
+  it("fails a manifest that pins a peer-suffixed next 16.4.4 against the 16.4.5 patch floor", () => {
+    const failures = guard.evaluateNextPatchFloor(
+      [{ file: "apps/a/package.json", declared: "16.4.4(@types/node@20.19.43)" }],
+      ["16.4.6"],
+    );
+    expect(failures.join("\n")).toContain("manifest=apps/a/package.json");
+    expect(failures.join("\n")).toContain("floor=16.4.5");
+  });
+
+  it("fails a follow-redirects override range ^1.16.2 as not an exact version", () => {
+    const actual = { ...REQUIRED_OVERRIDE_PINS, "follow-redirects": "^1.16.2" };
+    const message = guard.evaluateOverrideContract(actual, REQUIRED_OVERRIDE_PINS, GUARD_ENTRIES).join("\n");
+    expect(message).toContain("key=follow-redirects");
+    expect(message).toContain("is not an exact version");
+  });
+
+  it("admits a follow-redirects override of 1.16.10 above the 1.16.2 floor by numeric compare", () => {
+    // A string compare would place 1.16.10 below 1.16.2. The numeric segment
+    // compare must keep 1.16.10 above the floor.
+    expect(guard.compareVersions("1.16.10", "1.16.2")).toBe(1);
+    const actual = { ...REQUIRED_OVERRIDE_PINS, "follow-redirects": "1.16.10" };
+    expect(guard.evaluateOverrideContract(actual, REQUIRED_OVERRIDE_PINS, GUARD_ENTRIES)).toEqual([]);
+  });
+
+  it("fails a lockfile copy of follow-redirects 1.16.1 when no override pins it", () => {
+    const text = [
+      "packages:",
+      "",
+      "  follow-redirects@1.16.1:",
+      "    resolution: {integrity: sha512-x}",
+      "",
+    ].join("\n");
+    const locked = guard.parseLockedVersions(guard.extractPackagesSection(text));
+    const entries = GUARD_ENTRIES.filter((entry) => entry.packageName === "follow-redirects");
+    const message = guard.evaluateGuard(locked, entries).join("\n");
+    expect(message).toContain("package=follow-redirects");
+    expect(message).toContain("locked=1.16.1");
+    expect(message).toContain("fixed=1.16.2");
   });
 
   it("fails a workspace file that lost the next pin", () => {
