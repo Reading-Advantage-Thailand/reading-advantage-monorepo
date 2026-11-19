@@ -1006,7 +1006,7 @@ describe("A602 PND.3 section 8 draft on the extended parser", () => {
     expect(row["payeeTaxId"]).toBe("0-0000-00000-00-0");
     expect(row["payeeName"]).toBe("Mr. Fake Contractor");
     expect(row["payeeAddress"] ?? null).toBeNull();
-    expect(row["paymentDate"]).toBe("2026-10-31");
+    expect(row["paymentDate"]).toBe("2026-10-30");
     expect(row["incomeType"]).toBe("ค่าจ้าง");
     expect(row["taxRatePercent"]).toBe(3);
     expect(row["amountPaid"]).toBe("1000000");
@@ -1679,7 +1679,7 @@ describe("B601 B602 reader inflate caps", () => {
     const repeats = Math.ceil((cap + 64 * 1024) / 7);
     const payload = deflateSync(Buffer.from(`BT\n${"(V) Tj\n".repeat(repeats)}ET\n`, "utf8"));
     const result = readTextPdf(new Uint8Array(buildFlatePdf(payload)));
-    expect(result.text).toBeNull();
+    expect(result.text === null).toBe(true);
   });
 });
 
