@@ -81,15 +81,22 @@ export function Frame(props: FrameProps) {
       "{week}",
       String(props.week),
     )}`;
+  // A page without a route carries an English bar text, so the label is tagged English; the route
+  // pages keep the interface locale of their localized label. The plaque title stays English on a
+  // week page (the week titles are English) and takes the page locale on a bar page, where the
+  // title is the page heading (Review A N1 and N2).
+  const hasBar = props.bar !== undefined;
+  const labelLang = hasBar ? "en" : locale;
+  const titleLang = hasBar ? locale : "en";
   return (
     <header data-hero={variant}>
       {/* The label is the one copy of the route text that a screen reader reads (AC-4.2). */}
-      <p data-level-week lang={locale}>
+      <p data-level-week lang={labelLang}>
         {bar}
       </p>
       {/* The logo replaces the sprout crest (AC-4.3, Q44). It carries its own text alternative. */}
       <img data-logo src={logoSource} alt="Storytime Advantage" width={48} height={48} />
-      <h1 lang="en" style={{ "--title-chars": title.length } as CSSProperties}>
+      <h1 lang={titleLang} style={{ "--title-chars": title.length } as CSSProperties}>
         {title}
       </h1>
     </header>
