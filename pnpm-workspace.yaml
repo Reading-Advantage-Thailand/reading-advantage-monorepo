@@ -127,6 +127,7 @@ overrides:
   compression: 1.8.2
   image-size: 2.0.3
   "@xmldom/xmldom": 0.9.12
+  follow-redirects: 1.16.2
 
 peerDependencyRules:
   ignoreMissing: []
