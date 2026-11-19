@@ -298,7 +298,7 @@ Exception to the phase-order rule (copied from the parent plan, line 263, and ad
   - Phase acceptance PASS at `7b0ec07ab` (phase-acceptance-p2-7b0ec07ab.json, route bailian-token-plan/qwen3.8-max#high; r1 at e25884680 failed on B1, the lint of the adversarial test file, fixed in `f1da2226e`).
   - Adversarial P2 (round r1, 2026-11-16; audited HEAD `77315c83f`; test commit `d534bb3c5`): the gate exits 0 with 5 files, 37 passed, and 1 expected fail. `tsc --noEmit` in `apps/storytime` exits 0. The new file `phase2-a42-adversarial.test.ts` holds the six small attacks and 1 `it.fails`. No production file changed. Findings: F30, a malformed loops approval date is accepted (the contract checks presence only; nonblocking); F31, a reversed decodable clip array is accepted, and every page keeps a clip of its own text (nonblocking; it corroborates Review A F1); F32, the folder media tests read the read-along clips only, and `sha256sum -c MANIFEST.txt` reads every clip (nonblocking; the new test closes the gap). B1 fixed at `f1da2226e` (test commit; the subject is the 97-character form, because the given text is 107): ESLint exits 0, `phase1-quality-gates.sh` exits 0 with `PASS=2, FAIL=0`, and the 8-file set exits 0 with 118 passed and 1 expected fail.
 
-## Phase 3: At-home deploy
+## Phase 3: At-home deploy [checkpoint: 523e38573]
 
 Cross-track dependency: Phase 3 starts after the Phase 2b checkpoint of this track and after the checkpoint of Phase 1 ("Council fixes") of track `storytime_look_20261107`. Phase 2 of that track (the look port) ships on 2026-11-20 only if its gates pass in time.
 
