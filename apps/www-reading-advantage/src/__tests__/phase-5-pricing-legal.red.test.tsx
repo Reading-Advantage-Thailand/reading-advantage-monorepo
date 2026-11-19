@@ -72,7 +72,7 @@ const publicLocales: LocaleSurface[] = [
   {
     locale: "en",
     expectedPricing: EN_CURRENT_PRICING,
-    expectedQuotation: "Contact us for a quotation",
+    expectedQuotation: "In planning",
     copyReviewLabel: /^Copy reviewed:/,
     evaluationPattern:
       /low-risk|structured onboarding|currently in development|accepting inquiries|progress tracking|quality assurance/i,
@@ -84,7 +84,7 @@ const publicLocales: LocaleSurface[] = [
   {
     locale: "th",
     expectedPricing: "ติดต่อเราเพื่อสอบถามราคาปัจจุบัน",
-    expectedQuotation: "ติดต่อเราเพื่อขอใบเสนอราคา",
+    expectedQuotation: "อยู่ระหว่างการวางแผน",
     copyReviewLabel: /^ทบทวนข้อความเมื่อ:/,
     evaluationPattern:
       /ความเสี่ยงต่ำ|การเริ่มต้นที่มีโครงสร้าง|อยู่ในระหว่างพัฒนา|รับคำขอ|ติดตามความก้าวหน้า|รับรองคุณภาพ/i,
@@ -232,7 +232,7 @@ afterEach(() => {
 
 describe("Wave 5 Phase 5 pricing and legal claims", () => {
   it.each(publicLocales)(
-    "$locale pricing renders approved baht amounts and a localized quotation link, and no other amounts",
+    "$locale pricing renders approved baht amounts and a localized in-planning note, and no other amounts",
     ({ pricing, expectedQuotation }) => {
       clientWiring.messages = pricing;
       const rendered = render(<PricingTable />);

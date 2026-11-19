@@ -11,7 +11,7 @@ export const en = {
     trustSignals: {
         noHiddenFees: {
             title: 'Clear Pricing',
-            description: 'Prices in Thai baht, per student, per year. Managed Service by quotation',
+            description: 'Prices in Thai baht, per student, per year.',
         },
         instantSetup: {
             title: 'Simple Setup',
@@ -41,7 +41,7 @@ export const th = {
     trustSignals: {
         noHiddenFees: {
             title: 'ราคาชัดเจน',
-            description: 'ราคาเป็นเงินบาท ต่อผู้เรียน ต่อปี Managed Service ขอใบเสนอราคา',
+            description: 'ราคาเป็นเงินบาท ต่อผู้เรียน ต่อปี',
         },
         instantSetup: {
             title: 'ตั้งค่าง่าย',

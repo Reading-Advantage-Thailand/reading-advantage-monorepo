@@ -2,15 +2,15 @@ export const en = {
   metadata: {
     title: "Science Advantage - Reading Advantage Thailand",
     description:
-      "Science Advantage is a planned science book line with a printed workbook and a digital twin. It is built but not released, and it is on our roadmap.",
+      "Science Advantage brings printed workbooks and a dedicated app to Thai primary schools in the 2027 school year. Both are tagged to the Mastery Advantage knowledge graph.",
   },
   hero: {
     title: "Science Advantage",
-    subtitle: "A Science Workbook Line on Our Roadmap",
+    subtitle: "Science for Thai Primary Schools · 2027 School Year",
     description:
-      "A printed science workbook with a digital twin, tagged to the Mastery Advantage knowledge graph. It is built but not yet released.",
-    badge: "On our roadmap",
-    comingSoon: "On our roadmap",
+      "In the 2027 school year, young scientists open printed workbooks and a Science Advantage app, both tagged to the Mastery Advantage knowledge graph. We are building the app now on the Primary Advantage base.",
+    badge: "For the 2027 school year",
+    comingSoon: "For the 2027 school year",
     cta: "Request Demo",
     secondaryCta: "Learn More",
   },
@@ -122,7 +122,7 @@ export const en = {
   cta: {
     heading: "Interested in Science Advantage?",
     description:
-      "Science Advantage is on our roadmap. Contact us to tell us what you need.",
+      "Put Science Advantage on your plan for the 2027 school year. Contact us to tell us what your teachers and students need.",
     buttons: {
       requestDemo: "Request Demo",
       contactSales: "Contact Sales",
@@ -162,7 +162,7 @@ export const en = {
   },
   waitlist: {
     heading: "Tell Us You Are Interested",
-    description: "Science Advantage is on our roadmap. We will keep your email for news.",
+    description: "Science Advantage is planned for the 2027 school year. Leave your email for news as we build the app and workbooks.",
     form: {
       placeholder: "Enter your email",
       button: "Send",
@@ -177,7 +177,7 @@ export const en = {
   },
   eyebrows: {
     whyScienceAdvantage: "WHY SCIENCE ADVANTAGE",
-    ngssAligned: "ON OUR ROADMAP",
+    ngssAligned: "FOR THE 2027 SCHOOL YEAR",
     builtFor: "BUILT FOR",
   },
 };
@@ -186,15 +186,15 @@ export const th = {
   metadata: {
     title: "Science Advantage - Reading Advantage Thailand",
     description:
-      "Science Advantage เป็นหนังสือชุดวิทยาศาสตร์ที่วางแผนไว้ มีแบบฝึกหัดเล่มพิมพ์และเวอร์ชันดิจิทัล สร้างเสร็จแล้วแต่ยังไม่เปิดตัว อยู่ในแผนงานของเรา",
+      "Science Advantage จะนำหนังสือแบบฝึกหัดฉบับพิมพ์และแอปเฉพาะวิชามาสู่โรงเรียนประถมไทยในปีการศึกษา 2570 ทั้งสองส่วนติดแท็กเชื่อมกับกราฟความรู้ Mastery Advantage",
   },
   hero: {
     title: "Science Advantage",
-    subtitle: "ชุดหนังสือวิทยาศาสตร์ในแผนงานของเรา",
+    subtitle: "วิทยาศาสตร์สำหรับโรงเรียนประถมไทย · ปีการศึกษา 2570",
     description:
-      "แบบฝึกหัดวิทยาศาสตร์เล่มพิมพ์พร้อมเวอร์ชันดิจิทัล เชื่อมกับกราฟความรู้ Mastery Advantage สร้างเสร็จแล้วแต่ยังไม่เปิดตัว",
-    badge: "อยู่ในแผนงานของเรา",
-    comingSoon: "อยู่ในแผนงานของเรา",
+      "ในปีการศึกษา 2570 นักวิทยาศาสตร์ตัวน้อยจะได้เปิดหนังสือแบบฝึกหัดฉบับพิมพ์และใช้แอป Science Advantage ทั้งสองส่วนติดแท็กเชื่อมกับกราฟความรู้ Mastery Advantage ขณะนี้เรากำลังพัฒนาแอปโดยใช้พื้นฐานของ Primary Advantage",
+    badge: "สำหรับปีการศึกษา 2570",
+    comingSoon: "สำหรับปีการศึกษา 2570",
     cta: "ขอสาธิต",
     secondaryCta: "เรียนรู้เพิ่มเติม",
   },
@@ -304,7 +304,7 @@ export const th = {
   cta: {
     heading: "สนใจ Science Advantage หรือไม่?",
     description:
-      "Science Advantage อยู่ในแผนงานของเรา ติดต่อเราเพื่อบอกสิ่งที่คุณต้องการ",
+      "เพิ่ม Science Advantage ในแผนปีการศึกษา 2570 แล้วติดต่อมาบอกเราว่าครูและนักเรียนของคุณต้องการอะไร",
     buttons: {
       requestDemo: "ขอสาธิต",
       contactSales: "ติดต่อฝ่ายขาย",
@@ -344,7 +344,7 @@ export const th = {
   },
   waitlist: {
     heading: "บอกเราว่าคุณสนใจ",
-    description: "Science Advantage อยู่ในแผนงานของเรา เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
+    description: "Science Advantage วางแผนไว้สำหรับปีการศึกษา 2570 ฝากอีเมลของคุณไว้เพื่อรับข่าวระหว่างที่เราพัฒนาแอปและหนังสือแบบฝึกหัด",
     form: {
       placeholder: "กรอกอีเมลของคุณ",
       button: "บอกเราว่าคุณสนใจ",
@@ -359,7 +359,7 @@ export const th = {
   },
   eyebrows: {
     whyScienceAdvantage: "ทำไมต้อง SCIENCE ADVANTAGE",
-    ngssAligned: "อยู่ในแผนงานของเรา",
+    ngssAligned: "สำหรับปีการศึกษา 2570",
     builtFor: "สร้างขึ้นสำหรับ",
   },
 };

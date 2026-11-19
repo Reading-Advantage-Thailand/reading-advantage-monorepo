@@ -10,20 +10,20 @@ export const en = {
         blendedTier: "Blended Learning",
         managedTier: "Managed Service",
         unitNote: "Prices are in Thai baht, per student, per year.",
-        managedNote: "Managed Service (The Teaching Advantage) is planned. It is not yet available, and it depends on school demand. Contact us to discuss a quotation.",
+        managedNote: "Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready.",
     },
     pricingFeatures: {
         0: {
             name: "Price (per student, per year)",
             appOnly: "1,000 baht",
             blended: "1,500 baht",
-            managed: "Contact us for a quotation",
+            managed: "In planning",
         },
         1: {
             name: "Availability",
             appOnly: "Available",
             blended: "Available",
-            managed: "Not yet available. Depends on school demand.",
+            managed: "In planning",
         },
         2: {
             name: "Leveled reading articles in the digital app",
@@ -73,7 +73,6 @@ export const en = {
         button: "Get Started",
     },
     comingSoon: "Planned",
-    contactLink: "Contact us for a quotation",
 };
 
 export const th = {
@@ -88,20 +87,20 @@ export const th = {
         blendedTier: "Blended Learning",
         managedTier: "Managed Service",
         unitNote: "ราคาเป็นเงินบาท ต่อผู้เรียน ต่อปี",
-        managedNote: "Managed Service (The Teaching Advantage) อยู่ในแผน ยังไม่เปิดให้บริการ และขึ้นอยู่กับความต้องการของโรงเรียน ติดต่อเราเพื่อพูดคุยเรื่องใบเสนอราคา",
+        managedNote: "ปัจจุบันเรามี App-Only และ Blended Learning บริการที่ครบขึ้นอยู่ระหว่างการวางแผน เราจะแจ้งให้ทราบเมื่อพร้อม",
     },
     pricingFeatures: {
         0: {
             name: "ราคา (ต่อผู้เรียน ต่อปี)",
             appOnly: "1,000 บาท",
             blended: "1,500 บาท",
-            managed: "ติดต่อเราเพื่อขอใบเสนอราคา",
+            managed: "อยู่ระหว่างการวางแผน",
         },
         1: {
             name: "การเปิดให้บริการ",
             appOnly: "เปิดให้บริการ",
             blended: "เปิดให้บริการ",
-            managed: "ยังไม่เปิดให้บริการ ขึ้นอยู่กับความต้องการของโรงเรียน",
+            managed: "อยู่ระหว่างการวางแผน",
         },
         2: {
             name: "บทความอ่านแบ่งระดับในแอปดิจิทัล",
@@ -151,7 +150,6 @@ export const th = {
         button: "เริ่มต้นใช้งาน",
     },
     comingSoon: "อยู่ในแผน",
-    contactLink: "ติดต่อเราเพื่อขอใบเสนอราคา",
 };
 
 export const zh = {

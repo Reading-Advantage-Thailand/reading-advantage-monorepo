@@ -56,7 +56,7 @@ export const DEFAULT_GRAPH_LABELS: MasteryGraphLabels = {
   pathUpdated: "Your path has been updated",
   svgLabel: "Mastery Advantage knowledge graph",
   example: "Illustrative example, not real student data.",
-  planned: "Planned, no date",
+  planned: "Planned",
   tabsLabel: "Choose a subject",
   controlsLabel: "Graph controls",
   play: "Play",
