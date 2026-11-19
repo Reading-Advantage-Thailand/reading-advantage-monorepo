@@ -195,7 +195,7 @@ The list has three registers. The floor register holds 29 rows. The file `tests/
 | `compression` | `1.` | `1.8.2` | `GHSA-vc2v-76pw-4v95` |
 | `fast-uri` | `3.` | `3.1.7` | the fast-uri ids in audit §2 |
 | `fast-xml-parser` | `5.` | `5.10.1` | `GHSA-8r6m-32jq-jx6q` |
-| `follow-redirects` | `1.` | `1.16.1` | `GHSA-8r9p-f939-6h3c` `GHSA-q3jh-wrc6-jgq8` |
+| `follow-redirects` | `1.` | `1.16.2` | `GHSA-8r9p-f939-6h3c` `GHSA-q3jh-wrc6-jgq8` `GHSA-mrwp-f3q8-3g9p` |
 | `image-size` | `2.` | `2.0.3` | `GHSA-5p2g-fcmc-qvqq` `GHSA-w3rx-r6r6-pgpr` |
 | `ip-address` | `10.` | `10.3.1` | `GHSA-mwp4-54f8-5fhr` |
 | `js-yaml` | `3.` | `3.15.2` | the js-yaml ids in audit §2 |

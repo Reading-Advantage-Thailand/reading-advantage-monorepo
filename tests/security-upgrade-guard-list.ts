@@ -224,10 +224,10 @@ export const GUARD_ENTRIES: GuardEntry[] = [
     requirePresent: true,
   },
   {
-    advisoryIds: ["GHSA-8r9p-f939-6h3c", "GHSA-q3jh-wrc6-jgq8"],
+    advisoryIds: ["GHSA-8r9p-f939-6h3c", "GHSA-q3jh-wrc6-jgq8", "GHSA-mrwp-f3q8-3g9p"],
     packageName: "follow-redirects",
     linePrefix: "1.",
-    fixedVersion: "1.16.1",
+    fixedVersion: "1.16.2",
     requirePresent: true,
   },
   {

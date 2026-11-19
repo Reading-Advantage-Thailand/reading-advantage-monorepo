@@ -553,6 +553,19 @@ describe("guard list", () => {
     expect(evaluateGuard(atFloor, entry)).toEqual([]);
   });
 
+  it("keeps the follow-redirects 1.16.2 floor: 1.16.1 fails and 1.16.2 passes", () => {
+    const entry = GUARD_ENTRIES.filter((e) => e.packageName === "follow-redirects");
+    expect(entry.map((e) => e.fixedVersion)).toEqual(["1.16.2"]);
+    expect(entry.flatMap((e) => e.advisoryIds)).toContain("GHSA-mrwp-f3q8-3g9p");
+    const below = parseLockedVersions("  follow-redirects@1.16.1:\n    resolution: {integrity: x}\n");
+    const msg = evaluateGuard(below, entry).join("\n");
+    expect(msg).toContain("package=follow-redirects");
+    expect(msg).toContain("locked=1.16.1");
+    expect(msg).toContain("fixed=1.16.2");
+    const atFloor = parseLockedVersions("  follow-redirects@1.16.2:\n    resolution: {integrity: x}\n");
+    expect(evaluateGuard(atFloor, entry)).toEqual([]);
+  });
+
   it("does not floor a package with no patched release", () => {
     expect(NO_FIX_AVAILABLE.length).toBeGreaterThan(0);
     for (const entry of NO_FIX_AVAILABLE) {
