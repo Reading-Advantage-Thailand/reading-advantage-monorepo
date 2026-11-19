@@ -2261,21 +2261,11 @@ function readPaymentVoucherPdfLines(
 }
 
 /**
- * The own date field of a payment voucher payslip print, anchored to its line
- * (A642). The field may follow `Date` or `วันที่`.
- */
-const VOUCHER_DATE_FIELD =
-  /^[ \t]*(?:Date|วันที่)[ \t]*[:：]?[ \t]*(\d{1,2}\/\d{1,2}\/\d{4})/imu;
-
-/** The own date label of a payment voucher payslip print, with no value read (A642). */
-const VOUCHER_DATE_LABEL = /^[ \t]*(?:Date\b|วันที่(?=[ \t:：]|$))/imu;
-
-/**
  * Parses the text layer of a payment voucher payslip print. Each page that
  * carries the form title becomes one draft (PM decision 2026-11-15); `draft`
  * is the first page and `drafts` holds every page. The date comes only from the
- * own date field, and an unreadable own field goes to the review list (A642). A
- * document with no text layer needs the model read path (D-13).
+ * own date field, and an absent or unreadable own field goes to the review list
+ * (A642, F2). A document with no text layer needs the model read path (D-13).
  * @param input The text layer, or null when the PDF has none.
  * @returns The parsed drafts, the review result, or `needs-model`.
  */
@@ -2303,10 +2293,14 @@ export function parsePaymentVoucherPdf(input: {
       /(?:Payee|จ่ายให้แก่)[ \t]*[:：]?[ \t]*([^\n]+)/iu.exec(block)?.[1]?.trim() ??
       null;
     if (voucherNo === null || payee === null) return;
-    const date = readBuddhistNumericDate(
-      VOUCHER_DATE_FIELD.exec(block)?.[1] ?? null,
+    const dateField = readDateFieldFromLines(
+      block.split(/\r?\n/u),
+      VOUCHER_DATE_LABELS,
     );
-    if (date === null && VOUCHER_DATE_LABEL.test(block)) {
+    const date = dateField.found
+      ? readBuddhistNumericDate(dateField.value)
+      : null;
+    if (date === null) {
       unreadableDate = true;
       return;
     }
@@ -2448,8 +2442,9 @@ function readStandaloneMoney(text: string): string | null {
  * report layouts are read: the Cloud layout puts the date after
  * `Amount received on` and the amount on its own line, and the Workspace
  * layout puts the date after `Payment date` with no colon (A607). The date
- * comes only from those two own fields, and an unreadable own field goes to the
- * review list (A642). A document with no text layer needs the model read path.
+ * comes only from those two own fields, and an absent or unreadable own field
+ * goes to the review list (A642, F2). A document with no text layer needs the
+ * model read path.
  * @param input The text layer, or null when the PDF has none.
  * @returns The parsed draft or `needs-model`.
  */
@@ -2458,14 +2453,14 @@ export function parseCloudPaymentReceipt(input: {
 }): DocumentParseResult<CloudPaymentReceiptDraft> {
   if (input.text === null) return { status: "needs-model" };
   const text = normalizeDigits(input.text);
-  const paymentDateText =
-    readLabeledText(text, "Amount received on") ??
-    readLabeledText(text, "Payment date");
-  const paymentDate =
-    readEnglishDate(paymentDateText) ?? readIsoDate(paymentDateText);
-  if (paymentDateText !== null && paymentDate === null) {
-    return reviewDocument(REVIEW_UNREADABLE);
-  }
+  const dateField = readDateFieldFromLines(
+    text.split(/\r?\n/u),
+    CLOUD_RECEIPT_DATE_LABELS,
+  );
+  const paymentDate = dateField.found
+    ? (readEnglishDate(dateField.value) ?? readIsoDate(dateField.value))
+    : null;
+  if (paymentDate === null) return reviewDocument(REVIEW_UNREADABLE);
   const draft: CloudPaymentReceiptDraft = {
     documentTitle: /Payment[ \t]+Receipt/iu.exec(text)?.[0] ?? null,
     paymentDate,
@@ -2660,13 +2655,8 @@ export function parseForeignVendorInvoice(input: {
     (match) => match[1] ?? "",
   );
   const descriptionLine = lines.findIndex((line) => /^DESCRIPTION\b/iu.test(line));
-  const dateField = new RegExp(
-    `${excludedDateFieldBoundarySource()}` +
-      `(?<![A-Za-z0-9_])DATE(?![A-Za-z0-9_])[ \\t]*[:：]?[ \\t]*` +
-      `(\\d{4}\\.\\d{2}\\.\\d{2})`,
-    "iu",
-  ).exec(text);
-  const invoiceDate = readForeignDate(dateField?.[1] ?? null);
+  const dateField = readDateFieldFromLines(lines, FOREIGN_DATE_LABELS);
+  const invoiceDate = dateField.found ? readForeignDate(dateField.value) : null;
   if (invoiceDate === null) return reviewDocument(REVIEW_UNREADABLE);
   const draft: ForeignVendorInvoiceDraft = {
     invoiceDate,
@@ -2728,85 +2718,344 @@ const BARE_ENGLISH_DATE_LINE =
 /** The Thai code point range, which ends a Thai label as a letter ends one (A641). */
 const THAI_LETTER_RANGE = "\\u0E00-\\u0E7F";
 
-/** Characters that continue a longer English or Thai word after a label. */
-const LABEL_TAIL = `A-Za-z0-9_${THAI_LETTER_RANGE}`;
+/** The Unicode spaces that the field reader folds to a plain space (F1). */
+const UNICODE_SPACES = /[\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]/gu;
+
+/** The exact PM document date labels of a school invoice (A640). */
+const SCHOOL_DATE_LABELS = [
+  "Date",
+  "Invoice date",
+  "Issue date",
+  "วันที่",
+  "วันที่ออก",
+  "ลงวันที่",
+  "วันที่ออกใบแจ้งหนี้",
+  "วันที่ออกใบกำกับภาษี",
+] as const;
+
+/** The own date labels of a payment voucher payslip print (A642). */
+const VOUCHER_DATE_LABELS = ["Date", "วันที่"] as const;
+
+/** The own date labels of a cloud payment receipt; only these two fields count (A642). */
+const CLOUD_RECEIPT_DATE_LABELS = ["Payment date", "Amount received on"] as const;
+
+/** The own date label of a foreign vendor invoice (A642). */
+const FOREIGN_DATE_LABELS = ["DATE"] as const;
+
+/** The field words that turn a following date label into another field (F1). */
+const EXCLUDED_DATE_WORDS = new Set([
+  "payment",
+  "due",
+  "delivery",
+  "shipment",
+  "ชำระ",
+  "ส่งของ",
+  "กำหนด",
+  "จัดส่ง",
+]);
+
+/** The base date labels that the join rule guards (F1). */
+const BASE_DATE_LABELS = new Set(["date", "วันที่"]);
+
+/** One date field candidate of a line or cell. */
+type DateFieldCandidate = {
+  readonly start: number;
+  readonly label: string;
+  readonly separatorEnd: number;
+};
+
+/** The own date field of a document: absent, or present with its value. */
+type DateField =
+  | { readonly found: false }
+  | { readonly found: true; readonly value: string | null };
+
+/** One accepted label with its whole-word pattern. */
+type LabelPattern = {
+  readonly label: string;
+  readonly pattern: RegExp;
+};
+
+/** The compiled field patterns of one parser, built once per document (F1). */
+type DateFieldMatcher = {
+  readonly accepted: ReadonlySet<string>;
+  readonly labels: readonly LabelPattern[];
+  readonly excluded: readonly LabelPattern[];
+  readonly hint: RegExp;
+};
+
+/** The characters that do not end a value inside its own field (A641). */
+const DATE_VALUE_STOP = /[;；]|[ \t]{2,}|[:：]/u;
 
 /**
- * The date labels that may carry the document date of a school invoice. This
- * is the exact PM set (A640); a longer Thai label comes first, so `วันที่ออก`
- * wins over `วันที่`.
+ * Folds every Unicode space of one line to a plain space (F1).
+ * @param text One line or one cell value.
+ * @returns The line with plain spaces only.
  */
-const DOCUMENT_DATE_LABEL_SOURCE =
-  "invoice[ \\t]+date|issue[ \\t]+date|" +
-  "วันที่ออกใบแจ้งหนี้|วันที่ออกใบกำกับภาษี|วันที่ออก|ลงวันที่|วันที่|date";
-
-/**
- * Builds the boundary that blocks a payment, due, or delivery field before a
- * date label. The field may use whitespace, a colon, or a hyphen, so
- * `Payment-date:` and `Delivery: Date:` supply nothing (A641).
- * @returns The excluded-field boundary regex source.
- */
-function excludedDateFieldBoundarySource(): string {
-  return (
-    `(?<!(?:payment|due|delivery)[ \\t]+)` +
-    `(?<!(?:payment|due|delivery)[ \\t]*[:：-][ \\t]*)`
-  );
+function normalizeFieldSpaces(text: string): string {
+  return text.replace(UNICODE_SPACES, " ");
 }
 
 /**
- * Builds the document date label with its whole-word boundaries. A payment,
- * due, or delivery field before the label blocks it (A641), and a Thai label
- * stops at the end of its own word, so `วันที่` never matches inside
- * `วันที่ส่งของ`.
- * @returns The label regex source.
+ * Reads the label that ends before a separator. The label is the trailing run
+ * of letters, single spaces, slashes, and hyphens; a run of two spaces starts a
+ * new printed column (A641). The scan walks back from the separator, so the
+ * cost is the length of the label.
+ * @param line The normalized line.
+ * @param end The index of the separator.
+ * @returns The trimmed label and its start index.
  */
-function documentDateLabelSource(): string {
-  return (
-    `${excludedDateFieldBoundarySource()}` +
-    `(?<![${LABEL_TAIL}-])` +
-    `(?:${DOCUMENT_DATE_LABEL_SOURCE})` +
-    `(?![${LABEL_TAIL}])`
-  );
-}
-
-/**
- * Reads the text after an accepted document date label of a document text. A
- * date next to a payment, due, or delivery field supplies nothing (A641).
- * @param text Normalized document text.
- * @returns The label value, or null when no accepted label is present.
- */
-function readDocumentDateText(text: string): string | null {
-  const pattern = new RegExp(
-    `${documentDateLabelSource()}[ \\t]*[:：]?[ \\t]*([^\\n]+)`,
-    "iu",
-  );
-  const match = pattern.exec(text);
-  if (match === null) return null;
-  const value = firstPrintedColumn(match[1] ?? "");
-  return value === "" ? null : value;
-}
-
-/**
- * Reads the document date after an accepted label in the cells of one
- * worksheet. A date next to a payment, due, or delivery field supplies
- * nothing (A641).
- * @param cells The stored cell values of the worksheet.
- * @returns The label value, or null when no accepted label is present.
- */
-function readDocumentDateCellText(
-  cells: Readonly<Record<string, WorkbookCellValue>>,
-): string | null {
-  const pattern = new RegExp(
-    `${documentDateLabelSource()}[ \\t]*[:：][ \\t]*(.+)$`,
-    "iu",
-  );
-  for (const cell of positionedCells(cells)) {
-    const match = pattern.exec(cell.value);
-    if (match === null) continue;
-    const value = (match[1] ?? "").trim();
-    if (value !== "") return value;
+function labelEndingAt(
+  line: string,
+  end: number,
+): { readonly label: string; readonly start: number } {
+  let labelEnd = end;
+  while (labelEnd > 0 && (line[labelEnd - 1] === " " || line[labelEnd - 1] === "\t")) {
+    labelEnd -= 1;
   }
-  return null;
+  let start = labelEnd;
+  while (start > 0) {
+    const char = line[start - 1] ?? "";
+    if (/[A-Za-z\u0E00-\u0E7F/-]/u.test(char)) {
+      start -= 1;
+      continue;
+    }
+    if (char !== " " && char !== "\t") break;
+    let probe = start;
+    while (probe > 0 && (line[probe - 1] === " " || line[probe - 1] === "\t")) {
+      probe -= 1;
+    }
+    if (start - probe >= 2) break;
+    start = probe;
+  }
+  return { label: line.slice(start, labelEnd).trim(), start };
+}
+
+/**
+ * Escapes the regex metacharacters of one literal label.
+ * @param label The literal label.
+ * @returns The escaped source.
+ */
+function escapeRegExpSource(label: string): string {
+  return label.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+}
+
+/**
+ * Builds the whole-word pattern of one field label.
+ * @param label The literal label.
+ * @returns The pattern, case-insensitive for English.
+ */
+function labelWordPattern(label: string): RegExp {
+  return new RegExp(
+    `(?<![A-Za-z${THAI_LETTER_RANGE}])${escapeRegExpSource(label)}` +
+      `(?![A-Za-z${THAI_LETTER_RANGE}])`,
+    "giu",
+  );
+}
+
+/**
+ * Compiles the field patterns of one parser once, so a long document costs one
+ * scan per line and no pattern build (A641).
+ * @param labels The accepted field labels of the parser.
+ * @returns The compiled matcher.
+ */
+function createDateFieldMatcher(labels: readonly string[]): DateFieldMatcher {
+  const hintSource = [...labels, ...EXCLUDED_DATE_WORDS].join("|");
+  return {
+    accepted: new Set(labels.map((label) => label.toLowerCase())),
+    labels: labels.map((label) => ({
+      label,
+      pattern: labelWordPattern(label),
+    })),
+    excluded: [...EXCLUDED_DATE_WORDS].map((word) => ({
+      label: word,
+      pattern: labelWordPattern(word),
+    })),
+    hint: new RegExp(hintSource, "iu"),
+  };
+}
+
+/**
+ * Lists the date field candidates of one line: one at each colon, and one at
+ * each accepted label that a whitespace separator follows (A641).
+ * @param line One normalized line or cell value.
+ * @param matcher The compiled field patterns of the parser.
+ * @returns The candidates in start order.
+ */
+function dateFieldCandidates(
+  line: string,
+  matcher: DateFieldMatcher,
+): readonly DateFieldCandidate[] {
+  if (!matcher.hint.test(line)) return [];
+  const candidates: DateFieldCandidate[] = [];
+  for (let index = 0; index < line.length; index += 1) {
+    if (line[index] !== ":" && line[index] !== "：") continue;
+    const label = labelEndingAt(line, index);
+    if (label.label === "") continue;
+    candidates.push({
+      start: label.start,
+      label: label.label,
+      separatorEnd: index + 1,
+    });
+  }
+  for (const { label: accepted, pattern } of matcher.labels) {
+    for (const match of line.matchAll(pattern)) {
+      const start = match.index ?? 0;
+      const end = start + match[0].length;
+      if (line[end] !== " " && line[end] !== "\t") continue;
+      const label = labelEndingAt(line, end);
+      if (label.label.toLowerCase() !== accepted.toLowerCase()) continue;
+      let separatorEnd = end;
+      while (line[separatorEnd] === " " || line[separatorEnd] === "\t") {
+        separatorEnd += 1;
+      }
+      candidates.push({
+        start: label.start,
+        label: label.label,
+        separatorEnd,
+      });
+    }
+  }
+  for (const { label: word, pattern } of matcher.excluded) {
+    for (const match of line.matchAll(pattern)) {
+      const start = match.index ?? 0;
+      let separatorEnd = start + match[0].length;
+      const separator = line[separatorEnd];
+      if (
+        separator !== " " &&
+        separator !== "\t" &&
+        separator !== ":" &&
+        separator !== "："
+      ) {
+        continue;
+      }
+      while (line[separatorEnd] === " " || line[separatorEnd] === "\t") {
+        separatorEnd += 1;
+      }
+      candidates.push({ start, label: word, separatorEnd });
+    }
+  }
+  return candidates.sort((left, right) => left.start - right.start);
+}
+
+/**
+ * Reads the value of one field. The value stops at the next field candidate, at
+ * `;`, at a printed column, or at the next colon, so a later field never feeds
+ * this field (A641).
+ * @param line The normalized line.
+ * @param from The index after the separator.
+ * @param candidates The field candidates of the line, in start order.
+ * @returns The trimmed value.
+ */
+function dateFieldValue(
+  line: string,
+  from: number,
+  candidates: readonly DateFieldCandidate[],
+): string {
+  let end = line.length;
+  for (const other of candidates) {
+    if (other.start >= from) {
+      end = other.start;
+      break;
+    }
+  }
+  const rest = line.slice(from, end);
+  const stop = DATE_VALUE_STOP.exec(rest);
+  return (stop === null ? rest : rest.slice(0, stop.index)).trim();
+}
+
+/**
+ * Tells whether one candidate label is the join of a lone field word and the
+ * date label, as `Payment` then `Date` (F1).
+ * @param line The normalized line.
+ * @param previous The line or cell before it.
+ * @param candidate The candidate field.
+ * @returns True when the join makes another field.
+ */
+function dateLabelIsJoined(
+  line: string,
+  previous: string,
+  candidate: DateFieldCandidate,
+): boolean {
+  if (!BASE_DATE_LABELS.has(candidate.label.toLowerCase())) return false;
+  const before = line.slice(0, candidate.start).trim();
+  const context = before === "" ? previous.trim() : before;
+  const word = context.replace(/[:：;/]+$/u, "").trim();
+  if (word === "" || /\s/u.test(word)) return false;
+  return EXCLUDED_DATE_WORDS.has(word.toLowerCase());
+}
+
+/**
+ * Reads the first own date field of one line.
+ * @param line The normalized line.
+ * @param previous The line or cell before it.
+ * @param matcher The compiled field patterns of the parser.
+ * @returns The field, or `found: false`.
+ */
+function readDateFieldLine(
+  line: string,
+  previous: string,
+  matcher: DateFieldMatcher,
+): DateField {
+  const candidates = dateFieldCandidates(line, matcher);
+  for (const candidate of candidates) {
+    if (!matcher.accepted.has(candidate.label.toLowerCase())) continue;
+    if (dateLabelIsJoined(line, previous, candidate)) continue;
+    const value = dateFieldValue(line, candidate.separatorEnd, candidates);
+    return { found: true, value: value === "" ? null : value };
+  }
+  return { found: false };
+}
+
+/**
+ * Reads the first own date field of a line list.
+ * @param lines The lines of a document.
+ * @param labels The accepted field labels of the parser.
+ * @returns The field, or `found: false`.
+ */
+function readDateFieldFromLines(
+  lines: readonly string[],
+  labels: readonly string[],
+): DateField {
+  const matcher = createDateFieldMatcher(labels);
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = normalizeFieldSpaces(lines[index] ?? "");
+    const previous =
+      index === 0 ? "" : normalizeFieldSpaces(lines[index - 1] ?? "");
+    const field = readDateFieldLine(line, previous, matcher);
+    if (field.found) return field;
+  }
+  return { found: false };
+}
+
+/**
+ * Reads the first own date field of a worksheet. The cell to the left in the
+ * same row is the context of the join rule (F1).
+ * @param cells The stored cell values of the worksheet.
+ * @param labels The accepted field labels of the parser.
+ * @returns The field, or `found: false`.
+ */
+function readDateFieldFromCells(
+  cells: Readonly<Record<string, WorkbookCellValue>>,
+  labels: readonly string[],
+): DateField {
+  const matcher = createDateFieldMatcher(labels);
+  let previous: PositionedCell | null = null;
+  for (const cell of positionedCells(cells)) {
+    const context =
+      previous !== null &&
+      previous.row === cell.row &&
+      previous.column === cell.column - 1
+        ? normalizeFieldSpaces(previous.value)
+        : "";
+    const field = readDateFieldLine(
+      normalizeFieldSpaces(cell.value),
+      context,
+      matcher,
+    );
+    if (field.found) return field;
+    previous = cell;
+  }
+  return { found: false };
 }
 
 /**
@@ -2996,7 +3245,9 @@ function readSchoolLinesFromCells(
  * Sheet as `.xlsx`, the workbook reader reads all four tabs, and this parser
  * reads each tab that holds a title or a document number (open item Q21). Each
  * field of spec section 8 is read from its labeled cell; a field the tab does
- * not print stays null (A606). The tab text never goes to the model path.
+ * not print stays null (A606). The date comes only from its own accepted label;
+ * the sheet exception reads a bare date in a row that also holds the title or
+ * the document number (B620). The tab text never goes to the model path.
  * @param input The worksheets read from the exported workbook.
  * @returns The parsed drafts, or the review result when no tab is readable.
  */
@@ -3017,7 +3268,7 @@ export function parseSchoolInvoiceSheet(input: {
     const isReceipt =
       documentTitle !== null &&
       /ใบเสร็จรับเงิน|receipt/iu.test(documentTitle);
-    const dateText = readDocumentDateCellText(worksheet.cells);
+    const dateField = readDateFieldFromCells(worksheet.cells, SCHOOL_DATE_LABELS);
     const anchorRows: number[] = [];
     if (documentTitle !== null) anchorRows.push(2);
     if (number !== null) {
@@ -3026,11 +3277,16 @@ export function parseSchoolInvoiceSheet(input: {
       )?.row;
       anchorRows.push(numberRow ?? 5);
     }
-    const date =
-      readEnglishDate(dateText) ??
-      readThaiShortDate(dateText) ??
-      readBareDateBesideCells(worksheet.cells, anchorRows);
-    if (date === null) return reviewDocument(REVIEW_UNREADABLE);
+    let date: string | null;
+    if (dateField.found) {
+      date =
+        readEnglishDate(dateField.value) ??
+        readThaiShortDate(dateField.value);
+      if (date === null) return reviewDocument(REVIEW_UNREADABLE);
+    } else {
+      date = readBareDateBesideCells(worksheet.cells, anchorRows);
+      if (date === null) return reviewDocument(REVIEW_UNREADABLE);
+    }
     drafts.push({
       documentTitle,
       invoiceNo: number !== null && !isReceipt ? number : null,
@@ -3161,9 +3417,10 @@ function readSchoolLinesFromText(
 /**
  * Parses the text layer of a school invoice PDF. The parser reads every field
  * of spec section 8 that the print shows; the title match ignores case, so an
- * uppercase `INVOICE` is read (A606). The LibreOffice print has a clean layer;
- * the Google Sheets print has a broken Thai layer, and the intake puts that
- * file on the review list (open item Q21).
+ * uppercase `INVOICE` is read (A606). The date comes only from its own accepted
+ * label, and a document with no own date field goes to the review list (B620).
+ * The LibreOffice print has a clean layer; the Google Sheets print has a broken
+ * Thai layer, and the intake puts that file on the review list (open item Q21).
  * @param input The text layer, or null when the PDF has none.
  * @returns The parsed draft, the review result, or `needs-model`.
  */
@@ -3176,11 +3433,11 @@ export function parseSchoolInvoicePdf(input: {
     /\bPA-(?:INV|REC)-[0-9A-Za-z]+(?:-[0-9A-Za-z]+)*/iu.exec(text)?.[0] ?? null;
   if (number === null) return reviewDocument(REVIEW_MISSING_STORED_RESULT);
   const isReceipt = /ใบเสร็จรับเงิน|\breceipt\b/iu.test(text);
-  const dateText = readDocumentDateText(text);
+  const dateField = readDateFieldFromLines(text.split(/\r?\n/u), SCHOOL_DATE_LABELS);
   const dueText = readLabeledText(text, "Due|Due date");
-  const date =
-    readEnglishDate(dateText) ??
-    readThaiShortDate(dateText);
+  const date = dateField.found
+    ? (readEnglishDate(dateField.value) ?? readThaiShortDate(dateField.value))
+    : null;
   if (date === null) return reviewDocument(REVIEW_UNREADABLE);
   const draft: SchoolInvoiceDraft = {
     documentTitle: /\b(?:Invoice|Receipt)\b/iu.exec(text)?.[0] ?? null,
