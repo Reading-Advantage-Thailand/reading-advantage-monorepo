@@ -90,11 +90,16 @@ for _ in 1 2; do
 done
 if [ "$MIGRATE_OK" -eq 1 ]; then pass "The migration runs twice and exits 0"; else fail "The migration fails"; fi
 
-echo "=== Seed one family account of the gate ==="
+echo "=== Seed one family account of the gate for each B7 locale and width ==="
 mkdir -p "$TMP_DIR/accounts"
 cat > "$TMP_DIR/accounts/accounts.csv" <<'CSV'
-name,class,role
-Gate Family,gate-family,family
+username,name,class,role
+b7-th-390,B7 th 390,b7-th-390,family
+b7-th-980,B7 th 980,b7-th-980,family
+b7-th-1280,B7 th 1280,b7-th-1280,family
+b7-en-390,B7 en 390,b7-en-390,family
+b7-en-980,B7 en 980,b7-en-980,family
+b7-en-1280,B7 en 1280,b7-en-1280,family
 CSV
 if (cd "$ROOT" && STORYTIME_DATABASE_URL="$DB_URL" ./node_modules/.bin/tsx apps/storytime/scripts/make-accounts.ts --folder "$TMP_DIR/accounts" --database-url-env STORYTIME_DATABASE_URL >"$TMP_DIR/accounts.log" 2>&1); then
   pass "The account script exits 0"
@@ -107,6 +112,17 @@ if [ -n "${GATE_USER:-}" ] && [ -n "${GATE_PASSWORD:-}" ]; then
   pass "The gate account card exists"
 else
   fail "The gate account card is missing"
+fi
+B7_ORDER="b7-th-390 b7-th-980 b7-th-1280 b7-en-390 b7-en-980 b7-en-1280"
+: > "$TMP_DIR/accounts/b7-creds.txt"
+for B7_USER in $B7_ORDER; do
+  B7_PASSWORD="$(awk -F',' -v u="$B7_USER" '$1==u {print $5}' "$TMP_DIR/accounts/sign-in-cards.csv" 2>/dev/null || true)"
+  printf '%s,%s\n' "$B7_USER" "${B7_PASSWORD:-}" >> "$TMP_DIR/accounts/b7-creds.txt"
+done
+if [ "$(grep -cE '^b7-(th|en)-(390|980|1280),[^,]+$' "$TMP_DIR/accounts/b7-creds.txt" 2>/dev/null || true)" -eq 6 ]; then
+  pass "The six B7 account credentials exist"
+else
+  fail "A B7 account credential is missing"
 fi
 
 echo "=== Build the app (retry once on the known Next.js security-notice stop) ==="
@@ -156,6 +172,7 @@ import fs from 'node:fs';
 const base = process.argv[2];
 const shots = process.argv[3];
 const user = process.argv[4];
+const b7creds = fs.readFileSync(process.argv[5], 'utf8').trim().split('\n').map((line) => line.split(','));
 const locales = ['th', 'en'];
 const widths = [
   { name: '390', width: 390, height: 844 },
@@ -170,8 +187,9 @@ const check = (ok, name, detail) => { if (ok) pass(name); else { fail(name, deta
 
 const browser = await chromium.launch();
 try {
-  for (const locale of locales) {
-    for (const view of widths) {
+  for (const [localeIndex, locale] of locales.entries()) {
+    for (const [viewIndex, view] of widths.entries()) {
+      const [b7user, b7password] = b7creds[localeIndex * widths.length + viewIndex];
       const context = await browser.newContext({ viewport: { width: view.width, height: view.height } });
       const page = await context.newPage();
       const mediaRequests = [];
@@ -283,7 +301,7 @@ try {
       const primaryCount = await page.locator('button[data-entry-primary]').count();
       check(primaryCount === 1, `B7 ${locale} ${view.name} primary button exists`, `count=${primaryCount}`);
       if (primaryCount === 1) {
-        await page.fill('input[name="username"]', user);
+        await page.fill('input[name="username"]', b7user);
         await page.fill('input[name="password"]', 'wrong-password-1');
         await Promise.all([
           page.waitForNavigation({ waitUntil: 'networkidle' }).catch(() => {}),
@@ -302,7 +320,7 @@ try {
         });
         check(alertInCard === 'before', `B7 ${locale} ${view.name} alert inside card before field`, `position=${alertInCard}`);
         const kept = await page.$eval('input[name="username"]', (node) => node.value).catch(() => '');
-        check(kept === user, `B7 ${locale} ${view.name} username kept`, `value=${kept}`);
+        check(kept === b7user, `B7 ${locale} ${view.name} username kept`, `value=${kept}`);
       } else {
         check(false, `B7 ${locale} ${view.name} alert inside card before field`, 'no primary button');
         check(false, `B7 ${locale} ${view.name} username kept`, 'no primary button');
@@ -368,7 +386,7 @@ process.exit(failed);
 NODE
 
 echo "=== Run the Playwright rows B1 to B9 ==="
-if (cd "$APP" && node "$PLAYWRIGHT" "http://localhost:$APP_PORT" "$SHOT_DIR" "$GATE_USER" >"$TMP_DIR/playwright.log" 2>&1); then
+if (cd "$APP" && node "$PLAYWRIGHT" "http://localhost:$APP_PORT" "$SHOT_DIR" "$GATE_USER" "$TMP_DIR/accounts/b7-creds.txt" >"$TMP_DIR/playwright.log" 2>&1); then
   pass "The Playwright run exits 0"
 else
   fail "The Playwright run exits non-zero"
