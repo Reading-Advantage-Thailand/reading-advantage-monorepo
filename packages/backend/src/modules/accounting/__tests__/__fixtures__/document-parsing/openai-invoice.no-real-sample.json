@@ -1,0 +1,13 @@
+{
+  "_marker": "no real sample",
+  "_note": "FAKE OpenAI invoice fixture for plan task 6.1. Synthetic; the structure report holds no OpenAI invoice sample (PM-12, spec section 8 note 7). No real amount, name, tax id, account number, or document text.",
+  "invoiceNumber": "OPENAI-FAKE-0001",
+  "invoiceDate": "2026-10-01",
+  "periodStart": "2026-09-01",
+  "periodEnd": "2026-09-30",
+  "currency": "USD",
+  "subtotal": "10.00",
+  "tax": "0.70",
+  "total": "10.70",
+  "text": "OpenAI invoice OPENAI-FAKE-0001\nInvoice date: 2026-10-01\nBilling period: 2026-09-01 to 2026-09-30\nSubtotal: USD 10.00\nTax: USD 0.70\nTotal: USD 10.70"
+}

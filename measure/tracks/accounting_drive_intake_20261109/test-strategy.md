@@ -675,13 +675,15 @@ None. The phase holds no Red task and no Green task. The plan names the two task
 
 ### P6: Document parsing
 
-**Risk: high.** The phase writes the eight parsers and the eight draft schemas from the structure report. The parsers read money and counterparty text from a document, and they set the extraction marker. A wrong parser puts a wrong value into a finance row.
+> **Amendment P6 r2 (2026-11-19).** Route `opencode-go/deepseek-v4.1-flash`. `role_base_sha=d3dde9ced410e067f2876d7293d08e07412b3be1`. This amendment corrects Review A finding A613. The phase writes thirteen parsers and eleven draft schemas, the readers are real code, and the count rows compute from the module exports. The review applicability row of this phase, the counts, and the closeout gate item 1 now agree with the module at HEAD.
+
+**Risk: high.** The phase writes thirteen parsers and eleven draft schemas from the structure report. Two parser pairs share one schema: the two payment voucher parsers share `paymentVoucherDraftSchema`, and the two school invoice parsers share `schoolInvoiceDraftSchema`. The parsers read money and counterparty text from a document, and they set the extraction marker. A wrong parser puts a wrong value into a finance row.
 
 **Review applicability**
 
 | Review | Applies | Reason and scope |
 |---|---|---|
-| Review A (code) | yes | The phase adds one module with eight parsers and eight schemas. Review A checks the single-file placement, the Zod validation of every draft, the marker on every value, and the read-path routing. |
+| Review A (code) | yes | The phase adds one module with thirteen parsers and eleven schemas. Review A checks the single-file placement, the Zod validation of every draft, the marker on every value, the real readers, and the read-path routing. |
 | Review B (security) | **yes (required)** | The phase touches finance data (the parsed money and counterparty) and the Vertex route (a non-text cloud, Workspace, or OpenAI invoice goes to the model, D-13). Review B checks that the parsers read no other document, that the fixtures hold no real text, and that the model path is the only path that leaves the machine. |
 | Review C (UX/API) | no | The phase adds no route and no page. |
 | Adversarial testing | yes | A document with a hostile field value, a document with a missing field, a document with a field over the schema limit, and a CSV with a hostile cell. |
@@ -697,7 +699,7 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 
 | Task | File | Expected at the base | Labeled counts |
 |---|---|---|---|
-| 6.1 | `document-parsing.test.ts` | Exit 1. The message names the missing module `packages/backend/src/modules/accounting/document-parsing.ts` or a missing parser export. | `parsers=8`, `draft_schemas=8`, `marker_cases>=6`, `read_path_rows>=8` |
+| 6.1 | `document-parsing.test.ts` | Exit 1. The message names the missing module `packages/backend/src/modules/accounting/document-parsing.ts` or a missing parser export. | `parsers=13`, `draft_schemas=11`, `marker_cases>=6`, `read_path_rows>=8` |
 
 **Green gate**
 
@@ -708,16 +710,17 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 
 **Closeout gate**
 
-1. The Green gate of this phase holds with the quoted counts.
+1. The Green gate of this phase holds with the quoted counts: `parsers=13` and `draft_schemas=11`.
 2. `intake_out_of_scope_paths=0`. The allowed paths of this phase: `packages/backend/src/modules/accounting/document-parsing.ts`, `packages/backend/src/modules/accounting/__tests__/document-parsing.test.ts`, `packages/backend/src/modules/accounting/index.ts`, and the track files.
 3. The spec section 8 holds no placeholder row for a document type that the report names. The count `placeholder_rows_left=0` is a labeled integer.
 4. The report date is recorded in the plan note and in the spec. The count `report_date_recorded=1` is a labeled integer.
-5. The fixtures hold no real text. The count `real_text_in_fixtures=0` is a labeled integer.
+5. The fixtures hold no real text. `real_text_in_fixtures=0` is a human read of the test file and the three no-real-sample fixtures. The evidence class is human. No automated row counts real text: the `_marker` row only proves that each fixture holds the string `no real sample`.
 
 **Fixtures and mocks**
 
 - The parser fixtures come from the structure report and are fakes. A fixture holds a header row, a data row, a money text, a counterparty text, and a document type.
-- The reader is a fake. It returns a fake text or a fake CSV row set.
+- The readers are real code: `readWorkbook` and `readVoucherWorksheets` read the `.xlsx` workbook, and `readTextPdf` reads the text PDF. No fake reader exists.
+- The test rows call these readers with hostile inputs: a ZIP part over the 8 MiB inflate cap, a PDF stream over the 8 MiB inflate cap, a hostile shared-strings part, an XML character reference above `0x10FFFF`, a malformed ZIP, a malformed PDF, and a minimal text PDF.
 - The marker of every value comes from the read path, not from the parser input.
 
 **Mutants**
@@ -731,7 +734,7 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 
 **Labeled counts and floors**
 
-`parsers=8`, `draft_schemas=8`, `marker_cases>=6`, `read_path_rows>=8`, `placeholder_rows_left=0`, `real_text_in_fixtures=0`.
+`parsers=13`, `draft_schemas=11`, `marker_cases>=6`, `read_path_rows>=8`, `placeholder_rows_left=0`, `real_text_in_fixtures=0`.
 
 **What the tests cannot prove**
 
@@ -743,9 +746,10 @@ HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/a
 
 | Task | Anti-patterns | Defense | Falsification condition |
 |---|---|---|---|
-| 6.1 | A1, A3, A4 | `parsers=8` and `draft_schemas=8` are parsed from the label. The missing-module case is an assertion with a message. | One parser or one schema is missing and the file passes. |
+| 6.1 | A1, A3, A4 | The parser row iterates `PARSER_NAMES`, the thirteen names of spec section 8 in table order, and asserts that each name is a module function. The schema row counts every module export whose name ends in `DraftSchema` and asserts 11 exports; the evidence records the label `draft_schemas=11`. Both counts compute from the module, not from a literal array. A further row asserts that the retired placeholders `parsePayrollSheet` and `parseTaxInvoice` are absent. | One parser or one schema is missing and the file passes, or a count row asserts a literal array length instead of the module exports. |
 | 6.2 | A2, A7 | Every fixture holds a fake counterparty and a fake amount. The marker case asserts the marker on every value. | A fixture holds a real amount, or a value has no marker. |
 | 6.2 | A5 | The placeholder-error case is proven with a test double, so no test file is deleted and no Green edit weakens a case. | The real parser case passes without a schema check. |
+| 6.2 | A1, A4 | The reader rows call the real exports `readWorkbook`, `readVoucherWorksheets`, and `readTextPdf` on generated inputs. Each hostile row asserts the concrete result: an empty workbook, a null text, or an exported cap value. A fake reader cannot satisfy these rows. | A reader row passes with a fake reader, or a hostile row asserts only that no exception is raised. |
 
 ### P7: The marker, the review surface, and the guards
 
