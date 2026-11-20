@@ -2965,3 +2965,227 @@ describe("R8 F2 documents with no own date field go to the review list", () => {
     expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 });
+
+describe("R9 A641 punctuation suffixes on the PDF path", () => {
+  it("reads the accepted Date and not the dotted Delivery.Date", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const result = parse({
+      text: [
+        "Test School Company Ltd.",
+        "ใบแจ้งหนี้ / INVOICE",
+        "No: PA-INV-FAKE-071-T2",
+        "Delivery.Date: 31 Oct 2026",
+        "Date: 15 Oct 2026",
+      ].join("\n"),
+    }) as Record<string, unknown>;
+    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["date"]).toBe("2026-10-15");
+  });
+
+  it("reads the accepted Date and not the ampersand Delivery and Date", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const result = parse({
+      text: [
+        "Test School Company Ltd.",
+        "ใบแจ้งหนี้ / INVOICE",
+        "No: PA-INV-FAKE-072-T2",
+        "Delivery & Date: 31 Oct 2026",
+        "Date: 15 Oct 2026",
+      ].join("\n"),
+    }) as Record<string, unknown>;
+    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["date"]).toBe("2026-10-15");
+  });
+
+  it("returns review unreadable when only the dotted Delivery.Date carries a date", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const result = parse({
+      text: [
+        "Test School Company Ltd.",
+        "ใบแจ้งหนี้ / INVOICE",
+        "No: PA-INV-FAKE-073-T2",
+        "Delivery.Date: 31 Oct 2026",
+      ].join("\n"),
+    }) as Record<string, unknown>;
+    expect(requireReviewResult(result)).toBe("review:unreadable");
+  });
+
+  it("returns review unreadable when only the ampersand Delivery and Date carries a date", () => {
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const result = parse({
+      text: [
+        "Test School Company Ltd.",
+        "ใบแจ้งหนี้ / INVOICE",
+        "No: PA-INV-FAKE-074-T2",
+        "Delivery & Date: 31 Oct 2026",
+      ].join("\n"),
+    }) as Record<string, unknown>;
+    expect(requireReviewResult(result)).toBe("review:unreadable");
+  });
+});
+
+describe("R9 A641 punctuation suffixes on the sheet path", () => {
+  it("reads the accepted Date cell and not the dotted Delivery.Date cell", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const result = parse({
+      worksheets: [
+        {
+          name: "Term 2",
+          cells: {
+            A1: "Test School Company Ltd.",
+            A2: "ใบแจ้งหนี้ / INVOICE",
+            B5: "PA-INV-FAKE-075-T2",
+            A10: "Delivery.Date: 31 Oct 2026",
+            A11: "Date: 15 Oct 2026",
+          } as Record<string, string | number | null>,
+        },
+      ],
+    }) as Record<string, unknown>;
+    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["date"]).toBe("2026-10-15");
+  });
+
+  it("reads the accepted Date cell and not the ampersand Delivery and Date cell", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const result = parse({
+      worksheets: [
+        {
+          name: "Term 2",
+          cells: {
+            A1: "Test School Company Ltd.",
+            A2: "ใบแจ้งหนี้ / INVOICE",
+            B5: "PA-INV-FAKE-076-T2",
+            A10: "Delivery & Date: 31 Oct 2026",
+            A11: "Date: 15 Oct 2026",
+          } as Record<string, string | number | null>,
+        },
+      ],
+    }) as Record<string, unknown>;
+    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
+    expect(draft["date"]).toBe("2026-10-15");
+  });
+
+  it("returns review unreadable when only the dotted Delivery.Date cell carries a date", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const result = parse({
+      worksheets: [
+        {
+          name: "Term 2",
+          cells: {
+            A1: "Test School Company Ltd.",
+            A2: "ใบแจ้งหนี้ / INVOICE",
+            B5: "PA-INV-FAKE-077-T2",
+            A10: "Delivery.Date: 31 Oct 2026",
+          } as Record<string, string | number | null>,
+        },
+      ],
+    }) as Record<string, unknown>;
+    expect(requireReviewResult(result)).toBe("review:unreadable");
+  });
+
+  it("returns review unreadable when only the ampersand Delivery and Date cell carries a date", () => {
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const result = parse({
+      worksheets: [
+        {
+          name: "Term 2",
+          cells: {
+            A1: "Test School Company Ltd.",
+            A2: "ใบแจ้งหนี้ / INVOICE",
+            B5: "PA-INV-FAKE-078-T2",
+            A10: "Delivery & Date: 31 Oct 2026",
+          } as Record<string, string | number | null>,
+        },
+      ],
+    }) as Record<string, unknown>;
+    expect(requireReviewResult(result)).toBe("review:unreadable");
+  });
+});
+
+describe("R9 A641 dotted Delivery.DATE on the foreign path", () => {
+  it("reads the genuine DATE field and not an earlier dotted Delivery.DATE field", () => {
+    const parse = requireParser("parseForeignVendorInvoice");
+    const result = parse({
+      text: [
+        "VENDOR A PRINTING CO.,LTD",
+        "Delivery.DATE 2026.10.31",
+        "DATE 2026.10.15",
+        "TO:Test Company",
+        "DESCRIPTION",
+        "work book test",
+        "1000copies",
+        "RMB10.0",
+        "RMB10000",
+      ].join("\n"),
+    }) as Record<string, unknown>;
+    const draft = requireParsedDraft(result, "foreignVendorInvoiceDraftSchema");
+    expect(draft["invoiceDate"]).toBe("2026-10-15");
+  });
+
+  it("returns review unreadable when only the dotted Delivery.DATE field carries a date", () => {
+    const parse = requireParser("parseForeignVendorInvoice");
+    const result = parse({
+      text: [
+        "VENDOR A PRINTING CO.,LTD",
+        "Delivery.DATE 2026.10.31",
+        "TO:Test Company",
+        "DESCRIPTION",
+        "work book test",
+        "1000copies",
+        "RMB10.0",
+        "RMB10000",
+      ].join("\n"),
+    }) as Record<string, unknown>;
+    expect(requireReviewResult(result)).toBe("review:unreadable");
+  });
+});
+
+describe("R9 A643 dense date labels stay fast on the PDF path", () => {
+  // Sizing note: the brief asks for `'Date '.repeat(200000)`. That input
+  // hangs the suite instead of failing it: a per-test timeout cannot preempt
+  // synchronous scanning, and the r9 run with 200000 repeats printed no
+  // output in 600 s. A calibration of the backward scan on this machine
+  // gives about 3 s at 8000 repeats and grows with the square of the count,
+  // so 30000 repeats (≈150,000 chars, under MAX_PDF_TEXT_CHARS) exceeds the
+  // 2000 ms bound by an order of magnitude while still finishing, and 20000
+  // repeats (≈100,000 chars) is the smaller scaling control.
+  it(
+    "returns review unreadable for a 150-thousand-character Date line within 2000 ms",
+    { timeout: 10_000 },
+    () => {
+      const parse = requireParser("parseSchoolInvoicePdf");
+      const startedAt = Date.now();
+      const result = parse({
+        text: [
+          "Test School Company Ltd.",
+          "ใบแจ้งหนี้ / INVOICE",
+          "No: PA-INV-FAKE-079-T2",
+          "Date ".repeat(30000),
+        ].join("\n"),
+      }) as Record<string, unknown>;
+      const elapsedMs = Date.now() - startedAt;
+      expect(requireReviewResult(result)).toBe("review:unreadable");
+      expect(elapsedMs).toBeLessThan(2000);
+    },
+  );
+
+  it(
+    "returns review unreadable for a 100-thousand-character Date line within 2000 ms",
+    { timeout: 10_000 },
+    () => {
+      const parse = requireParser("parseSchoolInvoicePdf");
+      const startedAt = Date.now();
+      const result = parse({
+        text: [
+          "Test School Company Ltd.",
+          "ใบแจ้งหนี้ / INVOICE",
+          "No: PA-INV-FAKE-080-T2",
+          "Date ".repeat(20000),
+        ].join("\n"),
+      }) as Record<string, unknown>;
+      const elapsedMs = Date.now() - startedAt;
+      expect(requireReviewResult(result)).toBe("review:unreadable");
+      expect(elapsedMs).toBeLessThan(2000);
+    },
+  );
+});
