@@ -97,11 +97,6 @@ export default async function ZhongwenAdvantage({
 
   const faqItems = [
     {
-      question: "When will Zhongwen Advantage launch?",
-      answer:
-        "Our platform is scheduled to launch in early 2025. Join our waitlist for early access opportunities.",
-    },
-    {
       question: "What are the technical requirements?",
       answer:
         "Zhongwen Advantage will be accessible on any modern web browser, with mobile apps available for iOS and Android.",

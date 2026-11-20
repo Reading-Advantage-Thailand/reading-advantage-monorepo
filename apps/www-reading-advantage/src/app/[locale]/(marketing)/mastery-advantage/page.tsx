@@ -83,7 +83,6 @@ export default async function MasteryAdvantagePage() {
       key: "reading",
       logo: siteLogos.reading.color,
       logoAlt: t("powersEveryProduct.cards.reading.logoAlt"),
-      status: t("powersEveryProduct.cards.reading.status"),
       description: t("powersEveryProduct.cards.reading.description"),
       badge: "bg-site-border text-slate-800",
       bar: "bg-site-navy",
@@ -266,7 +265,9 @@ export default async function MasteryAdvantagePage() {
                 <div className="flex flex-1 flex-col gap-5 p-7">
                   <div className="flex items-center justify-between gap-3">
                     <img src={run.logo} alt={run.logoAlt} className="h-12 w-auto max-w-3/5" />
-                    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${run.badge}`}>{run.status}</span>
+                    {"status" in run && run.status ? (
+                      <span className={`rounded-full px-3 py-1 text-xs font-semibold ${run.badge}`}>{run.status}</span>
+                    ) : null}
                   </div>
                   <p className="text-sm leading-relaxed text-site-body">{run.description}</p>
                 </div>

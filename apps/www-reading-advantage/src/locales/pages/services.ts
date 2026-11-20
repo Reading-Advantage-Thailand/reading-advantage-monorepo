@@ -28,10 +28,10 @@ export const en = {
     },
     {
       name: "Managed Service",
-      status: "Not yet available",
+      status: "In planning",
       statusBadge: "ROADMAP",
       description:
-        "Planned service: we provide the technology and the teacher for complete English department outsourcing. It depends on school demand.",
+        "Planned service: we provide the technology and the teacher for complete English department outsourcing.",
       features: [
         "Fully outsourced English department",
         "Structured onboarding and implementation review",
@@ -117,10 +117,10 @@ export const th = {
     },
     {
       name: "บริการจัดการแบบครบวงจร",
-      status: "ยังไม่เปิดให้บริการ",
+      status: "อยู่ระหว่างการวางแผน",
       statusBadge: "แผนงาน",
       description:
-        "บริการที่วางแผนไว้: เรามอบทั้งเทคโนโลยีและครูสำหรับการจัดการแผนกวิชาภาษาอังกฤษแบบครบวงจร ขึ้นอยู่กับความต้องการของโรงเรียน",
+        "บริการที่วางแผนไว้: เรามอบทั้งเทคโนโลยีและครูสำหรับการจัดการแผนกวิชาภาษาอังกฤษแบบครบวงจร",
       features: [
         "แผนกวิชาภาษาอังกฤษแบบจัดการภายนอกทั้งหมด",
         "การเริ่มต้นใช้งานอย่างเป็นขั้นตอน",

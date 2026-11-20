@@ -1,10 +1,10 @@
 export const en = {
   hero: {
-    title: "Chinese Learning, Planned",
-    subtitle: "On Our Roadmap · Planned",
+    title: "Chinese Learning for the 2027 School Year",
+    subtitle: "Workbooks and an App for Thai Primary Schools",
     description:
-      "Zhongwen Advantage is on our roadmap. It is planned as a workbook line tagged to the Mastery Advantage knowledge graph.",
-    badge: "On Our Roadmap",
+      "In the 2027 school year, Thai primary students open Zhongwen Advantage workbooks and a dedicated app, both tagged to the Mastery Advantage knowledge graph. We are building the app now on the Primary Advantage base.",
+    badge: "For the 2027 school year",
     ctaButton: "Tell Us You Are Interested",
     alt: "Digital Chinese language learning with cultural elements",
   },
@@ -51,14 +51,14 @@ export const en = {
   waitlist: {
     joinWaitlist: "Tell Us You Are Interested",
     description:
-      "Zhongwen Advantage is on our roadmap. We will keep your email for news.",
+      "Zhongwen Advantage is planned for the 2027 school year. Leave your email for news as we build the app and workbooks.",
     emailPlaceholder: "Enter your email",
     subscribe: "Send",
   },
   cta: {
     heading: "Start Your Chinese Learning Journey",
     description:
-      "Zhongwen Advantage is on our roadmap. Tell us what you need.",
+      "Put Zhongwen Advantage on your plan for the 2027 school year. Tell us what your teachers and students need.",
     buttons: {
       joinWaitlist: "Tell Us You Are Interested",
       learnMore: "Learn More",
@@ -68,11 +68,11 @@ export const en = {
 
 export const th = {
   hero: {
-    title: "การเรียนภาษาจีน ในแผนงาน",
-    subtitle: "อยู่ในแผนงาน · กำลังวางแผน",
+    title: "เรียนภาษาจีนสำหรับปีการศึกษา 2570",
+    subtitle: "หนังสือแบบฝึกหัดและแอปสำหรับโรงเรียนประถมไทย",
     description:
-      "Zhongwen Advantage อยู่ในแผนงานของเรา วางแผนเป็นชุดแบบฝึกหัดที่เชื่อมกับกราฟความรู้ Mastery Advantage",
-    badge: "อยู่ในแผนงาน",
+      "ในปีการศึกษา 2570 นักเรียนประถมไทยจะได้เปิดหนังสือแบบฝึกหัด Zhongwen Advantage และใช้แอปเฉพาะวิชา ทั้งสองส่วนติดแท็กเชื่อมกับกราฟความรู้ Mastery Advantage ขณะนี้เรากำลังพัฒนาแอปโดยใช้พื้นฐานของ Primary Advantage",
+    badge: "สำหรับปีการศึกษา 2570",
     ctaButton: "บอกเราว่าคุณสนใจ",
     alt: "การเรียนรู้ภาษาจีนดิจิทัลพร้อมองค์ประกอบทางวัฒนธรรม",
   },
@@ -119,14 +119,14 @@ export const th = {
   waitlist: {
     joinWaitlist: "บอกเราว่าคุณสนใจ",
     description:
-      "Zhongwen Advantage อยู่ในแผนงานของเรา เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
+      "Zhongwen Advantage วางแผนไว้สำหรับปีการศึกษา 2570 ฝากอีเมลของคุณไว้เพื่อรับข่าวระหว่างที่เราพัฒนาแอปและหนังสือแบบฝึกหัด",
     emailPlaceholder: "ป้อนอีเมลของคุณ",
     subscribe: "ส่ง",
   },
   cta: {
     heading: "เริ่มต้นการเดินทางเรียนภาษาจีนของคุณ",
     description:
-      "Zhongwen Advantage อยู่ในแผนงานของเรา บอกเราว่าคุณต้องการอะไร",
+      "เพิ่ม Zhongwen Advantage ในแผนปีการศึกษา 2570 แล้วบอกเราว่าครูและนักเรียนของคุณต้องการอะไร",
     buttons: {
       joinWaitlist: "บอกเราว่าคุณสนใจ",
       learnMore: "เรียนรู้เพิ่มเติม",

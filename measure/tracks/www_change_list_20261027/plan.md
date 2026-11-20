@@ -32,6 +32,15 @@
 - [ ] W.5 Open one live approval page for Daniel. Give it one row per changed page and locale. Test: AC-8.
 - [ ] W.6 After the pass, merge the branch into local `master`. Then remove the worktree and delete the branch in the same turn. Test: AC-9.
 
+## Batch 2026-11-19: Thai-checked rows
+
+> Source: `/home/daniebo/Desktop/advantage-pr/11-content/www-change-list.md` v1.51, file lines 51, 52, 55, 56, 57. Branch `www/batch-20261119` from `origin/master` `ac1d09869`, worktree `/home/daniebo/Desktop/rama-worktrees/www-batch-20261119`. Thai check: Daniel, Google Tasks 2026-11-19 05:40 ICT, "All ok" — each "(draft; Daniel checks)" Thai in these rows counts as Daniel checked. Home roadmapNote takes place 2 INTERIM, not LAUNCH. W.5 and W.6 run later.
+
+- [x] W.1 Receive the entries. The five rows and their places are recorded in this phase. Test: AC-4.
+- [x] W.2 Tests first. `src/__tests__/www-batch-20261119.locale.test.ts` fails 41 of 43 (2 scope guards pass). Test commit `5945c4fb8`. Test: AC-5.
+- [x] W.3 Build the copy word for word in en and th. Newer rows win on shared keys. Commit `05dad845e`. Test: AC-6.
+- [x] W.4 Run the gates through heavy-run: www lint, typecheck, the www vitest suite, the www build, `affected-apps.mjs`. Lint exit 0, typecheck exit 0, suite 81 files / 2898 tests pass, build success (two SecurityFatalError nudge exits first, third attempt clean), affected `["www-reading-advantage"]`. Test: AC-7.
+
 ## Out of scope
 
 - Push and deploy. The push to `origin/master` stays with Daniel.

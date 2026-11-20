@@ -188,13 +188,13 @@ describe("www batch 2026-11-16, row B", () => {
 });
 
 /**
- * PM decision 2026-11-16: the home roadmap note keeps the plan sentence and drops the
- * no-dates sentence. These product lines are planned.
+ * File line 51 (2026-11-16): the home roadmap note takes the INTERIM copy. The
+ * 2026-11-16 PM decision text below is superseded.
  */
 const ROADMAP_NOTE = {
   key: "pages.home.v2.products.roadmapNote",
-  en: "These product lines are planned.",
-  th: "สายผลิตภัณฑ์เหล่านี้อยู่ในแผน",
+  en: "Storytime Advantage opens as an app on 30 November 2026. In the 2027 school year, Thai primary schools open Science, Math, and Zhongwen Advantage: workbooks and apps.",
+  th: "Storytime Advantage เปิดให้ใช้งานเป็นแอปวันที่ 30 พฤศจิกายน 2569 ในปีการศึกษา 2570 โรงเรียนประถมศึกษาไทยจะเปิดใช้ Science Advantage, Math Advantage และ Zhongwen Advantage ทั้งหนังสือแบบฝึกหัดและแอป",
   removed: { en: "We give no dates.", th: "เรายังไม่กำหนดวันที่" },
 } as const;
 
@@ -211,44 +211,44 @@ describe("www batch 2026-11-16, home roadmap note (PM decision)", () => {
 });
 
 /**
- * PM decision 2026-11-16: the Science, Math, and Zhongwen detail pages drop only the
- * no-release-date sentence in en and th. The exact line proves the kept text word for word.
+ * File line 52 (2026-11-16): the Science, Math, and Zhongwen detail pages name the
+ * 2027 school year. The 2026-11-16 PM decision text below is superseded.
  */
 const DETAIL_NO_DATE = [
   {
     key: "pages.products.mathAdvantage.hero.description",
-    en: "Math Advantage is on our product roadmap. It is a planned math book line with a printed workbook and a digital twin, tagged to the Mastery Advantage knowledge graph.",
-    th: "แมธแอดแวนเทจอยู่ในแผนงานผลิตภัณฑ์ของเรา เป็นชุดหนังสือคณิตศาสตร์ที่วางแผนไว้ มีแบบฝึกหัดเล่มพิมพ์และเวอร์ชันดิจิทัล เชื่อมกับกราฟความรู้ Mastery Advantage",
+    en: "In the 2027 school year, young mathematicians open printed workbooks and a Math Advantage app, both tagged to the Mastery Advantage knowledge graph. We are building the app now on the Primary Advantage base.",
+    th: "ในปีการศึกษา 2570 นักคณิตศาสตร์ตัวน้อยจะได้เปิดหนังสือแบบฝึกหัดฉบับพิมพ์และใช้แอป Math Advantage ทั้งสองส่วนติดแท็กเชื่อมกับกราฟความรู้ Mastery Advantage ขณะนี้เรากำลังพัฒนาแอปโดยใช้พื้นฐานของ Primary Advantage",
     removed: { en: "It has no release date.", th: "ยังไม่มีกำหนดวันเปิดตัว" },
   },
   {
     key: "pages.products.mathAdvantage.cta.description",
-    en: "Math Advantage is on our roadmap. Tell us what you need.",
-    th: "แมธแอดแวนเทจอยู่ในแผนงานของเรา บอกเราว่าคุณต้องการอะไร",
+    en: "Put Math Advantage on your plan for the 2027 school year. Tell us what your teachers and students need.",
+    th: "เพิ่ม Math Advantage ในแผนปีการศึกษา 2570 แล้วบอกเราว่าครูและนักเรียนของคุณต้องการอะไร",
     removed: { en: "It has no release date.", th: "ยังไม่มีกำหนดวันเปิดตัว" },
   },
   {
     key: "pages.products.scienceAdvantage.cta.description",
-    en: "Science Advantage is on our roadmap. Contact us to tell us what you need.",
-    th: "Science Advantage อยู่ในแผนงานของเรา ติดต่อเราเพื่อบอกสิ่งที่คุณต้องการ",
+    en: "Put Science Advantage on your plan for the 2027 school year. Contact us to tell us what your teachers and students need.",
+    th: "เพิ่ม Science Advantage ในแผนปีการศึกษา 2570 แล้วติดต่อมาบอกเราว่าครูและนักเรียนของคุณต้องการอะไร",
     removed: { en: "It has no release date.", th: "และยังไม่มีกำหนดวันเปิดตัว" },
   },
   {
     key: "pages.products.scienceAdvantage.waitlist.description",
-    en: "Science Advantage is on our roadmap. We will keep your email for news.",
-    th: "Science Advantage อยู่ในแผนงานของเรา เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
+    en: "Science Advantage is planned for the 2027 school year. Leave your email for news as we build the app and workbooks.",
+    th: "Science Advantage วางแผนไว้สำหรับปีการศึกษา 2570 ฝากอีเมลของคุณไว้เพื่อรับข่าวระหว่างที่เราพัฒนาแอปและหนังสือแบบฝึกหัด",
     removed: { en: "Science Advantage has no release date.", th: "Science Advantage ยังไม่มีกำหนดวันเปิดตัว" },
   },
   {
     key: "pages.products.zhongwenAdvantage.hero.description",
-    en: "Zhongwen Advantage is on our roadmap. It is planned as a workbook line tagged to the Mastery Advantage knowledge graph.",
-    th: "Zhongwen Advantage อยู่ในแผนงานของเรา วางแผนเป็นชุดแบบฝึกหัดที่เชื่อมกับกราฟความรู้ Mastery Advantage",
+    en: "In the 2027 school year, Thai primary students open Zhongwen Advantage workbooks and a dedicated app, both tagged to the Mastery Advantage knowledge graph. We are building the app now on the Primary Advantage base.",
+    th: "ในปีการศึกษา 2570 นักเรียนประถมไทยจะได้เปิดหนังสือแบบฝึกหัด Zhongwen Advantage และใช้แอปเฉพาะวิชา ทั้งสองส่วนติดแท็กเชื่อมกับกราฟความรู้ Mastery Advantage ขณะนี้เรากำลังพัฒนาแอปโดยใช้พื้นฐานของ Primary Advantage",
     removed: { en: "It has no release date.", th: "และยังไม่มีกำหนดวันเปิดตัว" },
   },
   {
     key: "pages.products.zhongwenAdvantage.waitlist.description",
-    en: "Zhongwen Advantage is on our roadmap. We will keep your email for news.",
-    th: "Zhongwen Advantage อยู่ในแผนงานของเรา เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
+    en: "Zhongwen Advantage is planned for the 2027 school year. Leave your email for news as we build the app and workbooks.",
+    th: "Zhongwen Advantage วางแผนไว้สำหรับปีการศึกษา 2570 ฝากอีเมลของคุณไว้เพื่อรับข่าวระหว่างที่เราพัฒนาแอปและหนังสือแบบฝึกหัด",
     removed: { en: "Zhongwen Advantage has no release date.", th: "Zhongwen Advantage ยังไม่มีกำหนดวันเปิดตัว" },
   },
 ] as const;

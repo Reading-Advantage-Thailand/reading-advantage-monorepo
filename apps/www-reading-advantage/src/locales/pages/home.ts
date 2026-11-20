@@ -44,9 +44,10 @@ export const en = {
                 description: "A full-stack engineering bootcamp for adults. Mastery Advantage runs inside it.",
                 meta: "About 12 to 15 weeks.",
             },
-            roadmapLabel: "On our roadmap",
-            roadmapNote: "These product lines are planned.",
+            roadmapLabel: "The Classroom Ahead",
+            roadmapNote: "Storytime Advantage opens as an app on 30 November 2026. In the 2027 school year, Thai primary schools open Science, Math, and Zhongwen Advantage: workbooks and apps.",
             roadmapTag: "Planned",
+            roadmapTag2027: "2027 school year",
             storytimePreparingLabel: "Launches 30 November 2026",
         },
         schools: {
@@ -269,9 +270,10 @@ export const th = {
                 description: "บูตแคมป์วิศวกรรมซอฟต์แวร์แบบฟูลสแตกสำหรับผู้ใหญ่ โดยมี Mastery Advantage ทำงานอยู่ภายใน",
                 meta: "ประมาณ 12 ถึง 15 สัปดาห์",
             },
-            roadmapLabel: "อยู่ในแผนงานของเรา",
-            roadmapNote: "สายผลิตภัณฑ์เหล่านี้อยู่ในแผน",
+            roadmapLabel: "ห้องเรียนในอนาคต",
+            roadmapNote: "Storytime Advantage เปิดให้ใช้งานเป็นแอปวันที่ 30 พฤศจิกายน 2569 ในปีการศึกษา 2570 โรงเรียนประถมศึกษาไทยจะเปิดใช้ Science Advantage, Math Advantage และ Zhongwen Advantage ทั้งหนังสือแบบฝึกหัดและแอป",
             roadmapTag: "อยู่ในแผน",
+            roadmapTag2027: "ปีการศึกษา 2570",
             storytimePreparingLabel: "เปิดตัววันที่ 30 พฤศจิกายน 2569",
         },
         schools: {
@@ -497,6 +499,7 @@ export const zh = {
             roadmapLabel: "路线图中",
             roadmapNote: "这些产品线在计划中，我们不给出日期。",
             roadmapTag: "计划中",
+            roadmapTag2027: "2027 school year",
             storytimePreparingLabel: "Launches 30 November 2026",
         },
         schools: {
