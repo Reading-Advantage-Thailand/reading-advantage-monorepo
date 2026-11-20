@@ -33,7 +33,27 @@ export function EntryArt() {
   return (
     <picture data-entry-art>
       <source media="(min-width: 980px)" srcSet={portraitSrc} />
-      <img src={landscapeSrc} alt="" width={1920} height={1080} />
+      <img src={landscapeSrc} alt="" loading="lazy" width={1920} height={1080} />
     </picture>
+  );
+}
+
+/**
+ * Shows the tall path picture in the left column of the join page on a desktop.
+ *
+ * The join page wraps this image in a hook that hides it on a phone. A plain image keeps the
+ * join markup short; the sign-in page keeps the two-source picture.
+ * @returns One decorative image of the approved place art.
+ */
+export function JoinArt() {
+  return (
+    <img
+      data-join-art-img
+      src={portraitSrc}
+      alt=""
+      loading="lazy"
+      width={1080}
+      height={1920}
+    />
   );
 }

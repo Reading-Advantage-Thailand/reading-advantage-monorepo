@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { JOIN_COPY, JOIN_PIECES, joinCopy } from "../../../lib/join-copy";
+import { JoinArt } from "../entry/entry-art";
 import { EntryIcon, type EntryIconName } from "../entry/entry-icons";
 import { EntryLogo } from "../entry/entry-logo";
 
@@ -79,6 +80,9 @@ export default async function JoinPage({
         <p data-entry-hero lang={lang}>
           {pieces.hero}
         </p>
+        <div data-join-art>
+          <JoinArt />
+        </div>
       </div>
       <section data-entry-card data-join-content>
         <div data-join-tiles>
