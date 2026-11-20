@@ -90,3 +90,103 @@ export function joinCopy(locale: string): JoinCopy {
 export function joinLines(block: string): string[] {
   return block.split("<br>");
 }
+
+/** The short pieces of one locale, each an exact substring of an approved block. */
+export interface JoinPieces {
+  /** The hero line, taken from the "who it is for" block. */
+  hero: string;
+  /** The five tile lines of the program, in the designed order. */
+  tiles: {
+    /** The daily 30-minute lesson tile. */
+    "daily-lessons": string;
+    /** The letters and phonics tile. */
+    "letters-phonics": string;
+    /** The sight words tile. */
+    "sight-words": string;
+    /** The songs and readers tile. */
+    "songs-readers": string;
+    /** The home app tile. */
+    "home-app": string;
+  };
+  /** The two numbered steps that tell a family how to get its login. */
+  steps: [string, string];
+  /** The lead line above the contact channels. */
+  contactLead: string;
+  /** The labels of the contact buttons. */
+  buttons: {
+    /** The LINE button label. */
+    line: string;
+    /** The phone button label. */
+    phone: string;
+    /** The email button label. */
+    email: string;
+    /** The small contact-page link label. */
+    site: string;
+  };
+}
+
+/**
+ * The pieces of the redesigned page, in the two shipped locales.
+ *
+ * Every piece is an exact substring of an approved block, or of an approved contact line
+ * without its URL. The page adds no new claim (spec FR-A71, AC-A71.9).
+ */
+export const JOIN_PIECES: { en: JoinPieces; th: JoinPieces } = {
+  en: {
+    hero: "Storytime Advantage is a full English program for children from Anuban 2 to P2 (ages 4 to 8)",
+    tiles: {
+      "daily-lessons": "a 30-minute scripted class day",
+      "letters-phonics":
+        "letter formation, phonics with recognition, blending, and segmenting",
+      "sight-words": "a timed step across 100 sight words",
+      "songs-readers": "songs, read-along books, and decodable books build up",
+      "home-app":
+        "children can hear pages and tap words in the app on a phone at home",
+    },
+    steps: [
+      "The child's school or tutor gives the family its sign-in details.",
+      "A parent, or the teacher for the class, signs in on the first visit. The device then stays signed in.",
+    ],
+    contactLead: "A family without sign-in details can contact us.",
+    buttons: {
+      line: "LINE Official: ReadingAdvantage",
+      phone: "Phone: +66 099-005-8038",
+      email: "Email: support@reading-advantage.com",
+      site: "Contact page",
+    },
+  },
+  th: {
+    hero: "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษเต็มรูปแบบสำหรับเด็กอนุบาล 2 ถึง ป.2 (อายุประมาณ 4 ถึง 8 ปี)",
+    tiles: {
+      "daily-lessons": "คือวันเรียน 30 นาทีที่มีสคริปต์",
+      "letters-phonics":
+        "พร้อมการเขียนตัวอักษร โฟนิกส์พร้อมการจดจำ การผสมเสียง และการแยกเสียง",
+      "sight-words":
+        "และขั้น sight words ที่ทำเร็วและมีการตรวจแบบจับเวลา ครอบคลุมคำที่เห็นบ่อย 100 คำ",
+      "songs-readers":
+        "ตลอดหลายสัปดาห์ เพลง หนังสืออ่านตาม และหนังสือฝึกอ่านเพิ่มขึ้นมาเรื่อย ๆ",
+      "home-app":
+        "เด็กฟังเสียงอ่านทีละหน้าและแตะคำเพื่อฟังเสียงอ่านได้ในแอปบนโทรศัพท์ที่บ้าน",
+    },
+    steps: [
+      "โรงเรียนหรือครูสอนพิเศษของเด็กมอบข้อมูลเข้าสู่ระบบให้ครอบครัว",
+      "ผู้ปกครอง หรือครูประจำชั้น เข้าสู่ระบบครั้งแรก แล้วอุปกรณ์นั้นก็ยังเข้าสู่ระบบอยู่",
+    ],
+    contactLead: "ครอบครัวที่ยังไม่มีข้อมูลเข้าสู่ระบบติดต่อเราได้",
+    buttons: {
+      line: "LINE Official: ReadingAdvantage",
+      phone: "โทร: +66 099-005-8038",
+      email: "อีเมล: support@reading-advantage.com",
+      site: "หน้าติดต่อ",
+    },
+  },
+};
+
+/** The five message keys that wait for the Thai check of Daniel (spec AC-A71.10). */
+export const ENTRY_PENDING_THAI_KEYS = [
+  "signInGreeting",
+  "signInShowPassword",
+  "signInHidePassword",
+  "signInNoLogin",
+  "joinHowToTitle",
+] as const;
