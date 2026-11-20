@@ -10,6 +10,11 @@
  * `approved`, so the page shows no draft marker. Storytime ships Thai and English only
  * (Daniel, 2026-11-16 07:34 ICT, "We are not doing Chinese support for Storytime"). A
  * locale without its own copy shows the English.
+ *
+ * Row C3 of the PR hand-off `11-content/www-change-list.md` (source commit e6e8ad12;
+ * Daniel's Thai check 2026-11-20) replaced the `whoItIsFor` block only: the first
+ * sentence and the "each week" sentence changed, and the last sentence stays word for
+ * word. The hand-off version stays `0.3`.
  */
 
 /** The status of the copy. */
@@ -48,7 +53,7 @@ export const JOIN_COPY: {
     title: "How to Join Storytime Advantage",
     heading: "How to Join Storytime Advantage",
     whoItIsFor:
-      "Storytime Advantage is an English program for Anuban 2 to P2 (ages 4 to 8). Each week has one sound, one song, and two books. The songs and the books on this site are for the children in the program.",
+      "Storytime Advantage is a full English program for children from Anuban 2 to P2 (ages 4 to 8): a 30-minute scripted class day with letter formation, phonics with recognition, blending, and segmenting, and a timed step across 100 sight words; across the weeks, songs, read-along books, and decodable books build up, and children can hear pages and tap words in the app on a phone at home. The songs and the books on this site are for the children in the program.",
     howToGetSignIn:
       "The child's school or tutor gives the family its sign-in details. A parent, or the teacher for the class, signs in on the first visit. The device then stays signed in.",
     contact:
@@ -59,7 +64,7 @@ export const JOIN_COPY: {
     title: "วิธีเข้าร่วม Storytime Advantage",
     heading: "วิธีเข้าร่วม Storytime Advantage",
     whoItIsFor:
-      "Storytime Advantage คือหลักสูตรภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 (อายุประมาณ 4 ถึง 8 ปี) ทุกสัปดาห์มีหนึ่งเสียง หนึ่งเพลง และหนังสือสองเล่ม เพลงและหนังสือในเว็บไซต์นี้มีไว้สำหรับเด็กในโครงการ",
+      "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษเต็มรูปแบบสำหรับเด็กอนุบาล 2 ถึง ป.2 (อายุประมาณ 4 ถึง 8 ปี) คือวันเรียน 30 นาทีที่มีสคริปต์ พร้อมการเขียนตัวอักษร โฟนิกส์พร้อมการจดจำ การผสมเสียง และการแยกเสียง และขั้น sight words ที่ทำเร็วและมีการตรวจแบบจับเวลา ครอบคลุมคำที่เห็นบ่อย 100 คำ ตลอดหลายสัปดาห์ เพลง หนังสืออ่านตาม และหนังสือฝึกอ่านเพิ่มขึ้นมาเรื่อย ๆ เด็กฟังเสียงอ่านทีละหน้าและแตะคำเพื่อฟังเสียงอ่านได้ในแอปบนโทรศัพท์ที่บ้าน เพลงและหนังสือในเว็บไซต์นี้มีไว้สำหรับเด็กในโครงการ",
     howToGetSignIn:
       "โรงเรียนหรือครูสอนพิเศษของเด็กมอบข้อมูลเข้าสู่ระบบให้ครอบครัว ผู้ปกครอง หรือครูประจำชั้น เข้าสู่ระบบครั้งแรก แล้วอุปกรณ์นั้นก็ยังเข้าสู่ระบบอยู่",
     contact:
