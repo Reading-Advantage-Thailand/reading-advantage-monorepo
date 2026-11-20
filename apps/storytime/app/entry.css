@@ -1,0 +1,291 @@
+/*
+ * The shared style of the two entry pages (spec FR-A71, AC-A71.11, plan task 4.3).
+ *
+ * Every selector attaches to an entry hook, so no rule reaches a week page. The colours and the
+ * faces come from the tokens of look.css and globals.css. Amber is the one accent. The shell is
+ * one column on a phone and two columns from 980 px; motion sits under no-preference only.
+ */
+
+[data-entry-shell] {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1040px;
+  margin-inline: auto;
+  padding: 24px 20px 48px;
+}
+
+[data-entry-art] {
+  display: block;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--st-brown);
+  box-shadow: var(--sq-shadow);
+}
+
+[data-entry-art] img {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+[data-entry-logo] {
+  display: block;
+  width: 156px;
+  height: auto;
+}
+
+[data-entry-greeting] {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--st-ink-soft);
+}
+
+[data-entry-brand] {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+[data-entry-card] {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 24px;
+  border: 2px solid var(--st-brown);
+  border-radius: 24px;
+  background: var(--sq-cream);
+  box-shadow: var(--sq-shadow);
+}
+
+[data-entry-card] h1 {
+  margin: 0 0 8px;
+  font-family: var(--sq-display);
+  font-size: 28px;
+  line-height: 1.25;
+  color: var(--st-brown);
+}
+
+[data-entry-label] {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--st-ink);
+}
+
+[data-entry-field] {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 56px;
+  padding: 10px 14px;
+  border: 2px solid var(--st-brown);
+  border-radius: 14px;
+  background: var(--sq-cream);
+  color: var(--st-ink);
+  font-family: var(--font-sans);
+  font-size: 18px;
+}
+
+[data-entry-password] {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+[data-entry-password] > div {
+  flex: 1 1 auto;
+}
+
+[data-password-toggle] {
+  box-sizing: border-box;
+  min-height: 56px;
+  padding: 8px 14px;
+  border: 2px solid var(--st-brown);
+  border-radius: 14px;
+  background: var(--st-amber);
+  color: var(--st-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+[data-entry-primary] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 56px;
+  padding: 10px 18px;
+  border: 2px solid var(--st-brown);
+  border-radius: 16px;
+  background: var(--st-amber);
+  color: var(--st-ink);
+  box-shadow: var(--sq-shadow);
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+[data-entry-error] {
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  border: 2px solid var(--st-brown);
+  border-radius: 14px;
+  background: var(--st-amber);
+  color: var(--st-ink);
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+[data-entry-nologin] {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--st-ink);
+}
+
+[data-entry-nologin] a {
+  color: var(--st-brown);
+  font-weight: 600;
+}
+
+[data-entry-signout] {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 48px;
+  padding: 8px 16px;
+  border: 2px solid var(--st-brown);
+  border-radius: 14px;
+  background: var(--sq-cream);
+  color: var(--st-brown);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+[data-join-tiles] {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+[data-join-tile] {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  box-sizing: border-box;
+  min-height: 132px;
+  padding: 16px;
+  border: 2px solid var(--st-brown);
+  border-radius: 18px;
+  background: var(--sq-cream);
+  box-shadow: var(--sq-shadow);
+  color: var(--st-ink);
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.45;
+}
+
+[data-join-tile] svg {
+  width: 32px;
+  height: 32px;
+  color: var(--st-brown);
+}
+
+[data-join-steps] {
+  margin: 0;
+  padding-left: 28px;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--st-ink);
+}
+
+[data-join-steps] li {
+  margin-bottom: 10px;
+}
+
+[data-entry-hint] {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--st-ink-soft);
+}
+
+[data-entry-contacts] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: stretch;
+}
+
+[data-contact] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 48px;
+  padding: 10px 16px;
+  border: 2px solid var(--st-brown);
+  border-radius: 14px;
+  background: var(--st-amber);
+  color: var(--st-ink);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+[data-contact-site] {
+  display: inline-block;
+  margin-top: 10px;
+  color: var(--st-brown);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  text-decoration: underline;
+}
+
+@media (min-width: 980px) {
+  [data-entry-shell] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+    gap: 44px;
+    align-items: center;
+  }
+
+  [data-entry-art] img {
+    height: 100%;
+    min-height: 460px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-contact],
+  [data-entry-primary],
+  [data-password-toggle] {
+    transition: transform 150ms ease, box-shadow 150ms ease;
+  }
+
+  [data-contact]:hover,
+  [data-entry-primary]:hover,
+  [data-password-toggle]:hover {
+    transform: translateY(-2px);
+  }
+}
