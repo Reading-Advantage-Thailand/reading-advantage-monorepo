@@ -91,22 +91,30 @@ export function joinLines(block: string): string[] {
   return block.split("<br>");
 }
 
-/** The short pieces of one locale, each an exact substring of an approved block. */
+/** The title and the one sentence of one program tile. */
+interface JoinTile {
+  /** The short title shown in the display face. */
+  title: string;
+  /** The one complete sentence under the title. */
+  sentence: string;
+}
+
+/** The short pieces of one locale. */
 export interface JoinPieces {
   /** The hero line, taken from the "who it is for" block. */
   hero: string;
-  /** The five tile lines of the program, in the designed order. */
+  /** The five tiles of the program, in the designed order. */
   tiles: {
     /** The daily 30-minute lesson tile. */
-    "daily-lessons": string;
+    "daily-lessons": JoinTile;
     /** The letters and phonics tile. */
-    "letters-phonics": string;
+    "letters-phonics": JoinTile;
     /** The sight words tile. */
-    "sight-words": string;
+    "sight-words": JoinTile;
     /** The songs and readers tile. */
-    "songs-readers": string;
+    "songs-readers": JoinTile;
     /** The home app tile. */
-    "home-app": string;
+    "home-app": JoinTile;
   };
   /** The two numbered steps that tell a family how to get its login. */
   steps: [string, string];
@@ -128,23 +136,40 @@ export interface JoinPieces {
 /**
  * The pieces of the redesigned page, in the two shipped locales.
  *
- * Every piece is an exact substring of an approved block, or of an approved contact line
- * without its URL. The page adds no new claim (spec FR-A71, AC-A71.9).
+ * The hero, step 2, the contact lead, and the button labels stay exact substrings of the
+ * approved blocks. The five tile titles and sentences and step 1 are PM microcopy of
+ * 2026-11-20; they state approved facts in new words and wait for Daniel's Thai check.
  */
 export const JOIN_PIECES: { en: JoinPieces; th: JoinPieces } = {
   en: {
     hero: "Storytime Advantage is a full English program for children from Anuban 2 to P2 (ages 4 to 8)",
     tiles: {
-      "daily-lessons": "a 30-minute scripted class day",
-      "letters-phonics":
-        "letter formation, phonics with recognition, blending, and segmenting",
-      "sight-words": "a timed step across 100 sight words",
-      "songs-readers": "songs, read-along books, and decodable books build up",
-      "home-app":
-        "children can hear pages and tap words in the app on a phone at home",
+      "daily-lessons": {
+        title: "Daily Class Lesson",
+        sentence: "Your child follows a 30-minute scripted lesson on every class day.",
+      },
+      "letters-phonics": {
+        title: "Letters and Sounds",
+        sentence:
+          "Your child practices letter formation, then phonics through recognition, blending, and segmenting.",
+      },
+      "sight-words": {
+        title: "Sight Words",
+        sentence: "Your child takes a timed step through 100 sight words.",
+      },
+      "songs-readers": {
+        title: "Songs and Readers",
+        sentence:
+          "Songs, read-along books, and decodable books build up as the weeks pass.",
+      },
+      "home-app": {
+        title: "Home Phone App",
+        sentence:
+          "On a phone at home, your child hears each page and taps words to hear them.",
+      },
     },
     steps: [
-      "school or tutor gives the family its sign-in details.",
+      "Your child's school or tutor gives your family the sign-in details.",
       "A parent, or the teacher for the class, signs in on the first visit. The device then stays signed in.",
     ],
     contactLead: "A family without sign-in details can contact us.",
@@ -158,15 +183,30 @@ export const JOIN_PIECES: { en: JoinPieces; th: JoinPieces } = {
   th: {
     hero: "Storytime Advantage เป็นหลักสูตรภาษาอังกฤษเต็มรูปแบบสำหรับเด็กอนุบาล 2 ถึง ป.2 (อายุประมาณ 4 ถึง 8 ปี)",
     tiles: {
-      "daily-lessons": "คือวันเรียน 30 นาทีที่มีสคริปต์",
-      "letters-phonics":
-        "พร้อมการเขียนตัวอักษร โฟนิกส์พร้อมการจดจำ การผสมเสียง และการแยกเสียง",
-      "sight-words":
-        "และขั้น sight words ที่ทำเร็วและมีการตรวจแบบจับเวลา ครอบคลุมคำที่เห็นบ่อย 100 คำ",
-      "songs-readers":
-        "ตลอดหลายสัปดาห์ เพลง หนังสืออ่านตาม และหนังสือฝึกอ่านเพิ่มขึ้นมาเรื่อย ๆ",
-      "home-app":
-        "เด็กฟังเสียงอ่านทีละหน้าและแตะคำเพื่อฟังเสียงอ่านได้ในแอปบนโทรศัพท์ที่บ้าน",
+      "daily-lessons": {
+        title: "บทเรียนในวันเรียน",
+        sentence: "ลูกเรียนตามบทเรียนที่มีสคริปต์นาน 30 นาทีในทุกวันเรียน",
+      },
+      "letters-phonics": {
+        title: "ตัวอักษรและเสียง",
+        sentence:
+          "ลูกฝึกเขียนตัวอักษร แล้วฝึกโฟนิกส์ด้วยการจดจำ การผสมเสียง และการแยกเสียง",
+      },
+      "sight-words": {
+        title: "Sight words",
+        sentence:
+          "ลูกฝึกขั้น sight words แบบจับเวลา ครอบคลุมคำที่เห็นบ่อย 100 คำ",
+      },
+      "songs-readers": {
+        title: "เพลงและหนังสืออ่าน",
+        sentence:
+          "เพลง หนังสืออ่านตาม และหนังสือฝึกอ่านจะเพิ่มขึ้นเรื่อย ๆ ตลอดหลายสัปดาห์",
+      },
+      "home-app": {
+        title: "แอปบนโทรศัพท์ที่บ้าน",
+        sentence:
+          "ที่บ้าน ลูกฟังเสียงอ่านทีละหน้าและแตะคำเพื่อฟังเสียงอ่านได้ในแอปบนโทรศัพท์",
+      },
     },
     steps: [
       "โรงเรียนหรือครูสอนพิเศษของเด็กมอบข้อมูลเข้าสู่ระบบให้ครอบครัว",
@@ -189,4 +229,14 @@ export const ENTRY_PENDING_THAI_KEYS = [
   "signInHidePassword",
   "signInNoLogin",
   "joinHowToTitle",
+] as const;
+
+/** The six new tile and step lines that wait for the Thai check of Daniel (spec AC-A71.9). */
+export const JOIN_PENDING_THAI_PIECES = [
+  "daily-lessons",
+  "letters-phonics",
+  "sight-words",
+  "songs-readers",
+  "home-app",
+  "steps.0",
 ] as const;

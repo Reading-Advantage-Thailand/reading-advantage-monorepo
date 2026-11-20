@@ -275,6 +275,21 @@
   color: var(--st-brown);
 }
 
+[data-join-tile] [data-join-tile-title] {
+  font-family: var(--sq-display);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--st-brown);
+}
+
+[data-join-tile] [data-join-tile-sentence] {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--st-ink);
+}
+
 [data-join-steps] {
   margin: 0;
   padding: 0;
