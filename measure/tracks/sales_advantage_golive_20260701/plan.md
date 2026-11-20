@@ -169,7 +169,7 @@ Do not start Phase 2 until the security gate is green.
   - Historical rollout evidence in commit `20ec943033549f103d78be0fa39d5e264ec23cf0` shows an authenticated `SALES_ADMIN` dashboard.
   - `qa-browserevidence-20260719.md` records `SESSION_INVALID`. `review-2026-07-20.md` keeps `SALES_REP` browser QA open.
   - Manual QA may start only when a valid Accounts session yields authenticated `SALES_REP` from the Sales callback.
-- [~] Task: End-to-end QA pass (from `sales_advantage_mvp_20260622/plan.md` Phase 8)
+- [b] Task: End-to-end QA pass (from `sales_advantage_mvp_20260622/plan.md` Phase 8) superseded:not-used — PM decision 2026-11-21 (Daniel asked: "Then what to do? Close? Archive?")
   - [b] Auth: admin login → Accounts provisions rep → company SSO rep login — deferred:accounts-provisioned-sales-rep
   - [b] Dashboard modules + progress; theory lesson mark-complete — deferred:valid-sales-rep-session
   - [b] Roleplay: record → submit → evaluation displays; retry → best-attempt logic — deferred:valid-sales-rep-session
