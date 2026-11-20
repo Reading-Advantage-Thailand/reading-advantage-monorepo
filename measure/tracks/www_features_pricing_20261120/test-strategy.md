@@ -1,67 +1,60 @@
-# Test Strategy — www features and pricing rewrite (A-70, row FP1)
+# Test Strategy — www features and pricing rewrite
 
-Track: `www_features_pricing_20261120`. Feature. Five phases. The app is `apps/www-reading-advantage`. Vitest with jsdom runs the tests. Playwright runs only in the capture step. No other package changes.
+Track: `www_features_pricing_20261120`. Scope: `apps/www-reading-advantage` only. The risk is **high**: copy and prices are public claims, six locale routes change, and pushing master deploys www live. The pages have no auth, user input, data writes, API handler, or new dependency.
 
-## Risk
+## Evidence and fixtures
 
-- Overall risk: low to medium. The change is static copy and static pages. It has no auth, no data, no input and no new dependency.
-- The main risk is a copy error. The copy is word for word, so a wrong character is a defect. Two exact sources exist: the spec (English) and the Thai check page (Thai).
-- The second risk is a broken look on a phone (a wide table, a long Thai line) and empty picture slots.
-- The third risk is a stale reader of a deleted key or component.
-- A page on master goes live on a push, so the Thai and the look gates stay with Daniel.
+- `features-pricing-expected.ts` pins English to the copy spec and Thai to TH-FP-01–95 in the Thai check page. A scratch source comparison plus Review A must find zero missing or altered strings. The application tests do not read the separate source repository.
+- Page tests render the actual route components and locale objects for en, th, and zh. Do not mock page content, locale lookup, links, metadata, or image paths. No network or database mock is needed; this scope has no live service dependency.
+- The asset test proves file format, size, dimensions, and referenced paths. It does not prove crop suitability. A person checks the four outputs.
+- Artifact tests prove copy, locale structure, metadata, markup, price values, source scope, and static assets. They do not prove rendered browser layout or production deployment. The local Next server and Playwright captures prove live browser behavior only for the built local revision; they do not prove master or production behavior.
 
-## Sources the tests pin
+## Phase gates and falsification
 
-- English: `/home/daniebo/Desktop/advantage-pr/11-content/www-features-pricing-spec.md` v1.0, sections 3, 4 and 5.
-- Thai: `/home/daniebo/Desktop/advantage-pr/11-content/thai-check/2026-11-20-features-pricing.html`, TH-FP-01 to TH-FP-95 (decision D5: no trailing period).
-- The tests hold the strings in `src/__tests__/fixtures/features-pricing-expected.ts`. The www suite never reads the advantage-pr repository. The check of task 1.4 and Review A compare the fixture with the sources.
+Commands below use the plan's `heavy-run.sh -c 'cd <worktree>/apps/www-reading-advantage && …'` wrapper, except the fixture source check (`python3 -I`). Run heavy commands one at a time. Use `pnpm exec vitest run --maxWorkers=1 <named files>` for targeted tests. Never replace a failed command with a count or text assertion.
 
-## Phase 1: Red — risk `medium`
+| Plan phase / risk | Targeted Red command | Green gate | Closeout gate |
+|---|---|---|---|
+| 0 Plan/start, **medium** | No feature Red. Baseline the named existing suites in plan 0.3; a non-zero baseline is recorded, not hidden. | A-71 Green confirmed; `git log -1 --format=%H master` and `git merge-base HEAD master` agree with the recorded start base; frozen install succeeds. | Baseline counts and existing failures are recorded. If A-71 remains open or master moved, stop/rebase before Phase 1. |
+| 1 Red, **medium** | Run each new locale, feature-page, pricing-page, and asset test by its exact path, then run the fixture source-check script. | Intended assertions fail for missing keys/content/assets; guard cases pass; no import/config failure. Lint and `pnpm check-types` on Red tests pass. | Run all four Red files together and rerun the baseline set. Red failures must be expected and localized; baseline behavior must match Phase 0. |
+| 2 Green, **high** | Re-run the affected content, locale, assets, SEO, i18n, contrast, and stale-reader tests named in plan tasks 2.2–2.5. | On one HEAD: changed-file ESLint; `pnpm check-types`; full www Vitest suite; `pnpm build`; `node scripts/ci/affected-apps.mjs --base <40-char-start-merge-base> --head <40-char-tested-HEAD>` lists www only. | Diff since Phase 1 checkpoint contains only planned files; removed component callers are gone (graph callers when available); all named gates exit 0. |
+| 3 Reviews, **medium** | Review A and Review C independently challenge the implementation; each Critical/High finding falsifies the gate. | Review A: source string exactness, callers, locale shape, and old-test meaning. Review C: six routes, metadata/canonicals, navigation, links, keys, and locale routing. | No unresolved Critical/High; fixes rerun Phase 2 gates. Review B is **not applicable**: static copy/pages only, with no auth, input, data, or handler change. Record the exclusion. |
+| 4 Browser/captures, **high** | Capture all six routes at 390, 980, and 1280 px. The capture report fails on overflow, broken images, console errors, or h1 count other than one. | Review all 18 captures and the report against design and picture rules. A High finding falsifies the gate and requires a fix plus recapture. | Person-checked verdict per route and width; send all capture paths and the verdict to the PM. Empty picture slots and zh English copy are judged as explicit defaults, not silently treated as implemented imagery or translated copy. |
+| 5 Acceptance/release, **critical** | No new feature Red. Acceptance reruns the full AC-1–AC-11 evidence against one immutable HEAD; any failed assertion falsifies acceptance. | Rerun Phase 2 gates on final HEAD; acceptance verifies each AC. Daniel's Thai check, look check, and deploy word are separate owner gates. | No push until all automated/review gates pass and Daniel authorizes it. Push to master is a live www deploy; this strategy authorizes no push or deploy. |
 
-| New test file | Asserts | AC |
+**Intentionally red aggregate handling:** Phase 1's new tests are expected to fail before implementation. Do not run or interpret the full aggregate suite as a Phase 1 gate. Run only named Red files and the Phase 0 baseline. Record file/test counts and failure reasons. Do not suppress failures. After Green, the complete www Vitest suite must exit 0; any known baseline failure remains explicitly listed and blocks claiming the aggregate is green unless the orchestrator accepts a documented exception.
+
+## Architecture and contract guardrails
+
+- Keep the change in the two marketing routes, their specified locale objects, small page-local/reusable presentation components, screenshot assets, and listed tests/docs. No API, handler, auth, database, transport, shared hero, navigation contract, or new dependency changes.
+- Preserve six locale routes, existing locale routing/static params, canonical URLs, header/footer links, and the explicit message contract: `metadata.title` and `metadata.description`; zh features/pricing are English copies; zh managed-service and nav labels remain unchanged.
+- Changed contracts include removal of `ComparisonTable`, `PricingTable`, `comparisonTable` and `pricingTable`; changes to feature/pricing locale keys; new price-table semantics and CTA targets. Update every caller and affected test in the same Green change. Keep unrelated pages and locale keys unchanged.
+- Main risks: source-copy drift, unsupported price/claim, stale key or component reader, wrong image crop, inaccessible table/FAQ, small-screen overflow, locale metadata/link regression, and accidental scope expansion. The exact locale scan and source-level scope diff are required guards.
+
+## Review applicability
+
+| Review | Applies? | Proof |
 |---|---|---|
-| `src/__tests__/www-features-pricing.locale.test.ts` | Every en and th string at its key; `metadata.*`; no Thai value ends with "."; the FR-9 figures and the 3,000 baht floor; zh equals en for the two pages; no removed string anywhere under `src/locales/` (en, th, zh); removed namespaces gone; scope guards (zh `roadmap.description` unchanged); a positive control for the scan | AC-1, 2, 3, 5, 6, 8, 9 |
-| `src/__tests__/www-features-page.content.test.tsx` | Section order and hooks; five cards in order; bullets; seven logos, Storytime first; FAQ items; one `<h1>`; `alt` on every image; button targets; no old text; en, th, zh | AC-3, 4, 5 |
-| `src/__tests__/www-pricing-page.content.test.tsx` | Section order and hooks; table caption, five rows, three columns, FR-9 numbers; the only baht amounts are the FR-9 and FR-10 amounts; no tier names; button targets; en, th, zh | AC-3, 4, 5 |
-| `src/__tests__/www-features-pricing.assets.test.ts` | Four WebP files exist, are not empty, are at most 200 KB, have the recorded pixel sizes; every image `src` of the two pages exists under `public/` | AC-7 |
+| Security (Review B) | No | No auth, user input, data, or handler changes; record the reason in the review log. |
+| UX/API (Review C) | Yes | Check six routes, canonical metadata, locale routing, links, anchors, and removed keys. The price table and links are content; no handler/API contract changes. |
+| Adversarial testing | Yes, bounded | Attack banned-string scans with positive controls; inject stale locale values, extra baht amounts, wrong price row/order, missing targets/assets, and changed zh guard values. Each must make its named test fail. No separate API fuzzing applies. |
+| Browser review | Yes | Inspect all 18 captures at 390/980/1280; judge look, Thai wrapping, table fit, empty image slots, contrast, zh mix, and broken images. Automated capture alone is not a look verdict. |
 
-Red rules:
+## Anti-pattern defenses and falsification
 
-- A Red run exits 1 with no import error and no config error. Each failing case fails on a missing key, section or file. The guard cases pass. The orchestrator records the counts.
-- A test reads the rendered text and the locale objects. It never reads a section key that Green names, so a key rename does not break it (spec section 7).
-- Every old test that the change breaks is listed in spec section 4.3. Green edits or deletes it with a reason, in the commit that removes the code it pins.
+Each listed defense is required. A defense fails if its stated mutation, omission, or evidence mismatch does not make the gate fail. A1–A11 refer to `measure/anti-patterns.md`.
 
-Commands: the vitest form of the plan with the named file. Evidence class: automated.
+- **Phase 0:** A1/A8 — use structured task markers and status, never free-text `deferred` parsing; malformed markers fail the registry check. A3/A4 — baseline reports labeled Test Files and Tests counts and must include named suites; zero selected suites is failure. A5/A6 — record command output before claiming a baseline or status. A9 — resolve active track paths; a test referring only to an archived path fails. A10 — record graph unavailable/stale rather than claim graph verification. A11 — no completed review is reported before a review artifact exists.
+- **Phase 1:** A3/A4 — record labeled per-file test counts; require nonzero assertions and guard cases. A5 — only expected assertion failures count as Red; import/config errors falsify Red. A7 — exact banned strings are checked as locale values; the positive-control string must be detected, and a hidden real match must fail. A8/A11 — keep phase markers and review state truthful. A9 — test fixtures and scripts must resolve the active track, not assume an archive path.
+- **Phase 2:** A3/A4 — report labeled counts for the full suite and require selected tests; empty runs fail. A5/A6 — claims of green require the actual successful command result and matching registry wording. A7 — negative scans use exact claim/price tokens and positive controls, never broad English exclusions. A8 — completed tasks require evidence and correct markers. A9 — active paths resolve. A10 — inspect callers before deletion and record graph check as skipped if graph is stale/unavailable; stale generated facts cannot be called fresh. A1 — task completion follows structured markers, not prose.
+- **Phase 3:** A4/A5 — both reviews must inspect the changed HEAD and produce findings/verdicts; an empty or missing report is not a pass. A6 — registry/status cannot claim accepted before reports and fixes. A8/A11 — review tasks move to done only with evidence; an executed review must not remain fully blocked. A9 — cited files resolve in the active track. A1 — do not infer review status from a word in prose.
+- **Phase 4:** A3/A4 — capture report labels route/locale/width and requires all 18 captures; missing captures are failure, not zero errors. A5 — report automated capture checks separately from person-checked look verdicts. A6 — no “browser passed” claim without both. A7 — image/content checks use exact prohibitions, not broad filters. A8/A11 — review and phase markers match actual evidence. A2 — captures and reviews do not authorize publication; Daniel's explicit deploy gate remains mandatory.
+- **Phase 5:** A2 — a push is blocked until Daniel's Thai/look/deploy approval; any missing approval falsifies release readiness. A3/A4 — acceptance lists labeled AC-1–AC-11 results and requires each AC; missing evidence is not pass. A5/A6 — claims match final commands, acceptance report, and registry status. A8/A11 — final task markers reflect completed evidence; no executed review stays fully blocked. A9 — active paths resolve. A1 — release state uses structured gates, not free-text substrings.
 
-## Phase 2: Green — risk `low`
+## Immutable phase base
 
-Gate commands (task 2.6), each through heavy-run, one at a time: ESLint on the changed files; `pnpm check-types`; the full www vitest suite; `pnpm build`; `node scripts/ci/affected-apps.mjs` (must list only `www-reading-advantage`).
+After committing this strategy, the orchestrator must capture `phase_base_sha` as the new commit's full `git rev-parse HEAD`, before starting Phase 1 Red. Do not reuse the role base or embed a pre-strategy SHA. This SHA is the immutable baseline for the phase's review and diff checks.
 
-Regression set (must stay green): `phase-2-seo-assets.red.test.ts` (updated), `phase-3-i18n.red.test.ts`, `phase-3-group-b-types.test.ts`, `no-gse-in-customer-copy.test.ts`, `hero-text-contrast.red.test.ts`, `phase-4-browser-regressions-remaining.red.test.tsx` (hero contrast case), `www-batch-20261119.locale.test.ts` (edited), `phase-w3-claims.test.ts` (block 1I removed).
+## Not claimed
 
-## Reviews
-
-| Gate | Assigned | Why |
-|---|---|---|
-| Review A (correctness, callers, test meaning) | Yes | Copy exactness, deleted callers, type shape of the locale roots, weakened old tests |
-| Review B (security) | No | Static copy and pages. No auth, no data, no input, no new dependency |
-| Review C (routes, links, UX contract) | Yes | Six routes, metadata per locale, button targets, header links, removed message keys |
-| Adversarial tests | No | The site-wide removed-string scan and the "only these baht amounts" assertion already attack the main failure modes. A defect found in review goes back to Green |
-| Browser review (UX) | Yes | The look at 390, 980 and 1280 px is the PM's and Daniel's check, and a table or a long Thai line can break a phone layout |
-| Phase acceptance | Yes | AC-1 to AC-11 at an immutable HEAD |
-
-## Phase 4: Browser review — risk `medium`
-
-- The capture script (scratch, not committed) saves 18 full-page PNG files: three locales, two pages, three widths. It reports horizontal overflow, broken images, console errors and the `<h1>` count for each capture.
-- The `measure-ux-browser-review` role judges the look from the captures and from the live pages. A High finding blocks the hand-off.
-- Evidence class: automated for the script report, person-checked for the verdict, owner-passed for Daniel's look check (task 5.2).
-
-## Phase 5: Gate — risk `low`
-
-- The acceptance role checks AC-1 to AC-11.
-- Daniel's Thai check, look check and deploy word are the only gate to the push (AC-12). Evidence class: owner-passed.
-
-## Not tested, and why
-
-- Live-site content after the deploy. The PM checks the live pages after Daniel's deploy.
-- zh copy quality. The zh pages show English copy by default (Q-PR-33). The contracted Chinese speaker checks later copy.
+Local build and browser evidence do not prove deployed production behavior. Production content and pricing can be claimed only after Daniel authorizes the master push and the PM verifies the live pages. zh copy quality is not tested as translated copy because the accepted default is English until checked zh content exists.
