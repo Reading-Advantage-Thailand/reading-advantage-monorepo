@@ -891,13 +891,14 @@ describe("cloud and OpenAI invoice read paths (D-13)", () => {
 });
 
 describe("remaining spec section 6 read paths", () => {
-  it("reads a text school invoice PDF locally", () => {
+  it("reads a text school invoice PDF locally (safe path, PM 2026-11-20)", () => {
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: "Test invoice PA-INV-FAKE-001 Date: 15 Oct 2026 total 30000",
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["extraction"]).toBe("local-text");
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
   it("sends a non-text school invoice PDF to the model read path", () => {
@@ -907,7 +908,9 @@ describe("remaining spec section 6 read paths", () => {
     expect("draft" in result).toBe(false);
   });
 
-  it("reads the four-tab school invoice sheet locally and never through a model", () => {
+  it("reads the four-tab school invoice sheet locally and never through a model (safe path, PM 2026-11-20)", () => {
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
     const parse = requireParser("parseSchoolInvoiceSheet");
     const tabs = ["Receipt Term 1", "ใบแจ้งหนี้", "Term 1", "Term 2"].map(
       (name) => ({
@@ -921,10 +924,7 @@ describe("remaining spec section 6 read paths", () => {
       }),
     );
     const result = parse({ worksheets: tabs }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["extraction"]).toBe("local-text");
-    expect(draft["invoiceNo"]).toBe("PA-INV-FAKE-001");
-    expect(draft["date"]).toBe("2026-10-15");
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
   it("reads a withholding certificate from its text layer locally", () => {
@@ -1007,15 +1007,14 @@ describe("A601 label boundary with unequal money", () => {
     expect(draft["total"]).toBe("1070");
   });
 
-  it("reads unequal school subtotal and net total exactly", () => {
+  it("reads unequal school subtotal and net total exactly (safe path, PM 2026-11-20)", () => {
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: "Test invoice PA-INV-FAKE-009\nDate: 15 ต.ค. 2569\nSubtotal: 50,000.00\nTotal: 30,000.00",
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
-    expect(draft["subtotal"]).toBe("5000000");
-    expect(draft["netTotal"]).toBe("3000000");
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 });
 
@@ -1149,18 +1148,20 @@ describe("A605 payment voucher PDF from the report fixture", () => {
 });
 
 describe("A606 school invoice sheet fields", () => {
-  it("reads the document title and the invoice number from the tab", () => {
+  it("reads the document title and the invoice number from the tab (safe path, PM 2026-11-20)", () => {
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
     const parse = requireParser("parseSchoolInvoiceSheet");
     const result = parse({ worksheets: [fakeRichSchoolTab()] }) as Record<
       string,
       unknown
     >;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["documentTitle"]).toBe("ใบแจ้งหนี้ / INVOICE");
-    expect(draft["invoiceNo"]).toBe("PA-INV-FAKE-002-T2");
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the receipt number from a receipt tab", () => {
+  it("reads the receipt number from a receipt tab (safe path, PM 2026-11-20)", () => {
+    // Safe path, PM 2026-11-20: every school invoice and receipt goes to
+    // the review list with no automatic date and no draft.
     const parse = requireParser("parseSchoolInvoiceSheet");
     const result = parse({
       worksheets: [
@@ -1175,19 +1176,18 @@ describe("A606 school invoice sheet fields", () => {
         },
       ],
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["receiptNo"]).toBe("PA-REC-FAKE-001-T1");
-    expect(draft["invoiceNo"]).toBeNull();
-    expect(draft["date"]).toBe("2026-10-15");
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the invoice date or returns the review result", () => {
+  it("reads the invoice date or returns the review result (safe path, PM 2026-11-20)", () => {
+    // Safe path, PM 2026-11-20: the school sheet always returns the
+    // review result, so the invoice date is never read automatically.
     const parse = requireParser("parseSchoolInvoiceSheet");
-    const draft = requireParsedOrReview(
-      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
-      "schoolInvoiceDraftSchema",
-    );
-    if (draft !== null) expect(draft["date"]).toBe("2026-10-15");
+    const result = parse({ worksheets: [fakeRichSchoolTab()] }) as Record<
+      string,
+      unknown
+    >;
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
   it("reads the quotation reference or returns the review result", () => {
@@ -1199,23 +1199,26 @@ describe("A606 school invoice sheet fields", () => {
     if (draft !== null) expect(draft["quotationRef"]).toBe("FAKE-Q-002");
   });
 
-  it("reads the due date or returns the review result", () => {
-    const parse = requireParser("parseSchoolInvoiceSheet");
-    const draft = requireParsedOrReview(
-      parse({ worksheets: [fakeRichSchoolTab()] }) as Record<string, unknown>,
-      "schoolInvoiceDraftSchema",
-    );
-    if (draft !== null) expect(draft["due"]).toBe("2026-10-31");
-  });
-
-  it("reads the issuer company names from the tab", () => {
+  it("reads the due date or returns the review result (safe path, PM 2026-11-20)", () => {
+    // Safe path, PM 2026-11-20: the school sheet returns no draft, so no
+    // automatic date (document date or due date) is read.
     const parse = requireParser("parseSchoolInvoiceSheet");
     const result = parse({ worksheets: [fakeRichSchoolTab()] }) as Record<
       string,
       unknown
     >;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["issuerCompanyNames"]).toBe("Test School Company Ltd.");
+    expect(requireReviewResult(result)).toBe("review:unreadable");
+  });
+
+  it("reads the issuer company names from the tab (safe path, PM 2026-11-20)", () => {
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const result = parse({ worksheets: [fakeRichSchoolTab()] }) as Record<
+      string,
+      unknown
+    >;
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
   it("reads the issuer tax id or returns the review result", () => {
@@ -1380,76 +1383,81 @@ describe("A606 school invoice sheet fields", () => {
 });
 
 describe("A606 school invoice PDF fields", () => {
-  it("reads the uppercase INVOICE title", () => {
+  it("reads the uppercase INVOICE title (safe path, PM 2026-11-20)", () => {
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({ text: fakeSchoolInvoicePdfText() }) as Record<
       string,
       unknown
     >;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(String(draft["documentTitle"] ?? "")).toMatch(/invoice/iu);
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the invoice number and date", () => {
+  it("reads the invoice number and date (safe path, PM 2026-11-20)", () => {
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({ text: fakeSchoolInvoicePdfText() }) as Record<
       string,
       unknown
     >;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["invoiceNo"]).toBe("PA-INV-FAKE-002-T2");
-    expect(draft["date"]).toBe("2026-10-15");
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the quotation reference", () => {
+  it("reads the quotation reference (safe path, PM 2026-11-20)", () => {
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({ text: fakeSchoolInvoicePdfText() }) as Record<
       string,
       unknown
     >;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["quotationRef"]).toBe("FAKE-Q-002");
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the due date", () => {
+  it("reads the due date (safe path, PM 2026-11-20)", () => {
+    // Safe path, PM 2026-11-20: the school PDF returns no draft, so no
+    // automatic date (document date or due date) is read.
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({ text: fakeSchoolInvoicePdfText() }) as Record<
       string,
       unknown
     >;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["due"]).toBe("2026-10-31");
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the customer name", () => {
+  it("reads the customer name (safe path, PM 2026-11-20)", () => {
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({ text: fakeSchoolInvoicePdfText() }) as Record<
       string,
       unknown
     >;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["customerName"]).toBe("Test School");
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the subtotal and the net total exactly", () => {
+  it("reads the subtotal and the net total exactly (safe path, PM 2026-11-20)", () => {
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({ text: fakeSchoolInvoicePdfText() }) as Record<
       string,
       unknown
     >;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["subtotal"]).toBe("5000000");
-    expect(draft["netTotal"]).toBe("3000000");
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the net total in words", () => {
+  it("reads the net total in words (safe path, PM 2026-11-20)", () => {
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({ text: fakeSchoolInvoicePdfText() }) as Record<
       string,
       unknown
     >;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["netTotalInWords"]).toBe("Test thirty thousand");
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
   it("reads the issuer tax id or returns the review result", () => {
@@ -1808,7 +1816,9 @@ describe("A620 currency on every section 8 draft", () => {
     expect(draft["currency"]).toBe("THB");
   });
 
-  it("reads the school sheet currency from the printed text", () => {
+  it("reads the school sheet currency from the printed text (safe path, PM 2026-11-20)", () => {
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
     const parse = requireParser("parseSchoolInvoiceSheet");
     const result = parse({
       worksheets: [
@@ -1824,12 +1834,12 @@ describe("A620 currency on every section 8 draft", () => {
         },
       ],
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
-    expect(draft["currency"]).toBe("THB");
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the school PDF currency from the printed text", () => {
+  it("reads the school PDF currency from the printed text (safe path, PM 2026-11-20)", () => {
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: [
@@ -1840,9 +1850,7 @@ describe("A620 currency on every section 8 draft", () => {
         "Total: THB 30,000.00",
       ].join("\n"),
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
-    expect(draft["currency"]).toBe("THB");
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
   it("holds THB for the withholding certificate whose Thai form prints no prefix", () => {
@@ -2153,7 +2161,7 @@ describe("A630 unreadable document date with a readable due or delivery date", (
 });
 
 describe("B620 invoice date labels", () => {
-  it("reads the document date from the Date label and not from the excluded Payment date label", () => {
+  it("reads the document date from the Date label and not from the excluded Payment date label (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: [
@@ -2164,11 +2172,12 @@ describe("B620 invoice date labels", () => {
         "Date: 15 Oct 2026",
       ].join("\n"),
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the document date from the Invoice date label and not from the excluded Payment date label", () => {
+  it("reads the document date from the Invoice date label and not from the excluded Payment date label (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: [
@@ -2179,11 +2188,12 @@ describe("B620 invoice date labels", () => {
         "Invoice date: 15 Oct 2026",
       ].join("\n"),
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the document date from the Issue date label and not from the excluded Payment date label", () => {
+  it("reads the document date from the Issue date label and not from the excluded Payment date label (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: [
@@ -2194,11 +2204,12 @@ describe("B620 invoice date labels", () => {
         "Issue date: 15 Oct 2026",
       ].join("\n"),
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the document date from the Invoice Date label and not from the excluded Payment date label", () => {
+  it("reads the document date from the Invoice Date label and not from the excluded Payment date label (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: [
@@ -2209,11 +2220,12 @@ describe("B620 invoice date labels", () => {
         "Invoice Date: 15 Oct 2026",
       ].join("\n"),
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the document date from the วันที่ label and not from the excluded วันที่ชำระ label", () => {
+  it("reads the document date from the วันที่ label and not from the excluded วันที่ชำระ label (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: [
@@ -2224,11 +2236,12 @@ describe("B620 invoice date labels", () => {
         "วันที่: 15 ต.ค. 2569",
       ].join("\n"),
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the document date from the วันที่ออก label and not from the excluded วันที่ชำระ label", () => {
+  it("reads the document date from the วันที่ออก label and not from the excluded วันที่ชำระ label (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: [
@@ -2239,11 +2252,12 @@ describe("B620 invoice date labels", () => {
         "วันที่ออก: 15 ต.ค. 2569",
       ].join("\n"),
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the document date from the ลงวันที่ label and not from the excluded วันที่ชำระ label", () => {
+  it("reads the document date from the ลงวันที่ label and not from the excluded วันที่ชำระ label (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: [
@@ -2254,11 +2268,12 @@ describe("B620 invoice date labels", () => {
         "ลงวันที่: 15 ต.ค. 2569",
       ].join("\n"),
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the document date from the วันที่ออกใบแจ้งหนี้ label and not from the excluded วันที่ชำระ label", () => {
+  it("reads the document date from the วันที่ออกใบแจ้งหนี้ label and not from the excluded วันที่ชำระ label (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: [
@@ -2269,11 +2284,12 @@ describe("B620 invoice date labels", () => {
         "วันที่ออกใบแจ้งหนี้: 15 ต.ค. 2569",
       ].join("\n"),
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the document date from the วันที่ออกใบกำกับภาษี label and not from the excluded วันที่ชำระ label", () => {
+  it("reads the document date from the วันที่ออกใบกำกับภาษี label and not from the excluded วันที่ชำระ label (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: [
@@ -2284,8 +2300,9 @@ describe("B620 invoice date labels", () => {
         "วันที่ออกใบกำกับภาษี: 15 ต.ค. 2569",
       ].join("\n"),
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 });
 
@@ -2383,11 +2400,9 @@ describe("B620 unlabelled dates and sheet bare-date cells", () => {
     expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the sheet bare date beside the title and not the elsewhere cell", () => {
-    // Characterization: passes at HEAD through the scan-all bare-date
-    // fallback, and it must stay green after the beside-only change (B620).
-    // B2 sits on the title row beside A2; D20 sits on no title or number
-    // row, so only B2 may supply the date.
+  it("reads the sheet bare date beside the title and not the elsewhere cell (safe path, PM 2026-11-20)", () => {
+    // Safe path, PM 2026-11-20: the sheet bare-date exception is gone with
+    // every other automatic date; the sheet goes to the review list.
     const parse = requireParser("parseSchoolInvoiceSheet");
     const result = parse({
       worksheets: [
@@ -2403,8 +2418,7 @@ describe("B620 unlabelled dates and sheet bare-date cells", () => {
         },
       ],
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
   it("returns review unreadable for a sheet bare date elsewhere only", () => {
@@ -2487,7 +2501,7 @@ describe("R7 A640 dated is no accepted document date label", () => {
 });
 
 describe("R7 A641 hyphen and nested excluded labels on the PDF path", () => {
-  it("reads the accepted Date and not the hyphenated Payment-date", () => {
+  it("reads the accepted Date and not the hyphenated Payment-date (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: [
@@ -2498,11 +2512,12 @@ describe("R7 A641 hyphen and nested excluded labels on the PDF path", () => {
         "Date: 15 Oct 2026",
       ].join("\n"),
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the accepted Date and not the nested Delivery: Date", () => {
+  it("reads the accepted Date and not the nested Delivery: Date (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: [
@@ -2513,8 +2528,9 @@ describe("R7 A641 hyphen and nested excluded labels on the PDF path", () => {
         "Date: 15 Oct 2026",
       ].join("\n"),
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
   it("returns review unreadable when only the hyphenated Payment-date carries a date", () => {
@@ -2545,7 +2561,7 @@ describe("R7 A641 hyphen and nested excluded labels on the PDF path", () => {
 });
 
 describe("R7 A641 hyphen and nested excluded labels on the sheet path", () => {
-  it("reads the accepted Date cell and not the hyphenated Payment-date cell", () => {
+  it("reads the accepted Date cell and not the hyphenated Payment-date cell (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoiceSheet");
     const result = parse({
       worksheets: [
@@ -2561,11 +2577,12 @@ describe("R7 A641 hyphen and nested excluded labels on the sheet path", () => {
         },
       ],
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the accepted Date cell and not the nested Delivery: Date cell", () => {
+  it("reads the accepted Date cell and not the nested Delivery: Date cell (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoiceSheet");
     const result = parse({
       worksheets: [
@@ -2581,8 +2598,9 @@ describe("R7 A641 hyphen and nested excluded labels on the sheet path", () => {
         },
       ],
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
   it("returns review unreadable when only the hyphenated Payment-date cell carries a date", () => {
@@ -2671,7 +2689,7 @@ describe("R7 A642 each parser reads its date only from its own field", () => {
 });
 
 describe("R8 A641 slash and longer excluded labels on the PDF path", () => {
-  it("reads the accepted Date and not the slashed Delivery / Date", () => {
+  it("reads the accepted Date and not the slashed Delivery / Date (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: [
@@ -2682,11 +2700,12 @@ describe("R8 A641 slash and longer excluded labels on the PDF path", () => {
         "Date: 15 Oct 2026",
       ].join("\n"),
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the accepted Date and not the longer Shipment date label", () => {
+  it("reads the accepted Date and not the longer Shipment date label (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: [
@@ -2697,8 +2716,9 @@ describe("R8 A641 slash and longer excluded labels on the PDF path", () => {
         "Date: 15 Oct 2026",
       ].join("\n"),
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
   it("returns review unreadable when only the longer Shipment date label carries a date", () => {
@@ -2729,7 +2749,7 @@ describe("R8 A641 slash and longer excluded labels on the PDF path", () => {
 });
 
 describe("R8 A641 slash and longer excluded labels on the sheet path", () => {
-  it("reads the accepted Date cell and not the slashed Delivery / Date cell", () => {
+  it("reads the accepted Date cell and not the slashed Delivery / Date cell (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoiceSheet");
     const result = parse({
       worksheets: [
@@ -2745,11 +2765,12 @@ describe("R8 A641 slash and longer excluded labels on the sheet path", () => {
         },
       ],
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the accepted Date cell and not the longer Shipment date cell", () => {
+  it("reads the accepted Date cell and not the longer Shipment date cell (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoiceSheet");
     const result = parse({
       worksheets: [
@@ -2765,8 +2786,9 @@ describe("R8 A641 slash and longer excluded labels on the sheet path", () => {
         },
       ],
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
   it("returns review unreadable when only the longer Shipment date cell carries a date", () => {
@@ -2864,9 +2886,7 @@ describe("R8 F1 excluded word on the line before the Date line", () => {
     expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the Date line when the line before it is unrelated text", () => {
-    // Characterization: passes at HEAD; a lone excluded word must join the
-    // Date line, while unrelated text must not block the accepted label.
+  it("reads the Date line when the line before it is unrelated text (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: [
@@ -2877,8 +2897,9 @@ describe("R8 F1 excluded word on the line before the Date line", () => {
         "Date: 15 Oct 2026",
       ].join("\n"),
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 });
 
@@ -2967,7 +2988,7 @@ describe("R8 F2 documents with no own date field go to the review list", () => {
 });
 
 describe("R9 A641 punctuation suffixes on the PDF path", () => {
-  it("reads the accepted Date and not the dotted Delivery.Date", () => {
+  it("reads the accepted Date and not the dotted Delivery.Date (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: [
@@ -2978,11 +2999,12 @@ describe("R9 A641 punctuation suffixes on the PDF path", () => {
         "Date: 15 Oct 2026",
       ].join("\n"),
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the accepted Date and not the ampersand Delivery and Date", () => {
+  it("reads the accepted Date and not the ampersand Delivery and Date (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoicePdf");
     const result = parse({
       text: [
@@ -2993,8 +3015,9 @@ describe("R9 A641 punctuation suffixes on the PDF path", () => {
         "Date: 15 Oct 2026",
       ].join("\n"),
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
   it("returns review unreadable when only the dotted Delivery.Date carries a date", () => {
@@ -3025,7 +3048,7 @@ describe("R9 A641 punctuation suffixes on the PDF path", () => {
 });
 
 describe("R9 A641 punctuation suffixes on the sheet path", () => {
-  it("reads the accepted Date cell and not the dotted Delivery.Date cell", () => {
+  it("reads the accepted Date cell and not the dotted Delivery.Date cell (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoiceSheet");
     const result = parse({
       worksheets: [
@@ -3041,11 +3064,12 @@ describe("R9 A641 punctuation suffixes on the sheet path", () => {
         },
       ],
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
-  it("reads the accepted Date cell and not the ampersand Delivery and Date cell", () => {
+  it("reads the accepted Date cell and not the ampersand Delivery and Date cell (safe path, PM 2026-11-20)", () => {
     const parse = requireParser("parseSchoolInvoiceSheet");
     const result = parse({
       worksheets: [
@@ -3061,8 +3085,9 @@ describe("R9 A641 punctuation suffixes on the sheet path", () => {
         },
       ],
     }) as Record<string, unknown>;
-    const draft = requireParsedDraft(result, "schoolInvoiceDraftSchema");
-    expect(draft["date"]).toBe("2026-10-15");
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date and no draft.
+    expect(requireReviewResult(result)).toBe("review:unreadable");
   });
 
   it("returns review unreadable when only the dotted Delivery.Date cell carries a date", () => {
@@ -3188,4 +3213,226 @@ describe("R9 A643 dense date labels stay fast on the PDF path", () => {
       expect(elapsedMs).toBeLessThan(2000);
     },
   );
+});
+
+describe("R10 school safe path with a genuine Date (PM 2026-11-20)", () => {
+  it("R10 returns review unreadable with no draft for a school PDF with a genuine Date", () => {
+    // Safe path, PM 2026-11-20: every school invoice goes to the review
+    // list with no automatic date. At HEAD this returns parsed 2026-10-15.
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const result = parse({
+      text: [
+        "Test School Company Ltd.",
+        "ใบแจ้งหนี้ / INVOICE",
+        "No: PA-INV-FAKE-101-T2",
+        "Date: 15 Oct 2026",
+        "Total: THB 30,000.00",
+      ].join("\n"),
+    }) as Record<string, unknown>;
+    expect(requireReviewResult(result)).toBe("review:unreadable");
+  });
+
+  it("R10 returns review unreadable with no draft for a school sheet with a genuine Date", () => {
+    // Safe path, PM 2026-11-20: the four-tab sheet goes to the review
+    // list with no automatic date. At HEAD this returns parsed 2026-10-15.
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const result = parse({
+      worksheets: [
+        {
+          name: "Term 2",
+          cells: {
+            A1: "Test School Company Ltd.",
+            A2: "ใบแจ้งหนี้ / INVOICE",
+            B5: "PA-INV-FAKE-102-T2",
+            A10: "Date: 15 Oct 2026",
+          } as Record<string, string | number | null>,
+        },
+      ],
+    }) as Record<string, unknown>;
+    expect(requireReviewResult(result)).toBe("review:unreadable");
+  });
+
+  it("R10 returns review unreadable for a school PDF with the Review A Shipping Date decoy before a genuine Date", () => {
+    // Review A r7 input: the suffix exception reads the decoy as the
+    // document date. At HEAD this returns parsed 2026-10-31.
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const result = parse({
+      text: [
+        "Test School Company Ltd.",
+        "ใบแจ้งหนี้ / INVOICE",
+        "No: PA-INV-FAKE-103-T2",
+        "Shipping Date: 31 Oct 2026",
+        "Date: 15 Oct 2026",
+      ].join("\n"),
+    }) as Record<string, unknown>;
+    expect(requireReviewResult(result)).toBe("review:unreadable");
+  });
+
+  it("R10 returns review unreadable for a school PDF with only the Shipping Date decoy", () => {
+    // At HEAD this returns parsed 2026-10-31 through the suffix exception.
+    const parse = requireParser("parseSchoolInvoicePdf");
+    const result = parse({
+      text: [
+        "Test School Company Ltd.",
+        "ใบแจ้งหนี้ / INVOICE",
+        "No: PA-INV-FAKE-104-T2",
+        "Shipping Date: 31 Oct 2026",
+      ].join("\n"),
+    }) as Record<string, unknown>;
+    expect(requireReviewResult(result)).toBe("review:unreadable");
+  });
+
+  it("R10 returns review unreadable for a school sheet with the Shipping Date decoy before a genuine Date", () => {
+    // At HEAD this returns parsed 2026-10-31 through the suffix exception.
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const result = parse({
+      worksheets: [
+        {
+          name: "Term 2",
+          cells: {
+            A1: "Test School Company Ltd.",
+            A2: "ใบแจ้งหนี้ / INVOICE",
+            B5: "PA-INV-FAKE-105-T2",
+            A10: "Shipping Date: 31 Oct 2026",
+            A11: "Date: 15 Oct 2026",
+          } as Record<string, string | number | null>,
+        },
+      ],
+    }) as Record<string, unknown>;
+    expect(requireReviewResult(result)).toBe("review:unreadable");
+  });
+
+  it("R10 returns review unreadable for a school sheet with only the Shipping Date decoy", () => {
+    // At HEAD this returns parsed 2026-10-31 through the suffix exception.
+    const parse = requireParser("parseSchoolInvoiceSheet");
+    const result = parse({
+      worksheets: [
+        {
+          name: "Term 2",
+          cells: {
+            A1: "Test School Company Ltd.",
+            A2: "ใบแจ้งหนี้ / INVOICE",
+            B5: "PA-INV-FAKE-106-T2",
+            A10: "Shipping Date: 31 Oct 2026",
+          } as Record<string, string | number | null>,
+        },
+      ],
+    }) as Record<string, unknown>;
+    expect(requireReviewResult(result)).toBe("review:unreadable");
+  });
+});
+
+describe("R10 non-school parsers keep their own date and reject the Shipping Date decoy", () => {
+  it("R10 reads the genuine voucher Date and not the Shipping Date decoy", () => {
+    // The voucher PDF shares the date field reader. At HEAD the suffix
+    // exception takes the decoy, whose English value no Buddhist numeric
+    // read parses, so the whole document goes to review instead of the
+    // genuine 2026-10-15.
+    const parse = requireParser("parsePaymentVoucherPdf");
+    const result = parse({
+      text: [
+        "ใบสำคัญจ่าย/PAYMENT  VOUCHER",
+        "Voucher: PV69/10-101",
+        "Payee: Test Counterparty",
+        "Shipping Date: 31 Oct 2026",
+        "Date: 15/10/2569",
+        "Net: 19400",
+      ].join("\n"),
+    }) as Record<string, unknown>;
+    const draft = requireParsedDraft(result, "paymentVoucherDraftSchema");
+    expect(draft["date"]).toBe("2026-10-15");
+  });
+
+  it("R10 returns review unreadable for a voucher with only the Shipping Date decoy", () => {
+    // Characterization: the decoy value is unreadable to the Buddhist
+    // numeric read, so this already returns review at HEAD and must stay
+    // review after the suffix exception is gone.
+    const parse = requireParser("parsePaymentVoucherPdf");
+    const result = parse({
+      text: [
+        "ใบสำคัญจ่าย/PAYMENT  VOUCHER",
+        "Voucher: PV69/10-102",
+        "Payee: Test Counterparty",
+        "Shipping Date: 31 Oct 2026",
+        "Net: 19400",
+      ].join("\n"),
+    }) as Record<string, unknown>;
+    expect(requireReviewResult(result)).toBe("review:unreadable");
+  });
+
+  it("R10 reads the genuine cloud receipt Payment date beside the Shipping Date decoy", () => {
+    // Characterization: the cloud receipt labels are multi-word, so the
+    // Shipping Date decoy matches no own field even at HEAD; the genuine
+    // Payment date is read. Green must keep it.
+    const parse = requireParser("parseCloudPaymentReceipt");
+    const result = parse({
+      text: [
+        "Payment Receipt",
+        "Shipping Date: 31 Oct 2026",
+        "Payment date: 15 Oct 2026",
+        "Amount: THB 2,000.00",
+        "Paid by Test Company",
+      ].join("\n"),
+    }) as Record<string, unknown>;
+    const draft = requireParsedDraft(result, "cloudPaymentReceiptDraftSchema");
+    expect(draft["paymentDate"]).toBe("2026-10-15");
+  });
+
+  it("R10 returns review unreadable for a cloud receipt with only the Shipping Date decoy", () => {
+    // Characterization: the decoy matches no cloud receipt own field, so
+    // this already returns review at HEAD and must stay review.
+    const parse = requireParser("parseCloudPaymentReceipt");
+    const result = parse({
+      text: [
+        "Payment Receipt",
+        "Shipping Date: 31 Oct 2026",
+        "Amount: THB 2,000.00",
+        "Paid by Test Company",
+      ].join("\n"),
+    }) as Record<string, unknown>;
+    expect(requireReviewResult(result)).toBe("review:unreadable");
+  });
+
+  it("R10 reads the genuine foreign DATE and not the Shipping Date decoy", () => {
+    // The foreign invoice shares the date field reader with the bare DATE
+    // label. At HEAD the suffix exception takes the decoy, whose English
+    // value no foreign yyyy.mm.dd read parses, so the document goes to
+    // review instead of the genuine 2026-10-15.
+    const parse = requireParser("parseForeignVendorInvoice");
+    const result = parse({
+      text: [
+        "VENDOR A PRINTING CO.,LTD",
+        "Shipping Date: 31 Oct 2026",
+        "DATE 2026.10.15",
+        "TO:Test Company",
+        "DESCRIPTION",
+        "work book test",
+        "1000copies",
+        "RMB10.0",
+        "RMB10000",
+      ].join("\n"),
+    }) as Record<string, unknown>;
+    const draft = requireParsedDraft(result, "foreignVendorInvoiceDraftSchema");
+    expect(draft["invoiceDate"]).toBe("2026-10-15");
+  });
+
+  it("R10 returns review unreadable for a foreign invoice with only the Shipping Date decoy", () => {
+    // Characterization: the decoy value is unreadable to the foreign
+    // yyyy.mm.dd read, so this already returns review at HEAD and must
+    // stay review after the suffix exception is gone.
+    const parse = requireParser("parseForeignVendorInvoice");
+    const result = parse({
+      text: [
+        "VENDOR A PRINTING CO.,LTD",
+        "Shipping Date: 31 Oct 2026",
+        "TO:Test Company",
+        "DESCRIPTION",
+        "work book test",
+        "1000copies",
+        "RMB10.0",
+        "RMB10000",
+      ].join("\n"),
+    }) as Record<string, unknown>;
+    expect(requireReviewResult(result)).toBe("review:unreadable");
+  });
 });
