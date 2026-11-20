@@ -186,10 +186,14 @@ export default async function FeaturesPage() {
               <span className="text-xs font-semibold uppercase tracking-eyebrow text-sky-800">
                 Mastery Advantage
               </span>
-              <div className="mt-5 grid grid-cols-3 gap-3" aria-hidden="true">
-                <div className="h-16 rounded-2xl bg-emerald-300" />
-                <div className="h-16 rounded-2xl bg-sky-300" />
-                <div className="h-16 rounded-2xl bg-amber-300" />
+              <div className="mt-5 flex justify-center">
+                <Image
+                  src={siteLogos.mastery.square}
+                  alt="Mastery Advantage"
+                  width={160}
+                  height={160}
+                  className="h-28 w-28 object-contain"
+                />
               </div>
             </div>
           </div>

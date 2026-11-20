@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { Link } from "@/locales/navigation";
 import { getScopedI18n } from "@/locales/server";
 import { buildMarketingMetadata } from "@/lib/seo";
@@ -119,13 +119,17 @@ export default async function PricingPage() {
           <h2 className="mb-6 text-2xl font-semibold tracking-tight text-slate-900 md:text-3xl">
             {t("included.heading")}
           </h2>
-          <ul className="grid max-w-3xl gap-4 sm:grid-cols-3">
+          <ul className="max-w-3xl space-y-3">
             {includedBullets.map((bullet) => (
               <li
                 key={bullet}
-                className="rounded-2xl border border-site-border bg-white p-5 text-sm leading-relaxed text-site-body shadow-panel"
+                className="flex items-start gap-3 rounded-2xl border border-site-border bg-white p-5 text-base leading-relaxed text-site-body shadow-panel"
               >
-                {bullet}
+                <Check
+                  className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800"
+                  aria-hidden="true"
+                />
+                <span>{bullet}</span>
               </li>
             ))}
           </ul>

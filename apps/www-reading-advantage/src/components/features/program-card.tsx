@@ -36,7 +36,7 @@ export function ProgramCard({
       data-testid={testId}
       className="flex h-full flex-col overflow-hidden rounded-3xl border border-site-border bg-white shadow-panel"
     >
-      {imageSrc && imageAlt ? (
+      {imageSrc && imageAlt && (
         <div className="bg-site-page">
           <Image
             src={imageSrc}
@@ -45,13 +45,6 @@ export function ProgramCard({
             height={360}
             className="h-48 w-full object-cover object-top"
           />
-        </div>
-      ) : (
-        <div
-          className="flex h-48 items-center justify-center bg-site-page"
-          aria-hidden="true"
-        >
-          <div className="h-16 w-16 rounded-2xl border border-site-border bg-white" />
         </div>
       )}
       <div className="flex flex-1 flex-col gap-3 p-6">
