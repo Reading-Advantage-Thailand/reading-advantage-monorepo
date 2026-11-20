@@ -165,7 +165,7 @@ The planner viewed each source and each output on 2026-11-20. Boxes are `x0,y0,x
 | Output file in `public/images/features/` | Source | Box | Output size | `alt` (D13) |
 |---|---|---|---|---|
 | `storytime-reader-card.webp` | `storytime-advantage/app-2026-11-15/reader-390x844.png` (390x844) | 12,142,378,424 (the picture card; the banner and the half face stay out) | 366x282 | Storytime Advantage reader screen |
-| `primary-lesson-step05.webp` | `primary-advantage/parity-run2-2026-10-19/student/lesson-step05-deep-reading-phone.png` (375x812) | 0,190,375,812 (the staff "Student preview / Exit preview" banner and its note stay out), then resize to 375x812 | 375x812 | Primary Advantage lesson screen |
+| `primary-lesson-step05.webp` | `primary-advantage/parity-run2-2026-10-19/student/lesson-step05-deep-reading-phone.png` (375x812) | 0,190,375,812 (the staff "Student preview / Exit preview" banner and its note stay out), no resize | 375x622 | Primary Advantage lesson screen |
 | `reading-article-selection.webp` | `reading-advantage/2026-06-11/12-2026-06-11-article-selection-full-page.png` (2880x4014) | 570,165,2820,1245 (the staff header, the sidebar and the leaderboard stay out), then resize to width 1200 | 1200x576 | Reading Advantage article selection screen |
 | `tutor-class-leaderboard.webp` | `tutor-advantage/dev-2026-11-16/student-mobile/010-screen.png` (520x1125) | 0,0,520,880 (the empty lower part stays out) | 520x880 | Tutor Advantage live class leaderboard screen |
 
