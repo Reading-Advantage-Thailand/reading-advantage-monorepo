@@ -2718,6 +2718,13 @@ const BARE_ENGLISH_DATE_LINE =
 /** The Unicode spaces that the field reader folds to a plain space (F1). */
 const UNICODE_SPACES = /[\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]/gu;
 
+/**
+ * The PM safe path of 2026-11-20: the automatic school date reader stays off
+ * until a structural field model exists (measure/tech-debt.md). Every school
+ * invoice and receipt goes to the review list with no automatic date.
+ */
+const PM_SCHOOL_SAFE_PATH_ACTIVE: boolean = true;
+
 /** The exact PM document date labels of a school invoice (A640). */
 const SCHOOL_DATE_LABELS = [
   "Date",
@@ -2838,14 +2845,13 @@ function createDateFieldMatcher(labels: readonly string[]): DateFieldMatcher {
 }
 
 /**
- * Reads the accepted label that ends at a colon of one field. The label is the
- * field text before the colon when that whole text is an accepted label, or its
- * last words when a value precedes it, as a document number before `Date:`.
- * A label that follows a modifier word or a punctuation mark is not an own
- * field (A641).
+ * Reads the accepted label of one field that ends at a colon. The whole text
+ * before the colon, trimmed and case-folded, must equal one accepted label.
+ * A value or a modifier word before the label makes the field no own field,
+ * so `Shipping Date:` supplies nothing (A641, PM safe path 2026-11-20).
  * @param before The field text before the colon.
  * @param matcher The compiled labels of the parser.
- * @returns The label and its start index, or null when no own field ends here.
+ * @returns The label at the field start, or null when no own field ends here.
  */
 function labelEndingAtColon(
   before: string,
@@ -2854,20 +2860,10 @@ function labelEndingAtColon(
   const text = before.replace(/[ \t]+$/u, "");
   if (text === "") return null;
   const folded = text.toLowerCase();
-  for (const label of matcher.labels) {
-    const needle = label.toLowerCase();
-    if (!folded.endsWith(needle)) continue;
-    const start = text.length - needle.length;
-    if (start > 0) {
-      if (text[start - 1] !== " ") continue;
-      const prefix = text.slice(0, start).trimEnd();
-      const lastWord = /\S+$/u.exec(prefix)?.[0] ?? "";
-      if (!/[A-Za-z0-9\u0E00-\u0E7F]$/u.test(prefix)) continue;
-      if (EXCLUDED_DATE_WORDS.has(lastWord.toLowerCase())) continue;
-    }
-    return { label, start };
-  }
-  return null;
+  const label = matcher.labels.find(
+    (candidate) => candidate.toLowerCase() === folded,
+  );
+  return label === undefined ? null : { label, start: 0 };
 }
 
 /**
@@ -3195,13 +3191,18 @@ function readSchoolLinesFromCells(
  * field of spec section 8 is read from its labeled cell; a field the tab does
  * not print stays null (A606). The date comes only from its own accepted label;
  * the sheet exception reads a bare date in a row that also holds the title or
- * the document number (B620). The tab text never goes to the model path.
+ * the document number (B620). The tab text never goes to the model path. Under
+ * the PM safe path of 2026-11-20 the parser returns the review result for every
+ * tab before it reads a date.
  * @param input The worksheets read from the exported workbook.
  * @returns The parsed drafts, or the review result when no tab is readable.
  */
 export function parseSchoolInvoiceSheet(input: {
   readonly worksheets: readonly WorkbookWorksheet[];
 }): DocumentParseResult<SchoolInvoiceDraft> {
+  // PM safe path 2026-11-20 (measure/tech-debt.md): every school invoice and
+  // receipt goes to the review list with no automatic date and no draft.
+  if (PM_SCHOOL_SAFE_PATH_ACTIVE) return reviewDocument(REVIEW_UNREADABLE);
   const drafts: SchoolInvoiceDraft[] = [];
   for (const worksheet of input.worksheets) {
     const documentTitle = readCellText(worksheet.cells, "A2");
@@ -3369,6 +3370,8 @@ function readSchoolLinesFromText(
  * label, and a document with no own date field goes to the review list (B620).
  * The LibreOffice print has a clean layer; the Google Sheets print has a broken
  * Thai layer, and the intake puts that file on the review list (open item Q21).
+ * Under the PM safe path of 2026-11-20 every text school invoice returns the
+ * review result before the date read.
  * @param input The text layer, or null when the PDF has none.
  * @returns The parsed draft, the review result, or `needs-model`.
  */
@@ -3376,6 +3379,9 @@ export function parseSchoolInvoicePdf(input: {
   readonly text: string | null;
 }): DocumentParseResult<SchoolInvoiceDraft> {
   if (input.text === null) return { status: "needs-model" };
+  // PM safe path 2026-11-20 (measure/tech-debt.md): the date read never runs,
+  // so every school invoice and receipt goes to the review list.
+  if (PM_SCHOOL_SAFE_PATH_ACTIVE) return reviewDocument(REVIEW_UNREADABLE);
   const text = normalizeDigits(input.text);
   const number =
     /\bPA-(?:INV|REC)-[0-9A-Za-z]+(?:-[0-9A-Za-z]+)*/iu.exec(text)?.[0] ?? null;
