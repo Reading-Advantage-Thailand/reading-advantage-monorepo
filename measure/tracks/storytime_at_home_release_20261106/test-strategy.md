@@ -118,6 +118,7 @@ The catalog is `measure/anti-patterns.md`. The parent table (parent section 1.5)
 | P2b Login and protected media | critical | yes | **yes (required)** | **yes (required)** | **yes (required)** | **yes (required)** |
 | P2 Approved A-42 pin | high | yes | no | no | yes (small) | no |
 | P3 At-home deploy | high | yes (on the record) | yes (environment check) | no | no | no (tagged-URL checks instead) |
+| P4 Entry redesign (A-71) | medium | yes | no (no auth, cookie, handler, or media change) | yes (page contracts and flow) | no (the AC-4.x rows hold the attacks) | **yes (required; judges the look at 390, 980, 1280)** |
 
 The reason for each entry is in the phase section.
 
@@ -994,6 +995,18 @@ Green records `base_count` once before the receipt and `new_tests` from the new 
 - **Reviews:** Review A on the record: yes. Review B (environment check and bucket access): yes, small. Review C: no. Adversarial: no (the Phase 1 and Phase 2 rounds hold the data attacks).
   Browser review: no. The tagged-URL checks replace it.
 - **Do not:** upload media before the word, move traffic without a separate word, or set `STORYTIME_SHOW_DRAFT_MEDIA` on the production service.
+
+## P4: Entry redesign (A-71)
+
+**Risk: medium.** The change is markup, style, and copy of two public pages. The auth code does not change. The browser review is required because the owner's complaint is about the look.
+
+- **Rows:** the plan task 4.1 lists the files and rows (`entry-signin-layout.test.tsx` S1 to S10, `entry-join-layout.test.tsx` J1 to J9, `entry-join-copy-split.test.ts` C1 to C5, `entry-css-layout.test.ts` L1 to L6, and `entry-browser-gate.sh` B1 to B9). The spec rows are AC-A71.1 to AC-A71.14.
+- **Layout is measured in a browser.** jsdom has no layout, so the two-column rule at 1280, the strip at 390, the 18 px labels, and the full-width button are CSS-structure rows (L1, L2) plus measured rows (B2 to B5). A CSS-structure row alone never passes a layout acceptance.
+- **Characterization set (stays green, unedited unless a reason line says why):** `login-page-guard.test.tsx`, `login-signin-page-username.test.tsx`, `login-join-page.test.tsx`, `phase3-join-copy-approved.test.ts`, `look-adversarial-p2b.test.tsx`, `p6-r7-teacher-entry.test.tsx`, `look-brand-chrome.test.ts`, and the sign-in rows of `login-signin-handler.test.ts` and `login-proxy.test.ts`.
+- **Copy rule:** a piece is a substring of an approved block (C1). A string with no approved source is in `ENTRY_PENDING_THAI_KEYS` (C3, C4), and the PM sends it to Daniel. No Thai is invented.
+- **Anti-patterns:** A1 (a word in a comment is not a rule: L1 to L5 parse the CSS), A3 (the shell row asserts the rule exists before it reads its value), A5 (a note quotes the exit code and the labeled counts, `screenshots=12`), A8 (the markers are `data-*` hooks, not prose).
+- **Do not:** touch the handler, the cookie, the proxy, or the media routes; add a stock photo; load a cover or any signed media on a signed-out page; add a hash or a manifest for the screenshots; push or deploy before Daniel's word.
+- **Reviews:** Review A yes. Review B no (the diff list proves no security-sensitive file changed; a reviewer that finds one escalates). Review C yes. Adversarial no. Browser review yes (plan task 4.6).
 
 ## 4. Questions and plan changes for the orchestrator
 

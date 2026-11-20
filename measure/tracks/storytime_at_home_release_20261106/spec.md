@@ -121,6 +121,42 @@ Acceptance:
 - AC-4.11 (owner-passed) Daniel gives the word for the deploy and for the removal of the public read of `gs://primary-app-storage/storytime-app/` (task 2b.10). That prefix serves the live revision `storytime-app-00011-dut` until the traffic move; the removal comes after it. The record names the revision and the word.
 - AC-4.12 (automated) The login uses new storytime tables only: no import of the shared company tables (`accounts`, `sessions`, `auditEvents`, `loginAttempts`) or of `createSession` in `apps/storytime`; `apps/storytime` holds no database import (all SQL lives in `packages/backend/src/modules/storytime-access/`); and the storytime tables (`packages/db/src/schema/storytime/`) are registered EXEMPT in `packages/domain/src/tenant-registry.ts`. The reused helpers are `hashPassword`, `verifyPassword`, and `consumeRateLimit` only.
 
+### FR-A71 Entry redesign: the sign-in page and the "How to join" page (Phase 4, PM assignment A-71)
+
+Owner words, Daniel, Google Tasks, 2026-11-20 18:49, on the live Storytime pages: "That is the ugliest login UX I've ever encountered."
+
+PM look, 2026-11-20: the live `/th/sign-in` and `/th/join` are a bare form on a cream page. On a desktop the card is tiny and left-aligned. There is no logo, no art, and no Storytime feel. `/th/join` is a wall of text with a small brown button.
+
+The PM design decisions are final. They are requirements of this spec:
+
+1. **Sign-in is a welcome screen.** It shows the Storytime Advantage logo, one large picture from the approved Storytime art that is already in our media (a book cover or a page with the cast), a greeting line, and then the sign-in card. On a desktop it has two columns (art on the left, card on the right), centred, at most about 1040 px wide. On a phone it has an art strip on top and the card below, and every control is thumb-size.
+2. **The card.** Big fields with the labels above them (18 px or more), a show-password toggle, one full-width primary button, and friendly error text. "Remember this device" stays as it is now (a long-running login, the first time only). Below the card, one line "No login yet?" with a link to `/join`.
+3. **`/join` is short.** A hero line, then 3 to 4 icon tiles that show the program (daily 30-minute lessons, letters and phonics, 100 sight words, songs and readers, the home app), each with one short line. Then "How to get a login" in 2 steps. The contact channels are buttons, not raw URLs: a LINE button with the LINE OA link `https://line.me/ti/p/Pf7_EF98Pv`, a tap-to-call phone `+66 099-005-8038`, and an email `support@reading-advantage.com`. Then the sign-in button. The approved C3 Thai and English strings of `apps/storytime/lib/join-copy.ts` stay the source of the text. They may be split into the tiles. The page adds no new claim. Any Thai text change goes to Daniel through the PM, and each such string is marked as needing the Thai check. This spec does not invent Thai beyond splits of the approved text.
+4. **Colour and type** come from the existing Storytime tokens (Sarabun, the brown and cream set), with one accent from the art. No stock photo of people.
+
+Scope: the page markup and style of the two pages, the new message keys, and the pieces of `join-copy.ts`. The sign-in handler, the sign-out handler, the cookie, the `next` check, the proxy, and the media routes do not change, so AC-4.1 to AC-4.4 and AC-4.7 hold as they are.
+
+Art and logo (facts read 2026-11-20; the plan, Phase 4, holds the detail): the logo is `apps/storytime/app/look/logo/storytime-advantage.svg`. The art is `apps/storytime/app/look/places/path-p.webp` (desktop column) and `apps/storytime/app/look/places/path-d.webp` (phone strip), the cast on the stone path, part of Daniel's approved look. A static import serves each file as `/_next/static/media/<name>.<hash>.<ext>`, which needs no session. The book covers are protected media and cannot load signed out.
+
+Acceptance:
+
+- AC-A71.1 (automated) The sign-in page markup holds the logo (`img[data-entry-logo]`) and one `<picture data-entry-art>` of the two path pictures with no media URL, no storage host, and no signed-URL query. Both load with no cookie in the browser gate.
+- AC-A71.2 (automated) The sign-in page holds the greeting line, the card, and an `h1` with the existing sign-in heading. The labels come before the fields, and the field names, ids, autocomplete values, form action, and hidden fields are unchanged.
+- AC-A71.3 (automated) The card has the show-password toggle (`aria-controls`, `aria-pressed`), exactly one submit button, and the error text of the existing keys inside the card. The password field is `type="password"` until the toggle changes it.
+- AC-A71.4 (automated) Below the card, the line "No login yet?" holds a link to `/<locale>/join`, in both locales.
+- AC-A71.5 (automated, browser) At 1280 the art is left of the card, and the shell is at most 1042 px wide and centred. At 980 the layout has two columns. At 390 the art strip (160 to 280 px high) is above the card. At each width the page has no horizontal scroll.
+- AC-A71.6 (automated, browser) At each width the labels are 18 px or more, each input is 56 px or more high, and the submit button is as wide as the card content within 2 px.
+- AC-A71.7 (automated) `/join` holds one hero line, exactly five tiles, two numbered steps with the heading "How to get a login", four contact buttons, and the sign-in button last. No text block holds more than 40 words.
+- AC-A71.8 (automated) The contact buttons are anchors: the LINE link `https://line.me/ti/p/Pf7_EF98Pv`, a `tel:` link of `+66 099-005-8038`, a `mailto:` link of `support@reading-advantage.com`, and the contact page link. The visible text of the page holds no `http://` or `https://` text and no `line.me`.
+- AC-A71.9 (automated) Each hero line, tile line, step line, contact lead, and button label is an exact substring of an approved C3 block (or an approved contact line without its URL), in English and in Thai. The four approved blocks and `signInLink` stay byte for byte. `phase3-join-copy-approved.test.ts` stays green and unedited.
+- AC-A71.10 (automated) The new strings without an approved source are the five keys `signInGreeting`, `signInShowPassword`, `signInHidePassword`, `signInNoLogin`, and `joinHowToTitle`. The list `ENTRY_PENDING_THAI_KEYS` names them. Their Thai value equals the English text until Daniel gives the Thai.
+- AC-A71.11 (automated) The style file `app/entry.css` uses the existing tokens, `var(--font-sans)` or the display face, no remote `url()`, no new font file, and motion only under `prefers-reduced-motion: no-preference`.
+- AC-A71.12 (person-checked) The UX browser review at 390, 980, and 1280 passes, judges the look (the PM decisions 1 to 4, with no clipped Thai, no overlap, no empty block, and a readable contrast), and names its screenshots.
+- AC-A71.13 (automated) The phase check passes: the app suite, `tsc`, ESLint, `phase1-quality-gates.sh`, `phase2b-browser-gate.sh`, and `phase3-browser-gate.sh` (the first-load row does not change).
+- AC-A71.14 (automated after the master push, `deferred:daniel`) A tagged revision with 0 % traffic exists. The four entry URLs and the two picture URLs answer 200 signed out on the tagged URL, and a week path redirects to the sign-in page. The traffic move stays Daniel's word (AC-3.1). Preview links go to the PM by 2026-11-22 12:00 ICT.
+
+Open questions (defaults in the plan, Phase 4): the phone link drops the zero after `+66` (default: `tel:+66990058038`), the contact page is a fourth button (default: kept), the five Thai lines wait for Daniel (default: English placeholder), the accent is the amber of the logo (default).
+
 ## 4. Constraints
 
 - Hard gates stay with Daniel: paid generation, deploys, deletions, and public dates. A task at a gate gets `[b] deferred:daniel`.
@@ -134,7 +170,7 @@ Acceptance:
 
 ## 5. Out of scope
 
-- A change to any app code or any contract (parent Phase 3 owns them). If the receiver or a test finds a contract fault, the task stops and reports it to the orchestrator.
+- A change to any app code or any contract (parent Phase 3 owns them), except FR-A71, which changes the two entry pages (Phase 4). If the receiver or a test finds a contract fault, the task stops and reports it to the orchestrator.
 - The loops (A-42) display work: tasks 3.9 and 4.6 of the parent.
 - The teacher app deploy (task 6.3 of the parent).
 - The media upload to the bucket and the traffic move before Daniel's word.
