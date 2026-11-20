@@ -138,7 +138,8 @@ export interface JoinPieces {
  *
  * The hero, step 2, the contact lead, and the button labels stay exact substrings of the
  * approved blocks. The five tile titles and sentences and step 1 are PM microcopy of
- * 2026-11-20; they state approved facts in new words and wait for Daniel's Thai check.
+ * 2026-11-20; they state approved facts in new words. Daniel approved their Thai on
+ * 2026-11-21, so their text stays as written.
  */
 export const JOIN_PIECES: { en: JoinPieces; th: JoinPieces } = {
   en: {
@@ -231,12 +232,11 @@ export const ENTRY_PENDING_THAI_KEYS = [
   "joinHowToTitle",
 ] as const;
 
-/** The six new tile and step lines that wait for the Thai check of Daniel (spec AC-A71.9). */
-export const JOIN_PENDING_THAI_PIECES = [
-  "daily-lessons",
-  "letters-phonics",
-  "sight-words",
-  "songs-readers",
-  "home-app",
-  "steps.0",
-] as const;
+/**
+ * The join tile and step lines that still wait for Daniel's Thai check.
+ *
+ * Daniel approved the Thai of the six tile and step lines on 2026-11-21 (PM hand-off
+ * Tasks c0tiaDJpUlMxZWFfak9Ycg, "Ok": "Use them as written"), so the list is empty.
+ * The current Thai text stays as written (spec AC-A71.9).
+ */
+export const JOIN_PENDING_THAI_PIECES = [] as const;
