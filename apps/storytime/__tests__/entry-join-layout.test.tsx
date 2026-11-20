@@ -1,0 +1,283 @@
+/**
+ * The entry redesign of the "How to join" page (Phase 4, task 4.1, spec FR-A71, AC-A71.7,
+ * AC-A71.8).
+ *
+ * The page is short: one hero line, exactly five icon tiles, two numbered steps under the
+ * "How to get a login" heading, four contact buttons, and the sign-in button last. The contact
+ * channels are buttons, not raw URLs: the visible text holds no URL. Every line is an exact
+ * substring of the approved C3 copy, so the page adds no new claim.
+ *
+ * At the base the first assertion of each case fails on the missing tiles, steps, buttons, or
+ * pieces, because the page holds three paragraphs and four raw contact lines. The page and the
+ * copy module are loaded only after the existsSync assertions, so no case fails with a load
+ * error.
+ */
+import { existsSync } from "node:fs";
+import { resolve } from "node:path";
+import type { ReactElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+const cookieSets = vi.hoisted(() => ({ count: 0 }));
+
+vi.mock("next/navigation", () => ({
+  redirect: (url: string) => {
+    throw new Error(`REDIRECT:${url}`);
+  },
+}));
+vi.mock("next-intl/server", () => ({
+  getTranslations: async (arg?: { locale?: string }) => (key: string) =>
+    `${arg?.locale ?? "th"}:${key}`,
+}));
+vi.mock("next/headers", () => ({
+  cookies: async () => ({
+    get: () => undefined,
+    getAll: () => [],
+    set: () => {
+      cookieSets.count += 1;
+    },
+    delete: () => undefined,
+  }),
+  headers: async () => new Headers(),
+}));
+
+const APP = resolve(import.meta.dirname, "..");
+const PAGE = resolve(APP, "app/[locale]/join/page.tsx");
+const COPY_FILE = resolve(APP, "lib/join-copy.ts");
+const MISSING_PAGE = "Missing apps/storytime/app/[locale]/join/page.tsx";
+const MISSING_COPY = "Missing apps/storytime/lib/join-copy.ts";
+
+/** The tile order of the PM design decision 3. */
+const TILE_ORDER = [
+  "daily-lessons",
+  "letters-phonics",
+  "sight-words",
+  "songs-readers",
+  "home-app",
+] as const;
+
+/** Loads the copy module after the existsSync assertion. */
+async function copyModule(): Promise<{
+  JOIN_COPY: { en: Record<string, string>; th: Record<string, string> };
+  JOIN_PIECES?: unknown;
+}> {
+  expect(existsSync(COPY_FILE), MISSING_COPY).toBe(true);
+  return (await import("../lib/join-copy.js")) as unknown as {
+    JOIN_COPY: { en: Record<string, string>; th: Record<string, string> };
+    JOIN_PIECES?: unknown;
+  };
+}
+
+/** Renders the join page for one locale and returns its static HTML. */
+async function renderJoin(locale: string): Promise<string> {
+  expect(existsSync(PAGE), MISSING_PAGE).toBe(true);
+  const mod = (await import("../app/[locale]/join/page.js")) as {
+    default: (props: never) => Promise<ReactElement> | ReactElement;
+  };
+  const element = await mod.default({
+    params: Promise.resolve({ locale }),
+  } as never);
+  const html = renderToStaticMarkup(element);
+  expect(html.length, "the join markup is not empty").toBeGreaterThan(0);
+  return html;
+}
+
+/** Returns the text of one HTML string with markup and attributes removed. */
+function visibleText(html: string): string {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** Splits the markup into its text blocks (paragraphs, list items, headings). */
+function textBlocks(html: string): string[] {
+  const blocks: string[] = [];
+  for (const match of html.matchAll(
+    /<(p|li|h1|h2|h3)[^>]*>([\s\S]*?)<\/\1>/gi,
+  )) {
+    blocks.push(visibleText(match[2] ?? ""));
+  }
+  return blocks.filter((block) => block.length > 0);
+}
+
+beforeEach(() => {
+  cookieSets.count = 0;
+});
+
+describe("entry join layout (red)", () => {
+  it("J1 holds the heading and the hero line of the pieces", async () => {
+    const copy = await copyModule();
+    expect(copy.JOIN_PIECES, "Missing JOIN_PIECES in apps/storytime/lib/join-copy.ts").toBeDefined();
+    const html = await renderJoin("th");
+    const heading = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1] ?? "";
+    expect(heading.length, "the h1 is not empty").toBeGreaterThan(0);
+    expect(heading, "the h1 holds the approved heading").toContain(
+      copy.JOIN_COPY.th.heading,
+    );
+    const pieces = copy.JOIN_PIECES as {
+      th: { hero: string };
+      en: { hero: string };
+    };
+    expect(pieces.th.hero.length, "the Thai hero piece is not empty").toBeGreaterThan(0);
+    expect(html, "the page holds the hero line").toContain(pieces.th.hero);
+  });
+
+  it("J2 holds exactly five tiles in the designed order", async () => {
+    const copy = await copyModule();
+    expect(copy.JOIN_PIECES, "Missing JOIN_PIECES in apps/storytime/lib/join-copy.ts").toBeDefined();
+    const html = await renderJoin("en");
+    const tiles = [...html.matchAll(/data-join-tile="([^"]*)"/g)].map(
+      (match) => match[1],
+    );
+    console.log(`join_tile_count=${tiles.length}`);
+    expect(tiles.length, "the page holds exactly five tiles").toBe(5);
+    expect(tiles, "the tiles follow the designed order").toEqual([...TILE_ORDER]);
+    const pieces = (
+      copy.JOIN_PIECES as { en: { tiles: Record<string, string> } }
+    ).en.tiles;
+    for (const name of TILE_ORDER) {
+      const tile = html.match(
+        new RegExp(
+          `<[^>]*data-join-tile="${name}"[^>]*>([\\s\\S]*?)(?=<[^>]*data-join-tile=|$)`,
+        ),
+      )?.[0];
+      expect(tile, `the ${name} tile exists`).toBeDefined();
+      if (tile) {
+        const icons = [...tile.matchAll(/<svg[^>]*aria-hidden="true"[^>]*>/g)];
+        expect(icons.length, `the ${name} tile holds one icon`).toBe(1);
+        expect(pieces[name]?.length ?? 0, `the ${name} piece is not empty`).toBeGreaterThan(0);
+        expect(tile, `the ${name} tile holds its piece`).toContain(pieces[name]);
+      }
+    }
+  });
+
+  it("J3 holds the two numbered steps under the how-to heading", async () => {
+    const copy = await copyModule();
+    expect(copy.JOIN_PIECES, "Missing JOIN_PIECES in apps/storytime/lib/join-copy.ts").toBeDefined();
+    const html = await renderJoin("en");
+    const steps = [...html.matchAll(/data-join-step="(\d)"/g)].map(
+      (match) => match[1],
+    );
+    console.log(`join_step_count=${steps.length}`);
+    expect(steps.length, "the page holds exactly two steps").toBe(2);
+    expect(steps, "the steps are numbered 1 and 2").toEqual(["1", "2"]);
+    const pieces = (
+      copy.JOIN_PIECES as { en: { steps: string[]; howToTitle: string } }
+    ).en;
+    expect(pieces.steps.length, "two step pieces exist").toBe(2);
+    for (const step of pieces.steps) {
+      expect(html, "the page holds the step line").toContain(step);
+    }
+    expect(html, "the steps sit under the how-to heading").toContain(
+      "joinHowToTitle",
+    );
+  });
+
+  it("J4 holds the three contact buttons and the small contact-page link", async () => {
+    expect(existsSync(PAGE), MISSING_PAGE).toBe(true);
+    const html = await renderJoin("th");
+    const contacts = [...html.matchAll(/data-contact="([^"]*)"[^>]*href="([^"]*)"/g)];
+    console.log(`join_contact_count=${contacts.length}`);
+    expect(contacts.length, "the page holds three contact buttons").toBe(3);
+    const byName = new Map(contacts.map((match) => [match[1], match[2]]));
+    expect(byName.get("line"), "the LINE button target").toBe(
+      "https://line.me/ti/p/Pf7_EF98Pv",
+    );
+    expect(byName.get("phone"), "the phone button target").toBe("tel:+66990058038");
+    expect(byName.get("email"), "the email button target").toBe(
+      "mailto:support@reading-advantage.com",
+    );
+    expect(byName.has("site"), "the contact page is not a button").toBe(false);
+    for (const match of html.matchAll(/<a[^>]*data-contact[^>]*>/g)) {
+      expect(match[0], "a contact button is an anchor").toMatch(/^<a[\s>]/);
+    }
+    const site = html.match(
+      /<a[^>]*data-contact-site[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/,
+    );
+    console.log(`join_site_link=${site ? 1 : 0}`);
+    expect(site, "the page holds the small contact-page link").toBeDefined();
+    if (site) {
+      expect(site[1], "the contact-page link target").toBe(
+        "https://www.reading-advantage.com/contact",
+      );
+      const label = visibleText(site[2] ?? "");
+      expect(label.length, "the contact-page label is not empty").toBeGreaterThan(0);
+      expect(label, "the contact-page label shows no URL").not.toMatch(/https?:\/\//);
+      expect(label, "the contact-page label shows no URL").not.toContain(
+        "reading-advantage.com/contact",
+      );
+    }
+  });
+
+  it("J5 shows no raw URL in the visible text", async () => {
+    expect(existsSync(PAGE), MISSING_PAGE).toBe(true);
+    for (const locale of ["th", "en"] as const) {
+      const html = await renderJoin(locale);
+      const text = visibleText(html);
+      expect(text.length, `the ${locale} visible text is not empty`).toBeGreaterThan(0);
+      expect(text, `no http URL in the ${locale} text`).not.toMatch(/https?:\/\//);
+      expect(text, `no line.me in the ${locale} text`).not.toContain("line.me");
+      expect(text, `no contact path in the ${locale} text`).not.toContain(
+        "reading-advantage.com/contact",
+      );
+    }
+  });
+
+  it("J6 ends with the sign-in button", async () => {
+    const copy = await copyModule();
+    for (const locale of ["th", "en"] as const) {
+      const html = await renderJoin(locale);
+      const link = html.match(
+        /<a[^>]*data-join-signin[^>]*>([\s\S]*?)<\/a>/,
+      )?.[0];
+      console.log(`join_signin_${locale}=${link ? 1 : 0}`);
+      expect(link, `the ${locale} page ends with the sign-in button`).toBeDefined();
+      if (link) {
+        expect(link, "the sign-in button target").toContain(
+          `href="/${locale}/sign-in"`,
+        );
+        const want =
+          locale === "th"
+            ? copy.JOIN_COPY.th.signInLink
+            : copy.JOIN_COPY.en.signInLink;
+        expect(want.length, "the approved sign-in line is not empty").toBeGreaterThan(0);
+        expect(link, "the sign-in button text").toContain(want);
+      }
+    }
+  });
+
+  it("J7 shows the Storytime Advantage logo", async () => {
+    expect(existsSync(PAGE), MISSING_PAGE).toBe(true);
+    const html = await renderJoin("th");
+    const img = html.match(/<img[^>]*data-entry-logo[^>]*>/)?.[0] ?? "";
+    console.log(`join_logo_found=${img ? 1 : 0}`);
+    expect(img, "the markup holds img[data-entry-logo]").not.toBe("");
+  });
+
+  it("J8 holds no draft marker, no cookie write, no media, and no week content", async () => {
+    expect(existsSync(PAGE), MISSING_PAGE).toBe(true);
+    const html = await renderJoin("th");
+    expect(html, "the approved copy shows no draft marker").not.toContain("data-draft");
+    expect(cookieSets.count, "the join page writes no cookie").toBe(0);
+    expect(html, "the join page holds no media URL").not.toMatch(
+      /\/media\/|storage\.googleapis\.com|\.mp3|\.mp4/,
+    );
+    expect(html, "the join page holds no week path").not.toMatch(/\/st\/\d/);
+  });
+
+  it("J9 keeps every text block short and tiles the program", async () => {
+    expect(existsSync(PAGE), MISSING_PAGE).toBe(true);
+    const html = await renderJoin("en");
+    const blocks = textBlocks(html);
+    expect(blocks.length, "the page holds text blocks").toBeGreaterThan(0);
+    const long = blocks.filter((block) => block.split(/\s+/).length > 40);
+    console.log(`join_long_blocks=${long.length}`);
+    expect(long, "no text block holds more than 40 words").toEqual([]);
+    const tiles = [...html.matchAll(/data-join-tile="/g)];
+    console.log(`join_tile_count_en=${tiles.length}`);
+    expect(tiles.length, "the English page holds at least 5 tiles").toBeGreaterThanOrEqual(5);
+  });
+});
