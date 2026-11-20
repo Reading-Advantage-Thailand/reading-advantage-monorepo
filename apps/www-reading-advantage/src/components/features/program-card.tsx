@@ -14,6 +14,8 @@ type ProgramCardProps = ProgramCardCopy & {
   testId: string;
   imageSrc?: string;
   imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
 };
 
 /**
@@ -26,7 +28,9 @@ export function ProgramCard({
   bullets,
   forText,
   imageAlt,
+  imageHeight,
   imageSrc,
+  imageWidth,
   name,
   status,
   testId,
@@ -34,16 +38,16 @@ export function ProgramCard({
   return (
     <article
       data-testid={testId}
-      className="flex h-full flex-col overflow-hidden rounded-3xl border border-site-border bg-white shadow-panel"
+      className="flex self-start flex-col overflow-hidden rounded-3xl border border-site-border bg-white shadow-panel"
     >
       {imageSrc && imageAlt && (
         <div className="bg-site-page">
           <Image
             src={imageSrc}
             alt={imageAlt}
-            width={520}
-            height={360}
-            className="h-48 w-full object-cover object-top"
+            width={imageWidth ?? 520}
+            height={imageHeight ?? 360}
+            className="h-auto w-full"
           />
         </div>
       )}

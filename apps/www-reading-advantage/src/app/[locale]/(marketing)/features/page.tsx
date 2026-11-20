@@ -32,18 +32,26 @@ const CARD_TEST_ID: Record<CardKey, string> = {
 };
 
 /** Screenshot slots that have an approved current-set crop (D7). */
-const CARD_IMAGES: Partial<Record<CardKey, { src: string; alt: string }>> = {
+const CARD_IMAGES: Partial<
+  Record<CardKey, { src: string; alt: string; width: number; height: number }>
+> = {
   storytime: {
     src: "/images/features/storytime-reader-card.webp",
     alt: "Storytime Advantage reader screen",
+    width: 366,
+    height: 282,
   },
   primary: {
     src: "/images/features/primary-lesson-step05.webp",
     alt: "Primary Advantage lesson screen",
+    width: 375,
+    height: 622,
   },
   reading: {
     src: "/images/features/reading-article-selection.webp",
     alt: "Reading Advantage article selection screen",
+    width: 1200,
+    height: 576,
   },
 };
 
@@ -163,6 +171,8 @@ export default async function FeaturesPage() {
                   testId={`program-card-${CARD_TEST_ID[key]}`}
                   imageSrc={image?.src}
                   imageAlt={image?.alt}
+                  imageWidth={image?.width}
+                  imageHeight={image?.height}
                   {...cardCopy(key)}
                 />
               );
