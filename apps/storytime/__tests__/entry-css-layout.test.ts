@@ -228,4 +228,21 @@ describe("entry css layout (red)", () => {
     console.log(`entry_css_imports=${imports.length}`);
     expect(imports.length, "the locale layout imports entry.css once").toBe(1);
   });
+
+  it("L7 pins the show-password toggle tap area at 56 px or more", async () => {
+    const css = entryCss();
+    const rules = parseCss(css);
+    const toggle = rules.filter((rule) =>
+      selectorEndsWith(rule.selector, ["[data-password-toggle]"]),
+    );
+    expect(toggle.length, "the toggle has a rule").toBeGreaterThan(0);
+    const minHeight = lastDeclaration(toggle, () => true, "min-height")?.value;
+    const heightPx = lengthPx(minHeight ?? "");
+    console.log(`entry_toggle_min_height=${minHeight ?? "none"}`);
+    expect(heightPx, "the toggle min-height parses as pixels").not.toBeNull();
+    expect(
+      heightPx ?? 0,
+      "the show-password toggle is 56 px or more high",
+    ).toBeGreaterThanOrEqual(56);
+  });
 });
