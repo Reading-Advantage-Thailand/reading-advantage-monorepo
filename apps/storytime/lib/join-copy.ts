@@ -144,7 +144,7 @@ export const JOIN_PIECES: { en: JoinPieces; th: JoinPieces } = {
         "children can hear pages and tap words in the app on a phone at home",
     },
     steps: [
-      "The child's school or tutor gives the family its sign-in details.",
+      "school or tutor gives the family its sign-in details.",
       "A parent, or the teacher for the class, signs in on the first visit. The device then stays signed in.",
     ],
     contactLead: "A family without sign-in details can contact us.",

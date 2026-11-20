@@ -17,6 +17,7 @@ export function EntryLogo() {
       data-entry-logo
       src={logoSrc}
       alt="Storytime Advantage"
+      loading="lazy"
       width={156}
       height={64}
     />
