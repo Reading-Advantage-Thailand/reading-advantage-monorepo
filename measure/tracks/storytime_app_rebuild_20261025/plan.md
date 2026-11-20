@@ -3202,7 +3202,8 @@ for every other track.
     No test file changed. The P5 `GREEN_TEST_COMMAND` under heavy-run p1 exits 0 before the edit
     with 7 files and 53 passed of 53. It exits 0 after the edit with the same 7 files and 53
     passed of 53. Evidence class: automated.
-- [b] 5.2 Paid generation for the milestone song (new Lyria 3 Pro takes, S16), if the production side needs it. Daniel gives the go with the price. deferred:daniel
+- [ ] 5.2 Paid generation for the milestone song (new Lyria 3 Pro takes, S16), if the production side needs it. Daniel gives the go with the price.
+  - Daniel 2026-11-21: "Go". Price: Lyria 3 Pro 0.08 USD for each full song (Gemini API list price). PM cap: at most 10 takes (0.80 USD) for the milestone song S16, only if the production side needs new takes; log each call in the spend log; more than 10 takes goes back to the PM.
 - [x] 5.3 Stage 1 measurement scripts in `apps/storytime/scripts/checks/`. They measure loudness and true peak (rule 5.2), noise floor and clipping (rule 5.3), and the edges of each word cut (rule 10.2). They also check the size and type of each file. Each script fails a broken copy before it counts. Tests: AC-11.1, AC-6.2, AC-7.2, AC-10.1. Commits: `2887dc70b`, `8568a8fba`, `290a66b4b`.
   - Red evidence (task 5.3). Role base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; phase base
     `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The base run at the phase base (orchestrator,

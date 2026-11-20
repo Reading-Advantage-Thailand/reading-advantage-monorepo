@@ -78,7 +78,8 @@ database. `packages/auth/src/company-identity/client.ts` stays unchanged._
     - [x] The seed is an idempotent upsert keyed on username
     - [x] The seed prints usernames only, to stdout and to stderr
     - [x] The seed provides a disable command and a rotation command; rotation replaces the password and extends the expiry
-- [b] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md) deferred:owner
+- [x] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md)
+  - Daniel 2026-11-21: "go".
 
 ## Phase 2: Test
 
@@ -137,7 +138,8 @@ Red-phase commits contain ONLY the new test files and Measure document edits.
 - [x] Task: Confirm the Red phase
     - [x] Run each new suite and record the failing assertion counts here
     - [x] Commit the test files and this plan only
-- [b] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md) deferred:owner
+- [x] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
+  - PM 2026-11-21: not a human gate; closed on the automated evidence of the phase.
 
 ## Phase 3: Implement
 
@@ -188,7 +190,8 @@ Red-phase commits contain ONLY the new test files and Measure document edits.
     - [x] Run the Sales and Marketing suites, `check-types`, and `lint`
     - [x] Run the Sales suite with `SALES_AUTH_MODE=legacy-school`
     - [x] Run the top-level build gate and record the exit code; the `codecamp-knowledge` break is external and owned by the APK lane
-- [b] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) deferred:owner
+- [x] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
+  - PM 2026-11-21: not a human gate; closed on the automated evidence of the phase.
 
 ### Phase 3 Green execution record (2026-08-29)
 
