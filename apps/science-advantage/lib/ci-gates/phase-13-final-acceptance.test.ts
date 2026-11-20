@@ -711,10 +711,12 @@ describe(
           );
         });
 
-        it("passes the isolated Science database URL to every job gate", () => {
+        // Commit 17ab2d5ac dropped the job-level DATABASE_URL. The job env now carries only the
+        // admin URL of the isolated service, and each test creates its own database from it.
+        it("passes the isolated database admin URL to every job gate", () => {
           const content = readFileSync(CI_WORKFLOW_PATH, "utf8");
           expect(content).toMatch(
-            /^\s{6}DATABASE_URL: postgresql:\/\/postgres:postgres@localhost:5432\/science_advantage_test$/mu,
+            /^\s{6}COMPANY_IDENTITY_TEST_ADMIN_DATABASE_URL: postgresql:\/\/postgres:postgres@localhost:5432\/postgres$/mu,
           );
         });
 
