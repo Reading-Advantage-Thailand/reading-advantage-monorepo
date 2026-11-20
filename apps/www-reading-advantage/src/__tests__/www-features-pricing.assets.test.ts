@@ -5,9 +5,11 @@ import { describe, expect, it } from "vitest";
 /*
  * Red test for the features image assets (track www_features_pricing_20261120).
  * It asserts that the four files of the image table in spec section 7 exist
- * under `public/images/features/`, are WebP, fit the 200 KB budget and carry
- * the planned pixel sizes. At Red the files do not exist, so the cases fail.
- * The page-src check passes at Red and guards Green against a dangling path.
+ * under `public/images/features/`, are WebP, fit the 200 KB budget, carry
+ * the planned pixel sizes, and keep each spec box aspect within 1% (no stretch).
+ * r2 pins the clean 375x622 region for primary-lesson-step05: the staff banner
+ * is removed (PM rule: no staff header) and the output is not resized.
+ * The page-src check guards Green against a dangling path.
  */
 
 const PUBLIC_DIR = resolve(__dirname, "../../public");
@@ -15,10 +17,11 @@ const FEATURES_DIR = join(PUBLIC_DIR, "images", "features");
 
 /** Planned outputs: file, width and height from the image table (spec 7). */
 const PLANNED_FILES = [
-  { name: "storytime-reader-card.webp", width: 366, height: 282 },
-  { name: "primary-lesson-step05.webp", width: 375, height: 812 },
-  { name: "reading-article-selection.webp", width: 1200, height: 576 },
-  { name: "tutor-class-leaderboard.webp", width: 520, height: 880 },
+  { name: "storytime-reader-card.webp", width: 366, height: 282, boxWidth: 366, boxHeight: 282 },
+  // r2: clean 375x622 region, no resize (staff banner removed, PM rule: no staff header; no stretch).
+  { name: "primary-lesson-step05.webp", width: 375, height: 622, boxWidth: 375, boxHeight: 622 },
+  { name: "reading-article-selection.webp", width: 1200, height: 576, boxWidth: 2250, boxHeight: 1080 },
+  { name: "tutor-class-leaderboard.webp", width: 520, height: 880, boxWidth: 520, boxHeight: 880 },
 ] as const;
 
 /** Reads the lossy VP8 frame size: width at byte 26, height at byte 28. */
@@ -26,6 +29,16 @@ function vp8Size(bytes: Buffer): { width: number; height: number } {
   const width = bytes.readUInt16LE(26) & 0x3fff;
   const height = bytes.readUInt16LE(28) & 0x3fff;
   return { width, height };
+}
+
+/** Relative aspect drift between the output file and its spec crop box. */
+function aspectDrift(
+  outWidth: number,
+  outHeight: number,
+  boxWidth: number,
+  boxHeight: number,
+): number {
+  return Math.abs(outWidth / outHeight - boxWidth / boxHeight) / (boxWidth / boxHeight);
 }
 
 /** Collects every /images/... path that the two new pages name. */
@@ -69,6 +82,17 @@ describe("control: planned files and page-src scanner", () => {
     bytes.writeUInt16LE(282, 28);
     expect(vp8Size(bytes)).toEqual({ width: 366, height: 282 });
   });
+
+  it("control: the aspect drift flags a stretch and passes a clean resize", () => {
+    expect(
+      aspectDrift(375, 812, 375, 622),
+      "stretched 375x812 over the 375x622 box: drift above 1%",
+    ).toBeGreaterThan(0.01);
+    expect(
+      aspectDrift(1200, 576, 2250, 1080),
+      "1200x576 resize of the 2250x1080 box: drift within 1%",
+    ).toBeLessThanOrEqual(0.01);
+  });
 });
 
 describe.each(PLANNED_FILES)("$name exists as a budgeted WebP ($width x $height)", (file) => {
@@ -89,6 +113,15 @@ describe.each(PLANNED_FILES)("$name exists as a budgeted WebP ($width x $height)
   it("carries the planned pixel size", () => {
     const bytes = readFileSync(join(FEATURES_DIR, file.name));
     expect(vp8Size(bytes)).toEqual({ width: file.width, height: file.height });
+  });
+
+  it("keeps the spec box aspect within 1% (no stretch)", () => {
+    const bytes = readFileSync(join(FEATURES_DIR, file.name));
+    const size = vp8Size(bytes);
+    expect(
+      aspectDrift(size.width, size.height, file.boxWidth, file.boxHeight),
+      `${file.name} aspect drift: at most 1%`,
+    ).toBeLessThanOrEqual(0.01);
   });
 });
 
