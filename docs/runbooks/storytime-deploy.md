@@ -209,6 +209,8 @@ These facts come from the test deploy of 2026-11-07. The tag rule below is in th
   The archive held 154 files (about 3 MB): `package.json`, `pnpm-lock.yaml`,
   `pnpm-workspace.yaml`, `turbo.json`, `.pnpmfile.cjs`, `.dockerignore`, `apps/storytime`,
   `packages/config`, and `packages/read-along`.
+- On 2026-11-07 the service used `STORYTIME_MEDIA_BASE=https://storage.googleapis.com/primary-app-storage/storytime-app`.
+- On 2026-11-07 the media sat under `gs://primary-app-storage/storytime-app/` with public read until the login phase.
 - The service needs the environment variable `STORYTIME_MEDIA_BASE=gs://storytime-app-media`.
   The signer (`apps/storytime/lib/media/sign.ts`) accepts only this `gs://` base of the private
   bucket `storytime-app-media`: a `https://` base, or a base of any other bucket, makes the
