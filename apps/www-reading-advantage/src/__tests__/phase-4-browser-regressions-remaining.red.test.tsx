@@ -2,7 +2,6 @@ import { cleanup, render } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { BlogCard } from "@/components/blog/blog-card";
 import PricingPage from "@/app/[locale]/(marketing)/pricing/page";
-import { PricingTable } from "@/components/pricing/pricing-table";
 import type { BlogListItem } from "@/types/blog";
 
 const serverWiring = vi.hoisted(() => ({
@@ -59,29 +58,6 @@ describe("Remaining Phase 4 browser regression contracts", () => {
       .soft(
         contained,
         "Remaining browser finding: related article content must stay inside a 390px card",
-      )
-      .toBe(true);
-  });
-
-  it("provides keyboard access to the pricing table scrollport", () => {
-    const rendered = render(<PricingTable />);
-    const scrollport = rendered.container.querySelector("div.overflow-x-auto");
-    const scrollportReady =
-      scrollport?.getAttribute("tabindex") === "0" &&
-      scrollport.getAttribute("role") === "region" &&
-      Boolean(scrollport.getAttribute("aria-label"));
-    const equivalentControls = [
-      ...rendered.container.querySelectorAll("button"),
-    ].some(
-      (button) =>
-        button.getAttribute("tabindex") !== "-1" &&
-        Boolean(button.getAttribute("aria-label")),
-    );
-
-    expect
-      .soft(
-        scrollportReady || equivalentControls,
-        "Remaining browser finding: pricing table needs keyboard-accessible controls",
       )
       .toBe(true);
   });

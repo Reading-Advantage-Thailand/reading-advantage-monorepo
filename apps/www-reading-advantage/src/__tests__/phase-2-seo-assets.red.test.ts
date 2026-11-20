@@ -103,16 +103,16 @@ const COMPLETED_ROUTE_METADATA = [
     path: "/features",
     load: () => import("@/app/[locale]/(marketing)/features/page"),
     expected: (messages: LocaleMessages) => ({
-      title: messages.pages.feature.hero.title,
-      description: messages.pages.feature.hero.description,
+      title: messages.pages.feature.metadata.title,
+      description: messages.pages.feature.metadata.description,
     }),
   },
   {
     path: "/pricing",
     load: () => import("@/app/[locale]/(marketing)/pricing/page"),
     expected: (messages: LocaleMessages) => ({
-      title: messages.pages.pricing.hero.title,
-      description: messages.pages.pricing.hero.description,
+      title: messages.pages.pricing.metadata.title,
+      description: messages.pages.pricing.metadata.description,
     }),
   },
   {
@@ -219,28 +219,31 @@ describe("Wave 5 T3 SEO metadata behavior", () => {
     const routeMetadata = [
       {
         path: "/about",
-        page: enMessages.pages.about,
+        title: enMessages.pages.about.hero.title,
+        description: enMessages.pages.about.hero.description,
       },
       {
         path: "/features",
-        page: enMessages.pages.feature,
+        title: enMessages.pages.feature.metadata.title,
+        description: enMessages.pages.feature.metadata.description,
       },
       {
         path: "/pricing",
-        page: enMessages.pages.pricing,
+        title: enMessages.pages.pricing.metadata.title,
+        description: enMessages.pages.pricing.metadata.description,
       },
     ];
 
-    for (const { page, path } of routeMetadata) {
+    for (const { description, path, title } of routeMetadata) {
       const metadata = buildMarketingMetadata({
-        description: page.hero.description,
+        description,
         locale: "en",
         path,
-        title: page.hero.title,
+        title,
       });
 
-      expect(metadata.title).toBe(page.hero.title);
-      expect(metadata.description).toBe(page.hero.description);
+      expect(metadata.title).toBe(title);
+      expect(metadata.description).toBe(description);
       expect(metadata.alternates?.canonical).toBe(`${SITE_ORIGIN}/en${path}`);
     }
 

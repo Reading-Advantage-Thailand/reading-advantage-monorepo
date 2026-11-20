@@ -169,23 +169,8 @@ const LIMITS = [
   },
 ] as const;
 
-/** File line 56 (2026-11-12): the Managed Service condition goes, and the quotation link goes. */
+/** File line 56 (2026-11-12): the Managed Service condition goes. FP1 replaces the pricingTable, roadmap.description and trustSignals entries. */
 const MANAGED_SERVICE = [
-  {
-    key: "components.pricingTable.table.managedNote",
-    en: "Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready.",
-    th: "ปัจจุบันเรามี App-Only และ Blended Learning บริการที่ครบขึ้นอยู่ระหว่างการวางแผน เราจะแจ้งให้ทราบเมื่อพร้อม",
-  },
-  {
-    key: "components.pricingTable.pricingFeatures.0.managed",
-    en: "In planning",
-    th: "อยู่ระหว่างการวางแผน",
-  },
-  {
-    key: "components.pricingTable.pricingFeatures.1.managed",
-    en: "In planning",
-    th: "อยู่ระหว่างการวางแผน",
-  },
   {
     key: "pages.managedService.hero.badge",
     en: "IN PLANNING",
@@ -197,19 +182,9 @@ const MANAGED_SERVICE = [
     th: "อยู่ระหว่างการวางแผน",
   },
   {
-    key: "pages.managedService.roadmap.description",
-    en: "Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready.",
-    th: "ปัจจุบันเรามี App-Only และ Blended Learning บริการที่ครบขึ้นอยู่ระหว่างการวางแผน เราจะแจ้งให้ทราบเมื่อพร้อม",
-  },
-  {
     key: "pages.managedService.roadmap.targetDate",
     en: "In planning",
     th: "อยู่ระหว่างการวางแผน",
-  },
-  {
-    key: "pages.pricing.trustSignals.noHiddenFees.description",
-    en: "Prices in Thai baht, per student, per year.",
-    th: "ราคาเป็นเงินบาท ต่อผู้เรียน ต่อปี",
   },
   {
     key: "pages.services.services.1.status",
@@ -280,11 +255,6 @@ describe("www batch 2026-11-19, Managed Service condition goes (file line 56)", 
   it.each(MANAGED_SERVICE)("holds the new en and th line at $key", ({ key, en: enLine, th: thLine }) => {
     expect(read("en", key)).toBe(enLine);
     expect(read("th", key)).toBe(thLine);
-  });
-
-  it("removes the quotation link key in en and th", () => {
-    expect(read("en", "components.pricingTable.contactLink")).toBeUndefined();
-    expect(read("th", "components.pricingTable.contactLink")).toBeUndefined();
   });
 });
 
