@@ -177,7 +177,10 @@ try {
       const mediaRequests = [];
       page.on('request', (request) => {
         const url = request.url();
-        if (/\/media\//.test(url) || /storage\.google/.test(url) || /amazonaws\.com/.test(url)) mediaRequests.push(url);
+        let pathname = '';
+        try { pathname = new URL(url).pathname; } catch { pathname = url; }
+        if (pathname.startsWith('/_next/static/')) return;
+        if (/\/media\//.test(pathname) || /storage\.google/.test(url) || /amazonaws\.com/.test(url) || /[?&](X-Amz-Signature|Signature|signature|Expires)=/i.test(url)) mediaRequests.push(url);
       });
 
       // B1: the logo and the art decode and answer 200 with no cookie.
@@ -286,6 +289,8 @@ try {
           page.waitForNavigation({ waitUntil: 'networkidle' }).catch(() => {}),
           page.locator('button[data-entry-primary]').click(),
         ]);
+        await page.waitForLoadState('networkidle').catch(() => {});
+        await page.waitForSelector('form[action="/api/auth/sign-in"] input[name="username"]', { timeout: 15000 }).catch(() => {});
         const alertInCard = await page.evaluate(() => {
           const form = document.querySelector('form[action="/api/auth/sign-in"]');
           const alert = form ? form.querySelector('[role="alert"]') : null;

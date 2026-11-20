@@ -700,8 +700,8 @@ flow_eq device_kept_sign_in_page 0
 # F3: the sign-out ends the session, so the week content is gone.
 flow_eq content_after_signout 0
 # F4: a stranger gets no draft, no week text, no media, and no cookie.
-# The join page shows its marked draft copy until AC-4.10 closes (test-strategy F4), so the marker is 1.
-flow_eq stranger_draft_marker 1
+# JOIN_COPY.status is approved since task 3.0 (AC-4.10 closed), so the marker is 0.
+flow_eq stranger_draft_marker 0
 flow_eq stranger_week_text 0
 flow_eq stranger_media_requests 0
 flow_eq stranger_set_cookie 0
