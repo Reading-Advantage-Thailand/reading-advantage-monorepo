@@ -11,6 +11,42 @@ import {
   type ProgramCardCopy,
 } from "@/components/features/program-card";
 
+/** Program card keys in the spec order (S2). */
+const CARD_KEYS = [
+  "storytime",
+  "primary",
+  "reading",
+  "codecamp",
+  "schoolSubjects",
+] as const;
+
+type CardKey = (typeof CARD_KEYS)[number];
+
+/** Rendered hooks; the school subjects card uses the spec's kebab-case hook. */
+const CARD_TEST_ID: Record<CardKey, string> = {
+  storytime: "storytime",
+  primary: "primary",
+  reading: "reading",
+  codecamp: "codecamp",
+  schoolSubjects: "school-subjects",
+};
+
+/** Screenshot slots that have an approved current-set crop (D7). */
+const CARD_IMAGES: Partial<Record<CardKey, { src: string; alt: string }>> = {
+  storytime: {
+    src: "/images/features/storytime-reader-card.webp",
+    alt: "Storytime Advantage reader screen",
+  },
+  primary: {
+    src: "/images/features/primary-lesson-step05.webp",
+    alt: "Primary Advantage lesson screen",
+  },
+  reading: {
+    src: "/images/features/reading-article-selection.webp",
+    alt: "Reading Advantage article selection screen",
+  },
+};
+
 /** Product logos for the app-family section, in the agreed order (D8). */
 const APP_LOGOS = [
   { id: "storytime", src: siteLogos.storytime.square, alt: "Storytime Advantage" },
@@ -51,8 +87,34 @@ export async function generateMetadata(props: {
  */
 export default async function FeaturesPage() {
   const t = await getScopedI18n("pages.feature");
-  const cards = t.raw("programs.cards") as Record<string, ProgramCardCopy>;
-  const faqItems = t.raw("faq.items") as FaqItem[];
+  const cardCopy = (cardKey: CardKey): ProgramCardCopy => {
+    const field = (name: "name" | "forText" | "status" | "body") =>
+      t(
+        `programs.cards.${cardKey}.${name}` as "programs.cards.storytime.name",
+      );
+    const bulletCounts: Record<CardKey, number> = {
+      storytime: 3,
+      primary: 3,
+      reading: 0,
+      codecamp: 0,
+      schoolSubjects: 0,
+    };
+    return {
+      name: field("name"),
+      forText: field("forText"),
+      status: field("status"),
+      body: field("body"),
+      bullets: Array.from({ length: bulletCounts[cardKey] }, (_, index) =>
+        t(
+          `programs.cards.${cardKey}.bullets.${index}` as "programs.cards.storytime.bullets.0",
+        ),
+      ),
+    };
+  };
+  const faqItems: FaqItem[] = [0, 1, 2].map((index) => ({
+    q: t(`faq.items.${index}.q` as "faq.items.0.q"),
+    a: t(`faq.items.${index}.a` as "faq.items.0.a"),
+  }));
 
   return (
     <main className="overflow-x-hidden bg-white">
@@ -93,29 +155,18 @@ export default async function FeaturesPage() {
             {t("programs.body")}
           </p>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <ProgramCard
-              testId="program-card-storytime"
-              imageSrc="/images/features/storytime-reader-card.webp"
-              imageAlt="Storytime Advantage reader screen"
-              {...cards.storytime}
-            />
-            <ProgramCard
-              testId="program-card-primary"
-              imageSrc="/images/features/primary-lesson-step05.webp"
-              imageAlt="Primary Advantage lesson screen"
-              {...cards.primary}
-            />
-            <ProgramCard
-              testId="program-card-reading"
-              imageSrc="/images/features/reading-article-selection.webp"
-              imageAlt="Reading Advantage article selection screen"
-              {...cards.reading}
-            />
-            <ProgramCard testId="program-card-codecamp" {...cards.codecamp} />
-            <ProgramCard
-              testId="program-card-school-subjects"
-              {...cards.schoolSubjects}
-            />
+            {CARD_KEYS.map((key) => {
+              const image = CARD_IMAGES[key];
+              return (
+                <ProgramCard
+                  key={key}
+                  testId={`program-card-${CARD_TEST_ID[key]}`}
+                  imageSrc={image?.src}
+                  imageAlt={image?.alt}
+                  {...cardCopy(key)}
+                />
+              );
+            })}
           </div>
         </div>
       </section>
