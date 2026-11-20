@@ -3,14 +3,16 @@
  * AC-A71.8).
  *
  * The page is short: one hero line, exactly five icon tiles, two numbered steps under the
- * "How to get a login" heading, four contact buttons, and the sign-in button last. The contact
- * channels are buttons, not raw URLs: the visible text holds no URL. Every line is an exact
- * substring of the approved C3 copy, so the page adds no new claim.
+ * "How to get a login" heading, three contact buttons and one small contact-page text
+ * link, and the sign-in button last. The contact channels are buttons, not raw URLs:
+ * the visible text holds no URL. The hero line, step 2, the contact lead, and the button
+ * labels are exact substrings of the approved C3 copy. Each tile holds a short title and
+ * one complete sentence, and step 1 holds one complete sentence (PM decision 2026-11-20).
  *
- * At the base the first assertion of each case fails on the missing tiles, steps, buttons, or
- * pieces, because the page holds three paragraphs and four raw contact lines. The page and the
- * copy module are loaded only after the existsSync assertions, so no case fails with a load
- * error.
+ * At the base the first assertion of the J2 and J3 cases fails on the missing tile titles,
+ * sentences, and step 1, because the page holds single-line tiles and the old step 1.
+ * The page and the copy module are loaded only after the existsSync assertions, so no
+ * case fails with a load error.
  */
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
@@ -55,6 +57,71 @@ const TILE_ORDER = [
   "songs-readers",
   "home-app",
 ] as const;
+
+/** The PM-approved tile titles and sentences (2026-11-20, new microcopy). */
+const EXPECTED_TILES: Record<
+  "en" | "th",
+  Record<string, { title: string; sentence: string }>
+> = {
+  en: {
+    "daily-lessons": {
+      title: "Daily Class Lesson",
+      sentence:
+        "Your child follows a 30-minute scripted lesson on every class day.",
+    },
+    "letters-phonics": {
+      title: "Letters and Sounds",
+      sentence:
+        "Your child practices letter formation, then phonics through recognition, blending, and segmenting.",
+    },
+    "sight-words": {
+      title: "Sight Words",
+      sentence: "Your child takes a timed step through 100 sight words.",
+    },
+    "songs-readers": {
+      title: "Songs and Readers",
+      sentence:
+        "Songs, read-along books, and decodable books build up as the weeks pass.",
+    },
+    "home-app": {
+      title: "Home Phone App",
+      sentence:
+        "On a phone at home, your child hears each page and taps words to hear them.",
+    },
+  },
+  th: {
+    "daily-lessons": {
+      title: "บทเรียนในวันเรียน",
+      sentence: "ลูกเรียนตามบทเรียนที่มีสคริปต์นาน 30 นาทีในทุกวันเรียน",
+    },
+    "letters-phonics": {
+      title: "ตัวอักษรและเสียง",
+      sentence:
+        "ลูกฝึกเขียนตัวอักษร แล้วฝึกโฟนิกส์ด้วยการจดจำ การผสมเสียง และการแยกเสียง",
+    },
+    "sight-words": {
+      title: "Sight words",
+      sentence:
+        "ลูกฝึกขั้น sight words แบบจับเวลา ครอบคลุมคำที่เห็นบ่อย 100 คำ",
+    },
+    "songs-readers": {
+      title: "เพลงและหนังสืออ่าน",
+      sentence:
+        "เพลง หนังสืออ่านตาม และหนังสือฝึกอ่านจะเพิ่มขึ้นเรื่อย ๆ ตลอดหลายสัปดาห์",
+    },
+    "home-app": {
+      title: "แอปบนโทรศัพท์ที่บ้าน",
+      sentence:
+        "ที่บ้าน ลูกฟังเสียงอ่านทีละหน้าและแตะคำเพื่อฟังเสียงอ่านได้ในแอปบนโทรศัพท์",
+    },
+  },
+};
+
+/** The PM-approved step 1 lines (2026-11-20; the Thai line is the approved C3 Thai). */
+const EXPECTED_STEP_0: Record<"en" | "th", string> = {
+  en: "Your child's school or tutor gives your family the sign-in details.",
+  th: "โรงเรียนหรือครูสอนพิเศษของเด็กมอบข้อมูลเข้าสู่ระบบให้ครอบครัว",
+};
 
 /** Loads the copy module after the existsSync assertion. */
 async function copyModule(): Promise<{
@@ -125,52 +192,68 @@ describe("entry join layout (red)", () => {
     expect(html, "the page holds the hero line").toContain(pieces.th.hero);
   });
 
-  it("J2 holds exactly five tiles in the designed order", async () => {
+  it("J2 holds exactly five tiles with a title and a sentence", async () => {
     const copy = await copyModule();
     expect(copy.JOIN_PIECES, "Missing JOIN_PIECES in apps/storytime/lib/join-copy.ts").toBeDefined();
-    const html = await renderJoin("en");
-    const tiles = [...html.matchAll(/data-join-tile="([^"]*)"/g)].map(
-      (match) => match[1],
-    );
-    console.log(`join_tile_count=${tiles.length}`);
-    expect(tiles.length, "the page holds exactly five tiles").toBe(5);
-    expect(tiles, "the tiles follow the designed order").toEqual([...TILE_ORDER]);
-    const pieces = (
-      copy.JOIN_PIECES as { en: { tiles: Record<string, string> } }
-    ).en.tiles;
-    for (const name of TILE_ORDER) {
-      const tile = html.match(
-        new RegExp(
-          `<[^>]*data-join-tile="${name}"[^>]*>([\\s\\S]*?)(?=<[^>]*data-join-tile=|$)`,
-        ),
-      )?.[0];
-      expect(tile, `the ${name} tile exists`).toBeDefined();
-      if (tile) {
-        const icons = [...tile.matchAll(/<svg[^>]*aria-hidden="true"[^>]*>/g)];
-        expect(icons.length, `the ${name} tile holds one icon`).toBe(1);
-        expect(pieces[name]?.length ?? 0, `the ${name} piece is not empty`).toBeGreaterThan(0);
-        expect(tile, `the ${name} tile holds its piece`).toContain(pieces[name]);
+    for (const locale of ["en", "th"] as const) {
+      const html = await renderJoin(locale);
+      const tiles = [...html.matchAll(/data-join-tile="([^"]*)"/g)].map(
+        (match) => match[1],
+      );
+      console.log(`join_tile_count_${locale}=${tiles.length}`);
+      expect(tiles.length, `the ${locale} page holds exactly five tiles`).toBe(5);
+      expect(tiles, `the ${locale} tiles follow the designed order`).toEqual([...TILE_ORDER]);
+      for (const name of TILE_ORDER) {
+        const tile = html.match(
+          new RegExp(
+            `<[^>]*data-join-tile="${name}"[^>]*>([\\s\\S]*?)(?=<[^>]*data-join-tile=|$)`,
+          ),
+        )?.[0];
+        expect(tile, `the ${locale} ${name} tile exists`).toBeDefined();
+        if (tile) {
+          const icons = [...tile.matchAll(/<svg[^>]*aria-hidden="true"[^>]*>/g)];
+          expect(icons.length, `the ${locale} ${name} tile holds one icon`).toBe(1);
+          const titleInner = tile.match(
+            /<[^>]*data-join-tile-title[^>]*>([\s\S]*?)<\/[^>]+?>/,
+          )?.[1];
+          const sentenceInner = tile.match(
+            /<[^>]*data-join-tile-sentence[^>]*>([\s\S]*?)<\/[^>]+?>/,
+          )?.[1];
+          expect(titleInner, `the ${locale} ${name} tile holds a title element`).toBeDefined();
+          expect(sentenceInner, `the ${locale} ${name} tile holds a sentence element`).toBeDefined();
+          if (titleInner !== undefined) {
+            expect(
+              visibleText(titleInner),
+              `the ${locale} ${name} title holds the approved title`,
+            ).toBe(EXPECTED_TILES[locale][name]?.title);
+          }
+          if (sentenceInner !== undefined) {
+            expect(
+              visibleText(sentenceInner),
+              `the ${locale} ${name} sentence holds the approved sentence`,
+            ).toBe(EXPECTED_TILES[locale][name]?.sentence);
+          }
+        }
       }
     }
   });
 
-  it("J3 holds the two numbered steps under the how-to heading", async () => {
+  it("J3 holds the two numbered steps with the approved step 1", async () => {
     const copy = await copyModule();
     expect(copy.JOIN_PIECES, "Missing JOIN_PIECES in apps/storytime/lib/join-copy.ts").toBeDefined();
-    const html = await renderJoin("en");
-    const steps = [...html.matchAll(/data-join-step="(\d)"/g)].map(
-      (match) => match[1],
-    );
-    console.log(`join_step_count=${steps.length}`);
-    expect(steps.length, "the page holds exactly two steps").toBe(2);
-    expect(steps, "the steps are numbered 1 and 2").toEqual(["1", "2"]);
-    const pieces = (
-      copy.JOIN_PIECES as { en: { steps: string[]; howToTitle: string } }
-    ).en;
-    expect(pieces.steps.length, "two step pieces exist").toBe(2);
-    for (const step of pieces.steps) {
-      expect(html, "the page holds the step line").toContain(step);
+    for (const locale of ["en", "th"] as const) {
+      const html = await renderJoin(locale);
+      const steps = [...html.matchAll(/data-join-step="(\d)"/g)].map(
+        (match) => match[1],
+      );
+      console.log(`join_step_count_${locale}=${steps.length}`);
+      expect(steps.length, `the ${locale} page holds exactly two steps`).toBe(2);
+      expect(steps, `the ${locale} steps are numbered 1 and 2`).toEqual(["1", "2"]);
+      expect(html, `the ${locale} page holds the approved step 1`).toContain(
+        EXPECTED_STEP_0[locale],
+      );
     }
+    const html = await renderJoin("en");
     expect(html, "the steps sit under the how-to heading").toContain(
       "joinHowToTitle",
     );

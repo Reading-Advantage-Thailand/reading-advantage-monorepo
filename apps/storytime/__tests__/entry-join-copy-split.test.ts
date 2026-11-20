@@ -2,15 +2,19 @@
  * The split of the approved join copy into page pieces (Phase 4, task 4.1, spec FR-A71,
  * AC-A71.9 and AC-A71.10).
  *
- * The five tiles, the hero line, the two steps, the contact lead, and the four button labels
- * are exact substrings of the approved C3 blocks, so the page adds no new claim. The four
- * approved blocks and `signInLink` stay byte for byte. The five new message keys wait for
- * Daniel's Thai check: their Thai value equals the English text until he gives the Thai.
+ * The hero line, step 2, the contact lead, and the four button labels are exact
+ * substrings of the approved C3 blocks, so the page adds no new claim. The five tiles
+ * and step 1 are new microcopy from approved facts: each tile holds a short title and
+ * one complete sentence, and step 1 holds one complete sentence (PM decision
+ * 2026-11-20). The four approved blocks and `signInLink` stay byte for byte. The five
+ * new message keys wait for Daniel's Thai check: their Thai value equals the English
+ * text until he gives the Thai.
  *
  * At the base the first assertion of the C1, C3, and C4 cases fails, because `JOIN_PIECES`
- * and `ENTRY_PENDING_THAI_KEYS` do not exist in `lib/join-copy.ts` and the message files hold
- * none of the five keys. The copy module is loaded only after the existsSync assertion, so no
- * case fails with a load error.
+ * holds single-line tiles and the old step 1, `JOIN_PENDING_THAI_PIECES` does not exist
+ * in `lib/join-copy.ts`, and the message files hold none of the five keys. The copy
+ * module is loaded only after the existsSync assertion, so no case fails with a load
+ * error.
  */
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -31,7 +35,86 @@ const NEW_KEYS = [
   "joinHowToTitle",
 ] as const;
 
-/** The PM-approved English values of the five new message keys (2026-11-20). */
+/** The PM-approved tile titles and sentences (2026-11-20, new microcopy). */
+const EXPECTED_TILES_EN: Record<string, { title: string; sentence: string }> = {
+  "daily-lessons": {
+    title: "Daily Class Lesson",
+    sentence:
+      "Your child follows a 30-minute scripted lesson on every class day.",
+  },
+  "letters-phonics": {
+    title: "Letters and Sounds",
+    sentence:
+      "Your child practices letter formation, then phonics through recognition, blending, and segmenting.",
+  },
+  "sight-words": {
+    title: "Sight Words",
+    sentence: "Your child takes a timed step through 100 sight words.",
+  },
+  "songs-readers": {
+    title: "Songs and Readers",
+    sentence:
+      "Songs, read-along books, and decodable books build up as the weeks pass.",
+  },
+  "home-app": {
+    title: "Home Phone App",
+    sentence:
+      "On a phone at home, your child hears each page and taps words to hear them.",
+  },
+};
+
+/** The PM-approved Thai tile titles and sentences (2026-11-20, Daniel checks). */
+const EXPECTED_TILES_TH: Record<string, { title: string; sentence: string }> = {
+  "daily-lessons": {
+    title: "บทเรียนในวันเรียน",
+    sentence: "ลูกเรียนตามบทเรียนที่มีสคริปต์นาน 30 นาทีในทุกวันเรียน",
+  },
+  "letters-phonics": {
+    title: "ตัวอักษรและเสียง",
+    sentence:
+      "ลูกฝึกเขียนตัวอักษร แล้วฝึกโฟนิกส์ด้วยการจดจำ การผสมเสียง และการแยกเสียง",
+  },
+  "sight-words": {
+    title: "Sight words",
+    sentence:
+      "ลูกฝึกขั้น sight words แบบจับเวลา ครอบคลุมคำที่เห็นบ่อย 100 คำ",
+  },
+  "songs-readers": {
+    title: "เพลงและหนังสืออ่าน",
+    sentence:
+      "เพลง หนังสืออ่านตาม และหนังสือฝึกอ่านจะเพิ่มขึ้นเรื่อย ๆ ตลอดหลายสัปดาห์",
+  },
+  "home-app": {
+    title: "แอปบนโทรศัพท์ที่บ้าน",
+    sentence:
+      "ที่บ้าน ลูกฟังเสียงอ่านทีละหน้าและแตะคำเพื่อฟังเสียงอ่านได้ในแอปบนโทรศัพท์",
+  },
+};
+
+/** The PM-approved step 1 lines (2026-11-20; the Thai line is the approved C3 Thai). */
+const EXPECTED_STEP_0: Record<"en" | "th", string> = {
+  en: "Your child's school or tutor gives your family the sign-in details.",
+  th: "โรงเรียนหรือครูสอนพิเศษของเด็กมอบข้อมูลเข้าสู่ระบบให้ครอบครัว",
+};
+
+/** The tile names in the designed order. */
+const TILE_NAMES = [
+  "daily-lessons",
+  "letters-phonics",
+  "sight-words",
+  "songs-readers",
+  "home-app",
+] as const;
+
+/** The pending Thai piece paths (the five tiles and step 1). */
+const EXPECTED_PENDING_PIECES = [
+  "daily-lessons",
+  "letters-phonics",
+  "sight-words",
+  "songs-readers",
+  "home-app",
+  "steps.0",
+] as const;
 const EXPECTED_NEW_EN: Record<string, string> = {
   signInGreeting: "Welcome to Storytime Advantage",
   signInShowPassword: "Show password",
@@ -67,7 +150,7 @@ function contactWithoutUrls(block: string): string[] {
 }
 
 describe("entry join copy split (red)", () => {
-  it("C1 keeps every piece inside the approved blocks", async () => {
+  it("C1 keeps the hero, step 2, lead, and labels inside the approved blocks and pins the tiles and step 1", async () => {
     const mod = await copyModule();
     expect(
       mod.JOIN_PIECES,
@@ -76,14 +159,14 @@ describe("entry join copy split (red)", () => {
     const pieces = mod.JOIN_PIECES as {
       en: {
         hero: string;
-        tiles: Record<string, string>;
+        tiles: Record<string, unknown>;
         steps: string[];
         contactLead: string;
         buttons: Record<string, string>;
       };
       th: {
         hero: string;
-        tiles: Record<string, string>;
+        tiles: Record<string, unknown>;
         steps: string[];
         contactLead: string;
         buttons: Record<string, string>;
@@ -93,6 +176,7 @@ describe("entry join copy split (red)", () => {
       en: Record<string, string>;
       th: Record<string, string>;
     };
+    const expectedTiles = { en: EXPECTED_TILES_EN, th: EXPECTED_TILES_TH };
     for (const locale of ["en", "th"] as const) {
       const blocks = [copy[locale].whoItIsFor, copy[locale].howToGetSignIn];
       const contactLines = contactWithoutUrls(copy[locale].contact);
@@ -104,20 +188,35 @@ describe("entry join copy split (red)", () => {
       ).toBe(true);
       const tileNames = Object.keys(group.tiles);
       expect(tileNames.length, `${locale} holds five tile pieces`).toBe(5);
-      for (const [name, line] of Object.entries(group.tiles)) {
-        expect(line.length, `${locale} tile ${name} is not empty`).toBeGreaterThan(0);
-        expect(
-          blocks.some((block) => block.includes(line)),
-          `${locale} tile ${name} is a substring of an approved block`,
-        ).toBe(true);
+      expect(
+        [...tileNames].sort(),
+        `${locale} holds the five designed tile names`,
+      ).toEqual([...TILE_NAMES].sort());
+      for (const name of TILE_NAMES) {
+        const raw: unknown = (group.tiles as Record<string, unknown>)[name];
+        const title =
+          typeof raw === "object" && raw !== null
+            ? (raw as { title?: unknown }).title
+            : undefined;
+        const sentence =
+          typeof raw === "object" && raw !== null
+            ? (raw as { sentence?: unknown }).sentence
+            : undefined;
+        expect(title, `${locale} tile ${name} holds its title`).toBe(
+          expectedTiles[locale][name]?.title,
+        );
+        expect(sentence, `${locale} tile ${name} holds its sentence`).toBe(
+          expectedTiles[locale][name]?.sentence,
+        );
       }
       expect(group.steps.length, `${locale} holds two step pieces`).toBe(2);
-      for (const [index, line] of group.steps.entries()) {
-        expect(
-          copy[locale].howToGetSignIn.includes(line),
-          `${locale} step ${index + 1} is a substring of the approved steps block`,
-        ).toBe(true);
-      }
+      expect(group.steps[0], `${locale} step 1 holds the approved sentence`).toBe(
+        EXPECTED_STEP_0[locale],
+      );
+      expect(
+        copy[locale].howToGetSignIn.includes(group.steps[1]),
+        `${locale} step 2 is a substring of the approved steps block`,
+      ).toBe(true);
       expect(
         copy[locale].contact.includes(group.contactLead) ||
           contactLines.some((line) => line.includes(group.contactLead)),
@@ -132,7 +231,7 @@ describe("entry join copy split (red)", () => {
         ).toBe(true);
       }
     }
-    console.log("join_pieces_locales=2");
+    console.log("join_pieces_locales=2 join_exact_tiles=10 join_exact_steps=2");
   });
 
   it("C2 keeps the four approved blocks and the sign-in link byte for byte", async () => {
@@ -183,7 +282,7 @@ describe("entry join copy split (red)", () => {
     console.log("new_keys_checked=5");
   });
 
-  it("C4 names exactly the five pending Thai keys", async () => {
+  it("C4 names the five pending keys and the six pending pieces", async () => {
     const mod = await copyModule();
     expect(
       mod.ENTRY_PENDING_THAI_KEYS,
@@ -192,6 +291,15 @@ describe("entry join copy split (red)", () => {
     expect(mod.ENTRY_PENDING_THAI_KEYS, "the pending list names the five keys").toEqual([
       ...NEW_KEYS,
     ]);
+    expect(
+      mod.JOIN_PENDING_THAI_PIECES,
+      "Missing JOIN_PENDING_THAI_PIECES in apps/storytime/lib/join-copy.ts",
+    ).toBeDefined();
+    expect(
+      mod.JOIN_PENDING_THAI_PIECES,
+      "the pending pieces name the five tiles and step 1",
+    ).toEqual([...EXPECTED_PENDING_PIECES]);
+    console.log("pending_keys=5 pending_pieces=6");
   });
 
   it("C5 ships no Chinese copy", async () => {
