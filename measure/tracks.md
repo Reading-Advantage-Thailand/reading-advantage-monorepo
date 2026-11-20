@@ -44,6 +44,11 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
+- [ ] **Track: www features and pricing rewrite (A-70, row FP1)** — *created 2026-11-20*
+  *Link: [./tracks/www_features_pricing_20261120/](./tracks/www_features_pricing_20261120/)*
+  *Status: planned; plan and spec written 2026-11-20 on branch `www/features-pricing-a70`; starts after A-71 Green; screenshots to the PM by 2026-11-23; the push waits for Daniel's Thai check and his deploy word | Owner: Monorepo orchestrator | PM assignment A-70, priority P2*
+  *Note: Daniel, 2026-11-20 18:4x, via the PM: "When I say 'We need to update the old www pages on features and pricing' I mean an entire rewrite." The copy is in advantage-pr `11-content/www-features-pricing-spec.md` v1.0 (commit `c54d2742`), row FP1. A new track and not a phase of the standing track `www_change_list_20261027`, because FP1 holds new design and new pages.*
+
 - [~] **Track: www daily blog posts of PR** — *created 2026-11-15*
   *Link: [./tracks/www_daily_blog_posts_20261115/](./tracks/www_daily_blog_posts_20261115/)*
   *Status: active, light lane; post 2026-11-15 (`a-five-year-old-reads-by-herself`) live; one task per post; the track stays open for later daily posts | Owner: Monorepo orchestrator | PM task A-61 follow-up*

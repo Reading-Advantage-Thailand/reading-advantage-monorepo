@@ -1,0 +1,40 @@
+{
+  "track_id": "www_features_pricing_20261120",
+  "type": "feature",
+  "status": "planned",
+  "created": "2026-11-20",
+  "created_at": "2026-11-20T00:00:00Z",
+  "updated_at": "2026-11-20T00:00:00Z",
+  "priority": "medium",
+  "description": "Full rewrite of the www /features and /pricing pages in en and th, and the new numbers with English section copy in zh. The copy is word for word from PR's spec www-features-pricing-spec.md v1.0, row FP1 of the www change list.",
+  "owner_chain": [
+    "Daniel (owner; Thai check; look check; deploy gate)",
+    "PM orchestrator (assignment A-70, priority P2, behind A-71)",
+    "Monorepo orchestrator (track owner; plan, Red, Green, reviews, captures)"
+  ],
+  "requested_by": "Daniel, Google Tasks V28tU2lwdE9QUS1WVU5vdQ, 2026-11-20 18:04: \"We need to update the old www pages on features and pricing now that we have more apps and different pricing\". Daniel, 2026-11-20 18:4x, via the PM: \"When I say 'We need to update the old www pages on features and pricing' I mean an entire rewrite.\"",
+  "source_of_truth": {
+    "spec": "/home/daniebo/Desktop/advantage-pr/11-content/www-features-pricing-spec.md",
+    "spec_version": "1.0",
+    "spec_commit": "c54d2742",
+    "change_list_row": "FP1 in /home/daniebo/Desktop/advantage-pr/11-content/www-change-list.md v1.63",
+    "thai_check_page": "/home/daniebo/Desktop/advantage-pr/11-content/thai-check/2026-11-20-features-pricing.html"
+  },
+  "app": "apps/www-reading-advantage",
+  "branch": "www/features-pricing-a70",
+  "worktree": "/home/daniebo/Desktop/rama-worktrees/www-features-pricing",
+  "base": "master 4da73415d",
+  "locales": ["en", "th", "zh"],
+  "start_gate": "A-71 Green is done (PM order: branch build after A-71 Green).",
+  "due": "Local screenshots of /features and /pricing at 390, 980 and 1280 px to the PM by 2026-11-23.",
+  "constraints": [
+    "Plan authoring first. No product code and no test in the planning commit.",
+    "No push, no merge and no deploy. A push to master deploys www live. The push waits for Daniel's Thai check and his deploy word.",
+    "Pathspec commits only. No git add -A, no git commit -a, no stash, no reset. Never stage apps/*/next-env.d.ts.",
+    "Every heavy command runs through /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<command>'.",
+    "Monorepo never writes in the advantage-pr repository.",
+    "No new hash, checksum field or provenance file (AGENTS.md hashing policy)."
+  ],
+  "estimated_tasks": 22,
+  "deviation_notes": "A new track and not a phase of the standing track www_change_list_20261027. The standing track excludes new design, new pages and new images, and its weekly template (W.1 to W.6) has no review or browser gate. FP1 is a layout rewrite with new sections and new pictures."
+}
