@@ -42,11 +42,18 @@ function tempFolder(): string {
 }
 
 /**
- * Reads the git status of the repository.
- * @returns The status lines.
+ * Reads the git status of the repository, ignoring the scratch folders of the
+ * parallel adversarial suites (Phase 4 acceptance F1: turbo runs bare vitest with
+ * parallel workers while phase5-adversarial and phase7-adversarial create
+ * `.phase5-adversarial-*` and `.adv-scratch` inside the repository).
+ * @returns The status lines without the two scratch name patterns.
  */
 function gitStatus(): string {
-  return execFileSync("git", ["status", "--porcelain"], { cwd: repository, encoding: "utf8" });
+  const raw = execFileSync("git", ["status", "--porcelain"], { cwd: repository, encoding: "utf8" });
+  return raw
+    .split("\n")
+    .filter((line) => !line.includes(".phase5-adversarial-") && !line.includes(".adv-scratch"))
+    .join("\n");
 }
 
 /**

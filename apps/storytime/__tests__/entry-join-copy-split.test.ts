@@ -282,7 +282,7 @@ describe("entry join copy split (red)", () => {
     console.log("new_keys_checked=5");
   });
 
-  it("C4 names the five pending keys and the six pending pieces", async () => {
+  it("C4 keeps the five keys pending and clears the six approved pieces", async () => {
     const mod = await copyModule();
     expect(
       mod.ENTRY_PENDING_THAI_KEYS,
@@ -291,15 +291,34 @@ describe("entry join copy split (red)", () => {
     expect(mod.ENTRY_PENDING_THAI_KEYS, "the pending list names the five keys").toEqual([
       ...NEW_KEYS,
     ]);
-    expect(
-      mod.JOIN_PENDING_THAI_PIECES,
-      "Missing JOIN_PENDING_THAI_PIECES in apps/storytime/lib/join-copy.ts",
-    ).toBeDefined();
-    expect(
-      mod.JOIN_PENDING_THAI_PIECES,
-      "the pending pieces name the five tiles and step 1",
-    ).toEqual([...EXPECTED_PENDING_PIECES]);
-    console.log("pending_keys=5 pending_pieces=6");
+    // Daniel approved the Thai of the six join tile lines (the five tiles and
+    // steps[0]) on 2026-11-21 (PM hand-off, Tasks c0tiaDJpUlMxZWFfak9Ycg, "Ok":
+    // "Use them as written"). The six pieces leave the pending list, and their
+    // current Thai text stays exactly as it is now.
+    const pendingPieces = [
+      ...((mod.JOIN_PENDING_THAI_PIECES as readonly string[] | undefined) ?? []),
+    ];
+    for (const piece of EXPECTED_PENDING_PIECES) {
+      expect(
+        pendingPieces,
+        `the approved piece ${piece} is out of the pending list`,
+      ).not.toContain(piece);
+    }
+    expect(pendingPieces, "the pending piece list holds no piece").toHaveLength(0);
+    const pieces = mod.JOIN_PIECES as {
+      th: { tiles: Record<string, { title: string; sentence: string }>; steps: string[] };
+    };
+    for (const name of TILE_NAMES) {
+      expect(pieces.th.tiles[name]?.title, `th tile ${name} title stays as approved`).toBe(
+        EXPECTED_TILES_TH[name]?.title,
+      );
+      expect(
+        pieces.th.tiles[name]?.sentence,
+        `th tile ${name} sentence stays as approved`,
+      ).toBe(EXPECTED_TILES_TH[name]?.sentence);
+    }
+    expect(pieces.th.steps[0], "th step 1 stays as approved").toBe(EXPECTED_STEP_0.th);
+    console.log("pending_keys=5 pending_pieces=0");
   });
 
   it("C5 ships no Chinese copy", async () => {

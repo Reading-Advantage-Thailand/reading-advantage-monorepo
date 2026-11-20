@@ -197,7 +197,11 @@ try {
         const url = request.url();
         let pathname = '';
         try { pathname = new URL(url).pathname; } catch { pathname = url; }
-        if (pathname.startsWith('/_next/static/')) return;
+        // Same-origin page assets only: a cross-origin /_next/static/ URL (a storage
+        // host with that path) is still flagged below.
+        let sameOrigin = false;
+        try { sameOrigin = new URL(url).origin === new URL(base).origin; } catch { sameOrigin = false; }
+        if (sameOrigin && pathname.startsWith('/_next/static/')) return;
         if (/\/media\//.test(pathname) || /storage\.google/.test(url) || /amazonaws\.com/.test(url) || /[?&](X-Amz-Signature|Signature|signature|Expires)=/i.test(url)) mediaRequests.push(url);
       });
 
