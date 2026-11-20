@@ -2715,9 +2715,6 @@ const BARE_THAI_DATE_LINE =
 const BARE_ENGLISH_DATE_LINE =
   /^([A-Za-z]{3,9}[ \t]+\d{1,2},?[ \t]+\d{4}|\d{1,2}[ \t]+[A-Za-z]{3,9}[ \t]+\d{4})$/u;
 
-/** The Thai code point range, which ends a Thai label as a letter ends one (A641). */
-const THAI_LETTER_RANGE = "\\u0E00-\\u0E7F";
-
 /** The Unicode spaces that the field reader folds to a plain space (F1). */
 const UNICODE_SPACES = /[\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]/gu;
 
@@ -2757,11 +2754,28 @@ const EXCLUDED_DATE_WORDS = new Set([
 /** The base date labels that the join rule guards (F1). */
 const BASE_DATE_LABELS = new Set(["date", "วันที่"]);
 
-/** One date field candidate of a line or cell. */
-type DateFieldCandidate = {
+/**
+ * The longest line the field reader splits; a longer line supplies nothing
+ * (A643).
+ */
+const MAX_DATE_LINE_CHARS = 4096;
+
+/**
+ * The most fields the field reader accepts on one line; a denser line supplies
+ * nothing (A643).
+ */
+const MAX_DATE_LINE_FIELDS = 64;
+
+/**
+ * The separators that end one date field and start the next: a semicolon, a
+ * tab, or a printed column gap of two spaces (A643).
+ */
+const DATE_FIELD_SEPARATOR = /[;\uFF1B\t]+|[ ]{2,}/gu;
+
+/** One field of a line, with the index where it starts in the line. */
+type DateFieldSlice = {
+  readonly text: string;
   readonly start: number;
-  readonly label: string;
-  readonly separatorEnd: number;
 };
 
 /** The own date field of a document: absent, or present with its value. */
@@ -2769,22 +2783,17 @@ type DateField =
   | { readonly found: false }
   | { readonly found: true; readonly value: string | null };
 
-/** One accepted label with its whole-word pattern. */
-type LabelPattern = {
-  readonly label: string;
-  readonly pattern: RegExp;
-};
-
-/** The compiled field patterns of one parser, built once per document (F1). */
+/** The compiled labels of one parser, built once per document (F1, A643). */
 type DateFieldMatcher = {
-  readonly accepted: ReadonlySet<string>;
-  readonly labels: readonly LabelPattern[];
-  readonly excluded: readonly LabelPattern[];
-  readonly hint: RegExp;
+  readonly labels: readonly string[];
 };
 
-/** The characters that do not end a value inside its own field (A641). */
-const DATE_VALUE_STOP = /[;；]|[ \t]{2,}|[:：]/u;
+/** One accepted date field of a line. */
+type DateFieldMatch = {
+  readonly label: string;
+  readonly value: string;
+  readonly labelStart: number;
+};
 
 /**
  * Folds every Unicode space of one line to a plain space (F1).
@@ -2796,188 +2805,128 @@ function normalizeFieldSpaces(text: string): string {
 }
 
 /**
- * Reads the label that ends before a separator. The label is the trailing run
- * of letters, single spaces, slashes, and hyphens; a run of two spaces starts a
- * new printed column (A641). The scan walks back from the separator, so the
- * cost is the length of the label.
- * @param line The normalized line.
- * @param end The index of the separator.
- * @returns The trimmed label and its start index.
+ * Splits one line into fields at a semicolon, a tab, or a printed column gap.
+ * The split runs once per line, and a line over a cap gives no field, so a
+ * hostile line cannot force a large scan (A643).
+ * @param line One normalized line.
+ * @returns The fields in order, or an empty list when the line is over a cap.
  */
-function labelEndingAt(
-  line: string,
-  end: number,
-): { readonly label: string; readonly start: number } {
-  let labelEnd = end;
-  while (labelEnd > 0 && (line[labelEnd - 1] === " " || line[labelEnd - 1] === "\t")) {
-    labelEnd -= 1;
+function splitDateFields(line: string): readonly DateFieldSlice[] {
+  if (line.length > MAX_DATE_LINE_CHARS) return [];
+  const fields: DateFieldSlice[] = [];
+  let start = 0;
+  for (const match of line.matchAll(DATE_FIELD_SEPARATOR)) {
+    const at = match.index ?? 0;
+    fields.push({ text: line.slice(start, at), start });
+    if (fields.length > MAX_DATE_LINE_FIELDS) return [];
+    start = at + match[0].length;
   }
-  let start = labelEnd;
-  while (start > 0) {
-    const char = line[start - 1] ?? "";
-    if (/[A-Za-z\u0E00-\u0E7F/-]/u.test(char)) {
-      start -= 1;
-      continue;
-    }
-    if (char !== " " && char !== "\t") break;
-    let probe = start;
-    while (probe > 0 && (line[probe - 1] === " " || line[probe - 1] === "\t")) {
-      probe -= 1;
-    }
-    if (start - probe >= 2) break;
-    start = probe;
-  }
-  return { label: line.slice(start, labelEnd).trim(), start };
+  fields.push({ text: line.slice(start), start });
+  return fields.length > MAX_DATE_LINE_FIELDS ? [] : fields;
 }
 
 /**
- * Escapes the regex metacharacters of one literal label.
- * @param label The literal label.
- * @returns The escaped source.
- */
-function escapeRegExpSource(label: string): string {
-  return label.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
-}
-
-/**
- * Builds the whole-word pattern of one field label.
- * @param label The literal label.
- * @returns The pattern, case-insensitive for English.
- */
-function labelWordPattern(label: string): RegExp {
-  return new RegExp(
-    `(?<![A-Za-z${THAI_LETTER_RANGE}])${escapeRegExpSource(label)}` +
-      `(?![A-Za-z${THAI_LETTER_RANGE}])`,
-    "giu",
-  );
-}
-
-/**
- * Compiles the field patterns of one parser once, so a long document costs one
- * scan per line and no pattern build (A641).
+ * Compiles the labels of one parser once, so a document costs one build and no
+ * per-line pattern work (A641, A643).
  * @param labels The accepted field labels of the parser.
- * @returns The compiled matcher.
+ * @returns The compiled matcher, with the longest label first.
  */
 function createDateFieldMatcher(labels: readonly string[]): DateFieldMatcher {
-  const hintSource = [...labels, ...EXCLUDED_DATE_WORDS].join("|");
   return {
-    accepted: new Set(labels.map((label) => label.toLowerCase())),
-    labels: labels.map((label) => ({
-      label,
-      pattern: labelWordPattern(label),
-    })),
-    excluded: [...EXCLUDED_DATE_WORDS].map((word) => ({
-      label: word,
-      pattern: labelWordPattern(word),
-    })),
-    hint: new RegExp(hintSource, "iu"),
+    labels: [...labels].sort((left, right) => right.length - left.length),
   };
 }
 
 /**
- * Lists the date field candidates of one line: one at each colon, and one at
- * each accepted label that a whitespace separator follows (A641).
- * @param line One normalized line or cell value.
- * @param matcher The compiled field patterns of the parser.
- * @returns The candidates in start order.
+ * Reads the accepted label that ends at a colon of one field. The label is the
+ * field text before the colon when that whole text is an accepted label, or its
+ * last words when a value precedes it, as a document number before `Date:`.
+ * A label that follows a modifier word or a punctuation mark is not an own
+ * field (A641).
+ * @param before The field text before the colon.
+ * @param matcher The compiled labels of the parser.
+ * @returns The label and its start index, or null when no own field ends here.
  */
-function dateFieldCandidates(
-  line: string,
+function labelEndingAtColon(
+  before: string,
   matcher: DateFieldMatcher,
-): readonly DateFieldCandidate[] {
-  if (!matcher.hint.test(line)) return [];
-  const candidates: DateFieldCandidate[] = [];
-  for (let index = 0; index < line.length; index += 1) {
-    if (line[index] !== ":" && line[index] !== "：") continue;
-    const label = labelEndingAt(line, index);
-    if (label.label === "") continue;
-    candidates.push({
-      start: label.start,
-      label: label.label,
-      separatorEnd: index + 1,
-    });
-  }
-  for (const { label: accepted, pattern } of matcher.labels) {
-    for (const match of line.matchAll(pattern)) {
-      const start = match.index ?? 0;
-      const end = start + match[0].length;
-      if (line[end] !== " " && line[end] !== "\t") continue;
-      const label = labelEndingAt(line, end);
-      if (label.label.toLowerCase() !== accepted.toLowerCase()) continue;
-      let separatorEnd = end;
-      while (line[separatorEnd] === " " || line[separatorEnd] === "\t") {
-        separatorEnd += 1;
-      }
-      candidates.push({
-        start: label.start,
-        label: label.label,
-        separatorEnd,
-      });
+): { readonly label: string; readonly start: number } | null {
+  const text = before.replace(/[ \t]+$/u, "");
+  if (text === "") return null;
+  const folded = text.toLowerCase();
+  for (const label of matcher.labels) {
+    const needle = label.toLowerCase();
+    if (!folded.endsWith(needle)) continue;
+    const start = text.length - needle.length;
+    if (start > 0) {
+      if (text[start - 1] !== " ") continue;
+      const prefix = text.slice(0, start).trimEnd();
+      const lastWord = /\S+$/u.exec(prefix)?.[0] ?? "";
+      if (!/[A-Za-z0-9\u0E00-\u0E7F]$/u.test(prefix)) continue;
+      if (EXCLUDED_DATE_WORDS.has(lastWord.toLowerCase())) continue;
     }
+    return { label, start };
   }
-  for (const { label: word, pattern } of matcher.excluded) {
-    for (const match of line.matchAll(pattern)) {
-      const start = match.index ?? 0;
-      let separatorEnd = start + match[0].length;
-      const separator = line[separatorEnd];
-      if (
-        separator !== " " &&
-        separator !== "\t" &&
-        separator !== ":" &&
-        separator !== "："
-      ) {
-        continue;
-      }
-      while (line[separatorEnd] === " " || line[separatorEnd] === "\t") {
-        separatorEnd += 1;
-      }
-      candidates.push({ start, label: word, separatorEnd });
-    }
-  }
-  return candidates.sort((left, right) => left.start - right.start);
+  return null;
 }
 
 /**
- * Reads the value of one field. The value stops at the next field candidate, at
- * `;`, at a printed column, or at the next colon, so a later field never feeds
- * this field (A641).
- * @param line The normalized line.
- * @param from The index after the separator.
- * @param candidates The field candidates of the line, in start order.
- * @returns The trimmed value.
+ * Matches one field when its label equals an accepted label, then a colon or a
+ * space and the value (A641). The value stops at the next colon, so a later
+ * field on the same line never feeds this field (A642).
+ * @param field One field of the line.
+ * @param matcher The compiled labels of the parser.
+ * @returns The match, or null when the field is not an own date field.
  */
-function dateFieldValue(
-  line: string,
-  from: number,
-  candidates: readonly DateFieldCandidate[],
-): string {
-  let end = line.length;
-  for (const other of candidates) {
-    if (other.start >= from) {
-      end = other.start;
-      break;
-    }
+function matchDateField(
+  field: DateFieldSlice,
+  matcher: DateFieldMatcher,
+): DateFieldMatch | null {
+  const lead = field.text.length - field.text.trimStart().length;
+  const text = field.text.trim();
+  if (text === "") return null;
+  const colon = text.search(/[:：]/u);
+  if (colon !== -1) {
+    const found = labelEndingAtColon(text.slice(0, colon), matcher);
+    if (found === null) return null;
+    const rest = text.slice(colon + 1);
+    const stop = rest.search(/[:：]/u);
+    return {
+      label: found.label,
+      value: (stop === -1 ? rest : rest.slice(0, stop)).trim(),
+      labelStart: field.start + lead + found.start,
+    };
   }
-  const rest = line.slice(from, end);
-  const stop = DATE_VALUE_STOP.exec(rest);
-  return (stop === null ? rest : rest.slice(0, stop.index)).trim();
+  const folded = text.toLowerCase();
+  for (const label of matcher.labels) {
+    const needle = label.toLowerCase();
+    if (!folded.startsWith(needle)) continue;
+    const after = folded.charAt(needle.length);
+    if (after !== "" && after !== " ") continue;
+    return {
+      label,
+      value: text.slice(needle.length).trim(),
+      labelStart: field.start + lead,
+    };
+  }
+  return null;
 }
 
 /**
- * Tells whether one candidate label is the join of a lone field word and the
+ * Tells whether one accepted field is the join of a lone field word and a base
  * date label, as `Payment` then `Date` (F1).
  * @param line The normalized line.
  * @param previous The line or cell before it.
- * @param candidate The candidate field.
+ * @param match The accepted date field.
  * @returns True when the join makes another field.
  */
 function dateLabelIsJoined(
   line: string,
   previous: string,
-  candidate: DateFieldCandidate,
+  match: DateFieldMatch,
 ): boolean {
-  if (!BASE_DATE_LABELS.has(candidate.label.toLowerCase())) return false;
-  const before = line.slice(0, candidate.start).trim();
+  if (!BASE_DATE_LABELS.has(match.label.toLowerCase())) return false;
+  const before = line.slice(0, match.labelStart).trim();
   const context = before === "" ? previous.trim() : before;
   const word = context.replace(/[:：;/]+$/u, "").trim();
   if (word === "" || /\s/u.test(word)) return false;
@@ -2988,7 +2937,7 @@ function dateLabelIsJoined(
  * Reads the first own date field of one line.
  * @param line The normalized line.
  * @param previous The line or cell before it.
- * @param matcher The compiled field patterns of the parser.
+ * @param matcher The compiled labels of the parser.
  * @returns The field, or `found: false`.
  */
 function readDateFieldLine(
@@ -2996,12 +2945,11 @@ function readDateFieldLine(
   previous: string,
   matcher: DateFieldMatcher,
 ): DateField {
-  const candidates = dateFieldCandidates(line, matcher);
-  for (const candidate of candidates) {
-    if (!matcher.accepted.has(candidate.label.toLowerCase())) continue;
-    if (dateLabelIsJoined(line, previous, candidate)) continue;
-    const value = dateFieldValue(line, candidate.separatorEnd, candidates);
-    return { found: true, value: value === "" ? null : value };
+  for (const field of splitDateFields(line)) {
+    const match = matchDateField(field, matcher);
+    if (match === null) continue;
+    if (dateLabelIsJoined(line, previous, match)) continue;
+    return { found: true, value: match.value === "" ? null : match.value };
   }
   return { found: false };
 }
