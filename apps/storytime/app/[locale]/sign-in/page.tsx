@@ -95,9 +95,11 @@ export default async function SignInPage({
 
   return (
     <main data-entry-shell>
-      <div data-entry-brand>
+      <header data-entry-welcome>
         <EntryLogo />
         <p data-entry-greeting>{t("signInGreeting")}</p>
+      </header>
+      <div data-entry-art-column>
         <EntryArt />
       </div>
       <section data-entry-card-area>

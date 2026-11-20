@@ -9,12 +9,20 @@
 [data-entry-shell] {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 18px;
   box-sizing: border-box;
   width: 100%;
   max-width: 1040px;
   margin-inline: auto;
-  padding: 24px 20px 48px;
+  padding: 16px 20px 40px;
+}
+
+[data-entry-welcome] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
 }
 
 [data-entry-art] {
@@ -29,28 +37,46 @@
   display: block;
   box-sizing: border-box;
   width: 100%;
-  height: 220px;
+  height: 176px;
   object-fit: cover;
+  object-position: center 45%;
 }
 
 [data-entry-logo] {
   display: block;
-  width: 156px;
+  width: 124px;
   height: auto;
 }
 
 [data-entry-greeting] {
   margin: 0;
-  font-family: var(--font-sans);
-  font-size: 20px;
-  line-height: 1.5;
-  color: var(--st-ink-soft);
+  font-family: var(--sq-display);
+  font-size: 28px;
+  line-height: 1.2;
+  color: var(--st-brown);
 }
 
 [data-entry-brand] {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+[data-entry-brand] h1 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--st-ink-soft);
+}
+
+[data-entry-hero] {
+  margin: 0;
+  font-family: var(--sq-display);
+  font-size: 28px;
+  line-height: 1.25;
+  color: var(--st-brown);
 }
 
 [data-entry-card] {
@@ -110,25 +136,28 @@
 
 [data-entry-password] {
   display: flex;
+  flex-direction: column;
   align-items: stretch;
-  gap: 8px;
 }
 
 [data-entry-password] > div {
-  flex: 1 1 auto;
+  width: 100%;
 }
 
 [data-password-toggle] {
+  align-self: flex-end;
   box-sizing: border-box;
-  min-height: 56px;
-  padding: 8px 14px;
-  border: 2px solid var(--st-brown);
-  border-radius: 14px;
-  background: var(--st-amber);
-  color: var(--st-ink);
+  min-height: 44px;
+  margin-top: 2px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--st-brown);
   font-family: var(--font-sans);
   font-size: 16px;
   font-weight: 600;
+  text-decoration: underline;
   cursor: pointer;
 }
 
@@ -196,7 +225,12 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 18px;
+  gap: 12px;
+  padding: 20px;
+}
+
+[data-join-content] [data-entry-hint] {
+  margin: 4px 0 0;
 }
 
 [data-join-content] h2 {
@@ -209,31 +243,31 @@
 
 [data-join-tiles] {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 12px;
+  grid-template-columns: 1fr;
+  gap: 10px;
 }
 
 [data-join-tile] {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
+  gap: 6px;
   box-sizing: border-box;
-  min-height: 132px;
-  padding: 16px;
+  min-height: 96px;
+  padding: 12px;
   border: 2px solid var(--st-brown);
-  border-radius: 18px;
+  border-radius: 16px;
   background: var(--sq-cream);
   box-shadow: var(--sq-shadow);
   color: var(--st-ink);
   font-family: var(--font-sans);
-  font-size: 18px;
-  line-height: 1.45;
+  font-size: 16px;
+  line-height: 1.4;
 }
 
 [data-join-tile] svg {
-  width: 32px;
-  height: 32px;
+  width: 26px;
+  height: 26px;
   color: var(--st-brown);
 }
 
@@ -309,30 +343,57 @@
   text-decoration: underline;
 }
 
+@media (min-width: 600px) {
+  [data-entry-hero] {
+    font-size: 34px;
+  }
+
+  [data-join-tiles] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (min-width: 980px) {
   [data-entry-shell] {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
     gap: 44px;
-    align-items: center;
+    align-items: start;
+  }
+
+  [data-entry-welcome] {
+    grid-column: 1 / -1;
+  }
+
+  [data-entry-greeting] {
+    font-size: 36px;
   }
 
   [data-entry-art] img {
-    height: 100%;
-    min-height: 460px;
+    height: 540px;
+  }
+
+  [data-entry-card] {
+    padding: 32px;
+  }
+
+  [data-entry-brand] {
+    padding-top: 24px;
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   [data-contact],
-  [data-entry-primary],
-  [data-password-toggle] {
+  [data-entry-primary] {
     transition: transform 150ms ease, box-shadow 150ms ease;
   }
 
+  [data-password-toggle] {
+    transition: color 150ms ease;
+  }
+
   [data-contact]:hover,
-  [data-entry-primary]:hover,
-  [data-password-toggle]:hover {
+  [data-entry-primary]:hover {
     transform: translateY(-2px);
   }
 }
