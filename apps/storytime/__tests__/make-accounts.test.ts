@@ -42,17 +42,33 @@ function tempFolder(): string {
 }
 
 /**
+ * Tells whether one porcelain status line is a scratch-directory row of the
+ * parallel adversarial suites (Review A r4 F6: match only the actual untracked
+ * scratch directories under apps/storytime, with path boundaries and the `??`
+ * status; keep every other row, including tracked changes inside those
+ * directories and file names that only contain a scratch substring).
+ * phase5-adversarial.test.ts creates `apps/storytime/.phase5-adversarial-<rand>/`
+ * with mkdtempSync; phase7-adversarial.test.ts creates `apps/storytime/.adv-scratch/`.
+ * @param line One porcelain status line, relative to the repository root.
+ * @returns True only for the two untracked scratch-directory rows.
+ */
+function isScratchStatusLine(line: string): boolean {
+  if (line === "?? apps/storytime/.adv-scratch/") return true;
+  return /^\?\? apps\/storytime\/\.phase5-adversarial-[^/\s]+\/$/.test(line);
+}
+
+/**
  * Reads the git status of the repository, ignoring the scratch folders of the
  * parallel adversarial suites (Phase 4 acceptance F1: turbo runs bare vitest with
  * parallel workers while phase5-adversarial and phase7-adversarial create
  * `.phase5-adversarial-*` and `.adv-scratch` inside the repository).
- * @returns The status lines without the two scratch name patterns.
+ * @returns The status lines without the two untracked scratch-directory rows.
  */
 function gitStatus(): string {
   const raw = execFileSync("git", ["status", "--porcelain"], { cwd: repository, encoding: "utf8" });
   return raw
     .split("\n")
-    .filter((line) => !line.includes(".phase5-adversarial-") && !line.includes(".adv-scratch"))
+    .filter((line) => !isScratchStatusLine(line))
     .join("\n");
 }
 
@@ -150,6 +166,24 @@ describe("the account script (AC-4.8)", () => {
     expect(cards.split("\n").filter((line) => line.length > 0), "the card list holds three cards").toHaveLength(4);
 
     expect(gitStatus(), "the tree of the repository stays the same").toBe(before);
+  });
+
+  it("drops only the untracked scratch directories from the status", () => {
+    const cases: Array<[string, boolean]> = [
+      ["?? apps/storytime/.phase5-adversarial-rp1eva/", true],
+      ["?? apps/storytime/.adv-scratch/", true],
+      ["?? notes.adv-scratch.txt", false],
+      [" M lib/.adv-scratch-policy.ts", false],
+      ["M  apps/storytime/.adv-scratch/tracked.ts", false],
+      ["?? storytime-stray-proof-tmp", false],
+    ];
+    expect(cases.length, "the fixture holds six cases").toBe(6);
+    let dropped = 0;
+    for (const [line, expected] of cases) {
+      expect(isScratchStatusLine(line), `the filter keeps ${line}`).toBe(expected);
+      if (expected) dropped += 1;
+    }
+    console.log(`scratch_fixture_cases=${cases.length} scratch_dropped=${dropped}`);
   });
 
   it("refuses a folder inside the repository and a link that resolves into it", async () => {

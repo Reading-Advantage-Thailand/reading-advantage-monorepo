@@ -481,6 +481,16 @@ Defaults taken on 2026-11-20 (the orchestrator may change them; each has the rea
 - `entry-browser-gate.sh`: exit 0, B rows `PASS=192, FAIL=0`, infra `PASS=9, FAIL=0`, `screenshots=12`.
 - No `apps/*/next-env.d.ts` staged. No hash field added.
 
+### Phase 4 Red r7 (Review A r4 F6, narrow scratch filter) (2026-11-21)
+
+- Role base `eeb1e022f33105cd80b84869c1e58d975c299e57`; phase base `3632d14adabb21d18f3ce6e7b8ec738a8c205c7c`. Both SHAs resolve. Task 4.7 was already `[~]` before this round and stays `[~]`. No product code changed.
+- Fix: the r6 substring filter is replaced by `isScratchStatusLine()` in `apps/storytime/__tests__/make-accounts.test.ts`. It drops a row only when the status is `??` and the path is exactly `apps/storytime/.adv-scratch/` or matches `apps/storytime/.phase5-adversarial-<suffix>/` (the two real scratch directories: `mkdtempSync(resolve(app, ".phase5-adversarial-"))` in phase5-adversarial.test.ts:57 and `join(app, ".adv-scratch")` in phase7-adversarial.test.ts:72). Tracked rows and substring file names are always kept.
+- New fixture: `drops only the untracked scratch directories from the status` pins the six F6 cases (`scratch_fixture_cases=6 scratch_dropped=2`): the two real untracked scratch directories are dropped; `?? notes.adv-scratch.txt`, ` M lib/.adv-scratch-policy.ts`, `M  apps/storytime/.adv-scratch/tracked.ts`, and `?? storytime-stray-proof-tmp` are kept.
+- Breakage proof: the same six fixtures in a scratch file holding the r6 filter exit 1 with `scratch_false_negatives=3` (the three kept rows the r6 filter drops); the scratch file was removed. The committed fixture passes on the new filter. A stray churn run (create and remove `storytime-stray-proof-tmp` at the repo root every 0.1 s during the file) exits 1 with `Tests 4 failed | 22 passed (26)`; the failing rows show `?? storytime-stray-proof-tmp`. The stray file was removed and `git status --short` holds only the edited test file.
+- Runs (all through `HEAVY_PRIORITY=p1 heavy-run.sh`, one at a time, foreground, shell timeout 0): `make-accounts.test.ts` exit 0, `Tests 26 passed (26)`. Full app suite exit 0, `Test Files 166 passed (166)`, `Tests 1998 passed | 4 expected fail (2002)`. `phase1-quality-gates.sh` attempt 1 exit 0, `PASS=2, FAIL=0` (`Tasks: 22 successful, 22 total`); the one retry exit 0, `PASS=2, FAIL=0` (`Tasks: 22 successful, 22 total`).
+- This round is gap-closing: the only new test already passes, and no new failing row was added.
+- No `apps/*/next-env.d.ts` staged. No hash field added.
+
 ### Phase 4 Green r4 closeout (2026-11-21)
 
 - Role base `a52fa2a3f5cf574b2da39a964678f49bab98021d` (Red r6 head); phase base `3632d14adabb21d18f3ce6e7b8ec738a8c205c7c`. Both SHAs resolve. The committed Red change `a52fa2a3f` sits inside `phase_base_sha..HEAD`. Task 4.7 was already `[~]` and stays `[~]`; phase acceptance closes it.
