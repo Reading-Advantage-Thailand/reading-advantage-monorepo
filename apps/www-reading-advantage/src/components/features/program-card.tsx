@@ -16,6 +16,7 @@ type ProgramCardProps = ProgramCardCopy & {
   imageAlt?: string;
   imageWidth?: number;
   imageHeight?: number;
+  featured?: boolean;
 };
 
 /**
@@ -26,6 +27,7 @@ type ProgramCardProps = ProgramCardCopy & {
 export function ProgramCard({
   body,
   bullets,
+  featured = false,
   forText,
   imageAlt,
   imageHeight,
@@ -35,13 +37,10 @@ export function ProgramCard({
   status,
   testId,
 }: ProgramCardProps) {
-  return (
-    <article
-      data-testid={testId}
-      className="flex self-start flex-col overflow-hidden rounded-3xl border border-site-border bg-white shadow-panel"
-    >
+  const content = (
+    <>
       {imageSrc && imageAlt && (
-        <div className="bg-site-page">
+        <div className={featured ? "bg-site-page md:w-48 md:shrink-0" : "bg-site-page"}>
           <Image
             src={imageSrc}
             alt={imageAlt}
@@ -68,6 +67,26 @@ export function ProgramCard({
           </ul>
         )}
       </div>
+    </>
+  );
+
+  if (featured) {
+    return (
+      <article
+        data-testid={testId}
+        className="flex self-start flex-col overflow-hidden rounded-3xl border border-site-border bg-white shadow-panel md:col-span-2 md:flex-row"
+      >
+        {content}
+      </article>
+    );
+  }
+
+  return (
+    <article
+      data-testid={testId}
+      className="flex self-start flex-col overflow-hidden rounded-3xl border border-site-border bg-white shadow-panel"
+    >
+      {content}
     </article>
   );
 }

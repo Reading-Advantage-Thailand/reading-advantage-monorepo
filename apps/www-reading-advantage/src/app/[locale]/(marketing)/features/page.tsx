@@ -162,7 +162,7 @@ export default async function FeaturesPage() {
           <p className="mb-10 max-w-3xl text-base leading-relaxed text-site-body">
             {t("programs.body")}
           </p>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid items-start gap-6 sm:grid-cols-2">
             {CARD_KEYS.map((key) => {
               const image = CARD_IMAGES[key];
               return (
@@ -173,6 +173,7 @@ export default async function FeaturesPage() {
                   imageAlt={image?.alt}
                   imageWidth={image?.width}
                   imageHeight={image?.height}
+                  featured={key === "primary"}
                   {...cardCopy(key)}
                 />
               );
