@@ -2,9 +2,14 @@
  * Word-for-word copy fixture for the www features and pricing rewrite.
  *
  * Every EN string is copied from spec sections 3, 4 and 5 of
- * `11-content/www-features-pricing-spec.md` v1.0 (advantage-pr `c54d2742`).
+ * `11-content/www-features-pricing-spec.md` v1.2 (fact-gate session
+ * ses_e04fe2728ffe3xXdHuR56ZneSL; spec commits d123d385, f2eee0cf,
+ * 7330789d, 640edec0). Pricing section 4 follows the FP1 stacking rule:
+ * four rows only, no 5-subject row, one English program per grade.
  * Every TH string is copied from TH-FP-01 to TH-FP-95 of the Thai check page
- * `11-content/thai-check/2026-11-20-features-pricing.html`, which Daniel checks.
+ * `11-content/thai-check/2026-11-20-features-pricing.html`, which Daniel checks,
+ * except TH-FP-R2-01 to TH-FP-R2-07, which come from spec v1.2 section 4 and
+ * go to Daniel's next Thai sitting (PM FP1 hand-off 2026-11-21).
  * Thai values follow the check page (D5): no trailing period.
  * Review A re-checks this file against the sources with a scratch script (plan 1.4).
  * Track: www_features_pricing_20261120.
@@ -81,7 +86,7 @@ export const FEATURES_ENTRIES: FixtureEntry[] = [
 export const PRICING_ENTRIES: FixtureEntry[] = [
   { id: "TH-FP-55", label: `S1 eyebrow`, en: `School pricing`, th: `ราคาสำหรับโรงเรียน` },
   { id: "TH-FP-56", label: `S1 heading`, en: `Plan next year's subjects. See the price clearly.`, th: `วางแผนวิชาสำหรับปีหน้า พร้อมดูราคาได้ชัดเจน` },
-  { id: "TH-FP-57", label: `S1 body 1`, en: `Start with English through Primary Advantage. Add subjects as your school's program grows.`, th: `เริ่มจากภาษาอังกฤษผ่าน Primary Advantage แล้วเพิ่มวิชาอื่นเมื่อหลักสูตรของโรงเรียนเติบโตขึ้น` },
+  { id: "TH-FP-57", label: `S1 body 1`, en: `Each grade picks one English program: Storytime Advantage, Primary Advantage, or Reading Advantage. Each English program is priced on its own. Schools add more subjects for the same students.`, th: `แต่ละชั้นเลือกโปรแกรมภาษาอังกฤษหนึ่งโปรแกรม: Storytime Advantage, Primary Advantage หรือ Reading Advantage แต่ละโปรแกรมคิดราคาแยกกัน และเพิ่มวิชาได้อีกสำหรับนักเรียนกลุ่มเดียวกัน` },
   { id: "TH-FP-58", label: `S1 body 2`, en: `The school price covers the app, teacher training and support. Printed workbooks are priced separately.`, th: `ราคาสำหรับโรงเรียนรวมแอป การอบรมครู และการสนับสนุนแล้ว ส่วนเวิร์กบุ๊กฉบับพิมพ์คิดราคาแยกต่างหาก` },
   { id: "TH-FP-59", label: `S2 heading`, en: `Add subjects along one clear curve`, th: `เพิ่มวิชาได้ตามอัตราค่าบริการที่ชัดเจน` },
   { id: "TH-FP-60", label: `S2 body`, en: `Each total is per student per year for the app, teacher training and support.`, th: `ราคารวมเป็นราคาต่อนักเรียนหนึ่งคนต่อปี สำหรับแอป การอบรมครู และการสนับสนุน` },
@@ -90,10 +95,9 @@ export const PRICING_ENTRIES: FixtureEntry[] = [
   { id: "TH-FP-63", label: `S2 row 2`, en: `2 subjects | +600 baht | 1,800 baht`, th: `2 วิชา | +600 บาท | 1,800 บาท` },
   { id: "TH-FP-64", label: `S2 row 3`, en: `3 subjects | +400 baht | 2,200 baht`, th: `3 วิชา | +400 บาท | 2,200 บาท` },
   { id: "TH-FP-65", label: `S2 row 4`, en: `4 subjects | +250 baht | 2,450 baht`, th: `4 วิชา | +250 บาท | 2,450 บาท` },
-  { id: "TH-FP-66", label: `S2 row 5`, en: `5 subjects | +250 baht | 2,700 baht`, th: `5 วิชา | +250 บาท | 2,700 บาท` },
-  { id: "TH-FP-67", label: `S2 note`, en: `Each further subject adds 250 baht per student per year.`, th: `วิชาเพิ่มเติมแต่ละวิชาคิดเพิ่ม 250 บาทต่อนักเรียนหนึ่งคนต่อปี` },
-  { id: "TH-FP-68", label: `S3 heading`, en: `English plus Math: 1,800 baht`, th: `ภาษาอังกฤษและคณิตศาสตร์: 1,800 บาท` },
-  { id: "TH-FP-69", label: `S3 body 1`, en: `A school that chooses English and Math pays 1,800 baht per student per year for the app, teacher training and support.`, th: `โรงเรียนที่เลือกภาษาอังกฤษและคณิตศาสตร์ จ่าย 1,800 บาทต่อนักเรียนหนึ่งคนต่อปี สำหรับแอป การอบรมครู และการสนับสนุน` },
+  { id: "TH-FP-67", label: `S2 note`, en: `Each total counts the same students in the same grades. A school picks one English program per grade, then adds subjects on the same curve.`, th: `ราคารวมแต่ละขั้นนับนักเรียนกลุ่มเดียวกันในชั้นเดียวกัน โรงเรียนเลือกโปรแกรมภาษาอังกฤษหนึ่งโปรแกรมต่อหนึ่งชั้น แล้วเพิ่มวิชาตามอัตราค่าบริการเดียวกัน` },
+  { id: "TH-FP-68", label: `S3 heading`, en: `Primary Advantage plus Math Advantage for the same students: 1,800 baht`, th: `Primary Advantage บวก Math Advantage สำหรับนักเรียนกลุ่มเดียวกัน: 1,800 บาท` },
+  { id: "TH-FP-69", label: `S3 body 1`, en: `A school that chooses Primary Advantage English and Math Advantage for the same students pays 1,800 baht per student per year for the app, teacher training and support.`, th: `โรงเรียนที่เลือกภาษาอังกฤษผ่าน Primary Advantage และ Math Advantage สำหรับนักเรียนกลุ่มเดียวกัน จ่าย 1,800 บาทต่อนักเรียนหนึ่งคนต่อปี สำหรับแอป การอบรมครู และการสนับสนุน` },
   { id: "TH-FP-70", label: `S3 body 2`, en: `Printed workbooks are quoted separately, per book.`, th: `เวิร์กบุ๊กฉบับพิมพ์เสนอราคาแยกเป็นรายเล่ม` },
   { id: "TH-FP-71", label: `S4 heading`, en: `App, training and support`, th: `แอป การอบรม และการสนับสนุน` },
   { id: "TH-FP-72", label: `S4 bullet 1`, en: `Access to the subject app.`, th: `เข้าใช้งานแอปประจำวิชา` },
@@ -102,14 +106,14 @@ export const PRICING_ENTRIES: FixtureEntry[] = [
   { id: "TH-FP-75", label: `S5 heading`, en: `Books are priced separately`, th: `หนังสือคิดราคาแยกต่างหาก` },
   { id: "TH-FP-76", label: `S5 body`, en: `Printed workbooks are priced per book, by quotation.`, th: `เวิร์กบุ๊กฉบับพิมพ์คิดราคาเป็นรายเล่ม โดยเสนอราคาแยกต่างหาก` },
   { id: "TH-FP-77", label: `S6 heading`, en: `Start with English. Plan for more.`, th: `เริ่มจากภาษาอังกฤษ แล้ววางแผนเพิ่มวิชา` },
-  { id: "TH-FP-78", label: `S6 body`, en: `Schools can start with English through Primary Advantage. Science Advantage, Math Advantage and Zhongwen Advantage are planned for the 2027 school year.`, th: `โรงเรียนเริ่มสอนภาษาอังกฤษผ่าน Primary Advantage ได้ ส่วน Science Advantage, Math Advantage และ Zhongwen Advantage วางแผนไว้สำหรับปีการศึกษา 2027` },
+  { id: "TH-FP-78", label: `S6 body`, en: `Schools start with one English program per grade. Science Advantage, Math Advantage and Zhongwen Advantage are planned for the 2027 school year.`, th: `โรงเรียนเริ่มด้วยโปรแกรมภาษาอังกฤษหนึ่งโปรแกรมต่อหนึ่งชั้น ส่วน Science Advantage, Math Advantage และ Zhongwen Advantage วางแผนไว้สำหรับปีการศึกษา 2027` },
   { id: "TH-FP-79", label: `S7 heading`, en: `For families, learning happens with a local tutor`, th: `ครอบครัวเรียนรู้ไปกับติวเตอร์ในพื้นที่` },
   { id: "TH-FP-80", label: `S7 body`, en: `A Tutor Advantage class package includes one printed workbook and about 22–23 hours with a local tutor. Packages start at 3,000 baht and adapt to the market.`, th: `แพ็กเกจคลาสของ Tutor Advantage ประกอบด้วยเวิร์กบุ๊กฉบับพิมพ์หนึ่งเล่ม และเวลาเรียนกับติวเตอร์ในพื้นที่ประมาณ 22–23 ชั่วโมง แพ็กเกจเริ่มต้นที่ 3,000 บาท และราคาอาจปรับตามตลาด` },
   { id: "TH-FP-81", label: `S7 button`, en: `Explore Tutor Advantage`, th: `ดูเพิ่มเติมเกี่ยวกับ Tutor Advantage` },
   { id: "TH-FP-82", label: `S8 body`, en: `A fuller service is in planning; we will share it when it is ready.`, th: `บริการที่ครบขึ้นอยู่ระหว่างการวางแผน เราจะแจ้งให้ทราบเมื่อพร้อม` },
   { id: "TH-FP-83", label: `S9 heading`, en: `Questions about school and family pricing`, th: `คำถามเกี่ยวกับราคาสำหรับโรงเรียนและครอบครัว` },
   { id: "TH-FP-84", label: `S9 Q1`, en: `Q: What counts as a subject?`, th: `วิชาใดบ้างที่นับรวมในราคา?` },
-  { id: "TH-FP-85", label: `S9 A1`, en: `A: Each subject in the school program counts toward the per-student yearly total. English is available through Primary Advantage. Science, Math and Zhongwen Advantage are planned for the 2027 school year.`, th: `วิชาแต่ละวิชาในหลักสูตรของโรงเรียนนับรวมในราคารายปีต่อนักเรียนหนึ่งคน โรงเรียนสามารถเรียนภาษาอังกฤษผ่าน Primary Advantage ส่วน Science Advantage, Math Advantage และ Zhongwen Advantage วางแผนไว้สำหรับปีการศึกษา 2027` },
+  { id: "TH-FP-85", label: `S9 A1`, en: `A: Each subject counts once toward the per-student yearly total. English counts once, through the one English program of that grade. Science Advantage, Math Advantage and Zhongwen Advantage are planned for the 2027 school year.`, th: `วิชาแต่ละวิชาในหลักสูตรของโรงเรียนนับรวมหนึ่งครั้งในราคารายปีต่อนักเรียนหนึ่งคน วิชาภาษาอังกฤษนับหนึ่งครั้งผ่านโปรแกรมภาษาอังกฤษประจำชั้นนั้น ส่วน Science Advantage, Math Advantage และ Zhongwen Advantage วางแผนไว้สำหรับปีการศึกษา 2027` },
   { id: "TH-FP-86", label: `S9 Q2`, en: `Q: Are printed books included in the school price?`, th: `ราคาสำหรับโรงเรียนรวมหนังสือฉบับพิมพ์หรือไม่?` },
   { id: "TH-FP-87", label: `S9 A2`, en: `A: No. Printed workbooks are priced separately, per book, by quotation.`, th: `ไม่รวม เวิร์กบุ๊กฉบับพิมพ์คิดราคาแยกเป็นรายเล่ม โดยเสนอราคาแยกต่างหาก` },
   { id: "TH-FP-88", label: `S9 Q3`, en: `Q: What about families?`, th: `แล้วครอบครัวมีทางเลือกอย่างไร?` },
@@ -153,20 +157,18 @@ export const PRICE_COLUMNS_TH: string[] = [
   `ราคารวมต่อนักเรียนหนึ่งคนต่อปี`,
 ];
 
-/** Price-table rows (TH-FP-62 to TH-FP-66), each split on " | ". */
+/** Price-table rows (TH-FP-62 to TH-FP-65), each split on " | ". */
 export const PRICE_ROWS_EN: string[][] = [
   [`1 subject`, `1,200 baht`, `1,200 baht`],
   [`2 subjects`, `+600 baht`, `1,800 baht`],
   [`3 subjects`, `+400 baht`, `2,200 baht`],
   [`4 subjects`, `+250 baht`, `2,450 baht`],
-  [`5 subjects`, `+250 baht`, `2,700 baht`],
 ];
 export const PRICE_ROWS_TH: string[][] = [
   [`1 วิชา`, `1,200 บาท`, `1,200 บาท`],
   [`2 วิชา`, `+600 บาท`, `1,800 บาท`],
   [`3 วิชา`, `+400 บาท`, `2,200 บาท`],
   [`4 วิชา`, `+250 บาท`, `2,450 บาท`],
-  [`5 วิชา`, `+250 บาท`, `2,700 บาท`],
 ];
 
 /** Every EN and TH string of spec sections 3 and 4, in check-page order. */

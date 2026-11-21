@@ -76,10 +76,10 @@ function allLeaves(messages: unknown): string[] {
 }
 
 describe("control: fixture and scanner", () => {
-  it("control: the fixture holds 52 features entries and 38 pricing entries", () => {
+  it("control: the fixture holds 52 features entries and 37 pricing entries", () => {
     expect(FEATURES_ENTRIES.length, "features entries: 52").toBe(52);
-    expect(PRICING_ENTRIES.length, "pricing entries: 38").toBe(38);
-    expect(PRICE_ROWS_EN.length, "price rows: 5").toBe(5);
+    expect(PRICING_ENTRIES.length, "pricing entries: 37").toBe(37);
+    expect(PRICE_ROWS_EN.length, "price rows: 4").toBe(4);
     expect(PRICE_COLUMNS_EN.length, "price columns: 3").toBe(3);
   });
 
@@ -166,7 +166,7 @@ describe("Thai values follow the check page (D5, FR-1, FR-8)", () => {
 });
 
 describe("price figures on the pricing page (FR-9, FR-10)", () => {
-  it("shows the five price-table rows in en and th", () => {
+  it("shows the four price-table rows in en and th", () => {
     const enCells = PRICE_ROWS_EN.flat();
     const thCells = PRICE_ROWS_TH.flat();
     expect(missingStrings(enPricingLeaves, enCells), "missing EN row cells").toEqual(

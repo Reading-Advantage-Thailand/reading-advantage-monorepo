@@ -127,15 +127,15 @@ afterEach(() => {
 });
 
 describe("control: fixture and hooks", () => {
-  it("control: the fixture lists 10 sections and 5 price rows", () => {
+  it("control: the fixture lists 10 sections and 4 price rows", () => {
     expect(SECTION_ORDER.length, "sections: 10").toBe(10);
-    expect(PRICE_ROWS_EN.length, "price rows: 5").toBe(5);
+    expect(PRICE_ROWS_EN.length, "price rows: 4").toBe(4);
     expect(PRICE_COLUMNS_EN.length, "price columns: 3").toBe(3);
   });
 
   it("control: the price rows carry the FR-9 curve", () => {
     expect(PRICE_ROWS_EN[0]).toEqual(["1 subject", "1,200 baht", "1,200 baht"]);
-    expect(PRICE_ROWS_EN[4]).toEqual(["5 subjects", "+250 baht", "2,700 baht"]);
+    expect(PRICE_ROWS_EN[3]).toEqual(["4 subjects", "+250 baht", "2,450 baht"]);
   });
 });
 
@@ -167,7 +167,7 @@ describe.each(LOCALES)("PricingPage content in %s", (locale) => {
     expect(sectionHookOrder(), "sections: 10 in order").toEqual([...SECTION_ORDER]);
   });
 
-  it("renders the price table with a caption, three columns and five rows (FR-9, D10)", () => {
+  it("renders the price table with a caption, three columns and four rows (FR-9, D10)", () => {
     const table = document.querySelector('[data-testid="subject-price-table"]');
     expect(table?.tagName, "price table is a table").toBe("TABLE");
     const caption = table?.querySelector("caption");
@@ -180,7 +180,7 @@ describe.each(LOCALES)("PricingPage content in %s", (locale) => {
     const wantedColumns = copy === "th" ? PRICE_COLUMNS_TH : PRICE_COLUMNS_EN;
     expect(headCells).toEqual(wantedColumns);
     const rows = table?.querySelectorAll("tbody tr") ?? [];
-    expect(rows.length, "price rows: 5").toBe(5);
+    expect(rows.length, "price rows: 4").toBe(4);
     const wantedRows = copy === "th" ? PRICE_ROWS_TH : PRICE_ROWS_EN;
     const found = Array.from(rows).map((row) =>
       Array.from(row.querySelectorAll("th, td")).map(
@@ -194,8 +194,8 @@ describe.each(LOCALES)("PricingPage content in %s", (locale) => {
     ).toBe(3);
     expect(
       table?.querySelectorAll('tbody th[scope="row"]').length ?? 0,
-      "row headers: 5",
-    ).toBe(5);
+      "row headers: 4",
+    ).toBe(4);
   });
 
   it("uses a custom hero as the first section of main (D11)", () => {
