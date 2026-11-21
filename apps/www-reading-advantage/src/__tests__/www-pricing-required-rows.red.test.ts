@@ -35,7 +35,7 @@ vi.mock("@/locales/server", () => ({
     import("next-intl").then(({ createTranslator }) =>
       createTranslator({
         locale: "en",
-        namespace: scope,
+        namespace: scope as never,
         messages: serverWiring.messages as never,
       }),
     ),
@@ -85,7 +85,7 @@ describe("control: required-rows scanners use the real translator", () => {
     const { createTranslator } = await import("next-intl");
     const t = createTranslator({
       locale: "en",
-      namespace: "pages.pricing",
+      namespace: "pages.pricing" as never,
       messages: serverWiring.messages as never,
     });
     const raw = (t as unknown as { raw: (key: string) => unknown }).raw(

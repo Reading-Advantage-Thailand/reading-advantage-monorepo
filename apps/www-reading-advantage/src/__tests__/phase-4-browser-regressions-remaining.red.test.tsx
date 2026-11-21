@@ -5,9 +5,21 @@ import PricingPage from "@/app/[locale]/(marketing)/pricing/page";
 import type { BlogListItem } from "@/types/blog";
 
 const serverWiring = vi.hoisted(() => ({
-  getScopedI18n: vi.fn(
-    async (scope: string) => (key: string) => `${scope}.${key}`,
-  ),
+  getScopedI18n: vi.fn(async (scope: string) => {
+    const translate = ((key: string) => `${scope}.${key}`) as ((
+      key: string,
+    ) => string) & { raw: (key: string) => unknown };
+    translate.raw = (key: string) =>
+      key === "subjects.rows"
+        ? [
+            { label: "row 1", cells: ["1 subject", "1,200 baht", "1,200 baht"] },
+            { label: "row 2", cells: ["2 subjects", "+600 baht", "1,800 baht"] },
+            { label: "row 3", cells: ["3 subjects", "+400 baht", "2,200 baht"] },
+            { label: "row 4", cells: ["4 subjects", "+250 baht", "2,450 baht"] },
+          ]
+        : undefined;
+    return translate;
+  }),
 }));
 
 vi.mock("@/locales/server", () => ({

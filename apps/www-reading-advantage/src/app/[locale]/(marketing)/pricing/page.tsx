@@ -40,9 +40,10 @@ export default async function PricingPage() {
   );
   const readRaw = (t as unknown as { raw?: (key: string) => unknown }).raw;
   const rawRows = readRaw?.("subjects.rows");
-  const subjectRows = (
-    Array.isArray(rawRows) ? rawRows : []
-  ) as Array<{ label: string; cells: string[] }>;
+  if (!Array.isArray(rawRows)) {
+    throw new Error("pages.pricing.subjects.rows must be an array");
+  }
+  const subjectRows = rawRows as Array<{ label: string; cells: string[] }>;
   const rowLabels = subjectRows.map((row) => row.label);
   const rows = subjectRows.map((row) => row.cells);
   const includedBullets = [0, 1, 2].map((index) =>
