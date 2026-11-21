@@ -58,7 +58,7 @@ export function ProgramCard({
           {forText}
         </p>
         <p className="text-xs font-medium text-emerald-800">{status}</p>
-        <p className="text-sm leading-relaxed text-site-body">{body}</p>
+        {body && <p className="text-sm leading-relaxed text-site-body">{body}</p>}
         {bullets.length > 0 && (
           <ul className="mt-auto list-disc space-y-2 pl-5 text-sm leading-relaxed text-site-body">
             {bullets.map((bullet) => (
@@ -74,7 +74,7 @@ export function ProgramCard({
     return (
       <article
         data-testid={testId}
-        className="flex self-start flex-col overflow-hidden rounded-3xl border border-site-border bg-white shadow-panel md:col-span-2 md:flex-row"
+        className="flex self-start flex-col overflow-hidden rounded-3xl border border-site-border bg-white shadow-panel md:col-span-2 md:flex-row md:items-start"
       >
         {content}
       </article>

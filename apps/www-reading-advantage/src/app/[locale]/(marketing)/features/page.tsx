@@ -48,8 +48,8 @@ const CARD_IMAGES: Partial<
     height: 622,
   },
   reading: {
-    src: "/images/features/reading-article-selection.webp",
-    alt: "Reading Advantage article selection screen",
+    src: "/images/products/ra-origins-2-cover.jpg",
+    alt: "Reading Advantage Origins 2 book cover",
     width: 1200,
     height: 576,
   },

@@ -46,7 +46,7 @@ export const en = {
         name: "Reading Advantage books",
         forText: "For: Families learning through Tutor Advantage",
         status: "Status: Reading Advantage Origins 2 is on sale through Tutor Advantage.",
-        body: "Reading Advantage books are taught through Tutor Advantage, not presented as a school app.",
+        body: "",
         bullets: [],
       },
       codecamp: {
@@ -155,7 +155,7 @@ export const th = {
         name: "Reading Advantage books",
         forText: "ครอบครัวที่เรียนผ่าน Tutor Advantage",
         status: "Reading Advantage Origins 2 วางจำหน่ายผ่าน Tutor Advantage",
-        body: "หนังสือ Reading Advantage ใช้เรียนผ่าน Tutor Advantage ไม่ได้นำเสนอเป็นแอปสำหรับโรงเรียน",
+        body: "",
         bullets: [],
       },
       codecamp: {
