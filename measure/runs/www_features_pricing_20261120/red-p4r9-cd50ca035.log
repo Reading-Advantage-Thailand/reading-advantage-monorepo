@@ -1,0 +1,16 @@
+MEASURE_AGENT_RESULT
+role: mid-red
+status: red
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+phase_base_sha: c096256a1eb9f41329306533a78aa0108cc6bcff
+role_base_sha: cd50ca0351341e7f6a3fa3ff3a37f0b9190c0ae4
+baseline_sha: c096256a1eb9f41329306533a78aa0108cc6bcff
+resulting_head: d131bfc38711c24379233cab8bad440eb3ae721d
+commits: d131bfc38711c24379233cab8bad440eb3ae721d test(www): pin whole portrait reading cover (track_id: www_features_pricing_20261120)
+tests_run: pnpm exec vitest run --maxWorkers=1 src/__tests__/www-reading-cover.red.test.ts -> Test Files 1 failed (1); Tests 3 failed | 7 passed (10); exit 1; no import or config error
+files_changed: apps/www-reading-advantage/src/__tests__/www-reading-cover.red.test.ts (new: F4 file/declared/rendered portrait-ratio pins, no-crop guard, other-cards regression guards, JPEG SOF reader); measure/tracks/www_features_pricing_20261120/plan.md (task 4.10 opened as [~] with Red evidence, default D-R9-1, 390-cap record, re-target record)
+plan_updates: task 4.10 records the Red r9 evidence 2026-11-21 with default D-R9-1 (whole cover keeps the title band so crop-to-ratio yields to the no-banner-crop rule; width-limited portrait column, auto height, md+ beside text, 390 above text) and the note that the 390 compact-height cap is left to the browser review; task stays [~]
+known_failures: F4 file aspect within 1% of source -> FAILS at role base (1200x576 strip: drift 182.6%, expected); F4 declared portrait dims -> FAILS at role base (1200x576 declared, expected); F4 rendered portrait ratio -> FAILS at role base (1200x576 rendered attrs, expected)
+handoff: Green regenerates public/images/products/ra-origins-2-cover.jpg from the read-only RA-Origins-2-Front-Cover.jpg (1200x1628) as the whole portrait cover uncropped (RA logo, title band, whole figures) at the same ratio, updates CARD_IMAGES.reading width/height to the portrait dims, and renders it in the width-limited picture column with automatic height and no object-cover crop (object-contain or intrinsic) keeping the D13 alt; other pictured cards, copy, and pricing stay untouched. Then rerun the reading-cover file plus the task 2.6 gates and recapture Phase 4 (including a 390 compactness look). Note: the three other-cards rows and the no-crop guard pass at HEAD by design (regression guards); the round still fails first via the three F4 rows.
+END_MEASURE_AGENT_RESULT

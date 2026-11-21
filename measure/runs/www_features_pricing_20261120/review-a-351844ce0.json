@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "role": "review-a",
+  "track": "www_features_pricing_20261120",
+  "phase": "Phase 4: Browser review and captures",
+  "baseline_sha": "351844ce0a2248cef25e536451bf6b785024de2e",
+  "phase_base_sha": "c096256a1eb9f41329306533a78aa0108cc6bcff",
+  "role_base_sha": "351844ce0a2248cef25e536451bf6b785024de2e",
+  "audited_head_sha": "351844ce0a2248cef25e536451bf6b785024de2e",
+  "status": "pass",
+  "summary": "The whole-cover change passes the correctness audit. Reading alone receives the capped contain wrapper, and other card markup remains unchanged. The ratio pins are meaningful. One nonblocking no-crop test gap remains. Browser acceptance and phase tasks remain separate gates.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "RA5 [Nit] review-a: apps/www-reading-advantage/src/__tests__/www-reading-cover.red.test.ts:226-237 checks only the image class, not the wrapper selector that controls object-fit. It also treats h-auto as proof against cropping. An in-memory contain-to-cover mutation on the capped Reading wrapper still passes this actual assertion in en, th, and zh. The image attributes and h-auto class remain unchanged. Add a wrapper-aware or computed-style assertion that rejects this mutation. Current production code correctly uses object-contain; this is a coverage gap, not a current crop defect."
+  ],
+  "evidence": [
+    "The required role gate exits 1: FAIL: current phase still has 3 non-deferred incomplete tasks. The correctness verdict passes with RA5 nonblocking. Tasks 4.1-4.3 remain the expected orchestration gate.",
+    "HEAD is 351844ce0a2248cef25e536451bf6b785024de2e, equal to supplied role_base_sha, baseline_sha, and audited_head_sha. The current Red and Green receipts retain phase_base_sha c096256a1eb9f41329306533a78aa0108cc6bcff.",
+    "Reconciled all 43 paths of c096256a1..351844ce0 with the previous provenance-bound audits. Independently inspected every line of cd50ca035..351844ce0. The five changed paths contain the cover, new r9 test, two presentation files, and active plan evidence only.",
+    "Read the current strategy, current phase plan, Red r9 and Green r9 receipts, and UX r7 F4. The preceding index, workflow, spec, and anti-pattern catalog remain in context. Plan task 4.10 explicitly replaces the earlier crop-to-card default with the whole portrait cover.",
+    "Pillow independently reads the supplied source as 1200x1628, the old strip as 1200x576, and the current JPEG as 600x814. Current file size is 141326 bytes. Current aspect drift is zero; old-strip drift is 1.8263888888888893. Viewed the delivered cover: branding, title, both illustrated heads, and full figures remain visible.",
+    "Executed the actual new file-aspect assertion and its actual JPEG reader with four in-memory inputs. The current progressive JPEG passes. The previous banner fails the aspect assertion. A missing deliverable fails with ENOENT. A malformed buffer fails with no JPEG SOF marker. These checks are not tautological and do not edit an asset or test.",
+    "All r8 tests and copy fixtures are byte-unchanged in cd50ca035..351844ce0. No committed Red test changes during d131bfc38..351844ce0. The re-target record changes the layout default, not an earlier assertion. Copy and pricing locale files remain unchanged.",
+    "An independent harness renders the actual FeaturesPage, ProgramCard, and Next Image with a real next-intl translator. In en, th, and zh, Reading receives 600x814 attributes, the D13 cover alt, and the capped contain wrapper. Storytime, Primary, CodeCamp, school-subject cards, and the Tutor section are byte-identical to the prior rendered revision.",
+    "Only CARD_IMAGES.reading supplies pictureClass. The caller forwards that optional value; ProgramCard adds it only to the corresponding featured image wrapper. Direct-child selectors match Reading's own image and cannot select sibling cards. Unchanged card markup proves the other picture rules and F2 layout receive no new classes at any breakpoint.",
+    "The current image uses h-auto w-full. Reading's direct-child max-height rule caps its image box, and object-contain preserves the complete portrait content inside that box. At md+, the existing 192-pixel column produces an intrinsic height below 300 pixels. Browser geometry and recognisability remain with the UX role.",
+    "RA5 proof executes the actual committed no-crop assertion against the actual rendered DOM. Changing only Reading's wrapper selector from object-contain to object-cover leaves that assertion passing in all three locales. The assertion does not inspect that wrapper. Current source uses contain, so no production blocker follows from this mutation.",
+    "Targeted Vitest: Test Files 10 passed (10); Tests 182 passed (182); exit 0. The run includes new cover checks, unchanged r8 checks, locale and content pins, assets, F2/look guards, and pricing regressions.",
+    "Foreground heavy-run executes tsc --noEmit --incremental false and the full www suite. Both exit 0. Vitest reports Test Files 91 passed (91); Tests 3117 passed (3117). The command uses a 1200000 ms timeout and no output redirection. The result matches plan task 4.10's aggregate claim.",
+    "build-graph is installed, but the worktree has no fresh graph.db. Read-only inspect and callers against the old main-tree graph return no ProgramCard symbol. The previously verified single FeaturesPage caller now supplies one optional prop. This role creates no graph and claims no fresh graph verification.",
+    "The phase changes no orchestration script, framework contract test, or registry. Framework-wide anti-pattern checks do not apply. Application counts use labeled integer assertions, the missing-cover fixture fails, and the observed test exit supports the plan claim.",
+    "git diff --check c096256a1..351844ce0 exits 0. Final HEAD remains the supplied identity, with no tracked changes. This role writes only its two supplied artifacts. It makes no implementation, test, plan, or registry edit, commit, app build, server start, push, merge, or deploy."
+  ],
+  "commands": [
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py role-gate --repo /home/daniebo/Desktop/rama-worktrees/www-features-pricing --role review-a --track www_features_pricing_20261120 --phase 'Phase 4: Browser review and captures' --result-file measure/runs/www_features_pricing_20261120/review-a-351844ce0.json --log-file measure/runs/www_features_pricing_20261120/review-a-351844ce0.log -> exit 1; three incomplete phase tasks only",
+    "git rev-parse HEAD; git status --short; git diff cd50ca035..351844ce0; git diff --check c096256a1..351844ce0 -> required HEAD matches; five delta paths; 43 phase paths; whitespace check exit 0",
+    "pnpm exec vitest run --maxWorkers=1 src/__tests__/www-reading-cover.red.test.ts src/__tests__/www-reading-card.red.test.ts src/__tests__/www-features-page.content.test.tsx src/__tests__/www-features-pricing.locale.test.ts src/__tests__/www-features-pricing.assets.test.ts src/__tests__/www-features-look-pins.red.test.ts src/__tests__/www-pricing-required-rows.red.test.ts src/__tests__/www-pricing-rows-fluid.red.test.ts src/__tests__/www-pricing-stacking.red.test.ts src/__tests__/www-pricing-page.content.test.tsx -> 10 files and 182 tests pass; exit 0",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/www-features-pricing/apps/www-reading-advantage && pnpm exec tsc --noEmit --incremental false && pnpm exec vitest run --maxWorkers=1' -> foreground timeout 1200000 ms; type-check exit 0; 91 files and 3117 tests pass; exit 0",
+    "python3 -I -c <Pillow source/current/old-file dimensions and Git invariants> -> source 1200x1628; current 600x814 with zero aspect drift; old strip rejected; r8 tests, copy fixtures, locale copy, and Red files during Green unchanged",
+    "node -e <actual-page renders before/after with real translation plus execution of the committed no-crop callback> -> only Reading wrapper changes; other cards and Tutor section byte-identical in en/th/zh; D13 alt retained; contain-to-cover mutation escapes the no-crop assertion; RA5 reproduced",
+    "node -e <actual F4 file-aspect assertion and JPEG reader with in-memory fixtures> -> current file passes; old banner fails; omitted file fails ENOENT; malformed file fails SOF parsing; guard verification exit 0",
+    "build-graph inspect /home/daniebo/Desktop/reading-advantage-monorepo/graph.db ProgramCard; build-graph callers /home/daniebo/Desktop/reading-advantage-monorepo/graph.db ProgramCard -> no symbol in stale graph"
+  ],
+  "changed_files": ["measure/runs/www_features_pricing_20261120/review-a-351844ce0.json", "measure/runs/www_features_pricing_20261120/review-a-351844ce0.log"],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_audit",
+  "confidence": "high",
+  "route": "openai/gpt-6.1-sol#high",
+  "ratings": [
+    {"axis": "correctness", "score": 4, "evidence": "The current portrait image and Reading-only selectors preserve content; other cards render byte-identically, while final browser geometry remains with UX."},
+    {"axis": "test_meaning", "score": 4, "evidence": "The old-banner, missing-file, and malformed-file fixtures fail, but the wrapper-fit mutation escapes the no-crop assertion at lines 226-237."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "The five-file delta contains only the approved whole-cover change, scoped presentation prop, new tests, and current plan evidence."},
+    {"axis": "evidence_quality", "score": 4, "evidence": "Independent image parsing, actual-page comparisons, mutation results, type-check, and full-suite exits support the verdict; no fresh graph is available."}
+  ]
+}

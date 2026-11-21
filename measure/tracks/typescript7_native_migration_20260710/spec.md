@@ -205,6 +205,7 @@ Each criterion maps to a requirement and a plan phase.
 | 15 | After Daniel's decision, CI runs TypeScript 7 and three runs are observed. | FR-6 | 5 |
 | 16 | After Daniel's decision, operator documents describe the one-compiler setup. | FR-6 | 5 |
 | 17 | No new hash field exists, and `compiler-baseline.json` hash coverage did not grow. | all | all |
+| 18 | Bump vinext 1.2.0 to the latest 1.4.x and adopt the Oxc lessons of the Math test bed. | FR-2, FR-4 | 3 |
 
 ## Out of Scope
 

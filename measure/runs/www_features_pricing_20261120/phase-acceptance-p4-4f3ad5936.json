@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "role": "phase-acceptance",
+  "track": "www_features_pricing_20261120",
+  "phase": "Phase 4: Browser review and captures",
+  "phase_base_sha": "c096256a1eb9f41329306533a78aa0108cc6bcff",
+  "baseline_sha": "c096256a1eb9f41329306533a78aa0108cc6bcff",
+  "role_base_sha": "4f3ad5936f0e2c3b1d811725483a83bd271619da",
+  "audited_head_sha": "4f3ad5936f0e2c3b1d811725483a83bd271619da",
+  "allowed_later_commits": [
+    "c2cb6a120a1274fffb5c76846426a9c8fcb0bbca (plan.md only; tasks 4.1 to 4.3 set to [x])",
+    "4f3ad5936f0e2c3b1d811725483a83bd271619da (test only; www-reading-cover.red.test.ts)"
+  ],
+  "status": "pass",
+  "summary": "Phase 4 passes at 4f3ad5936. All ten Phase 4 tasks are [x] and each names evidence. The reruns at HEAD pass: 182 A-70 tests, 3117 suite tests, tsc, and ESLint with 0 errors. Review A r5 and UX r8 at 351844ce0 still apply, because only one test file and plan.md changed after them. Of 23 independent mutations, 22 fail a named test and 1 stays green by documented design. Eight nonblocking findings remain for the orchestrator.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F1 [Major] phase-acceptance: spec.md (FR-3, the image table in section 7, and AC-7) still names reading-article-selection.webp as the Reading card picture. The page now shows ra-origins-2-cover.jpg (600x814, alt 'Reading Advantage Origins 2 book cover') by PM decisions D-R8-1 and D-R9-1. Only plan tasks 4.9 and 4.10 record these decisions. The old WebP stays on disk only because www-features-pricing.assets.test.ts:23 pins it. Update spec.md before the Phase 5 run and decide the fate of the old file. The owner is a build session or the user.",
+    "F2 [Nit] phase-acceptance: Plan task 4.1 names a capture script and an output folder (~/.cache/opencode/www-features-pricing/captures) that do not exist. The real captures sit in ux-wfp-r8 (Features, HEAD 351844ce0) and ux-wfp-r6 (Pricing, HEAD 4ccf4c879). Task 4.2 does not name ux-browser-4ccf4c879.json as the source of the Pricing verdict. Record both facts in the plan.",
+    "F3 [Nit] phase-acceptance: Plan task 4.9 (Green r8 evidence) still says the cover is a 1200x576 JPEG of 148,226 bytes. Task 4.10 replaced it with a 600x814 JPEG of 141,326 bytes. Plan line 90 repeats line 87 word for word under task 4.8. Mark the old claim as superseded and delete the repeated line.",
+    "F4 [Nit] phase-acceptance: Plan task 4.2 still calls RA5 an open test gap. Adversarial result adversarial-c2cb6a120.json closed it with commit 4f3ad5936. The Review A r5 log still shows status blocked, and its JSON shows retry_recommendation retry_audit. Both values date from before tasks 4.1 to 4.3 closed. The review-a role gate passes now. Record the RA5 closure in the plan.",
+    "F5 [Nit] phase-acceptance: Three committed test files declare unused symbols and give ESLint warnings: cardRenderBlock (www-features-look-pins.red.test.ts:122), beforeEach (www-reading-card.red.test.ts:3), and PROGRAM_CARD (www-reading-cover.red.test.ts:27). ESLint exits 0 with 0 errors. Remove the three symbols in the next test commit.",
+    "F6 [Nit] phase-acceptance: No automated test pins the 300 px height cap of the Reading cover at 390 px. A scratch mutation that emptied pictureClass (features/page.tsx:64) kept all 182 tests green. Plan task 4.10 states this. UX r8 measured 356x300 at 351844ce0, and the app code is unchanged since. Keep the browser review as the proof, or add a pin later.",
+    "F7 [Nit] phase-acceptance: Review C (review-c-38c03ba22.json, Phase 3) binds to 38c03ba22, and Green changed the pages after it. This acceptance re-checked the Review C surface at HEAD. Metadata, links, anchors, static params, and removed message keys did not change, and the related tests pass. Run Review C again if a fresh artifact is wanted before Phase 5.",
+    "F8 [Nit] phase-acceptance: Phase 3 has no checkpoint. Tasks 3.3 and 3.4 stay [ ] with no artifact, so the status command lists Phase 3 as incomplete (2 of 4 remaining). Plan task 5.1 needs a checkpoint on each phase heading. Resolve both tasks before Phase 5: record the Review B exclusion and the fix rounds 4.4 to 4.10."
+  ],
+  "evidence": [
+    "HEAD is 4f3ad5936f0e2c3b1d811725483a83bd271619da at the start and at the end of the audit. git status --short is empty. Commit c096256a1eb9f41329306533a78aa0108cc6bcff is an ancestor of HEAD.",
+    "Prerequisite results and their HEADs: Review A r5 pass at 351844ce0 (review-a-351844ce0.json); UX browser r8 pass at 351844ce0 (ux-browser-351844ce0.json); adversarial pass at 4f3ad5936 (adversarial-c2cb6a120.json); UX browser pass at 4ccf4c879 for all 18 Features and Pricing views (ux-browser-4ccf4c879.json).",
+    "Two commits follow the reviewed head 351844ce0. Commit c2cb6a120 changes only measure/tracks/www_features_pricing_20261120/plan.md (tasks 4.1 to 4.3). Commit 4f3ad5936 changes only src/__tests__/www-reading-cover.red.test.ts. git diff --name-status 351844ce0..HEAD lists exactly these two files. The implementation content is unchanged, so Review A r5 and UX r8 still apply.",
+    "Commit c2cb6a120 is a plan-only commit that the brief names. It is outside the two classes of the role rule (test files and measure/runs). This acceptance allows it by name, because it changes no implementation, test, or asset.",
+    "Pricing code is unchanged since 4ccf4c879. git diff --name-only 4ccf4c879..HEAD lists only the Features page, program-card.tsx, locales/pages/feature.ts, the cover JPEG, test files, and plan.md. The Pricing captures in ux-wfp-r6 stay valid for HEAD.",
+    "Plan tasks 4.1 to 4.10 are all [x] and each names evidence. The status command lists only Phase 3 (2 of 4 remaining) and Phase 5 (1 of 1 remaining) as incomplete. Task 5.2 is [b] with deferred:daniel.",
+    "All 18 final capture files exist as non-empty PNG files: Features in ux-wfp-r8 (9 files) and Pricing in ux-wfp-r6 (9 files), at widths 390, 980, and 1280. labeled_count captures_ok=18 of 18.",
+    "A-70 Red files at HEAD: 10 files and 182 tests pass. The subsets match the plan claims: 5 files 62 tests (task 4.9), 6 files 72 tests (task 4.10), 4 original files 110 tests.",
+    "Full www Vitest suite at HEAD through heavy-run (priority p2): Test Files 91 passed (91), Tests 3117 passed (3117). No intentionally red test remains in the aggregate. pnpm check-types (tsc --noEmit) exits 0 through heavy-run.",
+    "ESLint on 29 changed or new TypeScript files: 0 errors, 3 warnings (unused symbols, finding F5), exit 0. ESLint ignores e2e/photos.spec.ts by configuration. A heavy-run lint attempt waited more than 1200000 ms for the heavy lock held by another session, so the lint ran directly.",
+    "git diff --check c096256a1..HEAD exits 0. The phase diff touches only apps/www-reading-advantage and the track plan.md and spec.md. It does not touch measure/tracks.md or any framework script. No unrelated change follows the reviewed head.",
+    "Anti-pattern A5 verified: the plan aggregate claims (62, 72, 110 tests, 91 files, 3117 tests) match my reruns. A6 does not apply, because tracks.md is not in the diff. A3 and A4 do not apply, because no contract test or marker script changed, and the app counts use labeled toBe integer assertions.",
+    "Anti-pattern A7 verified: the REMOVED_STRINGS scan in www-features-pricing.locale.test.ts uses exact substrings over every locale leaf and has no exclusion filter. Mutation M1 injected 'Raz-Kids' into an en leaf and the scan failed.",
+    "Fake-gate check: the ten A-70 test files contain no skip, only, todo, or expect(true). Page tests replace only the translator entry points with shims that read the real en, th, and zh message objects. The RA4 test uses the real next-intl translator.",
+    "Independent mutation run on a scratch copy outside the source tree (no source file edited): the unmutated copy passes 182 of 182. 22 of 23 attacks fail a named test: stale Raz-Kids leaf (M1), extra 999 baht (M2), 2,700 returns (M2b), wrong +650 cell (M3a), swapped rows (M3b), /contacts link (M4a), wrong Tutor link (M4b), #program anchor (M4c), missing tutor asset (M4d), changed zh managed-service text (M5a), changed zh header label (M5b), Thai trailing period (M6), duplicate h1 (M7), empty alt (M8), wrapper object-cover (M9, the RA5 mutation), card object-cover (M10), old Reading screenshot (M11), empty-row fallback (N1), text-only h-full (N2), deleted sentence returns (N3), lost md:items-start (N4), old 1200x576 dimensions (N5).",
+    "One attack stays green by design: N6 removed the 390 px height cap (pictureClass). Plan task 4.10 states that the browser review owns this cap (finding F6).",
+    "The test strategy lists adversarial attacks: stale locale values, extra baht amounts, wrong row order, missing targets and assets, and changed zh guards. No earlier artifact in the folder shows them, and the adversarial artifact covers RA5 only. The mutation run above covers the full list.",
+    "Reading cover facts re-checked with a standard-library JPEG parser: public/images/products/ra-origins-2-cover.jpg is 600x814 and 141,326 bytes. The read-only source RA-Origins-2-Front-Cover.jpg is 1200x1628. The aspect drift is 0.000000. Only test files reference the old reading-article-selection.webp.",
+    "Review C surface re-checked at HEAD: a diff of the two route pages since 38c03ba22 shows no changed line with generateMetadata, generateStaticParams, href, anchor, or locale-link tokens except the cover src. grep finds comparisonTable and pricingTable only in test assertions and one comment. The SEO, link, and locale tests pass at HEAD.",
+    "The review-a role gate now prints PASS for the r5 artifacts, because tasks 4.1 to 4.3 are [x]. Its log still shows status blocked from the earlier state (finding F4).",
+    "build-graph is skipped: the worktree has no graph.db. This role did not rerun pnpm build or Playwright. UX r8 built at 351844ce0 (attempt 3 exit 0) and no app code changed since. Plan task 5.1 reruns the gates on the final HEAD.",
+    "Facts not verifiable here: the spec commit ids d123d385, f2eee0cf, 7330789d, and 640edec0 belong to the PR repository. The PM look check, the Drive upload, and Daniel's Thai approval come from the brief and plan task 4.3.",
+    "Record state for task 5.1: git worktree list shows /home/daniebo/Desktop/rama-worktrees/www-features-pricing at 4f3ad5936 on www/features-pricing-a70. git branch -a lists that branch and no origin branch for it.",
+    "Cleanup: the git-ignored scratch folder measure/runs/www_features_pricing_20261120/scratch-p4-accept still exists, because the shell denied rm -rf. Its public symlink is removed. Delete it with: rm -rf /home/daniebo/Desktop/rama-worktrees/www-features-pricing/measure/runs/www_features_pricing_20261120/scratch-p4-accept"
+  ],
+  "commands": [
+    "git rev-parse HEAD; git status --short; git diff --name-status c096256a1..HEAD; git diff --name-status 351844ce0..HEAD; git diff --name-only 4ccf4c879..HEAD; git diff --check c096256a1..HEAD -> HEAD 4f3ad5936, clean tree; the two later commits touch only the cover test and plan.md; diff check exit 0",
+    "cd apps/www-reading-advantage && CI=true pnpm exec vitest run --maxWorkers=1 <the 10 A-70 test files> -> Test Files 10 passed (10); Tests 182 passed (182)",
+    "same vitest form on 5, 6, and 4 named files -> 62 passed, 72 passed, and 110 passed; exit 0 each",
+    "HEAVY_PRIORITY=p2 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd .../apps/www-reading-advantage && CI=true pnpm exec vitest run --maxWorkers=1' -> Test Files 91 passed (91); Tests 3117 passed (3117)",
+    "HEAVY_PRIORITY=p2 bash .../heavy-run.sh -c 'cd .../apps/www-reading-advantage && pnpm check-types'; echo exit -> heavy-run exit=0 (after a lock wait of more than 600 s)",
+    "pnpm exec eslint on the 29 changed or new .ts and .tsx files of c096256a1..HEAD (not e2e) -> 0 errors, 3 warnings, exit 0; the same list with --max-warnings=0 exits 1 on those 3 warnings",
+    "python3 -I scratch mutation harness (2 scripts, copy of src under measure/runs, run with node_modules/.bin/vitest --reporter=json) -> baseline 182 of 182; 23 attacks: 22 caught, 1 documented escape (N6)",
+    "python3 -I standard-library PNG and JPEG parsers -> captures_ok=18 of 18; cover 600x814 and 141326 bytes; source 1200x1628; aspect drift 0.000000",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo . --track www_features_pricing -> incomplete_phases 2 (Phase 3: 2 of 4; Phase 5: 1 of 1); worktree clean",
+    "python3 .../measure_interphase_checks.py role-gate --role review-a on review-a-351844ce0.json and its log, phase Phase 4 -> PASS: review-a gate passed",
+    "python3 .../measure_interphase_checks.py role-gate --repo /home/daniebo/Desktop/rama-worktrees/www-features-pricing --role phase-acceptance --track www_features_pricing_20261120 --phase 'Phase 4: Browser review and captures' --result-file measure/runs/www_features_pricing_20261120/phase-acceptance-p4-4f3ad5936.json --log-file measure/runs/www_features_pricing_20261120/phase-acceptance-p4-4f3ad5936.log -> PASS: phase-acceptance gate passed (exit 0); audit-result check -> PASS: audit result is valid"
+  ],
+  "changed_files": [
+    "measure/runs/www_features_pricing_20261120/phase-acceptance-p4-4f3ad5936.json",
+    "measure/runs/www_features_pricing_20261120/phase-acceptance-p4-4f3ad5936.log",
+    "measure/runs/www_features_pricing_20261120/scratch-p4-accept/ (git-ignored scratch; delete)"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "claude-code/claude-sonnet-5-5#max (Red: opencode-go/muse-spark-1.3-contributor#high; Green: opencode-go/hy4-flash-free#high; Review A, UX, adversarial: openai)",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "apps/www-reading-advantage/src/components/features/program-card.tsx:57 keeps the h-auto w-full image, and 22 of 23 mutations fail named tests, so the behavior holds at HEAD."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "22 of 23 scratch mutations failed a named test, but the 390 px cap mutation at features/page.tsx:64 stayed green."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 4,
+      "evidence": "git diff --name-status c096256a1..HEAD touches only the app, plan.md, and spec.md, but the unused reading-article-selection.webp stays pinned at www-features-pricing.assets.test.ts:23."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Plan counts 62, 72, and 110 match my reruns, but task 4.1 names a missing capture folder and Review A r5 keeps stale blocked and retry_audit values."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "openai/gpt-6.1-sol#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-a-351844ce0.json passes with RA5 nonblocking, and my M9 run shows the post-fix assertion fails on the RA5 mutation, but its record keeps retry_audit."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "openai/gpt-6-luna#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-c-38c03ba22.json passed route, metadata, and link checks that I re-verified unchanged at HEAD, but it binds to 38c03ba22 and ran no mutation."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "openai/gpt-6-luna#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "adversarial-c2cb6a120.json closes RA5 with 4f3ad5936 and my M9 run confirms the catch, but it ran no attack of the strategy list beyond RA5."
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "role": "ux-browser-review",
+  "track": "www_features_pricing_20261120",
+  "phase": "Phase 4: Browser review and captures",
+  "baseline_sha": "351844ce0a2248cef25e536451bf6b785024de2e",
+  "phase_base_sha": "c096256a1eb9f41329306533a78aa0108cc6bcff",
+  "role_base_sha": "351844ce0a2248cef25e536451bf6b785024de2e",
+  "audited_head_sha": "351844ce0a2248cef25e536451bf6b785024de2e",
+  "status": "pass",
+  "summary": "Ready for the PM look check. F4 is closed. The whole cover is recognisable, the mobile card stays compact, and the header artifact is resolved.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "retry_recommendation": "none",
+  "evidence": [
+    "HEAD is 351844ce0a2248cef25e536451bf6b785024de2e. It matches the supplied role_base_sha and audited_head_sha. The immutable phase_base_sha is c096256a1eb9f41329306533a78aa0108cc6bcff.",
+    "Read the index, workflow, track spec, Phase 4 plan, test strategy, strategy handoff, previous audit, and exact user-facing changes. The orchestrator supplied the route and D-R9-1 default.",
+    "PROJECT_DEV_URL was unset. The audit served the production build at http://localhost:3123 and supplied this URL to the role gate.",
+    "Build attempts 1 and 2 exited 1. Attempt 3 exited 0. The build reported the known Next.js security notice. No upgrade occurred.",
+    "F4 withdrawn: checked the complete 600x814 cover at every requested viewport. Its portrait shape, RA logo, Origins 2 title, and illustrated figures remain recognisable. No banner crop or half face remains.",
+    "At 390, the image element is 356x300 with object-contain. The complete cover occupies about 221x300, centred within that element. Reading card heights are 462.75 px for en/zh and 446.75 px for th. This presentation stays compact.",
+    "At 980 and 1280, the whole cover renders at 192x260.47 beside the text. The image ratio matches the complete cover.",
+    "The Reading card shows its heading, audience, and status in all three locales. The deleted sentence is absent, and no empty body paragraph remains.",
+    "Primary paragraph-to-bullet spacing measures 12 px in all nine views. The previous large gap does not recur.",
+    "At 980, each pictured row is 948 px wide. At 1280, each pictured row is 1248 px wide. The two text cards share the final row, with 24 px gaps and no empty grid cell.",
+    "Card order stays Storytime, Primary, Reading, CodeCamp, then school subjects. The exact remediation diff leaves other image sources, image dimensions, locale copy, and Pricing unchanged.",
+    "page-check passed all nine Features combinations. Four pictures load at every viewport. It reports no hidden, blank, covered, or text-overlapped picture.",
+    "System Chrome returned HTTP 200, one h1, and document width equal to viewport width for all nine Features views. The interaction run recorded no page or console errors.",
+    "Viewed all nine final Features captures. The hierarchy, light bands, dark headings, card spacing, and Thai wrapping remain readable. Empty optional picture slots follow D7 and do not make these pages appear incomplete.",
+    "zh keeps English page copy with Chinese navigation and footer under D4/Q6. This expected default does not create a new layout defect.",
+    "All three native FAQ controls open with Enter and close with Space in every Features view. Focus outlines remain auto. Tab moves from the first FAQ control to the second at 390 in every locale.",
+    "Clicked Tutor and contact links at 390 in each locale. They reached the corresponding locale routes. The hero link reached the programs anchor.",
+    "Header artifact proof: at scrollY 0, 2430, and 3000, the only header has computed position fixed, viewport top 0, and bottom 81. The book heading moves from y=2550.20 to 120.20 to -449.80.",
+    "The viewport-only features-en-1280-header-viewport.png shows the header at the viewport top and the book heading below it. This proves a capture artifact, not a mid-document header defect.",
+    "page-check scrolls pictures into view before its full-page capture. Final features-locale-width.png captures instead await fonts and image decoding, then reset scrollTo(0,0) immediately before capture. No CSS or implementation changes hide the header.",
+    "Pricing received one confirming pass at /en/pricing, width 390. Its four totals are 1,200, 1,800, 2,200, and 2,450 baht. The table fits without horizontal overflow and exposes its caption, column headers, and row headers. Its first FAQ opens and closes by keyboard.",
+    "These are static pages without user input or asynchronous data. No loading or empty-data state applies. The tested routes render without an error state. The audit does not claim a simulated network-failure test.",
+    "The r7 Playwright denials did not recur with the bounded r5/r6 command form. Both browser runs completed. The audit changed no implementation, tests, plans, registry files, or commits.",
+    "This review authorizes the PM look check only. Daniel's Thai, look, push, and deploy gates remain separate. No production behavior is claimed.",
+    "The first role-gate run rejected object entries in accessibility_snapshots. Changed those entries to the required strings. The next role-gate run passed with exit 0.",
+    "Stopped audit server PID 3821905, identified from port 3123. The port is free. Final HEAD remains 351844ce0a2248cef25e536451bf6b785024de2e. git status is clean because Measure run artifacts are ignored; both supplied artifacts exist."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git status --short; git diff c096256a1eb9f41329306533a78aa0108cc6bcff..HEAD; git diff cd50ca035..HEAD",
+    "heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/www-features-pricing/apps/www-reading-advantage && pnpm build' — foreground, 1200000 ms timeout; attempts 1/2 exit 1, attempt 3 exit 0",
+    "pnpm exec next start -p 3123 — audit server only, background; curl /en/features returned 200",
+    "page-check http://localhost:3123/en/features http://localhost:3123/th/features http://localhost:3123/zh/features --out /home/daniebo/.cache/opencode/ux-wfp-r8/ — exit 0",
+    "heavy-run.sh -c with one node -e and chromium.launch({channel:chrome}): nine Features routes/viewports, font/image readiness, scroll reset, final screenshots, accessibility snapshots, image dimensions, h1 and width checks — exit 0",
+    "heavy-run.sh -c with one node -e and system Chrome: nine card measurements, FAQ keyboard checks, locale links, focused card captures, header DOM proof, viewport capture, and one Pricing confirmation — exit 0",
+    "Read the two browser outputs: /home/daniebo/.local/share/opencode/shell/7d1d77917728867cfa3b6948368e41fa3d42bd20/sh_1fd2f0c72001YbPnwdx2RC2tv1.out and sh_1fd3621e5001QWqlQxHLXuj3au.out",
+    "PROJECT_DEV_URL=http://localhost:3123 python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py role-gate --repo /home/daniebo/Desktop/rama-worktrees/www-features-pricing --role ux-browser-review --track www_features_pricing_20261120 --phase 'Phase 4: Browser review and captures' --result-file measure/runs/www_features_pricing_20261120/ux-browser-351844ce0.json --log-file measure/runs/www_features_pricing_20261120/ux-browser-351844ce0.log"
+  ],
+  "changed_files": [
+    "measure/runs/www_features_pricing_20261120/ux-browser-351844ce0.json",
+    "measure/runs/www_features_pricing_20261120/ux-browser-351844ce0.log"
+  ],
+  "confidence": "high",
+  "ux_applicability": "applicable",
+  "webbridge_status": "healthy",
+  "webbridge_evidence": {
+    "engine": "Playwright with system Chrome; page-check",
+    "base_url": "http://localhost:3123",
+    "screenshots": [
+      "/home/daniebo/.cache/opencode/ux-wfp-r8/features-en-390.png",
+      "/home/daniebo/.cache/opencode/ux-wfp-r8/features-th-980.png",
+      "/home/daniebo/.cache/opencode/ux-wfp-r8/features-zh-1280.png",
+      "/home/daniebo/.cache/opencode/ux-wfp-r8/reading-card-en-390.png",
+      "/home/daniebo/.cache/opencode/ux-wfp-r8/features-en-1280-header-viewport.png",
+      "/home/daniebo/.cache/opencode/ux-wfp-r8/pricing-en-390-confirmation.png"
+    ],
+    "accessibility_snapshots": [
+      "/home/daniebo/.local/share/opencode/shell/7d1d77917728867cfa3b6948368e41fa3d42bd20/sh_1fd2f0c72001YbPnwdx2RC2tv1.out — body snapshots for en/th/zh Features at 390, 980, and 1280. One level-1 heading; level-2 section headings; level-3 card headings; named images; lists; named links; native FAQ controls.",
+      "/home/daniebo/.local/share/opencode/shell/7d1d77917728867cfa3b6948368e41fa3d42bd20/sh_1fd3621e5001QWqlQxHLXuj3au.out — /en/pricing table at 390. Named table, caption, three column headers, four row headers, and eight data cells."
+    ],
+    "interactions": [
+      "Features en/th/zh at all widths: Enter opens each FAQ, Space closes it, and focus outline remains visible.",
+      "Features en/th/zh at 390: Tab advances between FAQ controls; Tutor/contact links reach locale routes; hero link reaches #programs.",
+      "Header stays fixed at viewport y=0 through three scroll positions; viewport-only capture confirms the book band stays below it.",
+      "One Pricing confirmation: HTTP 200, four price rows, document width 390, and keyboard FAQ open/close succeeds."
+    ]
+  },
+  "screenshots": [
+    "/home/daniebo/.cache/opencode/ux-wfp-r8/features-en-390.png",
+    "/home/daniebo/.cache/opencode/ux-wfp-r8/features-en-980.png",
+    "/home/daniebo/.cache/opencode/ux-wfp-r8/features-en-1280.png",
+    "/home/daniebo/.cache/opencode/ux-wfp-r8/features-th-390.png",
+    "/home/daniebo/.cache/opencode/ux-wfp-r8/features-th-980.png",
+    "/home/daniebo/.cache/opencode/ux-wfp-r8/features-th-1280.png",
+    "/home/daniebo/.cache/opencode/ux-wfp-r8/features-zh-390.png",
+    "/home/daniebo/.cache/opencode/ux-wfp-r8/features-zh-980.png",
+    "/home/daniebo/.cache/opencode/ux-wfp-r8/features-zh-1280.png",
+    "/home/daniebo/.cache/opencode/ux-wfp-r8/features-en-1280-header-viewport.png",
+    "/home/daniebo/.cache/opencode/ux-wfp-r8/pricing-en-390-confirmation.png"
+  ],
+  "viewport_verdicts": [
+    {"route": "/en/features", "width": 390, "verdict": "pass"},
+    {"route": "/en/features", "width": 980, "verdict": "pass"},
+    {"route": "/en/features", "width": 1280, "verdict": "pass"},
+    {"route": "/th/features", "width": 390, "verdict": "pass"},
+    {"route": "/th/features", "width": 980, "verdict": "pass"},
+    {"route": "/th/features", "width": 1280, "verdict": "pass"},
+    {"route": "/zh/features", "width": 390, "verdict": "pass"},
+    {"route": "/zh/features", "width": 980, "verdict": "pass"},
+    {"route": "/zh/features", "width": 1280, "verdict": "pass"},
+    {"route": "/en/pricing", "width": 390, "verdict": "pass", "scope": "single confirming pass only"}
+  ],
+  "preview_capture_status": "complete: nine final Features captures; scroll reset avoids the fixed-header artifact",
+  "header_verdict": "proven capture artifact; no mid-document header defect",
+  "pm_look_readiness": "ready",
+  "role_gate": {"exit_code": 0, "output": "PASS: ux-browser-review gate passed"},
+  "server_cleanup": "Stopped PID 3821905; port 3123 is free.",
+  "limitations": [
+    "Pricing received one confirming pass, as requested. The earlier full Pricing review remains the broader evidence.",
+    "The audit does not replace Daniel's Thai or look approval.",
+    "The known Next.js security notice remains separate work for the orchestrator."
+  ],
+  "route": "openai/gpt-6.1-sol#high",
+  "facts_changed": []
+}

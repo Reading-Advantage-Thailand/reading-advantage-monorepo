@@ -52,7 +52,7 @@ export const en = {
     title: "In planning",
     badge: "ROADMAP",
     description:
-      "Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready.",
+      "Our school programs bring printed workbooks and digital apps together. A fuller service is in planning; we will share it when it is ready.",
     targetLabel: "Status",
     targetDate: "In planning",
   },
@@ -122,7 +122,7 @@ export const th = {
     title: "อยู่ระหว่างการวางแผน",
     badge: "แผนงาน",
     description:
-      "ปัจจุบันเรามี App-Only และ Blended Learning บริการที่ครบขึ้นอยู่ระหว่างการวางแผน เราจะแจ้งให้ทราบเมื่อพร้อม",
+      "โปรแกรมสำหรับโรงเรียนของเราใช้เวิร์กบุ๊กฉบับพิมพ์ควบคู่กับแอปดิจิทัล บริการที่ครบขึ้นอยู่ระหว่างการวางแผน เราจะแจ้งให้ทราบเมื่อพร้อม",
     targetLabel: "สถานะ",
     targetDate: "อยู่ระหว่างการวางแผน",
   },

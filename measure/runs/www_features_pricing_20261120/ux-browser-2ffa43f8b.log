@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: ux-browser-review
+status: complete
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+commits: none
+tests_run: Production build passed after security-notice retries; page-check passed; 18 Chrome contexts passed automated layout checks; 54 FAQ checks, 12 CTA destinations, six Tab checks, and three anchors passed; UX look failed F3; role-gate exited 1 for F3, with no schema error.
+files_changed: measure/runs/www_features_pricing_20261120/ux-browser-2ffa43f8b.json; measure/runs/www_features_pricing_20261120/ux-browser-2ffa43f8b.log
+plan_updates: none; audit-only role
+known_failures: F3 blocks the PM look check. Large gaps remain outside cards at 980 and 1280 pixels. Next.js also reports a known security vulnerability.
+handoff: F1 and F2 withdrawn. Route F3 to Green: remove row-dependent gaps while preserving copy, card order, full faces, automatic height, and the uncropped Primary ratio. Captures: /home/daniebo/.cache/opencode/ux-wfp-r3/. HEAD remains 2ffa43f8bc84d05f956895417c4f10cc8023c511. Server stopped. Daniel's Thai, look, push, and deploy gates remain closed. Handle the Next.js security recommendation separately. Facts changed: none.
+END_MEASURE_AGENT_RESULT

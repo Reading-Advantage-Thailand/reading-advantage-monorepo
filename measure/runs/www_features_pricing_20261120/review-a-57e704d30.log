@@ -1,0 +1,16 @@
+Gate output, exit 1:
+FAIL: audit status must be pass, got 'fail'; RA4 blocks because missing or invalid required rows render an empty price table.
+FAIL: current phase still has 3 non-deferred incomplete tasks
+
+MEASURE_AGENT_RESULT
+role: review-a
+status: blocked
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+commits: none
+tests_run: targeted Vitest 7 files / 132 tests PASS; heavy-run full suite 88 files / 3086 tests PASS; RA1 3/4/5-row render proof PASS; RA3 mutation guard PASS; RA4 missing-row fixture exposes an empty production table
+files_changed: review-a-57e704d30.json; review-a-57e704d30.log
+plan_updates: none
+known_failures: RA4 blocks: missing or invalid required rows render an empty price table; RA2 stale records remain nonblocking
+handoff: Route RA4 to Green with omitted-row and non-array regression coverage. Reject invalid required rows instead of substituting an empty array. RA1 and RA3 are withdrawn. Reconcile RA2 before acceptance.
+END_MEASURE_AGENT_RESULT

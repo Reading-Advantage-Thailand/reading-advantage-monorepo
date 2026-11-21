@@ -1,7 +1,7 @@
 {
   "schemaVersion": "measure.architecture.v1",
-  "generatedAt": "2026-10-13T05:53:27+08:00",
-  "sourceRevision": "1f77e0087a019a032c29fe42a661064008d209ff",
+  "generatedAt": "2026-11-21T17:39:33+07:00",
+  "sourceRevision": "3e80d3679bcbc519d2a96e624d04f880e6d94efd",
   "projectType": "typescript-monorepo",
   "workspaceRoots": {
     "apps": [
@@ -15,6 +15,7 @@
       "reading-advantage",
       "sales-advantage",
       "science-advantage",
+      "storytime",
       "workbooks",
       "www-reading-advantage"
     ],
@@ -44,6 +45,7 @@
       "knowledge-space-practice",
       "mastery-runtime-compat",
       "practice-core",
+      "read-along",
       "reading-advantage-scripts",
       "sales-knowledge",
       "srs-engine",
@@ -58,5 +60,5 @@
       "worker"
     ]
   },
-  "routeCount": 738
+  "routeCount": 755
 }

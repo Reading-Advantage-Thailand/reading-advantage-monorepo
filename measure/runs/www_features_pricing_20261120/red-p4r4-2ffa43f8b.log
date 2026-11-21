@@ -1,0 +1,16 @@
+MEASURE_AGENT_RESULT
+role: mid-red
+status: red
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+phase_base_sha: c096256a1eb9f41329306533a78aa0108cc6bcff
+role_base_sha: 2ffa43f8bc84d05f956895417c4f10cc8023c511
+baseline_sha: c096256a1eb9f41329306533a78aa0108cc6bcff
+resulting_head: 0d1fd4bff489f50b170ccc3c4d788ee594efffb0
+commits: 0d1fd4bff489f50b170ccc3c4d788ee594efffb0 test(www): pin primary span layout and stacking copy (track_id: www_features_pricing_20261120)
+tests_run: pnpm exec vitest run --maxWorkers=1 src/__tests__/www-features-look-pins.red.test.ts src/__tests__/www-pricing-stacking.red.test.ts -> Test Files 2 failed (2); Tests 22 failed | 10 passed (32); exit 1; no import or config error
+files_changed: apps/www-reading-advantage/src/__tests__/www-features-look-pins.red.test.ts (extended with F3 pins and order/base-column controls); apps/www-reading-advantage/src/__tests__/www-pricing-stacking.red.test.ts (new); measure/tracks/www_features_pricing_20261120/plan.md (tasks 4.5 and 4.6 opened as [~] with Red evidence)
+plan_updates: task 4.5 Red r4 (F3 structural pins) opened as [~] with Red r4 evidence 2026-11-21; task 4.6 Red r4 (FP1 stacking pins, spec v1.2 commits d123d385 f2eee0cf 7330789d 640edec0) opened as [~] with Red r4 evidence 2026-11-21
+known_failures: F3 full-span class -> FAILS at role base (no sm|md|lg col-span, expected); F3 md+ row layout -> FAILS at role base (no md:flex-row, expected); F3 picture width cap -> FAILS at role base (no md+ width cap, expected); FP1 en 7x / th 7x / zh 2x / absence 3x stacking cases -> all FAIL at role base (old five-row copy with 2,700 and replaced stacking lines still live, expected)
+handoff: Green owns two fixes. F3: at md+ span the Primary card across the full grid width, show its picture beside its text in a width-limited column with the ratio kept and no crop, keep the other cards in the two-column grid, card order, and the 390 single column. FP1: apply spec v1.2 section 4 to the pricing locale messages only (S1 body 1, S2 rows 1-4 with note, S3 heading and body 1, S6 body, S9 answer 1, en/th/zh, 5-subject row and 2,700 gone); do not change the features page. Then rerun both Red files plus task 2.6 gates and recapture Phase 4.
+END_MEASURE_AGENT_RESULT

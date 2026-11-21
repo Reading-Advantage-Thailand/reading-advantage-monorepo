@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "role": "review-c",
+  "track": "www_features_pricing_20261120",
+  "phase": "Phase 3: Reviews",
+  "baseline_sha": "38c03ba22a194419fa54f60aca12b6ca59568725",
+  "phase_base_sha": "c096256a1eb9f41329306533a78aa0108cc6bcff",
+  "role_base_sha": "38c03ba22a194419fa54f60aca12b6ca59568725",
+  "audited_head_sha": "38c03ba22a194419fa54f60aca12b6ca59568725",
+  "status": "pass",
+  "contract_applicability": "applicable",
+  "summary": "The route and page contracts pass inspection and the four targeted suites pass. Locale routing, metadata, CTA targets, accessibility markup, price content, and deleted component cleanup match the spec.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "Provenance: git rev-parse HEAD returned 38c03ba22a194419fa54f60aca12b6ca59568725, equal to baseline_sha, role_base_sha, and audited_head_sha. The checkout was clean at audit start.",
+    "Scope: the exact phase diff c096256a1eb9f41329306533a78aa0108cc6bcff..38c03ba22a194419fa54f60aca12b6ca59568725 changes only the www app and the active track spec/plan; git diff --check returned exit 0.",
+    "Applicability: test-strategy.md, Review applicability table, marks Review C applicable for six routes, canonical metadata, locale routing, links, anchors, and removed keys.",
+    "Navigation: src/i18n/routing.ts:3 configures en, th, and zh; src/components/layout/header.tsx:43-48 retains /features and /pricing links; localized navigation uses createNavigation in src/locales/navigation.ts:7.",
+    "Route metadata: both page generateMetadata functions read locale-scoped metadata.title and metadata.description and call buildMarketingMetadata with /features or /pricing. src/lib/seo.ts:8-15 sets the supported locales; :47-61 creates locale-specific canonical, language alternates, Open Graph URL, and locale.",
+    "Links and anchor: features/page.tsx:138 points Find the right program to #programs and the section id is set at :147; the Tutor links use /products/tutor-advantage at features/page.tsx:235 and pricing/page.tsx:173; contact links use /contact at features/page.tsx:306 and pricing/page.tsx:203. The locale-aware Link adapter preserves the selected locale for internal page links.",
+    "Page semantics: each route has one h1 in its hero (features/page.tsx:129; pricing/page.tsx:69). components/features/faq-list.tsx:25-33 uses native details/summary disclosures. components/pricing/subject-price-table.tsx:25-65 renders a table caption, column headers with scope=col, and row headers with scope=row.",
+    "Copy and locale: feature.ts:225 and pricing.ts:243 define zh as English-object spreads; pricing locale rows hold the new values and 3,000 baht floor. The requested content tests include zh rendering, metadata title/description, CTA target, table and image-alt assertions.",
+    "Deleted component/key cleanup: grep -R for ComparisonTable, PricingTable, comparisonTable, and pricingTable under src/ and e2e/ found only the new locale test assertions and an existing explanatory test comment; no deleted component imports or stale runtime readers remain.",
+    "Green look-fix contract delta: features/page.tsx passes optional image props into ProgramCard without an image for unpictured cards; the Mastery panel now uses the mastery square logo with meaningful alt text at :186-195; pricing/page.tsx renders Included copy as list rows with aria-hidden decorative check icons at :118-136. No contract or accessibility defect found in these changes.",
+    "Test command: bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/www-features-pricing/apps/www-reading-advantage && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/__tests__/www-features-pricing.locale.test.ts src/__tests__/www-features-page.content.test.tsx src/__tests__/www-pricing-page.content.test.tsx src/__tests__/www-features-pricing.assets.test.ts' returned Test Files 4 passed (4), Tests 110 passed (110), exit 0.",
+    "Browser review was not run. The dedicated browser reviewer owns that later review phase; this audit checked source and unit-test contracts only."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git status --short -> HEAD 38c03ba22a194419fa54f60aca12b6ca59568725; clean at audit start",
+    "git diff --name-status c096256a1eb9f41329306533a78aa0108cc6bcff..38c03ba22a194419fa54f60aca12b6ca59568725; git diff --check ... -> scoped diff; exit 0",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/www-features-pricing/apps/www-reading-advantage && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 src/__tests__/www-features-pricing.locale.test.ts src/__tests__/www-features-page.content.test.tsx src/__tests__/www-pricing-page.content.test.tsx src/__tests__/www-features-pricing.assets.test.ts' -> 4 files and 110 tests passed; exit 0",
+    "grep -R -n -E 'ComparisonTable|PricingTable|comparisonTable|pricingTable' apps/www-reading-advantage/src apps/www-reading-advantage/e2e -> no stale runtime reader; remaining matches are removal-test assertions and an explanatory test comment"
+  ],
+  "changed_files": [
+    "measure/runs/www_features_pricing_20261120/review-c-38c03ba22.json",
+    "measure/runs/www_features_pricing_20261120/review-c-38c03ba22.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {"axis": "correctness", "score": 5, "evidence": "Both route components use locale-scoped copy and metadata, and the four named suites pass 110 tests."},
+    {"axis": "test_meaning", "score": 4, "evidence": "The named locale and content suites assert routes' metadata, anchors, link targets, markup, prices, zh copy, image rules, and assets."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "The exact phase diff is limited to the www app and the active track spec and plan."},
+    {"axis": "evidence_quality", "score": 5, "evidence": "The audit cites the exact phase diff, source locations, stale-reader scan, and successful 4-file/110-test command result."}
+  ]
+}

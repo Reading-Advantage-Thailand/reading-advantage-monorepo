@@ -671,6 +671,12 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ## Archived Tracks
 
+- [x] **Track: www features and pricing rewrite (A-70, row FP1)** — *created 2026-11-20, archived 2026-11-21*
+  *Link: [./archive/www_features_pricing_20261120/](./archive/www_features_pricing_20261120/)*
+  *Full rewrite of the www /features and /pricing pages in en and th, and the new numbers with English section copy in zh. The copy follows PR's spec www-features-pricing-spec.md v1.2, row FP1 of the www change list, plus the two v1.3 content updates of 2026-11-21.*
+  *Status: done; final acceptance PASS at 3e80d3679bcbc519d2a96e624d04f880e6d94efd (blocking_findings empty); Phase 4 acceptance at 4f3ad5936; 29 tasks done | Feature, PM assignment A-70 (P2) | Owner: Monorepo orchestrator | 10 A-70 Red files 182 tests, full www suite 91 files / 3117 tests, check-types exit 0, ESLint 0 errors, build attempt 2 exit 0, affected-apps www only | UX r8 features and r6 pricing pass, PM look check pass, Daniel approved all Thai 2026-11-21 07:23 per the PM | Daniel said "Deploy" 2026-11-21 17:25 ICT, scope www only, relayed by the PM*
+  *Note: The adversarial test at 4f3ad5936 (adversarial-c2cb6a120.json) passes and closes Review A RA5; 182 A-70 tests are green at HEAD. The doctor.sh architecture-manifest step fails on pre-existing external drift (precedent www_products_photos F10); this track changes no path under packages/. Final acceptance F7 notes that the PR copy spec v1.3 still reserves TH-FP-R2-01 to TH-FP-R2-07 for Daniel's next Thai sitting; the PM confirmed the approval record before the deploy word. The merge, push, CD run and live page check follow in the merge step; this closeout does not push, merge or deploy.*
+
 - [x] **Track: Architecture CI input pin** — *created 2026-11-10, archived 2026-11-19*
   *Link: [./archive/architecture_ci_input_pin_20261110/](./archive/architecture_ci_input_pin_20261110/)*
   *Run the architecture boundary check in CI without the analyzer input snapshot pin comparison, keep the pin and its refresh as a local command, and prove that a new analyzed file that the manifest does not list fails through the report hash binding, with or without a boundary finding.*

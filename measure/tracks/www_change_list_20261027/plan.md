@@ -16,7 +16,7 @@
 
 ## Phase 0: Set-up
 
-- [ ] 0.1 Record the six-field entry format in spec section 4. The orchestrator sends it to the PM. This task only writes the spec. Test: AC-1.
+- [~] 0.1 Record the six-field entry format in spec section 4. The orchestrator sends it to the PM. This task only writes the spec. Test: AC-1.
 - [ ] 0.2 Record the www locale list and the page list in spec section 10, read from `apps/www-reading-advantage`. Test: AC-2.
 - [ ] 0.3 Write the weekly approval page template in spec section 11, with the row fields. Test: AC-3.
 

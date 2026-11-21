@@ -1,0 +1,16 @@
+MEASURE_AGENT_RESULT
+role: mid-red
+status: red
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+phase_base_sha: c096256a1eb9f41329306533a78aa0108cc6bcff
+role_base_sha: 7fb548e5e5432c53b1d37b6a2a14a02bb3d0a091
+baseline_sha: c096256a1eb9f41329306533a78aa0108cc6bcff
+resulting_head: 034b91ecd19d8856071e537d1512a79175ecc61f
+commits: 034b91ecd19d8856071e537d1512a79175ecc61f test(www): pin pictured rows, fluid rows, f2 branch (track_id: www_features_pricing_20261120)
+tests_run: pnpm exec vitest run --maxWorkers=1 src/__tests__/www-features-look-pins.red.test.ts src/__tests__/www-pricing-rows-fluid.red.test.ts -> Test Files 2 failed (2); Tests 6 failed | 13 passed (19); exit 1; no import or config error
+files_changed: apps/www-reading-advantage/src/__tests__/www-features-look-pins.red.test.ts (F3 source pins retargeted to the every-pictured rule, render pins for pictured rows, F2r6 branch guard); apps/www-reading-advantage/src/__tests__/www-pricing-rows-fluid.red.test.ts (new: literal-index source pin, three-row render pins); measure/tracks/www_features_pricing_20261120/plan.md (task 4.7 opened as [~] with Red evidence and defaults D-R6-1/D-R6-2)
+plan_updates: task 4.7 records the Red r6 evidence 2026-11-21 with defaults D-R6-1 (single grid, extend featured to every pictured card) and D-R6-2 (rows from the message array, fixed three columns); task stays [~]
+known_failures: F3r6 no-primary-only wiring -> FAILS at role base (featured={key === primary} live, expected); F3r6 image-driven full width -> FAILS at role base (no image-driven wiring, expected); F3r6 render pictured rows -> FAILS at role base (storytime and reading lack md:col-span-2/md:flex-row, expected); RA1 literal index list -> FAILS at role base ([0,1,2,3] live, expected); RA1 three-row render count + missing marker -> FAIL at role base (four rows with [[missing markers render, expected)
+handoff: Green owns three fixes. F3: at md+ every pictured card is a full-width horizontal row (extend the featured presentation to storytime and reading; keep DOM order, items-start, and the 390 single column; D-R6-1 keeps the single grid). RA1: derive price-table row labels and cells from the locale row array (D-R6-2 keeps the fixed three columns). F2: the branch guard passes because F2 holds; it is the RA3 regression guard (in-memory RA3 mutation flips it fail) and needs no production change unless Green restructures the card. Then rerun both Red files plus the task 2.6 gates and recapture Phase 4. Note: the F2r6 guard row passes at HEAD by design (F2 fixed, UX r4 withdrew it); the round still fails first via the six F3/RA1 rows.
+END_MEASURE_AGENT_RESULT

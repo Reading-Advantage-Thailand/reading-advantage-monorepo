@@ -6,7 +6,6 @@ import thMessages from "@/locales/th";
 import zhMessages from "@/locales/zh";
 import { BlogCard } from "@/components/blog/blog-card";
 import ContactPage from "@/app/[locale]/(marketing)/contact/page";
-import { PricingTable } from "@/components/pricing/pricing-table";
 import type { BlogListItem } from "@/types/blog";
 
 const serverWiring = vi.hoisted(() => ({
@@ -101,25 +100,6 @@ describe("Phase 4 browser regression contracts", () => {
       .soft(
         safeCards,
         "UX-P4-002: related article cards must wrap safely at mobile width",
-      )
-      .toBe(true);
-  });
-
-  it("uses accessible contrast tokens for pricing status text", () => {
-    const rendered = render(<PricingTable />);
-    const statuses = [...rendered.container.querySelectorAll(".coming-soon")];
-    const contrastSafe =
-      statuses.length > 0 &&
-      statuses.every((status) =>
-        /\btext-(?:orange|amber|slate)-(?:700|800|900)\b/.test(
-          status.className,
-        ),
-      );
-
-    expect
-      .soft(
-        contrastSafe,
-        "UX-P4-004: pricing status text needs an accessible contrast token",
       )
       .toBe(true);
   });

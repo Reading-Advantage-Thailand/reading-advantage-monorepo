@@ -75,11 +75,6 @@ const PAGES: PhotoTarget[] = [
     heroSrc: "teacher-and-dashboard.png",
   },
   {
-    name: "pricing",
-    path: "/pricing",
-    heroSrc: "app-on-desktop.png",
-  },
-  {
     name: "about",
     path: "/about",
     heroSrc: "teacher-at-board.png",

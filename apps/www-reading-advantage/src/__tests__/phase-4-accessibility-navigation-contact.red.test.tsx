@@ -7,8 +7,6 @@ import { TableOfContents } from "@/components/blog/table-of-contents";
 import Footer from "@/components/common/footer";
 import { Header } from "@/components/layout/header";
 import { MasteryAdvantageGraph } from "@/components/marketing/mastery-advantage-graph";
-import { ComparisonTable } from "@/components/features/comparison-table";
-import { PricingTable } from "@/components/pricing/pricing-table";
 import { FAQAccordion } from "@/components/ui/faq-accordion";
 import { HorizontalStrip } from "@/components/ui/horizontal-strip";
 import ContactPage from "@/app/[locale]/(marketing)/contact/page";
@@ -132,46 +130,6 @@ describe("Wave 5 Phase 4 accessibility, navigation, and contact contracts", () =
           scrollport.getAttribute("role") === "region" &&
           scrollport.getAttribute("aria-label") === "Scrollable content",
         "RA-P4-002: the horizontal scrollport must be keyboard discoverable and directly named",
-      )
-      .toBe(true);
-    cleanup();
-
-    const pricing = render(<PricingTable />);
-    const checks = [...pricing.container.querySelectorAll(".check")];
-    expect.soft(checks.length).toBeGreaterThan(0);
-    expect
-      .soft(
-        checks.every(
-          (check) =>
-            check.getAttribute("role") === "img" &&
-            Boolean(check.getAttribute("aria-label")),
-        ),
-      )
-      .toBe(true);
-    cleanup();
-
-    const comparison = render(<ComparisonTable />);
-    const markedCells = [...comparison.container.querySelectorAll("td")].filter(
-      (cell) => /^[✔✘⚬]$/.test(cell.textContent?.trim() ?? ""),
-    );
-    expect.soft(markedCells.length).toBeGreaterThan(0);
-    expect
-      .soft(
-        markedCells.every(
-          (cell) => cell.querySelector("[aria-label], .sr-only") !== null,
-        ),
-      )
-      .toBe(true);
-    const semanticMarkLabels = [
-      ...comparison.container.querySelectorAll('[role="img"]'),
-    ].map((mark) => mark.getAttribute("aria-label"));
-    expect
-      .soft(
-        semanticMarkLabels.length > 0 &&
-          semanticMarkLabels.every(
-            (label) => label !== null && !/^[✔✘⚬]$/.test(label),
-          ),
-        "RA-P4-003: comparison marks must use localized semantic labels instead of raw glyphs",
       )
       .toBe(true);
     cleanup();

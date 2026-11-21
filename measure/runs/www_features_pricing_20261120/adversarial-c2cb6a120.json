@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "www_features_pricing_20261120",
+  "phase": "Phase 4: Browser review and captures",
+  "phase_base_sha": "c096256a1eb9f41329306533a78aa0108cc6bcff",
+  "role_base_sha": "c2cb6a120a1274fffb5c76846426a9c8fcb0bbca",
+  "pre_adversarial_head_sha": "c2cb6a120a1274fffb5c76846426a9c8fcb0bbca",
+  "audited_head_sha": "4f3ad5936f0e2c3b1d811725483a83bd271619da",
+  "status": "pass",
+  "verdict": "pass",
+  "summary": "The RA5 crop-fit test gap is closed. The wrapper object-contain to object-cover mutation fails the new assertion; the committed test and full www suite pass.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "Read the track spec, Phase 4 plan, test strategy, anti-pattern catalog, Review A receipt, UX browser receipt, and exact phase diff from c096256a1eb9f41329306533a78aa0108cc6bcff to c2cb6a120a1274fffb5c76846426a9c8fcb0bbca.",
+    "RA5 withdrawn: the committed test now inspects both the Reading picture wrapper and img class strings and rejects object-cover or object-fill on either; the in-memory wrapper mutation failed that assertion.",
+    "The Reading-cover file passes 10 of 10 tests at the unmutated HEAD. Under the wrapper object-contain to object-cover mutation, the named crop-fit assertion fails and 9 controls pass; the source was restored.",
+    "The required full www suite passes: 91 test files and 3117 tests.",
+    "No implementation defect surfaced. Existing Phase 4 pins cover the portrait source ratio, rendered dimensions, deleted locale copy, no empty body, featured row alignment, fluid pricing rows, invalid rows, and locale regressions.",
+    "No graph.db exists in this worktree; build-graph graph verification is skipped.",
+    "The test-only commit is 4f3ad5936f0e2c3b1d811725483a83bd271619da; pre-adversarial HEAD and role_base_sha are c2cb6a120a1274fffb5c76846426a9c8fcb0bbca."
+  ],
+  "commands": [
+    "git rev-parse HEAD before edits -> c2cb6a120a1274fffb5c76846426a9c8fcb0bbca",
+    "pnpm exec vitest run --maxWorkers=1 src/__tests__/www-reading-cover.red.test.ts -> 10 passed (10), exit 0",
+    "Scratch mutation in src/app/[locale]/(marketing)/features/page.tsx changed only [&>img]:object-contain to [&>img]:object-cover; targeted test -> 1 failed | 9 passed (10), exit 1; source restored",
+    "git commit test(www): reject crop fits on reading wrapper (track_id: www_features_pricing_20261120) -> 4f3ad5936f0e2c3b1d811725483a83bd271619da; only the test file committed",
+    "HEAVY_PRIORITY=p2 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/www-features-pricing/apps/www-reading-advantage && CI=true pnpm exec vitest run --maxWorkers=1' -> 91 files and 3117 tests passed, exit 0",
+    "PROJECT_TESTS='cd apps/www-reading-advantage && pnpm exec vitest run --maxWorkers=1 src/__tests__/www-reading-cover.red.test.ts' python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py role-gate --repo /home/daniebo/Desktop/rama-worktrees/www-features-pricing --role adversarial-testing --track www_features_pricing_20261120 --phase 'Phase 4: Browser review and captures' --result-file measure/runs/www_features_pricing_20261120/adversarial-c2cb6a120.json --log-file measure/runs/www_features_pricing_20261120/adversarial-c2cb6a120.log -> PASS: adversarial-testing gate passed"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/www-reading-cover.red.test.ts",
+    "measure/runs/www_features_pricing_20261120/adversarial-c2cb6a120.json",
+    "measure/runs/www_features_pricing_20261120/adversarial-c2cb6a120.log"
+  ],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "The unchanged implementation uses object-contain in features/page.tsx:64, and the whole-cover ratio and full suite pass at 4f3ad5936."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "www-reading-cover.red.test.ts rejects the actual wrapper crop mutation, while 10 baseline tests and the full 3117-test suite pass."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "Commit 4f3ad5936 changes only apps/www-reading-advantage/src/__tests__/www-reading-cover.red.test.ts."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The real wrapper mutation fails the named assertion, and the full www Vitest command reports 91 files and 3117 passing tests."
+    }
+  ]
+}

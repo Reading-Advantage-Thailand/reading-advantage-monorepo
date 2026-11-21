@@ -1,0 +1,15 @@
+MEASURE_AGENT_RESULT
+role: jr-green
+status: PASS
+track: www_features_pricing_20261120
+phase: Phase 2: Green — Red r2 / Green r3 crop round
+phase_base_sha: c096256a1eb9f41329306533a78aa0108cc6bcff
+role_base_sha: 8ea29b7a0facf436db3318f1a8effef00d92aca3
+final_green_head: 54d43357365c0cd82b9ac0fb52bd4d289f87a6c3
+commits: 54d433573 (fix: unresized primary crop), 38c03ba22 (docs: evidence); earlier commits 7eb29d520, ff5ef05d3, aa08865a9, f7d5b3b01, 462c6a7c4, a97305c00, 15991e26f, dd29fb07b, d324198f3 kept.
+tests_run: Assets test `21 passed (21)` exit 0. Four affected Red files `110 passed (110)` exit 0. eslint on 24 changed TypeScript files: 0 errors, 1 ignored-file warning for e2e/photos.spec.ts. `pnpm check-types`: exit 0. Full www suite: `85 Test Files passed`, `3045 Tests passed`, exit 0. `pnpm build`: attempt 1 exit 1 on the Next.js security nudge, attempt 2 exit 0. Heavy-run was blocked by another session's `measure/doctor.sh`, so the gates ran directly, as permitted.
+files_changed: Only apps/www-reading-advantage/public/images/features/primary-lesson-step05.webp regenerated from box 0,190,375,812 with no resize: 375x622, 24.5 KB, aspect drift 0%. The spec image table already carried the r2 box and size from Red. Plan evidence updated; task 1.3 returned to [x]. No test file edited; no next-env.d.ts staged.
+plan_updates: Task 1.3 flipped from [~] back to [x] with Red r2 SHAs 348806df3 and 8ea29b7a0. Tasks 2.1, 2.6 and 2.7 gained r3 evidence. Phase 1 checkpoint moved to 8ea29b7a0facf436db3318f1a8effef00d92aca3 and Phase 2 checkpoint to 54d43357365c0cd82b9ac0fb52bd4d289f87a6c3. No [b] task set; task 5.2 stays [b] deferred:daniel.
+known_failures: No test failure remains. The 375x622 output matches the Red-pinned crop exactly, so no resize and no stretch. Graph callers remain skipped for lack of a fresh graph.db. The first build attempt again stopped on the Next.js security advisory nudge and passed on retry.
+handoff: Viewed crop: the Your Pet Dog lesson card, Step 5 of 14 Deep Reading progress, the Deep Reading button, the highlight instruction and the bottom app bar; no staff preview banner, no staff note, no staff header and no price. Card layout checked in the r3 screenshots: the existing h-48 object-cover frame fills the slot with the shorter image, with no stretch and no letterbox bars. r3 screenshots: /home/daniebo/.cache/opencode/www-fp-shots-r3 (18 PNGs at 390/980/1280 for en/th/zh features and pricing). Server stopped; port 3123 free. Next.js asked that the user be told: "Your version of Next.js is affected by a known security vulnerability" and asked once: "Would you like me to run the 'security' upgrade in the background in a separate Git worktree? I can use the current checkout if you prefer." Latest nudge command: next upgrade --agent=security --internal-nudge-id=e2c678b1-6e5d-408e-94ea-81ffe5db4ad6. Defaults D1–D13 stand; Q1–Q7 await the PM. No push, merge or deploy made.
+END_MEASURE_AGENT_RESULT

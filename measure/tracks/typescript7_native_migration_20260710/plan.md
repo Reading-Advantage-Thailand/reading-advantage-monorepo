@@ -55,7 +55,8 @@
   - [x] Specify benchmark records for elapsed time, RSS, diagnostics, CPU/checkers,
     cache state, and exit status.
   - [x] Specify CI observation records and rollback triggers.
-- [b] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md) (deferred:product-owner)
+- [x] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md)
+  - PM 2026-11-21: not a human gate; closed on the automated evidence of the phase: the Phase 1 checkpoint `476835906` and `phase-1-acceptance-result.json`.
 
 ## Phase 2: vinext 1.x upgrade (PM step 0)
 
@@ -80,7 +81,8 @@
   - Files: the evidence note from Task 1.
   - Done when: the note names the resolved `vinext` and `vite` versions with commands that
     reproduce them (`pnpm why vinext`, `pnpm why vite`).
-- [b] Task: Measure - User Manual Verification 'Phase 2: vinext 1.x upgrade (PM step 0)' (Protocol in workflow.md) (deferred:product-owner)
+- [x] Task: Measure - User Manual Verification 'Phase 2: vinext 1.x upgrade (PM step 0)' (Protocol in workflow.md)
+  - PM 2026-11-21: not a human gate; closed on the automated evidence of the phase: the Phase 2 gate logs and the three review results.
 
 ### Red phase evidence (Mid Red, 2026-11-05)
 
@@ -159,6 +161,23 @@
   sections. `pnpm-workspace.yaml` is unchanged. No deploy ran.
 
 ## Phase 3: TypeScript 7 trial (PM step 1)
+
+> Phase 3 target (PM 2026-11-21): report to the PM by 2026-11-28.
+
+- [ ] Task: Bump vinext 1.2.0 to the latest 1.4.x and adopt the Oxc lessons of the Math test bed.
+  - PM 2026-11-21 (stack modernization): bump vinext 1.2.0 -> latest 1.4.x and adopt the Oxc lessons of the Math test bed (ra-math-advantage measure/archive/vinext-oxc-toolchain_20261114/oxc-evidence.md).
+  - What: find every package that pins vinext 1.2.0. `apps/marketing` and `apps/activity-vinext-fixture` pin it today. `grep` the repo for other manifests, workspace files, and lockfile entries.
+  - Target: vinext 1.4.6, the latest 1.4.x on npm. Check with `npm view vinext versions --json`. Checked 2026-11-21. Change only the pinning manifests and their lockfile entries.
+  - Gates: build each vinext app, run its tests, and run the runtime verify script. Use `heavy-run.sh` at `HEAVY_PRIORITY=p2`. Run one heavy step at a time after 22:00 ICT. Use `--maxWorkers=1` for vitest. Run `apps/marketing/scripts/verify-vinext-runtime.mjs` on the build. It needs HTTP 200 on `/` and HTTP 401 on `/api/campaigns`. Save each exit code and log under `evidence/`.
+  - Oxc lessons from `oxc-evidence.md` sections 6, 8, and 11. Give each lesson a check or a defer decision with a reason.
+    - oxlint: check the root config and zero-warning lint scripts on a seeded finding. Math finds no rule gap, because no ESLint config remains to diff. Record that fact.
+    - oxfmt: check `oxfmt --check` on a pinned exact version with an explicit ignore list. Math uses a format-only commit and a blame-ignore entry. Defer the repo-wide reformat if it is outside this phase, and give the reason.
+    - tsrs: check `TSRS_FAST=1 oxlint --type-aware --type-check` against `tsc` on one compiler line. Use a seeded TS2322 probe. Keep a named `tsc --noEmit` fallback where tsrs differs. Record each fallback and its reason.
+    - Rule gaps and workarounds: record each item of sections 6 and 8 as adopted or deferred with a reason. Name these workarounds: the 1800 s heavy-run cap, the vitest `include` gap, and the missing browser tool. Also name tracked files changed by `vinext build`, the `eslint-config-next` config load, and the dead dependency that reinstalls `next`.
+  - Build time: measure wall time before the bump and after it. Use three runs, the median, no `dist/`, and no concurrent heavy job. Math reports builds 2 to 3 times faster. Record both values with the commands in `evidence/`. A slower result is a finding, not a regression.
+  - Rollback: set the two pins back to 1.2.0. Restore the lockfile entries. Rerun the gates. Keep the rollback command in the evidence note. No deploy and no push.
+  - Evidence class: automated.
+  - Done when: both apps build, test, and pass the runtime verify on 1.4.6. Each Oxc lesson has a check result or a defer with a reason. The before and after times are recorded. No other pin changed.
 
 - [ ] Task: Create the trial worktree with the latest stable TypeScript 7.0.x.
   - What: make a git worktree on a new branch from master. Install the latest stable 7.0.x
