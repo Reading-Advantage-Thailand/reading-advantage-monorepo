@@ -213,7 +213,21 @@ jobs:
       - name: Test
         env:
           COMPANY_IDENTITY_TEST_POSTGRES_CONTAINER: ${{ job.services.postgres.id }}
-        run: pnpm test --filter=science-advantage... --filter=vocabulary-games... --filter=activity-vinext-fixture... --filter=@reading-advantage/architecture-enforcement... --filter=@reading-advantage/knowledge-space-practice... --filter=@reading-advantage/mastery-runtime-compat... --filter=@reading-advantage/scripts... --filter=@reading-advantage/session-service... --filter=@reading-advantage/worker...
+        run: pnpm test --filter=science-advantage... --filter=vocabulary-games... --filter=activity-vinext-fixture... --filter=@reading-advantage/architecture-enforcement... --filter=@reading-advantage/knowledge-space-practice... --filter=@reading-advantage/mastery-runtime-compat... --filter=@reading-advantage/scripts... --filter=@reading-advantage/session-service... --filter=@reading-advantage/worker... --filter='!@reading-advantage/db'
+
+      # Track sales_mastery_consumer_20260810: the two Phase 2 durable Red files
+      # stay in the repository as Red evidence but stay out of the CI run (PM
+      # rule 2026-11-21). A workflow change selects no app, so the exclusion
+      # belongs here and not in packages/db. The four other packages/db
+      # *.red.test.ts guards still run. Run the two files locally with
+      # `pnpm --filter @reading-advantage/db exec vitest run` and the two paths.
+      - name: Test packages/db without the Phase 2 Red evidence files
+        env:
+          COMPANY_IDENTITY_TEST_POSTGRES_CONTAINER: ${{ job.services.postgres.id }}
+        run: >-
+          pnpm --filter @reading-advantage/db exec vitest run
+          --exclude '**/sales-phase2-review-a-durable.red.test.ts'
+          --exclude '**/sales-phase2-transaction-atomicity.red.test.ts'
 
   affected:
     name: Check ${{ matrix.id }}
@@ -292,7 +306,7 @@ jobs:
       - name: Build, lint, type check, and test the app and its dependencies
         env:
           COMPANY_IDENTITY_TEST_POSTGRES_CONTAINER: ${{ job.services.postgres.id }}
-        run: pnpm turbo run build lint check-types test --filter=${{ matrix.id }}...
+        run: pnpm turbo run build lint check-types test --filter=${{ matrix.id }}... --filter='!@reading-advantage/db'
 
       # Track www_products_photos_20261115 (AC-3a): the photo e2e runs against the
       # app built above, so a push that hides or covers a www photo turns this job red.
