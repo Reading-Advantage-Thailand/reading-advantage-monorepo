@@ -63,7 +63,7 @@ describe("ReadingApkGamePage", () => {
   });
 
   it.each([["malformed", "bad"], ["multiple", ["11111111-1111-4111-8111-111111111111"]]])("uses the not-found boundary for a %s challenge identifier", async (_label, challengeId) => {
-    (notFound as jest.Mock).mockImplementation(() => { throw new Error("NEXT_NOT_FOUND"); });
+    jest.mocked(notFound).mockImplementation(() => { throw new Error("NEXT_NOT_FOUND"); });
     await expect(ReadingApkGamePage({
       params: Promise.resolve({ locale: "en", cartridgeId: "wizard-vs-zombie" }),
       searchParams: Promise.resolve({ challengeId }),
@@ -72,7 +72,7 @@ describe("ReadingApkGamePage", () => {
 
   it("uses the normal not-found boundary for an unknown cartridge", async () => {
     mockGetCartridgeCatalogEntry.mockReturnValue(undefined);
-    (notFound as jest.Mock).mockImplementation(() => { throw new Error("NEXT_NOT_FOUND"); });
+    jest.mocked(notFound).mockImplementation(() => { throw new Error("NEXT_NOT_FOUND"); });
 
     await expect(ReadingApkGamePage({
       params: Promise.resolve({ locale: "en", cartridgeId: "unknown" }),
