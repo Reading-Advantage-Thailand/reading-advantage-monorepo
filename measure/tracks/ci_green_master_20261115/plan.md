@@ -205,6 +205,25 @@ Track: `ci_green_master_20261115` (light lane).
     hashes did not move, and no field was added. The full check and the CI-form
     check then both exit 0. A preview refresh reports "no write required".
 
+## CI round 6 (PM 2026-11-22): the apk test type errors
+
+- Part A. Run `44940121776` reached the "Type check" step and reported five errors.
+  Four are in test files and are fixed here:
+  - `app/[locale]/(student)/student/games/apk/[cartridgeId]/page.test.tsx`
+    lines 66 and 75 use `jest.mocked(notFound)` in place of
+    `(notFound as jest.Mock)`.
+  - `app/api/v1/apk/routes.test.ts` lines 145 and 146 assert that both route
+    responses are defined, then narrow them before the status checks.
+  Commit `630cda1b4`. No assertion is weaker.
+- Tests: `routes.test.ts` passes 16 tests and `page.test.tsx` passes 6 tests
+  (Jest, `--runInBand`).
+- Local `check-types` after the fix reports no error in the two test files. The
+  `StudentCartridgeHost.tsx:480` error stays; part B handles it on branch
+  `ci/reading-type-480`.
+- The full `architecture:check` without the flag reported a stale input snapshot,
+  because the two test files are analyzer inputs. The pin refresh runs last on
+  this tree, and only existing fields change.
+
 ## Follow-up (deferred to a later owner)
 
 - [ ] The architecture report pin goes stale on every master push that changes analyzer
