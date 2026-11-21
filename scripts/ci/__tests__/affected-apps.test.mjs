@@ -454,6 +454,41 @@ describe("P1 group A: the acceptance checks of the spec", () => {
     expectIds(result, [], `A1-07 rows=0 changed_files=${changed}`, changed);
   });
 
+  it("A1-08 an eslint-config-only primary change returns no app", () => {
+    const { dir } = workspaceRepo();
+    const configPath = "apps/primary-advantage/eslint.config.mjs";
+    const base = commitChanges(dir, {
+      write: { [configPath]: "export default [];\n" },
+    });
+    const head = commitChanges(dir, {
+      write: {
+        [configPath]: "export default [{ rules: {} }];\n",
+        "apps/primary-advantage/.eslintrc.json": '{\n  "root": true\n}\n',
+        "apps/primary-advantage/.eslintignore": "public/\n",
+      },
+    });
+    const changed = changedFileCount(dir, base, head);
+    expect(changed).toBe(3);
+    const result = runScript(dir, base, head);
+    expectIds(result, [], `A1-08 rows=0 changed_files=${changed}`, changed);
+  });
+
+  it("A1-09 a primary lib change returns primary-advantage", () => {
+    const { dir, sha: base } = workspaceRepo();
+    const head = commitChanges(dir, {
+      write: { "apps/primary-advantage/lib/safe-callback-path.ts": "export const ok = 1;\n" },
+    });
+    const changed = changedFileCount(dir, base, head);
+    expect(changed).toBe(1);
+    const result = runScript(dir, base, head);
+    expectIds(
+      result,
+      ["primary-advantage"],
+      `A1-09 rows=1 changed_files=${changed}`,
+      changed,
+    );
+  });
+
   it("A1-02 a storytime-only change returns storytime", () => {
     const { dir, sha: base } = workspaceRepo();
     const head = commitChanges(dir, {

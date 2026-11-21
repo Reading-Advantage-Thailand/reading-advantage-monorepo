@@ -2,8 +2,8 @@
 /**
  * Print the app ids that a commit range affects.
  *
- * A change that touches only test files affects no app: a test file starts no
- * deploy (per-app CD rule, 2026-11-07).
+ * A change that touches only test files or lint-only config affects no app:
+ * such a file starts no deploy (per-app CD rule, 2026-11-07).
  *
  * Usage: node scripts/ci/affected-apps.mjs --base <sha> --head <sha>
  *
@@ -42,6 +42,12 @@ const GLOBAL_FILES = new Set([".pnpmfile.cjs", ".dockerignore", "turbo.json"]);
 
 /** The file-name suffixes of a test file, which deploys no app. */
 const TEST_FILE_SUFFIXES = [".test.ts", ".test.tsx", ".spec.ts"];
+
+/** The file-name prefixes of a lint-only config, which deploys no app. */
+const LINT_CONFIG_PREFIXES = [".eslintrc", "eslint.config."];
+
+/** The file name of the lint ignore file, which deploys no app. */
+const LINT_IGNORE_FILE = ".eslintignore";
 
 /** The lockfile sections that the script reads entry by entry. */
 const LOCK_ENTRY_SECTIONS = new Set(["importers", "packages", "snapshots", "catalogs", "overrides"]);
@@ -614,25 +620,29 @@ function changedPaths(base, head) {
 }
 
 /**
- * Report whether a path is a test file, which deploys no app.
+ * Report whether a path deploys no app.
  *
- * A path under a `__tests__` folder, or a name that ends with `.test.ts`,
- * `.test.tsx`, or `.spec.ts`, is a test file. The suffix `.red.test.ts`
- * ends with `.test.ts`, so it is a test file too.
+ * A path is non-source when it is a test file or a lint-only config. A test
+ * file is a path under a `__tests__` folder, or a name that ends with
+ * `.test.ts`, `.test.tsx`, or `.spec.ts`; `.red.test.ts` ends with `.test.ts`.
+ * A lint-only config is `.eslintignore` or a name that starts with
+ * `.eslintrc` or `eslint.config.`. Such a file changes no built image.
  *
  * @param {string} path The path relative to the repository root.
- * @returns {boolean} True when the path is a test file.
+ * @returns {boolean} True when the path deploys no app.
  */
-function isTestFile(path) {
+function isNonSourceFile(path) {
   const name = path.slice(path.lastIndexOf("/") + 1);
-  return TEST_FILE_SUFFIXES.some((suffix) => name.endsWith(suffix)) || path.split("/").includes("__tests__");
+  if (path.split("/").includes("__tests__")) return true;
+  if (TEST_FILE_SUFFIXES.some((suffix) => name.endsWith(suffix))) return true;
+  return name === LINT_IGNORE_FILE || LINT_CONFIG_PREFIXES.some((prefix) => name.startsWith(prefix));
 }
 
 /**
  * Compute the app ids that a range affects.
  *
- * A change that touches only test files affects no app, because a test file
- * deploys nothing (per-app CD rule, 2026-11-07).
+ * A change that touches only test files or lint-only config affects no app,
+ * because such a file changes no built image (per-app CD rule, 2026-11-07).
  *
  * @param {string} base The base id.
  * @param {string} head The head id.
@@ -666,7 +676,7 @@ function affectedApps(base, head) {
   const rowPaths = new Set();
   const rootChanged = new Set();
   for (const path of paths) {
-    if (isTestFile(path)) continue;
+    if (isNonSourceFile(path)) continue;
     if (GLOBAL_FILES.has(path)) return allRows();
     if (["package.json", "pnpm-workspace.yaml", "pnpm-lock.yaml"].includes(path)) rootChanged.add(path);
     const parts = path.split("/");
