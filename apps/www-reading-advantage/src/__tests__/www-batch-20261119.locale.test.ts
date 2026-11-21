@@ -215,10 +215,13 @@ describe("www batch 2026-11-19, home roadmap strip (file line 51)", () => {
     expect(read("th", "pages.home.v2.products.roadmapTag")).toBe("อยู่ในแผน");
   });
 
-  it("keeps the zh home roadmap note as it is", () => {
+  it("holds the approved zh roadmap note", () => {
     expect(read("zh", "pages.home.v2.products.roadmapNote")).toBe(
-      "这些产品线在计划中，我们不给出日期。",
+      "在2027学年，泰国小学开设 Science Advantage、Math Advantage 和 Zhongwen Advantage，配套练习册和应用。",
     );
+    const home = readSource("src/locales/pages/home.ts");
+    const zhBlock = home.slice(home.indexOf("export const zh"));
+    expect(zhBlock).not.toContain("这些产品线在计划中，我们不给出日期。");
   });
 });
 

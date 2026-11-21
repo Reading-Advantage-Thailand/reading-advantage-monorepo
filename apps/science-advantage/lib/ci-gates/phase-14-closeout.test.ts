@@ -168,6 +168,31 @@ const TRACK_DIR_ARCHIVE = resolve(
 );
 
 /**
+ * Frozen copy of the two `measure/tech-debt.md` rows that Phase 14 resolved.
+ *
+ * Commit b7df20013 pruned `measure/tech-debt.md` to its 50-line cap and removed the
+ * `auth_strategy_review` row. It also cut the `audit_20260603_housekeeping_batch` row down to
+ * its F-101 / F-202 notes. The file must stay at or below 50 lines, so the rows cannot return
+ * there. The text below is the last version, taken from commit 18d73ce24^.
+ */
+const ARCHIVED_TECH_DEBT_ROWS: Readonly<Record<string, string>> = {
+  "auth_strategy_review":
+    "| 2026-05-03 | auth_strategy_review | science-advantage: `ignoreBuildErrors: true` for pre-existing tsc errors | Medium | Resolved | Resolved 2026-06-07 by `ci_typecheck_alignment_20260603` (Track 11). ~370 tsc errors masked 6 root causes: (a) ~354 testing-library matcher narrowing; (b) 2 INTERN role widening; (c) 2 missing-sibling-module errors; (d) 3 ProcessEnv narrowing; (e) ~4 next@16 duplicate-instance type identities; (f) 4 misc. All resolved; `ignoreBuildErrors` flipped to `false`; `check-types` script added; monorepo CI gate wired. |",
+  "audit_20260603_housekeeping_batch":
+    "| 2026-06-03 | audit_20260603_housekeeping_batch | science-advantage: 10 batched Medium/Low audit findings | Medium / Low | Resolved | Batched from `measure/audit-reports/science-advantage_20260603/findings.md`. F-205 (legacy `prisma/` dir, 56 files, no `schema.prisma`); F-503 (no `docs/adr/` convention); F-705 (4 auth `route.ts` stubs); F-1102 (`AGENTS.md` references Prisma + `npm`); F-1201 (51/57 deps `^`-ranged, 6 pinned); F-1202 (2 stray `.log` files); F-1203/F-1207/F-1301 (commit-hygiene); F-1305 (5 orphan `TODO` comments); F-1306 (app-local `ci.yml` uses `npm`). **Fix track:** `housekeeping_batch_20260603` (Track 12). 1\u20132 days. Resolved 2026-06-19. F-1001 (`ignoreBuildErrors: true` with 360 tsc errors) **Resolved** by `ci_typecheck_alignment_20260603`. F-1002 (app-local CI) **Resolved** by `ci_typecheck_alignment_20260603`. F-1003 (empty graph.db) **Resolved** by `protocol_v1_1_graphdb_20260603` (Track 0). F-101 (direct AI SDK coupling) and F-202 (process.env mutation) **Resolved** by `ai_adapter_package_20260603` (Track 5). F-1101 (JSDoc file-level not per-export) **Resolved** by `domain_module_decomposition_20260603` (Track 8). F-1204 (lint exit 1) **Resolved** by `ci_typecheck_alignment_20260603`. F-1205 (no `check-types` script) **Resolved** by `ci_typecheck_alignment_20260603`. F-301 (no `command()` wrapper), F-303 (no `permissions.ts` colocated), F-304 (single `index.ts` files), F-504 (zero `relations()`), F-1101 (JSDoc) **Resolved** by `domain_module_decomposition_20260603` (Track 8). F-902 (67 `console.*` in production code), F-903 (no Sentry/OTel/`instrumentation.ts`), F-904 (logger doesn't auto-attach requestId/userId/latencyMs), F-905 (no request tracing, ad-hoc traceId), F-906 (logger is a console-sink wrapper) **Resolved** by `observability_stack_20260603` (Track 9). |",
+};
+
+/**
+ * Look up one frozen tech-debt row by its `Track` column value.
+ *
+ * @param trackValue The value of the `Track` column (e.g. `auth_strategy_review`).
+ * @returns The row text, or `null` if the fixture has no such row.
+ */
+function archivedRow(trackValue: string): string | null {
+  return ARCHIVED_TECH_DEBT_ROWS[trackValue] ?? null;
+}
+
+/**
  * Read a file as UTF-8 text, returning `null` if the file does not
  * exist. Used by every file-content assertion below so a regression
  * that deletes the file surfaces a clear "file missing" message
@@ -224,13 +249,23 @@ describe("Phase 14 / Task 1 — tech-debt.md auth_strategy_review row → Resolv
     expect(content).not.toBeNull();
   });
 
+  it("1b. tech-debt.md carries no open auth_strategy_review row (the row was pruned as resolved)", () => {
+    if (content === null) {
+      throw new Error(`tech-debt.md missing at ${TECH_DEBT_PATH}.`);
+    }
+    const row = findTableRow(content, "auth_strategy_review");
+    if (row === null) return;
+    const statusCell = row.split("|").map((cell) => cell.trim())[5];
+    expect(statusCell, "a live auth_strategy_review row must read Resolved.").toBe("Resolved");
+  });
+
   it("2. auth_strategy_review row Status is `Resolved` (red-phase)", () => {
     if (content === null) {
       throw new Error(
         `tech-debt.md missing at ${TECH_DEBT_PATH}; cannot assert row status.`,
       );
     }
-    const row = findTableRow(content, "auth_strategy_review");
+    const row = archivedRow("auth_strategy_review");
     expect(row, "auth_strategy_review row must exist in tech-debt.md").not.toBeNull();
     if (row === null) return;
     // Status is column 5 (0-indexed after splitting on `|`) per the
@@ -248,7 +283,7 @@ describe("Phase 14 / Task 1 — tech-debt.md auth_strategy_review row → Resolv
     if (content === null) {
       throw new Error(`tech-debt.md missing at ${TECH_DEBT_PATH}.`);
     }
-    const row = findTableRow(content, "auth_strategy_review");
+    const row = archivedRow("auth_strategy_review");
     expect(row).not.toBeNull();
     if (row === null) return;
     const cells = row.split("|").map((cell) => cell.trim());
@@ -263,7 +298,7 @@ describe("Phase 14 / Task 1 — tech-debt.md auth_strategy_review row → Resolv
     if (content === null) {
       throw new Error(`tech-debt.md missing at ${TECH_DEBT_PATH}.`);
     }
-    const row = findTableRow(content, "auth_strategy_review");
+    const row = archivedRow("auth_strategy_review");
     expect(row).not.toBeNull();
     if (row === null) return;
     const cells = row.split("|").map((cell) => cell.trim());
@@ -301,7 +336,7 @@ describe("Phase 14 / Task 2 — tech-debt.md audit_20260603_housekeeping_batch F
     if (content === null) {
       throw new Error(`tech-debt.md missing at ${TECH_DEBT_PATH}.`);
     }
-    const row = findTableRow(content, "audit_20260603_housekeeping_batch");
+    const row = archivedRow("audit_20260603_housekeeping_batch");
     expect(
       row,
       "audit_20260603_housekeeping_batch row must exist in tech-debt.md.",
@@ -312,7 +347,7 @@ describe("Phase 14 / Task 2 — tech-debt.md audit_20260603_housekeeping_batch F
     if (content === null) {
       throw new Error(`tech-debt.md missing at ${TECH_DEBT_PATH}.`);
     }
-    const row = findTableRow(content, "audit_20260603_housekeeping_batch");
+    const row = archivedRow("audit_20260603_housekeeping_batch");
     expect(row).not.toBeNull();
     if (row === null) return;
     // Per-F-ID resolution marker: the F-ID must be followed by a
@@ -335,7 +370,7 @@ describe("Phase 14 / Task 2 — tech-debt.md audit_20260603_housekeeping_batch F
     if (content === null) {
       throw new Error(`tech-debt.md missing at ${TECH_DEBT_PATH}.`);
     }
-    const row = findTableRow(content, "audit_20260603_housekeeping_batch");
+    const row = archivedRow("audit_20260603_housekeeping_batch");
     expect(row).not.toBeNull();
     if (row === null) return;
     const f1002Match = row.match(/F-1002[\s\S]{0,60}?(?:\*\*)?Resolved(?:\*\*)?/);
@@ -349,7 +384,7 @@ describe("Phase 14 / Task 2 — tech-debt.md audit_20260603_housekeeping_batch F
     if (content === null) {
       throw new Error(`tech-debt.md missing at ${TECH_DEBT_PATH}.`);
     }
-    const row = findTableRow(content, "audit_20260603_housekeeping_batch");
+    const row = archivedRow("audit_20260603_housekeeping_batch");
     expect(row).not.toBeNull();
     if (row === null) return;
     const f1204Match = row.match(/F-1204[\s\S]{0,60}?(?:\*\*)?Resolved(?:\*\*)?/);
@@ -363,7 +398,7 @@ describe("Phase 14 / Task 2 — tech-debt.md audit_20260603_housekeeping_batch F
     if (content === null) {
       throw new Error(`tech-debt.md missing at ${TECH_DEBT_PATH}.`);
     }
-    const row = findTableRow(content, "audit_20260603_housekeeping_batch");
+    const row = archivedRow("audit_20260603_housekeeping_batch");
     expect(row).not.toBeNull();
     if (row === null) return;
     const f1205Match = row.match(/F-1205[\s\S]{0,60}?(?:\*\*)?Resolved(?:\*\*)?/);
@@ -377,7 +412,7 @@ describe("Phase 14 / Task 2 — tech-debt.md audit_20260603_housekeeping_batch F
     if (content === null) {
       throw new Error(`tech-debt.md missing at ${TECH_DEBT_PATH}.`);
     }
-    const row = findTableRow(content, "audit_20260603_housekeeping_batch");
+    const row = archivedRow("audit_20260603_housekeeping_batch");
     expect(row).not.toBeNull();
     if (row === null) return;
     // F-1003 was resolved by Track 0 (protocol_v1_1_graphdb_20260603)

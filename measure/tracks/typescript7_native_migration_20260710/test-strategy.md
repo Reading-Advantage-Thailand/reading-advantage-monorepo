@@ -485,6 +485,12 @@ The orchestrator records its output with the decision.
 
 The full section comes before Phase 3 starts. These points are fixed now.
 
+**New Phase 3 task (PM 2026-11-21).**
+
+| Task | Check | Evidence class | Report |
+| --- | --- | --- | --- |
+| Bump vinext 1.2.0 to the latest 1.4.x and adopt the Oxc lessons of the Math test bed. | Build, tests, and the runtime verify script of each vinext app under `heavy-run.sh` at `HEAVY_PRIORITY=p2`. One check or defer reason per Oxc lesson, and before and after build times. | automated | PM by 2026-11-28 |
+
 **Baseline facts that shape the method.**
 
 - `compiler-baseline.json` and `phase1-workspace-baseline.json` give wall time per workspace but
