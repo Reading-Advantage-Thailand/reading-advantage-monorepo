@@ -141,12 +141,19 @@ function cardEntry(key: string): Record<string, string> {
 }
 
 /** Returns width/height attributes of the rendered reading image. */
-function renderedReadingSize(): { width: number; height: number; className: string; alt: string } {
+function renderedReadingSize(): {
+  width: number;
+  height: number;
+  className: string;
+  pictureClassName: string;
+  alt: string;
+} {
   const image = document.querySelector('[data-testid="program-card-reading"] img');
   return {
     width: Number(image?.getAttribute("width") ?? "0"),
     height: Number(image?.getAttribute("height") ?? "0"),
     className: image?.getAttribute("class") ?? "",
+    pictureClassName: image?.parentElement?.getAttribute("class") ?? "",
     alt: image?.getAttribute("alt") ?? "",
   };
 }
@@ -223,18 +230,13 @@ describe("F4: the rendered reading picture is not cropped", () => {
     ).toBeLessThanOrEqual(0.01);
   });
 
-  it("control: the rendered reading image uses no object-cover crop", () => {
-    const className = renderedReadingSize().className;
-    const crops =
-      className.includes("object-cover") || className.includes("object-fill");
-    const keepsRatio =
-      className.includes("h-auto") ||
-      className.includes("object-contain") ||
-      /aspect-\[/.test(className);
+  it("control: neither the reading picture wrapper nor image applies a crop fit", () => {
+    const { className, pictureClassName } = renderedReadingSize();
+    const pictureClasses = `${pictureClassName} ${className}`;
     expect(
-      crops && !keepsRatio,
-      `reading image crops (class: ${className})`,
-    ).toBe(false);
+      pictureClasses,
+      `reading picture wrapper or image uses a crop fit (classes: ${pictureClasses})`,
+    ).not.toMatch(/object-(?:cover|fill)/);
   });
 });
 
