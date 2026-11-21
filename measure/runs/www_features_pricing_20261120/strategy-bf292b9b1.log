@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: strategy
+status: pass
+track: www_features_pricing_20261120
+phase: all phases
+commits: c096256a1 docs(measure): refresh www pricing test strategy
+tests_run: git diff --check (pass); strategy/spec/plan/anti-pattern review; no product tests run (documentation-only)
+files_changed: measure/tracks/www_features_pricing_20261120/test-strategy.md
+plan_updates: none
+known_failures: none
+handoff: After this strategy commit and before Phase 1 Red, capture immutable phase_base_sha from `git rev-parse HEAD`; do not reuse role_base_sha. Review B is not applicable; Reviews A/C, adversarial tests, and 390/980/1280 browser review apply. Master push is Daniel-gated because it deploys www live.
+END_MEASURE_AGENT_RESULT

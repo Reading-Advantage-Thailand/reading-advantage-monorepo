@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: ux-browser-review
+status: complete
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+commits: none
+tests_run: Build passed on attempt 3; page-check passed nine Features views; system Chrome checks passed; one Pricing confirmation passed; role-gate passed after an artifact schema correction.
+files_changed: measure/runs/www_features_pricing_20261120/ux-browser-351844ce0.json; measure/runs/www_features_pricing_20261120/ux-browser-351844ce0.log
+plan_updates: none
+known_failures: No UX finding remains. The known Next.js security notice stays separate work for the orchestrator.
+handoff: F4 withdrawn. Ready for the PM look check. Nine final captures: /home/daniebo/.cache/opencode/ux-wfp-r8/features-<locale>-<width>.png. Scroll resets before capture avoid the fixed-header artifact. DOM checks and a viewport-only capture prove the header stays at the viewport top. Server stopped; port 3123 is free; HEAD unchanged. Daniel's Thai, look, push, and deploy gates remain separate. The branch and worktree stay until the orchestrator completes the merge. Other branches remain outside this audit. Facts changed: none.
+END_MEASURE_AGENT_RESULT

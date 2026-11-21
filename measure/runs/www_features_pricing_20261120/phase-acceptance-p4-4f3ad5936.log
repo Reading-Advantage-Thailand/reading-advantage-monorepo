@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: phase-acceptance
+status: complete
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+commits: none
+tests_run: A-70 Red files 10 files / 182 tests PASS (subsets 62, 72, 110 PASS); full www suite 91 files / 3117 tests PASS (heavy-run); pnpm check-types exit 0 (heavy-run); ESLint on 29 changed files 0 errors exit 0; 23 scratch mutations: 22 caught, 1 documented escape (390 px cap)
+files_changed: measure/runs/www_features_pricing_20261120/phase-acceptance-p4-4f3ad5936.json; measure/runs/www_features_pricing_20261120/phase-acceptance-p4-4f3ad5936.log; git-ignored scratch folder measure/runs/www_features_pricing_20261120/scratch-p4-accept (delete)
+plan_updates: none (audit only); the orchestrator records the items listed in handoff
+known_failures: none blocking; 8 nonblocking findings F1-F8 in the JSON; the 390 px cap of the Reading cover has no automated pin (browser review owns it)
+handoff: ACCEPTED at HEAD 4f3ad5936f0e2c3b1d811725483a83bd271619da (phase_base_sha c096256a1eb9f41329306533a78aa0108cc6bcff, role_base_sha 4f3ad5936f0e2c3b1d811725483a83bd271619da); allowed later commits: c2cb6a120 (plan.md only) and 4f3ad5936 (test only); Review A r5 and UX r8 at 351844ce0 still apply. Orchestrator should record in plan.md: (1) [checkpoint: 4f3ad5936f0e2c3b1d811725483a83bd271619da] on the Phase 4 heading; (2) RA5 closed by adversarial-c2cb6a120.json at 4f3ad5936 in task 4.2, and name ux-browser-4ccf4c879.json as the Pricing verdict; (3) fix the task 4.1 capture-folder text, mark the task 4.9 cover claim superseded by 4.10, and delete the repeated line 90; (4) update spec.md FR-3, the section 7 image table, and AC-7 for the Reading cover (D-R8-1, D-R9-1) and decide on the unused reading-article-selection.webp; (5) resolve Phase 3 tasks 3.3 and 3.4 and add the Phase 3 checkpoint before task 5.1; (6) record at 5.1 that git worktree list shows www-features-pricing at 4f3ad5936 on www/features-pricing-a70 with no origin branch. Task 5.2 stays deferred:daniel. Delete the scratch folder: rm -rf /home/daniebo/Desktop/rama-worktrees/www-features-pricing/measure/runs/www_features_pricing_20261120/scratch-p4-accept (the shell denied it to this role). No push, merge, or deploy done.
+END_MEASURE_AGENT_RESULT

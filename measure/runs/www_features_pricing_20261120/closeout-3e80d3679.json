@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "role": "closeout",
+  "track": "www_features_pricing_20261120",
+  "phase": "closeout",
+  "status": "pass",
+  "summary": "Track www_features_pricing_20261120 closes at final-acceptance head 3e80d3679. The audited head equals the pre-closeout HEAD. Every plan task is [x]. The track is archived, the registry row and metadata match, the source is v1.2 with the v1.3 updates recorded, and the closeout manifest is in the archive. No test or script hardcodes the old track path (A9). The doctor.sh architecture step fails on pre-existing external drift and is waived with the www_products_photos F10 precedent.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F1 [Nit] doctor.sh exits 1 on the architecture-manifest step ('Analyzer input snapshot hash does not match current bytes'). External, with the www_products_photos F10 precedent; this track changes no path under packages/. Owner: architecture_ci_input_pin_20261110.",
+    "F4 [Nit] three unused-symbol ESLint warnings remain in the A-70 Red tests, 0 errors, exit 0. Retained in the final-acceptance evidence and the archived registry note.",
+    "F5 [Nit] review-a-351844ce0.json keeps stale retry_audit and blocked values. RA5 is closed at 4f3ad5936 by adversarial-c2cb6a120.json.",
+    "F6 [Nit] Phases 1 to 3 have no dedicated phase-acceptance artifacts. Role gates, reviews and the Phase 4 whole-range acceptance cover them.",
+    "F7 [Nit] the PR spec v1.3 status line still reserves TH-FP-R2-01 to TH-FP-R2-07 for Daniel's next Thai sitting. The PM confirmed the all-Thai approval record of 2026-11-21 07:23 and the deploy word of 17:25 ICT before this closeout."
+  ],
+  "evidence": [
+    "Provenance: final-acceptance-3e80d3679.json audited_head_sha is 3e80d3679bcbc519d2a96e624d04f880e6d94efd, equal to git rev-parse HEAD at role start; the tree was clean.",
+    "Final acceptance status pass, blocking_findings empty; Phase 4 acceptance phase-acceptance-p4-4f3ad5936.json status pass at 4f3ad5936.",
+    "Plan markers before closeout: 31 [x], 0 [~], 1 [ ] (5.1), 1 [b] (5.2 deferred:daniel). After closeout: 31 [x] and no [~], [ ] or [b]. Every top-level task of the last phase carries a commit SHA on its line.",
+    "Task 5.1 evidence in plan.md: final-acceptance-3e80d3679.json PASS with 182 Red tests in 10 A-70 files, 91 files / 3117 tests, check-types exit 0, ESLint 0 errors, build attempt 2 exit 0, affected-apps ['www-reading-advantage']. Phase 5 heading carries [checkpoint: 3e80d3679bcbc519d2a96e624d04f880e6d94efd].",
+    "Task 5.2 evidence in plan.md: Daniel said 'Deploy' on 2026-11-21 17:25 ICT, relayed by the PM, scope www only. The PM look check passed. Daniel approved all Thai on 2026-11-21 07:23 per the PM, who confirmed the record before the word. The merge, push, CD run and live page check follow in the merge step and are recorded by the orchestrator in the PM report.",
+    "A5: no PASS=N/FAIL=0 or 'all checks pass' text in plan.md or spec.md; the recorded counts match the final-acceptance reruns.",
+    "A6: the old registry row understated the state. The new archived row states the adversarial pass at 4f3ad5936 (adversarial-c2cb6a120.json), the 182 green A-70 tests at HEAD, and the external doctor.sh architecture failure. No resolved-state claim outruns a red test.",
+    "A9 before the move: repo-wide grep for measure/tracks/www_features_pricing_20261120/ found hits only in this track's own plan.md and in historical measure/runs evidence. Zero hits in tests, scripts or support files.",
+    "A9 after the move: grep over tests, scripts and measure found 0 hits. No test reference needed a fix; no test change is outside closeout scope.",
+    "Post-move project test gate through the heavy-run wrapper: HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/www-features-pricing && bash measure/doctor.sh' -> exit 1 on the architecture step only. Summary lines: PASS: A12/A13 guard declarations and archive directories verified (6 guards); PASS: measure anti-pattern catalog exists with A1-A15; PASS: all active track plans use only [ ], [~], [x], or [b] task markers (92 plans checked); PASS: executed review tracks are not fully blocked by deferred:review-execution; Architecture check failed: V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes; ARCHITECTURE: step 4 exits 1; this is a tool failure, not a boundary verdict; DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1.",
+    "Generator freshness: the generated facts were stale at HEAD (sourceRevision 1f77e0087a from 2026-10-13, routeCount 738). generate.sh refreshed measure/generated/architecture.json and measure/generated/routes.md to 3e80d3679 (routeCount 755, with storytime, read-along and 17 later routes). Both files were staged before the gate, so bash measure/generate.sh && git diff --quiet measure/generated/ passed through the heavy-run wrapper with no leftover diff. This is the A10 drift class; both refreshed files are part of the closeout commit.",
+    "Closeout role gate: PASS: closeout gate passed, exit 0, after the four plan SHAs were added and the generated files were staged.",
+    "Archive: git mv moved measure/tracks/www_features_pricing_20261120/ to measure/archive/www_features_pricing_20261120/. The old path no longer exists. The archived row in measure/tracks.md uses the ./archive/ link and its description matches metadata.json exactly.",
+    "Metadata: status done, previous_status planned, completed 2026-11-21, completed_at 2026-11-21T00:00:00Z, archived_at 2026-11-21, source_of_truth.spec_version 1.2 with spec_commit d123d385 and the v1.2 commit list, actual_tasks 29.",
+    "Lessons learned and tech debt stay unchanged. The tech-debt registry is at its 50-line cap; the open F4, F5 and F7 nits stay in this evidence and the archived registry note, and F1 stays with architecture_ci_input_pin_20261110.",
+    "Artifact cleanup: no bulky run artifact was deleted because the orchestrator named none. Final acceptance, Phase 4 acceptance and every Red/Green/review/UX artifact under measure/runs/www_features_pricing_20261120/ are retained and committed with the archive."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> 3e80d3679bcbc519d2a96e624d04f880e6d94efd; git status --short -> clean",
+    "grep -rn --include='*.sh' --include='*.py' --include='*.mjs' --include='*.js' --include='*.ts' 'measure/tracks/www_features_pricing_20261120/' tests scripts measure -> 0 hits before and after the move",
+    "grep -rn --exclude-dir=.git --exclude-dir=node_modules 'measure/tracks/www_features_pricing_20261120/' . -> only this track's plan.md and historical measure/runs evidence",
+    "git mv measure/tracks/www_features_pricing_20261120 measure/archive/www_features_pricing_20261120 -> old path absent",
+    "HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/www-features-pricing && bash measure/doctor.sh' -> exit 1 on the external architecture step; three structural steps PASS",
+    "git add measure/generated/architecture.json measure/generated/routes.md -> staged refreshed generated facts",
+    "env GENERATED_CHECK_COMMAND='bash measure/generate.sh && git diff --quiet measure/generated/' PROJECT_GATE_TIMEOUT_SECONDS=1200 python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py role-gate --repo /home/daniebo/Desktop/rama-worktrees/www-features-pricing --role closeout --track www_features_pricing_20261120 --result-file measure/runs/www_features_pricing_20261120/closeout-3e80d3679.json --log-file measure/runs/www_features_pricing_20261120/closeout-3e80d3679.log --runner /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -> PASS: closeout gate passed, exit 0"
+  ],
+  "changed_files": [
+    "measure/tracks.md",
+    "measure/archive/www_features_pricing_20261120/metadata.json",
+    "measure/archive/www_features_pricing_20261120/plan.md",
+    "measure/archive/www_features_pricing_20261120/automation-supervisor-closeout-manifest.json",
+    "measure/runs/www_features_pricing_20261120/closeout-3e80d3679.json",
+    "measure/runs/www_features_pricing_20261120/closeout-3e80d3679.log",
+    "measure/generated/architecture.json",
+    "measure/generated/routes.md",
+    "measure/archive/www_features_pricing_20261120/plan.md (four earlier [x] tasks received real commit SHAs)"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

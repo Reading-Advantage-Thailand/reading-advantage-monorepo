@@ -1,0 +1,16 @@
+MEASURE_AGENT_RESULT
+role: mid-red
+status: red
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+phase_base_sha: c096256a1eb9f41329306533a78aa0108cc6bcff
+role_base_sha: 57e704d30ab381e6b31b679a790f617939bcb795
+baseline_sha: c096256a1eb9f41329306533a78aa0108cc6bcff
+resulting_head: d5147a628c7caf048504a01db569ba7fbca304b3
+commits: d5147a628c7caf048504a01db569ba7fbca304b3 test(www): pin required pricing rows with real translator (track_id: www_features_pricing_20261120)
+tests_run: pnpm exec vitest run --maxWorkers=1 src/__tests__/www-pricing-required-rows.red.test.ts -> Test Files 1 failed (1); Tests 3 failed | 4 passed (7); exit 1; no import or config error
+files_changed: apps/www-reading-advantage/src/__tests__/www-pricing-required-rows.red.test.ts (new: RA4 omitted/string/object rows reject, 3- and 4-row regression renders, real next-intl createTranslator); measure/tracks/www_features_pricing_20261120/plan.md (task 4.8 opened as [~] with Red evidence, default D-R7-1, stub note for Green)
+plan_updates: task 4.8 records the Red r7 evidence 2026-11-21 with default D-R7-1 (throw on missing or invalid subjects.rows; matches the page's existing loud missing-message behavior; no unapproved copy) and the note that phase-4-browser-regressions-remaining.red.test.tsx renders PricingPage through a stub without raw that Green must update; task stays [~]
+known_failures: RA4 omitted rows reject -> FAILS at role base (page resolves to zero rows, expected); RA4 string rows reject -> FAILS at role base (empty-array fallback live, expected); RA4 object rows reject -> FAILS at role base (empty-array fallback live, expected)
+handoff: Green replaces the empty-array fallback at pricing/page.tsx:41-45 with a throw on missing or non-array subjects.rows (default D-R7-1; do not invent visible copy); updates the raw-less translator stub in phase-4-browser-regressions-remaining.red.test.tsx to expose the row array without touching its pins; then reruns the required-rows file plus the task 2.6 gates. Note: the two valid-array regression rows pass at HEAD by design (Green r6 fluid behavior holds); the round still fails first via the three RA4 rows.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,16 @@
+MEASURE_AGENT_RESULT
+role: mid-red
+status: red
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+phase_base_sha: c096256a1eb9f41329306533a78aa0108cc6bcff
+role_base_sha: 38c03ba22a194419fa54f60aca12b6ca59568725
+baseline_sha: c096256a1eb9f41329306533a78aa0108cc6bcff
+resulting_head: ae5dad351e7b4e6bb1942aa80724c616b076a0a8
+commits: ae5dad351e7b4e6bb1942aa80724c616b076a0a8 test(www): pin storytime crop and codecamp stretch (track_id: www_features_pricing_20261120)
+tests_run: pnpm exec vitest run --maxWorkers=1 src/__tests__/www-features-look-pins.red.test.ts -> Test Files 1 failed (1); Tests 2 failed | 3 passed (5); exit 1; no import or config error
+files_changed: apps/www-reading-advantage/src/__tests__/www-features-look-pins.red.test.ts (new); measure/tracks/www_features_pricing_20261120/plan.md (task 4.4 opened as [~] with Red evidence)
+plan_updates: task 4.4 Red r3 opened as [~] under Phase 4 with Red r3 evidence 2026-11-21
+known_failures: F1 uses no object-fit crop without a matching explicit aspect ratio -> FAILS at role base (class h-48 w-full object-cover object-top, expected); F2 does not stretch imageless cards to the row height -> FAILS at role base (article h-full, grid without items-start, expected)
+handoff: Green owns the F1/F2 fixes: give the program-card image intrinsic height with no object-cover/object-fill crop (or an explicit aspect ratio matching the source within 1%), and give text-only cards automatic height (drop h-full without self-start, or set the programs grid to items-start); then rerun the look-pins file plus task 2.6 gates and recapture Phase 4
+END_MEASURE_AGENT_RESULT

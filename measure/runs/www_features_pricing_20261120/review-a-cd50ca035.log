@@ -1,0 +1,15 @@
+Gate output, exit 1:
+FAIL: current phase still has 3 non-deferred incomplete tasks
+
+MEASURE_AGENT_RESULT
+role: review-a
+status: blocked
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+commits: none
+tests_run: targeted Vitest 9 files / 172 tests PASS; heavy-run type-check PASS; full suite 90 files / 3107 tests PASS; real-translator locale renders PASS; missing-cover guard PASS
+files_changed: review-a-cd50ca035.json; review-a-cd50ca035.log
+plan_updates: none
+known_failures: no correctness findings; Phase 4 tasks 4.1-4.3 remain pending
+handoff: The PM changes pass the correctness audit. No unrelated pin weakened. Complete browser review and the PM handoff, then rerun the role gate. Owner approvals remain separate.
+END_MEASURE_AGENT_RESULT

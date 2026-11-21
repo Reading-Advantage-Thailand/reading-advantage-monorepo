@@ -1,12 +1,16 @@
 {
   "track_id": "www_features_pricing_20261120",
   "type": "feature",
-  "status": "planned",
+  "status": "done",
+  "previous_status": "planned",
   "created": "2026-11-20",
   "created_at": "2026-11-20T00:00:00Z",
-  "updated_at": "2026-11-20T00:00:00Z",
+  "completed": "2026-11-21",
+  "completed_at": "2026-11-21T00:00:00Z",
+  "archived_at": "2026-11-21",
+  "updated_at": "2026-11-21T00:00:00Z",
   "priority": "medium",
-  "description": "Full rewrite of the www /features and /pricing pages in en and th, and the new numbers with English section copy in zh. The copy is word for word from PR's spec www-features-pricing-spec.md v1.0, row FP1 of the www change list.",
+  "description": "Full rewrite of the www /features and /pricing pages in en and th, and the new numbers with English section copy in zh. The copy follows PR's spec www-features-pricing-spec.md v1.2, row FP1 of the www change list, plus the two v1.3 content updates of 2026-11-21.",
   "owner_chain": [
     "Daniel (owner; Thai check; look check; deploy gate)",
     "PM orchestrator (assignment A-70, priority P2, behind A-71)",
@@ -15,8 +19,10 @@
   "requested_by": "Daniel, Google Tasks V28tU2lwdE9QUS1WVU5vdQ, 2026-11-20 18:04: \"We need to update the old www pages on features and pricing now that we have more apps and different pricing\". Daniel, 2026-11-20 18:4x, via the PM: \"When I say 'We need to update the old www pages on features and pricing' I mean an entire rewrite.\"",
   "source_of_truth": {
     "spec": "/home/daniebo/Desktop/advantage-pr/11-content/www-features-pricing-spec.md",
-    "spec_version": "1.0",
-    "spec_commit": "c54d2742",
+    "spec_version": "1.2",
+    "spec_commit": "d123d385",
+    "spec_v1_2_commits": ["d123d385", "f2eee0cf", "7330789d", "640edec0"],
+    "spec_v1_3_updates": "Two content updates of 2026-11-21 are implemented and pinned at HEAD by tasks 4.9 and 4.10: the deleted Reading body line and the whole Origins 2 cover. Final acceptance F7 records that the PR spec v1.3 status line still reserves TH-FP-R2-01 to TH-FP-R2-07 for Daniel's next Thai sitting.",
     "change_list_row": "FP1 in /home/daniebo/Desktop/advantage-pr/11-content/www-change-list.md v1.63",
     "thai_check_page": "/home/daniebo/Desktop/advantage-pr/11-content/thai-check/2026-11-20-features-pricing.html"
   },
@@ -36,5 +42,6 @@
     "No new hash, checksum field or provenance file (AGENTS.md hashing policy)."
   ],
   "estimated_tasks": 22,
-  "deviation_notes": "A new track and not a phase of the standing track www_change_list_20261027. The standing track excludes new design, new pages and new images, and its weekly template (W.1 to W.6) has no review or browser gate. FP1 is a layout rewrite with new sections and new pictures."
+  "actual_tasks": 29,
+  "deviation_notes": "A new track and not a phase of the standing track www_change_list_20261027. The standing track excludes new design, new pages and new images, and its weekly template (W.1 to W.6) has no review or browser gate. FP1 is a layout rewrite with new sections and new pictures. Closed 2026-11-21 at final acceptance HEAD 3e80d3679; the merge, push, CD run and live page check follow in the orchestrator merge step."
 }

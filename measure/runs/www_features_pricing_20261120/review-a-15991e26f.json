@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "role": "review-a",
+  "track": "www_features_pricing_20261120",
+  "phase": "Phase 3: Reviews",
+  "baseline_sha": "15991e26f59724e71b428c15b1db98f6e34a9a06",
+  "phase_base_sha": "c096256a1eb9f41329306533a78aa0108cc6bcff",
+  "role_base_sha": "15991e26f59724e71b428c15b1db98f6e34a9a06",
+  "audited_head_sha": "15991e26f59724e71b428c15b1db98f6e34a9a06",
+  "status": "pass",
+  "summary": "No blocking correctness or architecture defect was found in the phase diff. Required copy, price, removed-claim, caller, and test checks pass. Four visual concerns remain for the planned browser-review role; none violates an explicit functional acceptance criterion by itself.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "[Medium] Review A: apps/www-reading-advantage/public/images/features/primary-lesson-step05.webp (spec.md:117; plan.md:51,69) | The provided screenshot shows a Student preview / Exit preview banner. Spec.md:117 names the source as the student-preview screen and does not require its removal, while plan.md:51 and :69 broadly ask the image/look reviewers to reject banners. Treat this as a planned visual review question, not a confirmed FR-3 defect; check the source crop against the intended page before acceptance.",
+    "[Low] Review A: apps/www-reading-advantage/src/components/features/program-card.tsx:49-55 (spec.md:107; plan.md:69) | The no-photo cards render a large blank panel and a white square. D7 says to show no picture when no fitting asset exists; this has no broken-image violation, but it may look like an unfinished image placeholder. The browser reviewer should decide whether the empty treatment meets the specified text-first layout.",
+    "[Low] Review A: apps/www-reading-advantage/src/app/[locale]/(marketing)/pricing/page.tsx:122-129 (source spec §4 S4, lines 252-253) | The three included-benefit tiles use text-sm. The copy and count match the source, and the spec sets no font-size minimum; the reported tiny appearance is a readability concern for the browser reviewer, not a proven contract failure.",
+    "[Low] Review A: apps/www-reading-advantage/src/app/[locale]/(marketing)/features/page.tsx:185-193 (source spec §3 S3, lines 146-149; spec.md:107) | The Mastery Advantage panel uses three plain color bars rather than an identifiable workbook-and-knowledge-map illustration. D7 also directs text-first rendering when no suitable image exists, so this is a visual-fit question for the browser reviewer, not a confirmed functional failure."
+  ],
+  "evidence": [
+    "Provenance: git rev-parse HEAD is 15991e26f59724e71b428c15b1db98f6e34a9a06, equal to audited_head_sha and role_base_sha. Audited exactly c096256a1eb9f41329306533a78aa0108cc6bcff..15991e26f59724e71b428c15b1db98f6e34a9a06. git status was clean before artifact creation; git diff --check exits 0.",
+    "The exact phase diff changes 35 files, all in apps/www-reading-advantage and the active track plan. It changes no orchestration script, contract-test framework, or registry; framework-wide anti-pattern checks do not apply.",
+    "python3 -I /home/daniebo/.cache/opencode/www-features-pricing/fixture-check.py exits 0: 0 fixture EN strings missing from the PR spec, 0 fixture TH strings missing from the Thai check page, and 0 Thai check-page strings missing from the fixture. It reports 24 trailing Thai periods in the draft spec; that is report-only under D5 and the plan.",
+    "The full suite run directly from apps/www-reading-advantage passes 85 files and 3040 tests, exit 0. The required heavy-run wrapper attempt timed out without output; the direct run after timeout completed successfully.",
+    "pnpm check-types from apps/www-reading-advantage exits 0.",
+    "The assets test checks statSync for each planned file and readFileSync for format and dimensions; phase 1 Red evidence records 12 expected ENOENT failures when the planned files were absent. This is a non-vacuous missing-deliverable guard.",
+    "The FR-16 locale scan finds no removed strings in src/locales/. Remaining comparisonTable/pricingTable text is limited to the new removal test and one test comment. Changed page locale objects use zh = { ...en }; the locale tests pass exact English/Thai fixture checks, price rows, metadata, zh copy, and removed-string guards.",
+    "The scope audit of old tests matches plan task 2.5: removed only deleted-table-specific imports/cases and obsolete block 1I; the remaining legal guarantee/zero-risk cases and non-table checks stay. phase-2-seo-assets.red.test.ts retains about.hero.* while reading feature/pricing metadata.*. No unrelated assertion removal was found in the listed test diffs.",
+    "build-graph scanned the app into /home/daniebo/.cache/opencode/review-a-wfp/www.graph.db (2617 nodes, 3650 edges). Its caller query finds FeaturesPage -> ProgramCard and FaqList, PricingPage -> FaqList and SubjectPriceTable. No ComparisonTable or PricingTable callers remain in the scanned source. The checked-in graph.db is absent, so these are scratch-scan results, not a fresh repository graph.",
+    "The changed exported components have JSDoc: ProgramCard and ProgramCardCopy at program-card.tsx:3,19; FaqList and FaqItem at faq-list.tsx:1,11; SubjectPriceTable at subject-price-table.tsx:10. No business logic moved into components; route files only assemble locale copy and render presentation.",
+    "A3 and framework-wide A4/A5 checks are not applicable because orchestration scripts, contract tests, and registry files did not change. No claim of a new test count relies on bare-digit matching. The plan's Phase 2 85-file/3040-test claim matches the observed full-suite result."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git status --short; git diff --check c096256a1eb9f41329306533a78aa0108cc6bcff..15991e26f -> HEAD matched; clean at entry; diff check exit 0",
+    "git diff --name-status c096256a1eb9f41329306533a78aa0108cc6bcff..15991e26f -> 35 scoped paths under app plus active plan",
+    "python3 -I /home/daniebo/.cache/opencode/www-features-pricing/fixture-check.py -> 0 missing in EN spec, TH source, and source-line coverage; exit 0",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/www-features-pricing/apps/www-reading-advantage && CI=true pnpm exec vitest run --maxWorkers=1' -> timed out at 600000 ms with no output",
+    "CI=true pnpm exec vitest run --maxWorkers=1 (apps/www-reading-advantage) -> 85 files passed, 3040 tests passed, exit 0",
+    "pnpm check-types (apps/www-reading-advantage) -> tsc --noEmit, exit 0",
+    "build-graph scan apps/www-reading-advantage /home/daniebo/.cache/opencode/review-a-wfp/www.graph.db -> 2617 nodes, 3650 edges",
+    "build-graph query scratch graph for ProgramCard/FaqList/SubjectPriceTable and deleted table symbols -> only current page callers for new components; no deleted component caller",
+    "grep removed claims under apps/www-reading-advantage/src/locales -> no matches",
+    "git diff of the task-2.5 test paths -> only the plan-listed obsolete table checks were removed; remaining legal checks and SEO about route assertions stay"
+  ],
+  "changed_files": [
+    "measure/runs/www_features_pricing_20261120/review-a-15991e26f.json",
+    "measure/runs/www_features_pricing_20261120/review-a-15991e26f.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {"axis": "correctness", "score": 4, "evidence": "Locale and page contracts pass the 85-file/3040-test suite, with the remaining four visual judgments explicitly deferred to plan task 4.2."},
+    {"axis": "test_meaning", "score": 4, "evidence": "The full suite passes 3040 tests, the copy source checker reports zero missing strings, and the missing-asset guard fails by statSync when an asset is absent."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "The phase diff names only the planned www app files and the active track plan, with no unrelated app, route, registry, or orchestration changes."},
+    {"axis": "evidence_quality", "score": 4, "evidence": "The exact source checker, full Vitest result, type-check result, diff check, and scratch build-graph results support the audit claims; the heavy-run wrapper itself timed out without output."}
+  ]
+}

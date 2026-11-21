@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "role": "review-a",
+  "track": "www_features_pricing_20261120",
+  "phase": "Phase 4: Browser review and captures",
+  "baseline_sha": "57e704d30ab381e6b31b679a790f617939bcb795",
+  "phase_base_sha": "c096256a1eb9f41329306533a78aa0108cc6bcff",
+  "role_base_sha": "57e704d30ab381e6b31b679a790f617939bcb795",
+  "audited_head_sha": "57e704d30ab381e6b31b679a790f617939bcb795",
+  "status": "fail",
+  "summary": "RA4 blocks acceptance: the new fallback hides missing or invalid price rows in production. RA1 and RA3 are closed. RA2 remains open. The current targeted and full suites pass.",
+  "blocking_findings": [
+    "RA4 [Blocker] review-a: apps/www-reading-advantage/src/app/[locale]/(marketing)/pricing/page.tsx:41-45 substitutes an empty array for missing or non-array required rows. This guard also runs with the real production translator. A real next-intl translator with subjects.rows omitted records MISSING_MESSAGE, but the actual page resolves and renders zero price rows. A string-valued rows fixture also renders zero rows, without a translator error. No visible missing-data marker remains in the table. Route to Green: reject absent or invalid required row data instead of substituting an empty array. Update deficient translator stubs rather than adding production behavior for them. Add omitted-row and non-array regressions using the real translator. Preserve valid array-driven rows."
+  ],
+  "nonblocking_findings": [
+    "RA2 [Nit] review-a: measure/tracks/www_features_pricing_20261120/spec.md:17,130,176 still names v1.0, five rows, and 2,700. Plan task 4.6 explicitly adopts v1.2 and four rows. Plan tasks 3.1-3.4 also remain pending despite existing review artifacts. Reconcile these records before final acceptance. The supplied v1.2 source resolves the implementation contract without a new product decision. This finding remains open: r6 changes neither the spec nor those markers."
+  ],
+  "evidence": [
+    "The required role gate exits 1. It rejects the failed audit with RA4 and reports three non-deferred incomplete tasks in Phase 4. The incomplete-task line is expected. RA4 independently requires Green remediation.",
+    "HEAD is 57e704d30ab381e6b31b679a790f617939bcb795, equal to supplied role_base_sha and audited_head_sha. Strategy and Green receipts retain immutable phase_base_sha c096256a1eb9f41329306533a78aa0108cc6bcff.",
+    "Reconciled the exact c096256a1..57e704d30 phase range with the previous provenance-bound audit. It contains 39 paths. Independently inspected every line of 7fb548e5e..57e704d30: both Red files, three production files, and the active plan. No registry or orchestration script changes.",
+    "Read the Measure index, current plan and strategy, prior review, Red r6 receipt, and Green r6 receipt. The prior workflow, spec, routing records, and anti-pattern catalog remain in context. Plan task 4.7 records the new layout and array-driven pricing rules.",
+    "RA1 withdrawn: pricing/page.tsx:41-47 derives labels and cells from the locale row array. The new three-row test passes. A Node harness renders the actual page and SubjectPriceTable with a real next-intl translator: unchanged data gives four rows, shortened data gives three, and extended data gives five.",
+    "RA3 withdrawn: www-features-look-pins.red.test.ts:223-237 checks the nonfeatured branch directly. Executing these actual test cases in memory gives two baseline passes. Replacing self-start with h-full in only the nonfeatured article gives one pass and one failure. The previous escaping mutation now fails.",
+    "RA2 remains open: the spec has no r6 delta. The source reference still says v1.0, FR-9 still requires five rows, and AC-3 still names 2,700. The Phase 3 markers remain pending.",
+    "RA4 reproduced with the actual pricing route and actual table component, using next-intl createTranslator and React renderToStaticMarkup. Missing rows produce zero rendered tbody rows and one MISSING_MESSAGE error, but rendering resolves. Non-array rows produce zero rows and no translator error. src/locales/server.ts exports the real next-intl translator; src/i18n.ts loads the locale objects without a required-row validator.",
+    "The RA4 harness uses in-memory transpilation and dependency injection for request context and navigation. It uses real locale pricing data, real translation, and actual route/table code. It makes no app build, server start, or source edit.",
+    "No unrelated Red pin weakened. F1, F2, card-order, base-column, and image-cap guards remain. The Primary-only F3 assertions are replaced by the recorded every-pictured rule and rendered checks for all three pictured cards. Added F2 branch and fluid-row cases strengthen coverage. The fluid-row test covers valid three-row data, not omitted or invalid data.",
+    "Both locale page files and the copy fixture have no delta since the r1 audit. The sole features-page change sets featured from image presence. Features copy remains unchanged, including card order and bullets. D4 and v1.2 copy pins pass.",
+    "Seven targeted files pass: Test Files 7 passed (7); Tests 132 passed (132); exit 0. They include both r6 files, locale/content tests, stacking pins, and the older browser regression.",
+    "Full Vitest through foreground heavy-run passes: Test Files 88 passed (88); Tests 3086 passed (3086); exit 0. The shell timeout was 1200000 ms. This matches plan task 4.7. No test output was redirected.",
+    "build-graph is installed, but the worktree has no fresh graph.db. Read-only inspect and callers commands against the old main-tree graph return no ProgramCard symbol. Source fallback finds one FeaturesPage caller for ProgramCard and one PricingPage caller for SubjectPriceTable. No exported signature changed in r6.",
+    "The three pictured cards retain intrinsic image dimensions, h-auto w-full, full-width md+ rows, and capped image columns. md:self-center prevents the picture wrapper from stretching. Text-only cards retain automatic height. Browser geometry and the final look verdict remain with UX.",
+    "git diff --check c096256a1..57e704d30 exits 0. Current-phase aggregate claims match the observed full-suite exit. No orchestration, framework contract test, or registry changes require framework-wide checks. Application counts use labeled integer assertions. The missing-row fixture directly falsifies the requested fallback requirement."
+  ],
+  "commands": [
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py role-gate --repo /home/daniebo/Desktop/rama-worktrees/www-features-pricing --role review-a --track www_features_pricing_20261120 --phase 'Phase 4: Browser review and captures' --result-file measure/runs/www_features_pricing_20261120/review-a-57e704d30.json --log-file measure/runs/www_features_pricing_20261120/review-a-57e704d30.log -> exit 1; audit status fail with RA4; three incomplete phase tasks",
+    "git rev-parse HEAD; git status --short; git diff 7fb548e5e..57e704d30; git diff --name-only c096256a1..57e704d30; git diff --check c096256a1..57e704d30 -> required HEAD matches; six delta paths; 39 phase paths; whitespace check exit 0",
+    "pnpm exec vitest run --maxWorkers=1 src/__tests__/www-features-look-pins.red.test.ts src/__tests__/www-pricing-rows-fluid.red.test.ts src/__tests__/www-features-pricing.locale.test.ts src/__tests__/www-pricing-page.content.test.tsx src/__tests__/www-features-page.content.test.tsx src/__tests__/www-pricing-stacking.red.test.ts src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx -> 7 files and 132 tests pass; exit 0",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/www-features-pricing/apps/www-reading-advantage && pnpm exec vitest run --maxWorkers=1' -> foreground timeout 1200000 ms; 88 files and 3086 tests pass; exit 0",
+    "node -e <actual-page render harness with real next-intl createTranslator> -> baseline 4 rows; shortened 3; extended 5; missing 0 with MISSING_MESSAGE; wrong-shape 0 without translator error; every render resolves; RA4 reproduced",
+    "node -e <actual F2r6 tests with an in-memory nonfeatured h-full mutation> -> baseline 2 passed; mutation 1 passed and 1 failed; RA3 closed",
+    "python3 -I -c <git diff checks for both locale page files, copy fixture, and local spec> -> all unchanged; stale v1.0 and fifth-row references remain",
+    "build-graph inspect /home/daniebo/Desktop/reading-advantage-monorepo/graph.db ProgramCard; build-graph callers /home/daniebo/Desktop/reading-advantage-monorepo/graph.db ProgramCard -> no matches in stale graph",
+    "rg -n 'ProgramCard|SubjectPriceTable' apps/www-reading-advantage/src --glob '!**/__tests__/**' -> one page caller per component"
+  ],
+  "changed_files": ["measure/runs/www_features_pricing_20261120/review-a-57e704d30.json", "measure/runs/www_features_pricing_20261120/review-a-57e704d30.log"],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "openai/gpt-6.1-sol#high",
+  "ratings": [
+    {"axis": "correctness", "score": 3, "evidence": "The real-translator fixture renders an empty table for omitted or invalid required rows at pricing/page.tsx:41-45."},
+    {"axis": "test_meaning", "score": 3, "evidence": "The F2 mutation now fails and all 3086 tests pass, but missing-row production coverage remains absent."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "The six-file r6 delta contains only planned tests, two pages, ProgramCard, and the active plan."},
+    {"axis": "evidence_quality", "score": 4, "evidence": "Observed test exits and actual-page fixtures support the findings; a fresh graph remains unavailable."}
+  ]
+}

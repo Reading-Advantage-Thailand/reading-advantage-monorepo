@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: ux-browser-review
+status: complete
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+commits: none
+tests_run: Build passed on attempt 2; page-check passed; 18 Chrome contexts passed automated layout checks; 54 FAQ checks, 54 updated copy checks, 12 CTA destinations, six Tab checks, and three anchors passed; UX look failed F3; role-gate exited 1 for F3, with no schema error.
+files_changed: measure/runs/www_features_pricing_20261120/ux-browser-7fb548e5e.json; measure/runs/www_features_pricing_20261120/ux-browser-7fb548e5e.log
+plan_updates: none
+known_failures: F3 remains blocking: the desktop grid leaves a 707–755-pixel empty first-row cell. Next.js reports a known security vulnerability.
+handoff: Not ready for the PM look check. Pricing passes all nine views. Route F3 to Green: use full-width horizontal rows for the three pictured cards at md+, then pair the text-only cards. Preserve order, copy, image ratios, and the 390 single column. Preview captures: /home/daniebo/.cache/opencode/ux-wfp-r4/page-locale-width.png. HEAD remains 7fb548e5e5432c53b1d37b6a2a14a02bb3d0a091. Server stopped. Handle the security recommendation separately. Facts changed: preview prices now have four rows ending at 2,450 baht; 2,700 is absent.
+END_MEASURE_AGENT_RESULT

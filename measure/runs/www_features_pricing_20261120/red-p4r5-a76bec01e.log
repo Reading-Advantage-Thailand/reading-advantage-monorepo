@@ -1,0 +1,16 @@
+MEASURE_AGENT_RESULT
+role: mid-red
+status: red
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+phase_base_sha: c096256a1eb9f41329306533a78aa0108cc6bcff
+role_base_sha: a76bec01e6ab180d6ad6081477523b3dd83cd846
+baseline_sha: c096256a1eb9f41329306533a78aa0108cc6bcff
+resulting_head: d6d684ec3799f3065716e3dadc8898dac567d61e
+commits: d6d684ec3799f3065716e3dadc8898dac567d61e test(www): re-pin pricing copy to spec v1.2 stacking (track_id: www_features_pricing_20261120)
+tests_run: pnpm exec vitest run --maxWorkers=1 src/__tests__/www-features-pricing.locale.test.ts src/__tests__/www-pricing-page.content.test.tsx src/__tests__/www-pricing-stacking.red.test.ts -> Test Files 3 failed (3); Tests 27 failed | 46 passed (73); exit 1; no import or config error
+files_changed: apps/www-reading-advantage/src/__tests__/fixtures/features-pricing-expected.ts (entries TH-FP-57/67/68/69/78/85 to R2 wording, TH-FP-66 deleted, PRICE_ROWS to four); apps/www-reading-advantage/src/__tests__/www-features-pricing.locale.test.ts (control to 37 entries / 4 rows); apps/www-reading-advantage/src/__tests__/www-pricing-page.content.test.tsx (controls and table assertions to four rows); measure/tracks/www_features_pricing_20261120/plan.md (task 4.6 Red r5 evidence, stays [~])
+plan_updates: task 4.6 records the Red r5 evidence 2026-11-21 with the note that spec v1.2 (PM FP1 hand-off 2026-11-21, spec commits d123d385 f2eee0cf 7330789d 640edec0) supersedes the v1.0 pins; task stays [~]
+known_failures: locale holds every pricing EN string -> FAILS at role base (old copy live, expected); locale holds every pricing TH string -> FAILS at role base (old copy live, expected); content four-row table + every-spec-string in en/th/zh (6x) -> FAIL at role base (old five-row page live, expected); stacking 19x FP1 cases -> FAIL at role base (old copy live, expected)
+handoff: Green applies spec v1.2 section 4 to the pricing locale messages only (S1 body 1, S2 rows 1-4 with note, S3 heading and body 1, S6 body, S9 answer 1, en/th/zh, 5-subject row and 2,700 gone), keeps the Q:/A: prefixes the page renders, and does not touch the features page; then reruns the three re-pinned files plus the stacking file and the task 2.6 gates
+END_MEASURE_AGENT_RESULT

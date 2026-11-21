@@ -1,0 +1,16 @@
+MEASURE_AGENT_RESULT
+role: mid-red
+status: red
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+phase_base_sha: c096256a1eb9f41329306533a78aa0108cc6bcff
+role_base_sha: 4ccf4c87972c4e6a7545dfc5cff8b94cc2ae2e45
+baseline_sha: c096256a1eb9f41329306533a78aa0108cc6bcff
+resulting_head: 0a331b242ebdf24729890d7661c4a6ec58a1ee2f
+commits: 0a331b242ebdf24729890d7661c4a6ec58a1ee2f test(www): pin origins 2 cover, deleted line, bullet gap (track_id: www_features_pricing_20261120)
+tests_run: pnpm exec vitest run --maxWorkers=1 src/__tests__/www-reading-card.red.test.ts -> Test Files 1 failed (1); Tests 11 failed | 3 passed (14); exit 1; no import or config error
+files_changed: apps/www-reading-advantage/src/__tests__/www-reading-card.red.test.ts (new: PM1 cover asset/src/alt/file, PM2 sentence absence in en/th/zh sources and rendered cards, PM3 bullet-anchor source pin); apps/www-reading-advantage/src/__tests__/fixtures/features-pricing-expected.ts (TH-FP-22 removed); apps/www-reading-advantage/src/__tests__/www-features-pricing.locale.test.ts and www-features-page.content.test.tsx (features-entries controls 52 to 51); measure/tracks/www_features_pricing_20261120/plan.md (task 4.9 opened as [~] with Red evidence, defaults D-R8-1, cause record)
+plan_updates: task 4.9 records the Red r8 evidence 2026-11-21 with default D-R8-1 (cover at images/products/ra-origins-2-cover.jpg, title band kept, card-ratio crop, D13 alt) and the PM(3) cause (md:flex-row stretch plus ul.mt-auto bottom-anchor); task stays [~]
+known_failures: PM1 cover src/old-src/file/alt (4x) -> FAIL at role base (old screenshot live, cover absent, expected); PM2 sentence absence in en/th/zh sources and rendered en/th/zh cards (6x) -> FAIL at role base (sentence live, expected); PM3 no mt-auto in stretched featured space -> FAILS at role base (ul.mt-auto live without items-start, expected)
+handoff: Green owns three fixes from the PM look check 2026-11-21. (1) Copy RA-Origins-2-Front-Cover.jpg (read-only source) into public/images/products/ra-origins-2-cover.jpg cropped to the card ratio with the title band kept, and point CARD_IMAGES.reading at it with alt Reading Advantage Origins 2 book cover; leave the old screenshot file on disk (assets test still lists it). (2) Delete the taught-through sentence from the en, th (and hence zh) reading body; keep the status line; PR updates the spec line. (3) Remove the Primary md+ paragraph-to-bullets gap at its cause: drop ul.mt-auto or add an items-start cross-axis class to the featured article. Re-targets done: fixture TH-FP-22 gone, both features-entries controls at 51; pricing pins untouched. Then rerun the reading-card file plus the task 2.6 gates and recapture Phase 4.
+END_MEASURE_AGENT_RESULT

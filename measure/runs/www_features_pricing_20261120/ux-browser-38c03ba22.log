@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: ux-browser-review
+status: fail
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+commits: none
+tests_run: Build attempts exited 1 then 0; page-check produced 18 captures; Chrome passed 18 route/width checks, 54 FAQ checks, 12 CTA clicks, and three anchor clicks; contrast and Tab checks passed.
+files_changed: measure/runs/www_features_pricing_20261120/ux-browser-38c03ba22.json; measure/runs/www_features_pricing_20261120/ux-browser-38c03ba22.log
+plan_updates: none
+known_failures: F1 High: the 980-pixel Storytime frame cuts through the face in every locale. F2 Medium: the 980-pixel CodeCamp card has excess blank space. The PM look check is not ready.
+handoff: Route F1 to Green: preserve the Storytime image ratio, then rerun the browser gate. Fix F2 with automatic height for text-only cards. Captures: /home/daniebo/.cache/opencode/ux-wfp-r2/. The mid-page header is a capture artifact; clean captures are available. Server PID 3416158 is stopped. No package changed; the Next.js security upgrade recommendation remains. Daniel's approval gates remain closed. Facts changed: none.
+END_MEASURE_AGENT_RESULT

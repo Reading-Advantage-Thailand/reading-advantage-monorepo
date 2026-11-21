@@ -1,0 +1,116 @@
+{
+  "manifest_version": 1,
+  "track_id": "www_features_pricing_20261120",
+  "title": "www features and pricing rewrite (A-70, row FP1)",
+  "closeout_date": "2026-11-21",
+  "role": "measure-closeout",
+  "pre_closeout": {
+    "audited_head_sha": "3e80d3679bcbc519d2a96e624d04f880e6d94efd",
+    "current_head_at_role_start": "3e80d3679bcbc519d2a96e624d04f880e6d94efd",
+    "provenance_match": true,
+    "provenance_source": "measure/runs/www_features_pricing_20261120/final-acceptance-3e80d3679.json audited_head_sha",
+    "plan_markers_before": "31 [x], 0 [~], 1 [ ] (task 5.1), 1 [b] (task 5.2 deferred:daniel)",
+    "plan_markers_after": "31 [x], 0 [~], 0 [ ], 0 [b]",
+    "deferred_tasks_remaining": "none; task 5.2 became [x] on Daniel's deploy word, so no [b] task survives",
+    "owner_informed": "Daniel gave the deploy word on 2026-11-21 17:25 ICT through the PM; scope www only",
+    "a5_false_claim": "pass — no PASS=N/FAIL=0 or 'all checks pass' text in the plan or spec; the count claims match the final-acceptance reruns (182 Red tests, 91 files / 3117 tests)",
+    "a6_registry_note": "pass — the old row understated the state; the new archived row states adversarial pass at 4f3ad5936 (adversarial-c2cb6a120.json), 182 green A-70 tests at HEAD, and the external doctor.sh architecture failure. No resolved-state claim outruns a red test.",
+    "a9_archived_track_path": "pass — no test or script hardcodes measure/tracks/www_features_pricing_20261120/"
+  },
+  "final_acceptance": {
+    "file": "measure/runs/www_features_pricing_20261120/final-acceptance-3e80d3679.json",
+    "log": "measure/runs/www_features_pricing_20261120/final-acceptance-3e80d3679.log",
+    "status": "pass",
+    "audited_head_sha": "3e80d3679bcbc519d2a96e624d04f880e6d94efd",
+    "blocking_findings": [],
+    "gate_fail_line": "one FAIL line for task 5.1 by the role-gate's own definition; F3 records it, and this closeout marks 5.1 [x]",
+    "phase4_acceptance": "measure/runs/www_features_pricing_20261120/phase-acceptance-p4-4f3ad5936.json, status pass, audited head 4f3ad5936"
+  },
+  "archive_move": {
+    "from": "measure/tracks/www_features_pricing_20261120/",
+    "to": "measure/archive/www_features_pricing_20261120/",
+    "method": "git mv, then an explicit pathspec commit",
+    "registry_row": "measure/tracks.md: active row removed; new [x] row in Archived Tracks with the ./archive/www_features_pricing_20261120/ link",
+    "registry_description_matches_metadata": true,
+    "metadata": "status done; previous_status planned; completed and completed_at 2026-11-21; archived_at 2026-11-21; updated_at 2026-11-21T00:00:00Z; source_of_truth.spec_version 1.2 with spec_commit d123d385; v1.3 content updates recorded; actual_tasks 29",
+    "plan": "Phase 5 heading carries [checkpoint: 3e80d3679bcbc519d2a96e624d04f880e6d94efd]; task 5.1 [x] with the acceptance evidence; task 5.2 [x] with the deploy-word record. Four earlier [x] tasks (0.1, 3.3, 4.1, 4.3) received real commit SHAs from the track history so every completed task is covered."
+  },
+  "task_shas": [
+    "bf292b9b1 plan and strategy",
+    "53b3a313b Phase 1 Red tests",
+    "8ea29b7a0 Phase 1 Red checkpoint",
+    "54d433573 Phase 2 Green checkpoint",
+    "4f3ad5936 Phase 3 and Phase 4 checkpoints, adversarial and test-only cover fix",
+    "3e80d3679 final acceptance audited head and Phase 5 checkpoint",
+    "24f082625 Green r9 whole Origins 2 cover",
+    "19b940a61 Green r8 PM look-check fixes",
+    "006fdbe50 Green r6 pictured rows and fluid pricing rows",
+    "ab4d499da Green r5 v1.2 pricing copy and four rows"
+  ],
+  "gates": {
+    "generated_check_command": "bash measure/generate.sh && git diff --quiet measure/generated/ — run through the heavy-run wrapper by the closeout role gate. The generated facts were stale at HEAD (sourceRevision 1f77e0087a from 2026-10-13); generate.sh refreshed architecture.json and routes.md to 3e80d3679, and both were staged before the gate so the diff check passed. This is the A10 drift class; no pre-commit hook regenerates measure/generated/. Both refreshed files are part of this closeout commit.",
+    "closeout_role_gate": "PASS: closeout gate passed, exit 0",
+    "project_test_gate": "HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/www-features-pricing && bash measure/doctor.sh' — exit 1 on the architecture step only; the three structural steps pass",
+    "project_test_gate_summary": [
+      "PASS: A12/A13 guard declarations and archive directories verified (6 guards)",
+      "PASS: measure anti-pattern catalog exists with A1-A15",
+      "PASS: all active track plans use only [ ], [~], [x], or [b] task markers (92 plans checked)",
+      "PASS: executed review tracks are not fully blocked by deferred:review-execution",
+      "Architecture check failed: V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes",
+      "ARCHITECTURE: step 4 exits 1; this is a tool failure, not a boundary verdict",
+      "DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1"
+    ],
+    "final_acceptance_gates_rerun_at_3e80d3679": "10 A-70 Red files 182 passed; full www suite 91 files / 3117 tests passed; check-types exit 0; ESLint 0 errors and 3 warnings; build attempt 2 exit 0; affected-apps ['www-reading-advantage']",
+    "architecture_waiver": "waived as external. The same step failed for www_products_photos (F10 there) and in CI. This track changes no path under packages/. Owner: architecture_ci_input_pin_20261110."
+  },
+  "a9_archived_track_path": {
+    "status": "pass",
+    "tests_and_scripts_hits": 0,
+    "hits": [],
+    "historic_evidence_hits": "Only historical text references inside this track's plan.md and measure/runs/www_features_pricing_20261120/*.log and *.json. They are records, not executable test paths. No test fix applies.",
+    "post_move_rerun": "grep over tests, scripts and measure after the move: 0 hits",
+    "note": "No test hardcodes the old track path. The A-70 tests resolve only app paths, as the final acceptance A9 check recorded."
+  },
+  "nonblocking_findings": {
+    "F1": "waived — doctor.sh architecture-manifest failure is external, with the www_products_photos F10 precedent",
+    "F2": "handled — the registry row and metadata now use the same description and the source is v1.2 with the v1.3 updates recorded",
+    "F3": "handled — task 5.1 is [x] with the final-acceptance evidence",
+    "F4": "open — three unused-symbol ESLint warnings, 0 errors; retained in the acceptance evidence and the registry note",
+    "F5": "open — stale retry_audit and blocked values in review-a-351844ce0.json; RA5 is closed at 4f3ad5936",
+    "F6": "open — Phases 1 to 3 closed through role gates, reviews and the Phase 4 whole-range acceptance",
+    "F7": "recorded — Daniel's deploy word and the all-Thai approval are in plan task 5.2 and the registry note; the PR spec v1.3 still reserves TH-FP-R2-01 to TH-FP-R2-07 for his next sitting, and the PM confirmed the approval record before the word"
+  },
+  "retained_evidence": [
+    "measure/archive/www_features_pricing_20261120/ (metadata.json, plan.md, spec.md, spec-review.md, test-strategy.md, this manifest)",
+    "measure/runs/www_features_pricing_20261120/ (final acceptance PASS at 3e80d3679 with its log, Phase 4 acceptance at 4f3ad5936, Review A/C, adversarial, UX browser and all Red/Green run logs)",
+    "measure/tracks.md (the archived row and the accurate adversarial state note)",
+    "measure/generated/architecture.json and measure/generated/routes.md (regenerated to HEAD 3e80d3679 and committed; no leftover diff)"
+  ],
+  "artifact_cleanup": {
+    "policy": "No bulky run artifact was deleted. The orchestrator named none.",
+    "deleted": [],
+    "kept": [
+      "the final acceptance PASS evidence and its log",
+      "the Phase 4 acceptance evidence and its log",
+      "every other artifact under measure/runs/www_features_pricing_20261120/"
+    ],
+    "scratch": "The scratch folder ~/.cache/opencode/www-features-pricing/ holds the closeout doctor output only; it is outside the repository and is not committed."
+  },
+  "lessons_learned_updates": "measure/lessons-learned.md stays unchanged. The closeout surfaced no new recurring pattern.",
+  "tech_debt_updates": "measure/tech-debt.md stays unchanged. The registry is at its 50-line cap. The open F4, F5 and F7 nits stay in the final-acceptance evidence and the archived registry note; F1 stays with architecture_ci_input_pin_20261110.",
+  "audit_replay_notes": [
+    "The GENERATED_CHECK_COMMAND uses 'git diff --quiet measure/generated/', a worktree-to-index comparison. It passed in the closeout run because the two refreshed generated files were staged before the gate. After the closeout commit, a replay that regenerates at the new HEAD must stage the result before the diff check, or set the command to 'bash measure/generate.sh' only. The committed generated facts bind to the pre-closeout final-acceptance head 3e80d3679.",
+    "The orchestrator assigned this closeout to the worktree /home/daniebo/Desktop/rama-worktrees/www-features-pricing on branch www/features-pricing-a70. A16 of measure/anti-patterns.md names one shared master tree as the normal rule. This assignment is the recorded exception for this track. The closeout did not create a worktree, did not push, and did not merge."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> 3e80d3679bcbc519d2a96e624d04f880e6d94efd, clean tree at role start",
+    "grep for [~], [ ], [b] in plan.md before and after the edits",
+    "grep for A5 false-claim patterns in plan.md and spec.md -> none",
+    "grep -rn for the fixed path measure/tracks/www_features_pricing_20261120/ over tests, scripts and measure -> 0 executable hits, before and after the move",
+    "git mv measure/tracks/www_features_pricing_20261120 measure/archive/www_features_pricing_20261120",
+    "HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/www-features-pricing && bash measure/doctor.sh' -> exit 1 on the external architecture step; the three structural steps pass",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py role-gate --role closeout --track www_features_pricing_20261120"
+  ],
+  "blocking_findings": [],
+  "retry_recommendation": "none"
+}
