@@ -173,6 +173,33 @@ Track: `ci_green_master_20261115` (light lane).
 - The blog test did not run in CI, because the selector now treats a test file as
   non-source. A local run on `ff1e24fe8` passes: 18 tests, 1.4 s.
 
+## CI round 5 (PM 2026-11-21): PC-5 without a runtime change
+
+- Route: the PM chose no Primary deploy, so no runtime source changes. Commit
+  `779c67635` takes three of the four parts of `39649dca8`:
+  - `apps/primary-advantage/eslint.config.mjs` ignores the built legacy
+    service-worker fixture and gives the PWA fixture server its Node globals.
+  - The rehearsal page test names the lesson card mock component, so the hook call
+    satisfies `rules-of-hooks`.
+  - `lib/safe-callback-path.ts` stays unchanged. Its control-character regex is
+    intentional, because it rejects control characters. A file-scoped override
+    turns off `no-control-regex` for that file only, with a one-line reason.
+- Commit `08a32e10a` treats lint-only config as non-source in
+  `scripts/ci/affected-apps.mjs`, like a test file: `eslint.config.*`, `.eslintrc*`,
+  and `.eslintignore` change no built image. Case A1-08 shows that an
+  eslint-config-only Primary change gives `[]`. Case A1-09 shows that a Primary
+  `lib/` change still gives `["primary-advantage"]`.
+- Gates on the final tree:
+  - Selector tests: 14 files, 234 tests pass.
+  - `pnpm --filter primary-advantage lint`: exit 0, 0 errors, 515 warnings.
+  - `pnpm --filter primary-advantage check-types`: exit 0, after
+    `pnpm turbo run build --filter="primary-advantage^..."` filled the dependency
+    `dist` folders.
+  - `pnpm architecture:check --skip-input-snapshot-pin --policy v2`: exit 0,
+    `clean (files=7034, findings=800, parseErrors=0)`, `debt: clean
+    (additions=0)`. The check found no stale report hash, so the pin refresh was
+    not needed. A preview refresh reports "no write required".
+
 ## Follow-up (deferred to a later owner)
 
 - [ ] The architecture report pin goes stale on every master push that changes analyzer
