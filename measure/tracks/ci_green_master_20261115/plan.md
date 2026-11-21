@@ -119,6 +119,33 @@ Track: `ci_green_master_20261115` (light lane).
 - This is the second PC-2 occurrence: every master push that changes analyzer inputs can
   stale the report pin before CI reads it. The refresh must run on the final pushed tree.
 
+## CI round 4 (PM 2026-11-21)
+
+- Failing run `44901340646` on `f4dd177a9`. Two jobs failed and no other job failed:
+  the "Build, Lint, and Test" job at `Architecture boundary check`, and the "Check
+  www-reading-advantage" job at its single build, lint, type check, and test step.
+  Steps after each failure were skipped. No PC-5, PC-4, or PC-6 failure appeared
+  in this run.
+- Cause (1), third PC-2 occurrence: "Analyzer report hashes do not match current
+  byte-identical reports". The www merges after the 2026-11-15 pin changed analyzer
+  inputs. The repo's own `pin:refresh` ran on the final tree and wrote four existing
+  hash fields of `packages/architecture-enforcement/src/config/
+  analyzer-reconciliation.v2.json` (input snapshot, two report hashes, review
+  subject). Commit `fd995faa4`. No hash field was added and no coverage widened.
+  A second preview refresh reported "no write required".
+- Cause (2): the test `src/lib/blog-blocks.test.ts:210` failed with "Test timed out
+  in 5000ms" and no assertion failed. The test renders every blog post through two
+  pipelines. It reads 139 posts, because the 2026-11-21 daily post (`b7637ab5e`)
+  added two. Measured time: 1.3 s locally, 6.2 s on CI. Commit `e09ee183c` sets a
+  30 s timeout on that test. No test was deleted or skipped, and no assertion
+  weakened.
+- The `scroll` warning in the log comes from `blog-pagination.tsx`
+  (`scroll={false}` on a Next `Link`). It is not related to the failure.
+- Gates on `fd995faa4`:
+  `pnpm architecture:check --skip-input-snapshot-pin --policy v2` exit 0, `clean
+  (files=7026, findings=800, parseErrors=0)`, `debt: clean (additions=0)`. PC-4 no
+  longer blocks the check. The blog test file passes locally: 18 tests, 1.3 s.
+
 ## Follow-up (deferred to a later owner)
 
 - [ ] Cut the additions of the largest module first: `apps/primary-advantage`, 144 of the
