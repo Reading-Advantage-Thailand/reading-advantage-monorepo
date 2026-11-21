@@ -162,6 +162,16 @@ Track: `ci_green_master_20261115` (light lane).
 - The selector does not treat `scripts/ci/**` as a global change. Case A5-01
   already holds a `scripts/ci/apps.json` change and expects `[]`. No special case
   was added.
+- Push, second attempt: `safe-push` exit 0, `pushed ff1e24fe82f3 to origin/master`
+  (6 commits, 0 behind). Affected apps: `[]`. The CD — www run `44920977351`
+  printed `affected: []` and skipped "Deploy to Cloud Run".
+- CI run `44920977340` on `ff1e24fe8`: "Architecture boundary check" passed, and
+  "Select affected apps" passed with no app row. Then `Lint` failed on
+  `primary-advantage#lint` with 13 errors. These errors are PC-5 and they pre-date
+  this track (last touch 2026-10-12). The fix waits on branch `origin/ci/primary-lint`
+  (`39649dca8`). Steps after Lint were skipped.
+- The blog test did not run in CI, because the selector now treats a test file as
+  non-source. A local run on `ff1e24fe8` passes: 18 tests, 1.4 s.
 
 ## Follow-up (deferred to a later owner)
 
