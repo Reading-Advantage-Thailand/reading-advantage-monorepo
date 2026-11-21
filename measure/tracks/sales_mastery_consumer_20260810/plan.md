@@ -226,10 +226,11 @@
    `63f1ec7e8563b96397c6d07ec994255482f4bf46`. Evidence:
    `phase2-review-a-red-remediation-evidence-20260817.md`. Green remains
    pending in the responsible Sales session. Phase 2 is not accepted.
-   - CI keeps the two durable Red files out of its run through the workflow
-     command in `.github/workflows/ci.yml` (PM rule 2026-11-21). Run them
-     locally with `pnpm --filter @reading-advantage/db exec vitest run` and the
-     two paths: `src/__tests__/sales-phase2-review-a-durable.red.test.ts` and
+   - CI keeps the two durable Red files from failing its run: the affected lane in
+     `.github/workflows/ci.yml` builds `@reading-advantage/sales-knowledge` first,
+     so the files load and skip without `PG_TEST_URL` (PM rule 2026-11-21). Run
+     them locally with `pnpm --filter @reading-advantage/db exec vitest run` and
+     the two paths: `src/__tests__/sales-phase2-review-a-durable.red.test.ts` and
      `src/__tests__/sales-phase2-transaction-atomicity.red.test.ts`.
 - [~] Task: Docs strategy: Record the owner-approved successor ledger strategy in
   `phase2-successor-ledger-strategy.md`. It supersedes only the old Phase 2
