@@ -476,8 +476,7 @@ export function StudentCartridgeHost({
               onComplete={handleComplete}
               onLifecycleTransition={(transition) => {
                 if (transition.to === "playing") startedAtRef.current = Date.now();
-                if (transition.event === "replay"
-                  || (transition.to === "playing" && transition.from !== "paused")) {
+                if (transition.event === "replay" || transition.to === "playing") {
                   rpg.beginSession();
                 }
                 if (transition.from === "results" && transition.event === "replay") {
