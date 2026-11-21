@@ -173,7 +173,7 @@ export default async function FeaturesPage() {
                   imageAlt={image?.alt}
                   imageWidth={image?.width}
                   imageHeight={image?.height}
-                  featured={key === "primary"}
+                  featured={Boolean(image)}
                   {...cardCopy(key)}
                 />
               );

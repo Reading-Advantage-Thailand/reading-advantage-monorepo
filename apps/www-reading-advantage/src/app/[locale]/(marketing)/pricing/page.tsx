@@ -38,16 +38,13 @@ export default async function PricingPage() {
   const columns = [0, 1, 2].map((index) =>
     t(`subjects.columns.${index}` as "subjects.columns.0"),
   );
-  const rowLabels = [0, 1, 2, 3].map((index) =>
-    t(`subjects.rows.${index}.label` as "subjects.rows.0.label"),
-  );
-  const rows = [0, 1, 2, 3].map((row) =>
-    [0, 1, 2].map((column) =>
-      t(
-        `subjects.rows.${row}.cells.${column}` as "subjects.rows.0.cells.0",
-      ),
-    ),
-  );
+  const readRaw = (t as unknown as { raw?: (key: string) => unknown }).raw;
+  const rawRows = readRaw?.("subjects.rows");
+  const subjectRows = (
+    Array.isArray(rawRows) ? rawRows : []
+  ) as Array<{ label: string; cells: string[] }>;
+  const rowLabels = subjectRows.map((row) => row.label);
+  const rows = subjectRows.map((row) => row.cells);
   const includedBullets = [0, 1, 2].map((index) =>
     t(`included.bullets.${index}` as "included.bullets.0"),
   );
