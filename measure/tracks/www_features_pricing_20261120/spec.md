@@ -14,7 +14,7 @@ Daniel added at 18:4x via the PM: "When I say 'We need to update the old www pag
 
 Source of truth (read only, never written from the Monorepo):
 
-- Copy spec: `/home/daniebo/Desktop/advantage-pr/11-content/www-features-pricing-spec.md` v1.0 (advantage-pr commit `c54d2742`). Sections 3, 4 and 5 hold the copy. Section 6 holds the blocks that go. Section 7 holds the notes for the www lane.
+- Copy spec: `/home/daniebo/Desktop/advantage-pr/11-content/www-features-pricing-spec.md` v1.2 (advantage-pr commits `d123d385`, `f2eee0cf`, `7330789d`, `640edec0`). Daniel approved the Thai on 2026-11-21 except the changed lines TH-FP-R2-01 to TH-FP-R2-07, which go to his next sitting. Sections 3, 4 and 5 hold the copy. Section 6 holds the blocks that go. Section 7 holds the notes for the www lane.
 - Change-list row FP1 in `/home/daniebo/Desktop/advantage-pr/11-content/www-change-list.md` v1.63. The row status is "WAITS FOR THAI (Daniel)".
 - Thai check page: `/home/daniebo/Desktop/advantage-pr/11-content/thai-check/2026-11-20-features-pricing.html`. It holds 95 Thai lines, TH-FP-01 to TH-FP-95. Daniel checks all Thai himself.
 - Open question Q-PR-33 (zh copy): "Default: The zh pages drop the old figures and the competitor table now. They show the new numbers and English section copy until the checked zh copy lands." The PM accepted this default on 2026-11-20 21:34 ICT.
@@ -127,7 +127,7 @@ The planner took each default below because the spec is silent or the choice has
 ### Pricing page (spec section 4)
 
 - **FR-8** `/en/pricing` and `/th/pricing` render sections S1 to S10 in the spec order with every EN and TH string word for word (with D5).
-- **FR-9** The S2 price table has the columns "Subjects", "Added per subject", "Total per student per year" and five rows: 1 subject 1,200 baht 1,200 baht; 2 subjects +600 baht 1,800 baht; 3 subjects +400 baht 2,200 baht; 4 subjects +250 baht 2,450 baht; 5 subjects +250 baht 2,700 baht. The Thai rows use "บาท" and "วิชา". The row 1 "Added per subject" cell shows "1,200 baht" as the spec says.
+- **FR-9** The S2 price table has the columns "Subjects", "Added per subject", "Total per student per year" and four rows: 1 subject 1,200 baht 1,200 baht; 2 subjects +600 baht 1,800 baht; 3 subjects +400 baht 2,200 baht; 4 subjects +250 baht 2,450 baht. The 5-subject row and 2,700 are gone under spec v1.2. The Thai rows use "บาท" and "วิชา". The row 1 "Added per subject" cell shows "1,200 baht" as the spec says.
 - **FR-10** The page shows the 3,000 baht Tutor floor and the 22–23 hours line (S7, S9). It shows no other price and no quotation offer for Managed Service (S8 states the fuller service is in planning).
 - **FR-11** The Tutor buttons point to `/products/tutor-advantage`. Every other button points to `/contact` (D6).
 - **FR-12** The page metadata uses the Meta title and Meta description of spec section 4.
@@ -173,7 +173,7 @@ The planner viewed each source and each output on 2026-11-20. Boxes are `x0,y0,x
 
 - **AC-1** Every EN and TH string of spec sections 3, 4 and 5 appears word for word in the rendered pages and the locale files (FR-1, FR-8, FR-15). Test: `www-features-pricing.locale.test.ts`.
 - **AC-2** The Thai strings follow D5 and no Thai value ends with a period (FR-1, FR-8). Test: same file.
-- **AC-3** The numbers 1,200, +600, 1,800, +400, 2,200, +250, 2,450, 2,700, 3,000, 22–23, 14, 28, 30 November 2026 and the 2027 school year appear as the spec says. No other baht amount appears on the two pages (FR-9, FR-10). Test: both content tests.
+- **AC-3** The numbers 1,200, +600, 1,800, +400, 2,200, +250, 2,450, 3,000, 22–23, 14, 28, 30 November 2026 and the 2027 school year appear as the spec says. No 2,700 and no other baht amount appears on the two pages (spec v1.2, FR-9, FR-10). Test: both content tests.
 - **AC-4** The section order, the five program cards, the seven logos, the three FAQ items on each page, the price-table rows and the button targets match sections 6 and 7 (FR-1 to FR-5, FR-8, FR-9, FR-11). Test: `www-features-page.content.test.tsx`, `www-pricing-page.content.test.tsx`.
 - **AC-5** zh pages show the new numbers and the English copy and none of the removed strings (FR-14). Test: both content tests with the zh locale, and the locale test.
 - **AC-6** No removed claim stays anywhere in `src/locales/` (FR-16). Test: `www-features-pricing.locale.test.ts`.
