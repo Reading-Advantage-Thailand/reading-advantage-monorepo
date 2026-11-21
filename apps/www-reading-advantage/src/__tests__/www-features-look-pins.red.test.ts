@@ -1,6 +1,9 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { cleanup, render } from "@testing-library/react";
+import FeaturesPage from "@/app/[locale]/(marketing)/features/page";
+import enMessages from "@/locales/en";
 
 /*
  * Red r3 pins for the Phase 4 browser look defects (track www_features_pricing_20261120).
@@ -15,7 +18,70 @@ import { describe, expect, it } from "vitest";
  * ratio kept, no crop); the other cards stay in the two-column grid; card order
  * and the 390 single column stay unchanged. The three F3 cases must fail at
  * 2ffa43f8b.
+ *
+ * Red r6 pins for the r4 F3 remainder [Blocker]: the Primary-only span leaves
+ * the first row half empty at 980 and 1280 (Storytime sits alone with a
+ * 707-755 px empty cell beside it). New rule, replacing the r4 Primary-only
+ * rule: at md+ EVERY pictured card is a full-width horizontal row; text-only
+ * cards sit in the two-column grid after them. Default D-R6-1: keep the single
+ * programs grid and CARD_KEYS order; extend the featured full-width row to
+ * every pictured card. The r4 Primary-only source pins are retargeted below so
+ * they do not contradict this rule. The render pins check the real route output
+ * (UX r4: recheck the rendered grid, not only the class pins). RA3 (Review A):
+ * the F2 guard below also inspects the nonfeatured branch directly. The new
+ * F3 and fluid-rows cases must fail at 7fb548e5e.
  */
+
+const hoisted = vi.hoisted(() => {
+  const state: { messages: unknown } = { messages: {} };
+
+  function readPath(root: unknown, path: string): unknown {
+    let value: unknown = root;
+    for (const segment of path.split(".")) {
+      if (value === null || typeof value !== "object") return undefined;
+      if (!(segment in (value as Record<string, unknown>))) return undefined;
+      value = (value as Record<string, unknown>)[segment];
+    }
+    return value;
+  }
+
+  function makeTranslator(scope: string) {
+    const prefix = scope ? `${scope}.` : "";
+    const translate = (key: string): string => {
+      const value = readPath(state.messages, `${prefix}${key}`);
+      return typeof value === "string" ? value : `[[missing:${prefix}${key}]]`;
+    };
+    translate.raw = (key: string): unknown =>
+      readPath(state.messages, `${prefix}${key}`);
+    return translate;
+  }
+
+  return { state, makeTranslator, readPath };
+});
+
+vi.mock("@/locales/server", () => ({
+  getI18n: vi.fn(() => Promise.resolve(hoisted.makeTranslator(""))),
+  getScopedI18n: vi.fn((scope: string) =>
+    Promise.resolve(hoisted.makeTranslator(scope)),
+  ),
+  getStaticParams: vi.fn(() => []),
+}));
+
+vi.mock("@/locales/client", () => ({
+  useScopedI18n: vi.fn(
+    (scope: string) => (key: string) => {
+      const value = hoisted.readPath(
+        hoisted.state.messages,
+        scope ? `${scope}.${key}` : key,
+      );
+      return typeof value === "string" ? value : `[[missing:${scope}.${key}]]`;
+    },
+  ),
+}));
+
+afterEach(() => {
+  cleanup();
+});
 
 const PROGRAM_CARD = resolve(
   __dirname,
@@ -66,10 +132,48 @@ function cardImageBlock(): string {
   return afterGuard.split("</div>")[0] ?? "";
 }
 
-/** True when the map block singles out the primary card for special layout. */
-function primaryConditioned(): boolean {
-  return /key\s*===\s*["']primary["']/.test(cardRenderBlock());
+/** Returns every article className in program-card.tsx, in source order. */
+function articleClasses(): string[] {
+  const source = readFileSync(PROGRAM_CARD, "utf8");
+  return [...source.matchAll(/<article[\s\S]*?className="([^"]*)"/g)].map(
+    (match) => match[1],
+  );
 }
+
+/** True when the featured full-width row is driven by image presence. */
+function fullWidthDrivenByImage(): boolean {
+  const section = programsSection();
+  if (/featured=\{[^}]*image/i.test(section)) return true;
+  const groupMap = section.match(/(PIC\w*|pictured\w*)\.map\(([\s\S]{0,800})/i);
+  if (groupMap && /featured|col-span/i.test(groupMap[2] ?? "")) return true;
+  return false;
+}
+
+/** True when no card layout is keyed on the primary card alone. */
+function noPrimaryOnlyLayout(): boolean {
+  const section = programsSection();
+  return !/featured=\{\s*key\s*===\s*["']primary["']|key\s*===\s*["']primary["'][\s\S]{0,120}col-span|col-span[\s\S]{0,120}key\s*===\s*["']primary/.test(
+    section,
+  );
+}
+
+/** True when an article class carries an md+ full-width span and row layout. */
+function isFullWidthRow(className: string): boolean {
+  return (
+    /(sm|md|lg):col-span-(2|3|full)/.test(className) &&
+    /(sm|md|lg):flex-row/.test(className)
+  );
+}
+
+/** Pictured program-card hooks, in DOM order. */
+const PICTURED_HOOKS = [
+  "program-card-storytime",
+  "program-card-primary",
+  "program-card-reading",
+] as const;
+
+/** Text-only program-card hooks, in DOM order. */
+const TEXT_HOOKS = ["program-card-codecamp", "program-card-school-subjects"] as const;
 
 describe("control: look-pin scanners resolve the card sources", () => {
   it("control: the card image class is found", () => {
@@ -116,6 +220,23 @@ describe("F2: text-only cards use automatic height", () => {
   });
 });
 
+describe("F2r6: row-scoped text-only coverage (RA3)", () => {
+  it("control: the card exposes featured and nonfeatured branches", () => {
+    expect(articleClasses().length, "article branches: 2").toBe(2);
+  });
+
+  it("the nonfeatured (text-only) branch carries no h-full and keeps automatic height", () => {
+    const branches = articleClasses();
+    const plain = branches[branches.length - 1] ?? "";
+    expect(plain.includes("h-full"), "nonfeatured h-full: absent").toBe(false);
+    expect(
+      plain.includes("self-start") ||
+        programsGridClass().includes("items-start"),
+      "nonfeatured automatic height",
+    ).toBe(true);
+  });
+});
+
 describe("control: F3 scanners resolve the card order and base column", () => {
   it("control: the card order is unchanged", () => {
     const source = readFileSync(FEATURES_PAGE, "utf8");
@@ -138,30 +259,43 @@ describe("control: F3 scanners resolve the card order and base column", () => {
   });
 });
 
-describe("F3: the Primary card spans the full grid width at md+", () => {
-  it("gives the primary card an md+ full-span class", () => {
-    const combined = `${readFileSync(PROGRAM_CARD, "utf8")}\n${programsSection()}`;
-    const hasSpan = /(sm|md|lg):col-span-(2|3|full)/.test(combined);
-    expect(
-      hasSpan && primaryConditioned(),
-      "F3 primary card spans the full grid width at md+",
-    ).toBe(true);
+describe("F3r6 source: no card layout is keyed on primary alone", () => {
+  it("wires the full-width row by image presence, not by the primary key", () => {
+    expect(noPrimaryOnlyLayout(), "F3r6 primary-only layout: absent").toBe(true);
+  });
+
+  it("drives the full-width row from the pictured cards", () => {
+    expect(fullWidthDrivenByImage(), "F3r6 image-driven full width").toBe(true);
   });
 });
 
-describe("F3: the Primary card shows its picture beside its text at md+", () => {
-  it("lays the primary card out in a row at md+", () => {
-    const cardSource = readFileSync(PROGRAM_CARD, "utf8");
-    const hasRow = /(sm|md|lg):flex-row/.test(cardSource);
-    expect(
-      hasRow && primaryConditioned(),
-      "F3 primary card uses an md+ row layout",
-    ).toBe(true);
+describe("F3r6 render: every pictured card is a full-width row", () => {
+  beforeEach(async () => {
+    hoisted.state.messages = enMessages;
+    render(await FeaturesPage());
   });
 
-  it("limits the picture column width at md+", () => {
+  it("renders storytime, primary and reading as full-width horizontal rows", () => {
+    const missing = PICTURED_HOOKS.filter((hook) => {
+      const element = document.querySelector(`[data-testid="${hook}"]`);
+      return !isFullWidthRow(element?.getAttribute("class") ?? "");
+    });
+    expect(missing, "pictured cards without a full-width row").toEqual([]);
+  });
+
+  it("control: text-only cards stay out of full-width rows", () => {
+    const wide = TEXT_HOOKS.filter((hook) => {
+      const element = document.querySelector(`[data-testid="${hook}"]`);
+      return isFullWidthRow(element?.getAttribute("class") ?? "");
+    });
+    expect(wide, "text-only cards in full-width rows").toEqual([]);
+  });
+
+  it("control: the picture column stays width-limited at md+", () => {
     const block = cardImageBlock();
-    const capped = /(sm|md|lg):(max-w-|w-|basis-)/.test(block);
-    expect(capped, `F3 picture column width-limited at md+ (block: ${block.slice(0, 200)})`).toBe(true);
+    expect(
+      /(sm|md|lg):(max-w-|w-|basis-)/.test(block),
+      `F3 picture column width-limited at md+ (block: ${block.slice(0, 200)})`,
+    ).toBe(true);
   });
 });
