@@ -197,8 +197,13 @@ Track: `ci_green_master_20261115` (light lane).
     `dist` folders.
   - `pnpm architecture:check --skip-input-snapshot-pin --policy v2`: exit 0,
     `clean (files=7034, findings=800, parseErrors=0)`, `debt: clean
-    (additions=0)`. The check found no stale report hash, so the pin refresh was
-    not needed. A preview refresh reports "no write required".
+    (additions=0)`.
+  - The full check without the flag reported "Analyzer input snapshot hash does
+    not match current bytes": the eslint config and the test mock are analyzer
+    inputs. Commit `1e7d0e574` refreshed two existing fields (input snapshot and
+    review subject) with the repo's own `pin:refresh --acknowledge`. The report
+    hashes did not move, and no field was added. The full check and the CI-form
+    check then both exit 0. A preview refresh reports "no write required".
 
 ## Follow-up (deferred to a later owner)
 
