@@ -12,7 +12,7 @@ export const en = {
   hero: {
     eyebrow: "School pricing",
     heading: "Plan next year's subjects. See the price clearly.",
-    body1: "Start with English through Primary Advantage. Add subjects as your school's program grows.",
+    body1: "Each grade picks one English program: Storytime Advantage, Primary Advantage, or Reading Advantage. Each English program is priced on its own. Schools add more subjects for the same students.",
     body2: "The school price covers the app, teacher training and support. Printed workbooks are priced separately.",
   },
   subjects: {
@@ -57,20 +57,12 @@ export const en = {
         ],
         label: "4 subjects | +250 baht | 2,450 baht",
       },
-      {
-        cells: [
-          "5 subjects",
-          "+250 baht",
-          "2,700 baht",
-        ],
-        label: "5 subjects | +250 baht | 2,700 baht",
-      },
     ],
-    note: "Each further subject adds 250 baht per student per year.",
+    note: "Each total counts the same students in the same grades. A school picks one English program per grade, then adds subjects on the same curve.",
   },
   example: {
-    heading: "English plus Math: 1,800 baht",
-    body1: "A school that chooses English and Math pays 1,800 baht per student per year for the app, teacher training and support.",
+    heading: "Primary Advantage plus Math Advantage for the same students: 1,800 baht",
+    body1: "A school that chooses Primary Advantage English and Math Advantage for the same students pays 1,800 baht per student per year for the app, teacher training and support.",
     body2: "Printed workbooks are quoted separately, per book.",
   },
   included: {
@@ -87,7 +79,7 @@ export const en = {
   },
   whichSubjects: {
     heading: "Start with English. Plan for more.",
-    body: "Schools can start with English through Primary Advantage. Science Advantage, Math Advantage and Zhongwen Advantage are planned for the 2027 school year.",
+    body: "Schools start with one English program per grade. Science Advantage, Math Advantage and Zhongwen Advantage are planned for the 2027 school year.",
   },
   family: {
     heading: "For families, learning happens with a local tutor",
@@ -102,7 +94,7 @@ export const en = {
     items: [
       {
         q: "Q: What counts as a subject?",
-        a: "A: Each subject in the school program counts toward the per-student yearly total. English is available through Primary Advantage. Science, Math and Zhongwen Advantage are planned for the 2027 school year.",
+        a: "A: Each subject counts once toward the per-student yearly total. English counts once, through the one English program of that grade. Science Advantage, Math Advantage and Zhongwen Advantage are planned for the 2027 school year.",
       },
       {
         q: "Q: Are printed books included in the school price?",
@@ -130,7 +122,7 @@ export const th = {
   hero: {
     eyebrow: "ราคาสำหรับโรงเรียน",
     heading: "วางแผนวิชาสำหรับปีหน้า พร้อมดูราคาได้ชัดเจน",
-    body1: "เริ่มจากภาษาอังกฤษผ่าน Primary Advantage แล้วเพิ่มวิชาอื่นเมื่อหลักสูตรของโรงเรียนเติบโตขึ้น",
+    body1: "แต่ละชั้นเลือกโปรแกรมภาษาอังกฤษหนึ่งโปรแกรม: Storytime Advantage, Primary Advantage หรือ Reading Advantage แต่ละโปรแกรมคิดราคาแยกกัน และเพิ่มวิชาได้อีกสำหรับนักเรียนกลุ่มเดียวกัน",
     body2: "ราคาสำหรับโรงเรียนรวมแอป การอบรมครู และการสนับสนุนแล้ว ส่วนเวิร์กบุ๊กฉบับพิมพ์คิดราคาแยกต่างหาก",
   },
   subjects: {
@@ -175,20 +167,12 @@ export const th = {
         ],
         label: "4 วิชา | +250 บาท | 2,450 บาท",
       },
-      {
-        cells: [
-          "5 วิชา",
-          "+250 บาท",
-          "2,700 บาท",
-        ],
-        label: "5 วิชา | +250 บาท | 2,700 บาท",
-      },
     ],
-    note: "วิชาเพิ่มเติมแต่ละวิชาคิดเพิ่ม 250 บาทต่อนักเรียนหนึ่งคนต่อปี",
+    note: "ราคารวมแต่ละขั้นนับนักเรียนกลุ่มเดียวกันในชั้นเดียวกัน โรงเรียนเลือกโปรแกรมภาษาอังกฤษหนึ่งโปรแกรมต่อหนึ่งชั้น แล้วเพิ่มวิชาตามอัตราค่าบริการเดียวกัน",
   },
   example: {
-    heading: "ภาษาอังกฤษและคณิตศาสตร์: 1,800 บาท",
-    body1: "โรงเรียนที่เลือกภาษาอังกฤษและคณิตศาสตร์ จ่าย 1,800 บาทต่อนักเรียนหนึ่งคนต่อปี สำหรับแอป การอบรมครู และการสนับสนุน",
+    heading: "Primary Advantage บวก Math Advantage สำหรับนักเรียนกลุ่มเดียวกัน: 1,800 บาท",
+    body1: "โรงเรียนที่เลือกภาษาอังกฤษผ่าน Primary Advantage และ Math Advantage สำหรับนักเรียนกลุ่มเดียวกัน จ่าย 1,800 บาทต่อนักเรียนหนึ่งคนต่อปี สำหรับแอป การอบรมครู และการสนับสนุน",
     body2: "เวิร์กบุ๊กฉบับพิมพ์เสนอราคาแยกเป็นรายเล่ม",
   },
   included: {
@@ -205,7 +189,7 @@ export const th = {
   },
   whichSubjects: {
     heading: "เริ่มจากภาษาอังกฤษ แล้ววางแผนเพิ่มวิชา",
-    body: "โรงเรียนเริ่มสอนภาษาอังกฤษผ่าน Primary Advantage ได้ ส่วน Science Advantage, Math Advantage และ Zhongwen Advantage วางแผนไว้สำหรับปีการศึกษา 2027",
+    body: "โรงเรียนเริ่มด้วยโปรแกรมภาษาอังกฤษหนึ่งโปรแกรมต่อหนึ่งชั้น ส่วน Science Advantage, Math Advantage และ Zhongwen Advantage วางแผนไว้สำหรับปีการศึกษา 2027",
   },
   family: {
     heading: "ครอบครัวเรียนรู้ไปกับติวเตอร์ในพื้นที่",
@@ -220,7 +204,7 @@ export const th = {
     items: [
       {
         q: "วิชาใดบ้างที่นับรวมในราคา?",
-        a: "วิชาแต่ละวิชาในหลักสูตรของโรงเรียนนับรวมในราคารายปีต่อนักเรียนหนึ่งคน โรงเรียนสามารถเรียนภาษาอังกฤษผ่าน Primary Advantage ส่วน Science Advantage, Math Advantage และ Zhongwen Advantage วางแผนไว้สำหรับปีการศึกษา 2027",
+        a: "วิชาแต่ละวิชาในหลักสูตรของโรงเรียนนับรวมหนึ่งครั้งในราคารายปีต่อนักเรียนหนึ่งคน วิชาภาษาอังกฤษนับหนึ่งครั้งผ่านโปรแกรมภาษาอังกฤษประจำชั้นนั้น ส่วน Science Advantage, Math Advantage และ Zhongwen Advantage วางแผนไว้สำหรับปีการศึกษา 2027",
       },
       {
         q: "ราคาสำหรับโรงเรียนรวมหนังสือฉบับพิมพ์หรือไม่?",

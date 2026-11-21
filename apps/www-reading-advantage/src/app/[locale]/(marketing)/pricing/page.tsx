@@ -38,10 +38,10 @@ export default async function PricingPage() {
   const columns = [0, 1, 2].map((index) =>
     t(`subjects.columns.${index}` as "subjects.columns.0"),
   );
-  const rowLabels = [0, 1, 2, 3, 4].map((index) =>
+  const rowLabels = [0, 1, 2, 3].map((index) =>
     t(`subjects.rows.${index}.label` as "subjects.rows.0.label"),
   );
-  const rows = [0, 1, 2, 3, 4].map((row) =>
+  const rows = [0, 1, 2, 3].map((row) =>
     [0, 1, 2].map((column) =>
       t(
         `subjects.rows.${row}.cells.${column}` as "subjects.rows.0.cells.0",
