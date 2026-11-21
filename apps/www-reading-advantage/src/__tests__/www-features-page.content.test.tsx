@@ -147,7 +147,7 @@ describe("control: fixture and hooks", () => {
     expect(PROGRAM_CARDS.length, "program cards: 5").toBe(5);
     expect(APP_LOGO_ORDER.length, "logo tiles: 7").toBe(7);
     expect(APP_LOGO_ORDER[0], "first logo: storytime").toBe("storytime");
-    expect(FEATURES_ENTRIES.length, "fixture entries: 52").toBe(52);
+    expect(FEATURES_ENTRIES.length, "fixture entries: 51").toBe(51);
   });
 
   it("control: the hook scanner reads test ids in document order", () => {

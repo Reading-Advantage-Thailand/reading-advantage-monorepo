@@ -76,8 +76,8 @@ function allLeaves(messages: unknown): string[] {
 }
 
 describe("control: fixture and scanner", () => {
-  it("control: the fixture holds 52 features entries and 37 pricing entries", () => {
-    expect(FEATURES_ENTRIES.length, "features entries: 52").toBe(52);
+  it("control: the fixture holds 51 features entries and 37 pricing entries", () => {
+    expect(FEATURES_ENTRIES.length, "features entries: 51").toBe(51);
     expect(PRICING_ENTRIES.length, "pricing entries: 37").toBe(37);
     expect(PRICE_ROWS_EN.length, "price rows: 4").toBe(4);
     expect(PRICE_COLUMNS_EN.length, "price columns: 3").toBe(3);

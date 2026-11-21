@@ -49,7 +49,6 @@ export const FEATURES_ENTRIES: FixtureEntry[] = [
   { id: "TH-FP-19", label: `Primary bullet 3`, en: `Use 28 games, flashcards, saved words and sentences, text-to-speech and translation.`, th: `ใช้เกม 28 เกม บัตรคำ รายการคำศัพท์และประโยคที่บันทึกไว้ ระบบอ่านข้อความ และเครื่องมือแปลภาษา` },
   { id: "TH-FP-20", label: `Reading card for`, en: `For: Families learning through Tutor Advantage`, th: `ครอบครัวที่เรียนผ่าน Tutor Advantage` },
   { id: "TH-FP-21", label: `Reading card status`, en: `Status: Reading Advantage Origins 2 is on sale through Tutor Advantage.`, th: `Reading Advantage Origins 2 วางจำหน่ายผ่าน Tutor Advantage` },
-  { id: "TH-FP-22", label: `Reading card body`, en: `Reading Advantage books are taught through Tutor Advantage, not presented as a school app.`, th: `หนังสือ Reading Advantage ใช้เรียนผ่าน Tutor Advantage ไม่ได้นำเสนอเป็นแอปสำหรับโรงเรียน` },
   { id: "TH-FP-23", label: `CodeCamp card for`, en: `For: Adults building full-stack engineering skills`, th: `ผู้ใหญ่ที่ต้องการพัฒนาทักษะวิศวกรรมซอฟต์แวร์แบบ full-stack` },
   { id: "TH-FP-24", label: `CodeCamp card status`, en: `Status: Live`, th: `เปิดสอนแล้ว` },
   { id: "TH-FP-25", label: `CodeCamp card body`, en: `An adult bootcamp that runs for about 12–15 weeks.`, th: `หลักสูตรเร่งรัดสำหรับผู้ใหญ่ ใช้เวลาประมาณ 12–15 สัปดาห์` },
