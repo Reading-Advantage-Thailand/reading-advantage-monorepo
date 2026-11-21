@@ -145,6 +145,11 @@ Track: `ci_green_master_20261115` (light lane).
   `pnpm architecture:check --skip-input-snapshot-pin --policy v2` exit 0, `clean
   (files=7026, findings=800, parseErrors=0)`, `debt: clean (additions=0)`. PC-4 no
   longer blocks the check. The blog test file passes locally: 18 tests, 1.3 s.
+- Push attempt: `safe-push` exit 2, "refused: affected apps:
+  [\"www-reading-advantage\"]; deploy push: needs Daniel's word through the PM".
+  The test fix is a www source change, so the selector names the www app. The
+  three commits stay local until the PM decides. Range: `e09ee183c..3b3ef3b46`
+  on top of `f4dd177a9`.
 
 ## Follow-up (deferred to a later owner)
 
