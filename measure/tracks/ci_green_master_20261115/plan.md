@@ -150,8 +150,24 @@ Track: `ci_green_master_20261115` (light lane).
   The test fix is a www source change, so the selector names the www app. The
   three commits stay local until the PM decides. Range: `e09ee183c..3b3ef3b46`
   on top of `f4dd177a9`.
+- Rebase (PM decision (c), 2026-11-21): the branch moved onto `32d3be5af`. The pin
+  commit `fd995faa4` was dropped, because origin/master moved after it. The test
+  commit is now `4c22532a1`, and the two plan records are `93fc69d2e` and
+  `7575442ff`. The pin refresh runs after every other commit.
+- Selector fix, PM decision (c): a test file deploys nothing (per-app CD rule,
+  2026-11-07). `scripts/ci/affected-apps.mjs` now treats a name that ends with
+  `.test.ts`, `.test.tsx`, or `.spec.ts`, and any path under `__tests__/`, as
+  non-source. Commit `89e64227c`. The selector tests pass: 14 files, 232 tests,
+  including five new cases. A test-only www change now prints `[]`.
+- The selector does not treat `scripts/ci/**` as a global change. Case A5-01
+  already holds a `scripts/ci/apps.json` change and expects `[]`. No special case
+  was added.
 
 ## Follow-up (deferred to a later owner)
+
+- [ ] The architecture report pin goes stale on every master push that changes analyzer
+  inputs (third time: rounds 2, 3, 4). Refresh the pin in CI, or drop the hash pin.
+  Owner: a later track; PM 2026-11-21.
 
 - [ ] Cut the additions of the largest module first: `apps/primary-advantage`, 144 of the
   337 additions in `packages/architecture-enforcement/src/config/baselines/debt-ledger.v1.json`.
