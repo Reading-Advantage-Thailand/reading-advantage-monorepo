@@ -16,6 +16,7 @@ type ProgramCardProps = ProgramCardCopy & {
   imageAlt?: string;
   imageWidth?: number;
   imageHeight?: number;
+  pictureClass?: string;
   featured?: boolean;
 };
 
@@ -32,6 +33,7 @@ export function ProgramCard({
   imageAlt,
   imageHeight,
   imageSrc,
+  pictureClass,
   imageWidth,
   name,
   status,
@@ -40,7 +42,13 @@ export function ProgramCard({
   const content = (
     <>
       {imageSrc && imageAlt && (
-        <div className={featured ? "bg-site-page md:w-48 md:shrink-0 md:self-center" : "bg-site-page"}>
+        <div
+          className={
+            featured
+              ? `bg-site-page md:w-48 md:shrink-0 md:self-center ${pictureClass ?? ""}`.trim()
+              : "bg-site-page"
+          }
+        >
           <Image
             src={imageSrc}
             alt={imageAlt}

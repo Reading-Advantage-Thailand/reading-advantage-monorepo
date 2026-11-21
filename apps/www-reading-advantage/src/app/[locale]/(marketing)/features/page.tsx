@@ -33,7 +33,16 @@ const CARD_TEST_ID: Record<CardKey, string> = {
 
 /** Screenshot slots that have an approved current-set crop (D7). */
 const CARD_IMAGES: Partial<
-  Record<CardKey, { src: string; alt: string; width: number; height: number }>
+  Record<
+    CardKey,
+    {
+      src: string;
+      alt: string;
+      width: number;
+      height: number;
+      pictureClass?: string;
+    }
+  >
 > = {
   storytime: {
     src: "/images/features/storytime-reader-card.webp",
@@ -50,8 +59,9 @@ const CARD_IMAGES: Partial<
   reading: {
     src: "/images/products/ra-origins-2-cover.jpg",
     alt: "Reading Advantage Origins 2 book cover",
-    width: 1200,
-    height: 576,
+    width: 600,
+    height: 814,
+    pictureClass: "max-h-[300px] [&>img]:max-h-[300px] [&>img]:object-contain",
   },
 };
 
@@ -173,6 +183,7 @@ export default async function FeaturesPage() {
                   imageAlt={image?.alt}
                   imageWidth={image?.width}
                   imageHeight={image?.height}
+                  pictureClass={image?.pictureClass}
                   featured={Boolean(image)}
                   {...cardCopy(key)}
                 />
