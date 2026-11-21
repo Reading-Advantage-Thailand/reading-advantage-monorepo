@@ -224,7 +224,8 @@ describe("plain Markdown", () => {
       }
     }
     expect(checked).toBeGreaterThan(50);
-  });
+    // 139 posts rendered twice measured 1.3 s locally and 6.2 s on CI.
+  }, 30_000);
 
   it("keeps a code fence with another language as code", async () => {
     const html = await renderBlogMarkdown("```js\nconst a = 1;\n```\n");
