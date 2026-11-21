@@ -2,6 +2,9 @@
 /**
  * Print the app ids that a commit range affects.
  *
+ * A change that touches only test files affects no app: a test file starts no
+ * deploy (per-app CD rule, 2026-11-07).
+ *
  * Usage: node scripts/ci/affected-apps.mjs --base <sha> --head <sha>
  *
  * Output: one JSON array of app ids on stdout, sorted, on one line. Exit 0.
@@ -36,6 +39,9 @@ const DEPENDENCY_FIELDS = [
 
 /** The root files that are a global input whenever they change. */
 const GLOBAL_FILES = new Set([".pnpmfile.cjs", ".dockerignore", "turbo.json"]);
+
+/** The file-name suffixes of a test file, which deploys no app. */
+const TEST_FILE_SUFFIXES = [".test.ts", ".test.tsx", ".spec.ts"];
 
 /** The lockfile sections that the script reads entry by entry. */
 const LOCK_ENTRY_SECTIONS = new Set(["importers", "packages", "snapshots", "catalogs", "overrides"]);
@@ -608,7 +614,25 @@ function changedPaths(base, head) {
 }
 
 /**
+ * Report whether a path is a test file, which deploys no app.
+ *
+ * A path under a `__tests__` folder, or a name that ends with `.test.ts`,
+ * `.test.tsx`, or `.spec.ts`, is a test file. The suffix `.red.test.ts`
+ * ends with `.test.ts`, so it is a test file too.
+ *
+ * @param {string} path The path relative to the repository root.
+ * @returns {boolean} True when the path is a test file.
+ */
+function isTestFile(path) {
+  const name = path.slice(path.lastIndexOf("/") + 1);
+  return TEST_FILE_SUFFIXES.some((suffix) => name.endsWith(suffix)) || path.split("/").includes("__tests__");
+}
+
+/**
  * Compute the app ids that a range affects.
+ *
+ * A change that touches only test files affects no app, because a test file
+ * deploys nothing (per-app CD rule, 2026-11-07).
  *
  * @param {string} base The base id.
  * @param {string} head The head id.
@@ -642,6 +666,7 @@ function affectedApps(base, head) {
   const rowPaths = new Set();
   const rootChanged = new Set();
   for (const path of paths) {
+    if (isTestFile(path)) continue;
     if (GLOBAL_FILES.has(path)) return allRows();
     if (["package.json", "pnpm-workspace.yaml", "pnpm-lock.yaml"].includes(path)) rootChanged.add(path);
     const parts = path.split("/");
