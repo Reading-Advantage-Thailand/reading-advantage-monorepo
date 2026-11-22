@@ -26,7 +26,9 @@ filesystem at collection time, so only the runner can count them:
 `real-logos-adversarial` loops (114). `scripts/__tests__/i18n-cli.test.ts`
 (13 static cases) is excluded from the Vitest run by `vitest.config.ts`
 and marked not counted, as are the 6 `e2e/*.spec.ts` Playwright files
-per spec section 2.
+per spec section 2. The per-file comparison lives in
+`measure/runs/www_test_audit_pilot_20261122/per-file-counts.md`: file,
+runner count, and row sum for all 91 files; every file matches.
 
 ## K rows (keep)
 
@@ -119,18 +121,18 @@ per spec section 2.
 | src/__tests__/hero-text-contrast.red.test.ts | all 2 contrast cases | 2 | readable hero subtitles | rewrite | extracts HeroSection calls from page sources; note 3 needs a rendered contrast test |
 | src/__tests__/products-entrance-visibility.red.test.ts | all 3 visibility cases | 3 | content stays visible, including under reduced motion | rewrite | regex-matches CSS and component source; note 3 needs behavior tests for the user-visible rule |
 | src/__tests__/www-features-look-pins.red.test.ts | F1 face-ratio pin; F2 stretch pin; F2r6 branch pins ×2 | 4 | uncropped faces; unstretched text cards | rewrite | source class pins for user-visible look defects; note 3 needs rendered or visual tests |
-| src/__tests__/www-features-look-pins.red.test.ts | source scanners, card order, base grid, F3r6 source pins, picture column | 8 | F3 layout (rendered checks stay) | delete | the rendered F3r6 checks prove the rule; scanner controls go with the scanners |
-| src/__tests__/phase-3-group-b-types.test.ts | keeps both production components free of unsafe assertions | 1 | no bypass casts | delete | static TypeScript AST analysis of two .tsx files, not runtime behavior |
-| src/__tests__/phase-3-i18n.red.test.ts | CTA copy, bypass casts, tsc diagnostics | 3 | locale sourcing; no casts; type validity (rendered CTA case stays) | delete | source reads and static analysis; the rendered case holds the CTA rule |
+| src/__tests__/www-features-look-pins.red.test.ts | source scanners, card order, base grid, F3r6 source pins, picture column | 8 | full-width image rows in card order on the rendered page | rewrite | source class pins for user-visible layout; note 3 needs the order, full-width rows, and column limits checked through the rendered page without class-name pins |
+| src/__tests__/phase-3-group-b-types.test.ts | keeps both production components free of unsafe assertions | 1 | no bypass casts | delete | static AST analysis of cast syntax; guards code hygiene, never a rendered pixel, so note 3 does not apply |
+| src/__tests__/phase-3-i18n.red.test.ts | CTA copy, bypass casts, tsc diagnostics | 3 | locale sourcing; no casts; type validity (rendered CTA case stays) | delete | source reads and static analysis with no rendered output asserted; the rendered CTA case holds the user-visible rule, so note 3 does not apply |
 | src/__tests__/phase-3-i18n.red.test.ts | known Thai typo forms in locale source | 1 | typo-free Thai service copy | rewrite | source regex; note 3 needs a rendered Thai copy check |
 | src/__tests__/phase-4-contact-authority.red.test.tsx | uses contactDetails references in page, footer, form sources | 1 | contact authority (rendered half stays) | rewrite | drops the `?raw` source-text asserts; the rendered asserts in the same case already prove the rule |
-| src/__tests__/www-pricing-rows-fluid.red.test.ts | pricing page source is found; no literal four-row index list | 2 | fluid rows (rendered cases stay) | delete | source-presence and source-absence pins; two rendered cases prove the rule |
-| src/__tests__/www-reading-card.red.test.ts | new cover src; old src gone; no mt-auto | 3 | cover swap and featured-row fix (rendered and file cases stay) | delete | string pins in page and card source |
-| src/__tests__/www-reading-cover.red.test.ts | declared dims; storytime, primary, tutor regression pins | 4 | cover dims; other cards unchanged | delete | reads CARD_IMAGES numbers and approved strings from page source |
+| src/__tests__/www-pricing-rows-fluid.red.test.ts | pricing page source is found; no literal four-row index list | 2 | fluid rows (rendered cases stay) | delete | pins on page-source text only; the rendered three-row cases prove the fluid mapping the visitor sees, so note 3 does not apply |
+| src/__tests__/www-reading-card.red.test.ts | new cover src; old src gone; no mt-auto | 3 | reading card shows the Origins 2 cover with the D13 alt and top-anchored bullets | rewrite | source pins for user-visible image and layout; note 3 needs the cover file, alt, and bullet anchoring checked through the rendered card |
+| src/__tests__/www-reading-cover.red.test.ts | declared dims; storytime, primary, tutor regression pins | 4 | rendered portrait dims per pictured card; approved files, alts, and dims unchanged | rewrite | source pins for user-visible image sizes; note 3 needs dims, files, and alts checked through the rendered cards and real files |
 | src/__tests__/no-gse-in-customer-copy.test.ts | all 4 sweep, pending, reason, print cases | 4 | CEFR-only customer copy | rewrite | scans source text with regex; note 3 needs a rendered-page and blog-route copy sweep |
 | src/lib/__tests__/phase-w3-claims.test.ts | all 18 claim audits and positive controls | 18 | truthful product claims | rewrite | reads src/ files as text; note 3 needs the claims held by rendered page tests, consolidated per rule |
 | src/__tests__/www-batch-20261119.locale.test.ts | roadmap tags in home source; zh roadmap source absence; reading-card badge source; planned-date default source; efficacy-stats and FAQ removals in page sources | 5 | 2027 copy rollout (locale pins stay) | rewrite | `readFileSync` pins on page and locale sources; note 3 needs rendered behavior tests |
-| src/components/layout/layout-components.test.ts | does not retain empty layout component modules | 1 | none (one-time migration guard) | delete | reads source files only to check emptiness; git history holds the state |
+| src/components/layout/layout-components.test.ts | does not retain empty layout component modules | 1 | none (one-time migration guard) | delete | reads source files only to check emptiness; no component renders, so note 3 does not apply; git history holds the state |
 
 ## D2 rows (duplicate: delete; kept duplicate named)
 
@@ -222,7 +224,7 @@ Runner counts per class (Vitest suite, 3175 cases):
 | Class | Cases | Share | Action |
 |---|---|---|---|
 | K keep | 2843 | 89.6 % | keep |
-| D1 source-text | 67 | 2.1 % | delete 22; rewrite 45 per note 3 |
+| D1 source-text | 67 | 2.1 % | delete 7; rewrite 60 per note 3 |
 | D2 duplicate | 22 | 0.7 % | delete, kept duplicate named |
 | D3 dead target | 0 | 0.0 % | none meets note 2 |
 | D4 weak check | 6 | 0.2 % | delete |
@@ -235,13 +237,13 @@ Check: 2843 + 67 + 22 + 0 + 6 + 221 + 16 = 3175.
 
 ## Projected cut of Vitest cases
 
-- Certain deletes: D1 source pins with rendered holders (22),
-  D2 duplicates (22), D4 weak checks (6). Total 50 cases, 1.6 %.
-- D1 rewrites (45 cases) and R2 rewrites (16 cases) keep their cases.
+- Certain deletes: D1 source pins with rendered holders or no rendered
+  output (7), D2 duplicates (22), D4 weak checks (6). Total 35 cases, 1.1 %.
+- D1 rewrites (60 cases) and R2 rewrites (16 cases) keep their cases.
 - D5 replacements collapse 221 exact-pin cases into locale-key checks.
   One key-shape check per pinned key group leaves about 60 to 80 cases.
   Cut from D5: about 141 to 161 cases, about 4.4 to 5.1 %.
-- Projected total cut: about 191 to 211 cases, about 6.0 to 6.6 %.
+- Projected total cut: about 176 to 196 cases, about 5.5 to 6.2 %.
   The honest projection is below the 20 % target of 635 cases.
   The projection is not inflated to reach the target.
 
