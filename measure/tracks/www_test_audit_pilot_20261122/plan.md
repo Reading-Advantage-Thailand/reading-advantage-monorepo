@@ -90,7 +90,13 @@ Each task below is one commit for one class.
   22 duplicate cases removed from 6 files. Every named duplicate stays.
 - [x] 2.3 Delete class D3. Test: (a), (b), (c), (d).
   No D3 rows (r2 note 2). No test commit and no gate.
-- [ ] 2.4 Delete class D4. Test: (a), (b), (c), (d).
+- [x] 2.4 Delete class D4. Test: (a), (b), (c), (d).
+  Commit: 0d705612d77a786b42484f5df067f9bbb54e2389.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-0d705612.json.
+  GREEN exit 0: measure/runs/www_test_audit_pilot_20261122/green-0d705612.log.
+  COVERAGE exit 0: measure/runs/www_test_audit_pilot_20261122/coverage-0d705612.log.
+  cases_before=3146, cases_after=3140, line_coverage_pct=89.86, floor=85.52.
+  6 weak-check cases removed from 3 files. No result-checking test was weakened.
 - [ ] 2.5 Replace class D5. Test: (a), (b), (c), (d).
 - [ ] 2.6 Checkpoint Phase 2. Test: (a), (b), (c).
   Record each commit SHA and its gate log in the task line.
