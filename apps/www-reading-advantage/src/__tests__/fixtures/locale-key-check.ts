@@ -28,49 +28,46 @@ function readPath(dict: Dict, key: string): string | undefined {
 }
 
 /**
- * Collects every dotted string-leaf key under a scope of the English dictionary.
- * The caller passes the keys to expectKeysInEveryLocale.
- * @param scope The dotted scope path.
- * @returns The dotted keys under the scope.
+ * Checks that each key of an independent required key list resolves to a
+ * non-empty string in one locale dictionary.
+ * The key list comes from the test, never from the dictionary under test.
+ * @param dict The locale dictionary.
+ * @param locale The locale name, for the failure message.
+ * @param keys The dotted locale keys to check.
  */
-export function keysUnderScope(scope: string): string[] {
-  const found: string[] = [];
-  const walk = (value: unknown, path: string): void => {
-    if (typeof value === "string") {
-      if (value.trim().length > 0) found.push(path);
-      return;
-    }
-    if (value === null || typeof value !== "object") return;
-    for (const [key, child] of Object.entries(value as Dict)) {
-      walk(child, `${path}.${key}`);
-    }
-  };
-  const root = scope
-    ? scope.split(".").reduce<unknown>((value, part) => {
-        if (value === null || typeof value !== "object" || !(part in value)) return undefined;
-        return (value as Dict)[part];
-      }, enMessages as unknown as Dict)
-    : enMessages;
-  if (root !== undefined) walk(root, scope);
-  return found;
+export function expectKeysInDictionary(
+  dict: Dict,
+  locale: string,
+  keys: readonly string[],
+): void {
+  expect(
+    keys.length,
+    `the required key list for ${locale} must not be empty`,
+  ).toBeGreaterThan(0);
+  for (const key of keys) {
+    const value = readPath(dict, key);
+    expect(typeof value, `${locale}: ${key} must be a string`).toBe("string");
+    expect(
+      (value as string).trim().length,
+      `${locale}: ${key} must be non-empty`,
+    ).toBeGreaterThan(0);
+  }
 }
 
 /**
- * Checks that each key resolves to a non-empty string in every shipped locale.
+ * Checks that each key of an independent required key list resolves to a
+ * non-empty string in every shipped locale.
  * The locale list comes from the app i18n config, not from a test-local list.
  * @param keys The dotted locale keys to check.
  */
 export function expectKeysInEveryLocale(keys: readonly string[]): void {
+  expect(
+    keys.length,
+    "the required key list must not be empty",
+  ).toBeGreaterThan(0);
   for (const locale of localeConfig.locales) {
     const dict = MESSAGES[locale];
     expect(dict, `locale ${locale} dictionary`).toBeDefined();
-    for (const key of keys) {
-      const value = readPath(dict, key);
-      expect(typeof value, `${locale}: ${key} must be a string`).toBe("string");
-      expect(
-        (value as string).trim().length,
-        `${locale}: ${key} must be non-empty`,
-      ).toBeGreaterThan(0);
-    }
+    expectKeysInDictionary(dict as Dict, locale, keys);
   }
 }

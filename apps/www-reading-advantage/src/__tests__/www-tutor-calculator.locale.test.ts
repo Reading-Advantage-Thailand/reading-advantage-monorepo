@@ -7,10 +7,24 @@
  */
 import { describe, expect, it } from "vitest";
 import { en, th, zh } from "@/locales/pages/products/tutor-advantage";
-import {
-  expectKeysInEveryLocale,
-  keysUnderScope,
-} from "@/__tests__/fixtures/locale-key-check";
+import { expectKeysInEveryLocale } from "@/__tests__/fixtures/locale-key-check";
+
+/** The required locale keys of the screens block. The list is written here, not read from a locale file. */
+const SCREENS_KEYS = [
+  "pages.products.tutorAdvantage.screens.eyebrow",
+  "pages.products.tutorAdvantage.screens.heading",
+  "pages.products.tutorAdvantage.screens.description",
+  "pages.products.tutorAdvantage.screens.items.0.caption",
+  "pages.products.tutorAdvantage.screens.items.0.alt",
+  "pages.products.tutorAdvantage.screens.items.1.caption",
+  "pages.products.tutorAdvantage.screens.items.1.alt",
+  "pages.products.tutorAdvantage.screens.items.2.caption",
+  "pages.products.tutorAdvantage.screens.items.2.alt",
+  "pages.products.tutorAdvantage.screens.items.3.caption",
+  "pages.products.tutorAdvantage.screens.items.3.alt",
+  "pages.products.tutorAdvantage.screens.items.4.caption",
+  "pages.products.tutorAdvantage.screens.items.4.alt",
+];
 
 type Dict = Record<string, unknown>;
 type Locale = "en" | "th" | "zh";
@@ -379,7 +393,7 @@ describe("2. the calculator block equals PR section 6 exactly", () => {
 
 describe("3. the screens block keys exist in every shipped locale", () => {
   it("holds the screens keys in every shipped locale", () => {
-    expectKeysInEveryLocale(keysUnderScope("pages.products.tutorAdvantage.screens"));
+    expectKeysInEveryLocale(SCREENS_KEYS);
   });
 
   it("keeps the five slot order and the section 6 key order in every locale", () => {

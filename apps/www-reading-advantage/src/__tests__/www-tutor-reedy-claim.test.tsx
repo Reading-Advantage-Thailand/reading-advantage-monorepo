@@ -12,15 +12,60 @@ import { getScopedI18n } from "@/locales/server";
 import * as pageCopy from "@/locales/pages/products/tutor-advantage";
 import * as componentCopy from "@/locales/components/products/tutor-advantage";
 import TutorAdvantage from "@/app/[locale]/(marketing)/products/tutor-advantage/page";
-import {
-  expectKeysInEveryLocale,
-  keysUnderScope,
-} from "@/__tests__/fixtures/locale-key-check";
+import { expectKeysInEveryLocale } from "@/__tests__/fixtures/locale-key-check";
+
+/** The required locale keys of the FAQ items. The list is written here, not read from a locale file. */
+const FAQ_ITEM_KEYS = [
+  "pages.products.tutorAdvantage.faq.items.0.question",
+  "pages.products.tutorAdvantage.faq.items.0.answer",
+  "pages.products.tutorAdvantage.faq.items.1.question",
+  "pages.products.tutorAdvantage.faq.items.1.answer",
+  "pages.products.tutorAdvantage.faq.items.2.question",
+  "pages.products.tutorAdvantage.faq.items.2.answer",
+  "pages.products.tutorAdvantage.faq.items.3.question",
+  "pages.products.tutorAdvantage.faq.items.3.answer",
+  "pages.products.tutorAdvantage.faq.items.4.question",
+  "pages.products.tutorAdvantage.faq.items.4.answer",
+  "pages.products.tutorAdvantage.faq.items.5.question",
+  "pages.products.tutorAdvantage.faq.items.5.answer",
+];
+
+/** The required locale keys of the Reedy block points. The list is written here, not read from a locale file. */
+const REEDY_POINT_KEYS = [
+  "pages.products.tutorAdvantage.reedyBlock.points.0",
+  "pages.products.tutorAdvantage.reedyBlock.points.1",
+  "pages.products.tutorAdvantage.reedyBlock.points.2",
+];
 
 type Dict = Record<string, unknown>;
 
 const LOCALES = ["en", "th", "zh"] as const;
 type Locale = (typeof LOCALES)[number];
+
+/** The two AC-24 eligibility limits that the Reedy copy must keep. */
+type EligibilityFact = "activePackage" | "finishedLesson";
+
+/**
+ * The words that carry each AC-24 eligibility limit in each locale.
+ * The check reads the facts, not the whole sentence.
+ */
+const ELIGIBILITY: Record<
+  Locale,
+  { readonly activePackage: readonly string[]; readonly finishedLesson: readonly string[] }
+> = {
+  en: {
+    activePackage: ["active", "package"],
+    finishedLesson: ["lessons", "finished"],
+  },
+  th: {
+    activePackage: ["แพ็กเกจ", "ใช้งานอยู่"],
+    finishedLesson: ["บทเรียน", "เรียนจบแล้ว"],
+  },
+  zh: {
+    activePackage: ["有效", "课程包"],
+    finishedLesson: ["课程", "已完成"],
+  },
+};
 
 const PAGES: Record<Locale, Dict> = {
   en: pageCopy.en as unknown as Dict,
@@ -98,6 +143,35 @@ function text(dict: Dict, path: string): string {
 }
 
 /**
+ * Checks that a text carries each AC-24 eligibility limit of one locale.
+ * @param value The text to check.
+ * @param locale The locale of the text.
+ * @param facts The eligibility limits to check.
+ */
+function expectEligibilityFacts(
+  value: string,
+  locale: Locale,
+  facts: readonly EligibilityFact[],
+): void {
+  for (const fact of facts) {
+    for (const marker of ELIGIBILITY[locale][fact]) {
+      expect(value, `${locale}: ${fact} must carry "${marker}"`).toContain(marker);
+    }
+  }
+}
+
+/**
+ * Finds the FAQ item whose question names Reedy.
+ * @param dict The page dictionary of one locale.
+ * @returns The FAQ item, or undefined when no question names Reedy.
+ */
+function reedyFaqAnswer(dict: Dict): string | undefined {
+  const items = (dict.faq as Dict).items as Array<Dict>;
+  const item = items.find((entry) => String(entry.question).includes("Reedy"));
+  return item ? String(item.answer) : undefined;
+}
+
+/**
  * Renders the Tutor Advantage page with the real messages of one locale.
  * @param locale The locale to render.
  * @returns A promise that resolves after the render.
@@ -168,17 +242,46 @@ describe("AC-24: the new Reedy descriptions", () => {
       "components.products.tutorAdvantage.features.2.description",
     ]);
   });
+
+  for (const locale of LOCALES) {
+    it(`${locale}: the page description keeps the active-package and finished-lesson limits`, () => {
+      const description = text(
+        PAGES[locale],
+        "platformFeatures.features.2.description",
+      );
+      expectEligibilityFacts(description, locale, ["activePackage", "finishedLesson"]);
+    });
+
+    it(`${locale}: the component description keeps the finished-lesson limit`, () => {
+      const description = text(
+        COMPONENTS[locale],
+        "features.2.description",
+      );
+      expectEligibilityFacts(description, locale, ["finishedLesson"]);
+    });
+  }
 });
 
 describe("AC-24: the FAQ answer drops the not-available clause", () => {
   it("holds the FAQ item keys in every shipped locale", () => {
-    expectKeysInEveryLocale(keysUnderScope("pages.products.tutorAdvantage.faq.items"));
+    expectKeysInEveryLocale(FAQ_ITEM_KEYS);
   });
+
+  for (const locale of LOCALES) {
+    it(`${locale}: the FAQ answer keeps the active-package and finished-lesson limits`, () => {
+      const answer = reedyFaqAnswer(PAGES[locale]);
+      expect(answer, `the Reedy FAQ answer in ${locale}`).toBeDefined();
+      expectEligibilityFacts(answer as string, locale, [
+        "activePackage",
+        "finishedLesson",
+      ]);
+    });
+  }
 });
 
 describe("AC-24: the Reedy block keeps three bullets", () => {
   it("holds the Reedy bullet keys in every shipped locale", () => {
-    expectKeysInEveryLocale(keysUnderScope("pages.products.tutorAdvantage.reedyBlock.points"));
+    expectKeysInEveryLocale(REEDY_POINT_KEYS);
   });
 
   for (const locale of LOCALES) {
@@ -191,6 +294,21 @@ describe("AC-24: the Reedy block keeps three bullets", () => {
       if (!(list instanceof HTMLElement)) throw new Error(`no list for ${locale}`);
       const bullets = Array.from(list.querySelectorAll("li")).map((item) => item.textContent);
       expect(bullets, `bullets in ${locale}: 3`).toHaveLength(3);
+    });
+
+    it(`${locale}: the first rendered bullet keeps the active-package and finished-lesson limits`, async () => {
+      await renderWithRealCopy(locale);
+      const heading = screen.getByRole("heading", { name: text(PAGES[locale], "reedyBlock.heading") });
+      const section = heading.closest("section");
+      if (!(section instanceof HTMLElement)) throw new Error(`no section for ${locale}`);
+      const list = section.querySelector("ul");
+      if (!(list instanceof HTMLElement)) throw new Error(`no list for ${locale}`);
+      const first = list.querySelector("li");
+      expect(first, `the first bullet in ${locale}`).not.toBeNull();
+      expectEligibilityFacts(first?.textContent ?? "", locale, [
+        "activePackage",
+        "finishedLesson",
+      ]);
     });
   }
 });

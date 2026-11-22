@@ -78,36 +78,64 @@ function copyLocale(locale: Locale): PageLocale {
   return locale === "th" ? "th" : "en";
 }
 
-/**
- * Collects the dotted paths of every string under a locale scope.
- * @param messages The locale messages.
- * @param scope The path segments of the scope.
- * @returns The dotted key paths under the scope.
- */
-function localeKeys(messages: unknown, scope: string[]): string[] {
-  const prefix = scope.join(".");
-  let value: unknown = messages;
-  for (const part of scope) {
-    if (value === null || typeof value !== "object" || !(part in value)) return [];
-    value = (value as Record<string, unknown>)[part];
-  }
-  const found: string[] = [];
-  const walk = (node: unknown, path: string): void => {
-    if (typeof node === "string") {
-      found.push(path);
-      return;
-    }
-    if (node === null || typeof node !== "object") return;
-    for (const [key, child] of Object.entries(node as Record<string, unknown>)) {
-      walk(child, `${path}.${key}`);
-    }
-  };
-  walk(value, prefix);
-  return found;
-}
+/** The required locale keys of the Primary page. The list is written here, not read from a locale file. */
+const PAGE_KEYS = [
+  "pages.products.primaryAdvantage.meta.title",
+  "pages.products.primaryAdvantage.meta.description",
+  "pages.products.primaryAdvantage.buttons.pricing",
+  "pages.products.primaryAdvantage.buttons.contact",
+  "pages.products.primaryAdvantage.hero.headline",
+  "pages.products.primaryAdvantage.hero.body",
+  "pages.products.primaryAdvantage.workbook.headline",
+  "pages.products.primaryAdvantage.workbook.body",
+  "pages.products.primaryAdvantage.blended.headline",
+  "pages.products.primaryAdvantage.blended.body",
+  "pages.products.primaryAdvantage.cefr.headline",
+  "pages.products.primaryAdvantage.cefr.body",
+  "pages.products.primaryAdvantage.students.headline",
+  "pages.products.primaryAdvantage.students.body",
+  "pages.products.primaryAdvantage.students.features",
+  "pages.products.primaryAdvantage.games.headline",
+  "pages.products.primaryAdvantage.games.body",
+  "pages.products.primaryAdvantage.reedy.headline",
+  "pages.products.primaryAdvantage.reedy.badge",
+  "pages.products.primaryAdvantage.reedy.body",
+  "pages.products.primaryAdvantage.teacher.headline",
+  "pages.products.primaryAdvantage.teacher.body",
+  "pages.products.primaryAdvantage.nextStep.headline",
+  "pages.products.primaryAdvantage.nextStep.body",
+  "pages.products.primaryAdvantage.closing.headline",
+  "pages.products.primaryAdvantage.closing.body",
+  "pages.products.primaryAdvantage.closing.tutorLink",
+  "pages.products.primaryAdvantage.images.workbookAndAppSeries",
+  "pages.products.primaryAdvantage.images.workbookQrLinkLanding",
+  "pages.products.primaryAdvantage.images.blendedStudentClassBook",
+  "pages.products.primaryAdvantage.images.blendedTeacherClassBook",
+  "pages.products.primaryAdvantage.images.cefrBookSeries",
+  "pages.products.primaryAdvantage.images.studentStoryListen",
+  "pages.products.primaryAdvantage.images.studentLanguageQuestionsAi",
+  "pages.products.primaryAdvantage.images.studentLongAnswerFeedback",
+  "pages.products.primaryAdvantage.images.studentHomeThai",
+  "pages.products.primaryAdvantage.images.gamesVocabularyPicker",
+  "pages.products.primaryAdvantage.images.gameEnchantedLibrary",
+  "pages.products.primaryAdvantage.images.reedyPreview",
+  "pages.products.primaryAdvantage.images.teacherLiveGuide",
+  "pages.products.primaryAdvantage.images.teacherProjectorGames",
+  "pages.products.primaryAdvantage.images.teacherPrintLesson",
+  "pages.products.primaryAdvantage.images.contactChannels",
+  "pages.products.primaryAdvantage.experience.eyebrow",
+  "pages.products.primaryAdvantage.experience.heading",
+  "pages.products.primaryAdvantage.experience.description",
+  "pages.products.primaryAdvantage.experience.play",
+  "pages.products.primaryAdvantage.experience.fullscreen",
+  "pages.products.primaryAdvantage.experience.hint",
+  "pages.products.primaryAdvantage.experience.frameTitle",
+  "pages.products.primaryAdvantage.experience.posterAlt",
+];
 
-const PAGE_KEYS = localeKeys(enMessages, ["pages", "products", "primaryAdvantage"]);
-const META_KEYS = PAGE_KEYS.filter((key) => key.startsWith("pages.products.primaryAdvantage.meta."));
+const META_KEYS = PAGE_KEYS.filter((key) =>
+  key.startsWith("pages.products.primaryAdvantage.meta."),
+);
 const EXPERIENCE_KEYS = PAGE_KEYS.filter((key) =>
   key.startsWith("pages.products.primaryAdvantage.experience."),
 );
@@ -508,6 +536,33 @@ describe.each(LOCALES)("PrimaryAdvantage content in %s", (locale) => {
     expect(hrefs.length, "links outside pa-demo: 8").toBe(8);
     expect(hrefs.filter((href) => !ALLOWED_HREFS.includes(href))).toEqual([]);
     expect(hrefs.filter((href) => /^(mailto:|https?:)/.test(href))).toEqual([]);
+  });
+
+  it("puts the approved destination in each container (FR-11)", () => {
+    expectContainers();
+    for (const container of CONTAINERS) {
+      const root = getContainer(container.testId);
+      const hrefs = Array.from(root.querySelectorAll("a")).map(
+        (anchor) => anchor.getAttribute("href") ?? "",
+      );
+      expect(hrefs, `links in ${container.testId}`).toEqual(
+        container.links.map((link) => link.href),
+      );
+    }
+  });
+
+  it("puts each approved image in its own section (FR-12)", () => {
+    expectContainers();
+    for (const container of CONTAINERS) {
+      const root = getContainer(container.testId);
+      const paths = Array.from(root.querySelectorAll("img")).map((image) =>
+        imagePath(image.getAttribute("src") ?? ""),
+      );
+      const wanted = IMAGES.filter(
+        (image) => `pa-section-${image.section}` === container.testId,
+      ).map((image) => `${IMAGE_DIR}${image.name}.webp`);
+      expect(paths, `images in ${container.testId}`).toEqual(wanted);
+    }
   });
 
   it.each(CONTAINERS.map((container) => [container.testId, container] as const))(

@@ -11,6 +11,7 @@ import {
   BANNED_COPY,
   CLAIM_TERMS,
   CONTAINER_IDS,
+  CONTAINER_STORY_IMAGES,
   LABEL_COPY,
   OLD_ROADMAP_COPY,
   OLD_STOCK_REFERENCES,
@@ -23,10 +24,116 @@ import {
   APPROVED_DATES,
   type ClaimTermName,
 } from "@/__tests__/fixtures/storytime-page-expected";
-import {
-  expectKeysInEveryLocale,
-  keysUnderScope,
-} from "@/__tests__/fixtures/locale-key-check";
+import { expectKeysInEveryLocale } from "@/__tests__/fixtures/locale-key-check";
+
+/** The required locale keys of the Storytime overview handoff. The list is written here, not read from a locale file. */
+const OVERVIEW_STORYTIME_KEYS = [
+  "pages.products.overview.gradeBands.storytime.title",
+  "pages.products.overview.gradeBands.storytime.gradeRange",
+  "pages.products.overview.gradeBands.storytime.description",
+  "pages.products.overview.gradeBands.storytime.ctaLabel",
+  "pages.products.overview.gradeBands.storytime.imageAlt",
+];
+
+/** The required locale keys of the Storytime label handoff. The list is written here, not read from a locale file. */
+const LABEL_HANDOFF_KEYS = [
+  "components.products.b2bSolutions.products.storytimeAdvantage.title",
+  "components.products.b2bSolutions.products.storytimeAdvantage.badge",
+  "components.products.b2bSolutions.products.storytimeAdvantage.gradeRange",
+  "components.products.b2bSolutions.products.storytimeAdvantage.imageAlt",
+  "components.products.b2bSolutions.products.storytimeAdvantage.features.0",
+  "components.products.b2bSolutions.products.storytimeAdvantage.features.3",
+  "components.common.navigation.itemsDescription.storytimeAdvantage",
+  "pages.home.suite.description",
+  "pages.home.v2.products.storytimePreparingLabel",
+];
+
+/** The required locale keys of the Storytime page. The list is written here, not read from a locale file. */
+const STORYTIME_PAGE_KEYS = [
+  "pages.products.storytimeAdvantage.metadata.title",
+  "pages.products.storytimeAdvantage.metadata.description",
+  "pages.products.storytimeAdvantage.hero.title",
+  "pages.products.storytimeAdvantage.hero.subtitle",
+  "pages.products.storytimeAdvantage.hero.description",
+  "pages.products.storytimeAdvantage.hero.comingSoon",
+  "pages.products.storytimeAdvantage.heroAlt",
+  "pages.products.storytimeAdvantage.adaptiveEngine.eyebrow",
+  "pages.products.storytimeAdvantage.adaptiveEngine.heading",
+  "pages.products.storytimeAdvantage.adaptiveEngine.description",
+  "pages.products.storytimeAdvantage.adaptiveEngine.alt",
+  "pages.products.storytimeAdvantage.keyFeatures.heading",
+  "pages.products.storytimeAdvantage.keyFeatures.features.0.title",
+  "pages.products.storytimeAdvantage.keyFeatures.features.0.points.0",
+  "pages.products.storytimeAdvantage.keyFeatures.features.0.points.1",
+  "pages.products.storytimeAdvantage.keyFeatures.features.0.points.2",
+  "pages.products.storytimeAdvantage.keyFeatures.features.0.points.3",
+  "pages.products.storytimeAdvantage.keyFeatures.features.1.title",
+  "pages.products.storytimeAdvantage.keyFeatures.features.1.points.0",
+  "pages.products.storytimeAdvantage.keyFeatures.features.1.points.1",
+  "pages.products.storytimeAdvantage.keyFeatures.features.1.points.2",
+  "pages.products.storytimeAdvantage.keyFeatures.features.1.points.3",
+  "pages.products.storytimeAdvantage.coreValue.heading",
+  "pages.products.storytimeAdvantage.coreValue.features.0.title",
+  "pages.products.storytimeAdvantage.coreValue.features.0.description",
+  "pages.products.storytimeAdvantage.coreValue.features.1.title",
+  "pages.products.storytimeAdvantage.coreValue.features.1.description",
+  "pages.products.storytimeAdvantage.coreValue.features.2.title",
+  "pages.products.storytimeAdvantage.coreValue.features.2.description",
+  "pages.products.storytimeAdvantage.song.heading",
+  "pages.products.storytimeAdvantage.song.text",
+  "pages.products.storytimeAdvantage.song.playLabel",
+  "pages.products.storytimeAdvantage.song.playerTitle",
+  "pages.products.storytimeAdvantage.teacherTools.heading",
+  "pages.products.storytimeAdvantage.teacherTools.tools.0.title",
+  "pages.products.storytimeAdvantage.teacherTools.tools.0.description",
+  "pages.products.storytimeAdvantage.teacherTools.tools.1.title",
+  "pages.products.storytimeAdvantage.teacherTools.tools.1.description",
+  "pages.products.storytimeAdvantage.teacherTools.tools.2.title",
+  "pages.products.storytimeAdvantage.teacherTools.tools.2.description",
+  "pages.products.storytimeAdvantage.faq.heading",
+  "pages.products.storytimeAdvantage.faq.questions.0.question",
+  "pages.products.storytimeAdvantage.faq.questions.0.answer",
+  "pages.products.storytimeAdvantage.faq.questions.1.question",
+  "pages.products.storytimeAdvantage.faq.questions.1.answer",
+  "pages.products.storytimeAdvantage.faq.questions.2.question",
+  "pages.products.storytimeAdvantage.faq.questions.2.answer",
+  "pages.products.storytimeAdvantage.faq.questions.3.question",
+  "pages.products.storytimeAdvantage.faq.questions.3.answer",
+  "pages.products.storytimeAdvantage.faq.questions.4.question",
+  "pages.products.storytimeAdvantage.faq.questions.4.answer",
+  "pages.products.storytimeAdvantage.cta.heading",
+  "pages.products.storytimeAdvantage.cta.description",
+  "pages.products.storytimeAdvantage.cta.buttons.joinWaitlist",
+  "pages.products.storytimeAdvantage.cta.buttons.learnMore",
+  "pages.products.storytimeAdvantage.eyebrows.keyFeatures",
+  "pages.products.storytimeAdvantage.eyebrows.k3Curriculum",
+  "pages.products.storytimeAdvantage.eyebrows.teacherResources",
+  "pages.products.storytimeAdvantage.eyebrows.frequentlyAskedQuestions",
+  "pages.products.storytimeAdvantage.images.week01HelloPip",
+  "pages.products.storytimeAdvantage.images.level2Unit1CoverArt",
+  "pages.products.storytimeAdvantage.images.week02HowManyCakes",
+  "pages.products.storytimeAdvantage.images.week03ItIsRed",
+  "pages.products.storytimeAdvantage.images.week04NanAndPamNap",
+  "pages.products.storytimeAdvantage.images.week05TwoEars",
+  "pages.products.storytimeAdvantage.images.week06ISeeACat",
+  "pages.products.storytimeAdvantage.images.week07TopOnAPot",
+  "pages.products.storytimeAdvantage.images.week01ReaderHelloCover",
+  "pages.products.storytimeAdvantage.images.week01ReaderNanCanNodCover",
+];
+
+/** The required locale keys of the Storytime metadata. The list is written here, not read from a locale file. */
+const STORYTIME_METADATA_KEYS = [
+  "pages.products.storytimeAdvantage.metadata.title",
+  "pages.products.storytimeAdvantage.metadata.description",
+];
+
+/** The required locale keys of the Storytime song block. The list is written here, not read from a locale file. */
+const STORYTIME_SONG_KEYS = [
+  "pages.products.storytimeAdvantage.song.heading",
+  "pages.products.storytimeAdvantage.song.text",
+  "pages.products.storytimeAdvantage.song.playLabel",
+  "pages.products.storytimeAdvantage.song.playerTitle",
+];
 
 const state = vi.hoisted(() => ({ messages: {} as unknown }));
 
@@ -52,6 +159,9 @@ vi.mock("@/locales/server", () => ({
 
 type Locale = "en" | "th" | "zh";
 const MESSAGES: Record<Locale, unknown> = { en: enMessages, th: thMessages, zh: zhMessages };
+
+/** The public folder of the Storytime pictures. */
+const IMAGE_DIR = "/images/storytime-advantage";
 
 const OLD_ROADMAP_STRINGS = OLD_ROADMAP_COPY.flatMap(({ en, th, zh }) => [en, th, zh]);
 
@@ -88,6 +198,11 @@ const CLAIM_CONTROLS: Record<ClaimTermName, readonly string[]> = {
     "Start in November",
     "Start in December",
     "STARTS IN MAY",
+  ],
+  "Thai month": [
+    "เปิดตัววันที่ 30 ธันวาคม 2569",
+    "เปิดตัววันที่ 30 มกราคม 2569",
+    "เริ่มในเดือนพฤษภาคม",
   ],
   "พ.ศ.": ["เปิดภาคเรียน พ.ศ. 2569"],
   "฿": ["฿500"],
@@ -148,9 +263,7 @@ afterEach(cleanup);
 
 describe("Storytime Advantage content", () => {
   it("holds the products overview Storytime keys in every shipped locale", () => {
-    expectKeysInEveryLocale(
-      keysUnderScope("pages.products.overview.gradeBands.storytime"),
-    );
+    expectKeysInEveryLocale(OVERVIEW_STORYTIME_KEYS);
   });
 
   it.each(["en", "th", "zh"] as const)("holds no forbidden claim in the %s overview handoff", (locale) => {
@@ -166,12 +279,7 @@ describe("Storytime Advantage content", () => {
   });
 
   it("holds the Storytime label handoff keys in every shipped locale", () => {
-    expectKeysInEveryLocale([
-      ...keysUnderScope("components.products.b2bSolutions.products.storytimeAdvantage"),
-      "components.common.navigation.itemsDescription.storytimeAdvantage",
-      "pages.home.suite.description",
-      "pages.home.v2.products.storytimePreparingLabel",
-    ]);
+    expectKeysInEveryLocale(LABEL_HANDOFF_KEYS);
   });
 
   it.each(["en", "th", "zh"] as const)("holds no forbidden claim in the %s label handoff", (locale) => {
@@ -200,7 +308,7 @@ describe("Storytime Advantage content", () => {
   });
 
   it("holds the Storytime page copy keys in every shipped locale", () => {
-    expectKeysInEveryLocale(keysUnderScope("pages.products.storytimeAdvantage"));
+    expectKeysInEveryLocale(STORYTIME_PAGE_KEYS);
   });
 
   it.each(["en", "th", "zh"] as const)("renders approved structure, links, and images in %s", async (locale) => {
@@ -226,6 +334,13 @@ describe("Storytime Advantage content", () => {
     expect(links).toHaveLength(2);
     expect(links.map((link) => link.getAttribute("href"))).toEqual(["/contact", "/contact"]);
 
+    const cta = document.querySelector('[data-testid="st-cta"]');
+    const approvedDate = locale === "th" ? APPROVED_DATES.th : APPROVED_DATES.en;
+    expect(
+      cta?.textContent ?? "",
+      `the CTA date in ${locale}`,
+    ).toContain(approvedDate);
+
     const images = Array.from(document.querySelectorAll("img"));
     const posterImages = images.filter((image) => imagePath(image.getAttribute("src") ?? "").includes("song-week-1"));
     expect(posterImages).toHaveLength(1);
@@ -236,6 +351,21 @@ describe("Storytime Advantage content", () => {
     expect(storyImages).toHaveLength(STORYTIME_IMAGES.length);
     expect(storyImages.every((image) => (image.getAttribute("alt") ?? "").trim().length > 0)).toBe(true);
 
+    for (const id of CONTAINER_IDS) {
+      const container = document.querySelector(`[data-testid="${id}"]`);
+      const paths = Array.from(container?.querySelectorAll("img") ?? [])
+        .map((image) => imagePath(image.getAttribute("src") ?? ""))
+        .filter((path) => !path.includes("song-week-1"));
+      expect(paths, `story images in ${id}`).toEqual(
+        CONTAINER_STORY_IMAGES[id].map((name) => `${IMAGE_DIR}/${name}.webp`),
+      );
+    }
+    const songSection = document.querySelector('[data-testid="st-section-3"]');
+    expect(
+      songSection?.querySelectorAll("img").length,
+      "images in the song section: the poster and the six story pictures",
+    ).toBe(1 + CONTAINER_STORY_IMAGES["st-section-3"].length);
+
     const pageText = [...textNodes(document.body), ...images.map((image) => image.alt)].join("\n");
     expect(findBannedCopy(pageText)).toEqual([]);
     for (const reference of OLD_STOCK_REFERENCES) expect(document.body.innerHTML).not.toContain(reference);
@@ -245,7 +375,7 @@ describe("Storytime Advantage content", () => {
   });
 
   it("holds the Storytime metadata keys in every shipped locale", () => {
-    expectKeysInEveryLocale(keysUnderScope("pages.products.storytimeAdvantage.metadata"));
+    expectKeysInEveryLocale(STORYTIME_METADATA_KEYS);
   });
 
   it.each(["en", "th", "zh"] as const)("exposes claim-free metadata in %s", async (locale) => {
@@ -257,7 +387,7 @@ describe("Storytime Advantage content", () => {
   });
 
   it("holds the Storytime song keys in every shipped locale", () => {
-    expectKeysInEveryLocale(keysUnderScope("pages.products.storytimeAdvantage.song"));
+    expectKeysInEveryLocale(STORYTIME_SONG_KEYS);
   });
 
   it("keeps every zh string equal to en except the song section", () => {
@@ -302,14 +432,15 @@ describe("Storytime Advantage content", () => {
 
   it("control: the claims scanner clears only the one approved public date", () => {
     expect(findClaimTerms(APPROVED_DATES.en)).toEqual(["year", "English month"]);
-    expect(findClaimTerms(APPROVED_DATES.th)).toEqual([]);
+    expect(findClaimTerms(APPROVED_DATES.th)).toEqual(["Thai month"]);
     expect(findUnapprovedClaimTerms(`The first unit launches on ${APPROVED_DATES.en}.`)).toEqual([]);
     expect(findUnapprovedClaimTerms(`เปิดตัววันที่ ${APPROVED_DATES.th}`)).toEqual([]);
     expect(findUnapprovedClaimTerms("The first unit launches on 30 November 2027.")).toContain("year");
     expect(findUnapprovedClaimTerms("The first unit launches on 30 December 2026.")).toContain("English month");
+    expect(findUnapprovedClaimTerms("The first unit launches on 30 December 2569.")).toContain("English month");
     expect(findUnapprovedClaimTerms("The first unit launches in 2026.")).toContain("year");
     expect(findUnapprovedClaimTerms("The first unit launches in November.")).toContain("English month");
-    expect(findUnapprovedClaimTerms("เปิดตัววันที่ 30 ธันวาคม 2569")).toEqual([]);
+    expect(findUnapprovedClaimTerms("เปิดตัววันที่ 30 ธันวาคม 2569")).toEqual(["Thai month"]);
     expect(findUnapprovedClaimTerms("เปิดตัว พ.ศ. 2569")).toContain("พ.ศ.");
   });
 

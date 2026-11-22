@@ -21,6 +21,29 @@ export const STORYTIME_IMAGES = [
   { name: "week-07-top-on-a-pot", alt: "images.week07TopOnAPot", width: 900, height: 675 },
 ] as const;
 
+/**
+ * The story image of each container, in page order.
+ * The song poster is not in this list. The poster sits in the song section.
+ */
+export const CONTAINER_STORY_IMAGES: Readonly<
+  Record<(typeof CONTAINER_IDS)[number], readonly string[]>
+> = {
+  "st-hero": ["week-01-hello-pip"],
+  "st-section-1": ["level-2-unit-1-cover-art"],
+  "st-section-2": ["week-01-reader-hello-cover", "week-01-reader-nan-can-nod-cover"],
+  "st-section-3": [
+    "week-02-how-many-cakes",
+    "week-03-it-is-red",
+    "week-04-nan-and-pam-nap",
+    "week-05-two-ears",
+    "week-06-i-see-a-cat",
+    "week-07-top-on-a-pot",
+  ],
+  "st-section-4": [],
+  "st-section-5": [],
+  "st-cta": [],
+};
+
 export const EXPECTED_META = {
   en: {
     title: "Storytime Advantage - English for Anuban 2 to P2 | Reading Advantage Thailand",
@@ -293,6 +316,21 @@ const MONTHS_EN = [
   "December",
 ];
 
+const MONTHS_TH = [
+  "มกราคม",
+  "กุมภาพันธ์",
+  "มีนาคม",
+  "เมษายน",
+  "พฤษภาคม",
+  "มิถุนายน",
+  "กรกฎาคม",
+  "สิงหาคม",
+  "กันยายน",
+  "ตุลาคม",
+  "พฤศจิกายน",
+  "ธันวาคม",
+];
+
 /**
  * The term classes of the claims scanner, in the order of spec section 7.
  * No class flags "date", "no public date", "30-minute", "5-minute", "3-minute", or "4 minutes".
@@ -300,6 +338,7 @@ const MONTHS_EN = [
 export const CLAIM_TERMS = [
   { name: "year", pattern: /20\d\d/ },
   { name: "English month", pattern: new RegExp(`\\b(?:${[...MONTHS_EN, ...MONTHS_EN.map((month) => month.toUpperCase())].join("|")})\\b`) },
+  { name: "Thai month", pattern: new RegExp(MONTHS_TH.join("|")) },
   { name: "พ.ศ.", pattern: /พ\.ศ\./ },
   { name: "฿", pattern: /฿/ },
   { name: "THB", pattern: /(?<![a-z])thb(?![a-z])/i },

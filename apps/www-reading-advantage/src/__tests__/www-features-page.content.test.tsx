@@ -8,10 +8,69 @@ import {
   APP_LOGO_ORDER,
   FEATURES_ENTRIES,
 } from "@/__tests__/fixtures/features-pricing-expected";
-import {
-  expectKeysInEveryLocale,
-  keysUnderScope,
-} from "@/__tests__/fixtures/locale-key-check";
+import { expectKeysInEveryLocale } from "@/__tests__/fixtures/locale-key-check";
+
+/** The required locale keys of the feature page. The list is written here, not read from a locale file. */
+const FEATURE_KEYS = [
+  "pages.feature.metadata.title",
+  "pages.feature.metadata.description",
+  "pages.feature.hero.eyebrow",
+  "pages.feature.hero.heading",
+  "pages.feature.hero.body1",
+  "pages.feature.hero.body2",
+  "pages.feature.hero.button",
+  "pages.feature.programs.heading",
+  "pages.feature.programs.body",
+  "pages.feature.programs.cards.storytime.name",
+  "pages.feature.programs.cards.storytime.forText",
+  "pages.feature.programs.cards.storytime.status",
+  "pages.feature.programs.cards.storytime.body",
+  "pages.feature.programs.cards.storytime.bullets.0",
+  "pages.feature.programs.cards.storytime.bullets.1",
+  "pages.feature.programs.cards.storytime.bullets.2",
+  "pages.feature.programs.cards.primary.name",
+  "pages.feature.programs.cards.primary.forText",
+  "pages.feature.programs.cards.primary.status",
+  "pages.feature.programs.cards.primary.body",
+  "pages.feature.programs.cards.primary.bullets.0",
+  "pages.feature.programs.cards.primary.bullets.1",
+  "pages.feature.programs.cards.primary.bullets.2",
+  "pages.feature.programs.cards.reading.name",
+  "pages.feature.programs.cards.reading.forText",
+  "pages.feature.programs.cards.reading.status",
+  "pages.feature.programs.cards.codecamp.name",
+  "pages.feature.programs.cards.codecamp.forText",
+  "pages.feature.programs.cards.codecamp.status",
+  "pages.feature.programs.cards.codecamp.body",
+  "pages.feature.programs.cards.schoolSubjects.name",
+  "pages.feature.programs.cards.schoolSubjects.forText",
+  "pages.feature.programs.cards.schoolSubjects.status",
+  "pages.feature.programs.cards.schoolSubjects.body",
+  "pages.feature.engine.heading",
+  "pages.feature.engine.body",
+  "pages.feature.blended.heading",
+  "pages.feature.blended.body1",
+  "pages.feature.blended.body2",
+  "pages.feature.tutor.heading",
+  "pages.feature.tutor.body1",
+  "pages.feature.tutor.body2",
+  "pages.feature.tutor.body3",
+  "pages.feature.tutor.button",
+  "pages.feature.nextSubjects.heading",
+  "pages.feature.nextSubjects.body",
+  "pages.feature.appFamily.heading",
+  "pages.feature.appFamily.body",
+  "pages.feature.faq.heading",
+  "pages.feature.faq.items.0.q",
+  "pages.feature.faq.items.0.a",
+  "pages.feature.faq.items.1.q",
+  "pages.feature.faq.items.1.a",
+  "pages.feature.faq.items.2.q",
+  "pages.feature.faq.items.2.a",
+  "pages.feature.nextStep.heading",
+  "pages.feature.nextStep.body",
+  "pages.feature.nextStep.button",
+];
 
 /*
  * Red test for the new /features page (track www_features_pricing_20261120).
@@ -251,7 +310,7 @@ describe.each(LOCALES)("FeaturesPage content in %s", (locale) => {
   });
 
   it("holds every feature key and no old feature copy (FR-1, FR-7)", () => {
-    expectKeysInEveryLocale(keysUnderScope("pages.feature"));
+    expectKeysInEveryLocale(FEATURE_KEYS);
     const body = document.body.textContent ?? "";
     expect(
       OLD_FEATURE_TITLES.filter((title) => body.includes(title)),
