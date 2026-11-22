@@ -1551,6 +1551,28 @@ describe("APKGameHost", () => {
     expect(onComplete).toHaveBeenCalledWith(validResults, "complete");
   });
 
+  it("keeps game pause and resume outside the lifecycle transitions", async () => {
+    const factory = createMockGameFactory();
+    const onLifecycleTransition = vi.fn();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        onLifecycleTransition={onLifecycleTransition}
+      />,
+    );
+
+    await screen.findByText("Game ready");
+    fireEvent.click(screen.getByRole("button", { name: "Pause game" }));
+    expect(screen.getByRole("button", { name: "Resume game" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Resume game" }));
+    expect(screen.getByRole("button", { name: "Pause game" })).toBeInTheDocument();
+
+    expect(onLifecycleTransition).not.toHaveBeenCalled();
+  });
+
   it("restores gameplay focus after Resume and active Mute controls", async () => {
     const factory = createMockGameFactory();
     render(

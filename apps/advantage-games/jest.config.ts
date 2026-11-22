@@ -26,6 +26,13 @@ const config: Config = {
     '^@reading-advantage/api/routes/apk-challenges$': '<rootDir>/../../packages/api/dist/routes/apk-challenges/index.js',
     '^@reading-advantage/api/routes/auth$': '<rootDir>/../../packages/api/dist/routes/auth/index.js',
     '^@reading-advantage/auth(/.*)?$': '<rootDir>/../../packages/auth/dist$1',
+    // These two db subpaths do not follow the dist/<subpath> shape. Their real
+    // targets come from the package exports map in packages/db/package.json.
+    // The generic db rule below would resolve them to a path that does not exist.
+    '^@reading-advantage/db/storytime/schema$':
+      '<rootDir>/../../packages/db/dist/schema/storytime/index.js',
+    '^@reading-advantage/db/marketing-constants$':
+      '<rootDir>/../../packages/db/dist/schema/marketing-constants.js',
     '^@reading-advantage/db(/.*)?$': '<rootDir>/../../packages/db/dist$1',
   },
   transformIgnorePatterns: [

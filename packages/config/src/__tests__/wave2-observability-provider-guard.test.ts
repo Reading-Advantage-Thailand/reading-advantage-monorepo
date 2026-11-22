@@ -78,6 +78,21 @@ const IGNORED_DIRS = new Set([
 const TEST_FILE_RE = /\.(test|integration\.test|spec)\.(tsx?|jsx?|mjs|cjs)$/;
 const SOURCE_FILE_RE = /\.(tsx?|jsx?|mjs|cjs)$/;
 
+/**
+ * Cheap text prefilter that runs before the TypeScript parse of one file.
+ *
+ * A hit from `findHits` needs the identifier text `console` or `Sentry` in the file.
+ * `\\u` keeps a file that holds an identifier escape (for example `conso\u006ce`),
+ * because the parser decodes that text. A file with none of these three tokens
+ * cannot hold a hit, so the scan skips its parse. The AST check stays the
+ * authority: a token in a comment or a string is still parsed and still rejected.
+ *
+ * Measured 2026-11-22 on the 1239 scanned files: the full parse of every file took
+ * 577-747 ms; the parse of the 209-218 prefiltered files took 145-173 ms. Hit counts
+ * were equal (589 `console`, 2 `Sentry`).
+ */
+const CALL_TEXT_RE = /console|Sentry|\\u/;
+
 type CallTarget = "console" | "sentry";
 
 interface AllowlistEntry {
@@ -272,7 +287,13 @@ describe("Wave 2 Phase 2 — observability provider guard", () => {
     ]);
   });
 
-  it("regression-protects against new console.error in production paths and forbids direct Sentry capture outside the observability adapter", { timeout: 30_000 }, () => {
+  // Budget note (2026-11-22, CI run 44988684591): this case took 31.5 s on the 4-core
+  // runner while turbo ran the Test step of every package at once, and the 30 s budget
+  // failed it. An isolated run of the same file in that job took 2.4-2.6 s, and a local
+  // run takes about 2 s. The scan now parses only the prefiltered files (about 0.15 s
+  // instead of 0.6-0.75 s), and the budget is 120 s: about 4x the worst measured run and
+  // the same value as the root `testTimeout`.
+  it("regression-protects against new console.error in production paths and forbids direct Sentry capture outside the observability adapter", { timeout: 120_000 }, () => {
     const scanDirs = expandScanPaths();
     const files = scanDirs.flatMap((dir) => walk(dir));
     const scannedFileCount = files.length;
@@ -283,6 +304,7 @@ describe("Wave 2 Phase 2 — observability provider guard", () => {
       if (isAllowlisted(rel)) continue;
 
       const source = readFileSync(file, "utf8");
+      if (!CALL_TEXT_RE.test(source)) continue;
       for (const h of findHits(source, file, "console")) {
         hits.push({ file: rel, line: h.line, text: h.text, kind: "console" });
       }

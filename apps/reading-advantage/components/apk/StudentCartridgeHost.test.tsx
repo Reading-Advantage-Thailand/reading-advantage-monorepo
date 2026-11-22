@@ -344,7 +344,7 @@ describe("StudentCartridgeHost", () => {
     expect(retry).toHaveBeenCalledTimes(1);
   });
 
-  it("records RPG baselines only for replay and fresh play transitions", async () => {
+  it("records RPG baselines for each lifecycle entry into playing and each replay", async () => {
     const beginSession = jest.fn();
     mockUseStudentRpg.mockReturnValue({
       state: null, loading: false, pendingCosmeticId: null, failureMessage: null,
@@ -356,13 +356,14 @@ describe("StudentCartridgeHost", () => {
     const transition = mockAPKGameHost.mock.calls.at(-1)?.[0].onLifecycleTransition;
 
     act(() => {
-      transition?.({ from: "briefing", event: "startPractice", to: "practice" });
-      transition?.({ from: "paused", event: "resume", to: "playing" });
-      transition?.({ from: "briefing", event: "start", to: "playing" });
-      transition?.({ from: "results", event: "replay", to: "briefing" });
+      transition?.({ from: "briefing", event: "start", to: "countdown" });
+      transition?.({ from: "countdown", event: "countdown-complete", to: "playing" });
+      transition?.({ from: "tutorial", event: "tutorial-skip", to: "playing" });
+      transition?.({ from: "playing", event: "game-complete", to: "results" });
+      transition?.({ from: "results", event: "replay", to: "playing" });
     });
 
-    expect(beginSession).toHaveBeenCalledTimes(2);
+    expect(beginSession).toHaveBeenCalledTimes(3);
   });
 
   it("refreshes rewards after a valid saved receipt and shows only new unlocks", async () => {

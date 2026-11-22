@@ -248,9 +248,16 @@ describe("company-identity last-administrator and revocation safety", () => {
           expect(
             results.filter(({ status }) => status === "rejected"),
           ).toHaveLength(1);
-          expect(
-            results.map((result) => errorCode(result)).filter(Boolean),
-          ).toEqual(["LAST_COMPANY_ADMIN_REQUIRED"]);
+          const refusalCodes = results
+            .map((result) => errorCode(result))
+            .filter((code): code is string => Boolean(code));
+          // Both codes are refusals and both keep one active administrator. The loser
+          // may break the last-administrator rule, or the winner may suspend the loser's
+          // own account before the loser's administrator check runs.
+          expect(refusalCodes).toHaveLength(1);
+          expect(["LAST_COMPANY_ADMIN_REQUIRED", "FORBIDDEN"]).toContain(
+            refusalCodes[0],
+          );
           const [count] = await seedSql<Array<{ active_admins: number }>>`
             select count(*)::int as active_admins
               from company_role_assignments role
@@ -323,9 +330,16 @@ describe("company-identity last-administrator and revocation safety", () => {
           expect(
             results.filter(({ status }) => status === "rejected"),
           ).toHaveLength(1);
-          expect(
-            results.map((result) => errorCode(result)).filter(Boolean),
-          ).toEqual(["LAST_COMPANY_ADMIN_REQUIRED"]);
+          const refusalCodes = results
+            .map((result) => errorCode(result))
+            .filter((code): code is string => Boolean(code));
+          // Both codes are refusals and both keep one active administrator. The loser
+          // may break the last-administrator rule, or the winner may suspend the loser's
+          // own account before the loser's administrator check runs.
+          expect(refusalCodes).toHaveLength(1);
+          expect(["LAST_COMPANY_ADMIN_REQUIRED", "FORBIDDEN"]).toContain(
+            refusalCodes[0],
+          );
           const [count] = await seedSql<Array<{ active_admins: number }>>`
             select count(*)::int as active_admins
               from company_role_assignments role

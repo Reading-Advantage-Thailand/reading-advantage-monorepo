@@ -11,7 +11,7 @@
  */
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { storeContractSuite, type ContractStore } from "./store-contract";
 
 const REPO = resolve(import.meta.dirname, "../../../../../..");
@@ -73,6 +73,13 @@ async function makeStore(): Promise<ContractStore> {
 }
 
 if (READY) {
+  // PGlite boots and the migration runs once for the file. The CI runner measured 34.6 s
+  // for the first case (run 44972585117), above the 30 s case budget. This machine runs
+  // the whole file in 2.2 s. The hook gets its own budget and the cases keep theirs.
+  beforeAll(async () => {
+    await setup();
+  }, 120_000);
+
   storeContractSuite("pglite", makeStore);
 
   describe("storytime store (PGlite)", () => {

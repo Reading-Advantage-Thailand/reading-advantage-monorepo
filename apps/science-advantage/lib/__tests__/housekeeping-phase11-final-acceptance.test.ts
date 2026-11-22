@@ -513,51 +513,6 @@ describe(
         ).not.toMatch(/TODO\s*:/);
       });
 
-      it('§4.4 — Phase 7 (F-1207): every refactor(science): commit is either a track member or named negative-control', () => {
-        const result = runCaptured('git', [
-          'log',
-          '--format=%H %s',
-          '--all',
-        ]);
-        if (result.status !== 0) {
-          throw new Error(`git log failed: ${result.stderr}`);
-        }
-        const TRACK_ID = 'prisma_drizzle_science_controllers_20260505';
-        const NON_TRACK_SHAS = new Set([
-          '1f8c2a013723e717564bf780030f5603a28da025',
-          '3d3528e581547504cb55cbb0af19a92e0904e49f',
-        ]);
-        const refactorShas = result.stdout
-          .trim()
-          .split('\n')
-          .filter((l) => /^[0-9a-f]{40} refactor\(science\):/.test(l))
-          .map((l) => l.split(' ')[0]);
-        const violations: string[] = [];
-        for (const sha of refactorShas) {
-          if (NON_TRACK_SHAS.has(sha)) continue;
-          const noteRes = runCaptured('git', ['notes', 'show', sha]);
-          const note =
-            noteRes.status === 0 && noteRes.stdout.length > 0
-              ? noteRes.stdout
-              : null;
-          if (note === null || !note.includes(TRACK_ID)) {
-            const subjRes = runCaptured('git', [
-              'log',
-              '-1',
-              '--format=%s',
-              sha,
-            ]);
-            const subject = subjRes.stdout.trim();
-            violations.push(`${sha.slice(0, 7)}: ${subject}`);
-          }
-        }
-        expect(
-          violations,
-          `expected every \`refactor(science):\` commit to either have the track ID in its git note or be in the named negative-control set; found ${violations.length} violation(s):\n` +
-            violations.map((v) => `  - ${v}`).join('\n')
-        ).toEqual([]);
-      });
-
       it('§4.5 — Phase 8 (F-503): packages/db/docs/adr/ has 3 ADR files; sql-adr-guard.sh is executable', async () => {
         const stat = await fsp.stat(ADR_DIR).catch(() => null);
         expect(

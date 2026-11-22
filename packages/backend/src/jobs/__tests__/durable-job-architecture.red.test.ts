@@ -246,5 +246,8 @@ describe("durable-job architecture Red contract", () => {
         sourcePath: ARCHITECTURE_TEST_SOURCE_PATH,
       }),
     ]);
-  }, 10_000);
+    // The analyzer parses the workspace with the TypeScript compiler. The CI runner
+    // measured 10.5 s for this case (run 44972585117); this machine runs both cases in
+    // 0.6 s. The case is slow, not hung, so it gets three times the measured CI time.
+  }, 30_000);
 });

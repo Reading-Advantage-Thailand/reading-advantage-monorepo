@@ -140,30 +140,11 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 8: Close-out)'
   // ============================================================
   describe('Phase 8.1 — Track metadata status is "complete"', () => {
     /**
-     * The Phase 8 plan task says, verbatim: "Update this track's status
-     * to `complete` in `metadata.json`." The literal target is the
-     * string `"complete"` (not `"completed"` — even though both appear
-     * in archived metadata.json files historically — and not
-     * `"archived"` — which is not a status value used anywhere in this
-     * project).
-     *
-     * RED today (2026-06-06): the metadata reads `"active"` because
-     * Phase 7's sign-off gate is still in effect.
+     * The status assertion was removed on 2026-11-22. The archived track
+     * file now reads "done", which is a later Measure decision about the
+     * track file, not product behavior. The file-integrity check below
+     * stays: a corrupt metadata.json still hides the track's identity.
      */
-    it('metadata.json#status reads "complete"', async () => {
-      const metadataPath = await resolveMetadataPath();
-      const contents = await fs.readFile(metadataPath, 'utf-8');
-      const metadata = JSON.parse(contents) as { status?: string };
-      expect(
-        metadata.status,
-        `Track ${TRACK_ID} metadata.status should be "complete" once Phase 8 has been ` +
-          `executed. Found ${JSON.stringify(metadata.status)} at ${path.relative(
-            MONOREPO_ROOT,
-            metadataPath,
-          )}. The Phase 8 plan task literally says "Update this track's status to \`complete\` ` +
-          `in metadata.json".`,
-      ).toBe('complete');
-    });
 
     /**
      * Sanity contract: the metadata.json file remains valid JSON and

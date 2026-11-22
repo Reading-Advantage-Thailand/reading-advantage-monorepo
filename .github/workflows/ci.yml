@@ -114,17 +114,28 @@ jobs:
       - name: Fetch published Git notes
         run: git fetch --no-tags origin refs/notes/commits:refs/notes/commits
 
-      - name: Check graph.db
+      # The science-advantage audit gates read graph.db through the `build-graph`
+      # CLI. The tool's source is the public bodangren/repo-graph repository, and
+      # it publishes no release binary, so CI builds the pinned commit once per
+      # run. The existing "Check graph.db" step then runs `build-graph scan`.
+      - name: Setup Bun for build-graph
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.14
+
+      - name: Install build-graph for the graph.db gates
+        env:
+          REPO_GRAPH_COMMIT: 3ac5b6058a474d6564c5c2010497add9a59994ec
         run: |
-          # graph.db is gitignored — rebuild it before checking.
-          # Requires build-graph on the CI runner PATH.
-          if command -v build-graph &>/dev/null; then
-            build-graph scan . ./graph.db
-            ./scripts/ci/check-graph-db.sh
-          else
-            echo "::warning::build-graph not found on PATH — skipping graph.db check."
-            echo "Install build-graph or add it to the CI runner image."
-          fi
+          git clone --quiet https://github.com/bodangren/repo-graph "$RUNNER_TEMP/repo-graph"
+          git -C "$RUNNER_TEMP/repo-graph" checkout --quiet "$REPO_GRAPH_COMMIT"
+          cd "$RUNNER_TEMP/repo-graph"
+          bun install --frozen-lockfile
+          bun run build
+          mkdir -p "$RUNNER_TEMP/bin"
+          install -m 0755 ./bin/repo-graph "$RUNNER_TEMP/bin/build-graph"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/bin/build-graph" --version
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -139,6 +150,32 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      # graph.db build needs the workspace node_modules: apps/accounting/tsconfig.json extends
+      # "@reading-advantage/config/tsconfig", which resolves only after the install (run 45003984764).
+      - name: Check graph.db
+        run: |
+          # graph.db is gitignored — rebuild it before checking.
+          # Requires build-graph on the CI runner PATH.
+          if command -v build-graph &>/dev/null; then
+            build-graph scan . ./graph.db
+            ./scripts/ci/check-graph-db.sh
+          else
+            echo "::warning::build-graph not found on PATH — skipping graph.db check."
+            echo "Install build-graph or add it to the CI runner image."
+          fi
+
+      # The science-advantage audit gates shell out to `rg` (ripgrep). The
+      # ubuntu-latest image does not always ship it, and a missing binary fails
+      # 50 gates with "spawnSync rg ENOENT" (run 44996916181).
+      - name: Install ripgrep for the science-advantage audit gates
+        run: |
+          if command -v rg >/dev/null; then
+            rg --version
+          else
+            sudo apt-get update
+            sudo apt-get install -y ripgrep
+          fi
 
       # The selector and CI-config tests of scripts/ci run here once for each event. The affected-app
       # matrix does not run them, because scripts/ci is not a workspace package.
@@ -208,12 +245,14 @@ jobs:
       # not table rows (science-advantage, vocabulary-games, activity-vinext-fixture), and the six
       # packages that no table app depends on (architecture-enforcement, knowledge-space-practice,
       # mastery-runtime-compat, scripts, session-service, worker). Each `...` adds the dependencies
-      # of the root. The science-advantage CI gates pin the step name and the command `pnpm test`, and
-      # they read `run:` and the command on one line, so the filters stay on one line.
+      # of the root. `--continue` stops a failed package from cancelling the other packages, so one
+      # run reports every failing task. The science-advantage CI gates pin the step name and the
+      # command `pnpm test`, and they read `run:` and the command on one line, so the filters stay
+      # on one line.
       - name: Test
         env:
           COMPANY_IDENTITY_TEST_POSTGRES_CONTAINER: ${{ job.services.postgres.id }}
-        run: pnpm test --filter=science-advantage... --filter=vocabulary-games... --filter=activity-vinext-fixture... --filter=@reading-advantage/architecture-enforcement... --filter=@reading-advantage/knowledge-space-practice... --filter=@reading-advantage/mastery-runtime-compat... --filter=@reading-advantage/scripts... --filter=@reading-advantage/session-service... --filter=@reading-advantage/worker...
+        run: pnpm test --continue --filter=science-advantage... --filter=vocabulary-games... --filter=activity-vinext-fixture... --filter=@reading-advantage/architecture-enforcement... --filter=@reading-advantage/knowledge-space-practice... --filter=@reading-advantage/mastery-runtime-compat... --filter=@reading-advantage/scripts... --filter=@reading-advantage/session-service... --filter=@reading-advantage/worker...
 
   affected:
     name: Check ${{ matrix.id }}
@@ -297,6 +336,21 @@ jobs:
       # change selects no app, so this stays here and not in packages/db.
       - name: Build the sales knowledge package for the packages/db tests
         run: pnpm --filter @reading-advantage/sales-knowledge... build
+
+      # Reading-advantage and primary-advantage gitignore next-env.d.ts, and turbo runs
+      # check-types beside build. So a fresh checkout has no Next module types when tsc
+      # starts, and the static-asset imports fail with TS2307 (run 44972585117). Write the
+      # two references when the app commits no file of its own. next build and next dev
+      # write the same file later, with their own generated routes import.
+      - name: Write the Next type references when the app has none
+        run: |
+          file="apps/${{ matrix.id }}/next-env.d.ts"
+          if [ -f "$file" ]; then
+            echo "$file already exists"
+            exit 0
+          fi
+          printf '%s\n' '/// <reference types="next" />' '/// <reference types="next/image-types/global" />' > "$file"
+          cat "$file"
 
       - name: Build, lint, type check, and test the app and its dependencies
         env:

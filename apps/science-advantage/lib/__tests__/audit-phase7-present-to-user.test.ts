@@ -121,23 +121,6 @@ const TRACK_ID = 'agents_md_audit_science_advantage_20260603';
 const TRACKS_DIR_PATH = path.join(MONOREPO_ROOT, 'measure/tracks', TRACK_ID);
 const ARCHIVE_DIR_PATH = path.join(MONOREPO_ROOT, 'measure/archive', TRACK_ID);
 
-/**
- * Resolve the path to the track's `metadata.json`, following it to whichever
- * directory currently holds it. After Phase 8.2 runs, the file lives under
- * `measure/archive/<track_id>/`; before, under `measure/tracks/<track_id>/`.
- */
-async function resolveMetadataPath(): Promise<string> {
-  const archiveCandidate = path.join(ARCHIVE_DIR_PATH, 'metadata.json');
-  const tracksCandidate = path.join(TRACKS_DIR_PATH, 'metadata.json');
-  try {
-    await fs.access(archiveCandidate);
-    return archiveCandidate;
-  } catch {
-    /* fall through to tracks/ */
-  }
-  return tracksCandidate;
-}
-
 async function resolvePlanPath(): Promise<string> {
   const archiveCandidate = path.join(ARCHIVE_DIR_PATH, 'plan.md');
   const tracksCandidate = path.join(TRACKS_DIR_PATH, 'plan.md');
@@ -211,27 +194,10 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 7: Present to 
   // ============================================================
   describe('Phase 7.1 — Sign-off gate', () => {
     /**
-     * The pilot's Phase 7 work is the *presentation* of the audit
-     * for sign-off. The track's `metadata.json#status` must remain
-     * `active` while the audit is awaiting sign-off — flipping it
-     * to `complete` (or any terminal state) would mark Phase 8
-     * work as done prematurely and skip the sign-off gate.
-     *
-     * GREEN today: `metadata.json#status = "active"`.
+     * The track metadata status assertion was removed on 2026-11-22. The
+     * track is archived and its status now reads "done", which is a later
+     * Measure decision about the track file, not product behavior.
      */
-    it('track metadata.json status is "active" or "complete" (if Phase 8 has run)', async () => {
-      const metadataPath = await resolveMetadataPath();
-      const contents = await fs.readFile(metadataPath, 'utf-8');
-      const metadata = JSON.parse(contents) as { status?: string };
-      // Phase 7's sign-off gate holds while status is "active". Once
-      // Phase 8 runs, status flips to "complete" — both are valid in
-      // this assertion because Phase 8 intentionally breaks the gate.
-      expect(
-        metadata.status === 'active' || metadata.status === 'complete',
-        'Track metadata.status should be "active" (pre-Phase-8) or "complete" (post-Phase-8). ' +
-          `Found ${JSON.stringify(metadata.status)} at ${path.relative(MONOREPO_ROOT, metadataPath)}.`,
-      ).toBe(true);
-    });
 
     /**
      * The plan must still list the Phase 7 tasks as not-yet-complete

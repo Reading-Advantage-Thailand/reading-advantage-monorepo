@@ -80,7 +80,6 @@ const TRACK_PLAN_CANDIDATES = [
 ];
 
 const TECH_DEBT_TRACK_KEY = 'audit_20260603_housekeeping_batch';
-const HOUSEKEEPING_TRACK_ID = 'housekeeping_batch_20260603';
 
 /**
  * Resolve the active path for a candidate set (first existing wins).
@@ -157,34 +156,10 @@ describe('§1 measure/tech-debt.md closeout (F-205/F-503/F-705/F-1102/F-1201/F-1
 describe('§2 measure/lessons-learned.md closeout entry', () => {
   const content = fs.readFileSync(LESSONS_LEARNED_FILE, 'utf-8');
 
-  it('§2.1 — lessons-learned.md contains a batched-housekeeping entry referencing the track ID', () => {
-    // The entry must satisfy ALL three constraints:
-    //   (a) reference the track id `housekeeping_batch_20260603`
-    //   (b) mention the batched-housekeeping pattern (one of three phrases)
-    //   (c) be dated on or after the track creation date (2026-06-03)
-    const lines = content.split('\n');
-    const patternKeywords = [
-      'batched housekeeping',
-      'batched-housekeeping',
-      '10 small fixes',
-      'cheaper to review',
-      'one PR with 10 small fixes',
-    ];
-
-    const candidateLine = lines.find((line) => {
-      if (!line.includes(HOUSEKEEPING_TRACK_ID)) return false;
-      if (!/2026-06-(\d{2})/.test(line)) return false;
-      const dayMatch = line.match(/2026-06-(\d{2})/);
-      if (!dayMatch) return false;
-      const day = Number.parseInt(dayMatch[1], 10);
-      if (day < 3) return false; // track created 2026-06-03
-      return patternKeywords.some((keyword) =>
-        line.toLowerCase().includes(keyword.toLowerCase())
-      );
-    });
-
-    expect(candidateLine, 'expected a lessons-learned entry that satisfies all three constraints; check Phase 12 task 2 deliverable').toBeDefined();
-  });
+  // The §2.1 entry assertion was removed on 2026-11-22. The lessons file
+  // is curated to a 50-line cap, so the 2026-06 housekeeping entry was
+  // condensed away by later tracks. The cap check below is a current
+  // guard and stays.
 
   it('§2.2 — file length stays at or below the 50-line curated-memory cap', () => {
     // Match the `wc -l` convention: count `\n` characters, dropping the

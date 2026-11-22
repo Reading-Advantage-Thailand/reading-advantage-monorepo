@@ -5,20 +5,10 @@ import path from 'node:path';
 const repoRoot = path.resolve(process.cwd(), '../..');
 
 describe('Phase 10: Closeout artifacts', () => {
-  it('marks F-902 through F-906 as Resolved in measure/tech-debt.md', () => {
-    const techDebtPath = path.join(repoRoot, 'measure/tech-debt.md');
-    const techDebt = fs.readFileSync(techDebtPath, 'utf8');
-
-    for (const findingId of ['F-902', 'F-903', 'F-904', 'F-905', 'F-906']) {
-      const row = techDebt
-        .split('\n')
-        .find((line) => line.includes(findingId) && /\bResolved\b/.test(line));
-      expect(
-        row,
-        `expected ${findingId} to be marked Resolved in ${techDebtPath}`,
-      ).toBeDefined();
-    }
-  });
+  // The F-902..F-906 tech-debt rows assertion was removed on 2026-11-22.
+  // measure/tech-debt.md is curated to a 50-line cap, so those rows were
+  // condensed away by later tracks. The lessons entry assertion below
+  // reads current content and stays.
 
   it('records the observability stack lessons-learned entry', () => {
     const lessonsPath = path.join(repoRoot, 'measure/lessons-learned.md');
@@ -30,18 +20,7 @@ describe('Phase 10: Closeout artifacts', () => {
     );
   });
 
-  it('records the rejected closeout as a reopened track', () => {
-    const metadataPath = path.join(
-      repoRoot,
-      'measure/tracks/observability_stack_20260603/metadata.json',
-    );
-    const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8')) as {
-      status: string;
-      deviation_notes: string;
-    };
-
-    expect(fs.existsSync(metadataPath)).toBe(true);
-    expect(metadata.status).toBe('reopened');
-    expect(metadata.deviation_notes).toContain('Final-acceptance 2026-06-23: FAIL');
-  });
+  // The "reopened track" assertion was removed on 2026-11-22. The track
+  // status is a later Measure decision: it now reads "parked" after the
+  // 2026-10-26 parking decision, not the 2026-06-23 "reopened" state.
 });
