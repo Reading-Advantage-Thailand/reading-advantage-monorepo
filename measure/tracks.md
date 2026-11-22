@@ -111,6 +111,11 @@ This file tracks all major tracks for the project.
 - [x] **Track: Sales Advantage Structural Alignment** *Link: [./tracks/sales_structural_alignment_20260919/](./tracks/sales_structural_alignment_20260919/)*
   Align shared authentication helpers, locale handling, keyboard access, announcements, and administrator navigation. **Implemented 2026-09-20 (5/6 tasks, 35 scoped tests green, tsc and eslint clean). Task 1 (shared `packages/auth` helper move) deferred — needs a dedicated cross-app track, registered in tech-debt; Task 6 recorded as tech-debt (App Router layout constraint); owner manual verification PASSED 2026-09-22.**
 
+- [ ] **Track: www test audit pilot** — *created 2026-11-22*
+  *Link: [./tracks/www_test_audit_pilot_20261122/](./tracks/www_test_audit_pilot_20261122/)*
+  *Status: new, opened 2026-11-22; Phase 1 (baseline and classification) next | Owner: Monorepo orchestrator | PM assignment A-66*
+  *Description: Pilot audit of the www-reading-advantage Vitest suite that deletes or rewrites tests in classes D1-D5 and R1-R3 to cut case count by 20 percent or more with no loss of fault detection.*
+
 
 
 
