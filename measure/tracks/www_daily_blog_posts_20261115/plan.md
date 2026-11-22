@@ -13,26 +13,34 @@ Track: `www_daily_blog_posts_20261115` (light lane). One task per post.
   manifest, copy the en and th posts and the two images, run the gates (five blog vitest files, www
   build, local render captures at 1280 and 390, en and th). Third commit on
   `www/daily-posts-1116-1117`. No push from this session. `73daa201f`.
-- [~] 1.4 Post `the-line-that-settled-the-class`, 2026-11-19 (PREPARE only; the orchestrator pushes
+- [x] 1.4 Post `the-line-that-settled-the-class`, 2026-11-19 (PREPARE only; the orchestrator pushes
   on 2026-11-19 because `blog.ts` has no date gate): verify the hand-off manifest, copy the en and
   th posts and the two images, run the gates (five blog vitest files, www build, local render
   captures at 1280 and 390, en and th). Fifth commit on `www/daily-posts-1116-1117`. No push from
-  this session.
-- [~] 1.5 Post `her-pencil-stops-the-tablet-stays-closed`, 2026-11-20 (PREPARE only; the orchestrator
+  this session. Pushed `bf4ebd647` to master (`ac1d09869..bf4ebd647`). CD run 44416947459: success.
+  Live: en and th give HTTP 200, hero `2026-11-19-class-finds-the-line.webp` loads, overflow 0 px at
+  390, 980, and 1280. Contact sheet:
+  https://drive.google.com/file/d/1LyLeQWzbdQ5_-PjGLk7MH04Ui6kX51tK/view?usp=drivesdk.
+- [x] 1.5 Post `her-pencil-stops-the-tablet-stays-closed`, 2026-11-20 (PREPARE only; the orchestrator
   pushes on 2026-11-20 because `blog.ts` has no date gate): verify the hand-off manifest, copy the
   en and th posts and the two images, run the gates (five blog vitest files, www build, local render
   captures at 1280 and 390, en and th). Sixth commit on `www/daily-posts-1116-1117`. No push from
-  this session.
-- [~] 1.6 Post `five-minutes-on-the-sofa`, 2026-11-21 (PREPARE only; the orchestrator pushes on
+  this session. Pushed `dc5a78bb7` to master. CD run 44633876712: success. 12 of 12 page checks
+  passed (en and th post, both blog lists, 390/980/1280).
+- [x] 1.6 Post `five-minutes-on-the-sofa`, 2026-11-21 (PREPARE only; the orchestrator pushes on
   2026-11-21 because `blog.ts` has no date gate): verify the hand-off manifest, copy the en and th
   posts and the two images, run the gates (five blog vitest files, www build, local render captures
   at 1280 and 390, en and th). Seventh commit on `www/daily-posts-1116-1117`. No push from this
-  session.
-- [~] 1.7 Post `every-lesson-has-a-next-lesson`, 2026-11-22 (PREPARE only; the orchestrator pushes
+  session. Pushed `829287b5d` to master (`12e057842..829287b5d`). CD run 44849723029: success. 12 of
+  12 page checks passed. Contact sheet:
+  https://drive.google.com/drive/folders/1HAS26l1okOW3vhqd-QnDHpuc9r5bMBvC.
+- [x] 1.7 Post `every-lesson-has-a-next-lesson`, 2026-11-22 (PREPARE only; the orchestrator pushes
   on 2026-11-22 because `blog.ts` has no date gate): verify the hand-off manifest, copy the en and
   th posts and the two images, run the gates (five blog vitest files, www build, local render
   captures at 1280 and 390, en and th). Eighth commit on `www/daily-posts-1116-1117`. No push from
-  this session.
+  this session. Pushed `bebaf8509` to master (`d782cc169..bebaf8509`). CD run 44962570177: success.
+  12 of 12 page checks passed. The 11-23 post still gave 404. Contact sheet:
+  https://drive.google.com/drive/folders/1crx5RlJse2NdLBobxMLtF6WFCdRYxHB2.
 - [x] 1.2 Fault: the reading time ignored the prose inside rich blocks and Thai script, so the daily
   post showed 4 min in en and 1 min in th. `calculateReadingTime` now counts figure captions,
   callout titles and text, and pull quotes, skips block keys, paths, alt text, and screen-reader
