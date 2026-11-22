@@ -97,7 +97,8 @@ Each task below is one commit for one class.
   COVERAGE exit 0: measure/runs/www_test_audit_pilot_20261122/coverage-0d705612.log.
   cases_before=3146, cases_after=3140, line_coverage_pct=89.86, floor=85.52.
   6 weak-check cases removed from 3 files. No result-checking test was weakened.
-- [ ] 2.5 Replace class D5. Test: (a), (b), (c), (d).
+- [~] 2.5 Replace class D5. Test: (a), (b), (c), (d).
+  In progress. Part 1: ee5c7b7390847eee0879ca9e8fa94b5eb4d33bd3.
 - [ ] 2.6 Checkpoint Phase 2. Test: (a), (b), (c).
   Record each commit SHA and its gate log in the task line.
 
