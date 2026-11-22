@@ -75,7 +75,12 @@ Phase gate: the suite passes, and the logs exist.
 Phase gate after every commit: the suite passes, and coverage falls by 1 point or less.
 Each task below is one commit for one class.
 
-- [ ] 2.1 Delete class D1. Test: (a), (b), (c), (d).
+- [x] 2.1 Delete class D1. Test: (a), (b), (c), (d).
+  Commit: 0be4a0374748e38d7ad504815441f0a9b3e3ee12.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-0be4a037.json.
+  GREEN exit 0: measure/runs/www_test_audit_pilot_20261122/green-0be4a037.log.
+  COVERAGE exit 0: measure/runs/www_test_audit_pilot_20261122/coverage-0be4a037.log.
+  cases_before=3175, cases_after=3168, line_coverage_pct=89.92, floor=85.52.
 - [ ] 2.2 Delete class D2. Test: (a), (b), (c), (d).
 - [ ] 2.3 Delete class D3. Test: (a), (b), (c), (d).
 - [ ] 2.4 Delete class D4. Test: (a), (b), (c), (d).
