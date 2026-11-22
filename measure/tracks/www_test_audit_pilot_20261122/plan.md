@@ -43,18 +43,17 @@ The spec reviewer judged this deviation before Red starts.
 
 Phase gate: the suite passes, and the logs exist.
 
-- [ ] 1.1 Record the baseline. Test: (a), (b), (c).
+- [x] 1.1 Record the baseline. Test: (a), (b), (c).
   Run the green test command through the runner.
   Run the coverage command through the runner.
-  Write the case count and the line coverage to `measure/runs/www_test_audit_pilot_20261122/baseline.json` with its `.log`.
-  Write no number in this plan.
-- [ ] 1.2 Classify every www test file. Test: (e), (f).
-  Write one row per file in `measure/tracks/www_test_audit_pilot_20261122/classification.md`.
-  Split a mixed file into one row per case.
-  Use the classes D1 to D5, R1 to R3, and K of spec section 5.
-  List the K rows first.
-  List each `e2e/*.spec.ts` Playwright file with its class.
-  Mark each Playwright row as not counted.
+  Evidence: measure/runs/www_test_audit_pilot_20261122/baseline.json with its `.log`.
+  Both runner commands exited 0. Plan holds no number.
+- [x] 1.2 Classify every www test file. Test: (e), (f).
+  Evidence: measure/tracks/www_test_audit_pilot_20261122/classification.md.
+  One row per file, split per describe block with case names when a file mixes classes.
+  K rows first. Each `e2e/*.spec.ts` Playwright file has a row marked not counted.
+  The scripts i18n-cli suite is marked not counted (excluded from the Vitest run).
+  Plan holds no number.
 - [ ] 1.3 Second-check 10 % of the rows. Test: (e), (f).
   A different model family re-checks 10 % of the rows.
   `measure-review-a-correctness` does the check on a model family different from the classifier.
