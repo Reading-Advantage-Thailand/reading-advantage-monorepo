@@ -97,10 +97,50 @@ Each task below is one commit for one class.
   COVERAGE exit 0: measure/runs/www_test_audit_pilot_20261122/coverage-0d705612.log.
   cases_before=3146, cases_after=3140, line_coverage_pct=89.86, floor=85.52.
   6 weak-check cases removed from 3 files. No result-checking test was weakened.
-- [~] 2.5 Replace class D5. Test: (a), (b), (c), (d).
-  In progress. Part 1: ee5c7b7390847eee0879ca9e8fa94b5eb4d33bd3.
-- [ ] 2.6 Checkpoint Phase 2. Test: (a), (b), (c).
-  Record each commit SHA and its gate log in the task line.
+- [x] 2.5 Replace class D5. Test: (a), (b), (c), (d).
+  Part 1: ee5c7b7390847eee0879ca9e8fa94b5eb4d33bd3. 4 pins.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-ee5c7b73.json.
+  Part 2: 7008ccefd63494410c7790bed26ead80fb6dd8c0. 102 pins.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-7008ccef.json.
+  Part 3: c577cdf18746f049571f21103bf8870dce0d114f. 61 pins across
+  www-batch-20261116.locale.test.ts, www-batch-20261119.locale.test.ts, and
+  www-stem-date-line.locale.test.ts.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-c577cdf.json.
+  GREEN exit 0: measure/runs/www_test_audit_pilot_20261122/green-c577cdf.log.
+  COVERAGE exit 0: measure/runs/www_test_audit_pilot_20261122/coverage-c577cdf.log.
+  cases_before=3081, cases_after=3048, line_coverage_pct=89.94, floor=85.52.
+  Part 4: 407c5d9bd88b840bd896c2f36defb466c8d90832. 54 pins across
+  tutor-calculator, tutor-reedy-claim, features-content, pricing-content,
+  features-pricing locale, Storytime content, reading-card, and codecamp page.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-407c5d9.json.
+  GREEN exit 0: measure/runs/www_test_audit_pilot_20261122/green-407c5d9.log.
+  COVERAGE exit 0: measure/runs/www_test_audit_pilot_20261122/coverage-407c5d9.log.
+  cases_before=3048, cases_after=3035, line_coverage_pct=90.03, floor=85.52.
+  All 221 D5 pins were reviewed. Fact guards stayed as K with a reason in the
+  part commit body and the run log. No tutor-commission money test changed.
+- [x] 2.6 Checkpoint Phase 2. Test: (a), (b), (c).
+  D1: 0be4a0374748e38d7ad504815441f0a9b3e3ee12.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-0be4a037.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-0be4a037.log.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-0be4a037.json.
+  D2: e332f594e70498666ce2f3c9c5c2afc492dceea4.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-e332f594.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-e332f594.log.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-e332f594.json.
+  D3: no rows, no test commit, no gate.
+  D4: 0d705612d77a786b42484f5df067f9bbb54e2389.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-0d705612.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-0d705612.log.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-0d705612.json.
+  D5 parts: ee5c7b739, 7008ccefd, c577cdf18, 407c5d9bd with the four gates
+  listed in task 2.5. Final phase 2 GREEN log:
+  measure/runs/www_test_audit_pilot_20261122/green-407c5d9.log.
+  Final phase 2 COVERAGE log:
+  measure/runs/www_test_audit_pilot_20261122/coverage-407c5d9.log.
+  Lint through heavy-run, exit 0 with 3 warnings:
+  measure/runs/www_test_audit_pilot_20261122/lint-407c5d9.log.
+  Check-types through heavy-run, exit 0:
+  measure/runs/www_test_audit_pilot_20261122/check-types-407c5d9.log.
 
 ## Phase 3: Rewrite batch (R1-R3)
 
