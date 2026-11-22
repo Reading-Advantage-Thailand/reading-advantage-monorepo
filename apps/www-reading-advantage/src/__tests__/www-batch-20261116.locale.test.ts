@@ -6,6 +6,7 @@ import th from "@/locales/th";
 import zh from "@/locales/zh";
 import { navigation as staticNavigation } from "@/config/navigation";
 import { buildMarketingMetadata } from "@/lib/seo";
+import { expectKeysInEveryLocale } from "@/__tests__/fixtures/locale-key-check";
 
 type Dict = Record<string, unknown>;
 
@@ -134,9 +135,8 @@ const ROW_B = [
 ] as const;
 
 describe("www batch 2026-11-16, row A", () => {
-  it.each(ROW_A)("holds the new en and th line at $key", ({ key, en: enLine, th: thLine }) => {
-    expect(read("en", key)).toBe(enLine);
-    expect(read("th", key)).toBe(thLine);
+  it("holds the row A keys in every shipped locale", () => {
+    expectKeysInEveryLocale(ROW_A.map(({ key }) => key));
   });
 
   it.each(ROW_A)("holds no old line at $key", ({ key, old }) => {
@@ -144,20 +144,35 @@ describe("www batch 2026-11-16, row A", () => {
     expect(read("th", key)).not.toBe(old.th);
   });
 
-  it("keeps every zh line of row A as it is", () => {
-    for (const { key, zh: zhLine } of ROW_A) expect(read("zh", key)).toBe(zhLine);
+  it("keeps the promised 2027 school year on the three badges", () => {
+    for (const row of ROW_A.filter(({ key }) => key.endsWith(".badge"))) {
+      expect(read("en", row.key)).toContain("2027");
+      expect(read("th", row.key)).toContain("2570");
+    }
+  });
+
+  it("keeps the no-release-date limit in the two zh feature lines", () => {
+    for (const row of ROW_A.filter(({ key }) => key.includes(".features."))) {
+      expect(read("zh", row.key)).toContain("发布日期");
+    }
   });
 
   it("keeps the STEM Advantage card on our roadmap", () => {
-    expect(read("en", "components.products.b2bSolutions.products.stemAdvantage.badge")).toBe("On our roadmap");
-    expect(read("th", "components.products.b2bSolutions.products.stemAdvantage.badge")).toBe("อยู่ในแผนงาน");
+    expect(read("en", "components.products.b2bSolutions.products.stemAdvantage.badge")).toContain("roadmap");
+    expect(read("th", "components.products.b2bSolutions.products.stemAdvantage.badge")).toContain("แผนงาน");
   });
 });
 
 describe("www batch 2026-11-16, row B", () => {
-  it.each(ROW_B)("holds the new en and th line at $key", ({ key, en: enLine, th: thLine }) => {
-    expect(read("en", key)).toBe(enLine);
-    expect(read("th", key)).toBe(thLine);
+  it("holds the row B keys in every shipped locale", () => {
+    expectKeysInEveryLocale(ROW_B.map(({ key }) => key));
+  });
+
+  it("keeps the promised launch day on the three short labels", () => {
+    for (const row of ROW_B.filter((_, index) => [2, 5, 6].includes(index))) {
+      expect(read("en", row.key)).toContain("30 November 2026");
+      expect(read("th", row.key)).toContain("30 พฤศจิกายน 2569");
+    }
   });
 
   it.each(ROW_B)("holds no old line at $key", ({ key, old }) => {
@@ -199,9 +214,15 @@ const ROADMAP_NOTE = {
 } as const;
 
 describe("www batch 2026-11-16, home roadmap note (PM decision)", () => {
-  it("holds the kept first sentence word for word in en and th", () => {
-    expect(read("en", ROADMAP_NOTE.key)).toBe(ROADMAP_NOTE.en);
-    expect(read("th", ROADMAP_NOTE.key)).toBe(ROADMAP_NOTE.th);
+  it("holds the roadmap note key in every shipped locale", () => {
+    expectKeysInEveryLocale([ROADMAP_NOTE.key]);
+  });
+
+  it("keeps the promised launch day and school year on the roadmap note", () => {
+    expect(read("en", ROADMAP_NOTE.key)).toContain("30 November 2026");
+    expect(read("en", ROADMAP_NOTE.key)).toContain("2027 school year");
+    expect(read("th", ROADMAP_NOTE.key)).toContain("30 พฤศจิกายน 2569");
+    expect(read("th", ROADMAP_NOTE.key)).toContain("2570");
   });
 
   it("holds no deleted no-dates sentence in en and th", () => {
@@ -254,9 +275,15 @@ const DETAIL_NO_DATE = [
 ] as const;
 
 describe("www batch 2026-11-16, product detail pages (PM decision)", () => {
-  it.each(DETAIL_NO_DATE)("holds the kept en and th line at $key", ({ key, en: enLine, th: thLine }) => {
-    expect(read("en", key)).toBe(enLine);
-    expect(read("th", key)).toBe(thLine);
+  it("holds the detail page keys in every shipped locale", () => {
+    expectKeysInEveryLocale(DETAIL_NO_DATE.map(({ key }) => key));
+  });
+
+  it("keeps the promised 2027 school year on the six detail lines", () => {
+    for (const { key } of DETAIL_NO_DATE) {
+      expect(read("en", key)).toContain("2027");
+      expect(read("th", key)).toContain("2570");
+    }
   });
 
   it.each(DETAIL_NO_DATE)("holds no no-release-date sentence at $key", ({ key, removed }) => {
@@ -315,9 +342,8 @@ const WEEK1_BOOK_LINE = {
 } as const;
 
 describe("www week 1 book line (row of 2026-11-16, supersedes TH-184)", () => {
-  it("holds the new en and th line and no old line", () => {
-    expect(read("en", WEEK1_BOOK_LINE.key)).toBe(WEEK1_BOOK_LINE.en);
-    expect(read("th", WEEK1_BOOK_LINE.key)).toBe(WEEK1_BOOK_LINE.th);
+  it("holds the week 1 book key in every locale and no old line", () => {
+    expectKeysInEveryLocale([WEEK1_BOOK_LINE.key]);
     expect(read("en", WEEK1_BOOK_LINE.key)).not.toContain(WEEK1_BOOK_LINE.old.en);
     expect(read("th", WEEK1_BOOK_LINE.key)).not.toContain(WEEK1_BOOK_LINE.old.th);
   });

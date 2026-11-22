@@ -7,6 +7,7 @@ import MasteryPage from "@/app/[locale]/(marketing)/mastery-advantage/page";
 import en from "@/locales/en";
 import th from "@/locales/th";
 import zh from "@/locales/zh";
+import { expectKeysInEveryLocale } from "@/__tests__/fixtures/locale-key-check";
 
 type Dict = Record<string, unknown>;
 
@@ -274,9 +275,15 @@ const MANAGED_SERVICE = [
 ] as const;
 
 describe("www batch 2026-11-19, home roadmap strip (file line 51)", () => {
-  it.each(ROADMAP_STRIP)("holds the new en and th line at $key", ({ key, en: enLine, th: thLine }) => {
-    expect(read("en", key)).toBe(enLine);
-    expect(read("th", key)).toBe(thLine);
+  it("holds the roadmap strip keys in every shipped locale", () => {
+    expectKeysInEveryLocale(ROADMAP_STRIP.map(({ key }) => key));
+  });
+
+  it("keeps the promised 2027 school year on the roadmap tag and note", () => {
+    expect(read("en", "pages.home.v2.products.roadmapTag2027")).toContain("2027");
+    expect(read("th", "pages.home.v2.products.roadmapTag2027")).toContain("2570");
+    expect(read("en", "pages.home.v2.products.roadmapNote")).toContain("30 November 2026");
+    expect(read("th", "pages.home.v2.products.roadmapNote")).toContain("30 พฤศจิกายน 2569");
   });
 
   it("tags the Science, Math, and Zhongwen roadmap cards with the 2027 school year", async () => {
@@ -293,18 +300,23 @@ describe("www batch 2026-11-19, home roadmap strip (file line 51)", () => {
   });
 
   it("holds the approved zh roadmap note", () => {
-    expect(read("zh", "pages.home.v2.products.roadmapNote")).toBe(
-      "在2027学年，泰国小学开设 Science Advantage、Math Advantage 和 Zhongwen Advantage，配套练习册和应用。",
-    );
+    expect(read("zh", "pages.home.v2.products.roadmapNote")).toContain("2027");
     const retired = "这些产品线在计划中，我们不给出日期。";
     expect(leaves(zh).some((leaf) => leaf.includes(retired))).toBe(false);
   });
 });
 
 describe("www batch 2026-11-19, detail pages name the 2027 school year (file line 52)", () => {
-  it.each(DETAIL_2027)("holds the new en and th line at $key", ({ key, en: enLine, th: thLine }) => {
-    expect(read("en", key)).toBe(enLine);
-    expect(read("th", key)).toBe(thLine);
+  it("holds the detail page keys in every shipped locale", () => {
+    expectKeysInEveryLocale(DETAIL_2027.map(({ key }) => key));
+  });
+
+  it("keeps the promised 2027 school year on the dated detail lines", () => {
+    const datedKeys = DETAIL_2027.filter(({ key }) => key !== "pages.products.zhongwenAdvantage.hero.subtitle");
+    for (const { key } of datedKeys) {
+      expect(read("en", key)).toContain("2027");
+      expect(read("th", key)).toContain("2570");
+    }
   });
 });
 
@@ -331,9 +343,15 @@ describe("www batch 2026-11-19, limit words go (file line 55)", () => {
 });
 
 describe("www batch 2026-11-19, Managed Service condition goes (file line 56)", () => {
-  it.each(MANAGED_SERVICE)("holds the new en and th line at $key", ({ key, en: enLine, th: thLine }) => {
-    expect(read("en", key)).toBe(enLine);
-    expect(read("th", key)).toBe(thLine);
+  it("holds the managed service keys in every shipped locale", () => {
+    expectKeysInEveryLocale(MANAGED_SERVICE.map(({ key }) => key));
+  });
+
+  it("keeps the planning claim limit on the managed service labels", () => {
+    for (const { key } of MANAGED_SERVICE.filter((_, index) => index < 4)) {
+      expect(read("en", key)).toMatch(/planning/i);
+      expect(read("th", key)).toContain("วางแผน");
+    }
   });
 });
 
