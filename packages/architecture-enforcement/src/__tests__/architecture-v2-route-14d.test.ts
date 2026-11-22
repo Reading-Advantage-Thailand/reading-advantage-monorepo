@@ -88,7 +88,13 @@ const PLAN_HASH = "a".repeat(64);
 const REVIEW_OWNER = "monorepo-architecture";
 const REVIEW_RATIONALE =
   "Reviewed re-baseline of the ci green track of 2026-11-15.";
-const PREVIEW_TIMEOUT_MS = 240_000;
+// The preview runs the real analyzer over every tracked source file of the
+// repository. Measured cost: 36.7 s alone with one worker on the 4-core dev
+// machine, and 274.9 s on the 4-core CI runner while the other package test
+// tasks run beside it. A 600 s budget keeps a 2.2x margin over the slowest
+// measured run. The work itself cannot shrink without staging a different
+// repository state, which is the contract under test.
+const PREVIEW_TIMEOUT_MS = 600_000;
 
 const fixtureRoots: string[] = [];
 
