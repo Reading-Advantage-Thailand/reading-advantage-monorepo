@@ -43,11 +43,13 @@ The decodable book uses only the sounds the class has learned, so she can work o
 
 ## The week follows her home
 
-Storytime Advantage launches on 30 November 2026. It is an app: the week's song, the week's books, and a parent page on a phone. In week 1, the song is "Hello, I am Pip." It is for children from Anuban 2 to P2.
+Storytime Advantage launches on 30 November 2026. It is a full English program in an app: scripted class days, the week's song, the week's books, and a parent page on a phone. In week 1, the song is "Hello, I am Pip." It is for children from Anuban 2 to P2.
 
 You sign in on the first visit. The phone then stays signed in, so your next visit is just opening the page.
 
-At school, the teacher opens the week on the classroom screen. At home, you open the same week on the family phone. The vision is a simple weekly routine that connects the classroom screen and the family phone. Both places hold one week: one sound, one song, and the books she can tap.
+At school, the teacher opens the week on the classroom screen. Each class day is a 30-minute scripted lesson with its own set of activities: letter formation, phonics with recognition, blending, and segmenting, a timed step across 100 sight words, read-along questions, and a daily recall. At home, you open the same week on the family phone. The vision is one program that connects both places.
+
+Storytime Advantage is CEFR-aligned. It was created to prepare children for the Cambridge Young Learners exams, for the families who want to take them, and for the CEFR levels.
 
 ## Nobody stops cooking
 
