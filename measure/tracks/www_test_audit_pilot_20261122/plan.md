@@ -81,8 +81,15 @@ Each task below is one commit for one class.
   GREEN exit 0: measure/runs/www_test_audit_pilot_20261122/green-0be4a037.log.
   COVERAGE exit 0: measure/runs/www_test_audit_pilot_20261122/coverage-0be4a037.log.
   cases_before=3175, cases_after=3168, line_coverage_pct=89.92, floor=85.52.
-- [ ] 2.2 Delete class D2. Test: (a), (b), (c), (d).
-- [ ] 2.3 Delete class D3. Test: (a), (b), (c), (d).
+- [x] 2.2 Delete class D2. Test: (a), (b), (c), (d).
+  Commit: e332f594e70498666ce2f3c9c5c2afc492dceea4.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-e332f594.json.
+  GREEN exit 0: measure/runs/www_test_audit_pilot_20261122/green-e332f594.log.
+  COVERAGE exit 0: measure/runs/www_test_audit_pilot_20261122/coverage-e332f594.log.
+  cases_before=3168, cases_after=3146, line_coverage_pct=89.92, floor=85.52.
+  22 duplicate cases removed from 6 files. Every named duplicate stays.
+- [x] 2.3 Delete class D3. Test: (a), (b), (c), (d).
+  No D3 rows (r2 note 2). No test commit and no gate.
 - [ ] 2.4 Delete class D4. Test: (a), (b), (c), (d).
 - [ ] 2.5 Replace class D5. Test: (a), (b), (c), (d).
 - [ ] 2.6 Checkpoint Phase 2. Test: (a), (b), (c).
