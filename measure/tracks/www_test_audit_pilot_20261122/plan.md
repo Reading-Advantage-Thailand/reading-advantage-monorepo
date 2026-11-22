@@ -44,17 +44,21 @@ The spec reviewer judged this deviation before Red starts.
 Phase gate: the suite passes, and the logs exist.
 
 - [x] 1.1 Record the baseline. Test: (a), (b), (c).
+  Commit: 08bec4c365bac5c15795b144bc45a86c42714f20.
   Run the green test command through the runner.
   Run the coverage command through the runner.
   Evidence: measure/runs/www_test_audit_pilot_20261122/baseline.json with its `.log`.
   Both runner commands exited 0. Plan holds no number.
 - [x] 1.2 Classify every www test file. Test: (e), (f).
+  Commit: d1b9d597b553f6033ef39029491eb2a13a550337.
+  Earlier classification commits: 08bec4c36, 1d4ddd2c0.
   Evidence: measure/tracks/www_test_audit_pilot_20261122/classification.md.
   One row per file, split per describe block with case names when a file mixes classes.
   K rows first. Each `e2e/*.spec.ts` Playwright file has a row marked not counted.
   The scripts i18n-cli suite is marked not counted (excluded from the Vitest run).
   Plan holds no number.
 - [x] 1.3 Second-check 10 % of the rows. Test: (e), (f).
+  Commit: d1b9d597b553f6033ef39029491eb2a13a550337.
   A different model family re-checks 10 % of the rows.
   `measure-review-a-correctness` does the check on a model family different from the classifier.
   The check is report-only.
@@ -67,6 +71,7 @@ Phase gate: the suite passes, and the logs exist.
   Chain: second-check-08bec4c fail -> Red r2 1d4ddd2c0 -> second-check-1d4ddd2
   -> Red r3 d1b9d597b -> second-check-d1b9d59 pass. Rate in the log.
 - [x] 1.4 Checkpoint Phase 1. Test: (c).
+  Commit: a1caa58034f6455e91205a5673ef172a974a7992.
   Commit the plan update with the log paths.
   Phase 1 ships no test change.
 
@@ -89,6 +94,7 @@ Each task below is one commit for one class.
   cases_before=3168, cases_after=3146, line_coverage_pct=89.92, floor=85.52.
   22 duplicate cases removed from 6 files. Every named duplicate stays.
 - [x] 2.3 Delete class D3. Test: (a), (b), (c), (d).
+  Commit: 409108d3e04b418c26390d15a25a66a8a8180dfb.
   No D3 rows (r2 note 2). No test commit and no gate.
 - [x] 2.4 Delete class D4. Test: (a), (b), (c), (d).
   Commit: 0d705612d77a786b42484f5df067f9bbb54e2389.
