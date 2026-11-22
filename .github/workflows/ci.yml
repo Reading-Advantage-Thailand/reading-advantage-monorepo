@@ -298,6 +298,21 @@ jobs:
       - name: Build the sales knowledge package for the packages/db tests
         run: pnpm --filter @reading-advantage/sales-knowledge... build
 
+      # Reading-advantage and primary-advantage gitignore next-env.d.ts, and turbo runs
+      # check-types beside build. So a fresh checkout has no Next module types when tsc
+      # starts, and the static-asset imports fail with TS2307 (run 44972585117). Write the
+      # two references when the app commits no file of its own. next build and next dev
+      # write the same file later, with their own generated routes import.
+      - name: Write the Next type references when the app has none
+        run: |
+          file="apps/${{ matrix.id }}/next-env.d.ts"
+          if [ -f "$file" ]; then
+            echo "$file already exists"
+            exit 0
+          fi
+          printf '%s\n' '/// <reference types="next" />' '/// <reference types="next/image-types/global" />' > "$file"
+          cat "$file"
+
       - name: Build, lint, type check, and test the app and its dependencies
         env:
           COMPANY_IDENTITY_TEST_POSTGRES_CONTAINER: ${{ job.services.postgres.id }}
