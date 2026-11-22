@@ -6,7 +6,11 @@
  * visitor sees; no TypeScript or TSX source text is read. A negative assertion
  * and a positive control pair each rule so a deletion-only fix fails.
  */
-import { describe, expect, it, vi } from "vitest";
+import type { ReactElement } from "react";
+import { cleanup, render } from "@testing-library/react";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import MathPage from "@/app/[locale]/(marketing)/products/math-advantage/page";
+import PrimaryPage from "@/app/[locale]/(marketing)/products/primary-advantage/page";
 import { generateMetadata as readingMetadata } from "@/app/[locale]/(marketing)/products/reading-advantage/page";
 import { generateMetadata as primaryMetadata } from "@/app/[locale]/(marketing)/products/primary-advantage/page";
 import { generateMetadata as scienceMetadata } from "@/app/[locale]/(marketing)/products/science-advantage/page";
@@ -50,6 +54,47 @@ vi.mock("@/locales/server", async () => {
     }),
   };
 });
+
+beforeAll(() => {
+  vi.stubGlobal(
+    "IntersectionObserver",
+    class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+      takeRecords() {
+        return [];
+      }
+    },
+  );
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn(() => ({
+      matches: true,
+      media: "",
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  );
+});
+
+afterEach(() => cleanup());
+
+/** Collects the visible text nodes of a rendered element. */
+function renderedText(container: HTMLElement): string {
+  const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+  const parts: string[] = [];
+  let node = walker.nextNode();
+  while (node) {
+    parts.push(node.textContent ?? "");
+    node = walker.nextNode();
+  }
+  return parts.join(" ");
+}
 
 type Dict = Record<string, unknown>;
 
@@ -315,6 +360,34 @@ describe("1G — Unverifiable stats and absolute claims", () => {
       violations,
       `Scoped unverifiable claims on Math or Primary:\n${violations.join("\n")}`,
     ).toEqual([]);
+
+    const renderedSurfaces = [
+      {
+        route: "math",
+        element: (await MathPage({
+          params: Promise.resolve({ locale: "en" }),
+        })) as ReactElement,
+      },
+      {
+        route: "primary",
+        element: (await PrimaryPage({
+          params: Promise.resolve({ locale: "en" }),
+        })) as ReactElement,
+      },
+    ];
+    for (const { route, element } of renderedSurfaces) {
+      const view = render(element);
+      const text = renderedText(view.container);
+      expect(text.trim().length, `${route} renders visible copy`).toBeGreaterThan(0);
+      const renderedViolations = scopedBans
+        .filter(({ pattern }) => pattern.test(text))
+        .map(({ label }) => `${route}: rendered ${label}`);
+      cleanup();
+      expect(
+        renderedViolations,
+        `Scoped unverifiable claims on the rendered Math or Primary page:\n${renderedViolations.join("\n")}`,
+      ).toEqual([]);
+    }
   });
 
   it("positive control: managed-service copy keeps a non-absolute risk qualifier", () => {

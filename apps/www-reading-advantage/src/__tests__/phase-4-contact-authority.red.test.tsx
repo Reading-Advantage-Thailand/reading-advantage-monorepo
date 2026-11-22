@@ -35,6 +35,23 @@ vi.mock("next/image", () => ({
   default: (props: React.ComponentProps<"img">) => <img {...props} />,
 }));
 
+/*
+ * The authority is supplied by the test, not by the shipped config. Every
+ * rendered destination must follow these distinct values. A component that
+ * hard-codes a real config literal fails the checks below.
+ */
+vi.mock("@/config/contact", () => ({
+  contactDetails: {
+    supportEmail: "authority@example.test",
+    phoneNumber: "+66 000-111-2222",
+    phoneHref: "tel:+660001112222",
+    tiktokUrl: "https://www.tiktok.com/@authority.test",
+    tiktokLabel: "@authority.test",
+    lineQrSrc: "/line-qr-authority.jpg",
+    lineQrAlt: "Authority Line QR",
+  },
+}));
+
 const localeMessages = [enMessages, thMessages, zhMessages];
 const contactHandle = new URL(contactDetails.tiktokUrl).pathname.slice(1);
 

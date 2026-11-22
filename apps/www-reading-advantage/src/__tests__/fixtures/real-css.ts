@@ -17,9 +17,6 @@ const result = await postcss([tailwindcss({ base: APP_ROOT })])
   .process(readFileSync(CSS_PATH, "utf8"), { from: CSS_PATH });
 const compiled = result.css;
 
-/** The real compiled stylesheet, available for direct declaration reads. */
-export const compiledCss: string = compiled;
-
 const parsed = postcss.parse(compiled);
 
 /** Escapes a class token for exact selector matching in the compiled CSS. */
