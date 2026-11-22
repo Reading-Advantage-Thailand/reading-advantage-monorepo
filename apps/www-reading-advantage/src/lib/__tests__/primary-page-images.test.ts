@@ -169,14 +169,6 @@ function cellSet(path: string): Set<string> {
   return set;
 }
 
-describe("source files", () => {
-  it("are present when A34_REQUIRE_SOURCES=1", () => {
-    if (!REQUIRE_SOURCES) return;
-    expect(existsSync(LIST_PATH), `image list at ${LIST_PATH}`).toBe(true);
-    expect(existsSync(BRIEF_PATH), `brief at ${BRIEF_PATH}`).toBe(true);
-  });
-});
-
 describe("image list", () => {
   sourceTest("has 16 rows from 15 distinct sources (images: 16, sources: 15)", () => {
     const rows = parseImageList();

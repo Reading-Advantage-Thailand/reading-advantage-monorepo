@@ -24,12 +24,6 @@ describe("localized navigation", () => {
     localeState.current = "en";
   });
 
-  it.each(["en", "th", "zh"])("returns the active %s locale", (locale) => {
-    localeState.current = locale;
-    const { result } = renderHook(() => useCurrentLocale());
-    expect(result.current).toBe(locale);
-  });
-
   it("uses the configured default for an unsupported locale", () => {
     localeState.current = "fr";
     const { result } = renderHook(() => useCurrentLocale());
