@@ -148,6 +148,19 @@ Each task below is one commit for one class.
   Check-types through heavy-run, exit 0:
   measure/runs/www_test_audit_pilot_20261122/check-types-407c5d9.log.
 
+- [x] 2.7 Review A remediation round A (9eb3b9c4f)
+  Fix commits: 733319505, fb5622ed7, 9eb3b9c4f.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-9eb3b9c4.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-9eb3b9c4.log.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-9eb3b9c4.json.
+- [x] 2.8 Review A remediation round B (4d1688131)
+  Fix commit: 4d168813116345c2b6684bcc543c2c33279f9cfa.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-4d168813.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-4d168813.log.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-4d168813.json.
+  Proof logs: measure/runs/www_test_audit_pilot_20261122/proof-f2a.log,
+  proof-f2b.log, proof-f3a.log, proof-f3b.log, proof-f4a.log, proof-f4b.log.
+
 ## Phase 3: Rewrite batch (R1-R3)
 
 Phase gate after every commit: the suite passes, and coverage falls by 1 point or less.
