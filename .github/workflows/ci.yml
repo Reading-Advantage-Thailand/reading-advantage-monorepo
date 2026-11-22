@@ -208,12 +208,14 @@ jobs:
       # not table rows (science-advantage, vocabulary-games, activity-vinext-fixture), and the six
       # packages that no table app depends on (architecture-enforcement, knowledge-space-practice,
       # mastery-runtime-compat, scripts, session-service, worker). Each `...` adds the dependencies
-      # of the root. The science-advantage CI gates pin the step name and the command `pnpm test`, and
-      # they read `run:` and the command on one line, so the filters stay on one line.
+      # of the root. `--continue` stops a failed package from cancelling the other packages, so one
+      # run reports every failing task. The science-advantage CI gates pin the step name and the
+      # command `pnpm test`, and they read `run:` and the command on one line, so the filters stay
+      # on one line.
       - name: Test
         env:
           COMPANY_IDENTITY_TEST_POSTGRES_CONTAINER: ${{ job.services.postgres.id }}
-        run: pnpm test --filter=science-advantage... --filter=vocabulary-games... --filter=activity-vinext-fixture... --filter=@reading-advantage/architecture-enforcement... --filter=@reading-advantage/knowledge-space-practice... --filter=@reading-advantage/mastery-runtime-compat... --filter=@reading-advantage/scripts... --filter=@reading-advantage/session-service... --filter=@reading-advantage/worker...
+        run: pnpm test --continue --filter=science-advantage... --filter=vocabulary-games... --filter=activity-vinext-fixture... --filter=@reading-advantage/architecture-enforcement... --filter=@reading-advantage/knowledge-space-practice... --filter=@reading-advantage/mastery-runtime-compat... --filter=@reading-advantage/scripts... --filter=@reading-advantage/session-service... --filter=@reading-advantage/worker...
 
   affected:
     name: Check ${{ matrix.id }}
