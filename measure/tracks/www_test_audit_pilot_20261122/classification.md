@@ -3,6 +3,16 @@
 Track: `www_test_audit_pilot_20261122`. Spec: [spec.md](./spec.md).
 Plan: [plan.md](./plan.md). Source: PM plan A-66 sections 3-7.
 
+## Rubric notes (r2)
+
+PM-approved stricter notes from the round-2 re-audit. They apply word
+for word to every row.
+
+1. D2 = the same rule on the same public surface.
+2. D3 = the code under test is gone from the source tree.
+3. A D1 test that guards user-visible behavior is rewritten, not deleted.
+4. The row counts add up to the baseline (3,175).
+
 ## Counting rule
 
 Case counts below are runner counts from the Phase 1 Vitest run
@@ -23,7 +33,7 @@ per spec section 2.
 | File | Case(s) | n | Rule | Reason |
 |---|---|---|---|---|
 | src/__tests__/proxy-redirect.test.ts | all 5 redirect cases | 5 | locale-routing rule | behavior through the middleware response |
-| src/lib/blog-locale.test.ts | postsDirectory ×4 (en default, th, zh, th-differs) | 4 | locale blog-path routing | behavior of the exported path builder |
+| src/lib/blog-locale.test.ts | postsDirectory en/th/zh; th differs | 4 | locale blog-path routing | behavior of the exported path builder |
 | src/locales/navigation.test.tsx | uses the configured default for an unsupported locale | 1 | locale fallback default | fallback logic through the hook |
 | src/__tests__/phase-2-seo-assets.red.test.ts | all 4 metadata cases | 4 | per-locale SEO metadata, real OG PNG | behavior through generateMetadata plus asset bytes |
 | src/__tests__/phase-2-seo-blog-routes.red.test.ts | all 10 article and pagination cases | 10 | article and pagination SEO metadata | behavior through generateMetadata with the real blog lib |
@@ -43,9 +53,11 @@ per spec section 2.
 | src/__tests__/www-pricing-required-rows.red.test.ts | all 7 RA4 cases | 7 | no silent empty table | real-translator render behavior |
 | src/__tests__/www-pricing-rows-fluid.red.test.ts | three-row fixture control; renders exactly the fixture row count; renders no missing-cell marker | 3 | fluid rows map the locale array | render behavior (source pins split to D1) |
 | src/__tests__/www-pricing-stacking.red.test.ts | all 22 stacking cases | 22 | pricing stacking rule and baht figures | money rule, never-delete set |
-| src/__tests__/www-reading-card.red.test.ts | rendered status line; cover file real; PM(2) absence ×3; rendered absence ×3 | 8 | kept status line; real cover file; deleted sentence stays deleted | rendered proof and asset bytes |
+| src/__tests__/www-reading-card.red.test.ts | scanner and status-source controls ×2; rendered status line; cover file real; PM(2) absence ×3; rendered absence ×3 | 10 | kept status line; real cover file; deleted sentence stays deleted | rendered proof, asset bytes, and source controls |
 | src/__tests__/www-reading-cover.red.test.ts | JPEG-reader, ratio, rendered-alt, file-aspect, rendered-ratio controls | 5 | cover aspect and D13 alt | controls, asset bytes, rendered proof |
 | src/__tests__/www-stem-date-line.locale.test.ts | no deleted phrases ×3; en/th sweeps ×2; meta/og/twitter case | 6 | release-date lines stay deleted | absence sweeps plus metadata behavior |
+| src/__tests__/www-batch-20261116.locale.test.ts | no old lines row A ×5 and row B ×9; no-dates limit; nav wiring; zh spread; roadmap no-deleted; detail no ×6; meta; svg ×2; book zh spread | 28 | old copy stays deleted; zh spread; nav wiring | absence sweeps, spread mechanism, metadata behavior (prose pins split to D5) |
+| src/__tests__/www-batch-20261119.locale.test.ts | removes the reading status label in en and th | 1 | status key removal | key absence (prose pins split to D5, source pins split to D1) |
 | src/__tests__/www-tutor-calculator.locale.test.ts | blocks exist; calculator deep-equals §2 ×5; no removed keys ×2; no superseded figures or claims ×3; 3000 default; zh equality; old lines absent plus control | 15 | payout figures, D-17/D-10 rules, claim guards | money pins and mechanism checks (prose pins split to D5) |
 | src/__tests__/www-tutor-followups.adversarial.test.ts | all 5 follow-up cases | 5 | zh draft rule; narrowed Storytime guard | equality mechanism plus guard with vacuity checks |
 | src/__tests__/www-tutor-reedy-claim.test.tsx | probe control; no forbidden claim page/component ×6 | 7 | Reedy availability claims stay truthful | absence sweeps plus control (exact pins split to D5) |
@@ -81,15 +93,14 @@ per spec section 2.
 | src/lib/__tests__/real-logos-captures-adversarial.test.ts | all 103 capture cases | 103 | capture integrity and spec parity | byte checks with fixture controls (kept duplicate for favicon D2 rows) |
 | src/lib/__tests__/real-logos-captures.red.test.ts | repo-root control; 15 capture PNG cases | 16 | capture files exist and read as PNG | asset bytes (order pins split to D4) |
 | src/lib/__tests__/real-logos-favicon.red.test.ts | ICO magic in one copy | 1 | favicon is a real ICO file | magic bytes (length and identity rows split to D2) |
-| src/lib/__tests__/real-logos-mapping.red.test.ts | maps the ten product ids; 30 per-kind file cases | 31 | logo manifest maps artwork that exists | data plus asset existence (removed-kind rows split to D2) |
+| src/lib/__tests__/real-logos-mapping.red.test.ts | maps the ten product ids; 30 per-kind file cases; no removed kind in any manifest value ×3 | 34 | logo manifest maps artwork that exists and names no removed kind | data plus asset existence; the source-text sweep checks a different surface, so note 1 keeps these here |
 | src/lib/__tests__/real-logos-references.red.test.ts | dir removals ×3; raster removals ×8; square SVGs | 12 | placeholders and rasters stay removed | public-tree absence and presence checks (literal sweeps split to D2) |
 | src/lib/__tests__/site-assets.test.ts | manifest existence; chibi tags | 2 | assets exist; chibi art stays scoped | manifest and tag rules |
-| src/lib/__tests__/storytime-page-images.test.ts | writes only the 10 lossless WebP files and the two song posters | 1 | delivered image set and encoding | asset bytes (source rows split to D3) |
-| src/lib/__tests__/tutor-screens.adversarial.test.ts | size parity; distinct srcs; prefix and traversal; repo hygiene | 4 | screens asset integrity | header bytes and manifest rules (order row split to D2) |
-| src/lib/__tests__/tutor-screens.test.ts | EXPECTED paths and sizes ×10; no tutor-desktop | 11 | screens manifest facts | data plus file existence (order row split to D2) |
+| src/lib/__tests__/storytime-page-images.test.ts | manifest parity, delivered WebP set, lanczos crop parity | 3 | delivered image facts | asset bytes against the live A45 manifest, which exists; note 2 keeps these here |
+| src/lib/__tests__/tutor-screens.adversarial.test.ts | size parity; distinct srcs; prefix and traversal; repo hygiene | 4 | screens asset integrity | header bytes and manifest rules (M4 order row is the D2 row below) |
+| src/lib/__tests__/tutor-screens.test.ts | EXPECTED paths and sizes ×10; gallery order; no tutor-desktop | 12 | screens manifest facts | data plus file existence (order kept here: manifest surface differs from the rendered proof; note 1) |
 | src/lib/blog-blocks.test.ts | all 18 block cases | 18 | blog block rendering and rejection | lib behavior with hostile inputs |
 | src/lib/blog-draft.test.ts | all 6 draft cases | 6 | drafts stay out of production lists | lib behavior |
-| src/lib/blog-locale.test.ts | postsDirectory en/th/zh; th differs | 4 | locale blog-path routing | behavior of the exported path builder |
 | src/lib/blog-posts-validation.test.ts | all 1726 frontmatter, content, naming, consistency cases | 1726 | every post carries valid frontmatter and names | content-integrity gate over all posts (merge candidate, see projection) |
 | src/lib/blog.test.ts | all 28 reading-time, pagination, heading, related cases | 28 | blog lib contracts | lib behavior (kept duplicate for blog-locale typeof D2 row) |
 | src/lib/tutor-commission.test.ts | all 34 rate, preset, conservation, clamp, tax cases | 34 | payout math to the satang | money rule, never-delete set |
@@ -97,27 +108,28 @@ per spec section 2.
 | src/lib/tutor-commission.followups.adversarial.test.ts | all 4 edge cases | 4 | payout edge variants | money rule, never-delete set |
 | src/lib/tutor-commission.settlement.adversarial.test.ts | all 37 settlement-parity cases | 37 | calculator matches the settlement system | money rule with independent model, never-delete set |
 | src/lib/wave2-product-claim-helper.test.ts | all 12 helper and case-study cases | 12 | claim classification and consent proof | lib behavior with counterexamples |
-| src/lib/__tests__/primary-page-images.test.ts | adds no 64-character hash to any file under apps/ | 1 | no hashes in the repo | process guard on the git diff |
-| src/__tests__/phase-4-browser-regressions-final.red.test.tsx | catches the observed 490px counterexample | 1 | overflow detector fires | control proves the detector fails on a bad tree |
+| src/lib/__tests__/primary-page-images.test.ts | image list, output folder, pixel parity, drift guard, and hash guard | 9 | delivered image facts | asset bytes against the live A34 sources, which exist; note 2 keeps these here |
 
 ## D1 rows (source-text test: delete, or replace with a behavior test)
 
 | File | Case(s) | n | Rule or none | Action | Reason |
 |---|---|---|---|---|---|
-| src/__tests__/blog-figure-natural-size.test.ts | all 4 figure CSS cases | 4 | none (layout detail) | delete | reads globals.css as text and regex-matches declarations |
-| src/__tests__/blog-hero-height.red.test.ts | all 3 compact-hero cases | 3 | none (fixed hero height) | delete | matches `min-h-hero-compact` and HeroSection props in source text |
-| src/__tests__/hero-text-contrast.red.test.ts | all 2 contrast cases | 2 | none (fixed hero color) | delete | extracts HeroSection calls from page sources as text |
-| src/__tests__/products-entrance-visibility.red.test.ts | all 3 visibility cases | 3 | none (fixed animation guards) | delete | regex-matches globals.css and b2b-solutions.tsx source |
-| src/__tests__/www-features-look-pins.red.test.ts | source class pins: controls ×3, F1, F2, F2r6 ×2, card order, base grid, F3r6 source ×2, picture column | 12 | none (fixed look defects) | delete | every case matches class names in program-card.tsx or features page source |
+| src/__tests__/blog-figure-natural-size.test.ts | all 4 figure CSS cases | 4 | natural-size centered figures | rewrite | reads globals.css as text; note 3 needs a rendered or visual behavior test for the user-visible rule |
+| src/__tests__/blog-hero-height.red.test.ts | all 3 compact-hero cases | 3 | compact hero without an 800 px band | rewrite | matches source text; note 3 needs a rendered behavior test for the user-visible rule |
+| src/__tests__/hero-text-contrast.red.test.ts | all 2 contrast cases | 2 | readable hero subtitles | rewrite | extracts HeroSection calls from page sources; note 3 needs a rendered contrast test |
+| src/__tests__/products-entrance-visibility.red.test.ts | all 3 visibility cases | 3 | content stays visible, including under reduced motion | rewrite | regex-matches CSS and component source; note 3 needs behavior tests for the user-visible rule |
+| src/__tests__/www-features-look-pins.red.test.ts | F1 face-ratio pin; F2 stretch pin; F2r6 branch pins ×2 | 4 | uncropped faces; unstretched text cards | rewrite | source class pins for user-visible look defects; note 3 needs rendered or visual tests |
+| src/__tests__/www-features-look-pins.red.test.ts | source scanners, card order, base grid, F3r6 source pins, picture column | 8 | F3 layout (rendered checks stay) | delete | the rendered F3r6 checks prove the rule; scanner controls go with the scanners |
 | src/__tests__/phase-3-group-b-types.test.ts | keeps both production components free of unsafe assertions | 1 | no bypass casts | delete | static TypeScript AST analysis of two .tsx files, not runtime behavior |
-| src/__tests__/phase-3-i18n.red.test.ts | CTA copy in source; bypass casts grep; Thai typos in source; tsc diagnostics | 4 | locale copy sourcing; no casts; typo list; type validity | delete | all four read .tsx or locale .ts source as text; case 5 renders the same components |
+| src/__tests__/phase-3-i18n.red.test.ts | CTA copy, bypass casts, tsc diagnostics | 3 | locale sourcing; no casts; type validity (rendered CTA case stays) | delete | source reads and static analysis; the rendered case holds the CTA rule |
+| src/__tests__/phase-3-i18n.red.test.ts | known Thai typo forms in locale source | 1 | typo-free Thai service copy | rewrite | source regex; note 3 needs a rendered Thai copy check |
 | src/__tests__/phase-4-contact-authority.red.test.tsx | uses contactDetails references in page, footer, form sources | 1 | contact authority (rendered half stays) | rewrite | drops the `?raw` source-text asserts; the rendered asserts in the same case already prove the rule |
 | src/__tests__/www-pricing-rows-fluid.red.test.ts | pricing page source is found; no literal four-row index list | 2 | fluid rows (rendered cases stay) | delete | source-presence and source-absence pins; two rendered cases prove the rule |
-| src/__tests__/www-reading-card.red.test.ts | scanner control; new cover src; old src gone; no mt-auto | 4 | cover swap and featured-row fix (rendered and file cases stay) | delete | class-name and src-string pins in page and card source |
+| src/__tests__/www-reading-card.red.test.ts | new cover src; old src gone; no mt-auto | 3 | cover swap and featured-row fix (rendered and file cases stay) | delete | string pins in page and card source |
 | src/__tests__/www-reading-cover.red.test.ts | declared dims; storytime, primary, tutor regression pins | 4 | cover dims; other cards unchanged | delete | reads CARD_IMAGES numbers and approved strings from page source |
-| src/__tests__/no-gse-in-customer-copy.test.ts | all 4 sweep, pending, reason, print cases | 4 | CEFR-only customer copy | delete | scans .tsx, .ts, .md, and .svg source as text with regex |
-| src/lib/__tests__/phase-w3-claims.test.ts | all 18 claim audits and positive controls | 18 | truthful product claims | delete | reads src/ files as text and matches banned literals; rendered page tests hold the live rules |
-| src/__tests__/www-batch-20261119.locale.test.ts | roadmap tags in home source; zh roadmap source absence; reading-card badge source; planned-date default source; efficacy-stats and FAQ removals in page sources | 5 | 2027 copy rollout (locale pins stay) | delete | `readFileSync` plus `toContain`/`not.toContain` on page and locale sources |
+| src/__tests__/no-gse-in-customer-copy.test.ts | all 4 sweep, pending, reason, print cases | 4 | CEFR-only customer copy | rewrite | scans source text with regex; note 3 needs a rendered-page and blog-route copy sweep |
+| src/lib/__tests__/phase-w3-claims.test.ts | all 18 claim audits and positive controls | 18 | truthful product claims | rewrite | reads src/ files as text; note 3 needs the claims held by rendered page tests, consolidated per rule |
+| src/__tests__/www-batch-20261119.locale.test.ts | roadmap tags in home source; zh roadmap source absence; reading-card badge source; planned-date default source; efficacy-stats and FAQ removals in page sources | 5 | 2027 copy rollout (locale pins stay) | rewrite | `readFileSync` pins on page and locale sources; note 3 needs rendered behavior tests |
 | src/components/layout/layout-components.test.ts | does not retain empty layout component modules | 1 | none (one-time migration guard) | delete | reads source files only to check emptiness; git history holds the state |
 
 ## D2 rows (duplicate: delete; kept duplicate named)
@@ -128,21 +140,15 @@ per spec section 2.
 | src/lib/blog-locale.test.ts | returns the en directory when locale is en | 1 | same file: returns the en subdirectory by default |
 | src/lib/blog-locale.test.ts | returns a number type for calculateReadingTime | 1 | src/lib/blog.test.ts calculateReadingTime value cases |
 | src/lib/__tests__/real-logos-favicon.red.test.ts | byte-identical copies; byte length ×2; ICO magic in the second copy | 4 | real-logos-captures-adversarial.test.ts favicon byte rows |
-| src/lib/__tests__/real-logos-mapping.red.test.ts | references no value containing the removed kind ×3 | 3 | real-logos-adversarial.test.ts FR-5 source sweep rows |
 | src/lib/__tests__/real-logos-references.red.test.ts | references zero occurrences of each removed literal ×11 | 11 | real-logos-adversarial.test.ts FR-5 source sweep rows |
 | src/__tests__/products-page-pictures.red.test.tsx | does not use the retired Storytime set | 1 | www-tutor-followups.adversarial.test.ts manifest guard case |
-| src/lib/__tests__/tutor-screens.test.ts | holds the five PR section 2 slots in gallery order | 1 | tutor-advantage/page.images.test.tsx rendered screens-order case |
 | src/lib/__tests__/tutor-screens.adversarial.test.ts | ADV-M4 slot order is fixed (portrait half rides with the manifest pins) | 1 | tutor-screens.test.ts EXPECTED order and portrait pins |
-| src/__tests__/www-reading-card.red.test.ts | alts the cover in English per D13 | 1 | www-reading-cover.red.test.ts rendered D13-alt control |
-| src/__tests__/www-reading-cover.red.test.ts | picture wrapper applies no crop fit | 1 | same file: rendered portrait-ratio case |
 | src/__tests__/phase-3-i18n.red.test.ts | (no D2 row: the bypass-cast grep duplicates group-b case 4, but both are D1 and both go) | 0 | — |
 
 ## D3 rows (dead target: delete)
 
-| File | Case(s) | n | Reason |
-|---|---|---|---|
-| src/lib/__tests__/primary-page-images.test.ts | has 16 rows; same names and alt text; SHA-256 per source; fills the output folder; lossless output sizes; pixel-equal crops; scaled Reedy check; drift guard | 8 | all eight read handoff sources outside the repo and skip without them |
-| src/lib/__tests__/storytime-page-images.test.ts | manifest SHA-256 check; lanczos crop check | 2 | both read the external A45 handoff manifest and skip without it |
+None. Both image-source suites validate live output images against
+sources that exist in this environment, so note 2 keeps them as K.
 
 ## D4 rows (weak check: delete, or merge)
 
@@ -168,6 +174,7 @@ per spec section 2.
 | src/app/[locale]/(marketing)/products/storytime-advantage/page.content.test.tsx | overview handoff ×3; label handoff ×3; approved copy ×3; metadata ×3; song copy ×3 | 15 | exact handoff strings (structure and sweeps stay as K) |
 | src/__tests__/www-tutor-screens-copy.adversarial.test.ts | (no D5 row: equality and absence checks are mechanisms, kept as K) | 0 | — |
 | src/__tests__/phase-4-contact-copy.red.test.tsx | raw handle plus platform phrase; rendered TikTok phrase ×3 | 4 | exact TikTok sentences (config value stays covered by the contact-authority test) |
+| src/__tests__/www-reading-card.red.test.ts | alts the cover in English per D13 | 1 | exact CARD_IMAGES alt pin (the rendered cover-alt case holds the rule) |
 | src/app/[locale]/(marketing)/products/codecamp-advantage/page.test.tsx | keeps the real production denominators | 1 | exact stat pins ("4", "20", "106") and marketing phrases |
 
 ## R1 rows (over-mocked: rewrite against a boundary fake)
@@ -189,6 +196,7 @@ blog and product page tests isolate the page under test only.
 | src/app/[locale]/(marketing)/services/managed-service/page.test.tsx | asymmetric desktop split | 1 | pins `lg:grid-cols-12` and span classes |
 | src/components/marketing/hero-section.test.tsx | default and custom background gradients | 2 | pins exact Tailwind gradient classes |
 | src/components/blog/blog-pagination.test.tsx | wraps pagination controls on narrow screens | 1 | pins the `flex-wrap` class |
+| src/__tests__/www-reading-cover.red.test.ts | picture wrapper applies no crop fit | 1 | asserts class-name text on rendered output; the aspect ratio cannot prove CSS did not crop |
 
 ## R3 rows (unclear: split or rename)
 
@@ -213,34 +221,36 @@ Runner counts per class (Vitest suite, 3175 cases):
 
 | Class | Cases | Share | Action |
 |---|---|---|---|
-| K keep | 2827 | 89.0 % | keep |
-| D1 source-text | 68 | 2.1 % | delete (one rewrite keeps its case) |
-| D2 duplicate | 28 | 0.9 % | delete, kept duplicate named |
-| D3 dead target | 10 | 0.3 % | delete |
+| K keep | 2843 | 89.6 % | keep |
+| D1 source-text | 67 | 2.1 % | delete 22; rewrite 45 per note 3 |
+| D2 duplicate | 22 | 0.7 % | delete, kept duplicate named |
+| D3 dead target | 0 | 0.0 % | none meets note 2 |
 | D4 weak check | 6 | 0.2 % | delete |
 | D5 copy pin | 221 | 7.0 % | replace with locale-key checks |
 | R1 over-mocked | 0 | 0.0 % | — |
-| R2 brittle | 15 | 0.5 % | rewrite with role-based selectors |
+| R2 brittle | 16 | 0.5 % | rewrite with role-based or visual selectors |
 | R3 unclear | 0 | 0.0 % | — |
 
-Check: 2827 + 68 + 28 + 10 + 6 + 221 + 15 = 3175.
+Check: 2843 + 67 + 22 + 0 + 6 + 221 + 16 = 3175.
 
 ## Projected cut of Vitest cases
 
-- Certain deletes (D1 except the one rewrite, D2, D3, D4):
-  67 + 28 + 10 + 6 = 111 cases, 3.5 %.
-- D5 replacements collapse 220 exact-pin cases into locale-key checks.
+- Certain deletes: D1 source pins with rendered holders (22),
+  D2 duplicates (22), D4 weak checks (6). Total 50 cases, 1.6 %.
+- D1 rewrites (45 cases) and R2 rewrites (16 cases) keep their cases.
+- D5 replacements collapse 221 exact-pin cases into locale-key checks.
   One key-shape check per pinned key group leaves about 60 to 80 cases.
-  Cut from D5: about 140 to 160 cases, about 4.4 to 5.0 %.
-- R2 rewrites keep their 15 cases (rewritten, not removed).
-- Projected total cut: about 250 to 270 cases, about 7.9 to 8.5 %.
+  Cut from D5: about 141 to 161 cases, about 4.4 to 5.1 %.
+- Projected total cut: about 191 to 211 cases, about 6.0 to 6.6 %.
   The honest projection is below the 20 % target of 635 cases.
   The projection is not inflated to reach the target.
 
-The largest lever outside these classes is the `blog-posts-validation`
-gate (1726 cases, kept as K). It checks every post label by label.
-A Phase 2 or Phase 3 merge into one case per rule (same assertions,
-aggregated failures) would keep fault detection and cut about 1700 cases.
-That merge is a Green-phase design decision, so it stays out of the
-projection above. The second lever is the primary-advantage content
-pin set (102 D5 cases); its replacement design decides the final count.
+## Approved merge line (separate Green commit)
+
+The PM approved merging `blog-posts-validation` (1726 per-post cases)
+into one case per rule as a separate Green commit. It counts toward the
+20 % target only if the merged test still fails on one broken post and
+names that post. Until that commit lands with its breakage proof, the
+merge stays out of the projection above. The second lever is the
+primary-advantage content pin set (102 D5 cases); its replacement
+design decides the final count.
