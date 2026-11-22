@@ -17,18 +17,27 @@
 9. This plan holds no baseline number. Counts live in the run logs only.
 10. No test count from source plan §2 appears in this plan.
 
-## Role note (deviation for the spec reviewer to judge)
+## Role note (accepted deviation for test-only work)
 
 Red writes no failing test in Phase 2 and Phase 3.
 A deletion or a rewrite of a test is the change itself.
-No new behavior needs a failing test first.
-The proposal assigns the work as follows.
-`measure-mid-red` does the classification and the second check.
-The second check is a report-only role.
-`measure-jr-green` makes the per-class commits.
-Reviews and phase acceptance run as usual.
+The roles run in this order.
+`measure-strategy` runs in Phase 1 only and writes `test-strategy.md`.
+It decides whether Review B applies.
+`measure-mid-red` does 1.1 and 1.2 and changes no file under `apps/`.
+Its role gate runs with `RED_TEST_COMMAND` unset.
+The gate checks only that no file under `apps/` changed.
+It also checks that `classification.md` and the baseline logs exist.
+`measure-review-a-correctness` does 1.3 on a model family different from the classifier.
+The check is report-only.
+`measure-jr-green` makes every commit of Phases 2-3 and the checkpoints.
+After each Green commit the orchestrator runs the jr-green role gate.
+It runs `GREEN_TEST_COMMAND='CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot'` through heavy-run.
+It also runs `pnpm --filter www-reading-advantage test:coverage` through heavy-run.
+It compares line coverage to the baseline (fall of 1 point or less).
+Reviews A/C and phase acceptance run as usual.
 This breaks the standard Red-then-Green order of `measure/workflow.md`.
-The spec reviewer judges this deviation before Red starts.
+The spec reviewer judged this deviation before Red starts.
 
 ## Phase 1: Baseline and classification
 
@@ -48,7 +57,9 @@ Phase gate: the suite passes, and the logs exist.
   Mark each Playwright row as not counted.
 - [ ] 1.3 Second-check 10 % of the rows. Test: (e), (f).
   A different model family re-checks 10 % of the rows.
+  `measure-review-a-correctness` does the check on a model family different from the classifier.
   The check is report-only.
+  It writes `measure/runs/www_test_audit_pilot_20261122/second-check-<short-head>.json` with its `.log`.
   A disagreement rate above 15 % stops the track.
   The PM then fixes the rubric.
 - [ ] 1.4 Checkpoint Phase 1. Test: (c).

@@ -26,10 +26,13 @@ They count only when this spec names a reason.
 No production code changes.
 No other app changes.
 No lint guard of source plan §5 step 6.
-No Stryker run in this track.
+No Stryker run ships in this track.
+No new mutation check ships in this track.
+The source plan mutation-check clause covers the 5 core modules only.
 The www app imports only `@reading-advantage/ui`, `utils`, and `config`.
 It touches none of the 5 core modules of source plan §5 step 2.
 This record replaces the mutation gate here.
+Each K row with no mutation check lists as such in `report.md`.
 
 ## 4. The fidelity rule
 
@@ -55,7 +58,7 @@ The table below quotes each class id once.
 | R1 | Over-mocked test | Rewrite against a boundary fake |
 | R2 | Brittle test | Rewrite with fixed clocks and role-based selectors |
 | R3 | Unclear test | Split or rename |
-| K | Keep: money, payout, auth, student data, data migration | Keep; add a mutation check when it has none |
+| K | Keep: money, payout, auth, student data, data migration | Keep; add no mutation check in this pilot |
 
 The K-list never-delete rule of source plan §4 applies.
 No K test goes unless a named duplicate keeps the same rule.
