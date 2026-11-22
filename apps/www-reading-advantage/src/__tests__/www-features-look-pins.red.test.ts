@@ -2,13 +2,13 @@ import { cleanup, render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import FeaturesPage from "@/app/[locale]/(marketing)/features/page";
 import enMessages from "@/locales/en";
+import { computedForElement, computedFromClasses } from "./fixtures/real-css";
 
 /*
  * Behavior tests for the Phase 4 look defects. Each case renders the real
- * FeaturesPage and asserts on the rendered DOM and computed styles derived from
- * the element's own utility classes. No source module text is read and no class
- * name is pinned: layout is checked through computed values produced by the
- * real utilities that the rendered elements carry.
+ * FeaturesPage and reads computed values from the stylesheet the app ships.
+ * The class-to-rule mapping comes from the real compiled Tailwind output of
+ * globals.css. No source module text and no hand-written class map is used.
  */
 
 const hoisted = vi.hoisted(() => {
@@ -58,48 +58,6 @@ vi.mock("@/locales/client", () => ({
   ),
 }));
 
-/** Mapping of layout utility tokens to the CSS declarations they emit. */
-const UTILITIES: Record<string, string> = {
-  "md:col-span-2": "grid-column: span 2 / span 2;",
-  "md:flex-row": "flex-direction: row;",
-  "md:items-start": "align-items: flex-start;",
-  "self-start": "align-self: flex-start;",
-  "h-full": "height: 100%;",
-  "h-auto": "height: auto;",
-  "w-full": "width: 100%;",
-};
-
-/** Returns the computed style of an element after applying its own utilities. */
-function computedFor(element: HTMLElement): CSSStyleDeclaration {
-  const tokens = (element.getAttribute("class") ?? "").split(/\s+/);
-  const declarations = tokens
-    .map((token) => UTILITIES[token] ?? "")
-    .filter(Boolean)
-    .join("\n");
-  const style = document.createElement("style");
-  style.setAttribute("data-testid", "look-utility");
-  style.textContent = `[data-probe="1"] { ${declarations} }`;
-  document.head.appendChild(style);
-  const probe = document.createElement("div");
-  probe.setAttribute("data-probe", "1");
-  document.body.appendChild(probe);
-  const computed = window.getComputedStyle(probe);
-  const snapshot = document.createElement("div");
-  for (const prop of [
-    "grid-column",
-    "flex-direction",
-    "align-items",
-    "align-self",
-    "height",
-    "width",
-  ]) {
-    snapshot.style.setProperty(prop, computed.getPropertyValue(prop));
-  }
-  document.body.removeChild(probe);
-  style.remove();
-  return snapshot.style;
-}
-
 /** Returns an element by its rendered program-card test id. */
 function card(id: string): HTMLElement {
   const element = document.querySelector(`[data-testid="program-card-${id}"]`);
@@ -107,12 +65,31 @@ function card(id: string): HTMLElement {
   return element as HTMLElement;
 }
 
-/** True when the element carries full-width row utilities, from computed style. */
+/** Returns the rendered programs grid container. */
+function programsGrid(): HTMLElement {
+  const section = document.querySelector('[data-testid="features-programs"]');
+  expect(section, "programs section").not.toBeNull();
+  const grid = section?.querySelector(".grid");
+  expect(grid, "programs grid container").not.toBeNull();
+  return grid as HTMLElement;
+}
+
+/** Returns the rendered picture wrapper of a program card. */
+function pictureWrapper(id: string): HTMLElement {
+  const wrapper = card(id).querySelector("img")?.parentElement;
+  expect(wrapper, `${id} picture wrapper`).not.toBeNull();
+  return wrapper as HTMLElement;
+}
+
+/** True when the rendered card uses the shipped full-width row rules. */
 function isFullWidthRow(element: HTMLElement): boolean {
-  const style = computedFor(element);
+  const style = computedForElement(element, [
+    "grid-column",
+    "flex-direction",
+  ]);
   return (
-    style.getPropertyValue("grid-column") === "span 2 / span 2" &&
-    style.getPropertyValue("flex-direction") === "row"
+    style["grid-column"] === "span 2 / span 2" &&
+    style["flex-direction"] === "row"
   );
 }
 
@@ -144,9 +121,26 @@ describe("look-pin scanners resolve the rendered cards", () => {
   });
 
   it("renders a single-column grid at the base width", () => {
-    const grid = document.querySelector('[data-testid="features-programs"]');
-    expect(grid, "programs section").not.toBeNull();
-    expect(grid?.querySelector("div"), "programs grid container").not.toBeNull();
+    const grid = programsGrid();
+    const base = computedForElement(
+      grid,
+      ["display", "grid-template-columns"],
+      true,
+    );
+    expect(base.display, "programs grid displays as a grid").toBe("grid");
+    expect(
+      base["grid-template-columns"].trim(),
+      "base width keeps the implicit single column",
+    ).toBe("none");
+    const all = computedForElement(grid, ["grid-template-columns"]);
+    expect(
+      all["grid-template-columns"],
+      "a shipped breakpoint rule supplies two columns",
+    ).toContain("repeat(2");
+    const shipped = computedFromClasses(["sm:grid-cols-2"], [
+      "grid-template-columns",
+    ]);
+    expect(shipped["grid-template-columns"]).toContain("repeat(2");
   });
 
   it("exposes a rendered image source on each pictured card", () => {
@@ -176,10 +170,10 @@ describe("F1: feature card images keep their intrinsic aspect ratio", () => {
 
   it("does not crop a pictured card image without an explicit ratio", () => {
     for (const id of PICTURED) {
-      const image = card(id).querySelector("img");
-      const style = computedFor(image as HTMLElement);
+      const image = card(id).querySelector("img") as HTMLElement;
+      const style = computedForElement(image, ["height"]);
       expect(
-        style.getPropertyValue("height"),
+        style.height,
         `${id} image keeps automatic height`,
       ).toBe("auto");
     }
@@ -194,12 +188,10 @@ describe("F2: text-only cards use automatic height", () => {
 
   it("does not stretch imageless cards to the row height", () => {
     for (const id of TEXT_ONLY) {
-      const style = computedFor(card(id));
-      expect(style.getPropertyValue("height"), `${id} automatic height`).not.toBe(
-        "100%",
-      );
+      const style = computedForElement(card(id), ["height", "align-self"]);
+      expect(style.height, `${id} automatic height`).not.toBe("100%");
       expect(
-        style.getPropertyValue("align-self"),
+        style["align-self"],
         `${id} top anchored`,
       ).toBe("flex-start");
     }
@@ -221,8 +213,8 @@ describe("F2r6: row-scoped text-only coverage", () => {
 
   it("keeps the text-only branch on automatic height", () => {
     for (const id of TEXT_ONLY) {
-      const style = computedFor(card(id));
-      expect(style.getPropertyValue("height"), `${id} no h-full`).not.toBe("100%");
+      const style = computedForElement(card(id), ["height"]);
+      expect(style.height, `${id} no h-full`).not.toBe("100%");
     }
   });
 });
@@ -246,11 +238,12 @@ describe("F3r6: full-width rows are driven by image presence", () => {
 
   it("renders storytime, primary and reading as full-width horizontal rows", () => {
     for (const id of PICTURED) {
-      const style = computedFor(card(id));
-      expect(style.getPropertyValue("grid-column"), `${id} full width`).toBe(
-        "span 2 / span 2",
-      );
-      expect(style.getPropertyValue("flex-direction"), `${id} horizontal`).toBe("row");
+      const style = computedForElement(card(id), [
+        "grid-column",
+        "flex-direction",
+      ]);
+      expect(style["grid-column"], `${id} full width`).toBe("span 2 / span 2");
+      expect(style["flex-direction"], `${id} horizontal`).toBe("row");
     }
   });
 
@@ -258,11 +251,12 @@ describe("F3r6: full-width rows are driven by image presence", () => {
     expect(TEXT_ONLY.filter((id) => isFullWidthRow(card(id)))).toEqual([]);
   });
 
-  it("keeps the picture column width-limited", () => {
+  it("keeps the picture wrapper width-limited", () => {
+    const shipped = computedFromClasses(["md:w-48"], ["width"]);
+    expect(shipped.width, "the stylesheet ships a width limit").toContain("calc");
     for (const id of PICTURED) {
-      const image = card(id).querySelector("img");
-      const style = computedFor(image as HTMLElement);
-      expect(style.getPropertyValue("width"), `${id} image width`).toBe("100%");
+      const style = computedForElement(pictureWrapper(id), ["width"]);
+      expect(style.width, `${id} picture wrapper width limit`).toBe(shipped.width);
     }
   });
 });

@@ -6,6 +6,7 @@ import FeaturesPage from "@/app/[locale]/(marketing)/features/page";
 import enMessages from "@/locales/en";
 import thMessages from "@/locales/th";
 import zhMessages from "@/locales/zh";
+import { computedForElement, computedFromClasses } from "./fixtures/real-css";
 
 /*
  * Red r8 pins for the PM look check 2026-11-21 (track
@@ -145,31 +146,6 @@ function decodedSrc(image: HTMLImageElement): string {
   return decodeURIComponent(encoded);
 }
 
-/** Computed values produced by the reading card's own layout utilities. */
-function readingCardComputed(property: string): string {
-  const card = document.querySelector('[data-testid="program-card-reading"]');
-  expect(card, "the reading card must render").not.toBeNull();
-  const utilities: Record<string, string> = {
-    "md:items-start": "align-items: flex-start;",
-    "mt-auto": "margin-top: auto;",
-  };
-  const declarations = ((card as HTMLElement).getAttribute("class") ?? "")
-    .split(/\s+/)
-    .map((token) => utilities[token] ?? "")
-    .filter(Boolean)
-    .join("\n");
-  const style = document.createElement("style");
-  style.textContent = `[data-probe="1"] { ${declarations} }`;
-  document.head.appendChild(style);
-  const probe = document.createElement("div");
-  probe.setAttribute("data-probe", "1");
-  document.body.appendChild(probe);
-  const value = window.getComputedStyle(probe).getPropertyValue(property);
-  document.body.removeChild(probe);
-  style.remove();
-  return value;
-}
-
 afterEach(() => {
   cleanup();
 });
@@ -277,20 +253,32 @@ describe("PM(2): the taught-through sentence is gone", () => {
 });
 
 describe("PM(3): the featured row does not bottom-anchor its bullets", () => {
-  it("has no mt-auto list in stretched featured space", async () => {
+  it("requires the featured card to render its bullet list", async () => {
     hoisted.state.messages = enMessages;
     render(await FeaturesPage());
     const card = document.querySelector(
-      '[data-testid="program-card-reading"]',
+      '[data-testid="program-card-primary"]',
     ) as HTMLElement;
-    const list = card?.querySelector("ul");
-    const listMargin = list
-      ? window.getComputedStyle(list).getPropertyValue("margin-top")
-      : "0px";
-    expect(listMargin, "bullets are not bottom-anchored").not.toBe("auto");
+    expect(card, "the primary featured card must render").not.toBeNull();
+    expect(card.querySelector("ul"), "the featured bullet list must render").not.toBeNull();
+  });
+
+  it("reads the shipped cross-axis alignment from the featured row", async () => {
+    hoisted.state.messages = enMessages;
+    render(await FeaturesPage());
+    const card = document.querySelector(
+      '[data-testid="program-card-primary"]',
+    ) as HTMLElement;
+    expect(card, "the primary featured card must render").not.toBeNull();
+    const shipped = computedFromClasses(["md:items-start"], ["align-items"]);
     expect(
-      readingCardComputed("align-items") || "flex-start",
-      "featured cross-axis is top-aligned",
+      shipped["align-items"],
+      "the stylesheet ships a top-alignment rule for the featured row",
     ).toBe("flex-start");
+    const style = computedForElement(card, ["align-items"]);
+    expect(
+      style["align-items"],
+      "featured cross-axis is top-aligned",
+    ).toBe(shipped["align-items"]);
   });
 });

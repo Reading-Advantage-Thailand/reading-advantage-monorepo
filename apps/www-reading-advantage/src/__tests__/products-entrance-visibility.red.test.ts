@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import B2BSolutions from "@/components/products/b2b-solutions";
+import { declarationsForClass } from "./fixtures/real-css";
 
 /*
  * Behavior tests for A-59: marketing content stays visible while entrance
@@ -74,8 +75,17 @@ describe("entrance animation visibility guards (A-59, computed behavior)", () =>
   it("renders the workbook image without a permanent blur or fade", async () => {
     render(await B2BSolutions());
     const image = screen.getByAltText("Blended learning approach");
-    const style = window.getComputedStyle(image);
-    expect(style.opacity).toBe("1");
-    expect(style.filter).not.toMatch(/blur/);
+    const declarations = Array.from(image.classList).map((token) => ({
+      token,
+      css: declarationsForClass(token),
+    }));
+    const blurred = declarations
+      .filter(({ css }) => /blur\(/.test(css))
+      .map(({ token }) => token);
+    const faded = declarations
+      .filter(({ css }) => /(?:^|;)\s*opacity:\s*0?\.\d+/.test(css))
+      .map(({ token }) => token);
+    expect(blurred, "workbook image must carry no blur utility").toEqual([]);
+    expect(faded, "workbook image must carry no fade utility").toEqual([]);
   });
 });

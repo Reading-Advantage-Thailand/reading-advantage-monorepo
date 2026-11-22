@@ -6,7 +6,16 @@
  * visitor sees; no TypeScript or TSX source text is read. A negative assertion
  * and a positive control pair each rule so a deletion-only fix fails.
  */
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { generateMetadata as readingMetadata } from "@/app/[locale]/(marketing)/products/reading-advantage/page";
+import { generateMetadata as primaryMetadata } from "@/app/[locale]/(marketing)/products/primary-advantage/page";
+import { generateMetadata as scienceMetadata } from "@/app/[locale]/(marketing)/products/science-advantage/page";
+import { generateMetadata as codecampMetadata } from "@/app/[locale]/(marketing)/products/codecamp-advantage/page";
+import { generateMetadata as mathMetadata } from "@/app/[locale]/(marketing)/products/math-advantage/page";
+import { generateMetadata as stemMetadata } from "@/app/[locale]/(marketing)/products/stem-advantage/page";
+import { generateMetadata as storytimeMetadata } from "@/app/[locale]/(marketing)/products/storytime-advantage/page";
+import { generateMetadata as tutorMetadata } from "@/app/[locale]/(marketing)/products/tutor-advantage/page";
+import { generateMetadata as zhongwenMetadata } from "@/app/[locale]/(marketing)/products/zhongwen-advantage/page";
 import * as home from "@/locales/pages/home";
 import * as mastery from "@/locales/pages/mastery-advantage";
 import * as caseStudies from "@/locales/pages/case-studies";
@@ -22,7 +31,72 @@ import * as tutor from "@/locales/pages/products/tutor-advantage";
 import * as zhongwen from "@/locales/pages/products/zhongwen-advantage";
 import { createProductClaimHelper } from "@/testing/product-claim-helper";
 
+vi.mock("@/locales/server", async () => {
+  const { default: en } = await vi.importActual<typeof import("@/locales/en")>(
+    "@/locales/en",
+  );
+  const readPath = (root: unknown, path: string): unknown =>
+    path.split(".").reduce<unknown>((value, part) => {
+      if (value === null || typeof value !== "object") return undefined;
+      return (value as Record<string, unknown>)[part];
+    }, root);
+  return {
+    getScopedI18n: vi.fn(async (scope: string) => {
+      const translate = (key: string) => {
+        const value = readPath(en, scope ? `${scope}.${key}` : key);
+        return typeof value === "string" ? value : `${scope}.${key}`;
+      };
+      return translate;
+    }),
+  };
+});
+
 type Dict = Record<string, unknown>;
+
+/** The product route metadata generators, one per shipped product page. */
+const PRODUCT_METADATA = {
+  reading: readingMetadata,
+  primary: primaryMetadata,
+  science: scienceMetadata,
+  codecamp: codecampMetadata,
+  math: mathMetadata,
+  stem: stemMetadata,
+  storytime: storytimeMetadata,
+  tutor: tutorMetadata,
+  zhongwen: zhongwenMetadata,
+};
+
+/** Collects the human-readable string values of a generated metadata object. */
+function metadataStrings(metadata: Record<string, unknown>): string[] {
+  const values: string[] = [];
+  const visit = (value: unknown): void => {
+    if (typeof value === "string") {
+      values.push(value);
+      return;
+    }
+    if (Array.isArray(value)) {
+      value.forEach(visit);
+      return;
+    }
+    if (value !== null && typeof value === "object") {
+      Object.values(value as Record<string, unknown>).forEach(visit);
+    }
+  };
+  visit(metadata);
+  return values;
+}
+
+/** Reads the shipped copy of one generated product route metadata result. */
+async function routeMetadataStrings(
+  generate: (args: {
+    params: Promise<{ locale: string }>;
+  }) => Promise<unknown>,
+): Promise<string[]> {
+  const metadata = await generate({
+    params: Promise.resolve({ locale: "en" }),
+  });
+  return metadataStrings(metadata as Record<string, unknown>);
+}
 
 /** Collects every string leaf of a nested dictionary. */
 function stringLeaves(value: unknown): string[] {
@@ -98,16 +172,17 @@ describe("1B — Stale launch dates", () => {
     expect(violations, `Stale launch copy:\n${violations.join("\n")}`).toEqual([]);
   });
 
-  it("has no stale launch dates in product metadata copy", () => {
+  it("has no stale launch dates in generated product route metadata", async () => {
     const stale = /(coming|launching|new for)\s+.*\b202[56]\b|starting\s+may\s+2026|coming\s+in\s+2026/gi;
-    const metadataLeaves = PRODUCT_MODULES.flatMap((module) => {
-      const en = (module as Dict).en as Dict;
-      return stringLeaves(en.hero).concat(stringLeaves(en.cta));
-    });
-    const violations = metadataLeaves.filter((text) => stale.test(text));
+    const violations: string[] = [];
+    for (const [route, generate] of Object.entries(PRODUCT_METADATA)) {
+      for (const value of await routeMetadataStrings(generate)) {
+        if (stale.test(value)) violations.push(`${route}: ${value}`);
+      }
+    }
     expect(
       violations,
-      `Stale launch copy in metadata fields:\n${violations.join("\n")}`,
+      `Stale launch copy in route metadata:\n${violations.join("\n")}`,
     ).toEqual([]);
   });
 
@@ -207,6 +282,39 @@ describe("1G — Unverifiable stats and absolute claims", () => {
         `${pattern} must be absent`,
       ).toBe(0);
     }
+  });
+
+  it("has no scoped unverifiable stats on the Math and Primary routes", async () => {
+    const scopedBans = [
+      { label: "95%", pattern: /95%/ },
+      { label: "3×", pattern: /3×/ },
+      { label: "24/7", pattern: /24\/7/ },
+    ] as const;
+    const surfaces = [
+      {
+        route: "math",
+        values: [
+          ...oneLocale(math as unknown as Dict),
+          ...(await routeMetadataStrings(mathMetadata)),
+        ],
+      },
+      {
+        route: "primary",
+        values: [
+          ...oneLocale(primary as unknown as Dict),
+          ...(await routeMetadataStrings(primaryMetadata)),
+        ],
+      },
+    ];
+    const violations = surfaces.flatMap(({ route, values }) =>
+      scopedBans
+        .filter(({ pattern }) => values.some((value) => pattern.test(value)))
+        .map(({ label }) => `${route}: ${label}`),
+    );
+    expect(
+      violations,
+      `Scoped unverifiable claims on Math or Primary:\n${violations.join("\n")}`,
+    ).toEqual([]);
   });
 
   it("positive control: managed-service copy keeps a non-absolute risk qualifier", () => {

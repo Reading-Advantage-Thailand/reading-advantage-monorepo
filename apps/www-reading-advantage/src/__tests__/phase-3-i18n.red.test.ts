@@ -92,7 +92,12 @@ describe("Wave 5 T8 and T15 i18n contracts", () => {
   });
 
   it("renders localized CTA interpolation and Sheet screen-reader text", async () => {
-    const renderedMessages = new Set<string>();
+    const renderedByLocale: Array<{
+      locale: SupportedLocale;
+      contactTitle: string;
+      productAction: string;
+      sheetClose: string;
+    }> = [];
 
     for (const [locale, messages] of Object.entries(LOCALE_MESSAGES) as Array<
       [SupportedLocale, (typeof LOCALE_MESSAGES)[SupportedLocale]]
@@ -126,7 +131,8 @@ describe("Wave 5 T8 and T15 i18n contracts", () => {
       expect(renderedProduct.container).toHaveTextContent(productDescription);
       expect(renderedProduct.container).toHaveTextContent(productAction);
       expect(renderedProduct.container).not.toHaveTextContent("{product}");
-      renderedMessages.add(`${contact.title}|${productAction}|${sheet.close}`);
+      const renderedContactTitle = renderedContact.container.textContent ?? "";
+      const renderedProductAction = renderedProduct.container.textContent ?? "";
 
       renderedContact.unmount();
       renderedProduct.unmount();
@@ -143,12 +149,26 @@ describe("Wave 5 T8 and T15 i18n contracts", () => {
         ),
       );
       const screenReaderClose = document.body.querySelector(".sr-only");
-      expect(screenReaderClose).not.toBeNull();
-      expect(screenReaderClose).toHaveTextContent(sheet.close);
+      expect(screenReaderClose, `${locale} Sheet close label must render`).not.toBeNull();
+      expect(
+        screenReaderClose?.textContent,
+        `${locale} Sheet close label must match its own locale`,
+      ).toBe(sheet.close);
+      renderedByLocale.push({
+        locale,
+        contactTitle: renderedContactTitle,
+        productAction: renderedProductAction,
+        sheetClose: screenReaderClose?.textContent ?? "",
+      });
       renderedSheet.unmount();
     }
 
-    expect(renderedMessages.size).toBe(3);
+    for (const field of ["contactTitle", "productAction", "sheetClose"] as const) {
+      expect(
+        new Set(renderedByLocale.map((entry) => entry[field])).size,
+        `${field} must render a distinct value in every locale`,
+      ).toBe(3);
+    }
     for (const scope of CTA_SCOPES) {
       const [namespace, ...keyParts] = scope.split(".");
       const key = keyParts.pop();

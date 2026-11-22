@@ -1,8 +1,13 @@
 import { cleanup, render } from "@testing-library/react";
 import { createElement } from "react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import HeroSection from "@/components/marketing/hero-section";
 import AboutPage from "@/app/[locale]/(marketing)/about/page";
+import ProductsPage from "@/app/[locale]/(marketing)/products/page";
+
+vi.mock("@/components/products/b2b-solutions", () => ({ default: () => null }));
+vi.mock("@/components/products/b2c-solutions", () => ({ default: () => null }));
+vi.mock("@/components/products/tutor-advantage", () => ({ default: () => null }));
 
 /*
  * Behavior tests for A-59: a left-aligned hero with a plain string description
@@ -61,6 +66,17 @@ describe("left-aligned hero description contrast (A-59, rendered behavior)", () 
     const rendered = render(await AboutPage());
     expect(
       descriptionColor(rendered.container, "pages.about.hero.description"),
+    ).toBe("rgb(51, 65, 85)");
+  });
+
+  it("keeps the rendered Products page hero subtitle dark on the default light gradient", async () => {
+    installTextColors();
+    const rendered = render(await ProductsPage());
+    expect(
+      descriptionColor(
+        rendered.container,
+        "pages.products.overview.hero.description",
+      ),
     ).toBe("rgb(51, 65, 85)");
   });
 });
