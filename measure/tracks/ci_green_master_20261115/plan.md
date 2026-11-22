@@ -224,6 +224,28 @@ Track: `ci_green_master_20261115` (light lane).
   because the two test files are analyzer inputs. The pin refresh runs last on
   this tree, and only existing fields change.
 
+- Part B. Fix `d34d74d2b` (the dead paused check at `StudentCartridgeHost.tsx:480`) was
+  checked by the PM, then replayed as `4eb42ba0a` on `bebaf8509`, because `origin/master`
+  moved by a www daily post. Patch-id is equal
+  (`13138ce1f31302a107f2a4f8c1a49e6f945ab3b6`) and the diff is byte-identical. The PM
+  approved the new SHA. Daniel's deploy word is on record.
+- Push `bebaf8509..4eb42ba0a`: fast-forward, no force.
+- CI run `44972585117` on `4eb42ba0a`:
+  - "Type check" step PASS, 0 errors. The `StudentCartridgeHost.tsx:480` TS2367 is gone.
+  - "Test" step FAILED: `@reading-advantage/backend#test`, 3 failures.
+    `durable-job-architecture.red.test.ts` timeout 10000 ms.
+    `postgres-admin-safety.integration.test.ts` expected `['FORBIDDEN']` to equal
+    `['LAST_COMPANY_ADMIN_REQUIRED']`. `storytime-access` `store.contract.test.ts` timeout
+    30000 ms. The sales Red files ran: `sales-mastery-projection.red.test.ts` 20 pass,
+    `sales-phase2-review-a.red.test.ts` 20 pass.
+  - Check `reading-advantage` job: `reading-advantage#check-types` FAILED with 9 TS2307
+    static-asset module errors (`components/index/book.tsx`, `components/ui/toaster.tsx`).
+    App tests: 152 suites, 1063 tests pass.
+- CD run `44972585144` (apps): affected `["reading-advantage"]`, then excluded ("push file
+  still builds the legacy `web/` folder"). No deploy. CD run `44972585112` (www): no deploy.
+  Live `reading-advantage-web` stays on `reading-advantage-web-00794-sdj`.
+- Master CI is still red. Round 7 is open and not started.
+
 ## Follow-up (deferred to a later owner)
 
 - [ ] The architecture report pin goes stale on every master push that changes analyzer
