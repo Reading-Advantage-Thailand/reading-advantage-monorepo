@@ -137,18 +137,6 @@ jobs:
           echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
           "$RUNNER_TEMP/bin/build-graph" --version
 
-      - name: Check graph.db
-        run: |
-          # graph.db is gitignored — rebuild it before checking.
-          # Requires build-graph on the CI runner PATH.
-          if command -v build-graph &>/dev/null; then
-            build-graph scan . ./graph.db
-            ./scripts/ci/check-graph-db.sh
-          else
-            echo "::warning::build-graph not found on PATH — skipping graph.db check."
-            echo "Install build-graph or add it to the CI runner image."
-          fi
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -162,6 +150,20 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      # graph.db build needs the workspace node_modules: apps/accounting/tsconfig.json extends
+      # "@reading-advantage/config/tsconfig", which resolves only after the install (run 45003984764).
+      - name: Check graph.db
+        run: |
+          # graph.db is gitignored — rebuild it before checking.
+          # Requires build-graph on the CI runner PATH.
+          if command -v build-graph &>/dev/null; then
+            build-graph scan . ./graph.db
+            ./scripts/ci/check-graph-db.sh
+          else
+            echo "::warning::build-graph not found on PATH — skipping graph.db check."
+            echo "Install build-graph or add it to the CI runner image."
+          fi
 
       # The science-advantage audit gates shell out to `rg` (ripgrep). The
       # ubuntu-latest image does not always ship it, and a missing binary fails
