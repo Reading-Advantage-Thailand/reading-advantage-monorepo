@@ -54,14 +54,19 @@ Phase gate: the suite passes, and the logs exist.
   K rows first. Each `e2e/*.spec.ts` Playwright file has a row marked not counted.
   The scripts i18n-cli suite is marked not counted (excluded from the Vitest run).
   Plan holds no number.
-- [ ] 1.3 Second-check 10 % of the rows. Test: (e), (f).
+- [x] 1.3 Second-check 10 % of the rows. Test: (e), (f).
   A different model family re-checks 10 % of the rows.
   `measure-review-a-correctness` does the check on a model family different from the classifier.
   The check is report-only.
   It writes `measure/runs/www_test_audit_pilot_20261122/second-check-<short-head>.json` with its `.log`.
   A disagreement rate above 15 % stops the track.
   The PM then fixes the rubric.
-- [ ] 1.4 Checkpoint Phase 1. Test: (c).
+  Evidence: measure/runs/www_test_audit_pilot_20261122/second-check-08bec4c.json (fail),
+  measure/runs/www_test_audit_pilot_20261122/second-check-1d4ddd2.json (under stop rule),
+  measure/runs/www_test_audit_pilot_20261122/second-check-d1b9d59.json (pass).
+  Chain: second-check-08bec4c fail -> Red r2 1d4ddd2c0 -> second-check-1d4ddd2
+  -> Red r3 d1b9d597b -> second-check-d1b9d59 pass. Rate in the log.
+- [x] 1.4 Checkpoint Phase 1. Test: (c).
   Commit the plan update with the log paths.
   Phase 1 ships no test change.
 
