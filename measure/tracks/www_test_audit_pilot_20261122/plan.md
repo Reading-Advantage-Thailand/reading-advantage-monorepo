@@ -43,13 +43,13 @@ The spec reviewer judged this deviation before Red starts.
 
 Phase gate: the suite passes, and the logs exist.
 
-- [x] 1.1 Record the baseline. Test: (a), (b), (c).
+- [x] 1.1 Record the baseline. Test: (a), (b), (c). (08bec4c36)
   Commit: 08bec4c365bac5c15795b144bc45a86c42714f20.
   Run the green test command through the runner.
   Run the coverage command through the runner.
   Evidence: measure/runs/www_test_audit_pilot_20261122/baseline.json with its `.log`.
   Both runner commands exited 0. Plan holds no number.
-- [x] 1.2 Classify every www test file. Test: (e), (f).
+- [x] 1.2 Classify every www test file. Test: (e), (f). (d1b9d597b)
   Commit: d1b9d597b553f6033ef39029491eb2a13a550337.
   Earlier classification commits: 08bec4c36, 1d4ddd2c0.
   Evidence: measure/tracks/www_test_audit_pilot_20261122/classification.md.
@@ -57,7 +57,7 @@ Phase gate: the suite passes, and the logs exist.
   K rows first. Each `e2e/*.spec.ts` Playwright file has a row marked not counted.
   The scripts i18n-cli suite is marked not counted (excluded from the Vitest run).
   Plan holds no number.
-- [x] 1.3 Second-check 10 % of the rows. Test: (e), (f).
+- [x] 1.3 Second-check 10 % of the rows. Test: (e), (f). (d1b9d597b)
   Commit: d1b9d597b553f6033ef39029491eb2a13a550337.
   A different model family re-checks 10 % of the rows.
   `measure-review-a-correctness` does the check on a model family different from the classifier.
@@ -70,7 +70,7 @@ Phase gate: the suite passes, and the logs exist.
   measure/runs/www_test_audit_pilot_20261122/second-check-d1b9d59.json (pass).
   Chain: second-check-08bec4c fail -> Red r2 1d4ddd2c0 -> second-check-1d4ddd2
   -> Red r3 d1b9d597b -> second-check-d1b9d59 pass. Rate in the log.
-- [x] 1.4 Checkpoint Phase 1. Test: (c).
+- [x] 1.4 Checkpoint Phase 1. Test: (c). (a1caa5803)
   Commit: a1caa58034f6455e91205a5673ef172a974a7992.
   Commit the plan update with the log paths.
   Phase 1 ships no test change.
@@ -80,30 +80,30 @@ Phase gate: the suite passes, and the logs exist.
 Phase gate after every commit: the suite passes, and coverage falls by 1 point or less.
 Each task below is one commit for one class.
 
-- [x] 2.1 Delete class D1. Test: (a), (b), (c), (d).
+- [x] 2.1 Delete class D1. Test: (a), (b), (c), (d). (0be4a0374)
   Commit: 0be4a0374748e38d7ad504815441f0a9b3e3ee12.
   Gate: measure/runs/www_test_audit_pilot_20261122/gate-0be4a037.json.
   GREEN exit 0: measure/runs/www_test_audit_pilot_20261122/green-0be4a037.log.
   COVERAGE exit 0: measure/runs/www_test_audit_pilot_20261122/coverage-0be4a037.log.
   cases_before=3175, cases_after=3168, line_coverage_pct=89.92, floor=85.52.
-- [x] 2.2 Delete class D2. Test: (a), (b), (c), (d).
+- [x] 2.2 Delete class D2. Test: (a), (b), (c), (d). (e332f594e)
   Commit: e332f594e70498666ce2f3c9c5c2afc492dceea4.
   Gate: measure/runs/www_test_audit_pilot_20261122/gate-e332f594.json.
   GREEN exit 0: measure/runs/www_test_audit_pilot_20261122/green-e332f594.log.
   COVERAGE exit 0: measure/runs/www_test_audit_pilot_20261122/coverage-e332f594.log.
   cases_before=3168, cases_after=3146, line_coverage_pct=89.92, floor=85.52.
   22 duplicate cases removed from 6 files. Every named duplicate stays.
-- [x] 2.3 Delete class D3. Test: (a), (b), (c), (d).
+- [x] 2.3 Delete class D3. Test: (a), (b), (c), (d). (409108d3e)
   Commit: 409108d3e04b418c26390d15a25a66a8a8180dfb.
   No D3 rows (r2 note 2). No test commit and no gate.
-- [x] 2.4 Delete class D4. Test: (a), (b), (c), (d).
+- [x] 2.4 Delete class D4. Test: (a), (b), (c), (d). (0d705612d)
   Commit: 0d705612d77a786b42484f5df067f9bbb54e2389.
   Gate: measure/runs/www_test_audit_pilot_20261122/gate-0d705612.json.
   GREEN exit 0: measure/runs/www_test_audit_pilot_20261122/green-0d705612.log.
   COVERAGE exit 0: measure/runs/www_test_audit_pilot_20261122/coverage-0d705612.log.
   cases_before=3146, cases_after=3140, line_coverage_pct=89.86, floor=85.52.
   6 weak-check cases removed from 3 files. No result-checking test was weakened.
-- [x] 2.5 Replace class D5. Test: (a), (b), (c), (d).
+- [x] 2.5 Replace class D5. Test: (a), (b), (c), (d). (407c5d9bd)
   Part 1: ee5c7b7390847eee0879ca9e8fa94b5eb4d33bd3. 4 pins.
   Gate: measure/runs/www_test_audit_pilot_20261122/gate-ee5c7b73.json.
   Part 2: 7008ccefd63494410c7790bed26ead80fb6dd8c0. 102 pins.
@@ -124,7 +124,7 @@ Each task below is one commit for one class.
   cases_before=3048, cases_after=3035, line_coverage_pct=90.03, floor=85.52.
   All 221 D5 pins were reviewed. Fact guards stayed as K with a reason in the
   part commit body and the run log. No tutor-commission money test changed.
-- [x] 2.6 Checkpoint Phase 2. Test: (a), (b), (c).
+- [x] 2.6 Checkpoint Phase 2. Test: (a), (b), (c). (409108d3e)
   D1: 0be4a0374748e38d7ad504815441f0a9b3e3ee12.
   GREEN log: measure/runs/www_test_audit_pilot_20261122/green-0be4a037.log.
   COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-0be4a037.log.
