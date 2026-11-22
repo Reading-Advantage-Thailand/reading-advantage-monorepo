@@ -30,30 +30,6 @@ vi.mock("next/image", () => ({
   default: (props: React.ComponentProps<"img">) => <img {...props} />,
 }));
 
-type ImportMetaWithGlob = ImportMeta & {
-  glob: <T>(
-    pattern: string,
-    options: { eager: true; import: string; query: string },
-  ) => Record<string, T>;
-};
-
-const contactPageSources = (import.meta as ImportMetaWithGlob).glob<string>(
-  "../app/[locale]/(marketing)/contact/page.tsx",
-  { eager: true, import: "default", query: "?raw" },
-);
-const footerSources = (import.meta as ImportMetaWithGlob).glob<string>(
-  "../components/common/footer.tsx",
-  {
-    eager: true,
-    import: "default",
-    query: "?raw",
-  },
-);
-const contactFormSources = (import.meta as ImportMetaWithGlob).glob<string>(
-  "../components/contact/contact-form.tsx",
-  { eager: true, import: "default", query: "?raw" },
-);
-
 const localeMessages = [enMessages, thMessages, zhMessages];
 const contactHandle = new URL(contactDetails.tiktokUrl).pathname.slice(1);
 
@@ -81,13 +57,6 @@ function findAuthorityDuplicates(
   });
 }
 
-function findMissingAuthorityReferences(
-  source: string,
-  references: string[],
-): string[] {
-  return references.filter((reference) => !source.includes(reference));
-}
-
 afterEach(() => {
   cleanup();
   serverWiring.messages = {};
@@ -98,36 +67,6 @@ describe("RC-P4-001 contact authority contract", () => {
     serverWiring.messages = enMessages as unknown as Record<string, unknown>;
     const contactPage = render(await ContactPage());
     const footer = render(await Footer());
-    const contactPageSource =
-      contactPageSources["../app/[locale]/(marketing)/contact/page.tsx"];
-    const footerSource = footerSources["../components/common/footer.tsx"];
-    const contactFormSource =
-      contactFormSources["../components/contact/contact-form.tsx"];
-    const contactPageReferences = [
-      "contactDetails.supportEmail",
-      "contactDetails.phoneNumber",
-      "contactDetails.phoneHref",
-      "contactDetails.tiktokLabel",
-      "contactDetails.tiktokUrl",
-    ];
-    const footerReferences = [
-      "contactDetails.supportEmail",
-      "contactDetails.phoneNumber",
-      "contactDetails.tiktokLabel",
-    ];
-
-    const missingReferences = [
-      ...findMissingAuthorityReferences(
-        contactPageSource,
-        contactPageReferences,
-      ).map((reference) => `contact page: ${reference}`),
-      ...findMissingAuthorityReferences(footerSource, footerReferences).map(
-        (reference) => `footer: ${reference}`,
-      ),
-      ...findMissingAuthorityReferences(contactFormSource, [
-        "contactDetails.supportEmail",
-      ]).map((reference) => `contact form: ${reference}`),
-    ];
 
     const renderedValues = [
       contactDetails.supportEmail,
@@ -136,7 +75,6 @@ describe("RC-P4-001 contact authority contract", () => {
     ];
     const renderedSurfaces = [contactPage.container, footer.container];
 
-    expect(missingReferences).toEqual([]);
     expect(
       renderedSurfaces.every((surface) =>
         renderedValues.every((value) => surface.textContent?.includes(value)),

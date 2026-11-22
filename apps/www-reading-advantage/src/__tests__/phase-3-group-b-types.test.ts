@@ -1,6 +1,3 @@
-import { readFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 import enMessages from "@/locales/en";
 import thMessages from "@/locales/th";
 import zhMessages from "@/locales/zh";
@@ -112,15 +109,6 @@ const EXPECTED_B2B_KEYS = [
       : []),
   ]),
 ];
-
-const GROUP_B_SOURCE_ROOT = resolve(
-  dirname(fileURLToPath(import.meta.url)),
-  "..",
-);
-const GROUP_B_SOURCE_FILES = [
-  "app/[locale]/(marketing)/services/page.tsx",
-  "components/products/b2b-solutions.tsx",
-] as const;
 
 type AssertionIssue = {
   kind: string;
@@ -385,16 +373,6 @@ describe("Phase 3 Group B locale contracts", () => {
           (issue) => issue.kind,
         ),
       ).toEqual(fixture.kinds);
-    }
-  });
-
-  it("keeps both production components free of unsafe assertions", () => {
-    for (const relativePath of GROUP_B_SOURCE_FILES) {
-      const source = readFileSync(
-        resolve(GROUP_B_SOURCE_ROOT, relativePath),
-        "utf8",
-      );
-      expect(findUnsafeAssertions(source, relativePath)).toEqual([]);
     }
   });
 

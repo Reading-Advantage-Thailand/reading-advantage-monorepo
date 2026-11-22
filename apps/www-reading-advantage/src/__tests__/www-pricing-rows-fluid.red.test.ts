@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render } from "@testing-library/react";
 import PricingPage from "@/app/[locale]/(marketing)/pricing/page";
@@ -13,11 +11,6 @@ import enMessages from "@/locales/en";
  * rows must fail at 7fb548e5e, where the page uses the literal index list
  * [0, 1, 2, 3].
  */
-
-const PRICING_PAGE = resolve(
-  __dirname,
-  "../app/[locale]/(marketing)/pricing/page.tsx",
-);
 
 const hoisted = vi.hoisted(() => {
   const state: { messages: unknown } = { messages: {} };
@@ -80,12 +73,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("control: fluid-rows scanners resolve the page and fixture", () => {
-  it("control: the pricing page source is found", () => {
-    const source = readFileSync(PRICING_PAGE, "utf8");
-    expect(source.includes("subject-price-table"), "table hook: present").toBe(true);
-  });
-
+describe("control: fluid-rows fixture", () => {
   it("control: the three-row fixture holds exactly three rows", () => {
     const rows = (
       threeRowMessages() as {
@@ -93,16 +81,6 @@ describe("control: fluid-rows scanners resolve the page and fixture", () => {
       }
     ).pages.pricing.subjects.rows;
     expect(rows.length, "fixture rows: 3").toBe(3);
-  });
-});
-
-describe("RA1: the price table maps over the locale row array", () => {
-  it("uses no literal four-row index list for the subject rows", () => {
-    const source = readFileSync(PRICING_PAGE, "utf8");
-    expect(
-      /\[\s*0\s*,\s*1\s*,\s*2\s*,\s*3\s*\]/.test(source),
-      "RA1 literal [0, 1, 2, 3] row index list: absent",
-    ).toBe(false);
   });
 });
 

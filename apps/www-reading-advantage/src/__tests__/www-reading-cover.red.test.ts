@@ -20,14 +20,6 @@ import enMessages from "@/locales/en";
  */
 
 const APP_DIR = resolve(__dirname, "../..");
-const FEATURES_PAGE = resolve(
-  __dirname,
-  "../app/[locale]/(marketing)/features/page.tsx",
-);
-const PROGRAM_CARD = resolve(
-  __dirname,
-  "../components/features/program-card.tsx",
-);
 
 /** Measured source cover size (portrait). */
 const SOURCE_WIDTH = 1200;
@@ -120,24 +112,29 @@ vi.mock("@/locales/client", () => ({
   ),
 }));
 
-/** Returns the reading entry dims declared in CARD_IMAGES. */
-function readingDims(): { width: number; height: number } {
-  const source = readFileSync(FEATURES_PAGE, "utf8");
-  const block = source.split("CARD_IMAGES")[1] ?? "";
-  const entry = block.split("reading:")[1]?.split("},")[0] ?? "";
-  const width = Number(entry.match(/width:\s*(\d+)/)?.[1] ?? "0");
-  const height = Number(entry.match(/height:\s*(\d+)/)?.[1] ?? "0");
-  return { width, height };
+/** Renders the real Features page with a locale dictionary. */
+async function renderFeatures(messages: unknown): Promise<void> {
+  hoisted.state.messages = messages;
+  render(await FeaturesPage());
 }
 
-/** Returns a CARD_IMAGES entry's src/alt/width/height by key. */
-function cardEntry(key: string): Record<string, string> {
-  const source = readFileSync(FEATURES_PAGE, "utf8");
-  const block = source.split("CARD_IMAGES")[1] ?? "";
-  const entry = block.split(`${key}:`)[1]?.split("},")[0] ?? "";
-  const pick = (name: string): string =>
-    entry.match(new RegExp(`${name}:\\s*("[^"]+"|\\d+)`))?.[1] ?? "";
-  return { src: pick("src"), alt: pick("alt"), width: pick("width"), height: pick("height") };
+/** Finds a rendered image by its decoded local path. */
+function renderedImage(srcPart: string): {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+} | null {
+  const image = Array.from(document.querySelectorAll("img")).find((node) =>
+    decodeURIComponent(node.getAttribute("src") ?? "").includes(srcPart),
+  );
+  if (!image) return null;
+  return {
+    src: decodeURIComponent(image.getAttribute("src") ?? ""),
+    alt: image.getAttribute("alt") ?? "",
+    width: Number(image.getAttribute("width") ?? "0"),
+    height: Number(image.getAttribute("height") ?? "0"),
+  };
 }
 
 /** Returns width/height attributes of the rendered reading image. */
@@ -207,11 +204,13 @@ describe("F4: the reading asset is the whole portrait cover", () => {
     ).toBeLessThanOrEqual(0.01);
   });
 
-  it("declares portrait dims for the reading card image", () => {
-    const dims = readingDims();
+  it("declares portrait dims for the reading card image", async () => {
+    await renderFeatures(enMessages);
+    const image = renderedImage("ra-origins-2-cover.jpg");
+    expect(image, "reading cover must render").not.toBeNull();
     expect(
-      aspectDrift(dims.width, dims.height, SOURCE_WIDTH, SOURCE_HEIGHT),
-      `reading dims aspect drift: at most 1% (${dims.width}x${dims.height})`,
+      aspectDrift(image!.width, image!.height, SOURCE_WIDTH, SOURCE_HEIGHT),
+      `rendered reading dims drift: at most 1% (${image!.width}x${image!.height})`,
     ).toBeLessThanOrEqual(0.01);
   });
 });
@@ -241,33 +240,33 @@ describe("F4: the rendered reading picture is not cropped", () => {
 });
 
 describe("F4 regression: the other pictured cards are unchanged", () => {
-  it("control: storytime keeps its approved source, dims and alt", () => {
-    expect(cardEntry("storytime")).toEqual({
-      src: '"/images/features/storytime-reader-card.webp"',
-      alt: '"Storytime Advantage reader screen"',
-      width: "366",
-      height: "282",
+  it("control: storytime keeps its approved source, dims and alt", async () => {
+    await renderFeatures(enMessages);
+    expect(renderedImage("storytime-reader-card.webp")).toEqual({
+      src: expect.stringContaining("/images/features/storytime-reader-card.webp"),
+      alt: "Storytime Advantage reader screen",
+      width: 366,
+      height: 282,
     });
   });
 
-  it("control: primary keeps its approved source, dims and alt", () => {
-    expect(cardEntry("primary")).toEqual({
-      src: '"/images/features/primary-lesson-step05.webp"',
-      alt: '"Primary Advantage lesson screen"',
-      width: "375",
-      height: "622",
+  it("control: primary keeps its approved source, dims and alt", async () => {
+    await renderFeatures(enMessages);
+    expect(renderedImage("primary-lesson-step05.webp")).toEqual({
+      src: expect.stringContaining("/images/features/primary-lesson-step05.webp"),
+      alt: "Primary Advantage lesson screen",
+      width: 375,
+      height: 622,
     });
   });
 
-  it("control: the tutor leaderboard keeps its approved source and dims", () => {
-    const source = readFileSync(FEATURES_PAGE, "utf8");
-    expect(
-      source.includes("/images/features/tutor-class-leaderboard.webp"),
-      "tutor src: present",
-    ).toBe(true);
-    expect(
-      source.includes("Tutor Advantage live class leaderboard screen"),
-      "tutor alt: present",
-    ).toBe(true);
+  it("control: the tutor leaderboard keeps its approved source and dims", async () => {
+    await renderFeatures(enMessages);
+    const image = renderedImage("tutor-class-leaderboard.webp");
+    expect(image, "tutor leaderboard image must render").not.toBeNull();
+    expect(image!.alt).toBe("Tutor Advantage live class leaderboard screen");
+    expect(aspectDrift(image!.width, image!.height, 520, 880)).toBeLessThanOrEqual(
+      0.01,
+    );
   });
 });

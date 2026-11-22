@@ -1,69 +1,81 @@
-// @vitest-environment node
-/**
- * Regression tests for A-59: products page content stuck faded or blurred.
- *
- * The tw-animate-css entrance utilities start every `.animate-in` element at
- * opacity 0 (the `enter` keyframe reads `--tw-enter-opacity`). The marketing
- * pages wrap most content, including product images, in these utilities, so a
- * stalled or reduced-motion render leaves content hidden. These tests pin the
- * two guards that keep content visible, plus the workbook image treatment.
- */
 import { readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { describe, expect, it } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
+import B2BSolutions from "@/components/products/b2b-solutions";
 
-const APP_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const GLOBALS_CSS = join(
-  APP_ROOT,
-  "src/app/[locale]/globals.css",
-);
-const B2B_SOLUTIONS = join(
-  APP_ROOT,
-  "src/components/products/b2b-solutions.tsx",
-);
-
-const css = readFileSync(GLOBALS_CSS, "utf8");
-const b2bSource = readFileSync(B2B_SOLUTIONS, "utf8");
-
-/**
- * Joins the bodies of every prefers-reduced-motion: reduce media query.
- * @param source The globals.css source text.
- * @returns The joined media query bodies, or an empty string when none exist.
+/*
+ * Behavior tests for A-59: marketing content stays visible while entrance
+ * motion plays. The cases apply the real stylesheet declarations to a probe or
+ * render the real component and read computed values. No source module text and
+ * no rendered class names are asserted.
  */
-function reducedMotionBlocks(source: string): string {
-  const matches = [
-    ...source.matchAll(
-      /@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{([\s\S]*?)\n\}/g,
-    ),
-  ];
-  return matches.map((match) => match[1]).join("\n");
+const APP_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
+const css = readFileSync(join(APP_ROOT, "src/app/[locale]/globals.css"), "utf8");
+
+/** Returns the declarations of the first rule matching a pattern. */
+function declarationsOf(pattern: RegExp): string {
+  const match = pattern.exec(css);
+  return match ? match[1] : "";
 }
 
-describe("entrance animation visibility guards (A-59)", () => {
-  it("disables entrance animations under prefers-reduced-motion: reduce", () => {
-    const block = reducedMotionBlocks(css);
-    expect(block, "a reduced-motion media query must exist").not.toBe("");
-    expect(block).toMatch(/\.animate-in[\s\S]*?animation:\s*none\s*!important/);
-    expect(block).toMatch(/\.animate-in[\s\S]*?opacity:\s*1\s*!important/);
-    expect(block).toMatch(/\.animate-in[\s\S]*?transform:\s*none\s*!important/);
+/** Applies declarations to a probe and snapshots selected computed values. */
+function computedValues(
+  declarations: string,
+  properties: readonly string[],
+): Record<string, string> {
+  const testid = `probe-${Math.random().toString(36).slice(2)}`;
+  const style = document.createElement("style");
+  style.textContent = `[data-testid="${testid}"] { ${declarations} }`;
+  document.head.appendChild(style);
+  const probe = document.createElement("div");
+  probe.setAttribute("data-testid", testid);
+  document.body.appendChild(probe);
+  const computed = window.getComputedStyle(probe);
+  const result: Record<string, string> = {};
+  for (const property of properties) {
+    result[property] = computed.getPropertyValue(property);
+  }
+  document.body.removeChild(probe);
+  document.head.removeChild(style);
+  return result;
+}
+
+afterEach(() => cleanup());
+
+describe("entrance animation visibility guards (A-59, computed behavior)", () => {
+  it("forces full opacity and no animation under reduced motion", () => {
+    const reduceBlocks = [
+      ...css.matchAll(
+        /@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{([\s\S]*?)\n\}/g,
+      ),
+    ].map((match) => match[1]);
+    const animateBlock = reduceBlocks.find((block) =>
+      /\.animate-in\s*\{/.test(block),
+    );
+    const block = /\.animate-in\s*\{([^}]*)\}/.exec(animateBlock ?? "")?.[1] ?? "";
+    const values = computedValues(block, [
+      "animation",
+      "opacity",
+      "transform",
+    ]);
+    expect(values.animation).toBe("none");
+    expect(values.opacity).toBe("1");
+    expect(values.transform).toBe("none");
   });
 
-  it("keeps entrance motion from hiding content at the default motion setting", () => {
-    // The enter keyframe starts from var(--tw-enter-opacity, 1). Pinning it to
-    // 1 keeps the slide/zoom motion while content stays fully opaque.
-    expect(css).toMatch(
-      /\.animate-in\s*\{[^}]*--tw-enter-opacity:\s*1\b[^}]*\}/,
-    );
+  it("keeps entrance motion from hiding content at the default setting", () => {
+    const block = declarationsOf(/\.animate-in\s*\{([^}]*)\}/);
+    const values = computedValues(block, ["--tw-enter-opacity"]);
+    expect(values["--tw-enter-opacity"].trim()).toBe("1");
   });
 
-  it("does not permanently blur or fade the blended-learning workbook image", () => {
-    const imageMatch = /src="\/images\/blended-learning\.png"([\s\S]*?)\/>/.exec(
-      b2bSource,
-    );
-    expect(imageMatch, "the blended-learning image must still render").not.toBeNull();
-    const imageProps = imageMatch?.[1] ?? "";
-    expect(imageProps).not.toMatch(/blur-sm/);
-    expect(imageProps).not.toMatch(/opacity-7[05]/);
+  it("renders the workbook image without a permanent blur or fade", async () => {
+    render(await B2BSolutions());
+    const image = screen.getByAltText("Blended learning approach");
+    const style = window.getComputedStyle(image);
+    expect(style.opacity).toBe("1");
+    expect(style.filter).not.toMatch(/blur/);
   });
 });
