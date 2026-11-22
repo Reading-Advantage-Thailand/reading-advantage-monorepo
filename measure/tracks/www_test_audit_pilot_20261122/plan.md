@@ -176,8 +176,8 @@ Each task below is one commit for one class.
 ### Recorded deviations
 
 - (F11) D1 commit 0be4a0374 also rewrote the two R2 cases of classification.md:195 (rendered full-width pictured row; text-only exclusion); history is not rewritten; task 3.2 counts them as done in 0be4a0374.
-- (F10) The separate GREEN log at 7008ccefd is missing; the coverage run at that commit (coverage-7008ccef.log) ran the full suite with exit 0.
-- (F16) Round A commits 733319505 and fb5622ed7 were gated together at 9eb3b9c4f.
+- (F10) The separate GREEN log at 7008ccefd is missing; the coverage run at that commit (coverage-7008ccef.log) ran the full suite with exit 0. New evidence: measure/runs/www_test_audit_pilot_20261122/green-at-7008ccef.log, GREEN through heavy-run, exit 0. Install method: node_modules symlinked from the role-base worktree. Both heavy-run installs failed or hung at the puppeteer postinstall.
+- (F16) Round A commits 733319505 and fb5622ed7 were gated together at 9eb3b9c4f. New evidence through heavy-run, each exit 0: measure/runs/www_test_audit_pilot_20261122/green-at-733319505.log, coverage-at-733319505.log, green-at-fb5622ed7.log, coverage-at-fb5622ed7.log. Install method: node_modules symlinked from the role-base worktree.
 
 ## Phase 3: Rewrite batch (R1-R3)
 
