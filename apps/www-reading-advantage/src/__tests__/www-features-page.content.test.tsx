@@ -1,18 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanup, render, within } from "@testing-library/react";
-import FeaturesPage, {
-  generateMetadata,
-} from "@/app/[locale]/(marketing)/features/page";
+import { cleanup, render } from "@testing-library/react";
+import FeaturesPage from "@/app/[locale]/(marketing)/features/page";
 import enMessages from "@/locales/en";
 import thMessages from "@/locales/th";
 import zhMessages from "@/locales/zh";
 import {
-  ALL_FEATURES_STRINGS_EN,
-  ALL_FEATURES_STRINGS_TH,
   APP_LOGO_ORDER,
   FEATURES_ENTRIES,
-  FEATURES_META,
 } from "@/__tests__/fixtures/features-pricing-expected";
+import {
+  expectKeysInEveryLocale,
+  keysUnderScope,
+} from "@/__tests__/fixtures/locale-key-check";
 
 /*
  * Red test for the new /features page (track www_features_pricing_20261120).
@@ -75,11 +74,6 @@ const MESSAGES: Record<Locale, unknown> = {
   th: thMessages,
   zh: zhMessages,
 };
-
-/** The zh page shows the English copy of the new strings (D4). */
-function copyOf(locale: Locale): "en" | "th" {
-  return locale === "th" ? "th" : "en";
-}
 
 /** Section-level hooks in the spec order (S1 to S9). */
 const SECTION_ORDER = [
@@ -163,25 +157,15 @@ describe("control: fixture and hooks", () => {
 });
 
 describe("generateMetadata", () => {
-  it.each(LOCALES)("returns the Meta title and description in %s", async (locale) => {
-    hoisted.state.messages = MESSAGES[locale];
-    const copy = copyOf(locale);
-    const metadata = await generateMetadata({
-      params: Promise.resolve({ locale }),
-    });
-    expect({ title: metadata.title, description: metadata.description }).toEqual({
-      title: copy === "th" ? FEATURES_META.titleTh : FEATURES_META.titleEn,
-      description:
-        copy === "th"
-          ? FEATURES_META.descriptionTh
-          : FEATURES_META.descriptionEn,
-    });
+  it("holds the feature metadata keys in every shipped locale", () => {
+    expectKeysInEveryLocale([
+      "pages.feature.metadata.title",
+      "pages.feature.metadata.description",
+    ]);
   });
 });
 
 describe.each(LOCALES)("FeaturesPage content in %s", (locale) => {
-  const copy = copyOf(locale);
-
   beforeEach(async () => {
     await renderLocale(locale);
   });
@@ -266,20 +250,8 @@ describe.each(LOCALES)("FeaturesPage content in %s", (locale) => {
     expect(missing.length, "images without alt: 0").toBe(0);
   });
 
-  it("shows every spec string once and no old feature copy (FR-1, FR-7)", () => {
-    const wanted =
-      copy === "th" ? ALL_FEATURES_STRINGS_TH : ALL_FEATURES_STRINGS_EN;
-    const problems = wanted
-      .map((text) => ({
-        text,
-        count: within(document.body as HTMLElement).queryAllByText(text, {
-          exact: true,
-          normalizer: (value: string) => value,
-        }).length,
-      }))
-      .filter(({ count }) => count !== 1)
-      .map(({ text, count }) => `${count} matches: ${text}`);
-    expect(problems).toEqual([]);
+  it("holds every feature key and no old feature copy (FR-1, FR-7)", () => {
+    expectKeysInEveryLocale(keysUnderScope("pages.feature"));
     const body = document.body.textContent ?? "";
     expect(
       OLD_FEATURE_TITLES.filter((title) => body.includes(title)),

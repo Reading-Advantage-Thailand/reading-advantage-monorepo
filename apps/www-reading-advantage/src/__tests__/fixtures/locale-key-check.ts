@@ -28,6 +28,34 @@ function readPath(dict: Dict, key: string): string | undefined {
 }
 
 /**
+ * Collects every dotted string-leaf key under a scope of the English dictionary.
+ * The caller passes the keys to expectKeysInEveryLocale.
+ * @param scope The dotted scope path.
+ * @returns The dotted keys under the scope.
+ */
+export function keysUnderScope(scope: string): string[] {
+  const found: string[] = [];
+  const walk = (value: unknown, path: string): void => {
+    if (typeof value === "string") {
+      if (value.trim().length > 0) found.push(path);
+      return;
+    }
+    if (value === null || typeof value !== "object") return;
+    for (const [key, child] of Object.entries(value as Dict)) {
+      walk(child, `${path}.${key}`);
+    }
+  };
+  const root = scope
+    ? scope.split(".").reduce<unknown>((value, part) => {
+        if (value === null || typeof value !== "object" || !(part in value)) return undefined;
+        return (value as Dict)[part];
+      }, enMessages as unknown as Dict)
+    : enMessages;
+  if (root !== undefined) walk(root, scope);
+  return found;
+}
+
+/**
  * Checks that each key resolves to a non-empty string in every shipped locale.
  * The locale list comes from the app i18n config, not from a test-local list.
  * @param keys The dotted locale keys to check.

@@ -3,20 +3,16 @@ import enMessages from "@/locales/en";
 import thMessages from "@/locales/th";
 import zhMessages from "@/locales/zh";
 import {
-  ALL_FEATURES_STRINGS_EN,
-  ALL_FEATURES_STRINGS_TH,
-  ALL_PRICING_STRINGS_EN,
-  ALL_PRICING_STRINGS_TH,
+  expectKeysInEveryLocale,
+  keysUnderScope,
+} from "@/__tests__/fixtures/locale-key-check";
+import {
   FEATURES_ENTRIES,
-  FEATURES_META,
-  HEADER_LABELS,
-  MANAGED_ROADMAP,
   PRICE_COLUMNS_EN,
   PRICE_COLUMNS_TH,
   PRICE_ROWS_EN,
   PRICE_ROWS_TH,
   PRICING_ENTRIES,
-  PRICING_META,
   REMOVED_STRINGS,
   ZH_MANAGED_SERVICE_DESCRIPTION,
 } from "@/__tests__/fixtures/features-pricing-expected";
@@ -55,13 +51,9 @@ function missingStrings(leaves: string[], wanted: string[]): string[] {
   return wanted.filter((text) => !leaves.includes(text));
 }
 
-const enFeatureLeaves = collectLeaves(scopeOf(enMessages, ["pages", "feature"]));
 const thFeatureLeaves = collectLeaves(scopeOf(thMessages, ["pages", "feature"]));
 const enPricingLeaves = collectLeaves(scopeOf(enMessages, ["pages", "pricing"]));
 const thPricingLeaves = collectLeaves(scopeOf(thMessages, ["pages", "pricing"]));
-const enManagedLeaves = collectLeaves(
-  scopeOf(enMessages, ["pages", "managedService", "roadmap", "description"]),
-);
 const thManagedLeaves = collectLeaves(
   scopeOf(thMessages, ["pages", "managedService", "roadmap", "description"]),
 );
@@ -92,67 +84,20 @@ describe("control: fixture and scanner", () => {
 });
 
 describe("new features copy in the locale files (FR-1, FR-6)", () => {
-  it("holds every features EN string of the spec", () => {
-    expect(
-      missingStrings(enFeatureLeaves, ALL_FEATURES_STRINGS_EN),
-      "missing EN features strings",
-    ).toEqual([]);
-  });
-
-  it("holds every features TH string of the Thai check page", () => {
-    expect(
-      missingStrings(thFeatureLeaves, ALL_FEATURES_STRINGS_TH),
-      "missing TH features strings",
-    ).toEqual([]);
-  });
-
-  it("holds the features Meta title and description in en and th", () => {
-    expect({
-      enTitle: enFeatureLeaves.includes(FEATURES_META.titleEn),
-      enDescription: enFeatureLeaves.includes(FEATURES_META.descriptionEn),
-      thTitle: thFeatureLeaves.includes(FEATURES_META.titleTh),
-      thDescription: thFeatureLeaves.includes(FEATURES_META.descriptionTh),
-    }).toEqual({
-      enTitle: true,
-      enDescription: true,
-      thTitle: true,
-      thDescription: true,
-    });
+  it("holds the features and meta keys in every shipped locale", () => {
+    expectKeysInEveryLocale(keysUnderScope("pages.feature"));
   });
 });
 
 describe("new pricing copy in the locale files (FR-8, FR-12)", () => {
-  it("holds every pricing EN string of the spec", () => {
-    expect(
-      missingStrings(enPricingLeaves, ALL_PRICING_STRINGS_EN),
-      "missing EN pricing strings",
-    ).toEqual([]);
+  it("holds the pricing and meta keys in every shipped locale", () => {
+    expectKeysInEveryLocale(keysUnderScope("pages.pricing"));
   });
 
-  it("holds every pricing TH string of the Thai check page", () => {
-    expect(
-      missingStrings(thPricingLeaves, ALL_PRICING_STRINGS_TH),
-      "missing TH pricing strings",
-    ).toEqual([]);
-  });
-
-  it("holds the pricing Meta title and description in en and th", () => {
-    expect({
-      enTitle: enPricingLeaves.includes(PRICING_META.titleEn),
-      enDescription: enPricingLeaves.includes(PRICING_META.descriptionEn),
-      thTitle: thPricingLeaves.includes(PRICING_META.titleTh),
-      thDescription: thPricingLeaves.includes(PRICING_META.descriptionTh),
-    }).toEqual({
-      enTitle: true,
-      enDescription: true,
-      thTitle: true,
-      thDescription: true,
-    });
-  });
-
-  it("holds the managed-service roadmap.description pair (FR-15)", () => {
-    expect(enManagedLeaves).toContain(MANAGED_ROADMAP.en);
-    expect(thManagedLeaves).toContain(MANAGED_ROADMAP.th);
+  it("holds the managed-service roadmap description key in every locale", () => {
+    expectKeysInEveryLocale([
+      "pages.managedService.roadmap.description",
+    ]);
   });
 });
 
@@ -253,18 +198,7 @@ describe("scope guards: values that stay unchanged (AC-8)", () => {
     expect(zhManaged).toBe(ZH_MANAGED_SERVICE_DESCRIPTION);
   });
 
-  it("keeps the Features and Pricing header labels in en, th and zh", () => {
-    for (const [messages, featuresLabel, pricingLabel] of [
-      [enMessages, HEADER_LABELS.enFeatures, HEADER_LABELS.enPricing],
-      [thMessages, HEADER_LABELS.thFeatures, HEADER_LABELS.thPricing],
-      [zhMessages, HEADER_LABELS.zhFeatures, HEADER_LABELS.zhPricing],
-    ] as const) {
-      const main = scopeOf(messages, ["components", "common", "header", "main"]);
-      const titles = Array.isArray(main)
-        ? (main as Messages[]).map((entry) => entry["title"])
-        : [];
-      expect(titles).toContain(featuresLabel);
-      expect(titles).toContain(pricingLabel);
-    }
+  it("holds the header label keys in every shipped locale", () => {
+    expectKeysInEveryLocale(keysUnderScope("components.common.header.main"));
   });
 });

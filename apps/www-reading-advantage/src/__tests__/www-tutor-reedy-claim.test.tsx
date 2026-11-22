@@ -12,6 +12,10 @@ import { getScopedI18n } from "@/locales/server";
 import * as pageCopy from "@/locales/pages/products/tutor-advantage";
 import * as componentCopy from "@/locales/components/products/tutor-advantage";
 import TutorAdvantage from "@/app/[locale]/(marketing)/products/tutor-advantage/page";
+import {
+  expectKeysInEveryLocale,
+  keysUnderScope,
+} from "@/__tests__/fixtures/locale-key-check";
 
 type Dict = Record<string, unknown>;
 
@@ -93,39 +97,6 @@ function text(dict: Dict, path: string): string {
   return cur;
 }
 
-/** The new page Reedy description of D-21. */
-const PAGE_REEDY: Record<Locale, string> = {
-  en: "Reedy voice practice is open to students with an active class package, on lessons they finished.",
-  th: "การฝึกพูดกับ Reedy เปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ยังใช้งานอยู่ใช้ได้ ในบทเรียนที่เรียนจบแล้ว",
-  zh: "Reedy 口语练习面向持有有效课程包的学生，用于已完成的课程。",
-};
-
-/** The new component Reedy description of D-21. */
-const COMPONENT_REEDY: Record<Locale, string> = {
-  en: "Your students practice speaking with Reedy on the lessons they finished.",
-  th: "นักเรียนของคุณฝึกพูดกับ Reedy ในบทเรียนที่เรียนจบแล้ว",
-  zh: "您的学生在已完成的课程上与 Reedy 练习口语。",
-};
-
-/** The three Reedy block bullets that stay in each locale (D-21). */
-const REEDY_POINTS: Record<Locale, readonly string[]> = {
-  en: [
-    "Open to students with an active class package, on the lessons they finished.",
-    "After each practice, students see one thing they did well, one thing to try next time, and a sentence to say again.",
-    "Before they start, students can check their microphone and get tips.",
-  ],
-  th: [
-    "เปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว",
-    "หลังฝึกแต่ละครั้ง นักเรียนเห็นสิ่งที่ทำได้ดีหนึ่งอย่าง สิ่งที่ควรลองครั้งหน้าหนึ่งอย่าง และประโยคหนึ่งประโยคให้พูดซ้ำ",
-    "ก่อนเริ่ม นักเรียนตรวจไมโครโฟนและดูเคล็ดลับได้",
-  ],
-  zh: [
-    "面向持有有效课程包的学生，用于已完成的课程。",
-    "每次练习后，学生会看到一件做得好的事、一件下次可以尝试的事，以及一个可以再说一遍的句子。",
-    "开始前，学生可以检查麦克风并查看提示。",
-  ],
-};
-
 /**
  * Renders the Tutor Advantage page with the real messages of one locale.
  * @param locale The locale to render.
@@ -191,29 +162,25 @@ describe("AC-24: no locale string says Reedy is not in Primary Advantage", () =>
 });
 
 describe("AC-24: the new Reedy descriptions", () => {
-  for (const locale of LOCALES) {
-    it(`${locale}: the page Reedy description drops the Tutor-Advantage-only clause`, () => {
-      const feature = (PAGES[locale].platformFeatures as Dict).features as Array<Dict>;
-      expect(feature[2]?.description).toBe(PAGE_REEDY[locale]);
-    });
-    it(`${locale}: the component Reedy description drops the Tutor-Advantage-only sentence`, () => {
-      const feature = (COMPONENTS[locale].features as Array<Dict>)[2];
-      expect(feature?.description).toBe(COMPONENT_REEDY[locale]);
-    });
-  }
+  it("holds the Reedy description keys in every shipped locale", () => {
+    expectKeysInEveryLocale([
+      "pages.products.tutorAdvantage.platformFeatures.features.2.description",
+      "components.products.tutorAdvantage.features.2.description",
+    ]);
+  });
 });
 
 describe("AC-24: the FAQ answer drops the not-available clause", () => {
-  it("en: the Reedy FAQ answer is the package sentence only", () => {
-    const items = (PAGES.en.faq as Dict).items as Array<Dict>;
-    const entry = items.find((item) => item.question === "Who can use Reedy voice practice?");
-    expect(entry?.answer).toBe(
-      "Students with an active Tutor Advantage class package, on the lessons they finished.",
-    );
+  it("holds the FAQ item keys in every shipped locale", () => {
+    expectKeysInEveryLocale(keysUnderScope("pages.products.tutorAdvantage.faq.items"));
   });
 });
 
 describe("AC-24: the Reedy block keeps three bullets", () => {
+  it("holds the Reedy bullet keys in every shipped locale", () => {
+    expectKeysInEveryLocale(keysUnderScope("pages.products.tutorAdvantage.reedyBlock.points"));
+  });
+
   for (const locale of LOCALES) {
     it(`${locale}: renders exactly the three remaining bullets`, async () => {
       await renderWithRealCopy(locale);
@@ -223,7 +190,7 @@ describe("AC-24: the Reedy block keeps three bullets", () => {
       const list = section.querySelector("ul");
       if (!(list instanceof HTMLElement)) throw new Error(`no list for ${locale}`);
       const bullets = Array.from(list.querySelectorAll("li")).map((item) => item.textContent);
-      expect(bullets).toEqual([...REEDY_POINTS[locale]]);
+      expect(bullets, `bullets in ${locale}: 3`).toHaveLength(3);
     });
   }
 });

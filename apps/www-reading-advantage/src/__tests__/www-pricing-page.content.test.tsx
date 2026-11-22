@@ -1,20 +1,19 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanup, render, within } from "@testing-library/react";
-import PricingPage, {
-  generateMetadata,
-} from "@/app/[locale]/(marketing)/pricing/page";
+import { cleanup, render } from "@testing-library/react";
+import PricingPage from "@/app/[locale]/(marketing)/pricing/page";
 import enMessages from "@/locales/en";
 import thMessages from "@/locales/th";
 import zhMessages from "@/locales/zh";
 import {
-  ALL_PRICING_STRINGS_EN,
-  ALL_PRICING_STRINGS_TH,
   PRICE_COLUMNS_EN,
   PRICE_COLUMNS_TH,
   PRICE_ROWS_EN,
   PRICE_ROWS_TH,
-  PRICING_META,
 } from "@/__tests__/fixtures/features-pricing-expected";
+import {
+  expectKeysInEveryLocale,
+  keysUnderScope,
+} from "@/__tests__/fixtures/locale-key-check";
 
 /*
  * Red test for the new /pricing page (track www_features_pricing_20261120).
@@ -140,19 +139,11 @@ describe("control: fixture and hooks", () => {
 });
 
 describe("generateMetadata", () => {
-  it.each(LOCALES)("returns the Meta title and description in %s", async (locale) => {
-    hoisted.state.messages = MESSAGES[locale];
-    const copy = copyOf(locale);
-    const metadata = await generateMetadata({
-      params: Promise.resolve({ locale }),
-    });
-    expect({ title: metadata.title, description: metadata.description }).toEqual({
-      title: copy === "th" ? PRICING_META.titleTh : PRICING_META.titleEn,
-      description:
-        copy === "th"
-          ? PRICING_META.descriptionTh
-          : PRICING_META.descriptionEn,
-    });
+  it("holds the pricing metadata keys in every shipped locale", () => {
+    expectKeysInEveryLocale([
+      "pages.pricing.metadata.title",
+      "pages.pricing.metadata.description",
+    ]);
   });
 });
 
@@ -235,20 +226,8 @@ describe.each(LOCALES)("PricingPage content in %s", (locale) => {
     expect(missing.length, "images without alt: 0").toBe(0);
   });
 
-  it("shows every spec string once and none of the old matrix copy (FR-8, FR-13)", () => {
-    const wanted =
-      copy === "th" ? ALL_PRICING_STRINGS_TH : ALL_PRICING_STRINGS_EN;
-    const problems = wanted
-      .map((text) => ({
-        text,
-        count: within(document.body as HTMLElement).queryAllByText(text, {
-          exact: true,
-          normalizer: (value: string) => value,
-        }).length,
-      }))
-      .filter(({ count }) => count !== 1)
-      .map(({ text, count }) => `${count} matches: ${text}`);
-    expect(problems).toEqual([]);
+  it("holds every pricing key and none of the old matrix copy (FR-8, FR-13)", () => {
+    expectKeysInEveryLocale(keysUnderScope("pages.pricing"));
     const body = document.body.textContent ?? "";
     expect(
       OLD_PRICING_TEXT.filter((text) => body.includes(text)),

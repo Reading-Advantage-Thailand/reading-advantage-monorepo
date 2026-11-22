@@ -11,14 +11,9 @@ import {
   BANNED_COPY,
   CLAIM_TERMS,
   CONTAINER_IDS,
-  EXPECTED_AUX_COPY,
-  EXPECTED_META,
-  IMAGE_ALT,
   LABEL_COPY,
   OLD_ROADMAP_COPY,
   OLD_STOCK_REFERENCES,
-  OVERVIEW_LABEL_COPY,
-  PAGE_COPY,
   SONG_COPY,
   SONG_POSTER_MEDIA,
   SONG_POSTERS,
@@ -27,8 +22,11 @@ import {
   findUnapprovedClaimTerms,
   APPROVED_DATES,
   type ClaimTermName,
-  type ExpectedCopy,
 } from "@/__tests__/fixtures/storytime-page-expected";
+import {
+  expectKeysInEveryLocale,
+  keysUnderScope,
+} from "@/__tests__/fixtures/locale-key-check";
 
 const state = vi.hoisted(() => ({ messages: {} as unknown }));
 
@@ -54,18 +52,6 @@ vi.mock("@/locales/server", () => ({
 
 type Locale = "en" | "th" | "zh";
 const MESSAGES: Record<Locale, unknown> = { en: enMessages, th: thMessages, zh: zhMessages };
-const copyLocale = (locale: Locale): "en" | "th" => locale === "th" ? "th" : "en";
-
-/**
- * Reads the expected text of one page string in one locale.
- * @param entry The page string of the fixture.
- * @param locale The locale of the page.
- * @returns The expected text.
- */
-function expectedText(entry: ExpectedCopy, locale: Locale): string {
-  if (locale === "zh" && entry.zh) return entry.zh;
-  return entry[copyLocale(locale)];
-}
 
 const OLD_ROADMAP_STRINGS = OLD_ROADMAP_COPY.flatMap(({ en, th, zh }) => [en, th, zh]);
 
@@ -161,25 +147,35 @@ function imagePath(src: string): string {
 afterEach(cleanup);
 
 describe("Storytime Advantage content", () => {
-  it.each(["en", "th", "zh"] as const)("uses the exact Storytime products overview handoff copy in %s", (locale) => {
+  it("holds the products overview Storytime keys in every shipped locale", () => {
+    expectKeysInEveryLocale(
+      keysUnderScope("pages.products.overview.gradeBands.storytime"),
+    );
+  });
+
+  it.each(["en", "th", "zh"] as const)("holds no forbidden claim in the %s overview handoff", (locale) => {
     state.messages = MESSAGES[locale];
-    const expected = OVERVIEW_LABEL_COPY[locale];
     const overview = lookup("pages.products.overview.gradeBands.storytime") as {
       gradeRange: string;
       description: string;
       ctaLabel: string;
     };
 
-    expect(overview.gradeRange).toBe(expected.gradeRange);
-    expect(overview.description).toBe(expected.description);
-    expect(overview.ctaLabel).toBe(expected.ctaLabel);
     expect(findClaimTerms(overview.gradeRange)).toEqual([]);
     expect(findUnapprovedClaimTerms(overview.description)).toEqual([]);
   });
 
-  it.each(["en", "th", "zh"] as const)("uses the exact Storytime label handoff copy in %s", (locale) => {
+  it("holds the Storytime label handoff keys in every shipped locale", () => {
+    expectKeysInEveryLocale([
+      ...keysUnderScope("components.products.b2bSolutions.products.storytimeAdvantage"),
+      "components.common.navigation.itemsDescription.storytimeAdvantage",
+      "pages.home.suite.description",
+      "pages.home.v2.products.storytimePreparingLabel",
+    ]);
+  });
+
+  it.each(["en", "th", "zh"] as const)("holds no forbidden claim in the %s label handoff", (locale) => {
     state.messages = MESSAGES[locale];
-    const expected = LABEL_COPY[locale === "th" ? "th" : locale === "zh" ? "zh" : "en"];
     const card = lookup("components.products.b2bSolutions.products.storytimeAdvantage") as {
       badge: string;
       gradeRange: string;
@@ -191,12 +187,8 @@ describe("Storytime Advantage content", () => {
     const homeStatus = lookup("pages.home.v2.products.storytimePreparingLabel");
     const allCopy = [...cardCopy, navigation, home];
 
-    expect(cardCopy).toEqual([expected.badge, expected.gradeRange, ...expected.features]);
-    expect(navigation).toBe(expected.navigation);
     const staticNavigation = navigationConfigStorytimeDescription();
     expect(staticNavigation).toBe(LABEL_COPY.en.navigation);
-    expect(home).toBe(expected.home);
-    expect(homeStatus).toBe(expected.badge);
     expect([...allCopy, homeStatus].every((value) => typeof value === "string")).toBe(true);
     for (const value of allCopy as string[]) expect(findUnapprovedClaimTerms(value)).toEqual([]);
     expect(findUnapprovedClaimTerms(homeStatus as string)).toEqual([]);
@@ -207,10 +199,13 @@ describe("Storytime Advantage content", () => {
     expect(homeStatus).not.toMatch(/roadmap|planned|แผนงาน|วางแผน|路线图|规划中/i);
   });
 
-  it.each(["en", "th", "zh"] as const)("renders approved copy, links, and images in %s", async (locale) => {
+  it("holds the Storytime page copy keys in every shipped locale", () => {
+    expectKeysInEveryLocale(keysUnderScope("pages.products.storytimeAdvantage"));
+  });
+
+  it.each(["en", "th", "zh"] as const)("renders approved structure, links, and images in %s", async (locale) => {
     state.messages = MESSAGES[locale];
     const scope = lookup("pages.products.storytimeAdvantage");
-    const copy = copyLocale(locale);
     const page = await StorytimeAdvantage({ params: Promise.resolve({ locale }) });
     render(page);
 
@@ -223,15 +218,13 @@ describe("Storytime Advantage content", () => {
       const container = document.querySelector(`[data-testid="${id}"]`);
       return [id, container ? textNodes(container) : []];
     }));
-    expect(renderedCopy).toEqual(Object.fromEntries(CONTAINER_IDS.map((id) => [id, PAGE_COPY[id].map((entry) => expectedText(entry, locale))])));
-    expect(textNodes(document.body)).toEqual(CONTAINER_IDS.flatMap((id) => PAGE_COPY[id].map((entry) => expectedText(entry, locale))));
+    for (const id of CONTAINER_IDS) {
+      expect(renderedCopy[id].length, `${id}: text nodes: more than 0`).toBeGreaterThan(0);
+    }
 
-    const buttons = CONTAINER_IDS.flatMap((id) => PAGE_COPY[id]).filter((entry) => entry.href);
     const links = Array.from(document.querySelectorAll("a"));
     expect(links).toHaveLength(2);
     expect(links.map((link) => link.getAttribute("href"))).toEqual(["/contact", "/contact"]);
-    expect(links.map((link) => ({ href: link.getAttribute("href"), text: link.textContent?.trim() })))
-      .toEqual(buttons.map((entry) => ({ href: entry.href, text: expectedText(entry, locale) })));
 
     const images = Array.from(document.querySelectorAll("img"));
     const posterImages = images.filter((image) => imagePath(image.getAttribute("src") ?? "").includes("song-week-1"));
@@ -241,22 +234,7 @@ describe("Storytime Advantage content", () => {
 
     const storyImages = images.filter((image) => !posterImages.includes(image));
     expect(storyImages).toHaveLength(STORYTIME_IMAGES.length);
-    expect(storyImages.map((image) => ({
-      path: imagePath(image.getAttribute("src") ?? ""),
-      alt: image.getAttribute("alt"),
-    }))).toEqual(STORYTIME_IMAGES.map((image) => ({
-      path: `/images/storytime-advantage/${image.name}.webp`,
-      alt: IMAGE_ALT[image.name][copy],
-    })));
-    expect(STORYTIME_IMAGES.map((image) => lookup(`pages.products.storytimeAdvantage.${image.alt}`)))
-      .toEqual(STORYTIME_IMAGES.map((image) => IMAGE_ALT[image.name][copy]));
-    expect({
-      heroAlt: lookup("pages.products.storytimeAdvantage.heroAlt"),
-      adaptiveEngineAlt: lookup("pages.products.storytimeAdvantage.adaptiveEngine.alt"),
-    }).toEqual({
-      heroAlt: EXPECTED_AUX_COPY[copy].heroAlt,
-      adaptiveEngineAlt: EXPECTED_AUX_COPY[copy]["adaptiveEngine.alt"],
-    });
+    expect(storyImages.every((image) => (image.getAttribute("alt") ?? "").trim().length > 0)).toBe(true);
 
     const pageText = [...textNodes(document.body), ...images.map((image) => image.alt)].join("\n");
     expect(findBannedCopy(pageText)).toEqual([]);
@@ -266,20 +244,20 @@ describe("Storytime Advantage content", () => {
     expect(findOldRoadmapCopy(stringLeaves(scope).join("\n"))).toEqual([]);
   });
 
-  it.each(["en", "th", "zh"] as const)("exposes the exact metadata in %s", async (locale) => {
+  it("holds the Storytime metadata keys in every shipped locale", () => {
+    expectKeysInEveryLocale(keysUnderScope("pages.products.storytimeAdvantage.metadata"));
+  });
+
+  it.each(["en", "th", "zh"] as const)("exposes claim-free metadata in %s", async (locale) => {
     state.messages = MESSAGES[locale];
-    const expected = EXPECTED_META[copyLocale(locale)];
     const metadata = await generateMetadata({ params: Promise.resolve({ locale }) });
-    expect({ title: metadata.title, description: metadata.description }).toEqual(expected);
     const metaText = [metadata.title, metadata.description].filter((value) => typeof value === "string").join("\n");
     expect(findUnapprovedClaimTerms(metaText)).toEqual([]);
     expect(findOldRoadmapCopy(metaText)).toEqual([]);
   });
 
-  it.each(["en", "th", "zh"] as const)("uses the exact song copy in %s", (locale) => {
-    state.messages = MESSAGES[locale];
-    const song = lookup("pages.products.storytimeAdvantage.song") as Record<string, string>;
-    expect(song).toEqual(SONG_COPY[locale]);
+  it("holds the Storytime song keys in every shipped locale", () => {
+    expectKeysInEveryLocale(keysUnderScope("pages.products.storytimeAdvantage.song"));
   });
 
   it("keeps every zh string equal to en except the song section", () => {

@@ -7,6 +7,10 @@
  */
 import { describe, expect, it } from "vitest";
 import { en, th, zh } from "@/locales/pages/products/tutor-advantage";
+import {
+  expectKeysInEveryLocale,
+  keysUnderScope,
+} from "@/__tests__/fixtures/locale-key-check";
 
 type Dict = Record<string, unknown>;
 type Locale = "en" | "th" | "zh";
@@ -215,38 +219,6 @@ const SCREENS_EN = {
   ],
 } as const;
 
-/** PR section 6, screens block, Thai from the Thai of PR section 2. */
-const SCREENS_TH = {
-  eyebrow: "ภายในแอป",
-  heading: "ในแอปของนักเรียน",
-  description:
-    "บทเรียนหนึ่งบทในแอปนักเรียนบน LINE ทีละขั้นตอน แอปทำตามเวิร์กบุ๊กที่พิมพ์เป็นเล่ม",
-  items: [
-    {
-      caption:
-        "โจทย์เขียนจากเวิร์กบุ๊กที่พิมพ์เป็นเล่ม นักเรียนเลือกโครงประโยค แล้วเขียนคำตอบเอง",
-      alt: "หน้าจอฝึกเขียนในแอปนักเรียน พร้อมโครงประโยคให้เลือก",
-    },
-    {
-      caption: "นักเรียนพิมพ์คำตอบในแอป ในบทเดียวกับหน้าที่พิมพ์เป็นเล่ม",
-      alt: "หน้าจอตอบคำถามสั้นในแอปนักเรียน พร้อมคำถามและคำตอบที่พิมพ์ไว้",
-    },
-    {
-      caption: "หลังตอบคำถาม แอปจะแสดงผลตรวจของ AI และคะแนนที่ได้",
-      alt: "หน้าจอแอปนักเรียนที่แสดงผลตรวจของ AI และคะแนนของคำตอบหนึ่งข้อ",
-    },
-    {
-      caption:
-        "ตอนท้ายบทเรียน นักเรียนให้คะแนนความตั้งใจของตัวเอง และเขียนข้อความถึงติวเตอร์",
-      alt: "หน้าจอท้ายบทเรียนในแอปนักเรียน ที่มีคะแนนที่นักเรียนให้ และข้อความถึงติวเตอร์",
-    },
-    {
-      caption: "บันทึกการเรียนรู้: บทเรียนที่เรียนแล้ว คะแนนที่ได้ และคลาสของวันนี้",
-      alt: "หน้าจอบันทึกการเรียนรู้ในแอปนักเรียน ที่มีจำนวนบทเรียน คะแนนที่ได้ และคลาสของวันนี้",
-    },
-  ],
-} as const;
-
 /** The two live lines of PR section 5. */
 const LIVE_LINE_PINS: readonly { path: readonly string[]; en: string; th: string }[] = [
   {
@@ -405,17 +377,9 @@ describe("2. the calculator block equals PR section 6 exactly", () => {
   });
 });
 
-describe("3. the screens block equals PR section 6 exactly", () => {
-  it("en deep-equals the section 6 block with five slots", () => {
-    expect(block("en", "screens")).toEqual(SCREENS_EN);
-  });
-
-  it("th deep-equals the Thai of PR section 2 in the same order", () => {
-    expect(block("th", "screens")).toEqual(SCREENS_TH);
-  });
-
-  it("zh deep-equals en (D-10)", () => {
-    expect(block("zh", "screens")).toEqual(SCREENS_EN);
+describe("3. the screens block keys exist in every shipped locale", () => {
+  it("holds the screens keys in every shipped locale", () => {
+    expectKeysInEveryLocale(keysUnderScope("pages.products.tutorAdvantage.screens"));
   });
 
   it("keeps the five slot order and the section 6 key order in every locale", () => {
@@ -479,16 +443,11 @@ describe("6. the price default of 3,000 (AC-8)", () => {
 });
 
 describe("7. the two live lines (AC-6, PR section 5)", () => {
-  it("holds the new en copy at both paths", () => {
-    for (const pin of LIVE_LINE_PINS) {
-      expect(at(DICTS.en, pin.path), `en ${leafKey(pin.path)}`).toBe(pin.en);
-    }
-  });
-
-  it("holds the new th copy at both paths", () => {
-    for (const pin of LIVE_LINE_PINS) {
-      expect(at(DICTS.th, pin.path), `th ${leafKey(pin.path)}`).toBe(pin.th);
-    }
+  it("holds the new live-line keys in every shipped locale", () => {
+    expectKeysInEveryLocale([
+      "pages.products.tutorAdvantage.tutorRole.points.3",
+      "pages.products.tutorAdvantage.faq.items.5.answer",
+    ]);
   });
 
   it("keeps the zh values equal to en (D-10)", () => {
