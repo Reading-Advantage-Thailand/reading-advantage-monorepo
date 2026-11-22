@@ -160,6 +160,24 @@ Each task below is one commit for one class.
   Gate: measure/runs/www_test_audit_pilot_20261122/gate-4d168813.json.
   Proof logs: measure/runs/www_test_audit_pilot_20261122/proof-f2a.log,
   proof-f2b.log, proof-f3a.log, proof-f3b.log, proof-f4a.log, proof-f4b.log.
+- [x] 2.9 Review A remediation round C (bcaa97ff4)
+  Fix commits: 7480484d4 (D1: F2, F4, F17), bcaa97ff4 (D5: F9, F12).
+  F2 proof: measure/runs/www_test_audit_pilot_20261122/proof-f2-r2.log.
+  F4 proof: measure/runs/www_test_audit_pilot_20261122/proof-f4-r2.log.
+  F9 proof: measure/runs/www_test_audit_pilot_20261122/proof-f9-r2.log.
+  F12 proof: measure/runs/www_test_audit_pilot_20261122/proof-f12-r2.log.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-7480484.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-7480484.log.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-7480484.json.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-bcaa97f.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-bcaa97f.log.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-bcaa97f.json.
+
+### Recorded deviations
+
+- (F11) D1 commit 0be4a0374 also rewrote the two R2 cases of classification.md:195 (rendered full-width pictured row; text-only exclusion); history is not rewritten; task 3.2 counts them as done in 0be4a0374.
+- (F10) The separate GREEN log at 7008ccefd is missing; the coverage run at that commit (coverage-7008ccef.log) ran the full suite with exit 0.
+- (F16) Round A commits 733319505 and fb5622ed7 were gated together at 9eb3b9c4f.
 
 ## Phase 3: Rewrite batch (R1-R3)
 
