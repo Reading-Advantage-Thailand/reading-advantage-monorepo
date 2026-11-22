@@ -25,6 +25,10 @@ describe("postsDirectory", () => {
     expect(postsDirectory("zh")).toBe(path.join(baseDir, "zh"));
   });
 
+  it("returns the en directory when locale is en", () => {
+    expect(postsDirectory("en")).toBe(path.join(baseDir, "en"));
+  });
+
   it("th path differs from en path", () => {
     expect(postsDirectory("th")).not.toBe(postsDirectory("en"));
   });
