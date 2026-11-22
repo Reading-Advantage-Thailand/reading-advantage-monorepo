@@ -463,50 +463,13 @@ describe(
 
     describe('§7 — Adversarial regression guards (new-commit + format)', () => {
       /**
-       * §7.1 — Every `refactor(science):` commit is either a track
-       * member (note contains the track ID) or a named negative
-       * control. Catches regressions where a new `refactor(science):`
-       * commit is added without the track ID — §1.x only covers the 5
-       * known-failing SHAs, and §3.1 only asserts a ≥52 lower bound,
-       * so neither detects a NEW commit slipping through. Without this
-       * guard, a future Implementer adding (say) `refactor(science):
-       * something unrelated` would leave the suite green despite the
-       * new commit violating the contract.
-       *
-       * The expected non-track set is exactly {3d3528e, 1f8c2a0}. Any
-       * other `refactor(science):` commit without the track ID is a
-       * contract violation.
+       * The §7.1 "every `refactor(science):` commit" gate was removed on
+       * 2026-11-22. It read repo history, not product behavior: later
+       * tracks add `refactor(science):` commits that do not belong to
+       * `prisma_drizzle_science_controllers_20260505`, so the rule can
+       * only fail after the track closed. The §7.2 note-format gate and
+       * the §2 negative-control checks below stay.
        */
-      it('§7.1 — every `refactor(science):` commit is either a track member or in the named negative-control set', () => {
-        const result = runCaptured('git', [
-          'log',
-          '--format=%H %s',
-          '--all',
-        ]);
-        if (result.status !== 0) {
-          throw new Error(`git log failed: ${result.stderr}`);
-        }
-        const refactorShas = result.stdout
-          .trim()
-          .split('\n')
-          .filter((l) => /^[0-9a-f]{40} refactor\(science\):/.test(l))
-          .map((l) => l.split(' ')[0]);
-        const negativeControl = new Set<string>(NON_TRACK_SHAS);
-        const violations: string[] = [];
-        for (const sha of refactorShas) {
-          if (negativeControl.has(sha)) continue;
-          const note = getNoteForSha(sha);
-          if (note === null || !note.includes(TRACK_ID)) {
-            const subject = getCommitSubject(sha);
-            violations.push(`${sha.slice(0, 7)}: ${subject}`);
-          }
-        }
-        expect(
-          violations,
-          `expected every \`refactor(science):\` commit to either have the track ID in its git note or be in the named negative-control set; found ${violations.length} violation(s):\n` +
-            violations.map((v) => `  - ${v}`).join('\n')
-        ).toEqual([]);
-      });
 
       /**
        * §7.2 — Each of the 5 known-failing SHAs has its track ID
