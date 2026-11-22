@@ -246,6 +246,36 @@ Track: `ci_green_master_20261115` (light lane).
   Live `reading-advantage-web` stays on `reading-advantage-web-00794-sdj`.
 - Master CI is still red. Round 7 is open and not started.
 
+## CI round 9 (PM 2026-11-22): the guard scan budget and the Test step
+
+- Failing run `44988684591` on `5ed06dad5`, job "Build, Lint, and Test", step
+  `Test`. `@reading-advantage/config#test` failed at
+  `wave2-observability-provider-guard.test.ts:275` with "Test timed out in 30000ms";
+  the file took 38.16 s. Turbo then cancelled 14 tasks, so the
+  codecamp-knowledge and backend tests gave no result.
+- Cause: one case parses every scanned production file with the TypeScript
+  compiler, and turbo runs the test task of every package at once on a 4-core
+  runner. The same file in the same job took 2.4 s in "Config drift check" and
+  2.6 s in "Tenant and provider architecture guards", where it ran alone. The
+  scan itself is 1239 files, 5.5 MB, and 0.6-0.75 s of parse on a local machine.
+  The 30 s budget had no room for the parallel load.
+- Fix, test side: a text prefilter (`/console|Sentry|\\u/`) skips the parse of a
+  file that cannot hold a hit. The AST check stays the authority, so a token in a
+  comment or a string is still rejected. `\\u` keeps a file with an identifier
+  escape, because the parser decodes that text. Measured on the 1239 files:
+  577-747 ms before, 145-173 ms after, with equal hit counts (589 `console`,
+  2 `Sentry`). The case budget moves to 120 s, which is about 4x the worst
+  measured run and the root `testTimeout` value. No assertion changed.
+- Fix, CI side: the `Test` step runs `pnpm test --continue ...`, so one run
+  reports every failing task. The science-advantage gate test reads
+  `run:[^\n]*pnpm test`, so `--continue` keeps that contract. The selector test
+  reads only `--filter=` tokens.
+- Commit `c98b90985`. Gates: `affected-apps` on `5ed06dad5..c98b90985` prints
+  `[]`; `scripts/ci` 14 files and 234 tests pass; the guard file passes 2 tests
+  in 1.11 s (was 2.05 s); the phase-13 regression guards pass 8 tests and skip 13.
+- Not fixed here: every later failure in that run gave no result, because turbo
+  cancelled the tasks. The next run reports all of them through `--continue`.
+
 ## Follow-up (deferred to a later owner)
 
 - [ ] The architecture report pin goes stale on every master push that changes analyzer
