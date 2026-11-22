@@ -67,6 +67,16 @@ const ELIGIBILITY: Record<
   },
 };
 
+/**
+ * Words that reverse an eligibility clause. A sentence that carries one of
+ * these does not state the AC-24 fact, even when it repeats the marker words.
+ */
+const NEGATION_PATTERNS: Record<Locale, readonly RegExp[]> = {
+  en: [/\bwithout\b/i, /\bunfinished\b/i, /\bnot\b/i, /\bnever\b/i, /\bno\b/i, /\beveryone\b/i, /\banyone\b/i],
+  th: [/ไม่/, /ทุกคน/],
+  zh: [/未/, /不/, /没有/, /所有/, /任何/],
+};
+
 const PAGES: Record<Locale, Dict> = {
   en: pageCopy.en as unknown as Dict,
   th: pageCopy.th as unknown as Dict,
@@ -153,6 +163,12 @@ function expectEligibilityFacts(
   locale: Locale,
   facts: readonly EligibilityFact[],
 ): void {
+  for (const pattern of NEGATION_PATTERNS[locale]) {
+    expect(
+      value,
+      `${locale}: the eligibility clause must not carry ${pattern}`,
+    ).not.toMatch(pattern);
+  }
   for (const fact of facts) {
     for (const marker of ELIGIBILITY[locale][fact]) {
       expect(value, `${locale}: ${fact} must carry "${marker}"`).toContain(marker);

@@ -285,8 +285,11 @@ describe.each(LOCALES)("PricingPage content in %s", (locale) => {
   it("shows the approved 1,800 amount in the example heading (FR-10)", () => {
     const section = document.querySelector('[data-testid="pricing-example"]');
     const heading = section?.querySelector("h2");
-    const amount = copy === "th" ? "1,800 บาท" : "1,800 baht";
-    expect(heading?.textContent ?? "", `the example heading in ${locale}`).toContain(
+    const amount =
+      copy === "th"
+        ? /(^|[^\d,])1,800 บาท/
+        : /(^|[^\d,])1,800 baht/;
+    expect(heading?.textContent ?? "", `the example heading in ${locale}`).toMatch(
       amount,
     );
   });
