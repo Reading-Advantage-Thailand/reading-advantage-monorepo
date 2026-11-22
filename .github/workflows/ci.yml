@@ -114,6 +114,29 @@ jobs:
       - name: Fetch published Git notes
         run: git fetch --no-tags origin refs/notes/commits:refs/notes/commits
 
+      # The science-advantage audit gates read graph.db through the `build-graph`
+      # CLI. The tool's source is the public bodangren/repo-graph repository, and
+      # it publishes no release binary, so CI builds the pinned commit once per
+      # run. The existing "Check graph.db" step then runs `build-graph scan`.
+      - name: Setup Bun for build-graph
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.14
+
+      - name: Install build-graph for the graph.db gates
+        env:
+          REPO_GRAPH_COMMIT: 3ac5b6058a474d6564c5c2010497add9a59994ec
+        run: |
+          git clone --quiet https://github.com/bodangren/repo-graph "$RUNNER_TEMP/repo-graph"
+          git -C "$RUNNER_TEMP/repo-graph" checkout --quiet "$REPO_GRAPH_COMMIT"
+          cd "$RUNNER_TEMP/repo-graph"
+          bun install --frozen-lockfile
+          bun run build
+          mkdir -p "$RUNNER_TEMP/bin"
+          install -m 0755 ./bin/repo-graph "$RUNNER_TEMP/bin/build-graph"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/bin/build-graph" --version
+
       - name: Check graph.db
         run: |
           # graph.db is gitignored — rebuild it before checking.
@@ -139,6 +162,18 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      # The science-advantage audit gates shell out to `rg` (ripgrep). The
+      # ubuntu-latest image does not always ship it, and a missing binary fails
+      # 50 gates with "spawnSync rg ENOENT" (run 44996916181).
+      - name: Install ripgrep for the science-advantage audit gates
+        run: |
+          if command -v rg >/dev/null; then
+            rg --version
+          else
+            sudo apt-get update
+            sudo apt-get install -y ripgrep
+          fi
 
       # The selector and CI-config tests of scripts/ci run here once for each event. The affected-app
       # matrix does not run them, because scripts/ci is not a workspace package.
