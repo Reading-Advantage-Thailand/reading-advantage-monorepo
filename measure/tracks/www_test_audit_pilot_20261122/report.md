@@ -78,87 +78,89 @@ Data in this section comes from `measure/tracks/www_test_audit_pilot_20261122/cl
 
 `classification.md:33-110` lists 77 K file groups. The classification gives 2843 K cases (`classification.md:226`). No K row was deleted. The git diff over the seven tutor-commission files from `a1caa5803` to HEAD returns no output. The command exit code is 0. This is the empty result from this session's run.
 
-| K file group | Cases |
-|---|---|
-| src/__tests__/proxy-redirect.test.ts | 5 |
-| src/lib/blog-locale.test.ts | 4 |
-| src/locales/navigation.test.tsx | 1 |
-| src/__tests__/phase-2-seo-assets.red.test.ts | 4 |
-| src/__tests__/phase-2-seo-blog-routes.red.test.ts | 10 |
-| src/__tests__/phase-2-seo-remaining-static.red.test.ts | 10 |
-| src/__tests__/phase-3-group-b-types.test.ts | 4 |
-| src/__tests__/phase-3-i18n.red.test.ts | 1 |
-| src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx | 4 |
-| src/__tests__/phase-4-browser-regressions.red.test.tsx | 1 |
-| src/__tests__/phase-4-browser-regressions-final.red.test.tsx | 1 |
-| src/__tests__/phase-4-contact-authority.red.test.tsx | 2 |
-| src/__tests__/phase-5-pricing-legal.red.test.tsx | 2 |
-| src/__tests__/products-page-pictures.red.test.tsx | 22 |
-| src/__tests__/www-features-page.content.test.tsx | 32 |
-| src/__tests__/www-features-pricing.assets.test.ts | 21 |
-| src/__tests__/www-features-pricing.locale.test.ts | 13 |
-| src/__tests__/www-pricing-page.content.test.tsx | 23 |
-| src/__tests__/www-pricing-required-rows.red.test.ts | 7 |
-| src/__tests__/www-pricing-rows-fluid.red.test.ts | 3 |
-| src/__tests__/www-pricing-stacking.red.test.ts | 22 |
-| src/__tests__/www-reading-card.red.test.ts | 10 |
-| src/__tests__/www-reading-cover.red.test.ts | 5 |
-| src/__tests__/www-stem-date-line.locale.test.ts | 6 |
-| src/__tests__/www-batch-20261116.locale.test.ts | 28 |
-| src/__tests__/www-batch-20261119.locale.test.ts | 1 |
-| src/__tests__/www-tutor-calculator.locale.test.ts | 15 |
-| src/__tests__/www-tutor-followups.adversarial.test.ts | 5 |
-| src/__tests__/www-tutor-reedy-claim.test.tsx | 7 |
-| src/__tests__/www-tutor-screens-copy.adversarial.test.ts | 5 |
-| src/app/[locale]/(marketing)/(home)/page.test.tsx | 6 |
-| src/app/[locale]/(marketing)/blog/page.test.tsx | 9 |
-| src/app/[locale]/(marketing)/products/codecamp-advantage/page.test.tsx | 3 |
-| src/app/[locale]/(marketing)/products/math-advantage/page.test.tsx | 4 |
-| src/app/[locale]/(marketing)/products/primary-advantage/page.adversarial.test.tsx | 40 |
-| src/app/[locale]/(marketing)/products/primary-advantage/page.content.test.tsx | 53 |
-| src/app/[locale]/(marketing)/products/reading-advantage/page.test.tsx | 6 |
-| src/app/[locale]/(marketing)/products/science-advantage/page.test.tsx | 4 |
-| src/app/[locale]/(marketing)/products/stem-advantage/page.test.tsx | 4 |
-| src/app/[locale]/(marketing)/products/storytime-advantage/page.content.test.tsx | 33 |
-| src/app/[locale]/(marketing)/products/storytime-advantage/page.test.tsx | 2 |
-| src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx | 5 |
-| src/app/[locale]/(marketing)/products/tutor-advantage/page.followups.adversarial.test.tsx | 4 |
-| src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx | 33 |
-| src/app/[locale]/(marketing)/products/tutor-advantage/page.phase3.adversarial.test.tsx | 25 |
-| src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx | 3 |
-| src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx | 14 |
-| src/app/[locale]/(marketing)/products/zhongwen-advantage/page.test.tsx | 4 |
-| src/components/blog/blog-pagination.test.tsx | 5 |
-| src/components/common/localized-link.test.tsx | 8 |
-| src/components/marketing/experience-demo.test.tsx | 3 |
-| src/components/marketing/hero-section.test.tsx | 5 |
-| src/components/marketing/mastery-advantage-graph.test.tsx | 13 |
-| src/components/marketing/tutor-commission-calculator.test.tsx | 22 |
-| src/components/marketing/tutor-commission-calculator.adversarial.test.tsx | 17 |
-| src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx | 30 |
-| src/components/products/storytime-song-player.test.tsx | 15 |
-| src/lib/__tests__/real-logos-adversarial.test.ts | 114 |
-| src/lib/__tests__/real-logos-captures-adversarial.test.ts | 103 |
-| src/lib/__tests__/real-logos-captures.red.test.ts | 16 |
-| src/lib/__tests__/real-logos-favicon.red.test.ts | 1 |
-| src/lib/__tests__/real-logos-mapping.red.test.ts | 34 |
-| src/lib/__tests__/real-logos-references.red.test.ts | 12 |
-| src/lib/__tests__/site-assets.test.ts | 2 |
-| src/lib/__tests__/storytime-page-images.test.ts | 3 |
-| src/lib/__tests__/tutor-screens.adversarial.test.ts | 4 |
-| src/lib/__tests__/tutor-screens.test.ts | 12 |
-| src/lib/blog-blocks.test.ts | 18 |
-| src/lib/blog-draft.test.ts | 6 |
-| src/lib/blog-posts-validation.test.ts | 1726 |
-| src/lib/blog.test.ts | 28 |
-| src/lib/tutor-commission.test.ts | 34 |
-| src/lib/tutor-commission.adversarial.test.ts | 24 |
-| src/lib/tutor-commission.followups.adversarial.test.ts | 4 |
-| src/lib/tutor-commission.settlement.adversarial.test.ts | 37 |
-| src/lib/wave2-product-claim-helper.test.ts | 12 |
-| src/lib/__tests__/primary-page-images.test.ts | 9 |
+The Mutation check column gives the status of each K row. A value of `none` means no mutation baseline exists for that file. A proof name means that a `proof-*.log` in `measure/runs/www_test_audit_pilot_20261122/` names the file as a failing test target. Sixty-seven rows say `none`. Ten rows name one or more proof logs. No Stryker baseline ran (`spec.md:26-34`). The www app imports no core module from source plan section 5 step 2.
 
-No Stryker baseline was run (`spec.md:26-34`). The www app imports no core module from source plan section 5 step 2. No K row carries a mutation check. The money rules stay through the seven tutor-commission files named in section 4.
+| K file group | Cases | Mutation check |
+|---|---|---|
+| src/__tests__/proxy-redirect.test.ts | 5 | none |
+| src/lib/blog-locale.test.ts | 4 | none |
+| src/locales/navigation.test.tsx | 1 | none |
+| src/__tests__/phase-2-seo-assets.red.test.ts | 4 | none |
+| src/__tests__/phase-2-seo-blog-routes.red.test.ts | 10 | none |
+| src/__tests__/phase-2-seo-remaining-static.red.test.ts | 10 | none |
+| src/__tests__/phase-3-group-b-types.test.ts | 4 | none |
+| src/__tests__/phase-3-i18n.red.test.ts | 1 | proof-f4b.log |
+| src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx | 4 | none |
+| src/__tests__/phase-4-browser-regressions.red.test.tsx | 1 | proof-adv17.log, proof-f19-phase-4-browser-regressions.log, proof-f20-phase-4-browser-regressions.log, proof-f21-phase-4-browser-regressions.log, proof-r2-phase-4-browser-regressions.log |
+| src/__tests__/phase-4-browser-regressions-final.red.test.tsx | 1 | proof-r2-phase-4-browser-regressions-final.log |
+| src/__tests__/phase-4-contact-authority.red.test.tsx | 2 | proof-f4-r2.log, proof-f4a.log, proof-pa-f1.log |
+| src/__tests__/phase-5-pricing-legal.red.test.tsx | 2 | none |
+| src/__tests__/products-page-pictures.red.test.tsx | 22 | none |
+| src/__tests__/www-features-page.content.test.tsx | 32 | none |
+| src/__tests__/www-features-pricing.assets.test.ts | 21 | none |
+| src/__tests__/www-features-pricing.locale.test.ts | 13 | none |
+| src/__tests__/www-pricing-page.content.test.tsx | 23 | proof-f12-r2.log |
+| src/__tests__/www-pricing-required-rows.red.test.ts | 7 | none |
+| src/__tests__/www-pricing-rows-fluid.red.test.ts | 3 | none |
+| src/__tests__/www-pricing-stacking.red.test.ts | 22 | none |
+| src/__tests__/www-reading-card.red.test.ts | 10 | none |
+| src/__tests__/www-reading-cover.red.test.ts | 5 | proof-r2-www-reading-cover.log |
+| src/__tests__/www-stem-date-line.locale.test.ts | 6 | none |
+| src/__tests__/www-batch-20261116.locale.test.ts | 28 | none |
+| src/__tests__/www-batch-20261119.locale.test.ts | 1 | none |
+| src/__tests__/www-tutor-calculator.locale.test.ts | 15 | none |
+| src/__tests__/www-tutor-followups.adversarial.test.ts | 5 | none |
+| src/__tests__/www-tutor-reedy-claim.test.tsx | 7 | proof-adv3.log, proof-adv456.log, proof-f9-r2.log, proof-pa-f3.log |
+| src/__tests__/www-tutor-screens-copy.adversarial.test.ts | 5 | none |
+| src/app/[locale]/(marketing)/(home)/page.test.tsx | 6 | none |
+| src/app/[locale]/(marketing)/blog/page.test.tsx | 9 | none |
+| src/app/[locale]/(marketing)/products/codecamp-advantage/page.test.tsx | 3 | none |
+| src/app/[locale]/(marketing)/products/math-advantage/page.test.tsx | 4 | none |
+| src/app/[locale]/(marketing)/products/primary-advantage/page.adversarial.test.tsx | 40 | none |
+| src/app/[locale]/(marketing)/products/primary-advantage/page.content.test.tsx | 53 | none |
+| src/app/[locale]/(marketing)/products/reading-advantage/page.test.tsx | 6 | none |
+| src/app/[locale]/(marketing)/products/science-advantage/page.test.tsx | 4 | none |
+| src/app/[locale]/(marketing)/products/stem-advantage/page.test.tsx | 4 | none |
+| src/app/[locale]/(marketing)/products/storytime-advantage/page.content.test.tsx | 33 | none |
+| src/app/[locale]/(marketing)/products/storytime-advantage/page.test.tsx | 2 | none |
+| src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx | 5 | none |
+| src/app/[locale]/(marketing)/products/tutor-advantage/page.followups.adversarial.test.tsx | 4 | none |
+| src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx | 33 | none |
+| src/app/[locale]/(marketing)/products/tutor-advantage/page.phase3.adversarial.test.tsx | 25 | none |
+| src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx | 3 | none |
+| src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx | 14 | none |
+| src/app/[locale]/(marketing)/products/zhongwen-advantage/page.test.tsx | 4 | none |
+| src/components/blog/blog-pagination.test.tsx | 5 | proof-r2-blog-pagination.log |
+| src/components/common/localized-link.test.tsx | 8 | none |
+| src/components/marketing/experience-demo.test.tsx | 3 | none |
+| src/components/marketing/hero-section.test.tsx | 5 | proof-f24.log, proof-r2-hero-section.log |
+| src/components/marketing/mastery-advantage-graph.test.tsx | 13 | none |
+| src/components/marketing/tutor-commission-calculator.test.tsx | 22 | none |
+| src/components/marketing/tutor-commission-calculator.adversarial.test.tsx | 17 | none |
+| src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx | 30 | none |
+| src/components/products/storytime-song-player.test.tsx | 15 | none |
+| src/lib/__tests__/real-logos-adversarial.test.ts | 114 | none |
+| src/lib/__tests__/real-logos-captures-adversarial.test.ts | 103 | none |
+| src/lib/__tests__/real-logos-captures.red.test.ts | 16 | none |
+| src/lib/__tests__/real-logos-favicon.red.test.ts | 1 | none |
+| src/lib/__tests__/real-logos-mapping.red.test.ts | 34 | none |
+| src/lib/__tests__/real-logos-references.red.test.ts | 12 | none |
+| src/lib/__tests__/site-assets.test.ts | 2 | none |
+| src/lib/__tests__/storytime-page-images.test.ts | 3 | none |
+| src/lib/__tests__/tutor-screens.adversarial.test.ts | 4 | none |
+| src/lib/__tests__/tutor-screens.test.ts | 12 | none |
+| src/lib/blog-blocks.test.ts | 18 | none |
+| src/lib/blog-draft.test.ts | 6 | none |
+| src/lib/blog-posts-validation.test.ts | 1726 | proof-adv11.log, proof-adv22.log, proof-adv8.log, proof-blog-merge.log, proof-f22.log, proof-f25.log |
+| src/lib/blog.test.ts | 28 | none |
+| src/lib/tutor-commission.test.ts | 34 | none |
+| src/lib/tutor-commission.adversarial.test.ts | 24 | none |
+| src/lib/tutor-commission.followups.adversarial.test.ts | 4 | none |
+| src/lib/tutor-commission.settlement.adversarial.test.ts | 37 | none |
+| src/lib/wave2-product-claim-helper.test.ts | 12 | none |
+| src/lib/__tests__/primary-page-images.test.ts | 9 | none |
+
+The money rules stay through the seven tutor-commission files named in this section. The per-row Mutation check column above is the record required by `spec.md:35`.
 
 ## 5. Review and gate history
 
@@ -246,6 +248,24 @@ Before: `Test Files  91 passed (91)`, `Tests  3175 passed (3175)`, `Duration  90
 After: `Test Files  98 passed (98)`, `Tests  1412 passed (1412)`, `Duration  98.11s (transform 1.34s, setup 4.43s, import 16.37s, tests 27.05s, environment 41.28s)` (`measure/runs/www_test_audit_pilot_20261122/green-66aeb1011.log`).
 
 The difference is +7.64 seconds (`baseline.log`, `green-66aeb1011.log`; computed from those two lines). Both runs used the shared runner with `HEAVY_PREFLIGHT_WAIT_S=3600` (`baseline.log`; `gate-66aeb1011.json`, green command). Both used the same Vitest command with one worker and the dot reporter (`baseline.log`, `gate-66aeb1011.json`). The two runs are comparable.
+
+The cause of the increase is not recorded. Neither runner log holds per-file timing, and no per-file timing was recorded at the baseline commit. The before comparison by file is not recorded. The baseline suite was not run again for this report.
+
+HYPOTHESIS (not a finding): the added tests compile the real stylesheet and read computed styles through `fixtures/real-css.ts` and `fixtures/contrast.ts`. That work is heavier than the deleted source-text and copy-pin cases. The two runs each ran once, so run-to-run noise is not excluded.
+
+To make the claim checkable, one verbose run at head went through heavy-run. The log is `measure/runs/www_test_audit_pilot_20261122/timing-at-head.log`. The JSON report is `measure/runs/www_test_audit_pilot_20261122/timing-at-head.json`. The JSON `duration` field reads zero, so the file figures below sum the assertion durations in that JSON. The five slowest files at head are:
+
+| Slowest file | Sum of assertion durations |
+|---|---|
+| src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx | 6461.93 ms |
+| src/lib/__tests__/real-logos-captures-adversarial.test.ts | 1649.38 ms |
+| src/lib/blog-blocks.test.ts | 1303.32 ms |
+| src/lib/__tests__/storytime-page-images.test.ts | 970.85 ms |
+| src/app/[locale]/(marketing)/products/primary-advantage/page.content.test.tsx | 859.77 ms |
+
+All five files are unchanged K rows (`classification.md:33-110`). The timing run does not prove the hypothesis.
+
+Recommendation: a follow-up task should compare per-file times of the deleted tests and the added tests. That task must run both commits with a JSON reporter and keep both reports.
 
 ## 8. Facts changed for the PM
 
