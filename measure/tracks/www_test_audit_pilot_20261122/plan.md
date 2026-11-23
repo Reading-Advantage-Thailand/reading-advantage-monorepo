@@ -551,6 +551,7 @@ Each task below is one commit for one class.
   It states that the five slowest figures sum assertionResults[].duration within
   each testResults[] entry. The five figures were recomputed from those fields
   and match the report. Other schema claims were checked: green_exit_code in
-  all 30 gate JSONs, route and phase in all 35 role JSONs, and
-  test_wall_seconds=90.47 in baseline.json.
+  all 30 gate JSONs, route and phase in 36 of 37 pre-existing role JSONs, and
+  test_wall_seconds=90.47 in baseline.json. The 37th role JSON is
+  spec-review-735a7fe.json, which has a phase but no route.
   No test or production file changed in this round.
