@@ -118,4 +118,42 @@ describe("WCAG contrast fixture", () => {
     };
     expect(resolveBackdrop(leaf, read)).toEqual(blue);
   });
+
+  it("finds backgrounds from type and descendant selectors", () => {
+    const style = document.createElement("style");
+    style.textContent = [
+      "body { background-color: rgb(248, 250, 252); }",
+      "#f21-root span { background-color: rgba(255, 0, 0, 0.5); }",
+    ].join("\n");
+    document.head.appendChild(style);
+    try {
+      const root = document.createElement("div");
+      root.id = "f21-root";
+      const leaf = document.createElement("span");
+      root.appendChild(leaf);
+      document.body.appendChild(root);
+      const backdrop = resolveBackdrop(leaf);
+      expect(backdrop).toEqual({ r: 252, g: 125, b: 126, a: 1 });
+      expect(
+        contrastRatio(parseColor("rgb(118, 118, 118)"), backdrop),
+      ).toBeCloseTo(1.8112, 3);
+      root.remove();
+    } finally {
+      style.remove();
+    }
+  });
+
+  it("uses the painted body rule instead of the white fallback", () => {
+    const leaf = document.createElement("span");
+    document.body.appendChild(leaf);
+    try {
+      const backdrop = resolveBackdrop(leaf);
+      expect(backdrop).toEqual(parseColor("#f8fafc"));
+      expect(
+        contrastRatio(parseColor("rgb(118, 118, 118)"), backdrop),
+      ).toBeLessThan(4.5);
+    } finally {
+      leaf.remove();
+    }
+  });
 });

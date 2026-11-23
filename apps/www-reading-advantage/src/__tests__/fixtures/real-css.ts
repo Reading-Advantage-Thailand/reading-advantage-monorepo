@@ -15,7 +15,30 @@ const CSS_PATH = join(APP_ROOT, "src/app/[locale]/globals.css");
 
 const result = await postcss([tailwindcss({ base: APP_ROOT })])
   .process(readFileSync(CSS_PATH, "utf8"), { from: CSS_PATH });
-const compiled = result.css;
+
+/** The full compiled stylesheet, for injection into a test document cascade. */
+export const compiledCss = result.css;
+
+/**
+ * The compiled stylesheet with CSS cascade layers unwrapped. jsdom ignores
+ * rules inside @layer blocks, so the unwrapped text lets the test document
+ * apply the same class, type, id and descendant selectors as a browser.
+ */
+export const jsdomCss = (() => {
+  const root = postcss.parse(compiledCss);
+  root.walkAtRules("layer", (rule) => {
+    if (rule.nodes) rule.replaceWith(rule.nodes);
+  });
+  // jsdom cannot parse @property descriptors. The declarations that use the
+  // properties still apply without them, and contrast reads custom properties
+  // from the compiled stylesheet directly.
+  root.walkAtRules("property", (rule) => {
+    rule.remove();
+  });
+  return root.toString();
+})();
+
+const compiled = compiledCss;
 
 const parsed = postcss.parse(compiled);
 

@@ -1,18 +1,13 @@
 /**
- * Computes WCAG contrast from the real compiled stylesheet. The helper reads
- * colours through the real-css fixture, so it never uses a hand-written class
- * map. Unresolved colours throw instead of passing by default.
+ * Computes WCAG contrast from the real compiled stylesheet. The stylesheet is
+ * injected into the test document, and jsdom applies its class, type, id and
+ * descendant selectors. No background is read from class tokens by hand.
  *
  * The backdrop is the composite of every painted ancestor background, walked
  * from the root toward the text. An opaque layer stops the walk. A layer that
  * cannot be read throws; it is never treated as transparent.
  */
-import { readFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
-import postcss from "postcss";
-import tailwindcss from "@tailwindcss/postcss";
-import { computedForElement } from "./real-css";
+import { compiledCss, jsdomCss } from "./real-css";
 
 /** An sRGB colour with an alpha channel from 0 to 1. */
 export interface Color {
@@ -36,17 +31,8 @@ const PAGE_BACKGROUND = "#ffffff";
 /** WCAG AA contrast floor for normal body text. */
 export const AA_CONTRAST_MIN = 4.5;
 
-const APP_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
-const CSS_PATH = join(APP_ROOT, "src/app/[locale]/globals.css");
-
-/**
- * The compiled stylesheet, used only to resolve custom properties that jsdom
- * leaves as var() text. The source is the app's real globals.css.
- */
-const compiledCss = (
-  await postcss([tailwindcss({ base: APP_ROOT })])
-    .process(readFileSync(CSS_PATH, "utf8"), { from: CSS_PATH })
-).css;
+/** The id of the injected stylesheet that carries the real cascade. */
+const CASCADE_STYLE_ID = "contrast-fixture-real-cascade";
 
 /** Custom property values from the compiled stylesheet. */
 const customProperties = new Map<string, string>();
@@ -55,6 +41,20 @@ for (const match of compiledCss.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) {
     customProperties.set(match[1], match[2].trim());
   }
 }
+
+/**
+ * Injects the real compiled stylesheet into the test document once.
+ * @returns Nothing. The style element is reused across reads.
+ */
+function ensureCascade(): void {
+  if (document.getElementById(CASCADE_STYLE_ID)) return;
+  const style = document.createElement("style");
+  style.id = CASCADE_STYLE_ID;
+  style.textContent = jsdomCss;
+  document.head.appendChild(style);
+}
+
+ensureCascade();
 
 /**
  * Resolves var() references that the compiled stylesheet defines.
@@ -225,22 +225,20 @@ function blend(foreground: Color, backdrop: Color): Color {
 }
 
 /**
- * Reads the painted background layer of one rendered element.
+ * Reads the painted background layer of one element from jsdom's cascade.
  * @param element The rendered element.
  * @returns The colour layer, or null when nothing is painted.
  * @throws When a background image or an unreadable colour would paint.
  */
 export function readBackgroundLayer(element: Element): BackgroundLayer {
+  ensureCascade();
   const tag = element.tagName.toLowerCase();
-  const style = computedForElement(element, [
-    "background-color",
-    "background-image",
-  ]);
-  const image = style["background-image"];
+  const style = window.getComputedStyle(element);
+  const image = style.backgroundImage;
   if (image && image !== "none") {
     throw new Error(`Unsupported background image "${image}" on <${tag}>`);
   }
-  const value = style["background-color"];
+  const value = style.backgroundColor;
   if (!value || value === "transparent" || /^rgba\(\s*0,\s*0,\s*0,\s*0\s*\)$/.test(value)) {
     return { color: null, hasImage: false };
   }
@@ -286,8 +284,9 @@ export function resolveBackdrop(
  */
 export function contrastOf(element: Element): number {
   const background = resolveBackdrop(element);
-  const value = computedForElement(element, ["color"])["color"];
+  ensureCascade();
+  const value = window.getComputedStyle(element).color;
   if (!value) throw new Error(`Unresolved foreground colour: ${element.tagName}`);
-  const foreground = blend(parseColor(value), background);
+  const foreground = blend(parseColor(resolveVariables(value)), background);
   return contrastRatio(foreground, background);
 }
