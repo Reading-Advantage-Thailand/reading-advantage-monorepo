@@ -14,6 +14,7 @@ import path from "path";
 import { afterAll, describe, expect, it } from "vitest";
 import matter from "gray-matter";
 import {
+  brokenPostRefs,
   listPostFiles,
   mislabelledPostRefs,
 } from "./fixtures/blog-posts-loader";
@@ -68,6 +69,31 @@ describe("blog post validation must see every post file", () => {
       ).toContain(probeRef);
     } finally {
       fs.unlinkSync(probePath);
+    }
+  });
+
+  it("surfaces a symlink to a directory named .md (ADV-22)", () => {
+    const tempBase = path.join(
+      "/home/daniebo/.cache/opencode",
+      "zz-adv-loader-base",
+    );
+    const localeDir = path.join(tempBase, "th");
+    const dirTarget = path.join(localeDir, "zz-adv-dir-target");
+    const linkPath = path.join(localeDir, "zz-adv-dirlink.md");
+    fs.mkdirSync(dirTarget, { recursive: true });
+    fs.symlinkSync("zz-adv-dir-target", linkPath);
+    try {
+      const listed = listPostFiles(tempBase);
+      const broken = brokenPostRefs(tempBase);
+      expect(
+        [...listed, ...broken],
+        "a symlink to a directory named .md must be surfaced, not skipped silently; the phase-base test and blog.ts crash with EISDIR on it",
+      ).toContain("th/zz-adv-dirlink.md");
+    } finally {
+      fs.unlinkSync(linkPath);
+      fs.rmdirSync(dirTarget);
+      fs.rmdirSync(localeDir);
+      fs.rmdirSync(tempBase);
     }
   });
 });
