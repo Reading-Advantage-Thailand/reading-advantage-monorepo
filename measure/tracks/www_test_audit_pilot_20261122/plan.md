@@ -555,3 +555,19 @@ Each task below is one commit for one class.
   test_wall_seconds=90.47 in baseline.json. The 37th role JSON is
   spec-review-735a7fe.json, which has a phase but no route.
   No test or production file changed in this round.
+- [x] 4.6 Report acceptance remediation F31 to F36 (3ad5dba96)
+  Commit: 3ad5dba96817a803d1ad6c6bc1675c71467cc50b.
+  Review log: measure/runs/www_test_audit_pilot_20261122/phase-acceptance-24733e3.log.
+  Report: measure/tracks/www_test_audit_pilot_20261122/report.md.
+  F31: nine files, fourteen R2 cases (`git show --name-only adf24e723`).
+  F32: four slowest files unchanged; the fifth changed in 7008ccefd, 733319505
+  and fb5622ed7 (`git log --oneline 635a604c8..HEAD -- <path>`).
+  F33: K table now has Mutation check and Other file proofs columns. Proofs are
+  credited only to the rule they break. 77 rows still sum to 2843 cases.
+  F34: per-commit rows cite real GREEN and COVERAGE logs. The D5 part 2 rerun is
+  green-at-7008ccef.log. Green-7008ccef.log holds an accounting plan.
+  F35: F1-F3 from Review A and Acceptance are labelled with role and source.
+  The workbook fix is 4d1688131, not 3b044ec9.
+  F36: the timing follow-up recommendation was removed.
+  F18 is recorded as approved by the PM on 2026-11-24, option A.
+  No test or production file changed in this round.
