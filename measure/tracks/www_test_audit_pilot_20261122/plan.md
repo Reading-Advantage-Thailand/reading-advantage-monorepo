@@ -139,9 +139,9 @@ Each task below is one commit for one class.
   COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-0d705612.log.
   Gate: measure/runs/www_test_audit_pilot_20261122/gate-0d705612.json.
   D5 parts: ee5c7b739, 7008ccefd, c577cdf18, 407c5d9bd with the four gates
-  listed in task 2.5. Final phase 2 GREEN log:
+  listed in task 2.5. Task 2.6 checkpoint GREEN log:
   measure/runs/www_test_audit_pilot_20261122/green-407c5d9.log.
-  Final phase 2 COVERAGE log:
+  Task 2.6 checkpoint COVERAGE log:
   measure/runs/www_test_audit_pilot_20261122/coverage-407c5d9.log.
   Lint through heavy-run, exit 0 with 3 warnings:
   measure/runs/www_test_audit_pilot_20261122/lint-407c5d9.log.
@@ -172,12 +172,26 @@ Each task below is one commit for one class.
   GREEN log: measure/runs/www_test_audit_pilot_20261122/green-bcaa97f.log.
   COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-bcaa97f.log.
   Gate: measure/runs/www_test_audit_pilot_20261122/gate-bcaa97f.json.
+- [x] 2.10 Phase acceptance remediation (3b044ec9)
+  Fix commits: 7c2d93e2 (D1: F1, F2), 3b044ec9 (D5: F3).
+  D1 GREEN log: measure/runs/www_test_audit_pilot_20261122/green-7c2d93e2.log.
+  D1 COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-7c2d93e2.log.
+  D1 gate: measure/runs/www_test_audit_pilot_20261122/gate-7c2d93e2.json.
+  D1 proof logs: measure/runs/www_test_audit_pilot_20261122/proof-pa-f1.log,
+  measure/runs/www_test_audit_pilot_20261122/proof-pa-f2.log.
+  D5 GREEN log: measure/runs/www_test_audit_pilot_20261122/green-3b044ec9.log.
+  D5 COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-3b044ec9.log.
+  D5 gate: measure/runs/www_test_audit_pilot_20261122/gate-3b044ec9.json.
+  D5 proof log: measure/runs/www_test_audit_pilot_20261122/proof-pa-f3.log.
+  Each proof log holds the failing run of the fixed check under a temporary
+  copy change. The copy change was restored before each commit.
 
 ### Recorded deviations
 
 - (F11) D1 commit 0be4a0374 also rewrote the two R2 cases of classification.md:195 (rendered full-width pictured row; text-only exclusion); history is not rewritten; task 3.2 counts them as done in 0be4a0374. Approved by the PM as a recorded exception on 2026-11-23 (Review A round 4, review-a-cab8ffd.json).
 - (F10) The separate GREEN log at 7008ccefd is missing; the coverage run at that commit (coverage-7008ccef.log) ran the full suite with exit 0. New evidence: measure/runs/www_test_audit_pilot_20261122/green-at-7008ccef.log, GREEN through heavy-run, exit 0. Install method: node_modules symlinked from the role-base worktree. Both heavy-run installs failed or hung at the puppeteer postinstall.
 - (F16) Round A commits 733319505 and fb5622ed7 were gated together at 9eb3b9c4f. New evidence through heavy-run, each exit 0: measure/runs/www_test_audit_pilot_20261122/green-at-733319505.log, coverage-at-733319505.log, green-at-fb5622ed7.log, coverage-at-fb5622ed7.log. Install method: node_modules symlinked from the role-base worktree.
+- (F4) The gate file gate-0be4a037.json names the Phase 1 strategy commit as its phase_base_sha. The gate file is a run artifact, so it stays as it is. The D1 implementation commit and its two logs give the correct D1 result. Git shows no app change between the strategy commit and the Phase 2 base.
 
 ## Phase 3: Rewrite batch (R1-R3)
 
