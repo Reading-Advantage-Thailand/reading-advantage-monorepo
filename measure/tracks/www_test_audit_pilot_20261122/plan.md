@@ -606,7 +606,10 @@ Each task below is one commit for one class.
   Commit: 58b847e6b80ce4fa380c678e00c69e885d872768.
   Review log: measure/runs/www_test_audit_pilot_20261122/review-a-aeaa6a1.json.
   Report: measure/tracks/www_test_audit_pilot_20261122/report.md.
-  Removed every count of run files from report.md and plan.md. The report now
+  Removed the counts of green-*.log and other run-file kinds from report.md
+  and plan.md. One count stays in task 4.5: the dated measurement of role JSON
+  files at head cb12d6f0f. That historical record names its head, so a later
+  round does not change it. The report now
   defines role result logs by MEASURE_AGENT_RESULT and gives a grep command.
   Test-run logs are named by pattern. Some role logs hold dispositions and
   some do not. The names overlap, so the reader must open a file to know its kind.
