@@ -77,6 +77,26 @@ const NEGATION_PATTERNS: Record<Locale, readonly RegExp[]> = {
   zh: [/未/, /不/, /没有/, /所有/, /任何/],
 };
 
+/**
+ * The word that carries the active-package limit in each locale.
+ * The check needs the word itself, not a part of another word.
+ */
+const ACTIVE_WORD: Record<Locale, RegExp> = {
+  en: /\bactive\b/i,
+  th: /ใช้งานอยู่/,
+  zh: /有效/,
+};
+
+/**
+ * The words that reverse the active-package limit in each locale.
+ * A text with one of them does not state the limit.
+ */
+const INACTIVE_PATTERNS: Record<Locale, readonly RegExp[]> = {
+  en: [/\binactive\b/i],
+  th: [/ไม่ใช้งาน/],
+  zh: [/无效/, /非有效/],
+};
+
 const PAGES: Record<Locale, Dict> = {
   en: pageCopy.en as unknown as Dict,
   th: pageCopy.th as unknown as Dict,
@@ -153,6 +173,44 @@ function text(dict: Dict, path: string): string {
 }
 
 /**
+ * Lists the AC-24 eligibility rules that one text breaks.
+ * @param value The text to check.
+ * @param locale The locale of the text.
+ * @param facts The eligibility limits to check.
+ * @returns One line per broken rule.
+ */
+function eligibilityBreaks(
+  value: string,
+  locale: Locale,
+  facts: readonly EligibilityFact[],
+): string[] {
+  const breaks: string[] = [];
+  for (const pattern of NEGATION_PATTERNS[locale]) {
+    if (pattern.test(value)) {
+      breaks.push(`${locale}: the eligibility clause must not carry ${pattern}`);
+    }
+  }
+  for (const pattern of INACTIVE_PATTERNS[locale]) {
+    if (pattern.test(value)) {
+      breaks.push(
+        `${locale}: the eligibility clause must not name an inactive package (${pattern})`,
+      );
+    }
+  }
+  for (const fact of facts) {
+    for (const marker of ELIGIBILITY[locale][fact]) {
+      if (!value.includes(marker)) {
+        breaks.push(`${locale}: ${fact} must carry "${marker}"`);
+      }
+    }
+  }
+  if (facts.includes("activePackage") && !ACTIVE_WORD[locale].test(value)) {
+    breaks.push(`${locale}: activePackage must carry the active word`);
+  }
+  return breaks;
+}
+
+/**
  * Checks that a text carries each AC-24 eligibility limit of one locale.
  * @param value The text to check.
  * @param locale The locale of the text.
@@ -163,17 +221,10 @@ function expectEligibilityFacts(
   locale: Locale,
   facts: readonly EligibilityFact[],
 ): void {
-  for (const pattern of NEGATION_PATTERNS[locale]) {
-    expect(
-      value,
-      `${locale}: the eligibility clause must not carry ${pattern}`,
-    ).not.toMatch(pattern);
-  }
-  for (const fact of facts) {
-    for (const marker of ELIGIBILITY[locale][fact]) {
-      expect(value, `${locale}: ${fact} must carry "${marker}"`).toContain(marker);
-    }
-  }
+  expect(
+    eligibilityBreaks(value, locale, facts),
+    `${locale}: the eligibility clause must hold`,
+  ).toEqual([]);
 }
 
 /**
@@ -237,6 +288,39 @@ describe("AC-24: the scan detects every forbidden claim", () => {
       (pattern) => !probes.some((probe) => pattern.test(probe)),
     );
     expect(unmatched).toEqual([]);
+  });
+});
+
+describe("AC-24: the eligibility scan detects an inactive package", () => {
+  it("rejects the inactive-package sentence in English", () => {
+    const counterexample =
+      "Open to students with an inactive class package, on lessons they finished.";
+
+    expect(
+      eligibilityBreaks(counterexample, "en", [
+        "activePackage",
+        "finishedLesson",
+      ]),
+    ).not.toEqual([]);
+  });
+
+  it("names the inactive rule for the probe of every locale", () => {
+    const probes: Record<Locale, string> = {
+      en: "Open to students with an inactive class package, on lessons they finished.",
+      th: "เปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ไม่ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว",
+      zh: "面向持有无效课程包的学生，用于已完成的课程。",
+    };
+    for (const locale of LOCALES) {
+      const breaks = eligibilityBreaks(probes[locale], locale, [
+        "activePackage",
+        "finishedLesson",
+      ]);
+      expect(breaks, locale).not.toEqual([]);
+      expect(
+        breaks.some((line) => line.includes("inactive package")),
+        locale,
+      ).toBe(true);
+    }
   });
 });
 
