@@ -12,6 +12,7 @@ import fs from "node:fs";
 import path from "path";
 import { afterAll, describe, expect, it } from "vitest";
 import matter from "gray-matter";
+import { listPostFiles } from "./fixtures/blog-posts-loader";
 
 const POSTS_BASE = path.join(
   process.cwd(),
@@ -19,22 +20,9 @@ const POSTS_BASE = path.join(
 );
 const PROBE_PATH = path.join(POSTS_BASE, "en", "zz-adversarial-mdx-probe.mdx");
 
-/** Copies the shipped loader of blog-posts-validation.test.ts. */
+/** Uses the shipped extension-agnostic loader. */
 function loadAllPosts() {
-  const localeDirs = fs
-    .readdirSync(POSTS_BASE, { withFileTypes: true })
-    .filter((d) => d.isDirectory())
-    .map((d) => d.name);
-  const entries: string[] = [];
-  for (const locale of localeDirs) {
-    const files = fs
-      .readdirSync(path.join(POSTS_BASE, locale))
-      .filter((f) => f.endsWith(".md"));
-    for (const file of files) {
-      entries.push(`${locale}/${file}`);
-    }
-  }
-  return entries;
+  return listPostFiles();
 }
 
 describe("blog post validation must see every post file", () => {

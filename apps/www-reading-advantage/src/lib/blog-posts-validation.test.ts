@@ -9,55 +9,29 @@
 import { describe, it, expect } from "vitest";
 import fs from "fs";
 import path from "path";
-import matter from "gray-matter";
+import {
+  listPostFiles,
+  loadAllPosts,
+  type PostEntry,
+} from "@/__tests__/fixtures/blog-posts-loader";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-const POSTS_BASE = path.join(
-  process.cwd(),
-  "src/app/[locale]/(marketing)/blog/posts",
-);
 
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const URL_SAFE_SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-interface PostEntry {
-  locale: string;
-  slug: string;
-  filePath: string;
-  raw: string;
-  data: Record<string, unknown>;
-  content: string;
-}
+/** Extensions that mark a file as a post written in Markdown. */
+const MARKDOWN_LIKE_RE = /\.(?:mdx|markdown|mdown|mkd)$/i;
 
-function loadAllPosts(): PostEntry[] {
-  const localeDirs = fs
-    .readdirSync(POSTS_BASE, { withFileTypes: true })
-    .filter((d) => d.isDirectory())
-    .map((d) => d.name);
-
-  const entries: PostEntry[] = [];
-
-  for (const locale of localeDirs) {
-    const localeDir = path.join(POSTS_BASE, locale);
-    const files = fs.readdirSync(localeDir).filter((f) => f.endsWith(".md"));
-
-    for (const file of files) {
-      const filePath = path.join(localeDir, file);
-      const raw = fs.readFileSync(filePath, "utf8");
-      const { data, content } = matter(raw);
-      entries.push({
-        locale,
-        slug: file.replace(/\.md$/, ""),
-        filePath,
-        raw,
-        data: data as Record<string, unknown>,
-        content,
-      });
-    }
-  }
-
-  return entries;
+/**
+ * Finds post files that use a Markdown-like extension other than .md.
+ * Files with data extensions such as .json are not posts.
+ * @returns One "<locale>/<file>" reference per mislabelled post.
+ */
+function nonMarkdownRefs(): string[] {
+  return listPostFiles().filter(
+    (ref) => MARKDOWN_LIKE_RE.test(ref) || !ref.includes("."),
+  );
 }
 
 const allPosts = loadAllPosts();
@@ -95,6 +69,9 @@ function isNonEmptyString(value: unknown): boolean {
 describe("blog post frontmatter — required fields", () => {
   it("discovers at least one post in the en/ directory", () => {
     expect(enPosts.length).toBeGreaterThan(0);
+    expect(nonMarkdownRefs(), "every discovered post file is Markdown").toEqual(
+      [],
+    );
   });
 
   it("title is a non-empty string on every post", () => {
@@ -236,11 +213,10 @@ describe("blog post file naming", () => {
   });
 
   it("file uses the .md extension on every post", () => {
-    expect(
-      violationsFor(allPosts, "file uses .md extension", (post) =>
-        /\.md$/.test(post.filePath),
-      ),
-    ).toEqual([]);
+    const violations = nonMarkdownRefs().map(
+      (ref) => `${ref}: file uses .md extension`,
+    );
+    expect(violations).toEqual([]);
   });
 });
 
@@ -249,6 +225,9 @@ describe("blog post file naming", () => {
 describe("cross-locale consistency", () => {
   it("en/ directory exists and is non-empty (canonical source)", () => {
     expect(enSlugs.size).toBeGreaterThan(0);
+    expect(nonMarkdownRefs(), "no non-Markdown post file in any locale").toEqual(
+      [],
+    );
   });
 
   it("a matching non-en post is never older than its en post", () => {
