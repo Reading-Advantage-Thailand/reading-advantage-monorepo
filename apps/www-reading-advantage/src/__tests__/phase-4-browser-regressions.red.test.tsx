@@ -8,15 +8,7 @@ import { BlogCard } from "@/components/blog/blog-card";
 import ContactPage from "@/app/[locale]/(marketing)/contact/page";
 import type { BlogListItem } from "@/types/blog";
 import { computedForElement } from "./fixtures/real-css";
-
-/** True when a computed color is dark enough for text on a light background. */
-function isDarkText(color: string): boolean {
-  const oklch = color.match(/oklch\(([\d.]+)/);
-  if (oklch) return Number(oklch[1]) <= 0.5;
-  const rgb = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-  if (rgb) return Math.max(Number(rgb[1]), Number(rgb[2]), Number(rgb[3])) <= 120;
-  return false;
-}
+import { AA_CONTRAST_MIN, contrastOf } from "./fixtures/contrast";
 
 const serverWiring = vi.hoisted(() => ({
   getScopedI18n: vi.fn(
@@ -127,9 +119,7 @@ describe("Phase 4 browser regression contracts", () => {
       );
     const contrastSafe =
       eyebrows.length === 2 &&
-      eyebrows.every((eyebrow) =>
-        isDarkText(computedForElement(eyebrow, ["color"]).color),
-      );
+      eyebrows.every((eyebrow) => contrastOf(eyebrow) >= AA_CONTRAST_MIN);
 
     expect
       .soft(

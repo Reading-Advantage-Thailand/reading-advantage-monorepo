@@ -4,15 +4,7 @@ import { BlogCard } from "@/components/blog/blog-card";
 import PricingPage from "@/app/[locale]/(marketing)/pricing/page";
 import type { BlogListItem } from "@/types/blog";
 import { computedForElement } from "./fixtures/real-css";
-
-/** True when a computed color is dark enough for text on a light background. */
-function isDarkText(color: string): boolean {
-  const oklch = color.match(/oklch\(([\d.]+)/);
-  if (oklch) return Number(oklch[1]) <= 0.5;
-  const rgb = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-  if (rgb) return Math.max(Number(rgb[1]), Number(rgb[2]), Number(rgb[3])) <= 120;
-  return false;
-}
+import { AA_CONTRAST_MIN, contrastOf } from "./fixtures/contrast";
 
 const serverWiring = vi.hoisted(() => ({
   getScopedI18n: vi.fn(async (scope: string) => {
@@ -104,8 +96,7 @@ describe("Remaining Phase 4 browser regression contracts", () => {
     const description = hero?.querySelector("p");
     const safeText = [title, description].every(
       (element) =>
-        element instanceof HTMLElement &&
-        isDarkText(computedForElement(element, ["color"]).color),
+        element instanceof HTMLElement && contrastOf(element) >= AA_CONTRAST_MIN,
     );
 
     expect
