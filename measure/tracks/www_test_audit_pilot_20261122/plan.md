@@ -185,6 +185,23 @@ Each task below is one commit for one class.
   D5 proof log: measure/runs/www_test_audit_pilot_20261122/proof-pa-f3.log.
   Each proof log holds the failing run of the fixed check under a temporary
   copy change. The copy change was restored before each commit.
+- [x] 2.11 Adversarial remediation ADV-3 (e153b885)
+  Fix commit: e153b885 (D5: ADV-3).
+  The eligibility check now lives in
+  apps/www-reading-advantage/src/__tests__/fixtures/reedy-eligibility.ts.
+  The main test and the adversarial probe file import that fixture.
+  The English set names the plain, the hyphenated, and the prefixed forms.
+  The Thai set names the cancelled package next to the package phrase.
+  The zh set stays as it was.
+  Every adversarial probe and its expectation stayed in the probe file.
+  Proof log: measure/runs/www_test_audit_pilot_20261122/proof-adv3.log.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-e153b88.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-e153b88.log.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-e153b88.json.
+  The type check still fails on the D1 file
+  src/__tests__/no-gse-in-customer-copy.test.ts. The D1 rewrite 4d1688131
+  introduced those page calls. The D5 commit changes no line of that file.
+  Evidence: measure/runs/www_test_audit_pilot_20261122/check-types-adv3.log.
 
 ### Recorded deviations
 
