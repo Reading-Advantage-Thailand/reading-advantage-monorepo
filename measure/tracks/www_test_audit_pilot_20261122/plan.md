@@ -592,12 +592,28 @@ Each task below is one commit for one class.
   Commit: 1e3c60d83744b7efcb19d8eb09df4760e1e8112e.
   Review log: measure/runs/www_test_audit_pilot_20261122/review-a-9976626.log.
   Report: measure/tracks/www_test_audit_pilot_20261122/report.md.
-  F43: Finding history now holds only run-file pointers, file counts, highest
-  IDs per role and the repeated-ID notice. Finding-to-role maps and statuses
-  were removed. PM-approved items point to plan.md Recorded deviations.
-  F44: 26 green-*.log files hold MEASURE_AGENT_RESULT and a dispositions: line;
-  45 are test-run logs. The report now says so and names green-e91c4d4.log.
+  F43: Finding history held only run-file pointers and the repeated-ID notice.
+  Finding-to-role maps and statuses were removed. PM-approved items point to
+  plan.md Recorded deviations.
+  F44: Green role result logs hold MEASURE_AGENT_RESULT; some hold a
+  dispositions: line and some do not. Test-run logs hold runner output only.
+  The report gives a grep command instead of a count.
   F45: GREEN logs end with the Vitest summary; COVERAGE logs end with the
   coverage table and Coverage summary block. Four log ends were read.
   Full report rescan found no other mapping, file-kind or log-ending claim.
+  No test or production file changed in this round.
+- [x] 4.9 Report review remediation F46 F47 (58b847e6b)
+  Commit: 58b847e6b80ce4fa380c678e00c69e885d872768.
+  Review log: measure/runs/www_test_audit_pilot_20261122/review-a-aeaa6a1.json.
+  Report: measure/tracks/www_test_audit_pilot_20261122/report.md.
+  Removed every count of run files from report.md and plan.md. The report now
+  defines role result logs by MEASURE_AGENT_RESULT and gives a grep command.
+  Test-run logs are named by pattern. Some role logs hold dispositions and
+  some do not. The names overlap, so the reader must open a file to know its kind.
+  Read green-7008ccef.log: it holds an accounting-track task plan with Phase 7
+  Red and Green rows, no Vitest summary and no result block. The rerun is
+  green-at-7008ccef.log. Read green-5a104ba.log: it holds a result block
+  without a dispositions line.
+  Also removed the run-file counts and highest finding numbers from the report
+  Finding history. Per-class tables still cite exact verified file names.
   No test or production file changed in this round.
