@@ -638,3 +638,17 @@ Each task below is one commit for one class.
   one holds green_exit_code. Tasks 4.9 and 4.10 now name both dated
   measurements, not one. Re-run of the scan found no undated count of run files.
   No test or production file changed in this round.
+- [x] 4.12 Report acceptance remediation F41 F42 F50 F51 (f8964c2b9)
+  Commit: f8964c2b9b9697ceab57bf1e4e742f12d78d68dd.
+  Review log: measure/runs/www_test_audit_pilot_20261122/phase-acceptance-4230e12.json.
+  Report: measure/tracks/www_test_audit_pilot_20261122/report.md.
+  F41: a lowercase non-file .md entry keeps parity; the phase-base test failed
+  with EISDIR on a directory named x.md. The .mdx and .MD checks are new.
+  F42: the per-row mutation status requirement is in the spec.md Out of scope
+  section, not Classes.
+  F50: commit 0d705612d deleted navigation cases that checked the active locale
+  through the real useCurrentLocale hook; commit 9eb3b9c4f restored the Thai
+  and Chinese cases.
+  F51: commit fb5622ed7 restored the explicit-English test in blog-locale.test.ts.
+  The original D2 explicit-English row was not kept as a same-rule duplicate.
+  All added SHAs resolved with git cat-file -e. No test or production file changed.
