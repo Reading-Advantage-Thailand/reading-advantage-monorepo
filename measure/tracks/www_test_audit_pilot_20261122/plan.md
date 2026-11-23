@@ -542,3 +542,15 @@ Each task below is one commit for one class.
   and measure/runs/www_test_audit_pilot_20261122/timing-at-head.json.
   The before comparison by file is not recorded. The baseline suite was not run.
   No test or production file changed in this round.
+- [x] 4.5 Report review remediation F29 (e97dc1353)
+  Commit: e97dc13537b4a6c7965e87e0f2f6bde9759b8d1f.
+  Review log: measure/runs/www_test_audit_pilot_20261122/review-a-e034575.log.
+  Report: measure/tracks/www_test_audit_pilot_20261122/report.md.
+  The report named a root duration field in timing-at-head.json. That field is
+  absent. The report now names the real root keys and the testResults[] keys.
+  It states that the five slowest figures sum assertionResults[].duration within
+  each testResults[] entry. The five figures were recomputed from those fields
+  and match the report. Other schema claims were checked: green_exit_code in
+  all 30 gate JSONs, route and phase in all 35 role JSONs, and
+  test_wall_seconds=90.47 in baseline.json.
+  No test or production file changed in this round.
