@@ -10,6 +10,7 @@ import { describe, it, expect } from "vitest";
 import fs from "fs";
 import path from "path";
 import {
+  brokenPostRefs,
   loadAllPosts,
   mislabelledPostRefs as nonMarkdownRefs,
   type PostEntry,
@@ -58,6 +59,7 @@ describe("blog post frontmatter — required fields", () => {
     expect(nonMarkdownRefs(), "every discovered post file is Markdown").toEqual(
       [],
     );
+    expect(brokenPostRefs(), "no broken post links").toEqual([]);
   });
 
   it("title is a non-empty string on every post", () => {
@@ -214,6 +216,7 @@ describe("cross-locale consistency", () => {
     expect(nonMarkdownRefs(), "no non-Markdown post file in any locale").toEqual(
       [],
     );
+    expect(brokenPostRefs(), "no broken post link in any locale").toEqual([]);
   });
 
   it("a matching non-en post is never older than its en post", () => {

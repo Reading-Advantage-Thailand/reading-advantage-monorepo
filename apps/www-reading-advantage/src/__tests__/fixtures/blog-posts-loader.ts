@@ -1,7 +1,9 @@
 /**
  * Loads on-disk blog post files for the merged validation test and its probes.
  * The file sweep is extension-agnostic, so a stray .mdx file is visible to the
- * rules instead of escaping them. Only .md files are parsed as posts.
+ * rules instead of escaping them. Only .md files are parsed as posts. Regular
+ * files and symlinks to regular files both count, as in the phase-base test
+ * and in blog.ts. Broken links are reported by brokenPostRefs.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -24,6 +26,18 @@ export interface PostEntry {
 }
 
 /**
+ * Lists the locale directories under the posts root.
+ * @param base The posts root.
+ * @returns One absolute path per locale directory.
+ */
+function localeDirectories(base: string): string[] {
+  return fs
+    .readdirSync(base, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => path.join(base, entry.name));
+}
+
+/**
  * Finds post files whose name does not use the exact .md suffix.
  * A case-insensitive .md match that is not exactly .md is mislabelled, as are
  * other Markdown-like extensions and files with no extension. Data companions
@@ -40,26 +54,50 @@ export function mislabelledPostRefs(base?: string): string[] {
 }
 
 /**
- * Lists every regular file in each locale directory, including dotfiles.
+ * Lists every post-file entry in each locale directory, including dotfiles,
+ * symlinks to regular files and non-Markdown files.
  * @param base The posts root, defaulting to the app's posts directory.
- * @returns One "<locale>/<file>" reference per file, including non-Markdown files.
+ * @returns One "<locale>/<file>" reference per entry.
  */
 export function listPostFiles(base: string = POSTS_BASE): string[] {
   // blog.ts markdownSlugs filters only by the .md suffix; dot-prefixed names
   // are real posts there, so this sweep must not skip them either.
-  const localeDirs = fs
-    .readdirSync(base, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name);
-
   const refs: string[] = [];
-  for (const locale of localeDirs) {
-    const entries = fs.readdirSync(path.join(base, locale), {
-      withFileTypes: true,
-    });
-    for (const entry of entries) {
-      if (!entry.isFile()) continue;
-      refs.push(`${locale}/${entry.name}`);
+  for (const localeDir of localeDirectories(base)) {
+    const locale = path.basename(localeDir);
+    for (const entry of fs.readdirSync(localeDir, { withFileTypes: true })) {
+      if (entry.isDirectory()) continue;
+      const fullPath = path.join(localeDir, entry.name);
+      if (entry.isFile()) {
+        refs.push(`${locale}/${entry.name}`);
+      } else if (entry.isSymbolicLink()) {
+        try {
+          if (fs.statSync(fullPath).isFile()) refs.push(`${locale}/${entry.name}`);
+        } catch {
+          // A broken link is reported by brokenPostRefs, not skipped silently.
+        }
+      }
+    }
+  }
+  return refs;
+}
+
+/**
+ * Finds symbolic links whose target cannot be resolved.
+ * @param base The posts root, defaulting to the app's posts directory.
+ * @returns One "<locale>/<file>" reference per broken link.
+ */
+export function brokenPostRefs(base: string = POSTS_BASE): string[] {
+  const refs: string[] = [];
+  for (const localeDir of localeDirectories(base)) {
+    const locale = path.basename(localeDir);
+    for (const entry of fs.readdirSync(localeDir, { withFileTypes: true })) {
+      if (!entry.isSymbolicLink()) continue;
+      try {
+        fs.statSync(path.join(localeDir, entry.name));
+      } catch {
+        refs.push(`${locale}/${entry.name}`);
+      }
     }
   }
   return refs;
