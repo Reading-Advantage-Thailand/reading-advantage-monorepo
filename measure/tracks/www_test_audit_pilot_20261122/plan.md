@@ -386,6 +386,25 @@ Each task below is one commit for one class.
   GREEN log: measure/runs/www_test_audit_pilot_20261122/green-98c2713d3.log.
   COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-98c2713d3.log.
   Line coverage is 91.93 percent, above the 85.52 floor.
+- [x] 3.10 Adversarial remediation ADV-11 (88b26fb9b)
+  Commit: 88b26fb9b9959f47f7ec9d71cfff629aa4c5b75f.
+  Proof: measure/runs/www_test_audit_pilot_20261122/proof-adv11.log.
+  cases_before=1397, cases_after=1398. The adversarial commit added a second
+  probe case. This fix adds no case.
+  The fixture now owns the mislabelled-file predicate. A name with a
+  case-insensitive .md suffix that is not exactly .md is flagged, along with
+  .mdx, .markdown, other Markdown-like extensions and extensionless files.
+  Data companions such as -segments.json stay ignored. The validation test
+  imports the shared predicate. The probe keeps its expectation and uses the
+  shared predicate in its setup. All 15 rules and both discovery cases remain.
+  The proof copies a valid th post to th/zz-adv-upper.MD. The extension rule
+  and both discovery cases fail and name the file. The temporary file is
+  deleted and no leftover exists. The shipped posts pass.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-88b26fb9b.json.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-88b26fb9b.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-88b26fb9b.log.
+  Line coverage is 91.95 percent, above the 85.52 floor.
+  ADV-12 is an optional note. It received no change.
 
 ## Phase 4: Pilot report
 
