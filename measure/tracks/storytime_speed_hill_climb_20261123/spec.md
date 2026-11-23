@@ -101,8 +101,11 @@ inside `div[data-entry-art-column]` (`app/[locale]/sign-in/page.tsx`).
   - DPR 3 needs 1116 device px, and picks 1280w.
   Every phone picks a smaller file than the 1920w original. The 1920w original stays the last
   candidate for a wide box at a high ratio. The desktop column is 480 CSS px or less at 980 px:
-  DPR 1.5 picks 720w, DPR 2 picks 960w, and DPR 3 keeps the 1080w original. No ratio loses
-  sharpness.
+  DPR 1.5 picks 720w, DPR 2 picks 960w, and DPR 3 keeps the 1080w original. The desktop
+  portrait art is capped by the 1080 px original. At DPR 3 it delivers about 2.4 source pixels
+  for each CSS pixel, the same as before the change. The change loses no sharpness against the
+  old code. A larger desktop file needs a new original from the art owner, and that is out of
+  scope.
 - D-3: The `sizes` values follow the CSS of `entry.css`. The phone img reads
   `calc(100vw - 40px)`, because the shell holds 20 px of inline padding on each side. The desktop
   source reads `480px`, which is above the measured column width at 980 px.
