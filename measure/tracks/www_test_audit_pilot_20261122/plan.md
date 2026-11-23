@@ -405,6 +405,30 @@ Each task below is one commit for one class.
   COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-88b26fb9b.log.
   Line coverage is 91.95 percent, above the 85.52 floor.
   ADV-12 is an optional note. It received no change.
+- [x] 3.11 Phase acceptance remediation F22 to F24 (286d95a99)
+  F22: 286d95a99b52c2f4a0d22c09b74afba37f0f972b.
+  Proof: measure/runs/www_test_audit_pilot_20261122/proof-f22.log.
+  cases_before=1398, cases_after=1399. The new dotfile unit test adds one case.
+  The loader no longer skips dot-prefixed names. blog.ts markdownSlugs filters
+  only by the .md suffix, and a comment cites it. The loader takes an optional
+  base directory for the temporary-directory unit test.
+  F23: de68074d977a2bc3b7000b99f2527d0cd9d9649f.
+  Proof: measure/runs/www_test_audit_pilot_20261122/proof-f23.log.
+  cases_before=1399, cases_after=1402. Three new unit cases raise the count.
+  Custom properties resolve from the element cascade: inline, then jsdom
+  computed value, then the compiled :root map. An undecidable override throws.
+  F24: 338047c69f1d7c71564c670d11ef3aab1ed782ae.
+  Proof: measure/runs/www_test_audit_pilot_20261122/proof-f24.log.
+  cases_before=1402, cases_after=1402. No case was added.
+  The hero tests compare every gradient stop with values from the compiled
+  stylesheet through real-css.ts.
+  F22 gate: measure/runs/www_test_audit_pilot_20261122/gate-286d95a99.json.
+  F23 gate: measure/runs/www_test_audit_pilot_20261122/gate-de68074d9.json.
+  F24 gate: measure/runs/www_test_audit_pilot_20261122/gate-338047c69.json.
+  COVERAGE logs: coverage-286d95a99.log, coverage-de68074d9.log and
+  coverage-338047c69.log in measure/runs/www_test_audit_pilot_20261122/.
+  Line coverage is 92.06 percent at the last gate, above the 85.52 floor.
+  Each proof restored its production file. No production or post change remains.
 
 ## Phase 4: Pilot report
 
