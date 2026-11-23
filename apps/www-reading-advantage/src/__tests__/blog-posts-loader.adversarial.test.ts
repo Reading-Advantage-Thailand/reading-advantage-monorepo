@@ -13,7 +13,10 @@ import fs from "node:fs";
 import path from "path";
 import { afterAll, describe, expect, it } from "vitest";
 import matter from "gray-matter";
-import { listPostFiles } from "./fixtures/blog-posts-loader";
+import {
+  listPostFiles,
+  mislabelledPostRefs,
+} from "./fixtures/blog-posts-loader";
 
 const POSTS_BASE = path.join(
   process.cwd(),
@@ -58,10 +61,7 @@ describe("blog post validation must see every post file", () => {
     try {
       const refs = listPostFiles();
       expect(refs, "the file sweep sees the probe").toContain(probeRef);
-      const MARKDOWN_LIKE_RE = /\.(?:mdx|markdown|mdown|mkd)$/i;
-      const mislabelled = refs.filter(
-        (ref) => MARKDOWN_LIKE_RE.test(ref) || !ref.includes("."),
-      );
+      const mislabelled = mislabelledPostRefs();
       expect(
         mislabelled,
         "an uppercase .MD post is not parsed and not flagged, so it escapes every rule",

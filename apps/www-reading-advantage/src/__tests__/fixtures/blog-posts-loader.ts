@@ -24,6 +24,21 @@ export interface PostEntry {
 }
 
 /**
+ * Finds post files whose name does not use the exact .md suffix.
+ * A case-insensitive .md match that is not exactly .md is mislabelled, as are
+ * other Markdown-like extensions and files with no extension. Data companions
+ * such as -segments.json do not match and stay ignored.
+ * @returns One "<locale>/<file>" reference per mislabelled post file.
+ */
+export function mislabelledPostRefs(): string[] {
+  return listPostFiles().filter((ref) => {
+    if (/\.md$/i.test(ref)) return !ref.endsWith(".md");
+    if (/\.(?:mdx|markdown|mdown|mkd)$/i.test(ref)) return true;
+    return !ref.includes(".");
+  });
+}
+
+/**
  * Lists every non-hidden regular file in each locale directory.
  * @returns One "<locale>/<file>" reference per file, including non-Markdown files.
  */

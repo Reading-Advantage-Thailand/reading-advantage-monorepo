@@ -10,8 +10,8 @@ import { describe, it, expect } from "vitest";
 import fs from "fs";
 import path from "path";
 import {
-  listPostFiles,
   loadAllPosts,
+  mislabelledPostRefs as nonMarkdownRefs,
   type PostEntry,
 } from "@/__tests__/fixtures/blog-posts-loader";
 
@@ -19,20 +19,6 @@ import {
 
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const URL_SAFE_SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-
-/** Extensions that mark a file as a post written in Markdown. */
-const MARKDOWN_LIKE_RE = /\.(?:mdx|markdown|mdown|mkd)$/i;
-
-/**
- * Finds post files that use a Markdown-like extension other than .md.
- * Files with data extensions such as .json are not posts.
- * @returns One "<locale>/<file>" reference per mislabelled post.
- */
-function nonMarkdownRefs(): string[] {
-  return listPostFiles().filter(
-    (ref) => MARKDOWN_LIKE_RE.test(ref) || !ref.includes("."),
-  );
-}
 
 const allPosts = loadAllPosts();
 const enPosts = allPosts.filter((p) => p.locale === "en");
