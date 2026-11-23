@@ -529,3 +529,16 @@ Each task below is one commit for one class.
   The 20 percent target is met. Line coverage rose from 86.52 percent to
   92.07 percent (baseline.json and gate-66aeb1011.json).
   All Phase 4 report gates exited 0.
+- [x] 4.4 Report review remediation F27 F28 (f68593cbc)
+  Commit: f68593cbc1a45e6c61975e6debf6d4da55c2a29c.
+  Review log: measure/runs/www_test_audit_pilot_20261122/review-a-4d41866.log.
+  Report: measure/tracks/www_test_audit_pilot_20261122/report.md.
+  F27: all 77 K rows now carry a Mutation check column. Sixty-seven rows say
+  none. Ten rows name proof logs from measure/runs/www_test_audit_pilot_20261122/.
+  The case sum stays at 2843 (classification.md:226).
+  F28: the Time section states that the cause is not recorded, gives a labelled
+  HYPOTHESIS, and quotes the five slowest files from one head timing run.
+  Timing evidence: measure/runs/www_test_audit_pilot_20261122/timing-at-head.log
+  and measure/runs/www_test_audit_pilot_20261122/timing-at-head.json.
+  The before comparison by file is not recorded. The baseline suite was not run.
+  No test or production file changed in this round.
