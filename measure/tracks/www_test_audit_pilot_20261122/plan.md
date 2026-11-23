@@ -253,11 +253,35 @@ Each task below is one commit for one class.
 Phase gate after every commit: the suite passes, and coverage falls by 1 point or less.
 Each task below is one commit for one class.
 
-- [ ] 3.1 Rewrite class R1. Test: (b), (c), (d).
-- [ ] 3.2 Rewrite class R2. Test: (b), (c), (d).
-- [ ] 3.3 Rewrite class R3. Test: (b), (c), (d).
+- [x] 3.1 Rewrite class R1 (no rows, classification.md R1 table is empty) (8a126f612)
+  The R1 table holds no rows. Boundary mocks stand in for adapters, not for
+  the code under test. No rewrite was needed.
+- [x] 3.2 Rewrite class R2 (adf24e723)
+  Fix commit: adf24e72376a4f061b9f3c435b4b4f5a62334fae.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-adf24e7.json.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-adf24e7.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-adf24e7.log.
+  Check-types log: measure/runs/www_test_audit_pilot_20261122/check-types-adf24e7.log.
+  Lint log: measure/runs/www_test_audit_pilot_20261122/lint-adf24e7.log.
+  cases_before=3094, cases_after=3094, line_coverage_pct=91.6, floor=85.52.
+  Nine files now assert computed CSS through
+  src/__tests__/fixtures/real-css.ts or a role-based selector. No rewritten
+  case asserts a class-name token. Each file has one mutation proof in a
+  proof-r2-<file>.log: a temporary production edit breaks the guarded
+  behavior, the target test exits 1, and git checkout restores the source.
+  The two R2 cases of classification.md:195 were already rewritten in D1
+  commit 0be4a0374 under recorded deviation F11. They live in
+  src/__tests__/www-features-look-pins.red.test.ts as the full-width row and
+  text-only exclusion cases. They still pass (14 cases) and the file holds
+  no class-name assertion. They were not rewritten again.
+- [x] 3.3 Rewrite class R3 (no rows) (8a126f612)
+  The R3 table holds no rows. Case names already state the rule or contract
+  id. No rename or split was needed.
 - [ ] 3.4 Checkpoint Phase 3. Test: (b), (c).
   Record each commit SHA and its gate log in the task line.
+- [ ] 3.5 Merge blog-posts-validation into one case per rule (separate commit). Test: (b), (c), (d).
+  Counts toward the 20 % target only if the merged test still fails on one
+  broken post and names that post (classification.md "Approved merge line").
 
 ## Phase 4: Pilot report
 
