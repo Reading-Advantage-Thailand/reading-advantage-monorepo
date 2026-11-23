@@ -487,6 +487,24 @@ Each task below is one commit for one class.
   GREEN log: measure/runs/www_test_audit_pilot_20261122/green-7b62bed78.log.
   COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-7b62bed78.log.
   Line coverage is 92.07 percent, above the 85.52 floor.
+- [x] 3.15 Adversarial remediation ADV-22 (66aeb1011)
+  Commit: 66aeb1011cd33b6ed591deed3acad4ae6f76f2b0.
+  Proof: measure/runs/www_test_audit_pilot_20261122/proof-adv22.log.
+  cases_before=1410, cases_after=1412. One committed probe case and one new
+  symlink unit case add the count.
+  brokenPostRefs now reports any entry whose name ends in .md, case
+  insensitively, that is not a readable regular file after following links:
+  broken links, symlinks to directories, sockets, fifos and directories named
+  .md. The old export name stays working for existing tests. Both discovery
+  cases assert the list is empty, so such an entry is named.
+  The symlink test adds a case for a symlink to a directory named .md. The
+  proof symlinks th/zz-adv-dirlink.md to an existing directory; both discovery
+  cases fail and name the link. The link was removed with no leftover.
+  The probe expectations were not changed. ADV-23 is a note and received no change.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-66aeb1011.json.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-66aeb1011.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-66aeb1011.log.
+  Line coverage is 92.07 percent, above the 85.52 floor.
 
 ## Phase 4: Pilot report
 
