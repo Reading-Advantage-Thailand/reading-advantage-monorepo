@@ -92,6 +92,11 @@ vi.mock("@/components/blog/contact-cta", () => ({
   ContactCTA: () => createElement("div", null, "contact-cta"),
 }));
 
+/*
+ * The Products route renders three solution sections. Two of them are async
+ * server components, so a client render of the route cannot show them.
+ * Each section is swept on its own below.
+ */
 vi.mock("@/components/products/b2b-solutions", () => ({ default: () => null }));
 vi.mock("@/components/products/b2c-solutions", () => ({ default: () => null }));
 vi.mock("@/components/products/tutor-advantage", () => ({ default: () => null }));
@@ -297,6 +302,18 @@ const CUSTOMER_PAGES: ReadonlyArray<readonly [string, () => Promise<ReactElement
   ["b2b solutions section", async () => {
     const actual = await vi.importActual<typeof import("@/components/products/b2b-solutions")>(
       "@/components/products/b2b-solutions",
+    );
+    return (await actual.default()) as ReactElement;
+  }],
+  ["b2c solutions section", async () => {
+    const actual = await vi.importActual<typeof import("@/components/products/b2c-solutions")>(
+      "@/components/products/b2c-solutions",
+    );
+    return (await actual.default()) as ReactElement;
+  }],
+  ["tutor advantage section", async () => {
+    const actual = await vi.importActual<typeof import("@/components/products/tutor-advantage")>(
+      "@/components/products/tutor-advantage",
     );
     return (await actual.default()) as ReactElement;
   }],

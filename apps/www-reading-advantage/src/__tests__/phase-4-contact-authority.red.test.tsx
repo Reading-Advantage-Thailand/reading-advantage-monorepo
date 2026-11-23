@@ -36,9 +36,10 @@ vi.mock("next/image", () => ({
 }));
 
 /*
- * The authority is supplied by the test, not by the shipped config. Every
- * rendered destination must follow these distinct values. A component that
- * hard-codes a real config literal fails the checks below.
+ * The render checks take the authority from the test, not from the shipped
+ * config. Every rendered destination must follow these distinct values.
+ * A component that hard-codes a real config literal fails the checks below.
+ * The duplicate check reads the shipped config through vi.importActual.
  */
 vi.mock("@/config/contact", () => ({
   contactDetails: {
@@ -53,12 +54,22 @@ vi.mock("@/config/contact", () => ({
 }));
 
 const localeMessages = [enMessages, thMessages, zhMessages];
-const contactHandle = new URL(contactDetails.tiktokUrl).pathname.slice(1);
 
 type AuthorityDuplicate = {
   path: string;
   value: string;
 };
+
+/**
+ * Reads the shipped contact config. The mock above serves the render checks.
+ * The duplicate check compares the locale fields with the real shipped values.
+ */
+async function shippedContactDetails(): Promise<typeof contactDetails> {
+  const actual = await vi.importActual<typeof import("@/config/contact")>(
+    "@/config/contact",
+  );
+  return actual.contactDetails;
+}
 
 function readMessage(messages: object, path: string): unknown {
   return path.split(".").reduce<unknown>((value, segment) => {
@@ -183,19 +194,21 @@ describe("RC-P4-001 contact authority contract", () => {
     }
   });
 
-  it("rejects duplicate raw contact values in authority locale fields", () => {
+  it("rejects duplicate raw contact values in authority locale fields", async () => {
+    const shipped = await shippedContactDetails();
+    const shippedHandle = new URL(shipped.tiktokUrl).pathname.slice(1);
     const authorities: AuthorityDuplicate[] = [
       {
         path: "pages.contact.email.address",
-        value: contactDetails.supportEmail,
+        value: shipped.supportEmail,
       },
       {
         path: "pages.contact.phone.number",
-        value: contactDetails.phoneNumber,
+        value: shipped.phoneNumber,
       },
       {
         path: "pages.contact.social.tiktok",
-        value: contactHandle,
+        value: shippedHandle,
       },
     ];
     const duplicates = localeMessages.flatMap((messages) =>
@@ -205,11 +218,13 @@ describe("RC-P4-001 contact authority contract", () => {
     expect(duplicates).toEqual([]);
   });
 
-  it("detects a duplicate-value counterexample without flagging a translated label", () => {
+  it("detects a duplicate-value counterexample without flagging a translated label", async () => {
+    const shipped = await shippedContactDetails();
+    const shippedHandle = new URL(shipped.tiktokUrl).pathname.slice(1);
     const counterexample = {
       pages: {
         contact: {
-          email: { address: contactDetails.supportEmail },
+          email: { address: shipped.supportEmail },
           phone: { number: "Call our team" },
           social: { tiktok: "ติดตามเรา" },
         },
@@ -218,22 +233,22 @@ describe("RC-P4-001 contact authority contract", () => {
     const duplicates = findAuthorityDuplicates(counterexample, [
       {
         path: "pages.contact.email.address",
-        value: contactDetails.supportEmail,
+        value: shipped.supportEmail,
       },
       {
         path: "pages.contact.phone.number",
-        value: contactDetails.phoneNumber,
+        value: shipped.phoneNumber,
       },
       {
         path: "pages.contact.social.tiktok",
-        value: contactHandle,
+        value: shippedHandle,
       },
     ]);
 
     expect(duplicates).toEqual([
       {
         path: "pages.contact.email.address",
-        value: contactDetails.supportEmail,
+        value: shipped.supportEmail,
       },
     ]);
   });
