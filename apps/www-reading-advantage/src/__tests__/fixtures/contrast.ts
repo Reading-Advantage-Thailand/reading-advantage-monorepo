@@ -57,18 +57,56 @@ function ensureCascade(): void {
 ensureCascade();
 
 /**
- * Resolves var() references that the compiled stylesheet defines.
- * @param value The computed background value.
- * @returns The value with resolvable variables substituted.
+ * Reads the effective value of one custom property for an element.
+ * Inline declarations win, then jsdom's computed value (which inherits from
+ * ancestors), then the compiled :root map.
+ * @param element The element whose cascade applies.
+ * @param name The custom property name.
+ * @returns The declared value, or undefined when nothing sets it.
  */
-function resolveVariables(value: string): string {
+function effectiveCustomProperty(
+  element: Element,
+  name: string,
+): string | undefined {
+  let node: Element | null = element;
+  while (node !== null) {
+    if (node instanceof HTMLElement) {
+      const inline = node.style.getPropertyValue(name);
+      if (inline.trim()) return inline.trim();
+    }
+    const computed = window.getComputedStyle(node).getPropertyValue(name);
+    if (computed.trim()) return computed.trim();
+    node = node.parentElement;
+  }
+  return customProperties.get(name);
+}
+
+/**
+ * Resolves var() references from the effective cascade of an element.
+ * @param value The colour value to resolve.
+ * @param element The element whose cascade applies.
+ * @returns The value with resolvable variables substituted.
+ * @throws When a referenced property is set but its winning value is unknown.
+ */
+function resolveVariables(value: string, element: Element): string {
   return value.replace(
     /var\(\s*(--[\w-]+)\s*(?:,\s*([^)]*))?\)/g,
     (whole, name: string, fallback: string | undefined) => {
-      const defined = customProperties.get(name);
-      if (defined) return resolveVariables(defined);
-      if (fallback) return resolveVariables(fallback.trim());
-      return whole;
+      const declared = effectiveCustomProperty(element, name);
+      const source =
+        declared ?? (fallback ? fallback.trim() : undefined) ?? customProperties.get(name);
+      if (source === undefined) {
+        throw new Error(
+          `Unresolved custom property ${name} on <${element.tagName.toLowerCase()}>`,
+        );
+      }
+      const resolved = resolveVariables(source, element);
+      if (/var\(/.test(resolved)) {
+        throw new Error(
+          `Unresolved custom property ${name} on <${element.tagName.toLowerCase()}>`,
+        );
+      }
+      return resolved;
     },
   );
 }
@@ -155,7 +193,7 @@ export function parseColor(value: string): Color {
   }
 
   const oklch = text.match(
-    /^oklch\(\s*([\d.]+)(%)?\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*([\d.]+))?\s*\)$/i,
+    /^oklch\(\s*([\d.]+)(%)?\s*([\d.]+)\s+([\d.]+)(?:\s*\/\s*([\d.]+))?\s*\)$/i,
   );
   if (oklch) {
     const lightness = Number(oklch[1]) / (oklch[2] === "%" ? 100 : 1);
@@ -242,7 +280,7 @@ export function readBackgroundLayer(element: Element): BackgroundLayer {
   if (!value || value === "transparent" || /^rgba\(\s*0,\s*0,\s*0,\s*0\s*\)$/.test(value)) {
     return { color: null, hasImage: false };
   }
-  const resolved = resolveVariables(value);
+  const resolved = resolveVariables(value, element);
   try {
     const color = parseColor(resolved);
     if (color.a === 0) return { color: null, hasImage: false };
@@ -287,6 +325,9 @@ export function contrastOf(element: Element): number {
   ensureCascade();
   const value = window.getComputedStyle(element).color;
   if (!value) throw new Error(`Unresolved foreground colour: ${element.tagName}`);
-  const foreground = blend(parseColor(resolveVariables(value)), background);
+  const foreground = blend(
+    parseColor(resolveVariables(value, element)),
+    background,
+  );
   return contrastRatio(foreground, background);
 }

@@ -4,6 +4,7 @@
  */
 import { describe, expect, it } from "vitest";
 import {
+  contrastOf,
   contrastRatio,
   parseColor,
   readBackgroundLayer,
@@ -152,6 +153,47 @@ describe("WCAG contrast fixture", () => {
       expect(
         contrastRatio(parseColor("rgb(118, 118, 118)"), backdrop),
       ).toBeLessThan(4.5);
+    } finally {
+      leaf.remove();
+    }
+  });
+
+  it("uses an inline custom property override on the element", () => {
+    const leaf = document.createElement("span");
+    leaf.style.setProperty("--color-slate-900", "#faf9f7");
+    leaf.style.color = "var(--color-slate-900)";
+    leaf.style.backgroundColor = "rgb(250, 249, 247)";
+    document.body.appendChild(leaf);
+    try {
+      expect(contrastOf(leaf)).toBeCloseTo(1, 1);
+    } finally {
+      leaf.remove();
+    }
+  });
+
+  it("uses a custom property override set on an ancestor", () => {
+    const parent = document.createElement("div");
+    parent.style.setProperty("--color-slate-900", "#faf9f7");
+    parent.style.backgroundColor = "rgb(250, 249, 247)";
+    const leaf = document.createElement("span");
+    leaf.style.color = "var(--color-slate-900)";
+    parent.appendChild(leaf);
+    document.body.appendChild(parent);
+    try {
+      expect(contrastOf(leaf)).toBeCloseTo(1, 1);
+    } finally {
+      parent.remove();
+    }
+  });
+
+  it("throws when a custom property override cannot be resolved", () => {
+    const leaf = document.createElement("span");
+    leaf.style.setProperty("--probe-chain", "var(--probe-missing)");
+    leaf.style.color = "var(--probe-chain)";
+    leaf.style.backgroundColor = "rgb(255, 255, 255)";
+    document.body.appendChild(leaf);
+    try {
+      expect(() => contrastOf(leaf)).toThrow(/Unresolved custom property/);
     } finally {
       leaf.remove();
     }
