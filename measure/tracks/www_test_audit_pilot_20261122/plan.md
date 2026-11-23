@@ -342,6 +342,31 @@ Each task below is one commit for one class.
   GREEN log: measure/runs/www_test_audit_pilot_20261122/green-0f63c5a9a.log.
   COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-0f63c5a9a.log.
   Line coverage is 91.76 percent, above the 85.52 floor.
+- [x] 3.8 Review A remediation F21 (93a16fe3b)
+  Commit: 93a16fe3bcd37d303faa78f5c0d8975ce376063b.
+  Proof: measure/runs/www_test_audit_pilot_20261122/proof-f21-phase-4-browser-regressions.log.
+  Proof: measure/runs/www_test_audit_pilot_20261122/proof-f21-phase-4-browser-regressions-remaining.log.
+  cases_before=1394, cases_after=1396. The two new cascade unit cases add the count.
+  The class-token background reader is gone. real-css.ts exports the compiled
+  stylesheet and a copy with @layer wrappers removed and @property rules
+  dropped, because jsdom ignores layered rules and cannot parse @property.
+  contrast.ts injects that stylesheet once into the test document and reads
+  color and background-color with window.getComputedStyle. jsdom then applies
+  class, type, id and descendant selectors. Recursive composition stays:
+  opaque stops, translucent composes over the parent backdrop, transparent is
+  skipped, background images and unreadable values throw, and unresolved
+  foreground throws.
+  The unit test adds a case where a type-selector body background and a
+  descendant-selector translucent layer compose to a hand-computed backdrop
+  and ratio. It adds a case where the body rule is the only painted background
+  and the resolver uses it instead of white.
+  Both R2 contrast tests still pass on the shipped pages. A sky-300 contact
+  eyebrow and a slate-400 pricing title each failed the numeric contrast
+  assertion with exit 1. Each production file was restored.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-93a16fe3b.json.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-93a16fe3b.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-93a16fe3b.log.
+  Line coverage is 91.83 percent, above the 85.52 floor.
 
 ## Phase 4: Pilot report
 
