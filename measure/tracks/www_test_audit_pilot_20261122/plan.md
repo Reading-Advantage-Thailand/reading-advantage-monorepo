@@ -469,6 +469,24 @@ Each task below is one commit for one class.
   GREEN log: measure/runs/www_test_audit_pilot_20261122/green-6be92dd85.log.
   COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-6be92dd85.log.
   Line coverage is 92.01 percent, above the 85.52 floor.
+- [x] 3.14 Phase acceptance remediation F25 (7b62bed78)
+  Commit: 7b62bed78b4bfefdb6abecf2579869150c2de476.
+  Proof: measure/runs/www_test_audit_pilot_20261122/proof-f25.log.
+  cases_before=1408, cases_after=1410. The two new symlink unit cases add the count.
+  The loader accepts a regular file or a symbolic link whose target, checked
+  with statSync, is a regular file. A broken link is reported by brokenPostRefs
+  and asserted empty in both discovery cases, so it is named instead of
+  crashing or being skipped. Dotfiles, the extension rule and the -segments.json
+  allowance are unchanged.
+  The new unit test uses a temporary directory to prove a symlinked blank-title
+  .md post is loaded and that a broken link is flagged.
+  The proof symlinks a blank-title file outside the posts dir as
+  en/zz-symlink-probe.md. The title rule fails and names en/zz-symlink-probe.
+  Both temporary paths were removed. No post or production file changed.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-7b62bed78.json.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-7b62bed78.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-7b62bed78.log.
+  Line coverage is 92.07 percent, above the 85.52 floor.
 
 ## Phase 4: Pilot report
 
