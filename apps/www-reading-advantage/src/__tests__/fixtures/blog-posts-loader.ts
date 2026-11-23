@@ -28,10 +28,11 @@ export interface PostEntry {
  * A case-insensitive .md match that is not exactly .md is mislabelled, as are
  * other Markdown-like extensions and files with no extension. Data companions
  * such as -segments.json do not match and stay ignored.
+ * @param base The posts root, defaulting to the app's posts directory.
  * @returns One "<locale>/<file>" reference per mislabelled post file.
  */
-export function mislabelledPostRefs(): string[] {
-  return listPostFiles().filter((ref) => {
+export function mislabelledPostRefs(base?: string): string[] {
+  return listPostFiles(base).filter((ref) => {
     if (/\.md$/i.test(ref)) return !ref.endsWith(".md");
     if (/\.(?:mdx|markdown|mdown|mkd)$/i.test(ref)) return true;
     return !ref.includes(".");
@@ -39,22 +40,25 @@ export function mislabelledPostRefs(): string[] {
 }
 
 /**
- * Lists every non-hidden regular file in each locale directory.
+ * Lists every regular file in each locale directory, including dotfiles.
+ * @param base The posts root, defaulting to the app's posts directory.
  * @returns One "<locale>/<file>" reference per file, including non-Markdown files.
  */
-export function listPostFiles(): string[] {
+export function listPostFiles(base: string = POSTS_BASE): string[] {
+  // blog.ts markdownSlugs filters only by the .md suffix; dot-prefixed names
+  // are real posts there, so this sweep must not skip them either.
   const localeDirs = fs
-    .readdirSync(POSTS_BASE, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."))
+    .readdirSync(base, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name);
 
   const refs: string[] = [];
   for (const locale of localeDirs) {
-    const entries = fs.readdirSync(path.join(POSTS_BASE, locale), {
+    const entries = fs.readdirSync(path.join(base, locale), {
       withFileTypes: true,
     });
     for (const entry of entries) {
-      if (!entry.isFile() || entry.name.startsWith(".")) continue;
+      if (!entry.isFile()) continue;
       refs.push(`${locale}/${entry.name}`);
     }
   }
@@ -63,16 +67,17 @@ export function listPostFiles(): string[] {
 
 /**
  * Parses the Markdown posts. Non-Markdown files are skipped, never parsed.
+ * @param base The posts root, defaulting to the app's posts directory.
  * @returns One parsed entry per .md file across all locales.
  */
-export function loadAllPosts(): PostEntry[] {
+export function loadAllPosts(base: string = POSTS_BASE): PostEntry[] {
   const entries: PostEntry[] = [];
-  for (const ref of listPostFiles()) {
+  for (const ref of listPostFiles(base)) {
     const separator = ref.indexOf("/");
     const locale = ref.slice(0, separator);
     const file = ref.slice(separator + 1);
     if (!file.endsWith(".md")) continue;
-    const filePath = path.join(POSTS_BASE, locale, file);
+    const filePath = path.join(base, locale, file);
     const raw = fs.readFileSync(filePath, "utf8");
     const { data, content } = matter(raw);
     entries.push({
