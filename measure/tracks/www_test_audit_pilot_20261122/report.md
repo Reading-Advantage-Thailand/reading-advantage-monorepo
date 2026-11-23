@@ -67,14 +67,14 @@ Every named log exists. GREEN logs end with the Vitest summary; COVERAGE logs en
 Data in this section comes from `measure/tracks/www_test_audit_pilot_20261122/classification.md`.
 
 - **D1 source-text**, 67 cases. Seven deletes remove static source reads with no rendered output. Sixty rewrites keep the rule through rendered or real-file behavior. Sources: `classification.md`, D1 rows section; `plan.md`, Phase 2 tasks. Examples: CEFR-only copy, real cover files, compact hero height, truthful claims.
-- **D2 duplicate**, 22 cases deleted. The kept duplicates are named in the `classification.md` D2 rows table. The Primary containers and order cases stay in `page.content.test.tsx`. The reading-time number cases stay in `blog.test.ts`. The favicon byte cases stay in `real-logos-captures-adversarial.test.ts`. The removed-literal sweep stays in `real-logos-adversarial.test.ts`. The retired picture set stays in `www-tutor-followups.adversarial.test.ts`. The M4 slot order stays in `tutor-screens.test.ts`.
+- **D2 duplicate**, 22 cases deleted. The original explicit-English row was not kept as a same-rule duplicate. Commit `fb5622ed7` restored the test `returns the en directory when locale is en` in `src/lib/blog-locale.test.ts`. The omitted-argument case checks a different rule. The Primary containers and order cases stay in `page.content.test.tsx`. The reading-time number cases stay in `blog.test.ts`. The favicon byte cases stay in `real-logos-captures-adversarial.test.ts`. The removed-literal sweep stays in `real-logos-adversarial.test.ts`. The retired picture set stays in `www-tutor-followups.adversarial.test.ts`. The M4 slot order stays in `tutor-screens.test.ts`.
 - **D3 dead target**, zero rows. No commit and no gate. Both image-source suites read sources that exist. Source: `classification.md`, D3 rows section.
-- **D4 weak check**, six cases deleted. Three navigation cases echoed a mocked locale. Two capture cases pinned the test file own names. One image case returned early without an environment flag. Source: `classification.md`, D4 rows section.
+- **D4 weak check**, six cases deleted. Commit `0d705612d` deleted three navigation cases that asserted the active locale through the real `useCurrentLocale` hook; commit `9eb3b9c4f` restored the Thai and Chinese cases. Two capture cases pinned the test file own names. One image case returned early without an environment flag. Source: `classification.md`, D4 rows section.
 - **D5 copy pin**, 221 cases. Four parts replace word-for-word pins with locale-key checks. The final case count is 3035 cases (`gate-407c5d9.json`). Money pins stay as K. Source: `classification.md`, D5 rows section.
 - **R1 over-mocked**, zero rows. Boundary mocks stand in for adapters, not for code under test. Source: `classification.md`, R1 rows section.
 - **R2 brittle**, 16 cases rewritten. Fourteen R2 cases were rewritten in nine files in `adf24e723`. Two cases were rewritten earlier in `0be4a0374`. The checks now read computed CSS, real color tokens, and DOM behavior. Sources: `classification.md`, R2 rows section; `plan.md`, Phase 3 tasks; `git show --stat adf24e723`.
 - **R3 unclear**, zero rows. Case names already state a rule or contract id. Source: `classification.md`, R3 rows section.
-- **Blog merge**, one case per rule. Fifteen rule checks and two discovery cases remain. The loader reads only names ending in the exact lowercase `.md` suffix (`fixtures/blog-posts-loader.ts`). Dot-prefixed `.md` posts and symlinks to `.md` files restore parity with the phase-base test and `blog.ts`. The `.mdx`, uppercase `.MD` and non-file entry checks are stricter naming validation. They are not parity checks. Sources: `plan.md`, blog merge task; `proof-f22.log`, `proof-f25.log`, `proof-adv8.log`, `proof-adv11.log`, `proof-adv22.log`.
+- **Blog merge**, one case per rule. Fifteen rule checks and two discovery cases remain. The loader reads only names ending in the exact lowercase `.md` suffix (`fixtures/blog-posts-loader.ts`). Dot-prefixed `.md` posts and symlinks to `.md` files restore parity with the phase-base test and `blog.ts`. A non-file entry named with lowercase `.md` also keeps parity. The phase-base test called readFileSync on every `.md` name. A directory named `x.md` failed with EISDIR. The `.mdx` and uppercase `.MD` name checks are new, stricter naming validation, not parity checks. Sources: `plan.md`, blog merge task; `proof-f22.log`, `proof-f25.log`, `proof-adv8.log`, `proof-adv11.log`, `proof-adv22.log`.
 - **Lint warnings**, three. Only the unused `beforeEach` import predates Phase 2. D5 part 2 made `sectionOf` and `copy` unused. Source: `review-a-c673f21.json`.
 
 ## 4. K rows kept
@@ -83,7 +83,7 @@ Data in this section comes from `measure/tracks/www_test_audit_pilot_20261122/cl
 
 The Mutation check column gives the status of each K row. A proof name is listed only when that proof breaks the rule of THAT K row. I read each cited proof log and compared its failing target with the K rule in the `classification.md` K rows section. A value of `none` means no proof of that row's own rule exists. The Other file proofs column records proofs that break another rule in the same file. A passing run is named as such and is not a mutation proof.
 
-The blog validation row has mixed evidence. `proof-adv8.log` and `proof-adv11.log` name a failing `.md` extension assertion. That assertion belongs to the blog K row naming checks. The same two logs also assert new discovery conditions for `.mdx` and uppercase `.MD` names. Those discovery conditions are stricter naming validation, not parity with the phase-base test. `proof-adv22.log` asserts a non-file entry condition. No Stryker baseline ran. The www app imports no core module.
+The blog validation row has mixed evidence. `proof-adv8.log` and `proof-adv11.log` name a failing `.md` extension assertion. That assertion belongs to the blog K row naming checks. The same two logs also assert new discovery conditions for `.mdx` and uppercase `.MD` names. Those discovery conditions are stricter naming validation, not parity with the phase-base test. `proof-adv22.log` asserts a lowercase `.md` non-file entry, which keeps parity with the phase-base test. No Stryker baseline ran. The www app imports no core module.
 
 | K file group | Cases | Mutation check | Other file proofs |
 |---|---|---|---|
@@ -156,7 +156,7 @@ The blog validation row has mixed evidence. `proof-adv8.log` and `proof-adv11.lo
 | src/lib/__tests__/tutor-screens.test.ts | 12 | none |  |
 | src/lib/blog-blocks.test.ts | 18 | none |  |
 | src/lib/blog-draft.test.ts | 6 | none |  |
-| src/lib/blog-posts-validation.test.ts | 1726 | proof-blog-merge.log, proof-f25.log, proof-f22.log, proof-adv8.log, proof-adv11.log (title, slug and .md extension naming rules) | proof-adv8.log, proof-adv11.log (new .mdx and uppercase .MD discovery assertions), proof-adv22.log (non-file entry assertion) |
+| src/lib/blog-posts-validation.test.ts | 1726 | proof-blog-merge.log, proof-f25.log, proof-f22.log, proof-adv8.log, proof-adv11.log (title, slug and .md extension naming rules) | proof-adv8.log, proof-adv11.log (new .mdx and uppercase .MD discovery assertions), proof-adv22.log (lowercase .md non-file parity assertion) |
 | src/lib/blog.test.ts | 28 | none |  |
 | src/lib/tutor-commission.test.ts | 34 | none |  |
 | src/lib/tutor-commission.adversarial.test.ts | 24 | none |  |
@@ -165,7 +165,7 @@ The blog validation row has mixed evidence. `proof-adv8.log` and `proof-adv11.lo
 | src/lib/wave2-product-claim-helper.test.ts | 12 | none |  |
 | src/lib/__tests__/primary-page-images.test.ts | 9 | none |  |
 
-The money rules stay through the seven tutor-commission files named in this section. The per-row Mutation check and Other file proofs columns above are the record required by the `spec.md` Classes section. The 77 rows still sum to 2843 cases in the `classification.md` Summary table.
+The money rules stay through the seven tutor-commission files named in this section. The per-row Mutation check and Other file proofs columns above are the record required by the `spec.md` Out of scope section. The 77 rows still sum to 2843 cases in the `classification.md` Summary table.
 
 ## 5. Finding history
 
