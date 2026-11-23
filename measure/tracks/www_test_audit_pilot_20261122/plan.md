@@ -214,6 +214,33 @@ Each task below is one commit for one class.
   COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-8d5ad1c4.log.
   Gate: measure/runs/www_test_audit_pilot_20261122/gate-8d5ad1c4.json.
 
+- [x] 2.13 Adversarial remediation ADV-4 to ADV-6 (dce443985)
+  Fix commit: dce44398537f4b57d24cb4611a53847805466cc1. D5: the shared
+  eligibility fixture apps/www-reading-advantage/src/__tests__/fixtures/reedy-eligibility.ts.
+  The English inactive set adds formerly, previously, no longer, lapsed, and
+  expired. The Thai set adds หมดอายุ. The Chinese set adds 过期 and 已过期.
+  A positive check requires each shipped eligibility sentence to equal one
+  approved sentence per locale, so any other rewording fails. The approved
+  list holds four sentences per locale, written in the fixture, and every
+  shipped eligibility sentence matches one of them. Probe expectations stayed
+  as committed at role base 7b15edd95. The probe file passes 9 of 9, the
+  shipped copy passes, and the negative controls still break.
+  phase_base_sha: a1caa58034f6455e91205a5673ef172a974a7992.
+  role_base_sha: 7b15edd958f7c06651922e19c189b7e238250e5b.
+  Proof log: measure/runs/www_test_audit_pilot_20261122/proof-adv456.log.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-dce4439.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-dce4439.log.
+  Check-types log: measure/runs/www_test_audit_pilot_20261122/check-types-dce4439.log.
+  Lint log: measure/runs/www_test_audit_pilot_20261122/lint-dce4439.log.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-dce4439.json.
+  The four gates exited 0 through heavy-run. Line coverage is 91.6 percent,
+  above the 85.52 floor. The lint log holds zero errors and three known
+  warnings in files this commit does not touch. The gates ran on the exact
+  content captured by the fix commit; no file changed between the runs and
+  the commit. The implementation and plan commit headers were shortened from
+  the requested wording to satisfy the 100-character commitlint limit; the
+  meaning and track id stay.
+
 ### Recorded deviations
 
 - (F11) D1 commit 0be4a0374 also rewrote the two R2 cases of classification.md:195 (rendered full-width pictured row; text-only exclusion); history is not rewritten; task 3.2 counts them as done in 0be4a0374. Approved by the PM as a recorded exception on 2026-11-23 (Review A round 4, review-a-cab8ffd.json).
