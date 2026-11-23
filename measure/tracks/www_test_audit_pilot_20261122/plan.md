@@ -629,3 +629,12 @@ Each task below is one commit for one class.
   Both plan.md and report.md were scanned for 'all counts', 'no count' and
   'every count'. No such phrase remains.
   No test or production file changed in this round.
+- [x] 4.11 Run-file count remediation F49 (e652235f8)
+  Commit: e652235f8c59c6194e8ab019e4af9dfa14276b03.
+  Review log: measure/runs/www_test_audit_pilot_20261122/review-a-1fcebee.json.
+  Exhaustive digit scan over plan.md and report.md found the ungated count of
+  gate JSONs in task 4.5. It was dated to head cb12d6f0f, as was the role JSON
+  count. The gate-JSON fact was checked over all current gate JSON files: every
+  one holds green_exit_code. Tasks 4.9 and 4.10 now name both dated
+  measurements, not one. Re-run of the scan found no undated count of run files.
+  No test or production file changed in this round.
