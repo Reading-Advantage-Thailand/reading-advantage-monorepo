@@ -450,6 +450,25 @@ Each task below is one commit for one class.
   GREEN log: measure/runs/www_test_audit_pilot_20261122/green-a53d426d5.log.
   COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-a53d426d5.log.
   Line coverage is 91.79 percent, above the 85.52 floor.
+- [x] 3.13 Adversarial remediation ADV-17 to ADV-19 (6be92dd85)
+  Commit: 6be92dd85838aeead1d28b160d5f1cad5e79e902.
+  Proof: measure/runs/www_test_audit_pilot_20261122/proof-adv17.log.
+  cases_before=1405, cases_after=1408. One committed probe case and two new
+  unit cases add the count.
+  The stylesheet guard now runs at read time over every document.styleSheets
+  entry, including the injected compiled copy, and recurses into grouping
+  at-rules. A style rule outside :root, :host or html that declares a --color-*
+  token throws with the selector and name when the tested element or any
+  ancestor matches it. An unevaluable selector throws. Inline --color-*
+  declarations still throw. The root token map stays the only resolved source.
+  The two new unit cases cover an ancestor match (ADV-18) and a rule inside
+  @media (ADV-19). The probe expectations were not changed.
+  The proof records the probe at 4 of 4, the fixture at 16 of 16, and both R2
+  contrast tests passing with no false throw. No production edit was needed.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-6be92dd85.json.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-6be92dd85.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-6be92dd85.log.
+  Line coverage is 92.01 percent, above the 85.52 floor.
 
 ## Phase 4: Pilot report
 
