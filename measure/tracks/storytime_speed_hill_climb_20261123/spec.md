@@ -138,6 +138,7 @@ inside `div[data-entry-art-column]` (`app/[locale]/sign-in/page.tsx`).
   `login-proxy.test.ts`.
 - AC-6: A local Lighthouse mobile run on `/th/sign-in`, 3 runs, shows a median LCP under 2500 ms.
   Each run goes through `heavy-run.sh` with `HEAVY_PRIORITY=p1`.
+  PM decision 2026-11-24: "A. Accept 2.8 s as the first step: LCP 4.0 to 2.8 s and score 0.77 to 0.95 is a clear gain. Close 1.1.5 with the gap recorded, after Review A r2 and the browser look 1.1.7 pass. The art change joins the launch-day batch." The recorded median is 2815.5 ms. The gap to 2500 ms is accepted and recorded in the track plan.
 - AC-7: The browser look passes at 390, 980, and 1280 px. The art shows the same picture, crop,
   corner radius, and shadow. The page holds no horizontal scroll and no new layout shift.
 - AC-8: Review A (correctness) passes with no open Blocker or Major finding.
