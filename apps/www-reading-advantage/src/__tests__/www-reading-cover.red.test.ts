@@ -4,6 +4,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render } from "@testing-library/react";
 import FeaturesPage from "@/app/[locale]/(marketing)/features/page";
 import enMessages from "@/locales/en";
+import {
+  computedForElement,
+  declarationsForClass,
+} from "./fixtures/real-css";
 
 /*
  * Red r9 pins for F4 (track www_features_pricing_20261120, UX r7 at
@@ -155,6 +159,33 @@ function renderedReadingSize(): {
   };
 }
 
+/** Crop-fit declarations shipped by an element's own classes. */
+function cropFits(element: HTMLElement): string[] {
+  return Array.from(element.classList)
+    .map((token) => declarationsForClass(token))
+    .filter((declaration) => /object-fit\s*:\s*(cover|fill)/.test(declaration));
+}
+
+/** Computed and shipped object-fit behavior of the reading picture. */
+function readingPictureFit(): {
+  wrapperCrops: string[];
+  imageCrops: string[];
+  computed: string;
+} {
+  const image = document.querySelector(
+    '[data-testid="program-card-reading"] img',
+  );
+  if (!(image instanceof HTMLElement)) {
+    return { wrapperCrops: [], imageCrops: [], computed: "" };
+  }
+  const wrapper = image.parentElement;
+  return {
+    wrapperCrops: wrapper instanceof HTMLElement ? cropFits(wrapper) : [],
+    imageCrops: cropFits(image),
+    computed: computedForElement(image, ["object-fit"])["object-fit"],
+  };
+}
+
 afterEach(() => {
   cleanup();
 });
@@ -230,12 +261,10 @@ describe("F4: the rendered reading picture is not cropped", () => {
   });
 
   it("control: neither the reading picture wrapper nor image applies a crop fit", () => {
-    const { className, pictureClassName } = renderedReadingSize();
-    const pictureClasses = `${pictureClassName} ${className}`;
-    expect(
-      pictureClasses,
-      `reading picture wrapper or image uses a crop fit (classes: ${pictureClasses})`,
-    ).not.toMatch(/object-(?:cover|fill)/);
+    const fit = readingPictureFit();
+    expect(fit.computed, "reading image must not crop to cover").not.toBe("cover");
+    expect(fit.wrapperCrops, "wrapper crop-fit declarations").toEqual([]);
+    expect(fit.imageCrops, "image crop-fit declarations").toEqual([]);
   });
 });
 

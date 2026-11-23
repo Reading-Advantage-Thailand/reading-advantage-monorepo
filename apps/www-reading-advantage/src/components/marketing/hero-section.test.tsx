@@ -1,6 +1,20 @@
 import { describe, it, expect, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import HeroSection from "@/components/marketing/hero-section";
+import { computedForElement } from "@/__tests__/fixtures/real-css";
+
+/** The computed gradient stops of the hero overlay. */
+function gradientOverlay(root: HTMLElement): Record<string, string> {
+  const overlay = root.querySelector("section")?.firstElementChild;
+  if (!(overlay instanceof HTMLElement)) return {};
+  return computedForElement(overlay, [
+    "--tw-gradient-position",
+    "--tw-gradient-from",
+    "--tw-gradient-via",
+    "--tw-gradient-to",
+    "background-image",
+  ]);
+}
 
 afterEach(() => {
   cleanup();
@@ -35,14 +49,13 @@ describe("HeroSection", () => {
     const rendered = render(
       <HeroSection title="Test Title" description="Test description" />,
     );
-    const gradient = rendered.container.querySelector("div.absolute.inset-0");
+    const gradient = gradientOverlay(rendered.container);
 
-    expect(gradient).toHaveClass(
-      "bg-gradient-to-br",
-      "from-amber-50",
-      "via-orange-50",
-      "to-sky-50",
-    );
+    expect(gradient["--tw-gradient-position"]).toBe("to bottom right in oklab");
+    expect(gradient["--tw-gradient-from"]).toBe("oklch(98.7%0.022 95.277)");
+    expect(gradient["--tw-gradient-via"]).not.toBe("");
+    expect(gradient["--tw-gradient-to"]).not.toBe("");
+    expect(gradient["background-image"]).toContain("linear-gradient");
   });
 
   it("replaces the default gradient with a custom gradient", () => {
@@ -53,17 +66,13 @@ describe("HeroSection", () => {
         customGradient="bg-gradient-to-r from-violet-500 to-fuchsia-500"
       />,
     );
-    const gradient = rendered.container.querySelector("div.absolute.inset-0");
+    const gradient = gradientOverlay(rendered.container);
 
-    expect(gradient).toHaveClass(
-      "bg-gradient-to-r",
-      "from-violet-500",
-      "to-fuchsia-500",
-    );
-    expect(gradient).not.toHaveClass("bg-gradient-to-br");
-    expect(gradient).not.toHaveClass("from-amber-50");
-    expect(gradient).not.toHaveClass("via-orange-50");
-    expect(gradient).not.toHaveClass("to-sky-50");
+    expect(gradient["--tw-gradient-position"]).toBe("to right in oklab");
+    expect(gradient["--tw-gradient-from"]).toContain("violet");
+    expect(gradient["--tw-gradient-via"]).toBe("");
+    expect(gradient["--tw-gradient-to"]).toContain("fuchsia");
+    expect(gradient["background-image"]).toContain("linear-gradient");
   });
 
   it("renders the CTA button with correct href when ctaButton prop is provided", () => {
