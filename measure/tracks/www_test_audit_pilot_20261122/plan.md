@@ -277,11 +277,30 @@ Each task below is one commit for one class.
 - [x] 3.3 Rewrite class R3 (no rows) (8a126f612)
   The R3 table holds no rows. Case names already state the rule or contract
   id. No rename or split was needed.
-- [ ] 3.4 Checkpoint Phase 3. Test: (b), (c).
-  Record each commit SHA and its gate log in the task line.
-- [ ] 3.5 Merge blog-posts-validation into one case per rule (separate commit). Test: (b), (c), (d).
-  Counts toward the 20 % target only if the merged test still fails on one
-  broken post and names that post (classification.md "Approved merge line").
+- [x] 3.4 Checkpoint Phase 3 (1d3e467f)
+  R2: adf24e72376a4f061b9f3c435b4b4f5a62334fae.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-adf24e7.json.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-adf24e7.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-adf24e7.log.
+  Merge: 257a6b0cdd54b3448a16370ff138750ae1fc97f5.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-257a6b0c.json.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-257a6b0c.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-257a6b0c.log.
+  R1 and R3 had no rows, so neither class has a commit.
+- [x] 3.5 Merge blog-posts-validation into one case per rule (257a6b0cd)
+  Commit: 257a6b0cdd54b3448a16370ff138750ae1fc97f5.
+  Proof: measure/runs/www_test_audit_pilot_20261122/proof-blog-merge.log.
+  cases_before=3094, cases_after=1385, cut=1709 cases.
+  The validation file fell from 1726 per-post cases to 17 cases: fifteen rule
+  cases and two discovery cases. Each rule case walks every post and collects
+  one "<locale>/<slug>: <rule>" line per broken post.
+  Three mutations of one en post each exited 1 and named
+  en/1-district-1-quality-school with the broken rule. The post file was
+  restored after each mutation. No post file changed in the commit.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-257a6b0c.json.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-257a6b0c.log.
+  Line coverage is 91.6 percent, above the 85.52 floor and the 86.52 baseline.
+  The merge counts toward the 20 % target under the Approved merge line.
 
 ## Phase 4: Pilot report
 
