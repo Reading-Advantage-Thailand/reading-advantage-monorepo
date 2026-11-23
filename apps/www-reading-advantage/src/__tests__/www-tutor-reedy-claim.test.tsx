@@ -13,6 +13,10 @@ import * as pageCopy from "@/locales/pages/products/tutor-advantage";
 import * as componentCopy from "@/locales/components/products/tutor-advantage";
 import TutorAdvantage from "@/app/[locale]/(marketing)/products/tutor-advantage/page";
 import { expectKeysInEveryLocale } from "@/__tests__/fixtures/locale-key-check";
+import {
+  eligibilityBreaks,
+  type EligibilityFact,
+} from "@/__tests__/fixtures/reedy-eligibility";
 
 /** The required locale keys of the FAQ items. The list is written here, not read from a locale file. */
 const FAQ_ITEM_KEYS = [
@@ -41,61 +45,6 @@ type Dict = Record<string, unknown>;
 
 const LOCALES = ["en", "th", "zh"] as const;
 type Locale = (typeof LOCALES)[number];
-
-/** The two AC-24 eligibility limits that the Reedy copy must keep. */
-type EligibilityFact = "activePackage" | "finishedLesson";
-
-/**
- * The words that carry each AC-24 eligibility limit in each locale.
- * The check reads the facts, not the whole sentence.
- */
-const ELIGIBILITY: Record<
-  Locale,
-  { readonly activePackage: readonly string[]; readonly finishedLesson: readonly string[] }
-> = {
-  en: {
-    activePackage: ["active", "package"],
-    finishedLesson: ["lessons", "finished"],
-  },
-  th: {
-    activePackage: ["แพ็กเกจ", "ใช้งานอยู่"],
-    finishedLesson: ["บทเรียน", "เรียนจบแล้ว"],
-  },
-  zh: {
-    activePackage: ["有效", "课程包"],
-    finishedLesson: ["课程", "已完成"],
-  },
-};
-
-/**
- * Words that reverse an eligibility clause. A sentence that carries one of
- * these does not state the AC-24 fact, even when it repeats the marker words.
- */
-const NEGATION_PATTERNS: Record<Locale, readonly RegExp[]> = {
-  en: [/\bwithout\b/i, /\bunfinished\b/i, /\bnot\b/i, /\bnever\b/i, /\bno\b/i, /\beveryone\b/i, /\banyone\b/i],
-  th: [/ไม่/, /ทุกคน/],
-  zh: [/未/, /不/, /没有/, /所有/, /任何/],
-};
-
-/**
- * The word that carries the active-package limit in each locale.
- * The check needs the word itself, not a part of another word.
- */
-const ACTIVE_WORD: Record<Locale, RegExp> = {
-  en: /\bactive\b/i,
-  th: /ใช้งานอยู่/,
-  zh: /有效/,
-};
-
-/**
- * The words that reverse the active-package limit in each locale.
- * A text with one of them does not state the limit.
- */
-const INACTIVE_PATTERNS: Record<Locale, readonly RegExp[]> = {
-  en: [/\binactive\b/i],
-  th: [/ไม่ใช้งาน/],
-  zh: [/无效/, /非有效/],
-};
 
 const PAGES: Record<Locale, Dict> = {
   en: pageCopy.en as unknown as Dict,
@@ -170,44 +119,6 @@ function text(dict: Dict, path: string): string {
   }
   if (typeof cur !== "string") throw new Error(`not text: ${path}`);
   return cur;
-}
-
-/**
- * Lists the AC-24 eligibility rules that one text breaks.
- * @param value The text to check.
- * @param locale The locale of the text.
- * @param facts The eligibility limits to check.
- * @returns One line per broken rule.
- */
-function eligibilityBreaks(
-  value: string,
-  locale: Locale,
-  facts: readonly EligibilityFact[],
-): string[] {
-  const breaks: string[] = [];
-  for (const pattern of NEGATION_PATTERNS[locale]) {
-    if (pattern.test(value)) {
-      breaks.push(`${locale}: the eligibility clause must not carry ${pattern}`);
-    }
-  }
-  for (const pattern of INACTIVE_PATTERNS[locale]) {
-    if (pattern.test(value)) {
-      breaks.push(
-        `${locale}: the eligibility clause must not name an inactive package (${pattern})`,
-      );
-    }
-  }
-  for (const fact of facts) {
-    for (const marker of ELIGIBILITY[locale][fact]) {
-      if (!value.includes(marker)) {
-        breaks.push(`${locale}: ${fact} must carry "${marker}"`);
-      }
-    }
-  }
-  if (facts.includes("activePackage") && !ACTIVE_WORD[locale].test(value)) {
-    breaks.push(`${locale}: activePackage must carry the active word`);
-  }
-  return breaks;
 }
 
 /**
@@ -320,6 +231,34 @@ describe("AC-24: the eligibility scan detects an inactive package", () => {
         breaks.some((line) => line.includes("inactive package")),
         locale,
       ).toBe(true);
+    }
+  });
+
+  it("rejects every wider reversal shape", () => {
+    const reversals: Record<Locale, readonly string[]> = {
+      en: [
+        "Open to students with a non-active class package, on lessons they finished.",
+        "Open to students with an in-active class package, on lessons they finished.",
+        "Open to students with a nonactive class package, on lessons they finished.",
+      ],
+      th: [
+        "เปิดให้นักเรียนที่ยกเลิกแพ็กเกจคลาสที่ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว",
+        "เปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ไม่ได้ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว",
+      ],
+      zh: ["面向持有非有效课程包的学生，用于已完成的课程。"],
+    };
+    for (const locale of LOCALES) {
+      for (const reversal of reversals[locale]) {
+        const breaks = eligibilityBreaks(reversal, locale, [
+          "activePackage",
+          "finishedLesson",
+        ]);
+        expect(breaks, `${locale}: ${reversal}`).not.toEqual([]);
+        expect(
+          breaks.some((line) => line.includes("inactive package")),
+          `${locale}: ${reversal}`,
+        ).toBe(true);
+      }
     }
   });
 });
