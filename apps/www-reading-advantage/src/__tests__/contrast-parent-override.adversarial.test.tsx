@@ -1,13 +1,12 @@
 /**
- * ADVERSARIAL (ADV-15): the contrast helper reads jsdom's computed
- * background-color, which pre-resolves var() from the :root token map and
- * ignores an ancestor's inline custom property override. A correctly-cased
- * parent override of --color-slate-900 does not change the layer the ratio
- * is computed from, so a component that fixes contrast through an inline
- * token override passes the contrast check with the wrong colour.
- * Route-to-Green: resolve var() from the element cascade (cascaded value +
- * effectiveCustomProperty) instead of trusting jsdom's pre-resolved computed
- * background-color.
+ * ADVERSARIAL probes for the contrast helper. ADV-15 (closed): the helper
+ * fails closed and throws when an element or ancestor declares a --color-*
+ * token inline, because jsdom pre-resolves var() from :root and the helper
+ * cannot know which colour a browser would paint. ADV-17 (open): the guard
+ * scans only the compiled stylesheet at module load, so a colour-token rule
+ * injected through a <style> element at test time is not seen and the helper
+ * computes from :root instead of throwing. Route-to-Green: scan the document
+ * stylesheets present at read time, or hook injected styles.
  */
 import { cleanup, render } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
@@ -61,5 +60,23 @@ describe("contrast helper custom property cascade", () => {
     expect(() => readBackgroundLayer(rendered.getByTestId("child"))).toThrow(
       /--color-slate-900/,
     );
+  });
+
+  it("throws when an injected class rule declares a colour token (ADV-17)", () => {
+    const style = document.createElement("style");
+    style.textContent = ".adv-token-override { --color-slate-900: #ff0000; }";
+    document.head.appendChild(style);
+    try {
+      const rendered = render(
+        <div className="adv-token-override">
+          <div className="bg-slate-900" data-testid="child" />
+        </div>,
+      );
+      expect(() => readBackgroundLayer(rendered.getByTestId("child"))).toThrow(
+        /--color-slate-900/,
+      );
+    } finally {
+      style.remove();
+    }
   });
 });
