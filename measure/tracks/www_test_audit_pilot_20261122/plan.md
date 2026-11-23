@@ -202,6 +202,17 @@ Each task below is one commit for one class.
   src/__tests__/no-gse-in-customer-copy.test.ts. The D1 rewrite 4d1688131
   introduced those page calls. The D5 commit changes no line of that file.
   Evidence: measure/runs/www_test_audit_pilot_20261122/check-types-adv3.log.
+- [x] 2.12 Type check repair (8d5ad1c4)
+  Fix commit: 8d5ad1c4 (D1: the eight page call types).
+  Eight page components take no props. The sweep now calls each of them
+  without an argument. The other page calls keep their props argument.
+  Every assertion stayed as it was. No page component changed.
+  Proof log: measure/runs/www_test_audit_pilot_20261122/proof-adv3-types.log.
+  Check-types log: measure/runs/www_test_audit_pilot_20261122/check-types-09a817c.log.
+  Lint log: measure/runs/www_test_audit_pilot_20261122/lint-09a817c.log.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-8d5ad1c4.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-8d5ad1c4.log.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-8d5ad1c4.json.
 
 ### Recorded deviations
 
