@@ -30,7 +30,7 @@ Each row comes from the named gate JSON. The `GREEN` column is its `green_exit_c
 | R2 | 3.2 | adf24e723 | 3094 | 3094 | 0 | 91.60 | green-adf24e7.log | coverage-adf24e7.log | gate-adf24e7.json |
 | Blog merge | 3.5 | 257a6b0cd | 3094 | 1385 | 0 | 91.60 | green-257a6b0c.log | coverage-257a6b0c.log | gate-257a6b0c.json |
 
-All log and gate paths are under `measure/runs/www_test_audit_pilot_20261122/`. Every named log exists. A GREEN log ends with the Vitest summary lines for files, tests and duration. A COVERAGE log ends with the coverage table and its `Coverage summary` block with percentage rows. I read the ends of `green-4d168813.log`, `green-bcaa97f.log`, `coverage-4d168813.log` and `coverage-bcaa97f.log` to confirm this. The original `green-7008ccef.log` holds an accounting plan, not a test run. The rerun `green-at-7008ccef.log` is the cited evidence for D5 part 2. The two reruns are `green-at-733319505.log` with `coverage-at-733319505.log`, and `green-at-fb5622ed7.log` with `coverage-at-fb5622ed7.log`.
+All log and gate paths are under `measure/runs/www_test_audit_pilot_20261122/`. Every named log exists. A GREEN log ends with the Vitest summary lines for files, tests and duration. A COVERAGE log ends with the coverage table and its `Coverage summary` block with percentage rows. I read the ends of `green-4d168813.log`, `green-bcaa97f.log`, `coverage-4d168813.log` and `coverage-bcaa97f.log` to confirm this. The original `green-7008ccef.log` holds an accounting-track task plan, with Phase 7 Red and Green rows for intake documents and monthly close. It holds no Vitest summary and no result block. The rerun `green-at-7008ccef.log` is the cited evidence for D5 part 2. The two reruns are `green-at-733319505.log` with `coverage-at-733319505.log`, and `green-at-fb5622ed7.log` with `coverage-at-fb5622ed7.log`.
 
 Each fix commit has a named GREEN log and COVERAGE log in `measure/runs/www_test_audit_pilot_20261122/`.
 
@@ -60,7 +60,7 @@ Each fix commit has a named GREEN log and COVERAGE log in `measure/runs/www_test
 | 66aeb1011 | green-66aeb1011.log | coverage-66aeb1011.log |
 | 8d5ad1c4 | green-8d5ad1c4.log | coverage-8d5ad1c4.log |
 
-All 44 named logs exist. GREEN logs end with the Vitest summary; COVERAGE logs end with the coverage table and `Coverage summary` block. The two `green-at-*` rows above are reruns.
+Every named log exists. GREEN logs end with the Vitest summary; COVERAGE logs end with the coverage table and `Coverage summary` block. The two `green-at-*` rows above are reruns.
 
 ## 3. What went, what changed, why
 
@@ -170,11 +170,17 @@ The money rules stay through the seven tutor-commission files named in this sect
 ## 5. Finding history
 
 The true history is in the run files under `measure/runs/www_test_audit_pilot_20261122/`.
-Read `review-a-*.json` for Review A, `adversarial-*.json` for adversarial testing, `phase-acceptance-*.json` for phase acceptance, and `second-check-*.json` for the second check. Green role result blocks are in `green-<role-base>.log` files that hold `MEASURE_AGENT_RESULT` and a `dispositions:` line, such as `green-e91c4d4.log`. Other `green-*.log` and `green-at-*.log` files are test-run logs.
+Role result logs are the files that hold a `MEASURE_AGENT_RESULT` block. List them with `grep -l MEASURE_AGENT_RESULT measure/runs/www_test_audit_pilot_20261122/green-*.log`. Some hold a `dispositions:` line and some do not.
+
+Test-run logs are `green-at-*.log`, `coverage-*.log`, `coverage-at-*.log` and the `green-<sha>.log` files that hold only runner output, with no `MEASURE_AGENT_RESULT` block.
+
+One file, `green-7008ccef.log`, holds a task plan for the accounting track. It lists Phase 7 tasks, such as Red and Green rows for intake documents and monthly close. It holds no Vitest summary and no `MEASURE_AGENT_RESULT` block. The rerun is `green-at-7008ccef.log`.
+
+These categories overlap in name. A role result log and a test-run log can share the `green-<short>.log` pattern. Open a file to learn its kind.
+
+Read `review-a-*.json` for Review A, `adversarial-*.json` for adversarial testing, `phase-acceptance-*.json` for phase acceptance and `second-check-*.json` for the second check.
 
 Finding IDs repeat across roles. Read an ID with its role file. This report copies no finding text on purpose.
-
-The file list gives 20 `review-a-*.json` files, 13 `adversarial-*.json` files, 7 `phase-acceptance-*.json` files and 3 `second-check-*.json` files. The highest finding number is F30 in `review-a-cb12d6f.json` for Review A, ADV-24 in `adversarial-e91c4d4.json` for adversarial testing, and F42 in `phase-acceptance-a0b229d.json` for phase acceptance.
 
 PM-approved items and recorded deviations are in `plan.md` under Recorded deviations and in the review and acceptance JSON files. See the run files for the full record.
 
