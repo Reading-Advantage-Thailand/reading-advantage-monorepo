@@ -7,7 +7,6 @@
  * from the root toward the text. An opaque layer stops the walk. A layer that
  * cannot be read throws; it is never treated as transparent.
  */
-import postcss from "postcss";
 import { compiledCss, jsdomCss } from "./real-css";
 
 /** An sRGB colour with an alpha channel from 0 to 1. */
@@ -40,25 +39,6 @@ const customProperties = new Map<string, string>();
 for (const match of compiledCss.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) {
   if (!customProperties.has(match[1])) {
     customProperties.set(match[1], match[2].trim());
-  }
-}
-
-/** A stylesheet rule that declares a colour token outside the root scope. */
-interface TokenRule {
-  readonly selector: string;
-  readonly name: string;
-}
-
-/** Colour-token rules that could change a tested element's colour. */
-const localTokenRules: TokenRule[] = [];
-for (const rule of postcss.parse(compiledCss).nodes ?? []) {
-  if (rule.type !== "rule") continue;
-  const selector = rule.selector.trim();
-  if (/^:root\b|^:host\b|^html\b/.test(selector)) continue;
-  for (const declaration of rule.nodes ?? []) {
-    if (declaration.type === "decl" && /^--color-/.test(declaration.prop)) {
-      localTokenRules.push({ selector, name: declaration.prop });
-    }
   }
 }
 
@@ -283,16 +263,58 @@ function blend(foreground: Color, backdrop: Color): Color {
 }
 
 /**
- * Fails when an element or an ancestor declares a colour token locally.
- * jsdom pre-resolves var() from the :root map, so it can report the root
- * colour while getPropertyValue reports the local override. The helper cannot
- * know which one the browser would paint, so it stops instead of guessing.
+ * Scans one CSS rule list for colour-token declarations that paint a target.
+ * Grouping rules are walked recursively, so rules inside @media, @supports,
+ * @layer and @container are covered.
+ * @param rules The rule list to scan.
+ * @param targets The tested element and each of its ancestors.
+ * @throws When a matching rule declares a colour token or a selector fails.
+ */
+function scanRulesForTokenOverrides(
+  rules: CSSRuleList,
+  targets: readonly Element[],
+): void {
+  for (const rule of Array.from(rules)) {
+    if (rule.type === 1) {
+      const styleRule = rule as CSSStyleRule;
+      const selector = styleRule.selectorText?.trim();
+      if (!selector || /^:root\b|^:host\b|^html\b/.test(selector)) continue;
+      const names = Array.from(styleRule.style ?? []).filter((name) =>
+        /^--color-/.test(name),
+      );
+      if (names.length === 0) continue;
+      for (const target of targets) {
+        let matches = false;
+        try {
+          matches = target.matches(selector);
+        } catch {
+          throw new Error(`Cannot evaluate selector ${selector} for ${names[0]}`);
+        }
+        if (matches) {
+          throw new Error(
+            `Custom property ${names[0]} from ${selector} on <${target.tagName.toLowerCase()}>`,
+          );
+        }
+      }
+      continue;
+    }
+    const group = rule as CSSGroupingRule;
+    if (group.cssRules) scanRulesForTokenOverrides(group.cssRules, targets);
+  }
+}
+
+/**
+ * Fails when an element, an ancestor or a stylesheet declares a colour token
+ * that could change the rendered colour. jsdom pre-resolves var() from the
+ * :root map, so the helper cannot know which colour a browser would paint.
  * @param element The element under test.
- * @throws When a local colour-token declaration or rule is found.
+ * @throws When a local declaration, a matching rule or an unevaluable selector is found.
  */
 function assertNoLocalTokenOverrides(element: Element): void {
+  const targets: Element[] = [];
   let node: Element | null = element;
   while (node !== null) {
+    targets.push(node);
     if (node !== document.documentElement && node instanceof HTMLElement) {
       const inline = node.getAttribute("style") ?? "";
       for (const match of inline.matchAll(/(?:^|;)\s*(--[\w-]+)\s*:/g)) {
@@ -313,18 +335,14 @@ function assertNoLocalTokenOverrides(element: Element): void {
     node = node.parentElement;
   }
 
-  for (const rule of localTokenRules) {
-    let matches: boolean;
+  for (const sheet of Array.from(document.styleSheets)) {
+    let rules: CSSRuleList;
     try {
-      matches = element.matches(rule.selector);
+      rules = sheet.cssRules;
     } catch {
-      throw new Error(`Cannot evaluate selector ${rule.selector} for ${rule.name}`);
+      throw new Error("Cannot read stylesheet rules for colour tokens");
     }
-    if (matches) {
-      throw new Error(
-        `Custom property ${rule.name} from ${rule.selector} on <${element.tagName.toLowerCase()}>`,
-      );
-    }
+    scanRulesForTokenOverrides(rules, targets);
   }
 }
 

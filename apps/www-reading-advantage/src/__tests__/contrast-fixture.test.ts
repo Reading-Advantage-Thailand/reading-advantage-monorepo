@@ -198,4 +198,46 @@ describe("WCAG contrast fixture", () => {
       leaf.remove();
     }
   });
+
+  it("throws for a colour token rule matching an ancestor (ADV-18)", () => {
+    const style = document.createElement("style");
+    style.textContent = ".unit-token-ancestor { --color-slate-900: #ff0000; }";
+    document.head.appendChild(style);
+    try {
+      const parent = document.createElement("div");
+      parent.className = "unit-token-ancestor";
+      parent.style.backgroundColor = "rgb(250, 249, 247)";
+      const leaf = document.createElement("span");
+      leaf.style.backgroundColor = "rgb(250, 249, 247)";
+      parent.appendChild(leaf);
+      document.body.appendChild(parent);
+      try {
+        expect(() => readBackgroundLayer(leaf)).toThrow(/--color-slate-900/);
+      } finally {
+        parent.remove();
+      }
+    } finally {
+      style.remove();
+    }
+  });
+
+  it("throws for a colour token rule inside @media (ADV-19)", () => {
+    const style = document.createElement("style");
+    style.textContent =
+      "@media (min-width: 1px) { .unit-token-media { --color-slate-700: #ff0000; } }";
+    document.head.appendChild(style);
+    try {
+      const leaf = document.createElement("span");
+      leaf.className = "unit-token-media";
+      leaf.style.backgroundColor = "rgb(250, 249, 247)";
+      document.body.appendChild(leaf);
+      try {
+        expect(() => readBackgroundLayer(leaf)).toThrow(/--color-slate-700/);
+      } finally {
+        leaf.remove();
+      }
+    } finally {
+      style.remove();
+    }
+  });
 });
