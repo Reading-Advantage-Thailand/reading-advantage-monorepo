@@ -550,10 +550,10 @@ Each task below is one commit for one class.
   absent. The report now names the real root keys and the testResults[] keys.
   It states that the five slowest figures sum assertionResults[].duration within
   each testResults[] entry. The five figures were recomputed from those fields
-  and match the report. Other schema claims were checked: green_exit_code in
-  all 30 gate JSONs, route and phase in 36 of 37 pre-existing role JSONs, and
-  test_wall_seconds=90.47 in baseline.json. The 37th role JSON is
-  spec-review-735a7fe.json, which has a phase but no route.
+  and match the report. Other schema claims were checked at head cb12d6f0f:
+  green_exit_code in the gate JSON files, route and phase in 36 of 37
+  pre-existing role JSONs, and test_wall_seconds=90.47 in baseline.json.
+  The 37th role JSON is spec-review-735a7fe.json, which has a phase but no route.
   No test or production file changed in this round.
 - [x] 4.6 Report acceptance remediation F31 to F36 (3ad5dba96)
   Commit: 3ad5dba96817a803d1ad6c6bc1675c71467cc50b.
@@ -607,9 +607,9 @@ Each task below is one commit for one class.
   Review log: measure/runs/www_test_audit_pilot_20261122/review-a-aeaa6a1.json.
   Report: measure/tracks/www_test_audit_pilot_20261122/report.md.
   Removed the counts of green-*.log and other run-file kinds from report.md
-  and plan.md. One count stays in task 4.5: the dated measurement of role JSON
-  files at head cb12d6f0f. That historical record names its head, so a later
-  round does not change it. The report now
+  and plan.md. Two counts stay in task 4.5: the dated measurements of role JSON
+  files and gate JSON files at head cb12d6f0f. Those historical records name
+  their head, so a later round does not change them. The report now
   defines role result logs by MEASURE_AGENT_RESULT and gives a grep command.
   Test-run logs are named by pattern. Some role logs hold dispositions and
   some do not. The names overlap, so the reader must open a file to know its kind.
@@ -624,8 +624,8 @@ Each task below is one commit for one class.
   Commit: e578839ddc225fca79b7f31075141987d6ca544d.
   Review log: measure/runs/www_test_audit_pilot_20261122/review-a-01e1e9d.json.
   Task 4.9 now says it removed counts of green-*.log and other run-file kinds.
-  It names the one exception: the dated role-JSON measurement in task 4.5 at
-  head cb12d6f0f. Task 4.5 was not changed.
+  It names the dated role-JSON and gate-JSON measurements in task 4.5 at head
+  cb12d6f0f. Task 4.5 was left unchanged during the F48 round.
   Both plan.md and report.md were scanned for 'all counts', 'no count' and
   'every count'. No such phrase remains.
   No test or production file changed in this round.
