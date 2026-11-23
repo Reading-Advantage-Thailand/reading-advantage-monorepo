@@ -571,3 +571,20 @@ Each task below is one commit for one class.
   F36: the timing follow-up recommendation was removed.
   F18 is recorded as approved by the PM on 2026-11-24, option A.
   No test or production file changed in this round.
+- [x] 4.7 Report acceptance remediation F33 to F42 (4d8d81ffe)
+  Commit: 4d8d81ffea62275fa17b84ca370a6f00cde96a9a.
+  Review log: measure/runs/www_test_audit_pilot_20261122/phase-acceptance-a0b229d.log.
+  Report: measure/tracks/www_test_audit_pilot_20261122/report.md.
+  PM decision C: the hand-written finding history was cut. One Finding history
+  section now points to the run files. It gives the JSON file counts and the
+  highest finding number per role. No finding text is copied.
+  F33: the blog K row credits proof-adv8.log and proof-adv11.log for the .md
+  extension naming rule. Their new discovery assertions stay separate.
+  F34: the log-pair table now includes 4d1688131 and bcaa97ff4 with verified
+  GREEN and COVERAGE logs.
+  F38: only beforeEach predates Phase 2. D5 part 2 made sectionOf and copy unused.
+  F41: the loader reads exact lowercase .md only. Stricter .mdx, .MD and non-file
+  checks stay separate from the parity checks for dotfiles and symlinks.
+  F42: all line-number citations were replaced by section or table names.
+  The lessons gained the line about hand-written evidence tables needing a script.
+  No test or production file changed in this round.
