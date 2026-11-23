@@ -1,19 +1,49 @@
 import { describe, it, expect, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import HeroSection from "@/components/marketing/hero-section";
-import { computedForElement } from "@/__tests__/fixtures/real-css";
+import {
+  computedForElement,
+  computedFromClasses,
+} from "@/__tests__/fixtures/real-css";
+
+/** Every declaration that a shipped gradient writes. */
+const GRADIENT_PROPERTIES = [
+  "--tw-gradient-position",
+  "--tw-gradient-from",
+  "--tw-gradient-via",
+  "--tw-gradient-to",
+  "background-image",
+] as const;
+
+/** The gradient classes of the default hero overlay. */
+const DEFAULT_GRADIENT_CLASSES = [
+  "bg-gradient-to-br",
+  "from-amber-50",
+  "via-orange-50",
+  "to-sky-50",
+] as const;
+
+/** The gradient classes of the custom hero overlay. */
+const CUSTOM_GRADIENT_CLASSES = [
+  "bg-gradient-to-r",
+  "from-violet-500",
+  "to-fuchsia-500",
+] as const;
 
 /** The computed gradient stops of the hero overlay. */
 function gradientOverlay(root: HTMLElement): Record<string, string> {
   const overlay = root.querySelector("section")?.firstElementChild;
   if (!(overlay instanceof HTMLElement)) return {};
-  return computedForElement(overlay, [
-    "--tw-gradient-position",
-    "--tw-gradient-from",
-    "--tw-gradient-via",
-    "--tw-gradient-to",
-    "background-image",
-  ]);
+  return computedForElement(overlay, GRADIENT_PROPERTIES);
+}
+
+/**
+ * Resolves the expected stops from the compiled stylesheet.
+ * @param classes The gradient classes the component is meant to use.
+ * @returns One computed value per gradient property.
+ */
+function expectedGradient(classes: readonly string[]): Record<string, string> {
+  return computedFromClasses(classes, GRADIENT_PROPERTIES);
 }
 
 afterEach(() => {
@@ -50,12 +80,11 @@ describe("HeroSection", () => {
       <HeroSection title="Test Title" description="Test description" />,
     );
     const gradient = gradientOverlay(rendered.container);
+    const expected = expectedGradient(DEFAULT_GRADIENT_CLASSES);
 
-    expect(gradient["--tw-gradient-position"]).toBe("to bottom right in oklab");
-    expect(gradient["--tw-gradient-from"]).toBe("oklch(98.7%0.022 95.277)");
-    expect(gradient["--tw-gradient-via"]).not.toBe("");
-    expect(gradient["--tw-gradient-to"]).not.toBe("");
-    expect(gradient["background-image"]).toContain("linear-gradient");
+    for (const property of GRADIENT_PROPERTIES) {
+      expect(gradient[property], property).toBe(expected[property]);
+    }
   });
 
   it("replaces the default gradient with a custom gradient", () => {
@@ -67,12 +96,11 @@ describe("HeroSection", () => {
       />,
     );
     const gradient = gradientOverlay(rendered.container);
+    const expected = expectedGradient(CUSTOM_GRADIENT_CLASSES);
 
-    expect(gradient["--tw-gradient-position"]).toBe("to right in oklab");
-    expect(gradient["--tw-gradient-from"]).toContain("violet");
-    expect(gradient["--tw-gradient-via"]).toBe("");
-    expect(gradient["--tw-gradient-to"]).toContain("fuchsia");
-    expect(gradient["background-image"]).toContain("linear-gradient");
+    for (const property of GRADIENT_PROPERTIES) {
+      expect(gradient[property], property).toBe(expected[property]);
+    }
   });
 
   it("renders the CTA button with correct href when ctaButton prop is provided", () => {
