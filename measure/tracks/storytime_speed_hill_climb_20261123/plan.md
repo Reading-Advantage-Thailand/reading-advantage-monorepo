@@ -23,8 +23,8 @@
 
 Scope: `EntryArt` on `/sign-in` and on the signed-out `/st` redirect, plus the WebP candidates and the TTFB line.
 
-- [ ] 1.1 Red and Green: the eager sign-in art, the WebP candidates, and the TTFB line. Test: AC-1 to AC-5 and AC-9. Evidence class: automated (commands and review reports), person-checked (the browser look of task 1.1.7).
-  - [ ] 1.1.1 Red: write `apps/storytime/__tests__/entry-art-lcp.test.tsx` and show it fail at the base. Test: AC-1, AC-2, AC-3, AC-4. Evidence class: automated.
+- [~] 1.1 Red and Green: the eager sign-in art, the WebP candidates, and the TTFB line. Test: AC-1 to AC-5 and AC-9. Evidence class: automated (commands and review reports), person-checked (the browser look of task 1.1.7).
+  - [~] 1.1.1 Red: write `apps/storytime/__tests__/entry-art-lcp.test.tsx` and show it fail at the base. Test: AC-1, AC-2, AC-3, AC-4. Evidence class: automated.
     Pre-gate: the worktree holds no `node_modules`, and `heavy-run.sh` installs nothing. Before the first run, install the workspace dependencies through heavy-run with `pnpm install --frozen-lockfile`, then confirm `git diff --exit-code pnpm-lock.yaml`. A lockfile change stops the task.
     The file renders the sign-in page through `renderToStaticMarkup`, as `entry-signin-layout.test.tsx` does, with the same mocks: `next/navigation`, `next-intl/server`, `next/headers`, and `../lib/auth`. It holds these cases:
     1. `picture[data-entry-art]` exists, and its img holds `loading="eager"` and `fetchpriority="high"`. At the base the img holds `loading="lazy"` and no `fetchpriority`.
@@ -36,6 +36,7 @@ Scope: `EntryArt` on `/sign-in` and on the signed-out `/st` redirect, plus the W
     - Red command: `HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/storytime-speed/apps/storytime && CI=true ../../node_modules/.bin/vitest run __tests__/entry-art-lcp.test.tsx'`
     - Expected at the base: exit 1. Cases 1 to 5 fail on the lazy img or a missing file. Case 6 passes the redirect and fails the art assertion.
     - Commit: `test(storytime): pin the eager sign-in art (track_id: storytime_speed_hill_climb_20261123)`, with the test file only.
+    - Red evidence 2026-11-23: the install pre-gate passed with no lockfile change. The Red command exits 1 with 6 failed cases. L1 fails on loading="lazy", L2 on srcset count 0, L3 on source srcset count 1, L4 and L5 on the missing path-d-720.webp, and L6 passes the 307 redirect and fails the art. The app suite shows 23 failed files and 234 failed tests; the new file holds 6 of them and the other 22 fail without it (unbuilt backend dist, missing run artifacts). tsc shows 14 base errors in untouched files; the new file adds none. Commits: 25a5a3abf319748d315085c8d266a4527a115efa.
   - [ ] 1.1.2 Green: make the art eager and add the four WebP candidates. Test: AC-1, AC-2, AC-3. Evidence class: automated.
     1. In `apps/storytime/app/[locale]/entry/entry-art.tsx`, import `path-d-720.webp`, `path-d-1280.webp`, `path-p-720.webp`, and `path-p-960.webp` as static assets beside the two originals.
     2. Give the img `loading="eager"`, `fetchpriority="high"`, `srcSet={`${landscape720Src} 720w, ${landscape1280Src} 1280w, ${landscapeSrc} 1920w`}`, and `sizes="calc(100vw - 40px)"`.
