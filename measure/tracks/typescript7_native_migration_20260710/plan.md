@@ -10,6 +10,8 @@
 > Use `--maxWorkers=1` for vitest. No push. No deploy. Add no new hash field.
 > Stage only the paths that this track owns.
 
+PM 2026-11-23: parked until after the 30 Nov launch.
+
 ## Phase 1: Contract & Schema Definition [checkpoint: 476835906]
 
 > Checkpoint note (Mid Red, 2026-11-05). The measure-guard blocks a Phase 2 start
@@ -268,7 +270,7 @@
 
 > Every task below is `[b]` with `deferred:pm` until the PM decides on the Phase 3 report.
 
-- [b] Task: Make TypeScript 7 the only compiler (deferred:pm)
+- [b] Task: Make TypeScript 7 the only compiler (deferred:backlog)
   - What: pin the exact 7.0.x in the workspace; remove the `overrides.typescript` 5.9.3 pin and
     the second install; fix each `tsconfig` with narrow `types` lists; remove `baseUrl` from
     `apps/marketing/tsconfig.json`.
@@ -277,30 +279,30 @@
   - Done when: `pnpm why typescript` shows one major version; `pnpm install --frozen-lockfile`
     exits 0; every `check-types` script exits as the Phase 1 baseline allows; `git grep` finds
     no new `@ts-ignore`, `@ts-nocheck`, or `ignoreBuildErrors`.
-- [b] Task: Move linting off the TypeScript 5 API (deferred:pm)
+- [b] Task: Move linting off the TypeScript 5 API (deferred:backlog)
   - What: apply the Phase 3 plan for `typescript-eslint` (Oxlint type-aware through tsgolint),
     pin the rule set, and move or remove each other API consumer from the Phase 3 table.
   - Files: `packages/config/eslint/`, app `eslint.config.mjs` files, an Oxlint config, `package.json`
     files that list the old tools.
   - Done when: `pnpm turbo run lint` exits as the baseline allows with the second install gone;
     each consumer row from Phase 3 is marked "done".
-- [b] Task: Route CI and Turbo to TypeScript 7 (deferred:pm)
+- [b] Task: Route CI and Turbo to TypeScript 7 (deferred:backlog)
   - What: update `turbo.json` and `.github/workflows/ci.yml`; bound checker count under Turbo;
     observe three representative CI runs.
   - Files: `turbo.json`, `.github/workflows/ci.yml`.
   - Done when: three CI runs finish with no new nondeterminism, memory failure, or cache error;
     the checker setting is written in the CI file.
-- [b] Task: Update operator documents (deferred:pm)
+- [b] Task: Update operator documents (deferred:backlog)
   - What: update `measure/tech-stack.md` and the operator notes for editor setup, checker
     count, fallback, and rollback. Mark `typescript6_major_migration` superseded.
   - Files: `measure/tech-stack.md`, `measure/tracks.md`, operator notes under `docs/`.
   - Done when: the documents name TypeScript 7 as the only compiler and give one rollback
     command; `grep -n "TypeScript 6" measure/tech-stack.md` shows no bridge text.
-- [b] Task: Run Measure doctor and final acceptance (deferred:pm)
+- [b] Task: Run Measure doctor and final acceptance (deferred:backlog)
   - What: run `measure/generate.sh` and `measure/doctor.sh` with their documented commands;
     run the aggregate `lint`, `test`, `check-types`, and `build` gates under `heavy-run.sh`;
     complete the change-quality review against `spec.md` and this plan.
   - Files: generated Measure files; review notes in the track folder.
   - Done when: doctor exits 0; no migration-caused regression remains against the baseline;
     no Critical or High finding is open.
-- [b] Task: Measure - User Manual Verification 'Phase 5: Rollout to one compiler' (Protocol in workflow.md) (deferred:pm)
+- [b] Task: Measure - User Manual Verification 'Phase 5: Rollout to one compiler' (Protocol in workflow.md) (deferred:backlog)

@@ -1866,7 +1866,7 @@ Green builds to these rules:
   `heavy-run.sh`; no test, build, tsc, build-graph, or server ran
   outside it.
 
-- [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:pm Moved to storytime_at_home_release_20261106 Phase 3 (PM decision 2026-11-05).
+- [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:daniel Moved to storytime_at_home_release_20261106 Phase 3 (PM decision 2026-11-05).
 
 ## Phase 4: Teacher app [checkpoint: c633a4446]
 
@@ -4156,7 +4156,7 @@ for every other track.
         - Files changed (6): `lib/teacher-media.ts`, `app/[locale]/teacher/[level]/[week]/week-view.tsx`, `app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx`, `app/[locale]/st/[level]/[week]/page.tsx`, `messages/en.json`, `messages/th.json`. No new file. No content change, no Red file change. The graph update stays `deferred:pm`.
 
 
-- [b] 6.3 Deploy the teacher app: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. The at-home deploy is task 3.11. deferred:pm
+- [b] 6.3 Deploy the teacher app: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. The at-home deploy is task 3.11. deferred:daniel
 - [b] 6.4 Move the traffic to the new revision. Then run the live check of every printed URL (AC-2.3). deferred:daniel
 - [x] 6.5 Retro entry in `measure/lessons-learned.md`. Update the spec and the plan to the state at the milestone. (`d3a379076`)
   - State at the milestone (2026-11-15):
