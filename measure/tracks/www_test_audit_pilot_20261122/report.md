@@ -15,7 +15,7 @@ Without the merge, the cut is small. Phase 2 ended at 3094 cases (`gate-257a6b0c
 
 ## 2. Per-class commits
 
-Each row comes from the named gate JSON. `GREEN` is the exit code in that JSON.
+Each row comes from the named gate JSON. The `GREEN` column is its `green_exit_code` field.
 
 | Class | Task | Commit | cases_before | cases_after | GREEN | Coverage % | Gate JSON |
 |---|---|---|---|---|---|---|---|
@@ -68,7 +68,7 @@ Data in this section comes from `measure/tracks/www_test_audit_pilot_20261122/cl
 - **D2 duplicate**, 22 cases deleted (`classification.md:228`, `plan.md:89-94`). The kept duplicates are named in `classification.md:146-154`. The Primary containers and order cases stay in `page.content.test.tsx`. The reading-time number cases stay in `blog.test.ts`. The favicon byte cases stay in `real-logos-captures-adversarial.test.ts`. The removed-literal sweep stays in `real-logos-adversarial.test.ts`. The retired picture set stays in `www-tutor-followups.adversarial.test.ts`. The M4 slot order stays in `tutor-screens.test.ts`.
 - **D3 dead target**, zero rows (`classification.md:159-161`). No commit and no gate. Both image-source suites read sources that exist.
 - **D4 weak check**, six cases deleted (`classification.md:228`, `plan.md:99-104`). Three navigation cases echoed a mocked locale. Two capture cases pinned the test file's own names. One image case returned early without an environment flag.
-- **D5 copy pin**, 221 cases (`classification.md:231`). Four parts replace word-for-word pins with locale-key checks (`plan.md:106-125`). The final file count is 3035 cases (`gate-407c5d9.json`). Money pins stay as K.
+- **D5 copy pin**, 221 cases (`classification.md:231`). Four parts replace word-for-word pins with locale-key checks (`plan.md:106-125`). The final case count is 3035 cases (`gate-407c5d9.json`). Money pins stay as K.
 - **R1 over-mocked**, zero rows (`classification.md:182-186`). Boundary mocks stand in for adapters, not for code under test.
 - **R2 brittle**, 16 cases rewritten (`classification.md:233`). Fourteen files changed in `adf24e723` (`plan.md:259`). Two cases were rewritten earlier in `0be4a0374` under deviation F11 (`plan.md:272-276`). The checks now read computed CSS, real color tokens, and DOM behavior.
 - **R3 unclear**, zero rows (`classification.md:203-206`). Case names already state a rule or contract id.
@@ -253,9 +253,9 @@ The cause of the increase is not recorded. Neither runner log holds per-file tim
 
 HYPOTHESIS (not a finding): the added tests compile the real stylesheet and read computed styles through `fixtures/real-css.ts` and `fixtures/contrast.ts`. That work is heavier than the deleted source-text and copy-pin cases. The two runs each ran once, so run-to-run noise is not excluded.
 
-To make the claim checkable, one verbose run at head went through heavy-run. The log is `measure/runs/www_test_audit_pilot_20261122/timing-at-head.log`. The JSON report is `measure/runs/www_test_audit_pilot_20261122/timing-at-head.json`. The JSON `duration` field reads zero, so the file figures below sum the assertion durations in that JSON. The five slowest files at head are:
+To make the claim checkable, one verbose run at head went through heavy-run. The log is `measure/runs/www_test_audit_pilot_20261122/timing-at-head.log`. The JSON report is `measure/runs/www_test_audit_pilot_20261122/timing-at-head.json`. That JSON has no root `duration` field. Its root keys are `numTotalTestSuites`, `numPassedTestSuites`, `numFailedTestSuites`, `numPendingTestSuites`, `numTotalTests`, `numPassedTests`, `numFailedTests`, `numPendingTests`, `numTodoTests`, `snapshot`, `startTime`, `success` and `testResults`. Each `testResults[]` item holds `assertionResults`, `startTime`, `endTime`, `status`, `message` and `name`. It holds no file duration field. Each `assertionResults[]` item holds a nonzero `duration`. The figures below sum `assertionResults[].duration` across all items of one `testResults[]` file entry. The five slowest files at head are:
 
-| Slowest file | Sum of assertion durations |
+| Slowest file | Sum of assertionResults[].duration |
 |---|---|
 | src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx | 6461.93 ms |
 | src/lib/__tests__/real-logos-captures-adversarial.test.ts | 1649.38 ms |
