@@ -508,13 +508,24 @@ Each task below is one commit for one class.
 
 ## Phase 4: Pilot report
 
-- [ ] 4.1 Write the pilot report. Test: (f).
-  File: `measure/tracks/www_test_audit_pilot_20261122/report.md`.
+- [x] 4.1 Write the pilot report (289c4451c)
+  Report: measure/tracks/www_test_audit_pilot_20261122/report.md.
+  Commit: 289c4451c643a0b054a0b45a1dda0d8650a362c3.
   The report lists what went, what changed, and why.
   It lists the per-class commits and the per-commit gate results.
-  It lists the K rows kept and the duplicates that kept each rule.
-- [ ] 4.2 Record the CI test time for www before and after. Test: (f).
-  Append both durations to the report.
-  Take both durations from the runner logs.
-- [ ] 4.3 Checkpoint Phase 4. Test: (a), (b), (c), (d), (e), (f).
-  Commit the plan update with the report path.
+  It lists the 77 K rows kept and the duplicates that kept each rule.
+  It lists every finding F1 to F26 and ADV-1 to ADV-24.
+- [x] 4.2 Record the CI test time for www before and after (289c4451c)
+  Commit: 289c4451c643a0b054a0b45a1dda0d8650a362c3.
+  Before: 90.47s in measure/runs/www_test_audit_pilot_20261122/baseline.log.
+  After: 98.11s in measure/runs/www_test_audit_pilot_20261122/green-66aeb1011.log.
+  The difference is +7.64s. Both runs used heavy-run and the same Vitest command.
+- [x] 4.3 Checkpoint Phase 4 (289c4451c)
+  Commit: 289c4451c643a0b054a0b45a1dda0d8650a362c3.
+  Report: measure/tracks/www_test_audit_pilot_20261122/report.md.
+  The raw case cut is 1763 cases, or 55.5 percent of the 3175 baseline
+  (measure/runs/www_test_audit_pilot_20261122/baseline.json and
+  measure/runs/www_test_audit_pilot_20261122/gate-66aeb1011.json).
+  The 20 percent target is met. Line coverage rose from 86.52 percent to
+  92.07 percent (baseline.json and gate-66aeb1011.json).
+  All Phase 4 report gates exited 0.
