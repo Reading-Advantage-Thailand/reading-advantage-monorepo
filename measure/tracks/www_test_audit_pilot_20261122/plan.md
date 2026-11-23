@@ -620,3 +620,12 @@ Each task below is one commit for one class.
   Also removed the run-file counts and highest finding numbers from the report
   Finding history. Per-class tables still cite exact verified file names.
   No test or production file changed in this round.
+- [x] 4.10 Plan wording remediation F48 (e578839dd)
+  Commit: e578839ddc225fca79b7f31075141987d6ca544d.
+  Review log: measure/runs/www_test_audit_pilot_20261122/review-a-01e1e9d.json.
+  Task 4.9 now says it removed counts of green-*.log and other run-file kinds.
+  It names the one exception: the dated role-JSON measurement in task 4.5 at
+  head cb12d6f0f. Task 4.5 was not changed.
+  Both plan.md and report.md were scanned for 'all counts', 'no count' and
+  'every count'. No such phrase remains.
+  No test or production file changed in this round.
