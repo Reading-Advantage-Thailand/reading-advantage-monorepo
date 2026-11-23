@@ -2,6 +2,9 @@
  * Validates every on-disk blog post markdown file across all locale directories.
  * Catches malformed frontmatter before it reaches production.
  * Uses real filesystem reads — no mocks.
+ *
+ * Each rule has one case. The case walks every post and collects one line per
+ * broken post, so a failure names every offending locale and slug.
  */
 import { describe, it, expect } from "vitest";
 import fs from "fs";
@@ -37,9 +40,7 @@ function loadAllPosts(): PostEntry[] {
 
   for (const locale of localeDirs) {
     const localeDir = path.join(POSTS_BASE, locale);
-    const files = fs
-      .readdirSync(localeDir)
-      .filter((f) => f.endsWith(".md"));
+    const files = fs.readdirSync(localeDir).filter((f) => f.endsWith(".md"));
 
     for (const file of files) {
       const filePath = path.join(localeDir, file);
@@ -60,146 +61,216 @@ function loadAllPosts(): PostEntry[] {
 }
 
 const allPosts = loadAllPosts();
+const enPosts = allPosts.filter((p) => p.locale === "en");
+const enSlugs = new Set(enPosts.map((p) => p.slug));
+
+/**
+ * Collects one violation line for every post that breaks one rule.
+ * @param posts The posts to check.
+ * @param rule The rule name printed in each violation.
+ * @param holds True when a post satisfies the rule.
+ * @returns One "<locale>/<slug>: <rule>" line per broken post.
+ */
+function violationsFor(
+  posts: readonly PostEntry[],
+  rule: string,
+  holds: (post: PostEntry) => boolean,
+): string[] {
+  const violations: string[] = [];
+  for (const post of posts) {
+    if (!holds(post)) {
+      violations.push(`${post.locale}/${post.slug}: ${rule}`);
+    }
+  }
+  return violations;
+}
+
+/** True when a frontmatter value is a non-empty string. */
+function isNonEmptyString(value: unknown): boolean {
+  return typeof value === "string" && value.trim().length > 0;
+}
 
 // ─── Required frontmatter ─────────────────────────────────────────────────────
 
 describe("blog post frontmatter — required fields", () => {
   it("discovers at least one post in the en/ directory", () => {
-    const enPosts = allPosts.filter((p) => p.locale === "en");
     expect(enPosts.length).toBeGreaterThan(0);
   });
 
-  for (const post of allPosts) {
-    const label = `[${post.locale}] ${post.slug}`;
+  it("title is a non-empty string on every post", () => {
+    expect(
+      violationsFor(allPosts, "title is a non-empty string", (post) =>
+        isNonEmptyString(post.data.title),
+      ),
+    ).toEqual([]);
+  });
 
-    it(`${label}: title is a non-empty string`, () => {
-      expect(typeof post.data.title).toBe("string");
-      expect((post.data.title as string).trim().length).toBeGreaterThan(0);
-    });
+  it("date is present and matches YYYY-MM-DD on every post", () => {
+    expect(
+      violationsFor(allPosts, "date matches YYYY-MM-DD", (post) =>
+        typeof post.data.date === "string" && ISO_DATE_RE.test(post.data.date),
+      ),
+    ).toEqual([]);
+  });
 
-    it(`${label}: date is present and matches YYYY-MM-DD`, () => {
-      expect(typeof post.data.date).toBe("string");
-      expect(post.data.date).toMatch(ISO_DATE_RE);
-    });
+  it("date is a valid calendar date on every post", () => {
+    expect(
+      violationsFor(allPosts, "date is a valid calendar date", (post) =>
+        !isNaN(new Date(post.data.date as string).getTime()),
+      ),
+    ).toEqual([]);
+  });
 
-    it(`${label}: date is a valid calendar date`, () => {
-      const d = new Date(post.data.date as string);
-      expect(isNaN(d.getTime())).toBe(false);
-    });
+  it("excerpt is a non-empty string on every post", () => {
+    expect(
+      violationsFor(allPosts, "excerpt is a non-empty string", (post) =>
+        isNonEmptyString(post.data.excerpt),
+      ),
+    ).toEqual([]);
+  });
 
-    it(`${label}: excerpt is a non-empty string`, () => {
-      expect(typeof post.data.excerpt).toBe("string");
-      expect((post.data.excerpt as string).trim().length).toBeGreaterThan(0);
-    });
+  it("author is a non-empty string on every post", () => {
+    expect(
+      violationsFor(allPosts, "author is a non-empty string", (post) =>
+        isNonEmptyString(post.data.author),
+      ),
+    ).toEqual([]);
+  });
 
-    it(`${label}: author is a non-empty string`, () => {
-      expect(typeof post.data.author).toBe("string");
-      expect((post.data.author as string).trim().length).toBeGreaterThan(0);
-    });
+  it("tags is an array on every post", () => {
+    expect(
+      violationsFor(allPosts, "tags is an array", (post) =>
+        Array.isArray(post.data.tags),
+      ),
+    ).toEqual([]);
+  });
 
-    it(`${label}: tags is an array`, () => {
-      expect(Array.isArray(post.data.tags)).toBe(true);
-    });
-
-    it(`${label}: every tag is a non-empty string`, () => {
-      const tags = (post.data.tags ?? []) as unknown[];
-      for (const tag of tags) {
-        expect(typeof tag).toBe("string");
-        expect((tag as string).trim().length).toBeGreaterThan(0);
-      }
-    });
-  }
+  it("every tag is a non-empty string on every post", () => {
+    expect(
+      violationsFor(allPosts, "every tag is a non-empty string", (post) => {
+        for (const tag of (post.data.tags ?? []) as unknown[]) {
+          if (!isNonEmptyString(tag)) return false;
+        }
+        return true;
+      }),
+    ).toEqual([]);
+  });
 });
 
 // ─── Optional frontmatter ─────────────────────────────────────────────────────
 
 describe("blog post frontmatter — optional fields", () => {
-  for (const post of allPosts) {
-    const label = `[${post.locale}] ${post.slug}`;
+  it("readingTime if present is a positive number on every post", () => {
+    expect(
+      violationsFor(
+        allPosts,
+        "readingTime is a positive number",
+        (post) =>
+          post.data.readingTime === undefined ||
+          (typeof post.data.readingTime === "number" &&
+            post.data.readingTime > 0),
+      ),
+    ).toEqual([]);
+  });
 
-    it(`${label}: readingTime if present must be a positive number`, () => {
-      if (post.data.readingTime !== undefined) {
-        expect(typeof post.data.readingTime).toBe("number");
-        expect(post.data.readingTime as number).toBeGreaterThan(0);
-      }
-    });
+  it("coverImage if present is an absolute path starting with / on every post", () => {
+    expect(
+      violationsFor(
+        allPosts,
+        "coverImage is an absolute path",
+        (post) =>
+          post.data.coverImage === undefined ||
+          (typeof post.data.coverImage === "string" &&
+            post.data.coverImage.startsWith("/")),
+      ),
+    ).toEqual([]);
+  });
 
-    it(`${label}: coverImage if present must be an absolute path starting with /`, () => {
-      if (post.data.coverImage !== undefined) {
-        expect(typeof post.data.coverImage).toBe("string");
-        expect(post.data.coverImage as string).toMatch(/^\//);
-      }
-    });
-
-    it(`${label}: coverImage if present must exist on disk`, () => {
-      if (post.data.coverImage !== undefined) {
-        const imgPath = path.join(process.cwd(), "public", post.data.coverImage as string);
-        expect(fs.existsSync(imgPath)).toBe(true);
-      }
-    });
-  }
+  it("coverImage if present exists on disk on every post", () => {
+    expect(
+      violationsFor(
+        allPosts,
+        "coverImage exists on disk",
+        (post) =>
+          post.data.coverImage === undefined ||
+          (typeof post.data.coverImage === "string" &&
+            fs.existsSync(
+              path.join(process.cwd(), "public", post.data.coverImage),
+            )),
+      ),
+    ).toEqual([]);
+  });
 });
 
 // ─── Content ──────────────────────────────────────────────────────────────────
 
 describe("blog post content", () => {
-  for (const post of allPosts) {
-    const label = `[${post.locale}] ${post.slug}`;
+  it("has a non-empty body after frontmatter on every post", () => {
+    expect(
+      violationsFor(allPosts, "body is non-empty", (post) =>
+        post.content.trim().length > 0,
+      ),
+    ).toEqual([]);
+  });
 
-    it(`${label}: has non-empty body content after frontmatter`, () => {
-      expect(post.content.trim().length).toBeGreaterThan(0);
-    });
-
-    it(`${label}: does not accidentally embed raw frontmatter delimiters in body`, () => {
-      const bodyLines = post.content.split("\n");
-      // A bare "---" line in the body is usually a mistake (unclosed frontmatter)
-      const bareDashes = bodyLines.filter((l) => l.trim() === "---");
-      expect(bareDashes.length).toBe(0);
-    });
-  }
+  it("does not embed raw frontmatter delimiters in any body", () => {
+    expect(
+      violationsFor(allPosts, "no raw frontmatter delimiter in body", (post) =>
+        post.content
+          .split("\n")
+          .every((line) => line.trim() !== "---"),
+      ),
+    ).toEqual([]);
+  });
 });
 
 // ─── File / slug conventions ──────────────────────────────────────────────────
 
 describe("blog post file naming", () => {
-  for (const post of allPosts) {
-    const label = `[${post.locale}] ${post.slug}`;
+  it("slug is URL-safe on every post", () => {
+    expect(
+      violationsFor(allPosts, "slug is URL-safe", (post) =>
+        URL_SAFE_SLUG_RE.test(post.slug),
+      ),
+    ).toEqual([]);
+  });
 
-    it(`${label}: slug is URL-safe (lowercase, hyphens only)`, () => {
-      expect(post.slug).toMatch(URL_SAFE_SLUG_RE);
-    });
-
-    it(`${label}: file uses .md extension (not .mdx or .markdown)`, () => {
-      expect(post.filePath).toMatch(/\.md$/);
-    });
-  }
+  it("file uses the .md extension on every post", () => {
+    expect(
+      violationsFor(allPosts, "file uses .md extension", (post) =>
+        /\.md$/.test(post.filePath),
+      ),
+    ).toEqual([]);
+  });
 });
 
 // ─── Cross-locale consistency ─────────────────────────────────────────────────
 
 describe("cross-locale consistency", () => {
-  const enSlugs = new Set(
-    allPosts.filter((p) => p.locale === "en").map((p) => p.slug),
-  );
-
-  const nonEnPosts = allPosts.filter((p) => p.locale !== "en");
-
   it("en/ directory exists and is non-empty (canonical source)", () => {
     expect(enSlugs.size).toBeGreaterThan(0);
   });
 
-  for (const post of nonEnPosts) {
-    const label = `[${post.locale}] ${post.slug}`;
-
-    it(`${label}: if slug matches an en/ post, date must not be older`, () => {
-      if (!enSlugs.has(post.slug)) return; // locale-only post — skip
-      const enPost = allPosts.find(
-        (p) => p.locale === "en" && p.slug === post.slug,
-      )!;
-      const localeDate = new Date(post.data.date as string).getTime();
-      const enDate = new Date(enPost.data.date as string).getTime();
-      // Locale post date should be >= en/ date (translation can be newer, not older)
-      expect(localeDate).toBeGreaterThanOrEqual(enDate);
-    });
-  }
+  it("a matching non-en post is never older than its en post", () => {
+    const nonEnPosts = allPosts.filter(
+      (post) => post.locale !== "en" && enSlugs.has(post.slug),
+    );
+    expect(
+      violationsFor(
+        nonEnPosts,
+        "date is not older than en post",
+        (post) => {
+          const enPost = allPosts.find(
+            (candidate) =>
+              candidate.locale === "en" && candidate.slug === post.slug,
+          );
+          if (!enPost) return true;
+          return (
+            new Date(post.data.date as string).getTime() >=
+            new Date(enPost.data.date as string).getTime()
+          );
+        },
+      ),
+    ).toEqual([]);
+  });
 });
