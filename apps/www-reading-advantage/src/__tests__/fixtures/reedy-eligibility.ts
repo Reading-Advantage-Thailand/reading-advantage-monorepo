@@ -55,18 +55,66 @@ export const ACTIVE_WORD: Record<ReedyLocale, RegExp> = {
 /**
  * The words that reverse the active-package limit in each locale.
  * A text with one of them does not state the limit.
- * The English set names the plain form, the hyphenated form, and the
- * prefixed forms. The Thai set names the cancelled package next to the
- * package phrase, in both word orders.
+ * The English set names the plain form, the hyphenated form, the prefixed
+ * forms, and the words that end an active package. The Thai set names the
+ * cancelled package next to the package phrase, in both word orders, and the
+ * expired package. The Chinese set names the invalid and the expired
+ * package.
  */
 export const INACTIVE_PATTERNS: Record<ReedyLocale, readonly RegExp[]> = {
-  en: [/\binactive\b/i, /\bnon-?active\b/i, /\bin-active\b/i],
-  th: [/ไม่ใช้งาน/, /ไม่ได้ใช้งาน/, /ยกเลิก[^.]{0,20}แพ็กเกจ/, /แพ็กเกจ[^.]{0,20}ยกเลิก/],
-  zh: [/无效/, /非有效/],
+  en: [
+    /\binactive\b/i,
+    /\bnon-?active\b/i,
+    /\bin-active\b/i,
+    /\bformerly\b/i,
+    /\bpreviously\b/i,
+    /\bno longer\b/i,
+    /\blapsed\b/i,
+    /\bexpired\b/i,
+  ],
+  th: [
+    /ไม่ใช้งาน/,
+    /ไม่ได้ใช้งาน/,
+    /ยกเลิก[^.]{0,20}แพ็กเกจ/,
+    /แพ็กเกจ[^.]{0,20}ยกเลิก/,
+    /หมดอายุ/,
+  ],
+  zh: [/无效/, /非有效/, /已过期/, /过期/],
+};
+
+/**
+ * The approved eligibility sentences of each locale. The list is written here,
+ * not read from a locale file. A sentence that is not on the list does not
+ * state the AC-24 rule, whatever words it carries.
+ */
+export const APPROVED_ELIGIBILITY_SENTENCES: Record<
+  ReedyLocale,
+  readonly string[]
+> = {
+  en: [
+    "Reedy voice practice is open to students with an active class package, on lessons they finished.",
+    "Students with an active Tutor Advantage class package, on the lessons they finished.",
+    "Open to students with an active class package, on the lessons they finished.",
+    "Your students practice speaking with Reedy on the lessons they finished.",
+  ],
+  th: [
+    "การฝึกพูดกับ Reedy เปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ยังใช้งานอยู่ใช้ได้ ในบทเรียนที่เรียนจบแล้ว",
+    "นักเรียนที่มีแพ็กเกจคลาส Tutor Advantage ที่ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว",
+    "เปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว",
+    "นักเรียนของคุณฝึกพูดกับ Reedy ในบทเรียนที่เรียนจบแล้ว",
+  ],
+  zh: [
+    "Reedy 口语练习面向持有有效课程包的学生，用于已完成的课程。",
+    "持有有效 Tutor Advantage 课程包的学生，用于已完成的课程。",
+    "面向持有有效课程包的学生，用于已完成的课程。",
+    "您的学生在已完成的课程上与 Reedy 练习口语。",
+  ],
 };
 
 /**
  * Lists the AC-24 eligibility rules that one text breaks.
+ * The negation, reversal, and marker rules come first. The approved sentence
+ * rule applies only when those rules pass, so a reversal names its own rule.
  * @param value The text to check.
  * @param locale The locale of the text.
  * @param facts The eligibility limits to check.
@@ -99,6 +147,11 @@ export function eligibilityBreaks(
   }
   if (facts.includes("activePackage") && !ACTIVE_WORD[locale].test(value)) {
     breaks.push(`${locale}: activePackage must carry the active word`);
+  }
+  if (breaks.length === 0 && !APPROVED_ELIGIBILITY_SENTENCES[locale].includes(value)) {
+    breaks.push(
+      `${locale}: the sentence must be one of the approved eligibility sentences`,
+    );
   }
   return breaks;
 }
