@@ -66,4 +66,17 @@ describe("blog post loader symlinks", () => {
       rmSync(base, { recursive: true, force: true });
     }
   });
+
+  it("flags a symlink to a directory named .md (ADV-22)", () => {
+    const { base, localeDir } = postsTree();
+    try {
+      const target = path.join(localeDir, "zz-dir-target");
+      mkdirSync(target);
+      symlinkSync("zz-dir-target", path.join(localeDir, "zz-dirlink.md"));
+      expect(brokenPostRefs(base)).toContain("en/zz-dirlink.md");
+      expect(listPostFiles(base)).not.toContain("en/zz-dirlink.md");
+    } finally {
+      rmSync(base, { recursive: true, force: true });
+    }
+  });
 });

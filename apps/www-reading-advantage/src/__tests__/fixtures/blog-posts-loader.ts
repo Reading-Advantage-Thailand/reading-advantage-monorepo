@@ -83,18 +83,22 @@ export function listPostFiles(base: string = POSTS_BASE): string[] {
 }
 
 /**
- * Finds symbolic links whose target cannot be resolved.
+ * Finds .md entries that cannot be read as a regular file after following
+ * links: broken links, symlinks to directories, sockets, fifos and directories
+ * named .md. The phase-base suite and blog.ts call readFileSync on every .md
+ * name, so each of these entries is a loud fault, not a file to skip.
  * @param base The posts root, defaulting to the app's posts directory.
- * @returns One "<locale>/<file>" reference per broken link.
+ * @returns One "<locale>/<file>" reference per unreadable .md entry.
  */
 export function brokenPostRefs(base: string = POSTS_BASE): string[] {
   const refs: string[] = [];
   for (const localeDir of localeDirectories(base)) {
     const locale = path.basename(localeDir);
     for (const entry of fs.readdirSync(localeDir, { withFileTypes: true })) {
-      if (!entry.isSymbolicLink()) continue;
+      if (!/\.md$/i.test(entry.name)) continue;
+      const fullPath = path.join(localeDir, entry.name);
       try {
-        fs.statSync(path.join(localeDir, entry.name));
+        if (!fs.statSync(fullPath).isFile()) refs.push(`${locale}/${entry.name}`);
       } catch {
         refs.push(`${locale}/${entry.name}`);
       }
