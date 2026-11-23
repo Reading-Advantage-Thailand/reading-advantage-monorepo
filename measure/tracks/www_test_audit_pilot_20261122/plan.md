@@ -320,6 +320,28 @@ Each task below is one commit for one class.
   GREEN log: measure/runs/www_test_audit_pilot_20261122/green-09c48878d.log.
   COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-09c48878d.log.
   Line coverage is 91.64 percent, above the 85.52 floor.
+- [x] 3.7 Review A remediation F20 (0f63c5a9a)
+  Commit: 0f63c5a9acd42b0b35f2690962aa1db85b9a5ed9.
+  Proof: measure/runs/www_test_audit_pilot_20261122/proof-f20-phase-4-browser-regressions.log.
+  Proof: measure/runs/www_test_audit_pilot_20261122/proof-f20-phase-4-browser-regressions-remaining.log.
+  cases_before=1388, cases_after=1394. Six new backdrop unit cases raise the count.
+  resolveBackdrop now walks ancestors recursively. It composites each
+  translucent layer over the resolved backdrop of its parent, stops at an
+  opaque layer, skips a fully transparent layer, and falls back to the page
+  background at the root. A background image or a colour the parser cannot
+  read throws with the element tag and the offending value. Custom properties
+  defined by the compiled stylesheet resolve from that stylesheet. Foreground
+  colours stay strict.
+  The unit test pins the composed ratio for translucent over translucent over
+  an opaque ancestor, translucent over the page, gradient and unsupported
+  colour throws, a transparent skip, and an opaque stop.
+  Both R2 contrast tests still pass on the shipped pages. A sky-300 contact
+  eyebrow and a slate-400 pricing title each failed the target test with exit
+  1. Each production file was restored.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-0f63c5a9a.json.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-0f63c5a9a.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-0f63c5a9a.log.
+  Line coverage is 91.76 percent, above the 85.52 floor.
 
 ## Phase 4: Pilot report
 
