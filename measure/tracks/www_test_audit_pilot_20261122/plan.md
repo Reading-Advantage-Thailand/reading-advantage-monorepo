@@ -588,3 +588,16 @@ Each task below is one commit for one class.
   F42: all line-number citations were replaced by section or table names.
   The lessons gained the line about hand-written evidence tables needing a script.
   No test or production file changed in this round.
+- [x] 4.8 Report review remediation F43 to F45 (1e3c60d83)
+  Commit: 1e3c60d83744b7efcb19d8eb09df4760e1e8112e.
+  Review log: measure/runs/www_test_audit_pilot_20261122/review-a-9976626.log.
+  Report: measure/tracks/www_test_audit_pilot_20261122/report.md.
+  F43: Finding history now holds only run-file pointers, file counts, highest
+  IDs per role and the repeated-ID notice. Finding-to-role maps and statuses
+  were removed. PM-approved items point to plan.md Recorded deviations.
+  F44: 26 green-*.log files hold MEASURE_AGENT_RESULT and a dispositions: line;
+  45 are test-run logs. The report now says so and names green-e91c4d4.log.
+  F45: GREEN logs end with the Vitest summary; COVERAGE logs end with the
+  coverage table and Coverage summary block. Four log ends were read.
+  Full report rescan found no other mapping, file-kind or log-ending claim.
+  No test or production file changed in this round.
