@@ -2,7 +2,16 @@
  * Computes WCAG contrast from the real compiled stylesheet. The helper reads
  * colours through the real-css fixture, so it never uses a hand-written class
  * map. Unresolved colours throw instead of passing by default.
+ *
+ * The backdrop is the composite of every painted ancestor background, walked
+ * from the root toward the text. An opaque layer stops the walk. A layer that
+ * cannot be read throws; it is never treated as transparent.
  */
+import { readFileSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import postcss from "postcss";
+import tailwindcss from "@tailwindcss/postcss";
 import { computedForElement } from "./real-css";
 
 /** An sRGB colour with an alpha channel from 0 to 1. */
@@ -13,11 +22,56 @@ export interface Color {
   readonly a: number;
 }
 
-/** The page backdrop used when no ancestor paints an opaque colour. */
+/** A painted background layer read from one element. */
+export interface BackgroundLayer {
+  /** The parsed colour, or null when the element paints no background. */
+  readonly color: Color | null;
+  /** True when a background image would paint behind the text. */
+  readonly hasImage: boolean;
+}
+
+/** The page backdrop used when no ancestor paints a background. */
 const PAGE_BACKGROUND = "#ffffff";
 
 /** WCAG AA contrast floor for normal body text. */
 export const AA_CONTRAST_MIN = 4.5;
+
+const APP_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
+const CSS_PATH = join(APP_ROOT, "src/app/[locale]/globals.css");
+
+/**
+ * The compiled stylesheet, used only to resolve custom properties that jsdom
+ * leaves as var() text. The source is the app's real globals.css.
+ */
+const compiledCss = (
+  await postcss([tailwindcss({ base: APP_ROOT })])
+    .process(readFileSync(CSS_PATH, "utf8"), { from: CSS_PATH })
+).css;
+
+/** Custom property values from the compiled stylesheet. */
+const customProperties = new Map<string, string>();
+for (const match of compiledCss.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) {
+  if (!customProperties.has(match[1])) {
+    customProperties.set(match[1], match[2].trim());
+  }
+}
+
+/**
+ * Resolves var() references that the compiled stylesheet defines.
+ * @param value The computed background value.
+ * @returns The value with resolvable variables substituted.
+ */
+function resolveVariables(value: string): string {
+  return value.replace(
+    /var\(\s*(--[\w-]+)\s*(?:,\s*([^)]*))?\)/g,
+    (whole, name: string, fallback: string | undefined) => {
+      const defined = customProperties.get(name);
+      if (defined) return resolveVariables(defined);
+      if (fallback) return resolveVariables(fallback.trim());
+      return whole;
+    },
+  );
+}
 
 /**
  * Clamps a channel to the sRGB byte range.
@@ -171,39 +225,67 @@ function blend(foreground: Color, backdrop: Color): Color {
 }
 
 /**
- * Resolves the first painted background from an element or its ancestors.
+ * Reads the painted background layer of one rendered element.
  * @param element The rendered element.
- * @returns The nearest painted colour, blended over the page when translucent.
- * @throws When no ancestor resolves to a supported colour.
+ * @returns The colour layer, or null when nothing is painted.
+ * @throws When a background image or an unreadable colour would paint.
  */
-export function resolvedBackground(element: Element): Color {
-  const page = parseColor(PAGE_BACKGROUND);
-  let node: Element | null = element;
-  while (node !== null) {
-    const value = computedForElement(node, ["background-color"])[
-      "background-color"
-    ];
-    if (value) {
-      try {
-        const color = parseColor(value);
-        if (color.a > 0) return blend(color, page);
-      } catch {
-        // An unresolved ancestor background is not a painted colour. Continue.
-      }
-    }
-    node = node.parentElement;
+export function readBackgroundLayer(element: Element): BackgroundLayer {
+  const tag = element.tagName.toLowerCase();
+  const style = computedForElement(element, [
+    "background-color",
+    "background-image",
+  ]);
+  const image = style["background-image"];
+  if (image && image !== "none") {
+    throw new Error(`Unsupported background image "${image}" on <${tag}>`);
   }
-  return page;
+  const value = style["background-color"];
+  if (!value || value === "transparent" || /^rgba\(\s*0,\s*0,\s*0,\s*0\s*\)$/.test(value)) {
+    return { color: null, hasImage: false };
+  }
+  const resolved = resolveVariables(value);
+  try {
+    const color = parseColor(resolved);
+    if (color.a === 0) return { color: null, hasImage: false };
+    return { color, hasImage: false };
+  } catch {
+    throw new Error(`Unsupported background colour "${value}" on <${tag}>`);
+  }
+}
+
+/**
+ * Resolves the full painted backdrop behind an element.
+ * @param element The rendered element.
+ * @param read The background reader, injectable for unit tests.
+ * @returns The composed opaque backdrop colour.
+ * @throws When a painted layer or background image cannot be resolved.
+ */
+export function resolveBackdrop(
+  element: Element,
+  read: (element: Element) => BackgroundLayer = readBackgroundLayer,
+): Color {
+  const layer = read(element);
+  if (layer.hasImage) {
+    throw new Error(`Background image on <${element.tagName.toLowerCase()}>`);
+  }
+  if (layer.color !== null && layer.color.a >= 1) return layer.color;
+  const parent = element.parentElement;
+  const behind = parent
+    ? resolveBackdrop(parent, read)
+    : parseColor(PAGE_BACKGROUND);
+  if (layer.color === null) return behind;
+  return blend(layer.color, behind);
 }
 
 /**
  * Computes the rendered contrast of one element against its painted backdrop.
  * @param element The rendered text element.
  * @returns The WCAG contrast ratio.
- * @throws When the foreground or background colour cannot be resolved.
+ * @throws When the foreground or backdrop colour cannot be resolved.
  */
 export function contrastOf(element: Element): number {
-  const background = resolvedBackground(element);
+  const background = resolveBackdrop(element);
   const value = computedForElement(element, ["color"])["color"];
   if (!value) throw new Error(`Unresolved foreground colour: ${element.tagName}`);
   const foreground = blend(parseColor(value), background);
