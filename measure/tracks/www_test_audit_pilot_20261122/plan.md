@@ -367,6 +367,25 @@ Each task below is one commit for one class.
   GREEN log: measure/runs/www_test_audit_pilot_20261122/green-93a16fe3b.log.
   COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-93a16fe3b.log.
   Line coverage is 91.83 percent, above the 85.52 floor.
+- [x] 3.9 Adversarial remediation ADV-8 (98c2713d3)
+  Commit: 98c2713d3046bfbf886c2e9c9ad097f46849ddd8.
+  Proof: measure/runs/www_test_audit_pilot_20261122/proof-adv8.log.
+  cases_before=1397, cases_after=1397. The committed adversarial probe adds
+  one case over the prior 1396. This fix adds no case.
+  The loader now lives in src/__tests__/fixtures/blog-posts-loader.ts. It
+  lists every non-hidden regular file in each locale directory, exposes that
+  list to the probe, and parses only .md files as posts. The extension rule
+  and both discovery cases now flag Markdown-like files that are not .md and
+  name them as <locale>/<file>. The shipped -segments.json data files are not
+  post candidates and stay ignored. The probe keeps its expectation; only its
+  loader setup now calls the shared listPostFiles.
+  The proof copies a valid en post to en/zz-adversarial-mdx-probe.mdx. The
+  extension rule and both discovery cases fail and name the file. The probe
+  file is deleted and no leftover exists. The shipped posts pass.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-98c2713d3.json.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-98c2713d3.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-98c2713d3.log.
+  Line coverage is 91.93 percent, above the 85.52 floor.
 
 ## Phase 4: Pilot report
 
