@@ -301,6 +301,25 @@ Each task below is one commit for one class.
   COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-257a6b0c.log.
   Line coverage is 91.6 percent, above the 85.52 floor and the 86.52 baseline.
   The merge counts toward the 20 % target under the Approved merge line.
+- [x] 3.6 Review A remediation F19 (09c48878d)
+  Commit: 09c48878d82fee91688f88ee97bb1aa667b34d0a.
+  Proof: measure/runs/www_test_audit_pilot_20261122/proof-f19-phase-4-browser-regressions.log.
+  Proof: measure/runs/www_test_audit_pilot_20261122/proof-f19-phase-4-browser-regressions-remaining.log.
+  cases_before=1385, cases_after=1388. The new fixture unit test adds three cases.
+  The isDarkText helper is gone from both R2 contrast tests. Each test now
+  uses contrastOf from src/__tests__/fixtures/contrast.ts. The fixture parses
+  hex, rgb(a) and oklch from the real compiled CSS, resolves the background
+  from the element and its ancestors, blends alpha, and throws on an
+  unresolved foreground. The assertion is a ratio of at least 4.5 to 1.
+  The unit test at src/__tests__/contrast-fixture.test.ts pins the F19 fault:
+  rgb(120,120,120) on #faf9f7 is below 4.5. It also pins black on white at 21
+  and a throw on an unparseable colour.
+  Two production mutations, a sky-300 contact eyebrow and a slate-400 pricing
+  title, each failed the target test. Each production file was restored.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-09c48878d.json.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-09c48878d.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-09c48878d.log.
+  Line coverage is 91.64 percent, above the 85.52 floor.
 
 ## Phase 4: Pilot report
 
