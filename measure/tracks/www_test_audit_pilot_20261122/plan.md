@@ -429,6 +429,27 @@ Each task below is one commit for one class.
   coverage-338047c69.log in measure/runs/www_test_audit_pilot_20261122/.
   Line coverage is 92.06 percent at the last gate, above the 85.52 floor.
   Each proof restored its production file. No production or post change remains.
+- [x] 3.12 Adversarial remediation ADV-15 (a53d426d5)
+  Commit: a53d426d5ba9fcf5c0a1f4a85c59a1280c4b96f7.
+  Proof: measure/runs/www_test_audit_pilot_20261122/proof-adv15.log.
+  cases_before=1402, cases_after=1405. The three committed probe cases add the count.
+  No CSS cascade was rebuilt. The helper fails closed: a --color-* custom
+  property declared on the element or any ancestor throws with the tag and
+  property name. The compiled stylesheet is scanned once for colour-token
+  declarations outside :root, :host or html; a matching selector throws with
+  the selector and name, and an unevaluable selector throws. The root token map
+  stays the only resolved source.
+  The two F23 unit cases that expected an inline override to change the ratio
+  now expect a throw. Failing closed replaces the resolve-from-element rule.
+  The probe's ADV-15 assertion now expects a throw naming --color-slate-900;
+  its two held cases still pass.
+  Both R2 contrast tests pass on the shipped pages. The proof adds an inline
+  --color-slate-900 to the pricing h1; the contrast case throws with the
+  property name. The production file was restored.
+  Gate: measure/runs/www_test_audit_pilot_20261122/gate-a53d426d5.json.
+  GREEN log: measure/runs/www_test_audit_pilot_20261122/green-a53d426d5.log.
+  COVERAGE log: measure/runs/www_test_audit_pilot_20261122/coverage-a53d426d5.log.
+  Line coverage is 91.79 percent, above the 85.52 floor.
 
 ## Phase 4: Pilot report
 
