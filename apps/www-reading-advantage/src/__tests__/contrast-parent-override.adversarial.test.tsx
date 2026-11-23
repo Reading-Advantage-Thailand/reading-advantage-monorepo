@@ -58,10 +58,8 @@ describe("contrast helper custom property cascade", () => {
     rendered.container
       .querySelector("div")!
       .setAttribute("style", "--color-slate-900: #ff0000");
-    const layer = readBackgroundLayer(rendered.getByTestId("child"));
-    expect(
-      layer.color?.r,
-      "jsdom pre-resolves var() from :root, so the override is lost and the ratio uses the wrong colour",
-    ).toBe(255);
+    expect(() => readBackgroundLayer(rendered.getByTestId("child"))).toThrow(
+      /--color-slate-900/,
+    );
   });
 });

@@ -7,6 +7,7 @@
  * from the root toward the text. An opaque layer stops the walk. A layer that
  * cannot be read throws; it is never treated as transparent.
  */
+import postcss from "postcss";
 import { compiledCss, jsdomCss } from "./real-css";
 
 /** An sRGB colour with an alpha channel from 0 to 1. */
@@ -39,6 +40,25 @@ const customProperties = new Map<string, string>();
 for (const match of compiledCss.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) {
   if (!customProperties.has(match[1])) {
     customProperties.set(match[1], match[2].trim());
+  }
+}
+
+/** A stylesheet rule that declares a colour token outside the root scope. */
+interface TokenRule {
+  readonly selector: string;
+  readonly name: string;
+}
+
+/** Colour-token rules that could change a tested element's colour. */
+const localTokenRules: TokenRule[] = [];
+for (const rule of postcss.parse(compiledCss).nodes ?? []) {
+  if (rule.type !== "rule") continue;
+  const selector = rule.selector.trim();
+  if (/^:root\b|^:host\b|^html\b/.test(selector)) continue;
+  for (const declaration of rule.nodes ?? []) {
+    if (declaration.type === "decl" && /^--color-/.test(declaration.prop)) {
+      localTokenRules.push({ selector, name: declaration.prop });
+    }
   }
 }
 
@@ -263,6 +283,52 @@ function blend(foreground: Color, backdrop: Color): Color {
 }
 
 /**
+ * Fails when an element or an ancestor declares a colour token locally.
+ * jsdom pre-resolves var() from the :root map, so it can report the root
+ * colour while getPropertyValue reports the local override. The helper cannot
+ * know which one the browser would paint, so it stops instead of guessing.
+ * @param element The element under test.
+ * @throws When a local colour-token declaration or rule is found.
+ */
+function assertNoLocalTokenOverrides(element: Element): void {
+  let node: Element | null = element;
+  while (node !== null) {
+    if (node !== document.documentElement && node instanceof HTMLElement) {
+      const inline = node.getAttribute("style") ?? "";
+      for (const match of inline.matchAll(/(?:^|;)\s*(--[\w-]+)\s*:/g)) {
+        if (/^--color-/.test(match[1])) {
+          throw new Error(
+            `Local custom property ${match[1]} on <${node.tagName.toLowerCase()}>`,
+          );
+        }
+      }
+      for (const name of Array.from(node.style)) {
+        if (/^--color-/.test(name)) {
+          throw new Error(
+            `Local custom property ${name} on <${node.tagName.toLowerCase()}>`,
+          );
+        }
+      }
+    }
+    node = node.parentElement;
+  }
+
+  for (const rule of localTokenRules) {
+    let matches: boolean;
+    try {
+      matches = element.matches(rule.selector);
+    } catch {
+      throw new Error(`Cannot evaluate selector ${rule.selector} for ${rule.name}`);
+    }
+    if (matches) {
+      throw new Error(
+        `Custom property ${rule.name} from ${rule.selector} on <${element.tagName.toLowerCase()}>`,
+      );
+    }
+  }
+}
+
+/**
  * Reads the painted background layer of one element from jsdom's cascade.
  * @param element The rendered element.
  * @returns The colour layer, or null when nothing is painted.
@@ -270,6 +336,7 @@ function blend(foreground: Color, backdrop: Color): Color {
  */
 export function readBackgroundLayer(element: Element): BackgroundLayer {
   ensureCascade();
+  assertNoLocalTokenOverrides(element);
   const tag = element.tagName.toLowerCase();
   const style = window.getComputedStyle(element);
   const image = style.backgroundImage;
@@ -321,6 +388,7 @@ export function resolveBackdrop(
  * @throws When the foreground or backdrop colour cannot be resolved.
  */
 export function contrastOf(element: Element): number {
+  assertNoLocalTokenOverrides(element);
   const background = resolveBackdrop(element);
   ensureCascade();
   const value = window.getComputedStyle(element).color;

@@ -158,20 +158,20 @@ describe("WCAG contrast fixture", () => {
     }
   });
 
-  it("uses an inline custom property override on the element", () => {
+  it("throws on an inline custom property override on the element", () => {
     const leaf = document.createElement("span");
     leaf.style.setProperty("--color-slate-900", "#faf9f7");
     leaf.style.color = "var(--color-slate-900)";
     leaf.style.backgroundColor = "rgb(250, 249, 247)";
     document.body.appendChild(leaf);
     try {
-      expect(contrastOf(leaf)).toBeCloseTo(1, 1);
+      expect(() => contrastOf(leaf)).toThrow(/--color-slate-900/);
     } finally {
       leaf.remove();
     }
   });
 
-  it("uses a custom property override set on an ancestor", () => {
+  it("throws on a custom property override set on an ancestor", () => {
     const parent = document.createElement("div");
     parent.style.setProperty("--color-slate-900", "#faf9f7");
     parent.style.backgroundColor = "rgb(250, 249, 247)";
@@ -180,7 +180,7 @@ describe("WCAG contrast fixture", () => {
     parent.appendChild(leaf);
     document.body.appendChild(parent);
     try {
-      expect(contrastOf(leaf)).toBeCloseTo(1, 1);
+      expect(() => contrastOf(leaf)).toThrow(/--color-slate-900/);
     } finally {
       parent.remove();
     }
