@@ -36,4 +36,58 @@ describe("AC-24 reversal probes that must break the eligibility check", () => {
       probe,
     ).not.toEqual([]);
   });
+
+  it("en: not currently active", () => {
+    const probe =
+      "Open to students with a package that is not currently active, on lessons they finished.";
+    expect(
+      eligibilityBreaks(probe, "en", ["activePackage", "finishedLesson"]),
+      probe,
+    ).not.toEqual([]);
+  });
+
+  it("en: lapsed package", () => {
+    const probe =
+      "Open to students with a lapsed class package, on lessons they finished.";
+    expect(
+      eligibilityBreaks(probe, "en", ["activePackage", "finishedLesson"]),
+      probe,
+    ).not.toEqual([]);
+  });
+
+  it("en: expired package", () => {
+    const probe =
+      "Open to students with an expired class package, on lessons they finished.";
+    expect(
+      eligibilityBreaks(probe, "en", ["activePackage", "finishedLesson"]),
+      probe,
+    ).not.toEqual([]);
+  });
+
+  it("en: formerly active package", () => {
+    const probe =
+      "Open to students with a formerly active class package, on lessons they finished.";
+    expect(
+      eligibilityBreaks(probe, "en", ["activePackage", "finishedLesson"]),
+      probe,
+    ).not.toEqual([]);
+  });
+
+  it("th: expired package", () => {
+    const probe =
+      "เปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่แต่หมดอายุ ในบทเรียนที่เรียนจบแล้ว";
+    expect(
+      eligibilityBreaks(probe, "th", ["activePackage", "finishedLesson"]),
+      probe,
+    ).not.toEqual([]);
+  });
+
+  it("zh: expired package", () => {
+    const probe =
+      "面向课程包已过期但仍标记为有效的学生，用于已完成的课程。";
+    expect(
+      eligibilityBreaks(probe, "zh", ["activePackage", "finishedLesson"]),
+      probe,
+    ).not.toEqual([]);
+  });
 });
