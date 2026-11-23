@@ -1,0 +1,12 @@
+{
+  "track_id": "storytime_speed_hill_climb_20261123",
+  "type": "chore",
+  "lane": "light",
+  "status": "new",
+  "created_at": "2026-11-23T00:00:00Z",
+  "updated_at": "2026-11-23T00:00:00Z",
+  "description": "Load the Storytime sign-in LCP art eagerly with a priority hint, responsive srcset and sizes, and four small WebP candidates, so the local Lighthouse mobile median LCP on /th/sign-in falls under 2.5 s. Record the TTFB cause in one line and fix nothing there.",
+  "estimated_tasks": 1,
+  "actual_tasks": null,
+  "deviation_notes": "PM decision 2026-11-23. Daniel approved a speed hill climb with the words \"Sounds good\". Priority P1: Storytime is the critical path for the 30 Nov launch. The evidence is the report storytime-speed-baseline-2026-11-23.md of the advantage-pr repository, read only. The change joins the launch-day deploy batch, which needs Daniel's word. The plan holds no deploy task and no traffic task."
+}

@@ -44,6 +44,11 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
+- [ ] **Track: Storytime speed hill climb: the sign-in LCP art** — *created 2026-11-23*
+  *Link: [./tracks/storytime_speed_hill_climb_20261123/](./tracks/storytime_speed_hill_climb_20261123/)*
+  *Status: new, light lane, one task in one phase; PM decision 2026-11-23, Daniel approved the speed hill climb ("Sounds good"); P1, Storytime is the critical path for the 30 Nov launch | Owner: Monorepo orchestrator*
+  *Note: the sign-in LCP art loads lazy at 145508 bytes. The sign-in medians are performance 0.77 (TH) and 0.74 (EN), with LCP 4015 ms and 4290 ms. The task makes the art eager with a priority hint, adds a `srcset`, `sizes`, and four small WebP candidates, and records the TTFB cause in one line. Done when a local Lighthouse mobile median of 3 runs shows LCP under 2.5 s on /th/sign-in and the browser look shows no visible change. The change joins the launch-day deploy batch, which needs Daniel's word; the plan holds no deploy task.*
+
 - [~] **Track: www daily blog posts of PR** — *created 2026-11-15*
   *Link: [./tracks/www_daily_blog_posts_20261115/](./tracks/www_daily_blog_posts_20261115/)*
   *Status: active, light lane; post 2026-11-15 (`a-five-year-old-reads-by-herself`) live; one task per post; the track stays open for later daily posts | Owner: Monorepo orchestrator | PM task A-61 follow-up*
