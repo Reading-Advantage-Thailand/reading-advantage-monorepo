@@ -3,6 +3,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { BlogCard } from "@/components/blog/blog-card";
 import PricingPage from "@/app/[locale]/(marketing)/pricing/page";
 import type { BlogListItem } from "@/types/blog";
+import { computedForElement } from "./fixtures/real-css";
+import { AA_CONTRAST_MIN, contrastOf } from "./fixtures/contrast";
 
 const serverWiring = vi.hoisted(() => ({
   getScopedI18n: vi.fn(async (scope: string) => {
@@ -55,16 +57,29 @@ describe("Remaining Phase 4 browser regression contracts", () => {
       await BlogCard({ post: mobileRelatedPost, locale: "en" }),
     );
     const card = rendered.container.firstElementChild;
-    const imageFrame = rendered.container.querySelector(".relative.h-48");
+    const image = rendered.container.querySelector("img");
+    const imageFrame = image?.parentElement;
     const tags = [...rendered.container.querySelectorAll("span")].filter(
       (tag) => tag.textContent === mobileRelatedPost.tags[0],
     );
+    const cardStyle =
+      card instanceof HTMLElement
+        ? computedForElement(card, ["min-width", "max-width"])
+        : {};
+    const frameStyle =
+      imageFrame instanceof HTMLElement
+        ? computedForElement(imageFrame, ["max-width"])
+        : {};
     const contained =
-      card?.classList.contains("min-w-0") &&
-      card.classList.contains("max-w-full") &&
-      imageFrame?.classList.contains("max-w-full") &&
+      cardStyle["min-width"] === "calc(var(--spacing) * 0)" &&
+      cardStyle["max-width"] === "100%" &&
+      frameStyle["max-width"] === "100%" &&
       tags.length === 1 &&
-      tags.every((tag) => tag.classList.contains("break-words"));
+      tags.every(
+        (tag) =>
+          computedForElement(tag, ["overflow-wrap"])["overflow-wrap"] ===
+          "break-word",
+      );
 
     expect
       .soft(
@@ -76,18 +91,12 @@ describe("Remaining Phase 4 browser regression contracts", () => {
 
   it("keeps pricing hero text at WCAG-AA contrast", async () => {
     const rendered = render(await PricingPage());
-    const hero = rendered.container.querySelector("main > section");
+    const hero = rendered.container.querySelector('[data-testid="pricing-hero"]');
     const title = hero?.querySelector("h1");
     const description = hero?.querySelector("p");
     const safeText = [title, description].every(
       (element) =>
-        element != null &&
-        !element.classList.contains("text-white/90") &&
-        !element.classList.contains("text-slate-400") &&
-        (element.classList.contains("text-black") ||
-          element.classList.contains("text-slate-700") ||
-          element.classList.contains("text-slate-800") ||
-          element.classList.contains("text-slate-900")),
+        element instanceof HTMLElement && contrastOf(element) >= AA_CONTRAST_MIN,
     );
 
     expect

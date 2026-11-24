@@ -1,0 +1,32 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+·············x
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/www-features-look-pins.red.test.ts > F3r6: full-width rows are driven by image presence > keeps the picture wrapper width-limited
+AssertionError: storytime picture wrapper width limit: expected 'auto' to be 'calc(var(--spacing) * 48)' // Object.is equality
+
+Expected: [32m"calc(var(--spacing) * 48)"[39m
+Received: [31m"auto"[39m
+
+ ❯ src/__tests__/www-features-look-pins.red.test.ts:259:64
+    257|     for (const id of PICTURED) {
+    258|       const style = computedForElement(pictureWrapper(id), ["width"]);
+    259|       expect(style.width, `${id} picture wrapper width limit`).toBe(sh…
+       |                                                                ^
+    260|     }
+    261|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  02:12:32
+   Duration  1.95s (transform 184ms, setup 69ms, import 705ms, tests 575ms, environment 440ms)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run src/__tests__/www-features-look-pins.red.test.ts '--maxWorkers=1' '--reporter=dot'

@@ -1,0 +1,59 @@
+# Baseline log tails: www test audit pilot, Phase 1 task 1.1
+
+Two commands ran through the shared runner with HEAVY_PREFLIGHT_WAIT_S=3600.
+Both exited 0. Both report 91 test files and 3175 test cases passing.
+The coverage run needed no extra flag: it finished without OOM, so no
+`-- --maxWorkers=1` was added.
+
+## 1. Vitest run (GREEN_TEST_COMMAND)
+
+Command: CI=true pnpm --filter www-reading-advantage exec vitest run
+--maxWorkers=1 --reporter=dot
+
+Tail (verbatim):
+
+```
+ Test Files  91 passed (91)
+      Tests  3175 passed (3175)
+   Start at  16:52:12
+   Duration  90.47s (transform 1.33s, setup 4.25s, import 8.62s, tests 32.00s, environment 37.01s)
+```
+
+Result: exit 0. case_count=3175, files=91, status pass.
+Wall time of the test run: test_wall_seconds=90.47.
+
+## 2. Coverage run (COVERAGE_COMMAND)
+
+Command: pnpm --filter www-reading-advantage test:coverage
+
+Tail (verbatim, coverage table plus test summary):
+
+```
+ Test Files  91 passed (91)
+      Tests  3175 passed (3175)
+   Start at  17:11:10
+   Duration  149.11s (transform 1.71s, setup 5.10s, import 9.49s, tests 85.25s, environment 36.17s)
+
+ Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   85.21 |    76.74 |   78.24 |   86.52 |
+...
+=============================== Coverage summary ===============================
+Statements   : 85.21% ( 1424/1671 )
+Branches     : 76.74% ( 680/886 )
+Functions    : 78.24% ( 374/478 )
+Lines        : 86.52% ( 1349/1559 )
+================================================================================
+```
+
+Result: exit 0. line_coverage_pct=86.52, branch_coverage_pct=76.74,
+function_coverage_pct=78.24, statement_coverage_pct=85.21.
+Wall time of the coverage run: coverage_wall_seconds=149.11.
+
+Note: the coverage output lists RolldownError parse failures for Thai
+blog `.md` files while remapping V8 coverage. Those files are not
+JavaScript. The provider excludes them from coverage and continues.
+The suite still reports 3175 passed with exit 0, so the errors are
+remap noise, not test failures.

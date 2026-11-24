@@ -1,6 +1,9 @@
-import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { cleanup, render } from "@testing-library/react";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import HomePage from "@/app/[locale]/(marketing)/(home)/page";
+import MathPage from "@/app/[locale]/(marketing)/products/math-advantage/page";
+import ZhongwenPage from "@/app/[locale]/(marketing)/products/zhongwen-advantage/page";
+import MasteryPage from "@/app/[locale]/(marketing)/mastery-advantage/page";
 import en from "@/locales/en";
 import th from "@/locales/th";
 import zh from "@/locales/zh";
@@ -12,6 +15,37 @@ const MESSAGES: Record<"en" | "th" | "zh", Dict> = {
   th: th as unknown as Dict,
   zh: zh as unknown as Dict,
 };
+
+/** Resolves a scoped key from the English dictionary and interpolates values. */
+function scopedValue(
+  scope: string,
+  key: string,
+  values?: Record<string, string | number>,
+): string {
+  let value: unknown = en as Dict;
+  for (const segment of `${scope}.${key}`.split(".")) {
+    if (value === null || typeof value !== "object" || !(segment in value)) {
+      return `${scope}.${key}`;
+    }
+    value = (value as Dict)[segment];
+  }
+  if (typeof value !== "string") return `${scope}.${key}`;
+  return Object.entries(values ?? {}).reduce(
+    (text, [name, replacement]) =>
+      text.replaceAll(`{${name}}`, String(replacement)),
+    value,
+  );
+}
+
+vi.mock("@/locales/server", () => ({
+  getI18n: vi.fn(() => Promise.resolve((key: string) => scopedValue("", key))),
+  getScopedI18n: vi.fn(
+    async (scope: string) =>
+      (key: string, values?: Record<string, string | number>) =>
+        scopedValue(scope, key, values),
+  ),
+  getStaticParams: vi.fn(() => []),
+}));
 
 /**
  * Reads one locale string by its dotted path.
@@ -28,13 +62,54 @@ function read(locale: "en" | "th" | "zh", path: string): string | undefined {
   return typeof value === "string" ? value : undefined;
 }
 
+/** Collects every string leaf of a dictionary. */
+function leaves(value: unknown): string[] {
+  if (typeof value === "string") return [value];
+  if (Array.isArray(value)) return value.flatMap(leaves);
+  if (value !== null && typeof value !== "object") return [];
+  return Object.values(value as Dict).flatMap(leaves);
+}
+
+/** Installs browser globals that the marketing components need on render. */
+beforeAll(() => {
+  vi.stubGlobal(
+    "IntersectionObserver",
+    class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+      takeRecords() {
+        return [];
+      }
+    },
+  );
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn(() => ({
+      matches: true,
+      addEventListener() {},
+      removeEventListener() {},
+      addListener() {},
+      removeListener() {},
+    })),
+  );
+});
+
+afterEach(() => {
+  cleanup();
+});
+
 /**
- * Reads one www source file as text.
- * @param name The path under the www app directory.
- * @returns The file text.
+ * Renders a real page with the English dictionary and returns its text.
+ * @param page A function that returns a rendered page element.
+ * @returns The rendered text content.
  */
-function readSource(name: string): string {
-  return readFileSync(resolve(process.cwd(), name), "utf8");
+async function renderedText(
+  page: () => unknown,
+): Promise<string> {
+  const element = (await page()) as React.ReactElement;
+  const container = render(element).container;
+  return container.textContent ?? "";
 }
 
 /** File line 51 (2026-11-16): the home roadmap strip names the 2027 school year. */
@@ -204,10 +279,12 @@ describe("www batch 2026-11-19, home roadmap strip (file line 51)", () => {
     expect(read("th", key)).toBe(thLine);
   });
 
-  it("tags the Science, Math, and Zhongwen roadmap cards with the 2027 school year", () => {
-    const page = readSource("src/app/[locale]/(marketing)/(home)/page.tsx");
-    const tags = page.match(/tag: t\("v2\.products\.roadmapTag2027"\)/g) ?? [];
-    expect(tags).toHaveLength(3);
+  it("tags the Science, Math, and Zhongwen roadmap cards with the 2027 school year", async () => {
+    const text = await renderedText(() =>
+      HomePage({ params: Promise.resolve({ locale: "en" }) }),
+    );
+    const tags = text.match(/2027 school year/g) ?? [];
+    expect(tags.length, "three roadmap cards carry the 2027 tag").toBeGreaterThanOrEqual(3);
   });
 
   it("keeps the STEM roadmap card on the planned tag", () => {
@@ -219,9 +296,8 @@ describe("www batch 2026-11-19, home roadmap strip (file line 51)", () => {
     expect(read("zh", "pages.home.v2.products.roadmapNote")).toBe(
       "在2027学年，泰国小学开设 Science Advantage、Math Advantage 和 Zhongwen Advantage，配套练习册和应用。",
     );
-    const home = readSource("src/locales/pages/home.ts");
-    const zhBlock = home.slice(home.indexOf("export const zh"));
-    expect(zhBlock).not.toContain("这些产品线在计划中，我们不给出日期。");
+    const retired = "这些产品线在计划中，我们不给出日期。";
+    expect(leaves(zh).some((leaf) => leaf.includes(retired))).toBe(false);
   });
 });
 
@@ -243,14 +319,14 @@ describe("www batch 2026-11-19, limit words go (file line 55)", () => {
     expect(read("th", "pages.masteryAdvantage.powersEveryProduct.cards.reading.status")).toBeUndefined();
   });
 
-  it("renders the reading card with no status badge", () => {
-    const page = readSource("src/app/[locale]/(marketing)/mastery-advantage/page.tsx");
-    expect(page).toContain('"status" in run');
+  it("renders the reading card with no status badge", async () => {
+    const text = await renderedText(() => MasteryPage());
+    expect(text).not.toContain("On sale now");
   });
 
-  it("drops the planned-date default in the mastery graph", () => {
-    const graph = readSource("src/components/marketing/mastery-advantage-graph.tsx");
-    expect(graph).not.toContain('planned: "Planned, no date"');
+  it("drops the planned-date default in the mastery graph", async () => {
+    const text = await renderedText(() => MasteryPage());
+    expect(text).not.toContain("Planned, no date");
   });
 });
 
@@ -262,14 +338,18 @@ describe("www batch 2026-11-19, Managed Service condition goes (file line 56)", 
 });
 
 describe("www batch 2026-11-19, planned-product pages (file line 57)", () => {
-  it("drops the efficacy-stats sentence from the math page", () => {
-    const page = readSource("src/app/[locale]/(marketing)/products/math-advantage/page.tsx");
-    expect(page).toContain("Math Advantage is on our product roadmap.");
-    expect(page).not.toContain("Specific efficacy stats");
+  it("drops the efficacy-stats sentence from the math page", async () => {
+    const text = await renderedText(() =>
+      MathPage({ params: Promise.resolve({ locale: "en" }) }),
+    );
+    expect(text).toContain("Math Advantage is on our product roadmap.");
+    expect(text).not.toContain("Specific efficacy stats");
   });
 
-  it("removes the launch-date FAQ item from the zhongwen page", () => {
-    const page = readSource("src/app/[locale]/(marketing)/products/zhongwen-advantage/page.tsx");
-    expect(page).not.toContain("When will Zhongwen Advantage launch?");
+  it("removes the launch-date FAQ item from the zhongwen page", async () => {
+    const text = await renderedText(() =>
+      ZhongwenPage({ params: Promise.resolve({ locale: "en" }) }),
+    );
+    expect(text).not.toContain("When will Zhongwen Advantage launch?");
   });
 });

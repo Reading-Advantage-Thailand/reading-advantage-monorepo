@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 3: Rewrite batch (R1-R3), adversarial round 5 (confirmation)",
+  "baseline_sha": "e9ccdac5e",
+  "phase_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "role_base_sha": "496ce22335df338926d9d8467770228247b53f30",
+  "audited_head_sha": "496ce22335df338926d9d8467770228247b53f30",
+  "status": "fail",
+  "summary": "ADV-15 is closed: the helper fails closed and throws on an inline --color-* token declared on the element or an ancestor, and the shipped pricing, contact, and hero surfaces pass with no false throw (25 tests). The orchestrator-directed change of the ADV-15 assertion to expect a throw is sound: a throw is a valid way not to pass silently. One silent pass remains: a colour-token rule injected through a <style> element at test time is not in the compiled-stylesheet scan, so a tested element matching it computes from :root without throwing. ADV-17 routes to Green with a committed failing probe.",
+  "blocking_findings": [
+    "ADV-17 [Blocker] adversarial: the contrast guard scans only the compiled stylesheet once at module load. A temporary probe injected <style> .adv-token-override { --color-slate-900: #ff0000; } and rendered a tested child inside that class; readBackgroundLayer did not throw and the ratio computed from the :root token, the same silent-pass class as ADV-15. Route-to-Green: extend the guard to the document stylesheets present at read time (or hook injected styles), so any rule declaring a --color-* token that a tested element matches throws. The committed probe src/__tests__/contrast-parent-override.adversarial.test.tsx fails its ADV-17 case until the fix lands."
+  ],
+  "nonblocking_findings": [
+    "ADV-15 closed: a53d426d5 fails closed. The helper throws, naming tag and property, when a --color-* token is declared inline on the element or an ancestor, and when the element matches a compiled-stylesheet rule outside :root/:host/html that declares such a token; the root token map is the only resolved source.",
+    "ADV-18 [Note] adversarial: the compiled-stylesheet rule check calls element.matches(selector) on the tested element only; an ancestor that matches a token rule is not checked (inline ancestor declarations are caught by the inline walk).",
+    "ADV-19 [Note] adversarial: the token-rule scan reads top-level postcss nodes; a --color-* declaration nested inside @media or @support in the compiled stylesheet would not be scanned (the shipped theme tokens live at :root, so this is theoretical)."
+  ],
+  "evidence": [
+    "pnpm --filter www-reading-advantage exec vitest run on the probe file, contrast-fixture.test.ts, and the three R2 contrast tests at 496ce2233: 5 files, 25 tests, all passed, so the shipped pages pass with no false throw.",
+    "The orchestrator-directed ADV-15 assertion (expect toThrow /--color-slate-900/) passes: the helper throws for a correctly-cased parent inline override.",
+    "The injected-style probe failed with 'expected [Function] to throw an error', proving a silent pass for a class rule injected at test time.",
+    "The committed probe at 3bad02148 passes its ADV-15 and two held cases and fails its ADV-17 case; the temporary probe file was deleted."
+  ],
+  "commands": [
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/contrast-parent-override.adversarial.test.tsx src/__tests__/contrast-fixture.test.ts src/__tests__/phase-4-browser-regressions.red.test.tsx src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx src/__tests__/hero-text-contrast.red.test.ts --reporter=dot",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/tmp-injected-style-probe.adversarial.test.tsx --reporter=verbose",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/contrast-parent-override.adversarial.test.tsx --reporter=verbose",
+    "git add apps/www-reading-advantage/src/__tests__/contrast-parent-override.adversarial.test.tsx && git commit -m 'test(www): add phase 3 round 5 adversarial checks (track_id: www_test_audit_pilot_20261122)'"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/contrast-parent-override.adversarial.test.tsx",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-3bad021.json",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-3bad021.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "kimi-code-plan-cn/kimi-for-coding",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "The fail-closed guard closes ADV-15 and the shipped pages pass, but an injected class rule still passes silently (contrast-parent-override.adversarial.test.tsx fails 1 of 4)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "A throw on an unreadable override is a valid non-silent failure; the committed probe pins the remaining injected-style gap."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "No production edit; the only commit updates the probe file."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The silent pass is proven by an expected-throw assertion that received no error, on top of the 25-test green run."
+    }
+  ]
+}

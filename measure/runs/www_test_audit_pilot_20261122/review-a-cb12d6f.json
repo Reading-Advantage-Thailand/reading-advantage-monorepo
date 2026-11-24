@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "cb12d6f0fe6fee1f5268214b5d2d5ae25ca96636",
+  "phase_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "role_base_sha": "cb12d6f0fe6fee1f5268214b5d2d5ae25ca96636",
+  "audited_head_sha": "cb12d6f0fe6fee1f5268214b5d2d5ae25ca96636",
+  "status": "fail",
+  "summary": "F29 is closed. The report's timing schema and five sums match the JSON. The plan's new claim that 35 role JSONs carry route and phase fields is off by one.",
+  "blocking_findings": [
+    "F30 [Blocker] review-a: plan.md:553–554 says route and phase are present in all 35 role JSONs. The pre-existing role artifact set has 37 JSONs: 36 have both fields, and spec-review-735a7fe.json has a phase but no route. Correct the count or define a 35-file subset."
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD returned cb12d6f0fe6fee1f5268214b5d2d5ae25ca96636, matching role_base_sha and audited_head_sha.",
+    "F29 withdrawn: report.md:256 now states that timing-at-head.json has no root duration field and names its real root, testResults[], and assertionResults[] fields.",
+    "A fresh calculation from timing-at-head.json sums all assertionResults[].duration values by testResults[] file. The five largest totals match report.md:260–264: 6461.93, 1649.38, 1303.32, 970.85, and 859.77 ms.",
+    "timing-at-head.json contains 98 testResults entries. Every entry has assertionResults, startTime, endTime, status, message, and name. None has a file-level duration field. All 1412 assertion results have a nonzero duration.",
+    "The report states the cause of the CI increase is not recorded, labels its explanation HYPOTHESIS, says the hypothesis is not proven, and does not claim that the pilot made the suite faster.",
+    "The report's other file-field claims checked here are correct: all 30 gate JSONs contain green_exit_code, and baseline.json has test_wall_seconds=90.47.",
+    "The plan's route/phase count does not match the role artifacts that existed before the two Phase 4 report reviews and this review artifact: 37 role JSONs are in that set, 36 have route and phase, and spec-review-735a7fe.json lacks route.",
+    "The exact range e034575f4159e6977231c22e0f6ffc93f1512d53..cb12d6f0fe6fee1f5268214b5d2d5ae25ca96636 changes only report.md and plan.md. The report changes correct F29 and clarify the gate field name and case-count wording.",
+    "The plan records F29 remediation at task 4.5 and cites commit e97dc1353, the report, the prior review log, and timing evidence. The commit resolves with git cat-file -e; green-e97dc1353.log ends with 98 files and 1412 tests passed."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --name-status e034575f4159e6977231c22e0f6ffc93f1512d53..cb12d6f0fe6fee1f5268214b5d2d5ae25ca96636",
+    "python3 -c \"import json; d=json.load(open('measure/runs/www_test_audit_pilot_20261122/timing-at-head.json')); a=[x for r in d['testResults'] for x in r.get('assertionResults',[])]; by_file=[(sum(x.get('duration',0) for x in r.get('assertionResults',[])),r['name'].split('/apps/www-reading-advantage/')[1]) for r in d['testResults']]; print('root_duration_present=', 'duration' in d, 'assertions=',len(a),'zero_or_missing=',sum(not x.get('duration') for x in a)); [print(f'{p}: {ms:.2f} ms') for ms,p in sorted(by_file,reverse=True)[:5]]\"",
+    "python3 -c \"import json; d=json.load(open('measure/runs/www_test_audit_pilot_20261122/timing-at-head.json')); results=d['testResults']; required={'assertionResults','startTime','endTime','status','message','name'}; missing=[r.get('name') for r in results if not required.issubset(r)]; file_duration=[r.get('name') for r in results if 'duration' in r]; print('testResults=',len(results),'missing_required_keys=',len(missing),'file_duration_fields=',len(file_duration),'root_keys=',','.join(d.keys()))\"",
+    "python3 -c \"import glob,json; fs=glob.glob('measure/runs/www_test_audit_pilot_20261122/gate-*.json'); missing=[]; [missing.append(f) for f in fs if 'green_exit_code' not in json.load(open(f))]; print('gate_jsons=',len(fs),'missing_green_exit_code=',missing)\"",
+    "python3 -c \"import glob,json,os; fs=glob.glob('measure/runs/www_test_audit_pilot_20261122/*.json'); excluded={'review-a-4d41866.json','review-a-e034575.json','review-a-cb12d6f.json'}; rows=[]; [(rows.append((os.path.basename(f),json.load(open(f))))) for f in fs if 'role' in json.load(open(f)) and os.path.basename(f) not in excluded]; good=[(n,d) for n,d in rows if 'route' in d and 'phase' in d]; print('pre-new-review_role_jsons=',len(rows),'with_route_and_phase=',len(good),'missing=',[(n,d.get('role')) for n,d in rows if 'route' not in d or 'phase' not in d])\"",
+    "rg -ni 'field|key|schema' measure/tracks/www_test_audit_pilot_20261122/report.md",
+    "git diff e034575f4159e6977231c22e0f6ffc93f1512d53..cb12d6f0fe6fee1f5268214b5d2d5ae25ca96636 -- measure/tracks/www_test_audit_pilot_20261122/report.md measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "git cat-file -e e97dc13537b4a6c7965e87e0f2f6bde9759b8d1f^{commit}",
+    "tail -10 measure/runs/www_test_audit_pilot_20261122/green-e97dc1353.log",
+    "git status --short"
+  ],
+  "changed_files": [
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "measure/tracks/www_test_audit_pilot_20261122/report.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "escalate_human",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "The F29 timing statement and all five sums are correct, but plan.md:553–554 gives an incorrect role-JSON count."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "No test was requested; the timing JSON and three proof logs were checked directly, and the Green log reports 1412 tests passed."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The exact review range changes report.md and plan.md only."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The verdict uses timing sums, gate schemas, role JSON schemas, baseline.json, and the exact diff."
+    }
+  ]
+}

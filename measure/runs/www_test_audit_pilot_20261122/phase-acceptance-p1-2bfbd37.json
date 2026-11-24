@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "role": "measure-phase-acceptance",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 1: Baseline and classification",
+  "round": 2,
+  "round1_result": "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-51252ca.json",
+  "track_base_sha": "635a604c89b2c909cfce33f555b7f043d4ea520f",
+  "baseline_sha": "2bfbd373fef2fc500798efe721975fa0a345e73f",
+  "phase_base_sha": "cbd023b1bd29333992f7511646cff1245191b049",
+  "phase_end_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+  "role_base_sha": "2bfbd373fef2fc500798efe721975fa0a345e73f",
+  "audited_head_sha": "2bfbd373fef2fc500798efe721975fa0a345e73f",
+  "status": "pass",
+  "summary": "Round 1 blocker F1 is closed. A Phase 1 adversarial result now exists, passes, and is checker-valid. Phase 1 content still verifies at this HEAD. The phase changed no file under apps/. Tasks 1.1 to 1.4 carry [x] with resolving SHAs. classification.md sums to 3175 with the D5 revert (K 3064, D1 67, D2 22, D4 6, R2 16). It covers all 98 test files and keeps K rows first. The baseline files are unchanged. The ex post second-check rate is 6 of 37 (16.2 %), above the 15 % stop rule, with a recorded PM exception. Three nonblocking items stand.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 [Nit] phase-acceptance: The record names the wrong rows for the ex post second-check count. Plan task 4.17, report.md section 6 and the classification errata imply three later misses: D4 navigation, D2 explicit-English and D2 Primary. They say all three were restored in task 2.7. The D2 explicit-English row sits only in the 18-row round 1 sample (second-check-08bec4c.json). The 37-row sample holds D4 navigation, D2 Primary and the D5 features-pricing locale row. The D5 row was reverted in f97a72f90 (task 4.18) after the 2026-11-24 exception. The count 6 of 37 (16.2 %) is right, and it stays above the 15 % stop rule either way. Fix: name the D5 row in report.md section 6, and add a pointer under task 1.3 to tasks 4.17 and 4.18. The PM exception sits in task 4.17 prose, not under Recorded deviations. PM option C of 2026-11-25 reverted the whole D5 class, which covers the third miss.",
+    "N2 [Nit] phase-acceptance: classification.md still holds one stale D5 sentence in the Approved merge line section. The sentence reads 'The second lever is the primary-advantage content pin set (102 D5 cases); its replacement design decides the final count.' The superseded note covers only the Projected cut block above it. Several K row reasons still say 'prose pins split to D5'. The D5 section note explains that the rows returned to K. Review A raised the same sentence as N14 in review-a-2bfbd37.json. Fix: extend the note to that sentence.",
+    "N3 [Nit] phase-acceptance: Plan task 1.3 says 'Rate in the log.' The final log second-check-d1b9d59.log gives no number. The rate sits in the JSON field disagreement_rate_rows, in second-check-1d4ddd2.log and in report.md section 6. This item carries over from round 1 N3. Round 1 N2 (classifier route not recorded) is now disclosed in report.md section 6, so I raise it no more."
+  ],
+  "evidence": [
+    "F1 withdrawn: adversarial-p1-7336f42.json (round 3, status pass, phase 'Phase 1: Baseline and classification', route claude-agent/sonnet#xhigh) exists. Its blocking_findings and four violation arrays are empty. The checker printed 'PASS: audit result is valid'. Its previous_results name adversarial-p1-51252ca.json (fail, ADV-P1-1) and adversarial-p1-fdf62c9.json (fail, ADV-P1-8). Both earlier results are Phase 1 results and both fail with one blocker each.",
+    "git rev-parse HEAD -> 2bfbd373fef2fc500798efe721975fa0a345e73f and git status --short was empty before any write. The probe script phase-acceptance-p1-2bfbd37-probes.py printed 117 PASS lines and 0 FAIL lines. Its sums use the D5 revert: K rows 2843 plus D5 rows 221 equal the Summary K of 3064.",
+    "Currency of the prerequisites: review-a-2bfbd37.json audits exactly this HEAD (status pass, checker-valid, route claude-agent/opus#high). The adversarial result audits 7336f42b3. git diff --name-only 7336f42b3 HEAD lists classification.md, plan.md and report.md, with 0 apps paths. The classification delta is two added note lines ('Note: D5 was reverted on 2026-11-25 by PM option C ...'). The test-only path rule of this role does not cover documents, so I accepted the delta by content check and by Review A at HEAD.",
+    "Phase 1 range is unchanged: git diff --name-status cbd023b1b a1caa5803 lists classification.md and plan.md only. git diff --name-only from the phase base and from the track base to a1caa5803 over apps lists 0 paths. The plan Phase 1 section is identical to the one audited in round 1. Tasks 1.1 to 1.4 carry [x] with SHAs 08bec4c36, d1b9d597b (twice) and a1caa5803, and all of them resolve.",
+    "classification.md at HEAD: K rows come first. Row sums are K 2843, D1 67 (7 delete, 60 rewrite), D2 22, D4 6, D5 221 and R2 16. The Summary table reads K 3064 (96.5 %), D1 67, D2 22, D4 6, D5 0 and R2 16. The check line 3064 + 67 + 22 + 0 + 6 + 0 + 16 = 3175 equals case_count. Each share equals n/3175 within 0.06. The 136 row lines are identical to a1caa5803. The D5 section carries the revert note and four Erratum lines exist, with fb5622ed7 and 9eb3b9c4f as ancestors of HEAD.",
+    "File set at a1caa5803: 98 test files (91 under src/, 6 e2e/*.spec.ts, 1 scripts/__tests__/i18n-cli.test.ts). All 98 have a row, with 0 missing and 0 stray. The 6 e2e rows and the i18n-cli row say 'not counted'. All 77 K files and all 14 D5 files exist at HEAD. The seven tutor-commission test files show an empty git diff from a1caa5803 to HEAD.",
+    "baseline.json by label: case_count=3175, line_coverage_pct=86.52, file_count=91, status=pass. File times are unchanged since round 1 (baseline.json 2026-11-22 17:14). baseline.log agrees (3175 tests, Lines 86.52 %, 'Result: exit 0' twice). heavy-run.log still holds three 'job ended exit 0' lines for the baseline runs (16:53:43, 17:06:04, 17:13:39). gate-0be4a037.json holds cases_before=3175 and cases_after=3168, which is 3175 minus the 7 D1 delete cases. per-file-counts.md matches the row sums for all 91 files. The missing runner JSON is the PM-accepted note ADV-P1-5.",
+    "Second-check chain: second-check-08bec4c.json fail at 4 of 18 (22.22 %), second-check-1d4ddd2.json at 3 of 37 (8.11 %) and second-check-d1b9d59.json pass. The ex post count is 6 of 37 (16.22 %) and rests on three in-sample rows: D4 navigation, D2 Primary and D5 features-pricing locale. The D2 explicit-English row is not in the 37-row sample (see N1). Plan task 4.17 records the PM exception of 2026-11-24 and task 4.18 records PM option C of 2026-11-25. report.md section 6 states the 16.2 % rate and the exception.",
+    "D5 revert f97a72f90: it touches 12 test files under apps/www-reading-advantage/src and no other path. 8 of the 12 files are identical to the pre-D5 commit 5a104ba6d by git diff --numstat. I traced one of the other four (primary-advantage page.content, +17 lines, equals fb5622ed7). The other three rest on probe G13 of adversarial-p1-7336f42.json. git diff --name-only f97a72f90 HEAD -- apps is empty. green-at-f97a72f9.log holds 1494 tests passed and coverage-at-f97a72f9.log holds 92.08 % lines (1675/1819).",
+    "Anti-pattern scan: A3, A4, A6 and A7 do not apply. The Phase 1 diff holds no contract test, filter or registry file. measure/tracks.md is unchanged since round 1. A5 holds: the plan Phase 1 section says 'Both runner commands exited 0' and holds no count, and the heavy-run lines confirm both exits. A9: grep -i 'measure/archive' over classification.md, plan.md and report.md returned exit 1. A15: grep -i -E 'sha256|checksum|sha-256' over classification.md, baseline.json and baseline.log returned exit 1.",
+    "Deviation notes. First, this acceptance and the Phase 1 adversarial pass both ran on claude-agent/sonnet#xhigh, because the route picker returned a barred DeepSeek route. I re-checked the adversarial output with my own probes (checker validity, sums, delta, errata, revert files) and did not re-run its mutation harness. Second, my round 1 JSON used objects in commands, and the checker rejects it ('commands must contain only non-empty strings'). That file had status fail, so it was no gate input. This round writes plain strings.",
+    "Not run: any Vitest suite. Phase 1 ships no test change, and the baseline runs have runner-level proof in heavy-run.log. The Phase 1 tree is not checked out, and test-strategy.md section 1.5 forbids a second worktree. Open items that final-acceptance-dc9d39d.json already lists (N1 doctor.sh pin, N2 plan task 4.3 label, ADV-26 to ADV-32) are not raised again."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git status --short -> 2bfbd373fef2fc500798efe721975fa0a345e73f; empty",
+    "python3 -I measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-2bfbd37-probes.py -> 117 PASS, 0 FAIL, exit 0",
+    "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py audit-result --role adversarial-testing --file measure/runs/www_test_audit_pilot_20261122/adversarial-p1-7336f42.json -> PASS: audit result is valid",
+    "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py audit-result --role review-a --file measure/runs/www_test_audit_pilot_20261122/review-a-2bfbd37.json -> PASS: audit result is valid",
+    "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py audit-result --role phase-acceptance --file measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-51252ca.json -> FAIL: commands must contain only non-empty strings (my round 1 file, superseded)",
+    "git diff --name-status cbd023b1b a1caa5803 -> classification.md and plan.md only",
+    "git diff --name-only cbd023b1b a1caa5803 -- apps; git diff --name-only 635a604c8 a1caa5803 -- apps -> no output",
+    "git diff --name-only 7336f42b3 HEAD -> classification.md, plan.md, report.md",
+    "git diff -U0 7336f42b3 HEAD -- measure/tracks/www_test_audit_pilot_20261122/classification.md -> two added note lines",
+    "git diff --name-only a1caa5803 HEAD -- <the 7 tutor-commission test paths> -> no output",
+    "git diff --name-only f97a72f90 HEAD -- apps -> no output",
+    "git show f97a72f90 --name-only; git diff --numstat 5a104ba6d HEAD -- <each file> -> 12 test files; 8 identical",
+    "grep -a '2026-11-22T1[6-7]' ~/.local/state/heavy-run.log | grep -a www-reading-advantage -> three 'job ended exit 0' lines (93 s, 95 s, 152 s)",
+    "grep -E 'Tests +[0-9]+ passed|Lines +:' green-at-f97a72f9.log coverage-at-f97a72f9.log -> 1494 passed; Lines 92.08 % (1675/1819)",
+    "python3 -I over second-check-1d4ddd2.json and second-check-08bec4c.json sampled_rows -> D4 navigation, D2 Primary, D5 features-pricing in the 37-row sample; D2 explicit-English only in the 18-row sample",
+    "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py role-gate --repo . --role measure-phase-acceptance --track www_test_audit_pilot_20261122 --phase 'Phase 1: Baseline and classification' --baseline cbd023b1bd29333992f7511646cff1245191b049 --result-file measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-2bfbd37.json --log-file measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-2bfbd37.log -> PASS: phase-acceptance gate passed",
+    "git diff --name-only 51252ca9e HEAD | grep -c 'measure/tracks.md' -> 0",
+    "grep -n -i 'measure/archive' classification.md plan.md report.md -> exit 1, no hit",
+    "grep -n -i -E 'sha256|checksum|sha-256' classification.md baseline.json baseline.log -> exit 1, no hit"
+  ],
+  "changed_files": [
+    "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-2bfbd37.json",
+    "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-2bfbd37.log",
+    "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-2bfbd37-probes.py"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "claude-agent/sonnet#xhigh",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "classification.md:233-245 sums to 3175 with K 3064 and the D5 revert, but the ex post count of 6 of 37 names the wrong rows (N1)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "Phase 1 ships no test; the baseline runs have three heavy-run exit 0 lines and adversarial-p1-7336f42.json reports 9 of 9 money mutants failing at HEAD."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --name-status cbd023b1b a1caa5803 lists classification.md and plan.md only, and the 136 classification row lines are identical to a1caa5803."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Every claim has a probe line or command result; per-file-counts.md has no retained runner JSON (PM-accepted ADV-P1-5) and the ex post rows are misnamed (N1)."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "claude-agent/sonnet#xhigh",
+      "agreed": true,
+      "score": 4,
+      "evidence": "adversarial-p1-51252ca.json: the ADV-P1-1 blocker was real (the PM later reverted D5), but its ADV-P1-4 row list names D2 explicit-English, which is not in the 37-row sample."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "claude-agent/sonnet#xhigh",
+      "agreed": true,
+      "score": 4,
+      "evidence": "adversarial-p1-fdf62c9.json: the ADV-P1-8 blocker led to the D5 revert f97a72f90, whose 12-file diff I checked (8 of 12 identical to pre-D5); I did not re-run its mutation harness."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "claude-agent/sonnet#xhigh",
+      "agreed": true,
+      "score": 4,
+      "evidence": "adversarial-p1-7336f42.json: pass is right; I re-checked checker validity, class sums, errata, the revert files and the delta to HEAD, but not its mutation run."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "claude-agent/opus#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-a-2bfbd37.json: pass is right and its N14 is real (classification.md still holds the '102 D5 cases' sentence), but it did not check which rows the ex post rate counts."
+    }
+  ]
+}

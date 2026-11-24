@@ -5,7 +5,7 @@
  */
 import { describe, it, expect } from "vitest";
 import path from "path";
-import { postsDirectory, calculateReadingTime } from "@/lib/blog";
+import { postsDirectory } from "@/lib/blog";
 
 describe("postsDirectory", () => {
   const baseDir = path.join(
@@ -31,11 +31,5 @@ describe("postsDirectory", () => {
 
   it("th path differs from en path", () => {
     expect(postsDirectory("th")).not.toBe(postsDirectory("en"));
-  });
-});
-
-describe("calculateReadingTime returns number", () => {
-  it("returns a number type", () => {
-    expect(typeof calculateReadingTime("some words here for a test")).toBe("number");
   });
 });

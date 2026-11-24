@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: None; this was an artifact audit. Existing log outputs and report evidence were sampled.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-01e1e9d.json and review-a-01e1e9d.log
+plan_updates: none
+known_failures: F48: plan.md:609 says all run-file counts were removed, but plan.md:554-556 retains a historical count of role JSON files.
+handoff: F46 and F47 are withdrawn. The revised log definitions pass six samples, and twelve independent report claims match their evidence. Route F48 to Green to qualify the run-file-count removal claim.
+END_MEASURE_AGENT_RESULT

@@ -102,13 +102,6 @@ describe("tutorScreens adversarial controls", () => {
     }
   });
 
-  it("ADV-M4 slot order is fixed and every portrait flag is false", () => {
-    expect(Object.keys(tutorScreens)).toEqual([...SLOTS]);
-    for (const slot of SLOTS) {
-      expect(tutorScreens[slot].portrait).toBe(false);
-    }
-  });
-
   it("ADV-A1 every repository image file is webp, non-zero, and no source PNG is present", () => {
     const files = allFiles(SCREENS_DIR);
     expect(files.length).toBe(5);

@@ -1,0 +1,40 @@
+PROOF ADV-4/5/6: temporary shipped-copy rewording must fail the main eligibility test.
+Edit: en reedyBlock.points.0 -> "Open to students with a formerly active class package, on lessons they finished."
+Command: CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot src/__tests__/www-tutor-reedy-claim.test.tsx
+Expected: exit 1 with an inactive-package break. Production edit is reverted after this run.
+--- test output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+·······················x····
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/www-tutor-reedy-claim.test.tsx > AC-24: the Reedy block keeps three bullets > en: the first rendered bullet keeps the active-package and finished-lesson limits
+AssertionError: en: the eligibility clause must hold: expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "en: the eligibility clause must not name an inactive package (/\\bformerly\\b/i)",[39m
+[31m+ ][39m
+
+ ❯ expectEligibilityFacts src/__tests__/www-tutor-reedy-claim.test.tsx:138:5
+    136|     eligibilityBreaks(value, locale, facts),
+    137|     `${locale}: the eligibility clause must hold`,
+    138|   ).toEqual([]);
+       |     ^
+    139| }
+    140|
+ ❯ src/__tests__/www-tutor-reedy-claim.test.tsx:347:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 27 passed (28)
+   Start at  13:40:34
+   Duration  1.43s (transform 220ms, setup 59ms, import 353ms, tests 434ms, environment 420ms)
+

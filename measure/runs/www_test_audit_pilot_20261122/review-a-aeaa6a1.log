@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: None; this was an artifact audit. Existing test and coverage logs were sampled.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-aeaa6a1.json and review-a-aeaa6a1.log
+plan_updates: none
+known_failures: F46: report.md:173 misclassifies Green result logs. F47: plan.md:598-599 has stale Green log counts.
+handoff: F43, F44, and F45 are withdrawn after checking the updated report and log files. Route F46 and F47 to Green for correction. Twelve independent report claims match their cited evidence. The exact range changes report.md and plan.md only.
+END_MEASURE_AGENT_RESULT

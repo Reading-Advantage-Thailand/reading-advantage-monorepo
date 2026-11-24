@@ -1,0 +1,37 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+··x
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/products-entrance-visibility.red.test.ts > entrance animation visibility guards (A-59, computed behavior) > renders the workbook image without a permanent blur or fade
+AssertionError: workbook image must carry no blur utility: expected [ 'blur-sm' ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "blur-sm",[39m
+[31m+ ][39m
+
+ ❯ src/__tests__/products-entrance-visibility.red.test.ts:88:66
+     86|       .filter(({ css }) => /(?:^|;)\s*opacity:\s*0?\.\d+/.test(css))
+     87|       .map(({ token }) => token);
+     88|     expect(blurred, "workbook image must carry no blur utility").toEqu…
+       |                                                                  ^
+     89|     expect(faded, "workbook image must carry no fade utility").toEqual…
+     90|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  01:23:58
+   Duration  2.32s (transform 158ms, setup 106ms, import 1.01s, tests 205ms, environment 704ms)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run src/__tests__/products-entrance-visibility.red.test.ts '--maxWorkers=1' '--reporter=dot'

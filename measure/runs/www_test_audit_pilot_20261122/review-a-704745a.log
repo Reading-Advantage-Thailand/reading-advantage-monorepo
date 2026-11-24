@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+commits: none
+tests_run: Targeted Vitest passed 19 tests in 2 files. Reviewed ADV-8 and ADV-11 mutation proofs and current gate receipts.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-704745a.json and review-a-704745a.log
+plan_updates: none
+known_failures: none
+handoff: ADV-8 and ADV-11 are closed. All 15 predicates and both discovery cases remain. JSON segment companions are ignored while Markdown posts are loaded. The audited phase diff changes no production file or post. The case reduction is 55.97%.
+dispositions: none
+END_MEASURE_AGENT_RESULT

@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { BlogTags } from "@/components/blog/blog-tags";
 import { BlogCard } from "@/components/blog/blog-card";
 import type { BlogListItem } from "@/types/blog";
+import { computedForElement } from "./fixtures/real-css";
 
 vi.mock("next/image", () => ({
   default: (props: React.ComponentProps<"img">) => <img {...props} />,
@@ -20,17 +21,24 @@ interface MobileOverflowFailure {
   reasons: string[];
 }
 
-function getClassName(element: HTMLElement): string {
-  return typeof element.className === "string" ? element.className : "";
+/** True when a computed min-width is zero or unset. */
+function isZeroMinWidth(value: string): boolean {
+  return value === "" || /\*\s*0\b/.test(value) || /^0(?:px)?$/.test(value);
 }
 
-function hasSafeWrap(element: HTMLElement): boolean {
-  const className = getClassName(element);
+/** True when a computed width is fixed or content-sized. */
+function isFixedWidth(value: string): boolean {
   return (
-    /\b(?:break-words|break-all|whitespace-normal)\b/.test(className) ||
-    [element.style.overflowWrap, element.style.wordBreak].some((value) =>
-      /^(?:anywhere|break-word|break-all)$/.test(value),
-    )
+    /^\d+(?:\.\d+)?px$/.test(value) ||
+    /^(?:max|min|fit)-content$/.test(value)
+  );
+}
+
+/** True when computed wrapping lets long text break. */
+function hasSafeWrap(style: Record<string, string>): boolean {
+  return (
+    style["overflow-wrap"] === "break-word" ||
+    style["word-break"] === "break-all"
   );
 }
 
@@ -50,26 +58,24 @@ function findMobileOverflowFailures(
     );
 
     for (const element of relevantElements) {
-      const className = getClassName(element);
-      if (
-        /\b(?:w-\[(?!full)|min-w-(?:max|\[)|max-w-\[(?!full))/.test(
-          className,
-        ) ||
-        Boolean(element.style.width || element.style.minWidth)
-      ) {
+      const style = computedForElement(element, [
+        "width",
+        "min-width",
+        "white-space",
+        "overflow-wrap",
+        "word-break",
+      ]);
+      if (isFixedWidth(style.width) || isFixedWidth(style["min-width"])) {
         reasons.add("fixed-or-min-content-width");
       }
-      if (
-        /\bwhitespace-nowrap\b/.test(className) ||
-        element.style.whiteSpace === "nowrap"
-      ) {
+      if (style["white-space"] === "nowrap") {
         reasons.add("nowrap");
       }
       if (
         element === tag &&
         (element.textContent?.trim().length ?? 0) >= 24 &&
         !/\s/.test(element.textContent?.trim() ?? "") &&
-        !hasSafeWrap(element)
+        !hasSafeWrap(style)
       ) {
         reasons.add("unbreakable-content");
       }
@@ -79,15 +85,23 @@ function findMobileOverflowFailures(
       if (!element) {
         return false;
       }
-      const className = getClassName(element);
-      return /\bmin-w-0\b/.test(className) && /\bmax-w-full\b/.test(className);
+      const style = computedForElement(element, ["min-width", "max-width"]);
+      return (
+        isZeroMinWidth(style["min-width"]) && style["max-width"] === "100%"
+      );
     };
+
+    const containerStyle =
+      container instanceof HTMLElement
+        ? computedForElement(container, ["display", "flex-wrap"])
+        : {};
+    const needsWrap =
+      containerStyle.display === "flex" && containerStyle["flex-wrap"] !== "wrap";
 
     if (
       !hasContainment(tag) ||
       !hasContainment(container) ||
-      (container?.classList.contains("flex") &&
-        !container.classList.contains("flex-wrap"))
+      needsWrap
     ) {
       reasons.add("missing-max-width-min-width-containment");
     }

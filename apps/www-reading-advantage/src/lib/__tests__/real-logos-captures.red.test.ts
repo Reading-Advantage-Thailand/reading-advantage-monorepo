@@ -52,14 +52,6 @@ describe("Phase 2 logo captures", () => {
     expect(existsSync(tracks), `repo root not found: ${REPO_ROOT}`).toBe(true);
   });
 
-  it("names the en home light capture first", () => {
-    expect(CAPTURE_FILES[0]).toBe("en-home-light.png");
-  });
-
-  it("names the en tutor dark capture last", () => {
-    expect(CAPTURE_FILES[CAPTURE_FILES.length - 1]).toBe("en-tutor-dark.png");
-  });
-
   it.each(CAPTURE_FILES)("has non-empty PNG %s", (name) => {
     const path = join(CAPTURES_DIR, name);
     expect(existsSync(path), `missing capture file: ${name}`).toBe(true);

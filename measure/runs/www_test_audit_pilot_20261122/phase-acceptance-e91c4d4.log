@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: phase-acceptance
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+commits: none
+tests_run: Heavy-run type check, lint, and coverage passed. Vitest passed 1,412 tests in 98 files with 92.07% line coverage. The focused run passed 91 tests. The paired probes confirm F25 and ADV-22 are closed.
+files_changed: phase-acceptance-e91c4d4.json, phase-acceptance-e91c4d4.log
+plan_updates: none
+known_failures: None at the audited HEAD. F26 is a nonblocking portability note for the ADV-22 test directory.
+handoff: Accept Phase 3 at e91c4d4cc. Credit the approved blog merge toward the 55.53% case reduction. Record F26 as follow-up tech debt.
+END_MEASURE_AGENT_RESULT

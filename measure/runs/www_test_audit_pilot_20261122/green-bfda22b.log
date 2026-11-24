@@ -1,0 +1,109 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+round: Phase acceptance remediation for F1, F2, F3, F4, F5
+track: www_test_audit_pilot_20261122
+phase: Phase 2: Delete batch (D1-D5)
+phase_base_sha: a1caa58034f6455e91205a5673ef172a974a7992
+role_base_sha: bfda22bd8fcf9b2905934dc598121889d676231a
+audited_head_sha: bfda22bd8fcf9b2905934dc598121889d676231a
+green_head: 99262eda416ff8e9c5865645b8ea85d6a29a9987
+dispositions: F1=FIX; F2=FIX; F3=FIX; F4=FIX; F5=FIX
+tasks_flipped_to_x: 2.10 Phase acceptance remediation (3b044ec9)
+tasks_flipped_to_b: none.
+proofs: measure/runs/www_test_audit_pilot_20261122/proof-pa-f1.log, measure/runs/www_test_audit_pilot_20261122/proof-pa-f2.log, measure/runs/www_test_audit_pilot_20261122/proof-pa-f3.log
+
+FINDING FIXES
+F1 FIX. The D1 contact test keeps the mock for the render checks. The duplicate
+raw contact check now reads the shipped config through vi.importActual. The
+counterexample control uses the same shipped values.
+F2 FIX. The D1 sweep now renders the B2C solutions section and the Tutor
+Advantage section. The Products route cannot render an async server component
+in a client render, so each section is swept on its own.
+F3 FIX. The D5 Reedy check now requires the active word as a whole word. It
+forbids the inactive word in English, Thai, and Chinese. The inactive sentence
+is a negative control case in every locale.
+F4 FIX. The gate file gate-0be4a037.json is a run artifact and stays as it is.
+The plan records the deviation. The D1 implementation commit and its two logs
+give the correct D1 result.
+F5 FIX. The plan names the 407c5d9 results as the task 2.6 checkpoint results.
+
+COMMITS
+7c2d93e207a8f093eddb8e8429fcbef88f54d3a1
+test(www): fix d1 contact and sweep checks post acceptance (track_id: www_test_audit_pilot_20261122)
+Pathspec commit of two test files: phase-4-contact-authority.red.test.tsx and
+no-gse-in-customer-copy.test.ts. The subject drops the word "acceptance" for
+"post" because the commitlint header limit is 100 characters.
+3b044ec9d250f78c90c7c7fc23b5b6d2680a40c3
+test(www): reject an inactive package in the reedy check (track_id: www_test_audit_pilot_20261122)
+Pathspec commit of one test file: www-tutor-reedy-claim.test.tsx.
+99262eda416ff8e9c5865645b8ea85d6a29a9987
+chore(measure): record www audit acceptance remediation (track_id: www_test_audit_pilot_20261122)
+Pathspec commit of measure/tracks/www_test_audit_pilot_20261122/plan.md only.
+The plan holds no case count and no coverage number for this task.
+
+HEAVY GATE COMMANDS
+GREEN at 7c2d93e2:
+ HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot'
+ exit 0. 91 test files passed. 3079 tests passed.
+COVERAGE at 7c2d93e2:
+ HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage'
+ exit 0. 91 test files passed. 3079 tests passed. Lines 91.55 percent.
+GREEN at 3b044ec9:
+ same GREEN command. exit 0. 91 test files passed. 3081 tests passed.
+COVERAGE at 3b044ec9:
+ same COVERAGE command. exit 0. 91 test files passed. 3081 tests passed.
+ Lines 91.55 percent.
+Each run used one heavy job at a time. The line coverage floor is 85.52 percent.
+Each run waited for the shared heavy lock behind another session job.
+
+GATE FILES
+measure/runs/www_test_audit_pilot_20261122/green-7c2d93e2.log
+measure/runs/www_test_audit_pilot_20261122/coverage-7c2d93e2.log
+measure/runs/www_test_audit_pilot_20261122/gate-7c2d93e2.json
+measure/runs/www_test_audit_pilot_20261122/green-3b044ec9.log
+measure/runs/www_test_audit_pilot_20261122/coverage-3b044ec9.log
+measure/runs/www_test_audit_pilot_20261122/gate-3b044ec9.json
+measure/runs/ is gitignored. The files stay as local evidence for the reviewers.
+
+BREAKAGE PROOFS
+proof-pa-f1.log. The shipped phone number was put into pages.contact.phone.number
+of the English locale. The duplicate check failed and named the phone path and
+the shipped value. The locale file was restored with git checkout before the
+commit.
+proof-pa-f2.log. A hard-coded <h3>GSE</h3> element was added to
+components/products/b2c-solutions.tsx. The sweep failed and named the b2c
+solutions section. The component file was restored with git checkout before the
+commit.
+proof-pa-f3.log. The Reedy copy was changed to the inactive sentence. The
+eligibility check failed and named the inactive rule and the active word. The
+locale file was restored with git checkout before the commit.
+git status --short shows no production change after each restore.
+
+TARGETED RED COMMAND OUTPUT
+CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot src/__tests__/phase-4-contact-authority.red.test.tsx
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot src/__tests__/no-gse-in-customer-copy.test.ts
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot src/__tests__/www-tutor-reedy-claim.test.tsx
+ Test Files  1 passed (1)
+      Tests  27 passed (27)
+
+NEW FILES
+No new source file. The three changed test files are listed in the commits above.
+The plan file gained the task 2.10 entry and the F4 deviation note.
+
+DOCTOR NOTE
+bash measure/doctor.sh fails at the architecture step. The committed v2 input
+pin names the Phase 1 strategy commit. More than 40 tracked app source files
+changed after the last pin refresh, so the step failed at the role base too.
+The pin belongs to the architecture pin track. This track changes no file under
+packages/. The live gate of this track is the scoped www command and the
+coverage command. Both passed for each commit.
+
+HANDOFF TO REVIEW ROLES
+The phase range is a1caa58034f6455e91205a5673ef172a974a7992..99262eda416ff8e9c5865645b8ea85d6a29a9987.
+Task 2.10 is marked [x]. No task is marked [b]. No production file changed.
+The phase base and the role base stay as they were.
+END_MEASURE_AGENT_RESULT

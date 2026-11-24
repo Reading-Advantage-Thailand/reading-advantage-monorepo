@@ -1,0 +1,40 @@
+MUTATION PROOF (R2)
+Note: removing the zero min-width breaks mobile containment
+Production file: apps/www-reading-advantage/src/components/blog/blog-card.tsx
+Edit: 'className="min-w-0 max-w-full rounded-lg border bg-card text-card-foreground shadow-sm"' -> 'className="max-w-full rounded-lg border bg-card text-card-foreground shadow-sm"'
+Test file: src/__tests__/phase-4-browser-regressions.red.test.tsx
+Expected: test exits 1; the production edit is restored after the run.
+Test exit code: 1
+--- test output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+·x·
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/phase-4-browser-regressions.red.test.tsx > Phase 4 browser regression contracts > keeps related article cards safe at mobile width
+AssertionError: UX-P4-002: related article cards must wrap safely at mobile width: expected false to be true // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- true[39m
+[31m+ false[39m
+
+ ❯ src/__tests__/phase-4-browser-regressions.red.test.tsx:117:8
+    115|         "UX-P4-002: related article cards must wrap safely at mobile w…
+    116|       )
+    117|       .toBe(true);
+       |        ^
+    118|   });
+    119|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  14:33:03
+   Duration  1.54s (transform 202ms, setup 76ms, import 718ms, tests 147ms, environment 423ms)
+

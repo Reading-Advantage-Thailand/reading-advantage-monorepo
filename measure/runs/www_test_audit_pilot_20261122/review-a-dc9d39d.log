@@ -1,0 +1,22 @@
+Review A (correctness and architecture), round 3, for www_test_audit_pilot_20261122, Phase 4: Pilot report.
+Audited HEAD: dc9d39dac96b66a60d0c07b8ccdecc49c0352395. Scope: da99c46c7..dc9d39dac (e993f5aa1, 9ccdeac32, dc9d39dac). Phase base: e91c4d4cc.
+Result JSON: measure/runs/www_test_audit_pilot_20261122/review-a-dc9d39d.json
+
+Check 1 PASS: the ADV-22 case keeps its assertion. It uses mkdtempSync under tmpdir() and removes the directory with rmSync. No temp directory remains after the run.
+Check 2 PASS: homedir() is /home/daniebo here, so the paths are unchanged. With HOME=/tmp/opencode/no-such-home the image suites give 2 passed and 10 skipped, through the unchanged skip gates.
+Check 3 PASS: N2, N3 and L1 are fixed. No line citation and no run-file count were added. One residue word remains: 'The five slowest files at head are:' (nonblocking).
+Check 4 PASS: plan 4.15 and the tech-debt row match adversarial-da99c46.json. The pruned row was Resolved and its track is archived. No test reads that row, and the file stays at 50 lines.
+Coverage at HEAD: Test Files 98 passed (98); Tests 1413 passed (1413); lines 92.08.
+
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: heavy-run pnpm --filter www-reading-advantage test:coverage gave 98 files, 1413 tests passed, lines 92.08; with HOME=/tmp/opencode/no-such-home the two image suites gave 2 passed and 10 skipped.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-dc9d39d.json and review-a-dc9d39d.log
+plan_updates: none
+known_failures: none
+handoff: PASS. Optional wording fix: report.md section 7 'The five slowest files at head are:' should say 'at the pre-merge head'. Nothing blocks.
+END_MEASURE_AGENT_RESULT

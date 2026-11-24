@@ -1,0 +1,29 @@
+{
+  "track_id": "www_test_audit_pilot_20261122",
+  "task": "2.10",
+  "class": "D5",
+  "round": "Phase acceptance remediation",
+  "status": "pass",
+  "implementation_commit": "3b044ec9d250f78c90c7c7fc23b5b6d2680a40c3",
+  "role_base_sha": "bfda22bd8fcf9b2905934dc598121889d676231a",
+  "phase_base_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+  "case_count": 3081,
+  "file_count": 91,
+  "line_coverage_pct": 91.55,
+  "branch_coverage_pct": 82.01,
+  "function_coverage_pct": 86.73,
+  "statement_coverage_pct": 90.34,
+  "line_coverage_floor_pct": 85.52,
+  "green_exit_code": 0,
+  "coverage_exit_code": 0,
+  "green_command": "CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot",
+  "coverage_command": "pnpm --filter www-reading-advantage test:coverage",
+  "green_log": "measure/runs/www_test_audit_pilot_20261122/green-3b044ec9.log",
+  "coverage_log": "measure/runs/www_test_audit_pilot_20261122/coverage-3b044ec9.log",
+  "proof_logs": [
+    "measure/runs/www_test_audit_pilot_20261122/proof-pa-f3.log"
+  ],
+  "cases_before": 3079,
+  "cases_after": 3081,
+  "note": "Numbers come from green-3b044ec9.log and coverage-3b044ec9.log. The cases_before value is the cases_after value of gate-7c2d93e2.json. This gate records the D5 remediation of the phase acceptance finding F3. The Reedy eligibility check rejects an inactive package and names the active word."
+}

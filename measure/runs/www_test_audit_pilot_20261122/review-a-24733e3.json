@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "24733e3b0cc63ae533501cfaf4f4998c96aafe4e",
+  "phase_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "role_base_sha": "24733e3b0cc63ae533501cfaf4f4998c96aafe4e",
+  "audited_head_sha": "24733e3b0cc63ae533501cfaf4f4998c96aafe4e",
+  "status": "pass",
+  "summary": "F30 is closed. The plan now states that 36 of 37 pre-existing role JSONs have route and phase fields; the spec-review JSON lacks route. The report still says F18 awaits PM confirmation; closeout will update it.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD returned 24733e3b0cc63ae533501cfaf4f4998c96aafe4e, matching role_base_sha and audited_head_sha.",
+    "F30 withdrawn: the exact diff changes only plan.md task 4.5 wording, and that task now gives 36 of 37 pre-existing role JSONs with both route and phase fields. spec-review-735a7fe.json has a phase but no route.",
+    "A recount excluding three later Review A artifacts and this review artifact finds 37 pre-existing role JSONs: 36 have route and phase; spec-review-735a7fe.json is the only file missing route.",
+    "The report still says F18 is pending PM confirmation at lines 198 and 234. The brief says PM approved default A and closeout will update the report; this note does not block the F30 check.",
+    "The one-line diff contains only the corrected task 4.5 count wording and the spec-review exception. It changes no report or product file."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --name-status cb12d6f0fe6fee1f5268214b5d2d5ae25ca96636..24733e3b0cc63ae533501cfaf4f4998c96aafe4e",
+    "git diff cb12d6f0fe6fee1f5268214b5d2d5ae25ca96636..24733e3b0cc63ae533501cfaf4f4998c96aafe4e -- measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "python3 -c \"import glob,json,os; fs=glob.glob('measure/runs/www_test_audit_pilot_20261122/*.json'); excluded={'review-a-4d41866.json','review-a-e034575.json','review-a-cb12d6f.json','review-a-24733e3.json'}; rows=[]; [(rows.append((os.path.basename(f),json.load(open(f))))) for f in fs if 'role' in json.load(open(f)) and os.path.basename(f) not in excluded]; both=[(n,d) for n,d in rows if 'route' in d and 'phase' in d]; missing=[(n,d.get('role'), 'phase' in d, 'route' in d) for n,d in rows if 'route' not in d or 'phase' not in d]; print('pre-later-reviews role_jsons=',len(rows),'with_route_and_phase=',len(both),'missing=',missing)\"",
+    "rg -n 'F18|needs PM confirmation' measure/tracks/www_test_audit_pilot_20261122/report.md",
+    "git status --short"
+  ],
+  "changed_files": [
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "The pre-existing role artifact count is 37, with 36 route-and-phase pairs and one spec-review file without route."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "No test run was needed; the artifact count was checked from JSON fields and the plan diff."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The exact range changes only plan.md task 4.5 wording."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The audit cites the exact diff, a JSON recount, and report.md lines 198 and 234."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+commits: none
+tests_run: Targeted Vitest passed 55 tests in 11 files. Reviewed both F19 mutation proofs and gate logs; no new production mutation run.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-b2e6558.json and review-a-b2e6558.log
+plan_updates: none
+known_failures: F20 blocks acceptance. Background resolution can use the wrong backdrop for translucent or unsupported painted colours.
+handoff: Route F20 to Green. Resolve each translucent background over the next painted ancestor. Fail closed when a painted background uses unsupported colour syntax. F19 is withdrawn. The user-requested production mutation was not run because this audit role cannot edit production files; the existing proof logs were reviewed.
+dispositions: none
+END_MEASURE_AGENT_RESULT

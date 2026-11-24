@@ -1,0 +1,43 @@
+MUTATION PROOF — F19 R2 contrast
+Note: a slate-400 pricing title fails the real contrast ratio
+Production file: apps/www-reading-advantage/src/app/[locale]/(marketing)/pricing/page.tsx
+Edit: 'className="mb-6 max-w-3xl text-3xl font-bold leading-display tracking-tight text-slate-900 md:text-5xl"' -> 'className="mb-6 max-w-3xl text-3xl font-bold leading-display tracking-tight text-slate-400 md:text-5xl"'
+Test file: src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx
+Expected: test exits 1 because the rendered colour fails WCAG AA 4.5:1.
+Test exit code: 1
+--- test output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+stderr | src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx > Remaining Phase 4 browser regression contracts > contains related article content at a 390px viewport
+Received `true` for a non-boolean attribute `fill`.
+
+If you want to write it to the DOM, pass a string instead: fill="true" or fill={value.toString()}.
+
+ ✓ src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx > Remaining Phase 4 browser regression contracts > contains related article content at a 390px viewport 151ms
+ × src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx > Remaining Phase 4 browser regression contracts > keeps pricing hero text at WCAG-AA contrast 52ms
+   → Unresolved or unsupported colour: var(--color-slate-400)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx > Remaining Phase 4 browser regression contracts > keeps pricing hero text at WCAG-AA contrast
+Error: Unresolved or unsupported colour: var(--color-slate-400)
+ ❯ parseColor src/__tests__/fixtures/contrast.ts:116:9
+    114|   }
+    115|
+    116|   throw new Error(`Unresolved or unsupported colour: ${value}`);
+       |         ^
+    117| }
+    118|
+ ❯ Module.contrastOf src/__tests__/fixtures/contrast.ts:209:28
+ ❯ src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx:99:43
+ ❯ src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx:97:43
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  15:22:13
+   Duration  1.41s (transform 73ms, setup 66ms, import 559ms, tests 204ms, environment 419ms)
+

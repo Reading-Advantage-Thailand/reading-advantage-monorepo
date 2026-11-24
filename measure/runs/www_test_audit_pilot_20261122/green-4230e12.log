@@ -1,0 +1,34 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+PM decision A: four acceptance report claims. Phase 4.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: 4230e12cb02efe8af1e90617008c4d66f08b1c90
+green_head: d2c8e6336743897f6f55bc6dc1f0a5b3e5005683
+report_commit: f8964c2b9b9697ceab57bf1e4e742f12d78d68dd
+plan_evidence_commit: d2c8e6336743897f6f55bc6dc1f0a5b3e5005683
+report: measure/tracks/www_test_audit_pilot_20261122/report.md
+review: measure/runs/www_test_audit_pilot_20261122/phase-acceptance-4230e12.json
+
+tasks_flipped_to_x:
+- 4.12 Report acceptance remediation F41 F42 F50 F51 (f8964c2b9). Evidence: report commit f8964c2b9 and plan commit d2c8e633.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: none tracked. report.md and plan.md were changed. No test or production file changed.
+
+checks_run:
+- F41: read the phase-base validation test with git show 8a126f612. It called fs.readFileSync on every name ending in lowercase .md, so a directory named x.md failed with EISDIR. Read fixtures/blog-posts-loader.ts: brokenPostRefs flags every lowercase .md entry that is not a readable regular file. The report now separates that parity check from the new .mdx and uppercase .MD name checks. The K-row note and the K table cell were updated with the same fact.
+- F42: read spec.md. The requirement "Each K row with no mutation check lists as such in report.md" is in section "Out of scope". The report now names that section instead of "Classes".
+- F50: git show on 0d705612d showed deletion of the it.each en, th, zh cases that asserted the active locale through the real useCurrentLocale hook. git show on 9eb3b9c4f showed restoration of the Thai and Chinese cases. The report now records both commits.
+- F51: git show on fb5622ed7 showed the restored test "returns the en directory when locale is en" in src/lib/blog-locale.test.ts. The original D2 explicit-English row was not kept as a same-rule duplicate; the omitted-argument case checks a different rule. The report now says this.
+- grep of the report for echo, mocked locale, Classes section and the old non-file phrasing returned no hits.
+- git cat-file -e resolved fb5622ed7, 0d705612d and 9eb3b9c4f.
+- No sentence over 25 words remains in report.md.
+
+gate: one required heavy-run gate exited 0. CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot passed 98 files and 1412 tests. Log: measure/runs/www_test_audit_pilot_20261122/green-f8964c2b9.log. No test changed, so no other gate was required.
+dispositions: F41=FIX; F42=FIX; F50=FIX; F51=FIX
+END_MEASURE_AGENT_RESULT

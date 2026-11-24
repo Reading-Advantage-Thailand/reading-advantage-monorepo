@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 3: Rewrite batch (R1-R3)",
+  "baseline_sha": "a0b8e18e8f0e4529dca74b3a29b8c7741a4bd388",
+  "phase_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "role_base_sha": "a0b8e18e8f0e4529dca74b3a29b8c7741a4bd388",
+  "audited_head_sha": "a0b8e18e8f0e4529dca74b3a29b8c7741a4bd388",
+  "status": "pass",
+  "summary": "F22 to F24 and ADV-15/17/18/19 are closed for the shipped content. The 15 blog predicates and two discovery cases remain; both contrast tests pass; all five gradient properties are asserted. One nonblocking test-fixture edge remains for symlinked Markdown files.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F25 [Nit] review-a: blog.ts:83–85 discovers posts by the .md filename suffix, while fixtures/blog-posts-loader.ts:61 includes only Dirent.isFile() entries. A symlinked .md post can therefore be discovered by production but omitted by test validation. No current blog post is a symlink, so this does not affect the shipped pages or their contrast results."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned a0b8e18e8f0e4529dca74b3a29b8c7741a4bd388, matching role_base_sha and audited_head_sha.",
+    "F22 is closed for current Markdown posts: blog.ts:79–86 uses a case-sensitive .md suffix on directory entries; blog-posts-loader.ts:47–65 now enumerates dotfiles and regular files, and loadAllPosts at lines 73–90 parses the same lowercase .md suffix. blog-posts-loader-dotfile.test.ts:29–43 proves a dot-prefixed .md file is listed and parsed.",
+    "The merged blog validation at blog-posts-validation.test.ts:53–240 still has 15 rule cases and two discovery cases. Compared with 257a6b0cd^, the same per-post predicates are aggregated across the loaded posts; the extension and discovery checks now use the shared suffix predicate.",
+    "The shipped test run passes blog validation and the dotfile probe. Current posts include .md files and -segments.json companions; only .md files are parsed, while the extension predicate ignores the JSON companions.",
+    "F23 and ADV-15/17/18/19 are closed: contrast.ts:67–110 resolves custom properties through element and ancestor values, and throws when a --color-* override cannot be trusted. Lines 273–347 scan current document stylesheets, ancestors, and nested grouping rules; unresolved selectors and unreadable stylesheets fail closed.",
+    "The 16 contrast helper tests include element and ancestor overrides, unresolved custom properties, injected style rules, ancestor rules, and an @media rule. Both R2 contrast tests pass on the contact and pricing pages, so the guard does not throw on shipped pages.",
+    "F24 is closed: hero-section.test.tsx:9–31 lists every expected gradient property and both default and custom stops. Lines 78–103 compare all five properties, including position, from, via, to, and background-image, with compiled stylesheet values.",
+    "The targeted Vitest run passed 9 files and 55 tests, including the blog loader, blog validation, contrast fixture, injected-style adversarial cases, both R2 contrast tests, the hero gradient tests, and the hero text contrast test.",
+    "proof-f22.log shows a dot-prefixed invalid slug fails the slug rule and names the slug. proof-f23.log shows an unsafe local override makes the pricing contrast test fail. proof-f24.log shows a changed gradient stop fails its exact value assertion.",
+    "proof-adv15.log shows an inline token override fails closed. proof-adv17.log records four passing probe cases, 16 passing helper cases, and passing contact and pricing contrast cases. adversarial-a0b8e18.json records pass at the audited head.",
+    "The exact phase diff 8a126f612abcc258c6c6711d6ac03fa085bbcbff..a0b8e18e8f0e4529dca74b3a29b8c7741a4bd388 contains tests, test fixtures, and plan.md only. The production blog module and blog post paths have no changes.",
+    "The baseline receipt records 3175 cases. The current gate records 1408 cases and 92.01% line coverage against the 85.52% floor. The reduction is 55.65%; a 20% reduction allows at most 2540 cases.",
+    "test-strategy.md:11 says graph.db is absent and this track changes no exported product symbol. Direct reference search shows the added helper exports are consumed by tests only.",
+    "F25 is a late test-fixture finding, not a product-file wrong-result finding. Under the Measure late-finding rule, it belongs in tech debt rather than a Green remediation round."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --name-status 8a126f612abcc258c6c6711d6ac03fa085bbcbff..a0b8e18e8f0e4529dca74b3a29b8c7741a4bd388",
+    "git diff --check 8a126f612abcc258c6c6711d6ac03fa085bbcbff..a0b8e18e8f0e4529dca74b3a29b8c7741a4bd388",
+    "git diff --name-only 8a126f612abcc258c6c6711d6ac03fa085bbcbff..a0b8e18e8f0e4529dca74b3a29b8c7741a4bd388 -- apps/www-reading-advantage/src/app/'[locale]'/'(marketing)'/blog/posts",
+    "git status --short",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader-dotfile.test.ts src/__tests__/blog-posts-loader.adversarial.test.ts src/lib/blog-posts-validation.test.ts src/__tests__/contrast-fixture.test.ts src/__tests__/contrast-parent-override.adversarial.test.tsx src/__tests__/phase-4-browser-regressions.red.test.tsx src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx src/components/marketing/hero-section.test.tsx src/__tests__/hero-text-contrast.red.test.ts",
+    "python3 -c \"baseline=3175; current=1408; print('reduction_pct=', round((baseline-current)*100/baseline, 2), '20pct_max=', int(baseline*0.8))\"",
+    "find apps/www-reading-advantage/src/app/'[locale]'/'(marketing)'/blog/posts -type l -printf '%P\\n'",
+    "rg -n '\\b(loadAllPosts|listPostFiles|mislabelledPostRefs|contrastOf|readBackgroundLayer)\\b' apps/www-reading-advantage/src"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/blog-posts-loader-dotfile.test.ts",
+    "apps/www-reading-advantage/src/__tests__/blog-posts-loader.adversarial.test.ts",
+    "apps/www-reading-advantage/src/__tests__/contrast-fixture.test.ts",
+    "apps/www-reading-advantage/src/__tests__/contrast-parent-override.adversarial.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/fixtures/blog-posts-loader.ts",
+    "apps/www-reading-advantage/src/__tests__/fixtures/contrast.ts",
+    "apps/www-reading-advantage/src/__tests__/fixtures/real-css.ts",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions-final.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/www-reading-cover.red.test.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/blended-learning/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/managed-service/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/page.test.tsx",
+    "apps/www-reading-advantage/src/components/blog/blog-pagination.test.tsx",
+    "apps/www-reading-advantage/src/components/marketing/hero-section.test.tsx",
+    "apps/www-reading-advantage/src/lib/blog-posts-validation.test.ts",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "The shipped blog posts and both contrast pages are covered, but blog-posts-loader.ts:61 omits symlinked .md entries that blog.ts discovers."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "The 9-file targeted run passed 55 tests; the F22, F23, F24, and ADV-15/17 proof logs show failing-first cases."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The exact phase diff changes test files, test fixtures, and plan.md only, with no production or post changes."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The audit cites current tests, mutation logs, gate receipts, baseline counts, and exact diff results."
+    }
+  ]
+}

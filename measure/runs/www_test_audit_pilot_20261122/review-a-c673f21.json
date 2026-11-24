@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 2: Delete batch (D1-D5)",
+  "baseline_sha": "c673f21341a19e961e8e1b9c3625c5b9ba62027c",
+  "phase_base_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+  "role_base_sha": "c673f21341a19e961e8e1b9c3625c5b9ba62027c",
+  "audited_head_sha": "c673f21341a19e961e8e1b9c3625c5b9ba62027c",
+  "status": "fail",
+  "summary": "Phase 2 changes no production file. Some test changes lose fault detection, and the D5 part 2 GREEN log does not contain the required run.",
+  "blocking_findings": [
+    "F1 [Blocker] review-a: FIX — D1 leaves layout regressions undetected. www-features-look-pins.red.test.ts:61–100 maps selected class names to CSS on a fake element. The mobile case only finds a div, and the width case only checks the image. Adding grid-cols-2 at mobile width or removing the picture wrapper width limit leaves these checks green. www-reading-card.red.test.ts:283–294 also accepts a missing list and defaults missing alignment to flex-start. Test the rendered layout with the real stylesheet.",
+    "F2 [Blocker] review-a: FIX — D1 reduces the surfaces covered by the claim checks. no-gse-in-customer-copy.test.ts:95–114 never renders a page, despite its header. A hard-coded GSE string in a rendered component escapes the sweep. phase-w3-claims.test.ts:101–111 reads hero and CTA dictionary values instead of route metadata. Its 1G block also drops the scoped checks for 95%, 3×, and 24/7 in Math and Primary. Restore those checks through rendered pages and metadata.",
+    "F3 [Blocker] review-a: FIX — D1 rewrites miss visible regressions. hero-text-contrast.red.test.ts:39–65 does not render Products. Removing textColor=\"dark\" from the Products hero passes both tests. products-entrance-visibility.red.test.ts:73–79 does not load the compiled utilities, so adding blur-sm to the workbook image leaves the test's filter unchanged. Check the affected routes and styles.",
+    "F4 [Blocker] review-a: FIX — D1 weakens the rendered contact and locale contracts. phase-4-contact-authority.red.test.tsx:65–83 does not check hrefs or ContactForm. A wrong tel: link with the same label now passes. phase-3-i18n.red.test.ts:129–151 checks one tuple per locale, so the Thai Sheet can use the English label. Check the contact destinations and the form against the authority. Keep the separate locale checks.",
+    "F5 [Blocker] review-a: FIX — Two D2 classifications do not preserve the same rule. The Primary replacement checks container count and order, but its old-reference list has no old test IDs. A nested empty cefr-timeline element passes the replacement. blog-locale.test.ts:16–29 checks the omitted argument and a path inequality, not the exact path for an explicit en. Restore each assertion or name a test that checks the same rule on the same surface.",
+    "F6 [Blocker] review-a: FIX — D4 removes real supported-locale behavior. locales/navigation.test.tsx:6–30 mocks next-intl, not useCurrentLocale. The deleted Thai and Chinese cases exercised the real routing branch. Returning the default on every call now passes the remaining hook test. Keep a supported non-default case alongside the unsupported case.",
+    "F7 [Blocker] review-a: FIX — D5 derives required keys from the dictionary it must check. locale-key-check.ts:36–74 drops missing and blank English leaves from the input and accepts an empty scope. The in-memory fixture passed on both a missing English leaf and a missing scope. The Primary local collector has the same single-leaf gap. Use independent required key lists and reject empty lists.",
+    "F8 [Blocker] review-a: FIX — D5 removes Primary and Storytime page wiring checks with the prose pins. The Primary test accepts any allowed href in any container and any of the allowed images in any section. The Storytime test accepts a repeated non-poster image if the total and its alt remain valid. Keep the approved destinations and image placement on the rendered pages without pinning prose.",
+    "F9 [Blocker] review-a: FIX — D5 loses positive Reedy eligibility checks. www-tutor-reedy-claim.test.tsx:162–193 checks keys, three bullets, and the old exclusion phrases. AC-24 also requires the active-package and completed-lesson limits. Replacing the package bullet with 'Open to all students on any lesson' satisfies the new checks. Preserve the limits in the FAQ, descriptions, and first rendered bullet.",
+    "F10 [Blocker] review-a: FIX — The phase has no matching GREEN evidence for D5 part 2. gate-7008ccef.json reports exit 0, but green-7008ccef.log:1–13 contains an accounting plan. The matching coverage log shows 3,081 passing cases and 89.94% lines. Supply the required GREEN log at commit 7008ccef or rerun that command through the shared runner.",
+    "F11 [Blocker] review-a: FIX — The D1 commit also rewrites two R2 cases. classification.md:195 assigns the rendered full-width pictured row and the text-only exclusion cases to R2. 0be4a037 changes both. Keep these R2 cases outside the D1 change so each test commit holds one class.",
+    "F12 [Blocker] review-a: FIX — D5 weakens date and price checks on rendered pages. The Storytime scanner accepts 30 December 2569 at page.content.test.tsx:312. The retained batch date checks omit the Storytime CTA, which can now show that wrong date. PricingPage checks table prices and forbids two old amounts, but its example heading can render 1,900 instead of 1,800. The K locale pin checks the dictionary, not the heading. Preserve both facts in the rendered checks."
+  ],
+  "nonblocking_findings": [
+    "F13 [Nit] review-a: Note — D-10 stays guarded. www-tutor-screens-copy.adversarial.test.ts:91–97 checks zh against en on each screens string path. ADV-C5 also checks matching paths and item counts at lines 113–123. Removing the exact English copy fixture does not remove D-10.",
+    "F14 [Nit] review-a: Note — gate-0be4a037.json names the Phase 1 strategy commit as phase_base_sha, not a1caa580. plan.md:88,94,104,117,124 pins counts despite line 17. The 221 pins are the classified set, not the number replaced.",
+    "F15 [Nit] review-a: Note — lint-407c5d9.log shows three warnings. The unused beforeEach import predates the phase. Part 2 makes sectionOf and copy unused."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned c673f21341a19e961e8e1b9c3625c5b9ba62027c, equal to the dispatched role base and audit head.",
+    "The phase diff from a1caa580 names 34 test files, one test fixture, and plan.md. It names no production file, registry, or orchestration script.",
+    "D1's seven net deletions map to classification.md:125–126,129,135. The rewrite defects are separate from these seven deletions.",
+    "D2's 22 removals map to classification.md:141–147. Primary container count and order stay in page.content.test.tsx:483–495,583–589. The old test-ID rule does not.",
+    "D2 keeps reading-time number checks in blog.test.ts:12, favicon byte rules in real-logos-captures-adversarial.test.ts:1361–1387, and the 11 FR-5 literals in real-logos-adversarial.test.ts:46–58,277–284.",
+    "D2 also keeps the live productPictures sweep in www-tutor-followups.adversarial.test.ts:58–62 and manifest order and portrait fields in tutor-screens.test.ts:15–59.",
+    "D4's six removals map to classification.md:159–161. The source-dependent image tests still run with A34_REQUIRE_SOURCES=1 and fail on missing inputs. The two capture cases only tested fixture literals.",
+    "D1 mutation reasoning: removing compact height from the blog slug hero changes the injected min-height from auto to 70vh, which fails blog-hero-height.red.test.ts:141–151.",
+    "D1 mutation reasoning: restoring the retired reading screenshot fails the rendered src checks in www-reading-card.red.test.ts:196–211. Changing the Primary image width from 375 to 400 fails www-reading-cover.red.test.ts:253–261.",
+    "D5's explicit key arrays cover the contact phrase, named batch rows, and fixed live-line paths. locale-key-check.ts:63–74 iterates localeConfig.locales. Dynamic scope discovery does not prove every former pin.",
+    "The Reading cover alt has no locale key. www-reading-cover.red.test.ts:188–193 keeps the exact rendered D13 alt.",
+    "The diff is empty for tutor-commission test files, pricing stacking, the pricing legal sweep, and the D-10 adversarial suite. Price figures and the 3,000 default remain pinned.",
+    "The Storytime date scan permits the approved launch date but does not require it in each rendered or metadata location that lost its copy pin. Batch checks cover separate named keys.",
+    "All seven coverage runs show passing tests and at least 85.52% line coverage: 89.92, 89.92, 89.86, 89.94, 89.94, 89.94, and 90.03. Baseline line coverage is 86.52%.",
+    "Six of seven GREEN logs match their gate counts. The D1 coverage retry passes at 89.92%; its separate first attempt failed. The D5 part 2 GREEN citation does not match its gate receipt.",
+    "The final coverage log shows 3,035 passing cases against the baseline of 3,175. The 20% goal remains a track-level gate.",
+    "Two targeted Vitest runs passed 68 cases in eight files and 86 cases in five files at HEAD. They include the D-10 and Storytime controls. No heavy suite ran in this audit.",
+    "The build-graph query had no usable index. The only new exports belong to the test fixture; Git and file reads show test-only callers. The assigned worktree stays open for remediation."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git log --reverse --format='%H %s' --name-status a1caa58034f6455e91205a5673ef172a974a7992..c673f21341a19e961e8e1b9c3625c5b9ba62027c",
+    "git diff --name-status a1caa58034f6455e91205a5673ef172a974a7992..c673f21341a19e961e8e1b9c3625c5b9ba62027c",
+    "git diff --check a1caa58034f6455e91205a5673ef172a974a7992..c673f21341a19e961e8e1b9c3625c5b9ba62027c",
+    "git show for each of the seven test commits",
+    "build-graph inspect graph.db assertLocaleKeys",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-hero-height.red.test.ts src/__tests__/hero-text-contrast.red.test.ts src/__tests__/products-entrance-visibility.red.test.ts src/__tests__/www-reading-card.red.test.ts src/__tests__/www-reading-cover.red.test.ts src/__tests__/www-tutor-screens-copy.adversarial.test.ts src/__tests__/www-features-look-pins.red.test.ts src/__tests__/www-batch-20261119.locale.test.ts",
+    "pnpm --filter www-reading-advantage exec vitest run src/locales/navigation.test.tsx src/__tests__/www-tutor-reedy-claim.test.tsx src/__tests__/no-gse-in-customer-copy.test.ts src/lib/__tests__/phase-w3-claims.test.ts 'src/app/[locale]/(marketing)/products/storytime-advantage/page.content.test.tsx'",
+    "node -e with TypeScript transpilation and VM fixtures for missing English leaves and scopes",
+    "python3 -c with JSON and labeled Vitest summary parsing for the seven gates",
+    "git status --short"
+  ],
+  "changed_files": [
+    "measure/runs/www_test_audit_pilot_20261122/review-a-c673f21.json",
+    "measure/runs/www_test_audit_pilot_20261122/review-a-c673f21.log"
+  ],
+  "test_strategy_violations": [
+    "F1–F9: Fault detection or rule coverage does not match specification sections 4–6.",
+    "F10: The D5 part 2 GREEN evidence does not meet test-strategy.md:37.",
+    "F11: D1 also changes R2 cases, contrary to plan.md:11 and test-strategy.md:189.",
+    "F12: A customer date and a rendered price lost their exact fact checks."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "openai/gpt-6.2-sol#high",
+  "ratings": [
+    {"axis": "correctness", "score": 2, "evidence": "locales/navigation.test.tsx:27–30 accepts a hook that always returns English."},
+    {"axis": "test_meaning", "score": 2, "evidence": "The in-memory locale fixture passed with both a missing English leaf and a missing scope."},
+    {"axis": "scope_discipline", "score": 3, "evidence": "The phase diff changes only tests and the plan, but 0be4a037 changes the R2 cases listed in classification.md:195."},
+    {"axis": "evidence_quality", "score": 3, "evidence": "Six GREEN logs match their gate receipts, but green-7008ccef.log:1–13 contains an unrelated plan."}
+  ]
+}

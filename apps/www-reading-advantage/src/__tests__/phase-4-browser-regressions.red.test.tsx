@@ -7,6 +7,8 @@ import zhMessages from "@/locales/zh";
 import { BlogCard } from "@/components/blog/blog-card";
 import ContactPage from "@/app/[locale]/(marketing)/contact/page";
 import type { BlogListItem } from "@/types/blog";
+import { computedForElement } from "./fixtures/real-css";
+import { AA_CONTRAST_MIN, contrastOf } from "./fixtures/contrast";
 
 const serverWiring = vi.hoisted(() => ({
   getScopedI18n: vi.fn(
@@ -84,17 +86,20 @@ describe("Phase 4 browser regression contracts", () => {
         ))}
       </>,
     );
-    const cardRoots = [...rendered.container.querySelectorAll("div")].filter(
-      (element) =>
-        element.classList.contains("rounded-lg") &&
-        element.classList.contains("border"),
-    );
     const headings = [...rendered.container.querySelectorAll("h2")];
     const safeCards =
-      cardRoots.length === relatedPosts.length &&
-      cardRoots.every((card) => card.classList.contains("min-w-0")) &&
       headings.length === relatedPosts.length &&
-      headings.every((heading) => heading.classList.contains("break-words"));
+      headings.every((heading) => {
+        const card = heading.parentElement?.parentElement;
+        if (!(card instanceof HTMLElement)) return false;
+        const cardStyle = computedForElement(card, ["min-width", "max-width"]);
+        const headingStyle = computedForElement(heading, ["overflow-wrap"]);
+        return (
+          cardStyle["min-width"] === "calc(var(--spacing) * 0)" &&
+          cardStyle["max-width"] === "100%" &&
+          headingStyle["overflow-wrap"] === "break-word"
+        );
+      });
 
     expect
       .soft(
@@ -106,12 +111,15 @@ describe("Phase 4 browser regression contracts", () => {
 
   it("uses an accessible contrast treatment for contact eyebrows", async () => {
     const rendered = render(await ContactPage());
-    const eyebrows = [
-      ...rendered.container.querySelectorAll("span.uppercase.tracking-widest"),
-    ];
+    const eyebrows = [...rendered.container.querySelectorAll("h2")]
+      .map((heading) => heading.previousElementSibling)
+      .filter(
+        (node): node is HTMLElement =>
+          node instanceof HTMLElement && node.tagName === "SPAN",
+      );
     const contrastSafe =
       eyebrows.length === 2 &&
-      eyebrows.every((eyebrow) => eyebrow.classList.contains("text-sky-800"));
+      eyebrows.every((eyebrow) => contrastOf(eyebrow) >= AA_CONTRAST_MIN);
 
     expect
       .soft(

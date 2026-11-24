@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { homedir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
@@ -8,7 +9,7 @@ import { describe, expect, it } from "vitest";
 import { SONG_POSTERS, STORYTIME_IMAGES } from "@/__tests__/fixtures/storytime-page-expected";
 
 const APP_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
-const SOURCE_ROOT = process.env.A45_STORYTIME_SOURCE_ROOT ?? "/home/daniebo/Desktop/handoff/a45-storytime-www-images";
+const SOURCE_ROOT = process.env.A45_STORYTIME_SOURCE_ROOT ?? join(homedir(), "Desktop/handoff/a45-storytime-www-images");
 const MANIFEST = join(SOURCE_ROOT, "MANIFEST.txt");
 const OUTPUT_DIR = join(APP_ROOT, "public/images/storytime-advantage");
 const SOURCES_PRESENT = existsSync(MANIFEST);

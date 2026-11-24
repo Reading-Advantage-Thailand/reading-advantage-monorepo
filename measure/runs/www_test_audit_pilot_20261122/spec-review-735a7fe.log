@@ -1,0 +1,46 @@
+# Spec Review: www_test_audit_pilot_20261122
+
+Author model: opencode-go/muse-spark-1.3-contributor (Muse family)
+
+## Round 1
+
+Date: 2026-11-22
+Reviewer: measure-spec-review subagent, opencode-go/hy4-flash-free
+
+HEAD confirmed equal to audited_head_sha 735a7fe4490599f1c70d4b723367ab3b8dd25a64.
+
+### What this track proposes
+
+This pilot cuts the www-reading-advantage Vitest case count by at least 20 percent without lowering fault detection. It records a baseline case count and line coverage through the shared heavy-run runner, classifies every www test file into K, D1-D5, and R1-R3 with K rows first, then deletes D1-D5 and rewrites R1-R3 in one commit per class. After each commit the suite must pass and line coverage must fall by at most one point. K tests stay unless a named duplicate keeps the same rule, and the track ships no push before phase acceptance.
+
+### How the current system works, per this spec
+
+Per this spec, www-reading-advantage has a Vitest suite and Playwright e2e files. Only Vitest cases count toward the 20 percent target; Playwright cases count only if the spec names a reason, which it does not. The app depends only on @reading-advantage/ui, utils, and config, so it touches none of the five core modules and needs no mutation baseline. Baseline counts and coverage live in run logs and are measured with the named Vitest commands through the shared runner.
+
+### Findings
+
+- F1 [Major] spec.md §5 K row / spec.md §3: The K action says to add a mutation check when one is absent, but §3 forbids a Stryker run and §7 names no mutation command, so the implementer cannot tell whether to add one. Rationale: Conflicting sections leave the K-test edge case undefined and repeat a gate the pilot replaces.
+- F2 [Major] plan.md Role note / task 1.3: The role note assigns the second check to measure-mid-red while task 1.3 requires a different model family. Rationale: Source plan §5 step 3 requires a second model distinct from the classifier, and the conflicting assignment leaves the check owner undefined.
+- F3 [Major] plan.md Role note (Red/Green deviation): The deviation is accepted in substance, but the plan does not record how the mid-red and jr-green role gates pass with no failing Red test, which workflow.md step 3 requires. Rationale: An unrecorded gate substitution blocks Phase 1 at the harness gate even though the phase commands are checkable.
+- F4 [Major] plan.md task 1.3: The result of the report-only second check has no named output file. Rationale: Other phase outputs name a file, and an unnamed report leaves a file-location detail to the implementer.
+
+### Zoom-out and zero-decision notes
+
+Both paraphrase sections were written, so no comprehension gap. The spec targets the root problem of source plan §1 (tests that protect no rule), adds no speculative feature and no premature optimization, and stays at the requirement level. Reuse cites heavy-run.sh, the test:coverage script, and Vitest; no citable existing code is duplicated. All work stays in test files under www. Named commands, files, gates, K-first ordering, Playwright handling, the 15 percent stop rule, and the no-push and 05:45 pause constraints remove the five kinds of implementer choice, except for the items in F1 through F4.
+
+### Red/Green deviation verdict
+
+The deviation is accepted in substance. Test-only deletion and rewrite change the tests themselves, so no new production behavior exists for a failing Red test to express. The controls preserve fault detection: baseline case count and line coverage, the K never-delete rule, per-file classification with K first, the 10 percent second check with a 15 percent stop rule, one commit per class, and the pass and one-point coverage gates after each commit. F3 records the remaining gate-record gap.
+
+MEASURE_AGENT_RESULT
+role: spec-review
+status: complete
+track: www_test_audit_pilot_20261122
+phase: track setup
+commits: none
+tests_run: none (document review only; git rev-parse HEAD confirmed HEAD equals audited_head_sha)
+files_changed: spec-review-735a7fe.json, spec-review-735a7fe.log
+plan_updates: none
+known_failures: none
+handoff: Round 1 spec review is pass with four Major nonblocking findings. The Red/Green deviation is accepted in substance for test-only work; F3 asks for a recorded role-gate substitution before Red starts. F1 asks to scope the K mutation-check clause to the pilot. F2 asks to name one owner for the second check. F4 asks for a second-check output filename. Did not edit spec.md or plan.md and made no commit.
+END_MEASURE_AGENT_RESULT

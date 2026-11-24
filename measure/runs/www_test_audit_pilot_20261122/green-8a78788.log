@@ -1,0 +1,22 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 2: Delete batch (D1-D5)
+round: Review A remediation round C
+green_head: c2f5cfdb0
+phase_base_sha: a1caa58034f6455e91205a5673ef172a974a7992
+role_base_sha: 8a78788199a95e641cd40056d044e3dc60563273
+commits: 7480484d4, bcaa97ff4, c2f5cfdb0
+tasks_flipped_to_x: 2.9 Review A remediation round C (c2f5cfdb0); SHA evidence 7480484d4 and bcaa97ff4 with both gate logs.
+tasks_flipped_to_b: none
+targeted_red_command: CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot on the five affected files.
+targeted_red_output: At role_base_sha the five files passed with 84 tests. This was the false pass the reviewer named. Each temporary production mutation then failed: F2 exit 1 with 1 failed test, F4 exit 1 with 1 failed test, F9 exit 1 with 4 failed tests, F12 exit 1 with 2 failed tests. All production files were restored with git checkout and git status showed only test edits.
+d1_gate: GREEN exit 0, 3069 tests in 89 files, lines 90.93 percent, coverage exit 0, floor 85.52. Logs green-7480484.log, coverage-7480484.log, gate-7480484.json.
+d5_gate: GREEN exit 0, 3069 tests in 89 files, lines 90.93 percent, coverage exit 0, floor 85.52. Logs green-bcaa97f.log, coverage-bcaa97f.log, gate-bcaa97f.json.
+plan_commit: c2f5cfdb0 records task 2.9 and the Recorded deviations block for F10, F11, and F16.
+new_files: proof-f2-r2.log, proof-f4-r2.log, proof-f9-r2.log, proof-f12-r2.log, green-7480484.log, coverage-7480484.log, gate-7480484.json, green-bcaa97f.log, coverage-bcaa97f.log, gate-bcaa97f.json.
+notes: F1 and F3 were CONTEST by the orchestrator and got no action. F17 removed the unused compiledCss export only. No production file changed in any commit. No push was made. The plan commit message used "fix" instead of "remediation" because commitlint limits the header to 100 characters. Step 3 was attempted at 7008ccefd. A temporary detached worktree was created. The registry download and the offline store both lacked a tarball, and the shared heavy lock stayed held by a Storytime video render. The run ended on SIGTERM. The partial log is green-at-7008ccef.log and the temporary worktree was removed. Commits 733319505 and fb5622ed7 were not rerun. The Recorded deviations block states F10, F11, and F16 as instructed.
+dispositions: F2=FIX; F4=FIX; F9=FIX; F12=FIX; F10=FIX; F11=FIX; F16=FIX
+proofs: measure/runs/www_test_audit_pilot_20261122/proof-f2-r2.log, measure/runs/www_test_audit_pilot_20261122/proof-f4-r2.log, measure/runs/www_test_audit_pilot_20261122/proof-f9-r2.log, measure/runs/www_test_audit_pilot_20261122/proof-f12-r2.log
+END_MEASURE_AGENT_RESULT

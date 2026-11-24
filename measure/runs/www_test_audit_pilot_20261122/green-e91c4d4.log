@@ -1,0 +1,30 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Phase 4: Pilot report. Tasks 4.1, 4.2 and 4.3.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+green_head: 4d41866fdde7d7c53359684485682e6fd06b27a5
+report_commit: 289c4451c643a0b054a0b45a1dda0d8650a362c3
+plan_evidence_commit: 4d41866fdde7d7c53359684485682e6fd06b27a5
+report: measure/tracks/www_test_audit_pilot_20261122/report.md
+
+tasks_flipped_to_x:
+- 4.1 Write the pilot report (289c4451c).
+- 4.2 Record the CI test time for www before and after (289c4451c).
+- 4.3 Checkpoint Phase 4 (289c4451c).
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: one tracked file, measure/tracks/www_test_audit_pilot_20261122/report.md. The plan commit changed the existing plan.md. No test or production file changed.
+
+report_evidence: baseline 3175 cases and 86.52 percent lines from baseline.json. Final 1412 cases and 92.07 percent lines from gate-66aeb1011.json. Cut 1763 cases, or 55.5 percent. Blog merge removed 1709 cases under approval at classification.md:250-258. Without that merge, the cut stays small. CI time before 90.47s from baseline.log and after 98.11s from green-66aeb1011.log; difference +7.64s; both runs used heavy-run and the same Vitest command.
+
+gates: four heavy-run gates exited 0 after the report commits. check-types 0. lint 0 with three known warnings in untouched files. full vitest 0 with 98 files and 1412 tests. coverage 0 with lines at 92.07 percent. Logs: check-types-289c4451c.log, lint-289c4451c.log, green-289c4451c.log and coverage-289c4451c.log in measure/runs/www_test_audit_pilot_20261122/. The report changes no test and no production file.
+
+deviations: none in this round. Earlier commit headers were shortened for commitlint. Those changes are recorded in the track plan.
+dispositions: none
+END_MEASURE_AGENT_RESULT

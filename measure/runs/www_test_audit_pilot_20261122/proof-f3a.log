@@ -1,0 +1,32 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+··x
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/hero-text-contrast.red.test.ts > left-aligned hero description contrast (A-59, rendered behavior) > keeps the rendered Products page hero subtitle dark on the default light gradient
+AssertionError: expected 'rgba(255, 255, 255, 0.9)' to be 'rgb(51, 65, 85)' // Object.is equality
+
+Expected: [32m"rgb[7m(51, 65, 85[27m)"[39m
+Received: [31m"rgb[7ma(255, 255, 255, 0.9[27m)"[39m
+
+ ❯ src/__tests__/hero-text-contrast.red.test.ts:80:7
+     78|         "pages.products.overview.hero.description",
+     79|       ),
+     80|     ).toBe("rgb(51, 65, 85)");
+       |       ^
+     81|   });
+     82| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  01:22:58
+   Duration  948ms (transform 77ms, setup 67ms, import 177ms, tests 122ms, environment 426ms)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run src/__tests__/hero-text-contrast.red.test.ts '--maxWorkers=1' '--reporter=dot'

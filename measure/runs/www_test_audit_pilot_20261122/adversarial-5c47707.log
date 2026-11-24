@@ -1,0 +1,32 @@
+# Adversarial log: www test audit pilot, Phase 2, round 4
+
+Audited head: 5c4770777. Probe commit: 7b15edd95.
+
+ADV-3 is closed. e153b885a moved the AC-24 rule into the shared fixture
+src/__tests__/fixtures/reedy-eligibility.ts and widened the inactive
+patterns. The reversal probe file, the contact-authority probe file,
+and the main Reedy test pass at 5c4770777 (34 cases). No production
+file changed in the round range.
+
+Three new reversals still pass the check:
+- en 'formerly active' keeps the word 'active' and no pattern matches
+  'formerly' (ADV-4).
+- th 'หมดอายุ' next to 'ใช้งานอยู่' keeps the active word (ADV-5).
+- zh '已过期' next to '有效' keeps the valid marker (ADV-6).
+
+Six held probes break as required: non-active, in-active, cancelled,
+not currently active, lapsed, expired. The committed probe file fails
+3 of 9 cases until Green widens the fixture.
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 2: Delete batch (D1-D5), adversarial round 4
+commits: 7b15edd95
+tests_run: pnpm --filter www-reading-advantage exec vitest run src/__tests__/reedy-inactive-reversal.adversarial.test.tsx src/__tests__/contact-authority-import-actual.adversarial.test.tsx src/__tests__/www-tutor-reedy-claim.test.tsx --reporter=dot (34 passed at 5c4770777); pnpm --filter www-reading-advantage exec vitest run src/__tests__/reedy-inactive-reversal.adversarial.test.tsx --reporter=verbose (6 passed, 3 failed after new probes)
+files_changed: apps/www-reading-advantage/src/__tests__/reedy-inactive-reversal.adversarial.test.tsx; measure/runs/www_test_audit_pilot_20261122/adversarial-5c47707.json; measure/runs/www_test_audit_pilot_20261122/adversarial-5c47707.log
+plan_updates: none
+known_failures: ADV-4, ADV-5, ADV-6 blocking. The AC-24 eligibility check admits en 'formerly active', th 'หมดอายุ', and zh '已过期' reversals.
+handoff: Route ADV-4, ADV-5, and ADV-6 to Green. Green adds 'formerly' to the English inactive set and 'หมดอายุ' and '已过期' to the Thai and Chinese sets in src/__tests__/fixtures/reedy-eligibility.ts until the committed probe file passes 9 of 9; the probe file stays as regression armor. ADV-3 is a closed note. Result JSON: measure/runs/www_test_audit_pilot_20261122/adversarial-5c47707.json.
+END_MEASURE_AGENT_RESULT

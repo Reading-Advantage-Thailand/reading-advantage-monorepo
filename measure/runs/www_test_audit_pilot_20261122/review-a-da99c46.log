@@ -1,0 +1,23 @@
+Review A (correctness and architecture), round 2, for www_test_audit_pilot_20261122, Phase 4: Pilot report.
+Audited HEAD: da99c46c7bc7f11ddddd00bd398216cdf27e335b. Scope: e836e7289..da99c46c7 (152fd0f67 report, da99c46c7 plan 4.14). Phase base: e91c4d4cc.
+Result JSON: measure/runs/www_test_audit_pilot_20261122/review-a-da99c46.json
+
+F1 withdrawn as fixed: the 1412 / 92.07 % values are labelled pre-merge at e91c4d4cc. The final run is 1413 / 92.08 % at e836e7289. The cut is 1762 cases (55.5 %), and the rise is 5.56 points. The python3 check confirms the arithmetic.
+N1 withdrawn as fixed: plan.md 4.13 says auto-merged.
+N2 mostly fixed: one sentence still says 'The honest pre-merge cut stays below that range' for the blog merge (nonblocking).
+N3 nonblocking: section 7 quotes the green-merge values with two spaces where the log has one.
+Late finding L1: tech-debt. Section 7 'one verbose run at head' describes timing-at-head.json, which holds 1412 tests (the pre-merge head).
+No line citation and no count of run files were added.
+
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: None in this round; the change is artifact-only and the apps tree equals e836e7289, where this role ran 1413 tests at 92.08 % lines.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-da99c46.json and review-a-da99c46.log
+plan_updates: none
+known_failures: none
+handoff: PASS. F1 and N1 are fixed. Optional wording fixes: N2 residue, 'The honest cut without the blog merge stays below that range'; N3, quote the green-merge log with one space. Record 'Late finding L1: tech-debt' in plan.md. Add the 'one verbose run at head' item to measure/tech-debt.md, because timing-at-head.json holds 1412 tests.
+END_MEASURE_AGENT_RESULT

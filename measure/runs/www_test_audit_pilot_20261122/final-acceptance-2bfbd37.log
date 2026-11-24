@@ -1,0 +1,59 @@
+Final acceptance log: www_test_audit_pilot_20261122 at 2bfbd373fef2fc500798efe721975fa0a345e73f
+Route: claude-agent/sonnet#xhigh (PM substitution: openai and kimi excluded; same family as Review A and phase acceptance, recorded as N8).
+Result JSON: measure/runs/www_test_audit_pilot_20261122/final-acceptance-2bfbd37.json (status pass).
+Probe scripts (read-only except the two mutation scripts, which restore every file):
+  final-acceptance-2bfbd37-probes.py, final-acceptance-2bfbd37-mutate.py, final-acceptance-2bfbd37-blog-mutate.py.
+
+Verdict: PASS. Round 1 blockers F1 and F2 are closed.
+
+Round 1 blockers
+- F1 (no Phase 1 phase acceptance): closed. phase-acceptance-p1-2bfbd37.json passes and audits HEAD.
+- F2 (Phase 4 result older than later track changes): closed. phase-acceptance-p4-2bfbd37.json passes and audits HEAD.
+  The latest results equal HEAD, so no later commit exists. Review A (review-a-2bfbd37.json) also audits HEAD.
+
+Contract checks
+- 70 role results carry a SHA pair; 0 fail the ancestry tests (baseline is an ancestor of audited HEAD, audited HEAD is an ancestor of HEAD).
+- Phase 1, 2, 3 each hold one passing phase-acceptance result. Phase 4 holds two (d2c8e63 older, p4-2bfbd37 at HEAD). See N2.
+- Checker status lists [C10] www_test_audit_pilot_20261122 as a closeout candidate.
+- Plan: 50 [x] tasks, all with SHAs that resolve and are ancestors of HEAD. No [~], no [ ], no [b].
+- No push: no remote branch contains HEAD.
+
+Gates run through heavy-run at HEAD (HEAVY_PREFLIGHT_WAIT_S=3600, one command per call)
+- check-types: exit 0.
+- lint: exit 0, 0 errors, 1 warning (www-reading-card.red.test.ts 3:21 beforeEach, present at the track base).
+- Vitest (--reporter=dot): 98 files, 1494 tests passed, exit 0.
+- test:coverage: 98 files, 1494 tests passed, 92.08 percent lines (1675/1819), exit 0.
+- bash measure/doctor.sh: exit 1 at the architecture step (stale pin, PM acknowledged 2026-11-24). Steps 1 to 3 print PASS.
+
+Independent checks of the final values
+- Cut: 3175 to 1494 cases = 1681 cases = 52.94 percent. Target 20 percent = 635 cases. Met.
+- Coverage: 86.52 to 92.08 percent, a rise of 5.56 points. Floor 85.52. Lowest of 30 gate JSONs: 89.86.
+- K share: 3064 of 3175 = 96.5 percent.
+- The cut rests wholly on the PM-approved blog merge (without it the suite holds 3203 cases, 28 above the baseline). Report section 1 says so.
+- K retention: 76 of 77 K files hold at least their K case count at HEAD. The exception is blog-posts-validation (1726 to 17), the approved merge.
+- Blog merge: three new post mutations each fail the merged test and name the post.
+- D5 revert: all 14 D5 files hold at least their baseline case count. Three new money-pin mutations fail (1,200 baht row, th tutorRole.points.3, 3,000 baht note).
+- Tutor-commission money files (7): git diff --stat 635a604c89 HEAD empty; 168 cases, equal at HEAD.
+- No production code changed: 0 non-test paths in 111 own commits; 0 changed paths under packages, services, integrations.
+- No K row deleted.
+
+Spec criteria
+- (a) met. (b) met. (c) met. (d) met with N7. (e) met. (f) met: report sections 1 to 8, section 8 says None.
+
+Anti-pattern audit
+- A5: no false pass claim in plan.md or report.md. A6: tracks.md entry understates the state and claims nothing about adversarial results (N4). A9: no test names an archived track path.
+
+Nonblocking notes: N1 doctor exit 1; N2 two passing Phase 4 results; N3 older Phase 2 and 3 results; N4 registry entry understates; N5 stale plan text without pointer (tasks 4.1, 2.5); N6 known open items by PM decision; N7 D5 four part commits and the F11 R2 cases; N8 route deviation and gitignored run folder.
+
+MEASURE_AGENT_RESULT
+role: final-acceptance
+status: complete
+track: www_test_audit_pilot_20261122
+phase: track review
+commits: none
+tests_run: heavy-run check-types pass (exit 0); heavy-run lint pass (exit 0, 0 errors, 1 warning); heavy-run vitest run --reporter=dot pass (98 files, 1494 tests); heavy-run test:coverage pass (98 files, 1494 tests, 92.08 percent lines); bash measure/doctor.sh exit 1 (stale architecture pin, PM acknowledged); 3 money-pin mutations and 3 blog post mutations all fail as expected and every file was restored
+files_changed: measure/runs/www_test_audit_pilot_20261122/final-acceptance-2bfbd37.json, final-acceptance-2bfbd37.log, final-acceptance-2bfbd37-probes.py, final-acceptance-2bfbd37-mutate.py, final-acceptance-2bfbd37-blog-mutate.py
+plan_updates: none (gate-only role)
+known_failures: none blocking; doctor.sh exit 1 on the stale architecture pin (PM acknowledged 2026-11-24); known open items by PM decision (F11, F18, 16.2 percent second-check exception, F52 to F55, N13, N14, ADV-26 to ADV-32, ADV-P1-9, N8 tech-debt)
+handoff: Verdict PASS, retry_recommendation none. Route to measure-closeout. At closeout, rewrite the measure/tracks.md entry (N4), consider a one-line pointer in plan tasks 4.1 and 2.5 (N5), and decide if the superseded phase-acceptance-d2c8e63 result needs a note (N2). The checker role-gate for final-acceptance runs PROJECT_LINT, PROJECT_CHECKS and PROJECT_TESTS from the environment; I ran the same gates directly through heavy-run and they pass. The run folder is gitignored, so the evidence stays in the local worktree. No file outside measure/runs changed and nothing was committed.
+END_MEASURE_AGENT_RESULT

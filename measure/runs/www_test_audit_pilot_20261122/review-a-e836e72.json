@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "d2c8e6336743897f6f55bc6dc1f0a5b3e5005683",
+  "phase_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "role_base_sha": "e836e728922d8b01ac3fd74fcccd7bd7df47b56b",
+  "audited_head_sha": "e836e728922d8b01ac3fd74fcccd7bd7df47b56b",
+  "status": "fail",
+  "summary": "The merge of origin/master 968bde612 is correct. The three merged test and fixture files hold the pilot structure and every master change, and the net app diff against master is test-only. The blog suite sweeps the two new posts, and the full suite passes with 1413 tests and 92.08 % lines. The report is stale: report.md:10 and report.md:199 call the e91c4d4cc run with 1412 cases and 92.07 % the final run, and the report does not mention the master merge.",
+  "blocking_findings": [
+    "F1 (A5, stale report claim): report.md:10 says 'The final run at `e91c4d4cc` holds 1412 cases and 92.07 % line coverage' and report.md:199 gives 'After: ... Tests 1412 passed (1412)'. The merge 6ee56327b added one master case ('holds no roadmap-without-date line in any locale of the home suite line', www-batch-20261116.locale.test.ts). The run at HEAD e836e7289 gives 'Test Files 98 passed (98)', 'Tests 1413 passed (1413)', and 'All files | 90.95 | 83.09 | 87.52 | 92.08' (this review's coverage run; green-merge-e836e7289.log:22-28). The report does not label the 1412/92.07 values as pre-merge and does not mention the master merge, plan task 4.13, or green-merge-e836e7289.log. Fix: label the section 1 and section 7 values as the pre-merge run at e91c4d4cc and add one line with the post-merge values (1413 cases, 92.08 % lines, green-merge-e836e7289.log), or replace them with the post-merge values. The derived values change only slightly: the cut becomes 1762 cases (55.5 %) and the coverage rise becomes 5.56 points. The 20 % target and the coverage rule still pass."
+  ],
+  "nonblocking_findings": [
+    "N1: plan.md 4.13 says 'The pilot test structure stays in the two conflicted test and fixture files.' green-merge-e836e7289.log:44 says 'The ort strategy auto-merged both expected conflict files'. The files did not conflict. `git show --cc 6ee56327b` shows a combined hunk only in storytime-advantage/page.content.test.tsx, and that resolution is line-exact. Change 'conflicted' to 'auto-merged' or 'expected-conflict' when F1 is fixed.",
+    "N2: report.md:12-14 use 'the merge' and 'pre-merge' for the blog-suite merge of task 3.5. After the master merge, the word is ambiguous. When F1 adds a master-merge line, name the blog merge as 'the blog merge' in lines 12-14."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned e836e728922d8b01ac3fd74fcccd7bd7df47b56b, equal to audited_head_sha and role_base_sha. The brief gave no phase_base_sha; this run uses e91c4d4cc from green-merge-e836e7289.log:44, and `git merge-base --is-ancestor e91c4d4cc HEAD` exits 0. The audited scope is d2c8e6336..e836e7289 (merge 6ee56327b plus plan commit e836e7289).",
+    "6ee56327b has parents d2c8e6336 and 968bde612. The merge base is 635a604c8.",
+    "Check 1 (www-batch-20261116.locale.test.ts): the sorted +/- lines of `git diff 635a604c8 968bde612` equal those of `git diff d2c8e6336 6ee56327b` (diff rc=0), so every master change is present. The sorted +/- lines of `git diff 635a604c8 d2c8e6336` equal those of `git diff 968bde612 6ee56327b` (diff rc=0), so the pilot structure (expectKeysInEveryLocale and contains-checks) is intact. Master's new ROW_B home values and its new no-roadmap case are in the merged file.",
+    "Check 1 (fixtures/storytime-page-expected.ts): the same two line-set comparisons return rc=0. The merged fixture keeps the pilot CONTAINER_STORY_IMAGES, MONTHS_TH and the 'Thai month' claim class, and master's three LABEL_COPY home lines, APPROVED_SCHOOL_YEAR and its scanner clearing in findUnapprovedClaimTerms.",
+    "storytime-advantage/page.content.test.tsx is the only file with a combined hunk in `git show --cc 6ee56327b`. The same two line-set comparisons return rc=0. The merged control keeps the pilot `findClaimTerms(APPROVED_DATES.th)).toEqual([\"Thai month\"])` and adds master's APPROVED_SCHOOL_YEAR import and assertion.",
+    "`git diff --name-only 968bde612 6ee56327b -- apps | grep -v test | grep -v fixtures` returns no line, so the merge adds no production code beyond master. The d2c8e6336..6ee56327b production changes are home.ts (suite description in en, th, zh), two blog posts and two webp images, all from master.",
+    "Check 2: fixtures/blog-posts-loader.ts:13-16 sets POSTS_BASE to src/app/[locale]/(marketing)/blog/posts and sweeps every locale directory. The en and th she-taps-nest-and-hears-it.md files are in that tree, and their coverImage /blog/2026-11-23-kitchen-evening.webp exists under public/blog. blog-posts-validation.test.ts:154-162 checks that coverImage exists on disk. The full suite run at HEAD passes this suite with the new posts.",
+    "Check 3: report.md:10 and report.md:199 give 1412 cases and 92.07 % from gate-66aeb1011.json and green-66aeb1011.log. This review's run at HEAD gives 1413 tests and 92.08 % lines. See F1.",
+    "report.md section 4 tutor-commission claim still holds: `git diff --name-only a1caa5803 HEAD -- 'apps/www-reading-advantage/**/tutor-commission*'` returns no output, exit 0.",
+    "report.md section 7 claims at line 217 still hold: `git log --oneline 635a604c8..HEAD -- <primary page.content.test.tsx>` lists fb5622ed7, 733319505, 7008ccefd; `git log --oneline 8a126f612..HEAD -- <path>` lists no commit.",
+    "report.md section 8 ('This track changed test files, test fixtures and measure/ files only. No company copy changed.') still holds for the track's own diff: the net app diff against master 968bde612 holds test and fixture files only. The home.ts copy change is master's.",
+    "Plan task 4.13 (plan.md:655-668) matches the merge: commit 6ee56327b, origin/master 968bde612, merge commit, 1413 tests in 98 files, 92.08 % lines. The word 'conflicted' is inaccurate; see N1.",
+    "This review ran the test-strategy.md:34 coverage command through heavy-run: 'Test Files  98 passed (98)', 'Tests  1413 passed (1413)', 'All files | 90.95 | 83.09 | 87.52 | 92.08'. The coverage output also holds repeated PARSE_ERROR lines, which did not fail the run."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git log --oneline -1 --format='%H %P' 6ee56327b",
+    "git merge-base d2c8e6336 968bde612",
+    "git diff --stat d2c8e6336..e836e7289",
+    "git diff d2c8e6336..e836e7289 -- measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "git diff 635a604c8 968bde612 -- <three merged files>; git diff 635a604c8 d2c8e6336 -- <three merged files>",
+    "diff <(git diff $MB d2c8e6336 -- $P | grep -E '^[-+][^-+]' | sort) <(git diff 968bde612 6ee56327b -- $P | grep -E '^[-+][^-+]' | sort) for each of the three files, and the master-side mirror",
+    "git show 6ee56327b --cc --format=",
+    "git diff --name-only 968bde612 6ee56327b -- apps | grep -v test | grep -v fixtures",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage'",
+    "rg -n '1412|1413|92\\.0|merge|master|pre-merge' measure/tracks/www_test_audit_pilot_20261122/report.md",
+    "git diff --name-only a1caa5803 HEAD -- 'apps/www-reading-advantage/**/tutor-commission*'",
+    "git log --oneline 635a604c8..HEAD -- <primary page.content.test.tsx>; git log --oneline 8a126f612..HEAD -- <same>",
+    "git merge-base --is-ancestor e91c4d4cc3c8d5d61a1e9b802c031247543180fa HEAD"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/public/blog/2026-11-23-decodable-nest.webp",
+    "apps/www-reading-advantage/public/blog/2026-11-23-kitchen-evening.webp",
+    "apps/www-reading-advantage/src/__tests__/fixtures/storytime-page-expected.ts",
+    "apps/www-reading-advantage/src/__tests__/www-batch-20261116.locale.test.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/posts/en/she-taps-nest-and-hears-it.md",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/posts/th/she-taps-nest-and-hears-it.md",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/storytime-advantage/page.content.test.tsx",
+    "apps/www-reading-advantage/src/locales/pages/home.ts",
+    "measure/tracks/www_daily_blog_posts_20261115/plan.md",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "claude-agent/opus#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "The merge is line-exact for all three test and fixture files (diff rc=0 both sides), but report.md:10 still calls the 1412-case, 92.07 % run final while HEAD runs 1413 tests at 92.08 %."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "blog-posts-validation.test.ts sweeps POSTS_BASE (blog-posts-loader.ts:13-16), so the two new posts and their coverImage file are checked; the full suite passes at HEAD."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "`git diff --name-only 968bde612 6ee56327b -- apps | grep -v test | grep -v fixtures` is empty, so the merge adds no production code beyond master."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Plan task 4.13 cites the merge commit, origin/master SHA and green-merge-e836e7289.log values, but calls auto-merged files 'conflicted' (green-merge-e836e7289.log:44 says auto-merged)."
+    }
+  ]
+}

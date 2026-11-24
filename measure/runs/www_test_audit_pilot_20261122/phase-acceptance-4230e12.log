@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: phase-acceptance
+status: blocked
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: Heavy-run type check, lint, and coverage passed. Vitest passed 1,412 tests in 98 files with 92.07% line coverage. Fresh probes contradicted three retained claims.
+files_changed: phase-acceptance-4230e12.json, phase-acceptance-4230e12.log
+plan_updates: none
+known_failures: F41, F42, F50, F51 are report defects. They concern non-file Markdown parity, the mutation-status source, D4 routing behavior, and the D2 duplicate record.
+handoff: Do not accept 4230e12cb. Route the four retained report claims to the report owner. Apply the remediation round limit. Preserve decision C and the report-only timing decision.
+END_MEASURE_AGENT_RESULT

@@ -1,85 +1,82 @@
-// @vitest-environment node
-/**
- * Regression tests for A-59 (follow-up): the products overview and about
- * heroes pass alignment="left" with a string description and keep the
- * default textColor="light". HeroSection renders that description as
- * text-white/90, white text over the default light amber/orange gradient,
- * so the subtitle line is nearly invisible. These tests pin that every
- * left-aligned HeroSection with a plain string description and the default
- * light gradient must set textColor="dark".
- */
-import { readFileSync, readdirSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
-import { describe, expect, it } from "vitest";
+import { cleanup, render } from "@testing-library/react";
+import { createElement } from "react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import HeroSection from "@/components/marketing/hero-section";
+import AboutPage from "@/app/[locale]/(marketing)/about/page";
+import ProductsPage from "@/app/[locale]/(marketing)/products/page";
 
-const APP_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const APP_DIR = join(APP_ROOT, "src/app");
+vi.mock("@/components/products/b2b-solutions", () => ({ default: () => null }));
+vi.mock("@/components/products/b2c-solutions", () => ({ default: () => null }));
+vi.mock("@/components/products/tutor-advantage", () => ({ default: () => null }));
 
-/**
- * Collects every page source under the locale app directory.
- * @returns The list of page file paths.
+/*
+ * Behavior tests for A-59: a left-aligned hero with a plain string description
+ * on the default light gradient must render dark, readable subtitle text. These
+ * cases render the real HeroSection and the real About page and read the
+ * computed text color. No page source text and no rendered class names are
+ * asserted.
  */
-function collectPageFiles(): string[] {
-  const files: string[] = [];
-  const walk = (dir: string) => {
-    for (const entry of readdirSync(dir, { withFileTypes: true })) {
-      const full = join(dir, entry.name);
-      if (entry.isDirectory()) walk(full);
-      else if (entry.name === "page.tsx") files.push(full);
-    }
-  };
-  walk(APP_DIR);
-  return files;
+
+/** Installs the real Tailwind text colors used by the hero description. */
+function installTextColors(): void {
+  const style = document.createElement("style");
+  style.setAttribute("data-testid", "hero-text-colors");
+  style.textContent =
+    ".text-slate-700{color:rgb(51,65,85)}.text-white\\/90{color:rgba(255,255,255,0.9)}";
+  document.head.appendChild(style);
 }
 
-/**
- * Extracts a self-closing HeroSection call, honoring nested braces and
- * parentheses so props such as an inline icon do not end the match early.
- * @param source The page source text.
- * @returns The call text, or null when the page renders no HeroSection.
- */
-function extractHeroCall(source: string): string | null {
-  const start = source.indexOf("<HeroSection");
-  if (start === -1) return null;
-  let depth = 0;
-  for (let i = start; i < source.length; i++) {
-    const ch = source[i];
-    if (depth === 0 && ch === ">" && source[i - 1] === "/") {
-      return source.slice(start, i + 1);
-    }
-    if (ch === "(" || ch === "{" || ch === "[") depth++;
-    if (ch === ")" || ch === "}" || ch === "]") depth--;
-  }
-  return null;
+/** Finds the description paragraph by its text and returns its computed color. */
+function descriptionColor(
+  container: HTMLElement,
+  description: string,
+): string {
+  const paragraph = Array.from(container.querySelectorAll("p")).find(
+    (node) => node.textContent === description,
+  );
+  expect(paragraph, "hero description must render").not.toBeNull();
+  return window.getComputedStyle(paragraph as HTMLElement).color;
 }
 
-const heroPages = collectPageFiles().flatMap((path) => {
-  const call = extractHeroCall(readFileSync(path, "utf8"));
-  return call ? [{ path, call }] : [];
+afterEach(() => {
+  cleanup();
+  document
+    .querySelectorAll('[data-testid="hero-text-colors"]')
+    .forEach((node) => node.remove());
 });
 
-describe("left-aligned hero description contrast (A-59)", () => {
-  it("renders a HeroSection on the products and about pages", () => {
-    const paths = heroPages.map((page) => page.path);
-    expect(paths.join("\n")).toContain(join("(marketing)", "products"));
-    expect(paths.join("\n")).toContain(join("(marketing)", "about"));
+describe("left-aligned hero description contrast (A-59, rendered behavior)", () => {
+  it("renders a readable dark subtitle on a left-aligned hero with a string description", () => {
+    installTextColors();
+    const rendered = render(
+      createElement(HeroSection, {
+        title: "Products",
+        description: "A plain string description",
+        alignment: "left",
+        textColor: "dark",
+      }),
+    );
+    expect(
+      descriptionColor(rendered.container, "A plain string description"),
+    ).toBe("rgb(51, 65, 85)");
   });
 
-  it("uses the dark text color when a left-aligned hero has a string description on the default light gradient", () => {
-    for (const { path, call } of heroPages) {
-      const relative = path.slice(APP_ROOT.length + 1);
-      const leftAligned = call.includes('alignment="left"');
-      const stringDescription = /description=\{\s*(t\(|`)/.test(call);
-      const controlsBackground =
-        call.includes("backgroundImage=") || call.includes("customGradient=");
-      if (!leftAligned || !stringDescription || controlsBackground) {
-        continue;
-      }
-      expect(
-        call,
-        `${relative}: left-aligned hero with a string description on the default light gradient must set textColor="dark" so the subtitle is readable`,
-      ).toMatch(/textColor="dark"/);
-    }
+  it("keeps the About page hero subtitle dark on the default light gradient", async () => {
+    installTextColors();
+    const rendered = render(await AboutPage());
+    expect(
+      descriptionColor(rendered.container, "pages.about.hero.description"),
+    ).toBe("rgb(51, 65, 85)");
+  });
+
+  it("keeps the rendered Products page hero subtitle dark on the default light gradient", async () => {
+    installTextColors();
+    const rendered = render(await ProductsPage());
+    expect(
+      descriptionColor(
+        rendered.container,
+        "pages.products.overview.hero.description",
+      ),
+    ).toBe("rgb(51, 65, 85)");
   });
 });

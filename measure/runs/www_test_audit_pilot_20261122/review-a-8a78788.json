@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 2: Delete batch (D1-D5)",
+  "baseline_sha": "8a78788199a95e641cd40056d044e3dc60563273",
+  "phase_base_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+  "role_base_sha": "8a78788199a95e641cd40056d044e3dc60563273",
+  "audited_head_sha": "8a78788199a95e641cd40056d044e3dc60563273",
+  "status": "fail",
+  "summary": "The remediation restores several checks and changes no production file. Targeted tests still miss layout, claim, contact authority, and price regressions. Both contested findings remain open.",
+  "blocking_findings": [
+    "F1 [Blocker] review-a: The CSS fixture reads class rules on a separate probe. It does not see inline overrides or apply media conditions. All 14 look tests passed when an inline style set the rendered picture wrapper width to 100%. Test the effective width and breakpoint rules on the rendered elements.",
+    "F2 [Blocker] review-a: Both claim suites passed with a hard-coded 95% claim rendered on Math. phase-w3-claims.test.ts:287–319 scans dictionary and metadata strings, not the rendered page. no-gse-in-customer-copy.test.ts:106–108 also mocks two product sections without rendering them separately. Check the actual output on the affected surfaces.",
+    "F3 [Blocker] review-a: The Products subtitle and blur-sm mutations now fail. The workbook image test reads only CSS class declarations. Setting the image inline opacity to zero leaves all three tests green, including the visibility test. Check effective opacity and filter on the image.",
+    "F4 [Blocker] review-a: The wrong phone destination and the duplicate English Sheet label now fail. The authority test still uses the current real config values. All five cases passed when the phone href used the current literal instead of the authority reference. Supply different authority values in the test and check that the rendered and submitted destinations follow them.",
+    "F9 [Blocker] review-a: The Reedy assertions check fragments that can also occur in a false claim. All 25 cases passed with: 'Open to everyone, even without an active class package, on unfinished lessons.' Keep the eligibility clauses or use checks that distinguish the fact from its negation.",
+    "F10 [Blocker] review-a: FIX — The phase has no matching GREEN evidence for D5 part 2. gate-7008ccef.json reports exit 0, but green-7008ccef.log:1–13 contains an accounting plan. The matching coverage log shows 3,081 passing cases and 89.94% lines. Supply the required GREEN log at commit 7008ccef or rerun that command through the shared runner. | CONTEST kept: The coverage run proves the full suite passed at that commit. It is not a log of the separate GREEN command that test-strategy.md:25–37 and plan.md:33–36 require. The Green summary cites the unrelated log and the plan records no substitution.",
+    "F11 [Blocker] review-a: FIX — The D1 commit also rewrites two R2 cases. classification.md:195 assigns the rendered full-width pictured row and the text-only exclusion cases to R2. 0be4a037 changes both. Keep these R2 cases outside the D1 change so each test commit holds one class. | CONTEST kept: The class mix remains and the promised record is not in the committed plan. plan.md:170 still has no R2 case list or D1 SHA. A durable, approved exception can resolve the record without rewriting history.",
+    "F12 [Blocker] review-a: The wrong Thai CTA month and the 1,900 baht example now fail. The example assertion uses substring matching. All 30 pricing content tests passed with 11,800 baht in the rendered example heading. Check the complete amount with its currency.",
+    "F16 [Blocker] review-a: The new plan entry at lines 151–155 closes three remediation commits with evidence only at 9eb3b9c4. It does not show tests or coverage at 733319505 or fb5622ed7. Spec criteria (b) and (c) require both results at every commit."
+  ],
+  "nonblocking_findings": [
+    "F17 [Nit] review-a: The new D1 fixture exports compiledCss without a caller. The D5 locale and render suites also duplicate the full feature and pricing key lists. Keep each required list in one test fixture."
+  ],
+  "evidence": [
+    "HEAD matches the supplied role base and audit head. The phase range changes only www tests, test fixtures, and plan.md. The remediation range includes no production path.",
+    "proof-f1.log:8–26 detects removal of the wrapper width utility. The in-memory breakpoint change to 2xl also failed at www-features-look-pins.red.test.ts:139.",
+    "proof-f2a.log:15–17 catches GSE on Contact. proof-f2b.log:30–34,75–77 catches stale generated metadata and a claim present in the Math locale copy.",
+    "proof-f3a.log:8–9 catches the light Products subtitle. proof-f3b.log:8–9 catches the blur-sm utility.",
+    "proof-f4a.log:8–9 catches the wrong phone href. proof-f4b.log:8–9 catches hard-coded English in the Sheet. An in-memory Thai dictionary value of Close also fails the separate uniqueness check.",
+    "F5 fixed: An in-memory explicit-English path error and nested cefr-timeline ID caused four failures in the restored assertions.",
+    "F6 fixed: An in-memory hook that always returned English failed the Thai and Chinese cases. The existing unsupported-locale fallback still passed.",
+    "F7 fixed: The independent key lists rejected a removed English feature key in Vitest. The in-memory helper also rejected a missing leaf, a missing scope, and an empty required list.",
+    "F8 fixed: The in-memory Primary hero destination change and repeated Storytime cover caused six failures. Primary also checks each section's image paths against IMAGES.",
+    "F9 partial: The original unrestricted Reedy sentence failed, but the false sentence that retained the markers passed the complete Reedy suite.",
+    "F12 partial: The in-memory Thai December date and 1,900 baht mutations caused four failures. The follow-up 11,800 baht mutation passed all pricing content tests.",
+    "D-10 still has direct equality and shape checks in www-tutor-screens-copy.adversarial.test.ts:91–123. Tutor-commission files, pricing stacking, and the pricing legal sweep have no committed changes.",
+    "The labeled gate and suite summaries match for 9eb3b9c4 and 4d168813. They show 3,063 and 3,069 passing tests, at 90.04% and 90.94% line coverage.",
+    "The 7008ccef coverage log shows 3,081 passing cases at 89.94%. The separate Green role summary at green-934080c.log:41–48 points to the unrelated GREEN log.",
+    "An unmodified targeted run passed 303 tests across 15 files. In-memory mutations changed no files. git status --short was empty.",
+    "The dispatched reviewer used OpenAI because the selected DeepSeek route was not allowed for decision roles. The worktree has no usable build-graph index. Source references limit the new exports to tests."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --name-status a1caa58034f6455e91205a5673ef172a974a7992..8a78788199a95e641cd40056d044e3dc60563273",
+    "git log --reverse --format='%h %s' --name-status c673f21341a19e961e8e1b9c3625c5b9ba62027c..8a78788199a95e641cd40056d044e3dc60563273",
+    "git diff --check a1caa58034f6455e91205a5673ef172a974a7992..8a78788199a95e641cd40056d044e3dc60563273",
+    "git show for 733319505, fb5622ed7, 9eb3b9c4f, and 4d1688131",
+    "CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot with 15 targeted files",
+    "node --input-type=module -e with vitest/node startVitest and in-memory Vite transforms for F1–F2, F3–F9, and F12",
+    "node -e with TypeScript transpilation and VM fixtures for missing locale keys and scopes",
+    "python3 -c with JSON and labeled Vitest result parsing for 7008ccef, 9eb3b9c4, and 4d168813",
+    "test -s graph.db",
+    "git status --short"
+  ],
+  "changed_files": [
+    "measure/runs/www_test_audit_pilot_20261122/review-a-8a78788.json",
+    "measure/runs/www_test_audit_pilot_20261122/review-a-8a78788.log"
+  ],
+  "test_strategy_violations": [
+    "F1, F2, F3, F4, F9, F12: The repaired tests still accept named regressions in the public output or source authority.",
+    "F10: The cited log does not show the required GREEN command result.",
+    "F11: The plan does not record an approved exception to the one-class rule.",
+    "F16: The new plan entry does not prove the per-commit gates for the first two remediation commits."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "escalate_human",
+  "confidence": "high",
+  "route": "openai/gpt-6.2-sol#high",
+  "ratings": [
+    {"axis": "correctness", "score": 2, "evidence": "All 25 Reedy cases passed with both eligibility rules reversed."},
+    {"axis": "test_meaning", "score": 3, "evidence": "The missing-key mutation failed at locale-key-check.ts:49, but a rendered 11,800 baht price passed all 30 pricing content cases."},
+    {"axis": "scope_discipline", "score": 4, "evidence": "The exact remediation diff lists only www tests, test fixtures, and plan.md."},
+    {"axis": "evidence_quality", "score": 3, "evidence": "The two remediation gate receipts match their labeled results, but plan.md:151–155 cites neither intermediate commit's gate."}
+  ]
+}

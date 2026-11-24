@@ -1,0 +1,71 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+round: r17, type check repair
+track: www_test_audit_pilot_20261122
+phase: Phase 2: Delete batch (D1-D5)
+phase_base_sha: a1caa58034f6455e91205a5673ef172a974a7992
+role_base_sha: 09a817cd9f9ed49d49053151202eaff6cc6c529b
+audited_head_sha: 09a817cd9f9ed49d49053151202eaff6cc6c529b
+green_head: 5c477077724cb3a51fcf749e8c531c121793e12b
+dispositions: none
+tasks_flipped_to_x: 2.12 Type check repair (8d5ad1c4)
+tasks_flipped_to_b: none.
+proofs: measure/runs/www_test_audit_pilot_20261122/proof-adv3-types.log
+
+REPAIR
+The type check failed on eight page calls in
+src/__tests__/no-gse-in-customer-copy.test.ts. Each of those page components
+takes no props, so the call passed an argument that the component never reads.
+The sweep now calls those eight components without an argument. The other page
+calls keep their props argument. Every assertion stayed as it was. No page
+component changed. The D1 rewrite 4d1688131 introduced the eight calls.
+
+COMMITS
+8d5ad1c4a360f1dd7d0c3e230d543fe2f8c104da
+test(www): fix page call types in the gse sweep (track_id: www_test_audit_pilot_20261122)
+Pathspec commit of one test file: src/__tests__/no-gse-in-customer-copy.test.ts.
+5c477077724cb3a51fcf749e8c531c121793e12b
+chore(measure): record www audit type check repair (track_id: www_test_audit_pilot_20261122)
+Pathspec commit of measure/tracks/www_test_audit_pilot_20261122/plan.md only.
+The plan holds no case count and no coverage number for this task.
+
+HEAVY GATE COMMANDS
+CHECK_TYPES:
+ HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage check-types'
+ exit 0. The log holds no error line.
+LINT:
+ HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage lint'
+ exit 0. Zero errors and three warnings. The three warnings sit in files this
+ commit does not touch. The same three warnings stand at the task 2.6 checkpoint.
+GREEN at 8d5ad1c4:
+ HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot'
+ exit 0. 93 test files passed. 3088 tests passed.
+COVERAGE at 8d5ad1c4:
+ HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage'
+ exit 0. 93 test files passed. 3088 tests passed. Lines 91.65 percent.
+The line coverage floor is 85.52 percent. Each run used one heavy job at a
+time. Each run waited for the shared heavy lock behind another session job.
+
+GATE FILES
+measure/runs/www_test_audit_pilot_20261122/check-types-09a817c.log
+measure/runs/www_test_audit_pilot_20261122/lint-09a817c.log
+measure/runs/www_test_audit_pilot_20261122/green-8d5ad1c4.log
+measure/runs/www_test_audit_pilot_20261122/coverage-8d5ad1c4.log
+measure/runs/www_test_audit_pilot_20261122/gate-8d5ad1c4.json
+measure/runs/ is gitignored. The files stay as local evidence for the reviewers.
+
+BREAKAGE PROOF
+proof-adv3-types.log. A hard-coded <h3>GSE</h3> element was added to
+components/products/b2c-solutions.tsx. The sweep failed and named the b2c
+solutions section. The component file was restored with git checkout before the
+commit. git status --short shows no production change after the restore.
+
+NEW FILES
+No new source file. The changed test file is listed in the commits above.
+
+HANDOFF TO REVIEW ROLES
+The type check now exits 0 for the www app. The lint gate exits 0.
+The phase range is a1caa58034f6455e91205a5673ef172a974a7992..5c477077724cb3a51fcf749e8c531c121793e12b.
+Task 2.12 is marked [x]. No task is marked [b]. No production file changed.
+The phase base and the role base stay as they were.
+END_MEASURE_AGENT_RESULT

@@ -1,35 +1,14 @@
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import FeaturesPage from "@/app/[locale]/(marketing)/features/page";
 import enMessages from "@/locales/en";
+import { computedForElement, computedFromClasses } from "./fixtures/real-css";
 
 /*
- * Red r3 pins for the Phase 4 browser look defects (track www_features_pricing_20261120).
- * F1 [High]: at 980 px the Storytime card image frame crops through the face.
- * F2 [Medium]: at 980 px the text-only CodeCamp card stretches with empty space.
- * Both cases read the component sources as text and must fail at 38c03ba22.
- *
- * Red r4 pins for F3 [Blocker]: at 980 and 1280 px the portrait Primary picture
- * (375x622) makes its grid row very tall, leaving large gaps below the shorter
- * cards. The orchestrator default fix: at md+ the Primary card spans the full
- * grid width with its picture beside its text (width-limited picture column,
- * ratio kept, no crop); the other cards stay in the two-column grid; card order
- * and the 390 single column stay unchanged. The three F3 cases must fail at
- * 2ffa43f8b.
- *
- * Red r6 pins for the r4 F3 remainder [Blocker]: the Primary-only span leaves
- * the first row half empty at 980 and 1280 (Storytime sits alone with a
- * 707-755 px empty cell beside it). New rule, replacing the r4 Primary-only
- * rule: at md+ EVERY pictured card is a full-width horizontal row; text-only
- * cards sit in the two-column grid after them. Default D-R6-1: keep the single
- * programs grid and CARD_KEYS order; extend the featured full-width row to
- * every pictured card. The r4 Primary-only source pins are retargeted below so
- * they do not contradict this rule. The render pins check the real route output
- * (UX r4: recheck the rendered grid, not only the class pins). RA3 (Review A):
- * the F2 guard below also inspects the nonfeatured branch directly. The new
- * F3 and fluid-rows cases must fail at 7fb548e5e.
+ * Behavior tests for the Phase 4 look defects. Each case renders the real
+ * FeaturesPage and reads computed values from the stylesheet the app ships.
+ * The class-to-rule mapping comes from the real compiled Tailwind output of
+ * globals.css. No source module text and no hand-written class map is used.
  */
 
 const hoisted = vi.hoisted(() => {
@@ -79,223 +58,205 @@ vi.mock("@/locales/client", () => ({
   ),
 }));
 
+/** Returns an element by its rendered program-card test id. */
+function card(id: string): HTMLElement {
+  const element = document.querySelector(`[data-testid="program-card-${id}"]`);
+  expect(element, `program card ${id} must render`).not.toBeNull();
+  return element as HTMLElement;
+}
+
+/** Returns the rendered programs grid container. */
+function programsGrid(): HTMLElement {
+  const section = document.querySelector('[data-testid="features-programs"]');
+  expect(section, "programs section").not.toBeNull();
+  const grid = section?.querySelector(".grid");
+  expect(grid, "programs grid container").not.toBeNull();
+  return grid as HTMLElement;
+}
+
+/** Returns the rendered picture wrapper of a program card. */
+function pictureWrapper(id: string): HTMLElement {
+  const wrapper = card(id).querySelector("img")?.parentElement;
+  expect(wrapper, `${id} picture wrapper`).not.toBeNull();
+  return wrapper as HTMLElement;
+}
+
+/** True when the rendered card uses the shipped full-width row rules. */
+function isFullWidthRow(element: HTMLElement): boolean {
+  const style = computedForElement(element, [
+    "grid-column",
+    "flex-direction",
+  ]);
+  return (
+    style["grid-column"] === "span 2 / span 2" &&
+    style["flex-direction"] === "row"
+  );
+}
+
+const PICTURED = ["storytime", "primary", "reading"] as const;
+const TEXT_ONLY = ["codecamp", "school-subjects"] as const;
+const ORDER = ["storytime", "primary", "reading", "codecamp", "school-subjects"];
+
 afterEach(() => {
   cleanup();
 });
 
-const PROGRAM_CARD = resolve(
-  __dirname,
-  "../components/features/program-card.tsx",
-);
-const FEATURES_PAGE = resolve(
-  __dirname,
-  "../app/[locale]/(marketing)/features/page.tsx",
-);
-
-/** Returns the programs section source of the features page. */
-function programsSection(): string {
-  const source = readFileSync(FEATURES_PAGE, "utf8");
-  const afterId = source.split('data-testid="features-programs"')[1] ?? "";
-  return afterId.split("</section>")[0] ?? "";
-}
-
-/** Returns the className of the card screenshot Image in program-card.tsx. */
-function cardImageClass(): string {
-  const source = readFileSync(PROGRAM_CARD, "utf8");
-  const match = source.match(/<Image[\s\S]*?className="([^"]*)"/);
-  return match?.[1] ?? "";
-}
-
-/** Returns the article className of the program card. */
-function cardArticleClass(): string {
-  const source = readFileSync(PROGRAM_CARD, "utf8");
-  const match = source.match(/<article[\s\S]*?className="([^"]*)"/);
-  return match?.[1] ?? "";
-}
-
-/** Returns the className of the programs grid in the features page. */
-function programsGridClass(): string {
-  return programsSection().match(/<div className="([^"]*\bgrid\b[^"]*)"/)?.[1] ?? "";
-}
-
-/** Returns the card-render block of the programs section (the CARD_KEYS map). */
-function cardRenderBlock(): string {
-  const section = programsSection();
-  const afterMap = section.split("CARD_KEYS.map")[1] ?? "";
-  return afterMap;
-}
-
-/** Returns the image block of the program card (the conditional image slot). */
-function cardImageBlock(): string {
-  const source = readFileSync(PROGRAM_CARD, "utf8");
-  const afterGuard = source.split("imageSrc && imageAlt &&")[1] ?? "";
-  return afterGuard.split("</div>")[0] ?? "";
-}
-
-/** Returns every article className in program-card.tsx, in source order. */
-function articleClasses(): string[] {
-  const source = readFileSync(PROGRAM_CARD, "utf8");
-  return [...source.matchAll(/<article[\s\S]*?className="([^"]*)"/g)].map(
-    (match) => match[1],
-  );
-}
-
-/** True when the featured full-width row is driven by image presence. */
-function fullWidthDrivenByImage(): boolean {
-  const section = programsSection();
-  if (/featured=\{[^}]*image/i.test(section)) return true;
-  const groupMap = section.match(/(PIC\w*|pictured\w*)\.map\(([\s\S]{0,800})/i);
-  if (groupMap && /featured|col-span/i.test(groupMap[2] ?? "")) return true;
-  return false;
-}
-
-/** True when no card layout is keyed on the primary card alone. */
-function noPrimaryOnlyLayout(): boolean {
-  const section = programsSection();
-  return !/featured=\{\s*key\s*===\s*["']primary["']|key\s*===\s*["']primary["'][\s\S]{0,120}col-span|col-span[\s\S]{0,120}key\s*===\s*["']primary/.test(
-    section,
-  );
-}
-
-/** True when an article class carries an md+ full-width span and row layout. */
-function isFullWidthRow(className: string): boolean {
-  return (
-    /(sm|md|lg):col-span-(2|3|full)/.test(className) &&
-    /(sm|md|lg):flex-row/.test(className)
-  );
-}
-
-/** Pictured program-card hooks, in DOM order. */
-const PICTURED_HOOKS = [
-  "program-card-storytime",
-  "program-card-primary",
-  "program-card-reading",
-] as const;
-
-/** Text-only program-card hooks, in DOM order. */
-const TEXT_HOOKS = ["program-card-codecamp", "program-card-school-subjects"] as const;
-
-describe("control: look-pin scanners resolve the card sources", () => {
-  it("control: the card image class is found", () => {
-    const imageClass = cardImageClass();
-    expect(imageClass.length, "card image class length: more than 0").toBeGreaterThan(0);
-  });
-
-  it("control: the card article class is found", () => {
-    const articleClass = cardArticleClass();
-    expect(articleClass.length, "card article class length: more than 0").toBeGreaterThan(0);
-  });
-
-  it("control: the programs grid class is found", () => {
-    const gridClass = programsGridClass();
-    expect(gridClass.includes("grid"), "programs grid uses grid: true").toBe(true);
-  });
-});
-
-describe("F1: feature card images keep their intrinsic aspect ratio", () => {
-  it("uses no object-fit crop without a matching explicit aspect ratio", () => {
-    const imageClass = cardImageClass();
-    const crops =
-      imageClass.includes("object-cover") || imageClass.includes("object-fill");
-    const keepsRatio =
-      imageClass.includes("h-auto") || /aspect-\[/.test(imageClass);
-    expect(
-      crops && !keepsRatio,
-      `F1 card image crops the face (class: ${imageClass})`,
-    ).toBe(false);
-  });
-});
-
-describe("F2: text-only cards use automatic height", () => {
-  it("does not stretch imageless cards to the row height", () => {
-    const articleClass = cardArticleClass();
-    const gridClass = programsGridClass();
-    const stretches =
-      articleClass.includes("h-full") && !articleClass.includes("self-start");
-    const gridStarts = gridClass.includes("items-start");
-    expect(
-      stretches && !gridStarts,
-      `F2 text-only card stretches (article: ${articleClass}; grid: ${gridClass})`,
-    ).toBe(false);
-  });
-});
-
-describe("F2r6: row-scoped text-only coverage (RA3)", () => {
-  it("control: the card exposes featured and nonfeatured branches", () => {
-    expect(articleClasses().length, "article branches: 2").toBe(2);
-  });
-
-  it("the nonfeatured (text-only) branch carries no h-full and keeps automatic height", () => {
-    const branches = articleClasses();
-    const plain = branches[branches.length - 1] ?? "";
-    expect(plain.includes("h-full"), "nonfeatured h-full: absent").toBe(false);
-    expect(
-      plain.includes("self-start") ||
-        programsGridClass().includes("items-start"),
-      "nonfeatured automatic height",
-    ).toBe(true);
-  });
-});
-
-describe("control: F3 scanners resolve the card order and base column", () => {
-  it("control: the card order is unchanged", () => {
-    const source = readFileSync(FEATURES_PAGE, "utf8");
-    const keys = source.match(/const CARD_KEYS = \[([\s\S]*?)\]/)?.[1] ?? "";
-    const order = [...keys.matchAll(/"([^"]+)"/g)].map((match) => match[1]);
-    expect(order, "card order: 5 keys").toHaveLength(5);
-    expect(order, "card order: storytime, primary, reading, codecamp, schoolSubjects").toEqual([
-      "storytime",
-      "primary",
-      "reading",
-      "codecamp",
-      "schoolSubjects",
-    ]);
-  });
-
-  it("control: the base grid stays one column", () => {
-    const gridClass = programsGridClass();
-    const baseCols = gridClass.split(" ").filter((token) => /^grid-cols-/.test(token));
-    expect(baseCols, "base grid-cols classes: none").toEqual([]);
-  });
-});
-
-describe("F3r6 source: no card layout is keyed on primary alone", () => {
-  it("wires the full-width row by image presence, not by the primary key", () => {
-    expect(noPrimaryOnlyLayout(), "F3r6 primary-only layout: absent").toBe(true);
-  });
-
-  it("drives the full-width row from the pictured cards", () => {
-    expect(fullWidthDrivenByImage(), "F3r6 image-driven full width").toBe(true);
-  });
-});
-
-describe("F3r6 render: every pictured card is a full-width row", () => {
+describe("look-pin scanners resolve the rendered cards", () => {
   beforeEach(async () => {
     hoisted.state.messages = enMessages;
     render(await FeaturesPage());
   });
 
-  it("renders storytime, primary and reading as full-width horizontal rows", () => {
-    const missing = PICTURED_HOOKS.filter((hook) => {
-      const element = document.querySelector(`[data-testid="${hook}"]`);
-      return !isFullWidthRow(element?.getAttribute("class") ?? "");
-    });
-    expect(missing, "pictured cards without a full-width row").toEqual([]);
+  it("renders every pictured card with an image", () => {
+    for (const id of PICTURED) {
+      expect(card(id).querySelector("img"), `${id} picture`).not.toBeNull();
+    }
   });
 
-  it("control: text-only cards stay out of full-width rows", () => {
-    const wide = TEXT_HOOKS.filter((hook) => {
-      const element = document.querySelector(`[data-testid="${hook}"]`);
-      return isFullWidthRow(element?.getAttribute("class") ?? "");
-    });
-    expect(wide, "text-only cards in full-width rows").toEqual([]);
+  it("renders the program cards in the approved order", () => {
+    const rendered = Array.from(
+      document.querySelectorAll("[data-testid^='program-card-']"),
+    ).map((node) => (node.getAttribute("data-testid") ?? "").replace("program-card-", ""));
+    expect(rendered).toEqual(ORDER);
   });
 
-  it("control: the picture column stays width-limited at md+", () => {
-    const block = cardImageBlock();
+  it("renders a single-column grid at the base width", () => {
+    const grid = programsGrid();
+    const base = computedForElement(
+      grid,
+      ["display", "grid-template-columns"],
+      true,
+    );
+    expect(base.display, "programs grid displays as a grid").toBe("grid");
     expect(
-      /(sm|md|lg):(max-w-|w-|basis-)/.test(block),
-      `F3 picture column width-limited at md+ (block: ${block.slice(0, 200)})`,
-    ).toBe(true);
+      base["grid-template-columns"].trim(),
+      "base width keeps the implicit single column",
+    ).toBe("none");
+    const all = computedForElement(grid, ["grid-template-columns"]);
+    expect(
+      all["grid-template-columns"],
+      "a shipped breakpoint rule supplies two columns",
+    ).toContain("repeat(2");
+    const shipped = computedFromClasses(["sm:grid-cols-2"], [
+      "grid-template-columns",
+    ]);
+    expect(shipped["grid-template-columns"]).toContain("repeat(2");
+  });
+
+  it("exposes a rendered image source on each pictured card", () => {
+    for (const id of PICTURED) {
+      const image = card(id).querySelector("img");
+      expect(image?.getAttribute("src"), `${id} image src`).toBeTruthy();
+    }
+  });
+
+  it("renders each card as an article with a heading", () => {
+    for (const id of [...PICTURED, ...TEXT_ONLY]) {
+      const element = card(id);
+      expect(element.tagName.toLowerCase(), `${id} article`).toBe("article");
+      expect(
+        element.querySelector("h3"),
+        `${id} heading`,
+      ).not.toBeNull();
+    }
+  });
+});
+
+describe("F1: feature card images keep their intrinsic aspect ratio", () => {
+  beforeEach(async () => {
+    hoisted.state.messages = enMessages;
+    render(await FeaturesPage());
+  });
+
+  it("does not crop a pictured card image without an explicit ratio", () => {
+    for (const id of PICTURED) {
+      const image = card(id).querySelector("img") as HTMLElement;
+      const style = computedForElement(image, ["height"]);
+      expect(
+        style.height,
+        `${id} image keeps automatic height`,
+      ).toBe("auto");
+    }
+  });
+});
+
+describe("F2: text-only cards use automatic height", () => {
+  beforeEach(async () => {
+    hoisted.state.messages = enMessages;
+    render(await FeaturesPage());
+  });
+
+  it("does not stretch imageless cards to the row height", () => {
+    for (const id of TEXT_ONLY) {
+      const style = computedForElement(card(id), ["height", "align-self"]);
+      expect(style.height, `${id} automatic height`).not.toBe("100%");
+      expect(
+        style["align-self"],
+        `${id} top anchored`,
+      ).toBe("flex-start");
+    }
+  });
+});
+
+describe("F2r6: row-scoped text-only coverage", () => {
+  beforeEach(async () => {
+    hoisted.state.messages = enMessages;
+    render(await FeaturesPage());
+  });
+
+  it("renders five cards with two distinct layout branches", () => {
+    const wide = PICTURED.filter((id) => isFullWidthRow(card(id)));
+    const plain = TEXT_ONLY.filter((id) => !isFullWidthRow(card(id)));
+    expect(wide, "pictured full-width cards").toHaveLength(PICTURED.length);
+    expect(plain, "text-only plain cards").toHaveLength(TEXT_ONLY.length);
+  });
+
+  it("keeps the text-only branch on automatic height", () => {
+    for (const id of TEXT_ONLY) {
+      const style = computedForElement(card(id), ["height"]);
+      expect(style.height, `${id} no h-full`).not.toBe("100%");
+    }
+  });
+});
+
+describe("F3r6: full-width rows are driven by image presence", () => {
+  beforeEach(async () => {
+    hoisted.state.messages = enMessages;
+    render(await FeaturesPage());
+  });
+
+  it("does not key the full-width layout on the primary card alone", () => {
+    const wide = PICTURED.filter((id) => isFullWidthRow(card(id)));
+    expect(wide, "more than one card uses the full-width row").toHaveLength(
+      PICTURED.length,
+    );
+  });
+
+  it("uses full-width rows for every pictured card", () => {
+    expect(PICTURED.filter((id) => !isFullWidthRow(card(id)))).toEqual([]);
+  });
+
+  it("renders storytime, primary and reading as full-width horizontal rows", () => {
+    for (const id of PICTURED) {
+      const style = computedForElement(card(id), [
+        "grid-column",
+        "flex-direction",
+      ]);
+      expect(style["grid-column"], `${id} full width`).toBe("span 2 / span 2");
+      expect(style["flex-direction"], `${id} horizontal`).toBe("row");
+    }
+  });
+
+  it("keeps text-only cards out of full-width rows", () => {
+    expect(TEXT_ONLY.filter((id) => isFullWidthRow(card(id)))).toEqual([]);
+  });
+
+  it("keeps the picture wrapper width-limited", () => {
+    const shipped = computedFromClasses(["md:w-48"], ["width"]);
+    expect(shipped.width, "the stylesheet ships a width limit").toContain("calc");
+    for (const id of PICTURED) {
+      const style = computedForElement(pictureWrapper(id), ["width"]);
+      expect(style.width, `${id} picture wrapper width limit`).toBe(shipped.width);
+    }
   });
 });

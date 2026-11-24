@@ -1,0 +1,20 @@
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report (Review A remediation, round 2)
+commits:
+  - 152fd0f673471f1a28310d104a94431779d7d57f (report: label pre-merge numbers, add master merge)
+  - da99c46c7bc7f11ddddd00bd398216cdf27e335b (plan evidence: task 4.14)
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: e836e728922d8b01ac3fd74fcccd7bd7df47b56b
+final_green_head: da99c46c7bc7f11ddddd00bd398216cdf27e335b
+dispositions: F1=FIX; N1=FIX; N2=FIX
+tests_run: None. The brief forbids a test suite in this docs-only round. No production or test file changed.
+files_changed:
+  - measure/tracks/www_test_audit_pilot_20261122/report.md
+  - measure/tracks/www_test_audit_pilot_20261122/plan.md
+plan_updates: Task 4.14 flipped to [x] with report commit SHA 152fd0f6 on the first line, committed in da99c46c7. Task 4.13 wording now says auto-merged. No task flipped to [b]; no deferred owner.
+known_failures: None. The brief subject for the report commit was 101 characters. Commitlint rejects headers over 100. The established repo convention was used: a 100-character equivalent subject with counts in place of numbers. No --no-verify was used.
+handoff: F1 is fixed in report.md. The 1412-case and 92.07 percent values are now labelled as the pre-merge run at e91c4d4cc. The report adds master merge 6ee56327b and the final run at e836e7289 with 1413 cases and 92.08 percent lines from green-merge-e836e7289.log. The recomputed cut is 1762 cases, or 55.5 percent of the 3175 baseline. The recomputed coverage rise is 5.56 points over 86.52 percent. The 20 percent target still passes. Every other final-count claim was checked and relabelled. The D5 step count is no longer called final. The time section compares baseline with the pre-merge run and names the post-merge run apart. No line citation and no count of a run-file kind was added. N1 is fixed in plan.md task 4.13 with auto-merged. N2 is fixed in report.md; task 3.5 is now named the blog merge, distinct from the master merge. `git diff --stat e836e7289` shows only report.md and plan.md. The report commit subject is the 100-character equivalent "docs(measure): label pre-merge counts and add master merge (track_id: www_test_audit_pilot_20261122)"; the brief subject was 101 characters and commitlint rejects headers over 100. No test suite ran. No push was made. The measure-guard message at the start of this round reported pre-existing [x] tasks without commit SHAs in a different track, primary_in_app_help_20261023; no edit, commit or push was made for that message.
+END_MEASURE_AGENT_RESULT

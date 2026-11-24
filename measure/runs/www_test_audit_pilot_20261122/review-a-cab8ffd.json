@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 2: Delete batch (D1-D5)",
+  "baseline_sha": "cab8ffd8e014c7ea83f1496747f421aa4bc8e344",
+  "phase_base_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+  "role_base_sha": "cab8ffd8e014c7ea83f1496747f421aa4bc8e344",
+  "audited_head_sha": "cab8ffd8e014c7ea83f1496747f421aa4bc8e344",
+  "status": "fail",
+  "summary": "F10 and F16 are closed by the supplied successful rerun logs. Apart from F11, Phase 2 passes. F11 remains pending PM approval. No production file changed in the phase range.",
+  "blocking_findings": [
+    "F11 [Blocker] review-a: FIX — The D1 commit also rewrites two R2 cases. classification.md:195 assigns the rendered full-width pictured row and the text-only exclusion cases to R2. 0be4a037 changes both. Keep these R2 cases outside the D1 change so each test commit holds one class. | CONTEST kept: exception pending PM approval; the orchestration record says the PM has not answered, so the one-class exception is not approved yet."
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD returned cab8ffd8e014c7ea83f1496747f421aa4bc8e344, equal to role_base_sha and audited_head_sha.",
+    "The audited range is a1caa58034f6455e91205a5673ef172a974a7992..cab8ffd8e014c7ea83f1496747f421aa4bc8e344. It changes plan.md only.",
+    "green-at-7008ccef.log reports 89 test files and 3,081 tests passed. plan.md:179 records the run through heavy-run with exit 0.",
+    "green-at-733319505.log reports 89 test files and 3,057 tests passed. plan.md:180 records exit 0.",
+    "coverage-at-733319505.log:2536 reports 89.98% line coverage, above the required 85.52%. plan.md:180 records exit 0.",
+    "green-at-fb5622ed7.log reports 89 test files and 3,061 tests passed. plan.md:180 records exit 0.",
+    "coverage-at-fb5622ed7.log:2536 reports 89.98% line coverage, above the required 85.52%. plan.md:180 records exit 0.",
+    "F10 withdrawn: green-at-7008ccef.log reports 89 test files and 3,081 tests passed; plan.md:179 records the heavy-run exit code as 0.",
+    "F16 withdrawn: both GREEN rerun logs report passing tests, and both COVERAGE rerun logs report 89.98% line coverage with exit 0 recorded in plan.md:180.",
+    "The GREEN and COVERAGE reruns used node_modules symlinked from the role-base worktree. The lockfile is the same at these commits, as recorded in the supplied audit brief.",
+    "plan.md:178 says the mixed D1/R2 commit exception is pending PM approval; the PM has not answered. F11 remains open.",
+    "The phase range contains no production path, confirmed by git diff --name-status."
+  ],
+  "commands": [
+    "git rev-parse HEAD && git status --short && git diff --name-status c2f5cfdb00f2603f003916165ec0d354b7ec0da8..cab8ffd8e014c7ea83f1496747f421aa4bc8e344 && git diff --check c2f5cfdb00f2603f003916165ec0d354b7ec0da8..cab8ffd8e014c7ea83f1496747f421aa4",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot'",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage'"
+  ],
+  "changed_files": [
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [
+    "F11 remains pending because the PM has not approved the recorded exception to the one-class-per-commit rule."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "escalate_human",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "The supplied GREEN logs pass and both supplied coverage logs report 89.98% lines, but the F11 exception is pending."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "green-at-7008ccef.log, green-at-733319505.log, and green-at-fb5622ed7.log report passing test suites."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 3,
+      "evidence": "The remediation range c2f5cfdb0..cab8ffd8e changes only plan.md, while F11's original mixed-class change remains."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "The plan names the rerun logs and exit codes, and both coverage logs show 89.98% line coverage."
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import type { ComponentProps } from "react";
 import { cleanup, render } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import ManagedService from "@/app/[locale]/(marketing)/services/managed-service/page";
+import { computedForElement } from "@/__tests__/fixtures/real-css";
 
 vi.mock("@/locales/server", () => ({
   getScopedI18n: vi.fn(async (scope: string) => (key: string) =>
@@ -21,8 +22,22 @@ describe("Managed Service overview layout", () => {
     const grid = rendered.container.querySelector("#overview .grid");
     const columns = grid ? Array.from(grid.children) : [];
 
-    expect(grid).toHaveClass("lg:grid-cols-12");
-    expect(columns[0]).toHaveClass("lg:col-span-7");
-    expect(columns[1]).toHaveClass("lg:col-span-5");
+    expect(
+      grid instanceof HTMLElement
+        ? computedForElement(grid, ["grid-template-columns"])[
+            "grid-template-columns"
+          ]
+        : "",
+    ).toBe("repeat(12, minmax(0, 1fr))");
+    expect(
+      columns[0] instanceof HTMLElement
+        ? computedForElement(columns[0], ["grid-column"])["grid-column"]
+        : "",
+    ).toBe("span 7 / span 7");
+    expect(
+      columns[1] instanceof HTMLElement
+        ? computedForElement(columns[1], ["grid-column"])["grid-column"]
+        : "",
+    ).toBe("span 5 / span 5");
   });
 });

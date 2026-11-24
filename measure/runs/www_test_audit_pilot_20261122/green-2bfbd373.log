@@ -1,0 +1,20 @@
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 1 adversarial notes (report and plan corrections)
+commits:
+  - 2bfbd373fef2fc500798efe721975fa0a345e73f (fix blog-merge cut and revert records)
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: 7336f42b31b2a80eb4ba61a093a84ada9befa866
+final_green_head: 2bfbd373fef2fc500798efe721975fa0a345e73f
+dispositions: ADV-P1-12=FIX; ADV-P1-10=FIX; ADV-P1-11=FIX; ADV-P1-4c=FIX
+tests_run: None. This round is documents only. No test suite ran and no production or test file changed.
+files_changed:
+  - measure/tracks/www_test_audit_pilot_20261122/classification.md
+  - measure/tracks/www_test_audit_pilot_20261122/report.md
+  - measure/tracks/www_test_audit_pilot_20261122/plan.md
+plan_updates: One line under task 4.18 names this round's change without a SHA. No new task was added and no earlier task or SHA changed. No task flipped to [b].
+known_failures: None. The commit subject is 94 characters, within the 100-character limit. No line citation and no undated run-file count was added.
+handoff: ADV-P1-12 is fixed in report.md section 1. Without the blog merge the suite holds 3203 cases, the final 1494 plus the 1709 removed cases, which is 28 above the 3175 baseline; the whole cut comes from the PM-approved blog merge. The stale 81-case, 54-case and 3121-case figures are gone. ADV-P1-10 is fixed in classification.md: the Phase 1 projection now carries a note that D5 was reverted on 2026-11-25 under PM option C and the projection is superseded. ADV-P1-11 is fixed in the report per-class table: D5 parts 1 to 4 are marked reverted and a D5 revert row for f97a72f90 was added with 1414 to 1494 cases and the named revert logs. ADV-P1-4c is fixed in plan task 4.17, which now says Phase 2 task 2.7. git diff --stat lists only the three allowed documents. No push was made. Substitution note from earlier rounds still applies: the Red model family is not recorded in the run files; the picker excluded only openai.
+END_MEASURE_AGENT_RESULT

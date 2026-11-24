@@ -6,6 +6,7 @@ import FeaturesPage from "@/app/[locale]/(marketing)/features/page";
 import enMessages from "@/locales/en";
 import thMessages from "@/locales/th";
 import zhMessages from "@/locales/zh";
+import { computedForElement, computedFromClasses } from "./fixtures/real-css";
 
 /*
  * Red r8 pins for the PM look check 2026-11-21 (track
@@ -34,10 +35,6 @@ const APP_DIR = resolve(__dirname, "../..");
 const FEATURES_PAGE = resolve(
   __dirname,
   "../app/[locale]/(marketing)/features/page.tsx",
-);
-const PROGRAM_CARD = resolve(
-  __dirname,
-  "../components/features/program-card.tsx",
 );
 
 const COVER_SRC = "/images/products/ra-origins-2-cover.jpg";
@@ -142,18 +139,19 @@ function readingAlt(): string {
   return entry.match(/alt:\s*"([^"]+)"/)?.[1] ?? "";
 }
 
-/** True when the featured article branch sets a cross-axis start class. */
-function featuredHasItemsStart(): boolean {
-  const source = readFileSync(PROGRAM_CARD, "utf8");
-  const first = source.match(/<article[\s\S]*?className="([^"]*)"/)?.[1] ?? "";
-  return /(^|\s)items-start/.test(first) || /md:items-start/.test(first);
+/** Returns the rendered reading card image. */
+function renderedReadingImage(): HTMLImageElement {
+  const card = document.querySelector('[data-testid="program-card-reading"]');
+  const image = card?.querySelector("img");
+  expect(image, "the reading cover must render").not.toBeNull();
+  return image as HTMLImageElement;
 }
 
-/** True when the bullets list carries mt-auto. */
-function bulletsListHasMtAuto(): boolean {
-  const source = readFileSync(PROGRAM_CARD, "utf8");
-  const list = source.match(/<ul[\s\S]*?className="([^"]*)"/)?.[1] ?? "";
-  return list.split(" ").includes("mt-auto");
+/** Returns the decoded local path of a Next image src attribute. */
+function decodedSrc(image: HTMLImageElement): string {
+  const src = image.getAttribute("src") ?? "";
+  const encoded = /url=([^&]+)/.exec(src)?.[1] ?? src;
+  return decodeURIComponent(encoded);
 }
 
 afterEach(() => {
@@ -180,13 +178,20 @@ describe("control: reading-card scanners and the kept status line", () => {
 });
 
 describe("PM(1): the reading card shows the Origins 2 printed cover", () => {
-  it("points the reading card at the new cover asset", () => {
-    const source = readFileSync(FEATURES_PAGE, "utf8");
-    expect(source.includes(COVER_SRC), "new cover src: referenced").toBe(true);
+  it("points the reading card at the new cover asset", async () => {
+    hoisted.state.messages = enMessages;
+    render(await FeaturesPage());
+    expect(decodedSrc(renderedReadingImage()), "rendered cover src").toContain(
+      COVER_SRC,
+    );
   });
 
-  it("no longer points the reading card at the old app screen", () => {
-    expect(readingSrc() === OLD_SRC, "old screenshot src: gone").toBe(false);
+  it("no longer points the reading card at the old app screen", async () => {
+    hoisted.state.messages = enMessages;
+    render(await FeaturesPage());
+    expect(decodedSrc(renderedReadingImage()), "old screenshot src").not.toContain(
+      OLD_SRC,
+    );
   });
 
   it("ships the cover file as a non-empty JPEG or WebP image", () => {
@@ -254,10 +259,32 @@ describe("PM(2): the taught-through sentence is gone", () => {
 });
 
 describe("PM(3): the featured row does not bottom-anchor its bullets", () => {
-  it("has no mt-auto list in stretched featured space", () => {
+  it("requires the featured card to render its bullet list", async () => {
+    hoisted.state.messages = enMessages;
+    render(await FeaturesPage());
+    const card = document.querySelector(
+      '[data-testid="program-card-primary"]',
+    ) as HTMLElement;
+    expect(card, "the primary featured card must render").not.toBeNull();
+    expect(card.querySelector("ul"), "the featured bullet list must render").not.toBeNull();
+  });
+
+  it("reads the shipped cross-axis alignment from the featured row", async () => {
+    hoisted.state.messages = enMessages;
+    render(await FeaturesPage());
+    const card = document.querySelector(
+      '[data-testid="program-card-primary"]',
+    ) as HTMLElement;
+    expect(card, "the primary featured card must render").not.toBeNull();
+    const shipped = computedFromClasses(["md:items-start"], ["align-items"]);
     expect(
-      !bulletsListHasMtAuto() || featuredHasItemsStart(),
-      "featured bullets: top-anchored (no mt-auto, or items-start row)",
-    ).toBe(true);
+      shipped["align-items"],
+      "the stylesheet ships a top-alignment rule for the featured row",
+    ).toBe("flex-start");
+    const style = computedForElement(card, ["align-items"]);
+    expect(
+      style["align-items"],
+      "featured cross-axis is top-aligned",
+    ).toBe(shipped["align-items"]);
   });
 });

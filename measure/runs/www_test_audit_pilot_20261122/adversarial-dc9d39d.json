@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report, adversarial round 2 (ADV-25 fix)",
+  "baseline_sha": "da99c46c7bc7f11ddddd00bd398216cdf27e335b",
+  "phase_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "role_base_sha": "dc9d39dac96b66a60d0c07b8ccdecc49c0352395",
+  "audited_head_sha": "dc9d39dac96b66a60d0c07b8ccdecc49c0352395",
+  "status": "pass",
+  "summary": "ADV-25 is closed: it does not reproduce. The ADV-22 case still fails when the loader accepts a directory named like a post or follows a directory symlink and accepts it, and it fails by name. Under HOME=/tmp/opencode/no-such-home and a fresh TMPDIR, the loader adversarial file passes and leaves no folder. The full gate passes: 98 files, 1413 tests, exit 0. Two late notes, ADV-31 and ADV-32, go to tech-debt. Verdict pass.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "ADV-31 [Late finding; note; suggested call tech-debt] adversarial: in blog-posts-loader.adversarial.test.ts, mkdirSync and symlinkSync run between mkdtempSync and the try block. If either call throws, the finally block never runs and the temp base stays in the OS temp directory. Q5 made the link path invalid: the case failed with ENOENT and the folder blog-loader-adversarial-eyYqSa stayed in TMPDIR. The sibling helper postsTree() (blog-posts-loader-symlink.test.ts:30-35) has the same shape. Moving the two calls inside the try block removes the leak.",
+    "ADV-32 [Late finding; note; record precision; suggested call tech-debt] adversarial: the tech-debt row of dc9d39dac and plan task 4.15 summarize ADV-26 and ADV-27 too broadly. ADV-26 says 'weak non-English guards', but the clause removal also passes in en (P9 of adversarial-da99c46.log). ADV-27 says 'APPROVED_SCHOOL_YEAR mutations pass', but changing the en or zh value fails the two real-copy label handoff tests (P4 of that log). Only the th value and the circular control pass."
+  ],
+  "evidence": [
+    "B0 baseline at dc9d39dac with a clean tree: vitest on blog-posts-loader.adversarial, blog-posts-loader-symlink, blog-posts-loader-dotfile, and blog-posts-validation gave 4 files, 24 tests, all passed.",
+    "Q1: brokenPostRefs accepts a directory. Exit 1, 2 failed. The names are 'blog-posts-loader.adversarial.test.ts > ... > surfaces a symlink to a directory named .md (ADV-22)' and 'blog-posts-loader-symlink.test.ts > ... > flags a symlink to a directory named .md (ADV-22)'. The messages were: expected [] to include 'th/zz-adv-dirlink.md' and expected [] to include 'en/zz-dirlink.md'.",
+    "Q2: brokenPostRefs follows the link and accepts anything that resolves (fs.existsSync). Exit 1, the same two tests failed with the same messages.",
+    "Q3: listPostFiles follows a directory symlink and lists it. Exit 1, 1 failed: the sibling test 'flags a symlink to a directory named .md (ADV-22)' (expected [ 'en/zz-dirlink.md' ] to not include 'en/zz-dirlink.md'). The adversarial case passed by design: it accepts listed or flagged, and a listed link is still loud through EISDIR in loadAllPosts.",
+    "E1: HOME=/tmp/opencode/no-such-home and TMPDIR=/tmp/opencode/adv-dc9d39d-tmp (new, empty), blog-posts-loader.adversarial only: exit 0, 3 passed. TMPDIR held only node-compile-cache afterward. No blog-loader-adversarial-* folder, none in /tmp, and the old path /home/daniebo/.cache/opencode/zz-adv-loader-base stayed absent. pnpm, not the test, created /tmp/opencode/no-such-home/.cache/pnpm and .npm/_logs.",
+    "Q4: the finally cleanup removed from the ADV-22 case, same env and a new TMPDIR: the case still passed, and TMPDIR then held blog-loader-adversarial-Roj2Kg with th/zz-adv-dirlink.md. The temp base lands under TMPDIR, and the stray folder check is live.",
+    "Q5: link creation made to fail after mkdtempSync: exit 1 with ENOENT naming a path under the fresh TMPDIR, and TMPDIR held the leaked folder blog-loader-adversarial-eyYqSa (ADV-31).",
+    "I1: primary-page-images and storytime-page-images in the default env: exit 0, 2 files, 12 passed, 0 skipped, so homedir() resolves to the same sources as the old literal. I2: the same files with HOME=/tmp/opencode/no-such-home and a fresh TMPDIR: exit 0, 2 passed, 10 skipped, each file prints a warning and skips.",
+    "G1: pnpm --filter www-reading-advantage exec vitest run --reporter=dot on the clean tree at dc9d39dac: exit 0, Test Files 98 passed (98), Tests 1413 passed (1413), 102.89s. The plan task 4.15 claim holds. No blog-loader-* folder in /tmp afterward.",
+    "L1: eslint on blog-posts-loader.adversarial.test.ts, primary-page-images.test.ts, and storytime-page-images.test.ts: exit 0, no output.",
+    "rg '/home/' apps/www-reading-advantage/src printed nothing, so 'No hard-coded /home/daniebo remains under src' holds. The e993f5aa1 diff changes only the base path and the cleanup of the ADV-22 case; the assertion text is unchanged.",
+    "measure/tech-debt.md holds 50 lines. The row removed in dc9d39dac was a Resolved row. timing-at-head.json holds numTotalTests 1412, so the L1 claim of the plan holds.",
+    "check-types, full lint, and coverage were not re-run by this role. Those claims rest on the record in plan task 4.15. I did not run CI, and I cannot remove /home/daniebo here; the ADV-25 proof is the changed path source plus E1, Q4, and Q5.",
+    "After every probe the revert script printed TREE CLEAN. Final git status --short --untracked-files=all printed 0 lines, git stash list printed 0 lines, and HEAD is dc9d39dac. My four fresh TMPDIR folders and /tmp/opencode/no-such-home are removed.",
+    "No CONTEST item came with the brief. ADV-25 from adversarial-da99c46.json is closed by this round."
+  ],
+  "commands": [
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run blog-posts-loader.adversarial blog-posts-loader-symlink blog-posts-loader-dotfile blog-posts-validation --reporter=verbose' (B0, Q1, Q2, Q3)",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'env HOME=/tmp/opencode/no-such-home TMPDIR=<fresh dir> pnpm --filter www-reading-advantage exec vitest run blog-posts-loader.adversarial --reporter=verbose' (E1, Q4, Q5; Q5 set TMPDIR only)",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run primary-page-images storytime-page-images --reporter=verbose' (I1; I2 adds env HOME and TMPDIR)",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run --reporter=dot' (G1)",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec eslint <three edited test files>' (L1)",
+    "python3 -I measure/runs/www_test_audit_pilot_20261122/adversarial-dc9d39d-probes.py check|apply <Q1..Q5> and revert",
+    "rg '/home/' apps/www-reading-advantage/src; wc -l measure/tech-debt.md; python3 -I (numTotalTests of timing-at-head.json)"
+  ],
+  "changed_files": [
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-dc9d39d.json",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-dc9d39d.log",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-dc9d39d-probes.py"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "claude-agent/sonnet#xhigh",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "E1 passes under a moved HOME and TMPDIR with no stray folder, and G1 passes 1413 tests in 98 files at dc9d39dac."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "Q1 and Q2 fail the ADV-22 case by name; Q3 passes it by design and the sibling test fails; Q5 shows a small leak on a failure path."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --stat da99c46c7 HEAD shows three test files and measure files only, and my probes left git status clean."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Every claim has a probe label and a result in adversarial-dc9d39d.log; check-types, full lint, and coverage were not re-run."
+    }
+  ]
+}

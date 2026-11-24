@@ -1,0 +1,54 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+·········x·················x··
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/www-pricing-page.content.test.tsx > PricingPage content in en > shows the approved 1,800 amount in the example heading (FR-10)
+AssertionError: the example heading in en: expected 'Primary Advantage plus Math Advantage…' to match /(^|[^\d,])1,800 baht/
+
+[32m- Expected:[39m
+/(^|[^\d,])1,800 baht/
+
+[31m+ Received:[39m
+"Primary Advantage plus Math Advantage for the same students: 11,800 baht"
+
+ ❯ src/__tests__/www-pricing-page.content.test.tsx:292:76
+    290|         ? /(^|[^\d,])1,800 บาท/
+    291|         : /(^|[^\d,])1,800 baht/;
+    292|     expect(heading?.textContent ?? "", `the example heading in ${local…
+       |                                                                            ^
+    293|       amount,
+    294|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/__tests__/www-pricing-page.content.test.tsx > PricingPage content in zh > shows the approved 1,800 amount in the example heading (FR-10)
+AssertionError: the example heading in zh: expected 'Primary Advantage plus Math Advantage…' to match /(^|[^\d,])1,800 baht/
+
+[32m- Expected:[39m
+/(^|[^\d,])1,800 baht/
+
+[31m+ Received:[39m
+"Primary Advantage plus Math Advantage for the same students: 11,800 baht"
+
+ ❯ src/__tests__/www-pricing-page.content.test.tsx:292:76
+    290|         ? /(^|[^\d,])1,800 บาท/
+    291|         : /(^|[^\d,])1,800 baht/;
+    292|     expect(heading?.textContent ?? "", `the example heading in ${local…
+       |                                                                            ^
+    293|       amount,
+    294|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 28 passed (30)
+   Start at  02:35:27
+   Duration  1.18s (transform 199ms, setup 64ms, import 316ms, tests 201ms, environment 435ms)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run '--maxWorkers=1' '--reporter=dot' src/__tests__/www-pricing-page.content.test.tsx

@@ -1,0 +1,121 @@
+# Adversarial log: www test audit pilot, Phase 4, round 2 (ADV-25 fix)
+
+Audited head: dc9d39dac96b66a60d0c07b8ccdecc49c0352395. role_base_sha: the same value.
+Previous PASS: adversarial-da99c46.json at da99c46c7.
+Scope: e993f5aa1 (ADV-25 fix in three test files), 9ccdeac32 (report wording), dc9d39dac (plan and tech-debt).
+No commit. Route: claude-agent/sonnet#xhigh.
+
+## Verdict
+
+Pass. No blocking finding. ADV-25 is closed: it does not reproduce.
+The ADV-22 case still fails when the loader accepts a directory named like a post or follows a directory symlink and accepts it.
+Under HOME=/tmp/opencode/no-such-home and a fresh TMPDIR, the loader adversarial file passes and leaves no folder.
+Two nonblocking notes, ADV-31 and ADV-32. Both are late findings, so the suggested call is tech-debt.
+
+## Method
+
+Each loader probe applied one exact text edit with a script that fails when the old text count is wrong.
+Each probe ran one vitest command through heavy-run.sh and reverted with git checkout.
+The script printed TREE CLEAN after every revert. It is saved as adversarial-dc9d39d-probes.py (labels Q1 to Q5).
+Runs without an edit need no script. Raw output stayed in /tmp and is quoted below.
+Files for Q1 to Q3: blog-posts-loader.adversarial, blog-posts-loader-symlink, blog-posts-loader-dotfile, blog-posts-validation.
+
+## Results
+
+B0 baseline, no edit. The four files: exit 0, 4 files, 24 tests passed. The ADV-22 case passed.
+
+Q1 loader accepts a directory named like a post. Edit: brokenPostRefs in src/__tests__/fixtures/blog-posts-loader.ts treats a directory as acceptable.
+  Result: exit 1, 2 failed, 22 passed. Failing tests, by name:
+  - blog-posts-loader.adversarial.test.ts > ... > surfaces a symlink to a directory named .md (ADV-22)
+    Message: a symlink to a directory named .md must be surfaced, not skipped silently; ... expected [] to include 'th/zz-adv-dirlink.md'
+  - blog-posts-loader-symlink.test.ts > ... > flags a symlink to a directory named .md (ADV-22)
+    Message: expected [] to include 'en/zz-dirlink.md'
+
+Q2 loader follows a symlink and accepts anything that resolves. Edit: brokenPostRefs uses fs.existsSync in place of the regular file check.
+  Result: exit 1, 2 failed, 22 passed. The same two tests fail with the same messages.
+
+Q3 file sweep follows a directory symlink and lists it as a post. Edit: listPostFiles accepts a directory after statSync.
+  Result: exit 1, 1 failed, 23 passed. The adversarial ADV-22 case passes. The sibling test fails:
+  - blog-posts-loader-symlink.test.ts > ... > flags a symlink to a directory named .md (ADV-22)
+    Message: expected [ 'en/zz-dirlink.md' ] to not include 'en/zz-dirlink.md'
+  This is by design. The adversarial case accepts "listed or flagged". The sibling test pins "flagged, not listed".
+  A listed directory link is still loud, because loadAllPosts calls readFileSync on it and gets EISDIR.
+
+E1 clean tree, HOME=/tmp/opencode/no-such-home, TMPDIR=/tmp/opencode/adv-dc9d39d-tmp (new, empty). Run: blog-posts-loader.adversarial only.
+  Command inside heavy-run: env HOME=... TMPDIR=... pnpm --filter www-reading-advantage exec vitest run blog-posts-loader.adversarial --reporter=verbose
+  Result: exit 0, 3 passed (3). After the run, TMPDIR held one entry: node-compile-cache, which Node creates. No blog-loader-adversarial-* folder.
+  /tmp held no blog-loader-* folder. The old ADV-25 path /home/daniebo/.cache/opencode/zz-adv-loader-base was absent. git status was clean.
+  pnpm created /tmp/opencode/no-such-home/.cache/pnpm and .npm/_logs. The test did not create them.
+
+Q4 the ADV-22 case no longer removes its temp base (check of my own stray folder check). Edit: the fs.rmSync line of the finally block removed. Same env, new TMPDIR.
+  Result: exit 0 (the case still passes). TMPDIR held blog-loader-adversarial-Roj2Kg with th/zz-adv-dirlink.md inside.
+  So the temp base is created under TMPDIR, and the stray folder check is live. /tmp held no stray folder.
+
+Q5 link creation fails after the temp base exists (failure path). Edit: the link path points into a missing directory. TMPDIR new.
+  Result: exit 1. The ADV-22 case fails with ENOENT, symlink '...' -> '/tmp/opencode/adv-dc9d39d-tmp4/blog-loader-adversarial-eyYqSa/th/zz-adv-missing-dir/zz-adv-dirlink.md'.
+  TMPDIR then held the folder blog-loader-adversarial-eyYqSa. The test leaks its base on this path. See ADV-31.
+
+I1 the two edited image tests, default env: exit 0, 2 files, 12 passed, 0 skipped. The homedir() default resolves to the same source files as the old literal.
+I2 the same two files, HOME=/tmp/opencode/no-such-home and fresh TMPDIR: exit 0, 2 passed, 10 skipped. Both files print a warning and skip. Neither fails.
+
+G1 full gate on the clean tree at dc9d39dac. Command: pnpm --filter www-reading-advantage exec vitest run --reporter=dot (PROJECT_TESTS).
+  Result: exit 0. Test Files 98 passed (98). Tests 1413 passed (1413). Duration 102.89s. No stray folder in /tmp. git status clean.
+
+L1 eslint on the three edited files: exit 0, no output.
+
+## ADV-25
+
+Closed. Evidence:
+- No literal /home/ remains under apps/www-reading-advantage/src, in any file kind (rg printed nothing).
+- The ADV-22 case builds its base with fs.mkdtempSync(path.join(tmpdir(), "blog-loader-adversarial-")). Q4 and Q5 show the base lands under TMPDIR.
+- E1 passes with HOME and TMPDIR moved. The old path is never created.
+- ADV-25 failed because a user could not create /home/daniebo. The test no longer makes that call.
+- I did not run CI and cannot remove /home/daniebo here. The proof is the changed path source plus E1, Q4, and Q5.
+
+## Findings
+
+Both are late findings. The suggested call for each is tech-debt, because each names test tooling or a record, not a product file.
+
+ADV-31 [Late finding; note; suggested call tech-debt]
+  In src/__tests__/blog-posts-loader.adversarial.test.ts, mkdirSync and symlinkSync run between mkdtempSync and the try block.
+  If either call throws, the finally block never runs and the temp base stays in the OS temp directory (Q5).
+  The sibling helper postsTree() in blog-posts-loader-symlink.test.ts:30-35 has the same shape.
+  The folder is small and sits in the OS temp directory. Moving the two calls inside the try block removes the leak.
+
+ADV-32 [Late finding; note; record precision; suggested call tech-debt]
+  The tech-debt row of dc9d39dac and plan task 4.15 summarize ADV-26 and ADV-27 too broadly.
+  ADV-26 says "weak non-English guards". The clause removal also passes in en (P9 of adversarial-da99c46.log).
+  ADV-27 says "APPROVED_SCHOOL_YEAR mutations pass". Changing the en or zh value fails the two real-copy label handoff tests (P4 of that log).
+  Only the th value and the circular control pass.
+
+## Claims checked
+
+- plan.md task 4.15, "the targeted file ran 3 tests": E1 gives 3 passed (3).
+- "the full suite ran 1413 tests in 98 files": G1 gives exit 0, 98 files, 1413 tests.
+- "No hard-coded /home/daniebo remains under apps/www-reading-advantage/src": holds (rg).
+- "their active cases and coverage stay unchanged" for the two image tests: I1 shows 12 of 12 cases active in the default env.
+- "ADV-22 symlink probe ... All assertions stay": the diff of e993f5aa1 changes only the base path and the cleanup. The assertion text is unchanged.
+- tech-debt.md holds 50 lines (wc -l). The removed row was a Resolved row (diff of dc9d39dac).
+- L1: timing-at-head.json holds numTotalTests 1412, so the run was pre-merge.
+- Not re-run by me: check-types, full lint, and coverage (92.08 percent). Those claims rest on the record in plan task 4.15. I did not open a Green log for this round.
+
+## Revert proof
+
+After each probe, python3 -I adversarial-dc9d39d-probes.py revert printed TREE CLEAN.
+Final state: HEAD is dc9d39dac. git status --short --untracked-files=all prints 0 lines. git stash list prints 0 lines. No new commit.
+I removed my four fresh TMPDIR folders and /tmp/opencode/no-such-home. /tmp holds no blog-loader-* folder.
+The posts directories hold no zz-, .mdx, or .MD entry. The old path /home/daniebo/.cache/opencode/zz-adv-loader-base is absent.
+Files written under measure/runs/ (ignored by git): this log, the result JSON, and adversarial-dc9d39d-probes.py.
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report, adversarial round 2 (ADV-25 fix)
+commits: none
+tests_run: B0, Q1 to Q3 targeted loader runs (4 files, 24 tests; Q1 and Q2 fail 2 by name, Q3 fails 1); E1 and Q4 and Q5 loader adversarial file under HOME=/tmp/opencode/no-such-home and fresh TMPDIR (E1 3 passed, no stray folder); I1 and I2 image tests (12 passed; 2 passed, 10 skipped); G1 full gate (exit 0, 98 files, 1413 tests); L1 eslint on three files (exit 0)
+files_changed: measure/runs/www_test_audit_pilot_20261122/adversarial-dc9d39d.json; measure/runs/www_test_audit_pilot_20261122/adversarial-dc9d39d.log; measure/runs/www_test_audit_pilot_20261122/adversarial-dc9d39d-probes.py
+plan_updates: none
+known_failures: none at dc9d39dac. ADV-25 is closed. ADV-31 and ADV-32 are late notes.
+handoff: Pass. ADV-25 does not reproduce, and the ADV-22 case still fails under the loader mutations. Two late notes, suggested call tech-debt. Result JSON: measure/runs/www_test_audit_pilot_20261122/adversarial-dc9d39d.json.
+END_MEASURE_AGENT_RESULT

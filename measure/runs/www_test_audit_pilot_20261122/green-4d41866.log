@@ -1,0 +1,33 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Review A remediation F27 and F28 on the pilot report. Phase 4.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: 4d41866fdde7d7c53359684485682e6fd06b27a5
+green_head: e034575f4159e6977231c22e0f6ffc93f1512d53
+report_commit: f68593cbc1a45e6c61975e6debf6d4da55c2a29c
+plan_evidence_commit: e034575f4159e6977231c22e0f6ffc93f1512d53
+report: measure/tracks/www_test_audit_pilot_20261122/report.md
+review: measure/runs/www_test_audit_pilot_20261122/review-a-4d41866.log
+
+tasks_flipped_to_x:
+- 4.4 Report review remediation F27 F28 (f68593cbc). Evidence: report commit f68593cbc and plan commit e034575f.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: none tracked. report.md and plan.md were changed. No test or production file changed.
+
+fixes:
+- F27: all 77 K rows now carry a Mutation check column. Sixty-seven rows say none. Ten rows name proof logs from measure/runs/www_test_audit_pilot_20261122/. The case sum stays at 2843 from classification.md:226.
+- F28: the Time section states that the cause is not recorded. It gives a labelled HYPOTHESIS and quotes the five slowest files from one head timing run. The before comparison by file is not recorded. The baseline suite was not run again.
+
+timing: measure/runs/www_test_audit_pilot_20261122/timing-at-head.log and measure/runs/www_test_audit_pilot_20261122/timing-at-head.json. The JSON duration field reads zero, so the file figures sum assertion durations. All five slowest files are unchanged K rows. The timing run does not prove the hypothesis.
+
+gates: four heavy-run gates exited 0 after the report commit. check-types 0. lint 0 with three known warnings in untouched files. full vitest 0 with 98 files and 1412 tests. coverage 0 with lines at 92.07 percent. Logs: check-types-f68593cbc.log, lint-f68593cbc.log, green-f68593cbc.log and coverage-f68593cbc.log in measure/runs/www_test_audit_pilot_20261122/.
+
+deviations: none in this round. Earlier commit headers were shortened for commitlint. Those changes are recorded in the track plan.
+dispositions: F27=FIX; F28=FIX
+END_MEASURE_AGENT_RESULT

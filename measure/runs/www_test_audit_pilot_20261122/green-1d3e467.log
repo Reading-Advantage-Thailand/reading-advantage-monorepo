@@ -1,0 +1,30 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Phase 3: Rewrite batch (R1-R3). Task 3.5: approved blog validation merge.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+phase_base_sha: 8a126f612abcc258c6c6711d6ac03fa085bbcbff
+role_base_sha: 1d3e467fee527cabc5f30d5c1ba0ba3a318a9baf
+green_head: 0165b8eca01e358f5076b61b2a366b2955f2c559
+implementation_commit: 257a6b0cdd54b3448a16370ff138750ae1fc97f5
+plan_evidence_commit: 0165b8eca01e358f5076b61b2a366b2955f2c559
+
+tasks_flipped_to_x:
+- 3.5 Merge blog-posts-validation into one case per rule (257a6b0cd). Evidence: implementation commit 257a6b0cd and plan commit 0165b8ec.
+- 3.4 Checkpoint Phase 3 (1d3e467f). Evidence: R2 commit adf24e723 and merge commit 257a6b0cd with both gate logs.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: none tracked. One existing test file, src/lib/blog-posts-validation.test.ts, was rewritten. The plan commit changed the existing plan.md. Run artifacts under measure/runs/www_test_audit_pilot_20261122/ are gitignored.
+
+merge: 1726 per-post cases became 17 cases: fifteen rule cases and two discovery cases. Each rule case walks every post and collects one "<locale>/<slug>: <rule>" line per broken post, then asserts an empty list. Every original rule is kept.
+
+gates: four heavy-run gates exited 0 after the implementation commit. check-types 0. lint 0 with three known warnings in untouched files. full vitest 0 with 93 files and 1385 tests. coverage 0 with lines at 91.6 percent. cases_before=3094, cases_after=1385, cut=1709. Line coverage stayed at 91.6 percent, above the 85.52 floor and the 86.52 baseline.
+
+proofs: measure/runs/www_test_audit_pilot_20261122/proof-blog-merge.log. Three mutations of one en post each exited 1 and named en/1-district-1-quality-school with the broken rule: blank title, date in DD-MM-YYYY form, and a missing coverImage file. The post file was restored after each mutation. git status shows no post change.
+
+deviation: the commit header was shortened for the 100-character commitlint limit. The meaning and track id stay.
+dispositions: none
+END_MEASURE_AGENT_RESULT

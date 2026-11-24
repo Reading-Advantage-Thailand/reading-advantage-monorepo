@@ -1,0 +1,29 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Adversarial remediation ADV-22. Phase 3: Rewrite batch (R1-R3).
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+phase_base_sha: 8a126f612abcc258c6c6711d6ac03fa085bbcbff
+role_base_sha: 865f52a913ae8459cfc33dac6eac9fa62d205916
+green_head: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+implementation_commit: 66aeb1011cd33b6ed591deed3acad4ae6f76f2b0
+plan_evidence_commit: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+
+tasks_flipped_to_x:
+- 3.15 Adversarial remediation ADV-22 (66aeb1011). Evidence: implementation commit 66aeb1011 and plan commit e91c4d4c.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: none tracked. The loader fixture and the symlink unit test were changed. The plan commit changed the existing plan.md. No post or production file changed.
+
+fix: brokenPostRefs now reports any entry whose name ends in .md, case insensitively, that is not a readable regular file after following links. That covers broken links, symlinks to directories, sockets, fifos and directories named .md. The old export name stays working. Both discovery cases assert the list is empty, so such an entry is named. The symlink unit test adds a case for a symlink to a directory named .md. The probe expectations were not changed.
+
+gates: four heavy-run gates exited 0 after the implementation commit. check-types 0. lint 0 with three known warnings in untouched files. full vitest 0 with 98 files and 1412 tests. coverage 0 with lines at 92.07 percent. cases_before=1410, cases_after=1412; one committed probe case and one new symlink unit case add the count. Line coverage is above the 85.52 floor and the 86.52 baseline.
+
+proofs: measure/runs/www_test_audit_pilot_20261122/proof-adv22.log. A symlink th/zz-adv-dirlink.md pointing to an existing directory made both discovery cases fail and name the link. The link was removed and no leftover exists. ADV-23 is a note and received no change.
+
+last_round: this is the last round on the loader. Further loader edge cases are notes.
+dispositions: ADV-22=FIX
+END_MEASURE_AGENT_RESULT

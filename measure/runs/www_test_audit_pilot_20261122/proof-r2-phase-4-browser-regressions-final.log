@@ -1,0 +1,52 @@
+MUTATION PROOF (R2)
+Note: removing safe wrapping lets a long tag overflow at 390px
+Production file: apps/www-reading-advantage/src/components/blog/blog-tags.tsx
+Edit: 'className="inline-flex min-w-0 max-w-full break-words items-center' -> 'className="inline-flex min-w-0 max-w-full items-center'
+Test file: src/__tests__/phase-4-browser-regressions-final.red.test.tsx
+Expected: test exits 1; the production edit is restored after the run.
+Test exit code: 1
+--- test output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+stderr | src/__tests__/phase-4-browser-regressions-final.red.test.tsx > Final Phase 4 browser regression contracts > detects overflow in the real article tag and related card structures
+Received `true` for a non-boolean attribute `fill`.
+
+If you want to write it to the DOM, pass a string instead: fill="true" or fill={value.toString()}.
+
+x·
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/phase-4-browser-regressions-final.red.test.tsx > Final Phase 4 browser regression contracts > detects overflow in the real article tag and related card structures
+AssertionError: expected [ { element: 'tag-0', …(1) } ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   {[39m
+[31m+     "element": "tag-0",[39m
+[31m+     "reasons": [[39m
+[31m+       "unbreakable-content",[39m
+[31m+     ],[39m
+[31m+   },[39m
+[31m+ ][39m
+
+ ❯ src/__tests__/phase-4-browser-regressions-final.red.test.tsx:140:22
+    138|     const failures = findMobileOverflowFailures(rendered.container, [l…
+    139|
+    140|     expect(failures).toEqual([]);
+       |                      ^
+    141|   });
+    142|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  14:33:31
+   Duration  1.43s (transform 47ms, setup 80ms, import 456ms, tests 253ms, environment 460ms)
+

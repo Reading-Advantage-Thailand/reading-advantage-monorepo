@@ -1,0 +1,108 @@
+{
+ "schema_version": 1,
+ "role": "measure-adversarial-testing",
+ "track": "www_test_audit_pilot_20261122",
+ "phase": "Phase 1: Baseline and classification",
+ "round": 2,
+ "track_base_sha": "635a604c89b2c909cfce33f555b7f043d4ea520f",
+ "baseline_sha": "cbd023b1bd29333992f7511646cff1245191b049",
+ "phase_base_sha": "cbd023b1bd29333992f7511646cff1245191b049",
+ "phase_end_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+ "role_base_sha": "fdf62c97b974cb7aec47a4a4e79f5538488ce9af",
+ "audited_head_sha": "fdf62c97b974cb7aec47a4a4e79f5538488ce9af",
+ "round1_result": "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca.json",
+ "status": "fail",
+ "summary": "Round 1 findings ADV-P1-1, -2, -3, -4 and -6 are resolved. The restored commission FAQ case fails on every en and th mutant. The four errata are true and complete. The class sums, the structure checks, and nine classification mutants pass. The bounded sample of three D5 live-line pins found a new loss. The pricing S7 body, the pricing S9 answer 2, and tutorRole.points.3 (th) have no test at HEAD. A plain typo from 3,000 to 3,500 in the S7 body passes all 58 sampled HEAD files. The a1caa5803 tests caught each of the three pins. This is one Blocker, ADV-P1-8.",
+ "blocking_findings": [
+  "ADV-P1-8 [Blocker] adversarial: Three of three sampled D5 pins that carry price or commission text have no test at HEAD. Method (adversarial-p1-fdf62c9-sample-run.py): one mutation in a /tmp copy of the app, 58 HEAD test files that reference locale, pricing or tutor modules, and three a1caa5803 files as controls. The control run has 67 environment failures, all in real-logos-captures-adversarial. Pin S7 (pricing.ts S7 body, 'Packages start at 3,000 baht' changed to 1,200 baht in en and th): no HEAD test fails; five a1caa5803 cases fail. A plain typo to 3,500 gives the same result. Pin S9 (pricing.ts S9 answer 2, 'No. Printed workbooks are priced separately' changed to 'Yes ... included in the school price'): no HEAD test fails; five a1caa5803 cases fail. Pin P3 (tutorRole.points.3 in th, 'the calculator shows examples' changed to 'shows the money you will actually get'): no HEAD test fails; 'holds the new th copy at both paths' fails at a1caa5803. The S7 and S9 English sentences appear in no HEAD test file. They appear only in the fixture (TH-FP-80, TH-FP-87), and the fixture feeds one length control (PRICING_ENTRIES.length equals 37). The K case 'shows no other baht amount than the FR-9 and FR-10 figures' (www-pricing-page.content.test.tsx:306) forbids only '1,000' and '1,500' and requires '3,000' somewhere on the page. The report line 'Money pins stay as K' and the 407c5d9bd line 'the 3,000 floor ... guard money facts' do not hold for these pins. The D5 erratum covers faq.items.5.answer only. Rationale: Review A rated the same loss class as Blocker in F9 (claim limits), F12 (price and date), and round 1 ADV-P1-1. Fix: Green restores exact en and th assertions for the fact-bearing price and commission statements (pricing S7 body, S9 answer 2, S9 answer 3, features S5 body 3, tutorRole.points.3 th), with one breakage proof each, and corrects the report line. The report rule applies to the other D5 rows too: a pin that carries a baht figure, a commission or payout rule, a price-inclusion claim, or a claim limit stays exact. This pass did not sweep those rows. Or the PM records a disclosed exception for the residual, as for ADV-P1-4."
+ ],
+ "nonblocking_findings": [
+  "ADV-P1-4b [Nit] adversarial: report.md and plan task 4.17 say the three rows were restored in Phases 2 and 3. All three restores (fb5622ed7 for explicit-English and Primary, 9eb3b9c4f for navigation) belong to task 2.7, which is Phase 2. Both commits precede adf24e723, the Phase 3 R2 commit. Fix: write Phase 2.",
+  "ADV-P1-9 [Nit] adversarial: The K case name 'shows no other baht amount than the FR-9 and FR-10 figures' (www-pricing-page.content.test.tsx:306) states more than it checks. It forbids two literals and requires '3,000' somewhere on the page. The same body existed at a1caa5803, so the name predates the track. Fix: rename it, or widen it to the figure list.",
+  "ADV-P1-5 [Note] adversarial (carried, PM accepted in plan task 4.17): per-file-counts.md rests on a runner JSON that is not kept. 1858 of 3175 cases were re-derived (24 files by static count, blog-posts-validation 1726 = 14 x 119 + 2 + 58).",
+  "ADV-P1-7 [Nit] adversarial (carried, PM accepted in plan task 4.17): two zero-case sentinel rows name K files inside D sections (phase-3-i18n.red.test.ts in D2, www-tutor-screens-copy.adversarial.test.ts in D5). The e2e rows count declared test() calls. All excluded from every sum."
+ ],
+ "evidence": [
+  "ADV-P1-1 withdrawn: adversarial-p1-fdf62c9-thai-claim-harness.py at HEAD. Mutants faq-th, faq-th-one-word, faq-en-only, faq-en-one-word, faq-en-and-zh all fail at HEAD (exit 1). The failing case is 'holds the exact en and th commission FAQ answer'. The a1caa5803 tests fail on the same five mutants. The base control passes (HEAD 24 cases, a1caa5803 26 cases). The restored test sits at www-tutor-calculator.locale.test.ts (commit ca91946bf, 12 lines added, test file only).",
+  "ADV-P1-2 withdrawn: report.md section 3 D2 bullet names 'The same commit restored the Primary no old test id old-reference case in page.content.test.tsx'. page.content.test.tsx at HEAD holds cefr-timeline, reversed-split, overlapping-section, stat-card (probe G3). At a1caa5803 it held none (INFO G3).",
+  "ADV-P1-3 withdrawn: classification.md has four Erratum lines (probe G0, G9). fb5622ed7 touches blog-locale.test.ts and the Primary page.content.test.tsx. 9eb3b9c4f touches navigation.test.tsx. ca91946b touches www-tutor-calculator.locale.test.ts. All are ancestors of HEAD. navigation.test.tsx at HEAD runs it.each(['th','zh']) and has no en case. The restored FAQ case asserts exact en and th text. Completeness: of 22 case titles in the D1 delete, D2 and D4 rows, 20 are absent at HEAD and only the two restored rows are present, each with an erratum.",
+  "ADV-P1-4 withdrawn: report.md section 6 states 3 of 37 recorded, 6 of 37 (16.2 percent) ex post, the stop rule of 15 percent, and the PM exception of 2026-11-24. The arithmetic matches second-check-1d4ddd2.json (3 recorded, 3 agreed rows restored). The wording defect is ADV-P1-4b.",
+  "ADV-P1-6 withdrawn: the Summary table K share reads 89.5 percent; probe G4 checks all six shares against n/3175 and the sum is 100.0 percent.",
+  "python3 -I adversarial-p1-fdf62c9-probes.py -> 55 PASS, 0 FAIL, exit 0, two identical runs. Class sums K 2843, D1 67, D2 22, D4 6, D5 221, R2 16 = 3175 = case_count. Nine classification mutants are all detected. The classification differs from a1caa5803 by four Erratum lines and one share cell.",
+  "K list: the seven tutor-commission files hold K rows only and are unchanged from a1caa5803 to HEAD. The pattern tutor-commission* matches exactly those seven paths.",
+  "Plan task 4.17 claims (A5): green-at-ca91946b.log 1414 tests in 98 files; coverage-at-ca91946b.log Lines 92.08 percent; green-p1-thai-breakage.log shows the restored case failing (1 failed, 18 passed); heavy-run.log shows exit 1 then exit 0 for the targeted file, then full suite exit 0 (100 s), coverage exit 0 (149 s), check-types exit 0, lint exit 0 on 2026-11-24 between 22:22 and 22:28.",
+  "Sample run output: control 67 failed, 1035 passed (1102), all failures in real-logos-captures-adversarial.test.ts (ENOENT, the copy has no repo root). P3-th: 68 failed (one new, the a1caa5803 control). S7-en-th: 72 failed (five new, all a1caa5803 controls). S7-typo-3500-en-th: 72 failed (the same five). S9-en-th: 72 failed (the same five). No new failure names a HEAD test file in any run.",
+  "Static check: grep for the S7 and S9 English sentences over HEAD *.test.ts and *.test.tsx returns no file. The fixture features-pricing-expected.ts holds them (TH-FP-80, TH-FP-87). The only HEAD use of PRICING_ENTRIES is www-features-pricing.locale.test.ts:209 (length equals 37). ALL_PRICING_STRINGS_EN and _TH are imported by no HEAD test.",
+  "The K case at www-pricing-page.content.test.tsx:306 had the same body at a1caa5803 (lines 259 to 265). The D5 case 'shows every spec string once and none of the old matrix copy' was the only P1 guard of the S7 and S9 statements, and 407c5d9bd replaced it with a key check.",
+  "Sample bound: three pins (P3, S7, S9). The S7 typo run mutates the S7 pin a second time. The harness mutants for points3 (en-only, en-and-zh) mutate the P3 pin again: HEAD fails both (ADV-C3 and the zh-equals-en case), so only the th text of P3 is untested.",
+  "Not run: the full suite; a mutation sweep of D5 rows beyond the sample; the Phase 1 GREEN and COVERAGE suites. Side effect: Vitest rewrote its gitignored results cache under apps/www-reading-advantage/node_modules/.vite. git status --short is empty before and after."
+ ],
+ "commands": [
+  {
+   "command": "git rev-parse HEAD; git status --short",
+   "result": "fdf62c97b974cb7aec47a4a4e79f5538488ce9af; empty"
+  },
+  {
+   "command": "python3 -I measure/runs/www_test_audit_pilot_20261122/adversarial-p1-fdf62c9-thai-claim-harness.py",
+   "result": "exit 0; five faq mutants caught at HEAD; points3-th caught by a1caa5803 only (gap=True)"
+  },
+  {
+   "command": "python3 -I measure/runs/www_test_audit_pilot_20261122/adversarial-p1-fdf62c9-sample-run.py",
+   "result": "control plus P3-th, S7-en-th, S9-en-th: lost_pin=True for all three"
+  },
+  {
+   "command": "python3 -I measure/runs/www_test_audit_pilot_20261122/adversarial-p1-fdf62c9-sample-run.py S7-typo-3500-en-th",
+   "result": "lost_pin=True"
+  },
+  {
+   "command": "python3 -I measure/runs/www_test_audit_pilot_20261122/adversarial-p1-fdf62c9-probes.py",
+   "result": "55 PASS, 0 FAIL, exit 0 (two identical runs)"
+  },
+  {
+   "command": "git diff -U0 a1caa5803 HEAD -- measure/tracks/www_test_audit_pilot_20261122/classification.md",
+   "result": "four Erratum lines and one share cell"
+  },
+  {
+   "command": "git show ca91946bf -- apps",
+   "result": "one test file, 12 lines added"
+  }
+ ],
+ "changed_files": [
+  "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-fdf62c9.json",
+  "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-fdf62c9.log",
+  "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-fdf62c9-probes.py",
+  "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-fdf62c9-thai-claim-harness.py",
+  "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-fdf62c9-sample-run.py"
+ ],
+ "test_strategy_violations": [
+  "spec section 4 (fidelity rule) and the report claim 'Money pins stay as K': ADV-P1-8. Price and commission statements lost their only exact pin in D5 part 4."
+ ],
+ "live_contract_violations": [],
+ "prod_wiring_violations": [],
+ "route_parity_violations": [],
+ "retry_recommendation": "retry_implementation",
+ "confidence": "high",
+ "route": "claude-agent/sonnet#xhigh",
+ "ratings": [
+  {
+   "axis": "correctness",
+   "score": 3,
+   "evidence": "The ADV-P1-1 fix and the four errata are right (probe G9, harness at HEAD), but the sample run shows the pricing S7 body and S9 answer 2 untested at HEAD (adversarial-p1-fdf62c9-sample-run.py)."
+  },
+  {
+   "axis": "test_meaning",
+   "score": 3,
+   "evidence": "The restored case fails on all five faq mutants, yet the K case at www-pricing-page.content.test.tsx:306 forbids only two literals and a 3,000 to 3,500 typo passes."
+  },
+  {
+   "axis": "scope_discipline",
+   "score": 5,
+   "evidence": "git status --short is empty before and after, and ca91946bf changed one test file (12 lines added) plus track documents only."
+  },
+  {
+   "axis": "evidence_quality",
+   "score": 5,
+   "evidence": "Every claim has a command result: harness exit codes per mutant, sample-run failure sets against a control, and 55 probe PASS lines twice."
+  }
+ ]
+}

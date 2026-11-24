@@ -1,0 +1,31 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Review A remediation F20. Phase 3: Rewrite batch (R1-R3).
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+phase_base_sha: 8a126f612abcc258c6c6711d6ac03fa085bbcbff
+role_base_sha: b2e65587828c534b590799c55b649da108f9ee25
+green_head: 1dd9134aa8c72d75e72f483b65a8af7e2cb78591
+implementation_commit: 0f63c5a9acd42b0b35f2690962aa1db85b9a5ed9
+plan_evidence_commit: 1dd9134aa8c72d75e72f483b65a8af7e2cb78591
+
+tasks_flipped_to_x:
+- 3.7 Review A remediation F20 (0f63c5a9a). Evidence: implementation commit 0f63c5a9a and plan commit 1dd9134a.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: none tracked. The fixture src/__tests__/fixtures/contrast.ts and its unit test src/__tests__/contrast-fixture.test.ts were changed. The plan commit changed the existing plan.md.
+
+fix: resolveBackdrop walks ancestors recursively. It composites each translucent layer over the resolved backdrop of its parent, stops at an opaque layer, skips a fully transparent layer, and falls back to the page background at the root. A background image or a colour the parser cannot read throws with the element tag and the offending value. Custom properties defined by the compiled stylesheet resolve from that stylesheet. Foreground colours stay strict.
+
+unit_test: the fixture test now has nine cases. Six new cases pin translucent over translucent over an opaque ancestor, translucent over the page, gradient and unsupported colour throws, a transparent skip, and an opaque stop. The three F19 cases still pass.
+
+gates: four heavy-run gates exited 0 after the implementation commit. check-types 0. lint 0 with three known warnings in untouched files. full vitest 0 with 94 files and 1394 tests. coverage 0 with lines at 91.76 percent. cases_before=1388, cases_after=1394; the six new cases are backdrop unit tests. Line coverage is above the 85.52 floor and the 86.52 baseline.
+
+proofs: measure/runs/www_test_audit_pilot_20261122/proof-f20-phase-4-browser-regressions.log and proof-f20-phase-4-browser-regressions-remaining.log. A sky-300 contact eyebrow and a slate-400 pricing title each failed the target test with exit 1. Each production edit was restored with git checkout. git status shows no production change.
+
+deviation: the commit header was shortened for the 100-character commitlint limit. The meaning and track id stay.
+dispositions: F20=FIX
+END_MEASURE_AGENT_RESULT

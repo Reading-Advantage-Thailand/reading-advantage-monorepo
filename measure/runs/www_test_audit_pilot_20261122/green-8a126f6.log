@@ -1,0 +1,30 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Phase 3: Rewrite batch (R1-R3). Task 3.2 only (R2 rewrite).
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+phase_base_sha: 8a126f612abcc258c6c6711d6ac03fa085bbcbff
+role_base_sha: 8a126f612abcc258c6c6711d6ac03fa085bbcbff
+green_head: 1d3e467fee527cabc5f30d5c1ba0ba3a318a9baf
+implementation_commit: adf24e72376a4f061b9f3c435b4b4f5a62334fae
+plan_evidence_commit: 1d3e467fee527cabc5f30d5c1ba0ba3a318a9baf
+
+tasks_flipped_to_x:
+- 3.1 Rewrite class R1 (no rows, classification.md R1 table is empty) (8a126f612).
+- 3.2 Rewrite class R2 (adf24e723). Evidence: implementation commit adf24e723 and plan commit 1d3e467f.
+- 3.3 Rewrite class R3 (no rows) (8a126f612).
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: none tracked. Nine existing test files were rewritten. The plan commit changed the existing plan.md. Run artifacts under measure/runs/www_test_audit_pilot_20261122/ are gitignored.
+
+gates: four heavy-run gates exited 0 after the implementation commit. check-types 0. lint 0 with three known warnings in untouched files. full vitest 0 with 93 files and 3094 tests. coverage 0 with lines at 91.6 percent and the floor at 85.52 percent. cases_before=3094 and cases_after=3094.
+
+two_d1_cases: the R2 cases of classification.md:195 were already rewritten in D1 commit 0be4a0374 under deviation F11. They live in www-features-look-pins.red.test.ts as the full-width row and text-only exclusion cases. They still pass with 14 cases. That file holds no class-name assertion. They were not rewritten again.
+
+proofs: nine proof-r2-*.log files under measure/runs/www_test_audit_pilot_20261122/. Each log records a temporary production edit that breaks the guarded behavior and a target test exit of 1. Each production file was restored with git checkout. git status shows no production change.
+
+dispositions: none
+END_MEASURE_AGENT_RESULT

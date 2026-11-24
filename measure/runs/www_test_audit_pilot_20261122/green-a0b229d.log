@@ -1,0 +1,43 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+PM decision C on Phase 4 acceptance findings. Phase 4: Pilot report.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: a0b229def673fb476ad2ded5719f54431d94511d
+green_head: 997662659f962202e3314605f39ee5fbd8fcbf3b
+report_commit: 4d8d81ffea62275fa17b84ca370a6f00cde96a9a
+plan_evidence_commit: 997662659f962202e3314605f39ee5fbd8fcbf3b
+report: measure/tracks/www_test_audit_pilot_20261122/report.md
+review: measure/runs/www_test_audit_pilot_20261122/phase-acceptance-a0b229d.json
+
+tasks_flipped_to_x:
+- 4.7 Report acceptance remediation F33 to F42 (4d8d81ffe). Evidence: report commit 4d8d81ffe and plan commit 997662659.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: none tracked. report.md and plan.md were changed. No test or production file changed.
+
+decision: PM decision C. The hand-written finding history was cut. One Finding history section now points to the run files. It names the file globs, gives the JSON file counts and the highest finding number per role. It states that IDs repeat across roles and that the report copies no finding text. No item is open now; see the run files.
+
+checks_run:
+- git cat-file -e on all 33 commit SHAs left in the report. All resolve.
+- baseline.json and gate-66aeb1011.json for 3175, 86.52, 1412, 92.07, 1763, 55.5, 5.55. gate-257a6b0c.json for 3094, 1385, 1709, 81, 1.7.
+- spec.md Goal and Classification Approved merge line sections for the 20 percent target and the merge condition.
+- ls of review-a-*.json, adversarial-*.json, phase-acceptance-*.json and second-check-*.json: 20, 13, 7 and 3 files.
+- python3 over the role JSONs for highest ids: Review A F30 in review-a-cb12d6f.json, adversarial ADV-24 in adversarial-e91c4d4.json, phase acceptance F42 in phase-acceptance-a0b229d.json.
+- K table: 77 rows summing to 2843 cases, checked with python3 over the report table.
+- All 65 named log paths checked with python3: all exist.
+- Five timing sums checked against timing-at-head.json assertionResults[].duration.
+- F34: ls and pass check of green-4d168813.log, coverage-4d168813.log, green-bcaa97f.log and coverage-bcaa97f.log. Each reports 3069 passing tests. Both pairs were added to the log-pair table.
+- F33: read proof-adv8.log and proof-adv11.log. Both fail the .md extension assertion. The blog K row now credits them for naming and lists the new discovery assertions separately.
+- F38: read review-a-c673f21.json. Only beforeEach predates Phase 2. D5 part 2 made sectionOf and copy unused. The report now says so.
+- F41: read fixtures/blog-posts-loader.ts. loadAllPosts reads exact lowercase .md. The blog narrative separates parity checks from stricter .mdx, .MD and non-file naming checks.
+- F42: no line-number citation remains in the report. Section and table names replaced them.
+- ASD-STE100 scan: no sentence over 25 words.
+
+gate: one required heavy-run gate exited 0. CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot passed 98 files and 1412 tests. Log: measure/runs/www_test_audit_pilot_20261122/green-4d8d81ffe.log. No test changed, so no other gate was required.
+dispositions: F33=FIX; F34=FIX; F35=FIX; F37=FIX; F38=FIX; F39=FIX; F40=FIX; F41=FIX; F42=FIX
+END_MEASURE_AGENT_RESULT

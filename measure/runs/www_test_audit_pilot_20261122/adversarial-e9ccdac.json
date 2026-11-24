@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 3: Rewrite batch (R1-R3), adversarial round 4",
+  "baseline_sha": "704745a3ca2bb27b52f28e2fcf65df9d994b64ac",
+  "phase_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "role_base_sha": "74a7213c2cd5cbcd163fc21a743d0d1a01d399af",
+  "audited_head_sha": "74a7213c2cd5cbcd163fc21a743d0d1a01d399af",
+  "status": "fail",
+  "summary": "The F22 loader fix mirrors blog.ts and skips nothing production-discoverable; the F24 hero fix discriminates the custom 'to' stop; no tutor-commission K file changed. One real false pass: the contrast helper trusts jsdom's computed background-color, which pre-resolves var() from the :root token map and ignores an ancestor's inline custom property override, so a correctly-cased parent override does not change the colour the ratio is computed from. ADV-15 routes to Green with a committed failing test.",
+  "blocking_findings": [
+    "ADV-15 [Blocker] adversarial: the contrast helper computes the ratio from the wrong colour when an ancestor overrides a colour token inline. readBackgroundLayer in src/__tests__/fixtures/contrast.ts reads window.getComputedStyle(element).backgroundColor; jsdom pre-resolves var(--color-slate-900) to the :root value rgb(15, 23, 42) even when the parent's inline style sets --color-slate-900: #ff0000, and a mechanism probe showed getComputedStyle(child).getPropertyValue('--color-slate-900') returns #ff0000 while getComputedStyle(child).backgroundColor returns rgb(15, 23, 42). A component that fixes contrast through an inline token override on a wrapper passes the contrast check with the un-overridden colour. Route-to-Green: resolve var() from the element cascade (cascaded background-color plus effectiveCustomProperty) instead of the pre-resolved computed value. The committed probe src/__tests__/contrast-parent-override.adversarial.test.tsx fails its ADV-15 case until the fix lands; its two held cases (case-variant ignored, var() fallback used) stay as armor."
+  ],
+  "nonblocking_findings": [
+    "ADV-16 [Note] adversarial: the loader filter mirrors blog.ts. markdownSlugs filters readdirSync(directory) by file.endsWith(\".md\") and the loader lists every regular file including dotfiles and parses only .md, so nothing production-discoverable is skipped; the loader also sees directories under posts/ that production ignores (blog.ts iterates SUPPORTED_LOCALES only), which is the harmless second kind."
+  ],
+  "evidence": [
+    "A temporary probe proved the mechanism: with the parent style set to --color-slate-900: #ff0000, getComputedStyle(child).getPropertyValue returns #ff0000 while getComputedStyle(child).backgroundColor returns rgb(15, 23, 42) and readBackgroundLayer returns {r:15, g:23, b:42}.",
+    "The committed probe at e9ccdac5e fails the ADV-15 case (expected 255, received 15) and passes the case-variant and fallback cases.",
+    "A temporary edit of hero-section.test.tsx changed the custom gradient to to-white; 'replaces the default gradient with a custom gradient' failed with '--tw-gradient-to: expected var(--color-white) to be var(--color-fuchsia-500)'; git checkout -- restored the file.",
+    "git diff --name-only 8a126f612..HEAD on the seven tutor-commission files is empty.",
+    "blog.ts line 84 filters readdirSync by file.endsWith(\".md\"); the loader lists every regular file per locale directory and parses only .md files, so dot-prefixed .md posts are seen by both."
+  ],
+  "commands": [
+    "git show 286d95a99 --stat",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/tmp-contrast-probe.adversarial.test.tsx --reporter=verbose",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/tmp-jsdom-probe.adversarial.test.tsx --reporter=verbose",
+    "pnpm --filter www-reading-advantage exec vitest run src/components/marketing/hero-section.test.tsx -t \"custom gradient\" --reporter=verbose",
+    "git diff --name-only 8a126f612abcc258c6c6711d6ac03fa085bbcbff..HEAD -- apps/www-reading-advantage/src/lib/tutor-commission.test.ts apps/www-reading-advantage/src/lib/tutor-commission.adversarial.test.ts apps/www-reading-advantage/src/lib/tutor-commission.followups.adversarial.test.ts apps/www-reading-advantage/src/lib/tutor-commission.settlement.adversarial.test.ts apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.adversarial.test.tsx apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/contrast-parent-override.adversarial.test.tsx --reporter=verbose",
+    "git add apps/www-reading-advantage/src/__tests__/contrast-parent-override.adversarial.test.tsx && git commit -m 'test(www): add phase 3 round 4 adversarial checks (track_id: www_test_audit_pilot_20261122)'"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/contrast-parent-override.adversarial.test.tsx",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-e9ccdac.json",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-e9ccdac.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "kimi-code-plan-cn/kimi-for-coding",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "The loader and hero fixes hold, but the contrast helper computes from the :root token when an ancestor overrides a token inline (contrast-parent-override.adversarial.test.tsx fails 1 of 3)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The F22 and F24 fixes answer their acceptance findings; the contrast helper resolves per element for the cases it sees but trusts jsdom's var() pre-resolution."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "Every production edit was temporary and restored; the only commit adds one probe file."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The mechanism probe printed jsdom's split behavior (custom property #ff0000, backgroundColor rgb(15, 23, 42))."
+    }
+  ]
+}

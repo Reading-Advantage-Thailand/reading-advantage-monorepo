@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: None; artifact-only check per test-strategy.md.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-4230e12.json and review-a-4230e12.log
+plan_updates: none
+known_failures: none
+handoff: F49 withdrawn. The range changes plan.md only. No undated run-file count or gate-JSON exception remains. The dated measurements at cb12d6f0f cannot be verified because run files are git-ignored.
+dispositions: none
+END_MEASURE_AGENT_RESULT

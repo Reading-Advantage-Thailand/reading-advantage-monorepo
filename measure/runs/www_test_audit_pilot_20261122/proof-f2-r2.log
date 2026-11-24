@@ -1,0 +1,38 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+···············x···
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/__tests__/phase-w3-claims.test.ts > 1G — Unverifiable stats and absolute claims > has no scoped unverifiable stats on the Math and Primary routes
+AssertionError: Scoped unverifiable claims on the rendered Math or Primary page:
+math: rendered 95%: expected [ 'math: rendered 95%' ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "math: rendered 95%",[39m
+[31m+ ][39m
+
+ ❯ src/lib/__tests__/phase-w3-claims.test.ts:389:9
+    387|         renderedViolations,
+    388|         `Scoped unverifiable claims on the rendered Math or Primary pa…
+    389|       ).toEqual([]);
+       |         ^
+    390|     }
+    391|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 passed (19)
+   Start at  02:33:27
+   Duration  1.19s (transform 304ms, setup 63ms, import 451ms, tests 72ms, environment 434ms)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run '--maxWorkers=1' '--reporter=dot' src/lib/__tests__/phase-w3-claims.test.ts

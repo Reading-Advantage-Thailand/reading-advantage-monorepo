@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: None; the brief requested an artifact check and no test run.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-4d41866.json and review-a-4d41866.log
+plan_updates: none
+known_failures: F27: K-row mutation status is not stated per row. F28: the report does not explain the 7.64-second CI time increase or state that its cause is not recorded.
+handoff: Route F27 and F28 to Green. Add no-mutation status to each K row or enumerate every affected row. Add an evidence-based reason for the CI time increase, or state that the cause is not recorded. Other checked report figures and finding summaries match their sources.
+dispositions: none
+END_MEASURE_AGENT_RESULT

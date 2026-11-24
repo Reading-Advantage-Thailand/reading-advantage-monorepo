@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 3: Rewrite batch (R1-R3)",
+  "baseline_sha": "0165b8eca01e358f5076b61b2a366b2955f2c559",
+  "phase_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "role_base_sha": "0165b8eca01e358f5076b61b2a366b2955f2c559",
+  "audited_head_sha": "0165b8eca01e358f5076b61b2a366b2955f2c559",
+  "status": "fail",
+  "summary": "The R2 changes pass their targeted suite and mutation proofs. The blog merge preserves the fifteen predicates and detects broken posts. F19 blocks acceptance because the revised pricing contrast test can pass a WCAG-AA failure.",
+  "blocking_findings": [
+    "F19 [Blocker] review-a: The R2 pricing and contact tests use isDarkText, which checks foreground lightness without calculating contrast against the rendered background. On the pricing hero background #faf9f7, rgb(120,120,120) has a 4.20:1 contrast ratio, below WCAG AA's 4.5:1 threshold, but passes the helper's max-channel <= 120 check. This loses fault detection for the claimed contrast rule."
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD returned 0165b8eca01e358f5076b61b2a366b2955f2c559, equal to role_base_sha and audited_head_sha.",
+    "The exact phase diff 8a126f612abcc258c6c6711d6ac03fa085bbcbff..0165b8eca01e358f5076b61b2a366b2955f2c559 changes nine R2 tests, blog-posts-validation.test.ts, and plan.md. No production file or classification row changed.",
+    "The targeted Vitest run passed 10 files and 52 tests. It covered all nine R2 files and the merged blog validation file.",
+    "gate-adf24e7.json reports GREEN, COVERAGE, check-types, and lint exit 0; case_count remains 3094; line coverage is 91.6%, above the 85.52% floor. Its nine proof-log paths match the nine R2 files.",
+    "All nine proof-r2 logs show the target test failing after a mutation of the behavior it checks. The failures report the affected criterion, such as mobile containment, contrast, layout, gradient, wrap, or crop behavior.",
+    "F11's two R2 cases are explicitly cited in plan.md:272–276 as already rewritten in D1 commit 0be4a0374. The plan identifies both retained cases and reports 14 passing cases without class-name assertions.",
+    "The parent version at 257a6b0c^ has the same 15 predicates: seven required-field predicates, three optional-field predicates, two content predicates, two naming predicates, and one cross-locale date predicate. The merged file retains each predicate and aggregates failed-post labels.",
+    "blog-posts-validation.test.ts:33–63 discovers every locale directory and every .md file at test load. Its rules iterate allPosts and violationsFor emits <locale>/<slug>: <rule> for each broken post.",
+    "The non-empty English discovery assertions at blog-posts-validation.test.ts:96–98 and 250–252 fail when no posts are discovered, preventing an empty-list pass.",
+    "The delimiter predicate at blog-posts-validation.test.ts:216–223 checks every discovered post body. The cross-locale predicate at lines 254–274 compares each matching non-English post date against its English post and includes the locale and slug in violations.",
+    "proof-blog-merge.log records three failing mutations—blank title, invalid date format, and missing cover image—and each failure names en/1-district-1-quality-school. The requested additional delimiter and non-English date mutations were not run because this audit role cannot edit production files.",
+    "The pricing hero uses bg-site-page at pricing/page.tsx:60–62; globals.css:60 defines that background as #faf9f7. The test helper at phase-4-browser-regressions.red.test.tsx:11–17 and phase-4-browser-regressions-remaining.red.test.tsx:12–18 accepts RGB channels up to 120 without comparing foreground and background.",
+    "A contrast calculation for rgb(120,120,120) on #faf9f7 returns 4.20:1, below WCAG AA's 4.5:1 requirement, while satisfying isDarkText's RGB condition.",
+    "Plan task 3.2 cites the 0be4a0374 exception and task 3.5 cites the merge proof, gates, and coverage logs. The plan's 3175-to-1385 reduction exceeds the 20% target; the approved merge condition is met by existing failing mutation proofs that identify the broken post."
+  ],
+  "commands": [
+    "git rev-parse HEAD && git diff --name-status 8a126f612abcc258c6c6711d6ac03fa085bbcbff..0165b8eca01e358f5076b61b2a366b2955f2c559 && git diff --check 8a126f612abcc258c6c6711d6ac03fa085bbcbff..0165b8eca01e358f5076b61b2a366b2955f2c559 && git status --short",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/phase-4-browser-regressions.red.test.tsx src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx src/__tests__/phase-4-browser-regressions-final.red.test.tsx src/__tests__/www-reading-cover.red.test.ts src/app/'[locale]'/'(marketing)'/services/page.test.tsx src/app/'[locale]'/'(marketing)'/services/blended-learning/page.test.tsx src/app/'[locale]'/'(marketing)'/services/managed-service/page.test.tsx src/components/marketing/hero-section.test.tsx src/components/blog/blog-pagination.test.tsx src/lib/blog-posts-validation.test.ts",
+    "git show 257a6b0cdd54b3448a16370ff138750ae1fc97f5^:apps/www-reading-advantage/src/lib/blog-posts-validation.test.ts",
+    "rg -n 'toHaveClass|className|classList|querySelector\\([^)]*\\.' apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions.red.test.tsx apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions-final.red.test.tsx apps/www-reading-advantage/src/__tests__/www-reading-cover.red.test.ts apps/www-reading-advantage/src/app/'[locale]'/'(marketing)'/services/page.test.tsx apps/www-reading-advantage/src/app/'[locale]'/'(marketing)'/services/blended-learning/page.test.tsx apps/www-reading-advantage/src/app/'[locale]'/'(marketing)'/services/managed-service/page.test.tsx apps/www-reading-advantage/src/components/marketing/hero-section.test.tsx apps/www-reading-advantage/src/components/blog/blog-pagination.test.tsx",
+    "python3 -c \"f=lambda c: (c/255/12.92 if c/255<=0.04045 else ((c/255+0.055)/1.055)**2.4); b=tuple(int('faf9f7'[i:i+2],16) for i in (0,2,4)); x=sum(w*f(v) for w,v in zip((0.2126,0.7152,0.0722),b)); y=sum(w*f(120) for w in (0.2126,0.7152,0.0722)); print(b, x, y, (x+0.05)/(y+0.05))\""
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions-final.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/www-reading-cover.red.test.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/blended-learning/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/managed-service/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/page.test.tsx",
+    "apps/www-reading-advantage/src/components/blog/blog-pagination.test.tsx",
+    "apps/www-reading-advantage/src/components/marketing/hero-section.test.tsx",
+    "apps/www-reading-advantage/src/lib/blog-posts-validation.test.ts",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [
+    "F19: isDarkText accepts foreground darkness without validating the WCAG AA contrast ratio against the rendered background."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "The pricing test accepts RGB values up to 120, which produce only 4.20:1 contrast against the rendered #faf9f7 background."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The targeted run passed 52 tests, but the isDarkText predicate permits a sub-AA contrast value."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The audited phase diff changes test files and plan.md only, with no production file."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The nine R2 proof logs, blog merge proof, gate receipts, and contrast calculation support the audit conclusions."
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+# Green run log: www test audit pilot (Green base 5a104ba6d)
+
+Role: measure-jr-green. Route: opencode-go/hy4-flash-free#high.
+This round covers task 2.5 (D5) only. D5 is split into ordered parts.
+
+## Base verification
+
+- role_base_sha: 5a104ba6dfbcdd1740f21c979d011a2251d7a657.
+- phase_base_sha (Phase 1): cbd023b1bd29333992f7511646cff1245191b049.
+- Baseline: case_count=3175, line_coverage_pct=86.52. Floor 85.52.
+- The working tree was clean at the start of this round.
+
+## Commits
+
+- ee5c7b7390847eee0879ca9e8fa94b5eb4d33bd3 test(www): replace d5 pins with
+  locale-key checks p1. 1 new helper and 1 test file changed.
+- 934080c2082fb2742fd1d157ac30f684470d0f60 chore(measure): mark www audit d5
+  in progress. Plan task 2.5 stays [~] until the last part.
+
+## Part 1 change summary
+
+File: src/__tests__/phase-4-contact-copy.red.test.tsx (4 D5 pins).
+The exact en/th/zh TikTok sentences are gone. One case now checks that
+pages.contact.social.tiktok is a non-empty string in every shipped locale.
+The locale list comes from localeConfig.locales in src/config/locale-config.ts.
+The three rendered cases keep their structural checks for one TikTok token
+and one handle token. They no longer pin the full sentence.
+
+New helper: src/__tests__/fixtures/locale-key-check.ts. It reads the shipped
+locale list from the app config and checks each dotted key in every locale.
+
+Kept as K: none in this part.
+- The raw handle config assertion was removed. classification.md line 178 says
+  the contact-authority test keeps that value.
+- No legal fact, price, money figure, customer date, or claim limit was touched.
+- No tutor-commission money test was touched.
+
+## Gate results (Part 1, ee5c7b73)
+
+- GREEN exit 0: 89 files passed, 3140 tests passed.
+  Log: measure/runs/www_test_audit_pilot_20261122/green-ee5c7b73.log.
+- COVERAGE exit 0: 89 files passed, 3140 tests passed.
+  Lines 89.94, statements 88.60, branches 80.85, functions 83.75 percent.
+  Log: measure/runs/www_test_audit_pilot_20261122/coverage-ee5c7b73.log.
+- Gate: measure/runs/www_test_audit_pilot_20261122/gate-ee5c7b73.json.
+
+RolldownError parse messages for Thai blog .md files are V8 remap noise.
+baseline.log records the same messages. The provider excludes those files.
+
+## D5 scope remaining
+
+classification.md lists 221 D5 pins across 14 rows. Part 1 closes the
+phase-4-contact-copy row (4 pins). 217 pins stay in the other 13 rows.
+Several remaining rows guard customer dates, prices, money, counts, or claim
+limits. Those pins stay as K with a reason in the part commit and log.
+
+## MEASURE_AGENT_RESULT
+
+MEASURE_AGENT_RESULT
+phase: Green
+track: www_test_audit_pilot_20261122
+phase_base_sha: cbd023b1bd29333992f7511646cff1245191b049
+role_base_sha: 5a104ba6dfbcdd1740f21c979d011a2251d7a657
+green_head: 934080c2082fb2742fd1d157ac30f684470d0f60
+tasks_completed: none (2.5 stays [~] until the last part)
+tasks_deferred: 2.5 parts 2 onward, 2.6, 3.x, 4.x (later rounds)
+tasks_blocked: none
+targeted_red_command: not applicable to a copy-pin replacement; the scoped
+  GREEN and COVERAGE commands are the gates for each part
+new_files: apps/www-reading-advantage/src/__tests__/fixtures/locale-key-check.ts
+  (test helper); measure/runs/www_test_audit_pilot_20261122/gate-ee5c7b73.json,
+  green-ee5c7b73.log, coverage-ee5c7b73.log (untracked run artifacts)
+handoff: D5 part 1 is complete. GREEN and COVERAGE exit 0. Line coverage is
+  89.94 percent against a floor of 85.52 percent. No D5 pin was kept as K in
+  this part. 217 pins remain across 13 rows. Task 2.5 stays [~]. No push was
+  made.
+END_MEASURE_AGENT_RESULT

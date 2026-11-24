@@ -1,0 +1,29 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Review A remediation F19. Phase 3: Rewrite batch (R1-R3).
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+phase_base_sha: 8a126f612abcc258c6c6711d6ac03fa085bbcbff
+role_base_sha: 0165b8eca01e358f5076b61b2a366b2955f2c559
+green_head: b2e65587828c534b590799c55b649da108f9ee25
+implementation_commit: 09c48878d82fee91688f88ee97bb1aa667b34d0a
+plan_evidence_commit: b2e65587828c534b590799c55b649da108f9ee25
+
+tasks_flipped_to_x:
+- 3.6 Review A remediation F19 (09c48878d). Evidence: implementation commit 09c48878d and plan commit b2e65587.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: two tracked files. src/__tests__/fixtures/contrast.ts holds the helper. src/__tests__/contrast-fixture.test.ts holds the unit test. Two existing R2 test files were changed. The plan commit changed the existing plan.md.
+
+fix: the isDarkText helper is gone from both R2 contrast tests. Each now calls contrastOf from fixtures/contrast.ts. The helper parses hex, rgb(a) and oklch from the real compiled CSS, resolves the background from the element and its ancestors, blends alpha over the page, and throws on an unresolved foreground colour. Each test asserts a ratio of at least 4.5 to 1.
+
+unit_test: contrast-fixture.test.ts pins the F19 fault: rgb(120,120,120) on #faf9f7 is below 4.5. Black on white is 21. An unparseable colour throws.
+
+gates: four heavy-run gates exited 0 after the implementation commit. check-types 0. lint 0 with three known warnings in untouched files. full vitest 0 with 94 files and 1388 tests. coverage 0 with lines at 91.64 percent. cases_before=1385, cases_after=1388; the three new cases are the helper unit test. Line coverage is above the 85.52 floor and the 86.52 baseline.
+
+proofs: measure/runs/www_test_audit_pilot_20261122/proof-f19-phase-4-browser-regressions.log and proof-f19-phase-4-browser-regressions-remaining.log. A sky-300 contact eyebrow and a slate-400 pricing title each failed the target test with exit 1. Each production edit was restored with git checkout. git status shows no production change.
+dispositions: F19=FIX
+END_MEASURE_AGENT_RESULT

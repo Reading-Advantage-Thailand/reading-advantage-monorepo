@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "d2c8e6336743897f6f55bc6dc1f0a5b3e5005683",
+  "phase_base_sha": "4230e12cb02efe8af1e90617008c4d66f08b1c90",
+  "role_base_sha": "d2c8e6336743897f6f55bc6dc1f0a5b3e5005683",
+  "audited_head_sha": "d2c8e6336743897f6f55bc6dc1f0a5b3e5005683",
+  "status": "pass",
+  "summary": "The four corrected claims and ten class-narrative claims check out. The requested wording search found no remaining old phrasing. The exact range changes report.md and plan.md only.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD returned d2c8e6336743897f6f55bc6dc1f0a5b3e5005683, matching role_base_sha and audited_head_sha.",
+    "The exact 4230e12cb..d2c8e6336 diff changes report.md and plan.md only. The apps/ diff is empty.",
+    "F41 PASS: the blog-merge phase base is the pre-merge test at 8a126f612. `git show 8a126f612:apps/www-reading-advantage/src/lib/blog-posts-validation.test.ts` shows `readdirSync` filtering names ending in `.md`, then `readFileSync` on each name; a directory named x.md therefore reaches a file read and fails with EISDIR. `git show e91c4d4cc:...` shows the later refactored test and fixture; `brokenPostRefs` also flags non-file .md entries. The current loader's `.mdx` and `.MD` checks are separate from parity checks.",
+    "F42 PASS: spec.md:24-35 is headed Out of scope and says each K row without a mutation check must be listed in report.md. The Classes section begins at line 46. The corrected report cites Out of scope.",
+    "F50 PASS: `git show 0d705612d` removes the three `returns the active locale` cases; `git show 9eb3b9c4f` restores the Thai and Chinese cases. The current test invokes the real useCurrentLocale hook, while mocking next-intl's useLocale adapter.",
+    "F51 PASS: `git show fb5622ed7` adds `returns the en directory when locale is en` in blog-locale.test.ts. The report states that the omitted-argument case checks a different rule and does not call it the same-rule duplicate.",
+    "Narrative claim 1 — D1: PASS. classification.md D1 rows total 67 cases; the seven deleted cases and 60 rewrites agree with the D1 task and case delta.",
+    "Narrative claim 2 — D2: PASS. classification.md D2 rows total 22 initial deletions. The report separately records the explicit-English restoration and the distinct omitted-argument rule.",
+    "Narrative claim 3 — D3: PASS. classification.md:150-153 says there are no D3 rows and both image-source suites validate live output images against existing sources.",
+    "Narrative claim 4 — D4: PASS. classification.md:155-161 lists six cases: three locale cases, two capture-name cases, and one env-gated image case. The report records the later Thai and Chinese restoration.",
+    "Narrative claim 5 — D5: PASS. classification.md D5 rows total 221 cases and plan.md lists four D5 parts; the report's final 3035 case value cites gate-407c5d9.json.",
+    "Narrative claim 6 — R1: PASS. classification.md:182-186 has no R1 rows and states that boundary mocks stand in for adapters, not the code under test.",
+    "Narrative claim 7 — R2: PASS. classification.md:188-201 records 14 cases in nine files; plan.md:272-276 records two earlier rewrites and 14 passing cases, with no class-name assertions.",
+    "Narrative claim 8 — R3: PASS. classification.md:203-206 has no rows and says case names state a rule or contract id.",
+    "Narrative claim 9 — Blog merge: PASS. The phase-base test and blog.ts included lowercase .md names; the current loader keeps dotfiles, regular-file symlinks, and non-file .md rejection for parity. .mdx and .MD checks are identified separately as stricter naming checks.",
+    "Narrative claim 10 — Lint warnings: PASS. plan.md:585 and the F38 recheck record the pre-existing beforeEach warning and the two declarations made unused by D5 part 2.",
+    "The requested wording scan found no remaining `echo`, `mocked locale`, or `Classes` phrasing. Its hits at report.md:77, 86, 159, and 189 distinguish stricter .mdx/.MD validation from parity.",
+    "Current-phase plan claim at plan.md:641-654 matches the diff. The named commit SHAs resolve, and no test or production file changed."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --name-status 4230e12cb02efe8af1e90617008c4d66f08b1c90..d2c8e6336743897f6f55bc6dc1f0a5b3e5005683",
+    "git diff --unified=4 4230e12cb02efe8af1e90617008c4d66f08b1c90..d2c8e6336743897f6f55bc6dc1f0a5b3e5005683 -- measure/tracks/www_test_audit_pilot_20261122/report.md measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "git diff --name-only 4230e12cb02efe8af1e90617008c4d66f08b1c90..d2c8e6336743897f6f55bc6dc1f0a5b3e5005683 -- apps",
+    "git show e91c4d4cc:apps/www-reading-advantage/src/lib/blog-posts-validation.test.ts",
+    "git show 8a126f612:apps/www-reading-advantage/src/lib/blog-posts-validation.test.ts",
+    "git show e91c4d4cc:apps/www-reading-advantage/src/__tests__/fixtures/blog-posts-loader.ts",
+    "git show --format= 0d705612d -- apps/www-reading-advantage/src/locales/navigation.test.tsx",
+    "git show --format= 9eb3b9c4f -- apps/www-reading-advantage/src/locales/navigation.test.tsx",
+    "git show --format= fb5622ed7 -- apps/www-reading-advantage/src/lib/blog-locale.test.ts",
+    "rg -n -i 'echo|mocked locale|Classes|stricter|parity' measure/tracks/www_test_audit_pilot_20261122/report.md",
+    "rg -n '^## ' measure/tracks/www_test_audit_pilot_20261122/spec.md",
+    "git cat-file -e 0d705612d^{commit} && git cat-file -e 9eb3b9c4f^{commit} && git cat-file -e fb5622ed7^{commit} && git cat-file -e f8964c2b9^{commit}"
+  ],
+  "changed_files": [
+    "measure/tracks/www_test_audit_pilot_20261122/report.md",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "report.md:70-86 now reflects the four findings, and the cited commits plus test files support the corrected claims."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "test-strategy.md:69 and 277-279 define this Phase 4 review as artifact-only; source and history checks verified the claims."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The exact range changes report.md and plan.md only; the apps/ diff is empty."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The four corrected claims cite git-show results and source locations, and each of the ten narrative claims has a classification or plan reference."
+    }
+  ]
+}

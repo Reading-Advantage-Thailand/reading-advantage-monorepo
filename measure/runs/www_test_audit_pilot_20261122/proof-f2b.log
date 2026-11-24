@@ -1,0 +1,105 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+··xx·x·········x···
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/__tests__/phase-w3-claims.test.ts > 1B — Stale launch dates > has no stale launch dates on product locale pages
+AssertionError: Stale launch copy:
+In the 2027 school year, young mathematicians open printed workbooks and a Math Advantage app, both tagged to the Mastery Advantage knowledge graph. We are building the app now on the Primary Advantage base. 95% coming in 2026.: expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "In the 2027 school year, young mathematicians open printed workbooks and a Math Advantage app, both tagged to the Mastery Advantage knowledge graph. We are building the app now on the Primary Advantage base. 95% coming in 2026.",[39m
+[31m+ ][39m
+
+ ❯ src/lib/__tests__/phase-w3-claims.test.ts:172:72
+    170|           stale.test(text)),
+    171|     );
+    172|     expect(violations, `Stale launch copy:\n${violations.join("\n")}`)…
+       |                                                                        ^
+    173|   });
+    174|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/lib/__tests__/phase-w3-claims.test.ts > 1B — Stale launch dates > has no stale launch dates in generated product route metadata
+AssertionError: Stale launch copy in route metadata:
+math: In the 2027 school year, young mathematicians open printed workbooks and a Math Advantage app, both tagged to the Mastery Advantage knowledge graph. We are building the app now on the Primary Advantage base. 95% coming in 2026.
+math: In the 2027 school year, young mathematicians open printed workbooks and a Math Advantage app, both tagged to the Mastery Advantage knowledge graph. We are building the app now on the Primary Advantage base. 95% coming in 2026.
+math: In the 2027 school year, young mathematicians open printed workbooks and a Math Advantage app, both tagged to the Mastery Advantage knowledge graph. We are building the app now on the Primary Advantage base. 95% coming in 2026.: expected [ …(3) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "math: In the 2027 school year, young mathematicians open printed workbooks and a Math Advantage app, both tagged to the Mastery Advantage knowledge graph. We are building the app now on the Primary Advantage base. 95% coming in 2026.",[39m
+[31m+   "math: In the 2027 school year, young mathematicians open printed workbooks and a Math Advantage app, both tagged to the Mastery Advantage knowledge graph. We are building the app now on the Primary Advantage base. 95% coming in 2026.",[39m
+[31m+   "math: In the 2027 school year, young mathematicians open printed workbooks and a Math Advantage app, both tagged to the Mastery Advantage knowledge graph. We are building the app now on the Primary Advantage base. 95% coming in 2026.",[39m
+[31m+ ][39m
+
+ ❯ src/lib/__tests__/phase-w3-claims.test.ts:186:7
+    184|       violations,
+    185|       `Stale launch copy in route metadata:\n${violations.join("\n")}`,
+    186|     ).toEqual([]);
+       |       ^
+    187|   });
+    188|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/lib/__tests__/phase-w3-claims.test.ts > 1C — Nonexistent-app pages > nonexistent-app pages are roadmap-labeled without a concrete launch date
+AssertionError: no concrete stale date: expected true to be false // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- false[39m
+[31m+ true[39m
+
+ ❯ src/lib/__tests__/phase-w3-claims.test.ts:202:67
+    200|       const leaves = allLocales(module as unknown as Dict);
+    201|       expect(roadmap.test(lines(leaves)), "roadmap label present").toB…
+    202|       expect(stale.test(lines(leaves)), "no concrete stale date").toBe…
+       |                                                                   ^
+    203|       roadmap.lastIndex = 0;
+    204|       stale.lastIndex = 0;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/lib/__tests__/phase-w3-claims.test.ts > 1G — Unverifiable stats and absolute claims > has no scoped unverifiable stats on the Math and Primary routes
+AssertionError: Scoped unverifiable claims on Math or Primary:
+math: 95%: expected [ 'math: 95%' ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "math: 95%",[39m
+[31m+ ][39m
+
+ ❯ src/lib/__tests__/phase-w3-claims.test.ts:317:7
+    315|       violations,
+    316|       `Scoped unverifiable claims on Math or Primary:\n${violations.jo…
+    317|     ).toEqual([]);
+       |       ^
+    318|   });
+    319|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 15 passed (19)
+   Start at  01:21:11
+   Duration  1.10s (transform 306ms, setup 69ms, import 408ms, tests 23ms, environment 437ms)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run src/lib/__tests__/phase-w3-claims.test.ts '--maxWorkers=1' '--reporter=dot'

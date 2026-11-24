@@ -63,14 +63,6 @@ describe("product picture files", () => {
       expect(statSync(file).size).toBeLessThanOrEqual(1_000_000);
     });
   }
-
-  it("does not use the retired Storytime set", () => {
-    // Spec D-2 of www_tutor_followups_20261118 puts the date on the tutor hero as a file suffix (tutor-advantage-hero-2026-11-06.webp), so the guard rejects only the retired Storytime set: a directory segment ending in 2026-11-06 (the storytime-cover-options-2026-11-06 handoff set) or a storytime cover file stamped with that date.
-    for (const picture of Object.values(productPictures)) {
-      expect(picture.src).not.toMatch(/2026-11-06\//);
-      expect(picture.src).not.toMatch(/storytime.*2026-11-06|cover-options-2026-11-06/);
-    }
-  });
 });
 
 describe("products page program cards", () => {

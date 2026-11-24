@@ -21,6 +21,29 @@ export const STORYTIME_IMAGES = [
   { name: "week-07-top-on-a-pot", alt: "images.week07TopOnAPot", width: 900, height: 675 },
 ] as const;
 
+/**
+ * The story image of each container, in page order.
+ * The song poster is not in this list. The poster sits in the song section.
+ */
+export const CONTAINER_STORY_IMAGES: Readonly<
+  Record<(typeof CONTAINER_IDS)[number], readonly string[]>
+> = {
+  "st-hero": ["week-01-hello-pip"],
+  "st-section-1": ["level-2-unit-1-cover-art"],
+  "st-section-2": ["week-01-reader-hello-cover", "week-01-reader-nan-can-nod-cover"],
+  "st-section-3": [
+    "week-02-how-many-cakes",
+    "week-03-it-is-red",
+    "week-04-nan-and-pam-nap",
+    "week-05-two-ears",
+    "week-06-i-see-a-cat",
+    "week-07-top-on-a-pot",
+  ],
+  "st-section-4": [],
+  "st-section-5": [],
+  "st-cta": [],
+};
+
 export const EXPECTED_META = {
   en: {
     title: "Storytime Advantage - English for Anuban 2 to P2 | Reading Advantage Thailand",
@@ -54,7 +77,7 @@ export const LABEL_COPY = {
       "QR links open the song and books",
     ],
     navigation: "English for Anuban 2 to P2; the first unit launches on 30 November 2026",
-    home: "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. Science, Math, Zhongwen, and STEM Advantage are on our roadmap. The first Storytime Advantage unit launches on 30 November 2026.",
+    home: "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. In the 2027 school year, Thai primary schools open Science Advantage, Math Advantage, and Zhongwen Advantage: workbooks and apps. STEM Advantage is planned. The first Storytime Advantage unit launches on 30 November 2026.",
   },
   th: {
     badge: "เปิดตัววันที่ 30 พฤศจิกายน 2569",
@@ -64,7 +87,7 @@ export const LABEL_COPY = {
       "คิวอาร์โค้ดเปิดเพลงและหนังสือ",
     ],
     navigation: "ภาษาอังกฤษสำหรับอนุบาล 2 ถึง ป.2 หน่วยการเรียนรู้แรกเปิดตัววันที่ 30 พฤศจิกายน 2569",
-    home: "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก Science, Math, Zhongwen และ STEM Advantage อยู่ในแผนงาน หน่วยการเรียนรู้แรกของ Storytime Advantage เปิดตัววันที่ 30 พฤศจิกายน 2569",
+    home: "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก ในปีการศึกษา 2570 โรงเรียนประถมศึกษาไทยจะเปิดใช้ Science Advantage, Math Advantage และ Zhongwen Advantage ทั้งหนังสือแบบฝึกหัดและแอป STEM Advantage อยู่ในแผน หน่วยการเรียนรู้แรกของ Storytime Advantage เปิดตัววันที่ 30 พฤศจิกายน 2569",
   },
   zh: {
     badge: "Launches 30 November 2026",
@@ -74,7 +97,7 @@ export const LABEL_COPY = {
       "二维码可打开歌曲和书籍",
     ],
     navigation: "English for Anuban 2 to P2; the first unit launches on 30 November 2026",
-    home: "Primary Advantage、Reading Advantage 和 CodeCamp Advantage 已上线。Mastery Advantage 在 CodeCamp Advantage 中运行，并通过带标签的内容进入 Primary Advantage。Science、Math、Zhongwen 和 STEM Advantage 在路线图中，暂无日期。",
+    home: "Primary Advantage、Reading Advantage 和 CodeCamp Advantage 已上线。Mastery Advantage 在 CodeCamp Advantage 中运行，并通过带标签的内容进入 Primary Advantage。在2027学年，泰国小学开设 Science Advantage、Math Advantage 和 Zhongwen Advantage，配套练习册和应用。",
   },
 } as const;
 
@@ -293,6 +316,21 @@ const MONTHS_EN = [
   "December",
 ];
 
+const MONTHS_TH = [
+  "มกราคม",
+  "กุมภาพันธ์",
+  "มีนาคม",
+  "เมษายน",
+  "พฤษภาคม",
+  "มิถุนายน",
+  "กรกฎาคม",
+  "สิงหาคม",
+  "กันยายน",
+  "ตุลาคม",
+  "พฤศจิกายน",
+  "ธันวาคม",
+];
+
 /**
  * The term classes of the claims scanner, in the order of spec section 7.
  * No class flags "date", "no public date", "30-minute", "5-minute", "3-minute", or "4 minutes".
@@ -300,6 +338,7 @@ const MONTHS_EN = [
 export const CLAIM_TERMS = [
   { name: "year", pattern: /20\d\d/ },
   { name: "English month", pattern: new RegExp(`\\b(?:${[...MONTHS_EN, ...MONTHS_EN.map((month) => month.toUpperCase())].join("|")})\\b`) },
+  { name: "Thai month", pattern: new RegExp(MONTHS_TH.join("|")) },
   { name: "พ.ศ.", pattern: /พ\.ศ\./ },
   { name: "฿", pattern: /฿/ },
   { name: "THB", pattern: /(?<![a-z])thb(?![a-z])/i },
@@ -347,11 +386,31 @@ export const APPROVED_DATES = {
 } as const;
 
 /**
+ * The approved 2027 school year phrases of the home suite row (change list 2026-11-22, line 50).
+ * The claims scanner clears them with the approved public date.
+ */
+export const APPROVED_SCHOOL_YEAR = {
+  en: "In the 2027 school year",
+  th: "ในปีการศึกษา 2570",
+  zh: "在2027学年",
+} as const;
+
+/**
  * Finds the claim terms of a text after it clears the approved public date.
  * @param text The text to scan.
  * @returns The names of the term classes that the text still holds, in scanner order.
  */
 export function findUnapprovedClaimTerms(text: string): ClaimTermName[] {
-  const cleared = text.split(APPROVED_DATES.en).join("").split(APPROVED_DATES.th).join("");
+  const cleared = text
+    .split(APPROVED_DATES.en)
+    .join("")
+    .split(APPROVED_DATES.th)
+    .join("")
+    .split(APPROVED_SCHOOL_YEAR.en)
+    .join("")
+    .split(APPROVED_SCHOOL_YEAR.th)
+    .join("")
+    .split(APPROVED_SCHOOL_YEAR.zh)
+    .join("");
   return findClaimTerms(cleared);
 }

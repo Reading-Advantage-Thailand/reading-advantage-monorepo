@@ -1,0 +1,11 @@
+$ eslint .
+
+/home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage/src/__tests__/www-reading-card.red.test.ts
+  3:21  warning  'beforeEach' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.content.test.tsx
+  307:10  warning  'sectionOf' is defined but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  477:9   warning  'copy' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+✖ 3 problems (0 errors, 3 warnings)
+

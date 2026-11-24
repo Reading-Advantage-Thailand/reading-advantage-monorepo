@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "aeaa6a11902e320b40bff38f9726ac2aec5e36c8",
+  "phase_base_sha": "997662659f962202e3314605f39ee5fbd8fcbf3b",
+  "role_base_sha": "aeaa6a11902e320b40bff38f9726ac2aec5e36c8",
+  "audited_head_sha": "aeaa6a11902e320b40bff38f9726ac2aec5e36c8",
+  "status": "fail",
+  "summary": "The exact change scope and twelve sampled report claims check out. F43-F45 are resolved. The changed report and plan still misclassify Green logs and retain stale log counts.",
+  "blocking_findings": [
+    "F46 [Blocker] review-a: report.md:173 says every other green-*.log and green-at-*.log is a test-run log. Six files contain MEASURE_AGENT_RESULT but no dispositions line, so they are not test-run logs. The report also identifies green-7008ccef.log as an accounting plan at line 33. Correct the log categories.",
+    "F47 [Blocker] review-a: plan.md:598–599 says 26 Green role logs hold result markers and dispositions and 45 other logs are test-run logs. The current run directory has 73 green-*.log files: 27 have dispositions lines, 33 have result markers, and 6 marker files lack dispositions. At least one of the remaining files is the accounting plan named in report.md:33. Replace these stale counts with a defined, reproducible inventory or remove them."
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD returned aeaa6a11902e320b40bff38f9726ac2aec5e36c8, matching role_base_sha and audited_head_sha.",
+    "F43 withdrawn: scanned every F-number and ADV- mention in report.md; only line 177 remains, and it gives permitted role-specific highest IDs and artifact counts. Line 175 gives only the repeated-ID notice. Line 179 names no finding ID or disposition.",
+    "F44 withdrawn: grep finds 27 green-*.log files with a dispositions line. The prior statement that none had one is false; the updated report narrows its claim but still misclassifies six marker-only role logs.",
+    "F45 withdrawn: read the final eight lines of two GREEN logs and two COVERAGE logs. GREEN logs end with Vitest summaries; COVERAGE logs end with a Coverage summary and percentage rows.",
+    "Current Green log inventory: ls counts 73 green-*.log files; grep finds 27 with dispositions lines and 33 with MEASURE_AGENT_RESULT. Six have markers but no dispositions; none has dispositions without a marker.",
+    "The six marker-only logs are role logs, not test-run logs. green-5a104ba.log contains a complete MEASURE_AGENT_RESULT block at lines 57-77 without a dispositions line.",
+    "report.md:33 itself calls green-7008ccef.log an accounting plan, which also contradicts the blanket test-run category at report.md:173.",
+    "F43-F45 changed-line corrections verified. The current diff adds Finding history pointers and the updated Green/COVERAGE descriptions; no other finding-ID mapping or line-number citation remains.",
+    "Independent sample 1: report.md:22 D1 gate values 3175 to 3168, GREEN exit 0 and coverage 89.92 match gate-0be4a037.json.",
+    "Independent sample 2: report.md:23 D2 values 3168 to 3146 and GREEN exit 0 match gate-e332f594.json.",
+    "Independent sample 3: report.md:25 D4 values 3146 to 3140 and coverage 89.86 match gate-0d705612.json.",
+    "Independent sample 4: report.md:28 D5 part 3 values 3081 to 3048 and coverage 89.94 match gate-c577cdf.json.",
+    "Independent sample 5: report.md:30 R2 values 3094 to 3094 and coverage 91.60 match gate-adf24e7.json.",
+    "Independent sample 6: report.md:31 blog merge values 3094 to 1385 and GREEN exit 0 match gate-257a6b0c.json.",
+    "Independent sample 7: report.md:29 D5 part 4 values 3048 to 3035 and coverage 90.03 match gate-407c5d9.json.",
+    "Independent sample 8: report.md:10 final case count 1412 and 92.07 percent coverage match gate-66aeb1011.json; its case transition is 1410 to 1412.",
+    "Independent sample 9: report.md:186 says the second check passed; second-check-d1b9d59.json has status pass.",
+    "Independent sample 10: five sampled K file-group counts at report.md:116, 118, 145, 159 and 107 match the K rows in classification.md:65, 92, 95, 106 and 54; values are 15, 7, 30, 1726 and 23.",
+    "Independent sample 11: report.md:191 baseline time 90.47 seconds matches baseline.json test_wall_seconds and baseline.log's Vitest output.",
+    "Independent sample 12: report.md:193 final time 98.11 seconds matches the final GREEN log; report.md:195 difference +7.64 seconds is correct.",
+    "The exact role range 997662659f962202e3314605f39ee5fbd8fcbf3b..aeaa6a11902e320b40bff38f9726ac2aec5e36c8 changes plan.md and report.md only. The apps/ path diff is empty.",
+    "The supplied phase range 997662659f962202e3314605f39ee5fbd8fcbf3b..aeaa6a11902e320b40bff38f9726ac2aec5e36c8 changes plan.md and report.md only.",
+    "All 91 named green, coverage, and proof log references found in report.md exist in the run directory.",
+    "No exported product symbol changed, so build-graph inspection was not applicable. The reviewed diff contains documentation only."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --name-status 997662659f962202e3314605f39ee5fbd8fcbf3b..aeaa6a11902e320b40bff38f9726ac2aec5e36c8",
+    "git diff --name-only 997662659f962202e3314605f39ee5fbd8fcbf3b..aeaa6a11902e320b40bff38f9726ac2aec5e36c8 -- apps",
+    "git diff --name-status 997662659f962202e3314605f39ee5fbd8fcbf3b..aeaa6a11902e320b40bff38f9726ac2aec5e36c8",
+    "git diff 997662659f962202e3314605f39ee5fbd8fcbf3b..aeaa6a11902e320b40bff38f9726ac2aec5e36c8 -- measure/tracks/www_test_audit_pilot_20261122/report.md measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "grep -nE 'F[0-9]|ADV-' measure/tracks/www_test_audit_pilot_20261122/report.md",
+    "grep -l '^dispositions:' measure/runs/www_test_audit_pilot_20261122/green-*.log",
+    "grep -l 'MEASURE_AGENT_RESULT' measure/runs/www_test_audit_pilot_20261122/green-*.log",
+    "for f in measure/runs/www_test_audit_pilot_20261122/green-*.log; do if grep -q '^dispositions:' \"$f\"; then if grep -q 'MEASURE_AGENT_RESULT' \"$f\"; then printf 'ROLE %s\\n' \"$f\"; else printf 'DISPOSITION_WITHOUT_MARKER %s\\n' \"$f\"; fi; elif grep -q 'MEASURE_AGENT_RESULT' \"$f\"; then printf 'MARKER_WITHOUT_DISPOSITION %s\\n' \"$f\"; fi; done",
+    "ls measure/runs/www_test_audit_pilot_20261122/green-*.log",
+    "tail -8 measure/runs/www_test_audit_pilot_20261122/green-4d168813.log",
+    "tail -8 measure/runs/www_test_audit_pilot_20261122/green-bcaa97f.log",
+    "tail -8 measure/runs/www_test_audit_pilot_20261122/coverage-4d168813.log",
+    "tail -8 measure/runs/www_test_audit_pilot_20261122/coverage-bcaa97f.log",
+    "read measure/runs/www_test_audit_pilot_20261122/green-5a104ba.log lines 57-77",
+    "python3 -c \"import json; from pathlib import Path; p=Path('measure/runs/www_test_audit_pilot_20261122'); names=['gate-0be4a037.json','gate-e332f594.json','gate-0d705612.json','gate-c577cdf.json','gate-adf24e7.json','gate-257a6b0c.json','gate-407c5d9.json','gate-66aeb1011.json']; [(lambda d,n:print(n,{k:d.get(k) for k in ['cases_before','cases_after','green_exit_code','line_coverage_pct']}))(json.load(open(p/n)),n) for n in names]\"",
+    "read measure/runs/www_test_audit_pilot_20261122/second-check-d1b9d59.json",
+    "python3 -c \"from pathlib import Path; import re; p=Path('measure/tracks/www_test_audit_pilot_20261122/report.md').read_text().splitlines(); i=p.index('| K file group | Cases | Mutation check | Other file proofs |'); j=next(n for n in range(i+1,len(p)) if p[n].startswith('## ')); rows=[x for x in p[i+2:j] if x.startswith('| src/')]; vals={x.split('|')[1].strip():int(x.split('|')[2].strip()) for x in rows}; cls=Path('measure/tracks/www_test_audit_pilot_20261122/classification.md').read_text().splitlines(); want=['src/lib/blog-posts-validation.test.ts','src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx','src/lib/__tests__/real-logos-captures-adversarial.test.ts','src/__tests__/www-tutor-reedy-claim.test.tsx','src/__tests__/www-pricing-page.content.test.tsx']; print('report K sample:',[(k,vals.get(k)) for k in want]); print('classification occurrences:',[(k,[x for x in cls if x.startswith('| '+k+' |')]) for k in want])\"",
+    "python3 -c \"import json; from pathlib import Path; p=Path('measure/runs/www_test_audit_pilot_20261122'); d=json.load(open(p/'baseline.json')); print('baseline',d.get('case_count'),d.get('line_coverage_pct'),d.get('test_wall_seconds')); f=json.load(open(p/'gate-66aeb1011.json')); print('final gate',f.get('cases_before'),f.get('cases_after'),f.get('line_coverage_pct'),f.get('green_exit_code'))\"",
+    "python3 -c \"from pathlib import Path; import re; base=Path('measure/runs/www_test_audit_pilot_20261122'); text=Path('measure/tracks/www_test_audit_pilot_20261122/report.md').read_text(); names=sorted(set(re.findall(r'\\\\b(?:green|coverage|proof)-[A-Za-z0-9-]+\\\\.log',text))); missing=[n for n in names if not (base/n).is_file()]; print('named log refs',len(names),'missing',missing)\""
+  ],
+  "changed_files": [
+    "measure/tracks/www_test_audit_pilot_20261122/report.md",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "The report's sampled arithmetic and F43-F45 corrections check out, but report.md:173 and plan.md:598-599 misstate Green log categories and counts."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "No test suite run was required for this artifact audit; existing Vitest logs and gate JSONs were independently checked."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The exact range changes only report.md and plan.md; the apps/ path diff is empty."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The audit records the exact HEAD, diff ranges, log inventory, four log tails, and twelve independent report samples."
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "role": "review-a",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 1: Baseline and classification",
+  "baseline_sha": "cbd023b1bd29333992f7511646cff1245191b049",
+  "phase_base_sha": "cbd023b1bd29333992f7511646cff1245191b049",
+  "role_base_sha": "d1b9d597b553f6033ef39029491eb2a13a550337",
+  "audited_head_sha": "d1b9d597b553f6033ef39029491eb2a13a550337",
+  "status": "pass",
+  "summary": "HEAD matches the supplied role base. The three disputed D1 rows now name behavior rewrites, the seven remaining D1 delete cases guard no user-visible behavior, and the 91 per-file count rows reconcile to 3,175.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "F1 withdrawn: classification.md:124, 130-131 change the three disputed D1 rows to rewrite and name rendered behavior: card order/full-width rows/column limits; the Origins 2 cover, D13 alt, and bullet anchoring; rendered portrait dimensions, approved files, alts, and dimensions.",
+    "F2 withdrawn: per-file-counts.md:9-99 contains 91 unique Vitest files; each runner count matches its row sum, and both totals are 3,175.",
+    "The seven remaining D1 delete cases are four rows: phase-3-group-b-types.test.ts (1) checks AST cast hygiene; phase-3-i18n.red.test.ts (3) checks source/static contracts while its rendered CTA behavior remains K; www-pricing-rows-fluid.red.test.ts (2) are source pins while three-row rendered behavior remains K; layout-components.test.ts (1) is a non-rendering migration guard.",
+    "Five source spot checks agree with per-file-counts.md: phase-3-group-b-types.test.ts has 5 test calls; phase-3-i18n.red.test.ts has 5; www-pricing-rows-fluid.red.test.ts has 5; layout-components.test.ts has 1; no-gse-in-customer-copy.test.ts has 4.",
+    "The classification summary calculates 2,843 + 67 + 22 + 0 + 6 + 221 + 16 = 3,175.",
+    "The round-2 rates are carried forward without a new sample: 3/37 rows (8.11%) and 15/322 counted cases (4.66%).",
+    "The exact phase diff cbd023b1bd29333992f7511646cff1245191b049..d1b9d597b553f6033ef39029491eb2a13a550337 changes classification.md and plan.md; the Red r3 diff 1d4ddd2c02acea93c50c715e043391113f4b2c03..d1b9d597b553f6033ef39029491eb2a13a550337 changes classification.md only.",
+    "The Phase 1 plan's claim that both baseline runner commands exited 0 is supported by baseline.log:16-17 and 32-34, with exit-0 results at lines 22 and 51."
+  ],
+  "commands": [
+    "git rev-parse HEAD — d1b9d597b553f6033ef39029491eb2a13a550337",
+    "git diff --name-status cbd023b1bd29333992f7511646cff1245191b049..d1b9d597b553f6033ef39029491eb2a13a550337 — classification.md and plan.md only",
+    "git diff --name-status 1d4ddd2c02acea93c50c715e043391113f4b2c03..d1b9d597b553f6033ef39029491eb2a13a550337 — classification.md only",
+    "Python per-file-counts.md reconciliation — 91 unique files; runner total 3,175; row total 3,175; no mismatches",
+    "Python source spot check — five files match runner and row counts: 5, 5, 5, 1, 4",
+    "Python classification arithmetic — 7 D1 delete cases; summary equals 3,175"
+  ],
+  "changed_files": [
+    "measure/tracks/www_test_audit_pilot_20261122/classification.md",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "disagreement_rate_rows": "3/37 (8.11%)",
+  "disagreement_rate_cases": "15/322 (4.66%)",
+  "sampled_rows": [],
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {"axis":"correctness","score":5,"evidence":"classification.md:124, 130-131 name rendered behaviors for all three repaired D1 rows."},
+    {"axis":"test_meaning","score":5,"evidence":"Five source files match their per-file counts; the seven retained deletes do not guard user-visible behavior."},
+    {"axis":"scope_discipline","score":5,"evidence":"git diff 1d4ddd2..d1b9d59 names classification.md only."},
+    {"axis":"evidence_quality","score":5,"evidence":"Python reconciliation reports 91 unique files, matching totals of 3,175, and no mismatches."}
+  ]
+}

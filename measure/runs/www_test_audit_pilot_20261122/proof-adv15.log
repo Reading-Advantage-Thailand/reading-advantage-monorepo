@@ -1,0 +1,59 @@
+MUTATION PROOF — ADV-15 local custom property override
+The pricing h1 now carries an inline --color-slate-900 declaration.
+Expected: the WCAG AA contrast case fails closed with the property name.
+Test exit code: 1
+--- test output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+stderr | src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx > Remaining Phase 4 browser regression contracts > contains related article content at a 390px viewport
+Received `true` for a non-boolean attribute `fill`.
+
+If you want to write it to the DOM, pass a string instead: fill="true" or fill={value.toString()}.
+
+ ✓ src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx > Remaining Phase 4 browser regression contracts > contains related article content at a 390px viewport 119ms
+ × src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx > Remaining Phase 4 browser regression contracts > keeps pricing hero text at WCAG-AA contrast 19ms
+   → Local custom property --color-slate-900 on <h1>
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx > Remaining Phase 4 browser regression contracts > keeps pricing hero text at WCAG-AA contrast
+Error: Local custom property --color-slate-900 on <h1>
+ ❯ assertNoLocalTokenOverrides src/__tests__/fixtures/contrast.ts:300:17
+    298|       for (const match of inline.matchAll(/(?:^|;)\s*(--[\w-]+)\s*:/g)…
+    299|         if (/^--color-/.test(match[1])) {
+    300|           throw new Error(
+       |                 ^
+    301|             `Local custom property ${match[1]} on <${node.tagName.toLo…
+    302|           );
+ ❯ Module.contrastOf src/__tests__/fixtures/contrast.ts:391:3
+ ❯ src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx:99:43
+ ❯ src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx:97:43
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  18:38:58
+   Duration  1.70s (transform 154ms, setup 69ms, import 880ms, tests 139ms, environment 437ms)
+

@@ -1,0 +1,63 @@
+Phase acceptance log: www_test_audit_pilot_20261122, Phase 1 (Baseline and classification)
+Audited HEAD: 51252ca9e09bd458052894304aaa7680b1daabc2 (current; git status clean at start).
+phase_base_sha: cbd023b1bd29333992f7511646cff1245191b049 (strategy commit, per test-strategy.md section 1.1).
+Phase 1 end: a1caa58034f6455e91205a5673ef172a974a7992. Track base: 635a604c89b2c909cfce33f555b7f043d4ea520f.
+Route: claude-agent/sonnet#xhigh.
+Result JSON: measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-51252ca.json (status fail).
+Probe script: measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-51252ca-probes.py (read-only, 79 PASS, 0 FAIL).
+
+PROVISIONAL VERDICT (written first): FAIL on one procedural blocker. Phase 1 content is accepted.
+
+Verdict: FAIL.
+The Phase 1 work meets tasks 1.1 to 1.4 and the Phase 1 gate checks.
+The one blocker is a missing prerequisite: the bounded adversarial pass for Phase 1.
+
+Blocking finding
+- F1: test-strategy.md sections 2, 3 and 7 require a bounded adversarial pass for Phase 1.
+  No adversarial result names Phase 1. The 15 results cover Phases 2, 3 and 4.
+  The pass targets a mislabeled K row and a duplicate that keeps no rule.
+  Two Phase 1 rows were wrong and passed a second-check sample: D4 navigation (F50) and D2 explicit-English (F51).
+  Review A of Phase 2 found both after the deletes. The restores are 9eb3b9c4f and fb5622ed7.
+
+Nonblocking findings
+- N1: the second check agreed with those two rows. Counting the navigation miss, 4 of 37 (10.8 %) stays under the 15 % stop rule.
+- N2: no Phase 1 artifact records the classifier route, so "different model family" cannot be shown from the record.
+- N3: plan task 1.3 says "Rate in the log". The final log gives no number; the JSON field and the 1d4ddd2 log hold it.
+
+What I verified (read-only)
+- Phase 1 diff cbd023b1b..a1caa5803: classification.md and plan.md only. Apps diff is empty from both the phase base and the track base.
+- Tasks 1.1 to 1.4 are [x]. Task SHAs 08bec4c36, d1b9d597b and a1caa5803 resolve.
+- baseline.json by label: case_count=3175, line_coverage_pct=86.52, file_count=91, status=pass. baseline.log agrees.
+- Runner proof: heavy-run.log has three "job ended exit 0" lines for the baseline runs. Start times match baseline.log.
+- First Phase 2 gate: cases_before=3175, cases_after=3168 (minus 7 D1 deletes). Coverage denominator 1559 lines equals the baseline.
+- classification.md: K rows first, class sums equal 3175, all 98 test files have a row, e2e and i18n-cli rows say not counted.
+- per-file-counts.md: 91 files match the row sums. Eight static counts match the runner counts.
+- K list: all seven tutor-commission files sit in K rows only. All D2 kept-duplicate files exist.
+- Second-check chain: 22.22 % (fail, stop rule), 8.11 % (F1 on three D1 rows), then pass after Red r3. Sample 37 of 129 rows (29 %).
+- Artifacts at HEAD: classification.md is byte-identical. The plan Phase 1 section differs only by added SHA lines.
+- A5 holds. A3, A4, A6 and A7 do not apply (no contract test, filter or registry file in the Phase 1 diff).
+
+Not run
+- The Phase 1 GREEN and COVERAGE suites. The Phase 1 tree is not checked out, and test-strategy.md section 1.5 forbids a second worktree.
+  The heavy-run log and the Phase 2 gate corroborate the baseline runs.
+
+Handoff options
+- Option A: run measure-adversarial-testing for Phase 1 at the current HEAD, bounded to classification.md and the baseline files. Then rerun this acceptance.
+  The probe script reruns unchanged.
+- Option B: the PM records an exception for F1. Cite adversarial-bfda22b.json (section 8 attack cases on the K list and e2e rows).
+  Cite also the K-file probes in final-acceptance-dc9d39d.json. Then rerun final acceptance.
+
+No file outside measure/runs/ changed. Nothing was committed.
+
+MEASURE_AGENT_RESULT
+role: measure-phase-acceptance
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 1: Baseline and classification
+commits: none
+tests_run: no Vitest run (the Phase 1 tree is not checked out); python3 -I phase-acceptance-p1-51252ca-probes.py passed 79 of 79; git diff and test -s gate commands passed; heavy-run.log shows three exit 0 baseline jobs
+files_changed: measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-51252ca.json, measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-51252ca.log, measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-51252ca-probes.py
+plan_updates: none (gate-only role)
+known_failures: F1 no Phase 1 adversarial result (test-strategy.md sections 2, 3 and 7); N1 two rows later restored passed the second check; N2 classifier route not recorded; N3 task 1.3 rate wording
+handoff: Verdict FAIL, retry_recommendation retry_audit. Phase 1 content verifies. One blocker, F1. Option A: run measure-adversarial-testing for Phase 1 at the current HEAD, then rerun this acceptance. Option B: the PM records an exception for F1, then final acceptance reruns. Nothing outside measure/runs changed and nothing was committed.
+END_MEASURE_AGENT_RESULT

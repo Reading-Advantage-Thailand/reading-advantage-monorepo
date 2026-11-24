@@ -1,0 +1,32 @@
+# Adversarial log: www test audit pilot, Phase 3, round 2 (re-judge)
+
+Audited head: 04e7ff8a8. Probe commit: 4de4b39ff.
+
+ADV-8 is closed. The shipped fixture lists every non-hidden file and
+flags Markdown-like non-.md files by name. A temporary .mdx and a
+temporary .markdown file were each named in three failing cases. A
+no-extension file was named. A post in a new ja folder with no en twin
+failed the title rule and was named.
+
+One new false pass: an uppercase .MD post is invisible. It is never
+parsed (the parse filter is case-sensitive) and never flagged (the
+mislabelled sweep omits a plain .md stem). Isolated, with only
+th/ZZ-ADV-UPPER.MD present, all 17 cases passed. ADV-11 routes to
+Green; the committed probe fails its ADV-11 case.
+
+The -segments.json allowance holds as designed. A post-shaped
+-segments.json file escaped every rule; real data companions stay
+ignored (ADV-12 note, optional hardening only).
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3), adversarial round 2
+commits: 4de4b39ff
+tests_run: pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts src/lib/blog-posts-validation.test.ts --reporter=dot (18 passed at 04e7ff8a8); pnpm --filter www-reading-advantage exec vitest run src/lib/blog-posts-validation.test.ts --reporter=verbose (named failures for noext, mdx, markdown, ja probes); pnpm --filter www-reading-advantage exec vitest run src/lib/blog-posts-validation.test.ts --reporter=dot (17 passed with only the .MD probe); pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts --reporter=verbose (1 failed, 1 passed)
+files_changed: apps/www-reading-advantage/src/__tests__/blog-posts-loader.adversarial.test.ts; measure/runs/www_test_audit_pilot_20261122/adversarial-04e7ff8.json; measure/runs/www_test_audit_pilot_20261122/adversarial-04e7ff8.log
+plan_updates: none
+known_failures: ADV-11 blocking. An uppercase .MD post escapes the merged blog validation.
+handoff: Route ADV-11 to Green. Green flags a case-insensitive .md suffix that is not exactly ".md" in blog-posts-validation.test.ts; the committed probe passes after the fix and stays as regression armor. ADV-8 is a closed note; ADV-9 and ADV-10 are kept notes; ADV-12 is an optional hardening note on -segments.json. Result JSON: measure/runs/www_test_audit_pilot_20261122/adversarial-04e7ff8.json.
+END_MEASURE_AGENT_RESULT

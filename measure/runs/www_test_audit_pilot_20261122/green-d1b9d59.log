@@ -1,0 +1,115 @@
+# Green run log: www test audit pilot (Green base d1b9d597b)
+
+Role: measure-jr-green. Route: opencode-go/hy4-flash-free#high (substitution).
+The first Green run on opencode/deepseek-v4.1-flash-free#high hit the free
+usage limit before any change, so this run is a substitution. A step-limit
+pause occurred mid-D1; this run continues from commit a1caa5803.
+
+## Base verification
+
+- HEAD at the first Green session start: d1b9d597b553f6033ef39029491eb2a13a550337.
+- role_base_sha for this resumed Green phase: a1caa58034f6455e91205a5673ef172a974a7992.
+- phase_base_sha (Phase 1): cbd023b1bd29333992f7511646cff1245191b049.
+- Red commits inside phase_base_sha..HEAD: 08bec4c36, 1d4ddd2c0, d1b9d597b.
+- Second-check chain: second-check-08bec4c.json (fail) -> Red r2 1d4ddd2c0
+  -> second-check-1d4ddd2.json (rate 8.1 %, under stop rule) -> Red r3
+  d1b9d597b -> second-check-d1b9d59.json (pass).
+- Baseline: case_count=3175, line_coverage_pct=86.52. Coverage gate floor:
+  85.52 percent.
+
+## Commits
+
+- a1caa5803 chore(measure): close www test audit phase 1
+  (track_id: www_test_audit_pilot_20261122). Marked plan tasks 1.3 and 1.4 [x].
+- D1 implementation commit: 0be4a0374748e38d7ad504815441f0a9b3e3ee12.
+  15 test files changed. One file deleted. No production file changed.
+- Plan evidence commit: c5914b92d6aecd668a0275cdb38b495947a60fa2.
+  Marked task 2.1 [x] with the SHA and the gate path.
+
+## D1 change summary
+
+Deleted the 7 D1-delete cases and rewrote the 60 D1-rewrite cases as behavior
+tests through public surfaces. No source .ts/.tsx text reads and no class-name
+pins remain in the changed files. Rewrites use rendered DOM (Testing Library
+roles/text and computed styles from real stylesheet declarations), real asset
+files, and imported locale data objects.
+
+Files changed (implementation):
+- src/__tests__/blog-figure-natural-size.test.ts (4 rewrite)
+- src/__tests__/blog-hero-height.red.test.ts (3 rewrite)
+- src/__tests__/hero-text-contrast.red.test.ts (2 rewrite)
+- src/__tests__/products-entrance-visibility.red.test.ts (3 rewrite)
+- src/__tests__/www-features-look-pins.red.test.ts (12 rewrite)
+- src/__tests__/phase-3-group-b-types.test.ts (1 delete)
+- src/__tests__/phase-3-i18n.red.test.ts (3 delete + 1 rewrite)
+- src/__tests__/phase-4-contact-authority.red.test.tsx (1 rewrite)
+- src/__tests__/www-pricing-rows-fluid.red.test.ts (2 delete)
+- src/components/layout/layout-components.test.ts (1 delete; file removed)
+- src/__tests__/www-reading-card.red.test.ts (3 rewrite)
+- src/__tests__/www-reading-cover.red.test.ts (4 rewrite)
+- src/__tests__/no-gse-in-customer-copy.test.ts (4 rewrite)
+- src/lib/__tests__/phase-w3-claims.test.ts (18 rewrite)
+- src/__tests__/www-batch-20261119.locale.test.ts (6 source-text rewrites;
+  D5 exact-copy pins preserved for a later class)
+
+Delete count: 7. No K row changed. No production code changed.
+
+## Local full-suite result (pre-gate)
+
+- Command: CI=true pnpm --filter www-reading-advantage exec vitest run
+  --maxWorkers=1 --reporter=dot
+- Result: 90 files passed, 3166 tests passed, exit 0.
+- Note: baseline 91 files / 3175 cases. The committed D1 state reports
+  90 files / 3168 cases in both heavy gates. The local count of 3166 above
+  was taken before the final edit state.
+
+## Heavy gates
+
+- GREEN_TEST_COMMAND: exit 0. 90 files passed, 3168 tests passed.
+  Log: measure/runs/www_test_audit_pilot_20261122/green-0be4a037.log.
+- COVERAGE_COMMAND: exit 0 with the documented command
+  `pnpm --filter www-reading-advantage test:coverage`.
+  90 files passed, 3168 tests passed.
+  Log: measure/runs/www_test_audit_pilot_20261122/coverage-0be4a037.log.
+- Lines: 89.92 percent (1402/1559). Baseline: 86.52 percent. Floor: 85.52 percent.
+- Statements 88.62 percent. Branches 81.03 percent. Functions 83.68 percent.
+- Gate evidence: measure/runs/www_test_audit_pilot_20261122/gate-0be4a037.json.
+- First coverage attempt used `test:coverage -- --maxWorkers=1` and exited 1.
+  The flag became a positional filter. src/lib/blog-draft.test.ts timed out
+  at 5000 ms. The documented command was rerun and passed.
+  Log: measure/runs/www_test_audit_pilot_20261122/coverage-0be4a037-first-attempt-failed.log.
+- measure/doctor.sh exited 1 at the architecture step. The tool reported a
+  V2 reconciliation snapshot hash mismatch, not a boundary verdict.
+  The strategy names GREEN and COVERAGE as the live gates. Both passed.
+
+## Targeted D1 deletion-set check
+
+- Command: git diff --name-only --diff-filter=D a1caa58034f..HEAD --
+  apps/www-reading-advantage
+- Output: apps/www-reading-advantage/src/components/layout/layout-components.test.ts
+- The path is the D1 delete row at classification.md line 135. No K row is deleted.
+- Classification rows 115-135 map to the 15 files in the implementation commit.
+
+## MEASURE_AGENT_RESULT
+
+MEASURE_AGENT_RESULT
+phase: Green
+track: www_test_audit_pilot_20261122
+phase_base_sha: cbd023b1bd29333992f7511646cff1245191b049
+role_base_sha: a1caa58034f6455e91205a5673ef172a974a7992
+green_head: c5914b92d6aecd668a0275cdb38b495947a60fa2
+tasks_completed: 2.1; implementation 0be4a0374748e38d7ad504815441f0a9b3e3ee12,
+  plan evidence c5914b92d6aecd668a0275cdb38b495947a60fa2
+tasks_deferred: 2.2-2.6, 3.x, 4.x (later rounds)
+tasks_blocked: none
+targeted_red_command: git diff --name-only --diff-filter=D a1caa58034f..HEAD
+  -- apps/www-reading-advantage; one path, layout-components.test.ts,
+  a D1 delete row; no K row deleted
+new_files: measure/runs/www_test_audit_pilot_20261122/gate-0be4a037.json,
+  green-0be4a037.log, coverage-0be4a037.log,
+  coverage-0be4a037-first-attempt-failed.log; untracked run artifacts,
+  as in Phase 1
+handoff: D1 is done. GREEN and COVERAGE exit 0. Line coverage is 89.92 percent
+  against a floor of 85.52 percent. doctor.sh exits 1 at the architecture tool
+  step, outside the strategy gates. D2-D5 go to the next Green round.
+END_MEASURE_AGENT_RESULT

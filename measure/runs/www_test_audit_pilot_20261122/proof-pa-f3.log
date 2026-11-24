@@ -1,0 +1,39 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+······················x····
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/www-tutor-reedy-claim.test.tsx > AC-24: the Reedy block keeps three bullets > en: the first rendered bullet keeps the active-package and finished-lesson limits
+AssertionError: en: the eligibility clause must hold: expected [ …(2) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "en: the eligibility clause must not name an inactive package (/\\binactive\\b/i)",[39m
+[31m+   "en: activePackage must carry the active word",[39m
+[31m+ ][39m
+
+ ❯ expectEligibilityFacts src/__tests__/www-tutor-reedy-claim.test.tsx:227:5
+    225|     eligibilityBreaks(value, locale, facts),
+    226|     `${locale}: the eligibility clause must hold`,
+    227|   ).toEqual([]);
+       |     ^
+    228| }
+    229|
+ ❯ src/__tests__/www-tutor-reedy-claim.test.tsx:408:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 26 passed (27)
+   Start at  11:08:01
+   Duration  1.42s (transform 212ms, setup 58ms, import 338ms, tests 440ms, environment 422ms)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run '--maxWorkers=1' '--reporter=dot' src/__tests__/www-tutor-reedy-claim.test.tsx
