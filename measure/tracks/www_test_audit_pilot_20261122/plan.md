@@ -683,3 +683,34 @@ Each task below is one commit for one class.
   The brief subject was 101 characters. Commitlint rejects headers over 100,
   so the subject says counts instead of numbers and is 100 characters.
   No --no-verify was used. No push was made.
+- [x] 4.15 ADV-25 temp directory fix and late findings (e993f5aa1)
+  Commit: e993f5aa1fce6835e06a6a265fe1c6e39483b5b3.
+  Report wording commit: 9ccdeac32567ebcb048fabb21f77533a51588c78.
+  ADV-25: the ADV-22 symlink probe builds its base with fs.mkdtempSync under
+  os.tmpdir() and removes it in the test's finally block. All assertions stay.
+  The two read-only source-root fallbacks in primary-page-images.test.ts and
+  storytime-page-images.test.ts now use os.homedir() instead of a literal home
+  path, so their active cases and coverage stay unchanged. No hard-coded
+  /home/daniebo remains under apps/www-reading-advantage/src.
+  Heavy-run gates passed: the targeted file ran 3 tests; the full suite ran
+  1413 tests in 98 files; coverage is 92.08 percent lines, above the 85.52
+  floor; check-types and lint exited 0 with three pre-existing warnings.
+  Case count and coverage did not change, so the report values stand.
+  The brief subject was 104 characters. Commitlint rejects headers over 100,
+  so the subject drops one article and is 100 characters. No --no-verify.
+  Late finding L1: tech-debt. The report named a timing run at head. The run
+  used timing-at-head.json, which holds 1412 tests, so it ran at the pre-merge
+  head. The report now says pre-merge head.
+  ADV-26 to ADV-30 are listed as tech-debt:
+  - ADV-26: the 2027 home suite line has weak non-English guards; a Thai year
+    edit or clause removal passes.
+  - ADV-27: expected-copy fixture fields are unpinned; LABEL_COPY, ROW_B home
+    and APPROVED_SCHOOL_YEAR mutations pass.
+  - ADV-28: the Thai month class has controls for 4 of 12 months; deleting the
+    other eight passes.
+  - ADV-29: a YAML error fails blog-posts-validation at collection and names
+    no post, as in the baseline.
+  - ADV-30: the .mdx and .MD probes write into the real en posts tree; parallel
+    overlap is a static risk.
+  L1 and ADV-26 to ADV-30 were added to measure/tech-debt.md in this commit.
+  One Resolved row from 2026-06-03 was pruned to keep that file at 50 lines.
