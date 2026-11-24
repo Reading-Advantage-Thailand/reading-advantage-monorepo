@@ -63,6 +63,7 @@ _Pin update (PM relay, 2026-10-26): the source set moved to advantage-pr ec63bc4
 _Re-pin commit (PM, 2026-10-26): the re-pin to advantage-pr ec63bc4 landed in commit `2c69dc328`. A storytime commit took the staged sales files from the shared git index. The PM kept that commit as it is (no split). `2c69dc328` is the re-pin commit for this track._
 _Re-pin commit (PM hand-off, 2026-11-11): the source set moves to advantage-pr 7eff8c10, which replaces e7ee72b6; the tone fix of 2026-11-11 applies, and the row review sits in `review/repin-7eff8c10.md`. A count answers a direct question only, no limit is volunteered, the Managed Service line changes, and the team size leaves the pitch._
 _Re-pin (PM hand-off, 2026-11-15): the source set moves to advantage-pr 609f962e ("pr-guidance: Review A 0c2ad2d remediation (sales dates, versions, links)"); row review in review/repin-609f962e.md._
+_Re-pin (PM hand-off, 2026-11-24): the source set moves to advantage-pr 1c531677 (pr: Q-RE-09 review fixes F1 SHA evidence, F2 effect size out of changelog and plan (T1.165 r2)); row review in review/repin-1c531677.md._
 _Known red gates until S9/S10 (approval pins, not changed on purpose): `scripts/sales-curriculum-production.test.ts` (cardinalities and pinned digest), `scripts/sales-curriculum-reconciliation.test.ts` (approved digest `ccba54…`), `scripts/production-readiness.test.ts` (approved candidate), and 8 tests in `packages/sales-knowledge` (approved coordinates)._
 
 - [x] Task: Contract — the new document list `84b151b7f`
