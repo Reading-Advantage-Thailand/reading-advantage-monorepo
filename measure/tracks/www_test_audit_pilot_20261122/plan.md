@@ -535,9 +535,10 @@ Each task below is one commit for one class.
   The pre-merge raw case cut is 1763 cases, or 55.5 percent of the 3175
   baseline, at e91c4d4cc (measure/runs/www_test_audit_pilot_20261122/baseline.json
   and measure/runs/www_test_audit_pilot_20261122/gate-66aeb1011.json).
-  The final cut after the master merge 6ee56327b is 1762 cases, with 1413
-  cases and 92.08 percent line coverage
-  (measure/runs/www_test_audit_pilot_20261122/green-merge-e836e7289.log).
+  The final cut after the master merge 6ee56327b and the commission FAQ pin
+  ca91946b is 1761 cases, with 1414 cases and 92.08 percent line coverage
+  (measure/runs/www_test_audit_pilot_20261122/green-at-ca91946b.log,
+  coverage-at-ca91946b.log).
   The 20 percent target is met. Pre-merge line coverage rose from 86.52
   percent to 92.07 percent (baseline.json and gate-66aeb1011.json).
   All Phase 4 report gates exited 0.
@@ -737,3 +738,22 @@ Each task below is one commit for one class.
   and labelled task 4.3 as pre-merge. The Phase 4 heading now writes L1 and
   ADV-26 to ADV-32 as one late-finding line each in the contract form.
   No test or production file changed. No push was made.
+- [x] 4.17 Commission FAQ pin and Phase 1 erratum (ca91946b)
+  Commit: ca91946bfe314ca55a55874d03b5cba6a597993c.
+  Source: measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca.json.
+  ADV-P1-1: www-tutor-calculator.locale.test.ts asserts the exact en and th
+  text of faq.items.5.answer through LIVE_LINE_PINS. The Thai mutation
+  "settles yearly, flat rate" fails the named case with exit 1. Proof log:
+  measure/runs/www_test_audit_pilot_20261122/green-p1-thai-breakage.log.
+  The live locale copy was restored byte for byte after the proof.
+  Heavy-run gates passed: the targeted file ran 19 tests; the full suite ran
+  1414 tests in 98 files; line coverage is 92.08 percent, above the 85.52
+  floor; check-types and lint exited 0 with three pre-existing warnings.
+  The final cut is 1761 cases, or 55.5 percent of the 3175 baseline. Earlier
+  counts of 1413 in tasks 4.13 to 4.15 are at their named heads.
+  ADV-P1-2, ADV-P1-3, ADV-P1-4 and ADV-P1-6 are recorded in classification.md
+  and report.md: the restored rows carry errata, the K share is 89.5 percent,
+  both halves of fb5622ed7 are named, and the ex post second-check rate is
+  6 of 37, or 16.2 percent. The PM accepted that rate as a disclosed exception
+  on 2026-11-24, because the rows were restored in Phases 2 and 3.
+  No push was made.

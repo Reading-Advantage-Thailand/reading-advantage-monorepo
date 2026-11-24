@@ -147,6 +147,9 @@ runner count, and row sum for all 91 files; every file matches.
 | src/lib/__tests__/tutor-screens.adversarial.test.ts | ADV-M4 slot order is fixed (portrait half rides with the manifest pins) | 1 | tutor-screens.test.ts EXPECTED order and portrait pins |
 | src/__tests__/phase-3-i18n.red.test.ts | (no D2 row: the bypass-cast grep duplicates group-b case 4, but both are D1 and both go) | 0 | — |
 
+Erratum: the explicit-English row was restored in `fb5622ed7`.
+Erratum: the Primary "no old test id" row was restored in `fb5622ed7`.
+
 ## D3 rows (dead target: delete)
 
 None. Both image-source suites validate live output images against
@@ -159,6 +162,8 @@ sources that exist in this environment, so note 2 keeps them as K.
 | src/locales/navigation.test.tsx | returns the active locale ×3 | 3 | echoes the mocked locale; no logic under test |
 | src/lib/__tests__/real-logos-captures.red.test.ts | names the first and last capture | 2 | pins the test file's own filename literals |
 | src/lib/__tests__/primary-page-images.test.ts | are present when A34_REQUIRE_SOURCES=1 | 1 | returns early and passes vacuously without the env flag |
+
+Erratum: the navigation row was restored in `9eb3b9c4f`; its th and zh cases were not deleted.
 
 ## D5 rows (copy pin on a marketing line: replace with a locale-key check)
 
@@ -178,6 +183,8 @@ sources that exist in this environment, so note 2 keeps them as K.
 | src/__tests__/phase-4-contact-copy.red.test.tsx | raw handle plus platform phrase; rendered TikTok phrase ×3 | 4 | exact TikTok sentences (config value stays covered by the contact-authority test) |
 | src/__tests__/www-reading-card.red.test.ts | alts the cover in English per D13 | 1 | exact CARD_IMAGES alt pin (the rendered cover-alt case holds the rule) |
 | src/app/[locale]/(marketing)/products/codecamp-advantage/page.test.tsx | keeps the real production denominators | 1 | exact stat pins ("4", "20", "106") and marketing phrases |
+
+Erratum: the live-line en and th pins for `faq.items.5.answer` were restored in `ca91946b`.
 
 ## R1 rows (over-mocked: rewrite against a boundary fake)
 
@@ -223,7 +230,7 @@ Runner counts per class (Vitest suite, 3175 cases):
 
 | Class | Cases | Share | Action |
 |---|---|---|---|
-| K keep | 2843 | 89.6 % | keep |
+| K keep | 2843 | 89.5 % | keep |
 | D1 source-text | 67 | 2.1 % | delete 7; rewrite 60 per note 3 |
 | D2 duplicate | 22 | 0.7 % | delete, kept duplicate named |
 | D3 dead target | 0 | 0.0 % | none meets note 2 |
