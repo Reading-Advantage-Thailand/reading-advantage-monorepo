@@ -197,7 +197,7 @@ PM-approved items and recorded deviations are in `plan.md` under Recorded deviat
 Before: `Test Files  91 passed (91)`, `Tests  3175 passed (3175)`, `Duration  90.47s (transform 1.33s, setup 4.25s, import 8.62s, tests 32.00s, environment 37.01s)` (`measure/runs/www_test_audit_pilot_20261122/baseline.log`, GREEN tail). The same value is `test_wall_seconds=90.47` in `baseline.json`.
 
 After the pilot cuts, before the master merge: `Test Files  98 passed (98)`, `Tests  1412 passed (1412)`, `Duration  98.11s (transform 1.34s, setup 4.43s, import 16.37s, tests 27.05s, environment 41.28s)` (`measure/runs/www_test_audit_pilot_20261122/green-66aeb1011.log`).
-After the master merge and the commission FAQ pin at `ca91946b`: `Test Files 98 passed (98)`, `Tests 1414 passed (1414)`, and 92.08 % line coverage (`measure/runs/www_test_audit_pilot_20261122/green-at-ca91946b.log`, `coverage-at-ca91946b.log`).
+After the master merge and the commission FAQ pin at `ca91946b`: `Test Files  98 passed (98)`, `Tests  1414 passed (1414)`, and 92.08 % line coverage (`measure/runs/www_test_audit_pilot_20261122/green-at-ca91946b.log`, `coverage-at-ca91946b.log`).
 
 The difference between the baseline and the pre-merge run is +7.64 seconds (`baseline.log`, `green-66aeb1011.log`; computed from those two lines). Both of those runs used the shared runner with `HEAVY_PREFLIGHT_WAIT_S=3600` (`baseline.log`; `gate-66aeb1011.json`, green command). Both used the same Vitest command with one worker and the dot reporter (`baseline.log`, `gate-66aeb1011.json`). The baseline and pre-merge runs are comparable.
 

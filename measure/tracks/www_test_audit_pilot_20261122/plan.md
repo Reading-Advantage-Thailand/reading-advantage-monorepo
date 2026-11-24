@@ -756,4 +756,10 @@ Each task below is one commit for one class.
   both halves of fb5622ed7 are named, and the ex post second-check rate is
   6 of 37, or 16.2 percent. The PM accepted that rate as a disclosed exception
   on 2026-11-24, because the rows were restored in Phases 2 and 3.
+  ADV-P1-5: per-file-counts.md rests on a JSON reporter output that no longer
+  exists, with 0 retained runner JSON files; 1858 of 3175 cases were re-derived
+  independently. Accepted as a note.
+  ADV-P1-7: two zero-case sentinel rows sit in D sections; both files hold K
+  rows, and the rows are excluded from every sum. Accepted as a note.
+  N5, N6 and N7 fix the D4 erratum, the section 7 quote form and these records.
   No push was made.

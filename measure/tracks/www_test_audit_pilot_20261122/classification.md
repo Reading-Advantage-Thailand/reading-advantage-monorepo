@@ -163,7 +163,7 @@ sources that exist in this environment, so note 2 keeps them as K.
 | src/lib/__tests__/real-logos-captures.red.test.ts | names the first and last capture | 2 | pins the test file's own filename literals |
 | src/lib/__tests__/primary-page-images.test.ts | are present when A34_REQUIRE_SOURCES=1 | 1 | returns early and passes vacuously without the env flag |
 
-Erratum: the navigation row was restored in `9eb3b9c4f`; its th and zh cases were not deleted.
+Erratum: The th and zh cases of the navigation row were restored in `9eb3b9c4f`; the en case stays deleted.
 
 ## D5 rows (copy pin on a marketing line: replace with a locale-key check)
 
