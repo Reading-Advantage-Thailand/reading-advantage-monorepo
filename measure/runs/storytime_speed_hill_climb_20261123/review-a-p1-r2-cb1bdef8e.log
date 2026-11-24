@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: storytime_speed_hill_climb_20261123
+phase: Phase 1: The sign-in LCP art
+commits: none
+tests_run: HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/entry-art-lcp.test.tsx' — passed, 6 tests
+files_changed: measure/runs/storytime_speed_hill_climb_20261123/review-a-p1-r2-cb1bdef8e.json; measure/runs/storytime_speed_hill_climb_20261123/review-a-p1-r2-cb1bdef8e.log
+plan_updates: none
+known_failures: none
+handoff: F1 withdrawn after checking the revised spec and all remaining desktop portrait sharpness claims. The existing 1080px original limits the desktop portrait art to about 2.4 source pixels per CSS pixel at DPR 3, as before this change. The phone-box statement in test-strategy.md:131 concerns the landscape source and is accurate. The targeted test passed all 6 cases.
+END_MEASURE_AGENT_RESULT

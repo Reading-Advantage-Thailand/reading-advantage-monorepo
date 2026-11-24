@@ -1,0 +1,111 @@
+# Phase acceptance log: Phase 1 of track storytime_speed_hill_climb_20261123
+
+Track: storytime_speed_hill_climb_20261123.
+Phase heading: Phase 1: The sign-in LCP art.
+Repo (worktree): /home/daniebo/Desktop/rama-worktrees/storytime-speed, branch storytime/speed-20261123.
+Phase base: e3b93ca3382c648d61a4a84ae590d9980224711f (track creation commit).
+Role base and audited HEAD: dcc136c1f340496bdb6276de115619cb32011857.
+Result file: measure/runs/storytime_speed_hill_climb_20261123/phase-acceptance-p1-dcc136c1f.json.
+Route: opencode/deepseek-v4.1-flash-free#high.
+Date: 2026-11-24.
+
+## HEAD currency
+
+`git rev-parse HEAD` returned dcc136c1f340496bdb6276de115619cb32011857. It equals the supplied
+audited_head_sha and role_base_sha. `git status --porcelain` printed no line before and after the
+runs. The build wrote no tracked file; apps/storytime/next-env.d.ts stayed unchanged.
+
+## Commit chain and phase base
+
+`git log --oneline -8` prints the named chain:
+
+- e3b93ca33 chore(measure): add storytime speed hill climb track (phase base)
+- 25a5a3abf test(storytime): pin the eager sign-in art (Red)
+- 96031a183 docs(storytime): record the red evidence of 1.1.1
+- 4865f0273 perf(storytime): load the sign-in art eagerly (Green)
+- fa0d7f701 docs(storytime): record green evidence
+- cb1bdef8e docs(storytime): correct portrait sharpness claim (spec fix)
+- dcc136c1f docs(storytime): close 1.1.5, add closeout notes (plan close)
+
+`git log --oneline -3 e3b93ca33` tops at the track creation commit, whose parent is 251d7d41e, so
+e3b93ca33 is the phase base. The Red commit holds the test file only. The Green commit holds
+entry-art.tsx and the four WebP files. The docs commits hold plan.md and spec.md only.
+
+## Prerequisites on the audited code
+
+- Review A r2: pass at cb1bdef8e, file review-a-p1-r2-cb1bdef8e.json. F1 is withdrawn after the
+  spec D-2 correction. No Blocker and no Major stays open.
+- UX browser review: pass at cb1bdef8e, file ux-browser-p1-cb1bdef8e.json. 192/192 browser checks
+  and 9/9 gate checks at 390, 980, and 1280 px.
+- Review A r1: fail at fa0d7f701 on F1, the desktop portrait sharpness overstatement. The spec fix
+  at cb1bdef8e closes it; r2 records the withdrawal.
+
+The advance from cb1bdef8e to dcc136c1f is docs-only. `git diff --stat cb1bdef8e..HEAD` lists
+plan.md and spec.md only. The Red test file is byte-identical to 25a5a3abf. The product code is
+unchanged, so the results at cb1bdef8e still describe the audited code. I name the allowed
+docs-only commits: cb1bdef8e and dcc136c1f, and I judge the exact HEAD dcc136c1f.
+
+## Gate applicability
+
+- Review B: does not apply. The diff changes no auth, session, data path, input handling, form
+  action, or redirect rule.
+- Review C: does not apply. The diff changes no API, route, locale key, or exported contract.
+- Adversarial testing: not assigned. The lane is light, and the spec's falsifiers are the byte
+  bound, the pixel pins, and the markup cases, which Review A read.
+- A3, A4, A6, and A7: do not apply. The phase diff changes no contract test, filter, or tracks
+  registry surface. The track holds no rg -q digit count and no markers-consistency check.
+
+## Work verified
+
+- Tasks 1.1.1 to 1.1.7 are [x] with commit evidence. `grep -c '\[ \]'` finds only the marker legend
+  line, and the plan holds no open task marker.
+- AC-1, AC-2, and AC-3: entry-art.tsx:64-81 carries the eager img, the three landscape candidates,
+  the three portrait candidates, and both sizes values. The four new files are WebP at 720x405,
+  1280x720, 720x1280, and 960x1707, at 29070, 71910, 102418, and 141266 bytes.
+- AC-4: the L6 case asserts status 307 and the exact Location, then the eager art at that target.
+- AC-5: the three named guard files pass 44/44. The whole suite exits 1 with 2 failed files and 10
+  failed tests, all from the absent gitignored media-list artifact. The set is pre-existing and
+  smaller than the 22 files at plan.md:77.
+- AC-6: the PM-accepted gap is recorded. Median LCP 2815.5 ms against 2500 ms; baseline 4.0 s and
+  score 0.77 to 0.95. Plan.md:59-62 and spec.md:141 hold the record.
+- AC-7: the UX gate passes, with the base-comparison gap recorded at plan.md:107.
+- AC-8: Review A r2 passes with no open Blocker or Major.
+- AC-9: plan.md:50 names the cold start, cloudbuild.yaml:44-51, and lib/auth/index.ts:119, and
+  ships no fix.
+- AC-10: no dependency, lockfile, hash field, deploy task, or traffic task enters the range.
+- A5: the plan records real command results for the targeted test, check-types, and build. Two
+  record sentences are inaccurate (N1 and N2), and neither hides a product result. N1's own
+  evidence block records the 22 failed files.
+
+## Commands run
+
+All heavy commands ran through heavy-run.sh with HEAVY_PRIORITY=p1 and no redirection.
+
+- Targeted Red/Green test: exit 0, 6/6 tests.
+- Guard files look-assets, entry-signin-layout, and login-proxy: exit 0, 44/44 tests.
+- Whole app suite: exit 1, 2 failed files, 10 failed tests, all from the missing media-list file.
+- check-types: exit 0.
+- lint: exit 0, 0 errors, 45 warnings.
+- build: exit 1 on the first run with the security notice, exit 0 on the retry.
+- measure_interphase_checks.py status: incomplete_phases 0, worktree clean.
+
+## Findings
+
+No blocking finding. Five record-level notes are nonblocking: N1 the plan.md:53 suite exit-0
+sentence, N2 the pinned counts and the 41-to-45 lint drift, N3 the store-read line 121 versus 120,
+N4 the UX base-comparison gap, and N5 the stale measure/tracks.md status and the Phase acceptance
+row. The late-finding stop rule sends records to measure/tech-debt.md, not to Green.
+
+MEASURE_AGENT_RESULT
+role: measure-phase-acceptance
+status: pass
+track: storytime_speed_hill_climb_20261123
+phase: Phase 1: The sign-in LCP art
+commits: none
+tests_run: heavy-run vitest entry-art-lcp.test.tsx exit 0 with 6/6; heavy-run vitest look-assets plus entry-signin-layout plus login-proxy exit 0 with 44/44; heavy-run whole app suite exit 1 with 2 failed files and 10 failed tests, all from the absent gitignored media-list artifact; heavy-run check-types exit 0; heavy-run lint exit 0 with 45 warnings; heavy-run build exit 1 on the first security-notice run and exit 0 on the retry
+files_changed: measure/runs/storytime_speed_hill_climb_20261123/phase-acceptance-p1-dcc136c1f.json; measure/runs/storytime_speed_hill_climb_20261123/phase-acceptance-p1-dcc136c1f.log
+plan_updates: none; five nonblocking record notes N1 to N5 go to the orchestrator as measure/tech-debt.md items or a small plan-text commit
+known_failures: none blocking; whole-suite 2 failed files and 10 failed tests from the absent gitignored measure/runs/storytime_app_rebuild_20261025/media-list-w01.md, present at the phase base; PM-accepted LCP median 2815.5 ms against 2500 ms, recorded at plan.md:59-62
+dispositions: none
+handoff: Phase 1 passes at HEAD dcc136c1f. All seven tasks are [x], the targeted test is 6/6, the three AC-5 guard files are 44/44, check-types is 0, and the build is 0 on retry. Review A r2 and the UX review pass at cb1bdef8e, and only plan.md and spec.md changed after it. N1 to N5 are record notes, not product defects; plan.md:53 still says the whole suite exits 0 and plan.md:77 pins counts that drifted. The change joins the launch-day deploy batch, which needs Daniel's word; this track holds no deploy or traffic task.
+END_MEASURE_AGENT_RESULT

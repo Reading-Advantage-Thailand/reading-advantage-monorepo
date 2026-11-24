@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "role": "measure-final-acceptance",
+  "track": "storytime_speed_hill_climb_20261123",
+  "track_id": "storytime_speed_hill_climb_20261123",
+  "phase": "track review",
+  "round": "r2",
+  "supersedes": "final-acceptance-track-dcc136c1f.json (fail, blocked on the Red and Green routes)",
+  "baseline_sha": "e3b93ca3382c648d61a4a84ae590d9980224711f",
+  "track_base_sha": "e3b93ca3382c648d61a4a84ae590d9980224711f",
+  "phase_base_sha": "e3b93ca3382c648d61a4a84ae590d9980224711f",
+  "role_base_sha": "b1a954eda4ed19afc1f1937f71e8279e52042719",
+  "audited_head_sha": "b1a954eda4ed19afc1f1937f71e8279e52042719",
+  "summary": "Final acceptance r2 passes at HEAD b1a954eda. The r1 blocker is closed: the orchestrator supplied the routes, and every independence pair differs. Red is Muse, Green is hy, Review A and UX are OpenAI, phase acceptance is DeepSeek, and this role is Anthropic. The only change since dcc136c1f is plan.md, and no product code changed. The plan closeout check now returns no feedback. The new plan text matches the evidence, with one stale fragment at plan.md:77. The role gate passes with exit 0, with lint, check-types, and the four light test files. The doctor gate still exits 1 from a stale architecture pin that predates this track.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F1 [Nit] final-acceptance: One fragment of the new plan.md:77 text is stale. It says the suite exits 1 with the same failure set as the phase base, and that the diff prints one deletion and no addition. Those words describe the Green run of 22 failed files. The phase acceptance run at dcc136c1f shows 2 failed files, a subset of the base set, and the cited log holds no such diff. The text understates the result and hides no failure. Route: tech-debt (a record sentence, not a product file). Optional fix in the closeout commit: write a subset of the phase base failure set and drop the diff clause.",
+    "F2 [Nit] final-acceptance: No spec-review role result exists, and the orchestrator ran no spec-review spawn. Decision: SKILL.md exempts only the final acceptance for the light lane (metadata lane light). The spec review gate has no light-lane exemption, and neither the spec header nor test-strategy.md says otherwise. The build session ran a Round 1 review (spec-review.md) with 2 Major and 2 Nit findings, all fixed. Its route is not recorded, so independence from the spec author (opencode-go/deepseek-v4.1-flash) cannot be checked. Record this as a deviation. No new review is needed: Review A, the phase acceptance, and this role read the spec against the finished code, and closeout does not check for it.",
+    "F3 [Nit] final-acceptance: The Red, Green, and UX routes come from the orchestrator read of the session list. No artifact in the repository records them: the Red and Green logs hold no route line, and the UX JSON holds no route key. The Review A and phase acceptance routes match their JSON files. Fix: the closeout manifest records all six routes.",
+    "F4 [Nit] final-acceptance: bash measure/doctor.sh still exits 1 at b1a954eda. The four guard steps pass, and the plan edit broke none. The architecture step prints Analyzer input snapshot hash does not match current bytes. The pin was stale before this track: the manifest changed last at d782cc169 on 2026-11-22, and 18 source files changed in 18 commits before the track parent. This track did not touch the manifest, and no source file changed since r1. Ask the PM to waive it as in the 2026-11-18 final acceptance.",
+    "F5 [Nit] final-acceptance: The UX evidence gap of r1 (N4) stays. The screenshot folder /home/daniebo/.cache/opencode/storytime-entry-gate-2669858 no longer exists. The result holds no base screenshot, no console capture, and no accessibility snapshot. No plan line claims a screenshot count. AC-7 holds on independent proof: entry.css is unchanged, the LCP box stays 372 by 176, the layout shift stays 0.0725 against 0.073, and SSIM against the originals is at least 0.955.",
+    "F6 [Nit] final-acceptance: Four items stay with closeout. Metadata.json and the tracks.md note still state the 2.5 s goal, while the median is 2815.47 ms (PM-accepted gap). Measure/tracks.md:49 still reads Status: new. The plan.md:91 row says final acceptance is pending, and this pass makes that stale. The plan open question Q1 (the deploy batch list) stays with the PM. The metadata lane is light, so the closeout check needs no final acceptance.",
+    "F7 [Nit] final-acceptance: The Red log baseline_sha reads 251d7d41ead56edc8ec6f6a67a486a6. It has 31 characters and does not resolve. The real parent of the track commit is 251d7d41ead56ed1542af9bfc8ec6f6a67a486a6. Every audit result uses e3b93ca33, so no gate is affected."
+  ],
+  "evidence": [
+    "HEAD: git rev-parse HEAD prints b1a954eda4ed19afc1f1937f71e8279e52042719. It equals the supplied audited_head_sha. Its parent is dcc136c1f340496bdb6276de115619cb32011857. git status --porcelain prints nothing. The branch is storytime/speed-20261123.",
+    "Change since r1: git diff dcc136c1f..HEAD --stat prints plan.md with 4 insertions and 4 deletions. git diff dcc136c1f..HEAD --name-status prints M plan.md only. git diff --check exits 0. git diff --name-only dcc136c1f..HEAD over apps, packages, services, integrations, pnpm-lock.yaml, and package.json prints nothing, so no product code changed.",
+    "Diff scope: git diff --name-status e3b93ca33..HEAD prints the same eight paths as r1: A entry-art-lcp.test.tsx, M entry-art.tsx, A four WebP files, M plan.md, M spec.md. The count over pnpm-lock.yaml, package.json, apps/storytime/package.json, entry.css, and the join folder is 0. All eight commits of e3b93ca33^..HEAD carry (track_id: storytime_speed_hill_climb_20261123).",
+    "Path diff, latest result (phase acceptance, audited dcc136c1f340496bdb6276de115619cb32011857): git diff --name-only dcc136c1f340496bdb6276de115619cb32011857 HEAD prints measure/tracks/storytime_speed_hill_climb_20261123/plan.md only. The audited HEAD of that result differs from HEAD, so each later commit must be covered. b1a954eda lists only the plan file, so it is covered.",
+    "Path diff, my audited HEAD: git diff --name-only HEAD HEAD prints nothing. My audited HEAD equals current HEAD.",
+    "Path diff, Review A r2 and UX (audited cb1bdef8ea0cf9cf92ccc9e428d910af0f057b31): git diff --name-only cb1bdef8ea0cf9cf92ccc9e428d910af0f057b31 HEAD prints plan.md and spec.md of the track. Spec.md holds one added line, the PM decision text of AC-6, from dcc136c1f. These two results are not the latest result, and no product, test, or lockfile path changed after cb1bdef8e.",
+    "Path diff, Review A r1 (audited fa0d7f701c571c373484b67e01254aaa20dd03e7): git diff --name-only fa0d7f701c571c373484b67e01254aaa20dd03e7 HEAD prints plan.md and spec.md of the track. Review A r1 is a fail that r2 replaced.",
+    "Ancestry: git merge-base --is-ancestor answers yes for the baseline e3b93ca33 against each audited HEAD (fa0d7f701, cb1bdef8e, dcc136c1f, b1a954eda) and for each audited HEAD against HEAD. Ten of ten answers are yes.",
+    "Phase acceptance: the runs folder holds exactly one phase-acceptance result, phase-acceptance-p1-dcc136c1f.json, status pass. The role gate at b1a954eda prints PASS: phase-acceptance gate passed, exit 0. This verifies the new plan row text role gate passed.",
+    "Status: measure_interphase_checks.py status prints head b1a954eda4ed19afc1f1937f71e8279e52042719, worktree clean, incomplete_phases 0, closeout_candidates 1 ([C1] this track). In r1 the value was 0.",
+    "Plan closeout check: importing measure_interphase_checks.py with python3 -I and calling plan_closeout_feedback on plan.md returns an empty list. track_incomplete returns 0. phase_counts returns (1, 1, 0, 0, 1), so the top task line now holds a SHA. In r1 the check returned four lines.",
+    "Plan diff, line 26 (task 1.1): the line now ends with Commits: 4865f0273 (Green). 4865f0273 is the Green commit 4865f0273562306225bbbc311e8cbd5c8b7b077d. Children 1.1.1, 1.1.6, and 1.1.7 inherit the cover.",
+    "Plan diff, line 53 (task 1.1.4): the line now says the suite exits 1 with 2 failed files and 10 failed tests. The phase acceptance log records these numbers. The absent file is measure/runs/storytime_app_rebuild_20261025/media-list-w01.md. I verified in r1 that .gitignore:56 ignores it, no commit tracks it, and phase5-media-list.test.ts:38 and phase5-adversarial.test.ts:51 read it. git diff --name-only e3b93ca33..HEAD over apps/storytime/__tests__ lists only the new entry-art-lcp.test.tsx, so the track touches neither test. At the phase base the two tests read the same absent file. The line is true.",
+    "Plan diff, line 77 (task 1.1.4 evidence): the counts 22 failed files, 228 failed tests, and 41 warnings are gone. The new text cites phase-acceptance-p1-dcc136c1f.log, which exists and records the suite exit 1, check-types exit 0, lint exit 0, and build exit 0 after one retry. The residual fragment about the same failure set and the diff is finding F1.",
+    "Plan diff, line 91 (gate table): Phase acceptance now reads passed at dcc136c1f with the result name, and final acceptance pending. The role gate output above supports the first part. The word pending goes stale on this pass (finding F6).",
+    "Unchanged lines: plan.md:50 still says the first store read is at line 121. That is correct: line 119 returns null without a cookie, line 120 is getStore(), and line 121 is store.findSessionByDigest. Spec.md D-4 says the same. N3 is not a defect and stays as written. No line of plan.md claims a screenshot count.",
+    "A5: grep -E for PASS=N FAIL=0 and all checks pass finds no hit in this plan, and no old pinned count or old claim remains. A6: grep -E over measure/tracks.md finds no overstatement pattern, and this track has no adversarial testing. A9: no file in tests/ names this track or an archived track path.",
+    "Independence, family source: the family of each route comes from model_family and route_family of /home/daniebo/Desktop/advantage-pr/scripts/jobs/ra-quota, with the family declared in /home/daniebo/.config/ra-quota/routes.json. Red opencode-go/muse-spark-1.3-contributor#high is muse. Green opencode-go/hy4-flash-free#high is hy (the model id names no family, and the config declares hy). Review A openai/gpt-6-luna#high is openai. UX openai/gpt-6-luna#high is openai. Phase acceptance opencode/deepseek-v4.1-flash-free#high is deepseek. This role claude-agent/sonnet#max is claude (Anthropic).",
+    "Independence, pairs: Red muse differs from phase acceptance deepseek: pass. Red muse differs from Green hy: pass. Green hy differs from Review A openai: pass. This role claude differs from Red muse, Green hy, Review A openai, and phase acceptance deepseek: pass, four of four. Extra pairs also differ: Review A openai against Red muse, phase acceptance deepseek against Green hy, UX openai against Green hy, and this role against UX openai. The ra-quota rule of no acceptance route in the Red or Review A family holds for both acceptance routes.",
+    "Independence, observations: Review A and UX share the OpenAI family, and no rule bars that pair. The spec author (opencode-go/deepseek-v4.1-flash) and the phase acceptance share the DeepSeek family, and no rule covers that pair. My own read of the spec and plan is independent of both.",
+    "Product evidence from r1 still holds because no product path changed: the targeted test passed 6 of 6, the guard files passed 44 of 44, ESLint on the two changed files exited 0 with 4 warnings, the SSIM of the four candidates is 0.955 to 0.986, and the raw Lighthouse files give median LCP 2815.47 ms, score 0.95, and layout shift 0.0725. The brief ordered no heavy rerun.",
+    "Role gate with the PROJECT variables, my run at b1a954eda: the role-gate for final-acceptance prints PASS: final-acceptance gate passed, exit 0. The three gates ran through heavy-run.sh one after another and printed no FAIL line. PROJECT_LINT is pnpm --filter storytime lint. PROJECT_CHECKS is pnpm --filter storytime check-types. PROJECT_TESTS is vitest on entry-art-lcp.test.tsx, look-assets.test.ts, entry-signin-layout.test.tsx, and login-proxy.test.ts. The gate re-verifies lint, types, and the tests at the exact HEAD. The tracked tree stays clean afterward.",
+    "Role gate, choice of PROJECT_TESTS: the phase acceptance log also ran the whole app suite, which is heavy and exits 1 on the two known failing files. The brief ordered no heavy rerun, and that command would fail the gate. I used the two light test commands of that log, joined into one. Earlier final acceptances (www_tutor_calculator_20261117 and www_features_pricing_20261120) also used the commands of their track. The repo holds no measure/gates.json, so the orchestrator exports the same three variables for its own gate run.",
+    "Doctor, my run at b1a954eda: heavy-run runs bash measure/doctor.sh. Four guard lines print PASS (A12 and A13 guards, catalog A1 to A15, 93 plans with valid markers, review execution). The architecture step prints Analyzer input snapshot hash does not match current bytes. ARCHITECTURE step 4 exits 1 and DOCTOR exits 1. The output equals the r1 output, as expected: no source file changed since r1."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git rev-parse HEAD^; git status --porcelain; git rev-parse --abbrev-ref HEAD - b1a954eda4ed19afc1f1937f71e8279e52042719, parent dcc136c1f, empty status, branch storytime/speed-20261123.",
+    "git log --format='%H %an | %s' dcc136c1f..HEAD; git diff dcc136c1f..HEAD --stat; git diff dcc136c1f..HEAD --name-status; git diff --check dcc136c1f..HEAD; git diff dcc136c1f..HEAD - one commit; plan.md only; four insertions and four deletions; exit 0.",
+    "git diff --name-only dcc136c1f..HEAD -- apps packages services integrations pnpm-lock.yaml package.json - no output.",
+    "git diff --name-status e3b93ca33..HEAD; git diff --check e3b93ca33..HEAD; git diff --name-only e3b93ca33..HEAD -- pnpm-lock.yaml package.json apps/storytime/package.json apps/storytime/app/entry.css apps/storytime/app/[locale]/join - eight planned paths; exit 0; count 0.",
+    "git diff --name-only dcc136c1f HEAD; git diff --name-only cb1bdef8e HEAD; git diff --name-only fa0d7f701 HEAD; git diff --name-only HEAD HEAD - plan.md; plan.md and spec.md; plan.md and spec.md; empty.",
+    "git merge-base --is-ancestor for the baseline and each audited HEAD, and for each audited HEAD and HEAD - ten answers, all yes.",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo . --track storytime_speed_hill_climb_20261123 - incomplete_phases 0, worktree clean, closeout_candidates 1.",
+    "python3 -I with importlib on measure_interphase_checks.py: plan_closeout_feedback(plan.md), track_incomplete(plan.md), phase_counts(plan.md, Phase 1) - [], 0, (1, 1, 0, 0, 1).",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py role-gate --repo . --role phase-acceptance --track storytime_speed_hill_climb_20261123 --phase 'Phase 1: The sign-in LCP art' --baseline e3b93ca3382c648d61a4a84ae590d9980224711f --result-file <phase-acceptance-p1-dcc136c1f.json> --log-file <phase-acceptance-p1-dcc136c1f.log> - PASS: phase-acceptance gate passed, exit 0.",
+    "python3 -I with SourceFileLoader on /home/daniebo/Desktop/advantage-pr/scripts/jobs/ra-quota: model_family and route_family over the six routes with /home/daniebo/.config/ra-quota/routes.json - muse, hy, openai, openai, deepseek, claude.",
+    "grep -n -E for the old pinned counts and old claims in plan.md; grep -nE for the A5 pattern in plan.md; grep -nE for the A6 pattern in measure/tracks.md; grep -rn for this track id in tests/ - no hit in each.",
+    "grep -n -i screenshot plan.md; sed -n 50p plan.md; sed -n 112,117p spec.md - no screenshot count claim; line 121 text unchanged in both files.",
+    "HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/storytime-speed && bash measure/doctor.sh' - exit 1 at the architecture step; four guard steps pass.",
+    "HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 PROJECT_GATE_TIMEOUT_SECONDS=1800 env PROJECT_LINT='cd <worktree> && pnpm --filter storytime lint' PROJECT_CHECKS='cd <worktree> && pnpm --filter storytime check-types' PROJECT_TESTS='cd <worktree>/apps/storytime && CI=true ../../node_modules/.bin/vitest run __tests__/entry-art-lcp.test.tsx __tests__/look-assets.test.ts __tests__/entry-signin-layout.test.tsx __tests__/login-proxy.test.ts' python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py role-gate --repo . --role final-acceptance --track storytime_speed_hill_climb_20261123 --phase 'track review' --baseline e3b93ca3382c648d61a4a84ae590d9980224711f --result-file <this json> --log-file <this log> --runner /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh - PASS: final-acceptance gate passed, exit 0."
+  ],
+  "changed_files": [
+    "measure/runs/storytime_speed_hill_climb_20261123/final-acceptance-track-b1a954eda.json",
+    "measure/runs/storytime_speed_hill_climb_20261123/final-acceptance-track-b1a954eda.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "claude-agent/sonnet#max",
+  "acceptance_criteria": {
+    "AC-1": "pass: entry-art.tsx:64-81 and test cases L1 to L3 (unchanged since r1)",
+    "AC-2": "pass: four WebP files with pinned sizes; ten originals unchanged",
+    "AC-3": "pass: 29070 bytes against 30000 and 71910 bytes against 75000",
+    "AC-4": "pass: test case L6 and login-proxy.test.ts",
+    "AC-5": "pass with exception: 44 of 44 in the three named files; the whole suite exits 1 from the absent gitignored media-list-w01.md, and plan.md:53 now says so",
+    "AC-6": "pass by PM decision 2026-11-24: median LCP 2815.47 ms against the 2500 ms goal",
+    "AC-7": "pass: 192 of 192 browser checks, layout shift 0.0725, same LCP box, SSIM at least 0.955",
+    "AC-8": "pass: Review A r2 has no open Blocker or Major",
+    "AC-9": "pass: cold start at cloudbuild.yaml:44-51 and auth/index.ts:119; no fix",
+    "AC-10": "pass: no dependency, lockfile, hash, deploy, or traffic change"
+  },
+  "pm_exceptions": [
+    "AC-6: median LCP 2815.47 ms against 2500 ms. PM decision 2026-11-24 accepts the gap. Spec.md:141 and plan.md:59-62 record it.",
+    "AC-5: the whole app suite exits 1 with 2 failed files and 10 failed tests from an absent gitignored file. The brief records PM acceptance on 2026-11-24. Plan.md:53 now records the failure set."
+  ],
+  "pending_release_steps": [
+    "Deploy: the change joins the 30 November launch-day batch and needs the deploy word of Daniel. This track holds no deploy task and no traffic task (spec D-5)."
+  ],
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "entry-art.tsx:64-81 holds the eager img and both candidate sets, and no product path changed since r1, but the median LCP 2815.47 ms misses the 2500 ms goal (PM-accepted, spec.md:141)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "entry-art-lcp.test.tsx L1 to L6 fail at 25a5a3abf and pass at HEAD, but L3 pins only a non-empty sizes value (line 205) and no test reads the browser pick."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --name-status e3b93ca33..HEAD lists exactly the eight planned paths, and the r2 commit changes plan.md only."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "plan_closeout_feedback now returns an empty list and plan.md:53 states the true suite result, but plan.md:77 keeps one stale fragment and the routes are recorded nowhere in the repository."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "openai/gpt-6-luna#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "F1 at fa0d7f701 was a real gap: the old spec.md D-2 said no ratio loses sharpness, and the 1080w cap makes that false at DPR 3; I read git diff fa0d7f701 cb1bdef8e."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "openai/gpt-6-luna#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "The r2 pass is right: spec.md D-2 now matches entry-art.tsx:65-69, and 1080 px over a 431 to 459 px box gives about 2.4 source pixels per CSS pixel, as before the change."
+    },
+    {
+      "reviewer_role": "ux-browser",
+      "reviewer_route": "openai/gpt-6-luna#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "The pass is right on 192 of 192 checks, layout shift 0.0725, and unchanged entry.css, but the result keeps no base screenshots and its screenshot folder no longer exists."
+    },
+    {
+      "reviewer_role": "phase-acceptance",
+      "reviewer_route": "opencode/deepseek-v4.1-flash-free#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "The pass is right and its role gate passes at HEAD, but its N3 correction was imprecise (line 121 is the first store read) and it checked neither the closeout SHA lines nor doctor."
+    }
+  ]
+}

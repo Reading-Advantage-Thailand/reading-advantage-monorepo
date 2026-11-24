@@ -1,0 +1,129 @@
+# Final acceptance log: track storytime_speed_hill_climb_20261123, HEAD dcc136c1f
+
+Role: measure-final-acceptance. Route: claude-agent/sonnet#max (Anthropic).
+Track base: e3b93ca3382c648d61a4a84ae590d9980224711f (track creation commit).
+Role base and audited HEAD: dcc136c1f340496bdb6276de115619cb32011857.
+Repo (worktree): /home/daniebo/Desktop/rama-worktrees/storytime-speed, branch storytime/speed-20261123.
+Result file: measure/runs/storytime_speed_hill_climb_20261123/final-acceptance-track-dcc136c1f.json.
+Date: 2026-11-24.
+
+## Verdict: FAIL on one open check
+
+The work passes. One check stays open: the route families of Red and Green. The files red-p1-111.log
+and green-p1-112.log hold no route line. The brief makes the independence of phase acceptance from
+Red a hard rule, so I cannot pass without that fact. The orchestrator holds the Route lines of the
+spawns. When it sends them and they show independence, this result becomes a pass with no change to
+the code. A read of the OpenCode session store for these routes was refused by the permission layer.
+I did not retry it and I did not use another path to the same data.
+
+## Binding to HEAD
+
+- git rev-parse HEAD prints dcc136c1f340496bdb6276de115619cb32011857. It equals the supplied
+  audited_head_sha and role_base_sha. git status --porcelain prints nothing before and after my runs.
+- git diff --name-only dcc136c1f HEAD prints nothing. The audited HEAD of the latest result (phase
+  acceptance) equals HEAD, and so does mine.
+- git diff --name-only cb1bdef8e HEAD prints the track plan.md and spec.md. This is the range after
+  Review A r2 and the UX review. The spec.md change is one added line (the PM decision text of AC-6).
+  Nothing under apps, packages, pnpm-lock.yaml, or package.json changed after cb1bdef8e.
+- Spec.md is not on the plan-and-evidence list of the coverage rule. The rule applies only when an
+  audited HEAD differs from HEAD. Both latest audited HEADs equal HEAD, so I record this and do not
+  fail on it.
+- git diff --name-only fa0d7f701 HEAD prints plan.md and spec.md. Review A r1 is a fail that r2 replaced.
+- Ancestry: the baseline e3b93ca33 is an ancestor of each audited HEAD. Each audited HEAD is an
+  ancestor of HEAD. Four of four answers are yes.
+- One phase-acceptance result exists for the one phase: phase-acceptance-p1-dcc136c1f.json, status pass.
+
+## Families on record
+
+- Review A: openai/gpt-6-luna#high, in both rounds (OpenAI).
+- Phase acceptance: opencode/deepseek-v4.1-flash-free#high (DeepSeek).
+- UX browser review: no route key in the JSON (unknown).
+- Spec author: opencode-go/deepseek-v4.1-flash (spec-review.md). The spec reviewer route is not recorded.
+- Red and Green: no route line in red-p1-111.log or green-p1-112.log. Their families are not on record.
+- Final acceptance (this role): claude-agent/sonnet#max (Anthropic). It differs from OpenAI and DeepSeek.
+
+What stays unverified: Red against phase acceptance (the brief rule), Red against Green, Review A
+against Green, and this role against Red and Green.
+
+## Acceptance criteria, one by one
+
+- AC-1 pass. entry-art.tsx:64-81 holds one picture[data-entry-art]. The img holds loading eager,
+  fetchPriority high, srcSet 720w 1280w 1920w, and sizes calc(100vw - 40px). The source holds srcSet
+  720w 960w 1080w and sizes 480px.
+- AC-2 pass. The four files are WebP at 720x405, 1280x720, 720x1280, and 960x1707. The ten originals
+  keep their names and sizes. The places folder holds 14 files.
+- AC-3 pass. path-d-720.webp is 29070 bytes (limit 30000). path-d-1280.webp is 71910 bytes (limit 75000).
+- AC-4 pass. Test case L6 asserts status 307, the exact Location, and the eager art at the target.
+- AC-5 pass with a recorded exception. The three named files pass 44 of 44 in my run. The whole suite
+  exits 1 with 2 failed files and 10 failed tests, all from the absent gitignored media-list-w01.md.
+  The brief records PM acceptance. I did not rerun the whole suite.
+- AC-6 pass by PM decision of 2026-11-24. The raw Lighthouse files still exist and reproduce the
+  numbers: LCP 2822.223, 2815.47, 2345.697 ms (median 2815.47 ms), score 0.95, transfer 291517 bytes.
+  The goal was under 2500 ms. Spec.md:141 and plan.md:59-62 record the accepted gap.
+- AC-7 pass. Layout shift is 0.07254 in all three runs (baseline 0.073). The LCP box is 372 by 176,
+  as at the baseline. entry.css and the join files are unchanged. SSIM against the originals is 0.955,
+  0.977, 0.984, and 0.986. I viewed the original and the 720w candidate: same scene and crop.
+  The UX result passes 192 of 192 browser checks.
+- AC-8 pass. Review A r2 has no blocking and no nonblocking finding.
+- AC-9 pass. plan.md:50 names a cold start. cloudbuild.yaml:44-51 sets no --min-instances.
+  auth/index.ts:119 returns null before the store read. No fix ships.
+- AC-10 pass. No dependency, lockfile, hash token, deploy task, or traffic task enters the range.
+
+## Decisions on the record notes N1 to N5
+
+None of N1 to N5 blocks the acceptance of the work. Two of them block the closeout until a text commit.
+
+- N1 (plan.md:53 says the suite exits 0). It is a false statement, and the task is marked [x]. The
+  closeout needs a plan without a false result, so the closeout must make a plan.md-only text commit
+  first. The commit states exit 1 with the base failure set and records the PM acceptance.
+- N2 (counts 22 files and 41 warnings). Correct. Fix: cite the logs and drop the pinned counts.
+  ESLint on the two changed files shows 4 ban-ts-comment warnings, all added by this track.
+- N3 (store read line 121 against 120). Not a defect. Line 120 is getStore(), the handle only. Line 121
+  is the first store read. Do not change the text to 120.
+- N4 (UX evidence). Correct. The screenshot folder is gone. AC-7 holds on the independent proof above.
+- N5 (tracks.md status). Correct. Plan.md:91 also says Phase acceptance is not assigned. Closeout
+  updates tracks.md and writes the accepted LCP gap into the metadata description.
+
+## New findings
+
+- The closeout plan check finds four completed task lines with no commit SHA on the line: 1.1, 1.1.1,
+  1.1.6, and 1.1.7. Minimal fix: a plan-only text commit adds a SHA to the task 1.1 line. The three
+  child lines inherit the cover. An in-memory simulation (no file written) returns no feedback.
+- The doctor gate exits 1. The architecture step reports Analyzer input snapshot hash does not match
+  current bytes. The pin was stale before this track: the manifest changed last on 2026-11-22 at
+  d782cc169, and 18 source files changed in 18 commits before the track parent. The track did not
+  touch the manifest. The three guard steps pass. A final acceptance of 2026-11-18 recorded the same
+  failure as a Nit.
+- PROJECT_LINT, PROJECT_CHECKS, and PROJECT_TESTS are unset, and measure/gates.json is absent.
+- The Red log baseline_sha has 31 characters and does not resolve. The track commit parent is
+  251d7d41ead56ed1542af9bfc8ec6f6a67a486a6. No gate used the wrong value.
+
+## Anti-pattern audit
+
+- A5: no PASS=N FAIL=0 text and no all checks pass text in this plan. Plan.md:53 is still false (N1).
+- A6: no overstatement pattern in measure/tracks.md. This track has no adversarial testing, and the
+  note claims none. The note and the metadata state the 2.5 s goal, so closeout must record the gap.
+- A9: no file in tests/ names this track or an archived track path.
+
+## What to do next
+
+1. Send the Route line of the spec-review spawn, the Red spawn (task 1.1.1), and the Green spawn
+   (tasks 1.1.2 to 1.1.5).
+2. Make one plan.md-only commit with the fixes of N1, N2, a SHA on the task 1.1 line, and the line 91
+   row. Touch no spec.md and no metadata.json.
+3. Run final acceptance again on the new HEAD. The new run checks the plan-only diff and the routes.
+4. Closeout then updates tracks.md and the metadata description, and asks the PM to waive doctor.
+
+MEASURE_AGENT_RESULT
+role: measure-final-acceptance
+status: blocked
+track: storytime_speed_hill_climb_20261123
+phase: track review
+commits: none
+tests_run: heavy-run vitest entry-art-lcp.test.tsx exit 0 with 6 of 6; heavy-run vitest look-assets plus entry-signin-layout plus login-proxy exit 0 with 44 of 44; heavy-run eslint on entry-art.tsx and entry-art-lcp.test.tsx exit 0 with 4 warnings; heavy-run bash measure/doctor.sh exit 1 at the architecture step from a stale pin that predates the track; heavy-run ffmpeg ssim and psnr over four candidates exit 0; python3 -I read of three raw Lighthouse files; measure_interphase_checks.py status exit 0; plan_closeout_feedback lists four lines without a SHA; whole suite and lint and check-types and build not rerun by this role per the brief
+files_changed: measure/runs/storytime_speed_hill_climb_20261123/final-acceptance-track-dcc136c1f.json; measure/runs/storytime_speed_hill_climb_20261123/final-acceptance-track-dcc136c1f.log
+plan_updates: none (gate-only role)
+known_failures: blocking F1 the Red and Green logs hold no route line so independence cannot be checked; nonblocking F2 four task lines lack a commit SHA; F3 plan.md:53 states a false suite result; doctor exit 1 from a pre-existing stale architecture pin; PROJECT_LINT PROJECT_CHECKS PROJECT_TESTS unset; whole suite exit 1 from the absent gitignored media-list-w01.md (pre-existing and PM-accepted); median LCP 2815.47 ms against 2500 ms (PM-accepted)
+dispositions: none
+handoff: Question for the orchestrator: send the Route line of the spec-review spawn and of the Red spawn (task 1.1.1) and of the Green spawn (tasks 1.1.2 to 1.1.5); the logs hold none. Options: (a) Red is not DeepSeek and not Anthropic and Green is not OpenAI and not Anthropic and Red differs from Green so independence holds and this result becomes a pass; (b) Red is DeepSeek so phase acceptance is invalid and must run again on another family before final acceptance runs again; (c) the routes cannot be recovered so record the deviation and ask the PM to accept it. Default: (a) only when the routes show it. Everything else passes: all 10 acceptance criteria hold and the diff holds exactly the eight planned paths. Before closeout make one plan.md-only commit: add a commit SHA to the task 1.1 line (25a5a3abf and 4865f0273; the three child lines inherit the cover; optionally name the audited head cb1bdef8e on tasks 1.1.6 and 1.1.7); correct plan.md:53 to state exit 1 with the base failure set from the absent gitignored media-list-w01.md and record the PM acceptance; drop the pinned counts at plan.md:77; correct the Phase acceptance row at plan.md:91; keep the store read at line 121 because N3 is no defect. Touch no spec.md and no metadata.json. Then run final acceptance again on the new HEAD. Closeout writes the accepted LCP gap into the metadata description and the tracks.md note. Export PROJECT_LINT and PROJECT_CHECKS and PROJECT_TESTS for the mechanical role-gate. Ask the PM to waive the doctor gate as before.
+END_MEASURE_AGENT_RESULT

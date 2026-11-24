@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "role": "measure-review-a-correctness",
+  "track": "storytime_speed_hill_climb_20261123",
+  "phase": "Phase 1: The sign-in LCP art",
+  "baseline_sha": "e3b93ca3382c648d61a4a84ae590d9980224711f",
+  "phase_base_sha": "e3b93ca3382c648d61a4a84ae590d9980224711f",
+  "role_base_sha": "fa0d7f701c571c373484b67e01254aaa20dd03e7",
+  "audited_head_sha": "fa0d7f701c571c373484b67e01254aaa20dd03e7",
+  "summary": "The eager landscape art and WebP variants pass the targeted test. The portrait srcset cannot meet the stated DPR 3 sharpness claim at desktop widths because its largest source is 1080w. A spec decision is needed before remediation.",
+  "blocking_findings": [
+    "F1 [Blocker] review-a: At 980 px and 1280 px, the desktop portrait art renders at about 431 px and 459 px wide, but its srcset ends at 1080w. At DPR 3 this provides about 2.5x and 2.35x source pixels per CSS pixel, below the stated no-sharpness-loss requirement; `sizes=\"480px\"` requests 1440w but the browser can only select the 1080w original. Rationale: the desktop candidate set cannot satisfy the spec's DPR 3 sharpness claim and can upscale the delivered art. Question for the product owner: Should the track keep the 1080w cap and correct the no-sharpness-loss claim, or add a larger desktop candidate and revise the spec and plan?"
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "HEAD is fa0d7f701c571c373484b67e01254aaa20dd03e7; the worktree was clean before writing this result.",
+    "apps/storytime/app/[locale]/entry/entry-art.tsx:28-34 sets the desktop source to 720w, 960w, and the 1080w original with sizes=\"480px\".",
+    "apps/storytime/app/entry.css:9-17, 405-423 sets a 1040px maximum shell, 20px horizontal padding, a two-column grid with a 44px gap, and a 540px desktop art height. The art occupies the first column, about 431px at a 980px viewport and 459px at 1280px.",
+    "measure/tracks/storytime_speed_hill_climb_20261123/spec.md:97-108 says the desktop source keeps the original at DPR 3 and that no ratio loses sharpness.",
+    "The six original and reduced images were visually inspected. They retain the same scene and crop. `file` reports the four new WebP dimensions as 720x405, 1280x720, 720x1280, and 960x1707.",
+    "measure/runs/storytime_speed_hill_climb_20261123/green-p1-112.log:19-21 records Lighthouse runs 2822.2, 2815.5, and 2345.7 ms, median 2815.5 ms, above 2500 ms; task 1.1.5 correctly remains [~].",
+    "The plan's Lighthouse method matches the baseline report: Lighthouse 13.6.0, mobile preset with simulated throttling, performance category, three runs, and median."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git status --short — HEAD matched the supplied audited_head_sha; no pre-existing worktree changes.",
+    "git diff --stat e3b93ca3382c648d61a4a84ae590d9980224711f..fa0d7f701c571c373484b67e01254aaa20dd03e7; git diff --name-status e3b93ca3382c648d61a4a84ae590d9980224711f..fa0d7f701c571c373484b67e01254aaa20dd03e7 — seven expected paths only.",
+    "git diff --exit-code 96031a1839f26f6669a09865d90392c915117bd2..HEAD -- apps/storytime/__tests__ — exit 0; Green changed no committed tests.",
+    "git diff --check e3b93ca3382c648d61a4a84ae590d9980224711f..HEAD — exit 0.",
+    "file apps/storytime/app/look/places/path-d.webp apps/storytime/app/look/places/path-d-720.webp apps/storytime/app/look/places/path-d-1280.webp apps/storytime/app/look/places/path-p.webp apps/storytime/app/look/places/path-p-720.webp apps/storytime/app/look/places/path-p-960.webp — originals remain, all four variants are WebP with expected dimensions.",
+    "HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/entry-art-lcp.test.tsx' — exit 0; 1 file and 6 tests passed."
+  ],
+  "changed_files": [
+    "apps/storytime/__tests__/entry-art-lcp.test.tsx",
+    "apps/storytime/app/[locale]/entry/entry-art.tsx",
+    "apps/storytime/app/look/places/path-d-1280.webp",
+    "apps/storytime/app/look/places/path-d-720.webp",
+    "apps/storytime/app/look/places/path-p-720.webp",
+    "apps/storytime/app/look/places/path-p-960.webp",
+    "measure/tracks/storytime_speed_hill_climb_20261123/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "escalate_human",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "The landscape candidate assertions pass, but entry-art.tsx:28-34 caps desktop portrait delivery at 1080w for a 480px slot at DPR 3."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The targeted Vitest command passed six assertions, including eager attributes, candidate counts, asset dimensions, byte limits, and redirect behavior."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The phase diff lists only the specified test, component, four image variants, and track plan."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The result records the verified HEAD, exact diff, test output, image dimensions, and Lighthouse values from the Green log."
+    }
+  ]
+}

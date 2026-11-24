@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "role": "measure-phase-acceptance",
+  "track_id": "storytime_speed_hill_climb_20261123",
+  "phase": "Phase 1: The sign-in LCP art",
+  "baseline_sha": "e3b93ca3382c648d61a4a84ae590d9980224711f",
+  "phase_base_sha": "e3b93ca3382c648d61a4a84ae590d9980224711f",
+  "role_base_sha": "dcc136c1f340496bdb6276de115619cb32011857",
+  "audited_head_sha": "dcc136c1f340496bdb6276de115619cb32011857",
+  "summary": "Phase 1 passes at HEAD dcc136c1f. All seven Phase 1 tasks are [x] with commit evidence. The phase diff holds the Red test, the eager EntryArt markup, four WebP candidates, and the plan/spec records. The targeted test passes 6/6, the three AC-5 guard files pass 44/44, check-types exits 0, and the build exits 0 on retry. Review A r2 and the UX browser review pass on cb1bdef8e, and the later commits touch only plan.md and spec.md. The PM-accepted LCP median 2815.5 ms gap is recorded and not hidden. Five record-level notes are nonblocking.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 [Nit] phase-acceptance: plan.md:53 says the whole app suite exits 0. At HEAD it exits 1 with 2 failed files and 10 failed tests. Every failure reads a missing measure/runs/storytime_app_rebuild_20261025/media-list-w01.md. That path sits under the gitignored measure/runs/ folder, is absent at the phase base, and the phase diff touches neither failing test file. The failure set is pre-existing and smaller than the 22 files that plan.md:77 records, so the operative criterion at plan.md:57 (same failure set or better) holds and gate 1.1.4 is met. The sentence is wrong as written. Fix: state the base failure set in that bullet. Under the late-finding stop rule this is a record, not a product defect, so it goes to measure/tech-debt.md, not a fix round.",
+    "N2 [Nit] phase-acceptance: plan.md:77 pins counts (test_files=167, test_files_failed=22, tests=1936, 41 lint warnings). The orchestrator skill says write no test count in plan.md; cite the log. At HEAD lint exits 0 with 0 errors and 45 warnings, 4 of them ban-ts-comment warnings at entry-art.tsx:2,4,7,9. Fix: cite the lint log and drop the pinned counts.",
+    "N3 [Nit] phase-acceptance: plan.md:50 says the first store read is at apps/storytime/lib/auth/index.ts:121. grep shows `if (!token) return null;` at :119 and `getStore()` at :120. Fix: line 120. The cause itself (cold start, no --min-instances at cloudbuild.yaml:44-51) is correct.",
+    "N4 [Nit] phase-acceptance: ux-browser-p1-cb1bdef8e.json ran no base browser gate; heavy-run stopped the baseline frozen-lockfile install. It compared 12 new-code screenshots with the base art files. It holds no base screenshots, no console output, and no accessibility snapshot. AC-7 still passes on the new code, and plan.md:107 records the limit. The orchestrator brief's summary (5 screenshots, 0 console errors) does not match the artifact (12 screenshots, no console capture).",
+    "N5 [Nit] phase-acceptance: measure/tracks.md:49 still reads Status: new, light lane for a track whose only phase now passes. The plan gate table at plan.md:87-91 also says Phase acceptance not assigned, while the orchestrator ran it. Both are orchestrator registry records, outside the phase diff."
+  ],
+  "evidence": [
+    "HEAD is dcc136c1f340496bdb6276de115619cb32011857 and equals the supplied audited_head_sha and role_base_sha. git status --porcelain is empty and the branch is storytime/speed-20261123.",
+    "git log -8 shows the named chain: e3b93ca33 track creation, 25a5a3abf Red test, 96031a183 Red record, 4865f0273 Green art, fa0d7f701 Green record, cb1bdef8e spec fix, dcc136c1f plan close. git log -3 e3b93ca33 tops at the track creation commit, whose parent is 251d7d41e, so e3b93ca33 is the phase base.",
+    "git diff --name-status e3b93ca33..HEAD lists exactly eight planned paths: the test file, entry-art.tsx, four WebP files, plan.md, and spec.md. git diff --check exits 0. git diff e3b93ca33..HEAD over pnpm-lock.yaml, package.json, and apps/storytime/package.json is empty.",
+    "git show 25a5a3abf:apps/storytime/app/[locale]/entry/entry-art.tsx holds loading=\"lazy\" and no fetchpriority, no srcSet, and no sizes. git cat-file -e 25a5a3abf:apps/storytime/app/look/places/path-d-720.webp exits 128. L1 to L5 therefore fail at the base, and L6 passes the 307 part and fails the art part.",
+    "AC-1 holds: apps/storytime/app/[locale]/entry/entry-art.tsx:64-81 holds one picture[data-entry-art], the img holds loading=\"eager\", fetchPriority=\"high\", srcSet 720w/1280w/1920w, and sizes calc(100vw - 40px), and the source with media (min-width: 980px) holds srcSet 720w/960w/1080w and sizes 480px.",
+    "AC-2 and AC-3 hold: stat reports 29070 bytes for path-d-720.webp, 71910 for path-d-1280.webp, 102418 for path-p-720.webp, and 141266 for path-p-960.webp. file reports 720x405, 1280x720, 720x1280, and 960x1707. The originals stay at 145508 bytes 1920x1080 and 153008 bytes 1080x1920, and look-assets.test.ts passes.",
+    "Targeted test: HEAVY_PRIORITY=p1 heavy-run.sh -c 'cd apps/storytime && CI=true ../../node_modules/.bin/vitest run __tests__/entry-art-lcp.test.tsx' exits 0 with 6/6 tests. The guard files look-assets.test.ts, entry-signin-layout.test.tsx, and login-proxy.test.ts exit 0 with 44/44 tests.",
+    "Gate 1.1.4: pnpm --filter storytime check-types exits 0. pnpm --filter storytime lint exits 0 with 0 errors and 45 warnings. pnpm --filter storytime build exits 1 on the first run with the Next.js security notice and exits 0 on the retry, as plan.md:77 records.",
+    "The full app suite at HEAD exits 1: 167 files, 2 failed files, 165 passed files, 1994 passed tests, 10 failed tests, and 4 expected failures. Each failure is a missing measure/runs/storytime_app_rebuild_20261025/media-list-w01.md. The phase diff touches neither phase5-adversarial.test.ts nor phase5-media-list.test.ts.",
+    "AC-4 holds: the L6 case asserts status 307 and Location /th/sign-in?next=%2Fth%2Fst, and then asserts the eager art of the sign-in target.",
+    "AC-9 holds: plan.md:50 names a cold start from apps/storytime/cloudbuild.yaml:44-51, which sets no --min-instances, and apps/storytime/lib/auth/index.ts:119, which returns null before the store read at :120. No fix ships.",
+    "AC-10 holds: the diff changes no dependency, lockfile, hash field, deploy task, or traffic task. The plan holds no deploy or traffic task.",
+    "measure_interphase_checks.py status --repo /home/daniebo/Desktop/rama-worktrees/storytime-speed --track storytime_speed_hill_climb_20261123 reports incomplete_phases 0 and a clean worktree.",
+    "Review A r2 (review-a-p1-r2-cb1bdef8e.json) reports pass with no blocking or nonblocking finding at cb1bdef8e, and it withdraws F1 after the spec D-2 correction. The UX result (ux-browser-p1-cb1bdef8e.json) reports pass with 192/192 browser checks, 9/9 gate checks, and 12 screenshots at 390, 980, and 1280 px.",
+    "The post-review advance is docs-only: git diff --stat cb1bdef8e..HEAD lists only plan.md and spec.md. The test file is byte-identical to the Red commit (git diff 25a5a3abf..HEAD -- the test file is empty), and the product code is unchanged. The prerequisite results still describe the audited code.",
+    "Review B, Review C, and adversarial testing do not apply. The phase diff changes no auth, session, data path, input handling, API, route, locale key, or exported contract. The lane is light, and the spec's falsifiers are the byte bound, the pixel pins, and the markup cases, which Review A read.",
+    "A3, A4, A6, and A7 do not apply. The phase diff changes no contract test, filter, or tracks registry surface. The track holds no rg -q digit count assertion and no markers-consistency check, and measure/tracks.md is not in the diff.",
+    "A5: plan.md records real command results for the targeted test, check-types, and build. The two inaccurate record sentences are N1 and N2, and neither hides a product result; N1's own evidence block records the 22 failed files."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git status --porcelain; git branch --show-current - HEAD dcc136c1f340496bdb6276de115619cb32011857, empty status, branch storytime/speed-20261123.",
+    "git log --oneline -8 and git log --oneline -3 e3b93ca33 - the named Red, Green, spec fix, and plan close commits, plus the track creation base.",
+    "git diff --name-status e3b93ca33..HEAD; git diff --check e3b93ca33..HEAD; git diff --stat cb1bdef8e..HEAD - eight planned paths, exit 0, and plan.md plus spec.md only after cb1bdef8e.",
+    "git diff e3b93ca33..HEAD -- pnpm-lock.yaml package.json apps/storytime/package.json - no output.",
+    "git show 25a5a3abf:apps/storytime/app/[locale]/entry/entry-art.tsx; git cat-file -e 25a5a3abf:apps/storytime/app/look/places/path-d-720.webp - lazy base markup and exit 128 for the missing candidate.",
+    "git diff 25a5a3abf..HEAD -- apps/storytime/__tests__/entry-art-lcp.test.tsx - no output, so Green changed no Red assertion.",
+    "HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/storytime-speed/apps/storytime && CI=true ../../node_modules/.bin/vitest run __tests__/entry-art-lcp.test.tsx' - exit 0, 6/6 tests passed.",
+    "HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/storytime-speed/apps/storytime && CI=true ../../node_modules/.bin/vitest run __tests__/look-assets.test.ts __tests__/entry-signin-layout.test.tsx __tests__/login-proxy.test.ts' - exit 0, 44/44 tests passed.",
+    "HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/storytime-speed/apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=2' - exit 1, 2 failed files and 10 failed tests, all from the absent gitignored media-list artifact.",
+    "HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/storytime-speed && pnpm --filter storytime check-types' - exit 0.",
+    "HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/storytime-speed && pnpm --filter storytime lint' - exit 0, 45 warnings, 0 errors.",
+    "HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=3000 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/storytime-speed && pnpm --filter storytime build' - first run exit 1 with the security notice, retry exit 0.",
+    "stat -c '%n %s' and file over path-d.webp, path-d-720.webp, path-d-1280.webp, path-p.webp, path-p-720.webp, and path-p-960.webp - byte counts and pinned pixel sizes.",
+    "python3 /home/daniebo/Desktop/measure/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo /home/daniebo/Desktop/rama-worktrees/storytime-speed --track storytime_speed_hill_climb_20261123 - incomplete_phases 0, worktree clean, HEAD dcc136c1f.",
+    "grep -n 'export async function getCurrentUser|if (!token)|getStore()' apps/storytime/lib/auth/index.ts - :117, :119, and :120, which places the store read at line 120.",
+    "git show --stat 25a5a3abf 96031a183 4865f0273 fa0d7f701 cb1bdef8e dcc136c1f - each commit holds only its planned files."
+  ],
+  "changed_files": [
+    "apps/storytime/__tests__/entry-art-lcp.test.tsx",
+    "apps/storytime/app/[locale]/entry/entry-art.tsx",
+    "apps/storytime/app/look/places/path-d-720.webp",
+    "apps/storytime/app/look/places/path-d-1280.webp",
+    "apps/storytime/app/look/places/path-p-720.webp",
+    "apps/storytime/app/look/places/path-p-960.webp",
+    "measure/tracks/storytime_speed_hill_climb_20261123/plan.md",
+    "measure/tracks/storytime_speed_hill_climb_20261123/spec.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "opencode/deepseek-v4.1-flash-free#high",
+  "handoff": "Phase 1 passes at HEAD dcc136c1f. Five nonblocking record notes go to the orchestrator: N1 correct plan.md:53 (the whole suite does not exit 0; it keeps the pre-existing 2-file failure set from the absent gitignored media-list artifact), N2 cite the lint log instead of pinned counts, N3 change line 121 to 120, N4 record the UX evidence gap and the 12 screenshots, N5 update measure/tracks.md status and the Phase acceptance row. Under the late-finding stop rule these are records, not product defects, so no fix round is needed; put them in measure/tech-debt.md or a small plan-text commit. The PM-accepted LCP gap (median 2815.5 ms against 2500 ms; baseline 4.0 s, score 0.77 to 0.95) is recorded at plan.md:59-62 and spec.md:141. The change joins the launch-day deploy batch, which needs Daniel's word; this track holds no deploy or traffic task.",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "entry-art.tsx:64-81 holds the eager img, the three landscape candidates, the three portrait candidates, and both sizes values, and the six pinned WebP files match their recorded bytes and pixels."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "entry-art-lcp.test.tsx L1 to L6 fail at 25a5a3abf (lazy markup, missing path-d-720.webp) and pass 6/6 at HEAD, and L6 holds a passing redirect part plus the art assertion."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --name-status e3b93ca33..HEAD lists exactly the eight planned paths, with no lockfile, package.json, deploy, or traffic change."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "plan.md records the exact bytes, the three Lighthouse runs, and the commands, but plan.md:53 says the suite exits 0 and plan.md:77 pins a 41-warning count that is 45 at HEAD."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "openai/gpt-6-luna#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "Rechecked spec.md:104-108 against entry-art.tsx:65-69; the 1080w cap matches the unchanged original, and my targeted run passed 6/6 at HEAD."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "openai/gpt-6-luna#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "F1 was right at fa0d7f701 because spec.md then promised no desktop sharpness loss while the source ended at 1080w; the r2 withdrawal matches the corrected text."
+    },
+    {
+      "reviewer_role": "ux-browser",
+      "reviewer_route": "unknown",
+      "agreed": true,
+      "score": 4,
+      "evidence": "Rechecked the UX JSON: 192/192 checks and 12 screenshots at 390, 980, and 1280 px; the pass is right, but it rests on base art files rather than base screenshots."
+    }
+  ]
+}

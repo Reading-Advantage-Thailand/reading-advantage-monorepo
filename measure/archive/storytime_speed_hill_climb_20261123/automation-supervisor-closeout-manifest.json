@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "track_id": "storytime_speed_hill_climb_20261123",
+  "role": "measure-closeout",
+  "status": "closed",
+  "completion_date": "2026-11-24",
+  "commits": [
+    "the closeout commit on branch storytime/speed-20261123; its SHA is recorded in the closeout log and in the final reply of this role"
+  ],
+  "pre_closeout_head": "b1a954eda4ed19afc1f1937f71e8279e52042719",
+  "final_acceptance_audited_head_sha": "b1a954eda4ed19afc1f1937f71e8279e52042719",
+  "final_acceptance_head_equals_pre_closeout_head": true,
+  "track_base_sha": "e3b93ca3382c648d61a4a84ae590d9980224711f",
+  "phase_base_sha": "e3b93ca3382c648d61a4a84ae590d9980224711f",
+  "lane": "light lane: one task, one phase; no adversarial testing; final acceptance role ran and passed",
+  "archive_path": "measure/archive/storytime_speed_hill_climb_20261123",
+  "routes": [
+    {
+      "role": "red",
+      "route": "opencode-go/muse-spark-1.3-contributor#high",
+      "source": "OpenCode session list, attested by the orchestrator; no artifact in the repository records it"
+    },
+    {
+      "role": "green",
+      "route": "opencode-go/hy4-flash-free#high",
+      "source": "OpenCode session list, attested by the orchestrator; no artifact in the repository records it"
+    },
+    {
+      "role": "review-a",
+      "route": "openai/gpt-6-luna#high",
+      "source": "review-a-p1-r2-cb1bdef8e.json"
+    },
+    {
+      "role": "ux-browser",
+      "route": "openai/gpt-6-luna#high",
+      "source": "OpenCode session list, attested by the orchestrator; no route key in the UX result"
+    },
+    {
+      "role": "phase-acceptance",
+      "route": "opencode/deepseek-v4.1-flash-free#high",
+      "source": "phase-acceptance-p1-dcc136c1f.json"
+    },
+    {
+      "role": "final-acceptance",
+      "route": "claude-agent/sonnet#max",
+      "source": "final-acceptance-track-b1a954eda.json"
+    },
+    {
+      "role": "closeout",
+      "route": "opencode-go/hy4-flash-free#high",
+      "source": "this closeout assignment"
+    }
+  ],
+  "route_notes": [
+    "Six distinct route strings are recorded; Review A and UX share the OpenAI route, and Green and closeout share the hy route.",
+    "The Red, Green, and UX routes come from the orchestrator read of the OpenCode session list, not from a repository artifact.",
+    "No spec-review route was recorded. The track holds spec-review.md from the build session with the author family opencode-go/deepseek-v4.1-flash; independence cannot be checked (final acceptance F2)."
+  ],
+  "audits": [
+    {
+      "role": "review-a",
+      "phase": 1,
+      "result_file": "measure/runs/storytime_speed_hill_climb_20261123/review-a-p1-r2-cb1bdef8e.json",
+      "audited_head_sha": "cb1bdef8ea0cf9cf92ccc9e428d910af0f057b31",
+      "status": "pass"
+    },
+    {
+      "role": "ux-browser",
+      "phase": 1,
+      "result_file": "measure/runs/storytime_speed_hill_climb_20261123/ux-browser-p1-cb1bdef8e.json",
+      "audited_head_sha": "cb1bdef8ea0cf9cf92ccc9e428d910af0f057b31",
+      "status": "pass"
+    },
+    {
+      "role": "phase-acceptance",
+      "phase": 1,
+      "result_file": "measure/runs/storytime_speed_hill_climb_20261123/phase-acceptance-p1-dcc136c1f.json",
+      "audited_head_sha": "dcc136c1f340496bdb6276de115619cb32011857",
+      "status": "pass"
+    },
+    {
+      "role": "final-acceptance",
+      "phase": "track review",
+      "result_file": "measure/runs/storytime_speed_hill_climb_20261123/final-acceptance-track-b1a954eda.json",
+      "audited_head_sha": "b1a954eda4ed19afc1f1937f71e8279e52042719",
+      "status": "pass"
+    }
+  ],
+  "closeout_items": [
+    {
+      "id": "F1",
+      "file": "measure/archive/storytime_speed_hill_climb_20261123/plan.md",
+      "line": 77,
+      "disposition": "FIX",
+      "detail": "Replaced the stale 'same failure set as the phase base' and 'one deletion and no addition' clause with the dcc136c1f result: 2 failed files and 10 failed tests from the absent gitignored media-list-w01.md, a subset of the phase base failure set."
+    },
+    {
+      "id": "F6-a",
+      "file": "measure/archive/storytime_speed_hill_climb_20261123/metadata.json",
+      "disposition": "FIX",
+      "detail": "Set status done, added completed 2026-11-24, and wrote the accepted LCP gap (median 2815.47 ms against 2500 ms, baseline about 4000 ms, PM accepted 2026-11-24 as the first step), follow-up B with trigger 2026-12-01, and the 30 November 2026 launch batch that needs Daniel's deploy word."
+    },
+    {
+      "id": "F6-b",
+      "file": "measure/tracks.md",
+      "disposition": "FIX",
+      "detail": "Replaced the 'Status: new' line and the active entry with the archived entry after '## Archived Tracks'. The entry carries the same description as metadata.json, the done status, the LCP gap note, follow-up B, and the deploy-batch note."
+    },
+    {
+      "id": "F6-c",
+      "file": "measure/archive/storytime_speed_hill_climb_20261123/plan.md",
+      "line": 91,
+      "disposition": "FIX",
+      "detail": "Changed 'final acceptance pending' to 'final acceptance passed at b1a954eda (final-acceptance-track-b1a954eda, role gate passed)'."
+    },
+    {
+      "id": "F3",
+      "file": "this manifest",
+      "disposition": "FIX",
+      "detail": "Records all six routes and the source of each."
+    },
+    {
+      "id": "F2",
+      "file": "measure/tech-debt.md",
+      "disposition": "DEVIATION",
+      "detail": "No spec-review route was recorded; the deviation is a tech-debt row. The PM owns a later spec-review route rule for light lanes."
+    },
+    {
+      "id": "F4",
+      "file": "measure/tech-debt.md",
+      "disposition": "WAIVED",
+      "detail": "Doctor exits 1 at the stale architecture-enforcement pin that predates this track. The PM waived the gate on request. Four guard steps pass."
+    },
+    {
+      "id": "F5",
+      "file": "measure/tech-debt.md",
+      "disposition": "DEBT",
+      "detail": "The UX screenshot folder is gone; no base screenshot, console capture, or accessibility snapshot was retained. AC-7 holds on independent proof."
+    },
+    {
+      "id": "F7",
+      "file": "measure/tech-debt.md",
+      "disposition": "DEBT",
+      "detail": "The Red log baseline_sha has 31 characters and does not resolve. No gate used it."
+    },
+    {
+      "id": "Q1",
+      "disposition": "PM",
+      "detail": "The deploy batch list stays with the PM. The art change joins the 30 November 2026 launch-day deploy batch and needs Daniel's deploy word. This closeout makes no push, merge, or deploy."
+    }
+  ],
+  "plan_state": {
+    "total_tasks": 2,
+    "done_tasks": 2,
+    "deferred_tasks": 0,
+    "in_progress_tasks": 0,
+    "space_marker_tasks": 0,
+    "note": "The plan holds one task (1.1) with seven sub-boxes, all [x] with commit SHA evidence. plan_closeout_feedback returns an empty list and track_incomplete returns 0. No [~], no [ ], no [b]."
+  },
+  "generated_check_command": {
+    "value": "bash measure/generate.sh && git diff --quiet measure/generated/",
+    "source": "The repo generator measure/generate.sh and the command pattern recorded in the www_features_pricing_20261120 closeout manifest. There is no measure/gates.json in this worktree, so the command was supplied through GENERATED_CHECK_COMMAND in the environment.",
+    "note": "measure/generated was stale at the pre-closeout HEAD (sourceRevision 3e80d3679 from the www_features_pricing closeout). The closeout refreshed architecture.json and routes.md to b1a954eda and staged them before the gate so the worktree-to-index diff check passed. A replay after the closeout commit must stage a fresh regeneration first."
+  },
+  "commands": [
+    "git rev-parse HEAD; git status --porcelain; git branch --show-current -> b1a954eda4ed19afc1f1937f71e8279e52042719, empty status, branch storytime/speed-20261123 (exit 0)",
+    "python3 measure_interphase_checks.py closeout --help -> usage printed (exit 0)",
+    "grep for measure/tracks/storytime_speed_hill_climb_20261123/ over tests/, scripts/, and measure/ before the move -> no hit (exit 0)",
+    "python3 importlib check: plan_closeout_feedback -> [], track_incomplete -> 0 (exit 0)",
+    "git diff --check -> exit 0",
+    "git mv measure/tracks/storytime_speed_hill_climb_20261123 measure/archive/storytime_speed_hill_climb_20261123 -> exit 0",
+    "grep for the fixed path after the move -> no hit (exit 0)",
+    "bash measure/generate.sh; git add measure/generated/architecture.json measure/generated/routes.md; git diff --quiet measure/generated/ -> exit 0",
+    "HEAVY_PRIORITY=p1 heavy-run -c 'pnpm --filter storytime lint' -> exit 0, 0 errors and 45 warnings",
+    "HEAVY_PRIORITY=p1 heavy-run -c 'pnpm --filter storytime check-types' -> exit 0",
+    "HEAVY_PRIORITY=p1 heavy-run -c 'cd apps/storytime && CI=true vitest run entry-art-lcp, look-assets, entry-signin-layout, login-proxy' -> exit 0, 4 files and 50 tests passed",
+    "HEAVY_PRIORITY=p1 env PROJECT_LINT, PROJECT_CHECKS, PROJECT_TESTS, GENERATED_CHECK_COMMAND python3 measure_interphase_checks.py closeout --repo . --track storytime_speed_hill_climb_20261123 --runner heavy-run.sh -> PASS: closeout checks passed (exit 0); INFO: light lane, no final acceptance"
+  ],
+  "retained_evidence": [
+    "measure/runs/storytime_speed_hill_climb_20261123/final-acceptance-track-b1a954eda.json and .log (the final acceptance verdict at the pre-closeout HEAD)",
+    "measure/runs/storytime_speed_hill_climb_20261123/phase-acceptance-p1-dcc136c1f.json and .log",
+    "measure/runs/storytime_speed_hill_climb_20261123/review-a-p1-r2-cb1bdef8e.json and .log",
+    "measure/runs/storytime_speed_hill_climb_20261123/ux-browser-p1-cb1bdef8e.json and .log",
+    "measure/runs/storytime_speed_hill_climb_20261123/closeout-track-b1a954eda.json and .log (this closeout)",
+    "spec-review.md in the archived track (build-session review, 2 Major and 2 Nit, all fixed)"
+  ],
+  "artifact_cleanup": "None. The orchestrator named no bulky artifact for deletion. No run folder other than measure/runs/storytime_speed_hill_climb_20261123/ was added to the commit.",
+  "anti_pattern_checks": {
+    "a5": "grep for PASS=n, FAIL=0 and 'all checks pass' over the archived plan.md returns no hit. The plan states the true suite result (2 failed files and 10 failed tests) and the accepted LCP gap (2815.47 ms).",
+    "a6": "The archived registry entry states the final acceptance PASS at b1a954eda and the role gate PASS. No claim exceeds the recorded audits; the LCP gap is called accepted by the PM, not met.",
+    "a9": "Before the move, no file in tests/, scripts/, or measure/ named the fixed path measure/tracks/storytime_speed_hill_climb_20261123/. After the move, the same grep returns no hit. No test edit was needed."
+  },
+  "registry": {
+    "file": "measure/tracks.md",
+    "section": "Archived Tracks",
+    "link": "./archive/storytime_speed_hill_climb_20261123/",
+    "description_matches_metadata": true,
+    "note": "The active entry was removed and the archived entry sits first under '## Archived Tracks'. The description line is identical to the metadata description."
+  },
+  "metadata_updates": {
+    "file": "measure/archive/storytime_speed_hill_climb_20261123/metadata.json",
+    "status": "done",
+    "completed": "2026-11-24",
+    "updated_at": "2026-11-24T00:00:00Z",
+    "actual_tasks": 1,
+    "description": "Load the Storytime sign-in LCP art eagerly with a priority hint, responsive srcset and sizes, and four small WebP candidates. The local Lighthouse mobile median LCP on /th/sign-in measures 2815.47 ms against the 2500 ms done-when (baseline about 4000 ms); the PM accepted this gap on 2026-11-24 as the first step. Follow-up B covers render-blocking CSS and unused JavaScript in a later track with trigger 2026-12-01. The art change joins the 30 November 2026 launch-day deploy batch and needs Daniel's deploy word; this track holds no deploy task and no traffic task."
+  },
+  "lessons_learned_and_tech_debt": "tech-debt.md gained one consolidated row for F2, F4, F5, F7, the pre-existing whole-suite failures, and follow-up B. F1 was fixed in plan.md, so no row was added for it. One resolved row (audit_20260603_housekeeping_batch F-101 and F-202) was removed to keep the 50-line cap. lessons-learned.md was not updated: this track yielded no durable reusable lesson beyond its plan and this manifest.",
+  "owner_gate": "The plan holds no [b] task, so no deferred owner needs notice. Q1 (the deploy batch list) stays with the PM, and the deploy word stays with Daniel. This closeout does not push, merge, or deploy.",
+  "retry_recommendation": "none"
+}

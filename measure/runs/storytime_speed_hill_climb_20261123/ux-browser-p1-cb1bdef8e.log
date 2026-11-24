@@ -1,0 +1,28 @@
+UX Browser audit passed on audited HEAD cb1bdef8ea0cf9cf92ccc9e428d910af0f057b31.
+The new-code browser gate passed all 192 browser checks and captured 12 screenshots.
+The base browser gate did not run. Heavy-run stopped its frozen-lockfile install after 10 minutes of registry network waits.
+Per PM instruction, the comparison used the original path-d.webp and path-p.webp art files from phase_base_sha, not a base browser run.
+The new-code screenshots and base art files show the same scenes, framing, aspect, colors, sharpness, and text placement.
+No horizontal overflow appeared. The sign-in interactions passed at all six locale and viewport combinations.
+The supplied gate did not capture accessibility snapshots or browser console output. The audit records this evidence gap.
+The temporary baseline worktree was removed. The audited worktree stayed at the supplied HEAD and had no tracked changes.
+
+MEASURE_AGENT_RESULT
+status: pass
+baseline_sha: e3b93ca3382c648d61a4a84ae590d9980224711f
+role: measure-ux-browser-review
+track: storytime_speed_hill_climb_20261123
+phase: Phase 1: The sign-in LCP art
+task: 1.1.7
+phase_base_sha: e3b93ca3382c648d61a4a84ae590d9980224711f
+role_base_sha: cb1bdef8ea0cf9cf92ccc9e428d910af0f057b31
+audited_head_sha: cb1bdef8ea0cf9cf92ccc9e428d910af0f057b31
+tests: current-code gate passed 192/192 browser checks and 9/9 gate checks; browser-to-browser baseline run did not complete
+screenshots: /home/daniebo/.cache/opencode/storytime-entry-gate-2669858/{th,en}-sign-in-{390,980,1280}.png
+accessibility_snapshots: none; the supplied gate does not capture them
+interactions: password toggle, aria-pressed state, wrong-password alert placement, and username retention passed for Thai and English at 390, 980, and 1280 px
+next_env: apps/storytime/next-env.d.ts unchanged
+changed_files: measure/runs/storytime_speed_hill_climb_20261123/ux-browser-p1-cb1bdef8e.json; measure/runs/storytime_speed_hill_climb_20261123/ux-browser-p1-cb1bdef8e.log
+nonblocking: base browser run unavailable after heavy-run stopped a 10-minute npm registry wait; visual comparison used the base commit art files, not base screenshots
+handoff: UX gate passes. The new-code screenshots match the original phase-base art in scene, crop, aspect, color, sharpness, and text placement. No horizontal overflow appears. The browser-to-browser comparison and saved accessibility snapshots are unavailable; the supplied gate does not capture them. The exact nonblocking evidence gap is recorded in the audit JSON.
+END_MEASURE_AGENT_RESULT
