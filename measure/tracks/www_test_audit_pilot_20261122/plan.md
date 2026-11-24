@@ -652,3 +652,17 @@ Each task below is one commit for one class.
   F51: commit fb5622ed7 restored the explicit-English test in blog-locale.test.ts.
   The original D2 explicit-English row was not kept as a same-rule duplicate.
   All added SHAs resolved with git cat-file -e. No test or production file changed.
+- [x] 4.13 Merge master into the pilot branch before final acceptance (6ee56327b)
+  Commit: 6ee56327b84bd45fee1277d5da940b278ea60b26.
+  Fetched origin master at 968bde612595fdcfcbadd8d7d14bafbfa8aa8b67.
+  Merged origin/master as a merge commit. No rebase, no force, and no push.
+  Master brings two dated blog posts, two blog images, and the 2027 home copy.
+  Master also brings the storytime claims-scanner test update.
+  The pilot test structure stays in the two conflicted test and fixture files.
+  Master's changed home copy stays, with the new no-roadmap-without-date test.
+  APPROVED_SCHOOL_YEAR and its scanner clearing stay in the fixture.
+  No production code changed here beyond what master brings.
+  The four heavy-run gates passed at the merge head.
+  Check-types and lint exited 0. Lint holds three pre-existing warnings.
+  Vitest passed 1413 tests in 98 files. Line coverage is 92.08 percent.
+  The coverage floor is 85.52 percent.
