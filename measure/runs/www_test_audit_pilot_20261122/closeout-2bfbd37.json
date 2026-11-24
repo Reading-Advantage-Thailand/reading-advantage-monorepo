@@ -42,7 +42,9 @@
     "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/www-test-audit && bash measure/doctor.sh' -> exit 1 on the stale architecture pin only",
     "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/www-test-audit && pnpm --filter www-reading-advantage exec vitest run --reporter=dot' -> exit 0, 98 files, 1494 tests",
     "git add -f measure/runs/www_test_audit_pilot_20261122/ && git add measure/archive/www_test_audit_pilot_20261122 measure/tracks.md measure/generated/",
-    "git commit -m 'chore(measure): close out www test audit pilot (track_id: www_test_audit_pilot_20261122)'"
+    "git commit -m 'chore(measure): close out www test audit pilot (track_id: www_test_audit_pilot_20261122)' -> b57a3e323378a13afb71fcfa4d0e41fec7acab9c",
+    "git add -u measure/tracks/www_test_audit_pilot_20261122/ && git commit -m 'chore(measure): drop stale active track path (track_id: www_test_audit_pilot_20261122)' -> dffc805175918230c1037d7cae0b24eb7ab09243",
+    "git status --short -> empty after both commits; branch www/test-audit"
   ],
   "changed_files": [
     "measure/tracks.md",
