@@ -508,6 +508,15 @@ Each task below is one commit for one class.
 
 ## Phase 4: Pilot report
 
+- Late finding L1: tech-debt (the timing run at head was pre-merge)
+- Late finding ADV-26: tech-debt (the 2027 school-year clause removal passes in en as well as th and zh)
+- Late finding ADV-27: tech-debt (only the th APPROVED_SCHOOL_YEAR value and its circular control pass)
+- Late finding ADV-28: tech-debt (the Thai month class has controls for 4 of 12 months)
+- Late finding ADV-29: tech-debt (a YAML error names no post at collection, as in the baseline)
+- Late finding ADV-30: tech-debt (the .mdx and .MD probes write into the real en posts tree)
+- Late finding ADV-31: tech-debt (mkdirSync and symlinkSync run before try, leaking the mkdtemp base on a throw)
+- Late finding ADV-32: tech-debt (the earlier ADV-26 and ADV-27 records were too broad)
+
 - [x] 4.1 Write the pilot report (289c4451c)
   Report: measure/tracks/www_test_audit_pilot_20261122/report.md.
   Commit: 289c4451c643a0b054a0b45a1dda0d8650a362c3.
@@ -721,3 +730,10 @@ Each task below is one commit for one class.
   - ADV-32: the earlier ADV-26 and ADV-27 records were too broad; corrected here.
   ADV-26 to ADV-32 and L1 were added to measure/tech-debt.md.
   One Resolved row from 2026-06-03 was pruned to keep that file at 50 lines.
+- [x] 4.16 Record document commit and late-finding lines (47f4cac87)
+  Commit: 47f4cac872450120e984468bbd14a97ff9a7b637.
+  Review log: measure/runs/www_test_audit_pilot_20261122/review-a-47f4cac.json.
+  N4: commit 47f4cac87 added ADV-31 and ADV-32, corrected ADV-26 and ADV-27,
+  and labelled task 4.3 as pre-merge. The Phase 4 heading now writes L1 and
+  ADV-26 to ADV-32 as one late-finding line each in the contract form.
+  No test or production file changed. No push was made.
