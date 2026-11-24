@@ -65,7 +65,7 @@
     "heavy_run": "After the archive move, HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run --reporter=dot' -> exit 0; summary: Test Files 98 passed (98), Tests 1494 passed (1494), Duration 97.82s. The MISSING_MESSAGE IntlError and 'Could not parse CSS stylesheet' lines are expected noise from negative-case tests. Final acceptance had already re-run check-types, lint, Vitest and coverage at HEAD 2bfbd373f with exit 0, 0 errors plus 1 pre-existing lint warning, and 92.08 % lines. No apps path changed during closeout."
   },
   "retained_evidence": [
-    "measure/runs/www_test_audit_pilot_20261122/ (424 files, force-added to git: final acceptance, phase acceptances, gate JSONs, green and coverage logs, adversarial probes, mutation scripts, classification and timing evidence, closeout result)",
+    "measure/runs/www_test_audit_pilot_20261122/ (427 files, force-added to git: final acceptance, phase acceptances, gate JSONs, green and coverage logs, adversarial probes, mutation scripts, classification and timing evidence, closeout result)",
     "measure/runs/www_test_audit_pilot_20261122/final-acceptance-2bfbd37.json and .log",
     "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p4-2bfbd37.json and .log",
     "measure/runs/www_test_audit_pilot_20261122/green-at-f97a72f9.log and coverage-at-f97a72f9.log",
