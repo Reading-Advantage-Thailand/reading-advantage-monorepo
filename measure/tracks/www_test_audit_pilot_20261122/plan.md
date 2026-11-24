@@ -523,11 +523,14 @@ Each task below is one commit for one class.
 - [x] 4.3 Checkpoint Phase 4 (289c4451c)
   Commit: 289c4451c643a0b054a0b45a1dda0d8650a362c3.
   Report: measure/tracks/www_test_audit_pilot_20261122/report.md.
-  The raw case cut is 1763 cases, or 55.5 percent of the 3175 baseline
-  (measure/runs/www_test_audit_pilot_20261122/baseline.json and
-  measure/runs/www_test_audit_pilot_20261122/gate-66aeb1011.json).
-  The 20 percent target is met. Line coverage rose from 86.52 percent to
-  92.07 percent (baseline.json and gate-66aeb1011.json).
+  The pre-merge raw case cut is 1763 cases, or 55.5 percent of the 3175
+  baseline, at e91c4d4cc (measure/runs/www_test_audit_pilot_20261122/baseline.json
+  and measure/runs/www_test_audit_pilot_20261122/gate-66aeb1011.json).
+  The final cut after the master merge 6ee56327b is 1762 cases, with 1413
+  cases and 92.08 percent line coverage
+  (measure/runs/www_test_audit_pilot_20261122/green-merge-e836e7289.log).
+  The 20 percent target is met. Pre-merge line coverage rose from 86.52
+  percent to 92.07 percent (baseline.json and gate-66aeb1011.json).
   All Phase 4 report gates exited 0.
 - [x] 4.4 Report review remediation F27 F28 (f68593cbc)
   Commit: f68593cbc1a45e6c61975e6debf6d4da55c2a29c.
@@ -701,16 +704,20 @@ Each task below is one commit for one class.
   Late finding L1: tech-debt. The report named a timing run at head. The run
   used timing-at-head.json, which holds 1412 tests, so it ran at the pre-merge
   head. The report now says pre-merge head.
-  ADV-26 to ADV-30 are listed as tech-debt:
-  - ADV-26: the 2027 home suite line has weak non-English guards; a Thai year
-    edit or clause removal passes.
-  - ADV-27: expected-copy fixture fields are unpinned; LABEL_COPY, ROW_B home
-    and APPROVED_SCHOOL_YEAR mutations pass.
+  ADV-26 to ADV-32 are listed as tech-debt:
+  - ADV-26: the 2027 school-year clause removal passes in en as well as th and
+    zh; a Thai year edit passes.
+  - ADV-27: expected-copy fixture fields are unpinned; LABEL_COPY and ROW_B
+    home mutations pass, but only the th APPROVED_SCHOOL_YEAR value and its
+    circular control pass; en and zh edits fail the label handoff tests.
   - ADV-28: the Thai month class has controls for 4 of 12 months; deleting the
     other eight passes.
   - ADV-29: a YAML error fails blog-posts-validation at collection and names
     no post, as in the baseline.
   - ADV-30: the .mdx and .MD probes write into the real en posts tree; parallel
     overlap is a static risk.
-  L1 and ADV-26 to ADV-30 were added to measure/tech-debt.md in this commit.
+  - ADV-31: in the adversarial loader test and the sibling helper postsTree(),
+    mkdirSync and symlinkSync run before try, so a throw leaks the mkdtemp base.
+  - ADV-32: the earlier ADV-26 and ADV-27 records were too broad; corrected here.
+  ADV-26 to ADV-32 and L1 were added to measure/tech-debt.md.
   One Resolved row from 2026-06-03 was pruned to keep that file at 50 lines.
