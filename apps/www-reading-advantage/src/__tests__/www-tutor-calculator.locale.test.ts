@@ -247,6 +247,11 @@ const LIVE_LINE_PINS: readonly { path: readonly string[]; en: string; th: string
   },
 ];
 
+/** The commission-model FAQ answer pin of PR section 5. */
+const FAQ_ANSWER_PIN = LIVE_LINE_PINS.find(
+  ({ path }) => path.join(".") === "faq.items.5.answer",
+);
+
 /** The two old live lines that PR section 5 removes. */
 const ABSENT_LIVE_LINES = [
   "We do not publish income figures. Ask us for the details.",
@@ -462,6 +467,13 @@ describe("7. the two live lines (AC-6, PR section 5)", () => {
       "pages.products.tutorAdvantage.tutorRole.points.3",
       "pages.products.tutorAdvantage.faq.items.5.answer",
     ]);
+  });
+
+  it("holds the exact en and th commission FAQ answer", () => {
+    expect(FAQ_ANSWER_PIN, "the faq.items.5.answer pin").toBeDefined();
+    const pin = FAQ_ANSWER_PIN!;
+    expect(at(DICTS.en, pin.path), "en faq.items.5.answer").toBe(pin.en);
+    expect(at(DICTS.th, pin.path), "th faq.items.5.answer").toBe(pin.th);
   });
 
   it("keeps the zh values equal to en (D-10)", () => {
