@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: review-a
+status: blocked
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+commits: none
+tests_run: targeted Vitest 6 files / 142 tests PASS; heavy-run full Vitest 87 files / 3077 tests PASS; source comparison PASS; missing-deliverable guard PASS
+files_changed: review-a-7fb548e5e.json; review-a-7fb548e5e.log
+plan_updates: none
+known_failures: role-gate exits 1: current phase still has 3 non-deferred incomplete tasks; no implementation blocker
+handoff: Orchestrator must record completed browser work and the PM handoff for tasks 4.1-4.3, then rerun role-gate. Correctness audit passes with three nonblocking findings.
+END_MEASURE_AGENT_RESULT

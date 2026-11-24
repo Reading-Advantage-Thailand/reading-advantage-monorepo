@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "role": "ux-browser-review",
+  "track": "www_features_pricing_20261120",
+  "phase": "Phase 4: Browser review and captures",
+  "baseline_sha": "cd50ca0351341e7f6a3fa3ff3a37f0b9190c0ae4",
+  "phase_base_sha": "c096256a1eb9f41329306533a78aa0108cc6bcff",
+  "role_base_sha": "cd50ca0351341e7f6a3fa3ff3a37f0b9190c0ae4",
+  "audited_head_sha": "cd50ca0351341e7f6a3fa3ff3a37f0b9190c0ae4",
+  "status": "inconclusive",
+  "summary": "Not ready. The Reading crop does not clearly present a book cover. Playwright command denials block the remaining live checks and clean final captures.",
+  "blocking_findings": [
+    "F4 [Blocker] ux-browser-review: The new Reading picture appears as a landscape title banner, not a recognisable printed book cover. The 1200x576 crop removes the RA branding, portrait shape, and both illustrated characters' heads. It retains the complete Origins 2 title band and cuts no face, but those properties do not establish book-cover recognition. The desktop presentation reduces this fragment to about 192x92 pixels. Evidence: apps/www-reading-advantage/public/images/products/ra-origins-2-cover.jpg; /home/daniebo/.cache/opencode/ux-wfp-r7/photos/390-3-ra-origins-2-cover.png; localhost-en-features-1280.png. Route to Green: derive an uncropped 1200x1628 image from the supplied full-cover source. Set the image width and height to that portrait ratio. Show it in a width-capped portrait column, with automatic height and no cover crop. Preserve the RA logo, Origins 2 title, and complete illustrated faces. Keep the sentence deletion, status line, card order, and Primary spacing fix. Recheck recognisability at all three widths."
+  ],
+  "nonblocking_findings": [],
+  "retry_recommendation": "escalate_human",
+  "evidence": [
+    "The last HEAD check returned cd50ca0351341e7f6a3fa3ff3a37f0b9190c0ae4. It matches the supplied baseline, role base, and audited HEAD. The immutable phase base remains c096256a1eb9f41329306533a78aa0108cc6bcff.",
+    "Read the exact phase changes since the previous audit and plan task 4.9. The earlier routing record, strategy, spec, design documents, and original phase diff remain in the review context.",
+    "Viewed the supplied full-cover source and the new JPEG. The full cover measures 1200x1628 and includes the RA logo, illustrated heads, and title. The crop keeps only source y=1052..1628, producing a 1200x576 landscape fragment.",
+    "The current crop preserves the complete title band. It contains no half face because it removes the illustrated heads entirely. F4 concerns book-cover recognition, not clipped title text or a cut face.",
+    "Viewed the fresh en 390 and 1280 captures, th 980 capture, zh 1280 capture, and the focused 390 cover crop. The picture reads as a banner fragment. The full portrait cover would preserve its recognisable book form and branding.",
+    "The code removes the specified English and Thai body sentences. zh inherits the English deletion. ProgramCard conditionally omits the empty body paragraph. The status values remain unchanged in the exact locale diff.",
+    "The featured article now uses md:items-start. The viewed captures show Primary bullets immediately after the paragraph, rather than at the bottom of a stretched text column. Fresh numerical gap measurements remain blocked.",
+    "The viewed desktop captures retain three full-width pictured rows, paired text-only cards, and the original order. F3 does not visibly recur. Full live assertions remain blocked.",
+    "PROJECT_DEV_URL was unset. The audit started the production server at http://localhost:3123. curl returned HTTP 200 for /en/features. The role gate receives this URL through its environment.",
+    "Build attempt 1 exited 1 on the Next.js security notice. Attempt 2 exited 0. Both foreground attempts used heavy-run with a 1200000 ms shell timeout. No upgrade or package change occurred.",
+    "Next.js recommends a security upgrade because it reports a known vulnerability. The orchestrator must handle that recommendation separately.",
+    "page-check completed all nine Features route/viewport combinations. It reported four shown photographs at 390 and three at desktop widths. The Reading thumbnail falls below its 120-pixel height threshold on desktop. No reported photograph is hidden, blank, covered, or overlapped by text.",
+    "The fresh en 1280 page-check report has error=null and layoutWidth=1280. Its reported Storytime and Primary pictures load and remain visible. This report does not replace interaction checks or accessibility snapshots.",
+    "The Green en 1280 capture and the fresh en 1280 page-check capture both show the header in the middle of the document. Read page-check: photo_report scrolls photographs into view at line 347, then returns without resetting scroll. The main routine takes a full-page screenshot after photo_report. This explains a likely fixed-header capture artifact.",
+    "The required fresh live header proof did not run. Both heavy-run Playwright commands received tool-level Permission denied: shell responses before execution. The reviewer does not claim a proven live header pass or classify this as an implementation overlap defect.",
+    "The two denied commands would have captured the nine clean Features previews, accessibility snapshots, keyboard interactions, deleted-sentence assertions, Primary gap measurements, and a single Pricing confirmation. They produced no valid browser evidence.",
+    "The reviewer did not attempt another browser route around the command denials. Gate and server-cleanup commands remained available.",
+    "The nine raw page-check captures exist under ux-wfp-r7 with localhost-prefixed names. They are not the requested header-artifact-free final set. No features-locale-width.png file is claimed as delivered.",
+    "Pricing code and copy remain unchanged in this remediation. Its previous PM pass remains context only. The requested single fresh Pricing confirmation did not run.",
+    "Stopped only audit server PID 3111914, obtained from ss for port 3123. The final port check shows no listener. The working tree has no implementation change from this audit.",
+    "No implementation, test, plan, registry, package, or commit changed. This audit cannot pass until the blocked live checks run and F4 receives a disposition."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git status --short; git diff 4ccf4c879..HEAD; read plan task 4.9 and both cover images",
+    "bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/www-features-pricing/apps/www-reading-advantage && pnpm build' — foreground, 1200000 ms timeout; attempt 1 exit 1 on security notice; attempt 2 exit 0",
+    "pnpm exec next start -p 3123 — the only background process; curl http://localhost:3123/en/features returned HTTP 200",
+    "/home/daniebo/Desktop/advantage-pr/scripts/jobs/page-check http://localhost:3123/en/features http://localhost:3123/th/features http://localhost:3123/zh/features --out /home/daniebo/.cache/opencode/ux-wfp-r7/ — exit 0",
+    "heavy-run node -e with system Chrome: nine Features contexts, one Pricing confirmation, and header artifact reproduction — tool denied: Permission denied: shell; no execution evidence",
+    "heavy-run node -e with system Chrome: bounded nine-context Features capture and interaction retry — tool denied: Permission denied: shell; no execution evidence",
+    "Read page-check lines 315–418 and its screenshot/photo_report call order; viewed Green and current full-page captures",
+    "ss -ltnp '( sport = :3123 )'; kill -TERM 3111914; ss -ltnp '( sport = :3123 )'; git rev-parse HEAD; git status --short — server stopped, port free, HEAD unchanged",
+    "PROJECT_DEV_URL=http://localhost:3123 python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py role-gate --repo /home/daniebo/Desktop/rama-worktrees/www-features-pricing --role ux-browser-review --track www_features_pricing_20261120 --phase 'Phase 4: Browser review and captures' --result-file measure/runs/www_features_pricing_20261120/ux-browser-cd50ca035.json --log-file measure/runs/www_features_pricing_20261120/ux-browser-cd50ca035.log"
+  ],
+  "changed_files": [
+    "measure/runs/www_features_pricing_20261120/ux-browser-cd50ca035.json",
+    "measure/runs/www_features_pricing_20261120/ux-browser-cd50ca035.log"
+  ],
+  "confidence": "medium",
+  "ux_applicability": "applicable",
+  "webbridge_status": "unhealthy",
+  "webbridge_evidence": {
+    "engine": "page-check used its browser; independent Playwright commands were denied",
+    "base_url": "http://localhost:3123",
+    "screenshots": [
+      "/home/daniebo/.cache/opencode/ux-wfp-r7/photos/390-3-ra-origins-2-cover.png",
+      "/home/daniebo/.cache/opencode/ux-wfp-r7/localhost-en-features-390.png",
+      "/home/daniebo/.cache/opencode/ux-wfp-r7/localhost-en-features-1280.png",
+      "/home/daniebo/.cache/opencode/ux-wfp-r7/localhost-th-features-980.png",
+      "/home/daniebo/.cache/opencode/ux-wfp-r7/localhost-zh-features-1280.png"
+    ],
+    "accessibility_snapshots": [],
+    "interactions": []
+  },
+  "screenshots": [
+    "/home/daniebo/.cache/opencode/ux-wfp-r7/localhost-en-features-390.png",
+    "/home/daniebo/.cache/opencode/ux-wfp-r7/localhost-en-features-980.png",
+    "/home/daniebo/.cache/opencode/ux-wfp-r7/localhost-en-features-1280.png",
+    "/home/daniebo/.cache/opencode/ux-wfp-r7/localhost-th-features-390.png",
+    "/home/daniebo/.cache/opencode/ux-wfp-r7/localhost-th-features-980.png",
+    "/home/daniebo/.cache/opencode/ux-wfp-r7/localhost-th-features-1280.png",
+    "/home/daniebo/.cache/opencode/ux-wfp-r7/localhost-zh-features-390.png",
+    "/home/daniebo/.cache/opencode/ux-wfp-r7/localhost-zh-features-980.png",
+    "/home/daniebo/.cache/opencode/ux-wfp-r7/localhost-zh-features-1280.png"
+  ],
+  "preview_capture_status": "incomplete: raw page-check captures only; header-artifact-free final captures unavailable",
+  "header_verdict": "Capture code supports an artifact explanation; fresh live proof remains blocked.",
+  "role_gate": {
+    "exit_code": 1,
+    "output_summary": "FAIL: audit status must be pass, got 'inconclusive'; F4 [Blocker] ux-browser-review: the crop does not clearly present a printed book cover.",
+    "schema_errors": []
+  },
+  "pm_look_readiness": "not_ready",
+  "handoff_question": {
+    "question": "Can the orchestrator authorize the read-only Playwright capture and interaction commands for this audit?",
+    "options": ["Authorize the commands and rerun the audit", "Stop the audit"]
+  },
+  "route": "openai/gpt-6.1-sol#high",
+  "facts_changed": []
+}

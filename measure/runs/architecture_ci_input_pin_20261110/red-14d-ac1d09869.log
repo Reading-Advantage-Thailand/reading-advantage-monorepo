@@ -1,0 +1,133 @@
+# Red 1.4d (r4) — option 1, the v2 route — FINAL
+
+Task 1.4d marked `[~]` in plan.md with the option 1 amendment and the
+Red evidence. The plan amendment carries the route, the two defaults,
+the exact words "default taken, no PM answer in 20 min", and the
+sub-steps: (a) Red tests, (b) Green code port, (c) Green data.
+
+- `phase_base_sha=09168dc422ed48604b8f2f0cb9a23ad4d110543b` resolves.
+- `role_base_sha=ac1d09869f7819f43666ffee2f8886d945175733` resolves (HEAD at run time).
+- Resulting HEAD: `e51124bd4d3f8cf10f87649b1023d151ec334a81`.
+- `git status --short`: the three dirty `next-env.d.ts` files
+  (`apps/accounting`, `apps/activity-vinext-fixture`, `apps/marketing`)
+  and the unrelated untracked paths are left untouched. Those paths are
+  unrelated user work, not track scope. Only the new test file and the
+  plan amendment were committed.
+- No production file, manifest, baseline, or workflow file was changed.
+- No question tool was used; no user input was needed. Default taken.
+
+The r3 run stopped on a provider error before its commit. Its staged
+edits were reviewed, kept, and completed. The stale r3 result block
+named a commit that does not exist; this log overwrites it.
+
+## Test file
+
+`packages/architecture-enforcement/src/__tests__/architecture-v2-route-14d.test.ts`
+(12 cases). Test hunks only; no production hunk was copied. The file
+ports the 41e320d9d delta cases in their c6e3e4462 final form, with one
+adaptation: the review subject is recomputed with a local helper because
+`computeV2ManifestReviewSubjectSha256` is not exported on master.
+
+Two r4 corrections were made to the staged file. First, a comment that
+held a `measure/runs/` path and unlabeled counts was reworded, so the
+file holds no A9 path and no bare count. Second, the preview case stubs
+only the async manifest validator. The task 1.4 pin is stale against the
+current tree, so that validator otherwise reports "Analyzer input
+snapshot hash does not match current bytes" before the four-file staging
+runs. The pin contract is covered by `architecture-ci-input-pin.test.ts`.
+The sync validator used by the delta cases stays real. A getter over the
+real module keeps the overlay case failing on a missing function, and
+lets the ported Green export show without a further edit to the mock.
+
+All imports resolve at HEAD. The vitest format follows the package
+convention; the shell-harness note does not apply to this package.
+
+Anti-pattern detectors over the test file exit 1 (no hits):
+`rg -n 'measure/tracks|measure/runs' <file>` (A9), the A3 bare-digit
+count detector, and the A7 bare-English filter detector.
+
+## Command
+
+`CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-v2-route-14d.test.ts --maxWorkers=1`
+
+Run at `role_base_sha` and again at the resulting HEAD. Both exit 1.
+Counts: `tests_total=12`, `tests_failed=9`, `tests_passed=3`.
+Duration about 0.9 s. No load error, no import error, no syntax error.
+
+Failing tests and reasons:
+
+1. `delta_staged_addition_validates` — reports "V2 baseline deltas must
+   be empty". The validator lacks the v1-plus-staged-delta rule.
+2. `delta_staged_removal_of_v1_survivor_validates` — same reason.
+3. `delta_unexplained_baseline_rejected` — reports "database v2 baseline
+   entries differ from v1" instead of "does not match v1 plus the staged
+   delta". The v2-against-v1-plus-delta check is missing.
+4. `preview_stages_current_delta_and_rebinds_four_files` — stages
+   `additions=0`. The four-file shape holds; the current-delta staging is
+   missing.
+5. `cli_accepts_owner_and_rationale` — throws "Unsupported architecture
+   reconciliation argument: --owner".
+6. `cli_forwards_review_metadata_to_apply` — same, parse throws first.
+7. `apply_allows_reviewed_candidate_write` — rejects with "Candidate v2
+   reconciliation cannot write before acceptance".
+8. `overlay_pins_snapshot_over_proposed_bytes` — finds
+   `computeAnalyzerInputSnapshotWithOverlay` undefined.
+9. `ci_runs_check_under_policy_v2_with_skip` — the boundary step runs
+   `pnpm architecture:check --skip-input-snapshot-pin` with no
+   `--policy v2`.
+
+Passing guards: `route_fixture_positive_control`,
+`delta_unstaged_addition_rejected`, `delta_malformed_record_rejected`.
+The base shape check already rejects non-empty deltas and malformed
+records, and the fixture manifest validates before any mutation.
+
+## Guarded test edits from c6e3e4462 (for reviewer audit)
+
+c6e3e4462 edits three existing test files. None of these edits was
+copied into an existing file; the Red file only adds. Green must port
+each edit with its production change.
+
+1. `architecture-ci-input-pin.test.ts` — the workflow expectation gains
+   `--policy v2`. Reason: the CI step runs the check under policy v2
+   (220e5886d). The old expectation fails after Green.
+2. `reconciliation-manifest-v2.red.test.ts` — the case is renamed to
+   "staged baseline deltas"; the three `toEqual([])` assertions become
+   non-empty array assertions. Reason: the committed manifest stages the
+   reviewed delta instead of empty arrays.
+3. `v2-baseline-delta.test.ts` — the addition and removal fixtures append
+   to the committed staged delta instead of overwriting it; the removal
+   case picks a v1 survivor still present in v2. Reason: fixtures must
+   build on the committed staged delta once the manifest stages one.
+
+MEASURE_AGENT_RESULT
+status: pass
+track: architecture_ci_input_pin_20261110
+phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+task: 1.4d
+role: red
+role_base_sha: ac1d09869f7819f43666ffee2f8886d945175733
+baseline_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+resulting_HEAD: e51124bd4d3f8cf10f87649b1023d151ec334a81
+commits: ["e51124bd4d3f8cf10f87649b1023d151ec334a81 test(architecture): red tests for the v2 ci route (track_id: architecture_ci_input_pin_20261110)"]
+tests: ["route_fixture_positive_control", "delta_staged_addition_validates", "delta_staged_removal_of_v1_survivor_validates", "delta_unexplained_baseline_rejected", "delta_unstaged_addition_rejected", "delta_malformed_record_rejected", "preview_stages_current_delta_and_rebinds_four_files", "cli_accepts_owner_and_rationale", "cli_forwards_review_metadata_to_apply", "apply_allows_reviewed_candidate_write", "overlay_pins_snapshot_over_proposed_bytes", "ci_runs_check_under_policy_v2_with_skip"]
+test_files: ["packages/architecture-enforcement/src/__tests__/architecture-v2-route-14d.test.ts"]
+failing_tests: ["delta_staged_addition_validates: V2 baseline deltas must be empty", "delta_staged_removal_of_v1_survivor_validates: V2 baseline deltas must be empty", "delta_unexplained_baseline_rejected: database v2 baseline entries differ from v1, not v1 plus the staged delta", "preview_stages_current_delta_and_rebinds_four_files: stages additions=0", "cli_accepts_owner_and_rationale: Unsupported architecture reconciliation argument: --owner", "cli_forwards_review_metadata_to_apply: Unsupported architecture reconciliation argument: --owner", "apply_allows_reviewed_candidate_write: Candidate v2 reconciliation cannot write before acceptance", "overlay_pins_snapshot_over_proposed_bytes: computeAnalyzerInputSnapshotWithOverlay undefined", "ci_runs_check_under_policy_v2_with_skip: no --policy v2 in boundary step"]
+passing_guards: ["route_fixture_positive_control", "delta_unstaged_addition_rejected", "delta_malformed_record_rejected"]
+counts: "tests_total=12, tests_failed=9, tests_passed=3"
+guarded_test_edits_from_c6e3e4462: ["architecture-ci-input-pin.test.ts: workflow expectation gains --policy v2 because CI runs under policy v2 (220e5886d)", "reconciliation-manifest-v2.red.test.ts: zero-delta assertions become staged-delta assertions because the manifest stages the reviewed delta", "v2-baseline-delta.test.ts: fixtures append to the committed staged delta and removal picks a v1 survivor because the manifest stages one"]
+evidence_commands: ["git status --short", "git rev-parse --verify 09168dc422ed48604b8f2f0cb9a23ad4d110543b", "git rev-parse --verify ac1d09869f7819f43666ffee2f8886d945175733", "git show 41e320d9d --stat", "git show c6e3e4462 -- packages/architecture-enforcement/src/__tests__", "git show 220e5886d -- .github/workflows/ci.yml", "CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-v2-route-14d.test.ts --maxWorkers=1", "rg -n 'measure/tracks|measure/runs' packages/architecture-enforcement/src/__tests__/architecture-v2-route-14d.test.ts (exit 1)"]
+handoff: "Red 1.4d done. 9 of 12 new cases fail for the missing v2 behavior; 3 guards pass. Green port: production hunks from 41e320d9d, 3aff7f243, 7ca865ae8, and 220e5886d, plus the c6e3e4462 guarded test edits listed above. Note for Green: (1) the old architecture-ci-input-pin.test.ts still expects the flag without --policy v2 and needs the c6e3e4462 edit; (2) the manifest must stage the reviewed delta and the PIN must be refreshed before the preview test passes; (3) this Red file overlaps the upstream v2-baseline-delta.test.ts, prefer the upstream file when reconciling. No question asked; default taken."
+END_MEASURE_AGENT_RESULT
+
+Follow-up 2026-11-18 (type fix). Green ported the code and data at HEAD
+82b584d666975e9347759ed9e7e2cc7062a46f8a; all 12 cases pass in a clean
+worktree. The apply mock at line 302 widened `transactionOutcome.state`
+to `string`, so package check-types failed. Fixed with `state: "committed"
+as const` in the test file only. No assertion or test behavior changed.
+Commit `9213a78b3f88177e6c733c35420dde412d366a12`
+`test(architecture): type the apply mock state (track_id: architecture_ci_input_pin_20261110)`.
+Verification: `pnpm --filter @reading-advantage/architecture-enforcement check-types` exits 0.
+`CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-v2-route-14d.test.ts --maxWorkers=1`
+exits 1 with `tests_total=12`, `tests_passed=11`, `tests_failed=1`; the one
+failure is `preview_stages_current_delta_and_rebinds_four_files`, caused by
+the unrelated dirty `next-env.d.ts` files in this checkout (expected).

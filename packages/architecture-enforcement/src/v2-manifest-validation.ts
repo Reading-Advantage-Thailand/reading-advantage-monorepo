@@ -21,6 +21,7 @@ import { computeRulesetHash } from "./baseline.js";
 import {
   architectureBaselineSchema,
   architectureConfigSchema,
+  baselineEntrySchema,
   type ArchitectureFinding,
 } from "./contracts.js";
 import { selectArchitectureSourceFiles } from "./inventory.js";
@@ -35,6 +36,7 @@ import {
   computeReconciliationImplementationTreeSha256V2Sync,
 } from "./reconciliation-manifest.js";
 import { compareStableStrings } from "./stable-order.js";
+import { z } from "zod";
 import {
   listWorkspacePackageManifestPaths,
   loadWorkspaceModuleTargets,
@@ -197,6 +199,23 @@ function isSha256(value: unknown): value is string {
     !/^0{64}$/.test(value) &&
     !/^a{64}$/.test(value)
   );
+}
+
+/**
+ * Computes the review subject over the protected manifest fields.
+ * @param manifest Parsed v2 reconciliation manifest.
+ * @returns Lowercase SHA-256 digest of the canonical protected fields.
+ */
+export function computeV2ManifestReviewSubjectSha256(
+  manifest: Record<string, unknown>,
+): string {
+  const {
+    reviews: _reviews,
+    acceptance: _acceptance,
+    reviewSubjectSha256: _subject,
+    ...protectedFields
+  } = manifest;
+  return sha256Text(canonicalJson(protectedFields));
 }
 
 /** Tests whether a repository-relative path is exact and traversal-free. */
@@ -418,6 +437,71 @@ function tenantRegistryException(): Record<string, string | number> {
   };
 }
 
+/** One staged move from a frozen v1 instance key to its current entry. */
+const baselineRenameSchema = z
+  .object({
+    semanticKey: z.string().regex(SHA256_PATTERN),
+    previousInstanceKey: z.string().regex(SHA256_PATTERN),
+    entry: baselineEntrySchema,
+  })
+  .strict();
+
+/** Strict staged delta of one v2 reconciliation manifest. */
+interface StagedBaselineDelta {
+  additions: z.infer<typeof baselineEntrySchema>[];
+  removals: string[];
+  renames: z.infer<typeof baselineRenameSchema>[];
+}
+
+/**
+ * Parses the staged v2 baseline delta of one manifest.
+ * @param manifest Parsed v2 reconciliation manifest.
+ * @returns Strict additions, removals, and renames of the staged delta.
+ * @throws When a delta field is missing or holds a malformed record.
+ */
+function parseStagedDelta(manifest: Record<string, unknown>): StagedBaselineDelta {
+  return {
+    additions: z.array(baselineEntrySchema).parse(manifest.baselineAdditions),
+    removals: z
+      .array(z.string().regex(SHA256_PATTERN))
+      .parse(manifest.baselineRemovals),
+    renames: z.array(baselineRenameSchema).parse(manifest.baselineRenames),
+  };
+}
+
+/**
+ * Applies the staged delta to the frozen v1 entries of one domain.
+ * Renames replace the entry at the old instance key, removals drop the rest,
+ * and additions append. The result sorts by instance key.
+ * @param v1Entries Frozen v1 baseline entries of one domain.
+ * @param delta Strict staged delta of the manifest.
+ * @param domain Architecture domain of the reconstruction.
+ * @returns Reconstructed entries that must equal the v2 baseline entries.
+ */
+function applyStagedDelta(
+  v1Entries: readonly z.infer<typeof baselineEntrySchema>[],
+  delta: StagedBaselineDelta,
+  domain: string,
+): z.infer<typeof baselineEntrySchema>[] {
+  const renamed = new Map(
+    delta.renames
+      .filter((rename) => rename.entry.domain === domain)
+      .map((rename) => [rename.previousInstanceKey, rename.entry]),
+  );
+  const dropped = new Set(
+    delta.removals.filter((key) => !renamed.has(key)),
+  );
+  const survivors = v1Entries
+    .filter((entry) => !dropped.has(entry.instanceKey))
+    .map((entry) => renamed.get(entry.instanceKey) ?? entry);
+  const additions = delta.additions.filter(
+    (entry) => entry.domain === domain,
+  );
+  return [...survivors, ...additions].sort((left, right) =>
+    compareStableStrings(left.instanceKey, right.instanceKey),
+  );
+}
+
 /** Validates v1 and v2 artifact bytes and the exact v2 policy differences. */
 function validateArtifactFamilySync(
   repoRoot: string,
@@ -505,10 +589,12 @@ function validateArtifactFamilySync(
     ) {
       throw new Error(`${domain} v2 baseline ruleset hash is invalid`);
     }
-    if (
-      canonicalJson(v2Baseline.entries) !== canonicalJson(v1Baseline.entries)
-    ) {
-      throw new Error(`${domain} v2 baseline entries differ from v1`);
+    const staged = parseStagedDelta(manifest);
+    const reconstructed = applyStagedDelta(v1Baseline.entries, staged, domain);
+    if (canonicalJson(reconstructed) !== canonicalJson(v2Baseline.entries)) {
+      throw new Error(
+        `${domain} v2 baseline does not match v1 plus the staged delta`,
+      );
     }
   }
 }
@@ -620,20 +706,16 @@ function validateManifestShapeSync(
     "baselineRemovals",
     "baselineRenames",
   ]) {
-    if (!Array.isArray(manifest[key]) || manifest[key].length !== 0) {
-      throw new Error("V2 baseline deltas must be empty");
+    if (!Array.isArray(manifest[key])) {
+      throw new Error(`V2 baseline delta ${key} must be an array`);
     }
   }
+  parseStagedDelta(manifest);
   validateArtifactFamilySync(repoRoot, manifest);
 
-  const {
-    reviews: _reviews,
-    acceptance: _acceptance,
-    reviewSubjectSha256: _subject,
-    ...protectedFields
-  } = manifest;
   if (
-    sha256Text(canonicalJson(protectedFields)) !== manifest.reviewSubjectSha256
+    computeV2ManifestReviewSubjectSha256(manifest as Record<string, unknown>) !==
+    manifest.reviewSubjectSha256
   ) {
     throw new Error("Review subject does not match protected manifest fields");
   }
@@ -863,6 +945,30 @@ export async function computeAnalyzerInputSnapshotSha256(
   } finally {
     await projection.dispose();
   }
+}
+
+/**
+ * Computes the input snapshot over the current tree with proposed bytes overlaid.
+ * The evidence projection reads the Coding candidate from the working tree, so a
+ * preview must pin the snapshot of the state its transaction writes.
+ * @param repoRoot Repository root whose tree is clean outside the overlay.
+ * @param overlay Proposed utf8 contents keyed by repository path.
+ * @returns Lowercase SHA-256 digest of the overlaid analyzer input snapshot.
+ */
+export async function computeAnalyzerInputSnapshotWithOverlay(
+  repoRoot: string,
+  overlay: ReadonlyMap<string, string>,
+): Promise<string> {
+  const sourcePaths = selectV2AnalyzerSourcePaths(repoRoot);
+  const files = await Promise.all(
+    listAnalyzerInputPaths(repoRoot, sourcePaths).map(async (path) => ({
+      path,
+      sha256: overlay.has(path)
+        ? sha256Bytes(Buffer.from(overlay.get(path)!, "utf8"))
+        : sha256Bytes(await readFile(resolve(repoRoot, path))),
+    })),
+  );
+  return sha256Text(canonicalJson(files));
 }
 
 /** Computes one projection, two analyzer reports, and the input snapshot over it.

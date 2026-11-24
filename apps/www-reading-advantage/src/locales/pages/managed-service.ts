@@ -4,7 +4,7 @@ export const en = {
     subtitle: "Planned Service",
     description:
       "We provide the technology and the teachers for complete English department outsourcing.",
-    badge: "NOT YET AVAILABLE",
+    badge: "IN PLANNING",
     primaryCta: "Learn More",
     secondaryCta: "Register Interest",
   },
@@ -49,12 +49,12 @@ export const en = {
     ],
   },
   roadmap: {
-    title: "Not Yet Available",
+    title: "In planning",
     badge: "ROADMAP",
     description:
-      "Managed Service is not yet available. Whether we launch it depends on school demand. We accept inquiries from interested schools, and we set no date.",
+      "Our school programs bring printed workbooks and digital apps together. A fuller service is in planning; we will share it when it is ready.",
     targetLabel: "Status",
-    targetDate: "Depends on school demand",
+    targetDate: "In planning",
   },
   cta: {
     title: "Register Interest",
@@ -74,7 +74,7 @@ export const th = {
     subtitle: "บริการที่วางแผนไว้",
     description:
       "เรามอบทั้งเทคโนโลยีและครูสำหรับการจัดการแผนกวิชาภาษาอังกฤษแบบครบวงจรภายนอก",
-    badge: "ยังไม่เปิดให้บริการ",
+    badge: "อยู่ระหว่างการวางแผน",
     primaryCta: "เรียนรู้เพิ่มเติม",
     secondaryCta: "ลงทะเบียนความสนใจ",
   },
@@ -119,12 +119,12 @@ export const th = {
     ],
   },
   roadmap: {
-    title: "ยังไม่เปิดให้บริการ",
+    title: "อยู่ระหว่างการวางแผน",
     badge: "แผนงาน",
     description:
-      "บริการจัดการแบบครบวงจรยังไม่เปิดให้บริการ การเปิดบริการขึ้นอยู่กับความต้องการของโรงเรียน เรารับคำถามจากโรงเรียนที่สนใจ และเรายังไม่กำหนดวันเปิด",
+      "โปรแกรมสำหรับโรงเรียนของเราใช้เวิร์กบุ๊กฉบับพิมพ์ควบคู่กับแอปดิจิทัล บริการที่ครบขึ้นอยู่ระหว่างการวางแผน เราจะแจ้งให้ทราบเมื่อพร้อม",
     targetLabel: "สถานะ",
-    targetDate: "ขึ้นอยู่กับความต้องการของโรงเรียน",
+    targetDate: "อยู่ระหว่างการวางแผน",
   },
   cta: {
     title: "ลงทะเบียนความสนใจ",

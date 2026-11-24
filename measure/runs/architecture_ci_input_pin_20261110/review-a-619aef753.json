@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "role": "review-a",
+  "axis": "correctness and architecture",
+  "route": "opencode-go/glm-5.3#high",
+  "track_id": "architecture_ci_input_pin_20261110",
+  "phase": "Phase 1: CI mode and the local pin refresh (target 2026-11-12)",
+  "phase_base_sha": "09168dc422ed48604b8f2f0cb9a23ad4d110543b",
+  "role_base_sha": "9619b95482833feae716bbe4182cbc8172787134",
+  "audited_head_sha": "619aef7530baad0a028666c55e2f1ef9057fc733",
+  "head_matches": true,
+  "status": "pass",
+  "verdict": "pass",
+  "summary": "Audit of the five remediation commits 9619b9548..619aef753 in a clean checkout at the audited HEAD. The review gate in applyArchitectureReconciliation sits on the only production v2 write path, after the plan-hash, acknowledge, and v2-policy checks and before the fresh-preview recompute and the write; the v2 preview builder always stages the manifest under id reconciliation-manifest (architecture-reconciliation.ts:839-848), so the gate reads the exact staged bytes. The 4 gate tests pass and case 1 pins the exact refusal message, which exists only in the new code, so the case is failing-first. The refused-write state is real and correct: the committed manifest holds baseline_additions=255, removals=15, renames=162, reviews=0, status=candidate, and v2-manifest-validation.ts:105 with :631 freeze the review evidence paths to the durable_job_worker_platform_20260713 track and :656-658 bind the evidence to empty delta lists, so no review record can validate against the staged delta; the plan records this and the deferred follow-up (plan.md:239-245). The budget error messages (e52cefc53) are correct and pinned by 4 tests. The N1 fix (6061bed66) asserts non-empty removals and renames. The docs (ce87ce505) name exactly the flags the CLI parser accepts (--policy v1|v2, --owner, --rationale, --acknowledge, --expected-plan-hash; architecture-reconciliation-cli.ts:116-165) and the workflow line holds --skip-input-snapshot-pin --policy v2. The pin refresh 619aef753 changes only pin fields. Reproduced: targeted 44 of 44 over 5 files, suite 339 of 340 with the single environmental directory-name failure that the plan itself flags, check-types exit 0, lint 0 errors and 1 pre-existing warning, and both live v2 checks exit 0 with files=7012, findings=800, parseErrors=0, additions=0, removals=0, renames=0. No blocking findings; five non-blocking notes.",
+  "commands": [
+    "git rev-parse HEAD (in /home/daniebo/.cache/arch-gate-2) -> 619aef7530baad0a028666c55e2f1ef9057fc733, equal to audited_head_sha; git status --porcelain empty",
+    "git log --oneline 9619b9548..619aef753 -> 5 commits: a510c9492, e52cefc53, 6061bed66, ce87ce505, 619aef753",
+    "git diff --name-only 9619b9548..619aef753 -> 8 files, all under packages/architecture-enforcement, docs/architecture-enforcement.md, measure/tracks.md",
+    "git diff --name-only 5062b170e..619aef753 -- measure/archive/backend_architecture_enforcement_20260713/ -> empty",
+    "CI=true pnpm exec vitest run (architecture-review-gate, architecture-pin-refresh-budget, reconciliation-manifest-v2.red, architecture-ci-input-pin) --maxWorkers=1 -> exit 0, test_files=4, tests=32, failed=0",
+    "CI=true pnpm exec vitest run architecture-v2-route-14d.test.ts --maxWorkers=1 -> exit 0, tests=12 of 12",
+    "CI=true pnpm --filter @reading-advantage/architecture-enforcement test -- --maxWorkers=1 -> exit 1, suite_files=37, suite_tests=340, tests_failed=1 (the environmental case architecture-reconciliation-cli.test.ts:225, expected in a folder not ending reading-advantage-monorepo; plan.md:242 flags it)",
+    "pnpm --filter @reading-advantage/architecture-enforcement lint -> exit 0, errors=0, warnings=1 (pre-existing prefer-const in architecture-pin-refresh-resume.test.ts)",
+    "pnpm --filter @reading-advantage/architecture-enforcement check-types -> exit 0",
+    "pnpm architecture:check --skip-input-snapshot-pin --policy v2 -> exit 0, clean (files=7012, findings=800, parseErrors=0), debt clean (additions=0, removals=0, renames=0)",
+    "pnpm architecture:check --policy v2 -> exit 0, same counts",
+    "node manifest count -> baselineAdditions=255, baselineRemovals=15, baselineRenames=162, reviews=0, keys=15, acceptance.status=candidate",
+    "grep -n 'measure/tracks|measure/runs' over the two new test files -> exit 1",
+    "sed -n 602,670p and 95,112p v2-manifest-validation.ts -> REVIEW_EVIDENCE_PATHS freeze the durable_job_worker_platform_20260713 review paths; validateReviewSync :631 binds evidencePath and :656-658 bind empty delta lists",
+    "grep -rn applyArchitectureReconciliationForPolicy over src (non-test) -> defined in policy-write-guard.ts:40, called only at architecture-reconciliation.ts:1267",
+    "wc -l measure/tech-debt.md -> 50 lines, confirming the plan's reason for keeping the follow-up note in plan.md"
+  ],
+  "changed_files": [
+    "packages/architecture-enforcement/src/architecture-reconciliation.ts",
+    "packages/architecture-enforcement/src/__tests__/architecture-review-gate.test.ts",
+    "packages/architecture-enforcement/src/architecture-pin-refresh-cli.ts",
+    "packages/architecture-enforcement/src/__tests__/architecture-pin-refresh-budget.test.ts",
+    "packages/architecture-enforcement/src/__tests__/reconciliation-manifest-v2.red.test.ts",
+    "docs/architecture-enforcement.md",
+    "measure/tracks.md",
+    "packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json"
+  ],
+  "confidence": "high",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 (process note, Red evidence): the two remediation test files have no recorded Red run. Commits a510c9492 and e52cefc53 each mix the new test file with the production change, and neither the green log nor plan.md records a red count at 9619b9548. The structural red-ness holds: both pinned error strings ('staged baseline delta without a review record', '--budget-s must be a positive whole number of seconds: <value>') exist only in the new code, so the refusal and message cases fail at the base HEAD. The phase's earlier tasks all recorded red evidence, so the remediation broke that pattern.",
+    "N2 (gate seam): assertReviewedStagedDelta sits only in applyArchitectureReconciliation. The lower-level helper applyArchitectureReconciliationForPolicy (policy-write-guard.ts:40) is re-exported through the package index (index.ts: 'export * from \"./policy-write-guard.js\"') without the gate. No caller bypasses today: grep over non-test source finds the only call at architecture-reconciliation.ts:1267, and the CLI routes through the gated entry. A future direct caller of the exported helper could write the four v2 artifacts without review evidence.",
+    "N3 (plan wording, incomplete enumeration): plan.md:238 and green-rem-9619b9548.log:99-100 say the refresh commit 'moved the input snapshot, the implementation and test tree, and the report hash'. The 619aef753 diff also moved reviewSubjectSha256 (5840f9c73 -> 11886f7e5c). The field is derived over the manifest bytes (architecture-reconciliation.ts:833), so it necessarily moves. No claim made is wrong; the enumeration omits one derived value.",
+    "N4 (environmental, pre-existing, plan-flagged): the suite case 'exercises repository discovery and the production default boundaries' (architecture-reconciliation-cli.test.ts:225) asserts the repository folder name with /reading-advantage-monorepo$/. It fails in this audit checkout (arch-gate-2), giving 339 of 340. plan.md:242 and the green log name this exact failure mode; no track commit touched the case.",
+    "N5 (recorded constraint, judged correct): every later v2 reconcile write is refused while the committed manifest holds the 255/15/162 staged delta with reviews=0 and status=candidate. I verified the two schema rules that make a review record impossible today (v2-manifest-validation.ts:105 REVIEW_EVIDENCE_PATHS name the durable_job_worker_platform_20260713 track; :631 binds evidencePath; :656-658 require the evidence JSON to hold empty delta lists). Fail-closed is the right direction: the alternative is the unreviewed write that Review B F1 rejected. CI and the pin refresh are unaffected (the check and both live v2 runs exit 0), and the plan records the constraint and the deferred follow-up at plan.md:239-245 with the follow-up scope spelled out."
+  ],
+  "evidence": [
+    "Provenance: git rev-parse HEAD in /home/daniebo/.cache/arch-gate-2 returns 619aef7530baad0a028666c55e2f1ef9057fc733, equal to audited_head_sha; the tree is clean and the backend build artifacts exist.",
+    "Audit point 1 (gate placement): applyArchitectureReconciliation checks the plan hash, then the acknowledge flag, then rejects non-v2 policy, then calls assertReviewedStagedDelta (architecture-reconciliation.ts:1264), then the write-set guard, then the fresh-preview byte comparison, then the write. No path writes the four v2 artifacts without passing the gate. The preview builder stages the manifest under id 'reconciliation-manifest' (architecture-reconciliation.ts:839-848), the exact id the gate reads (:1184).",
+    "Audit point 1 (gate tests): architecture-review-gate.test.ts holds 4 cases. Case 1 asserts the exact refusal message on an unreviewed candidate write with a staged delta; the message string exists only in the a510c9492 diff, so the case fails at 9619b9548 (failing-first, not vacuous). Cases 2 to 4 assert a later control's error and the absence of the gate message, proving pass-through. All 4 pass at HEAD.",
+    "Audit point 2 (refused writes): node counts over the committed manifest give baselineAdditions=255, baselineRemovals=15, baselineRenames=162, reviews=0, keys=15, status=candidate. validateReviewSync requires review.evidencePath === REVIEW_EVIDENCE_PATHS[index] (:631) where the paths are measure/tracks/durable_job_worker_platform_20260713/reviews/<role>.md (:105-107), and requires the evidence JSON to bind baselineAdditions/Removals/Renames as empty arrays (:656-658). No review record can validate against the staged 255/15/162 delta, so the gate refuses every later v2 reconcile apply. The plan records this at plan.md:239-245, names the deferred follow-up scope (bind staged deltas in v2 review records, move the frozen evidence paths), and green-rem-9619b9548.log:38-61 states the same. measure/tech-debt.md is at its 50-line cap (wc -l = 50), so keeping the note in the plan is justified.",
+    "Audit point 3 (budget messages): parsePinRefreshArguments now throws '--budget-s requires a value' for a missing value and '--budget-s must be a positive whole number of seconds: <value>' for an invalid one (architecture-pin-refresh-cli.ts:113-124), instead of the misleading unsupported-argument message. architecture-pin-refresh-budget.test.ts holds 4 cases: the four invalid values with exact message and the no-unsupported assertion, the missing value, the unknown flag keeping the old message, and --budget-s 9 accepted as 900. All pass at HEAD.",
+    "Audit point 4 (N1 fix): 6061bed66 adds non-empty length assertions for baselineRemovals and baselineRenames in reconciliation-manifest-v2.red.test.ts. The committed manifest holds 15 and 162 records, so the assertions carry meaning; they pass in my 4-file run.",
+    "Audit point 5 (docs match the CLI): docs/architecture-enforcement.md names 'pnpm architecture:reconcile --policy v2 --owner <owner-id> --rationale \"<reason>\"' and the acknowledged run with '--acknowledge --expected-plan-hash'. parseArchitectureReconciliationArguments accepts exactly those flags (architecture-reconciliation-cli.ts:116-165), requires --acknowledge with --expected-plan-hash (:158-162) and --owner with --rationale (:163-165), and enforces the lower-case owner id through REVIEWER_ID_PATTERN. The CI line reads 'GitHub CI runs pnpm architecture:check --skip-input-snapshot-pin --policy v2' and .github/workflows/ci.yml:176 holds exactly that command. measure/tracks.md:80 gained the same flag.",
+    "Audit point 6 (pin refresh): the 619aef753 diff touches one file with one hunk: implementationAndTestTreeSha256, analyzerInputSnapshotSha256, reportSha256s (both entries), and reviewSubjectSha256 moved; analyzerImplementationTreeSha256 and every delta list, reviews, and acceptance stayed. All changed values are pin fields, so 'changes only pin fields' holds. The live checks at HEAD prove the pins are consistent: both v2 checks exit 0 with files=7012, findings=800, parseErrors=0, additions=0, removals=0, renames=0, exactly the green log counts (green-rem-9619b9548.log:131-132).",
+    "Plan claim checks: targeted_files=5 and targeted_tests=44 reproduced (32 over my 4-file run plus 12 in the route file, all passing); suite_files=37 and suite_tests=340 reproduced with tests_failed=1 being only the environmental name case that plan.md:242 predicts for a differently named worktree; check_types=0, lint=0 with lint_errors=0 and lint_warnings=1 reproduced; gate_cases=4 and budget_cases=4 reproduced; baseline_additions=255, baseline_removals=15, baseline_renames=162, manifest_keys=15 reproduced by node counts.",
+    "Scope: git diff --name-only 9619b9548..619aef753 lists 8 files, all inside the declared blast radius (packages/architecture-enforcement, docs, and the measure/tracks.md registry note). The archive diff 5062b170e..619aef753 is empty. No path under packages/backend/turbo.json or packages/webhooks changed.",
+    "A9: grep for 'measure/tracks|measure/runs' over architecture-review-gate.test.ts and architecture-pin-refresh-budget.test.ts exits 1."
+  ],
+  "retry_recommendation": "none",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "Both live v2 checks at the audited HEAD exit 0 with files=7012, findings=800, parseErrors=0, additions=0, removals=0, renames=0, and the gate sits ahead of every v2 reconcile write with the exact staged-manifest id the preview builder uses (architecture-reconciliation.ts:839, :1184, :1264)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "44 of 44 targeted cases reproduce at HEAD and the gate refusal case pins a message that exists only in the a510c9492 code, but no Red run was recorded for the two new remediation test files and each commit mixes the test with the production change (green-rem-9619b9548.log records no red counts)."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --name-only 9619b9548..619aef753 lists exactly 8 files inside the declared blast radius; the archive diff is empty; no turbo.json or webhooks path changed."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every reproduced remediation claim matched exactly: 44/44 targeted, 37 files and 340 suite cases, lint 0 errors and 1 pre-existing warning, check-types exit 0, and both v2 checks with the same files/findings/debt counts as the green log."
+    }
+  ]
+}

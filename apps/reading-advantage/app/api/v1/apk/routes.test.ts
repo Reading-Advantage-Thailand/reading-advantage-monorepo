@@ -142,6 +142,10 @@ describe("Reading APK routes", () => {
     const readResponse = await GET_RPG();
     const equipResponse = await PATCH_RPG(postRequest({ cosmeticId: "apprentice-wand" }));
 
+    expect(readResponse).toBeDefined();
+    expect(equipResponse).toBeDefined();
+    if (!readResponse || !equipResponse) throw new Error("expected a route response");
+
     expect(readResponse.status).toBe(200);
     expect(equipResponse.status).toBe(200);
     expect(mockGetMyRpgState).toHaveBeenCalledWith(expect.objectContaining({

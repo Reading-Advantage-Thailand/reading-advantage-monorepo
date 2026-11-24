@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "role": "final-acceptance",
+  "track": "www_features_pricing_20261120",
+  "phase": "track review",
+  "phase_base_sha": "4da73415d330d537025740471714073902737431",
+  "baseline_sha": "4da73415d330d537025740471714073902737431",
+  "role_base_sha": "3e80d3679bcbc519d2a96e624d04f880e6d94efd",
+  "audited_head_sha": "3e80d3679bcbc519d2a96e624d04f880e6d94efd",
+  "status": "pass",
+  "summary": "Track www_features_pricing_20261120 passes final acceptance at 3e80d3679. The task 2.6 gates pass on the final HEAD: 10 A-70 Red files 182 passed, full www suite 91 files / 3117 tests, check-types exit 0, ESLint 0 errors, build attempt 1 exit 1 on the Next.js security notice and attempt 2 exit 0, affected-apps lists only www-reading-advantage. AC-1 to AC-11 hold by the tests, the review artifacts and my own rechecks. Every phase heading 1 to 4 carries a checkpoint, and the Phase 4 acceptance result is valid for its head; the only later commit 3e80d3679 changes only plan.md and spec.md of this track and closes phase-acceptance findings F1 to F4 and F8. The branch and the worktree stay for the merge; Daniel gave the deploy word on 2026-11-21 17:25 ICT (brief fact, task 5.2).",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F1 [Nit] final-acceptance: bash measure/doctor.sh exits 1 on the architecture step ('V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes'). The same step failed for the www_products_photos acceptance (external, F10 there) and in ci.yml. This track changes no path under packages/. Route it to the architecture owner track, not to this track.",
+    "F2 [Nit] final-acceptance: the measure/tracks.md row (line 49) still says 'Status: planned; plan and spec written 2026-11-20' and metadata.json holds status 'planned' with source spec v1.0 commit c54d2742. Both understate the current state (Phases 1 to 4 complete and accepted). Closeout rewrites the row and the metadata so the registry description equals the metadata description.",
+    "F3 [Nit] final-acceptance: plan task 5.1 stays '[ ]' during this audit by its own definition ('Final acceptance does this task; it stays [ ] here'), so the mechanical role-gate counts 1 non-deferred incomplete task. The orchestrator marks 5.1 [x] after this PASS, then the closeout standard is met.",
+    "F4 [Nit] final-acceptance: ESLint keeps 3 unused-symbol warnings (cardRenderBlock in www-features-look-pins.red.test.ts:122, beforeEach in www-reading-card.red.test.ts:3, PROGRAM_CARD in www-reading-cover.red.test.ts:27), 0 errors, exit 0. Phase-acceptance finding F5 stays open; remove the symbols in the next test commit.",
+    "F5 [Nit] final-acceptance: review-a-351844ce0.json keeps retry_recommendation retry_audit and its log keeps status blocked from before tasks 4.1 to 4.3 closed. RA5 is closed by adversarial-c2cb6a120.json at 4f3ad5936 (commit 4f3ad5936 'test(www): reject crop fits on reading wrapper') and the review-a role gate passes now. Stale record values only.",
+    "F6 [Nit] final-acceptance: Phases 1 to 3 have no dedicated phase-acceptance artifacts. They closed through the mid-red and jr-green role gates, the Review A/C artifacts and the phase checks in tasks 1.5, 2.6 and 2.7; the Phase 4 acceptance then audited the full c096256a1..4f3ad5936 range (all tests, 23 mutations, the whole plan). Same class as www_tutor_followups F6.",
+    "F7 [Nit] final-acceptance: the PR copy spec is now v1.3 (2026-11-21). The v1.3 content changes (the deleted Reading body line and the Origins 2 cover picture) are implemented and pinned at HEAD by tasks 4.9 and 4.10, and my spot checks confirm the v1.2 R2 Thai wording in the locale files. The source status line still reserves TH-FP-R2-01 to TH-FP-R2-07 for Daniel's next Thai sitting, while plan task 4.3 records his all-Thai approval of 2026-11-21 07:23 and the brief records his deploy word of 17:25 ICT. The orchestrator confirms with the PM which sitting covered the R2 lines before the push; this is an owner record, not a code defect."
+  ],
+  "evidence": [
+    "HEAD is 3e80d3679bcbc519d2a96e624d04f880e6d94efd at the start and at the end of the audit; git status --short is empty. Track base (merge-base with origin/master) is 4da73415d330d537025740471714073902737431 and is an ancestor of HEAD.",
+    "Path-diff command and output for the later commit after the audited head of the latest result: git diff --name-only 4f3ad5936f0e2c3b1d811725483a83bd271619da HEAD -> measure/tracks/www_features_pricing_20261120/plan.md and measure/tracks/www_features_pricing_20261120/spec.md, nothing else. plan.md is a plan file; spec.md is the F1 remediation that phase-acceptance-p4-4f3ad5936.json itself ordered ('Update spec.md before the Phase 5 run'), a track record under measure/tracks/<track>/. No path of the app is in the diff, so the reviewed implementation is unchanged since the Phase 4 acceptance.",
+    "Path-diff command and output for the full track range: git diff --name-only 4da73415d..HEAD -> 47 paths, all under apps/www-reading-advantage/ (41 files) and measure/tracks/www_features_pricing_20261120/ plus measure/tracks.md (6 files). No other app, package or framework file changes.",
+    "Phase checkpoints: plan.md line 32 'Phase 1 ... [checkpoint: 8ea29b7a0facf436db3318f1a8effef00d92aca3]', line 48 'Phase 2 ... [checkpoint: 54d43357365c0cd82b9ac0fb52bd4d289f87a6c3]', line 60 'Phase 3 ... [checkpoint: 4f3ad5936f0e2c3b1d811725483a83bd271619da]', line 67 'Phase 4 ... [checkpoint: 4f3ad5936f0e2c3b1d811725483a83bd271619da]'. Each checkpoint SHA is an ancestor of HEAD (git merge-base --is-ancestor, all OK). Phase 5 holds only task 5.1 '[ ]' (this task) and task 5.2 '[b] deferred:daniel'.",
+    "Phase acceptance: measure/runs/www_features_pricing_20261120/phase-acceptance-p4-4f3ad5936.json is role phase-acceptance, status pass, blocking_findings empty, baseline c096256a1 (ancestor of its audited head, which is an ancestor of current HEAD), audited_head_sha 4f3ad5936. measure_interphase_checks.py audit-result --role phase-acceptance on it prints 'PASS: audit result is valid', exit 0.",
+    "Prior results all pass and bind to ancestor heads: review-a r5 at 351844ce0 (review-a-351844ce0.json), review-c at 38c03ba22 (review-c-38c03ba22.json), adversarial at 4f3ad5936 (adversarial-c2cb6a120.json), ux-browser r8 features at 351844ce0 (ux-browser-351844ce0.json), ux-browser pricing at 4ccf4c879 (ux-browser-4ccf4c879.json). Each audited head is an ancestor of current HEAD (merge-base --is-ancestor OK for c096256a1, 38c03ba22, 4ccf4c879, 351844ce0, 4f3ad5936).",
+    "Gate 1, A-70 Red files at HEAD through heavy-run p1: CI=true pnpm exec vitest run --maxWorkers=1 <the 10 A-70 files> -> Test Files 10 passed (10), Tests 182 passed (182), exit 0.",
+    "Gate 2, full www suite through heavy-run p1: Test Files 91 passed (91), Tests 3117 passed (3117), exit 0. This matches the plan's task 4.10 claim '91 files / 3117 tests' (anti-pattern A5).",
+    "Gate 3, check-types through heavy-run p1: tsc --noEmit exit 0.",
+    "Gate 4, ESLint on the 29 changed or new .ts/.tsx files of the track through heavy-run p1: 3 problems (0 errors, 3 warnings: the phase-acceptance F5 unused symbols), exit 0.",
+    "Gate 5, www build through heavy-run p1: attempt 1 exit 1 on the Next.js security notice ('Your version of Next.js is affected by a known security vulnerability. This command stopped to show the upgrade recommendation. Retry the same command to continue.'), attempt 2 exit 0 with 'This command is continuing after the upgrade reminder'. No upgrade applied, per the brief. The heavy-run log records 'job ended exit 1 after 15 s' and 'job ended exit 0 after 20 s' for the two attempts.",
+    "Scope gate: node scripts/ci/affected-apps.mjs --base 4da73415d330d537025740471714073902737431 --head 3e80d3679bcbc519d2a96e624d04f880e6d94efd -> ['www-reading-advantage'], exit 0. Exactly the www app, no other app.",
+    "Worktree and branch record: git worktree list shows /home/daniebo/Desktop/rama-worktrees/www-features-pricing at 3e80d3679 on www/features-pricing-a70. git branch -a | grep features-pricing shows only '* www/features-pricing-a70'; no origin branch for it.",
+    "AC-1 to AC-3 spot rechecks against the source: the PR copy spec (read only) holds 1,200 baht, +600, 1,800, +400, 2,200, +250, 2,450, 3,000, 22-23, 30 November 2026 and the 2027 school year; '2,700' appears only in the TH-FP-R2-02 change note, not in page copy. The locale files hold the v1.2 R2 Thai wording (TH-FP-R2-01, R2-03 and R2-06 each found once in pricing.ts), the deleted taught-through sentence appears 0 times in feature.ts, and no production file references the old reading-article-selection.webp (only test assertions). The stacking test pins the 2,700 absence and passes at HEAD.",
+    "AC-7 recheck with a standard-library JPEG parser: public/images/products/ra-origins-2-cover.jpg is 141,326 bytes, JPEG magic ffd8ff, dims 600x814. The four WebP crops are pinned by www-features-pricing.assets.test.ts, which passes at HEAD.",
+    "AC-11 capture evidence: ux-wfp-r8 holds features-en/th/zh at 390, 980 and 1280 (9 non-empty PNG files) and ux-wfp-r6 holds pricing-en/th/zh at 390, 980 and 1280 (9 non-empty PNG files). UX r8 pass at 351844ce0 for Features, UX pass at 4ccf4c879 for Pricing, PM look check pass (plan task 4.3).",
+    "Anti-pattern A5: plan.md and spec.md hold no 'PASS=N, FAIL=0' and no 'all checks pass' text (grep). The plan's count claims 62 passed, 72 passed, 110 passed and '91 files / 3117 tests' match my reruns and the phase-acceptance reruns.",
+    "Anti-pattern A6: the measure/tracks.md row understates the state (finding F2); it does not overstate. No registry text claims acceptance that did not happen.",
+    "Anti-pattern A9: no file in tests/*.sh references www_features_pricing_20261120 or an archived track path of it (grep over tests/*.sh and measure/tests). The A-70 tests resolve only app paths.",
+    "Removed contracts: grep over apps/www-reading-advantage/src and e2e finds comparisonTable and pricingTable only in test assertions and one comment in www-batch-20261119.locale.test.ts; features/page.tsx and pricing/page.tsx no longer import HeroSection (custom hero per D11).",
+    "Closeout readiness: bash measure/doctor.sh exits 1 only on the pre-existing architecture manifest step (finding F1); the marker, catalog and review-execution steps print PASS. The status command reports only Phase 5 (1/1 remaining, task 5.1).",
+    "Mechanical role-gate result: with PROJECT_LINT, PROJECT_CHECKS and PROJECT_TESTS exported and the heavy-run wrapper as --runner, the final-acceptance role gate prints exactly one FAIL line, 'track still has 1 non-deferred incomplete tasks', exit 1. The counted task is 5.1, this task, which plan line 98 defines as staying '[ ]' during final acceptance. The three configured gates all passed inside the gate run (no FAIL line for them). Precedent: www_tutor_followups_20261118 final acceptance recorded the same class of counted open release tasks as known_failures.",
+    "Facts from the brief, not verifiable in this repo: Daniel's deploy word of 2026-11-21 17:25 ICT (task 5.2); the PM look check, the Drive upload and the captures hand-off (plan task 4.3); the advantage-pr spec commit ids d123d385, f2eee0cf, 7330789d, 640edec0 and the v1.3 commit history."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git status --short -> 3e80d3679bcbc519d2a96e624d04f880e6d94efd, clean tree",
+    "git merge-base --is-ancestor <sha> HEAD for 4da73415d, c096256a1, 8ea29b7a0, 54d433573, 38c03ba22, 4ccf4c879, 351844ce0, 4f3ad5936 -> all ancestor OK",
+    "git diff --name-only 4f3ad5936f0e2c3b1d811725483a83bd271619da HEAD -> measure/tracks/www_features_pricing_20261120/plan.md, measure/tracks/www_features_pricing_20261120/spec.md",
+    "git diff --name-only 4da73415d..HEAD -> 47 paths, apps/www-reading-advantage and measure only",
+    "HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd apps/www-reading-advantage && CI=true pnpm exec vitest run --maxWorkers=1 <10 A-70 files>' -> Test Files 10 passed (10), Tests 182 passed (182), exit 0",
+    "HEAVY_PRIORITY=p1 bash .../heavy-run.sh -c 'cd apps/www-reading-advantage && CI=true pnpm exec vitest run --maxWorkers=1' -> Test Files 91 passed (91), Tests 3117 passed (3117), exit 0",
+    "HEAVY_PRIORITY=p1 bash .../heavy-run.sh -c 'cd apps/www-reading-advantage && pnpm check-types' -> exit 0",
+    "HEAVY_PRIORITY=p1 bash .../heavy-run.sh -c 'cd apps/www-reading-advantage && pnpm exec eslint <29 changed files>' -> 0 errors, 3 warnings, exit 0",
+    "HEAVY_PRIORITY=p1 bash .../heavy-run.sh -c 'cd apps/www-reading-advantage && pnpm build' -> attempt 1 exit 1 (Next.js security notice), attempt 2 exit 0",
+    "node scripts/ci/affected-apps.mjs --base 4da73415d330d537025740471714073902737431 --head 3e80d3679bcbc519d2a96e624d04f880e6d94efd -> [\"www-reading-advantage\"], exit 0",
+    "git worktree list; git branch -a | grep features-pricing -> worktree at 3e80d3679 on www/features-pricing-a70, local branch only",
+    "python3 -I standard-library JPEG parser -> cover 600x814, 141326 bytes, JPEG magic",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo . --track www_features_pricing -> incomplete_phases 1 (Phase 5: 1/1 remaining); worktree clean",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py audit-result --role phase-acceptance --file measure/runs/www_features_pricing_20261120/phase-acceptance-p4-4f3ad5936.json -> PASS: audit result is valid",
+    "HEAVY_PRIORITY=p1 bash .../heavy-run.sh -c 'cd <worktree> && bash measure/doctor.sh' -> exit 1 on the pre-existing architecture manifest step (finding F1); marker, catalog and review steps PASS",
+    "HEAVY_PRIORITY=p1 PROJECT_GATE_TIMEOUT_SECONDS=1200 env PROJECT_LINT='<eslint on the 29 changed files>' PROJECT_CHECKS='cd apps/www-reading-advantage && pnpm check-types' PROJECT_TESTS='cd apps/www-reading-advantage && CI=true pnpm exec vitest run --maxWorkers=1' python3 .../measure_interphase_checks.py role-gate --repo <worktree> --role final-acceptance --track www_features_pricing_20261120 --result-file measure/runs/www_features_pricing_20261120/final-acceptance-3e80d3679.json --log-file measure/runs/www_features_pricing_20261120/final-acceptance-3e80d3679.log --runner /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -> 'FAIL: track still has 1 non-deferred incomplete tasks', exit 1. The one FAIL line is open task 5.1, this task, which plan line 98 defines as staying '[ ]' during final acceptance ('Final acceptance does this task; it stays [ ] here'). The three configured gates ran through the heavy-run wrapper and produced no FAIL line: PROJECT_LINT, PROJECT_CHECKS and PROJECT_TESTS all passed."
+  ],
+  "changed_files": [
+    "measure/runs/www_features_pricing_20261120/final-acceptance-3e80d3679.json",
+    "measure/runs/www_features_pricing_20261120/final-acceptance-3e80d3679.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "opencode-go/glm-5.3#high (substitution: ra-quota picked opencode/glm-5.3-flash-free#high, not in the catalog; opencode/deepseek-v4.1-flash-free#high hit 'Free usage limit reached' before any work; Review A/UX/adversarial: openai; phase acceptance: claude-code/claude-sonnet-5-5#max; Red: opencode-go/muse-spark-1.3-contributor#high; Green: opencode-go/hy4-flash-free#high)",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "All 182 A-70 tests and the full 3117-test suite pass at HEAD, and my source spot checks confirm the v1.2/v1.3 copy, the four-row price table and the whole 600x814 Origins 2 cover (parser-verified)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "Red failed first in every round (plan records 83 failed, 33 failed, 21 failed, 12 failed and the r3 to r9 heads) and phase acceptance caught 22 of 23 mutations, but the 390 px cover cap mutation stays green by documented design."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --name-only 4da73415d..HEAD lists 47 paths, all inside apps/www-reading-advantage and measure/, and affected-apps prints exactly [\"www-reading-advantage\"]."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Every claim I checked has a command result or file:line behind it, but the plan keeps one stale capture-folder line and the review-a r5 artifact keeps stale blocked/retry_audit values (findings F5)."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "openai/gpt-6.1-sol#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-a-351844ce0.json passes with RA5 as the one gap, and the adversarial commit 4f3ad5936 that closed RA5 is an ancestor of HEAD with the A-70 suite green, but its JSON keeps a stale retry_audit value."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "openai/gpt-6-luna#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "review-c-38c03ba22.json passed the route, metadata and link surface that I re-verified unchanged at HEAD (no ComparisonTable or PricingTable reader, no HeroSection import), but it binds to 38c03ba22 and did not see the later cover change."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "openai/gpt-6-luna#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "adversarial-c2cb6a120.json binds to 4f3ad5936, closes RA5 with a failing-first test commit, and the 182-test A-70 run at HEAD confirms the new assertion holds."
+    },
+    {
+      "reviewer_role": "ux-browser-review",
+      "reviewer_route": "openai/gpt-6.1-sol#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "ux-browser-351844ce0.json and ux-browser-4ccf4c879.json pass with the 18 captures I confirmed non-empty, and no app code changed after 351844ce0 except the cover test and the plan/spec records."
+    }
+  ]
+}

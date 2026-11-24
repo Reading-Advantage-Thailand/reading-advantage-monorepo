@@ -1,5 +1,6 @@
 import { execFileSync } from "node:child_process";
 import {
+  copyFileSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
@@ -14,8 +15,43 @@ import { fileURLToPath } from "node:url";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 const packageRoot = join(dirname(fileURLToPath(import.meta.url)), "../..");
+const corePackageRoot = join(packageRoot, "../knowledge-space-core");
 const tempRoot = mkdtempSync(join(tmpdir(), "codecamp-knowledge-pack-"));
+const coreSnapshotRoot = join(tempRoot, "knowledge-space-core");
 let extractedPackage = "";
+
+/**
+ * Builds a private copy of the knowledge-space-core package for the packed CLI.
+ *
+ * Another turbo task rewrites `packages/knowledge-space-core/dist` in place
+ * through `tsc -p` (mastery-runtime-compat release proof). A reader of the
+ * shared dist can catch a file that tsc truncated and has not finished
+ * (CI run 44984746870). The private copy keeps this test on stable bytes.
+ */
+function buildCoreSnapshot(): void {
+  mkdirSync(coreSnapshotRoot, { recursive: true });
+  copyFileSync(
+    join(corePackageRoot, "package.json"),
+    join(coreSnapshotRoot, "package.json"),
+  );
+  execFileSync(
+    "node",
+    [
+      join(packageRoot, "../../node_modules/typescript/bin/tsc"),
+      "--project",
+      join(corePackageRoot, "tsconfig.json"),
+      "--outDir",
+      join(coreSnapshotRoot, "dist"),
+    ],
+    { cwd: corePackageRoot, stdio: "pipe" },
+  );
+  mkdirSync(join(coreSnapshotRoot, "node_modules"), { recursive: true });
+  symlinkSync(
+    join(corePackageRoot, "node_modules/zod"),
+    join(coreSnapshotRoot, "node_modules/zod"),
+    "dir",
+  );
+}
 
 describe("packed graph release artifact", () => {
   beforeAll(() => {
@@ -28,6 +64,7 @@ describe("packed graph release artifact", () => {
       cwd: packageRoot,
       stdio: "pipe",
     });
+    buildCoreSnapshot();
     execFileSync("npm", ["pack", "--pack-destination", tempRoot], {
       cwd: packageRoot,
       stdio: "pipe",
@@ -37,7 +74,7 @@ describe("packed graph release artifact", () => {
     extractedPackage = join(tempRoot, "package");
     mkdirSync(join(extractedPackage, "node_modules/@reading-advantage"), { recursive: true });
     symlinkSync(
-      join(packageRoot, "../knowledge-space-core"),
+      coreSnapshotRoot,
       join(extractedPackage, "node_modules/@reading-advantage/knowledge-space-core"),
       "dir",
     );

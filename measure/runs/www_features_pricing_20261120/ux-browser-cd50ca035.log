@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: ux-browser-review
+status: blocked
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+commits: none
+tests_run: Build passed on attempt 2; page-check passed nine Features captures; two Playwright commands were denied; live checks and clean final captures remain incomplete; role-gate exited 1 for the inconclusive audit and F4, with no schema error.
+files_changed: measure/runs/www_features_pricing_20261120/ux-browser-cd50ca035.json; measure/runs/www_features_pricing_20261120/ux-browser-cd50ca035.log
+plan_updates: none
+known_failures: F4: the cover crop reads as a landscape banner rather than a book cover. Tool permissions block the remaining live review.
+handoff: Question for the orchestrator: Can the orchestrator authorize the read-only Playwright capture and interaction commands for this audit? Options: Authorize the commands and rerun the audit; Stop the audit. Route F4 to Green: use the complete portrait cover with its RA logo, title, and complete illustrated faces. Raw captures only: /home/daniebo/.cache/opencode/ux-wfp-r7/. Header artifact explanation remains unproven live. Server stopped; HEAD unchanged. No deployment authorized. Facts changed: none.
+END_MEASURE_AGENT_RESULT

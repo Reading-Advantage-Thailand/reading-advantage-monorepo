@@ -113,12 +113,21 @@ export function parsePinRefreshArguments(
     }
     if (argument === "--budget-s") {
       const value = args[index + 1];
-      if (value === undefined || !/^[1-9]\d*$/.test(value)) {
+      if (value === undefined) {
+        throw new Error("--budget-s requires a value");
+      }
+      if (!/^[1-9]\d*$/.test(value)) {
         throw new Error(
-          `Unsupported architecture pin refresh argument: ${argument}`,
+          `--budget-s must be a positive whole number of seconds: ${value}`,
         );
       }
-      budgetSeconds = Number(value);
+      const requestedSeconds = Number(value);
+      if (!Number.isSafeInteger(requestedSeconds)) {
+        throw new Error(
+          `--budget-s must be a positive whole number of seconds: ${value}`,
+        );
+      }
+      budgetSeconds = requestedSeconds;
       index += 1;
       continue;
     }

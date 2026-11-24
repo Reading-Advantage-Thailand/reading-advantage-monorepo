@@ -1,0 +1,66 @@
+# Test strategy log for architecture_ci_input_pin_20261110
+
+Role: measure-strategy. Phase: `Phase 1: CI mode and the local pin refresh (target 2026-11-12)`.
+Role base: `3058dc8d4e98b587e4871b2caa2eaa95ed541898` (the spec-review fix commit).
+Spec review: round 2 passed. The result sits at
+`measure/runs/architecture_ci_input_pin_20261110/spec-review-r2-791ef0057.json`.
+The four Nit findings are fixed in `3058dc8d4`.
+
+The log was written first with status `partial`. The final block below holds the
+finished status.
+
+## What the strategy holds
+
+- The file `measure/tracks/architecture_ci_input_pin_20261110/test-strategy.md` maps AC-1 to
+  AC-5 and FR-6 to named test cases in one Red file. Every criterion has an automated test.
+- The strategy names the risks R1 to R7: the inert flag, the broad skip, the unlisted new
+  analyzed file, the write without `--acknowledge`, the hashing policy of AGENTS.md, the
+  green-for-the-wrong-reason CI mode, and the archive change.
+- The strategy assigns the gates for P1: Review A required, Review B required, Review C
+  required with a limited scope, adversarial testing required, and the browser review not
+  applicable.
+- The strategy names the allowed paths for Red and for Green, and keeps the rule that every
+  package suite runs through `heavy-run.sh` with one named test file outside it.
+- The strategy names no `phase_base_sha`. It names the capture point instead.
+
+## The measured facts
+
+- The package suite exits 0 at the role base with `Test Files 31 passed (31)` and
+  `Tests 251 passed (251)`. Duration 63.18 s.
+- `pnpm architecture:check` fails at the role base. The message names the input snapshot
+  hash. The `tsx` command exits 2 and the `pnpm` wrapper exits 1.
+
+## The plan change
+
+The strategy added one line to the rules of `plan.md`. The line states that the CI-mode
+command stays red at the 1.2 and the 1.3 HEADs, and that widening the skip to make it pass
+is a defect. The reason is fact M4 of the strategy. Task 1.2 changes three files of the
+analyzer implementation tree, so the tree hashes and the report hashes go stale until the
+1.4 refresh.
+
+## The commit
+
+The assignment named a commit subject of 110 characters. The `commit-msg` hook rejects a
+header longer than 100 characters, and the plan rule holds the same limit. The commit uses
+the shorter subject `chore(measure): add the ci input pin test strategy (track_id: architecture_ci_input_pin_20261110)`,
+which is 97 characters. No `--no-verify` flag was used and no push ran.
+
+## The phase base capture point
+
+The orchestrator captures the `phase_base_sha` with `git rev-parse HEAD` after the commit
+of this strategy and before the Red role starts. The commit of this strategy is
+`09168dc422ed48604b8f2f0cb9a23ad4d110543b`. The orchestrator must read the current value
+at that point, because master is shared with other tracks.
+
+MEASURE_AGENT_RESULT
+role: measure-strategy
+status: complete
+track: architecture_ci_input_pin_20261110
+phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+commits: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+tests_run: no test of this track exists yet. Two base measurements ran in one heavy-run.sh job on 2026-11-10: `pnpm architecture:check` fails at the role base with "Analyzer input snapshot hash does not match current bytes" (tsx exit 2, pnpm wrapper exit 1); `CI=true pnpm --filter @reading-advantage/architecture-enforcement test` exits 0 with Test Files 31 passed (31) and Tests 251 passed (251).
+files_changed: measure/tracks/architecture_ci_input_pin_20261110/test-strategy.md (new), measure/tracks/architecture_ci_input_pin_20261110/plan.md (one added rule line)
+plan_updates: one line added to the rules of plan.md: "The CI-mode command stays red at the 1.2 and the 1.3 HEADs. It passes only after the 1.4 refresh. A non-zero exit at 1.2 or at 1.3 is the expected state, not a defect. Widening the skip to make it pass is a defect." The plan needed this gate line because fact M4 makes the CI-mode command red at the 1.2 and 1.3 HEADs, and the plan stated no expected exit code for those HEADs. No other plan line changed.
+known_failures: none
+handoff: Gate assignment for P1. Review A (correctness): required. Review B (security): required. The phase weakens a CI integrity check by removing one comparison from the CI gate. Review B reads the skip surface and the write surface: the skip must cover only the analyzerInputSnapshotSha256 comparison, no environment variable or config file may select the mode, the CI workflow must hold no refresh command, the refresh command must write only the manifest and only with --acknowledge, the track must add no hash field and join no hash list, and the archive diff must be empty. Review C (UX/API): required with a limited scope. The phase adds no route, no page, and no public API. The applicable surface is the developer command line: the exit codes of the check and refresh commands, the printed old and new values of the preview, the wording that names --acknowledge, the rejection of an unknown argument, the CI step name, and the three commands in the documentation. Adversarial testing: required. The hostile round covers the near-miss flag spelling, the environment variable attempt, the argument order attack, the broadened skip, the unacknowledged write, a wrong acknowledgement spelling, a manifest with an extra field, and a workflow file that names the refresh command. UX browser review: not applicable. The track changes no page, no component, no style, and no route, so no browser renders the new surface and no page exists to open. The developer command line replaces the browser run. Risks named and defended: R1 inert flag, defended by ac4_cli_passes_the_flag_to_the_checker; R2 a skip that turns off more than one comparison, defended by the ac3 group and ac2; R3 an unlisted new analyzed file that passes in CI mode, defended by ac2_new_analyzed_file_fails_with_report_hash; R4 a refresh that writes without --acknowledge, defended by ac5_preview_prints_old_and_new_and_writes_nothing; R5 the hashing policy of AGENTS.md, defended by the manifest key check and the counts manifest_fields_changed=5 and hash_path_lists_changed=0; R6 a green-for-the-wrong-reason CI mode, closed by the new plan line; R7 an archive change, closed by the archive diff check. The strategy holds a fixture positive control so that no AC case fails for a fixture reason. It requires cases for both pin comparison sites, because the sync site and the async site differ. The phase base capture point is exact: the orchestrator runs `git rev-parse HEAD` after commit 09168dc422ed48604b8f2f0cb9a23ad4d110543b and before the Red role starts, and records the value in the Red evidence. The strategy file embeds no phase_base_sha value. Red may write one path only: packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts. Green may write the four source files, .github/workflows/ci.yml, both package files, docs/architecture-enforcement.md, and the manifest at task 1.4 only. The barrel packages/architecture-enforcement/src/index.ts is out of scope, because no CLI module sits in the barrel today. Every package suite runs through /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh, and only the one named test file runs outside it. The Red role must run this command outside the wrapper: CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts. The commit subject of the assignment was 110 characters and the commit-msg hook rejected it, so the commit uses a 97-character subject. No push and no --no-verify ran.
+END_MEASURE_AGENT_RESULT

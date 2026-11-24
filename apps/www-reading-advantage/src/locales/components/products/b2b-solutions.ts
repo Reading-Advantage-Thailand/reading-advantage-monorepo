@@ -45,7 +45,7 @@ export const en = {
         scienceAdvantage: {
             title: "Science Advantage",
             badge: "For the 2027 school year",
-            gradeRange: "Science book line, built but not released",
+            gradeRange: "Science book line",
             features: {
                 0: "Built as a printed workbook with a digital twin",
                 1: "Planned to mix reading investigations and interactive explorations",
@@ -145,7 +145,7 @@ export const th = {
         scienceAdvantage: {
             title: "Science Advantage",
             badge: "สำหรับปีการศึกษา 2570",
-            gradeRange: "ชุดหนังสือวิทยาศาสตร์ สร้างเสร็จแล้วแต่ยังไม่เปิดตัว",
+            gradeRange: "ชุดหนังสือวิทยาศาสตร์",
             features: {
                 0: "สร้างเป็นแบบฝึกหัดเล่มพิมพ์พร้อมเวอร์ชันดิจิทัล",
                 1: "วางแผนผสานการสืบค้นผ่านการอ่านและกิจกรรมโต้ตอบ",

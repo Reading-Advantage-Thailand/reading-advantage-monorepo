@@ -1,0 +1,2 @@
+$ pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/architecture-pin-refresh-cli.ts --acknowledge
+[ELIFECYCLE] Command failed.

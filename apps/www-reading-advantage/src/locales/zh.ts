@@ -22,8 +22,6 @@ import { zh as pricingPage } from "./pages/pricing";
 import { zh as blogPage } from "./pages/blog";
 // components
 import { zh as localeSwitcher } from "./components/locale-switcher";
-import { zh as pricingTable } from "./components/pricing-table";
-import { zh as comparisonTable } from "./components/comparison-table";
 import { zh as contactForm } from "./components/contact-form";
 import { zh as footer } from "./components/common/footer";
 import { zh as header } from "./components/common/header";
@@ -63,8 +61,6 @@ export default {
   },
   components: {
     localeSwitcher,
-    pricingTable,
-    comparisonTable,
     contactForm,
     pagination,
     blog,

@@ -90,9 +90,9 @@ export default async function Home({
   ];
 
   const roadmapProducts = [
-    { key: "science-advantage", name: "Science Advantage", logo: siteLogos.science.color },
-    { key: "math-advantage", name: "Math Advantage", logo: siteLogos.math.color },
-    { key: "zhongwen-advantage", name: "Zhongwen Advantage", logo: siteLogos.zhongwen.color },
+    { key: "science-advantage", name: "Science Advantage", logo: siteLogos.science.color, tag: t("v2.products.roadmapTag2027") },
+    { key: "math-advantage", name: "Math Advantage", logo: siteLogos.math.color, tag: t("v2.products.roadmapTag2027") },
+    { key: "zhongwen-advantage", name: "Zhongwen Advantage", logo: siteLogos.zhongwen.color, tag: t("v2.products.roadmapTag2027") },
     { key: "storytime-advantage", name: "Storytime Advantage", logo: siteLogos.storytime.color, tag: t("v2.products.storytimePreparingLabel") },
     { key: "stem-advantage", name: "STEM Advantage", logo: siteLogos.stem.color },
   ];

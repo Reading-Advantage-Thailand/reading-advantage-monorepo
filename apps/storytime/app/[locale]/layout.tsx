@@ -6,6 +6,7 @@ import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
 import "../globals.css";
 import "../look.css";
+import "../entry.css";
 
 /**
  * The Thai-first app face (spec section 6). next/font self-hosts every font at build time, so

@@ -374,6 +374,121 @@ describe("P1 group A: the acceptance checks of the spec", () => {
     expectIds(result, ["www-reading-advantage"], `A1-01 rows=1 changed_files=${changed}`, changed);
   });
 
+  it("A1-03 a www test-only change returns no app", () => {
+    const { dir, sha: base } = workspaceRepo();
+    const head = commitChanges(dir, {
+      write: {
+        "apps/www-reading-advantage/src/lib/blog-blocks.test.ts": "export {};\n",
+        "apps/www-reading-advantage/src/app/page.test.tsx": "export {};\n",
+        "apps/www-reading-advantage/src/lib/seo.spec.ts": "export {};\n",
+        "apps/www-reading-advantage/src/lib/copy.red.test.ts": "export {};\n",
+      },
+    });
+    const changed = changedFileCount(dir, base, head);
+    expect(changed).toBe(4);
+    const result = runScript(dir, base, head);
+    expectIds(result, [], `A1-03 rows=0 changed_files=${changed}`, changed);
+  });
+
+  it("A1-04 a file under __tests__ returns no app", () => {
+    const { dir, sha: base } = workspaceRepo();
+    const head = commitChanges(dir, {
+      write: {
+        "apps/www-reading-advantage/src/lib/__tests__/blog.test.ts": "export {};\n",
+        "apps/www-reading-advantage/src/lib/__tests__/helpers/plan.ts":
+          "export const plan = 1;\n",
+      },
+    });
+    const changed = changedFileCount(dir, base, head);
+    expect(changed).toBe(2);
+    const result = runScript(dir, base, head);
+    expectIds(result, [], `A1-04 rows=0 changed_files=${changed}`, changed);
+  });
+
+  it("A1-05 a mixed test and source change returns the app", () => {
+    const { dir, sha: base } = workspaceRepo();
+    const head = commitChanges(dir, {
+      write: {
+        "apps/www-reading-advantage/src/lib/blog-blocks.test.ts": "export {};\n",
+        "apps/www-reading-advantage/src/lib/blog.ts": "export const blog = 1;\n",
+      },
+    });
+    const changed = changedFileCount(dir, base, head);
+    expect(changed).toBe(2);
+    const result = runScript(dir, base, head);
+    expectIds(
+      result,
+      ["www-reading-advantage"],
+      `A1-05 rows=1 changed_files=${changed}`,
+      changed,
+    );
+  });
+
+  it("A1-06 a www source change without a test file returns www", () => {
+    const { dir, sha: base } = workspaceRepo();
+    const head = commitChanges(dir, {
+      write: { "apps/www-reading-advantage/src/lib/blog.ts": "export const blog = 2;\n" },
+    });
+    const changed = changedFileCount(dir, base, head);
+    expect(changed).toBe(1);
+    const result = runScript(dir, base, head);
+    expectIds(
+      result,
+      ["www-reading-advantage"],
+      `A1-06 rows=1 changed_files=${changed}`,
+      changed,
+    );
+  });
+
+  it("A1-07 a package test-only change returns no app", () => {
+    const { dir, sha: base } = workspaceRepo();
+    const head = commitChanges(dir, {
+      write: {
+        "packages/utils/src/index.test.ts": "export {};\n",
+        "packages/utils/src/__tests__/parse.ts": "export const parse = 1;\n",
+      },
+    });
+    const changed = changedFileCount(dir, base, head);
+    expect(changed).toBe(2);
+    const result = runScript(dir, base, head);
+    expectIds(result, [], `A1-07 rows=0 changed_files=${changed}`, changed);
+  });
+
+  it("A1-08 an eslint-config-only primary change returns no app", () => {
+    const { dir } = workspaceRepo();
+    const configPath = "apps/primary-advantage/eslint.config.mjs";
+    const base = commitChanges(dir, {
+      write: { [configPath]: "export default [];\n" },
+    });
+    const head = commitChanges(dir, {
+      write: {
+        [configPath]: "export default [{ rules: {} }];\n",
+        "apps/primary-advantage/.eslintrc.json": '{\n  "root": true\n}\n',
+        "apps/primary-advantage/.eslintignore": "public/\n",
+      },
+    });
+    const changed = changedFileCount(dir, base, head);
+    expect(changed).toBe(3);
+    const result = runScript(dir, base, head);
+    expectIds(result, [], `A1-08 rows=0 changed_files=${changed}`, changed);
+  });
+
+  it("A1-09 a primary lib change returns primary-advantage", () => {
+    const { dir, sha: base } = workspaceRepo();
+    const head = commitChanges(dir, {
+      write: { "apps/primary-advantage/lib/safe-callback-path.ts": "export const ok = 1;\n" },
+    });
+    const changed = changedFileCount(dir, base, head);
+    expect(changed).toBe(1);
+    const result = runScript(dir, base, head);
+    expectIds(
+      result,
+      ["primary-advantage"],
+      `A1-09 rows=1 changed_files=${changed}`,
+      changed,
+    );
+  });
+
   it("A1-02 a storytime-only change returns storytime", () => {
     const { dir, sha: base } = workspaceRepo();
     const head = commitChanges(dir, {

@@ -1,0 +1,17 @@
+MEASURE_AGENT_RESULT
+role: final-acceptance
+status: complete
+track: architecture_ci_input_pin_20261110
+phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+commits: none
+track_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: 743e7ddc3d860f9d1c6c814523a2275f473dca0b
+audited_head_sha: 743e7ddc3d860f9d1c6c814523a2275f473dca0b
+tests_run: PROJECT_LINT exit 0 with 0 errors and 1 pre-existing warning; PROJECT_CHECKS exit 0; PROJECT_TESTS exit 0 with 38 files and 415 tests; pin contract 20/20; both policy-v2 architecture checks exit 0 with files=7013, findings=800, parseErrors=0, debt 0/0/0; bash measure/doctor.sh exit 0. The first package-test attempt hit the external 120-second tool timeout; the identical rerun passed in 125.96 seconds.
+files_changed: measure/runs/architecture_ci_input_pin_20261110/final-acceptance-743e7ddc3.json; measure/runs/architecture_ci_input_pin_20261110/final-acceptance-743e7ddc3.log
+plan_updates: none. Closeout must append [checkpoint: 743e7ddc3] to the Phase 1 heading.
+known_failures: no blocking failures. Deferred B-F2 keeps later v2 reconcile writes refused, fail-closed. Carried documentation nits and the exported lower-level gate seam are nonblocking.
+handoff: Final acceptance passes and the final-acceptance role gate prints PASS after rerunning all configured project gates. Exactly one passing Phase 1 acceptance targets the current HEAD and its role gate passes. All 21 acceptance criteria have passing coverage. Closeout must append the checkpoint and carry the B-F2 follow-up and the nonblocking findings in the result JSON.
+result_file: measure/runs/architecture_ci_input_pin_20261110/final-acceptance-743e7ddc3.json
+retry_recommendation: none
+END_MEASURE_AGENT_RESULT

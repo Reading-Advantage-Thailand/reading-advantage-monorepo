@@ -1,0 +1,15 @@
+Gate output, exit 1:
+FAIL: current phase still has 3 non-deferred incomplete tasks
+
+MEASURE_AGENT_RESULT
+role: review-a
+status: blocked
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+commits: none
+tests_run: targeted Vitest 10 files / 182 tests PASS; heavy-run type-check PASS; full suite 91 files / 3117 tests PASS; image and scope checks PASS; old-banner, missing-file and malformed-file guards PASS
+files_changed: review-a-351844ce0.json; review-a-351844ce0.log
+plan_updates: none
+known_failures: no correctness blocker; RA5 records a nonblocking wrapper-fit coverage gap; Phase 4 tasks 4.1-4.3 remain pending
+handoff: The whole-cover change passes correctness. Reading-only scope and other-card markup pass. Consider RA5. Complete browser review and PM handoff, then rerun the role gate.
+END_MEASURE_AGENT_RESULT

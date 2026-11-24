@@ -1,0 +1,65 @@
+Measure review B (security and data handling) — architecture_ci_input_pin_20261110
+Audited HEAD: 3585c49aae9e334496d8156902e70eda19d04f71
+Phase base: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+Role base: 4ec3d5d21453a46f998cef8bfd42578bd1669c46
+Focus range: 4ec3d5d21..3585c49aa
+Verdict: pass
+
+MEASURE_AGENT_RESULT
+role: measure-review-b (security and data handling)
+track_id: architecture_ci_input_pin_20261110
+phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+audited_head_sha: 3585c49aae9e334496d8156902e70eda19d04f71
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: 4ec3d5d21453a46f998cef8bfd42578bd1669c46
+head_is_current: true (main repository HEAD and the clean checkout both equal the audited HEAD; the checkout is clean)
+security_applicability: applicable
+status: pass
+verdict: pass
+retry_recommendation: none
+route: opencode-go/deepseek-v4.1-flash
+
+security_points:
+  1 pass: .github/workflows/ci.yml:25-26 keeps permissions contents: read; the range changes no workflow file; no secret and no pull_request_target is added
+  2 pass_with_note: the budget keeps the strict ^[1-9]\d*$ regex and adds Number.isSafeInteger (architecture-pin-refresh-cli.ts:114-134); the accepted value reaches budgetMs arithmetic only
+  3 pass: the gate keys on the manifest destination path and the id (architecture-reconciliation.ts:1183-1197); two rows prove the renamed-id refusal by the exact message; the ordered write-set guard and the fresh-preview equality close the crafted-preview shapes
+  4 pass: accepted requires all three reviews and an owner receipt (v2-manifest-validation.ts:774-812); a failed commit validation rolls back (policy-update-transaction.ts:788-820); "Accepted" is treated as candidate
+  5 pass: the pin refresh at 965079f05 moves five pin fields; the check with the pin exits 0 at files=7013 with additions=0; the four v1 binding files are unchanged
+
+blocking_findings: none
+
+nonblocking_findings:
+  F5 low: docs/architecture-enforcement.md:55-57 says "the preview accepts any --owner value". The preview parses baselineEntrySchema for each new entry (architecture-reconciliation.ts:796-801, baseline-update.ts:132-137, contracts.ts:81), so an owner outside ^[a-z0-9][a-z0-9_-]*$ fails the preview when the candidate adds an entry. The claim holds only when no new entry is built. The code is stricter than the doc, so no unsafe value reaches the acknowledged run.
+  F2 medium (carried, unchanged): v2-manifest-validation.ts:631 and :656-658 and :819 still bind empty staged-delta lists, so the v2 schema cannot hold a review record for the committed delta of 255 additions, 15 removals, and 162 renames. The gate refuses every later v2 reconcile write. The refusal is fail-closed and safe; it blocks the reconcile route until the deferred follow-up lands.
+
+gate_bypass_answer:
+  No bypass found. The two new rows (v2-manifest, ownership-map) assert the exact gate message for the manifest path. A crafted preview that swaps an id and a path fails either the ordered four-path guard (policy-write-guard.ts:30-38) or the canonical fresh-preview equality (architecture-reconciliation.ts:1284-1296). The transaction rejects duplicate ids and paths (policy-update-transaction.ts:299-320). The accepted bypass is review-bound and owner-bound.
+
+budget_answer:
+  The value is digits only by regex, then Number, then Number.isSafeInteger. It flows only to budgetMs = budgetSeconds * 1000 and two numeric comparisons (architecture-pin-refresh-cli.ts:257-267). It reaches no path, shell, file, or network call. The error message holds the value as a string only. No unsafe sink.
+
+ci_answer:
+  .github/workflows/ci.yml:25-26 keeps permissions contents: read. git diff 4ec3d5d21..3585c49aa -- .github/workflows/ci.yml is empty.
+
+A2: not_applicable: no draft to published status for a named subject. The acceptance status stays candidate.
+A6: no overstatement. The plan r2 counts match the measurement (files=7013, suite 403, two renamed-id rows). F5 records an over-permissive doc sentence, not a security overstatement.
+
+provenance:
+  - phase_base_sha 09168dc42, role_base_sha 4ec3d5d21, and audited_head_sha 3585c49aa all resolve; HEAD equals the audited HEAD in the main repository and in the clean checkout
+  - git log --oneline 4ec3d5d21..3585c49aa -> ae29f456b, 36925e1f6, b9362c9d1, 965079f05, 3585c49aa
+  - git diff --stat 4ec3d5d21..3585c49aa -> 7 files, 231 insertions, 11 deletions
+  - git diff 09168dc42..3585c49aa of the four v1 binding files and v1-validation.ts is empty
+  - the committed manifest stays valid; both checks exit 0 at files=7013 with additions=0
+  - no tenant, organization, secret, or personal data is in scope
+
+test_commands:
+  - CI=true pnpm exec vitest run architecture-review-gate.test.ts architecture-pin-refresh-budget.test.ts architecture-v2-route-14d.test.ts --maxWorkers=1 -> exit 0, 3 files, 22 tests passed
+  - CI=true pnpm exec vitest run architecture-v2-route-adversarial.test.ts --maxWorkers=1 -> exit 0, 61 tests passed
+  - CI=true pnpm --filter @reading-advantage/architecture-enforcement test --maxWorkers=1 -> exit 0, 38 files, 403 tests passed
+  - CI=true pnpm architecture:check --policy v2 -> exit 0, clean (files=7013, findings=800, parseErrors=0), debt clean (additions=0, removals=0, renames=0)
+  - CI=true pnpm architecture:check --policy v2 --skip-input-snapshot-pin -> exit 0, same counts
+
+ratings: correctness 5, test_meaning 5, scope_discipline 5, evidence_quality 5
+END_MEASURE_AGENT_RESULT
+
+Notes: audit only. No repository file was edited. Tests ran in /home/daniebo/.cache/arch-gate-3/reading-advantage-monorepo at 3585c49aa.

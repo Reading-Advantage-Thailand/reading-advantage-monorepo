@@ -1,15 +1,27 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { JOIN_COPY, joinCopy, joinLines } from "../../../lib/join-copy";
+import { JOIN_COPY, JOIN_PIECES, joinCopy } from "../../../lib/join-copy";
+import { JoinArt } from "../entry/entry-art";
+import { EntryIcon, type EntryIconName } from "../entry/entry-icons";
+import { EntryLogo } from "../entry/entry-logo";
+
+/**
+ * The tile order of the join page (PM design decision 3).
+ */
+const TILE_ORDER: EntryIconName[] = [
+  "daily-lessons",
+  "letters-phonics",
+  "sight-words",
+  "songs-readers",
+  "home-app",
+];
 
 /**
  * The "How to join" page of the Storytime app (design section 2, AC-4.5).
  *
  * The page is public: a visitor without a session sees it, and it writes no cookie. It holds no
- * week content and no media link. The copy comes from the PR hand-off and stays a draft until
- * the PR copy and the Thai check of Daniel are recorded, so the page shows a draft marker while
- * the status is `draft`.
+ * week content and no raw URL text. The short lines come from the pieces of the approved C3 copy,
+ * so the page adds no new claim.
  */
 
 /**
@@ -27,6 +39,20 @@ export async function generateMetadata({
 }
 
 /**
+ * Escapes one approved line for static markup. The apostrophe stays literal so the rendered line
+ * keeps the PM copy byte for byte; every character with markup meaning is escaped.
+ * @param text The approved line.
+ * @returns The line as static markup text.
+ */
+function approvedLineHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+/**
  * Renders the "How to join" page.
  * @param props.params The locale of the page.
  * @returns The page.
@@ -38,36 +64,70 @@ export default async function JoinPage({
 }) {
   const { locale } = await params;
   const copy = joinCopy(locale);
+  const pieces = JOIN_PIECES[locale === "th" ? "th" : "en"];
   const translate = await getTranslations({ locale });
   const t = (key: string) => translate(key);
+  const lang = locale === "th" ? "th" : "en";
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-6 p-6">
-      {JOIN_COPY.status === "draft" ? (
-        <p data-draft="true" className="rounded-xl border border-amber-500 p-3">
-          {t("joinDraftMarker")}
+    <main data-entry-shell>
+      <div data-entry-brand>
+        <EntryLogo />
+        {JOIN_COPY.status === "draft" ? (
+          <p data-draft="true">{t("joinDraftMarker")}</p>
+        ) : null}
+        <h1 lang={lang}>{copy.heading}</h1>
+        <p data-entry-hero lang={lang}>
+          {pieces.hero}
         </p>
-      ) : null}
-      <h1 className="text-2xl font-semibold" lang={locale === "th" ? "th" : "en"}>
-        {copy.heading}
-      </h1>
-      <p className="leading-7" lang={locale === "th" ? "th" : "en"}>
-        {copy.whoItIsFor}
-      </p>
-      <p className="leading-7" lang={locale === "th" ? "th" : "en"}>
-        {copy.howToGetSignIn}
-      </p>
-      <div className="flex flex-col gap-1 leading-7" lang={locale === "th" ? "th" : "en"}>
-        {joinLines(copy.contact).map((line) => (
-          <p key={line}>{line}</p>
-        ))}
+        <div data-join-art>
+          <JoinArt />
+        </div>
       </div>
-      <Link
-        href={`/${locale}/sign-in`}
-        className="inline-flex min-h-16 w-fit items-center rounded-2xl border border-[#92400e] bg-[#92400e] px-4 py-2 text-white"
-      >
-        {copy.signInLink}
-      </Link>
+      <section data-entry-card data-join-content>
+        <div data-join-tiles>
+          {TILE_ORDER.map((name) => {
+            const tile = pieces.tiles[name];
+            return (
+              <div key={name} data-join-tile={name} lang={lang}>
+                <EntryIcon name={name} />
+                <span data-join-tile-title>{tile.title}</span>
+                <span data-join-tile-sentence>{tile.sentence}</span>
+              </div>
+            );
+          })}
+        </div>
+        <h2>{t("joinHowToTitle")}</h2>
+        <ol data-join-steps lang={lang}>
+          {pieces.steps.map((step, index) => (
+            <li
+              key={step}
+              data-join-step={String(index + 1)}
+              dangerouslySetInnerHTML={{ __html: approvedLineHtml(step) }}
+            />
+          ))}
+        </ol>
+        <p data-entry-hint lang={lang}>
+          {pieces.contactLead}
+        </p>
+        <div data-entry-contacts>
+          <a data-contact="line" href="https://line.me/ti/p/Pf7_EF98Pv">
+            {pieces.buttons.line}
+          </a>
+          <a data-contact="phone" href="tel:+66990058038">
+            {pieces.buttons.phone}
+          </a>
+          <a data-contact="email" href="mailto:support@reading-advantage.com">
+            {pieces.buttons.email}
+          </a>
+        </div>
+        <a data-contact-site href="https://www.reading-advantage.com/contact">
+          {pieces.buttons.site}
+        </a>
+        <a data-join-signin href={`/${locale}/sign-in`}>
+          {copy.signInLink}
+        </a>
+      </section>
     </main>
   );
 }

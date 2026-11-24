@@ -1,0 +1,49 @@
+Phase acceptance rerun r2 for architecture_ci_input_pin_20261110, Phase 1.
+Audited HEAD: 743e7ddc3d860f9d1c6c814523a2275f473dca0b (master HEAD).
+Phase base: 09168dc422ed48604b8f2f0cb9a23ad4d110543b.
+Clean checkout: /home/daniebo/.cache/arch-gate-5/reading-advantage-monorepo (same SHA, clean status, backend and knowledge-space-core dist present).
+Prior run: phase-acceptance-00dfbea9a.json (FAIL, B1 stale input pin).
+
+Exact phase heading: ## Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+
+What changed since the r1 audited HEAD 00dfbea9a:
+- dcf77dba5 changes only packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json, 2 insertions and 2 deletions. Only analyzerInputSnapshotSha256 and reviewSubjectSha256 moved. The two tree hashes and both report hashes stayed. This is the round-10 shape that r1 predicted.
+- 743e7ddc3 changes only measure/ paths: green-pin-00dfbea9a.log, green-rem-9619b9548.log, and the plan evidence note. A measure/ path is not an analyzer input.
+
+Gates re-run at 743e7ddc3 in the clean checkout (one job at a time):
+- pnpm architecture:check --policy v2 (heavy-run) -> exit 0. clean (files=7013, findings=800, parseErrors=0), policy v2 (status=candidate, default=v1), debt 0/0/0. B1 is fixed. This is the gate that exited 1 at 00dfbea9a.
+- pnpm architecture:check --skip-input-snapshot-pin --policy v2 (heavy-run) -> exit 0, same counts, no input snapshot error.
+- CI=true pnpm exec vitest run architecture-ci-input-pin.test.ts --maxWorkers=1 -> exit 0, 20 of 20.
+- CI=true pnpm exec vitest run architecture-v2-route-adversarial.test.ts --maxWorkers=1 -> exit 0, 73 of 73.
+- pnpm --filter @reading-advantage/architecture-enforcement check-types (heavy-run) -> exit 0.
+- pnpm --filter @reading-advantage/architecture-enforcement lint (heavy-run) -> exit 0, 0 errors, 1 pre-existing prefer-const warning.
+- CI=true pnpm --filter @reading-advantage/architecture-enforcement test (heavy-run) -> exit 0, 38 files, 415 tests, 0 failed.
+- git diff --name-only 5062b170e..HEAD -- measure/archive/backend_architecture_enforcement_20260713/ -> empty.
+- Track commits touch no path under packages/backend/turbo.json or packages/webhooks.
+- A9 detector over the two test files -> exit 1.
+- Manifest read: 15 keys, status=candidate, reviews=0, baselineAdditions=255, inputPin=36da45b86aa06c20..., reviewSubject=a78a4291edd5cfd5....
+
+Prerequisite allowance (named commits): review-a, review-b, review-c, and adversarial all pass at 3585c49aa. The four commits between 3585c49aa and 743e7ddc3 are 3c4a15581 (test-only), 00dfbea9a (test-only), dcf77dba5 (pin-only), and 743e7ddc3 (measure-only). Under the test-only and pin-only commit rule the prerequisite results apply to the audited HEAD.
+
+r1 findings: B1 is fixed and withdrawn into evidence. N1 (deferred B-F2 review-record follow-up) stays carried state, not a phase gate. N2 (uncommitted green-rem-9619b9548.log edit) is resolved: the edit is committed at 743e7ddc3.
+
+Checkpoint: the plan rule (task 1.5) has the acceptance role append [checkpoint: 743e7ddc3] to the phase heading. The permission system of this gate-only session rejects a plan.md edit, so that one-line append is routed to the orchestrator.
+
+MEASURE_AGENT_RESULT
+phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+audited_head_sha: 743e7ddc3d860f9d1c6c814523a2275f473dca0b
+status: pass
+blocking_findings: 0
+nonblocking_findings: 2
+nonblocking_1: The deferred B-F2 review-record follow-up stays open (manifest status=candidate, reviews=0, staged delta 255/15/162). Carried state, not a gate of this phase.
+nonblocking_2: The plan checkpoint append '[checkpoint: 743e7ddc3]' to the phase heading is routed to the orchestrator; the permission system of this gate-only session rejects a plan.md edit.
+b1_resolution: dcf77dba5 moved only analyzerInputSnapshotSha256 and reviewSubjectSha256; pnpm architecture:check --policy v2 exits 0 at the audited HEAD with files=7013, findings=800, parseErrors=0, debt 0/0/0.
+prerequisite_commits_allowed: 3c4a15581=test-only; 00dfbea9a=test-only; dcf77dba5=pin-only; 743e7ddc3=measure-only
+gate_exit_codes: check_policy_v2=0; check_skip_pin_v2=0; pin_test=0; adversarial_test=0; check_types=0; lint=0; package_test=0
+gate_counts: pin_tests=20/20; adversarial_tests=73/73; suite_files=38; suite_tests=415; suite_failed=0; lint_errors=0; lint_warnings=1; files=7013; findings=800; parse_errors=0; additions=0; removals=0; renames=0
+archive_diff: empty
+confidence: high
+retry_recommendation: none
+changed_files: phase-acceptance-743e7ddc3.json; phase-acceptance-743e7ddc3.log
+END_MEASURE_AGENT_RESULT

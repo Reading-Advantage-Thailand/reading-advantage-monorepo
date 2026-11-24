@@ -1,0 +1,12 @@
+{
+  "_marker": "no real sample",
+  "_note": "FAKE withholding certificate fixture for plan task 6.1. Synthetic; the structure report holds no per-payee withholding certificate sample (PM-12, spec section 8 note 7). No real amount, name, tax id, account number, or document text. Tax ids are zero sentinels.",
+  "withholderTaxId": "0000000000000",
+  "payeeName": "Test Counterparty",
+  "payeeTaxId": "0000000000000",
+  "paymentDate": "2026-09-30",
+  "incomeType": "service fee",
+  "amountPaid": "1000.00",
+  "taxWithheld": "30.00",
+  "text": "Withholding tax certificate\nWithholder tax id: 0000000000000\nPayee: Test Counterparty\nPayee tax id: 0000000000000\nPayment date: 2026-09-30\nIncome type: service fee\nAmount paid: 1000.00\nTax withheld: 30.00"
+}

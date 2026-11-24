@@ -1,0 +1,15 @@
+MEASURE_AGENT_RESULT
+role: jr-green
+status: green
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+phase_base_sha: c096256a1eb9f41329306533a78aa0108cc6bcff
+role_base_sha: 4f3ad5936f0e2c3b1d811725483a83bd271619da
+final_green_head: 3e80d3679bcbc519d2a96e624d04f880e6d94efd
+commits: 3e80d3679bcbc519d2a96e624d04f880e6d94efd docs(measure): record a70 p4 checkpoint and spec cover (track_id: www_features_pricing_20261120)
+tests_run: None. Docs-only round after Phase 4 acceptance: no code, test, asset or build change. The requested commit header was 101 characters, so the shortened 96-character form "docs(measure): record a70 p4 checkpoint and spec cover" was used to meet the 100-character rule.
+files_changed: measure/tracks/www_features_pricing_20261120/plan.md and measure/tracks/www_features_pricing_20261120/spec.md only. No application file, test file, asset, next-env.d.ts or registry changed. The git-ignored scratch folder measure/runs/www_features_pricing_20261120/scratch-p4-accept existed and was deleted with `rm -rf` on that exact path; exit 0, path gone.
+plan_updates: Phase 3 and Phase 4 headings each carry `[checkpoint: 4f3ad5936f0e2c3b1d811725483a83bd271619da]`. Task 4.1 records the real capture folders ux-wfp-r8 (features) and ux-wfp-r6 (pricing). Task 4.2 records the Pricing verdict artifact ux-browser-4ccf4c879.json and RA5 closure by adversarial-c2cb6a120.json at 4f3ad5936 through test-only commit 4f3ad5936. Task 4.9's 1200x576 cover claim is marked SUPERSEDED BY 4.10 (D-R9-1). The duplicate Green r6 evidence line under task 4.8 was deleted after confirming it matched line 87 word for word; one copy remains under task 4.7. Tasks 3.3 and 3.4 marked [x] with the Review B exclusion and the fix-round record; all Medium and Low review findings were resolved in later rounds, so no plan-review.md is needed. Task 5.1 stays [ ] with the git worktree and branch note (www-features-pricing at 4f3ad5936 on www/features-pricing-a70; no origin branch; push needs the PM).
+known_failures: None. Phase 4 acceptance status pass with no blocking findings. Task 5.2 stays deferred:daniel.
+handoff: Reviewers scope this round to plan.md and spec.md in commit 3e80d3679. No task flipped to [b]. Phase 4 is checkpointed at 4f3ad5936. Spec FR-3, the section 7 image table and AC-7 now name public/images/products/ra-origins-2-cover.jpg as the whole uncropped portrait Origins 2 cover (600x814, D13 alt "Reading Advantage Origins 2 book cover", PM confirmation D-R9-1), with the old reading-article-selection.webp kept on disk unused because the assets test still lists it. Immutable phase_base_sha c096256a1eb9f41329306533a78aa0108cc6bcff; role_base_sha 4f3ad5936f0e2c3b1d811725483a83bd271619da; final head 3e80d3679bcbc519d2a96e624d04f880e6d94efd. Worktree clean.
+END_MEASURE_AGENT_RESULT

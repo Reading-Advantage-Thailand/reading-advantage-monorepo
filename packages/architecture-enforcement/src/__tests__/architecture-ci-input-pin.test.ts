@@ -487,7 +487,7 @@ describe("architecture CI input pin contract", () => {
       .map((line) => line.trim())
       .filter((line) => line.startsWith("run:"));
     expect(runLines).toContain(
-      "run: pnpm architecture:check --skip-input-snapshot-pin",
+      "run: pnpm architecture:check --skip-input-snapshot-pin --policy v2",
     );
   });
 

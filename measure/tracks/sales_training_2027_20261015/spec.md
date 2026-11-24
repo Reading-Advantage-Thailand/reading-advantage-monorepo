@@ -168,7 +168,7 @@ with the version on its line 3:
 **Acceptance Criteria:**
 - Given the product module, When it describes products, Then it uses the states at the `7eff8c10` source set: Primary Advantage, Tutor Advantage, and CodeCamp Advantage live; Reading Advantage not offered to schools now, its books now in Tutor Advantage classes; Science, Math, and Zhongwen Advantage each its own app built from the Primary Advantage base app, no date; Storytime Advantage in the K–6 offer, no date; STEM Advantage planned, no date. It gives no date for any of these lines.
 - Given the tier lesson, When it states prices, Then it gives App-Only ~1,000 ฿, Blended Learning ~1,500 ฿, and Tutor Advantage from 3,000 ฿ for each class package. The tier table keeps the Managed Service row: the approved line "Today we offer App-Only and Blended Learning. A fuller service is in planning; we will share it when it is ready.", the instruction never to pre-sell it, and no price.
-- Given the claims lesson, When it gives outcome language, Then it uses only the approved forms of the outcome-claims policy, CEFR names only, and no GSE, Pearson, or YLE names.
+- Given the claims lesson, When it gives outcome language, Then it uses only the approved forms of the outcome-claims policy, CEFR names only, and no GSE or Pearson names. It allows one Cambridge Young Learners form only, word for word: "the program was created to prepare students for the Cambridge Young Learners exams". Any other Cambridge form is a fail. The bans in scope item 5 stay: no Cambridge logo, and none of the words "official", "partner", "authorised", "approved", "endorsed", or "Cambridge-approved".
 - Given a book name, When a lesson uses it, Then it carries the product name ("Primary Advantage Origins 2", never "Origins 2").
 - Given the product lesson, When it describes the books, Then it shows the placement-to-book map (program and book level 1–4) and the print status of each book.
 - Given a fact that expires (the PR scope doc lists them: the Primary cutover, target 2026-10-17/18, last date 2026-10-20; Primary Advantage Origins 3.2 and Quest 4 on sale in Tutor Advantage at about 2026-11-08; Reedy Preview in Primary Advantage only after the cutover passes), When a lesson states it, Then the content test names it, so that S10 can check it again.
@@ -398,10 +398,12 @@ The claims criterion has passingScore 90. It fails the attempt on any one of the
 2. False urgency.
 3. A promise of Read Along with Reedy.
 4. A book that is not printed, or any level above book level 4.
-5. GSE, Pearson, or YLE words.
+5. GSE or Pearson words. Cambridge Young Learners is allowed in one form only, word for word: "the program was created to prepare students for the Cambridge Young Learners exams". Any other Cambridge form is a fail. The bans stay: no Cambridge logo, and none of the words "official", "partner", "authorised", "approved", "endorsed", or "Cambridge-approved". The GSE, Pearson, and Cambridge YLE word lists stay internal.
+   - _Amendment 2026-11-24 (PM ruling 2026-11-24, AGENTS.md principle 9: policy wins). The outcome-claims policy at the pin allows the one exam-preparation form. The scope doc still bans YLE in a line to a parent or a school. The policy governs. PM words: "[the PM] allow only this form: 'the program was created to prepare students for the Cambridge Young Learners exams'. Keep the bans: no logo, and none of the words official, partner, authorised, approved, endorsed, Cambridge-approved. Word lists stay internal."_
 6. A book name without the product name.
 7. An earnings figure in a family sale (commission talk belongs to recruitment only).
-8. A Managed Service sale, or a date for Science, Math, Zhongwen, or Storytime Advantage, for a new edition, or for a pilot start. The May 2027 line in section 4 is the only date that a trainee may say.
+8. A Managed Service sale, or a date for Science, Math, or Zhongwen Advantage, for a new edition, or for a pilot start. The only product date a trainee may say is "Storytime Advantage launches on 30 November 2026". That date is for the app only. No line may say that printed Storytime books ship or sell in 2026. Every other product date stays banned. The May 2027 line in section 4 is the only other date that a trainee may say.
+   - _Amendment 2026-11-24 (PM ruling 2026-11-24). PM words: "[the PM] Line 171 takes the one allowed YLE form, with GSE and Pearson still banned. In the same small plan commit, change scope item 8 to allow only the 30 November 2026 Storytime app date, and keep every other date banned."_
 9. "Leading", "best", "#1", or a percentage with no source.
 
 ## Out of Scope

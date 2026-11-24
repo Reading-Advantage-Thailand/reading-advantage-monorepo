@@ -1,19 +1,31 @@
 # The upload of a review build of the Storytime app (plan task 6.2, round 8).
 #
-# It keeps only what the storytime image needs: apps/storytime, packages, the root manifests,
-# and the lock and workspace files. Gitignore has a strict rule: no rule re-includes a file
-# below an ignored folder. So this file uses /apps/* plus !/apps/storytime, and never a bare *.
+# It keeps only what the storytime image needs: apps/storytime, the six packages of the Dockerfile
+# COPY set, the root manifests, and the lock and workspace files. Gitignore has a strict rule: no
+# rule re-includes a file below an ignored folder. So this file uses /apps/* and /packages/* with
+# one re-include per folder it keeps, and never a bare *.
+# The 2026-11-21 trim (A-71 preview): the commit holds 92781 tracked files, and the upload of the
+# whole packages folder was 413.6 MiB. The image reads no package outside the Dockerfile COPY set,
+# so the other packages and their assets stay out of the upload.
 # The CD build does not use this file; it uses the root .gcloudignore.
 /*
 !/apps
 /apps/*
 !/apps/storytime
 !/packages
+/packages/*
+!/packages/auth
+!/packages/backend
+!/packages/config
+!/packages/db
+!/packages/read-along
+!/packages/storage
 !/package.json
 !/pnpm-lock.yaml
 !/pnpm-workspace.yaml
 !/turbo.json
 !/.pnpmfile.cjs
+!/.dockerignore
 **/node_modules
 **/.next
 **/.env

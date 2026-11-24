@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "role": "closeout",
+  "track_id": "architecture_ci_input_pin_20261110",
+  "phase": "track",
+  "role_base_sha": "743e7ddc3d860f9d1c6c814523a2275f473dca0b",
+  "audited_head_sha": "743e7ddc3d860f9d1c6c814523a2275f473dca0b",
+  "status": "pass",
+  "summary": "Closeout passes. The pre-closeout HEAD equals the final acceptance audited HEAD 743e7ddc3. All nine plan tasks are [x] with commit evidence, and no [~], [ ], or [b] task remains. The Phase 1 heading now carries [checkpoint: 743e7ddc3]. The track moved to measure/archive/, the registry entry moved to Archived Tracks, metadata status is done with completion date 2026-11-19, and the deferred B-F2 follow-up is recorded as one Open row in measure/tech-debt.md. The closeout manifest exists. The A5, A6, A9, and A13 detectors report no hit. No test needs a path fix after the archive move.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 (deferred B-F2): measure/tech-debt.md now records that the v2 schema cannot bind a review record for the committed 255/15/162 staged delta. The manifest stays at status=candidate with reviews=0, so later v2 reconcile writes stay refused, fail-closed. This is an accepted follow-up, not a gate of the track.",
+    "N2 (carried documentation nits, no action in closeout): final acceptance N3 to N6 remain as recorded in final-acceptance-743e7ddc3.json. They do not affect the closeout state."
+  ],
+  "evidence": [
+    "Provenance: git rev-parse HEAD at the start returns 743e7ddc3d860f9d1c6c814523a2275f473dca0b, equal to the audited_head_sha of final-acceptance-743e7ddc3.json and phase-acceptance-743e7ddc3.json.",
+    "Plan state: 9 task lines, 9 [x], 0 [~], 0 [ ], 0 [b]; each top-level [x] names a commit SHA. The Phase 1 heading ends with [checkpoint: 743e7ddc3].",
+    "Archive: git mv measure/tracks/architecture_ci_input_pin_20261110 measure/archive/architecture_ci_input_pin_20261110 exited 0; the archive holds plan.md, metadata.json, index.md, spec.md, spec-review.md, test-strategy.md, and the closeout manifest.",
+    "Registry: the active [ ] entry was removed; an archived [x] entry with the metadata description was added under '## Archived Tracks'; the identity-debt note no longer holds the literal id of the closed track in the active section.",
+    "Metadata: status=done, completed=2026-11-19, updated_at=2026-11-19T00:00:00Z, actual_tasks=9; the description is unchanged and matches the archived registry entry.",
+    "Tech debt: the B-F2 row is present at the tail of measure/tech-debt.md and the file holds 50 lines after two resolved Done rows were merged into one.",
+    "Acceptance evidence retained: phase-acceptance-743e7ddc3.json and final-acceptance-743e7ddc3.json both hold status=pass and zero blocking findings; the reviewers and adversarial result at 3585c49aa hold status=pass.",
+    "A5: no 'all checks pass' or PASS=n, FAIL=0 text in the archived plan.",
+    "A6: the archived registry note states the adversarial pass at 3585c49aa with 73 cases and the deferred fail-closed B-F2 state; it claims nothing beyond the recorded results.",
+    "A9: no test holds a hardcoded path to this track's plan. The eight track-id strings in tests/orchestrator_doctor_gate.sh are expected-output clauses, not paths.",
+    "A13: no directory for this track remains under measure/tracks/."
+  ],
+  "commands": [
+    "git rev-parse HEAD -> 743e7ddc3d860f9d1c6c814523a2275f473dca0b",
+    "git status --short -> dirty with unrelated next-env.d.ts and untracked paths; no such path was staged",
+    "git mv measure/tracks/architecture_ci_input_pin_20261110 measure/archive/architecture_ci_input_pin_20261110 -> exit 0",
+    "python3 plan marker check -> 9 [x], 0 [~], 0 [ ], 0 [b]",
+    "rg -n 'PASS=[0-9]+.*FAIL=0|all checks pass' measure/archive/architecture_ci_input_pin_20261110/plan.md -> no hit (A5)",
+    "rg -n 'completely fixed|fully solved|all (checks |tests )?pass' measure/tracks.md -> no hit (A6)",
+    "rg -n 'measure/tracks/([a-z_0-9-]+)/plan\\.md' tests/*.sh -> fixture ids only, no hit for this track (A9)",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo /home/daniebo/Desktop/reading-advantage-monorepo --track architecture_ci_input_pin_20261110 -> PASS",
+    "python3 /home/daniebo/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo /home/daniebo/Desktop/reading-advantage-monorepo -> see closeout-743e7ddc3.log"
+  ],
+  "changed_files": [
+    "measure/archive/architecture_ci_input_pin_20261110/ (moved from measure/tracks/, with the checkpoint append, the metadata update, and the closeout manifest)",
+    "measure/tracks.md",
+    "measure/tech-debt.md",
+    "measure/runs/architecture_ci_input_pin_20261110/ (result JSON, logs, closeout-743e7ddc3.json, and closeout-743e7ddc3.log)"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "confidence": "high",
+  "retry_recommendation": "none"
+}

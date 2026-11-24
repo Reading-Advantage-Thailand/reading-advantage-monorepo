@@ -30,8 +30,9 @@ import { afterAll, describe, expect, it } from "vitest";
 const app = resolve(import.meta.dirname, "..");
 const repoRoot = resolve(app, "..", "..");
 
-/** The nine scripts that start a throwaway database today (relative to the repo root). */
+/** The ten scripts that start a throwaway database today (relative to the repo root). */
 const KNOWN_DB_SCRIPTS = [
+  "apps/storytime/__tests__/entry-browser-gate.sh",
   "apps/storytime/__tests__/look-phase1-browser-gate.sh",
   "apps/storytime/__tests__/look-phase2-browser-gate.sh",
   "apps/storytime/__tests__/look-song-phone-browser-gate.sh",

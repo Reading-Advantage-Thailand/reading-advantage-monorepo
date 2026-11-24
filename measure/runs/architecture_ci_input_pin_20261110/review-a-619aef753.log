@@ -1,0 +1,99 @@
+# Review A (re-review r2) — Phase 1 remediation at 619aef753
+
+Track: architecture_ci_input_pin_20261110
+Phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+Audited HEAD: 619aef7530baad0a028666c55e2f1ef9057fc733
+Remediation range: 9619b9548..619aef753 (a510c9492, e52cefc53, 6061bed66, ce87ce505, 619aef753)
+Clean checkout: /home/daniebo/.cache/arch-gate-2 (HEAD equals the audited HEAD, tree clean)
+
+## Audit points
+
+1. Review gate (a510c9492). assertReviewedStagedDelta sits in
+   applyArchitectureReconciliation after the plan-hash, acknowledge, and
+   v2-policy checks and before the write-set guard, the fresh-preview
+   comparison, and the write (architecture-reconciliation.ts:1264). The v2
+   preview builder stages the manifest under id "reconciliation-manifest"
+   (:839-848), the exact id the gate reads (:1184). No production path writes
+   the four v2 artifacts without the gate; the CLI routes through this entry.
+   The 4 gate tests pass. Case 1 pins the refusal message, which exists only
+   in the new code, so it fails at the base HEAD. Not vacuous.
+
+2. Refused later writes. The committed manifest holds baseline_additions=255,
+   removals=15, renames=162, reviews=0, status=candidate (node counts).
+   v2-manifest-validation.ts:105-107 freezes the review evidence paths to the
+   durable_job_worker_platform_20260713 track, :631 binds evidencePath, and
+   :656-658 require the evidence to bind empty delta lists. No review record
+   can validate against the staged 255/15/162 delta. Fail-closed is correct;
+   the plan records it and the deferred follow-up (plan.md:239-245).
+   measure/tech-debt.md sits at its 50-line cap (wc -l = 50), so keeping the
+   follow-up note in the plan is justified. CI and the pin refresh are
+   unaffected: both live v2 checks exit 0.
+
+3. Budget messages (e52cefc53). The parser now names the missing value and
+   the invalid value with the rule (architecture-pin-refresh-cli.ts:113-124).
+   The 4 budget cases pass at HEAD.
+
+4. N1 fix (6061bed66). The red test now asserts non-empty removals and
+   renames. The manifest holds 15 and 162 records, so the assertions carry
+   meaning. Passes in my 4-file run.
+
+5. Docs (ce87ce505). Every named flag matches the CLI parser
+   (architecture-reconciliation-cli.ts:116-165), the workflow line at
+   .github/workflows/ci.yml:176 matches the docs CI line, and
+   measure/tracks.md:80 carries the same flag.
+
+6. Pin refresh (619aef753). One file, one hunk: only pin values moved
+   (implementationAndTestTreeSha256, analyzerInputSnapshotSha256,
+   reportSha256s, reviewSubjectSha256). The delta lists, reviews, acceptance,
+   and the 15-key set stayed. Both live v2 checks exit 0 with files=7012,
+   findings=800, parseErrors=0, additions=0, removals=0, renames=0.
+
+## Findings
+
+Blocking: none.
+
+Non-blocking:
+
+- N1: no recorded Red run for the two new remediation test files; the commits
+  mix the test with the production change. The structural red-ness holds
+  because both pinned messages exist only in the new code.
+- N2: applyArchitectureReconciliationForPolicy (policy-write-guard.ts:40) is
+  re-exported from the package index without the gate. Only
+  architecture-reconciliation.ts:1267 calls it today.
+- N3: plan.md:238 and the green log omit reviewSubjectSha256 from the list of
+  moved values. The field is derived over the manifest bytes, so it must move.
+  No stated claim is wrong.
+- N4: the suite case at architecture-reconciliation-cli.test.ts:225 fails in
+  any checkout folder not ending in reading-advantage-monorepo. The plan flags
+  this exact environmental failure (plan.md:242). Reproduced as 339 of 340.
+- N5: every later v2 reconcile write stays refused until the deferred
+  follow-up lands. Verified correct and recorded in the plan.
+
+## Verdict
+
+PASS. All reproduced plan claims matched exactly.
+
+MEASURE_AGENT_RESULT
+status: pass
+track: architecture_ci_input_pin_20261110
+phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+task: phase 1 remediation re-review at 619aef753
+role: review-a
+role_base_sha: 9619b95482833feae716bbe4182cbc8172787134
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+audited_head_sha: 619aef7530baad0a028666c55e2f1ef9057fc733
+remediation_commits: ["a510c94920481b911efcfc7f01a3546277e37f73", "e52cefc5316edb89fb60b6e14ec391420940918f", "6061bed6655f51fb252c9b96bc09b3866effafef", "ce87ce505b20d882acdb1dfb86a4c365602a7d0c", "619aef7530baad0a028666c55e2f1ef9057fc733"]
+blocking_findings: 0
+nonblocking_findings: 5
+retry_recommendation: none
+commands_run:
+  - "git rev-parse HEAD in /home/daniebo/.cache/arch-gate-2 -> 619aef7530baad0a028666c55e2f1ef9057fc733 (equals audited HEAD)"
+  - "CI=true pnpm exec vitest run (review-gate, pin-refresh-budget, manifest-v2.red, ci-input-pin) --maxWorkers=1 -> 4 files, 32 tests, 0 failed"
+  - "CI=true pnpm exec vitest run architecture-v2-route-14d.test.ts --maxWorkers=1 -> 12 of 12"
+  - "CI=true pnpm --filter @reading-advantage/architecture-enforcement test -- --maxWorkers=1 -> 37 files, 340 tests, 1 failed (environmental name case)"
+  - "pnpm --filter @reading-advantage/architecture-enforcement lint -> 0 errors, 1 warning"
+  - "pnpm --filter @reading-advantage/architecture-enforcement check-types -> exit 0"
+  - "pnpm architecture:check --skip-input-snapshot-pin --policy v2 -> exit 0, files=7012, findings=800, parseErrors=0, additions=0, removals=0, renames=0"
+  - "pnpm architecture:check --policy v2 -> exit 0, same counts"
+key_facts: "The gate sits on the only v2 write path and is failing-first. The refused-write state is verified: the v2 schema cannot hold a review record for the staged 255/15/162 delta (frozen evidence paths and empty-list binding), the plan records this and the deferred follow-up. The budget messages, the N1 fix, the docs, and the pin-only refresh are all correct. Both live v2 checks exit 0 with 0/0/0."
+END_MEASURE_AGENT_RESULT

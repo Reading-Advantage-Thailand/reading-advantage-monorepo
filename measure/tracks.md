@@ -66,7 +66,7 @@ This file tracks all major tracks for the project.
 
 - [~] **Track: Storytime at-home release (weeks 1 to 7 in the app)** — *created 2026-11-06*
   *Link: [./tracks/storytime_at_home_release_20261106/](./tracks/storytime_at_home_release_20261106/)*
-  *Status: active, opened 2026-11-06; Phase 1 received locally at f2989514d, not deployed | Owner: Monorepo orchestrator | Parent: storytime_app_rebuild_20261025 | Phase 1 local commits by 2026-11-14, date needed 2026-11-16; Phase 3 deploy target 2026-11-20 (`deferred:daniel`)*
+  *Status: active, opened 2026-11-06; Phase 1 received locally at f2989514d, not deployed | Owner: Monorepo orchestrator | Parent: storytime_app_rebuild_20261025 | Phase 1 local commits by 2026-11-14, date needed 2026-11-16; Phase 3 deploy target 2026-11-20 (`deferred:daniel`); Phase 4 Entry redesign (A-71) planned 2026-11-20, preview by 2026-11-22 12:00 ICT*
   *Note: PM decision 2026-11-05 moved tasks 3.10 and 3.11 of the parent here. PM hand-off 2026-11-06: 7 week packages from Workbooks commit 82f88853. Dependency: Red and Green of Phase 1 start after the parent Phase 3 heading carries its checkpoint. No push and no deploy without Daniel's word.*
 
 - [ ] **Track: Remove the void Storytime code from Primary** — *created 2026-11-07*
@@ -74,15 +74,10 @@ This file tracks all major tracks for the project.
   *Status: active, opened 2026-11-07; Phase 1 removed locally at ccb3ba4e7, accepted at e62a8eba7 [checkpoint], not deployed; Phase 2 is the next Primary deploy by the team (`deferred:daniel`) | Owner: Monorepo orchestrator | Parent: storytime_app_rebuild_20261025 (task 7.1, code part) | Phase 1 local commits 2026-11-07*
   *Note: Daniel 2026-11-07: "Are we back to the Storytime app inside Primary for a third time after I have originated that?" 25 files deleted, 9 edited in apps/primary-advantage. The bucket prefix gs://primary-app-storage/storytime/ stays untouched. No push and no deploy.*
 
-- [ ] **Track: Architecture CI input pin** — *created 2026-11-10*
-  *Link: [./tracks/architecture_ci_input_pin_20261110/](./tracks/architecture_ci_input_pin_20261110/)*
-  *Status: new, opened 2026-11-10; Phase 1 (Red, Green, refresh, phase check) target 2026-11-12 | Owner: Monorepo orchestrator | Amends the archived backend_architecture_enforcement_20260713 | Priority: TOP (CI is red on every push)*
-  *Note: PM decisions of 2026-11-10: "architecture: YES to skipping the pin in CI, in backend_architecture_enforcement_20260713, as a small amendment. The pin stays as a local refresh command. A test must prove that an unlisted new analyzed file still fails." and "Option B. Write a new small track that refers to the archived backend_architecture_enforcement_20260713, and keep the archive intact." CI runs the check with `--skip-input-snapshot-pin`; the pin stays on the local `pnpm architecture:check` and the local `pnpm architecture:pin:refresh`. No push and no deploy.*
-
 - [ ] **Track: Architecture identity and provider debt** — *created 2026-11-11*
   *Link: [./tracks/architecture_identity_provider_debt_20261111/](./tracks/architecture_identity_provider_debt_20261111/)*
   *Description: Fix the 111 company identity isolation, company identity database, AI provider, and integration provider findings that the v1 architecture baseline accepts as debt, then remove them from the baseline.*
-  *Status: new, opened 2026-11-11; starts not before 2026-11-21 (after the 2026-11-20 Storytime release); due 2026-12-15 | Owner: Monorepo orchestrator | Depends on: architecture_ci_input_pin_20261110 task 1.4d | Priority: P2*
+  *Status: new, opened 2026-11-11; starts not before 2026-11-21 (after the 2026-11-20 Storytime release); due 2026-12-15 | Owner: Monorepo orchestrator | Depends on: task 1.4d of the architecture CI input pin track (closed 2026-11-19) | Priority: P2*
   *Note: PM decision of 2026-11-11: the 111 findings (COMPANY_IDENTITY_PRODUCT_ISOLATION 93, COMPANY_IDENTITY_DB_BOUNDARY 5, AI_PROVIDER_BOUNDARY 11, INTEGRATION_PROVIDER_BOUNDARY 2) are accepted as debt only until this track closes. A new finding of these rules still fails CI. No push and no deploy.*
 
 - [~] **Track: Sales Advantage 2027 training — roleplay scoring repair and curriculum rebuild** — *created 2026-10-15*
@@ -675,6 +670,18 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 ---
 
 ## Archived Tracks
+
+- [x] **Track: www features and pricing rewrite (A-70, row FP1)** — *created 2026-11-20, archived 2026-11-21*
+  *Link: [./archive/www_features_pricing_20261120/](./archive/www_features_pricing_20261120/)*
+  *Full rewrite of the www /features and /pricing pages in en and th, and the new numbers with English section copy in zh. The copy follows PR's spec www-features-pricing-spec.md v1.2, row FP1 of the www change list, plus the two v1.3 content updates of 2026-11-21.*
+  *Status: done; final acceptance PASS at 3e80d3679bcbc519d2a96e624d04f880e6d94efd (blocking_findings empty); Phase 4 acceptance at 4f3ad5936; 29 tasks done | Feature, PM assignment A-70 (P2) | Owner: Monorepo orchestrator | 10 A-70 Red files 182 tests, full www suite 91 files / 3117 tests, check-types exit 0, ESLint 0 errors, build attempt 2 exit 0, affected-apps www only | UX r8 features and r6 pricing pass, PM look check pass, Daniel approved all Thai 2026-11-21 07:23 per the PM | Daniel said "Deploy" 2026-11-21 17:25 ICT, scope www only, relayed by the PM*
+  *Note: The adversarial test at 4f3ad5936 (adversarial-c2cb6a120.json) passes and closes Review A RA5; 182 A-70 tests are green at HEAD. The doctor.sh architecture-manifest step fails on pre-existing external drift (precedent www_products_photos F10); this track changes no path under packages/. Final acceptance F7 notes that the PR copy spec v1.3 still reserves TH-FP-R2-01 to TH-FP-R2-07 for Daniel's next Thai sitting; the PM confirmed the approval record before the deploy word. The merge, push, CD run and live page check follow in the merge step; this closeout does not push, merge or deploy.*
+
+- [x] **Track: Architecture CI input pin** — *created 2026-11-10, archived 2026-11-19*
+  *Link: [./archive/architecture_ci_input_pin_20261110/](./archive/architecture_ci_input_pin_20261110/)*
+  *Run the architecture boundary check in CI without the analyzer input snapshot pin comparison, keep the pin and its refresh as a local command, and prove that a new analyzed file that the manifest does not list fails through the report hash binding, with or without a boundary finding.*
+  *Status: done; 9 tasks; phase acceptance and final acceptance pass at 743e7ddc3 | Chore, amends the archived backend_architecture_enforcement_20260713 | Owner: Monorepo orchestrator | Phase 1 heading carries [checkpoint: 743e7ddc3]; both policy-v2 checks exit 0 with files=7013, findings=800, parseErrors=0 and debt 0/0/0 | No push and no deploy*
+  *Note: CI runs `pnpm architecture:check --skip-input-snapshot-pin --policy v2`; the pin and the refresh stay local. Review A, review B, review C, and adversarial testing pass at 3585c49aa with 73 adversarial cases. The deferred B-F2 follow-up stays open in tech-debt.md: the v2 schema cannot bind a review record for the committed 255/15/162 staged delta, so later v2 reconcile writes stay refused, fail-closed.*
 
 - [x] **Track: www blog rich post format** — *created 2026-11-15, archived 2026-11-18*
   *Link: [./archive/www_blog_rich_format_20261115/](./archive/www_blog_rich_format_20261115/)*

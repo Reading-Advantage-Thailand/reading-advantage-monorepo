@@ -1,149 +1,225 @@
+/**
+ * Locale copy for the www features and pricing rewrite (track www_features_pricing_20261120).
+ * English and Thai values are word for word from the copy spec and the Thai check page (D5).
+ * The zh export is the English object (D4) until checked zh copy lands.
+ */
+
 export const en = {
-    hero: {
-        eyebrow: "Workbook and App",
-        title: "Platform Features",
-        heading: "Printed Workbooks and a Digital Twin",
-        description: "What the Reading Advantage platform includes",
-        descriptionFull: "Reading Advantage pairs printed workbooks with a digital twin, tagged to the Mastery Advantage knowledge graph. Articles are written at CEFR-aligned reading levels.",
-        alt: "Students using Reading Advantage app",
+  metadata: {
+    title: "Reading Advantage | Books, Apps and Learning Programs",
+    description: "Explore Storytime, Primary and Reading Advantage, Tutor Advantage, CodeCamp Advantage, and new school subjects planned for 2027.",
+  },
+  hero: {
+    eyebrow: "Books, apps and learning for every stage",
+    heading: "One workbook. A whole learning journey.",
+    body1: "A Thai teacher opens a workbook. Students read, practise and explore with its digital twin.",
+    body2: "Reading Advantage brings together printed workbooks, apps and learning programs for children, families, schools and adults.",
+    button: "Find the right program",
+  },
+  programs: {
+    heading: "From first stories to adult coding",
+    body: "A kindergartener follows a story. A primary student reads at their level. A family learns with a local tutor. An adult builds full-stack engineering skills.",
+    cards: {
+      storytime: {
+        name: "Storytime Advantage",
+        forText: "For: Kindergarten Anuban 2 to P2",
+        status: "Status: Launches 30 November 2026",
+        body: "A teacher leads a 30-minute scripted class. The screen supports the teacher; it never runs the lesson.",
+        bullets: [
+          "Practise letter formation, phonics and timed sight-word recognition.",
+          "Read along with stories and questions, then recall five items each day.",
+          "Readers, songs and videos build across the weeks. Families have a home app.",
+        ],
+      },
+      primary: {
+        name: "Primary Advantage",
+        forText: "For: English learners in grades P3 to P6",
+        status: "Status: Live in schools",
+        body: "Printed workbooks and an app support leveled reading at CEFR-aligned levels from Pre-A1 to B2.",
+        bullets: [
+          "Ask a lesson chatbot questions about the passage.",
+          "Get AI feedback on short and long written answers.",
+          "Use 28 games, flashcards, saved words and sentences, text-to-speech and translation.",
+        ],
+      },
+      reading: {
+        name: "Reading Advantage books",
+        forText: "For: Families learning through Tutor Advantage",
+        status: "Status: Reading Advantage Origins 2 is on sale through Tutor Advantage.",
+        body: "",
+        bullets: [],
+      },
+      codecamp: {
+        name: "CodeCamp Advantage",
+        forText: "For: Adults building full-stack engineering skills",
+        status: "Status: Live",
+        body: "An adult bootcamp that runs for about 12–15 weeks.",
+        bullets: [],
+      },
+      schoolSubjects: {
+        name: "Science, Math and Zhongwen Advantage",
+        forText: "For: Primary schools",
+        status: "Status: For the 2027 school year",
+        body: "Each subject is planned as an app with printed workbooks, built on the Primary Advantage base.",
+        bullets: [],
+      },
     },
-    features: {
-        0: {
-            title: "Leveled Content",
-            description: "Articles are generated with Google Gemini and OpenAI models, chosen per task, at CEFR-aligned reading levels.",
-        },
-        1: {
-            title: "Mastery-Based Learning",
-            description: "Mastery Advantage uses Knowledge Space Theory and FSRS spaced repetition to schedule practice.",
-        },
-        2: {
-            title: "Interactive Exercises",
-            description: "Engage with our interactive simulations, quizzes, and exercises designed to reinforce learning.",
-        },
-        3: {
-            title: "Progress Tracking",
-            description: "Comprehensive analytics and reporting features allow learners and educators to monitor progress and see where students need support.",
-        },
-        4: {
-            title: "Web Access",
-            description: "Access our educational content anytime, anywhere in a web browser.",
-        },
-        5: {
-            title: "Translation Support",
-            description: "Learners can read word and sentence translations in Thai, Chinese, and Vietnamese.",
-        },
-    },
-    cta: {
-        title: "Want to see Reading Advantage?",
-        description: "Contact us to talk about Reading Advantage",
-        button: "Get Started",
-    },
-    platformFeatures: {
-        heading: "Platform Features",
-        subheading: "Everything You Need",
-    },
-    comparison: {
-        heading: "Comparison",
-        subheading: "What Is Included",
-    },
+  },
+  engine: {
+    heading: "One engine, growing across the curriculum",
+    body: "Mastery Advantage combines Knowledge Space Theory and FSRS spaced repetition. It runs in production in CodeCamp Advantage and is entering Primary Advantage through tagged content.",
+  },
+  blended: {
+    heading: "The book stays in the lesson",
+    body1: "Blended Learning means printed workbooks and the digital app. Each workbook has 14 lessons and its own digital twin.",
+    body2: "Your teacher leads the class. The app supports the learning experience.",
+  },
+  tutor: {
+    heading: "One workbook. A local tutor. A small group.",
+    body1: "Tutor Advantage brings families together with a local tutor for a class package of about 22–23 hours.",
+    body2: "Reedy voice practice is available on completed lessons for students with an active class package.",
+    body3: "Class packages start at 3,000 baht. Prices adapt to the market.",
+    button: "Explore Tutor Advantage",
+  },
+  nextSubjects: {
+    heading: "In the 2027 school year, more subjects join",
+    body: "Primary schools can look ahead to Science Advantage, Math Advantage and Zhongwen Advantage: apps with workbooks, each built on the Primary Advantage base.",
+  },
+  appFamily: {
+    heading: "A growing family of apps",
+    body: "We aim to open a new Advantage app every month, led by Storytime Advantage.",
+  },
+  faq: {
+    heading: "Questions from families and schools",
+    items: [
+      {
+        q: "Q: Which app fits which age?",
+        a: "A: Storytime Advantage is for kindergarten Anuban 2 to P2. Primary Advantage is for English learners in grades P3 to P6.",
+      },
+      {
+        q: "Q: Does the screen teach for the teacher?",
+        a: "A: No. In Storytime Advantage, the teacher leads the lesson and the screen supports the teacher.",
+      },
+      {
+        q: "Q: When do the new subjects open?",
+        a: "A: Science Advantage, Math Advantage and Zhongwen Advantage are planned for primary schools in the 2027 school year.",
+      },
+    ],
+  },
+  nextStep: {
+    heading: "Let's plan the next step",
+    body: "Tell us about your learners or your school. We'll help you explore the programs and books that fit.",
+    button: "Talk with our team",
+  },
 };
 
 export const th = {
-    hero: {
-        eyebrow: "แบบฝึกหัดและแอป",
-        title: "คุณสมบัติของแพลตฟอร์ม",
-        heading: "แบบฝึกหัดเล่มพิมพ์และเวอร์ชันดิจิทัล",
-        description: "สิ่งที่แพลตฟอร์ม Reading Advantage มีให้",
-        descriptionFull: "Reading Advantage จับคู่แบบฝึกหัดเล่มพิมพ์กับเวอร์ชันดิจิทัล เชื่อมกับกราฟความรู้ Mastery Advantage บทความเขียนตามระดับการอ่านที่สอดคล้อง CEFR",
-        alt: "นักเรียนใช้แอป Reading Advantage",
+  metadata: {
+    title: "Reading Advantage | หนังสือ แอป และโปรแกรมการเรียนรู้",
+    description: "ทำความรู้จัก Storytime Advantage, Primary Advantage, Reading Advantage, Tutor Advantage, CodeCamp Advantage และวิชาใหม่สำหรับโรงเรียนที่วางแผนไว้ในปี 2027",
+  },
+  hero: {
+    eyebrow: "หนังสือ แอป และการเรียนรู้ สำหรับทุกช่วงวัย",
+    heading: "เวิร์กบุ๊กหนึ่งเล่ม กับเส้นทางการเรียนรู้ที่ต่อเนื่อง",
+    body1: "ครูไทยเปิดเวิร์กบุ๊ก นักเรียนอ่าน ฝึกฝน และเรียนรู้เพิ่มเติมผ่านแอปที่ทำงานคู่กับหนังสือ",
+    body2: "Reading Advantage รวมเวิร์กบุ๊กฉบับพิมพ์ แอป และโปรแกรมการเรียนรู้ไว้ด้วยกัน สำหรับเด็ก ครอบครัว โรงเรียน และผู้ใหญ่",
+    button: "เลือกโปรแกรมที่เหมาะกับคุณ",
+  },
+  programs: {
+    heading: "จากนิทานเรื่องแรก สู่การเขียนโค้ดสำหรับผู้ใหญ่",
+    body: "เด็กอนุบาลเรียนรู้ไปกับเรื่องราว นักเรียนประถมอ่านในระดับที่เหมาะกับตนเอง ครอบครัวเรียนกับติวเตอร์ในพื้นที่ และผู้ใหญ่พัฒนาทักษะวิศวกรรมซอฟต์แวร์แบบ full-stack",
+    cards: {
+      storytime: {
+        name: "Storytime Advantage",
+        forText: "เด็กอนุบาล 2 ถึง ป.2",
+        status: "เปิดตัววันที่ 30 พฤศจิกายน 2026",
+        body: "ครูเป็นผู้นำบทเรียนตามสคริปต์ ใช้เวลา 30 นาที หน้าจอช่วยสนับสนุนครู แต่ไม่ได้ทำหน้าที่สอนแทนครู",
+        bullets: [
+          "ฝึกเขียนตัวอักษร ฝึกเสียงตัวอักษร และฝึกจำคำศัพท์ที่เห็นบ่อยภายในเวลาที่กำหนด",
+          "อ่านนิทานและตอบคำถามไปด้วยกัน จากนั้นทบทวนสิ่งที่เรียนรู้วันละ 5 รายการ",
+          "มีหนังสืออ่าน เพลง และวิดีโอที่ต่อยอดกันไปตลอดหลายสัปดาห์ พร้อมแอปสำหรับใช้ที่บ้าน",
+        ],
+      },
+      primary: {
+        name: "Primary Advantage",
+        forText: "ผู้เรียนภาษาอังกฤษชั้น ป.3 ถึง ป.6",
+        status: "เปิดใช้งานในโรงเรียนแล้ว",
+        body: "เวิร์กบุ๊กฉบับพิมพ์และแอปช่วยสนับสนุนการอ่านแบบแบ่งระดับ ตั้งแต่ Pre-A1 ถึง B2 ซึ่งสอดคล้องกับ CEFR",
+        bullets: [
+          "ถามแชตบอตประจำบทเรียนเกี่ยวกับเนื้อเรื่อง",
+          "รับคำแนะนำจาก AI สำหรับคำตอบทั้งแบบสั้นและแบบยาว",
+          "ใช้เกม 28 เกม บัตรคำ รายการคำศัพท์และประโยคที่บันทึกไว้ ระบบอ่านข้อความ และเครื่องมือแปลภาษา",
+        ],
+      },
+      reading: {
+        name: "Reading Advantage books",
+        forText: "ครอบครัวที่เรียนผ่าน Tutor Advantage",
+        status: "Reading Advantage Origins 2 วางจำหน่ายผ่าน Tutor Advantage",
+        body: "",
+        bullets: [],
+      },
+      codecamp: {
+        name: "CodeCamp Advantage",
+        forText: "ผู้ใหญ่ที่ต้องการพัฒนาทักษะวิศวกรรมซอฟต์แวร์แบบ full-stack",
+        status: "เปิดสอนแล้ว",
+        body: "หลักสูตรเร่งรัดสำหรับผู้ใหญ่ ใช้เวลาประมาณ 12–15 สัปดาห์",
+        bullets: [],
+      },
+      schoolSubjects: {
+        name: "Science, Math and Zhongwen Advantage",
+        forText: "โรงเรียนประถมศึกษา",
+        status: "สำหรับปีการศึกษา 2027",
+        body: "เราวางแผนให้แต่ละวิชาเป็นแอปที่ใช้คู่กับเวิร์กบุ๊กฉบับพิมพ์ โดยพัฒนาต่อยอดจากพื้นฐานของ Primary Advantage",
+        bullets: [],
+      },
     },
-    features: {
-        0: {
-            title: "เนื้อหาแบ่งตามระดับ",
-            description: "บทความสร้างด้วยโมเดลของ Google Gemini และ OpenAI ที่เลือกตามงาน ในระดับการอ่านที่สอดคล้อง CEFR",
-        },
-        1: {
-            title: "การเรียนรู้ตามความเชี่ยวชาญ",
-            description: "Mastery Advantage ใช้ทฤษฎีปริภูมิความรู้และการทบทวนแบบ FSRS เพื่อกำหนดเวลาฝึกฝน",
-        },
-        2: {
-            title: "แบบฝึกหัดโต้ตอบ",
-            description: "มีส่วนร่วมกับการจำลองแบบโต้ตอบ คำถามแบบทดสอบ และแบบฝึกหัดที่ออกแบบมาเพื่อเสริมการเรียนรู้",
-        },
-        3: {
-            title: "การติดตามความก้าวหน้า",
-            description: "ฟีเจอร์การวิเคราะห์และรายงานอย่างครอบคลุมช่วยให้ผู้เรียนและครูสามารถติดตามความคืบหน้าและเห็นว่านักเรียนต้องการการสนับสนุนตรงไหน",
-        },
-        4: {
-            title: "เข้าถึงผ่านเว็บ",
-            description: "เข้าถึงเนื้อหาการศึกษาผ่านเว็บเบราว์เซอร์",
-        },
-        5: {
-            title: "การแปลภาษา",
-            description: "ผู้เรียนดูคำแปลของคำและประโยคเป็นภาษาไทย จีน และเวียดนามได้",
-        },
-    },
-    cta: {
-        title: "อยากดู Reading Advantage หรือไม่?",
-        description: "ติดต่อเราเพื่อคุยเรื่อง Reading Advantage",
-        button: "เริ่มต้นใช้งาน",
-    },
-    platformFeatures: {
-        heading: "คุณสมบัติของแพลตฟอร์ม",
-        subheading: "ทุกสิ่งที่คุณต้องการ",
-    },
-    comparison: {
-        heading: "การเปรียบเทียบ",
-        subheading: "สิ่งที่รวมอยู่",
-    },
+  },
+  engine: {
+    heading: "หนึ่งเอนจินที่เติบโตไปพร้อมกับหลักสูตร",
+    body: "Mastery Advantage ผสานทฤษฎีพื้นที่ความรู้ (Knowledge Space Theory) กับระบบทบทวนแบบเว้นระยะ FSRS ปัจจุบันใช้งานจริงใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็กข้อมูล",
+  },
+  blended: {
+    heading: "เวิร์กบุ๊กยังเป็นส่วนหนึ่งของทุกบทเรียน",
+    body1: "Blended Learning คือการเรียนด้วยเวิร์กบุ๊กฉบับพิมพ์ควบคู่กับแอปดิจิทัล เวิร์กบุ๊กแต่ละเล่มมี 14 บทเรียน และมีแอปที่ทำงานคู่กัน",
+    body2: "ครูเป็นผู้นำชั้นเรียน ส่วนแอปช่วยสนับสนุนการเรียนรู้",
+  },
+  tutor: {
+    heading: "เวิร์กบุ๊กหนึ่งเล่ม ติวเตอร์ในพื้นที่ และกลุ่มเรียนขนาดเล็ก",
+    body1: "Tutor Advantage เชื่อมครอบครัวกับติวเตอร์ในพื้นที่ผ่านแพ็กเกจคลาส ซึ่งใช้เวลาเรียนประมาณ 22–23 ชั่วโมง",
+    body2: "นักเรียนที่มีแพ็กเกจคลาสที่ยังใช้งานอยู่ สามารถฝึกพูดกับ Reedy ในบทเรียนที่เรียนจบแล้วได้",
+    body3: "แพ็กเกจคลาสเริ่มต้นที่ 3,000 บาท ราคาอาจปรับตามตลาด",
+    button: "ดูเพิ่มเติมเกี่ยวกับ Tutor Advantage",
+  },
+  nextSubjects: {
+    heading: "ปีการศึกษา 2027 จะมีวิชาใหม่เพิ่มขึ้น",
+    body: "โรงเรียนประถมศึกษาสามารถเตรียมพบกับ Science Advantage, Math Advantage และ Zhongwen Advantage ซึ่งวางแผนเป็นแอปที่ใช้คู่กับเวิร์กบุ๊ก และพัฒนาต่อยอดจากพื้นฐานของ Primary Advantage",
+  },
+  appFamily: {
+    heading: "ครอบครัวแอปที่เติบโตขึ้นเรื่อย ๆ",
+    body: "เราตั้งเป้าเปิดตัวแอป Advantage ใหม่ทุกเดือน โดยเริ่มจาก Storytime Advantage",
+  },
+  faq: {
+    heading: "คำถามจากครอบครัวและโรงเรียน",
+    items: [
+      {
+        q: "แอปใดเหมาะกับเด็กช่วงวัยไหน?",
+        a: "Storytime Advantage เหมาะสำหรับเด็กอนุบาล 2 ถึง ป.2 ส่วน Primary Advantage เหมาะสำหรับผู้เรียนภาษาอังกฤษชั้น ป.3 ถึง ป.6",
+      },
+      {
+        q: "หน้าจอสอนแทนครูหรือไม่?",
+        a: "ไม่ใช่ ใน Storytime Advantage ครูเป็นผู้นำบทเรียน และหน้าจอช่วยสนับสนุนครู",
+      },
+      {
+        q: "วิชาใหม่จะเปิดเมื่อไร?",
+        a: "เราวางแผนให้ Science Advantage, Math Advantage และ Zhongwen Advantage สำหรับโรงเรียนประถมศึกษาเปิดในปีการศึกษา 2027",
+      },
+    ],
+  },
+  nextStep: {
+    heading: "มาวางแผนก้าวต่อไปด้วยกัน",
+    body: "เล่าให้ฟังเกี่ยวกับผู้เรียนหรือโรงเรียนของคุณ เราจะช่วยดูว่าโปรแกรมและหนังสือแบบใดเหมาะกับคุณ",
+    button: "พูดคุยกับทีมงานของเรา",
+  },
 };
 
-export const zh = {
-    hero: {
-        eyebrow: "练习册与应用",
-        title: "平台功能",
-        heading: "纸质练习册与数字版本",
-        description: "Reading Advantage 平台包含的内容",
-        descriptionFull: "Reading Advantage 将纸质练习册与数字版本配对，对接 Mastery Advantage 知识图谱。文章按符合 CEFR 的阅读级别编写。",
-        alt: "学生使用Reading Advantage应用",
-    },
-    features: {
-        0: {
-            title: "分级内容",
-            description: "文章由 Google Gemini 和 OpenAI 模型按任务选择生成，对应符合 CEFR 的阅读级别。",
-        },
-        1: {
-            title: "基于掌握度的学习",
-            description: "Mastery Advantage 使用知识空间理论和 FSRS 间隔重复来安排练习。",
-        },
-        2: {
-            title: "互动练习",
-            description: "通过我们的互动模拟、测验和练习，强化学习。",
-        },
-        3: {
-            title: "进度追踪",
-            description: "全面的分析和报告功能使学习者和教育者能够监控进度并了解学生在哪些方面需要支持。",
-        },
-        4: {
-            title: "网页访问",
-            description: "通过网页浏览器访问我们的教育内容。",
-        },
-        5: {
-            title: "翻译支持",
-            description: "学习者可查看词语和句子的泰语、中文和越南语翻译。",
-        },
-    },
-    cta: {
-        title: "想了解 Reading Advantage 吗？",
-        description: "联系我们，了解 Reading Advantage",
-        button: "开始使用",
-    },
-    platformFeatures: {
-        heading: "平台功能",
-        subheading: "您所需要的一切",
-    },
-    comparison: {
-        heading: "对比",
-        subheading: "包含的内容",
-    },
-};
+export const zh = { ...en };

@@ -147,7 +147,11 @@ describe("architecture reconciliation CLI", () => {
       state: "preview-required",
       summary: { reconciliationPlanHash: PLAN_HASH },
     });
-    expect(json.values.preview).toHaveBeenCalledWith("/explicit");
+    expect(json.values.preview).toHaveBeenCalledWith(
+      "/explicit",
+      undefined,
+      undefined,
+    );
   });
 
   it("applies only the expected hash and surfaces cleanup-incomplete distinctly", async () => {
@@ -168,6 +172,7 @@ describe("architecture reconciliation CLI", () => {
     expect(committed.values.apply).toHaveBeenCalledWith(
       expect.any(Object),
       PLAN_HASH,
+      undefined,
     );
     expect(JSON.parse(committed.stdout.join(""))).toMatchObject({
       state: "committed",

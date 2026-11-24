@@ -1,0 +1,48 @@
+Measure review B (security and data handling) — architecture_ci_input_pin_20261110
+Audited HEAD: 9619b95482833feae716bbe4182cbc8172787134
+Phase base: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+Role base: ac1d09869f7819f43666ffee2f8886d945175733
+Focus range: ac1d09869..9619b9548
+Verdict: fail
+
+MEASURE_AGENT_RESULT
+role: measure-review-b (security and data handling)
+track_id: architecture_ci_input_pin_20261110
+phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+audited_head_sha: 9619b95482833feae716bbe4182cbc8172787134
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: ac1d09869f7819f43666ffee2f8886d945175733
+head_is_current: true
+security_applicability: applicable
+verdict: fail
+retry_recommendation: escalate_human
+route: opencode-go/deepseek-v4.1-flash
+
+security_points:
+  1 pass: ci.yml:25-26 keeps permissions contents read; no secrets. and no pull_request_target in .github/workflows; the change is one static run line adding --policy v2
+  2 pass_with_note: --expected-plan-hash requires 64 lowercase hex; --owner and --rationale pass ownerSchema and rationaleSchema at baselineEntrySchema.parse; data only, no path or shell use; F4 records the late check
+  3 fail: F1, a candidate manifest with reviews=[] wrote the four v2 files at 863841016
+  4 pass: node probe over the committed v2 baselines with one synthetic finding gives status new-debt additions=1; ratchet tests pass; check under policy v2 exits 0 with additions=0
+  5 pass: the four V1_ARTIFACT_BINDINGS files are unchanged from the phase base and from the role base
+
+blocking_findings:
+  F1 high: an unreviewed candidate manifest can write the four v2 artifacts. The accepted gate is gone at architecture-reconciliation.ts:1206-1235. The compensating control is a self-asserted owner plus rationale for each new entry. No negative test exists, and architecture-v2-route-14d.test.ts:561 asserts only the absence of one error message. Owner decision required.
+
+nonblocking_findings:
+  F2 medium: v2-manifest-validation.ts:656 and :819 hardcode empty staged-delta lists in the review evidence and the owner receipt, so an accepted manifest with a non-empty delta cannot carry honest evidence
+  F3 low: measure/tracks.md:80 names only --skip-input-snapshot-pin, while ci.yml:176 also passes --policy v2 (understatement, A6 not triggered)
+  F4 low: the CLI accepts any non-empty --owner and --rationale and validates them only when a new entry is built
+
+provenance:
+  - head 9619b9548 equals the repository HEAD; the dirty files are unrelated untracked files and three next-env.d.ts files outside the focus range
+  - git diff ac1d09869..9619b9548: ci.yml one line, the reconcile CLI, architecture-reconciliation.ts, v2-manifest-validation.ts, one test file, one test rename, two baseline files, the manifest, the plan and the logs
+  - none of the 255 baseline additions touches a file changed in the focus range
+
+test_commands:
+  - CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-v2-route-14d.test.ts packages/architecture-enforcement/src/__tests__/ratchet.test.ts packages/architecture-enforcement/src/__tests__/ratchet.red.test.ts --maxWorkers=1 -> exit 0, 23 passed
+  - CI=true pnpm architecture:check --policy v2 --skip-input-snapshot-pin -> exit 0, files=7010 findings=800 parseErrors=0 additions=0 removals=0 renames=0
+
+ratings: correctness 3, test_meaning 3, scope_discipline 4, evidence_quality 4
+END_MEASURE_AGENT_RESULT
+
+Notes: audit only. No repository file was edited. Tests ran in /home/daniebo/.cache/arch-gate at 9619b9548.

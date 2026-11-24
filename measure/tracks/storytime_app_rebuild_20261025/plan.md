@@ -1866,7 +1866,7 @@ Green builds to these rules:
   `heavy-run.sh`; no test, build, tsc, build-graph, or server ran
   outside it.
 
-- [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:pm Moved to storytime_at_home_release_20261106 Phase 3 (PM decision 2026-11-05).
+- [b] 3.11 At-home deploy: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. Confirm that `STORYTIME_SHOW_DRAFT_MEDIA` is not set in the production service (`storytime-app`): read the service environment of the deployed revision and record the result. Target: 2026-11-20. deferred:daniel Moved to storytime_at_home_release_20261106 Phase 3 (PM decision 2026-11-05).
 
 ## Phase 4: Teacher app [checkpoint: c633a4446]
 
@@ -3202,7 +3202,8 @@ for every other track.
     No test file changed. The P5 `GREEN_TEST_COMMAND` under heavy-run p1 exits 0 before the edit
     with 7 files and 53 passed of 53. It exits 0 after the edit with the same 7 files and 53
     passed of 53. Evidence class: automated.
-- [b] 5.2 Paid generation for the milestone song (new Lyria 3 Pro takes, S16), if the production side needs it. Daniel gives the go with the price. deferred:daniel
+- [ ] 5.2 Paid generation for the milestone song (new Lyria 3 Pro takes, S16), if the production side needs it. Daniel gives the go with the price.
+  - Daniel 2026-11-21: "Go". Price: Lyria 3 Pro 0.08 USD for each full song (Gemini API list price). PM cap: at most 10 takes (0.80 USD) for the milestone song S16, only if the production side needs new takes; log each call in the spend log; more than 10 takes goes back to the PM.
 - [x] 5.3 Stage 1 measurement scripts in `apps/storytime/scripts/checks/`. They measure loudness and true peak (rule 5.2), noise floor and clipping (rule 5.3), and the edges of each word cut (rule 10.2). They also check the size and type of each file. Each script fails a broken copy before it counts. Tests: AC-11.1, AC-6.2, AC-7.2, AC-10.1. Commits: `2887dc70b`, `8568a8fba`, `290a66b4b`.
   - Red evidence (task 5.3). Role base `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`; phase base
     `6b8115e865fdcd469bfd48ef0c17ca9b1ef5fe3a`. The base run at the phase base (orchestrator,
@@ -4155,7 +4156,7 @@ for every other track.
         - Files changed (6): `lib/teacher-media.ts`, `app/[locale]/teacher/[level]/[week]/week-view.tsx`, `app/[locale]/teacher/[level]/[week]/[day]/lesson-flow.tsx`, `app/[locale]/st/[level]/[week]/page.tsx`, `messages/en.json`, `messages/th.json`. No new file. No content change, no Red file change. The graph update stays `deferred:pm`.
 
 
-- [b] 6.3 Deploy the teacher app: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. The at-home deploy is task 3.11. deferred:pm
+- [b] 6.3 Deploy the teacher app: the exact passed commit to `storytime-app` with no traffic. Upload the media to the production bucket and check it file by file. Check the tagged URL. The at-home deploy is task 3.11. deferred:daniel
 - [b] 6.4 Move the traffic to the new revision. Then run the live check of every printed URL (AC-2.3). deferred:daniel
 - [x] 6.5 Retro entry in `measure/lessons-learned.md`. Update the spec and the plan to the state at the milestone. (`d3a379076`)
   - State at the milestone (2026-11-15):
@@ -4223,7 +4224,7 @@ for every other track.
     - Result measure/runs/storytime_app_rebuild_20261025/ux-browser-p7-84b4c6e79.json; captures ux-p7-r2/ux-p7-r2-reader-390.png and -1440.png.
     - An earlier attempt (ux-browser-p7-1f278e78c) was refused by heavy-run.sh under the PM rule 11-10.
   - Red evidence (2026-11-13, role mid-red, model claude-code/claude-sonnet-5-5#high, phase base and role base `76be270f4af0b6d3250ec1defac8769ff21943fb`, Red commit `9829424af`): the Primary test is `apps/primary-advantage/__tests__/read-along-package-import.test.ts` and the Storytime test is `apps/storytime/__tests__/phase7-printed-urls-live.test.ts`. Stage 1 (Primary vitest, four read-along paths and the new test) exits 1: 5 rows fail and 96 pass. The failing rows are "removes the Primary copy of the player" (`primary_copy_files_remaining=7`), "imports the player from the shared package in every Primary caller", "leaves no Primary source file that imports the Primary copy" (`local_read_along_imports=9`), "resolves the shared package in the Primary app", and "removes the tech-debt row of task 2.3" (`tech_debt_rows_remaining=1`). Stage 2 (Storytime vitest) exits 1: the 4 rows of the 7.4 script fail on `Missing apps/storytime/scripts/checks/printed-urls-live.ts`. A scratch script (removed) made the 4 Storytime rows pass. The final Red command exits 1. No row fails on a load error or a type error. Labeled counts: `primary_read_along_tests=95` (vitest cases in 6 files, exit 0 before the new test), `primary_read_along_test_files=6`, `read_along_test_files_distinct=10` (the Green gate needs 95 cases or more in the Primary command, and 10 distinct names or more).
-- [b] 7.3 Fate of the void build branches and worktrees: `master-next`, `storytime/own-app`, `storytime/primary-cleanup`, `~/Desktop/rama-worktrees/storytime`, and `~/Desktop/rama-worktrees/storytime-qr`. First, the Monorepo orchestrator lists the commits on each branch that are not Storytime work. deferred:pm
+- [b] 7.3 Fate of the void build branches and worktrees: `master-next`, `storytime/own-app`, `storytime/primary-cleanup`, `~/Desktop/rama-worktrees/storytime`, and `~/Desktop/rama-worktrees/storytime-qr`. First, the Monorepo orchestrator lists the commits on each branch that are not Storytime work. deferred:pm trigger: 2026-12-01.
   - Note (2026-10-27): the records that exist only on storytime/own-app are copied to docs/generation-rules-draft2.md and docs/void-build-carryover.md (rules draft 2 with rule 6.7, decisions S31 to S34, and the uncommitted speak.ts timer fix). Removal of the worktrees and the master-next delete wait for Daniel.
 - [x] 7.4 Continuity watch: on 2026-11-15, request each printed path on the live domain. If a path does not answer with its week page, give Daniel the options. One option is the week page with only the passed parts. The deploy stays his gate. (evidence `4871ec9ee`)
   - The AC-2.3 script is `apps/storytime/scripts/checks/printed-urls-live.ts`. Its test is `apps/storytime/__tests__/phase7-printed-urls-live.test.ts`. The script is the one command for the 2026-11-15 run.
@@ -4344,13 +4345,13 @@ for every other track.
 
 Scope note (Daniel, Tasks, 2026-11-16 07:34 ICT): "We are not doing Chinese support for Storytime". The app ships Thai and English only. No zh locale, zh row (the Z16 to Z18 sign-in lines), or zh test is in scope; none is in the app at 7b0ec07ab, so the 11-20 switch is unchanged. Follow-up after the release: drop the Chinese sentence from the JSDoc of apps/storytime/lib/join-copy.ts.
 
-- [b] 8.1 Daniel confirms or cuts the release-1 scope (S17) after milestone 1. deferred:pm
+- [b] 8.1 Daniel confirms or cuts the release-1 scope (S17) after milestone 1. deferred:pm trigger: 2026-12-01.
 - [b] 8.2 Weeks 2 to 8 at the standard of the passed milestone week: media through the production side, stages 1 and 2, and Daniel's pass for each batch. Weeks 2 to 7 also wait for S26. deferred:daniel
-- [b] 8.3 Karaoke cuts and the karaoke tile, if Daniel decides S28 for release 1. deferred:pm
-- [b] 8.4 Teacher access (Q1): the sign-in for the teacher app and the teacher routes on the public service. deferred:pm
-- [b] 8.5 The Phonics, Speaking, and Writing skill values (S8) with the first evidence code, if the release-1 scope has evidence. deferred:pm
+- [b] 8.3 Karaoke cuts and the karaoke tile, if Daniel decides S28 for release 1. deferred:pm trigger: 2026-12-01 (release 2 scope)
+- [b] 8.4 Teacher access (Q1): the sign-in for the teacher app and the teacher routes on the public service. deferred:pm trigger: 2026-12-01 (release 2 scope)
+- [b] 8.5 The Phonics, Speaking, and Writing skill values (S8) with the first evidence code, if the release-1 scope has evidence. deferred:pm trigger: 2026-12-01 (release 2 scope)
 - [b] 8.6 Internal release 1 on 2026-12-01: no public date, and the deploy on Daniel's go. deferred:daniel
-- [b] 8.7 After 2026-11-20: apps/storytime/__tests__/phase5-media-list.test.ts and phase5-adversarial.test.ts read measure/runs/storytime_app_rebuild_20261025/media-list-w01.md, which .gitignore:56 ignores. The tests pass only where that local file exists. Commit the needed list as a test fixture, or build it inside the test, so a clean checkout passes. PM decision 2026-11-18. deferred:pm
+- [b] 8.7 After 2026-11-20: apps/storytime/__tests__/phase5-media-list.test.ts and phase5-adversarial.test.ts read measure/runs/storytime_app_rebuild_20261025/media-list-w01.md, which .gitignore:56 ignores. The tests pass only where that local file exists. Commit the needed list as a test fixture, or build it inside the test, so a clean checkout passes. PM decision 2026-11-18. deferred:pm trigger: after storytime_speed track (a small test fix in the light lane).
 
 ## Task count
 

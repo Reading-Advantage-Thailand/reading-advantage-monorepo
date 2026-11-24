@@ -1,0 +1,10 @@
+{
+  "_marker": "no real sample",
+  "_note": "FAKE receipt fixture for plan task 6.1. Synthetic; the structure report holds no receipt sample (PM-12, spec section 8 note 7). No real amount, name, tax id, account number, or document text.",
+  "vendor": "Test Counterparty",
+  "date": "2026-01-15",
+  "amount": "123.45",
+  "currency": "THB",
+  "paymentMethod": "cash",
+  "text": "Test Counterparty\nReceipt\nDate: 2026-01-15\nTotal: THB 123.45\nPaid by cash"
+}

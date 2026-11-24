@@ -9,6 +9,7 @@ import {
   type ArchitectureReconciliationSummary,
 } from "./architecture-reconciliation.js";
 import type { ArchitecturePolicyVersion } from "./policy-selection.js";
+import type { NewDebtReviewMetadata } from "./baseline-update.js";
 
 /** Output representations supported by the one-time reconciliation command. */
 export type ArchitectureReconciliationCliFormat = "human" | "json";
@@ -25,6 +26,8 @@ export interface ArchitectureReconciliationCliOptions {
   repoRoot: string;
   /** Optional explicit architecture policy. */
   policyVersion?: ArchitecturePolicyVersion;
+  /** Accountable owner and reviewed rationale for genuinely new entries. */
+  newDebtMetadata?: NewDebtReviewMetadata;
 }
 
 /** Replaceable command boundaries used by production and isolated tests. */
@@ -33,6 +36,7 @@ export interface ArchitectureReconciliationCliDependencies {
   apply(
     preview: ArchitectureReconciliationPreview,
     expectedPlanHash: string,
+    newDebtMetadata?: NewDebtReviewMetadata,
   ): Promise<ArchitectureReconciliationApplyResult>;
   /** Finds the containing repository root. */
   discoverRepositoryRoot(cwd: string): string;
@@ -40,6 +44,7 @@ export interface ArchitectureReconciliationCliDependencies {
   preview(
     repoRoot: string,
     policyVersion?: ArchitecturePolicyVersion,
+    newDebtMetadata?: NewDebtReviewMetadata,
   ): Promise<ArchitectureReconciliationPreview>;
   /** Writes one complete diagnostic to standard error. */
   writeStderr(value: string): void;
@@ -62,20 +67,22 @@ function resolveDependencies(
   return {
     apply:
       overrides?.apply ??
-      ((preview, expectedPlanHash) =>
+      ((preview, expectedPlanHash, newDebtMetadata) =>
         applyArchitectureReconciliation({
           preview,
           acknowledge: true,
           expectedReconciliationPlanHash: expectedPlanHash,
+          ...(newDebtMetadata ? { newDebtMetadata } : {}),
         })),
     discoverRepositoryRoot:
       overrides?.discoverRepositoryRoot ?? discoverRepositoryRoot,
     preview:
       overrides?.preview ??
-      ((repoRoot, policyVersion) =>
+      ((repoRoot, policyVersion, newDebtMetadata) =>
         previewArchitectureReconciliation({
           repoRoot,
           ...(policyVersion ? { policyVersion } : {}),
+          ...(newDebtMetadata ? { newDebtMetadata } : {}),
         })),
     writeStderr:
       overrides?.writeStderr ?? ((value) => process.stderr.write(value)),
@@ -102,6 +109,8 @@ export function parseArchitectureReconciliationArguments(
   let format: ArchitectureReconciliationCliFormat = "human";
   let repoRoot: string | undefined;
   let policyVersion: ArchitecturePolicyVersion | undefined;
+  let owner: string | undefined;
+  let rationale: string | undefined;
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index];
     if (argument === "--acknowledge") {
@@ -134,6 +143,12 @@ export function parseArchitectureReconciliationArguments(
       if (!value) throw new Error("--repo-root requires a path");
       repoRoot = value;
       index += 1;
+    } else if (argument === "--owner" || argument === "--rationale") {
+      const value = args[index + 1];
+      if (!value) throw new Error(`${argument} requires a value`);
+      if (argument === "--owner") owner = value;
+      else rationale = value;
+      index += 1;
     } else {
       throw new Error(
         `Unsupported architecture reconciliation argument: ${argument}`,
@@ -145,12 +160,16 @@ export function parseArchitectureReconciliationArguments(
       "--acknowledge and --expected-plan-hash must be supplied together",
     );
   }
+  if ((owner === undefined) !== (rationale === undefined)) {
+    throw new Error("--owner and --rationale must be supplied together");
+  }
   return {
     acknowledge,
     ...(expectedPlanHash ? { expectedPlanHash } : {}),
     format,
     repoRoot: repoRoot ?? discover(cwd),
     ...(policyVersion ? { policyVersion } : {}),
+    ...(owner && rationale ? { newDebtMetadata: { owner, rationale } } : {}),
   };
 }
 
@@ -195,9 +214,12 @@ export async function runArchitectureReconciliationCli(
     cwd,
     dependencies.discoverRepositoryRoot,
   );
-  const preview = options.policyVersion
-    ? await dependencies.preview(options.repoRoot, options.policyVersion)
-    : await dependencies.preview(options.repoRoot);
+  const newDebtMetadata = options.newDebtMetadata;
+  const preview = await dependencies.preview(
+    options.repoRoot,
+    options.policyVersion,
+    newDebtMetadata,
+  );
   if (!options.acknowledge) {
     const result = {
       state: "preview-required" as const,
@@ -213,7 +235,11 @@ export async function runArchitectureReconciliationCli(
     );
     return 1;
   }
-  const applied = await dependencies.apply(preview, options.expectedPlanHash!);
+  const applied = await dependencies.apply(
+    preview,
+    options.expectedPlanHash!,
+    newDebtMetadata,
+  );
   if (applied.transactionOutcome.state === "not-acknowledged") {
     throw new Error(
       "Acknowledged reconciliation returned a non-writing outcome",

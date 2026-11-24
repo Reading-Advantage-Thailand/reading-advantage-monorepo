@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "role": "spec-review",
+  "phase": "track setup",
+  "track_id": "architecture_ci_input_pin_20261110",
+  "round": 2,
+  "role_base_sha": "791ef0057",
+  "audited_head_sha": "791ef0057ad93397fc00155cab0394bd042f7bd9",
+  "status": "pass",
+  "summary": "Spec review round 2 passes. The track adds a CI mode flag --skip-input-snapshot-pin that skips only the analyzerInputSnapshotSha256 pin comparison, keeps every other manifest and boundary check, and adds a local refresh command that rewrites the five pinned manifest fields with --acknowledge. Every cited file:line was verified at HEAD 791ef0057, AC-2 genuinely fails a new analyzed file through the report hash binding, the selector cannot turn off any other check, and the plan test commands obey the heavy-run rule. No blocking findings; four Nits remain (F1 to F4).",
+  "paraphrase": {
+    "proposes": "This track adds a CI mode to the architecture boundary check. CI passes the new flag --skip-input-snapshot-pin, which skips only the analyzerInputSnapshotSha256 comparison; every other manifest check stays active. A new analyzed file still fails CI because the analyzer report binds the exact source path list. The track also adds a local refresh command, pnpm architecture:pin:refresh, which rewrites the five pinned manifest fields only with --acknowledge. The archived track backend_architecture_enforcement_20260713 stays intact.",
+    "current_system": "CI runs pnpm architecture:check at .github/workflows/ci.yml:156-157 in the 'Build, Lint, and Test' job. The command validates the committed v2 reconciliation manifest and compares five pinned fields against current bytes, including analyzerInputSnapshotSha256. That pin last changed in commit 221081178 on 2026-09-08, so every later change to an analyzed file fails CI. The evidence projection reads clean HEAD bytes for all paths outside packages/architecture-enforcement, so only committed state moves the pins."
+  },
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F1 [Nit] spec.md §2 Evidence (pin computation): the parenthetical range :775-805 names listAnalyzerInputPaths, the path-listing helper; the hash functions are :812 (async) and :837 (sync), already cited in the same bullet. Rationale: record accuracy; the range should point at the compute functions or say 'path list'.",
+    "F2 [Nit] plan.md task 1.2: the plan says to parse --skip-input-snapshot-pin and carry it in ArchitectureCheckCliOptions, but never says to pass options.skipInputSnapshotPin into checkArchitectureRepository inside runArchitectureCheckCli (architecture-check-cli.ts:114-119), and no AC asserts the flag reaches the checker. Rationale: a parsed-but-inert flag would pass AC-1 and AC-4 while CI still fails; add one wiring sentence and one parse-or-flow assertion.",
+    "F3 [Nit] plan.md task 1.1 / spec.md §6 AC-2: the fixture must satisfy hasFullRepositoryInputSet (v2-manifest-validation.ts:916-923), else the whole current-state block is skipped and AC-2 fails for the wrong reason. Rationale: name the existing fixture pattern createMinimalV2EvidenceRepository (baseline-validation.test.ts:112) so the Red test exercises the real comparison block.",
+    "F4 [Nit] metadata.json description: it says the track proves 'a new analyzed file with a boundary finding still fails', while spec D-2 and AC-2 prove a new analyzed file with no finding fails through the report hash binding. Rationale: the metadata narrows the claim and disagrees with the spec; align the wording."
+  ],
+  "evidence": [
+    "HEAD is 791ef0057ad93397fc00155cab0394bd042f7bd9, equal to role_base_sha 791ef0057.",
+    "git diff --stat d81048bae 791ef0057 -- measure/tracks/architecture_ci_input_pin_20261110 returned empty: the track files are unchanged since the track commit.",
+    "Round 1 was inconclusive (stopped by the orchestrator) and held no findings, so no CONTEST handling applies.",
+    "ci.yml:61 names the job 'Build, Lint, and Test'; :156-157 is the step 'Architecture boundary check' running 'pnpm architecture:check'; :159-165 is the tenant and provider guard step. All spec claims about ci.yml hold.",
+    "v2-manifest-validation.ts:953-960 (sync) and :1026-1030 (async) are the only two analyzerInputSnapshotSha256 comparisons; both throw 'Analyzer input snapshot hash does not match current bytes'. :937-944, :945-952, :1031-1039, :961, :724 are the other bindings the spec cites. :740-750 is selectV2AnalyzerSourcePaths, so the spec fact check (two comparison sites, not three) holds.",
+    "analyzer.ts:116-125 confirms ArchitectureAnalysisResult holds sourcePaths, findings, parseErrors; analyzer.ts:1089 returns sourcePaths in the report; v2-manifest-validation.ts:1015 hashes the full serialized report. A new analyzed file changes sourcePaths, so AC-2 fails through the report hash error at :1031-1039, not through the skipped pin and not for another reason.",
+    "The async validator delegates to the sync validator with the same input (v2-manifest-validation.ts:984), so honoring validateInputSnapshotPin in both cited blocks covers both paths; all other callers (policy-selection.ts:84, baseline-validation.ts:288,372, architecture-reconciliation.ts:365) omit the option and keep the default true, so the selector cannot turn off any other check.",
+    "The manifest holds exactly the five fields of D-3 (analyzer-reconciliation.v2.json:37-44). reviewSubjectSha256 binds all protected fields (v2-manifest-validation.ts:606-616), so any refresh of the other four hashes must recompute it; this forces the five-field refresh.",
+    "Exit code contract of the check CLI is 0 clean, 1 debt change, 2 analysis failure (architecture-check-cli.ts:102-103), matching plan 1.4 stop rules.",
+    "inventory.ts:26 DEFAULT_ROOTS are apps, integrations, packages, services; inventory.ts:15 SOURCE_FILE_PATTERN matches TS/JS; the spec claim holds.",
+    "baseline-validation.test.ts:435-476 proves the projection reads clean HEAD bytes for unrelated dirty files and overlays only packages/architecture-enforcement candidates.",
+    "Root package.json:7 runs architecture:check with no flag; packages/architecture-enforcement/package.json has check/lint/test scripts and no pin:refresh yet, as the plan expects.",
+    "All five compute functions the refresh needs already exist and are exported: computeAnalyzerInputSnapshotSha256(:812)/Sync(:837), computeAnalyzerImplementationTreeSha256V2, computeReconciliationImplementationTreeSha256V2, computeAnalyzerReportSha256(:894), computeAnalyzerReconciliationReviewSubjectSha256 (reconciliation-manifest.ts:857).",
+    "The existing baseline-update CLI (baseline-update-cli.ts) updates debt baselines, not the five pins, so the new refresh command is not a duplicate; it mirrors the same --acknowledge preview pattern.",
+    "Plan test commands obey the heavy-run rule: every package suite (check-types, lint, test, architecture:check) runs through /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh (script verified to exist), and only the named file packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts runs outside it.",
+    "Archive directory measure/archive/backend_architecture_enforcement_20260713/ exists; plan tasks 1.5 and the phase check guard its integrity."
+  ],
+  "commands": [
+    "git rev-parse HEAD (exit 0)",
+    "git diff --stat d81048bae 791ef0057 -- measure/tracks/architecture_ci_input_pin_20261110 (exit 0, empty output)",
+    "file reads of spec.md, plan.md, index.md, metadata.json, .github/workflows/ci.yml, v2-manifest-validation.ts, architecture-check.ts, architecture-check-cli.ts, analyzer.ts, inventory.ts, baseline-validation.test.ts, baseline-update-cli.ts, analyzer-reconciliation.v2.json, package.json, packages/architecture-enforcement/package.json (all exit 0)"
+  ],
+  "changed_files": [
+    "measure/runs/architecture_ci_input_pin_20261110/spec-review-r2-791ef0057.json",
+    "measure/runs/architecture_ci_input_pin_20261110/spec-review-r2-791ef0057.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "handoff": "Author open question answered: the refresh command must update all five manifest fields. reviewSubjectSha256 is a hash over all protected manifest fields (v2-manifest-validation.ts:606-616), so refreshing any of the other four without recomputing it fails validation with 'Review subject does not match protected manifest fields'. D-3 already decides this; keep it. Recommend the author apply F2 and F3 as FIX before Red because both guard against a green-looking but inert implementation. The edit to measure/tracks/architecture_ci_input_pin_20261110/spec-review.md was denied by the permission layer; the round 2 subsections are in the .log artifact and can be transcribed verbatim (Author model line unchanged)."
+}

@@ -1,0 +1,61 @@
+# Review C log — re-review of the Phase 1 remediation
+Route: opencode-go/glm-5.3#high
+Track: architecture_ci_input_pin_20261110
+Phase heading: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+Remediation range: 9619b9548..619aef753
+Audited HEAD (immutable): 619aef7530baad0a028666c55e2f1ef9057fc733
+Clean checkout: /home/daniebo/.cache/arch-gate-2 (rev-parse HEAD = 619aef753..., status clean)
+Result artifact: measure/runs/architecture_ci_input_pin_20261110/review-c-619aef753.json
+
+MEASURE_AGENT_RESULT
+Re-review of the Phase 1 remediation at audited HEAD 619aef7530baad0a028666c55e2f1ef9057fc733.
+Phase heading: "Phase 1: CI mode and the local pin refresh (target 2026-11-12)".
+
+Prior findings at 9619b954 (review-c-9619b9548.json, pass, 4 nonblocking):
+- N1 docs CI line omits --policy v2: FIXED. docs/architecture-enforcement.md:131 now
+  reads 'pnpm architecture:check --skip-input-snapshot-pin --policy v2', matching
+  .github/workflows/ci.yml:176 exactly, plus one explanatory sentence (docs lines 38-39).
+- N2 budget error mislabels a bad value: FIXED. Live runs: '--budget-s 0' and
+  '--budget-s abc' print '--budget-s must be a positive whole number of seconds: <value>'
+  (exit 2); a missing value prints '--budget-s requires a value' (exit 2). The
+  unsupported-argument message now appears only for unknown flags.
+  architecture-pin-refresh-budget.test.ts pins all four cases; 4/4 pass.
+- N3 no --help output: DECLINED by the owner; not re-raised.
+- N4 reconcile undocumented: FIXED. New 'Reconcile the v2 baselines' section
+  (docs lines 43-58). Live run of the documented preview
+  'pnpm architecture:reconcile --policy v2 --owner monorepo-architecture --rationale ...'
+  prints the plan hash, writes nothing, and exits 0 with the acknowledgement instruction.
+
+New gate error (refused unreviewed write) check:
+- assertReviewedStagedDelta (architecture-reconciliation.ts:1264) throws
+  'V2 reconciliation refuses a staged baseline delta without a review record';
+  the CLI surfaces it as 'Architecture reconciliation failed: ...'.
+- The message names the refused write and the reason in one sentence, consistent with
+  the other CLI errors, and docs lines 56-57 state the rule. Reads clearly: PASS.
+- architecture-review-gate.test.ts covers refuse-unreviewed-candidate,
+  allow-reviewed-candidate, allow-accepted, allow-no-delta; 4/4 pass
+  (8/8 with the budget tests).
+
+New nonblocking finding (1):
+- The new docs section says the reconcile owner id 'holds a lower-case identifier',
+  but no code enforces the case: architecture-reconciliation-cli.ts:146-149 stores the
+  --owner value unchecked, and no lowercase owner validation exists in
+  architecture-reconciliation.ts or v2-manifest-validation.ts. A live preview accepted
+  --owner 'Monorepo-Architecture' with exit 0. Either validate the case or write the
+  docs line as a convention. Routed to Green.
+
+Tests at the audited HEAD:
+- CI=true pnpm exec vitest run architecture-review-gate.test.ts
+  architecture-pin-refresh-budget.test.ts --maxWorkers=1: 8/8 pass.
+- CI=true pnpm exec vitest run architecture-ci-input-pin.test.ts
+  architecture-reconciliation-cli.test.ts --maxWorkers=1: 25/26 pass; the one failure
+  is the known environmental assertion at architecture-reconciliation-cli.test.ts:225
+  ('expected /home/daniebo/.cache/arch-gate-2 to match /reading-advantage-monorepo$/'),
+  introduced by commit de19b65e6 on track backend_architecture_enforcement_20260713,
+  untouched by this remediation range, and passing 6/6 in the real repository.
+
+Blocking findings: none.
+Nonblocking findings: 1 (owner-id case rule in docs not enforced by code).
+Status: pass. Confidence: high. retry_recommendation: none.
+END_MEASURE_AGENT_RESULT

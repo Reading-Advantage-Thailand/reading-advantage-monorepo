@@ -204,8 +204,22 @@ STORAGE_PGID="$(ps -o pgid= -p "$STORAGE_PID" 2>/dev/null | tr -d ' ')"
 sleep 1
 if kill -0 "$STORAGE_PID" 2>/dev/null; then pass "The stand-in for the storage starts"; else fail "The stand-in for the storage does not start"; fi
 
-echo "=== Build the production app ==="
+echo "=== Build the app (retry once on the known Next.js security-notice stop) ==="
+BUILD_OK=1
 if (cd "$APP" && ../../node_modules/.bin/next build >"$TMP_DIR/build.log" 2>&1); then
+  echo "build_attempt_1=0"
+else
+  echo "build_attempt_1=1"
+  tail -5 "$TMP_DIR/build.log" || true
+  if (cd "$APP" && ../../node_modules/.bin/next build >"$TMP_DIR/build-2.log" 2>&1); then
+    echo "build_attempt_2=0"
+  else
+    BUILD_OK=0
+    echo "build_attempt_2=1"
+    tail -20 "$TMP_DIR/build-2.log" || true
+  fi
+fi
+if [ "$BUILD_OK" -eq 1 ]; then
   pass "The production build exits 0"
 else
   fail "The production build fails"
@@ -700,8 +714,8 @@ flow_eq device_kept_sign_in_page 0
 # F3: the sign-out ends the session, so the week content is gone.
 flow_eq content_after_signout 0
 # F4: a stranger gets no draft, no week text, no media, and no cookie.
-# The join page shows its marked draft copy until AC-4.10 closes (test-strategy F4), so the marker is 1.
-flow_eq stranger_draft_marker 1
+# JOIN_COPY.status is approved since task 3.0 (AC-4.10 closed), so the marker is 0.
+flow_eq stranger_draft_marker 0
 flow_eq stranger_week_text 0
 flow_eq stranger_media_requests 0
 flow_eq stranger_set_cookie 0

@@ -1,0 +1,84 @@
+# Review A (re-review r3) — Phase 1 remediation at 3585c49aa
+
+Track: architecture_ci_input_pin_20261110
+Phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+Audited HEAD: 3585c49aae9e334496d8156902e70eda19d04f71
+Remediation range: 4ec3d5d21..3585c49aa (ae29f456b, 36925e1f6, b9362c9d1, 965079f05, 3585c49aa)
+Clean checkout: /home/daniebo/.cache/arch-gate-3/reading-advantage-monorepo (HEAD equals
+the audited HEAD, tree clean, backend build artifacts present)
+
+## Audit points
+
+1. Gate by destination path (ae29f456b). stagedManifestFromPreview matches the
+   canonical replacement id OR the manifest destination path
+   (architecture-reconciliation.ts:1186-1190). A renamed id at the manifest
+   path can no longer skip the gate. The first-match edge cannot reach a
+   write: the acknowledged apply requires canonical byte-identity with the
+   freshly recomputed preview (:1286-1294). The two new gate rows assert the
+   exact refusal message and had a recorded failing-first check. Correct.
+
+2. Safe-integer budget (36925e1f6). The digit regex accepts a 400-digit
+   string; Number() maps it to Infinity and the budget stop could never
+   fire. The fix requires Number.isSafeInteger and throws the same named
+   message. The Red case
+   budget_rejects_a_value_that_is_not_a_finite_whole_number sits in the
+   adversarial file committed at the role base and structurally fails there;
+   the green log records the red run (61 cases, 1 failed). Correct.
+
+3. Docs (b9362c9d1). The owner paragraph now scopes the pattern to the
+   accepted manifest and names the acknowledged run as the enforcement
+   point. Two imprecisions remain (findings N1 and N2 below). Docs only; the
+   behavior is correct and pinned by the adversarial owner rows.
+
+4. Pin refresh (965079f05). One hunk in one file: four pin values moved
+   (analyzerInputSnapshotSha256, implementationAndTestTreeSha256, both
+   reportSha256s entries, reviewSubjectSha256).
+   analyzerImplementationTreeSha256 stayed. Delta lists, reviews, acceptance,
+   and the 15-key set stayed (255/15/162, reviews=0, candidate). Only pin
+   fields changed.
+
+5. Plan evidence (3585c49aa). The commit fixes the earlier N3 wording and
+   records the r2 sub-block. Every count I reproduced matched: 71/71
+   targeted, 38 files and 403 suite tests with 0 failures, check-types 0,
+   lint 0 errors and 1 pre-existing warning, v2 check exit 0 with
+   files=7013, findings=800, parseErrors=0, additions=0, removals=0,
+   renames=0.
+
+## Findings
+
+Blocking: none.
+
+Non-blocking:
+
+- N1: the docs quote `[a-z][a-z0-9-]{0,63}` as the --owner pattern, but the
+  owner contract for --owner values is OWNER_PATTERN
+  `/^[a-z0-9][a-z0-9_-]*$/` (contracts.ts:7,81). The adversarial rows prove
+  `0wn3r-1d` and `monorepo_arch` are accepted. The quoted pattern is the
+  accepted-manifest ownerBinding contract, a different thing.
+- N2: "the preview accepts any --owner value" is false when the delta holds
+  new findings. The preview runs createUpdatedArchitectureBaselines
+  (architecture-reconciliation.ts:794-798) and baselineEntrySchema.parse
+  refuses a non-conforming owner before any write. The 1.4d live evidence
+  refused the owner "Daniel" at the preview.
+- N3: the plan wording "(2 failed, 4 skipped)" describes a name-filtered
+  run; the 4 skipped are the other cases of the gate file, not a code state.
+  The failing-first property is real per the green log step 3.
+
+## Verdict
+
+PASS. All reproduced plan claims matched exactly.
+
+MEASURE_AGENT_RESULT
+status: pass
+track: architecture_ci_input_pin_20261110
+phase: Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+task: phase 1 remediation r3 re-review at 3585c49aa
+role: review-a
+role_base_sha: 4ec3d5d21453a46f998cef8bfd42578bd1669c46
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+audited_head_sha: 3585c49aae9e334496d8156902e70eda19d04f71
+blocking_findings: 0
+nonblocking_findings: 3
+retry_recommendation: none
+result_path: measure/runs/architecture_ci_input_pin_20261110/review-a-3585c49aa.json
+END_MEASURE_AGENT_RESULT

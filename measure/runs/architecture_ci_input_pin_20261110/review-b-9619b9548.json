@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "agent": "measure-review-b",
+  "role": "security_and_data_handling",
+  "track_id": "architecture_ci_input_pin_20261110",
+  "phase": "Phase 1: CI mode and the local pin refresh (target 2026-11-12)",
+  "phase_base_sha": "09168dc422ed48604b8f2f0cb9a23ad4d110543b",
+  "role_base_sha": "ac1d09869f7819f43666ffee2f8886d945175733",
+  "audited_head_sha": "9619b95482833feae716bbe4182cbc8172787134",
+  "head_is_current": true,
+  "focus_range": "ac1d09869..9619b9548",
+  "security_applicability": "applicable",
+  "status": "fail",
+  "verdict": "fail",
+  "summary": "Security points 1, 2, 4, and 5 pass on machine evidence. Point 3 fails: the v2 reconcile route writes the four v2 artifacts from a candidate manifest with zero review records, and the only control is a self-asserted owner plus rationale on each new entry. A latent defect blocks any honest acceptance while the staged delta is non-empty. No tenant, secret, or personal data is in scope. Audit only; no repository file was edited.",
+  "blocking_findings": [
+    "F1 high: an unreviewed candidate manifest can write the four v2 artifacts. applyArchitectureReconciliation no longer requires policyStatus accepted (packages/architecture-enforcement/src/architecture-reconciliation.ts:1206-1235). The committed manifest is candidate with reviews=[] and a staged delta of 255 additions, 15 removals, and 162 renames, and commit 863841016 wrote the v2 baselines under it. The remaining guards are exact plan-hash equality, v2-only, the exact four-path destination set, an identical fresh preview, and a self-asserted --owner plus --rationale per new entry. No test proves that an unreviewed write is refused; architecture-v2-route-14d.test.ts:561 asserts only the absence of one error message. Route to Green, then to the owner: restore a review-artifact gate for writes with non-empty deltas, or record the owner decision that self-attested owner plus rationale is the accepted control."
+  ],
+  "nonblocking_findings": [
+    "F2 medium: validateReviewSync and the owner-receipt check require baselineAdditions, baselineRemovals, and baselineRenames to be empty arrays (packages/architecture-enforcement/src/v2-manifest-validation.ts:656 and :819), but the review subject now covers non-empty staged deltas, so the accepted path demands evidence that states a falsehood. The policy stays candidate with default v1, so CI must keep the explicit --policy v2.",
+    "F3 low: measure/tracks.md:80 names only --skip-input-snapshot-pin, while .github/workflows/ci.yml:176 now runs pnpm architecture:check --skip-input-snapshot-pin --policy v2. This is an understatement, not an overstatement, so the A6 check finds no claim that outruns the implementation.",
+    "F4 low: parseArchitectureReconciliationArguments accepts any non-empty --owner and --rationale and validates them only when a new entry is built (baselineEntrySchema.parse in reviewedEntryForFinding). The values are data only and reach no path or shell call, so there is no injection path. An early pattern check would give a clearer refusal."
+  ],
+  "security_points": [
+    "1 pass: .github/workflows/ci.yml:25-26 keeps permissions contents read; no secrets. and no pull_request_target in .github/workflows; the focus-range change is one static run line adding --policy v2",
+    "2 pass_with_note: --expected-plan-hash requires 64 lowercase hex (architecture-reconciliation-cli.ts:126-130); --owner and --rationale pass ownerSchema and rationaleSchema at baselineEntrySchema.parse; F4 records the late check",
+    "3 fail: F1, a candidate manifest with reviews=[] wrote the four v2 files at 863841016",
+    "4 pass: a node probe over the committed v2 baselines with one synthetic finding returns status new-debt additions=1; ratchet.test.ts and ratchet.red.test.ts pass; the check under policy v2 exits 0 with additions=0",
+    "5 pass: the four V1_ARTIFACT_BINDINGS files are unchanged from the phase base and from the role base"
+  ],
+  "evidence": [
+    "git rev-parse HEAD at audit time is 9619b95482833feae716bbe4182cbc8172787134, equal to the audited HEAD; the dirty files are unrelated untracked files and three next-env.d.ts files outside the focus range",
+    "git diff ac1d09869..9619b9548: ci.yml one line, the reconcile CLI, architecture-reconciliation.ts, v2-manifest-validation.ts, one test file, one test rename, two baseline files, the manifest, the plan and the logs",
+    "CI=true pnpm exec vitest run architecture-v2-route-14d.test.ts ratchet.test.ts ratchet.red.test.ts --maxWorkers=1 exits 0 with 23 passed in /home/daniebo/.cache/arch-gate",
+    "CI=true pnpm architecture:check --policy v2 --skip-input-snapshot-pin exits 0 with files=7010, findings=800, parseErrors=0, additions=0, removals=0, renames=0",
+    "node probe over the committed v2 baselines with one synthetic new finding returns status new-debt and additions=1, so the ratchet still fails a new finding",
+    "git diff 09168dc42..9619b9548 of database.v1.json, provider.v1.json, ownership-map.v1.json, analyzer-reconciliation.v1.json and v1-validation.ts is empty; debt-ledger.v1.json is not in V1_ARTIFACT_BINDINGS",
+    "none of the 255 baseline additions touches a file changed in ac1d09869..9619b9548, so this work did not baseline its own new debt",
+    "the manifest holds reviews=[] and acceptance.status=candidate; policy-selection.ts:99-107 requires accepted to pair with default v2",
+    "baseline-update.test.ts:280 rejects owner Architecture Team, so the owner schema is enforced at entry construction"
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --stat ac1d09869..9619b9548",
+    "git diff ac1d09869..9619b9548 -- .github/workflows/ci.yml",
+    "git diff 09168dc42..9619b9548 -- packages/architecture-enforcement/src/config/baselines/database.v1.json packages/architecture-enforcement/src/config/baselines/provider.v1.json packages/architecture-enforcement/src/config/ownership-map.v1.json packages/architecture-enforcement/src/config/analyzer-reconciliation.v1.json packages/architecture-enforcement/src/v1-validation.ts",
+    "CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-v2-route-14d.test.ts packages/architecture-enforcement/src/__tests__/ratchet.test.ts packages/architecture-enforcement/src/__tests__/ratchet.red.test.ts --maxWorkers=1",
+    "CI=true pnpm architecture:check --policy v2 --skip-input-snapshot-pin",
+    "pnpm exec tsx -e compareArchitectureDebt over the committed v2 baselines with one synthetic new finding"
+  ],
+  "changed_files": [],
+  "confidence": "medium",
+  "retry_recommendation": "escalate_human",
+  "route": "opencode-go/deepseek-v4.1-flash",
+  "data_flow_notes": [
+    "The only writer of architecture baselines is the locked four-file transaction: baseline-update.ts rejects v2 destinations and the protected v1 paths.",
+    "applyStagedDelta reconstructs v2 entries from v1 plus the strict delta; duplicates fail the unique-instance rule of architectureBaselineSchema, so a delta cannot add an entry the reconstruction does not explain.",
+    "Persistence uses the exclusive .architecture-enforcement-write.lock with a journal and recovery (policy-update-transaction.ts:692-839).",
+    "No tenant, organization, secret, or personal data is in scope for this package."
+  ],
+  "consent_gate_a2": "not_applicable: no draft to published status change exists in the focus range",
+  "registry_check_a6": "no overstatement found; F3 records an understatement",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "pnpm architecture:check --policy v2 exits 0 with additions=0, but the accepted path contradicts the staged delta (v2-manifest-validation.ts:656)"
+    },
+    {
+      "axis": "test_meaning",
+      "score": 3,
+      "evidence": "architecture-v2-route-14d.test.ts:561 asserts only the absence of one error message, and no test proves an unreviewed write is refused"
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 4,
+      "evidence": "the focus range touches one workflow line, the reconcile code, one config delta and evidence; the removed accepted gate follows the ported upstream commit 3aff7f243"
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "plan.md 1.4d records the plan hash, exit codes and counts, and this audit reproduced the check and the ratchet probe"
+    }
+  ],
+  "notes": "Audit only; no repository file was edited. Tests ran in /home/daniebo/.cache/arch-gate at 9619b9548. The owner decision on F1 is the gate."
+}

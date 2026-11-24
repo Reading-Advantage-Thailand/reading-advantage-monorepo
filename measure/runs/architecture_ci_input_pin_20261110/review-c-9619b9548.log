@@ -1,0 +1,94 @@
+Review C log — architecture_ci_input_pin_20261110 — Phase 1: CI mode and the local pin refresh (target 2026-11-12)
+Route: opencode-go/glm-5.3#high
+phase_base_sha: 09168dc422ed48604b8f2f0cb9a23ad4d110543b
+role_base_sha: not supplied by the brief; the phase diff 09168dc4..9619b954 bounds this review
+audited_head_sha: 9619b95482833feae716bbe4182cbc8172787134
+Checkout: /home/daniebo/.cache/arch-gate, detached at the audited HEAD, clean tree, packages installed.
+
+Contract applicability: applicable.
+The phase diff changes package.json (new architecture:pin:refresh script), packages/architecture-enforcement/package.json (new pin:refresh script), architecture-check-cli.ts (--skip-input-snapshot-pin, --policy), architecture-reconciliation-cli.ts (--owner, --rationale, newDebtMetadata), the new architecture-pin-refresh-cli.ts (--acknowledge, --budget-s), .github/workflows/ci.yml (boundary step flags), and docs/architecture-enforcement.md. Every scoped point has changed code in the diff.
+
+Checks run:
+
+1. Scripts match CLI flags.
+   - package.json:7-9: architecture:check, architecture:pin:refresh, architecture:reconcile. packages/architecture-enforcement/package.json:19-22: check, pin:refresh, reconcile. Each names an existing CLI file.
+   - architecture-check-cli.ts parses --skip-input-snapshot-pin and --policy v1|v2; architecture-reconciliation-cli.ts parses --acknowledge, --expected-plan-hash, --owner, --rationale, --policy, --format, --repo-root and enforces the --acknowledge/--expected-plan-hash and --owner/--rationale pairs; architecture-pin-refresh-cli.ts parses --acknowledge and --budget-s, default 1500 (line 29), matching docs line 50.
+   - Pass-through verified: `pnpm architecture:check --policy v3` at the repo root reaches the CLI and fails with exit code 2 ("Command failed with exit code 2: tsx src/architecture-check-cli.ts --policy v3").
+   - Result: pass.
+
+2. CI step calls an existing script with accepted flags.
+   - .github/workflows/ci.yml:175-176: "Architecture boundary check" runs `pnpm architecture:check --skip-input-snapshot-pin --policy v2`. Both flags are accepted by the check CLI.
+   - Test ac4_workflow_step_runs_the_flag pins that exact run line; ac4_local_script_holds_no_flag pins that the local package.json script carries no flag.
+   - The phase diff also carries hunks of other tracks in ci.yml (shadcn_lint_ratchet_20261115, www_products_photos_20261115, ci_green_master_20261115) plus the input-build step of ci_green_master_20261115 that the boundary step depends on; each carries its own track id.
+   - Result: pass.
+
+3. Docs and plan describe the commands as they now work.
+   - Plan line 157 and line 200 record the option-1 route where CI runs the boundary check under --policy v2 (commits 133d5b596, 220e5886d). Plan lines 209-210 keep the two acceptance commands. Plan lines 42 and 179 record the pin:refresh script and the --acknowledge --budget-s 1500 series command.
+   - docs/architecture-enforcement.md:33-46 names the CI mode, the local full check, and the three pin:refresh invocations. Lines 63-77 document exit codes 0/1/2/3 and "a run that stores no new module exits with code 2"; these match the returns in architecture-pin-refresh-cli.ts. Lines 111-112 document CI and measure/doctor.sh (doctor.sh:17 runs plain `pnpm architecture:check`), correct except for the omitted --policy v2 (nonblocking finding 1).
+   - Result: pass with nonblocking findings 1 and 4.
+
+4. Error and help output of the reconcile CLI.
+   - Live runs in the clean checkout, each naming the flag and the reason:
+     - --policy v3 -> "Architecture reconciliation failed: --policy must be v1 or v2", exit 1.
+     - --acknowledge alone -> "--acknowledge and --expected-plan-hash must be supplied together", exit 1.
+     - --owner alone -> "--owner requires a value", exit 1.
+     - --expected-plan-hash abc -> "requires a lowercase SHA-256 digest", exit 1.
+     - typo --acknowlege -> "Unsupported architecture reconciliation argument: --acknowlege", exit 1.
+   - Help: no --help exists; --help is rejected as an unsupported argument. No usage line lists valid flags or points to the docs. Nonblocking finding 3.
+   - Result: error paths clear; help absent, nonblocking.
+
+Tests:
+- `CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts --maxWorkers=1` in /home/daniebo/.cache/arch-gate: 20 of 20 pass in 21.47 s.
+- `CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-reconciliation-cli.test.ts --maxWorkers=1` in the same checkout: 5 of 6 pass. The one failure is "expected '/home/daniebo/.cache/arch-gate' to match /reading-advantage-monorepo$/'" (test line 225). That assertion hard-codes the repository directory name, predates this phase (the phase diff touches only the preview/apply metadata assertions in that file), and passes in the real repository at the same HEAD 9619b954. Environment artifact, not a phase defect.
+
+Blocking findings: none.
+
+Nonblocking findings:
+1. Docs CI line omits --policy v2. docs/architecture-enforcement.md:111 says GitHub CI runs `pnpm architecture:check --skip-input-snapshot-pin`, but ci.yml:176 runs `pnpm architecture:check --skip-input-snapshot-pin --policy v2`. A user who copies the documented command runs the v1 policy check, which plan line 200 says reports a debt change by design. The documented command does not reproduce CI behavior. One-line docs fix routed to Green.
+2. Pin refresh budget errors report the wrong cause. `pnpm architecture:pin:refresh --budget-s 0` and `--budget-s abc` print "Unsupported architecture pin refresh argument: --budget-s" (architecture-pin-refresh-cli.ts:114-119). The flag is supported; the value is invalid. The reconcile CLI names the value rule correctly ("--policy must be v1 or v2"), so the pattern exists in the same package.
+3. No help output on any of the three CLIs. --help is rejected as an unsupported argument with no usage text. The wrong- and missing-flag error messages are clear on their own.
+4. docs/architecture-enforcement.md never documents the architecture:reconcile command, including the --owner and --rationale flags this phase added to it (133d5b596; the phase-base CLI at 09168dc4 rejects --owner). The plan records the route; the doc file stays silent.
+
+Verdict: PASS. No blocking findings. Retry recommendation: none.
+
+MEASURE_AGENT_RESULT
+{
+  "role": "Review C: UX and API end-to-end contract",
+  "route": "opencode-go/glm-5.3#high",
+  "track_id": "architecture_ci_input_pin_20261110",
+  "phase": "Phase 1: CI mode and the local pin refresh (target 2026-11-12)",
+  "phase_base_sha": "09168dc422ed48604b8f2f0cb9a23ad4d110543b",
+  "role_base_sha": null,
+  "role_base_sha_note": "The orchestrator brief supplied phase_base_sha and audited_head_sha only. The phase diff 09168dc4..9619b954 bounds this review.",
+  "audited_head_sha": "9619b95482833feae716bbe4182cbc8172787134",
+  "audited_head_current": true,
+  "contract_applicability": "applicable",
+  "verdict": "pass",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "Docs CI line omits --policy v2. docs/architecture-enforcement.md:111 says GitHub CI runs 'pnpm architecture:check --skip-input-snapshot-pin', but .github/workflows/ci.yml:176 runs 'pnpm architecture:check --skip-input-snapshot-pin --policy v2' (commit 133d5b596). A user who copies the documented command runs the v1 policy check, which plan line 200 says reports a debt change by design. The documented command does not reproduce CI behavior. One-line docs fix routed to Green.",
+    "Pin refresh budget errors report the wrong cause. 'pnpm architecture:pin:refresh --budget-s 0' and '--budget-s abc' print 'Unsupported architecture pin refresh argument: --budget-s' (architecture-pin-refresh-cli.ts:114-119). The flag is supported; only the value is invalid. The reconcile CLI names the value rule correctly ('--policy must be v1 or v2'), so the pattern exists in the same package.",
+    "No help output exists on any of the three CLIs. '--help' is rejected as an unsupported argument with no usage text and no pointer to docs/architecture-enforcement.md. The error messages for wrong and missing flags are clear on their own (verified live: --policy v3, --acknowledge alone, --owner without value, --expected-plan-hash abc, and a typo flag each name the flag and the reason).",
+    "docs/architecture-enforcement.md does not document the architecture:reconcile command at all, including the --owner and --rationale flags this phase added to it (133d5b596; the phase-base CLI at 09168dc4 rejects --owner). The plan records the route and the flags; the doc file that the phase updated for check and pin:refresh stays silent on reconcile."
+  ],
+  "evidence": [
+    "git rev-parse HEAD in /home/daniebo/.cache/arch-gate returns 9619b95482833feae716bbe4182cbc8172787134 with a clean tree: the audited HEAD checkout is current.",
+    "package.json:7-9 and packages/architecture-enforcement/package.json:19-22 hold the check, pin:refresh, and reconcile scripts; each names an existing CLI file.",
+    "architecture-check-cli.ts parses --skip-input-snapshot-pin and --policy v1|v2; architecture-reconciliation-cli.ts parses --acknowledge, --expected-plan-hash, --owner, --rationale, --policy, --format, --repo-root; architecture-pin-refresh-cli.ts parses --acknowledge and --budget-s with default 1500 (line 29).",
+    "Pass-through verified: 'pnpm architecture:check --policy v3' at the repo root fails with exit code 2 'tsx src/architecture-check-cli.ts --policy v3'.",
+    ".github/workflows/ci.yml:175-176 runs 'pnpm architecture:check --skip-input-snapshot-pin --policy v2'; test ac4_workflow_step_runs_the_flag pins that exact run line.",
+    "Five live reconcile error-path runs each name the flag and the reason and exit 1 (--policy v3, --acknowledge alone, --owner alone, --expected-plan-hash abc, typo --acknowlege).",
+    "'CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts --maxWorkers=1' in /home/daniebo/.cache/arch-gate passes 20 of 20 in 21.47 s.",
+    "Environment note, not a phase defect: architecture-reconciliation-cli.test.ts fails 1 of 6 in the arch-gate checkout only at 'expected /home/daniebo/.cache/arch-gate to match /reading-advantage-monorepo$/' (test line 225). The assertion hard-codes the repository directory name, predates this phase, and passes in the real repository at the same HEAD 9619b954."
+  ],
+  "retry_recommendation": "none",
+  "ratings": [
+    { "axis": "correctness", "score": 4, "evidence": "Every scoped flag parses in its CLI and the CI step matches the check CLI (ci.yml:176); the one gap is the docs CI line omitting --policy v2 (docs:111 vs ci.yml:176)." },
+    { "axis": "test_meaning", "score": 4, "evidence": "architecture-ci-input-pin.test.ts pins the workflow run line, the unflagged local script, and the CLI flag forwarding; 20 of 20 pass at the audited HEAD." },
+    { "axis": "scope_discipline", "score": 4, "evidence": "Track commits 90d492116, c10d18cbe, 45cedcfef, 133d5b596 change exactly the plan-listed files; extra ci.yml hunks in the window carry other track ids." },
+    { "axis": "evidence_quality", "score": 4, "evidence": "Each claim rests on a file:line or a live command result: the --policy v3 pass-through run, five reconcile error runs, and the 20/20 vitest run." }
+  ]
+}
+END_MEASURE_AGENT_RESULT
+
+Refinement pass: the JSON artifact and the log block above were compared line by line. Verdict stays PASS. No blocking finding appeared on re-read of the parse loops, the workflow step, the docs, and the live CLI output. The four nonblocking findings stand with their file:line evidence.

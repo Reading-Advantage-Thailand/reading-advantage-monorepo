@@ -1,0 +1,15 @@
+Gate output, exit 1:
+FAIL: current phase still has 3 non-deferred incomplete tasks
+
+MEASURE_AGENT_RESULT
+role: review-a
+status: blocked
+track: www_features_pricing_20261120
+phase: Phase 4: Browser review and captures
+commits: none
+tests_run: targeted Vitest 8 files / 139 tests PASS; heavy-run type-check PASS; full suite 89 files / 3093 tests PASS; real-translator before/after fixtures PASS; test runtime-equivalence check PASS
+files_changed: review-a-4ccf4c879.json; review-a-4ccf4c879.log
+plan_updates: none
+known_failures: no correctness blocker; Phase 4 tasks 4.1-4.3 remain pending
+handoff: RA4 and RA2 are withdrawn. The correctness audit passes. The orchestrator must finish the browser work and PM handoff, then rerun the role gate. Owner approvals remain separate.
+END_MEASURE_AGENT_RESULT

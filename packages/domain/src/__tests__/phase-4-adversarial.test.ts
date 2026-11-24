@@ -125,6 +125,30 @@ async function countGameCompletions(
   return Number((result.rows[0] as { count: unknown }).count);
 }
 
+/**
+ * Inserts many users of one school with one statement. The leaderboard seed
+ * loops call this instead of one INSERT per user, because each round trip to
+ * the in-process database costs time and the cap under test needs 100+ rows.
+ * @param harness The live test database.
+ * @param schoolId The school that owns the users.
+ * @param userIds The ids, usernames, and names of the users.
+ */
+async function seedSchoolUsers(
+  harness: TestDb,
+  schoolId: string,
+  userIds: readonly string[],
+): Promise<void> {
+  await harness.db.insert(users).values(
+    userIds.map((userId) => ({
+      id: userId,
+      username: userId,
+      displayUsername: userId,
+      name: `Student ${userId}`,
+      schoolId,
+    })),
+  );
+}
+
 async function sumXpLogs(
   harness: TestDb,
   userId: string,
@@ -505,13 +529,19 @@ describe("Phase 4 adversarial: leaderboard limit clamping (live-DB)", () => {
     await harness.close();
   });
 
+  // 105 sequential recordGameCompletion transactions are cheap on an idle
+  // machine (about 0.5 s) but took 6,982 ms on the 4-core CI runner while the
+  // other package test tasks ran beside it. Keep a measured 20 s budget.
   it("5C.1: limit > 100 is clamped to 100 (no rows beyond cap)", async () => {
     await seedSchoolAndUser(harness, SCHOOL_A_ID, SCHOOL_A_ID);
 
     // Seed 105 users in school-A with a game completion each.
-    for (let i = 0; i < 105; i++) {
-      const userId = `user-${String(i).padStart(3, "0")}`;
-      await seedSchoolAndUser(harness, SCHOOL_A_ID, userId);
+    const userIds = Array.from(
+      { length: 105 },
+      (_, i) => `user-${String(i).padStart(3, "0")}`,
+    );
+    await seedSchoolUsers(harness, SCHOOL_A_ID, userIds);
+    for (const [i, userId] of userIds.entries()) {
       // Build a unique valid UUID v4 per user. Format:
       //   XXXXXXXX-XXXX-4XXX-YXXX-XXXXXXXXXXXX  (36 chars total)
       // Y must be 8/9/A/B (variant bits).
@@ -542,15 +572,18 @@ describe("Phase 4 adversarial: leaderboard limit clamping (live-DB)", () => {
       rows.length,
       `Leaderboard row count with limit=999: ${rows.length} — expected 100 (clamped)`,
     ).toBe(100);
-  });
+  }, 20_000);
 
   it("5C.2: limit = 50 returns up to 50 rows", async () => {
     await seedSchoolAndUser(harness, SCHOOL_A_ID, SCHOOL_A_ID);
 
     // Seed 60 users
-    for (let i = 0; i < 60; i++) {
-      const userId = `user-${String(i).padStart(3, "0")}`;
-      await seedSchoolAndUser(harness, SCHOOL_A_ID, userId);
+    const userIds = Array.from(
+      { length: 60 },
+      (_, i) => `user-${String(i).padStart(3, "0")}`,
+    );
+    await seedSchoolUsers(harness, SCHOOL_A_ID, userIds);
+    for (const [i, userId] of userIds.entries()) {
       const idx = i + 1000;
       const part1 = idx.toString(16).padStart(8, "0");
       const part2 = "0000";

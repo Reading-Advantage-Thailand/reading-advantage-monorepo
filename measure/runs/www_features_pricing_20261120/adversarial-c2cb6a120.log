@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+status: pass
+summary: Closed Review A RA5 with a wrapper-aware crop-fit test. The object-contain to object-cover mutation fails the new assertion. The full www suite passes 91 files and 3117 tests.
+blocking_findings: []
+nonblocking_findings: []
+evidence: ["RA5 withdrawn: test checks wrapper and img classes and catches the actual object-cover wrapper mutation", "Unmutated cover test passes 10/10", "Full www Vitest suite passes 91 files and 3117 tests", "Test-only commit 4f3ad5936f0e2c3b1d811725483a83bd271619da", "build-graph skipped because this worktree has no graph.db"]
+commands: ["pnpm exec vitest run --maxWorkers=1 src/__tests__/www-reading-cover.red.test.ts: 10 passed", "wrapper object-cover scratch mutation: 1 failed and 9 passed, exit 1; source restored", "heavy-run full www suite: 91 files and 3117 tests passed", "role-gate: PASS: adversarial-testing gate passed"]
+changed_files: ["apps/www-reading-advantage/src/__tests__/www-reading-cover.red.test.ts", "measure/runs/www_features_pricing_20261120/adversarial-c2cb6a120.json", "measure/runs/www_features_pricing_20261120/adversarial-c2cb6a120.log"]
+retry_recommendation: none
+handoff: Phase 4 adversarial testing passes. The RA5 finding is withdrawn because the committed test fails under the wrapper object-cover mutation and passes at HEAD. No implementation defect surfaced. Keep this result tied to audited HEAD 4f3ad5936f0e2c3b1d811725483a83bd271619da; any implementation commit requires the gate to rerun.
+confidence: high
+END_MEASURE_AGENT_RESULT

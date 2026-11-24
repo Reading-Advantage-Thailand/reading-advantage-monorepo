@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "Acceptance audit of Phase 1 (CI mode and the local pin refresh) of architecture_ci_input_pin_20261110 at audited HEAD 00dfbea9acfb3cdfe73b1cb6e04051c78dc90a9c, phase base 09168dc422ed48604b8f2f0cb9a23ad4d110543b, run in the clean checkout at /home/daniebo/.cache/arch-gate-4/reading-advantage-monorepo. Prerequisites verified: review-a, review-b, review-c, and adversarial results all pass at 3585c49aa; the Green logs green-14d-e51124bd4, green-15-9213a78b3, green-rem-9619b9548, and green-rem2-4ec3d5d21 exist and record their gates. The prerequisite results apply to the audited HEAD under the test-only-commit rule: the only commits between 3585c49aa and 00dfbea9a are 3c4a15581 and 00dfbea9a, and both touch only packages/architecture-enforcement/src/__tests__/architecture-v2-route-adversarial.test.ts. That allowance is recorded here. Verified green at HEAD: the pin test (AC-1 to AC-5) passes 20 of 20, the adversarial file passes 73 of 73, check-types exits 0, lint exits 0 with the one pre-existing warning, the package suite passes 38 files and 415 tests with 0 failures, the CI-mode check 'pnpm architecture:check --skip-input-snapshot-pin --policy v2' exits 0 (files=7013, findings=800, parseErrors=0, debt 0/0/0, no input snapshot error), the archive diff is empty, the track commits touch no forbidden path and nothing outside the declared blast radius, and the A9 detector exits 1. One gate fails: the local full check 'pnpm architecture:check --policy v2' of task 1.5 exits 1 with 'Analyzer input snapshot hash does not match current bytes'. The two allowed test-only commits changed the bytes of a tracked analyzer input after the last pin refresh 965079f05, so the input snapshot pin is stale at the audited HEAD. Every other manifest comparison passes at HEAD, so one local refresh at 00dfbea9a should move only analyzerInputSnapshotSha256 and reviewSubjectSha256, the round-10 shape. The plan rule of task 1.5 says a non-zero exit stops the phase. The phase is therefore not acceptable at this HEAD. The checkpoint is not appended.",
+  "blocking_findings": [
+    "B1 (phase gate, routed to Green): The local full check gate of task 1.5 fails at the audited HEAD. 'pnpm architecture:check --policy v2' in the clean checkout at 00dfbea9a exits 1 with 'Architecture check failed: V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes' (the tsx child exits 2, the plan's code for an invalid manifest). Task 1.5 expects exit 0, 'so the local pin stays'. Cause: the last pin refresh 965079f05 predates the two test-only commits 3c4a15581 and 00dfbea9a, which changed the bytes of the tracked analyzer input packages/architecture-enforcement/src/__tests__/architecture-v2-route-adversarial.test.ts. The analyzer input snapshot hashes the exact bytes of every analyzed input, and test files are analyzed inputs. The stale pin is the only manifest error at HEAD: the CI-mode check passes and the error list holds no other line. Fix: run 'pnpm architecture:pin:refresh --acknowledge' at 00dfbea9a through heavy-run (the round-9 and round-10 experience says one run of about 35 s), commit only the manifest with the track header, then rerun this acceptance at the resulting HEAD. The expected refresh shape is the round-10 shape: only analyzerInputSnapshotSha256 and reviewSubjectSha256 move; the two tree hashes and the report hashes stay. The plan precedent is round 10: the test-only commit 9213a78b3 staled the pin the same way, the check under policy v2 exited 1, and the refresh commit 7044e9aa5 fixed the gate."
+  ],
+  "nonblocking_findings": [
+    "N1 (carried state, no action in this phase): The deferred B-F2 follow-up stays open as the PM default records. The committed manifest at HEAD holds status=candidate, reviews=0, and a staged delta of 255 additions, 15 removals, and 162 renames, so the review-record gate of a510c9492 refuses every later v2 reconcile write until the v2 schema can bind a delta review. The refusal is fail-closed. The brief records this default; it is not a gate of this phase.",
+    "N2 (main checkout hygiene, outside the audited HEAD): The main checkout holds one uncommitted edit to the committed run log measure/runs/architecture_ci_input_pin_20261110/green-rem-9619b9548.log, beside the three known dirty next-env.d.ts files. The clean checkout reads committed bytes, so this audit is unaffected. The owning session should commit or drop that edit."
+  ],
+  "evidence": [
+    "Provenance: git rev-parse HEAD in the main repository returns 00dfbea9acfb3cdfe73b1cb6e04051c78dc90a9c, equal to the audited HEAD and to master HEAD. git rev-parse HEAD in /home/daniebo/.cache/arch-gate-4/reading-advantage-monorepo returns the same SHA with a clean status, and packages/backend/dist and packages/knowledge-space-core/dist exist there, so the analyzer runs without parse errors from missing builds.",
+    "Prerequisites: review-a-3585c49aa.json (status pass, route opencode-go/glm-5.3#high), review-b-3585c49aa.json (status pass, route opencode-go/deepseek-v4.1-flash), review-c-3585c49aa.json (status pass, route opencode-go/glm-5.3#high), and adversarial-3585c49aa.json (status pass, resulting_head_sha 00dfbea9a) all exist with logs in measure/runs/architecture_ci_input_pin_20261110/. All four target audited_head_sha 3585c49aae9e334496d8156902e70eda19d04f71 at role base 4ec3d5d21453a46f998cef8bfd42578bd1669c46.",
+    "Test-only-commit allowance: git log 3585c49aa..00dfbea9a holds exactly two commits, 3c4a15581 (206 insertions, 5 deletions) and 00dfbea9a (3 insertions, 3 deletions), and both change only packages/architecture-enforcement/src/__tests__/architecture-v2-route-adversarial.test.ts. The prerequisite results therefore apply to the audited HEAD, and this acceptance records the exact HEAD it audited and names the two test-only commits it allowed. The allowance preserves the implementation content but not the input snapshot pin, because the analyzer input snapshot hashes test file bytes (B1).",
+    "AC-1 to AC-5 at HEAD: 'CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts --maxWorkers=1' in the clean checkout exits 0 with 20 of 20 passed. The file holds the spec cases ac1_pin_error_present_without_option, ac1_pin_error_absent_with_option, ac1_sync_validator_skips_pin, ac2_new_analyzed_file_fails_with_report_hash, ac2_ci_mode_cli_exits_non_zero, ac3/ac3b/ac3c narrow-skip guards, ac4_workflow_step_runs_the_flag, ac4_local_script_holds_no_flag, ac4_cli_passes_the_flag_to_the_checker, ac4_no_environment_variable_selects_the_mode, ac4_unknown_flag_is_rejected, the five ac5 refresh cases, and fr6_documentation_names_the_three_commands. The plan records the Red state at the phase base: 12 of 20 failed at 09168dc42.",
+    "AC-4 wiring verified directly: .github/workflows/ci.yml:175-176 at HEAD runs 'Architecture boundary check' with 'run: pnpm architecture:check --skip-input-snapshot-pin --policy v2', and the test asserts that exact line. The root package.json script architecture:check holds no flag. The test file reads the real repository files, so the assertion is live, not artifact-only.",
+    "Adversarial file at HEAD: 'CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-v2-route-adversarial.test.ts --maxWorkers=1' exits 0 with 73 of 73 passed, the count the adversarial result records at 00dfbea9a.",
+    "Phase check gates at HEAD: check-types through heavy-run exits 0. Lint through heavy-run exits 0 with 0 errors and the one pre-existing prefer-const warning in architecture-pin-refresh-resume.test.ts. The package suite 'CI=true pnpm --filter @reading-advantage/architecture-enforcement test' through heavy-run exits 0 with 38 files and 415 tests, 0 failures (the r2 record of 403 plus the 12 new adversarial cases). The CI-mode check 'pnpm architecture:check --skip-input-snapshot-pin --policy v2' through heavy-run exits 0 with 'clean (files=7013, findings=800, parseErrors=0)', 'architecture policy: v2 (status=candidate, default=v1)', and 'architecture debt: clean (additions=0, removals=0, renames=0)'. No line names the input snapshot error.",
+    "The failing gate: 'pnpm architecture:check --policy v2' through heavy-run at 00dfbea9a exits 1 with 'Architecture check failed: V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes'. This is the only validation error at HEAD, so the implementation tree, the implementation and test tree, both report hashes, and the review subject still match the current bytes; only analyzerInputSnapshotSha256 is stale. The manifest file last changed at 965079f05, and the two later test-only commits changed an analyzed input.",
+    "A5 (false-claim text): The plan's evidence claims were checked against reality. The r2 claims (targeted 71 of 71, suite 38 files and 403 tests, files=7013, findings=800, check_policy_v2=0) hold at their recorded HEAD 965079f05 per review A, and my re-run at 00dfbea9a confirms the same counts with the suite grown to 415 as the adversarial file grew to 73 cases. The plan makes no claim that the full check passes at 00dfbea9a, so no plan text is false; the gate itself is red, which B1 records.",
+    "Scope: git diff --name-only 5062b170e..HEAD -- measure/archive/backend_architecture_enforcement_20260713/ is empty, so the archive is intact. The 67 track commits in 09168dc42..HEAD touch no path under packages/backend/turbo.json or packages/webhooks and no path outside the declared blast radius (packages/architecture-enforcement, docs/architecture-enforcement.md, measure/, .github/workflows/ci.yml, package.json).",
+    "A9 detector: rg -n 'measure/tracks|measure/runs' over architecture-v2-route-adversarial.test.ts and architecture-ci-input-pin.test.ts exits 1, so no test reads the Measure evidence paths.",
+    "A6 (registry overstatement): The tracks.md entry for this track states the CI flag, the local pin, and the PM decisions, and claims nothing resolved that is not. The remediation track architecture_identity_provider_debt_20261111 entry restates the PM scope.",
+    "Manifest state at HEAD: analyzer-reconciliation.v2.json holds its 15 keys, acceptance.status=candidate, reviews of length 0, and baselineAdditions of 255 entries, matching the brief's record of the deferred B-F2 follow-up (N1).",
+    "Checkpoint: the phase heading '## Phase 1: CI mode and the local pin refresh (target 2026-11-12)' carries no [checkpoint: ...] marker. The acceptance fails, so the marker is not appended. The task 1.5 rule says a non-zero exit stops the phase and goes to the orchestrator."
+  ],
+  "commands": [
+    "git rev-parse HEAD (main repository) -> 00dfbea9acfb3cdfe73b1cb6e04051c78dc90a9c (current master HEAD, equal to the audited HEAD)",
+    "git rev-parse HEAD; git status --short (in /home/daniebo/.cache/arch-gate-4/reading-advantage-monorepo) -> 00dfbea9a..., clean; packages/backend/dist and packages/knowledge-space-core/dist present",
+    "git log --oneline 3585c49aa..00dfbea9a -> 2 commits: 3c4a15581, 00dfbea9a; both touch only src/__tests__/architecture-v2-route-adversarial.test.ts",
+    "CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-ci-input-pin.test.ts --maxWorkers=1 -> exit 0, 20 of 20 passed",
+    "CI=true pnpm exec vitest run packages/architecture-enforcement/src/__tests__/architecture-v2-route-adversarial.test.ts --maxWorkers=1 -> exit 0, 73 of 73 passed",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/.cache/arch-gate-4/reading-advantage-monorepo && pnpm --filter @reading-advantage/architecture-enforcement check-types' -> exit 0",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/.cache/arch-gate-4/reading-advantage-monorepo && pnpm --filter @reading-advantage/architecture-enforcement lint' -> exit 0, 0 errors, 1 pre-existing warning",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/.cache/arch-gate-4/reading-advantage-monorepo && CI=true pnpm --filter @reading-advantage/architecture-enforcement test' -> exit 0, 38 files, 415 tests, 0 failed",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/.cache/arch-gate-4/reading-advantage-monorepo && pnpm architecture:check --skip-input-snapshot-pin --policy v2' -> exit 0, files=7013, findings=800, parseErrors=0, debt 0/0/0, no input snapshot error",
+    "HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/.cache/arch-gate-4/reading-advantage-monorepo && pnpm architecture:check --policy v2' -> exit 1, 'Analyzer input snapshot hash does not match current bytes' (B1)",
+    "git diff --name-only 5062b170e..HEAD -- measure/archive/backend_architecture_enforcement_20260713/ -> empty",
+    "git log 09168dc42..HEAD --grep='architecture_ci_input_pin_20261110' --name-only --pretty=format: | sort -u | rg 'packages/backend/turbo.json|^packages/webhooks/' -> no match; the same list outside the declared blast radius -> no match",
+    "rg -n 'measure/tracks|measure/runs' over the two changed test files -> exit 1",
+    "node read of analyzer-reconciliation.v2.json -> 15 keys, status=candidate, reviews=0, baselineAdditions=255"
+  ],
+  "changed_files": [
+    "measure/runs/architecture_ci_input_pin_20261110/phase-acceptance-00dfbea9a.json",
+    "measure/runs/architecture_ci_input_pin_20261110/phase-acceptance-00dfbea9a.log"
+  ],
+  "confidence": "high",
+  "retry_recommendation": "retry_implementation",
+  "audited_head_sha": "00dfbea9acfb3cdfe73b1cb6e04051c78dc90a9c",
+  "route": "opencode-go/glm-5.3#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "AC-1 to AC-5 all hold at HEAD (pin test 20 of 20, live CI-mode check exit 0 with files=7013 and debt 0/0/0), but the phase's own full-check gate is red at the audited HEAD: pnpm architecture:check --policy v2 exits 1 on the stale input snapshot pin."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "Every AC has a failing-first test: the plan records 12 of 20 pin cases failing at the phase base, the adversarial file records its Red rounds, and my runs show 20/20, 73/73, and a 415-test suite with 0 failures at HEAD."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The 67 track commits in 09168dc42..HEAD touch no path outside packages/architecture-enforcement, docs/architecture-enforcement.md, measure/, .github/workflows/ci.yml, and package.json; the archive diff 5062b170e..HEAD is empty."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every claim in this result has a command: all six phase-check gates ran at the audited HEAD in the clean checkout, and the failing gate's output line is quoted verbatim."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "opencode-go/glm-5.3#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "Their pass at 3585c49aa matches my re-checks: the gate-by-path fix, the safe-integer guard, and the 965079f05 refresh shape all hold, and their reproduced counts (71 targeted, 403 suite, live v2 check exit 0) match the state at their HEAD; the stale pin arose only from the later test-only commits, outside their audited range."
+    },
+    {
+      "reviewer_role": "review-b",
+      "reviewer_route": "opencode-go/deepseek-v4.1-flash",
+      "agreed": true,
+      "score": 5,
+      "evidence": "Their security pass holds at HEAD: the CI workflow keeps contents: read, the accepted bypass stays review-bound, and the manifest's fail-closed refusal state (reviews=0, adds=255, status=candidate) is exactly what I read at HEAD."
+    },
+    {
+      "reviewer_role": "review-c",
+      "reviewer_route": "opencode-go/glm-5.3#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "Their pass is right and their one nonblocking finding (no test for the isSafeInteger budget guard) was addressed: the adversarial round added the boundary cases at 00dfbea9a, and the 73-case run passes."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "opencode-go/glm-5.3#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "Their pass is correct within their scope: both prior findings are fixed, the extended 73-case file passes at 00dfbea9a in my run too, and their probes found no write bypass; the resulting test-only commits staled the input pin, which their role does not gate and this acceptance records as B1."
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+MEASURE_AGENT_RESULT
+role: mid-red
+status: pass
+track: www_features_pricing_20261120
+phase: Phase 1: Red round 2 (primary crop stretch defect)
+baseline_sha: c096256a1eb9f41329306533a78aa0108cc6bcff
+role_base_sha: d324198f325682c7d914e35331bb723c34fbcea5
+result_head_sha: 8ea29b7a0facf436db3318f1a8effef00d92aca3
+commits:
+- 348806df3 test(www): pin clean 375x622 primary crop, no stretch (track_id: www_features_pricing_20261120)
+- 8ea29b7a0 docs(measure): red r2 evidence for primary crop fix (track_id: www_features_pricing_20261120)
+tests_run:
+- assets Red r2 (www-features-pricing.assets.test.ts, heavy-run foreground): Tests 2 failed | 19 passed (21), exit 1
+- the 2 failures are the stretched 375x812 primary-lesson-step05.webp: planned-size mismatch (375x622 pinned) and box-aspect drift ~30% over the 1% limit
+- new aspect control passes: flags crafted 375x812-over-375x622 stretch, passes clean 1200x576-over-2250x1080 resize
+- other three files keep their size and aspect assertions green
+- eslint on the edited test file: exit 0
+- pnpm check-types: exit 0
+files_changed:
+- apps/www-reading-advantage/src/__tests__/www-features-pricing.assets.test.ts (primary pinned 375x622 with box 375x622, aspectDrift helper, per-file 1% aspect assertion, aspect control, header reason line)
+- measure/tracks/www_features_pricing_20261120/spec.md (image-table row: no resize, output 375x622; source size 375x812 kept)
+- measure/tracks/www_features_pricing_20261120/plan.md (r2 evidence bullet under 1.3, marker [~])
+plan_updates:
+- 1.3 [x] to [~] for the Green remake, with r2 evidence bullet
+known_failures:
+- assets: 2 assertions fail on the current stretched primary-lesson-step05.webp (planned pixel size 375x622, spec box aspect within 1%)
+- Green must remake the file as the clean 375x622 region with no resize; all other assets assertions pass
+handoff:
+- No product decision needed; orchestrator decision applied as ordered: clean region 375x622, no resize (staff banner removed, PM rule: no staff header; no stretch).
+- Green: regenerate primary-lesson-step05.webp from box 0,190,375,812 with no resize, then rerun the assets test plus the task 2.6 gates on one HEAD.
+- No push, no merge, no deploy: Daniel's Thai check, look check and deploy word still gate everything (task 5.2, deferred:daniel).
+END_MEASURE_AGENT_RESULT

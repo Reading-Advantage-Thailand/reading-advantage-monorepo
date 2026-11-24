@@ -10,6 +10,8 @@
 > Use `--maxWorkers=1` for vitest. No push. No deploy. Add no new hash field.
 > Stage only the paths that this track owns.
 
+PM 2026-11-23: parked until after the 30 Nov launch.
+
 ## Phase 1: Contract & Schema Definition [checkpoint: 476835906]
 
 > Checkpoint note (Mid Red, 2026-11-05). The measure-guard blocks a Phase 2 start
@@ -55,7 +57,8 @@
   - [x] Specify benchmark records for elapsed time, RSS, diagnostics, CPU/checkers,
     cache state, and exit status.
   - [x] Specify CI observation records and rollback triggers.
-- [b] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md) (deferred:product-owner)
+- [x] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md)
+  - PM 2026-11-21: not a human gate; closed on the automated evidence of the phase: the Phase 1 checkpoint `476835906` and `phase-1-acceptance-result.json`.
 
 ## Phase 2: vinext 1.x upgrade (PM step 0)
 
@@ -80,7 +83,8 @@
   - Files: the evidence note from Task 1.
   - Done when: the note names the resolved `vinext` and `vite` versions with commands that
     reproduce them (`pnpm why vinext`, `pnpm why vite`).
-- [b] Task: Measure - User Manual Verification 'Phase 2: vinext 1.x upgrade (PM step 0)' (Protocol in workflow.md) (deferred:product-owner)
+- [x] Task: Measure - User Manual Verification 'Phase 2: vinext 1.x upgrade (PM step 0)' (Protocol in workflow.md)
+  - PM 2026-11-21: not a human gate; closed on the automated evidence of the phase: the Phase 2 gate logs and the three review results.
 
 ### Red phase evidence (Mid Red, 2026-11-05)
 
@@ -159,6 +163,23 @@
   sections. `pnpm-workspace.yaml` is unchanged. No deploy ran.
 
 ## Phase 3: TypeScript 7 trial (PM step 1)
+
+> Phase 3 target (PM 2026-11-21): report to the PM by 2026-11-28.
+
+- [ ] Task: Bump vinext 1.2.0 to the latest 1.4.x and adopt the Oxc lessons of the Math test bed.
+  - PM 2026-11-21 (stack modernization): bump vinext 1.2.0 -> latest 1.4.x and adopt the Oxc lessons of the Math test bed (ra-math-advantage measure/archive/vinext-oxc-toolchain_20261114/oxc-evidence.md).
+  - What: find every package that pins vinext 1.2.0. `apps/marketing` and `apps/activity-vinext-fixture` pin it today. `grep` the repo for other manifests, workspace files, and lockfile entries.
+  - Target: vinext 1.4.6, the latest 1.4.x on npm. Check with `npm view vinext versions --json`. Checked 2026-11-21. Change only the pinning manifests and their lockfile entries.
+  - Gates: build each vinext app, run its tests, and run the runtime verify script. Use `heavy-run.sh` at `HEAVY_PRIORITY=p2`. Run one heavy step at a time after 22:00 ICT. Use `--maxWorkers=1` for vitest. Run `apps/marketing/scripts/verify-vinext-runtime.mjs` on the build. It needs HTTP 200 on `/` and HTTP 401 on `/api/campaigns`. Save each exit code and log under `evidence/`.
+  - Oxc lessons from `oxc-evidence.md` sections 6, 8, and 11. Give each lesson a check or a defer decision with a reason.
+    - oxlint: check the root config and zero-warning lint scripts on a seeded finding. Math finds no rule gap, because no ESLint config remains to diff. Record that fact.
+    - oxfmt: check `oxfmt --check` on a pinned exact version with an explicit ignore list. Math uses a format-only commit and a blame-ignore entry. Defer the repo-wide reformat if it is outside this phase, and give the reason.
+    - tsrs: check `TSRS_FAST=1 oxlint --type-aware --type-check` against `tsc` on one compiler line. Use a seeded TS2322 probe. Keep a named `tsc --noEmit` fallback where tsrs differs. Record each fallback and its reason.
+    - Rule gaps and workarounds: record each item of sections 6 and 8 as adopted or deferred with a reason. Name these workarounds: the 1800 s heavy-run cap, the vitest `include` gap, and the missing browser tool. Also name tracked files changed by `vinext build`, the `eslint-config-next` config load, and the dead dependency that reinstalls `next`.
+  - Build time: measure wall time before the bump and after it. Use three runs, the median, no `dist/`, and no concurrent heavy job. Math reports builds 2 to 3 times faster. Record both values with the commands in `evidence/`. A slower result is a finding, not a regression.
+  - Rollback: set the two pins back to 1.2.0. Restore the lockfile entries. Rerun the gates. Keep the rollback command in the evidence note. No deploy and no push.
+  - Evidence class: automated.
+  - Done when: both apps build, test, and pass the runtime verify on 1.4.6. Each Oxc lesson has a check result or a defer with a reason. The before and after times are recorded. No other pin changed.
 
 - [ ] Task: Create the trial worktree with the latest stable TypeScript 7.0.x.
   - What: make a git worktree on a new branch from master. Install the latest stable 7.0.x
@@ -249,7 +270,7 @@
 
 > Every task below is `[b]` with `deferred:pm` until the PM decides on the Phase 3 report.
 
-- [b] Task: Make TypeScript 7 the only compiler (deferred:pm)
+- [b] Task: Make TypeScript 7 the only compiler (deferred:backlog)
   - What: pin the exact 7.0.x in the workspace; remove the `overrides.typescript` 5.9.3 pin and
     the second install; fix each `tsconfig` with narrow `types` lists; remove `baseUrl` from
     `apps/marketing/tsconfig.json`.
@@ -258,30 +279,30 @@
   - Done when: `pnpm why typescript` shows one major version; `pnpm install --frozen-lockfile`
     exits 0; every `check-types` script exits as the Phase 1 baseline allows; `git grep` finds
     no new `@ts-ignore`, `@ts-nocheck`, or `ignoreBuildErrors`.
-- [b] Task: Move linting off the TypeScript 5 API (deferred:pm)
+- [b] Task: Move linting off the TypeScript 5 API (deferred:backlog)
   - What: apply the Phase 3 plan for `typescript-eslint` (Oxlint type-aware through tsgolint),
     pin the rule set, and move or remove each other API consumer from the Phase 3 table.
   - Files: `packages/config/eslint/`, app `eslint.config.mjs` files, an Oxlint config, `package.json`
     files that list the old tools.
   - Done when: `pnpm turbo run lint` exits as the baseline allows with the second install gone;
     each consumer row from Phase 3 is marked "done".
-- [b] Task: Route CI and Turbo to TypeScript 7 (deferred:pm)
+- [b] Task: Route CI and Turbo to TypeScript 7 (deferred:backlog)
   - What: update `turbo.json` and `.github/workflows/ci.yml`; bound checker count under Turbo;
     observe three representative CI runs.
   - Files: `turbo.json`, `.github/workflows/ci.yml`.
   - Done when: three CI runs finish with no new nondeterminism, memory failure, or cache error;
     the checker setting is written in the CI file.
-- [b] Task: Update operator documents (deferred:pm)
+- [b] Task: Update operator documents (deferred:backlog)
   - What: update `measure/tech-stack.md` and the operator notes for editor setup, checker
     count, fallback, and rollback. Mark `typescript6_major_migration` superseded.
   - Files: `measure/tech-stack.md`, `measure/tracks.md`, operator notes under `docs/`.
   - Done when: the documents name TypeScript 7 as the only compiler and give one rollback
     command; `grep -n "TypeScript 6" measure/tech-stack.md` shows no bridge text.
-- [b] Task: Run Measure doctor and final acceptance (deferred:pm)
+- [b] Task: Run Measure doctor and final acceptance (deferred:backlog)
   - What: run `measure/generate.sh` and `measure/doctor.sh` with their documented commands;
     run the aggregate `lint`, `test`, `check-types`, and `build` gates under `heavy-run.sh`;
     complete the change-quality review against `spec.md` and this plan.
   - Files: generated Measure files; review notes in the track folder.
   - Done when: doctor exits 0; no migration-caused regression remains against the baseline;
     no Critical or High finding is open.
-- [b] Task: Measure - User Manual Verification 'Phase 5: Rollout to one compiler' (Protocol in workflow.md) (deferred:pm)
+- [b] Task: Measure - User Manual Verification 'Phase 5: Rollout to one compiler' (Protocol in workflow.md) (deferred:backlog)
