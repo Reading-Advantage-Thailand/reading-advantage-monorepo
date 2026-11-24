@@ -516,6 +516,7 @@ Each task below is one commit for one class.
 - Late finding ADV-30: tech-debt (the .mdx and .MD probes write into the real en posts tree)
 - Late finding ADV-31: tech-debt (mkdirSync and symlinkSync run before try, leaking the mkdtemp base on a throw)
 - Late finding ADV-32: tech-debt (the earlier ADV-26 and ADV-27 records were too broad)
+- Late finding ADV-P1-9: tech-debt (the baht-amount case name overstates its two-literal check)
 
 - [x] 4.1 Write the pilot report (289c4451c)
   Report: measure/tracks/www_test_audit_pilot_20261122/report.md.
@@ -535,10 +536,10 @@ Each task below is one commit for one class.
   The pre-merge raw case cut is 1763 cases, or 55.5 percent of the 3175
   baseline, at e91c4d4cc (measure/runs/www_test_audit_pilot_20261122/baseline.json
   and measure/runs/www_test_audit_pilot_20261122/gate-66aeb1011.json).
-  The final cut after the master merge 6ee56327b and the commission FAQ pin
-  ca91946b is 1761 cases, with 1414 cases and 92.08 percent line coverage
-  (measure/runs/www_test_audit_pilot_20261122/green-at-ca91946b.log,
-  coverage-at-ca91946b.log).
+  The final cut after the D5 revert f97a72f9 is 1681 cases, with 1494 cases
+  and 92.08 percent line coverage
+  (measure/runs/www_test_audit_pilot_20261122/green-at-f97a72f9.log,
+  coverage-at-f97a72f9.log).
   The 20 percent target is met. Pre-merge line coverage rose from 86.52
   percent to 92.07 percent (baseline.json and gate-66aeb1011.json).
   All Phase 4 report gates exited 0.
@@ -763,3 +764,24 @@ Each task below is one commit for one class.
   rows, and the rows are excluded from every sum. Accepted as a note.
   N5, N6 and N7 fix the D4 erratum, the section 7 quote form and these records.
   No push was made.
+- [x] 4.18 Revert the D5 class and correct counts (f97a72f9)
+  Commit: f97a72f9066c7f2509ec70045a28734926c878fa.
+  Source: measure/runs/www_test_audit_pilot_20261122/adversarial-p1-fdf62c9.json.
+  PM decision 2026-11-25, option C: revert D5 entirely. D5 deleted price, baht
+  and commission pins, and a sweep risks a third miss. The pilot stays above
+  the 20 percent target.
+  ADV-P1-8 FIX by revert: the pricing S7 body, pricing S9 answer 2 and the th
+  tutorRole.points.3 pins are back. All exact en and th pins of the D5 files
+  returned; the later FAQ pin from ca91946b is no longer needed.
+  Heavy-run gates passed: full suite 1494 tests in 98 files; line coverage is
+  92.08 percent, above the 85.52 floor; check-types exited 0 and lint exited 0
+  with one pre-existing warning. The final cut is 1681 cases, or 52.9 percent
+  of the 3175 baseline. The 1761-case cut and 1414-case count in task 4.17 are
+  pre-revert.
+  ADV-P1-4b FIX: report.md now says all three restored rows belong to Phase 2
+  task 2.7, not Phases 2 and 3. The K share is 96.5 percent and the D5 rows are
+  back in K status; no K row was deleted.
+  ADV-P1-9: the K case named 'shows no other baht amount than the FR-9 and
+  FR-10 figures' forbids two literals and requires 3,000. Recorded as tech-debt
+  in measure/tech-debt.md and as a late finding under the Phase 4 heading.
+  No production code changed. No push was made.

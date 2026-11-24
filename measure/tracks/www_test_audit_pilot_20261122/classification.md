@@ -167,6 +167,8 @@ Erratum: The th and zh cases of the navigation row were restored in `9eb3b9c4f`;
 
 ## D5 rows (copy pin on a marketing line: replace with a locale-key check)
 
+All D5 rows were reverted to kept status by PM decision on 2026-11-25, option C. D5 deleted price, baht and commission pins, and a sweep risks a third miss.
+
 | File | Case(s) | n | Reason |
 |---|---|---|---|
 | src/__tests__/www-batch-20261116.locale.test.ts | new en/th lines row A ×5, zh row A, STEM badge, new row B ×9, roadmap sentence, detail lines ×6, zh detail, week-1 book line | 25 | exact word-for-word en/th/zh pins of PM batch copy |
@@ -184,7 +186,7 @@ Erratum: The th and zh cases of the navigation row were restored in `9eb3b9c4f`;
 | src/__tests__/www-reading-card.red.test.ts | alts the cover in English per D13 | 1 | exact CARD_IMAGES alt pin (the rendered cover-alt case holds the rule) |
 | src/app/[locale]/(marketing)/products/codecamp-advantage/page.test.tsx | keeps the real production denominators | 1 | exact stat pins ("4", "20", "106") and marketing phrases |
 
-Erratum: the live-line en and th pins for `faq.items.5.answer` were restored in `ca91946b`.
+Erratum: the live-line en and th pins for `faq.items.5.answer` returned with the D5 revert.
 
 ## R1 rows (over-mocked: rewrite against a boundary fake)
 
@@ -230,17 +232,17 @@ Runner counts per class (Vitest suite, 3175 cases):
 
 | Class | Cases | Share | Action |
 |---|---|---|---|
-| K keep | 2843 | 89.5 % | keep |
+| K keep | 3064 | 96.5 % | keep; D5 rows returned to K |
 | D1 source-text | 67 | 2.1 % | delete 7; rewrite 60 per note 3 |
 | D2 duplicate | 22 | 0.7 % | delete, kept duplicate named |
 | D3 dead target | 0 | 0.0 % | none meets note 2 |
 | D4 weak check | 6 | 0.2 % | delete |
-| D5 copy pin | 221 | 7.0 % | replace with locale-key checks |
+| D5 copy pin | 0 | 0.0 % | reverted to kept status |
 | R1 over-mocked | 0 | 0.0 % | — |
 | R2 brittle | 16 | 0.5 % | rewrite with role-based or visual selectors |
 | R3 unclear | 0 | 0.0 % | — |
 
-Check: 2843 + 67 + 22 + 0 + 6 + 221 + 16 = 3175.
+Check: 3064 + 67 + 22 + 0 + 6 + 0 + 16 = 3175.
 
 ## Projected cut of Vitest cases
 
