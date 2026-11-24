@@ -1,16 +1,20 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanup, render } from "@testing-library/react";
-import PricingPage from "@/app/[locale]/(marketing)/pricing/page";
+import { cleanup, render, within } from "@testing-library/react";
+import PricingPage, {
+  generateMetadata,
+} from "@/app/[locale]/(marketing)/pricing/page";
 import enMessages from "@/locales/en";
 import thMessages from "@/locales/th";
 import zhMessages from "@/locales/zh";
 import {
+  ALL_PRICING_STRINGS_EN,
+  ALL_PRICING_STRINGS_TH,
   PRICE_COLUMNS_EN,
   PRICE_COLUMNS_TH,
   PRICE_ROWS_EN,
   PRICE_ROWS_TH,
+  PRICING_META,
 } from "@/__tests__/fixtures/features-pricing-expected";
-import { expectKeysInEveryLocale } from "@/__tests__/fixtures/locale-key-check";
 
 /*
  * Red test for the new /pricing page (track www_features_pricing_20261120).
@@ -65,65 +69,6 @@ vi.mock("@/locales/client", () => ({
     },
   ),
 }));
-
-/** The required locale keys of the pricing page. The list is written here, not read from a locale file. */
-const PRICING_KEYS = [
-  "pages.pricing.metadata.title",
-  "pages.pricing.metadata.description",
-  "pages.pricing.hero.eyebrow",
-  "pages.pricing.hero.heading",
-  "pages.pricing.hero.body1",
-  "pages.pricing.hero.body2",
-  "pages.pricing.subjects.heading",
-  "pages.pricing.subjects.body",
-  "pages.pricing.subjects.columnsLabel",
-  "pages.pricing.subjects.columns.0",
-  "pages.pricing.subjects.columns.1",
-  "pages.pricing.subjects.columns.2",
-  "pages.pricing.subjects.rows.0.cells.0",
-  "pages.pricing.subjects.rows.0.cells.1",
-  "pages.pricing.subjects.rows.0.cells.2",
-  "pages.pricing.subjects.rows.0.label",
-  "pages.pricing.subjects.rows.1.cells.0",
-  "pages.pricing.subjects.rows.1.cells.1",
-  "pages.pricing.subjects.rows.1.cells.2",
-  "pages.pricing.subjects.rows.1.label",
-  "pages.pricing.subjects.rows.2.cells.0",
-  "pages.pricing.subjects.rows.2.cells.1",
-  "pages.pricing.subjects.rows.2.cells.2",
-  "pages.pricing.subjects.rows.2.label",
-  "pages.pricing.subjects.rows.3.cells.0",
-  "pages.pricing.subjects.rows.3.cells.1",
-  "pages.pricing.subjects.rows.3.cells.2",
-  "pages.pricing.subjects.rows.3.label",
-  "pages.pricing.subjects.note",
-  "pages.pricing.example.heading",
-  "pages.pricing.example.body1",
-  "pages.pricing.example.body2",
-  "pages.pricing.included.heading",
-  "pages.pricing.included.bullets.0",
-  "pages.pricing.included.bullets.1",
-  "pages.pricing.included.bullets.2",
-  "pages.pricing.books.heading",
-  "pages.pricing.books.body",
-  "pages.pricing.whichSubjects.heading",
-  "pages.pricing.whichSubjects.body",
-  "pages.pricing.family.heading",
-  "pages.pricing.family.body",
-  "pages.pricing.family.button",
-  "pages.pricing.managed.body",
-  "pages.pricing.faq.heading",
-  "pages.pricing.faq.items.0.q",
-  "pages.pricing.faq.items.0.a",
-  "pages.pricing.faq.items.1.q",
-  "pages.pricing.faq.items.1.a",
-  "pages.pricing.faq.items.2.q",
-  "pages.pricing.faq.items.2.a",
-  "pages.pricing.nextStep.heading",
-  "pages.pricing.nextStep.body",
-  "pages.pricing.nextStep.button",
-  "pages.pricing.priceFloor",
-];
 
 type Locale = "en" | "th" | "zh";
 const LOCALES: readonly Locale[] = ["en", "th", "zh"];
@@ -195,11 +140,19 @@ describe("control: fixture and hooks", () => {
 });
 
 describe("generateMetadata", () => {
-  it("holds the pricing metadata keys in every shipped locale", () => {
-    expectKeysInEveryLocale([
-      "pages.pricing.metadata.title",
-      "pages.pricing.metadata.description",
-    ]);
+  it.each(LOCALES)("returns the Meta title and description in %s", async (locale) => {
+    hoisted.state.messages = MESSAGES[locale];
+    const copy = copyOf(locale);
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ locale }),
+    });
+    expect({ title: metadata.title, description: metadata.description }).toEqual({
+      title: copy === "th" ? PRICING_META.titleTh : PRICING_META.titleEn,
+      description:
+        copy === "th"
+          ? PRICING_META.descriptionTh
+          : PRICING_META.descriptionEn,
+    });
   });
 });
 
@@ -282,20 +235,20 @@ describe.each(LOCALES)("PricingPage content in %s", (locale) => {
     expect(missing.length, "images without alt: 0").toBe(0);
   });
 
-  it("shows the approved 1,800 amount in the example heading (FR-10)", () => {
-    const section = document.querySelector('[data-testid="pricing-example"]');
-    const heading = section?.querySelector("h2");
-    const amount =
-      copy === "th"
-        ? /(^|[^\d,])1,800 บาท/
-        : /(^|[^\d,])1,800 baht/;
-    expect(heading?.textContent ?? "", `the example heading in ${locale}`).toMatch(
-      amount,
-    );
-  });
-
-  it("holds every pricing key and none of the old matrix copy (FR-8, FR-13)", () => {
-    expectKeysInEveryLocale(PRICING_KEYS);
+  it("shows every spec string once and none of the old matrix copy (FR-8, FR-13)", () => {
+    const wanted =
+      copy === "th" ? ALL_PRICING_STRINGS_TH : ALL_PRICING_STRINGS_EN;
+    const problems = wanted
+      .map((text) => ({
+        text,
+        count: within(document.body as HTMLElement).queryAllByText(text, {
+          exact: true,
+          normalizer: (value: string) => value,
+        }).length,
+      }))
+      .filter(({ count }) => count !== 1)
+      .map(({ text, count }) => `${count} matches: ${text}`);
+    expect(problems).toEqual([]);
     const body = document.body.textContent ?? "";
     expect(
       OLD_PRICING_TEXT.filter((text) => body.includes(text)),

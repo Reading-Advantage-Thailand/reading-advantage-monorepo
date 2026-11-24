@@ -1,76 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanup, render } from "@testing-library/react";
-import FeaturesPage from "@/app/[locale]/(marketing)/features/page";
+import { cleanup, render, within } from "@testing-library/react";
+import FeaturesPage, {
+  generateMetadata,
+} from "@/app/[locale]/(marketing)/features/page";
 import enMessages from "@/locales/en";
 import thMessages from "@/locales/th";
 import zhMessages from "@/locales/zh";
 import {
+  ALL_FEATURES_STRINGS_EN,
+  ALL_FEATURES_STRINGS_TH,
   APP_LOGO_ORDER,
   FEATURES_ENTRIES,
+  FEATURES_META,
 } from "@/__tests__/fixtures/features-pricing-expected";
-import { expectKeysInEveryLocale } from "@/__tests__/fixtures/locale-key-check";
-
-/** The required locale keys of the feature page. The list is written here, not read from a locale file. */
-const FEATURE_KEYS = [
-  "pages.feature.metadata.title",
-  "pages.feature.metadata.description",
-  "pages.feature.hero.eyebrow",
-  "pages.feature.hero.heading",
-  "pages.feature.hero.body1",
-  "pages.feature.hero.body2",
-  "pages.feature.hero.button",
-  "pages.feature.programs.heading",
-  "pages.feature.programs.body",
-  "pages.feature.programs.cards.storytime.name",
-  "pages.feature.programs.cards.storytime.forText",
-  "pages.feature.programs.cards.storytime.status",
-  "pages.feature.programs.cards.storytime.body",
-  "pages.feature.programs.cards.storytime.bullets.0",
-  "pages.feature.programs.cards.storytime.bullets.1",
-  "pages.feature.programs.cards.storytime.bullets.2",
-  "pages.feature.programs.cards.primary.name",
-  "pages.feature.programs.cards.primary.forText",
-  "pages.feature.programs.cards.primary.status",
-  "pages.feature.programs.cards.primary.body",
-  "pages.feature.programs.cards.primary.bullets.0",
-  "pages.feature.programs.cards.primary.bullets.1",
-  "pages.feature.programs.cards.primary.bullets.2",
-  "pages.feature.programs.cards.reading.name",
-  "pages.feature.programs.cards.reading.forText",
-  "pages.feature.programs.cards.reading.status",
-  "pages.feature.programs.cards.codecamp.name",
-  "pages.feature.programs.cards.codecamp.forText",
-  "pages.feature.programs.cards.codecamp.status",
-  "pages.feature.programs.cards.codecamp.body",
-  "pages.feature.programs.cards.schoolSubjects.name",
-  "pages.feature.programs.cards.schoolSubjects.forText",
-  "pages.feature.programs.cards.schoolSubjects.status",
-  "pages.feature.programs.cards.schoolSubjects.body",
-  "pages.feature.engine.heading",
-  "pages.feature.engine.body",
-  "pages.feature.blended.heading",
-  "pages.feature.blended.body1",
-  "pages.feature.blended.body2",
-  "pages.feature.tutor.heading",
-  "pages.feature.tutor.body1",
-  "pages.feature.tutor.body2",
-  "pages.feature.tutor.body3",
-  "pages.feature.tutor.button",
-  "pages.feature.nextSubjects.heading",
-  "pages.feature.nextSubjects.body",
-  "pages.feature.appFamily.heading",
-  "pages.feature.appFamily.body",
-  "pages.feature.faq.heading",
-  "pages.feature.faq.items.0.q",
-  "pages.feature.faq.items.0.a",
-  "pages.feature.faq.items.1.q",
-  "pages.feature.faq.items.1.a",
-  "pages.feature.faq.items.2.q",
-  "pages.feature.faq.items.2.a",
-  "pages.feature.nextStep.heading",
-  "pages.feature.nextStep.body",
-  "pages.feature.nextStep.button",
-];
 
 /*
  * Red test for the new /features page (track www_features_pricing_20261120).
@@ -133,6 +75,11 @@ const MESSAGES: Record<Locale, unknown> = {
   th: thMessages,
   zh: zhMessages,
 };
+
+/** The zh page shows the English copy of the new strings (D4). */
+function copyOf(locale: Locale): "en" | "th" {
+  return locale === "th" ? "th" : "en";
+}
 
 /** Section-level hooks in the spec order (S1 to S9). */
 const SECTION_ORDER = [
@@ -216,15 +163,25 @@ describe("control: fixture and hooks", () => {
 });
 
 describe("generateMetadata", () => {
-  it("holds the feature metadata keys in every shipped locale", () => {
-    expectKeysInEveryLocale([
-      "pages.feature.metadata.title",
-      "pages.feature.metadata.description",
-    ]);
+  it.each(LOCALES)("returns the Meta title and description in %s", async (locale) => {
+    hoisted.state.messages = MESSAGES[locale];
+    const copy = copyOf(locale);
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ locale }),
+    });
+    expect({ title: metadata.title, description: metadata.description }).toEqual({
+      title: copy === "th" ? FEATURES_META.titleTh : FEATURES_META.titleEn,
+      description:
+        copy === "th"
+          ? FEATURES_META.descriptionTh
+          : FEATURES_META.descriptionEn,
+    });
   });
 });
 
 describe.each(LOCALES)("FeaturesPage content in %s", (locale) => {
+  const copy = copyOf(locale);
+
   beforeEach(async () => {
     await renderLocale(locale);
   });
@@ -309,8 +266,20 @@ describe.each(LOCALES)("FeaturesPage content in %s", (locale) => {
     expect(missing.length, "images without alt: 0").toBe(0);
   });
 
-  it("holds every feature key and no old feature copy (FR-1, FR-7)", () => {
-    expectKeysInEveryLocale(FEATURE_KEYS);
+  it("shows every spec string once and no old feature copy (FR-1, FR-7)", () => {
+    const wanted =
+      copy === "th" ? ALL_FEATURES_STRINGS_TH : ALL_FEATURES_STRINGS_EN;
+    const problems = wanted
+      .map((text) => ({
+        text,
+        count: within(document.body as HTMLElement).queryAllByText(text, {
+          exact: true,
+          normalizer: (value: string) => value,
+        }).length,
+      }))
+      .filter(({ count }) => count !== 1)
+      .map(({ text, count }) => `${count} matches: ${text}`);
+    expect(problems).toEqual([]);
     const body = document.body.textContent ?? "";
     expect(
       OLD_FEATURE_TITLES.filter((title) => body.includes(title)),

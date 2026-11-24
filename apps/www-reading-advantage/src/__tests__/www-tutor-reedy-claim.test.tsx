@@ -12,34 +12,6 @@ import { getScopedI18n } from "@/locales/server";
 import * as pageCopy from "@/locales/pages/products/tutor-advantage";
 import * as componentCopy from "@/locales/components/products/tutor-advantage";
 import TutorAdvantage from "@/app/[locale]/(marketing)/products/tutor-advantage/page";
-import { expectKeysInEveryLocale } from "@/__tests__/fixtures/locale-key-check";
-import {
-  eligibilityBreaks,
-  type EligibilityFact,
-} from "@/__tests__/fixtures/reedy-eligibility";
-
-/** The required locale keys of the FAQ items. The list is written here, not read from a locale file. */
-const FAQ_ITEM_KEYS = [
-  "pages.products.tutorAdvantage.faq.items.0.question",
-  "pages.products.tutorAdvantage.faq.items.0.answer",
-  "pages.products.tutorAdvantage.faq.items.1.question",
-  "pages.products.tutorAdvantage.faq.items.1.answer",
-  "pages.products.tutorAdvantage.faq.items.2.question",
-  "pages.products.tutorAdvantage.faq.items.2.answer",
-  "pages.products.tutorAdvantage.faq.items.3.question",
-  "pages.products.tutorAdvantage.faq.items.3.answer",
-  "pages.products.tutorAdvantage.faq.items.4.question",
-  "pages.products.tutorAdvantage.faq.items.4.answer",
-  "pages.products.tutorAdvantage.faq.items.5.question",
-  "pages.products.tutorAdvantage.faq.items.5.answer",
-];
-
-/** The required locale keys of the Reedy block points. The list is written here, not read from a locale file. */
-const REEDY_POINT_KEYS = [
-  "pages.products.tutorAdvantage.reedyBlock.points.0",
-  "pages.products.tutorAdvantage.reedyBlock.points.1",
-  "pages.products.tutorAdvantage.reedyBlock.points.2",
-];
 
 type Dict = Record<string, unknown>;
 
@@ -121,33 +93,38 @@ function text(dict: Dict, path: string): string {
   return cur;
 }
 
-/**
- * Checks that a text carries each AC-24 eligibility limit of one locale.
- * @param value The text to check.
- * @param locale The locale of the text.
- * @param facts The eligibility limits to check.
- */
-function expectEligibilityFacts(
-  value: string,
-  locale: Locale,
-  facts: readonly EligibilityFact[],
-): void {
-  expect(
-    eligibilityBreaks(value, locale, facts),
-    `${locale}: the eligibility clause must hold`,
-  ).toEqual([]);
-}
+/** The new page Reedy description of D-21. */
+const PAGE_REEDY: Record<Locale, string> = {
+  en: "Reedy voice practice is open to students with an active class package, on lessons they finished.",
+  th: "การฝึกพูดกับ Reedy เปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ยังใช้งานอยู่ใช้ได้ ในบทเรียนที่เรียนจบแล้ว",
+  zh: "Reedy 口语练习面向持有有效课程包的学生，用于已完成的课程。",
+};
 
-/**
- * Finds the FAQ item whose question names Reedy.
- * @param dict The page dictionary of one locale.
- * @returns The FAQ item, or undefined when no question names Reedy.
- */
-function reedyFaqAnswer(dict: Dict): string | undefined {
-  const items = (dict.faq as Dict).items as Array<Dict>;
-  const item = items.find((entry) => String(entry.question).includes("Reedy"));
-  return item ? String(item.answer) : undefined;
-}
+/** The new component Reedy description of D-21. */
+const COMPONENT_REEDY: Record<Locale, string> = {
+  en: "Your students practice speaking with Reedy on the lessons they finished.",
+  th: "นักเรียนของคุณฝึกพูดกับ Reedy ในบทเรียนที่เรียนจบแล้ว",
+  zh: "您的学生在已完成的课程上与 Reedy 练习口语。",
+};
+
+/** The three Reedy block bullets that stay in each locale (D-21). */
+const REEDY_POINTS: Record<Locale, readonly string[]> = {
+  en: [
+    "Open to students with an active class package, on the lessons they finished.",
+    "After each practice, students see one thing they did well, one thing to try next time, and a sentence to say again.",
+    "Before they start, students can check their microphone and get tips.",
+  ],
+  th: [
+    "เปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว",
+    "หลังฝึกแต่ละครั้ง นักเรียนเห็นสิ่งที่ทำได้ดีหนึ่งอย่าง สิ่งที่ควรลองครั้งหน้าหนึ่งอย่าง และประโยคหนึ่งประโยคให้พูดซ้ำ",
+    "ก่อนเริ่ม นักเรียนตรวจไมโครโฟนและดูเคล็ดลับได้",
+  ],
+  zh: [
+    "面向持有有效课程包的学生，用于已完成的课程。",
+    "每次练习后，学生会看到一件做得好的事、一件下次可以尝试的事，以及一个可以再说一遍的句子。",
+    "开始前，学生可以检查麦克风并查看提示。",
+  ],
+};
 
 /**
  * Renders the Tutor Advantage page with the real messages of one locale.
@@ -202,67 +179,6 @@ describe("AC-24: the scan detects every forbidden claim", () => {
   });
 });
 
-describe("AC-24: the eligibility scan detects an inactive package", () => {
-  it("rejects the inactive-package sentence in English", () => {
-    const counterexample =
-      "Open to students with an inactive class package, on lessons they finished.";
-
-    expect(
-      eligibilityBreaks(counterexample, "en", [
-        "activePackage",
-        "finishedLesson",
-      ]),
-    ).not.toEqual([]);
-  });
-
-  it("names the inactive rule for the probe of every locale", () => {
-    const probes: Record<Locale, string> = {
-      en: "Open to students with an inactive class package, on lessons they finished.",
-      th: "เปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ไม่ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว",
-      zh: "面向持有无效课程包的学生，用于已完成的课程。",
-    };
-    for (const locale of LOCALES) {
-      const breaks = eligibilityBreaks(probes[locale], locale, [
-        "activePackage",
-        "finishedLesson",
-      ]);
-      expect(breaks, locale).not.toEqual([]);
-      expect(
-        breaks.some((line) => line.includes("inactive package")),
-        locale,
-      ).toBe(true);
-    }
-  });
-
-  it("rejects every wider reversal shape", () => {
-    const reversals: Record<Locale, readonly string[]> = {
-      en: [
-        "Open to students with a non-active class package, on lessons they finished.",
-        "Open to students with an in-active class package, on lessons they finished.",
-        "Open to students with a nonactive class package, on lessons they finished.",
-      ],
-      th: [
-        "เปิดให้นักเรียนที่ยกเลิกแพ็กเกจคลาสที่ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว",
-        "เปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ไม่ได้ใช้งานอยู่ ในบทเรียนที่เรียนจบแล้ว",
-      ],
-      zh: ["面向持有非有效课程包的学生，用于已完成的课程。"],
-    };
-    for (const locale of LOCALES) {
-      for (const reversal of reversals[locale]) {
-        const breaks = eligibilityBreaks(reversal, locale, [
-          "activePackage",
-          "finishedLesson",
-        ]);
-        expect(breaks, `${locale}: ${reversal}`).not.toEqual([]);
-        expect(
-          breaks.some((line) => line.includes("inactive package")),
-          `${locale}: ${reversal}`,
-        ).toBe(true);
-      }
-    }
-  });
-});
-
 describe("AC-24: no locale string says Reedy is not in Primary Advantage", () => {
   for (const locale of LOCALES) {
     it(`${locale}: the page dictionary holds no forbidden claim`, () => {
@@ -275,54 +191,29 @@ describe("AC-24: no locale string says Reedy is not in Primary Advantage", () =>
 });
 
 describe("AC-24: the new Reedy descriptions", () => {
-  it("holds the Reedy description keys in every shipped locale", () => {
-    expectKeysInEveryLocale([
-      "pages.products.tutorAdvantage.platformFeatures.features.2.description",
-      "components.products.tutorAdvantage.features.2.description",
-    ]);
-  });
-
   for (const locale of LOCALES) {
-    it(`${locale}: the page description keeps the active-package and finished-lesson limits`, () => {
-      const description = text(
-        PAGES[locale],
-        "platformFeatures.features.2.description",
-      );
-      expectEligibilityFacts(description, locale, ["activePackage", "finishedLesson"]);
+    it(`${locale}: the page Reedy description drops the Tutor-Advantage-only clause`, () => {
+      const feature = (PAGES[locale].platformFeatures as Dict).features as Array<Dict>;
+      expect(feature[2]?.description).toBe(PAGE_REEDY[locale]);
     });
-
-    it(`${locale}: the component description keeps the finished-lesson limit`, () => {
-      const description = text(
-        COMPONENTS[locale],
-        "features.2.description",
-      );
-      expectEligibilityFacts(description, locale, ["finishedLesson"]);
+    it(`${locale}: the component Reedy description drops the Tutor-Advantage-only sentence`, () => {
+      const feature = (COMPONENTS[locale].features as Array<Dict>)[2];
+      expect(feature?.description).toBe(COMPONENT_REEDY[locale]);
     });
   }
 });
 
 describe("AC-24: the FAQ answer drops the not-available clause", () => {
-  it("holds the FAQ item keys in every shipped locale", () => {
-    expectKeysInEveryLocale(FAQ_ITEM_KEYS);
+  it("en: the Reedy FAQ answer is the package sentence only", () => {
+    const items = (PAGES.en.faq as Dict).items as Array<Dict>;
+    const entry = items.find((item) => item.question === "Who can use Reedy voice practice?");
+    expect(entry?.answer).toBe(
+      "Students with an active Tutor Advantage class package, on the lessons they finished.",
+    );
   });
-
-  for (const locale of LOCALES) {
-    it(`${locale}: the FAQ answer keeps the active-package and finished-lesson limits`, () => {
-      const answer = reedyFaqAnswer(PAGES[locale]);
-      expect(answer, `the Reedy FAQ answer in ${locale}`).toBeDefined();
-      expectEligibilityFacts(answer as string, locale, [
-        "activePackage",
-        "finishedLesson",
-      ]);
-    });
-  }
 });
 
 describe("AC-24: the Reedy block keeps three bullets", () => {
-  it("holds the Reedy bullet keys in every shipped locale", () => {
-    expectKeysInEveryLocale(REEDY_POINT_KEYS);
-  });
-
   for (const locale of LOCALES) {
     it(`${locale}: renders exactly the three remaining bullets`, async () => {
       await renderWithRealCopy(locale);
@@ -332,22 +223,7 @@ describe("AC-24: the Reedy block keeps three bullets", () => {
       const list = section.querySelector("ul");
       if (!(list instanceof HTMLElement)) throw new Error(`no list for ${locale}`);
       const bullets = Array.from(list.querySelectorAll("li")).map((item) => item.textContent);
-      expect(bullets, `bullets in ${locale}: 3`).toHaveLength(3);
-    });
-
-    it(`${locale}: the first rendered bullet keeps the active-package and finished-lesson limits`, async () => {
-      await renderWithRealCopy(locale);
-      const heading = screen.getByRole("heading", { name: text(PAGES[locale], "reedyBlock.heading") });
-      const section = heading.closest("section");
-      if (!(section instanceof HTMLElement)) throw new Error(`no section for ${locale}`);
-      const list = section.querySelector("ul");
-      if (!(list instanceof HTMLElement)) throw new Error(`no list for ${locale}`);
-      const first = list.querySelector("li");
-      expect(first, `the first bullet in ${locale}`).not.toBeNull();
-      expectEligibilityFacts(first?.textContent ?? "", locale, [
-        "activePackage",
-        "finishedLesson",
-      ]);
+      expect(bullets).toEqual([...REEDY_POINTS[locale]]);
     });
   }
 });

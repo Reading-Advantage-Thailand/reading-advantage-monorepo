@@ -1,10 +1,10 @@
 import { cleanup, render } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import ContactPage from "@/app/[locale]/(marketing)/contact/page";
+import { contactDetails } from "@/config/contact";
 import enMessages from "@/locales/en";
 import thMessages from "@/locales/th";
 import zhMessages from "@/locales/zh";
-import { expectKeysInEveryLocale } from "@/__tests__/fixtures/locale-key-check";
 
 const serverWiring = vi.hoisted(() => ({
   messages: {} as Record<string, unknown>,
@@ -30,9 +30,24 @@ vi.mock("next/image", () => ({
 }));
 
 const localizedTikTokCopy = [
-  { locale: "en", messages: enMessages },
-  { locale: "th", messages: thMessages },
-  { locale: "zh", messages: zhMessages },
+  {
+    locale: "en",
+    messages: enMessages,
+    platformPhrase: "Follow us on TikTok",
+    expected: "Follow us on TikTok @reading.advantage",
+  },
+  {
+    locale: "th",
+    messages: thMessages,
+    platformPhrase: "ติดตามเราบน TikTok",
+    expected: "ติดตามเราบน TikTok @reading.advantage",
+  },
+  {
+    locale: "zh",
+    messages: zhMessages,
+    platformPhrase: "在 TikTok 关注我们",
+    expected: "在 TikTok 关注我们 @reading.advantage",
+  },
 ] as const;
 
 afterEach(() => {
@@ -41,13 +56,16 @@ afterEach(() => {
 });
 
 describe("RA-P4-CONTACT-001 localized TikTok copy", () => {
-  it("keeps the TikTok platform phrase key in every shipped locale", () => {
-    expectKeysInEveryLocale(["pages.contact.social.tiktok"]);
+  it("keeps the raw handle in contact config and the platform phrase in locale data", () => {
+    expect(contactDetails.tiktokLabel).toBe("@reading.advantage");
+    for (const { messages, platformPhrase } of localizedTikTokCopy) {
+      expect(messages.pages.contact.social.tiktok).toBe(platformPhrase);
+    }
   });
 
   it.each(localizedTikTokCopy)(
     "$locale renders one natural localized TikTok phrase",
-    async ({ messages }) => {
+    async ({ messages, expected }) => {
       serverWiring.messages = messages as unknown as Record<string, unknown>;
       const rendered = render(await ContactPage());
       const socialLink = rendered.getByRole("link", { name: /TikTok/ });
@@ -55,6 +73,7 @@ describe("RA-P4-CONTACT-001 localized TikTok copy", () => {
 
       expect(renderedCopy?.match(/TikTok/g) ?? []).toHaveLength(1);
       expect(renderedCopy?.match(/@reading\.advantage/g) ?? []).toHaveLength(1);
+      expect(renderedCopy).toBe(expected);
     },
   );
 });

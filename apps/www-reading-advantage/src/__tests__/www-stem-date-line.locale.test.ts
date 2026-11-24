@@ -3,7 +3,6 @@ import en from "@/locales/en";
 import th from "@/locales/th";
 import zh from "@/locales/zh";
 import { buildMarketingMetadata } from "@/lib/seo";
-import { expectKeysInEveryLocale } from "@/__tests__/fixtures/locale-key-check";
 
 type Dict = Record<string, unknown>;
 
@@ -82,15 +81,9 @@ const PLACES = [
 ] as const;
 
 describe("www STEM Advantage release-date line (PM decision 2026-11-16)", () => {
-  it("holds the STEM kept-line keys in every shipped locale", () => {
-    expectKeysInEveryLocale(PLACES.map(({ key }) => key));
-  });
-
-  it("keeps the roadmap claim limit on the three kept lines", () => {
-    for (const { key } of PLACES) {
-      expect(read("en", key)).toContain("roadmap");
-      expect(read("th", key)).toContain("แผนงาน");
-    }
+  it.each(PLACES)("holds the kept en and th line at $key", ({ key, en: enLine, th: thLine }) => {
+    expect(read("en", key)).toBe(enLine);
+    expect(read("th", key)).toBe(thLine);
   });
 
   it.each(PLACES)("holds no deleted date phrase at $key", ({ key, removed }) => {
@@ -115,11 +108,6 @@ describe("www STEM Advantage release-date line (PM decision 2026-11-16)", () => 
   });
 
   it("keeps the zh STEM lines as they are", () => {
-    expectKeysInEveryLocale([
-      "pages.products.stemAdvantage.metadata.description",
-      "pages.products.stemAdvantage.hero.description",
-      "pages.products.stemAdvantage.cta.description",
-    ]);
     expect(read("zh", "pages.products.stemAdvantage.metadata.description")).toContain(
       "暂无发布日期",
     );
@@ -127,20 +115,25 @@ describe("www STEM Advantage release-date line (PM decision 2026-11-16)", () => 
     expect(read("zh", "pages.products.stemAdvantage.cta.description")).toContain("暂无发布日期");
   });
 
-  it("keeps every other STEM page line key in every shipped locale", () => {
-    expectKeysInEveryLocale([
-      "pages.products.stemAdvantage.metadata.title",
-      "pages.products.stemAdvantage.hero.title",
-      "pages.products.stemAdvantage.hero.comingSoon",
-      "pages.products.stemAdvantage.cta.heading",
-    ]);
-  });
-
-  it("keeps the roadmap claim limit on the STEM titles and badge", () => {
-    expect(read("en", "pages.products.stemAdvantage.metadata.title")).toMatch(/roadmap/i);
-    expect(read("th", "pages.products.stemAdvantage.metadata.title")).toContain("แผนงาน");
-    expect(read("en", "pages.products.stemAdvantage.hero.comingSoon")).toMatch(/roadmap/i);
-    expect(read("th", "pages.products.stemAdvantage.hero.comingSoon")).toContain("แผนงาน");
+  it("keeps every other line of the en and th STEM page word for word", () => {
+    expect(read("en", "pages.products.stemAdvantage.metadata.title")).toBe(
+      "STEM Advantage - On Our Roadmap | Reading Advantage Thailand",
+    );
+    expect(read("en", "pages.products.stemAdvantage.hero.title")).toBe(
+      "K-12 Coding and STEM, Planned",
+    );
+    expect(read("en", "pages.products.stemAdvantage.hero.comingSoon")).toBe("On Our Roadmap");
+    expect(read("en", "pages.products.stemAdvantage.cta.heading")).toBe(
+      "Get Started with STEM Advantage",
+    );
+    expect(read("th", "pages.products.stemAdvantage.metadata.title")).toBe(
+      "STEM Advantage - อยู่ในแผนงาน | Reading Advantage Thailand",
+    );
+    expect(read("th", "pages.products.stemAdvantage.hero.title")).toBe(
+      "การเขียนโค้ดและ STEM สำหรับ K-12 ในแผนงาน",
+    );
+    expect(read("th", "pages.products.stemAdvantage.hero.comingSoon")).toBe("อยู่ในแผนงาน");
+    expect(read("th", "pages.products.stemAdvantage.cta.heading")).toBe("เริ่มต้นกับ STEM Advantage");
   });
 
   it("keeps the date text out of the meta, og, and twitter descriptions", () => {

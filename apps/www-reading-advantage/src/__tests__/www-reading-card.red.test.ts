@@ -38,6 +38,7 @@ const FEATURES_PAGE = resolve(
 );
 
 const COVER_SRC = "/images/products/ra-origins-2-cover.jpg";
+const COVER_ALT = "Reading Advantage Origins 2 book cover";
 const OLD_SRC = "/images/features/reading-article-selection.webp";
 const DELETED_EN =
   "Reading Advantage books are taught through Tutor Advantage, not presented as a school app.";
@@ -131,6 +132,13 @@ function readingSrc(): string {
   return entry.match(/src:\s*"([^"]+)"/)?.[1] ?? "";
 }
 
+/** Returns the alt value of the reading entry in CARD_IMAGES. */
+function readingAlt(): string {
+  const block = cardImagesBlock();
+  const entry = block.split("reading:")[1] ?? "";
+  return entry.match(/alt:\s*"([^"]+)"/)?.[1] ?? "";
+}
+
 /** Returns the rendered reading card image. */
 function renderedReadingImage(): HTMLImageElement {
   const card = document.querySelector('[data-testid="program-card-reading"]');
@@ -204,10 +212,8 @@ describe("PM(1): the reading card shows the Origins 2 printed cover", () => {
     expect(isJpeg || isWebP, "cover magic: JPEG or WebP").toBe(true);
   });
 
-  it("renders a non-empty cover alt on the reading card per D13", async () => {
-    hoisted.state.messages = enMessages;
-    render(await FeaturesPage());
-    expect(renderedReadingImage().getAttribute("alt")?.trim().length ?? 0).toBeGreaterThan(0);
+  it("alts the cover in English per D13", () => {
+    expect(readingAlt(), "reading alt").toBe(COVER_ALT);
   });
 });
 

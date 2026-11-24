@@ -2,153 +2,21 @@ import { describe, expect, it } from "vitest";
 import enMessages from "@/locales/en";
 import thMessages from "@/locales/th";
 import zhMessages from "@/locales/zh";
-import { expectKeysInEveryLocale } from "@/__tests__/fixtures/locale-key-check";
-/** The required locale keys of the feature page. The list is written here, not read from a locale file. */
-const FEATURE_KEYS = [
-  "pages.feature.metadata.title",
-  "pages.feature.metadata.description",
-  "pages.feature.hero.eyebrow",
-  "pages.feature.hero.heading",
-  "pages.feature.hero.body1",
-  "pages.feature.hero.body2",
-  "pages.feature.hero.button",
-  "pages.feature.programs.heading",
-  "pages.feature.programs.body",
-  "pages.feature.programs.cards.storytime.name",
-  "pages.feature.programs.cards.storytime.forText",
-  "pages.feature.programs.cards.storytime.status",
-  "pages.feature.programs.cards.storytime.body",
-  "pages.feature.programs.cards.storytime.bullets.0",
-  "pages.feature.programs.cards.storytime.bullets.1",
-  "pages.feature.programs.cards.storytime.bullets.2",
-  "pages.feature.programs.cards.primary.name",
-  "pages.feature.programs.cards.primary.forText",
-  "pages.feature.programs.cards.primary.status",
-  "pages.feature.programs.cards.primary.body",
-  "pages.feature.programs.cards.primary.bullets.0",
-  "pages.feature.programs.cards.primary.bullets.1",
-  "pages.feature.programs.cards.primary.bullets.2",
-  "pages.feature.programs.cards.reading.name",
-  "pages.feature.programs.cards.reading.forText",
-  "pages.feature.programs.cards.reading.status",
-  "pages.feature.programs.cards.codecamp.name",
-  "pages.feature.programs.cards.codecamp.forText",
-  "pages.feature.programs.cards.codecamp.status",
-  "pages.feature.programs.cards.codecamp.body",
-  "pages.feature.programs.cards.schoolSubjects.name",
-  "pages.feature.programs.cards.schoolSubjects.forText",
-  "pages.feature.programs.cards.schoolSubjects.status",
-  "pages.feature.programs.cards.schoolSubjects.body",
-  "pages.feature.engine.heading",
-  "pages.feature.engine.body",
-  "pages.feature.blended.heading",
-  "pages.feature.blended.body1",
-  "pages.feature.blended.body2",
-  "pages.feature.tutor.heading",
-  "pages.feature.tutor.body1",
-  "pages.feature.tutor.body2",
-  "pages.feature.tutor.body3",
-  "pages.feature.tutor.button",
-  "pages.feature.nextSubjects.heading",
-  "pages.feature.nextSubjects.body",
-  "pages.feature.appFamily.heading",
-  "pages.feature.appFamily.body",
-  "pages.feature.faq.heading",
-  "pages.feature.faq.items.0.q",
-  "pages.feature.faq.items.0.a",
-  "pages.feature.faq.items.1.q",
-  "pages.feature.faq.items.1.a",
-  "pages.feature.faq.items.2.q",
-  "pages.feature.faq.items.2.a",
-  "pages.feature.nextStep.heading",
-  "pages.feature.nextStep.body",
-  "pages.feature.nextStep.button",
-];
-
-/** The required locale keys of the pricing page. The list is written here, not read from a locale file. */
-const PRICING_KEYS = [
-  "pages.pricing.metadata.title",
-  "pages.pricing.metadata.description",
-  "pages.pricing.hero.eyebrow",
-  "pages.pricing.hero.heading",
-  "pages.pricing.hero.body1",
-  "pages.pricing.hero.body2",
-  "pages.pricing.subjects.heading",
-  "pages.pricing.subjects.body",
-  "pages.pricing.subjects.columnsLabel",
-  "pages.pricing.subjects.columns.0",
-  "pages.pricing.subjects.columns.1",
-  "pages.pricing.subjects.columns.2",
-  "pages.pricing.subjects.rows.0.cells.0",
-  "pages.pricing.subjects.rows.0.cells.1",
-  "pages.pricing.subjects.rows.0.cells.2",
-  "pages.pricing.subjects.rows.0.label",
-  "pages.pricing.subjects.rows.1.cells.0",
-  "pages.pricing.subjects.rows.1.cells.1",
-  "pages.pricing.subjects.rows.1.cells.2",
-  "pages.pricing.subjects.rows.1.label",
-  "pages.pricing.subjects.rows.2.cells.0",
-  "pages.pricing.subjects.rows.2.cells.1",
-  "pages.pricing.subjects.rows.2.cells.2",
-  "pages.pricing.subjects.rows.2.label",
-  "pages.pricing.subjects.rows.3.cells.0",
-  "pages.pricing.subjects.rows.3.cells.1",
-  "pages.pricing.subjects.rows.3.cells.2",
-  "pages.pricing.subjects.rows.3.label",
-  "pages.pricing.subjects.note",
-  "pages.pricing.example.heading",
-  "pages.pricing.example.body1",
-  "pages.pricing.example.body2",
-  "pages.pricing.included.heading",
-  "pages.pricing.included.bullets.0",
-  "pages.pricing.included.bullets.1",
-  "pages.pricing.included.bullets.2",
-  "pages.pricing.books.heading",
-  "pages.pricing.books.body",
-  "pages.pricing.whichSubjects.heading",
-  "pages.pricing.whichSubjects.body",
-  "pages.pricing.family.heading",
-  "pages.pricing.family.body",
-  "pages.pricing.family.button",
-  "pages.pricing.managed.body",
-  "pages.pricing.faq.heading",
-  "pages.pricing.faq.items.0.q",
-  "pages.pricing.faq.items.0.a",
-  "pages.pricing.faq.items.1.q",
-  "pages.pricing.faq.items.1.a",
-  "pages.pricing.faq.items.2.q",
-  "pages.pricing.faq.items.2.a",
-  "pages.pricing.nextStep.heading",
-  "pages.pricing.nextStep.body",
-  "pages.pricing.nextStep.button",
-  "pages.pricing.priceFloor",
-];
-
-/** The required locale keys of the header main items. The list is written here, not read from a locale file. */
-const HEADER_MAIN_KEYS = [
-  "components.common.header.main.0.title",
-  "components.common.header.main.0.href",
-  "components.common.header.main.1.title",
-  "components.common.header.main.1.href",
-  "components.common.header.main.2.title",
-  "components.common.header.main.2.href",
-  "components.common.header.main.3.title",
-  "components.common.header.main.3.href",
-  "components.common.header.main.4.title",
-  "components.common.header.main.4.href",
-  "components.common.header.main.5.title",
-  "components.common.header.main.5.href",
-  "components.common.header.main.6.title",
-  "components.common.header.main.6.href",
-];
-
 import {
+  ALL_FEATURES_STRINGS_EN,
+  ALL_FEATURES_STRINGS_TH,
+  ALL_PRICING_STRINGS_EN,
+  ALL_PRICING_STRINGS_TH,
   FEATURES_ENTRIES,
+  FEATURES_META,
+  HEADER_LABELS,
+  MANAGED_ROADMAP,
   PRICE_COLUMNS_EN,
   PRICE_COLUMNS_TH,
   PRICE_ROWS_EN,
   PRICE_ROWS_TH,
   PRICING_ENTRIES,
+  PRICING_META,
   REMOVED_STRINGS,
   ZH_MANAGED_SERVICE_DESCRIPTION,
 } from "@/__tests__/fixtures/features-pricing-expected";
@@ -187,9 +55,13 @@ function missingStrings(leaves: string[], wanted: string[]): string[] {
   return wanted.filter((text) => !leaves.includes(text));
 }
 
+const enFeatureLeaves = collectLeaves(scopeOf(enMessages, ["pages", "feature"]));
 const thFeatureLeaves = collectLeaves(scopeOf(thMessages, ["pages", "feature"]));
 const enPricingLeaves = collectLeaves(scopeOf(enMessages, ["pages", "pricing"]));
 const thPricingLeaves = collectLeaves(scopeOf(thMessages, ["pages", "pricing"]));
+const enManagedLeaves = collectLeaves(
+  scopeOf(enMessages, ["pages", "managedService", "roadmap", "description"]),
+);
 const thManagedLeaves = collectLeaves(
   scopeOf(thMessages, ["pages", "managedService", "roadmap", "description"]),
 );
@@ -220,20 +92,67 @@ describe("control: fixture and scanner", () => {
 });
 
 describe("new features copy in the locale files (FR-1, FR-6)", () => {
-  it("holds the features and meta keys in every shipped locale", () => {
-    expectKeysInEveryLocale(FEATURE_KEYS);
+  it("holds every features EN string of the spec", () => {
+    expect(
+      missingStrings(enFeatureLeaves, ALL_FEATURES_STRINGS_EN),
+      "missing EN features strings",
+    ).toEqual([]);
+  });
+
+  it("holds every features TH string of the Thai check page", () => {
+    expect(
+      missingStrings(thFeatureLeaves, ALL_FEATURES_STRINGS_TH),
+      "missing TH features strings",
+    ).toEqual([]);
+  });
+
+  it("holds the features Meta title and description in en and th", () => {
+    expect({
+      enTitle: enFeatureLeaves.includes(FEATURES_META.titleEn),
+      enDescription: enFeatureLeaves.includes(FEATURES_META.descriptionEn),
+      thTitle: thFeatureLeaves.includes(FEATURES_META.titleTh),
+      thDescription: thFeatureLeaves.includes(FEATURES_META.descriptionTh),
+    }).toEqual({
+      enTitle: true,
+      enDescription: true,
+      thTitle: true,
+      thDescription: true,
+    });
   });
 });
 
 describe("new pricing copy in the locale files (FR-8, FR-12)", () => {
-  it("holds the pricing and meta keys in every shipped locale", () => {
-    expectKeysInEveryLocale(PRICING_KEYS);
+  it("holds every pricing EN string of the spec", () => {
+    expect(
+      missingStrings(enPricingLeaves, ALL_PRICING_STRINGS_EN),
+      "missing EN pricing strings",
+    ).toEqual([]);
   });
 
-  it("holds the managed-service roadmap description key in every locale", () => {
-    expectKeysInEveryLocale([
-      "pages.managedService.roadmap.description",
-    ]);
+  it("holds every pricing TH string of the Thai check page", () => {
+    expect(
+      missingStrings(thPricingLeaves, ALL_PRICING_STRINGS_TH),
+      "missing TH pricing strings",
+    ).toEqual([]);
+  });
+
+  it("holds the pricing Meta title and description in en and th", () => {
+    expect({
+      enTitle: enPricingLeaves.includes(PRICING_META.titleEn),
+      enDescription: enPricingLeaves.includes(PRICING_META.descriptionEn),
+      thTitle: thPricingLeaves.includes(PRICING_META.titleTh),
+      thDescription: thPricingLeaves.includes(PRICING_META.descriptionTh),
+    }).toEqual({
+      enTitle: true,
+      enDescription: true,
+      thTitle: true,
+      thDescription: true,
+    });
+  });
+
+  it("holds the managed-service roadmap.description pair (FR-15)", () => {
+    expect(enManagedLeaves).toContain(MANAGED_ROADMAP.en);
+    expect(thManagedLeaves).toContain(MANAGED_ROADMAP.th);
   });
 });
 
@@ -334,7 +253,18 @@ describe("scope guards: values that stay unchanged (AC-8)", () => {
     expect(zhManaged).toBe(ZH_MANAGED_SERVICE_DESCRIPTION);
   });
 
-  it("holds the header label keys in every shipped locale", () => {
-    expectKeysInEveryLocale(HEADER_MAIN_KEYS);
+  it("keeps the Features and Pricing header labels in en, th and zh", () => {
+    for (const [messages, featuresLabel, pricingLabel] of [
+      [enMessages, HEADER_LABELS.enFeatures, HEADER_LABELS.enPricing],
+      [thMessages, HEADER_LABELS.thFeatures, HEADER_LABELS.thPricing],
+      [zhMessages, HEADER_LABELS.zhFeatures, HEADER_LABELS.zhPricing],
+    ] as const) {
+      const main = scopeOf(messages, ["components", "common", "header", "main"]);
+      const titles = Array.isArray(main)
+        ? (main as Messages[]).map((entry) => entry["title"])
+        : [];
+      expect(titles).toContain(featuresLabel);
+      expect(titles).toContain(pricingLabel);
+    }
   });
 });

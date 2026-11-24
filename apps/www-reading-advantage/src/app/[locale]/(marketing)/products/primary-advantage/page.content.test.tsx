@@ -18,7 +18,6 @@ import {
   type ExpectedContainer,
   type PageLocale,
 } from "@/__tests__/fixtures/primary-page-expected";
-import { expectKeysInEveryLocale } from "@/__tests__/fixtures/locale-key-check";
 
 /*
  * Content tests for the Primary Advantage page (track www_primary_page_revamp_20261030).
@@ -77,68 +76,6 @@ const MESSAGES: Record<Locale, unknown> = {
 function copyLocale(locale: Locale): PageLocale {
   return locale === "th" ? "th" : "en";
 }
-
-/** The required locale keys of the Primary page. The list is written here, not read from a locale file. */
-const PAGE_KEYS = [
-  "pages.products.primaryAdvantage.meta.title",
-  "pages.products.primaryAdvantage.meta.description",
-  "pages.products.primaryAdvantage.buttons.pricing",
-  "pages.products.primaryAdvantage.buttons.contact",
-  "pages.products.primaryAdvantage.hero.headline",
-  "pages.products.primaryAdvantage.hero.body",
-  "pages.products.primaryAdvantage.workbook.headline",
-  "pages.products.primaryAdvantage.workbook.body",
-  "pages.products.primaryAdvantage.blended.headline",
-  "pages.products.primaryAdvantage.blended.body",
-  "pages.products.primaryAdvantage.cefr.headline",
-  "pages.products.primaryAdvantage.cefr.body",
-  "pages.products.primaryAdvantage.students.headline",
-  "pages.products.primaryAdvantage.students.body",
-  "pages.products.primaryAdvantage.students.features",
-  "pages.products.primaryAdvantage.games.headline",
-  "pages.products.primaryAdvantage.games.body",
-  "pages.products.primaryAdvantage.reedy.headline",
-  "pages.products.primaryAdvantage.reedy.badge",
-  "pages.products.primaryAdvantage.reedy.body",
-  "pages.products.primaryAdvantage.teacher.headline",
-  "pages.products.primaryAdvantage.teacher.body",
-  "pages.products.primaryAdvantage.nextStep.headline",
-  "pages.products.primaryAdvantage.nextStep.body",
-  "pages.products.primaryAdvantage.closing.headline",
-  "pages.products.primaryAdvantage.closing.body",
-  "pages.products.primaryAdvantage.closing.tutorLink",
-  "pages.products.primaryAdvantage.images.workbookAndAppSeries",
-  "pages.products.primaryAdvantage.images.workbookQrLinkLanding",
-  "pages.products.primaryAdvantage.images.blendedStudentClassBook",
-  "pages.products.primaryAdvantage.images.blendedTeacherClassBook",
-  "pages.products.primaryAdvantage.images.cefrBookSeries",
-  "pages.products.primaryAdvantage.images.studentStoryListen",
-  "pages.products.primaryAdvantage.images.studentLanguageQuestionsAi",
-  "pages.products.primaryAdvantage.images.studentLongAnswerFeedback",
-  "pages.products.primaryAdvantage.images.studentHomeThai",
-  "pages.products.primaryAdvantage.images.gamesVocabularyPicker",
-  "pages.products.primaryAdvantage.images.gameEnchantedLibrary",
-  "pages.products.primaryAdvantage.images.reedyPreview",
-  "pages.products.primaryAdvantage.images.teacherLiveGuide",
-  "pages.products.primaryAdvantage.images.teacherProjectorGames",
-  "pages.products.primaryAdvantage.images.teacherPrintLesson",
-  "pages.products.primaryAdvantage.images.contactChannels",
-  "pages.products.primaryAdvantage.experience.eyebrow",
-  "pages.products.primaryAdvantage.experience.heading",
-  "pages.products.primaryAdvantage.experience.description",
-  "pages.products.primaryAdvantage.experience.play",
-  "pages.products.primaryAdvantage.experience.fullscreen",
-  "pages.products.primaryAdvantage.experience.hint",
-  "pages.products.primaryAdvantage.experience.frameTitle",
-  "pages.products.primaryAdvantage.experience.posterAlt",
-];
-
-const META_KEYS = PAGE_KEYS.filter((key) =>
-  key.startsWith("pages.products.primaryAdvantage.meta."),
-);
-const EXPERIENCE_KEYS = PAGE_KEYS.filter((key) =>
-  key.startsWith("pages.products.primaryAdvantage.experience."),
-);
 
 const ALLOWED_HREFS = ["/pricing", "/contact", "/products/tutor-advantage"];
 /** Spec section 7a: the demo adds one link, inside pa-demo only. */
@@ -492,20 +429,32 @@ describe("locale files", () => {
     expect({ present, oldButtons }).toEqual({ present: [], oldButtons: [] });
   });
 
-  it("keeps the meta keys non-empty in every shipped locale", () => {
-    expect(META_KEYS.length).toBeGreaterThan(0);
-    expectKeysInEveryLocale(META_KEYS);
+  it.each(LOCALES)("%s has the meta title and description", (locale) => {
+    const scope = (
+      MESSAGES[locale] as {
+        pages: { products: { primaryAdvantage: { meta?: Record<string, unknown> } } };
+      }
+    ).pages.products.primaryAdvantage;
+    const copy = copyLocale(locale);
+    expect({
+      title: scope.meta?.title,
+      description: scope.meta?.description,
+    }).toEqual({
+      title: META.title[copy],
+      description: META.description[copy],
+    });
   });
 });
 
 describe("generateMetadata", () => {
-  it.each(LOCALES)("%s returns a non-empty title and description", async (locale) => {
+  it.each(LOCALES)("%s returns the title and description of the brief", async (locale) => {
     hoisted.state.messages = MESSAGES[locale];
+    const copy = copyLocale(locale);
     const metadata = await generateMetadata({ params: Promise.resolve({ locale }) });
-    expect(metadata.title).toEqual(expect.any(String));
-    expect((metadata.title as string).length).toBeGreaterThan(0);
-    expect(metadata.description).toEqual(expect.any(String));
-    expect((metadata.description as string).length).toBeGreaterThan(0);
+    expect({ title: metadata.title, description: metadata.description }).toEqual({
+      title: META.title[copy],
+      description: META.description[copy],
+    });
   });
 });
 
@@ -530,10 +479,36 @@ describe.each(LOCALES)("PrimaryAdvantage content in %s", (locale) => {
     );
   });
 
-  it("keeps every primary page copy key non-empty in every shipped locale", () => {
-    expect(PAGE_KEYS.length).toBeGreaterThan(0);
-    expectKeysInEveryLocale(PAGE_KEYS);
-  });
+  it.each(CONTAINERS.map((container) => [container.testId, container] as const))(
+    "%s shows each brief string word for word, once",
+    (_testId, container) => {
+      const root = getContainer(container.testId);
+      expect(container.texts.length, "texts of the container").toBeGreaterThan(0);
+      const problems = container.texts
+        .map(({ kind, ...strings }) => ({
+          kind,
+          text: strings[copy],
+          count: countExactText(root, strings[copy]),
+        }))
+        .filter(({ count }) => count !== 1)
+        .map(({ kind, text, count }) => `${kind} (${count} matches): ${text}`);
+      expect(problems).toEqual([]);
+    },
+  );
+
+  it.each(CONTAINERS.map((container) => [container.testId, container] as const))(
+    "%s has exactly its links, with the brief label",
+    (_testId, container) => {
+      const root = getContainer(container.testId);
+      const found = Array.from(root.querySelectorAll("a"))
+        .map((anchor) => `${anchor.getAttribute("href")} | ${anchor.textContent?.trim()}`)
+        .sort();
+      const expected = container.links
+        .map((link) => `${link.href} | ${link[copy]}`)
+        .sort();
+      expect(found).toEqual(expected);
+    },
+  );
 
   it("has no link outside the containers and no other href (links outside pa-demo: 8)", () => {
     expectContainers();
@@ -546,41 +521,22 @@ describe.each(LOCALES)("PrimaryAdvantage content in %s", (locale) => {
     expect(hrefs.filter((href) => /^(mailto:|https?:)/.test(href))).toEqual([]);
   });
 
-  it("puts the approved destination in each container (FR-11)", () => {
-    expectContainers();
-    for (const container of CONTAINERS) {
-      const root = getContainer(container.testId);
-      const hrefs = Array.from(root.querySelectorAll("a")).map(
-        (anchor) => anchor.getAttribute("href") ?? "",
-      );
-      expect(hrefs, `links in ${container.testId}`).toEqual(
-        container.links.map((link) => link.href),
-      );
-    }
-  });
-
-  it("puts each approved image in its own section (FR-12)", () => {
-    expectContainers();
-    for (const container of CONTAINERS) {
-      const root = getContainer(container.testId);
-      const paths = Array.from(root.querySelectorAll("img")).map((image) =>
-        imagePath(image.getAttribute("src") ?? ""),
-      );
-      const wanted = IMAGES.filter(
-        (image) => `pa-section-${image.section}` === container.testId,
-      ).map((image) => `${IMAGE_DIR}${image.name}.webp`);
-      expect(paths, `images in ${container.testId}`).toEqual(wanted);
-    }
-  });
-
   it.each(CONTAINERS.map((container) => [container.testId, container] as const))(
-    "%s shows its images with non-empty alt text",
+    "%s shows its images with the alt text of the list",
     (_testId, container) => {
       const root = getContainer(container.testId);
-      const images = Array.from(root.querySelectorAll("img"));
-      for (const image of images) {
-        expect((image.getAttribute("alt") ?? "").length).toBeGreaterThan(0);
-      }
+      const section = sectionOf(container);
+      const expected = IMAGES.filter((image) => image.section === section).map(
+        (image) => ({
+          path: `${IMAGE_DIR}${image.name}.webp`,
+          alt: copy === "th" ? image.altTh : image.altEn,
+        }),
+      );
+      const found = Array.from(root.querySelectorAll("img")).map((image) => ({
+        path: imagePath(image.getAttribute("src") ?? ""),
+        alt: image.getAttribute("alt") ?? "",
+      }));
+      expect(found).toEqual(expected);
     },
   );
 
@@ -647,9 +603,19 @@ describe.each(LOCALES)("T6 games demo section in %s (spec section 7a)", (locale)
     await renderLocale(locale);
   });
 
-  it("keeps the demo experience keys non-empty in every shipped locale", () => {
-    expect(EXPERIENCE_KEYS.length).toBeGreaterThan(0);
-    expectKeysInEveryLocale(EXPERIENCE_KEYS);
+  it("has the experience keys in the locale file, word for word (AC-15, AC-16)", () => {
+    const scope = (
+      MESSAGES[locale] as {
+        pages: { products: { primaryAdvantage: { experience?: Record<string, unknown> } } };
+      }
+    ).pages.products.primaryAdvantage;
+    const expected = Object.fromEntries(
+      Object.keys(DEMO.strings).map((key) => [
+        key,
+        demoText(key as keyof typeof DEMO.strings, copy),
+      ]),
+    );
+    expect(scope.experience).toEqual(expected);
   });
 
   it("puts pa-demo after pa-section-5 and before pa-section-6, 11 containers (AC-14)", () => {
@@ -661,13 +627,18 @@ describe.each(LOCALES)("T6 games demo section in %s (spec section 7a)", (locale)
     ]);
   });
 
-  it("keeps the demo label keys non-empty in every shipped locale", () => {
-    const labels = ["eyebrow", "heading", "description", "hint", "fullscreen"];
-    const keys = EXPERIENCE_KEYS.filter((key) =>
-      labels.some((label) => key.endsWith(`.${label}`)),
-    );
-    expect(keys.length).toBeGreaterThan(0);
-    expectKeysInEveryLocale(keys);
+  it("shows the eyebrow, heading, description, hint, and Open full screen label word for word, once (AC-15)", () => {
+    const root = getContainer(DEMO.testId);
+    const keys = ["eyebrow", "heading", "description", "hint", "fullscreen"] as const;
+    const problems = keys
+      .map((key) => ({
+        key,
+        text: demoText(key, copy),
+        count: countExactText(root, demoText(key, copy)),
+      }))
+      .filter(({ count }) => count !== 1)
+      .map(({ key, text, count }) => `${key} (${count} matches): ${text}`);
+    expect(problems).toEqual([]);
   });
 
   it("shows the Play button with the play string and no iframe before the tap (AC-17)", () => {
