@@ -1,0 +1,148 @@
+# Final acceptance log, round r2: track storytime_speed_hill_climb_20261123, HEAD b1a954eda
+
+Role: measure-final-acceptance. Route: claude-agent/sonnet#max (Anthropic).
+Track base: e3b93ca3382c648d61a4a84ae590d9980224711f (track creation commit).
+Role base and audited HEAD: b1a954eda4ed19afc1f1937f71e8279e52042719 (parent dcc136c1f).
+Repo (worktree): /home/daniebo/Desktop/rama-worktrees/storytime-speed, branch storytime/speed-20261123.
+Result file: measure/runs/storytime_speed_hill_climb_20261123/final-acceptance-track-b1a954eda.json.
+Supersedes: final-acceptance-track-dcc136c1f.json (fail, blocked on the Red and Green routes).
+Date: 2026-11-24.
+
+## Verdict: PASS (no blocking finding)
+
+The r1 blocker is closed. The orchestrator supplied the routes, and every independence pair differs.
+No real defect appeared. The new plan text matches the evidence, with one stale fragment that I
+route to tech-debt. The mechanical role gate passes with exit 0.
+
+## Binding to HEAD (checks repeated at b1a954eda)
+
+- git rev-parse HEAD prints b1a954eda4ed19afc1f1937f71e8279e52042719. The parent is dcc136c1f. The
+  tracked tree is clean before and after my runs.
+- git diff dcc136c1f..HEAD --stat prints plan.md only, 4 insertions and 4 deletions. git diff --check
+  exits 0. The diff over apps, packages, services, integrations, pnpm-lock.yaml, and package.json
+  prints nothing. No product code changed since r1.
+- git diff --name-status e3b93ca33..HEAD prints the same eight planned paths as r1. The count over
+  pnpm-lock.yaml, package.json, apps/storytime/package.json, entry.css, and the join folder is 0.
+- git diff --name-only dcc136c1f HEAD prints plan.md only. The latest result (phase acceptance) is
+  bound to dcc136c1f. The one later commit lists only the plan file, so it is covered.
+- git diff --name-only HEAD HEAD prints nothing: my audited HEAD equals HEAD.
+- git diff --name-only cb1bdef8e HEAD and fa0d7f701 HEAD print plan.md and spec.md. These are older
+  results (Review A and UX), not the latest result. No product, test, or lockfile path changed after
+  cb1bdef8e.
+- Ancestry: ten of ten answers are yes (the baseline against each audited HEAD, and each audited
+  HEAD against HEAD).
+- Status: incomplete_phases 0, worktree clean, closeout_candidates 1 (this track). In r1 it was 0.
+- Plan closeout check: plan_closeout_feedback returns an empty list. It returned four lines in r1.
+  track_incomplete is 0.
+- Phase acceptance role gate at b1a954eda: PASS, exit 0. This verifies the new plan row text.
+
+## Independence, pair by pair
+
+The families come from the ra-quota code of the orchestrator (model_family and route_family) and its
+routes.json. The Red, Green, and UX routes are attested by the orchestrator from the session list.
+The Review A and phase acceptance routes also match their JSON files.
+
+| Role | Route | Family |
+|------|-------|--------|
+| Red | opencode-go/muse-spark-1.3-contributor#high | muse |
+| Green | opencode-go/hy4-flash-free#high | hy |
+| Review A r1 and r2 | openai/gpt-6-luna#high | openai |
+| UX browser | openai/gpt-6-luna#high | openai |
+| Phase acceptance | opencode/deepseek-v4.1-flash-free#high | deepseek |
+| Final acceptance r2 | claude-agent/sonnet#max | claude |
+
+- Red (muse) against phase acceptance (deepseek): differ. PASS. This is the hard rule of the brief.
+- Red (muse) against Green (hy): differ. PASS.
+- Green (hy) against Review A (openai): differ. PASS.
+- This role (claude) against Red, Green, Review A, and phase acceptance: differ in all four. PASS.
+- Extra pairs also differ: Review A against Red, phase acceptance against Green, UX against Green,
+  and this role against UX. The ra-quota rule of no acceptance route in the Red or Review A family
+  holds for both acceptance routes.
+- Observations, not violations: Review A and UX share the OpenAI family, and no rule bars that pair.
+  The spec author (DeepSeek) and the phase acceptance share a family, and no rule covers that pair.
+- Spec review: see the decision below.
+
+## Plan diff, line by line
+
+- Line 26, task 1.1: now ends with Commits: 4865f0273 (Green). That is the Green commit. The children
+  1.1.1, 1.1.6, and 1.1.7 inherit the cover. True. The r1 finding F2 is closed.
+- Line 53, task 1.1.4: now says exit 1 with 2 failed files and 10 failed tests, from the absent
+  gitignored media-list-w01.md. The phase acceptance log records the numbers. Two tests read the file
+  (phase5-media-list.test.ts:38 and phase5-adversarial.test.ts:51). The track touches neither test.
+  True. N1 is closed (r1 finding F3).
+- Line 77, task 1.1.4 evidence: the pinned counts are gone, and the text cites the phase acceptance
+  log, which holds the suite, check-types, lint, and build results. N2 is closed (r1 finding F4).
+  One fragment is stale: same failure set as the phase base, and the diff of one deletion. These words
+  describe the Green run of 22 failed files. See finding F1.
+- Line 91, gate table: Phase acceptance passed at dcc136c1f. True (role gate exit 0). The word
+  pending for final acceptance goes stale on this pass.
+- Line 50 and spec D-4: the first store read stays at line 121. Correct. N3 is not a defect.
+- N4: no plan line claims a screenshot count, so no plan change was due.
+
+## Spec review decision
+
+The orchestrator asked whether the light lane needs a spec review. From the documents:
+
+- The framework exempts only the final acceptance for the light lane (SKILL.md closeout standard and
+  the closeout check, through metadata lane light). It has no light-lane exemption for the spec review.
+- The spec header and the test-strategy header say light lane. test-strategy.md section 4 and the plan
+  gate table drop Phase acceptance and Adversarial testing. Neither names the spec review.
+- The track holds spec-review.md with a Round 1 by the build session: 2 Major and 2 Nit findings, all
+  fixed. Its route is not recorded, and the spec author was opencode-go/deepseek-v4.1-flash.
+
+Decision: the spec review is needed in principle, and the build session met it in substance. The
+orchestrator role spawn and its result file do not exist. I record a deviation (finding F2). No new
+review is needed now, because Review A, the phase acceptance, and this role read the spec against the
+finished code. The closeout check does not require a spec-review result. Independence from the spec
+author cannot be checked, because the Round 1 route is not recorded.
+
+## Gates at b1a954eda (all heavy commands ran through heavy-run.sh, no redirection)
+
+- Role gate, final-acceptance, with the PROJECT variables: PASS, exit 0. PROJECT_LINT is
+  pnpm --filter storytime lint. PROJECT_CHECKS is pnpm --filter storytime check-types. PROJECT_TESTS is
+  vitest on entry-art-lcp.test.tsx, look-assets.test.ts, entry-signin-layout.test.tsx, and
+  login-proxy.test.ts. Each ran through the wrapper and printed no FAIL line. The tracked tree stayed clean.
+- Choice of PROJECT_TESTS: the phase acceptance log also ran the whole suite. It is heavy and exits 1 on
+  the two known failing files. The brief ordered no heavy rerun, and that command would fail the gate.
+  I used the two light test commands of that log, joined into one. Earlier final acceptances used the
+  commands of their own track in the same way. The repo holds no measure/gates.json.
+- Doctor: exit 1 at the architecture step, with the same output as r1. The four guard steps pass,
+  including the marker check over 93 plans. The pin was stale before this track. No source file changed
+  since r1. Ask the PM to waive it.
+- Product evidence of r1 still holds, because no product path changed: the targeted test 6 of 6, the
+  guard files 44 of 44, ESLint 0 errors and 4 warnings, SSIM 0.955 to 0.986, and the raw Lighthouse
+  files (median LCP 2815.47 ms, score 0.95, layout shift 0.0725).
+
+## Findings (all nonblocking)
+
+- F1 plan.md:77 keeps a stale fragment. Route: tech-debt. Optional fix in the closeout commit: write a
+  subset of the phase base failure set, and drop the diff clause.
+- F2 no spec-review spawn or result. Record a deviation.
+- F3 the Red, Green, and UX routes are attested, not recorded. The closeout manifest records them.
+- F4 the doctor gate exits 1 from a stale architecture pin that predates this track.
+- F5 the UX evidence gap of r1 (N4) stays. The screenshot folder is gone.
+- F6 four items stay with closeout: the metadata description with the accepted LCP gap, the tracks.md
+  status and note, the plan row that says final acceptance is pending, and the open question Q1.
+- F7 the Red log baseline_sha has 31 characters and does not resolve. No gate used it.
+
+## What to do next
+
+1. Run closeout on this HEAD. Make no commit before it. A later commit must touch only plan.md and
+   measure/runs, or the audited HEAD no longer equals the pre-closeout HEAD.
+2. Closeout writes the accepted LCP gap into the metadata description and the tracks.md note, sets the
+   status, records the six routes in the manifest, and archives the track with measure/runs.
+3. Ask the PM to waive the doctor gate, and record the spec-review deviation.
+
+MEASURE_AGENT_RESULT
+role: measure-final-acceptance
+status: complete
+track: storytime_speed_hill_climb_20261123
+phase: track review
+commits: none
+tests_run: heavy-run final-acceptance role gate exit 0 (PROJECT_LINT pnpm --filter storytime lint; PROJECT_CHECKS pnpm --filter storytime check-types; PROJECT_TESTS vitest on entry-art-lcp plus look-assets plus entry-signin-layout plus login-proxy); phase-acceptance role gate exit 0; heavy-run bash measure/doctor.sh exit 1 at the architecture step from a stale pin that predates the track with four guard steps passing; plan_closeout_feedback returns an empty list; status incomplete_phases 0; whole suite not rerun per the brief; product evidence of r1 unchanged because no product path changed
+files_changed: measure/runs/storytime_speed_hill_climb_20261123/final-acceptance-track-b1a954eda.json; measure/runs/storytime_speed_hill_climb_20261123/final-acceptance-track-b1a954eda.log
+plan_updates: none (gate-only role)
+known_failures: none blocking; nonblocking F1 stale fragment at plan.md:77 (tech-debt); F2 no spec-review result (deviation); F3 Red and Green and UX routes attested only; F4 doctor exit 1 from a pre-existing stale pin; F5 UX evidence gap; F6 four closeout items; F7 Red log baseline typo; whole suite exit 1 from the absent gitignored media-list-w01.md and median LCP 2815.47 ms against 2500 ms are PM-accepted
+dispositions: none
+handoff: PASS at b1a954eda. Independence holds in every pair: Red muse differs from phase acceptance deepseek and from Green hy; Green hy differs from Review A openai; this role claude differs from Red and Green and Review A and phase acceptance. The role gate passes with exit 0; export the same PROJECT_LINT and PROJECT_CHECKS and PROJECT_TESTS for your own gate run. Go to closeout and make no commit before it; a later commit may touch only plan.md and measure/runs. Closeout writes the accepted LCP gap (median 2815.47 ms against 2500 ms; PM decision 2026-11-24) into the metadata description and the tracks.md note, sets the tracks.md status, updates the plan.md:91 pending word, records the six routes in the manifest, passes the Q1 note to the PM, and archives measure/runs with the track. Record the spec-review deviation (F2). Ask the PM to waive the doctor gate (F4). Optional wording fix at plan.md:77 (F1) or send it to tech-debt.
+END_MEASURE_AGENT_RESULT

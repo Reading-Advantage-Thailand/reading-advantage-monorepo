@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: blocked
+track: storytime_speed_hill_climb_20261123
+phase: Phase 1: The sign-in LCP art
+commits: none
+tests_run: HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/entry-art-lcp.test.tsx' — passed, 6 tests
+files_changed: measure/runs/storytime_speed_hill_climb_20261123/review-a-p1-fa0d7f701.json; measure/runs/storytime_speed_hill_climb_20261123/review-a-p1-fa0d7f701.log
+plan_updates: none
+known_failures: F1: the portrait desktop srcset ends at 1080w and cannot meet the stated DPR 3 no-sharpness-loss requirement at 980 px and 1280 px.
+handoff: Ask the product owner: Should the track keep the 1080w cap and correct the no-sharpness-loss claim, or add a larger desktop candidate and revise the spec and plan? Default: keep the 1080w cap and correct the claim. The targeted tests pass. The recorded Lighthouse median is 2815.5 ms, above 2500 ms, and task 1.1.5 remains [~]. The Green Lighthouse method matches the baseline method.
+END_MEASURE_AGENT_RESULT

@@ -671,6 +671,12 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ## Archived Tracks
 
+- [x] **Track: Storytime speed hill climb: the sign-in LCP art** — *created 2026-11-23, archived 2026-11-24*
+  *Link: [./archive/storytime_speed_hill_climb_20261123/](./archive/storytime_speed_hill_climb_20261123/)*
+  *Load the Storytime sign-in LCP art eagerly with a priority hint, responsive srcset and sizes, and four small WebP candidates. The local Lighthouse mobile median LCP on /th/sign-in measures 2815.47 ms against the 2500 ms done-when (baseline about 4000 ms); the PM accepted this gap on 2026-11-24 as the first step. Follow-up B covers render-blocking CSS and unused JavaScript in a later track with trigger 2026-12-01. The art change joins the 30 November 2026 launch-day deploy batch and needs Daniel's deploy word; this track holds no deploy task and no traffic task.*
+  *Status: done; final acceptance PASS at b1a954eda (final-acceptance-track-b1a954eda, role gate PASS); phase acceptance at dcc136c1f | Chore, light lane, PM decision 2026-11-23 (Daniel "Sounds good"), P1, 30 Nov launch critical path | Owner: Monorepo orchestrator | No deploy task and no traffic task*
+  *Note: The accepted LCP gap is a median 2815.47 ms against the 2500 ms done-when (baseline about 4000 ms); the PM accepted it on 2026-11-24 as the first step. Follow-up B (render-blocking CSS and unused JavaScript) is a later track with trigger 2026-12-01. The art change joins the 30 November 2026 launch-day deploy batch and needs Daniel's deploy word; open question Q1 (the batch list) stays with the PM. This closeout does not push, merge, or deploy.*
+
 - [x] **Track: www features and pricing rewrite (A-70, row FP1)** — *created 2026-11-20, archived 2026-11-21*
   *Link: [./archive/www_features_pricing_20261120/](./archive/www_features_pricing_20261120/)*
   *Full rewrite of the www /features and /pricing pages in en and th, and the new numbers with English section copy in zh. The copy follows PR's spec www-features-pricing-spec.md v1.2, row FP1 of the www change list, plus the two v1.3 content updates of 2026-11-21.*

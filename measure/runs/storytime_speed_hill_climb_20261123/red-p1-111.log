@@ -1,0 +1,19 @@
+Red P1 T1.1.1 done. Phase base 251d7d41ead56edc8ec6f6a67a486a6 verified. Role base e3b93ca3382c648d61a4a84ae590d9980224711f was HEAD with a clean tree. Two new commits prove Red work. No product file changed. No lockfile change. No deploy.
+
+MEASURE_AGENT_RESULT
+status: pass
+baseline_sha: 251d7d41ead56edc8ec6f6a67a486a6
+role: measure-mid-red
+track: storytime_speed_hill_climb_20261123
+phase: Phase 1: The sign-in LCP art
+task: 1.1.1
+head: 96031a1839f26f6669a09865d90392c915117bd2
+commits: 25a5a3abf test(storytime): pin the eager sign-in art; 96031a183 docs(storytime): record the red evidence of 1.1.1
+tests: apps/storytime/__tests__/entry-art-lcp.test.tsx, 6 cases, 6 fail as named
+files: apps/storytime/__tests__/entry-art-lcp.test.tsx (new); measure/tracks/storytime_speed_hill_climb_20261123/plan.md ([~] markers plus Red note)
+failures: L1 loading lazy not eager; L2 img srcset count 0 not 3; L3 source srcset count 1 not 3; L4 path-d-720.webp missing; L5 path-d-720.webp missing; L6 redirect passes then art fails lazy; pre-existing suite failures stay: 228 failed tests in 22 untouched files (unbuilt packages/backend dist, missing measure/runs artifacts); pre-existing tsc: 14 errors in untouched files, none in the new file
+counts: suite test_files=167 test_files_failed=23 tests=1936 passed=1698 failed=234 expected_fail=4
+evidence: install pre-gate pnpm install --frozen-lockfile exit 0, git diff --exit-code pnpm-lock.yaml exit 0; Red command exit 1 with entry_lcp_loading=lazy, entry_lcp_srcset_count=0, entry_lcp_source_count=1, entry_lcp_file_path_d_720_webp=0, entry_st_redirect=/th/sign-in?next=%2Fth%2Fst; full suite log at /tmp/lcp-red-suite.log; tsc exit 2 with only base errors
+deferred: none
+handoff: Green task 1.1.2 owns entry-art.tsx and the four WebP files. Red asserts loading eager, fetchpriority high, img srcset 720w plus 1280w plus 1920w with sizes naming 100vw, source srcset 720w plus 960w plus 1080w with sizes, WebP pins 720x405 1280x720 720x1280 960x1707, byte bounds 30000 and 75000, and the exact 307 target. Green must not edit the Red file.
+END_MEASURE_AGENT_RESULT

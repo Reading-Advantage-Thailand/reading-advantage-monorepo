@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "The new-code gate passed. The screenshots match the base art files in scene, crop, aspect, sharpness, color, and framing; no changed layout or overflow appeared.",
+  "changed_files": [
+    "measure/runs/storytime_speed_hill_climb_20261123/ux-browser-p1-cb1bdef8e.json",
+    "measure/runs/storytime_speed_hill_climb_20261123/ux-browser-p1-cb1bdef8e.log"
+  ],
+  "confidence": "medium",
+  "role": "measure-ux-browser-review",
+  "track": "storytime_speed_hill_climb_20261123",
+  "phase": "Phase 1: The sign-in LCP art",
+  "baseline_sha": "e3b93ca3382c648d61a4a84ae590d9980224711f",
+  "phase_base_sha": "e3b93ca3382c648d61a4a84ae590d9980224711f",
+  "role_base_sha": "cb1bdef8ea0cf9cf92ccc9e428d910af0f057b31",
+  "audited_head_sha": "cb1bdef8ea0cf9cf92ccc9e428d910af0f057b31",
+  "commands": [
+    "git rev-parse HEAD; git status --short — HEAD matched role_base_sha and audited_head_sha; worktree was clean before the gate.",
+    "git diff --name-status e3b93ca3382c648d61a4a84ae590d9980224711f..cb1bdef8ea0cf9cf92ccc9e428d910af0f057b31 — verified implementation and plan/spec path set.",
+    "HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=3000 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/Desktop/rama-worktrees/storytime-speed && bash apps/storytime/__tests__/entry-browser-gate.sh --locked' — exit 0; production build passed, 192 browser checks passed, 12 screenshots captured.",
+    "PROJECT_DEV_URL was unset; entry-browser-gate.sh started its local production server at a dynamically assigned localhost port.",
+    "HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=3000 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/.cache/opencode/storytime-speed-base-e3b93ca && bash apps/storytime/__tests__/entry-browser-gate.sh --locked' — exit 1; Turbopack rejected the external node_modules symlink and the base build produced no screenshots.",
+    "HEAVY_PRIORITY=p1 HEAVY_MIN_AVAIL_MB=3000 HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /home/daniebo/.cache/opencode/storytime-speed-base-e3b93ca && pnpm install --frozen-lockfile' — heavy-run stopped the 10-minute network wait with exit 124; the log reports ECONNRESET, EAI_AGAIN, and curl error 23.",
+    "git -C /home/daniebo/Desktop/reading-advantage-monorepo worktree remove --force /home/daniebo/.cache/opencode/storytime-speed-base-e3b93ca && git -C /home/daniebo/Desktop/reading-advantage-monorepo worktree prune — removed the temporary baseline worktree.",
+    "git rev-parse HEAD; git status --short; git diff -- apps/storytime/next-env.d.ts — HEAD still matches audited_head_sha; no tracked changes or next-env.ts changes."
+  ],
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F1 [Nonblocking] ux-browser-review: The base browser gate did not run. Heavy-run stopped the frozen-lockfile install after 10 minutes of registry network waits. I compared the new-code screenshots with the original path-d.webp and path-p.webp images at phase_base_sha instead. This comparison confirms the scene and framing, but it is not a browser-to-browser screenshot comparison."
+  ],
+  "evidence": [
+    "The base and audited HEAD SHAs match the supplied values. Current-code gate screenshots are under /home/daniebo/.cache/opencode/storytime-entry-gate-2669858.",
+    "The gate passed 192/192 Playwright checks and 9/9 gate checks. It checked Thai and English sign-in pages at 390, 980, and 1280 px; it found no horizontal overflow.",
+    "Visual inspection of the six new-code screenshots shows the landscape phone crop and desktop portrait crop, rounded corners, sharpness, color, and text overlay are visible.",
+    "The build did not change apps/storytime/next-env.d.ts or any tracked file.",
+    "The base browser run did not complete. The first build rejected an external node_modules symlink. The subsequent frozen-lockfile install waited on npm registry requests and heavy-run stopped it after 10 minutes.",
+    "Compared the six new-code screenshots with the original path-d.webp and path-p.webp images read from the e3b93ca3382c648d61a4a84ae590d9980224711f worktree. This comparison used the base art files, not a base browser run.",
+    "The original and new files show the same scene, framing, aspect, and character placement. New screenshots show the same landscape phone crop and portrait desktop crop, with no visible blur, color change, overlay conflict, or horizontal overflow.",
+    "The user-facing diff changes only the EntryArt image candidates, loading priority, and sizes. The decorative alt text, intrinsic dimensions, picture hooks, crop CSS, heights, object-fit, radius, and shadow stay unchanged.",
+    "The signed-out /th/st redirect is covered by the targeted entry-art-lcp test. It asserts the 307 target and the sign-in art markup at that target; the browser gate captures the sign-in page itself.",
+    "The browser gate verified password visibility interaction, aria-pressed=true, wrong-password alert placement, and username retention at all six locale and viewport combinations.",
+    "The supplied gate script does not capture accessibility snapshots or console output. This audit therefore has no saved accessibility snapshot or direct console-error evidence."
+  ],
+  "screenshot_paths": [
+    "/home/daniebo/.cache/opencode/storytime-entry-gate-2669858/th-sign-in-390.png",
+    "/home/daniebo/.cache/opencode/storytime-entry-gate-2669858/th-sign-in-980.png",
+    "/home/daniebo/.cache/opencode/storytime-entry-gate-2669858/th-sign-in-1280.png",
+    "/home/daniebo/.cache/opencode/storytime-entry-gate-2669858/en-sign-in-390.png",
+    "/home/daniebo/.cache/opencode/storytime-entry-gate-2669858/en-sign-in-980.png",
+    "/home/daniebo/.cache/opencode/storytime-entry-gate-2669858/en-sign-in-1280.png"
+  ],
+  "accessibility_snapshot_paths": [],
+  "interaction_evidence": [
+    "The sign-in gate toggled password visibility and verified aria-pressed=true at all six locale and viewport combinations.",
+    "The sign-in gate submitted a wrong password and checked the role=alert placement and retained username at all six combinations."
+  ],
+  "test_strategy_violations": [],
+  "ux_applicability": "applicable",
+  "webbridge_status": "not_run",
+  "webbridge_evidence": {
+    "engine": "The supplied Playwright browser gate ran; the OpenChamber browser panel was not used.",
+    "base_url": "PROJECT_DEV_URL was unset. The gate started a local production server at a dynamic localhost port.",
+    "screenshots": [
+      "/home/daniebo/.cache/opencode/storytime-entry-gate-2669858/th-sign-in-390.png",
+      "/home/daniebo/.cache/opencode/storytime-entry-gate-2669858/th-sign-in-980.png",
+      "/home/daniebo/.cache/opencode/storytime-entry-gate-2669858/th-sign-in-1280.png",
+      "/home/daniebo/.cache/opencode/storytime-entry-gate-2669858/en-sign-in-390.png",
+      "/home/daniebo/.cache/opencode/storytime-entry-gate-2669858/en-sign-in-980.png",
+      "/home/daniebo/.cache/opencode/storytime-entry-gate-2669858/en-sign-in-1280.png"
+    ],
+    "accessibility_snapshots": [],
+    "interactions": [
+      "Password visibility toggle and aria-pressed state passed at all six locale and viewport combinations.",
+      "Wrong-password alert placement and username retention passed at all six combinations."
+    ]
+  },
+  "retry_recommendation": "none",
+  "screenshots": [
+    "/home/daniebo/.cache/opencode/storytime-entry-gate-2669858/th-sign-in-390.png",
+    "/home/daniebo/.cache/opencode/storytime-entry-gate-2669858/th-sign-in-980.png",
+    "/home/daniebo/.cache/opencode/storytime-entry-gate-2669858/th-sign-in-1280.png",
+    "/home/daniebo/.cache/opencode/storytime-entry-gate-2669858/en-sign-in-390.png",
+    "/home/daniebo/.cache/opencode/storytime-entry-gate-2669858/en-sign-in-980.png",
+    "/home/daniebo/.cache/opencode/storytime-entry-gate-2669858/en-sign-in-1280.png"
+  ]
+}

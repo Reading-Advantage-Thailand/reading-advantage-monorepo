@@ -1,0 +1,27 @@
+Green P1 T1.1.2 to T1.1.5 done. Phase base e3b93ca3382c648d61a4a84ae590d9980224711f verified. Role base 96031a1839f26f6669a09865d90392c915117bd2 was HEAD with a clean tree. Two new commits prove Green work. No committed Red test changed. No lockfile change. No deploy.
+
+MEASURE_AGENT_RESULT
+status: partial
+baseline_sha: e3b93ca3382c648d61a4a84ae590d9980224711f
+role: measure-jr-green
+track: storytime_speed_hill_climb_20261123
+phase: Phase 1: The sign-in LCP art
+tasks: 1.1.2 to 1.1.5
+head: fa0d7f701c571c373484b67e01254aaa20dd03e7
+commits: 4865f0273562306225bbbc311e8cbd5c8b7b077d perf(storytime): load the sign-in art eagerly; fa0d7f701c571c373484b67e01254aaa20dd03e7 docs(storytime): record green evidence
+flipped_x: 1.1.2, 1.1.3, 1.1.4 with Commits 4865f0273562306225bbbc311e8cbd5c8b7b077d in each task line
+flipped_b: none
+left_in_progress: 1.1.5 stays [~] because the median LCP is 2815.5 ms, above the 2500 ms limit
+tests: targeted Red command exits 0 with 6 passed cases; full suite reports 22 failed files and 228 failed tests; check-types exits 0 with 0 errors after the build generates asset types; ESLint exits 0 on the changed file; build exits 0 after one retry of the known Next.js security notice
+files: apps/storytime/app/[locale]/entry/entry-art.tsx modified; apps/storytime/app/look/places/path-d-720.webp new; apps/storytime/app/look/places/path-d-1280.webp new; apps/storytime/app/look/places/path-p-720.webp new; apps/storytime/app/look/places/path-p-960.webp new; measure/tracks/storytime_speed_hill_climb_20261123/plan.md updated with Green evidence and markers
+red_command_output: entry_lcp_loading=eager, entry_lcp_fetchpriority=high, entry_lcp_srcset_count=3, entry_lcp_source_count=3, 1 file passed, 6 tests passed, exit 0
+failure_set: Red base had 23 failed files and 234 failed tests; Green has 22 failed files and 228 failed tests; the failed-file diff prints one deletion, the Red file, and no addition
+lighthouse: LCP 2822.2, 2815.5, 2345.7 ms, median 2815.5 ms; performance 0.95, 0.95, 0.97, median 0.95; transfer 291519, 291517, 291517 bytes, median 291517 bytes; server response 9, 8, 8 ms
+lighthouse_insights: discovery reads priorityHinted true, eagerlyLoaded true, requestDiscoverable true on all 3 runs; median breakdown reads timeToFirstByte 9.2 ms, resourceLoadDelay 23.4 ms, resourceLoadDuration 11.9 ms, elementRenderDelay 35.2 ms
+lighthouse_gate: not met; median LCP 2815.5 ms exceeds 2500 ms, and task 1.1.5 stays at [~]
+ttfb_line: cold start; apps/storytime/cloudbuild.yaml:44-51 sets no --min-instances, and apps/storytime/lib/auth/index.ts:119 returns null before the store read; no fix
+security_notice: next build printed a one-time Next.js security upgrade reminder for next upgrade --agent=security; this track runs no upgrade
+deferred: none
+dispositions: none
+handoff: Review A and the UX review own the next tasks. The art change is complete; the local Lighthouse median misses the 2500 ms target, and task 1.1.5 stays at [~]. The art change cuts 1199.5 ms from the 4015 ms baseline. What remains sits outside this art-only track: simulated throttling and the render path, including render-blocking CSS, unused JavaScript, and layout shift (spec D-7). The live host needs the launch-day deploy, which this track does not run. Do not treat the 2815.5 ms median as a pass. The Next.js security upgrade reminder needs an owner decision.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,74 @@
+# Closeout log: track storytime_speed_hill_climb_20261123, pre-closeout HEAD b1a954eda
+
+Role: measure-closeout. Route: opencode-go/hy4-flash-free#high.
+Track base: e3b93ca3382c648d61a4a84ae590d9980224711f.
+Pre-closeout HEAD and final acceptance audited_head_sha: b1a954eda4ed19afc1f1937f71e8279e52042719.
+Repo (worktree): /home/daniebo/Desktop/rama-worktrees/storytime-speed, branch storytime/speed-20261123.
+Date: 2026-11-24.
+
+## Verdict: PASS
+
+The pre-closeout HEAD equals the final acceptance audited_head_sha. The closeout gate prints
+PASS: closeout checks passed with exit 0. The light-lane final acceptance is recorded.
+
+## Commands and exit codes
+
+1. git rev-parse HEAD -> b1a954eda4ed19afc1f1937f71e8279e52042719 (exit 0)
+2. git status --porcelain -> empty (exit 0)
+3. git branch --show-current -> storytime/speed-20261123 (exit 0)
+4. python3 measure_interphase_checks.py closeout --help -> usage printed (exit 0)
+5. grep for the fixed path measure/tracks/storytime_speed_hill_climb_20261123/ over tests/,
+   scripts/, and measure/ before the move -> no hit (exit 0)
+6. python3 importlib check: plan_closeout_feedback -> [], track_incomplete -> 0,
+   active_registry_contains after the active-entry removal -> False (exit 0)
+7. git diff --check -> no whitespace error (exit 0)
+8. git mv measure/tracks/storytime_speed_hill_climb_20261123
+   measure/archive/storytime_speed_hill_climb_20261123 -> exit 0
+9. grep for the fixed path after the move -> no hit (exit 0)
+10. bash measure/generate.sh -> architecture.json and routes.md regenerated at b1a954eda (exit 0)
+11. git add measure/generated/architecture.json measure/generated/routes.md (exit 0)
+12. git diff --quiet measure/generated/ -> exit 0
+13. HEAVY_PRIORITY=p1 heavy-run -c 'pnpm --filter storytime lint' -> exit 0,
+    0 errors and 45 warnings
+14. HEAVY_PRIORITY=p1 heavy-run -c 'pnpm --filter storytime check-types' -> exit 0
+15. HEAVY_PRIORITY=p1 heavy-run -c 'cd apps/storytime && CI=true vitest run
+    entry-art-lcp, look-assets, entry-signin-layout, login-proxy' -> exit 0,
+    4 test files and 50 tests passed in 1.32 s
+16. HEAVY_PRIORITY=p1 env PROJECT_LINT=... PROJECT_CHECKS=... PROJECT_TESTS=...
+    GENERATED_CHECK_COMMAND='bash measure/generate.sh && git diff --quiet measure/generated/'
+    python3 measure_interphase_checks.py closeout --repo .
+    --track storytime_speed_hill_climb_20261123 --runner heavy-run.sh
+    -> INFO: light lane, no final acceptance; PASS: closeout checks passed (exit 0)
+
+## Closeout work
+
+- plan.md line 91: final acceptance passed at b1a954eda with the result name and the role gate.
+- plan.md line 77: the stale failure-set clause now states 2 failed files and 10 failed tests
+  at dcc136c1f from the absent gitignored media-list-w01.md, a subset of the phase base set.
+- metadata.json: status done, completed 2026-11-24, the accepted LCP gap (median 2815.47 ms
+  against 2500 ms, baseline about 4000 ms, PM accepted 2026-11-24 as the first step),
+  follow-up B with trigger 2026-12-01, and the 30 November 2026 launch batch that needs
+  Daniel's deploy word. The track holds no deploy task and no traffic task.
+- measure/tracks.md: the "Status: new" entry was removed from the active section. The archived
+  entry carries the same description as metadata.json, the done status, the LCP gap note, and
+  the deploy-batch note.
+- measure/tech-debt.md: one consolidated row records F2, F4, F5, F7, the pre-existing whole-suite
+  failures, and follow-up B. F1 was fixed in plan.md. One resolved row was removed to keep
+  the 50-line cap.
+- The archived manifest records the six routes, the source of each, the spec-review deviation,
+  the PM waiver of the doctor gate, the retained evidence, and no artifact cleanup.
+- Q1 (the deploy batch list) stays with the PM. Daniel's deploy word is not sought here.
+- No push, no merge, no deploy.
+
+MEASURE_AGENT_RESULT
+role: measure-closeout
+status: complete
+track: storytime_speed_hill_climb_20261123
+phase: track review
+commits: the closeout commit on branch storytime/speed-20261123; its SHA is reported in the final reply
+tests_run: heavy-run lint exit 0 (0 errors, 45 warnings); heavy-run check-types exit 0; heavy-run vitest on entry-art-lcp plus look-assets plus entry-signin-layout plus login-proxy exit 0 (4 files, 50 tests); heavy-run closeout gate exit 0 with PASS: closeout checks passed and INFO: light lane, no final acceptance
+files_changed: archived measure/tracks/storytime_speed_hill_climb_20261123 (plan.md, metadata.json); measure/tracks.md; measure/tech-debt.md; closeout manifest in the archive; closeout result json and log in measure/runs/storytime_speed_hill_climb_20261123; measure/generated/architecture.json and routes.md refreshed to b1a954eda
+plan_updates: the line 91 gate row says final acceptance passed at b1a954eda; the line 77 stale failure-set clause now states 2 failed files and 10 failed tests from the absent gitignored media-list-w01.md, a subset of the phase base failure set
+known_failures: none blocking; doctor exits 1 at the pre-existing stale architecture pin (PM waived); the whole app suite exits 1 with 2 failed files and 10 failed tests from the absent gitignored media-list-w01.md (pre-existing, PM accepted); median LCP 2815.47 ms against 2500 ms is a PM-accepted gap; the UX screenshot folder is gone; the Red log baseline_sha has 31 characters and does not resolve; no spec-review route was recorded
+handoff: PASS at the pre-closeout HEAD b1a954eda. The track is archived and the registry entry matches the metadata description. Hand Q1 (the deploy batch list) to the PM and keep Daniel's deploy word for the 30 November 2026 launch batch. Follow-up B (render-blocking CSS and unused JavaScript, trigger 2026-12-01) is a later track. Do not merge this branch to master and do not push it without Daniel's word through the PM.
+END_MEASURE_AGENT_RESULT

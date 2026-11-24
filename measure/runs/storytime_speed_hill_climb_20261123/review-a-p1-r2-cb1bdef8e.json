@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "role": "measure-review-a-correctness",
+  "track": "storytime_speed_hill_climb_20261123",
+  "phase": "Phase 1: The sign-in LCP art",
+  "baseline_sha": "e3b93ca3382c648d61a4a84ae590d9980224711f",
+  "phase_base_sha": "e3b93ca3382c648d61a4a84ae590d9980224711f",
+  "role_base_sha": "cb1bdef8ea0cf9cf92ccc9e428d910af0f057b31",
+  "audited_head_sha": "cb1bdef8ea0cf9cf92ccc9e428d910af0f057b31",
+  "summary": "F1 is closed. The revised spec correctly states that the 1080px portrait original caps desktop resolution and preserves the prior source detail. No stale desktop sharpness claim remains in the spec, plan, or test strategy.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "F1 withdrawn: checked spec.md D-2 against the unchanged desktop source set and entry.css layout. The source original is 1080px wide; desktop art is about 431px wide at 980px and 459px at 1280px. At DPR 3 the source yields about 2.5 and 2.35 pixels per CSS pixel, or about 2.4 overall, as before the change.",
+    "Checked the revised spec claim that larger desktop art needs a new original from the art owner; the existing original has no additional source detail to provide.",
+    "Checked all references in spec.md, plan.md, and test-strategy.md. The test-strategy.md:131 sharpness statement refers to a wide phone box using the 1920w landscape original and remains true. No other claim promises no sharpness loss for desktop portrait art.",
+    "HEAD is cb1bdef8ea0cf9cf92ccc9e428d910af0f057b31 and matched the supplied audited_head_sha. The worktree was clean before writing this result.",
+    "The only change since the prior review HEAD is spec.md D-2. The phase diff contains the expected Red test, Green component and image variants, plan notes, and the corrected spec text."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git status --short — HEAD matched the supplied SHA; no pre-existing worktree changes.",
+    "git diff --stat e3b93ca3382c648d61a4a84ae590d9980224711f..cb1bdef8ea0cf9cf92ccc9e428d910af0f057b31; git diff --name-status e3b93ca3382c648d61a4a84ae590d9980224711f..cb1bdef8ea0cf9cf92ccc9e428d910af0f057b31 — eight expected paths in the phase diff.",
+    "git diff fa0d7f701c571c373484b67e01254aaa20dd03e7..cb1bdef8ea0cf9cf92ccc9e428d910af0f057b31 -- spec.md plan.md test-strategy.md — spec.md D-2 only.",
+    "rg -n -i 'sharpness|sharp|DPR 3|ratio loses|phone box|1080w' measure/tracks/storytime_speed_hill_climb_20261123/spec.md measure/tracks/storytime_speed_hill_climb_20261123/plan.md measure/tracks/storytime_speed_hill_climb_20261123/test-strategy.md — remaining sharpness statement is the phone-box statement at test-strategy.md:131.",
+    "HEAVY_PRIORITY=p1 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd apps/storytime && CI=true ../../node_modules/.bin/vitest run --maxWorkers=1 __tests__/entry-art-lcp.test.tsx' — exit 0; 1 file and 6 tests passed."
+  ],
+  "changed_files": [
+    "apps/storytime/__tests__/entry-art-lcp.test.tsx",
+    "apps/storytime/app/[locale]/entry/entry-art.tsx",
+    "apps/storytime/app/look/places/path-d-1280.webp",
+    "apps/storytime/app/look/places/path-d-720.webp",
+    "apps/storytime/app/look/places/path-p-720.webp",
+    "apps/storytime/app/look/places/path-p-960.webp",
+    "measure/tracks/storytime_speed_hill_climb_20261123/plan.md",
+    "measure/tracks/storytime_speed_hill_climb_20261123/spec.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "spec.md:104-108 accurately limits desktop portrait detail to the existing 1080px original and compares it with the unchanged prior source."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The required targeted Vitest command passed all six tests for rendered attributes, candidate sets, image dimensions, byte limits, and redirect behavior."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff fa0d7f701..HEAD shows only the requested spec.md D-2 correction."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The review records the verified HEAD, remediation diff, search results, CSS dimensions, and test output."
+    }
+  ]
+}
