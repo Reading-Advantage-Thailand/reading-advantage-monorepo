@@ -517,6 +517,7 @@ Each task below is one commit for one class.
 - Late finding ADV-31: tech-debt (mkdirSync and symlinkSync run before try, leaking the mkdtemp base on a throw)
 - Late finding ADV-32: tech-debt (the earlier ADV-26 and ADV-27 records were too broad)
 - Late finding ADV-P1-9: tech-debt (the baht-amount case name overstates its two-literal check)
+- Late finding N8: tech-debt (D5 helper fixtures locale-key-check.ts and reedy-eligibility.ts and CONTAINER_STORY_IMAGES are used only by adversarial tests or unused; one adversarial test comment says both files import the fixture)
 
 - [x] 4.1 Write the pilot report (289c4451c)
   Report: measure/tracks/www_test_audit_pilot_20261122/report.md.
@@ -785,3 +786,4 @@ Each task below is one commit for one class.
   FR-10 figures' forbids two literals and requires 3,000. Recorded as tech-debt
   in measure/tech-debt.md and as a late finding under the Phase 4 heading.
   No production code changed. No push was made.
+  F1, F2, N8, N9 and N10 fixed the report counts, the lint warning count, the FAQ pin note and the tech-debt records.
