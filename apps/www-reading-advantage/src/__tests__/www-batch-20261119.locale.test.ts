@@ -46,8 +46,8 @@ const ROADMAP_STRIP = [
   },
   {
     key: "pages.home.v2.products.roadmapNote",
-    en: "Storytime Advantage opens as an app on 30 November 2026. In the 2027 school year, Thai primary schools open Science, Math, and Zhongwen Advantage: workbooks and apps.",
-    th: "Storytime Advantage เปิดให้ใช้งานเป็นแอปวันที่ 30 พฤศจิกายน 2569 ในปีการศึกษา 2570 โรงเรียนประถมศึกษาไทยจะเปิดใช้ Science Advantage, Math Advantage และ Zhongwen Advantage ทั้งหนังสือแบบฝึกหัดและแอป",
+    en: "In the 2027 school year, Thai primary schools open Science, Math, and Zhongwen Advantage: workbooks and apps.",
+    th: "ในปีการศึกษา 2570 โรงเรียนประถมศึกษาไทยจะเปิดใช้ Science Advantage, Math Advantage และ Zhongwen Advantage ทั้งหนังสือแบบฝึกหัดและแอป",
   },
   {
     key: "pages.home.v2.products.roadmapTag2027",

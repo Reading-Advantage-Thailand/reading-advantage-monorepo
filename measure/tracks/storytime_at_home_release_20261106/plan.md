@@ -388,7 +388,7 @@ Scope note (Daniel, Tasks, 2026-11-16 07:34 ICT): "We are not doing Chinese supp
 
 PM assignment A-71 (P1, public launch 2026-11-30). Spec: FR-A71 (owner words, the four PM design decisions, AC-A71.1 to AC-A71.14). Dates: Red, Green, reviews, and the UX review run 2026-11-21 to 2026-11-22. The phase check has the target 2026-11-22 06:00 ICT. The preview of the tagged 0 % revision goes to the PM by 2026-11-22 12:00 ICT at the latest.
 
-Exception to the phase-order rule: Phase 3 has no checkpoint because task 3.1 waits for Daniel's deploy word, and tasks 3.2 and 3.3 are `[b] deferred:pm`. Phase 4 starts under the PM order A-71, in the same way as the Phase 2 exception. No task of Phase 3 changes. This phase changes the sign-in page and the "How to join" page only. It changes no contract, no cookie, no route handler, no media route, and no proxy rule. The auth rows AC-4.1 to AC-4.4 stay as they are.
+Exception to the phase-order rule: Phase 3 has no checkpoint because task 3.1 waits for Daniel's deploy word, and tasks 3.2 and 3.3 are closed `[x]`. Phase 4 starts under the PM order A-71, in the same way as the Phase 2 exception. No task of Phase 3 changes. This phase changes the sign-in page and the "How to join" page only. It changes no contract, no cookie, no route handler, no media route, and no proxy rule. The auth rows AC-4.1 to AC-4.4 stay as they are.
 
 Facts read on 2026-11-20 (base `4da73415d`, read-only; Green re-reads them before the first edit):
 

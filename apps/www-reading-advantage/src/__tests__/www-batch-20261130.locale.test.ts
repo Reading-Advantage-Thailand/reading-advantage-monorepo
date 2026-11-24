@@ -138,6 +138,8 @@ describe("www batch 2026-11-30, storytime launch day", () => {
     );
     expect(read("en", "pages.home.v2.products.roadmapNote")).not.toContain("These product lines are planned.");
     expect(read("th", "pages.home.v2.products.roadmapNote")).not.toContain("สายผลิตภัณฑ์เหล่านี้อยู่ในแผน");
-    expect(read("zh", "pages.home.v2.products.roadmapNote")).toBe("这些产品线在计划中，我们不给出日期。");
+    expect(read("zh", "pages.home.v2.products.roadmapNote")).toBe(
+      "在2027学年，泰国小学开设 Science Advantage、Math Advantage 和 Zhongwen Advantage，配套练习册和应用。",
+    );
   });
 });
