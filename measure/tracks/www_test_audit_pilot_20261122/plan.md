@@ -658,7 +658,7 @@ Each task below is one commit for one class.
   Merged origin/master as a merge commit. No rebase, no force, and no push.
   Master brings two dated blog posts, two blog images, and the 2027 home copy.
   Master also brings the storytime claims-scanner test update.
-  The pilot test structure stays in the two conflicted test and fixture files.
+  The pilot test structure stays in the two auto-merged test and fixture files.
   Master's changed home copy stays, with the new no-roadmap-without-date test.
   APPROVED_SCHOOL_YEAR and its scanner clearing stay in the fixture.
   No production code changed here beyond what master brings.
@@ -666,3 +666,20 @@ Each task below is one commit for one class.
   Check-types and lint exited 0. Lint holds three pre-existing warnings.
   Vitest passed 1413 tests in 98 files. Line coverage is 92.08 percent.
   The coverage floor is 85.52 percent.
+- [x] 4.14 Report master-merge label fix (152fd0f6)
+  Commit: 152fd0f673471f1a28310d104a94431779d7d57f.
+  Review log: measure/runs/www_test_audit_pilot_20261122/review-a-e836e72.json.
+  F1: report.md labels 1412 cases and 92.07 percent as the pre-merge run at
+  e91c4d4cc. It adds the master merge 6ee56327b and the final run at e836e7289
+  with 1413 cases and 92.08 percent lines from green-merge-e836e7289.log.
+  The cut is recomputed to 1762 cases, or 55.5 percent of the 3175 baseline.
+  The coverage rise is recomputed to 5.56 points over the 86.52 percent baseline.
+  The D5 step count is no longer called final. The time section compares the
+  baseline with the pre-merge run and names the post-merge run apart.
+  N1: task 4.13 now says auto-merged for the two files, not conflicted.
+  N2: the blog merge is named for task 3.5, distinct from the master merge.
+  No line citation and no count of a run-file kind was added.
+  No test or production file changed. No test suite ran in this round.
+  The brief subject was 101 characters. Commitlint rejects headers over 100,
+  so the subject says counts instead of numbers and is 100 characters.
+  No --no-verify was used. No push was made.
