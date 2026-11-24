@@ -1,0 +1,222 @@
+# Green run log: storytime_at_home_release_20261106, Phase 3, task 3.3
+
+role: measure-jr-green
+track: storytime_at_home_release_20261106
+phase: Phase 3: At-home deploy
+phase_base_sha: 950d6eebf0148b6df05baf678d2b674b3271d171
+baseline_sha: 950d6eebf0148b6df05baf678d2b674b3271d171
+role_base_sha: 25200e4362d313557f3a4e25179952f54e11d60d
+model: opencode-go/deepseek-v4.1-flash
+date: 2026-11-19
+worktree: /home/daniebo/Desktop/rama-worktrees/storytime-home-look (branch storytime/home-look)
+
+## Base verification
+
+`git rev-parse HEAD` at the start printed `25200e4362d313557f3a4e25179952f54e11d60d`.
+The committed Red change is inside `950d6eebf..HEAD`: `242021c43368bad7cfab913969ab3ee81ee12899`
+(the Red test) and `25200e4362d313557f3a4e25179952f54e11d60d` (the Red evidence). The worktree was
+clean at the start. The Red test file `apps/storytime/__tests__/phase3-home-look-red.test.ts` was
+treated as immutable and was not edited.
+
+## Targeted Red command before the change
+
+```
+cd /home/daniebo/Desktop/rama-worktrees/storytime-home-look && CI=true pnpm --filter storytime exec vitest run --maxWorkers=1 __tests__/phase3-home-look-red.test.ts
+```
+
+Exit code: 1. Vitest output: `Test Files 1 failed (1)`, `Tests 3 failed | 3 passed (6)`.
+Counts: `files_failed=1 files_total=1 tests_failed=3 tests_passed=3 tests_total=6`.
+The 3 failed cases: the home main carries no `data-place`; the page has no hero window header; the
+home page does not import the shared frame. The 3 passing cases: the kept text and sign-out form,
+the week page positive control, and the non-vacuity self-test. No `Cannot find module` and no
+`ENOENT` appear.
+
+## The change
+
+Style and markup only; no new image file.
+
+- `apps/storytime/app/[locale]/st/page.tsx`: the root `main` carries `data-place` and `data-hero`
+  from `placeFor(null)` (`meadow` / `path`), and the page renders the shared `Frame` with
+  `variant="cover"`, the fallback heading as the plaque title, and `bar="Storytime Advantage"` as
+  the label. The heading moves to the plaque; the instruction stays in a cream card; the teacher
+  link and the sign-out form stay.
+- `apps/storytime/app/[locale]/frame.tsx`: `FrameProps` becomes a union of the route props
+  (`level` and `week`) and the bar props (`bar`). A week page passes the route numbers as before;
+  the signed-in home passes `bar`. The rendered markup is unchanged for the week pages.
+- `apps/storytime/__tests__/phase3-browser-gate.sh`: 3 new Playwright rows. Signed in, `/th/st`
+  must paint `main[data-place]::before` with a `url(...)` computed background-image at 390 x 844,
+  980 x 800, and 1280 x 800. The rows write viewport screenshots under `~/.cache/st-home-look/`.
+  The script's row count goes from 81 to 84.
+
+No first-load growth: the frame logo and the two place pictures are the shipped look assets, and
+the gate reads 284267 bytes without the two place pictures. The plan's last recorded value was
+284270 bytes at `3804ab55a`, so the change is inside run variance.
+
+## Environment note (not a code change)
+
+This fresh worktree linked `node_modules` and `apps/storytime/node_modules` to the main checkout.
+Turbopack refused a build over that link (`Symlink ... could not be resolved`), and the first gate
+builds failed before they tested the code. The worktree then ran
+`pnpm install --offline --frozen-lockfile` and
+`pnpm turbo run build --filter=storytime^... --concurrency=1` (all 6 packages cached). Both write
+only gitignored paths. No lockfile, no `next-env.d.ts`, and no app file changed for this step.
+
+The Next.js 16.4.1 build stopped once with the `SecurityFatalError` upgrade notice after a
+successful compile and page generation. The plan retry rule F4 allows one rerun; the rerun read the
+receipt and exited 0 with `PASS: Production build exits 0`. No `next upgrade` ran.
+
+## Green checks
+
+| Check | Result |
+|---|---|
+| Targeted Red command after the change | exit 0, `Test Files 1 passed (1)`, `Tests 6 passed (6)` |
+| `__tests__/look-assets.test.ts` and `__tests__/look-frame.test.tsx` | exit 0, 2 files, 33 tests passed |
+| Combined final Vitest run (3 files) | exit 0, `Tests 39 passed (39)` |
+| `pnpm --filter storytime exec tsc --noEmit` | exit 0 |
+| ESLint on the 2 changed TSX files | exit 0 |
+| `bash -n` on the browser gate | exit 0 |
+
+## Browser gate
+
+```
+HEAVY_PRIORITY=p2 HEAVY_RUN_TIMEOUT_S=1800 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=3600 \
+  bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c \
+  'cd /home/daniebo/Desktop/rama-worktrees/storytime-home-look && bash apps/storytime/__tests__/phase3-browser-gate.sh'
+```
+
+Final run exit code: 0. Shell rows `PASS=5, FAIL=0`. Playwright rows `PASS=84, FAIL=0`
+(base 81 rows plus the 3 new rows). New row values:
+
+```
+home_place_ground_390=true  (place=meadow, background_image=url(.../meadow-p...webp))
+home_place_ground_980=true  (place=meadow, background_image=url(.../meadow-d...webp))
+home_place_ground_1280=true (place=meadow, background_image=url(.../meadow-d...webp))
+```
+
+First-load numbers of the same run:
+`transferred_bytes_first_load_with_place_pictures=584301`,
+`transferred_bytes_first_load=284267`, `place_pictures_excluded=2`,
+`requests_total=28`, `media_requests_before_tap=0`.
+
+## Screenshots (viewport shots, signed in)
+
+- `/home/daniebo/.cache/st-home-look/st-home-390x844.png`
+- `/home/daniebo/.cache/st-home-look/st-home-980x800.png`
+- `/home/daniebo/.cache/st-home-look/st-home-1280x800.png`
+
+Each shot shows the painted ground, the hero window with the logo, the app label, the heading
+plaque, the cream instruction card, and the sign-out button. The ground is a fixed layer, so a
+full-page shot would show the cream body below the viewport by design.
+
+## Commits
+
+- `b12ecce6cec7748f5f99e4f72e42e667d3220706` —
+  `feat(storytime): give the signed-in home the look (track_id: storytime_at_home_release_20261106)`
+  (96 characters). Three paths: the home page, the frame, and the browser gate.
+- The plan evidence commit follows this log and names `b12ecce6c`. Task 3.3 stays `[~]` until the
+  reviews pass.
+
+No push, no merge into the 11-20 candidate, and no deploy occurred.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: storytime_at_home_release_20261106
+phase: Phase 3: At-home deploy
+baseline_sha: 950d6eebf0148b6df05baf678d2b674b3271d171
+role_base_sha: 25200e4362d313557f3a4e25179952f54e11d60d
+resulting_HEAD: b12ecce6cec7748f5f99e4f72e42e667d3220706
+commits: b12ecce6c (implementation), then the plan-evidence commit
+tests_run:
+  - CI=true pnpm --filter storytime exec vitest run --maxWorkers=1 __tests__/phase3-home-look-red.test.ts — exit 0; files=1 passed; tests=6 passed
+  - CI=true pnpm --filter storytime exec vitest run --maxWorkers=1 __tests__/phase3-home-look-red.test.ts __tests__/look-assets.test.ts __tests__/look-frame.test.tsx — exit 0; files=3; tests=39 passed
+  - pnpm --filter storytime exec tsc --noEmit — exit 0
+  - eslint "app/[locale]/st/page.tsx" "app/[locale]/frame.tsx" — exit 0
+  - bash -n apps/storytime/__tests__/phase3-browser-gate.sh — exit 0
+  - phase3-browser-gate.sh through heavy-run — exit 0; shell PASS=5 FAIL=0; Playwright PASS=84 FAIL=0
+files_changed:
+  - apps/storytime/app/[locale]/st/page.tsx
+  - apps/storytime/app/[locale]/frame.tsx
+  - apps/storytime/__tests__/phase3-browser-gate.sh
+files_added: none
+first_load: transferred_bytes_first_load=284267; with_place_pictures=584301; place_pictures_excluded=2
+screenshots:
+  - /home/daniebo/.cache/st-home-look/st-home-390x844.png
+  - /home/daniebo/.cache/st-home-look/st-home-980x800.png
+  - /home/daniebo/.cache/st-home-look/st-home-1280x800.png
+plan_updates: 3.3 keeps [~]; the plan gains the Green evidence, the 3 new browser-gate rows, and the first-load numbers
+tasks_flipped_to_x: none
+tasks_flipped_to_b: none
+known_failures: none
+handoff: The signed-in home page holds the Storytime look, and the browser gate proves the place ground at 390, 980, and 1280 px. Task 3.3 stays [~] for the review roles. The first green build stopped once on the Next.js security notice; the F4 rerun passed. The worktree needed a local pnpm install because its node_modules were symlinks to the main checkout.
+dispositions: none
+blocked: none
+END_MEASURE_AGENT_RESULT
+
+## Green r2: the language tags (Review A N1, N2, N3)
+
+role_base_sha: c98a3721910c54f4934077981d6214528d4f91a7
+date: 2026-11-19
+model: opencode-go/deepseek-v4.1-flash
+
+### The fixes
+
+- N1: the plaque `h1` of a page that passes `bar` takes the page locale, so the Thai home heading
+  is tagged `th`. A route page keeps `lang="en"`, because the week titles are English.
+- N2: the label `p` of a page that passes `bar` is tagged `en`, because the home bar text
+  "Storytime Advantage" is English. A route page keeps the interface locale of its localized label.
+- Both rules read `hasBar` in `apps/storytime/app/[locale]/frame.tsx`. The week-page output is
+  unchanged: `labelLang=locale` and `titleLang="en"` on the route branch.
+- N3: the targeted run adds `look-brand-chrome.test.tsx`, `look-council-r1.test.tsx`, and
+  `look-adversarial-p2.test.tsx`.
+
+### Green r2 checks
+
+| Check | Result |
+|---|---|
+| 6-file targeted run (Red file, look-assets, look-frame, 3 N3 files) | exit 0, `Test Files 6 passed (6)`, `Tests 65 passed (65)` |
+| `pnpm --filter storytime exec tsc --noEmit` | exit 0 |
+| ESLint on `app/[locale]/frame.tsx` | exit 0 |
+| Browser gate | not run: a `lang` attribute changes no pixel; the picture check passed at `c98a37219` |
+
+### Open conflict for a Mid Red retry
+
+`apps/storytime/__tests__/look-adversarial-p2b.test.tsx` is a fourth direct `Frame` importer,
+outside the named N3 set. Its H5 and H9 cases treat `/st` as a page without a place and fail with
+`fallback: main is reached by the rule main[data-place]`. The same 2 cases fail at the role base
+`c98a37219` (`Tests 2 failed | 7 passed (9)`), because task 3.3 supersedes that premise. Green did
+not edit the committed test. The file needs a Mid Red retry before the phase gate can pass.
+
+### Green r2 commits
+
+- `cc85afebf1a0da7cf0a06d2054ad5b6dd86f7790` —
+  `fix(storytime): tag the home plaque language (track_id: storytime_at_home_release_20261106)`
+  (91 characters). The frame file is the only path.
+- The plan evidence commit follows this log and names `cc85afebf`. Task 3.3 stays `[~]`.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: storytime_at_home_release_20261106
+phase: Phase 3: At-home deploy
+baseline_sha: 950d6eebf0148b6df05baf678d2b674b3271d171
+role_base_sha: c98a3721910c54f4934077981d6214528d4f91a7
+resulting_HEAD: cc85afebf1a0da7cf0a06d2054ad5b6dd86f7790
+commits: cc85afebf (implementation), then the plan-evidence commit
+review_findings: N1 fixed, N2 fixed, N3 fixed
+tests_run:
+  - CI=true pnpm --filter storytime exec vitest run --maxWorkers=1 __tests__/phase3-home-look-red.test.ts __tests__/look-assets.test.ts __tests__/look-frame.test.tsx __tests__/look-brand-chrome.test.tsx __tests__/look-council-r1.test.tsx __tests__/look-adversarial-p2.test.tsx — exit 0; files=6 passed; tests=65 passed
+  - pnpm --filter storytime exec tsc --noEmit — exit 0
+  - eslint "app/[locale]/frame.tsx" — exit 0
+  - browser gate — not run: a lang attribute changes no pixel; the picture check passed at c98a37219
+files_changed:
+  - apps/storytime/app/[locale]/frame.tsx
+week_page_output: unchanged (route branch keeps labelLang=locale and titleLang="en")
+known_failures: apps/storytime/__tests__/look-adversarial-p2b.test.tsx H5 and H9 fail at role base c98a37219 and after the fix (2 failed | 7 passed); its plain-page rule treats /st as holding no place, which task 3.3 supersedes; the committed test needs a Mid Red retry and was not edited
+plan_updates: 3.3 keeps [~]; the plan gains the Green r2 evidence and the open p2b conflict
+tasks_flipped_to_x: none
+tasks_flipped_to_b: none
+handoff: N1, N2, and N3 are fixed and the targeted 6-file set, tsc, and ESLint pass. Route the look-adversarial-p2b H5/H9 contradiction to a Mid Red retry; Green must not edit that committed test.
+dispositions: N1=FIX; N2=FIX; N3=FIX
+blocked: none for N1, N2, and N3; look-adversarial-p2b needs a Mid Red retry before the phase gate
+END_MEASURE_AGENT_RESULT

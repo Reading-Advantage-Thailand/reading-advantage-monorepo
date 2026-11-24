@@ -772,6 +772,41 @@ try {
     return { ok: index >= 0 && network.requests[index].afterTap, detail: `first_media_request_index=${index}` };
   });
 
+  // Task 3.3 (post-launch home look): the signed-in home page at /th/st carries the home place
+  // of the look, so the ground layer paints at every width. The row reads the computed
+  // background-image of `main[data-place]::before`; a page without the look answers none. The
+  // screenshot is a viewport shot on purpose: the ground layer is fixed, so it paints the
+  // viewport only, and a full-page shot shows the cream body below it by design.
+  const homeLookDir = process.env.PROJECT_HOME_LOOK_DIR;
+  async function placeGround(pg) {
+    return pg.evaluate(() => {
+      const main = document.querySelector('main[data-place]');
+      if (!main) return { place: null, image: 'none', painted: false };
+      const image = getComputedStyle(main, '::before').backgroundImage;
+      return { place: main.getAttribute('data-place'), image, painted: image !== 'none' && /url\(/.test(image) };
+    });
+  }
+  for (const viewport of [{ width: 390, height: 844 }, { width: 980, height: 800 }, { width: 1280, height: 800 }]) {
+    await runCheck(`Task 3.3 signed-in home shows the place ground at ${viewport.width}`, async () => {
+      const pg = await signedPage();
+      try {
+        await pg.setViewportSize(viewport);
+        await pg.goto(`${base}/th/st`, { waitUntil: 'networkidle' });
+        const ground = await placeGround(pg);
+        if (homeLookDir) {
+          const fs = await import('node:fs');
+          const path = await import('node:path');
+          fs.mkdirSync(homeLookDir, { recursive: true });
+          await pg.screenshot({ path: path.join(homeLookDir, `st-home-${viewport.width}x${viewport.height}.png`) });
+        }
+        console.log(`home_place_ground_${viewport.width}=${ground.painted} (place=${ground.place}, background_image=${ground.image.slice(0, 90)})`);
+        return { ok: ground.painted, detail: `place=${ground.place}, background_image=${ground.image.slice(0, 90)}` };
+      } finally {
+        await pg.close();
+      }
+    });
+  }
+
   for (const viewport of [{ width: 360, height: 800 }, { width: 800, height: 360 }]) {
     const dimensions = await runCheck(`Measure targets at ${viewport.width}x${viewport.height}`, async () => {
       if (!page) throw new Error('Browser page is unavailable');
@@ -1465,7 +1500,7 @@ NODE
 
 echo "=== Run Playwright with SYSTEM Chrome (channel: chrome); timeout 15m ==="
 if [ "$READY" -eq 1 ]; then
-  PROJECT_DEV_URL="http://127.0.0.1:$PORT" PROJECT_FIXTURE_WEEK="$FIXTURE/l2/w01.json" PROJECT_SIGN_IN_USER=staff-01 PROJECT_SIGN_IN_PASSWORD="$STAFF_PASSWORD" timeout 15m node "$PLAYWRIGHT"
+  PROJECT_DEV_URL="http://127.0.0.1:$PORT" PROJECT_FIXTURE_WEEK="$FIXTURE/l2/w01.json" PROJECT_SIGN_IN_USER=staff-01 PROJECT_SIGN_IN_PASSWORD="$STAFF_PASSWORD" PROJECT_HOME_LOOK_DIR="${HOME}/.cache/st-home-look" timeout 15m node "$PLAYWRIGHT"
   PW_RC=$?
   if [ "$PW_RC" -eq 0 ]; then pass "Playwright gate exits 0"; else fail "Playwright gate exits $PW_RC"; fi
 else
