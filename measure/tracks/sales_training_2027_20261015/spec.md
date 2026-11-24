@@ -398,7 +398,8 @@ The claims criterion has passingScore 90. It fails the attempt on any one of the
 2. False urgency.
 3. A promise of Read Along with Reedy.
 4. A book that is not printed, or any level above book level 4.
-5. GSE, Pearson, or YLE words.
+5. GSE or Pearson words. Cambridge Young Learners is allowed in one form only, word for word: "the program was created to prepare students for the Cambridge Young Learners exams". Any other Cambridge form is a fail. The bans stay: no Cambridge logo, and none of the words "official", "partner", "authorised", "approved", "endorsed", or "Cambridge-approved". The GSE, Pearson, and Cambridge YLE word lists stay internal.
+   - _Amendment 2026-11-24 (PM ruling 2026-11-24, AGENTS.md principle 9: policy wins). The outcome-claims policy at the pin allows the one exam-preparation form. The scope doc still bans YLE in a line to a parent or a school. The policy governs. PM words: "[the PM] allow only this form: 'the program was created to prepare students for the Cambridge Young Learners exams'. Keep the bans: no logo, and none of the words official, partner, authorised, approved, endorsed, Cambridge-approved. Word lists stay internal."_
 6. A book name without the product name.
 7. An earnings figure in a family sale (commission talk belongs to recruitment only).
 8. A Managed Service sale, or a date for Science, Math, Zhongwen, or Storytime Advantage, for a new edition, or for a pilot start. The May 2027 line in section 4 is the only date that a trainee may say.
