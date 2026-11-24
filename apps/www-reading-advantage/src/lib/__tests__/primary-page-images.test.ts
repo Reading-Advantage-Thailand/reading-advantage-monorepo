@@ -2,6 +2,7 @@
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
@@ -19,7 +20,7 @@ import {
  */
 
 const APP_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
-const SOURCE_ROOT = process.env.A34_SOURCE_ROOT ?? "/home/daniebo/Desktop/advantage-pr";
+const SOURCE_ROOT = process.env.A34_SOURCE_ROOT ?? join(homedir(), "Desktop/advantage-pr");
 const LIST_PATH = join(SOURCE_ROOT, "11-content/www-primary-advantage-page-images.md");
 const BRIEF_PATH = join(SOURCE_ROOT, "11-content/www-primary-advantage-page-brief.md");
 const OUTPUT_DIR = join(APP_ROOT, "public/images/primary-advantage");
