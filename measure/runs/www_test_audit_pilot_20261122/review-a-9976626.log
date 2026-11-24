@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: None; this was an artifact audit. The existing Green log reports 1412 tests passed.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-9976626.json and review-a-9976626.log
+plan_updates: none
+known_failures: F43: finding IDs and dispositions remain in Finding history. F44: green-*.log files do not contain dispositions lines. F45: coverage logs end with coverage summaries, not test summaries.
+handoff: F33, F34, F38, and F41 source checks pass. Twelve independent samples match their files. Route F43-F45 to Green. The exact range changes only report.md and plan.md.
+dispositions: none
+END_MEASURE_AGENT_RESULT

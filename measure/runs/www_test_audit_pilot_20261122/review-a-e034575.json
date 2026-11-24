@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "e034575f4159e6977231c22e0f6ffc93f1512d53",
+  "phase_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "role_base_sha": "e034575f4159e6977231c22e0f6ffc93f1512d53",
+  "audited_head_sha": "e034575f4159e6977231c22e0f6ffc93f1512d53",
+  "status": "fail",
+  "summary": "F27 and F28 are closed. K rows and timing sums match their sources. The changed report incorrectly says the timing JSON has a zero duration field; that field is absent.",
+  "blocking_findings": [
+    "F29 [Blocker] review-a: report.md:256 says the timing JSON duration field reads zero. timing-at-head.json has no top-level duration field; its root keys omit duration, and its assertionResults contain nonzero duration values. Replace the claim with the actual JSON structure before deriving per-file sums."
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD returned e034575f4159e6977231c22e0f6ffc93f1512d53, matching role_base_sha and audited_head_sha.",
+    "F27 withdrawn: report.md:83–161 now gives all 77 K rows a Mutation check cell. A fresh count gives 77 rows, 2843 cases, 67 none statuses, 10 proof-log statuses, and no blank status.",
+    "Three named proof logs match their K rows: proof-f4b.log fails src/__tests__/phase-3-i18n.red.test.ts; proof-r2-phase-4-browser-regressions.log fails src/__tests__/phase-4-browser-regressions.red.test.tsx; proof-f12-r2.log fails src/__tests__/www-pricing-page.content.test.tsx.",
+    "F28 withdrawn: report.md:252–268 states that the cause is not recorded, labels the explanation HYPOTHESIS, says the hypothesis is not proven, and recommends a per-file follow-up. It does not claim that the pilot made the suite faster.",
+    "The five file totals in report.md:258–264 match sums of assertionResults[].duration in timing-at-head.json: 6461.93, 1649.38, 1303.32, 970.85, and 859.77 ms. All five paths are unchanged K rows.",
+    "F29 is in the newly added timing paragraph. timing-at-head.json root keys are numTotalTestSuites, numPassedTestSuites, numFailedTestSuites, numPendingTestSuites, numTotalTests, numPassedTests, numFailedTests, numPendingTests, numTodoTests, snapshot, startTime, success, and testResults. There is no root duration field. The first test result has assertionResults, startTime, endTime, status, message, and name; it also has no file duration field.",
+    "The exact diff 4d41866fd..e034575f4 changes only report.md and plan.md. The rest of the report is unchanged from the prior audit.",
+    "The plan records the F27/F28 remediation at task 4.4 and names the changed report, review log, and timing evidence. The timing-at-head.log shows the verbose run at the audited head."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --name-status 4d41866fdde7d7c53359684485682e6fd06b27a5..e034575f4159e6977231c22e0f6ffc93f1512d53",
+    "python3 -c \"from pathlib import Path; p=Path('measure/tracks/www_test_audit_pilot_20261122/report.md').read_text().splitlines(); a=p.index('| K file group | Cases | Mutation check |'); b=next(i for i in range(a+1,len(p)) if p[i].startswith('## ')); rows=[x for x in p[a+2:b] if x.startswith('| src/')]; cells=[x.strip().strip('|').split('|') for x in rows]; counts=[int(c[1].strip()) for c in cells]; statuses=[c[2].strip() for c in cells]; print('groups=',len(rows),'cases=',sum(counts),'none=',statuses.count('none'),'proof_rows=',sum(s!='none' for s in statuses),'blank=',sum(not s for s in statuses))\"",
+    "python3 -c \"import json; d=json.load(open('measure/runs/www_test_audit_pilot_20261122/timing-at-head.json')); rows=[]; [(rows.append((sum((a.get('duration') or 0) for a in r.get('assertionResults',[])), r['name'].split('/apps/www-reading-advantage/')[1] if '/apps/www-reading-advantage/' in r['name'] else r['name']))) for r in d['testResults']]; print('root_duration=',d.get('duration')); [print(f'{p}: {ms:.2f} ms') for ms,p in sorted(rows,reverse=True)[:5]]\"",
+    "python3 -c \"import json; d=json.load(open('measure/runs/www_test_audit_pilot_20261122/timing-at-head.json')); print('root keys=',list(d)); print('first test result keys=',list(d['testResults'][0]))\"",
+    "git diff 4d41866fdde7d7c53359684485682e6fd06b27a5..e034575f4159e6977231c22e0f6ffc93f1512d53 -- measure/tracks/www_test_audit_pilot_20261122/report.md measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "changed_files": [
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "measure/tracks/www_test_audit_pilot_20261122/report.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "The K statuses and five timing sums match their sources, but report.md:256 claims an absent JSON duration field is zero."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "No suite run was requested; report completeness and timing calculations were checked directly against artifacts."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The exact remediation diff changes report.md and plan.md only."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "K counts, proof targets, timing sums, and JSON fields were checked against the named files."
+    }
+  ]
+}

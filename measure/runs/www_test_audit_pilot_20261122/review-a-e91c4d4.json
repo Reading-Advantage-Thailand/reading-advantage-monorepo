@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 3: Rewrite batch (R1-R3)",
+  "baseline_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "phase_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "role_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "audited_head_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "status": "pass",
+  "summary": "F25 is closed. The loader reads regular .md files and symlinks to regular files; it reports unreadable .md entries instead of silently omitting them. All 15 blog rules and two discovery cases remain. The change is test-only, and the case reduction is 55.53%.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD returned e91c4d4cc3c8d5d61a1e9b802c031247543180fa, matching role_base_sha and audited_head_sha.",
+    "F25 withdrawn: checked the symlink loader, brokenPostRefs, the three symlink unit cases, the failing-first proof, and the merged validation. A symlink to a regular .md target is listed and parsed; broken or non-regular .md entries are flagged.",
+    "The phase-base test used readdirSync(localeDir).filter(name => name.endsWith('.md')) and readFileSync for each result. Current listPostFiles includes regular files and symlinks to regular files; loadAllPosts reads the same exact lowercase .md suffix and readFileSync follows symlinks.",
+    "Current listPostFiles skips directory entries and symlinks that do not target regular files. brokenPostRefs identifies every case-insensitive .md name whose stat target is not a regular file or cannot be statted; both discovery tests assert that list is empty. The ADV-22 directory-symlink probe proves the validation fails and names the entry.",
+    "A locale-directory symlink is not traversed by localeDirectories because Dirent.isDirectory() is false for a symlink. The phase-base validation used the same isDirectory() filter, so this does not meet the brief's blocker condition. adversarial-e91c4d4.json records this existing gap as ADV-23.",
+    "blog.ts:79–85 discovers names using readdirSync and the case-sensitive .md suffix. Current listPostFiles also includes dot-prefixed regular and symlinked files; blog-posts-loader-dotfile.test.ts proves a dot-prefixed .md file is listed and parsed.",
+    "blog-posts-validation.test.ts contains 17 cases: 15 field/content/naming/consistency rules and two discovery cases. The 15 rules still walk every parsed post, and both discovery cases assert no mislabelled or broken .md entry remains.",
+    "The targeted Vitest command passed 4 files and 24 tests. The verbose output shows all 15 validation rules and both discovery cases passing, plus the loader and adversarial cases.",
+    "proof-f25.log shows a symlinked blank-title post fails the title rule and names its locale and slug. proof-adv22.log shows a .md directory symlink fails both discovery cases and is named.",
+    "gate-66aeb1011.json records full GREEN, coverage, type-check, and lint exits of 0 at this phase head; it records 1412 cases and 92.07% line coverage against the 85.52% floor. The baseline receipt records 3175 cases and 86.52% line coverage.",
+    "The case reduction is 55.53% (3175 to 1412); the 20% target permits at most 2540 cases.",
+    "The exact diff 8a126f612abcc258c6c6711d6ac03fa085bbcbff..e91c4d4cc3c8d5d61a1e9b802c031247543180fa has 19 changed paths. All are tests, test fixtures, or Measure plan evidence; no production file or blog post changed.",
+    "The diff has no whitespace errors. git status --short is empty.",
+    "test-strategy.md:11 records that graph.db is absent and the track changes no exported product symbol. rg references for the changed fixture exports show consumers only in the validation test and loader probes; no production caller changed."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --name-status 8a126f612abcc258c6c6711d6ac03fa085bbcbff..e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+    "python3 -c \"import subprocess; d='8a126f612abcc258c6c6711d6ac03fa085bbcbff..e91c4d4cc3c8d5d61a1e9b802c031247543180fa'; f=subprocess.check_output(['git','diff','--name-only',d],text=True).splitlines(); bad=[p for p in f if not (p.startswith('measure/') or ('apps/www-reading-advantage/src/' in p and ('.test.' in p or '/__tests__/' in p)))]; print('changed=',len(f),'outside_test_fixture_measure=',bad)\"",
+    "git diff --check 8a126f612abcc258c6c6711d6ac03fa085bbcbff..e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts src/__tests__/blog-posts-loader-dotfile.test.ts src/__tests__/blog-posts-loader-symlink.test.ts src/lib/blog-posts-validation.test.ts --reporter=verbose",
+    "python3 -c \"baseline=3175; current=1412; print('reduction_pct=', round((baseline-current)*100/baseline, 2), '20pct_max=', int(baseline*0.8))\"",
+    "rg -n '\\b(brokenPostRefs|mislabelledPostRefs|listPostFiles|loadAllPosts)\\b' apps/www-reading-advantage/src",
+    "git status --short"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/blog-posts-loader-dotfile.test.ts",
+    "apps/www-reading-advantage/src/__tests__/blog-posts-loader-symlink.test.ts",
+    "apps/www-reading-advantage/src/__tests__/blog-posts-loader.adversarial.test.ts",
+    "apps/www-reading-advantage/src/__tests__/contrast-fixture.test.ts",
+    "apps/www-reading-advantage/src/__tests__/contrast-parent-override.adversarial.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/fixtures/blog-posts-loader.ts",
+    "apps/www-reading-advantage/src/__tests__/fixtures/contrast.ts",
+    "apps/www-reading-advantage/src/__tests__/fixtures/real-css.ts",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions-final.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/www-reading-cover.red.test.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/blended-learning/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/managed-service/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/page.test.tsx",
+    "apps/www-reading-advantage/src/components/blog/blog-pagination.test.tsx",
+    "apps/www-reading-advantage/src/components/marketing/hero-section.test.tsx",
+    "apps/www-reading-advantage/src/lib/blog-posts-validation.test.ts",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "The loader matches regular and file-symlink reads and flags other .md entries; locale-directory symlinks remain outside the phase-base fixture's coverage."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "The 4-file targeted run passes 24 tests, and proof-f25.log and proof-adv22.log show failing-first fixtures."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The exact 19-path diff contains only tests, fixtures, and plan.md; no production file or post changed."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The verdict cites the current targeted run, phase gate, adversarial proof, baseline, exact diff, and working-tree status."
+    }
+  ]
+}

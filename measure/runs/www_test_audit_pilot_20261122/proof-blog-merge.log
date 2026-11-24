@@ -1,0 +1,227 @@
+MUTATION PROOF — blog-posts-validation merge (task 3.5)
+
+The merged validation test has one case per rule. Each mutation below breaks
+one post in the en/ locale, runs the merged test, and restores the post file.
+A passing merge proof shows exit 1 and a failure line naming
+en/1-district-1-quality-school with the broken rule.
+
+=== MUTATION title rule ===
+Post file: apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/posts/en/1-district-1-quality-school.md
+Edit: 'title: "1 District 1 Quality School: A Parent\'s Guide to Thailand\'s Education Revolution"' -> 'title: ""'
+Expected: merged test exits 1 and names en/1-district-1-quality-school.
+Test exit code: 1
+--- test output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > discovers at least one post in the en/ directory 1ms
+ × src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > title is a non-empty string on every post 5ms
+   → expected [ Array(1) ] to deeply equal []
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > date is present and matches YYYY-MM-DD on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > date is a valid calendar date on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > excerpt is a non-empty string on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > author is a non-empty string on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > tags is an array on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > every tag is a non-empty string on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — optional fields > readingTime if present is a positive number on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — optional fields > coverImage if present is an absolute path starting with / on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — optional fields > coverImage if present exists on disk on every post 1ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post content > has a non-empty body after frontmatter on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post content > does not embed raw frontmatter delimiters in any body 1ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post file naming > slug is URL-safe on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post file naming > file uses the .md extension on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > cross-locale consistency > en/ directory exists and is non-empty (canonical source) 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > cross-locale consistency > a matching non-en post is never older than its en post 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > title is a non-empty string on every post
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "en/1-district-1-quality-school: title is a non-empty string",[39m
+[31m+ ][39m
+
+ ❯ src/lib/blog-posts-validation.test.ts:105:7
+    103|         isNonEmptyString(post.data.title),
+    104|       ),
+    105|     ).toEqual([]);
+       |       ^
+    106|   });
+    107|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 16 passed (17)
+   Start at  14:48:44
+   Duration  711ms (transform 28ms, setup 66ms, import 41ms, tests 12ms, environment 425ms)
+
+
+
+=== MUTATION date format rule ===
+Post file: apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/posts/en/1-district-1-quality-school.md
+Edit: 'date: "2026-04-25"' -> 'date: "25-04-2026"'
+Expected: merged test exits 1 and names en/1-district-1-quality-school.
+Test exit code: 1
+--- test output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > discovers at least one post in the en/ directory 1ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > title is a non-empty string on every post 1ms
+ × src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > date is present and matches YYYY-MM-DD on every post 5ms
+   → expected [ Array(1) ] to deeply equal []
+ × src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > date is a valid calendar date on every post 1ms
+   → expected [ Array(1) ] to deeply equal []
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > excerpt is a non-empty string on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > author is a non-empty string on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > tags is an array on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > every tag is a non-empty string on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — optional fields > readingTime if present is a positive number on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — optional fields > coverImage if present is an absolute path starting with / on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — optional fields > coverImage if present exists on disk on every post 1ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post content > has a non-empty body after frontmatter on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post content > does not embed raw frontmatter delimiters in any body 1ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post file naming > slug is URL-safe on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post file naming > file uses the .md extension on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > cross-locale consistency > en/ directory exists and is non-empty (canonical source) 0ms
+ × src/lib/blog-posts-validation.test.ts > cross-locale consistency > a matching non-en post is never older than its en post 1ms
+   → expected [ Array(1) ] to deeply equal []
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > date is present and matches YYYY-MM-DD on every post
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "en/1-district-1-quality-school: date matches YYYY-MM-DD",[39m
+[31m+ ][39m
+
+ ❯ src/lib/blog-posts-validation.test.ts:113:7
+    111|         typeof post.data.date === "string" && ISO_DATE_RE.test(post.da…
+    112|       ),
+    113|     ).toEqual([]);
+       |       ^
+    114|   });
+    115|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > date is a valid calendar date on every post
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "en/1-district-1-quality-school: date is a valid calendar date",[39m
+[31m+ ][39m
+
+ ❯ src/lib/blog-posts-validation.test.ts:121:7
+    119|         !isNaN(new Date(post.data.date as string).getTime()),
+    120|       ),
+    121|     ).toEqual([]);
+       |       ^
+    122|   });
+    123|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/lib/blog-posts-validation.test.ts > cross-locale consistency > a matching non-en post is never older than its en post
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "th/1-district-1-quality-school: date is not older than en post",[39m
+[31m+ ][39m
+
+ ❯ src/lib/blog-posts-validation.test.ts:274:7
+    272|         },
+    273|       ),
+    274|     ).toEqual([]);
+       |       ^
+    275|   });
+    276| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 14 passed (17)
+   Start at  14:48:55
+   Duration  705ms (transform 28ms, setup 66ms, import 43ms, tests 13ms, environment 421ms)
+
+
+
+=== MUTATION coverImage on disk rule ===
+Post file: apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/posts/en/1-district-1-quality-school.md
+Edit: 'coverImage: "/blog/day04-quality-school_001.jpg"' -> 'coverImage: "/blog/does-not-exist.jpg"'
+Expected: merged test exits 1 and names en/1-district-1-quality-school.
+Test exit code: 1
+--- test output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > discovers at least one post in the en/ directory 1ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > title is a non-empty string on every post 1ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > date is present and matches YYYY-MM-DD on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > date is a valid calendar date on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > excerpt is a non-empty string on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > author is a non-empty string on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > tags is an array on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > every tag is a non-empty string on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — optional fields > readingTime if present is a positive number on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — optional fields > coverImage if present is an absolute path starting with / on every post 0ms
+ × src/lib/blog-posts-validation.test.ts > blog post frontmatter — optional fields > coverImage if present exists on disk on every post 5ms
+   → expected [ Array(1) ] to deeply equal []
+ ✓ src/lib/blog-posts-validation.test.ts > blog post content > has a non-empty body after frontmatter on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post content > does not embed raw frontmatter delimiters in any body 1ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post file naming > slug is URL-safe on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post file naming > file uses the .md extension on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > cross-locale consistency > en/ directory exists and is non-empty (canonical source) 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > cross-locale consistency > a matching non-en post is never older than its en post 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/blog-posts-validation.test.ts > blog post frontmatter — optional fields > coverImage if present exists on disk on every post
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "en/1-district-1-quality-school: coverImage exists on disk",[39m
+[31m+ ][39m
+
+ ❯ src/lib/blog-posts-validation.test.ts:201:7
+    199|             )),
+    200|       ),
+    201|     ).toEqual([]);
+       |       ^
+    202|   });
+    203| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 16 passed (17)
+   Start at  14:49:05
+   Duration  754ms (transform 30ms, setup 64ms, import 42ms, tests 11ms, environment 456ms)
+
+

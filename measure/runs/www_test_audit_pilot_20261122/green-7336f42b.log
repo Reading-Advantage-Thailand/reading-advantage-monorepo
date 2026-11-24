@@ -1,0 +1,20 @@
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4 report (Review A F1, F2 and notes)
+commits:
+  - 7336f42b31b2a80eb4ba61a093a84ada9befa866 (fix report counts and add tech-debt notes)
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: ecff7cfadfe454ebc5baeacf9ae1f8f7f30ece42
+final_green_head: 7336f42b31b2a80eb4ba61a093a84ada9befa866
+dispositions: F1=FIX; F2=FIX; N9=FIX; N10=FIX; N8=FIX
+tests_run: None. This round is documents only. No test suite ran and no production or test file changed.
+files_changed:
+  - measure/tracks/www_test_audit_pilot_20261122/report.md
+  - measure/tracks/www_test_audit_pilot_20261122/plan.md
+  - measure/tech-debt.md
+plan_updates: One line under task 4.18 names this round's change without a SHA. No new task was added and no earlier task or SHA changed. '- Late finding N8: tech-debt (...)' was added under the Phase 4 heading. No task flipped to [b].
+known_failures: None. The commit subject is 98 characters, within the 100-character limit. No line citation and no undated run-file count was added. measure/tech-debt.md stays at 50 lines.
+handoff: F1 is fixed in report.md section 4. The K rows section gives 2843 cases for 77 file groups; the Summary table gives 3064 K cases (96.5 %) after the 221 reverted D5 cases returned to K status. Both the opening sentence and the closing sentence now state both values. F2 is fixed in section 3: one lint warning remains, the pre-existing unused beforeEach import; the sectionOf and copy warnings went away with the D5 revert. No other lint warning count remains in report.md. N9 is fixed in section 1: the ca91946b pin case was removed again by the D5 revert, the restored pre-D5 file holds the original pins, and the net count is the final 1494. N10 is fixed in the tech-debt row title, which now names ADV-P1-9 and N8. N8 is recorded as a late finding under the Phase 4 heading and as a one-line entry in the tech-debt row. git diff --stat lists only the three allowed documents. No push was made. Substitution note from earlier rounds still applies: the Red model family is not recorded in the run files; the picker excluded only openai.
+END_MEASURE_AGENT_RESULT

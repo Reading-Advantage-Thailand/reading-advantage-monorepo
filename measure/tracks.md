@@ -111,13 +111,6 @@ This file tracks all major tracks for the project.
 - [x] **Track: Sales Advantage Structural Alignment** *Link: [./tracks/sales_structural_alignment_20260919/](./tracks/sales_structural_alignment_20260919/)*
   Align shared authentication helpers, locale handling, keyboard access, announcements, and administrator navigation. **Implemented 2026-09-20 (5/6 tasks, 35 scoped tests green, tsc and eslint clean). Task 1 (shared `packages/auth` helper move) deferred — needs a dedicated cross-app track, registered in tech-debt; Task 6 recorded as tech-debt (App Router layout constraint); owner manual verification PASSED 2026-09-22.**
 
-- [ ] **Track: www test audit pilot** — *created 2026-11-22*
-  *Link: [./tracks/www_test_audit_pilot_20261122/](./tracks/www_test_audit_pilot_20261122/)*
-  *Status: new, opened 2026-11-22; Phase 1 (baseline and classification) next | Owner: Monorepo orchestrator | PM assignment A-66*
-  *Description: Pilot audit of the www-reading-advantage Vitest suite that deletes or rewrites tests in classes D1-D5 and R1-R3 to cut case count by 20 percent or more with no loss of fault detection.*
-
-
-
 
 ## Current Focus (owner-confirmed 2026-08-10)
 
@@ -675,6 +668,13 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 ---
 
 ## Archived Tracks
+
+- [x] **Track: www test audit pilot** — *created 2026-11-22, archived 2026-11-25*
+  *Link: [./archive/www_test_audit_pilot_20261122/](./archive/www_test_audit_pilot_20261122/)*
+  *Pilot audit of the www-reading-advantage Vitest suite that deletes or rewrites tests in classes D1-D5 and R1-R3 to cut case count by 20 percent or more with no loss of fault detection.*
+  *Status: done; final acceptance PASS at 2bfbd373fef2fc500798efe721975fa0a345e73f with blocking_findings empty and audited_head_sha equal to pre-closeout HEAD; Phase 1 to Phase 4 passing acceptances in measure/runs/www_test_audit_pilot_20261122/ | Owner: Monorepo orchestrator | PM assignment A-66*
+  *Final values: 1494 cases in 98 files; cut 1681 cases, or 52.9 % of the 3175 baseline; line coverage 86.52 % to 92.08 %; the whole cut comes from the PM-approved blog merge. D5 was reverted by PM decision 2026-11-25, option C, because it lost price, baht and commission pins. No push; no production file changed.*
+  *Note: Phase 4 result phase-acceptance-d2c8e63.json is superseded by phase-acceptance-p4-2bfbd37.json. Open items stay open by PM decision: bash measure/doctor.sh exits 1 on the stale architecture pin (PM acknowledged 2026-11-24); F52 to F55; N13 and N14; ADV-26 to ADV-32, ADV-P1-9 and N8 in measure/tech-debt.md; the 16.2 % second-check exception; and the F11 and F18 exceptions.*
 
 - [x] **Track: www features and pricing rewrite (A-70, row FP1)** — *created 2026-11-20, archived 2026-11-21*
   *Link: [./archive/www_features_pricing_20261120/](./archive/www_features_pricing_20261120/)*

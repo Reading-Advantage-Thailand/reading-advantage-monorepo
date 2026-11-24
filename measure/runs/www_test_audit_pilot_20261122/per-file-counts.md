@@ -1,0 +1,101 @@
+# Per-file runner counts: www test audit pilot
+
+Source: the Phase 1 JSON reporter run (3175 passed cases, 91 files).
+Runner count comes from the JSON `assertionResults` length per file.
+Row sum comes from classification.md counted case rows.
+
+| File | Runner | Rows | Match |
+|---|---|---|---|
+| src/__tests__/blog-figure-natural-size.test.ts | 4 | 4 | yes |
+| src/__tests__/blog-hero-height.red.test.ts | 3 | 3 | yes |
+| src/__tests__/hero-text-contrast.red.test.ts | 2 | 2 | yes |
+| src/__tests__/no-gse-in-customer-copy.test.ts | 4 | 4 | yes |
+| src/__tests__/phase-2-seo-assets.red.test.ts | 4 | 4 | yes |
+| src/__tests__/phase-2-seo-blog-routes.red.test.ts | 10 | 10 | yes |
+| src/__tests__/phase-2-seo-remaining-static.red.test.ts | 10 | 10 | yes |
+| src/__tests__/phase-3-group-b-types.test.ts | 5 | 5 | yes |
+| src/__tests__/phase-3-i18n.red.test.ts | 5 | 5 | yes |
+| src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx | 4 | 4 | yes |
+| src/__tests__/phase-4-browser-regressions-final.red.test.tsx | 2 | 2 | yes |
+| src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx | 2 | 2 | yes |
+| src/__tests__/phase-4-browser-regressions.red.test.tsx | 3 | 3 | yes |
+| src/__tests__/phase-4-contact-authority.red.test.tsx | 3 | 3 | yes |
+| src/__tests__/phase-4-contact-copy.red.test.tsx | 4 | 4 | yes |
+| src/__tests__/phase-5-pricing-legal.red.test.tsx | 2 | 2 | yes |
+| src/__tests__/products-entrance-visibility.red.test.ts | 3 | 3 | yes |
+| src/__tests__/products-page-pictures.red.test.tsx | 23 | 23 | yes |
+| src/__tests__/proxy-redirect.test.ts | 5 | 5 | yes |
+| src/__tests__/www-batch-20261116.locale.test.ts | 53 | 53 | yes |
+| src/__tests__/www-batch-20261119.locale.test.ts | 37 | 37 | yes |
+| src/__tests__/www-features-look-pins.red.test.ts | 14 | 14 | yes |
+| src/__tests__/www-features-page.content.test.tsx | 38 | 38 | yes |
+| src/__tests__/www-features-pricing.assets.test.ts | 21 | 21 | yes |
+| src/__tests__/www-features-pricing.locale.test.ts | 22 | 22 | yes |
+| src/__tests__/www-pricing-page.content.test.tsx | 29 | 29 | yes |
+| src/__tests__/www-pricing-required-rows.red.test.ts | 7 | 7 | yes |
+| src/__tests__/www-pricing-rows-fluid.red.test.ts | 5 | 5 | yes |
+| src/__tests__/www-pricing-stacking.red.test.ts | 22 | 22 | yes |
+| src/__tests__/www-reading-card.red.test.ts | 14 | 14 | yes |
+| src/__tests__/www-reading-cover.red.test.ts | 10 | 10 | yes |
+| src/__tests__/www-stem-date-line.locale.test.ts | 11 | 11 | yes |
+| src/__tests__/www-tutor-calculator.locale.test.ts | 21 | 21 | yes |
+| src/__tests__/www-tutor-followups.adversarial.test.ts | 5 | 5 | yes |
+| src/__tests__/www-tutor-reedy-claim.test.tsx | 17 | 17 | yes |
+| src/__tests__/www-tutor-screens-copy.adversarial.test.ts | 5 | 5 | yes |
+| src/app/[locale]/(marketing)/(home)/page.test.tsx | 6 | 6 | yes |
+| src/app/[locale]/(marketing)/blog/page.test.tsx | 9 | 9 | yes |
+| src/app/[locale]/(marketing)/products/codecamp-advantage/page.test.tsx | 4 | 4 | yes |
+| src/app/[locale]/(marketing)/products/math-advantage/page.test.tsx | 4 | 4 | yes |
+| src/app/[locale]/(marketing)/products/primary-advantage/page.adversarial.test.tsx | 40 | 40 | yes |
+| src/app/[locale]/(marketing)/products/primary-advantage/page.content.test.tsx | 155 | 155 | yes |
+| src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx | 3 | 3 | yes |
+| src/app/[locale]/(marketing)/products/reading-advantage/page.test.tsx | 6 | 6 | yes |
+| src/app/[locale]/(marketing)/products/science-advantage/page.test.tsx | 4 | 4 | yes |
+| src/app/[locale]/(marketing)/products/stem-advantage/page.test.tsx | 4 | 4 | yes |
+| src/app/[locale]/(marketing)/products/storytime-advantage/page.content.test.tsx | 48 | 48 | yes |
+| src/app/[locale]/(marketing)/products/storytime-advantage/page.test.tsx | 2 | 2 | yes |
+| src/app/[locale]/(marketing)/products/tutor-advantage/page.adversarial.test.tsx | 5 | 5 | yes |
+| src/app/[locale]/(marketing)/products/tutor-advantage/page.followups.adversarial.test.tsx | 4 | 4 | yes |
+| src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx | 33 | 33 | yes |
+| src/app/[locale]/(marketing)/products/tutor-advantage/page.phase3.adversarial.test.tsx | 25 | 25 | yes |
+| src/app/[locale]/(marketing)/products/tutor-advantage/page.placeholders.test.tsx | 3 | 3 | yes |
+| src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx | 14 | 14 | yes |
+| src/app/[locale]/(marketing)/products/zhongwen-advantage/page.test.tsx | 4 | 4 | yes |
+| src/app/[locale]/(marketing)/services/blended-learning/page.test.tsx | 1 | 1 | yes |
+| src/app/[locale]/(marketing)/services/managed-service/page.test.tsx | 1 | 1 | yes |
+| src/app/[locale]/(marketing)/services/page.test.tsx | 3 | 3 | yes |
+| src/components/blog/blog-pagination.test.tsx | 6 | 6 | yes |
+| src/components/common/localized-link.test.tsx | 8 | 8 | yes |
+| src/components/layout/layout-components.test.ts | 1 | 1 | yes |
+| src/components/marketing/experience-demo.test.tsx | 3 | 3 | yes |
+| src/components/marketing/hero-section.test.tsx | 7 | 7 | yes |
+| src/components/marketing/mastery-advantage-graph.test.tsx | 13 | 13 | yes |
+| src/components/marketing/tutor-commission-calculator.adversarial.test.tsx | 17 | 17 | yes |
+| src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx | 30 | 30 | yes |
+| src/components/marketing/tutor-commission-calculator.test.tsx | 22 | 22 | yes |
+| src/components/products/storytime-song-player.test.tsx | 15 | 15 | yes |
+| src/lib/__tests__/phase-w3-claims.test.ts | 18 | 18 | yes |
+| src/lib/__tests__/primary-page-images.test.ts | 10 | 10 | yes |
+| src/lib/__tests__/real-logos-adversarial.test.ts | 114 | 114 | yes |
+| src/lib/__tests__/real-logos-captures-adversarial.test.ts | 103 | 103 | yes |
+| src/lib/__tests__/real-logos-captures.red.test.ts | 18 | 18 | yes |
+| src/lib/__tests__/real-logos-favicon.red.test.ts | 5 | 5 | yes |
+| src/lib/__tests__/real-logos-mapping.red.test.ts | 34 | 34 | yes |
+| src/lib/__tests__/real-logos-references.red.test.ts | 23 | 23 | yes |
+| src/lib/__tests__/site-assets.test.ts | 2 | 2 | yes |
+| src/lib/__tests__/storytime-page-images.test.ts | 3 | 3 | yes |
+| src/lib/__tests__/tutor-screens.adversarial.test.ts | 5 | 5 | yes |
+| src/lib/__tests__/tutor-screens.test.ts | 12 | 12 | yes |
+| src/lib/blog-blocks.test.ts | 18 | 18 | yes |
+| src/lib/blog-draft.test.ts | 6 | 6 | yes |
+| src/lib/blog-locale.test.ts | 6 | 6 | yes |
+| src/lib/blog-posts-validation.test.ts | 1726 | 1726 | yes |
+| src/lib/blog.test.ts | 28 | 28 | yes |
+| src/lib/tutor-commission.adversarial.test.ts | 24 | 24 | yes |
+| src/lib/tutor-commission.followups.adversarial.test.ts | 4 | 4 | yes |
+| src/lib/tutor-commission.settlement.adversarial.test.ts | 37 | 37 | yes |
+| src/lib/tutor-commission.test.ts | 34 | 34 | yes |
+| src/lib/wave2-product-claim-helper.test.ts | 12 | 12 | yes |
+| src/locales/navigation.test.tsx | 4 | 4 | yes |
+
+Total runner: 3175. Total rows: 3175.

@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 2: Delete batch (D1-D5)",
+  "baseline_sha": "5c477077724cb3a51fcf749e8c531c121793e12b",
+  "phase_base_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+  "role_base_sha": "5c477077724cb3a51fcf749e8c531c121793e12b",
+  "audited_head_sha": "5c477077724cb3a51fcf749e8c531c121793e12b",
+  "status": "pass",
+  "summary": "ADV-3 is closed. The shared eligibility fixture rejects all three reversal shapes while preserving the active rule and shipped copy. The type repair changes no assertion, and the F2 proof still fails as intended. Both commits pass their gates. No production file or K rule changed.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F17 [Nit] review-a: The unused compiledCss export is removed, but the full feature and pricing locale-key lists remain duplicated between www-features-pricing.locale.test.ts, www-features-page.content.test.tsx, and www-pricing-page.content.test.tsx. Keep each required list in one fixture."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned 5c477077724cb3a51fcf749e8c531c121793e12b, equal to role_base_sha and audited_head_sha.",
+    "The phase diff a1caa58034f6455e91205a5673ef172a974a7992..5c477077724cb3a51fcf749e8c531c121793e12b changes tests, test fixtures, and plan.md only. No production file changed.",
+    "ADV-3 withdrawn: reedy-inactive-reversal.adversarial.test.tsx:12–38 holds English non-active and in-active probes and a Thai cancellation probe. Each uses the shared eligibilityBreaks fixture.",
+    "The existing Reedy test retains the same adversarial probe strings and checks at www-tutor-reedy-claim.test.tsx:237–263. Its regular expressions reject each form and require an inactive-rule failure.",
+    "The fixture at fixtures/reedy-eligibility.ts:62–65 adds the English non-active variants and Thai cancellation variants. It keeps the existing active word requirement at lines 49–53.",
+    "The shipped English, Thai, and Chinese Reedy copy passes the retained fact checks. A targeted run passed 39 tests in four files, including the Reedy main suite and both adversarial probes.",
+    "proof-adv3.log shows the fixed Reedy check fails on the injected non-active sentence before Green.",
+    "The type repair commit 8d5ad1c4 changes only eight no-argument page calls in no-gse-in-customer-copy.test.ts. It changes no assertion. proof-adv3-types.log shows the injected B2C GSE heading still fails the rendered sweep.",
+    "gate-e153b88.json reports GREEN exit 0, COVERAGE exit 0, and 91.65% line coverage, above the 85.52% floor. The logs report 93 files and 3,088 tests passed.",
+    "gate-8d5ad1c4.json reports GREEN exit 0, COVERAGE exit 0, check-types exit 0, lint exit 0, and 91.65% line coverage, above the 85.52% floor. The GREEN log reports 93 files and 3,088 tests passed.",
+    "lint-09a817c.log reports zero errors and three warnings. check-types-09a817c.log contains only the tsc command; gate-8d5ad1c4.json records exit 0.",
+    "No K row weakened: the contact check uses the shipped config for the same three locale paths as the phase-base test. The prior contact counterexample remains, and the tutor-commission K tests remain unchanged."
+  ],
+  "commands": [
+    "git rev-parse HEAD && git diff --name-status 99262eda416ff8e9c5865645b8ea85d6a29a9987..5c477077724cb3a51fcf749e8c531c121793e12b && git diff --name-status a1caa58034f6455e91205a5673ef172a974a7992..5c477077724cb3a51fcf749e8c531c121793e12b && git diff --check a1caa58034f6455e91205a5673ef172a974a7992..5c477077724cb3a51fcf749e8c531c121793e12b && git status --short",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-reedy-claim.test.tsx src/__tests__/reedy-inactive-reversal.adversarial.test.tsx src/__tests__/contact-authority-import-actual.adversarial.test.tsx src/__tests__/no-gse-in-customer-copy.test.ts",
+    "git show --format= 8d5ad1c4a360f1dd7d0c3e230d543fe2f8c104da -- apps/www-reading-advantage/src/__tests__/no-gse-in-customer-copy.test.ts",
+    "rg -n 'All files|% Lines' measure/runs/www_test_audit_pilot_20261122/coverage-e153b88.log measure/runs/www_test_audit_pilot_20261122/coverage-8d5ad1c4.log"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/contact-authority-import-actual.adversarial.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/fixtures/reedy-eligibility.ts",
+    "apps/www-reading-advantage/src/__tests__/no-gse-in-customer-copy.test.ts",
+    "apps/www-reading-advantage/src/__tests__/reedy-inactive-reversal.adversarial.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-reedy-claim.test.tsx",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "The shared fixture rejects three reversal probes, and shipped locale copy passes in the targeted 39-test run."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "proof-adv3.log and proof-adv3-types.log show the Reedy reversal and rendered GSE mutations fail."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The phase diff changes tests, test fixtures, and plan.md only."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Both gate receipts report exit 0 and 91.65% lines; the type-repair gate also reports check-types and lint exit 0."
+    }
+  ]
+}

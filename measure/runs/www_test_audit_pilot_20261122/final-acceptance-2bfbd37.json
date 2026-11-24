@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "role": "measure-final-acceptance",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "track review",
+  "track_base_sha": "635a604c89b2c909cfce33f555b7f043d4ea520f",
+  "baseline_sha": "2bfbd373fef2fc500798efe721975fa0a345e73f",
+  "role_base_sha": "2bfbd373fef2fc500798efe721975fa0a345e73f",
+  "audited_head_sha": "2bfbd373fef2fc500798efe721975fa0a345e73f",
+  "status": "pass",
+  "summary": "Final acceptance passes at 2bfbd373f. Both round 1 blockers are closed. Phase 1 now has a passing phase-acceptance result, and the Phase 1 and Phase 4 results audit HEAD itself, so no later commit exists to cover. All four gates pass on a fresh heavy-run: check-types, lint (0 errors, 1 warning), Vitest (98 files, 1494 tests) and coverage (92.08 % lines). The cut is 1681 of 3175 cases, or 52.9 %, against a 20 % target. The whole cut comes from the PM-approved blog merge, as report.md section 1 says. The D5 revert is verified: all 14 D5 files hold at least their baseline case count, and three new money-pin mutations fail. For all 77 K files, HEAD holds at least the K case count, except the approved blog merge, which three new post mutations prove still fails and names the post. The seven tutor-commission files are byte-identical to the track base. The pilot changed no production file. Every spec criterion (a) to (f) is met. Known items stay open by PM decision. Eight nonblocking notes follow.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N1 [Nit] final-acceptance: bash measure/doctor.sh exits 1. Steps 1 to 3 print PASS. Step 4 prints 'Architecture check failed: V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes'. The pin was stale before the track (round 1 N1: 18 source files changed between the last pin refresh d782cc169 and 635a604c89). git diff --name-only 635a604c89 HEAD over packages, services and integrations is empty. The closeout standard says doctor exits 0, so this exit rests on the PM acknowledgement of 2026-11-24.",
+    "N2 [Nit] final-acceptance: Phase 4 holds two passing phase-acceptance results: phase-acceptance-d2c8e63.json (audited d2c8e6336) and phase-acceptance-p4-2bfbd37.json (audited HEAD). The brief says exactly one passing result for every phase. I read this as one governing result per phase, which is the latest. Round 1 F2 itself asked for a second Phase 4 pass at the later HEAD, and that pass makes two. Phases 1, 2 and 3 each hold exactly one passing result. If the PM wants a strict count of one, the older d2c8e63 result needs a record that it is superseded.",
+    "N3 [Nit] final-acceptance: The Phase 2 result (8a126f612) and the Phase 3 result (e91c4d4cc) are older than HEAD, with 73 and 42 later commits. The path rule binds the latest result only, and that result audits HEAD. Probe P4 lists 18 (Phase 2 result) and 17 (Phase 3 result) track paths changed after them that are not plan or evidence files. They are D5-revert files, Phase 3 R2 files, master-merge fixture files, the two files of the ADV-25 temp-directory fix, and classification.md and report.md. Four files of the D1, D2 and D4 class commits changed after 8a126f612: www-batch-20261119.locale.test.ts and www-reading-card.red.test.ts (D5 revert), www-reading-cover.red.test.ts (Phase 3 R2), and primary-page-images.test.ts (ADV-25 fix). Substantive cover at HEAD: phase-acceptance-p1-2bfbd37, phase-acceptance-p4-2bfbd37, review-a-2bfbd37, adversarial-p1-7336f42 (same apps tree as HEAD) and my own checks.",
+    "N4 [Nit] final-acceptance: measure/tracks.md still says 'Status: new, opened 2026-11-22; Phase 1 (baseline and classification) next'. All 50 plan tasks are [x]. The text understates the state and makes no claim about adversarial results, so A6 does not trigger. Closeout rewrites the entry.",
+    "N5 [Nit] final-acceptance: plan.md task 4.1 says the report lists every finding F1 to F26 and ADV-1 to ADV-24, and task 2.5 describes D5 as replaced with no pointer to the later revert. The report now copies no finding text (PM decision C, tasks 4.7 and 4.8) and D5 is reverted (task 4.18, report.md section 2 rows marked reverted). Later tasks record both changes, so the plan is honest as a record. A reader of 4.1 or 2.5 alone is misled. Closeout can add a one-line pointer to each.",
+    "N6 [Nit] final-acceptance: Known open items stay open by PM decision and are not re-raised: F11 and F18 exceptions (plan.md Recorded deviations; task 4.6), the 16.2 % second-check rate exception (PM 2026-11-24, plan.md task 4.17, report.md section 6), F52 to F55, N13 and N14 (classification.md Approved merge line section still says 'The second lever is the primary-advantage content pin set (102 D5 cases)'; report.md section 1 '3203 cases' is a defined sum, about 3232 with the two posts master added), ADV-26 to ADV-32, ADV-P1-9 and N8 (all in measure/tech-debt.md, 2026-11-24 row), and the missing log paths for the check-types and lint claims of tasks 4.13, 4.15 and 4.18.",
+    "N7 [Nit] final-acceptance: Spec criterion (d) reads 'Each class ships in its own commit'. D5 shipped in four part commits (ee5c7b739, 7008ccefd, c577cdf18, 407c5d9bd), each D5-only, and one commit (f97a72f90) reverted it. D1 commit 0be4a0374 also holds the two R2 cases of F11. Round 1 accepted both. The final state has no D5 change. I keep the same call.",
+    "N8 [Nit] final-acceptance: deviation record and audit trail. This role ran on route claude-agent/sonnet#xhigh, the same family as Review A (opus#high) and phase acceptance (sonnet#xhigh), and the same route as the Phase 1 and Phase 4 phase-acceptance results and the Phase 1 adversarial result. The PM excluded the openai and kimi routes. I re-ran every gate and every probe from the repository and reused no reviewer number. Also, measure/runs/ is gitignored (.gitignore:56), so git ls-files lists 0 run files for this track: the evidence that plan.md cites lives in the local worktree only."
+  ],
+  "evidence": [
+    "git rev-parse HEAD -> 2bfbd373fef2fc500798efe721975fa0a345e73f at start and at end; git status --short -> empty at start, after each gate, and at end. HEAD equals role_base_sha and audited_head_sha.",
+    "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo . -> 'closeout_candidates: 12' and '[C10] www_test_audit_pilot_20261122' is listed.",
+    "Probe P1 (python3 -I measure/runs/www_test_audit_pilot_20261122/final-acceptance-2bfbd37-probes.py): 70 role result JSON files carry a baseline_sha and audited_head_sha pair; 0 fail an ancestry test (baseline is an ancestor of audited HEAD, audited HEAD is an ancestor of HEAD). Named results: phase-acceptance-p1-2bfbd37 pass, phase-acceptance-p4-2bfbd37 pass, phase-acceptance-8a126f6 pass, phase-acceptance-e91c4d4 pass, phase-acceptance-d2c8e63 pass, review-a-2bfbd37 pass, adversarial-p1-7336f42 pass, second-check-d1b9d59 pass, spec-review-735a7fe pass; each with 0 blocking findings.",
+    "python3 measure_interphase_checks.py audit-result --role <role> --file <result> -> 'PASS: audit result is valid' (rc 0) for phase-acceptance-p1-2bfbd37, phase-acceptance-p4-2bfbd37, phase-acceptance-8a126f6, phase-acceptance-e91c4d4, review-a-2bfbd37 and adversarial-p1-7336f42.",
+    "Probe P2 (phase-acceptance results per plan phase): Phase 1 results=2 passing=1 (p1-2bfbd37; p1-51252ca is a fail). Phase 2 results=2 passing=1 (8a126f612). Phase 3 results=3 passing=1 (e91c4d4cc). Phase 4 results=5 passing=2 (d2c8e6336 and 2bfbd373f). See N2.",
+    "Probe P4 (later-commit coverage): git diff --name-only 2bfbd373f HEAD -> 0 paths for phase-acceptance-p1-2bfbd37, phase-acceptance-p4-2bfbd37 and review-a-2bfbd37 (later_commits=0). git diff --name-only 7336f42b3 HEAD -> 3 paths (classification.md, report.md, plan.md; all measure/tracks) for adversarial-p1-7336f42, and git diff --stat 7336f42b3 HEAD shows no apps path. For phase-acceptance-d2c8e63, -e91c4d4 and -8a126f6: 17, 17 and 18 track paths that are not plan or evidence files. See N3.",
+    "Probe P3 (checker track_scope and commit_paths): own_commits=111, skipped_other_track=5, paths=68; non_test_non_measure_paths=0; apps paths outside apps/www-reading-advantage: none; paths outside apps/ and measure/: none. Probe P3b: git diff --name-only 968bde612 HEAD -> 60 paths, 51 under apps/ (14 added, 35 modified, 2 deleted), 0 outside apps/www-reading-advantage and measure/, and a grep for paths not matching __tests__, .test., .adversarial. or .red. returns none. git diff --name-only 635a604c89 HEAD -- packages services integrations -> empty. Master's own apps change (8 paths: 2 images, 2 posts, home.ts, 3 test files) arrives through the merge, not through a pilot commit.",
+    "git diff --diff-filter=D --name-only 635a604c89 HEAD -> two test files: products/primary-advantage/page.test.tsx (D2 duplicate) and components/layout/layout-components.test.ts (D1 delete).",
+    "Probe P7 (checker phase_counts, track_incomplete, plan_closeout_feedback): Phase 1 4/4/4, Phase 2 13/13/13, Phase 3 15/15/15, Phase 4 18/18/18 (tasks, complete, complete with SHA); track_incomplete=0; no [b] marker; plan_closeout_feedback=[]. All 45 distinct SHAs that end a task line in plan.md resolve with git cat-file -e and are ancestors of HEAD. 50 [x] tasks.",
+    "Probe P8: git branch -r --contains HEAD -> none; git branch -r --list '*test-audit*' -> none. No push.",
+    "Heavy-run check-types: output '$ tsc --noEmit' only, 'heavy-run exit=0'.",
+    "Heavy-run lint: 'eslint .' -> '1 problem (0 errors, 1 warning)': apps/www-reading-advantage/src/__tests__/www-reading-card.red.test.ts 3:21 'beforeEach' is defined but never used; 'heavy-run exit=0'. The import exists at the track base (git show 635a604c89:...www-reading-card.red.test.ts line 3), so the warning predates the track.",
+    "Heavy-run Vitest (--reporter=dot): 'Test Files  98 passed (98)', 'Tests  1494 passed (1494)', 'Duration  96.99s'; 'heavy-run exit=0'. The MISSING_MESSAGE IntlError and the 'Could not parse CSS stylesheet' lines are expected noise of negative-case tests.",
+    "Heavy-run coverage (pnpm --filter www-reading-advantage test:coverage): 'Test Files  98 passed (98)', 'Tests  1494 passed (1494)', 'Duration  147.58s'; Statements 90.95 %, Branches 82.99 %, Functions 87.52 %, Lines 92.08 % (1675/1819); 'heavy-run exit=0'. The Rolldown 'Failed to parse ... .md. Excluding it from coverage' lines are in earlier coverage logs too (coverage-66aeb1011.log).",
+    "bash measure/doctor.sh -> exit 1. Steps 1 to 3 print PASS (A12/A13 guards, catalog A1-A15, 93 plans with valid markers, review-execution). Step 4 prints 'Architecture check failed: V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes'. See N1. git status --short after doctor -> empty.",
+    "Final values: baseline.json holds 3175 cases and 86.52 % lines. HEAD holds 1494 cases (fresh Vitest and JSON report: numTotalTests=1494, numPassedTests=1494, numFailedTests=0, 98 files). Cut = 3175 - 1494 = 1681 = 52.94 %. Target 20 % = 635 cases. Coverage rise 92.08 - 86.52 = 5.56 points, floor 85.52. K share = 3064 / 3175 = 96.5 % (classification.md Summary: K 3064, D1 67, D2 22, D4 6, R2 16 = 3175). All numbers equal report.md section 1 and plan.md task 4.18.",
+    "gate-*.json: 30 files, all status pass with green_exit_code 0 and coverage_exit_code 0; line_coverage_pct from 89.86 to 92.07, lowest above the 85.52 floor. gate-257a6b0c.json: cases_before 3094, cases_after 1385 (blog merge removed 1709 cases). The D5 revert f97a72f90 has no gate JSON; green-at-f97a72f9.log ('Tests  1494 passed (1494)') and coverage-at-f97a72f9.log ('Lines : 92.08% ( 1675/1819 )') cover it, and my fresh run at HEAD agrees.",
+    "Without the blog merge the suite would hold 1494 + 1709 = 3203 cases, 28 above the baseline (report.md section 1; gate-257a6b0c.json). The 52.9 % cut therefore rests wholly on the PM-approved blog merge (classification.md Approved merge line section; plan task 3.5). The merged file keeps its rule: see the next two lines.",
+    "Blog merge mutations (python3 -I measure/runs/www_test_audit_pilot_20261122/final-acceptance-2bfbd37-blog-mutate.py): an impossible date in en/welcome-to-our-blog fails 'date is a valid calendar date on every post' with 'en/welcome-to-our-blog: date is a valid calendar date' (and the cross-locale case names th/welcome-to-our-blog); an empty excerpt in en/ai-education-evolution fails the excerpt case and names the post; an empty title in th/welcome-to-our-blog fails the title case and names the post. Each run exited 1 through heavy-run. Each post was restored byte for byte. These posts differ from the post of proof-blog-merge.log.",
+    "Money-pin mutations (python3 -I measure/runs/www_test_audit_pilot_20261122/final-acceptance-2bfbd37-mutate.py), each run through heavy-run, exit 1: M1 pricing.ts '1,200 baht' to '1,300 baht' fails www-pricing-page.content.test.tsx 'renders the price table with a caption, three columns and four rows (FR-9, D10)' in en and zh. M2 the th tutorRole.points.3 line loses its last word and fails www-tutor-calculator.locale.test.ts 'holds the new th copy at both paths'. M3 'Default: 3,000 baht' to 'Default: 3,500 baht' fails 'en deep-equals the section 6 block' and 'keeps 3,000 in the en and th price notes'. Each file was restored byte for byte; git status --short was empty at the end.",
+    "K retention at case level (JSON report /tmp/fa-2bfbd37-cases.json from heavy-run vitest --reporter=json --outputFile): 77 K rows, 77 files, K case sum 2843 (classification.md). For 76 files the HEAD runner case count is at least the K n of the row. The one exception is src/lib/blog-posts-validation.test.ts, 1726 to 17, the PM-approved merge. 47 pure-K files: 46 hold at least their baseline count (per-file-counts.md); the 47th is the same blog file. Eleven mixed K files hold fewer cases than at the baseline. For each, the K n still holds at HEAD. Nine of the eleven files have baseline-only titles, and I matched each of them to a D1, D2 or D4 row of classification.md (for example blog-locale.test.ts 'returns a number type' is a D2 row with its kept duplicate in blog.test.ts; phase-3-i18n.red 5 to 2 with K n=1 plus the Thai typo rewrite; real-logos-favicon.red 5 to 1 with K n=1). The other two (navigation.test.tsx 4 to 3, real-logos-references.red 23 to 12) have no baseline-only static title; their K n holds, and the classification row sums equal the baseline count of each file, so the cases that left are D rows by construction.",
+    "D5 revert check: the four D5 part commits touched 13 files; 7 are identical to the track base at HEAD and 6 differ because of other classes, master, or the unused fixture locale-key-check.ts (tech-debt N8). All 14 files of the classification.md D5 section hold a HEAD case count at least equal to the baseline (www-batch-20261116 53 to 54, page.content primary 155 to 158, www-reading-card.red 14 to 15, the others equal). The 221 D5 cases are back.",
+    "Tutor-commission money files (7): git diff --stat 635a604c89 HEAD over them -> empty. HEAD runner cases equal K n in each file: 22, 17, 30, 34, 24, 4 and 37, which sum to 168.",
+    "Spec criteria. (a) met: 52.94 % cut against 20 %. (b) met: coverage 86.52 to 92.08 %, lowest gate 89.86, floor 85.52. (c) met: 30 gate JSONs pass, the revert has green and coverage logs. (d) met with N7: D1 0be4a0374, D2 e332f594e, D4 0d705612d, R2 adf24e723, blog merge 257a6b0cd, D5 four parts then reverted by f97a72f90; D3, R1 and R3 have no rows and no commit. (e) met: see the K retention line. (f) met: report.md has sections 1 Result, 2 Per-class commits, 3 What went, what changed, why, 4 K rows kept, 5 Finding history, 6 Lessons, 7 Time, 8 Facts changed. Section 8 says None.",
+    "A5: rg -n 'PASS=[0-9]+.*FAIL=0|all checks pass' over plan.md and report.md -> no match (rc 1). Plan task 4.18 gate claims (1494 tests in 98 files, 92.08 %, check-types 0, lint 0 with one warning) match my fresh runs. A6: rg over measure/tracks.md for the A6 pattern -> no match; the entry makes no resolved or pass claim (N4). A9: rg -n 'measure/tracks/([a-z_0-9-]+)/plan\\.md' tests/*.sh -> only fixture paths (fixture_*_2026*); no tests/*.sh file names this track and no real track named in them sits in measure/archive. A15: the track diff adds one A15 table row of text in test-strategy.md and no hash field.",
+    "Review B, Review C and the UX review are not applicable (test-strategy.md section 3). No Review C result exists by design. spec.md changed only in commit 2e7fb8780 (amend after spec review, before Red started)."
+  ],
+  "commands": [
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage check-types'  -> exit 0",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage lint'  -> exit 0, 0 errors, 1 warning",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run --reporter=dot'  -> exit 0, 98 files, 1494 tests",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage'  -> exit 0, 98 files, 1494 tests, 92.08 percent lines",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run --reporter=json --outputFile=/tmp/fa-2bfbd37-cases.json'  -> exit 0, per-file case report for the K retention probe",
+    "bash measure/doctor.sh  -> exit 1 (stale architecture pin, N1)",
+    "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo .  -> C10 closeout candidate",
+    "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py audit-result --role <role> --file <result>  -> valid, for six named results",
+    "python3 -I measure/runs/www_test_audit_pilot_20261122/final-acceptance-2bfbd37-probes.py [/tmp/fa-2bfbd37-cases.json]  -> probes P0 to P8 (read-only)",
+    "python3 -I measure/runs/www_test_audit_pilot_20261122/final-acceptance-2bfbd37-mutate.py  -> three money-pin mutations fail, files restored",
+    "python3 -I measure/runs/www_test_audit_pilot_20261122/final-acceptance-2bfbd37-blog-mutate.py  -> three blog post mutations fail and name the post, files restored",
+    "git diff --name-only 7336f42b3 HEAD; git diff --name-only 968bde612 HEAD -- apps; git diff --name-only 635a604c89 HEAD -- packages services integrations; git diff --diff-filter=D --name-only 635a604c89 HEAD",
+    "rg -n 'PASS=[0-9]+.*FAIL=0|all checks pass' measure/tracks/www_test_audit_pilot_20261122/plan.md measure/tracks/www_test_audit_pilot_20261122/report.md  -> no match",
+    "rg -n 'measure/tracks/([a-z_0-9-]+)/plan\\.md' tests/*.sh  -> fixture paths only"
+  ],
+  "changed_files": [
+    "measure/runs/www_test_audit_pilot_20261122/final-acceptance-2bfbd37.json",
+    "measure/runs/www_test_audit_pilot_20261122/final-acceptance-2bfbd37.log",
+    "measure/runs/www_test_audit_pilot_20261122/final-acceptance-2bfbd37-probes.py",
+    "measure/runs/www_test_audit_pilot_20261122/final-acceptance-2bfbd37-mutate.py",
+    "measure/runs/www_test_audit_pilot_20261122/final-acceptance-2bfbd37-blog-mutate.py"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "claude-agent/sonnet#xhigh",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "Fresh heavy-run Vitest and coverage at 2bfbd373f give 1494 passed in 98 files and 92.08 % lines, and 6 new mutations (3 money pins, 3 blog posts) each fail the pinned test."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "76 of 77 K files hold at least their K case count at HEAD and the seven tutor-commission files are unchanged, but 67 K rows have no mutation check by spec and the blog K row rests on the merged per-rule cases."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "Probe P3 finds 0 non-test paths in 111 own commits, and git diff --name-only 635a604c89 HEAD over packages, services and integrations is empty."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Every spec claim has a gate JSON, a log, or a probe line, but plan tasks 4.1 and 2.5 carry stale text without a pointer (N5) and tasks 4.13, 4.15 and 4.18 name no check-types or lint log (N6)."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "claude-agent/opus#high",
+      "agreed": true,
+      "score": 5,
+      "evidence": "review-a-2bfbd37.json passes; I re-checked its final values (1494, 1681 at 52.9 %, 92.08 %, 3064 at 96.5 %) and the 3094 - 1385 = 1709 blog merge arithmetic against fresh runs and gate-257a6b0c.json."
+    },
+    {
+      "reviewer_role": "adversarial",
+      "reviewer_route": "claude-agent/sonnet#xhigh",
+      "agreed": true,
+      "score": 5,
+      "evidence": "adversarial-p1-7336f42.json passes the D5 revert; my own M1 to M3 money mutations fail at HEAD as its nine mutants did, and git diff --stat 7336f42b3 HEAD shows no apps path."
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+········xx·····x····x····
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/www-tutor-reedy-claim.test.tsx > AC-24: the new Reedy descriptions > en: the page description keeps the active-package and finished-lesson limits
+AssertionError: en: the eligibility clause must not carry /\bwithout\b/i: expected 'Open to everyone, even without an act…' not to match /\bwithout\b/i
+
+[32m- Expected:[39m
+/\bwithout\b/i
+
+[31m+ Received:[39m
+"Open to everyone, even without an active class package, on unfinished lessons."
+
+ ❯ expectEligibilityFacts src/__tests__/www-tutor-reedy-claim.test.tsx:170:11
+    168|       value,
+    169|       `${locale}: the eligibility clause must not carry ${pattern}`,
+    170|     ).not.toMatch(pattern);
+       |           ^
+    171|   }
+    172|   for (const fact of facts) {
+ ❯ src/__tests__/www-tutor-reedy-claim.test.tsx:268:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/__tests__/www-tutor-reedy-claim.test.tsx > AC-24: the new Reedy descriptions > en: the component description keeps the finished-lesson limit
+AssertionError: en: the eligibility clause must not carry /\bwithout\b/i: expected 'Open to everyone, even without an act…' not to match /\bwithout\b/i
+
+[32m- Expected:[39m
+/\bwithout\b/i
+
+[31m+ Received:[39m
+"Open to everyone, even without an active class package, on unfinished lessons."
+
+ ❯ expectEligibilityFacts src/__tests__/www-tutor-reedy-claim.test.tsx:170:11
+    168|       value,
+    169|       `${locale}: the eligibility clause must not carry ${pattern}`,
+    170|     ).not.toMatch(pattern);
+       |           ^
+    171|   }
+    172|   for (const fact of facts) {
+ ❯ src/__tests__/www-tutor-reedy-claim.test.tsx:276:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/__tests__/www-tutor-reedy-claim.test.tsx > AC-24: the FAQ answer drops the not-available clause > en: the FAQ answer keeps the active-package and finished-lesson limits
+AssertionError: en: the eligibility clause must not carry /\bwithout\b/i: expected 'Open to everyone, even without an act…' not to match /\bwithout\b/i
+
+[32m- Expected:[39m
+/\bwithout\b/i
+
+[31m+ Received:[39m
+"Open to everyone, even without an active class package, on unfinished lessons."
+
+ ❯ expectEligibilityFacts src/__tests__/www-tutor-reedy-claim.test.tsx:170:11
+    168|       value,
+    169|       `${locale}: the eligibility clause must not carry ${pattern}`,
+    170|     ).not.toMatch(pattern);
+       |           ^
+    171|   }
+    172|   for (const fact of facts) {
+ ❯ src/__tests__/www-tutor-reedy-claim.test.tsx:290:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/__tests__/www-tutor-reedy-claim.test.tsx > AC-24: the Reedy block keeps three bullets > en: the first rendered bullet keeps the active-package and finished-lesson limits
+AssertionError: en: the eligibility clause must not carry /\bwithout\b/i: expected 'Open to everyone, even without an act…' not to match /\bwithout\b/i
+
+[32m- Expected:[39m
+/\bwithout\b/i
+
+[31m+ Received:[39m
+"Open to everyone, even without an active class package, on unfinished lessons."
+
+ ❯ expectEligibilityFacts src/__tests__/www-tutor-reedy-claim.test.tsx:170:11
+    168|       value,
+    169|       `${locale}: the eligibility clause must not carry ${pattern}`,
+    170|     ).not.toMatch(pattern);
+       |           ^
+    171|   }
+    172|   for (const fact of facts) {
+ ❯ src/__tests__/www-tutor-reedy-claim.test.tsx:324:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 21 passed (25)
+   Start at  02:34:51
+   Duration  1.55s (transform 235ms, setup 67ms, import 384ms, tests 482ms, environment 454ms)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run '--maxWorkers=1' '--reporter=dot' src/__tests__/www-tutor-reedy-claim.test.tsx

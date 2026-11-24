@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 3: Rewrite batch (R1-R3)",
+  "baseline_sha": "b2e65587828c534b590799c55b649da108f9ee25",
+  "phase_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "role_base_sha": "b2e65587828c534b590799c55b649da108f9ee25",
+  "audited_head_sha": "b2e65587828c534b590799c55b649da108f9ee25",
+  "status": "fail",
+  "summary": "F19 is closed: the contrast tests now require a computed ratio of at least 4.5. F20 blocks acceptance because background resolution skips unsupported colours and composites translucent backgrounds against white instead of the resolved ancestor.",
+  "blocking_findings": [
+    "F20 [Blocker] review-a: resolvedBackground in fixtures/contrast.ts:179–196 does not compute the actual backdrop for every supported case. It blends the first translucent background over PAGE_BACKGROUND instead of the next painted ancestor, and catches unsupported background colours as if they were transparent before falling back to an ancestor or white. This can report a passing ratio for a failing rendered contrast."
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD returned b2e65587828c534b590799c55b649da108f9ee25, equal to role_base_sha and audited_head_sha.",
+    "F19 withdrawn: contrastOf now compares the computed foreground with resolvedBackground and both changed R2 tests require a ratio of at least 4.5. The sky-300 contact mutation fails the target assertion, and contrast-fixture.test.ts pins the rgb(120,120,120) on #faf9f7 ratio below 4.5.",
+    "The exact Phase 3 diff 8a126f612abcc258c6c6711d6ac03fa085bbcbff..b2e65587828c534b590799c55b649da108f9ee25 changes test files, test fixtures, and plan.md only. No production file or classification row changed.",
+    "The targeted Vitest run passed 11 files and 55 tests, including contrast-fixture.test.ts, both contrast tests, the remaining R2 files, and the blog merge test.",
+    "gate-09c48878d.json reports GREEN, COVERAGE, check-types, and lint exit 0. It reports 1,388 cases, 91.64% line coverage, and the 85.52% coverage floor.",
+    "The gate and plan cite both F19 mutation logs. The contact sky-300 mutation exits 1 at the contrast assertion. The slate-400 pricing mutation exits 1 because the unsupported foreground value throws; this is fail-closed, but it does not prove that this token's numeric ratio was computed.",
+    "A hand calculation using the standard OKLab-to-linear-sRGB matrices maps oklch(0.627955 0.257683 29.234) to (255, 0, 0), matching pure red. The conversion constants in fixtures/contrast.ts:48–61 implement those matrices.",
+    "F20 evidence: fixtures/contrast.ts:188–193 catches parse errors and continues to a parent; lines 189–190 blend a translucent color against the page constant. A translucent child over a non-white opaque ancestor therefore uses the wrong backdrop. An unsupported painted background is skipped instead of throwing.",
+    "contrast-fixture.test.ts:8–26 covers the gray/cream ratio, black/white ratio, and unresolved foreground syntax. It does not test translucent background composition, ancestor compositing, or unresolved painted backgrounds.",
+    "graph.db is absent as recorded in test-strategy.md:11. A direct caller search shows the new contrast exports are consumed only by the two R2 tests and contrast-fixture.test.ts; no product symbol changed.",
+    "The requested new production mutation was not run because this audit role cannot edit production files. The two existing proof logs were reviewed instead.",
+    "Phase 3 round 1 evidence remains valid for the blog merge predicates and the 20% target. The task 3.6 plan lines 304–322 record the F19 fix, proof logs, and gate."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --name-status 8a126f612abcc258c6c6711d6ac03fa085bbcbff..b2e65587828c534b590799c55b649da108f9ee25",
+    "git diff --check 8a126f612abcc258c6c6711d6ac03fa085bbcbff..b2e65587828c534b590799c55b649da108f9ee25",
+    "git status --short",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/contrast-fixture.test.ts src/__tests__/phase-4-browser-regressions.red.test.tsx src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx src/__tests__/phase-4-browser-regressions-final.red.test.tsx src/__tests__/www-reading-cover.red.test.ts src/app/'[locale]'/'(marketing)'/services/page.test.tsx src/app/'[locale]'/'(marketing)'/services/blended-learning/page.test.tsx src/app/'[locale]'/'(marketing)'/services/managed-service/page.test.tsx src/components/marketing/hero-section.test.tsx src/components/blog/blog-pagination.test.tsx src/lib/blog-posts-validation.test.ts",
+    "python3 -c \"import math; L,C,h=0.627955,0.257683,29.234; a=C*math.cos(math.radians(h)); b=C*math.sin(math.radians(h)); lp=L+0.3963377774*a+0.2158037573*b; mp=L-0.1055613458*a-0.0638541728*b; sp=L-0.0894841775*a-1.291485548*b; l,m,s=lp**3,mp**3,sp**3; rgb=[4.0767416621*l-3.3077115913*m+0.2309699292*s,-1.2684380046*l+2.6097574011*m-0.3413193965*s,-0.0041960863*l-0.7034186147*m+1.707614701*s]; enc=lambda x: 12.92*x if x<=0.0031308 else 1.055*x**(1/2.4)-0.055; print(tuple(round(enc(x)*255) for x in rgb))",
+    "rg -n '\\b(parseColor|contrastRatio|relativeLuminance|resolvedBackground|contrastOf|AA_CONTRAST_MIN)\\b' apps/www-reading-advantage/src"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/contrast-fixture.test.ts",
+    "apps/www-reading-advantage/src/__tests__/fixtures/contrast.ts",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions-final.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/www-reading-cover.red.test.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/blended-learning/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/managed-service/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/page.test.tsx",
+    "apps/www-reading-advantage/src/components/blog/blog-pagination.test.tsx",
+    "apps/www-reading-advantage/src/components/marketing/hero-section.test.tsx",
+    "apps/www-reading-advantage/src/lib/blog-posts-validation.test.ts",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [
+    "F20: resolvedBackground can calculate contrast against an incorrect background when a painted background is translucent or unsupported."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "F20 at fixtures/contrast.ts:179–196 shows translucent backgrounds are blended against white and unsupported painted colours are skipped."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The targeted run passed 55 tests, but contrast-fixture.test.ts has no case for alpha composition over ancestors."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The audited Phase 3 diff changes tests, test fixtures, and plan.md only."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The gate receipt, two F19 proof logs, targeted run, source lines, and independent OKLCH conversion check support the result."
+    }
+  ]
+}

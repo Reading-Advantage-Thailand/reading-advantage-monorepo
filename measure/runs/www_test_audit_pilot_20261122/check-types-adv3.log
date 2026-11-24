@@ -1,0 +1,12 @@
+$ tsc --noEmit
+src/__tests__/no-gse-in-customer-copy.test.ts(280,42): error TS2554: Expected 0 arguments, but got 1.
+src/__tests__/no-gse-in-customer-copy.test.ts(281,55): error TS2554: Expected 0 arguments, but got 1.
+src/__tests__/no-gse-in-customer-copy.test.ts(284,46): error TS2554: Expected 0 arguments, but got 1.
+src/__tests__/no-gse-in-customer-copy.test.ts(285,46): error TS2554: Expected 0 arguments, but got 1.
+src/__tests__/no-gse-in-customer-copy.test.ts(287,48): error TS2554: Expected 0 arguments, but got 1.
+src/__tests__/no-gse-in-customer-copy.test.ts(290,61): error TS2554: Expected 0 arguments, but got 1.
+src/__tests__/no-gse-in-customer-copy.test.ts(297,61): error TS2554: Expected 0 arguments, but got 1.
+src/__tests__/no-gse-in-customer-copy.test.ts(298,63): error TS2554: Expected 0 arguments, but got 1.
+/home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] www-reading-advantage@0.1.0 check-types: `tsc --noEmit`
+Exit status 2

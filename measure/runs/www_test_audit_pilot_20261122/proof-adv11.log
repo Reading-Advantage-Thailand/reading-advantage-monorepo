@@ -1,0 +1,100 @@
+MUTATION PROOF — ADV-11 uppercase .MD post
+A copy of a valid th post is saved as th/zz-adv-upper.MD.
+Expected: the '.md extension' rule and both discovery cases fail and name the file.
+Test exit code: 1
+--- test output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+ × src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > discovers at least one post in the en/ directory 7ms
+   → every discovered post file is Markdown: expected [ 'th/zz-adv-upper.MD' ] to deeply equal []
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > title is a non-empty string on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > date is present and matches YYYY-MM-DD on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > date is a valid calendar date on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > excerpt is a non-empty string on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > author is a non-empty string on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > tags is an array on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > every tag is a non-empty string on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — optional fields > readingTime if present is a positive number on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — optional fields > coverImage if present is an absolute path starting with / on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — optional fields > coverImage if present exists on disk on every post 1ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post content > has a non-empty body after frontmatter on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post content > does not embed raw frontmatter delimiters in any body 1ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post file naming > slug is URL-safe on every post 0ms
+ × src/lib/blog-posts-validation.test.ts > blog post file naming > file uses the .md extension on every post 1ms
+   → expected [ Array(1) ] to deeply equal []
+ × src/lib/blog-posts-validation.test.ts > cross-locale consistency > en/ directory exists and is non-empty (canonical source) 1ms
+   → no non-Markdown post file in any locale: expected [ 'th/zz-adv-upper.MD' ] to deeply equal []
+ ✓ src/lib/blog-posts-validation.test.ts > cross-locale consistency > a matching non-en post is never older than its en post 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > discovers at least one post in the en/ directory
+AssertionError: every discovered post file is Markdown: expected [ 'th/zz-adv-upper.MD' ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "th/zz-adv-upper.MD",[39m
+[31m+ ][39m
+
+ ❯ src/lib/blog-posts-validation.test.ts:58:73
+     56|   it("discovers at least one post in the en/ directory", () => {
+     57|     expect(enPosts.length).toBeGreaterThan(0);
+     58|     expect(nonMarkdownRefs(), "every discovered post file is Markdown"…
+       |                                                                         ^
+     59|       [],
+     60|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/lib/blog-posts-validation.test.ts > blog post file naming > file uses the .md extension on every post
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "th/zz-adv-upper.MD: file uses .md extension",[39m
+[31m+ ][39m
+
+ ❯ src/lib/blog-posts-validation.test.ts:205:24
+    203|       (ref) => `${ref}: file uses .md extension`,
+    204|     );
+    205|     expect(violations).toEqual([]);
+       |                        ^
+    206|   });
+    207| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/lib/blog-posts-validation.test.ts > cross-locale consistency > en/ directory exists and is non-empty (canonical source)
+AssertionError: no non-Markdown post file in any locale: expected [ 'th/zz-adv-upper.MD' ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "th/zz-adv-upper.MD",[39m
+[31m+ ][39m
+
+ ❯ src/lib/blog-posts-validation.test.ts:214:74
+    212|   it("en/ directory exists and is non-empty (canonical source)", () =>…
+    213|     expect(enSlugs.size).toBeGreaterThan(0);
+    214|     expect(nonMarkdownRefs(), "no non-Markdown post file in any locale…
+       |                                                                          ^
+    215|       [],
+    216|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 14 passed (17)
+   Start at  17:20:01
+   Duration  706ms (transform 30ms, setup 59ms, import 44ms, tests 15ms, environment 421ms)
+

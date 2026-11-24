@@ -1,0 +1,34 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Review A remediation F48 on the plan. Phase 4.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: 01e1e9d2904f3ee13718d6d86a4b54bb774f100e
+green_head: 1fcebeeeac80cff1017cadb47265e148106e0379
+wording_commit: e578839ddc225fca79b7f31075141987d6ca544d
+plan_evidence_commit: 1fcebeeeac80cff1017cadb47265e148106e0379
+plan: measure/tracks/www_test_audit_pilot_20261122/plan.md
+review: measure/runs/www_test_audit_pilot_20261122/review-a-01e1e9d.json
+
+tasks_flipped_to_x:
+- 4.10 Plan wording remediation F48 (e578839dd). Evidence: wording commit e578839dd and tick commit 1fcebeee.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: none tracked. Only plan.md changed. No test or production file changed.
+
+checks_run:
+- Read task 4.9 and task 4.5 in plan.md. Task 4.9 said 'Removed every count of run files from report.md and plan.md'. Task 4.5 holds the historical count of 36 of 37 pre-existing role JSON files at head cb12d6f0f.
+- Changed only the wording of task 4.9. It now says it removed counts of green-*.log and other run-file kinds, and names the one exception: the dated measurement in task 4.5 at head cb12d6f0f. The head names the bounded set, so later rounds do not change it. Task 4.5 was not edited.
+- grepped plan.md and report.md for 'all counts', 'no count', 'every count', 'all run-file' and 'every count of run'. No match remains.
+- Confirmed with git diff that only plan.md changed in the wording commit.
+- No report.md edit was needed.
+
+gate: one required heavy-run gate exited 0. CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot passed 98 files and 1412 tests. Log: measure/runs/www_test_audit_pilot_20261122/green-e578839dd.log. No test changed, so no other gate was required.
+
+deviation: the two commit headers were shortened for the 100-character commitlint limit. The meaning and track id stay.
+dispositions: F48=FIX
+END_MEASURE_AGENT_RESULT

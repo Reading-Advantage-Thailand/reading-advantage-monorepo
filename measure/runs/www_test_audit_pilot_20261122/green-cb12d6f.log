@@ -1,0 +1,26 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Review A remediation F30 on the plan. Phase 4. PM approved option A.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: cb12d6f0fe6fee1f5268214b5d2d5ae25ca96636
+green_head: 24733e3b0cc63ae533501cfaf4f4998c96aafe4e
+plan_evidence_commit: 24733e3b0cc63ae533501cfaf4f4998c96aafe4e
+review: measure/runs/www_test_audit_pilot_20261122/review-a-cb12d6f.json
+
+tasks_flipped_to_x: none. F30 corrects a count in task 4.5 of the plan.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: none tracked. plan.md was changed. No test or production file changed.
+
+measured_count: 37 pre-existing role JSON files. 36 of them have both route and phase. spec-review-735a7fe.json has a phase but no route. The four named prefixes alone give 39 files in the current directory, because three later Review A artifacts were added after the role base. The plan now states the measured 36 of 37 pre-existing role JSONs.
+
+checks: no other count in the task 4.5 lines is wrong. green_exit_code is in all 30 gate JSONs. test_wall_seconds=90.47 is in baseline.json. report.md does not repeat the 35 count. No other schema claim changed.
+
+gate: one required heavy-run gate exited 0. CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot passed 98 files and 1412 tests. Log: measure/runs/www_test_audit_pilot_20261122/green-24733e3b0.log. No test changed, so no other gate was required.
+dispositions: F30=FIX
+END_MEASURE_AGENT_RESULT

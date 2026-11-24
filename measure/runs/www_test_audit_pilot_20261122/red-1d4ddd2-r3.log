@@ -1,0 +1,67 @@
+# Red log: www test audit pilot, Phase 1 task 1.2 round 3 (final)
+
+Role: measure-mid-red (r3). Track: www_test_audit_pilot_20261122.
+Phase heading: "Phase 1: Baseline and classification". Task 1.2 only.
+
+## Base SHAs
+
+- phase_base_sha (immutable): cbd023b1bd29333992f7511646cff1245191b049
+- role_base_sha (immutable): 1d4ddd2c02acea93c50c715e043391113f4b2c03
+- HEAD at start: 1d4ddd2c02acea93c50c715e043391113f4b2c03 (clean tree).
+- HEAD at end: d1b9d597b (one pathspec commit, classification.md only).
+
+## Scope proof
+
+- `git status --short` before the commit showed only classification.md
+  modified. No unrelated user work was present.
+- `git diff --name-only <phase_base_sha> HEAD -- apps/` prints nothing.
+  No file under `apps/` changed in this round.
+
+## Trigger
+
+Second check round 2 (second-check-1d4ddd2.json): 3 of 37 rows disagree
+(8.1 %, under the limit), but F1 blocks three D1 delete rows that guard
+user-visible behavior, and F2 asks for a per-file runner-count table.
+
+## Changes (this round)
+
+- classification.md:122 look-pins delete row (8) becomes rewrite: the
+  rewrite must check card order, full-width image rows, and width-limited
+  picture columns through the rendered Features page, without class pins.
+- classification.md:128 reading-card delete row (3) becomes rewrite: the
+  rewrite must check the Origins 2 cover file, the D13 alt, and
+  top-anchored bullets through the rendered card.
+- classification.md:129 reading-cover delete row (4) becomes rewrite: the
+  rewrite must check rendered portrait dims per pictured card and the
+  approved files, alts, and dims through rendered cards and real files.
+- Remaining D1 delete rows (group-b AST 1, i18n source and static 3,
+  rows-fluid 2, layout-components 1) re-scanned against note 3; each row
+  now states the one-line reason it guards no user-visible behavior
+  (code hygiene, static analysis with a rendered holder, source pins
+  with rendered proof, or a non-rendering migration guard).
+- New run artifact per-file-counts.md (file, runner count, row sum for
+  all 91 files; every file matches; totals 3175 = 3175), cited in the
+  counting-rule section of classification.md.
+- Summary table: K 2843, D1 67 (delete 7, rewrite 60), D2 22, D3 0,
+  D4 6, D5 221, R2 16. Check line sums to 3175.
+- Projection: certain deletes 35 cases (1.1 %); D5 replacement saves
+  about 141 to 161 more; total about 176 to 196 cases (5.5 to 6.2 %),
+  below the 20 % target, stated without inflation. Approved merge line
+  for blog-posts-validation kept apart with its breakage-proof condition.
+
+## MEASURE_AGENT_RESULT (final)
+
+```
+MEASURE_AGENT_RESULT
+baseline_sha: cbd023b1bd29333992f7511646cff1245191b049
+role: measure-mid-red
+track: www_test_audit_pilot_20261122
+phase: "Phase 1: Baseline and classification"
+head: d1b9d597b
+commits: d1b9d597b (chore(measure): www d1 rows to rewrite per note 3)
+tests: none written (role writes no failing test; see role note)
+files: measure/tracks/www_test_audit_pilot_20261122/classification.md (r3 note-3 flips, note-3 scan, per-file cite, summary, projection, merge line)
+remaining_failures: none in this role; task 1.3 second check reruns against this head by a later role
+status: pass
+handoff: none; reconciliation method (static it/each/for/describe expansion cross-checked with the runner JSON; dynamic filesystem suites counted by the runner only) recorded in red-08bec4c-r2.log and reused here
+```

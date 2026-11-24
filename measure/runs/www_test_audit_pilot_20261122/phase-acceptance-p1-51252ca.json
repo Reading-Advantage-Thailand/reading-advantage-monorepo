@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "role": "measure-phase-acceptance",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 1: Baseline and classification",
+  "track_base_sha": "635a604c89b2c909cfce33f555b7f043d4ea520f",
+  "baseline_sha": "51252ca9e09bd458052894304aaa7680b1daabc2",
+  "phase_base_sha": "cbd023b1bd29333992f7511646cff1245191b049",
+  "phase_end_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+  "role_base_sha": "51252ca9e09bd458052894304aaa7680b1daabc2",
+  "audited_head_sha": "51252ca9e09bd458052894304aaa7680b1daabc2",
+  "status": "fail",
+  "summary": "Phase 1 content verifies and the phase changed no file under apps/. Tasks 1.1 to 1.4 carry [x] with resolving SHAs. baseline.json, classification.md and the second-check chain all match each other and the runner log. One procedural blocker stands. test-strategy.md requires a bounded adversarial pass for Phase 1, and no adversarial result names Phase 1. The two Phase 1 rows that later proved wrong are the case in point. Run that pass at the current HEAD and rerun this acceptance, or record a PM exception.",
+  "blocking_findings": [
+    "F1 [Blocker] phase-acceptance: Phase 1 has no adversarial result. test-strategy.md sections 2 and 3 mark the Phase 1 adversarial pass as 'yes, bounded'. The section 7 closeout gate orders Review A, the bounded adversarial pass, then phase acceptance. All 15 adversarial-*.json files name Phase 2, 3 or 4. The earliest, adversarial-2be9b74.json, audits Phase 2. Rationale: the required pass targets a mislabeled K row and a duplicate that keeps no rule. Two Phase 1 rows were wrong and passed a second-check sample. They are the D4 navigation row (plan task 4.12, F50, restored in 9eb3b9c4f) and the D2 explicit-English row (F51, restored in fb5622ed7). Fix: run measure-adversarial-testing for Phase 1 at the current HEAD, then rerun this acceptance. Or record a PM exception for this gap. Mitigation: adversarial-bfda22b.json passed the section 8 attack cases on the K list and on the e2e rows, and the seven tutor-commission K files stay unchanged."
+  ],
+  "nonblocking_findings": [
+    "N1 [Nit] phase-acceptance: The second check agreed with two rows that Phase 2 later proved wrong. The round 1 sample agreed with the D2 explicit-English row. The 1d4ddd2 sample agreed with the D4 navigation row. Counting the navigation miss, the rate is 4 of 37 (10.8 %), under the 15 % stop rule. classification.md still lists both rows as delete. Plan task 4.12 and report.md record the restores. No fix is needed beyond F1.",
+    "N2 [Nit] phase-acceptance: No Phase 1 artifact records the route of the classifier. The plan requires a second check by a different model family. All three second checks ran on openai/gpt-6-luna#high. The spec author was the Muse family. The record cannot show the classifier family. The orchestrator dispatch record holds it.",
+    "N3 [Nit] phase-acceptance: Plan task 1.3 says 'Rate in the log.' The final log second-check-d1b9d59.log gives no number. The rate sits in the JSON field disagreement_rate_rows and in second-check-1d4ddd2.log. The final pass reused the 37-row sample and drew no new one. The diff 1d4ddd2c0..d1b9d597b changed only D1 rows, the counting-rule paragraph, the summary and the projection, so no unsampled class changed."
+  ],
+  "evidence": [
+    "git rev-parse HEAD -> 51252ca9e09bd458052894304aaa7680b1daabc2 and git status --short was empty before any write. The probe script phase-acceptance-p1-51252ca-probes.py printed 79 PASS lines and 0 FAIL lines on two runs.",
+    "Phase 1 range: git diff --name-status cbd023b1b a1caa5803 lists classification.md and plan.md only. git diff --name-only 635a604c8 a1caa5803 -- apps lists 0 paths. Task 1.4 'Phase 1 ships no test change' holds.",
+    "plan.md:46, 52, 60 and 73 carry [x] for tasks 1.1 to 1.4. Full SHAs 08bec4c365, d1b9d597b5 and a1caa58034 resolve with git cat-file -e. Task 1.1 (08bec4c36) set its marker and added classification.md. The baseline files are gitignored (.gitignore:56), so no commit holds them. Task 1.3 names the audited head d1b9d597b. Commit a1caa5803 set that marker.",
+    "baseline.json parsed by label: case_count=3175, line_coverage_pct=86.52, file_count=91, status=pass. baseline.log shows 91 files and 3175 tests passed, Lines 86.52 % (1349/1559) and 'Result: exit 0' twice. 1349/1559 is 86.53 %, which matches within rounding.",
+    "Runner proof in ~/.local/state/heavy-run.log (grep -a): the green command took the lock at 2026-11-22T16:52:10 and ended exit 0 after 93 s. The JSON reporter run ended exit 0 after 95 s at 17:06:04. test:coverage took the lock at 17:11:07 and ended exit 0 after 152 s. The start times match baseline.log (16:52:12 and 17:11:10).",
+    "Live corroboration at the first Phase 2 gate: gate-0be4a037.json holds cases_before=3175, cases_after=3168 (3175 minus the 7 D1 delete cases), green_exit_code=0 and coverage_exit_code=0. coverage-0be4a037.log shows Lines 1402/1559. The 1559-line denominator equals the baseline, so the coverage floor 85.52 compares like with like.",
+    "classification.md is tracked and identical at a1caa5803 and HEAD (git diff --stat empty). K rows come first (classification.md:33). D1, D2, D3 (none), D4, D5, R1 (none), R2 and R3 (none) follow, then Not counted (classification.md:208). Class sums K 2843, D1 67, D2 22, D4 6, D5 221 and R2 16 equal the Summary table (classification.md:226-233). They total 3175, equal to case_count. D1 splits into 7 delete and 60 rewrite.",
+    "File set at a1caa5803 (git ls-tree): 98 test files. 91 sit under src/ (the Vitest set per vitest.config.ts include), 6 are e2e/*.spec.ts and 1 is scripts/__tests__/i18n-cli.test.ts. All 98 have a row, with 0 missing and 0 stray. Each e2e row and the i18n-cli row say 'not counted' (classification.md:212-218).",
+    "per-file-counts.md lists 91 files whose runner count equals the classification row sum for every file. The runner sum is 3175. Eight static it/test counts at a1caa5803 match the runner counts: proxy-redirect 5, blog-draft 6, localized-link 8, storytime-song-player 15, math-advantage page 4, tutor-commission.followups 4, storytime page 2, blog-blocks 18.",
+    "K-list check: the seven tutor-commission files appear only in K rows (classification.md:90-92 and 108-111). No D row names a tutor-commission file. The D5 row for www-tutor-calculator.locale covers prose pins only, and the money pins stay K (classification.md:63 and 170). Each of the seven D2 kept-duplicate files exists at a1caa5803.",
+    "Second-check chain: second-check-08bec4c.json fail at 4 of 18 (22.22 %, above the 15 % stop rule). The PM rubric r2 (classification.md:6-14) and Red r2 1d4ddd2c0 followed. second-check-1d4ddd2.json showed 3 of 37 (8.11 %) with F1 on three D1 rows. Red r3 d1b9d597b flipped those rows to rewrite. second-check-d1b9d59.json passed with F1 and F2 withdrawn. The 37-row sample is 29 % of the 129 counted-class rows, above 10 %. All three audited heads resolve and show an empty apps diff. Between d1b9d597b and a1caa5803 only plan.md changed.",
+    "Currency: classification.md is byte-identical at HEAD. The plan Phase 1 section differs from a1caa5803 only by added SHA and Commit lines. The run files are gitignored, so currency rests on the content cross-checks above. File times: baseline.json 2026-11-22 17:14 and second-check-d1b9d59.json 18:43. The Phase 1 prerequisite results target d1b9d597b, not HEAD. I rely on content identity of the Phase 1 artifacts. The test-only path rule does not fit, because later commits include the master merge and track documents.",
+    "Anti-pattern scan: A3, A4, A6 and A7 do not apply, because the Phase 1 diff holds no contract test, filter or registry file. A5 holds: the plan Phase 1 section says 'Both runner commands exited 0' and holds no count, and the heavy-run lines confirm both exits. A9: grep for 'measure/archive' over classification.md, plan.md, the second-check JSON files and baseline files returned exit 1. A15: rg -n 'sha256|checksum|sha-256' over classification.md, baseline.json and baseline.log returned exit 1.",
+    "Phase 1 role gate commands re-run: git diff --name-only cbd023b1b a1caa5803 -- apps/ printed nothing. test -s exited 0 for classification.md, baseline.json and baseline.log. No Phase 1 gate JSON exists: none of the 30 gate JSON files names a Phase 1 task, and test-strategy.md section 7 asks for logs. red-cbd023b.log, red-08bec4c-r2.log and red-1d4ddd2-r3.log hold the scope proofs.",
+    "Not run: the Phase 1 GREEN and COVERAGE suites. They gate the Phase 1 tree, which is not checked out here. test-strategy.md section 1.5 forbids a second worktree. The heavy-run lines and gate-0be4a037.json corroborate the baseline runs. Open items that final-acceptance-dc9d39d.json already lists (N1 doctor.sh pin, N2 plan task 4.3 label, ADV-26 to ADV-32) are not raised again."
+  ],
+  "commands": [
+    {"command": "git rev-parse HEAD; git status --short", "result": "51252ca9e09bd458052894304aaa7680b1daabc2; empty"},
+    {"command": "git diff --name-status cbd023b1b a1caa5803", "result": "classification.md and plan.md only"},
+    {"command": "git diff --name-only 635a604c8 a1caa5803 -- apps", "result": "0 paths"},
+    {"command": "git diff --name-only cbd023b1b a1caa5803 -- apps/; test -s classification.md baseline.json baseline.log", "result": "no output; all three test -s exit 0"},
+    {"command": "python3 -I measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-51252ca-probes.py", "result": "79 PASS, 0 FAIL, exit 0"},
+    {"command": "grep -a '2026-11-22T1[6-7]' ~/.local/state/heavy-run.log | grep -a www-reading-advantage", "result": "three 'job ended exit 0' lines (93 s, 95 s, 152 s)"},
+    {"command": "git show a1caa5803:<file> | grep -cE '^\\s*(it|test)\\(|^\\s*(it|test)\\.each' for 8 test files", "result": "8 of 8 equal the runner counts"},
+    {"command": "git diff 1d4ddd2c0 d1b9d597b -- classification.md", "result": "D1 rows, counting-rule paragraph, summary and projection only"},
+    {"command": "git diff --stat a1caa5803 HEAD -- classification.md", "result": "empty"},
+    {"command": "grep -n 'measure/archive' classification.md plan.md second-check-*.json baseline.*", "result": "exit 1, no hit"},
+    {"command": "rg -n 'sha256|checksum|sha-256' classification.md baseline.json baseline.log", "result": "exit 1, no hit"},
+    {"command": "python3 -I over adversarial-*.json, gate-*.json, second-check-*.json, phase-acceptance-*.json", "result": "15 adversarial results, none for Phase 1; 30 gate JSONs, none for a Phase 1 task; 3 second-check results"}
+  ],
+  "changed_files": [
+    "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-51252ca.json",
+    "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-51252ca.log",
+    "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-51252ca-probes.py"
+  ],
+  "test_strategy_violations": [
+    "test-strategy.md sections 2, 3 and 7: the Phase 1 closeout gate needs a bounded adversarial pass before phase acceptance, and no such result exists."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_audit",
+  "confidence": "high",
+  "route": "claude-agent/sonnet#xhigh",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "classification.md:226-233 sums to the 3175 baseline and 79 probe checks pass, but two rows later proved wrong in Phase 2 (plan.md task 4.12)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 3,
+      "evidence": "Phase 1 ships no test; its checks are artifact checks backed by three heavy-run 'job ended exit 0' lines for the baseline runs."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --name-status cbd023b1b a1caa5803 lists classification.md and plan.md only, and the apps diff is empty."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "baseline.log is a prose summary, but heavy-run.log and gate-0be4a037.json confirm it; no Phase 1 adversarial result exists."
+    }
+  ],
+  "reviewer_ratings": [
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "openai/gpt-6-luna#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "second-check-08bec4c.json: I recomputed 4 of 18 = 22.22 % above the 15 % stop rule; it agreed with the D2 explicit-English row that F51 later restored."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "openai/gpt-6-luna#high",
+      "agreed": true,
+      "score": 3,
+      "evidence": "second-check-1d4ddd2.json: the F1 blocker on three D1 rows is right (3 of 37 = 8.11 %), but it agreed with the D4 navigation row that F50 later restored."
+    },
+    {
+      "reviewer_role": "review-a",
+      "reviewer_route": "openai/gpt-6-luna#high",
+      "agreed": true,
+      "score": 4,
+      "evidence": "second-check-d1b9d59.json: I re-checked the 91 per-file counts, the 3175 sum and 8 spot counts; the 37-row sample was carried forward, not redrawn."
+    }
+  ]
+}

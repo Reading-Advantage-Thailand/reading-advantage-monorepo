@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "1fcebeeeac80cff1017cadb47265e148106e0379",
+  "phase_base_sha": "01e1e9d2904f3ee13718d6d86a4b54bb774f100e",
+  "role_base_sha": "1fcebeeeac80cff1017cadb47265e148106e0379",
+  "audited_head_sha": "1fcebeeeac80cff1017cadb47265e148106e0379",
+  "status": "fail",
+  "summary": "The range scope is correct and F48 is resolved. The numeric scan found another run-file inventory count: plan.md still says all 30 gate JSONs.",
+  "blocking_findings": [
+    "F49 [Blocker] review-a: plan.md:554 says `green_exit_code` was checked in all 30 gate JSONs. Task 4.9 says its only remaining run-file count is the dated role-JSON measurement, but this separate gate-JSON count is not named as an exception or anchored to a fixed head. Remove it or record its historical scope."
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD returned 1fcebeeeac80cff1017cadb47265e148106e0379, matching role_base_sha and audited_head_sha.",
+    "F48 withdrawn: plan.md:609-612 now limits the removal claim and explicitly retains the dated 36-of-37 role-JSON measurement at head cb12d6f0f.",
+    "The exact diff 01e1e9d2904f3ee13718d6d86a4b54bb774f100e..1fcebeeeac80cff1017cadb47265e148106e0379 changes plan.md only. It edits task 4.9 wording and adds task 4.10.",
+    "The apps/ path diff is empty, so no test or production file changed.",
+    "The corrected scan uses plural-aware terms (`logs?`, `files?`, `jsons?`). It found report.md numeric references to metrics, test cases, fixed commit/file names, sampled logs and test-file counts. These do not enumerate run-file kinds.",
+    "The relevant plan JSON hits are plan.md:554-556: `all 30 gate JSONs` and `36 of 37 pre-existing role JSONs`. Only the latter matches the declared task 4.9 exception. The gate count is an unqualified run-file inventory count and may change when another round adds gate JSON artifacts.",
+    "Other numeric matches in the report and plan refer to case/test counts, source-file counts, commit-derived filenames, fixed named log pairs, or log samples read. They do not state a current run-file-kind inventory count."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --name-status 01e1e9d2904f3ee13718d6d86a4b54bb774f100e..1fcebeeeac80cff1017cadb47265e148106e0379",
+    "git diff --unified=8 01e1e9d2904f3ee13718d6d86a4b54bb774f100e..1fcebeeeac80cff1017cadb47265e148106e0379 -- measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "git diff --name-only 01e1e9d2904f3ee13718d6d86a4b54bb774f100e..1fcebeeeac80cff1017cadb47265e148106e0379 -- apps",
+    "rg -n -i '([0-9][^\\\\n]{0,60}\\\\b(logs?|files?|jsons?)\\\\b|\\\\b(logs?|files?|jsons?)\\\\b[^\\\\n]{0,60}[0-9])' measure/tracks/www_test_audit_pilot_20261122/report.md measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "read measure/tracks/www_test_audit_pilot_20261122/plan.md lines 545-564",
+    "read measure/tracks/www_test_audit_pilot_20261122/plan.md lines 605-632",
+    "read measure/tracks/www_test_audit_pilot_20261122/report.md lines 25-65"
+  ],
+  "changed_files": [
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "F48 is addressed, but plan.md:554 retains an unqualified count of gate JSON artifacts."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "This artifact-only check used the exact diff and a plural-aware search; no suite run was required."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The exact range changes plan.md only and the apps/ path diff is empty."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The finding is tied to the numeric scan at plan.md:554 and the remediation text at plan.md:609-612."
+    }
+  ]
+}

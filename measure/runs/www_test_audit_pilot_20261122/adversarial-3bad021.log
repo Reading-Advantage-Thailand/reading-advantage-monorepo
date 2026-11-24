@@ -1,0 +1,34 @@
+# Adversarial log: www test audit pilot, Phase 3, round 5 (confirmation)
+
+Audited head: 496ce2233. Probe commit: 3bad02148.
+
+ADV-15 is closed. The helper fails closed: it throws, naming tag and
+property, on an inline --color-* token on the element or an ancestor,
+and on a compiled-stylesheet token rule the element matches. The
+orchestrator-directed change of the ADV-15 assertion to expect a throw
+is sound: a throw is a valid way not to pass silently. The shipped
+pricing, contact, and hero surfaces pass with no false throw (25
+tests).
+
+One silent pass remains (ADV-17). A colour-token rule injected through
+a <style> element at test time is not in the compiled-stylesheet scan,
+so a tested element matching it computes from :root without throwing.
+The committed probe fails its ADV-17 case until Green scans the
+document stylesheets present at read time.
+
+Other helper edge cases are notes: ancestor-matched compiled rules are
+not checked (ADV-18), and token rules nested in at-rules are not
+scanned (ADV-19).
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3), adversarial round 5 (confirmation)
+commits: 3bad02148
+tests_run: pnpm --filter www-reading-advantage exec vitest run src/__tests__/contrast-parent-override.adversarial.test.tsx src/__tests__/contrast-fixture.test.ts src/__tests__/phase-4-browser-regressions.red.test.tsx src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx src/__tests__/hero-text-contrast.red.test.ts --reporter=dot (25 passed); pnpm --filter www-reading-advantage exec vitest run src/__tests__/tmp-injected-style-probe.adversarial.test.tsx --reporter=verbose (silent pass, temp file deleted); pnpm --filter www-reading-advantage exec vitest run src/__tests__/contrast-parent-override.adversarial.test.tsx --reporter=verbose (3 passed, 1 failed as intended)
+files_changed: apps/www-reading-advantage/src/__tests__/contrast-parent-override.adversarial.test.tsx; measure/runs/www_test_audit_pilot_20261122/adversarial-3bad021.json; measure/runs/www_test_audit_pilot_20261122/adversarial-3bad021.log
+plan_updates: none
+known_failures: ADV-17 blocking. An injected class rule that declares a colour token passes silently.
+handoff: Route ADV-17 to Green. Green extends the guard to the document stylesheets present at read time so any rule declaring a --color-* token that a tested element matches throws; the committed probe passes after the fix and stays as armor. ADV-15 is a closed note; ADV-18 and ADV-19 are notes. Result JSON: measure/runs/www_test_audit_pilot_20261122/adversarial-3bad021.json.
+END_MEASURE_AGENT_RESULT

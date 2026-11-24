@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+commits: none
+tests_run: Targeted Vitest passed 67 tests in 12 files, including contrast-fixture.test.ts and real-css.adversarial.test.ts. Both F21 mutation proofs failed the numeric assertions with exit 1.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-941278c.json and review-a-941278c.log
+plan_updates: none
+known_failures: none
+handoff: F21 is withdrawn. The jsdom cascade resolves body, type, descendant, and utility backgrounds. Removing @layer wrappers preserves source order and does not reverse relevant precedence on the contact and pricing pages. No new defect can produce a false pass in the tested pages.
+dispositions: none
+END_MEASURE_AGENT_RESULT

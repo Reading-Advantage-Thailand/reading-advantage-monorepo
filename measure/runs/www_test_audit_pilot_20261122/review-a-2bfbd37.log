@@ -1,0 +1,24 @@
+Review A (correctness and architecture), round 8 (documents only), for www_test_audit_pilot_20261122, Phase 4: Pilot report.
+Audited HEAD: 2bfbd373fef2fc500798efe721975fa0a345e73f. Scope: 7336f42b3..2bfbd373f. Phase base: e91c4d4cc.
+Result JSON: measure/runs/www_test_audit_pilot_20261122/review-a-2bfbd37.json
+
+Scope PASS: git diff --stat lists classification.md, report.md and plan.md only.
+Blog-merge PASS: gate-257a6b0c.json gives 3094 - 1385 = 1709.
+Git gives 1726 (14 x 119 + 2 + 58) before the merge and 17 after. So 1494 + 1709 = 3203, which is 28 above 3175.
+Projection note, f97a72f90 table row (1414 -> 1494, 92.08 %), reverted D5 marks and the plan 4.17 'Phase 2 task 2.7' wording: PASS.
+No 81/54/3121 cut figure, line citation or run-file count remains. The final values agree: 1494, 1681 (52.9 %), 92.08 % and 3064 (96.5 %).
+Nonblocking N13: the 3203 counterfactual uses the task 3.5 post count (119). With 121 posts at HEAD, the unmerged suite would be about 3232. The conclusion is unchanged.
+Nonblocking N14: the classification 'second lever ... 102 D5 cases' sentence has no stale note.
+
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: None; documents-only change, apps tree equal to ecff7cfad (1494 tests, 92.08 % lines in this role's round 6 run).
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-2bfbd37.json and review-a-2bfbd37.log
+plan_updates: none
+known_failures: none
+handoff: PASS. Optional N13: add 'at task 3.5' and the sources to the 3203 sentence. Optional N14: extend the classification D5-revert note to the 'second lever' sentence. Nothing blocks.
+END_MEASURE_AGENT_RESULT

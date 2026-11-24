@@ -1,0 +1,24 @@
+Review A (correctness and architecture), round 7 (documents only), for www_test_audit_pilot_20261122, Phase 4: Pilot report.
+Audited HEAD: 7336f42b31b2a80eb4ba61a093a84ada9befa866. Scope: ecff7cfad..7336f42b3. Phase base: e91c4d4cc.
+Result JSON: measure/runs/www_test_audit_pilot_20261122/review-a-7336f42.json
+
+Scope PASS: git diff --stat lists report.md, plan.md and measure/tech-debt.md only.
+F1 withdrawn as fixed: section 4 gives 2843 for the 77 K-section rows and 3064 (96.5 %) for the Summary, in both places.
+F2 withdrawn as fixed: section 3 gives one lint warning (beforeEach); the two D5 warnings went away with the revert.
+N8, N9 and N10 are recorded and true. The N8 late-finding line is in the contract form. tech-debt.md has 50 lines.
+Stale-count grep: report.md holds only current or labelled values; the plan's 1414, 1761 and three-warning lines are in dated tasks that 4.18 labels pre-revert.
+No line citation and no run-file count were added.
+Nonblocking N11: the one-warning claim cites review-a-c673f21.json (three warnings). N12: plan task 4.4 keeps an old 'classification.md:226' citation.
+
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: None; documents-only change, apps tree equal to ecff7cfad (1494 tests, 92.08 % lines, lint 1 warning in this role's round 6 runs).
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-7336f42.json and review-a-7336f42.log
+plan_updates: none
+known_failures: none
+handoff: PASS. F1 and F2 are fixed; N8, N9 and N10 are recorded. Optional N11: cite plan task 4.18 for the one-warning count. Optional N12: replace the old 'classification.md:226' citation in plan task 4.4 with 'the K rows section'. Nothing blocks.
+END_MEASURE_AGENT_RESULT

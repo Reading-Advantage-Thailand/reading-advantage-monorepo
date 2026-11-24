@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 3: Rewrite batch (R1-R3), adversarial round 8 (closing confirmation)",
+  "baseline_sha": "865f52a91",
+  "phase_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "role_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "audited_head_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "status": "pass",
+  "summary": "ADV-22 is closed: brokenPostRefs flags any name ending in .md (case-insensitive) that is not a readable regular file after following links, and both discovery cases assert the list empty. My own temporary directory symlink with an uppercase .MD name was flagged and named in both cases. The probe file passes 3 of 3 with unchanged expectations, and the loader unit tests and the merged validation pass: 4 files, 24 tests. Verdict pass.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "ADV-22 closed: 66aeb1011 flags broken links, directory symlinks, sockets, fifos, and directories whose name ends in .md case-insensitively; my probe th/ZZ-ADV-Closing.MD -> directory failed both discovery cases and was named.",
+    "ADV-23 kept: a locale-level directory symlink is not followed by localeDirectories (note from 865f52a91).",
+    "ADV-24 [Note] adversarial: a hard link to a post shares the target content and is a regular file to statSync, so it is parsed like the original and validated; a hard link is indistinguishable from the file itself at this layer."
+  ],
+  "evidence": [
+    "pnpm --filter www-reading-advantage exec vitest run on the probe file, the dotfile and symlink loader tests, and blog-posts-validation.test.ts at e91c4d4cc: 4 files, 24 tests, all passed.",
+    "A temporary th/ZZ-ADV-Closing.MD symlink to a directory failed 'no broken post links' and 'no broken post link in any locale', each naming th/ZZ-ADV-Closing.MD; the symlink and its target were removed.",
+    "After cleanup, the probe file and the merged validation pass 20 tests and git status is clean."
+  ],
+  "commands": [
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts src/__tests__/blog-posts-loader-dotfile.test.ts src/__tests__/blog-posts-loader-symlink.test.ts src/lib/blog-posts-validation.test.ts --reporter=dot",
+    "pnpm --filter www-reading-advantage exec vitest run src/lib/blog-posts-validation.test.ts --reporter=verbose",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts src/lib/blog-posts-validation.test.ts --reporter=dot"
+  ],
+  "changed_files": [
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-e91c4d4.json",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-e91c4d4.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "kimi-code-plan-cn/kimi-for-coding",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "The directory-symlink probe is flagged and named in both discovery cases, and 24 tests pass at e91c4d4cc."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "brokenPostRefs now covers every non-file .md entry class called out in the acceptance finding."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "No production edit and no commit belong to this round; the temp symlink was removed."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The verdict rests on a green run of four files and a named failing probe of my own making."
+    }
+  ]
+}

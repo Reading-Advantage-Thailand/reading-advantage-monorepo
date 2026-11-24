@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "4d41866fdde7d7c53359684485682e6fd06b27a5",
+  "phase_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "role_base_sha": "4d41866fdde7d7c53359684485682e6fd06b27a5",
+  "audited_head_sha": "4d41866fdde7d7c53359684485682e6fd06b27a5",
+  "status": "fail",
+  "summary": "The report's cited figures and finding summaries check out. Two required details are missing: per-row K mutation status and an explanation or explicit unknown for the CI time increase.",
+  "blocking_findings": [
+    "F27 [Blocker] review-a: report.md:81–161 lists the 77 K groups, but it does not mark each row as lacking a mutation check. The single summary sentence at line 161 does not provide per-row status. spec.md:35 requires each K row without a mutation check to list that status. Add the status to every row or enumerate every affected row.",
+    "F28 [Blocker] review-a: report.md:244–248 reports the 7.64-second increase and timing components, but it does not state a reason for the increase or say that the cause is not recorded. Add one evidence-based explanation or state that the cause is unknown."
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD returned 4d41866fdde7d7c53359684485682e6fd06b27a5, matching role_base_sha and audited_head_sha.",
+    "The exact phase diff e91c4d4cc..4d41866fd contains only report.md and plan.md.",
+    "The report's baseline figures match baseline.json and baseline.log: 3175 cases, 86.52% line coverage, and 90.47 seconds. Its final figures match gate-66aeb1011.json and green-66aeb1011.log: 1412 cases, 92.07% line coverage, and 98.11 seconds.",
+    "The merge figures match gate-257a6b0c.json: 3094 to 1385 cases, 1709 removed, and the blog validation reduced from 1726 cases to 17.",
+    "The reported pre-merge comparison is consistent: Phase 2 ended at 3094; the final count without the 1709-case merge would be 3121. That is a 54-case or 1.7% cut from 3175.",
+    "All 10 commit SHAs in the per-class table resolve with git cat-file -e. The plan task lines match the listed D1-D5, R2, and blog-merge SHAs and case counts.",
+    "The K table contains 77 groups and sums to 2843 cases, matching classification.md:226. The seven tutor-commission file paths have an empty diff from a1caa5803 to HEAD.",
+    "The K section does not report mutation-check status on any row. Report.md:161 says only, 'No K row carries a mutation check.' This does not meet the per-row reporting requirement in spec.md:35.",
+    "Report.md:246–248 states the duration increased by 7.64 seconds and gives component timings. It neither attributes the increase nor says that the cause is not recorded.",
+    "The report states that the 20% target is met through the blog merge, names the 1709-case merge, and acknowledges the result without that merge would be only a 1.7% cut.",
+    "The findings section includes F1-F26 and ADV-1–ADV-24 once each, with an escape description, finding role, and fix or note. Six spot checks against review and acceptance JSONs match.",
+    "Spot checks confirm F17 remains an open nit, F18 retains default A pending PM confirmation, F25 is closed, F26 remains a portability note, ADV-8 is closed, and ADV-23 remains a note.",
+    "The report includes the lessons and open PM items. Its prose is clear overall; long sentences do not hide another factual discrepancy.",
+    "The plan records Phase 4 tasks 4.1–4.3 complete and cites the report, commit, gate, and timing logs."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --name-status e91c4d4cc3c8d5d61a1e9b802c031247543180fa..4d41866fdde7d7c53359684485682e6fd06b27a5",
+    "python3 -c \"import subprocess; xs='0be4a0374 e332f594e 409108d3e 0d705612d ee5c7b739 7008ccefd c577cdf18 407c5d9bd adf24e723 257a6b0cd'.split(); bad=[]; [bad.append(x) for x in xs if subprocess.run(['git','cat-file','-e',x+'^{commit}'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode]; print('checked=',len(xs),'missing=',bad)\"",
+    "python3 -c \"from pathlib import Path; p=Path('measure/tracks/www_test_audit_pilot_20261122/report.md').read_text().splitlines(); a=p.index('| K file group | Cases |'); b=next(i for i in range(a+1,len(p)) if p[i].startswith('## ')); rows=[x for x in p[a+2:b] if x.startswith('| src/')]; nums=[int(x.rsplit('|',2)[1].strip()) for x in rows]; print('groups=',len(rows),'case_sum=',sum(nums),'mutation_fields=',sum('mutation' in x.lower() for x in rows))\"",
+    "git diff --name-only a1caa58034f6455e91205a5673ef172a974a7992..HEAD -- apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.adversarial.test.tsx apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx apps/www-reading-advantage/src/lib/tutor-commission.test.ts apps/www-reading-advantage/src/lib/tutor-commission.adversarial.test.ts apps/www-reading-advantage/src/lib/tutor-commission.followups.adversarial.test.ts apps/www-reading-advantage/src/lib/tutor-commission.settlement.adversarial.test.ts",
+    "rg -n 'Test Files|Tests  |Duration  ' measure/runs/www_test_audit_pilot_20261122/baseline.log",
+    "rg -n 'Test Files|Tests  |Duration  ' measure/runs/www_test_audit_pilot_20261122/green-66aeb1011.log",
+    "git status --short"
+  ],
+  "changed_files": [
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "measure/tracks/www_test_audit_pilot_20261122/report.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "Reported totals match their source receipts, but the report omits per-row K mutation status and the time-increase explanation."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "No test run was requested; the artifact checks verified report totals against gate receipts and classification rows."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The exact Phase 4 diff changes only report.md and plan.md."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The key figures match baseline logs, Green logs, gate receipts, classification.md, and plan.md."
+    }
+  ]
+}

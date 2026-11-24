@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 2: Delete batch (D1-D5)
+commits: none
+tests_run: Two targeted www Vitest runs: 154 passed in 13 files. Missing-key fixture: reproduced the false pass. Checked seven coverage logs and seven GREEN citations.
+files_changed: review-a-c673f21.json, review-a-c673f21.log
+plan_updates: none
+known_failures: F1–F12 block Phase 2. The D5 part 2 GREEN log does not contain the required run.
+handoff: Send F1–F12 to Green. D-10 still has a direct equality check. See review-a-c673f21.json for evidence and fixes.
+END_MEASURE_AGENT_RESULT

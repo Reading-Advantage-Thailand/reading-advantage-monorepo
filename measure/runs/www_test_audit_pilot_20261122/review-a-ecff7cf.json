@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "fdf62c97b974cb7aec47a4a4e79f5538488ce9af",
+  "phase_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "role_base_sha": "ecff7cfadfe454ebc5baeacf9ae1f8f7f30ece42",
+  "audited_head_sha": "ecff7cfadfe454ebc5baeacf9ae1f8f7f30ece42",
+  "status": "fail",
+  "summary": "The D5 revert is correct. Seven files equal a1caa5803 byte for byte, and the other five keep only D1, D2, master-merge and Thai-month changes. Two restored pins fail under mutation, and no production file changed. classification.md sums to 3175 with K 3064 (96.5 %). Section 1 and section 7 of report.md give the right final values: 1494 cases, a cut of 1681 (52.9 %), 92.08 % lines and a rise of 5.56. The revert made two report claims false: section 4 still gives 2843 K cases, and section 3 still gives three lint warnings.",
+  "blocking_findings": [
+    "F1 (stale count, report deliverable): report.md section 4 says 'The classification summary table gives 2843 K cases.' The closing paragraph says 'The 77 rows still sum to 2843 cases in the `classification.md` Summary table.' After ecff7cfad, the classification.md Summary table gives 'K keep | 3064 | 96.5 %'. The 77 K-section rows still sum to 2843. The 221 reverted D5 cases sit in the D5 section and now have K status. Fix: give both values and name their sources, for example: 'The K rows section lists 77 file groups with 2843 cases. With the 221 reverted D5 cases, the Summary table gives 3064 K cases (96.5 %).'",
+    "F2 (stale count, report deliverable): report.md section 3 says 'Lint warnings, three. Only the unused `beforeEach` import predates Phase 2. D5 part 2 made `sectionOf` and `copy` unused.' After the revert, `pnpm --filter www-reading-advantage lint` through heavy-run gives '✖ 1 problem (0 errors, 1 warning)': the beforeEach warning only. Plan 4.18 also says 'lint exited 0 with one pre-existing warning'. Fix: say that one warning remains, the pre-existing beforeEach import, and that the two D5 part 2 warnings went away with the revert."
+  ],
+  "nonblocking_findings": [
+    "N8 (leftover D5 tooling): the revert left the D5 helpers and their adversarial tests in place. fixtures/locale-key-check.ts now has one importer, locale-key-check.adversarial.test.ts. fixtures/reedy-eligibility.ts now has one importer, reedy-inactive-reversal.adversarial.test.tsx, and that file's header says 'Both files import that fixture', which is now false. CONTAINER_STORY_IMAGES in storytime-page-expected.ts has no importer. These adversarial cases are part of the 1494 count, but they guard helpers that no restored test uses. Record them as tech-debt, or remove them in a later change.",
+    "N9 (clarity): report.md section 1 says 'The commission FAQ pin at `ca91946b` added one case' and then gives 1494 at f97a72f9. www-tutor-calculator.locale.test.ts now equals a1caa5803, so that one case is gone again, and the baseline it.each pins cover the line. Plan 4.18 says this ('the later FAQ pin from ca91946b is no longer needed'), but the report does not.",
+    "N10 (record): the tech-debt row title still reads 'Late adversarial and review findings (ADV-26 to ADV-32, L1)' although the row now also holds ADV-P1-9."
+  ],
+  "evidence": [
+    "Late-finding call for F1 and F2: Phase 4 is past round 2, so these are late findings. Both claims were true before this round; the D5 revert in this round made them false. report.md is the Phase 4 deliverable, and a reader receives a wrong K count and a wrong warning count. Both findings meet the wrong-result exception of contracts.md, so each gets one fix round. The fix round is subject to the Round limit, which is the orchestrator's call.",
+    "git rev-parse HEAD returned ecff7cfadfe454ebc5baeacf9ae1f8f7f30ece42, equal to audited_head_sha and role_base_sha. `git status --short` is empty; measure/runs/ is git-ignored.",
+    "`git diff --stat fdf62c97b..HEAD` lists 12 test files (all in f97a72f90), measure/tech-debt.md, classification.md, plan.md and report.md. `git diff --name-only fdf62c97b..HEAD -- apps` lists only *.test.ts(x) files. No production file changed.",
+    "Check 1 (full restore): `git diff a1caa5803 HEAD` is empty for phase-4-contact-copy.red, www-features-page.content, www-features-pricing.locale, www-pricing-page.content, www-stem-date-line.locale, www-tutor-calculator.locale and www-tutor-reedy-claim.",
+    "Check 1 (non-D5 work kept): `git diff --stat c577cdf18^ HEAD -- www-batch-20261119.locale.test.ts` is empty, so the D1 0be4a0374 state stays. For www-reading-card.red.test.ts, the f97a72f90 line set equals the exact reverse of 407c5d9bd (rc=0), so the D1 0be4a0374 and 4d1688131 changes stay. The primary-advantage page.content.test.tsx diff from a1caa5803 is the 15 added lines of the fb5622ed7 D2 restore (OLD_TEST_IDS and 'renders no test id of the old page').",
+    "Check 1 (master merge kept): `git diff 968bde612 HEAD -- www-batch-20261116.locale.test.ts` is empty. For storytime page.content.test.tsx, HEAD equals master 968bde612 plus the Thai-month controls of the 733319505 fact check. The fixture keeps the 'Thai month' class, so those controls must stay. Master's APPROVED_SCHOOL_YEAR assertion and the no-roadmap case are present.",
+    "Check 1 (scope): no commit of D1 (0be4a0374, 4d1688131, 7480484d4, 7c2d93e2, 8d5ad1c4), D2 (e332f594e, fb5622ed7), D4 (0d705612d, 9eb3b9c4f), R2 (adf24e723), the blog merge (257a6b0cd) or the loader fix (e91c4d4cc) touches a reverted file, except the three files above, and their changes stay. D5 files not in the revert are fixtures/locale-key-check.ts, fixtures/storytime-page-expected.ts, fixtures/reedy-eligibility.ts and reedy-inactive-reversal.adversarial.test.tsx; see N8.",
+    "Check 1 (mutation proof 1): the probe measure/runs/www_test_audit_pilot_20261122/probe-review-a-ecff7cf/src/pricing-s7-baht-mutation.test.ts mocks @/locales/pages/pricing. It changes the th S7 body 'แพ็กเกจเริ่มต้นที่ 3,000 บาท และราคาอาจปรับตามตลาด' to 2,500 บาท (exactly 1 hit; priceFloor stays '3,000 บาท'). It then runs the restored www-features-pricing.locale.test.ts. Only 'holds every pricing TH string of the Thai check page' fails ('missing TH pricing strings').",
+    "Check 1 (mutation proof 2): the probe tutor-points3-th-mutation.test.ts mocks @/locales/pages/products/tutor-advantage. It changes th tutorRole.points[3] 'แสดงตัวอย่าง' to 'แสดงรายได้จริง', then runs the restored www-tutor-calculator.locale.test.ts. Only 'holds the new th copy at both paths' fails ('th tutorRole.points[3]').",
+    "Check 1 (probe totals): the combined heavy-run probe result is 'Test Files  2 failed (2)', 'Tests  2 failed | 41 passed (43)'. No source file was edited, so no revert was needed.",
+    "Check 2: the classification.md Summary gives 3064 + 67 + 22 + 0 + 6 + 0 + 16 = 3175, and 2843 + 221 = 3064. K 3064/3175 = 96.50 %. The shares 96.5 + 2.1 + 0.7 + 0.2 + 0.5 total 100.0 %. The D5 section keeps its rows under the note 'All D5 rows were reverted to kept status by PM decision on 2026-11-25, option C'. The K rows section is unchanged in this range, so no K row was deleted. The FAQ erratum now says the pins 'returned with the D5 revert', which matches the tutor-calculator file equal to a1caa5803.",
+    "Check 3 (report, correct parts): 'Money pins stay as K' is gone. Section 1 states the revert with the PM reason and gives 'The final run at `f97a72f9` holds 1494 cases and 92.08 %' (green-at-f97a72f9.log: 'Tests  1494 passed (1494)'; coverage-at-f97a72f9.log: 'Lines        : 92.08% ( 1675/1819 )'). Arithmetic: 3175-1494 = 1681, 1681/3175 = 52.94 % (shown as 52.9 %), 92.08-86.52 = 5.56. The pre-merge 1412 and 92.07 % at e91c4d4cc stay labelled. Section 7 labels the 1494 line 'After the D5 revert at `f97a72f9`' and quotes it with two spaces, as in the raw log. ADV-P1-4b: 'all three rows were restored in Phase 2 task 2.7' matches plan task 2.7 (fix commits 733319505, fb5622ed7, 9eb3b9c4f). The diffs add no file:line reference and no count of a run-file kind.",
+    "Check 3 (report, stale parts): see F1 (section 4, 2843) and F2 (section 3, three lint warnings).",
+    "Check 4 (plan 4.18): commit f97a72f9, the source adversarial-p1-fdf62c9.json, the PM option C reason and the ADV-P1-8 pins match the findings and the diffs. The plan's 1494 / 92.08 / 1681 / 52.9 values, check-types 0 and lint with one warning also match. 'The K share is 96.5 percent' is correct, and the 4.17 values are labelled pre-revert. Plan 4.3 now gives the final cut after f97a72f9 as 1681 with 1494 cases. The Phase 4 heading adds '- Late finding ADV-P1-9: tech-debt (...)' in the contract form.",
+    "Check 4 (tech-debt.md): `wc -l` gives 50. The diff replaces one row with one row and appends an [ADV-P1-9] entry, which matches adversarial-p1-fdf62c9.json ADV-P1-9 (the K case name overstates a two-literal check). See N10 for the row title.",
+    "Lint at HEAD: heavy-run `pnpm --filter www-reading-advantage lint` gives '3:21  warning  'beforeEach' is defined but never used' and '✖ 1 problem (0 errors, 1 warning)'.",
+    "Coverage gate at HEAD: heavy-run `pnpm --filter www-reading-advantage test:coverage` gives 'Test Files  98 passed (98)', 'Tests  1494 passed (1494)' and 'All files | 90.95 | 82.99 | 87.52 | 92.08'."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git status --short",
+    "git log --oneline 9044cf04b..HEAD",
+    "git diff --stat fdf62c97b..HEAD",
+    "git diff --name-only fdf62c97b..HEAD -- apps",
+    "git log --format='%h %s' a1caa5803..f97a72f90^ -- <each reverted file>",
+    "for each D5 commit (ee5c7b739 7008ccefd c577cdf18 407c5d9bd 733319505 bcaa97ff4 3b044ec9d e153b885a dce443985): list files not in the f97a72f90 file set",
+    "git diff 968bde612 HEAD -- <storytime page.content.test.tsx> <www-batch-20261116.locale.test.ts>",
+    "git diff a1caa5803 HEAD -- <each of the 10 other reverted files> (changed-line counts)",
+    "git diff --stat c577cdf18^ HEAD -- www-batch-20261119.locale.test.ts",
+    "diff <(reverse of git diff 407c5d9bd^ 407c5d9bd -- www-reading-card.red.test.ts) <(git diff f97a72f90^ f97a72f90 -- same)",
+    "for each D1/D2/D4/R2/blog/loader commit: list files that are in the f97a72f90 file set",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 heavy-run.sh -c './node_modules/.bin/vitest run --config <abs>/apps/www-reading-advantage/vitest.config.ts --root <abs>/measure/runs/www_test_audit_pilot_20261122/probe-review-a-ecff7cf --reporter=verbose 2>&1'",
+    "git diff fdf62c97b..HEAD -- classification.md report.md plan.md measure/tech-debt.md",
+    "rg -n '2843|3064|221|3035|89\\.[56]|96\\.5|1414|1494|1681|52\\.9|Money pins|K file groups|D5' report.md",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 heavy-run.sh -c 'pnpm --filter www-reading-advantage lint 2>&1'",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage'",
+    "rg -l 'CONTAINER_STORY_IMAGES|expectKeysInEveryLocale|reedy-eligibility' apps/www-reading-advantage/src",
+    "python3 -I -c '<print findings of adversarial-p1-fdf62c9.json>'"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/phase-4-contact-copy.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/www-batch-20261116.locale.test.ts",
+    "apps/www-reading-advantage/src/__tests__/www-batch-20261119.locale.test.ts",
+    "apps/www-reading-advantage/src/__tests__/www-features-page.content.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/www-features-pricing.locale.test.ts",
+    "apps/www-reading-advantage/src/__tests__/www-pricing-page.content.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/www-reading-card.red.test.ts",
+    "apps/www-reading-advantage/src/__tests__/www-stem-date-line.locale.test.ts",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-reedy-claim.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.content.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/storytime-advantage/page.content.test.tsx",
+    "measure/tech-debt.md",
+    "measure/tracks/www_test_audit_pilot_20261122/classification.md",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "measure/tracks/www_test_audit_pilot_20261122/report.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "claude-agent/opus#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "The revert is exact: seven files equal a1caa5803, and the reading-card revert is the exact reverse of 407c5d9bd. But report.md section 4 still says the Summary table gives 2843 K cases where classification.md now gives 3064."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "The probe-review-a-ecff7cf mutations of the th pricing S7 baht figure and th tutorRole.points.3 give 'Tests  2 failed | 41 passed (43)'; only the two restored pin cases fail."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 4,
+      "evidence": "`git diff --name-only fdf62c97b..HEAD -- apps` lists only the 12 reverted test files, but the D5 helpers locale-key-check.ts and reedy-eligibility.ts and their adversarial tests stay without a consumer (N8)."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 3,
+      "evidence": "The new values cite green-at-f97a72f9.log and coverage-at-f97a72f9.log, but report.md section 3 still says three lint warnings while heavy-run lint gives '✖ 1 problem (0 errors, 1 warning)'."
+    }
+  ]
+}

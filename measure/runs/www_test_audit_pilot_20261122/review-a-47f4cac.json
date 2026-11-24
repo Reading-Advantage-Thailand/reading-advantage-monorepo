@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "dc9d39dac96b66a60d0c07b8ccdecc49c0352395",
+  "phase_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "role_base_sha": "47f4cac872450120e984468bbd14a97ff9a7b637",
+  "audited_head_sha": "47f4cac872450120e984468bbd14a97ff9a7b637",
+  "status": "pass",
+  "summary": "Commit 47f4cac87 changes plan.md, report.md and measure/tech-debt.md only. Plan 4.3 labels 1763 cases and 92.07 % as pre-merge at e91c4d4cc. It gives the final values after 6ee56327b: a cut of 1762 cases, 1413 cases and 92.08 %. The tech-debt row matches the adversarial records for ADV-26, ADV-27, ADV-31 and ADV-32, and the file stays at 50 lines. Report section 7 now says 'at the pre-merge head' in both places. The commit adds no line citation and no run-file count.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N4 (record form, orchestrator scope): no plan task records commit 47f4cac87. The commit edits task 4.3 and task 4.15 in place, and 4.15 still names commit e993f5aa1, although ADV-31 and ADV-32 were added in 47f4cac87. The text no longer says 'in this commit', so no claim is false. The ADV-26 to ADV-32 calls are bullets, not lines in the contracts.md form '- Late finding <id>: tech-debt (<reason>)'. The L1 line is also not in that exact form. If the orchestrator wants the exact form, add those lines under the Phase 4 heading."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned 47f4cac872450120e984468bbd14a97ff9a7b637, equal to audited_head_sha and role_base_sha. `git status --short` was empty before this run wrote its files.",
+    "`git diff --stat dc9d39dac..HEAD` lists measure/tech-debt.md (2 +-), plan.md (29 lines) and report.md (2 +-) only. One commit: 47f4cac87.",
+    "Plan 4.3: 'The pre-merge raw case cut is 1763 cases, or 55.5 percent of the 3175 baseline, at e91c4d4cc' (baseline.json, gate-66aeb1011.json). 'The final cut after the master merge 6ee56327b is 1762 cases, with 1413 cases and 92.08 percent line coverage' (green-merge-e836e7289.log). 'Pre-merge line coverage rose from 86.52 percent to 92.07 percent.' These agree with 3175-1412=1763, 3175-1413=1762, and the round 1 and round 3 coverage runs of this role (1413 tests, 92.08 % lines).",
+    "tech-debt.md: `wc -l` gives 50 before and after. The diff replaces one row with one row. The item title now reads 'ADV-26 to ADV-32, L1'.",
+    "ADV-26 row text 'The 2027 school-year clause removal passes in en as well as th and zh; a Thai year edit passes' matches adversarial-da99c46.json ADV-26 (P9: clause removal in en, th and zh passes; P11: th year 2570 to 2571 passes) and the ADV-32 correction in adversarial-dc9d39d.json.",
+    "ADV-27 row text says LABEL_COPY and ROW_B home mutations pass, only the th APPROVED_SCHOOL_YEAR value and the circular control pass, and en and zh edits fail the label handoff tests. This matches adversarial-da99c46.json ADV-27 (P11 noise in LABEL_COPY home and ROW_B row 7 passes; P4 circular control) and adversarial-dc9d39d.json ADV-32 ('changing the en or zh value fails the two real-copy label handoff tests. Only the th value and the circular control pass').",
+    "ADV-31 row text matches adversarial-dc9d39d.json ADV-31: mkdirSync and symlinkSync run before the try block in blog-posts-loader.adversarial.test.ts and in the sibling helper postsTree(), so a throw leaks the mkdtemp base. It also matches the setup note of this role's round 3 review.",
+    "ADV-32 row text 'The earlier ADV-26 and ADV-27 records were too broad; corrected here' matches adversarial-dc9d39d.json ADV-32.",
+    "Report section 7 now ends the timing paragraph with 'The five slowest files at the pre-merge head are:'. `rg -n 'at head' report.md` returns no hit; only the file name timing-at-head remains.",
+    "`git diff dc9d39dac..HEAD | grep '^+' | grep -nE ':[0-9]+\\b|[0-9]+ (gate|green|coverage|proof|review|run) (files|logs)'` returns no hit, so the commit adds no line citation and no count of a run-file kind.",
+    "No tests ran this round. The commit changes documents only, and the apps tree equals dc9d39dac, where this role ran 1413 tests at 92.08 % lines."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git status --short",
+    "git log --oneline dc9d39dac..HEAD",
+    "git diff --stat dc9d39dac..HEAD",
+    "git diff dc9d39dac..HEAD -- measure/tracks",
+    "git diff dc9d39dac..HEAD -- measure/tech-debt.md",
+    "wc -l measure/tech-debt.md",
+    "python3 -I -c '<print ADV-26, ADV-27, ADV-31, ADV-32 from adversarial-da99c46.json and adversarial-dc9d39d.json>'",
+    "rg -n 'at head|:[0-9]+\\b' measure/tracks/www_test_audit_pilot_20261122/report.md",
+    "git diff dc9d39dac..HEAD | grep '^+' | grep -nE ':[0-9]+\\b|[0-9]+ (gate|green|coverage|proof|review|run) (files|logs)'",
+    "rg -n 'Late finding' measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "rg -n '47f4cac|4\\.16' measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "changed_files": [
+    "measure/tech-debt.md",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "measure/tracks/www_test_audit_pilot_20261122/report.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "claude-agent/opus#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "Plan 4.3 gives 1763 pre-merge and 1762 final, which equal 3175-1412 and 3175-1413, and the tech-debt ADV-26 and ADV-27 text matches the ADV-32 correction in adversarial-dc9d39d.json."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "This round changes documents only; the apps tree equals dc9d39dac, where this role's coverage run gave 1413 tests at 92.08 % lines."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "`git diff --stat dc9d39dac..HEAD` lists plan.md, report.md and measure/tech-debt.md only."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Each new value names its run file, but no plan task records commit 47f4cac87 and the late-finding calls are not in the contracts.md line form."
+    }
+  ]
+}

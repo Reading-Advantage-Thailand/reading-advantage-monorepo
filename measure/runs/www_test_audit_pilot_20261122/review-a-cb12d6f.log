@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: None; the brief requested an artifact check. Reviewed the passed Green log at the audited head.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-cb12d6f.json and review-a-cb12d6f.log
+plan_updates: none
+known_failures: F30: the plan says route and phase are present in 35 role JSONs; 36 of the 37 pre-existing role JSONs have both fields.
+handoff: F29 withdrawn. The report's timing schema, five timing sums, green_exit_code fields, and baseline test_wall_seconds value check out. F30 is a wrong count in the changed plan evidence. Send it to the human under the late-finding stop rule; do not start another Green round.
+dispositions: none
+END_MEASURE_AGENT_RESULT

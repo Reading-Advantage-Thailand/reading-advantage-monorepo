@@ -1,0 +1,27 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Adversarial remediation ADV-8. Phase 3: Rewrite batch (R1-R3).
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+phase_base_sha: 8a126f612abcc258c6c6711d6ac03fa085bbcbff
+role_base_sha: 8f7d949616cde79bd9f9890f17c2dade02e7ef8d
+green_head: 04e7ff8a88d0820c1c0b332045bcfbbd213b14bf
+implementation_commit: 98c2713d3046bfbf886c2e9c9ad097f46849ddd8
+plan_evidence_commit: 04e7ff8a88d0820c1c0b332045bcfbbd213b14bf
+
+tasks_flipped_to_x:
+- 3.9 Adversarial remediation ADV-8 (98c2713d3). Evidence: implementation commit 98c2713d3 and plan commit 04e7ff8a.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: one tracked file, src/__tests__/fixtures/blog-posts-loader.ts. The validation test and the committed probe were changed. The plan commit changed the existing plan.md. No post file was added.
+
+fix: the loader lives in one fixture. It lists every non-hidden regular file in each locale directory, exposes that list to the probe, and parses only .md files as posts. The extension rule and both discovery cases now flag Markdown-like files that are not .md and name them as <locale>/<file>. Auxiliary -segments.json data files stay ignored. The probe keeps its expectation; only its loader setup calls the shared listPostFiles. All 15 rules and both discovery cases remain.
+
+gates: four heavy-run gates exited 0 after the implementation commit. check-types 0. lint 0 with three known warnings in untouched files. full vitest 0 with 95 files and 1397 tests. coverage 0 with lines at 91.93 percent. cases_before=1397, cases_after=1397; the committed probe adds one case over the prior 1396 and this fix adds none. Line coverage is above the 85.52 floor and the 86.52 baseline.
+
+proofs: measure/runs/www_test_audit_pilot_20261122/proof-adv8.log. A copy of a valid en post saved as en/zz-adversarial-mdx-probe.mdx made the extension rule and both discovery cases fail, naming the file. The temporary post was deleted, no leftover exists, and the shipped posts pass.
+dispositions: ADV-8=FIX
+END_MEASURE_AGENT_RESULT

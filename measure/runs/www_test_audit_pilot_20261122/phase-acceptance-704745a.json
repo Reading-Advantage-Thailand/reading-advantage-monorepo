@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "role": "phase-acceptance",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 3: Rewrite batch (R1-R3)",
+  "baseline_sha": "704745a3ca2bb27b52f28e2fcf65df9d994b64ac",
+  "phase_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "role_base_sha": "704745a3ca2bb27b52f28e2fcf65df9d994b64ac",
+  "audited_head_sha": "704745a3ca2bb27b52f28e2fcf65df9d994b64ac",
+  "status": "fail",
+  "summary": "All 1,398 www tests pass with 91.95% line coverage. The merged blog validation loses a kept check. The contrast check can pass unreadable text.",
+  "blocking_findings": [
+    "F22 [Blocker] phase-acceptance: The ADV-8 remediation skips dot-prefixed .md files at fixtures/blog-posts-loader.ts:57. The same en/.phase-three-probe.md input fails the phase-base URL-safe slug rule by name. All 17 merged cases pass at the audited HEAD. Production blog.ts:79–85 and 294–299 still discover and count that filename. Restore the kept check for every production-discoverable .md file.",
+    "F23 [Blocker] phase-acceptance: The F21 remediation resolves remaining var() values from a global map, not the element, at fixtures/contrast.ts:64–72 and 285–290. A pricing title with an inline --color-slate-900 of #faf9f7 on the same background passes at 16.97:1. The equivalent literal color fails at 1:1. Use the effective custom property or fail when it cannot be determined."
+  ],
+  "nonblocking_findings": [
+    "F24 [Nit] phase-acceptance: The initial R2 rewrite of hero-section.test.tsx:52–56 checks only that two gradient stops exist. Changing the middle and end stops to white and amber passes all seven cases. The former class pins rejected this change. This is a late finding outside the remediation lines."
+  ],
+  "evidence": [
+    "Git confirms the exact phase base 8a126f612abcc258c6c6711d6ac03fa085bbcbff and the unchanged audited HEAD 704745a3ca2bb27b52f28e2fcf65df9d994b64ac. The role base equals the audited HEAD.",
+    "The Phase 2 acceptance artifact passes at the Phase 3 base. Green, final Review A, and final adversarial testing all target 704745a3c. No test-only exception is needed between those results and acceptance.",
+    "Review B, Review C, and UX browser review do not apply under test-strategy.md:78–87. No browser ran.",
+    "All 10 Phase 3 tasks have [x] and a resolvable first-line SHA. Tasks 3.1 and 3.3 cite the phase base because classification.md has no R1 or R3 rows.",
+    "The R2 inventory has 16 cases. The R2 commit changes nine files and covers 14 cases. plan.md:272–276 identifies the two previously rewritten cases and the F11 approval.",
+    "The seven class, merge, and remediation receipts match the labeled GREEN and COVERAGE logs. The four exit fields are zero in each receipt. Line coverage is 91.60%, 91.60%, 91.64%, 91.76%, 91.83%, 91.93%, and 91.95%. The floor is 85.52%.",
+    "The class and remediation lint logs record zero errors and three warnings. The type logs show tsc --noEmit with no diagnostics. Fresh type check and lint both exit 0 at the audited HEAD.",
+    "The fresh heavy-run test:coverage exits 0: 95 files and 1,398 tests pass. V8 reports 91.95% lines, or 1,611 of 1,752. The baseline also has Markdown remap warnings.",
+    "All nine proof-r2 logs contain assertion failures and exit 1. The paired F19, F20, and F21 logs also contain assertion failures and exit 1. The proofs cover their named mutations, not all forms of a regression.",
+    "The blog merge reduces 1,726 cases to 17. Its three recorded post mutations exit 1 and name en/1-district-1-quality-school. A fresh blank-author probe also exits 1 and names that post and the author rule.",
+    "The same dot-prefixed Markdown entry gives 17 passes at the audited HEAD and one named slug failure with 1,739 passes at the phase base. The initial merge still loaded it. Commit 98c2713d3 added the skip.",
+    "An in-memory pricing probe logs var(--color-slate-900) and a computed custom property of #faf9f7. The helper substitutes rgb(15,23,42) and reports 16.97:1. The literal control gives 1:1 and fails the WCAG check.",
+    "F22 concerns a line added by the ADV-8 remediation. F23 concerns the foreground resolution line changed by the F21 remediation. F24 concerns the original R2 rewrite.",
+    "The Git range has no non-test, non-Measure path and no changed blog post. The probes were in memory. No tracked file needed restoration.",
+    "A5: The plan's recorded command exits agree with the runner output. The task 3.5 statement that every post receives validation does not hold after ADV-8. A3, A4, A6, and A7 do not apply to the unchanged Measure framework.",
+    "The raw reduction from 3,175 to 1,398 is 55.97%, which rounds to 56%. The named breakage proofs are valid for their inputs. Do not credit the merge toward acceptance while it weakens the K row. Excluding the 1,709-case merge reduction leaves 3,107 cases and a 2.14% reduction."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git status --porcelain=v1 --branch",
+    "git log --format='%H %s' --name-status 8a126f612..704745a3c",
+    "git diff --check 8a126f612..704745a3c",
+    "git diff --name-only 8a126f612..704745a3c -- . ':(exclude)measure/**' ':(exclude,glob)apps/www-reading-advantage/**/*.test.ts' ':(exclude,glob)apps/www-reading-advantage/**/*.test.tsx' ':(exclude,glob)apps/www-reading-advantage/src/__tests__/fixtures/**'",
+    "git diff --name-only 8a126f612..704745a3c -- 'apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/posts'",
+    "git show 98c2713d3 -- apps/www-reading-advantage/src/__tests__/fixtures/blog-posts-loader.ts",
+    "git show -U5 93a16fe3b -- apps/www-reading-advantage/src/__tests__/fixtures/contrast.ts",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage'",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage check-types'",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage lint'",
+    "NO_COLOR=1 CI=true node --input-type=module -e 'import {startVitest} from \"vitest/node\"; import {execFileSync} from \"node:child_process\"; const base=process.argv[1]===\"base\";const test=\"src/lib/blog-posts-validation.test.ts\"; const old=base?execFileSync(\"git\",[\"show\",`8a126f612:apps/www-reading-advantage/${test}`],{encoding:\"utf8\"}):null;const facade=`import actualFs from \"node:fs\"; const fs={...actualFs,readdirSync(dir,options){const list=actualFs.readdirSync(dir,options);if(!String(dir).endsWith(\"/blog/posts/en\"))return list; console.log(\"PROBE: en/.phase-three-probe.md is a discoverable input\"); return [...list,options?.withFileTypes?{name:\".phase-three-probe.md\",isFile(){return true;}}:\".phase-three-probe.md\"];},readFileSync(file,options){return actualFs.readFileSync(String(file).replace(\"/.phase-three-probe.md\",\"/1-district-1-quality-school.md\"),options);}};`;const ctx=await startVitest(\"test\",[test],{watch:false,maxWorkers:1,reporters:[\"dot\"]},{plugins:[{name:\"phase-3-dotfile-probe\",enforce:\"pre\",transform(code,id){if(base&&id.endsWith(\"/\"+test))return old.replace(\"import fs from \\\"fs\\\";\",facade);if(!base&&id.endsWith(\"/fixtures/blog-posts-loader.ts\"))return code.replace(\"import fs from \\\"node:fs\\\";\",facade);}}]}); await ctx.close();' head",
+    "NO_COLOR=1 CI=true node --input-type=module -e 'import {startVitest} from \"vitest/node\"; import {execFileSync} from \"node:child_process\"; const base=process.argv[1]===\"base\";const test=\"src/lib/blog-posts-validation.test.ts\"; const old=base?execFileSync(\"git\",[\"show\",`8a126f612:apps/www-reading-advantage/${test}`],{encoding:\"utf8\"}):null;const facade=`import actualFs from \"node:fs\"; const fs={...actualFs,readdirSync(dir,options){const list=actualFs.readdirSync(dir,options);if(!String(dir).endsWith(\"/blog/posts/en\"))return list; console.log(\"PROBE: en/.phase-three-probe.md is a discoverable input\"); return [...list,options?.withFileTypes?{name:\".phase-three-probe.md\",isFile(){return true;}}:\".phase-three-probe.md\"];},readFileSync(file,options){return actualFs.readFileSync(String(file).replace(\"/.phase-three-probe.md\",\"/1-district-1-quality-school.md\"),options);}};`;const ctx=await startVitest(\"test\",[test],{watch:false,maxWorkers:1,reporters:[\"dot\"]},{plugins:[{name:\"phase-3-dotfile-probe\",enforce:\"pre\",transform(code,id){if(base&&id.endsWith(\"/\"+test))return old.replace(\"import fs from \\\"fs\\\";\",facade);if(!base&&id.endsWith(\"/fixtures/blog-posts-loader.ts\"))return code.replace(\"import fs from \\\"node:fs\\\";\",facade);}}]}); await ctx.close();' base",
+    "NO_COLOR=1 CI=true node --input-type=module -e 'import {startVitest} from \"vitest/node\"; const variable=process.argv[1]===\"var\"; const ctx=await startVitest(\"test\",[\"src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx\"],{watch:false,maxWorkers:1,reporters:[\"dot\"]},{plugins:[{name:\"phase-3-contrast-pair\",enforce:\"pre\",transform(code,id){if(id.endsWith(\"/fixtures/contrast.ts\")){const start=\"return contrastRatio(foreground, background);\";return code.replace(start,`if(element.tagName === \"H1\") console.log(\"PROBE h1:\",value,window.getComputedStyle(element).getPropertyValue(\"--color-slate-900\"),foreground,background,contrastRatio(foreground, background));${start}`);} if(!id.endsWith(\"/pricing/page.tsx\"))return;const start=\"h1 className=\\\"mb-6\";if(!code.includes(start))throw new Error(\"Probe source mismatch\");const color=variable?\"var(--color-slate-900)\":\"#faf9f7\";return code.replace(start,`h1 style={{ \"--color-slate-900\": \"#faf9f7\", color: ${JSON.stringify(color)}, backgroundColor: \"#faf9f7\" }} className=\"mb-6`);}}]});await ctx.close();' var",
+    "NO_COLOR=1 CI=true node --input-type=module -e 'import {startVitest} from \"vitest/node\"; const variable=process.argv[1]===\"var\"; const ctx=await startVitest(\"test\",[\"src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx\"],{watch:false,maxWorkers:1,reporters:[\"dot\"]},{plugins:[{name:\"phase-3-contrast-pair\",enforce:\"pre\",transform(code,id){if(id.endsWith(\"/fixtures/contrast.ts\")){const start=\"return contrastRatio(foreground, background);\";return code.replace(start,`if(element.tagName === \"H1\") console.log(\"PROBE h1:\",value,window.getComputedStyle(element).getPropertyValue(\"--color-slate-900\"),foreground,background,contrastRatio(foreground, background));${start}`);} if(!id.endsWith(\"/pricing/page.tsx\"))return;const start=\"h1 className=\\\"mb-6\";if(!code.includes(start))throw new Error(\"Probe source mismatch\");const color=variable?\"var(--color-slate-900)\":\"#faf9f7\";return code.replace(start,`h1 style={{ \"--color-slate-900\": \"#faf9f7\", color: ${JSON.stringify(color)}, backgroundColor: \"#faf9f7\" }} className=\"mb-6`);}}]});await ctx.close();' literal",
+    "NO_COLOR=1 CI=true node --input-type=module -e 'import {startVitest} from \"vitest/node\"; const ctx=await startVitest(\"test\",[\"src/lib/blog-posts-validation.test.ts\"],{watch:false,maxWorkers:1,reporters:[\"dot\"]},{plugins:[{name:\"phase-3-author-probe\",enforce:\"pre\",transform(code,id){if(!id.endsWith(\"/fixtures/blog-posts-loader.ts\"))return; const start=\"const raw = fs.readFileSync(filePath, \\\"utf8\\\");\"; if(!code.includes(start))throw new Error(\"Probe source mismatch\"); const from=JSON.stringify(\"author: \\\"Reading Advantage Marketing Team\\\"\"); const to=JSON.stringify(\"author: \\\"\\\"\"); return code.replace(start,`let raw = fs.readFileSync(filePath,\"utf8\"); if(ref === \"en/1-district-1-quality-school.md\") {if(!raw.includes(${from}))throw new Error(\"Probe input mismatch\"); raw=raw.replace(${from},${to}); console.log(\"PROBE: blanked the author of\",ref);}`);}}]}); await ctx.close();'",
+    "NO_COLOR=1 CI=true node --input-type=module -e 'import {startVitest} from \"vitest/node\"; const ctx=await startVitest(\"test\",[\"src/components/marketing/hero-section.test.tsx\"],{watch:false,maxWorkers:1,reporters:[\"dot\"]},{plugins:[{name:\"phase-3-gradient-stop\",enforce:\"pre\",transform(code,id){if(!id.endsWith(\"/components/marketing/hero-section.tsx\"))return;const original=\"via-orange-50 to-sky-50\";if(!code.includes(original))throw new Error(\"Probe source mismatch\"); console.log(\"PROBE: changed the default hero middle and end stops\");return code.replace(original,\"via-white to-amber-50\");}}]});await ctx.close();'"
+  ],
+  "changed_files": [
+    "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-704745a.json",
+    "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-704745a.log"
+  ],
+  "test_strategy_violations": [
+    "F22: The shared loader weakens the K blog validation row. See classification.md:106 and test-strategy.md:238.",
+    "F23: The F21 proof does not cover local custom properties. The fresh probe demonstrates a false pass for task 3.8."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "openai/gpt-6.2-sol#high (substitution: ra-quota pick printed claude-agent/sonnet#max, but the Claude 7-day window is above 90 %; gpt-6.2-sol is an approved phase-acceptance route and not the Red family)",
+  "ratings": [
+    {"axis": "correctness", "score": 3, "evidence": "The dotfile and local color probes pass where the phase-base rule or the literal control fails."},
+    {"axis": "test_meaning", "score": 3, "evidence": "The blank-author probe fails by post and rule, but the dotfile bypasses every merged rule."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "The exact phase diff lists only www test files, test fixtures, and plan.md."},
+    {"axis": "evidence_quality", "score": 4, "evidence": "All seven receipts match the runner summaries, but proof-blog-merge.log does not cover the discovery regression in F22."}
+  ],
+  "reviewer_ratings": [
+    {"reviewer_role": "review-a", "reviewer_route": "openai/gpt-6-luna#high", "agreed": true, "score": 4, "evidence": "The 0165b8e review identified the foreground-only check; contrast-fixture.test.ts:40–47 tests that boundary."},
+    {"reviewer_role": "review-a", "reviewer_route": "openai/gpt-6-luna#high", "agreed": true, "score": 4, "evidence": "The b2e6558 review identified the backdrop issue now covered by contrast-fixture.test.ts:59–98."},
+    {"reviewer_role": "review-a", "reviewer_route": "openai/gpt-6-luna#high", "agreed": true, "score": 4, "evidence": "The 1dd9134 review identified the missing non-class background, now covered by contrast-fixture.test.ts:122–157."},
+    {"reviewer_role": "review-a", "reviewer_route": "openai/gpt-6-luna#high", "agreed": false, "score": 1, "evidence": "The 941278c pass misses the local custom property false pass in fixtures/contrast.ts:285–290."},
+    {"reviewer_role": "review-a", "reviewer_route": "openai/gpt-6-luna#high", "agreed": false, "score": 1, "evidence": "The 704745a pass misses the lost phase-base slug check at fixtures/blog-posts-loader.ts:57."},
+    {"reviewer_role": "adversarial", "reviewer_route": "kimi-code-plan-cn/kimi-for-coding", "agreed": true, "score": 4, "evidence": "The 8f7d949 fail correctly identifies the .mdx gap caught after the fix in proof-adv8.log."},
+    {"reviewer_role": "adversarial", "reviewer_route": "kimi-code-plan-cn/kimi-for-coding", "agreed": true, "score": 4, "evidence": "The 04e7ff8 fail correctly identifies the uppercase .MD gap caught after the fix in proof-adv11.log."},
+    {"reviewer_role": "adversarial", "reviewer_route": "kimi-code-plan-cn/kimi-for-coding", "agreed": false, "score": 1, "evidence": "The 704745a pass confirms uppercase .MD rejection but misses the separate dot-prefixed .md false pass."}
+  ]
+}

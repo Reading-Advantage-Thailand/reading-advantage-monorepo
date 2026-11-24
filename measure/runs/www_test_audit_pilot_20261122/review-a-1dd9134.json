@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 3: Rewrite batch (R1-R3)",
+  "baseline_sha": "1dd9134aa8c72d75e72f483b65a8af7e2cb78591",
+  "phase_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "role_base_sha": "1dd9134aa8c72d75e72f483b65a8af7e2cb78591",
+  "audited_head_sha": "1dd9134aa8c72d75e72f483b65a8af7e2cb78591",
+  "status": "fail",
+  "summary": "F20 is closed. The recursive composition and strict painted-layer handling pass the unit cases. F21 blocks acceptance because background lookup omits CSS outside element class tokens and can use white instead of the actual page backdrop.",
+  "blocking_findings": [
+    "F21 [Blocker] review-a: readBackgroundLayer in fixtures/contrast.ts:233–255 reads styles through computedForElement, which only derives declarations from element.classList. It misses backgrounds from non-class selectors and inline styles. In this app, globals.css:162–164 sets the body background with @apply bg-slate-50, but the class-only helper reaches PAGE_BACKGROUND (#ffffff) instead. A foreground rgb(118,118,118) passes at 4.54:1 against the fallback white but fails at 4.34:1 against #f8fafc. The contrast test can therefore pass a failing rendered contrast."
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD returned 1dd9134aa8c72d75e72f483b65a8af7e2cb78591, equal to role_base_sha and audited_head_sha.",
+    "F20 withdrawn: resolveBackdrop at fixtures/contrast.ts:264–278 walks ancestors, stops at opaque backgrounds, skips transparent layers, and composites each translucent layer over its resolved parent. readBackgroundLayer at lines 233–255 throws for background images and unsupported painted colours.",
+    "contrast-fixture.test.ts:59–70 pins the composed backdrop #bebebe and a 2.3754:1 ratio for rgb(120,120,120). An independent calculation produced the same channel values and ratio.",
+    "contrast-fixture.test.ts:72–120 also tests translucent layers over the page, background-image and unsupported-colour errors, transparent backgrounds, and stopping at an opaque layer.",
+    "The targeted Vitest run passed 11 files and 61 tests, including the nine backdrop checks and both R2 contrast assertions.",
+    "The contact sky-300 mutation proof fails the real contrast assertion. The current contact and pricing page colors are defined in globals.css and resolve through the compiled stylesheet variables. The slate-400 pricing mutation fails closed because its variable is unsupported; that proof does not claim a numeric ratio.",
+    "The hand check for the composed unit-test case uses #faf9f7, then 50% black, then 50% white. The intermediate RGB values are (125,125,124), the final backdrop is (190,190,190), and the ratio against (120,120,120) is 2.375392.",
+    "F21 evidence: real-css.ts:86–95 derives styles only from element.classList. globals.css:162–164 applies bg-slate-50 to body through a body selector, so the resolver does not observe the app's real body backdrop and falls back to #ffffff.",
+    "A contrast calculation gives rgb(118,118,118) a ratio of 4.54:1 on white and 4.34:1 on #f8fafc. The first passes the helper's threshold while the actual backdrop fails it.",
+    "The exact phase diff 8a126f612abcc258c6c6711d6ac03fa085bbcbff..1dd9134aa8c72d75e72f483b65a8af7e2cb78591 changes test files, test fixtures, and plan.md only. No production file or classification row changed.",
+    "gate-0f63c5a9a.json reports GREEN, COVERAGE, check-types, and lint exit 0; case_count is 1394 and line coverage is 91.76%, above the 85.52% floor.",
+    "Plan task 3.7 at lines 323–344 records the implementation SHA, both proof logs, six added cases, and the gate logs. The 1,394 case count remains below the 20% target ceiling of 2,540 from the 3,175 baseline.",
+    "graph.db is absent as recorded in test-strategy.md:11. A direct caller search shows the contrast exports are used by test files only; no product symbol changed.",
+    "No new production mutation was run because this audit role cannot edit production files. The two existing proof logs were reviewed."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --name-status b2e65587828c534b590799c55b649da108f9ee25..1dd9134aa8c72d75e72f483b65a8af7e2cb78591",
+    "git diff --name-status 8a126f612abcc258c6c6711d6ac03fa085bbcbff..1dd9134aa8c72d75e72f483b65a8af7e2cb78591",
+    "git diff --check 8a126f612abcc258c6c6711d6ac03fa085bbcbff..1dd9134aa8c72d75e72f483b65a8af7e2cb78591",
+    "git status --short",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/contrast-fixture.test.ts src/__tests__/phase-4-browser-regressions.red.test.tsx src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx src/__tests__/phase-4-browser-regressions-final.red.test.tsx src/__tests__/www-reading-cover.red.test.ts src/app/'[locale]'/'(marketing)'/services/page.test.tsx src/app/'[locale]'/'(marketing)'/services/blended-learning/page.test.tsx src/app/'[locale]'/'(marketing)'/services/managed-service/page.test.tsx src/components/marketing/hero-section.test.tsx src/components/blog/blog-pagination.test.tsx src/lib/blog-posts-validation.test.ts",
+    "node -e 'const blend=(c,b,a)=>c.map((v,i)=>Math.round(v*a+b[i]*(1-a))); const first=blend([0,0,0],[250,249,247],0.5); const back=blend([255,255,255],first,0.5); const lum=x=>x.reduce((s,v,i)=>s+[0.2126,0.7152,0.0722][i]*(v/255<=0.04045?v/255/12.92:((v/255+0.055)/1.055)**2.4),0); const ratio=(lum(back)+0.05)/(lum([120,120,120])+0.05); console.log(first, back, ratio)'",
+    "python3 -c \"f=lambda c:(c/255/12.92 if c/255<=0.04045 else ((c/255+0.055)/1.055)**2.4); lum=lambda rgb:sum(w*f(v) for w,v in zip((0.2126,0.7152,0.0722),rgb)); bg1=lum((255,255,255)); bg2=lum((248,250,252)); print((bg1+0.05)/(lum((118,118,118))+0.05), (bg2+0.05)/(lum((118,118,118))+0.05))\"",
+    "rg -n '\\b(parseColor|contrastRatio|relativeLuminance|readBackgroundLayer|resolveBackdrop|contrastOf|AA_CONTRAST_MIN|BackgroundLayer)\\b' apps/www-reading-advantage/src"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/contrast-fixture.test.ts",
+    "apps/www-reading-advantage/src/__tests__/fixtures/contrast.ts",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions-final.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/www-reading-cover.red.test.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/blended-learning/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/managed-service/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/page.test.tsx",
+    "apps/www-reading-advantage/src/components/blog/blog-pagination.test.tsx",
+    "apps/www-reading-advantage/src/components/marketing/hero-section.test.tsx",
+    "apps/www-reading-advantage/src/lib/blog-posts-validation.test.ts",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [
+    "F21: contrast background lookup does not include CSS rules outside the rendered element's class tokens, so it can test a different backdrop than the browser renders."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "The body background from globals.css:162–164 is not read by the class-only background extractor, allowing a failing ratio to pass against white."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The targeted run passed 61 tests and the backdrop unit cases cover alpha composition, but they inject background layers rather than exercise the rendered body selector."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The audited Phase 3 diff changes test files, test fixtures, and plan.md only."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The gate, two proof logs, 61-test run, unit-test backdrop calculation, and independent contrast calculation support the result."
+    }
+  ]
+}

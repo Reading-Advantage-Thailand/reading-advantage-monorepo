@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "47f4cac872450120e984468bbd14a97ff9a7b637",
+  "phase_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "role_base_sha": "9044cf04b0ab60d5f005ef9e5339ae1c9a0122a3",
+  "audited_head_sha": "9044cf04b0ab60d5f005ef9e5339ae1c9a0122a3",
+  "status": "pass",
+  "summary": "The new case asserts the exact en and th faq.items.5.answer text from the imported live locale module. A Thai mutation through a module mock fails only that case: 1 failed, 18 passed. No production file changed. The class sums total 3175, and the K share is 89.5 %. The report names both halves of fb5622ed7 and states 6 of 37 (16.2 %) with the PM exception. The final values are consistent: 1414 cases, a cut of 1761 (55.5 %), 92.08 % lines and a rise of 5.56 points. The coverage run at HEAD confirms these values. Three wording items do not block.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N5 (changed line, erratum accuracy): classification.md D4 erratum says 'the navigation row was restored in `9eb3b9c4f`; its th and zh cases were not deleted.' The history differs. `git show 0d705612d` deletes `it.each([\"en\", \"th\", \"zh\"])`, and `git show 9eb3b9c4f` restores only `it.each([\"th\", \"zh\"])`. The th and zh cases were deleted and then restored, the en case stays deleted, and the row is restored only in part. The report D4 bullet states this history correctly. Suggested erratum text: 'The th and zh cases of the navigation row were restored in `9eb3b9c4f`; the en case stays deleted.'",
+    "N6 (changed line, quote form): report.md section 7 quotes `Test Files 98 passed (98)` and `Tests 1414 passed (1414)` with one space, and cites green-at-ca91946b.log. That raw Vitest log holds 'Test Files  98 passed (98)' and 'Tests  1414 passed (1414)' with two spaces. The values are correct.",
+    "N7 (record): plan 4.17 records the disposition of ADV-P1-1, -2, -3, -4 and -6 from adversarial-p1-51252ca.json. It does not record ADV-P1-5 (per-file-counts.md rests on a deleted runner JSON; 1858 of 3175 cases re-derived) or ADV-P1-7 (zero-case sentinel rows in D sections). Add one line for each, for example as tech-debt or as accepted notes."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned 9044cf04b0ab60d5f005ef9e5339ae1c9a0122a3, equal to audited_head_sha and role_base_sha. `git status --short` is empty; measure/runs/ is git-ignored (.gitignore:56).",
+    "`git log --oneline 47f4cac87..HEAD` lists 51252ca9e, ca91946bf and 9044cf04b. `git diff --name-only 47f4cac87..HEAD -- apps` lists only src/__tests__/www-tutor-calculator.locale.test.ts. No production copy changed.",
+    "Check 1 (pin source): the test imports `{ en, th, zh } from \"@/locales/pages/products/tutor-advantage\"` into DICTS. The new case 'holds the exact en and th commission FAQ answer' finds the faq.items.5.answer entry of LIVE_LINE_PINS. It asserts toBeDefined, then toBe(pin.en) on DICTS.en and toBe(pin.th) on DICTS.th. The coverage run at HEAD passes, so both pins equal the live source text.",
+    "Check 1 (breakage, reproduced): a direct edit of the locale file was blocked by this role's shell rules. A probe at measure/runs/www_test_audit_pilot_20261122/probe-review-a-9044cf0/src/thai-faq-mutation.test.ts mocks the locale module through vi.mock. It changes 'ทุกเดือน' to 'ทุกปี' in th.faq.items[5].answer, then imports the real test file. Run through heavy-run with the app's vitest.config.ts and --root at the probe, the result is 'Tests  1 failed | 18 passed (19)'. The only failure is the 'holds the exact en and th commission FAQ answer' case, with 'th faq.items.5.answer' and the diff เดือน -> ปี. No source file was changed, so no revert was needed. This matches green-p1-thai-breakage.log ('Tests  1 failed | 18 passed (19)', the same case, Thai answer 'settles yearly, flat rate').",
+    "Check 2 (sums): the classification.md Summary gives 2843 + 67 + 22 + 0 + 6 + 221 + 16 = 3175. K share 2843/3175 = 89.54 %, shown as 89.5 %. The shares now total 100.0 %.",
+    "Check 2 (D2 errata): `git show --stat fb5622ed7` changes primary-advantage/page.content.test.tsx (adds OLD_TEST_IDS and 'renders no test id of the old page') and blog-locale.test.ts (adds 'returns the en directory when locale is en'). Both D2 errata match the D2 rows for blog-locale.test.ts and the primary-advantage 'no old test id' case.",
+    "Check 2 (D4 erratum): see N5.",
+    "Check 2 (D5 erratum): the D5 row for www-tutor-calculator.locale.test.ts lists 'live-line en/th pins ×2'. ca91946bf restores the en and th exact pin for faq.items.5.answer in one case. The tutorRole.points.3 pin is not restored, and the erratum names only faq.items.5.answer, so it is accurate.",
+    "Check 3 (report section 1): 'The final run at `ca91946b` holds 1414 cases and 92.08 %' cites green-at-ca91946b.log and coverage-at-ca91946b.log. Both files exist. green-at-ca91946b.log holds 'Tests  1414 passed (1414)'. coverage-at-ca91946b.log holds 'Lines        : 92.08% ( 1675/1819 )'. Arithmetic: 3175-1414 = 1761, 1761/3175 = 55.46 % (shown as 55.5 %), 92.08-86.52 = 5.56. The pre-merge values 1412 and 92.07 % at e91c4d4cc stay labelled pre-merge. `rg` finds no remaining 1413, 1762 or 1763 in report.md outside the labelled pre-merge text.",
+    "Check 3 (fb5622ed7): the report D2 bullet names the blog-locale restore and 'The same commit restored the Primary `no old test id` old-reference case in `page.content.test.tsx`'.",
+    "Check 3 (second check): report section 6 now says 'The second check passed', '3 disagreements in 37 sampled rows, or 8.11 percent', and 'the ex post rate is 6 of 37, or 16.2 percent, above the 15 percent stop rule'. It adds the PM exception on 2026-11-24 and 'The route that produced the classifier rows is not recorded.' second-check-d1b9d59.json holds disagreement_rate_rows '3/37 (8.11%)'. 6/37 = 16.22 %. The 'another family' claim is removed. The PM decision date comes from the orchestrator brief and plan 4.17; this role did not see the PM's words.",
+    "Check 3 (citations): the 9044cf04b report and classification diffs add no file:line reference and no count of a run-file kind. Each new value names a run file or a commit.",
+    "Check 4 (plan): the 51252ca9e Phase 4 heading writes L1 and ADV-26 to ADV-32 in the contracts.md form '- Late finding <id>: tech-debt (<reason>)'. Task 4.16 records commit 47f4cac87. Task 4.17 matches ca91946bf and 9044cf04b. The targeted file runs 19 tests (the probe saw 19), the suite runs 1414, coverage is 92.08 %, and the final cut is 1761 (55.5 %). It notes that the 1413 counts in 4.13 to 4.15 are at their named heads. See N7 for ADV-P1-5 and ADV-P1-7.",
+    "Coverage gate at HEAD: `HEAVY_PREFLIGHT_WAIT_S=3600 bash heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage'` gives 'Test Files  98 passed (98)', 'Tests  1414 passed (1414)' and 'All files | 90.95 | 83.09 | 87.52 | 92.08'. The probe sits outside the app root, so this run does not include it."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git status --short",
+    "git log --oneline 47f4cac87..HEAD",
+    "git diff --stat 47f4cac87..HEAD",
+    "git diff 47f4cac87..HEAD -- apps",
+    "git diff 47f4cac87..HEAD -- measure/tracks/www_test_audit_pilot_20261122/classification.md measure/tracks/www_test_audit_pilot_20261122/report.md measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "git show --stat fb5622ed7 9eb3b9c4f 0d705612d",
+    "git show --format= 0d705612d -- apps/www-reading-advantage/src/locales/navigation.test.tsx",
+    "git show --format= 9eb3b9c4f -- apps/www-reading-advantage/src/locales/navigation.test.tsx",
+    "python3 -I -c '<print findings of adversarial-p1-51252ca.json and rate keys of second-check-d1b9d59.json>'",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash heavy-run.sh -c './node_modules/.bin/vitest run --config <abs>/apps/www-reading-advantage/vitest.config.ts --root <abs>/measure/runs/www_test_audit_pilot_20261122/probe-review-a-9044cf0 --reporter=verbose 2>&1'",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage'",
+    "grep -E 'Test Files|Tests |All files|Lines' green-at-ca91946b.log coverage-at-ca91946b.log",
+    "rg -n '1413|1412|1414|1761|1762|1763|92\\.0[78]|5\\.5[56]' report.md"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts",
+    "measure/tracks/www_test_audit_pilot_20261122/classification.md",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "measure/tracks/www_test_audit_pilot_20261122/report.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "claude-agent/opus#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "The pin and the report values are right (1414, 1761, 55.5 %, 92.08 %, 5.56), but the classification.md D4 erratum says the th and zh cases 'were not deleted', while git show 0d705612d deletes them."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "The module-mock probe changing ทุกเดือน to ทุกปี gives 'Tests  1 failed | 18 passed (19)', and only the new exact-pin case fails."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "`git diff --name-only 47f4cac87..HEAD -- apps` lists only www-tutor-calculator.locale.test.ts, and the measure edits map to ADV-P1-1, -2, -3, -4 and -6 and N4."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Each new value names green-at-ca91946b.log, coverage-at-ca91946b.log or a commit, but plan 4.17 omits ADV-P1-5 and ADV-P1-7."
+    }
+  ]
+}

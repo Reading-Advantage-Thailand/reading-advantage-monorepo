@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 3: Rewrite batch (R1-R3)",
+  "baseline_sha": "941278cf354b58582e2da0f5f1b5ebf605a2a768",
+  "phase_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "role_base_sha": "941278cf354b58582e2da0f5f1b5ebf605a2a768",
+  "audited_head_sha": "941278cf354b58582e2da0f5f1b5ebf605a2a768",
+  "status": "pass",
+  "summary": "F21 is closed. The compiled stylesheet cascade finds painted body, type, descendant, and utility backgrounds. Removing layer wrappers preserves relevant rule order for the two tested pages and creates no precedence conflict there.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD returned 941278cf354b58582e2da0f5f1b5ebf605a2a768, equal to role_base_sha and audited_head_sha.",
+    "F21 withdrawn: readBackgroundLayer now injects jsdomCss and reads window.getComputedStyle for rendered elements. contrast-fixture.test.ts:122–158 proves type and descendant selectors resolve, and proves a body-only page backdrop is #f8fafc rather than the white fallback.",
+    "The unit composition test uses the real injected stylesheet for its body and descendant rules. It calculates #fc7d7e and a 1.8112:1 ratio for rgb(118,118,118), which is below 4.5.",
+    "The two pages use layered Tailwind utilities for contrast colors: contact/page.tsx:68–75 places the eyebrow in bg-sky-50; pricing/page.tsx:58–75 places text in the bg-site-page hero. The only competing page-level fill is body bg-slate-50 in globals.css:162–164. No matching unlayered rule competes with the tested foreground or section background declarations. Unwrapping preserves the compiled source order, and no relevant precedence reversal occurs on these pages.",
+    "The targeted Vitest run passed 12 files and 67 tests, including contrast-fixture.test.ts, real-css.adversarial.test.ts, the two contrast tests, and the remaining named R2 and D1 consumers.",
+    "Both F21 mutation proof logs show the target numeric contrast assertions fail with exit 1: the contact sky-300 eyebrow and pricing slate-400 title.",
+    "gate-93a16fe3b.json reports GREEN, COVERAGE, check-types, and lint exit 0; case_count is 1396 and line coverage is 91.83%, above the 85.52% floor.",
+    "Plan task 3.8 at lines 345–368 records commit 93a16fe3b, both F21 proof logs, cases_before=1394 and cases_after=1396, and the gate logs.",
+    "The exact phase diff 8a126f612abcc258c6c6711d6ac03fa085bbcbff..941278cf354b58582e2da0f5f1b5ebf605a2a768 changes test files, test fixtures, and plan.md only. It contains no production file.",
+    "The new contrast exports are consumed only by test files. test-strategy.md:11 states graph.db is absent and no exported product symbol changes in this track.",
+    "No new defect met the wrong-result bar. The current injected stylesheet and helper tests prove the required page and backdrop cases; the page-specific mutation proofs also fail at numeric contrast assertions."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --name-status 8a126f612abcc258c6c6711d6ac03fa085bbcbff..941278cf354b58582e2da0f5f1b5ebf605a2a768",
+    "git diff --check 8a126f612abcc258c6c6711d6ac03fa085bbcbff..941278cf354b58582e2da0f5f1b5ebf605a2a768",
+    "git status --short",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/contrast-fixture.test.ts src/__tests__/real-css.adversarial.test.ts src/__tests__/phase-4-browser-regressions.red.test.tsx src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx src/__tests__/phase-4-browser-regressions-final.red.test.tsx src/__tests__/www-reading-cover.red.test.ts src/app/'[locale]'/'(marketing)'/services/page.test.tsx src/app/'[locale]'/'(marketing)'/services/blended-learning/page.test.tsx src/app/'[locale]'/'(marketing)'/services/managed-service/page.test.tsx src/components/marketing/hero-section.test.tsx src/components/blog/blog-pagination.test.tsx src/lib/blog-posts-validation.test.ts",
+    "rg -n '\\b(declarationsForClass|computedFromClasses|computedForElement|contrastOf|resolveBackdrop)\\b' apps/www-reading-advantage/src/__tests__",
+    "git diff --name-status 8a126f612abcc258c6c6711d6ac03fa085bbcbff..941278cf354b58582e2da0f5f1b5ebf605a2a768"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/contrast-fixture.test.ts",
+    "apps/www-reading-advantage/src/__tests__/fixtures/contrast.ts",
+    "apps/www-reading-advantage/src/__tests__/fixtures/real-css.ts",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions-final.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/www-reading-cover.red.test.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/blended-learning/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/managed-service/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/page.test.tsx",
+    "apps/www-reading-advantage/src/components/blog/blog-pagination.test.tsx",
+    "apps/www-reading-advantage/src/components/marketing/hero-section.test.tsx",
+    "apps/www-reading-advantage/src/lib/blog-posts-validation.test.ts",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "contrast-fixture.test.ts:122–158 verifies the selector cascade and body-only backdrop, while the two F21 mutation proofs fail the numeric assertions."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "The 12-file targeted Vitest run passed 67 tests, including the 11 contrast helper cases, real-css adversarial checks, and page-level assertions."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The exact phase diff changes test files, test fixtures, and plan.md only, with no production file."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The audit cites the targeted run, gate receipt, F21 proof logs, unit calculations, changed-file diff, and current plan evidence."
+    }
+  ]
+}

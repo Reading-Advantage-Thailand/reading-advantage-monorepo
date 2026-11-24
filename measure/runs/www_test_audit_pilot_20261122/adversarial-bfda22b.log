@@ -1,0 +1,34 @@
+# Adversarial log: www test audit pilot, Phase 2 bounded pass, re-judged
+
+Audited head: bfda22bd8 (adversarial probe commit).
+Phase range: a1caa58034f6455e91205a5673ef172a974a7992..bfda22bd8.
+
+ADV-1 is withdrawn on the orchestrator contest. git show proves
+0d705612d deleted the full navigation it.each block, so the D4 gate is
+correct for its commit. Commit 9eb3b9c4f restored the th and zh cases
+under Review A round 1 finding F6. The restored cases exercise the real
+routing.locales branch in useCurrentLocale, so a default-only hook
+fails them. The restore is recorded in plan task 2.7.
+
+Attack case (a) holds: all seven tutor-commission K files are unchanged.
+Attack case (b) holds: no D4 deletion removed the only behavioral check
+of a payout rule; the restored nav cases keep a real locale branch.
+Attack case (c) holds: no e2e file is counted.
+
+Anti-patterns A1, A3, A4, A5, A7, A8 hold. ADV-2 stays as a nit on the
+coverage label location.
+
+Both new fixtures hold: ten committed probes pass at bfda22bd8.
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 2: Delete batch (D1-D5)
+commits: bfda22bd8
+tests_run: pnpm --filter www-reading-advantage exec vitest run src/__tests__/locale-key-check.adversarial.test.ts src/__tests__/real-css.adversarial.test.ts --reporter=verbose (10 passed, 2 files); git show 0d705612d and 9eb3b9c4f on navigation.test.tsx (full block deleted, then th/zh restored under F6)
+files_changed: apps/www-reading-advantage/src/__tests__/locale-key-check.adversarial.test.ts; apps/www-reading-advantage/src/__tests__/real-css.adversarial.test.ts; measure/runs/www_test_audit_pilot_20261122/adversarial-bfda22b.json; measure/runs/www_test_audit_pilot_20261122/adversarial-bfda22b.log
+plan_updates: none
+known_failures: none. ADV-1 withdrawn on contest evidence; ADV-2 nit on coverage label location remains.
+handoff: Phase 2 adversarial verdict is pass at bfda22bd8. The two committed probe files add 10 cases; later suite counts include them. The refined result JSON is measure/runs/www_test_audit_pilot_20261122/adversarial-bfda22b.json.
+END_MEASURE_AGENT_RESULT

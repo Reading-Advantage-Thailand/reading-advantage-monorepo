@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: phase-acceptance
+status: blocked
+track: www_test_audit_pilot_20261122
+phase: Phase 2: Delete batch (D1-D5)
+commits: none
+tests_run: Scoped www GREEN through heavy-run: 3,079 passed in 91 files. Scoped V8 COVERAGE through heavy-run: 3,079 passed and 90.93% lines on retry. Two Node predicate checks exposed the contact and Reedy gaps.
+files_changed: phase-acceptance-bfda22b.json, phase-acceptance-bfda22b.log
+plan_updates: none
+known_failures: F1: The K duplicate check uses the mock phone number. F2: The CEFR-only sweep omits two rendered Product sections. F3: The Reedy check accepts an inactive package.
+handoff: Do not accept or push bfda22bd8. Route F1–F3 to Green. Rerun the applicable reviews and acceptance at the resulting HEAD. Review A at 2be9b74db applies through the test-only bfda22bd8 commit.
+END_MEASURE_AGENT_RESULT

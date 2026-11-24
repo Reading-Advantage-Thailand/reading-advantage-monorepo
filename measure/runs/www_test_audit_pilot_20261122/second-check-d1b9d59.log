@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: review-a
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 1: Baseline and classification
+commits: none
+tests_run: No product test command run; Python artifact checks passed for 91 per-file counts, 5 source spot checks, D1 delete total, and classification sum
+files_changed: measure/runs/www_test_audit_pilot_20261122/second-check-d1b9d59.json and second-check-d1b9d59.log only
+plan_updates: none
+known_failures: none
+handoff: HEAD d1b9d597b553f6033ef39029491eb2a13a550337 matches role_base_sha. F1 and F2 are withdrawn. The round-2 disagreement rates are carried forward; no new sample was drawn.
+END_MEASURE_AGENT_RESULT

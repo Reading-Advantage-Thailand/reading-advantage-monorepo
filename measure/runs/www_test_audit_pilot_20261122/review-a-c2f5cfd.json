@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 2: Delete batch (D1-D5)",
+  "baseline_sha": "c2f5cfdb00f2603f003916165ec0d354b7ec0da8",
+  "phase_base_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+  "role_base_sha": "c2f5cfdb00f2603f003916165ec0d354b7ec0da8",
+  "audited_head_sha": "c2f5cfdb00f2603f003916165ec0d354b7ec0da8",
+  "status": "fail",
+  "summary": "Round C fixes the named F2, F4, F9, and F12 test gaps. The documented deviations for F10, F11, and F16 disclose unmet phase criteria but do not satisfy them. F1 and F3's contests hold under the stated fault-detection comparison.",
+  "blocking_findings": [
+    "F10 [Blocker] review-a: FIX — The phase has no matching GREEN evidence for D5 part 2. gate-7008ccef.json reports exit 0, but green-7008ccef.log:1–13 contains an accounting plan. The matching coverage log shows 3,081 passing cases and 89.94% lines. Supply the required GREEN log at commit 7008ccef or rerun that command through the shared runner. | CONTEST kept: plan.md:179 records the missing GREEN log and the successful coverage run, but test-strategy.md:25–37 requires a separate GREEN run; transparent deviation evidence does not meet that gate.",
+    "F11 [Blocker] review-a: FIX — The D1 commit also rewrites two R2 cases. classification.md:195 assigns the rendered full-width pictured row and the text-only exclusion cases to R2. 0be4a037 changes both. Keep these R2 cases outside the D1 change so each test commit holds one class. | CONTEST kept: plan.md:178 documents the mixed-class commit and says history will not be rewritten, but neither the plan nor the source spec approves an exception to the one-class rule.",
+    "F16 [Blocker] review-a: The new plan entry at lines 151–155 closes three remediation commits with evidence only at 9eb3b9c4. It does not show tests or coverage at 733319505 or fb5622ed7. Spec criteria (b) and (c) require both results at every commit. | CONTEST kept: plan.md:180 records that the two commits were gated together, but test-strategy.md:186–192 and spec.md:70–72 require successful test and coverage evidence after every commit."
+  ],
+  "nonblocking_findings": [
+    "F17 [Nit] review-a: The unused compiledCss export is removed, but the full feature and pricing locale-key lists remain duplicated between www-features-pricing.locale.test.ts, www-features-page.content.test.tsx, and www-pricing-page.content.test.tsx. Keep each required list in one fixture."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned c2f5cfdb00f2603f003916165ec0d354b7ec0da8, equal to role_base_sha and audited_head_sha.",
+    "The audited range is a1caa58034f6455e91205a5673ef172a974a7992..c2f5cfdb00f2603f003916165ec0d354b7ec0da8. Its diff contains test files and plan.md only; it contains no production file.",
+    "proof-f2-r2.log shows the rendered Math claim mutation fails: 1 failed test and 18 passed.",
+    "proof-f4-r2.log shows the wrong contact authority phone destination fails: 1 failed test and 4 passed.",
+    "proof-f9-r2.log shows the false Reedy eligibility wording fails: 4 failed tests and 21 passed.",
+    "proof-f12-r2.log shows the 11,800-baht mutation fails in the rendered pricing example: 2 failed tests and 28 passed.",
+    "F2 withdrawn: proof-f2-r2.log shows a rendered 95% Math claim fails the rewritten claim test.",
+    "F4 withdrawn: proof-f4-r2.log shows a rendered phone href that differs from the authority value fails.",
+    "F9 withdrawn: proof-f9-r2.log shows reversed eligibility conditions fail four Reedy assertions.",
+    "F12 withdrawn: proof-f12-r2.log shows an 11,800-baht rendered example fails the exact amount assertion.",
+    "F1 withdrawn: The original test at a1caa5803 reads class strings and source rules; it also cannot detect an inline width override.",
+    "F3 withdrawn: The original test at a1caa5803 reads source and stylesheet text; it also cannot detect an inline opacity override.",
+    "The D1 and D5 gate receipts report GREEN exit 0 and coverage exit 0 for commits 7480484d4 and bcaa97ff4. Their logs are cited in plan.md:169–174.",
+    "plan.md:176–180 records the three deviations. The record is candid, but it does not replace the per-commit evidence and class boundary required by the spec and strategy.",
+    "At a1caa5803, www-features-look-pins.red.test.ts uses source/class probes for layout. An inline width override is outside its checks, so the current render-class test has no loss of fault detection for that mutation.",
+    "At a1caa5803, products-entrance-visibility.red.test.ts reads source and CSS text. An inline opacity override is outside its checks, so the current tests have no loss of fault detection for that mutation.",
+    "The targeted Vitest run passed 96 tests across six files, including the F2, F4, F9, and F12 tests.",
+    "Numeric assertions in changed tests checked dates or CSS values; no bare-digit count assertion was found.",
+    "F17 duplicate key lists remain in the three test files named in the finding."
+  ],
+  "commands": [
+    "git rev-parse HEAD && git status --short",
+    "git diff --name-status a1caa58034f6455e91205a5673ef172a974a7992..c2f5cfdb00f2603f003916165ec0d354b7ec0da8 && git diff --check a1caa58034f6455e91205a5673ef172a974a7992..c2f5cfdb00f2603f003916165ec0d354b7ec0da8",
+    "git show a1caa58034f6455e91205a5673ef172a974a7992:apps/www-reading-advantage/src/__tests__/www-features-look-pins.red.test.ts",
+    "git show a1caa58034f6455e91205a5673ef172a974a7992:apps/www-reading-advantage/src/__tests__/products-entrance-visibility.red.test.ts",
+    "pnpm --filter www-reading-advantage exec vitest run src/lib/__tests__/phase-w3-claims.test.ts src/__tests__/phase-4-contact-authority.red.test.tsx src/__tests__/www-tutor-reedy-claim.test.tsx src/__tests__/www-pricing-page.content.test.tsx src/__tests__/www-features-look-pins.red.test.ts src/__tests__/products-entrance-visibility.red.test.ts",
+    "rg -n 'toMatch\\([^\\n]*\\\\d|toMatch\\([^\\n]*[0-9]|toContain\\([^\\n]*[0-9]' apps/www-reading-advantage/src/__tests__ apps/www-reading-advantage/src/lib/__tests__ apps/www-reading-advantage/src/locales/navigation.test.tsx"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/**",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/**/page*.test.tsx",
+    "apps/www-reading-advantage/src/components/layout/layout-components.test.ts",
+    "apps/www-reading-advantage/src/lib/__tests__/**",
+    "apps/www-reading-advantage/src/lib/blog-locale.test.ts",
+    "apps/www-reading-advantage/src/locales/navigation.test.tsx",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [
+    "F10: The Phase 2 plan records a missing separate GREEN log for the D5 part 2 commit.",
+    "F11: The D1 commit includes two R2 cases, contrary to the one-class-per-commit rule.",
+    "F16: Two remediation commits lack their own recorded GREEN and coverage evidence."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "escalate_human",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "The four named mutation proofs fail in proof-f2-r2.log, proof-f4-r2.log, proof-f9-r2.log, and proof-f12-r2.log."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The targeted Vitest run passed 96 tests, and the four proof logs show their named mutations fail."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 3,
+      "evidence": "The phase diff has no production file, but plan.md:178 records two R2 cases in the D1 commit."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 3,
+      "evidence": "The D1 and D5 receipts match round C, while plan.md:179–180 records missing or combined earlier gates."
+    }
+  ]
+}

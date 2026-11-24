@@ -1,0 +1,31 @@
+# Adversarial log: www test audit pilot, Phase 3, bounded round
+
+Audited head: 941278cf3. Probe commit: 8f7d94961.
+
+The blog merge holds on three rules. A th post with a trailing '---'
+failed and was named. An uppercase th slug failed and was named. A th
+post dated before its en twin failed and was named. Empty discovery
+fails loudly; no rule swallows posts.
+
+One real false pass: the merged loader never reads a non-.md file. A
+temporary .mdx post left all 17 cases green, and the .md-extension rule
+can never fail. ADV-8 routes to Green; the committed failing test
+src/__tests__/blog-posts-loader.adversarial.test.ts pins the defect and
+self-cleans.
+
+The R2 rewrites hold. Three temporary production mutations (flex-wrap
+removed, min-w-0 removed, default gradient changed) each failed exactly
+the rewritten case. All production files were restored.
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+commits: 8f7d94961
+tests_run: pnpm --filter www-reading-advantage exec vitest run src/lib/blog-posts-validation.test.ts --reporter=verbose (named failures for delimiter and slug probes); pnpm --filter www-reading-advantage exec vitest run src/lib/blog-posts-validation.test.ts -t "never older" --reporter=verbose (named th/1-district-1-quality-school); pnpm --filter www-reading-advantage exec vitest run src/components/blog/blog-pagination.test.tsx src/__tests__/phase-4-browser-regressions.red.test.tsx src/components/marketing/hero-section.test.tsx --reporter=verbose (3 mutations, 3 failures); pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts --reporter=verbose (1 failed as intended)
+files_changed: apps/www-reading-advantage/src/__tests__/blog-posts-loader.adversarial.test.ts; measure/runs/www_test_audit_pilot_20261122/adversarial-8f7d949.json; measure/runs/www_test_audit_pilot_20261122/adversarial-8f7d949.log
+plan_updates: none
+known_failures: ADV-8 blocking. The merged blog validation skips non-.md posts; a .mdx post escapes all rules and discovery.
+handoff: Route ADV-8 to Green. Green makes the loader extension-agnostic or rejects non-.md post files, and exports the loader; the committed failing test passes after the fix and stays as regression armor. ADV-9 and ADV-10 are notes: the R2 rewrites catch the old class-pin mutations, and the merged rules name offenders. Result JSON: measure/runs/www_test_audit_pilot_20261122/adversarial-8f7d949.json.
+END_MEASURE_AGENT_RESULT

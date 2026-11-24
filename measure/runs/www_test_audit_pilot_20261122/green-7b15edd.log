@@ -1,0 +1,34 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Phase 2: Delete batch (D1-D5). Adversarial remediation ADV-4 to ADV-6.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 2: Delete batch (D1-D5)
+phase_base_sha: a1caa58034f6455e91205a5673ef172a974a7992
+role_base_sha: 7b15edd958f7c06651922e19c189b7e238250e5b
+green_head: 8a126f612abcc258c6c6711d6ac03fa085bbcbff
+implementation_commit: dce44398537f4b57d24cb4611a53847805466cc1
+plan_evidence_commit: 8a126f612abcc258c6c6711d6ac03fa085bbcbff
+
+tasks_flipped_to_x:
+- 2.13 Adversarial remediation ADV-4 to ADV-6. Evidence: implementation commit dce443985 and plan commit 8a126f612.
+
+tasks_flipped_to_b: none. No finding needs a human action.
+
+targeted_red_command:
+CI=true pnpm --filter www-reading-advantage exec vitest run src/__tests__/reedy-inactive-reversal.adversarial.test.tsx --reporter=verbose
+At role base 7b15edd95 with the committed fixture, the probe file failed 3 of 9 cases. The three failures were en formerly active, th expired (หมดอายุ), and zh expired (已过期). After the fix, the probe file and the main file passed 37 of 37 cases.
+
+new_files: none tracked. The implementation changed the existing fixture apps/www-reading-advantage/src/__tests__/fixtures/reedy-eligibility.ts. The plan commit changed the existing plan.md. Run artifacts under measure/runs/www_test_audit_pilot_20261122/ are gitignored.
+
+gates: four heavy-run gates exited 0. check-types 0. lint 0 with three known warnings. full vitest 0 with 93 files and 3094 tests. coverage 0 with lines at 91.6 percent and the floor at 85.52 percent.
+
+proofs: measure/runs/www_test_audit_pilot_20261122/proof-adv456.log holds a temporary shipped-copy rewording that fails the main test. The production file was restored with git checkout. git status is clean and no production file changed in the round range.
+
+dispositions: ADV-4=FIX; ADV-5=FIX; ADV-6=FIX
+
+doctor: the three structural guard steps passed. The architecture step exited 1 on an unrelated pre-existing V2 reconciliation manifest drift (Analyzer input snapshot hash) owned by architecture_ci_input_pin_20261110. My two commits touch only the test fixture and plan.md. The strategy's documented live gate is the four heavy-run gates, and all four exited 0.
+
+deviation: commitlint rejected the two requested headers at 106 characters. Both headers were shortened to 100 or fewer characters. The meaning and the track id stay.
+END_MEASURE_AGENT_RESULT

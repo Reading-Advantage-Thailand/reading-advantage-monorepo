@@ -1,0 +1,82 @@
+# Green run log: www test audit pilot (Green base 934080c2)
+
+Role: measure-jr-green. Route: opencode-go/hy4-flash-free#high.
+This round covers task 2.5 (D5) only. Part 2 is complete.
+
+## Base verification
+
+- role_base_sha: 934080c2082fb2742fd1d157ac30f684470d0f60.
+- phase_base_sha (Phase 1): cbd023b1bd29333992f7511646cff1245191b049.
+- Baseline: case_count=3175, line_coverage_pct=86.52. Floor 85.52.
+- The working tree was clean at the start of this round.
+
+## Commits
+
+- 7008ccefd63494410c7790bed26ead80fb6dd8c0 test(www): replace d5 pins with
+  locale-key checks p2. 1 test file changed. No new production file.
+
+## Part 2 change summary
+
+File: primary-advantage/page.content.test.tsx (102 D5 pins).
+The exact fixture copy for meta title and description, brief strings per
+container, link labels per container, image alt text, demo experience keys,
+and the demo eyebrow block is gone. The page scope keys are collected from
+the locale data and checked as non-empty strings in every locale through the
+reused locale-key-check helper. The locale list comes from localeConfig.locales.
+
+Targeted run before commit:
+pnpm --filter www-reading-advantage exec vitest run
+  'src/app/[locale]/(marketing)/products/primary-advantage/page.content.test.tsx'
+  --maxWorkers=1
+Result: 1 file passed, 96 tests passed.
+
+Kept as K in this part, with reasons:
+- container count and order (AC-14): structure, not copy.
+- allowed href set and no external links: structure and safety.
+- image presence and count: structure.
+- absence sweeps for price, date, and free term: guards customer facts.
+- approved customer date sentence check: guards a customer date.
+No price, money figure, claim limit, or tutor-commission test was changed.
+
+## Gate results (Part 2, 7008ccef)
+
+- GREEN exit 0: 89 files passed, 3081 tests passed.
+  Log: measure/runs/www_test_audit_pilot_20261122/green-7008ccef.log.
+- COVERAGE exit 0: 89 files passed, 3081 tests passed.
+  Lines 89.94, statements 88.60, branches 80.85, functions 83.75 percent.
+  Log: measure/runs/www_test_audit_pilot_20261122/coverage-7008ccef.log.
+- Gate: measure/runs/www_test_audit_pilot_20261122/gate-7008ccef.json.
+
+Case count fell by 59. The per-container exact-copy case lists collapse into
+one key-coverage case per key group. Every pinned key is still checked.
+
+RolldownError parse messages for Thai blog .md files are V8 remap noise.
+baseline.log records the same messages. The provider excludes those files.
+
+## D5 scope remaining
+
+classification.md lists 221 D5 pins across 14 rows. Part 1 closed 4 pins.
+Part 2 closed 102 pins. 115 pins stay in the other 12 rows. Several guard
+customer dates, prices, money, counts, or claim limits. Those pins stay as K
+with a reason in the part commit body and log.
+
+## MEASURE_AGENT_RESULT
+
+MEASURE_AGENT_RESULT
+phase: Green
+track: www_test_audit_pilot_20261122
+phase_base_sha: cbd023b1bd29333992f7511646cff1245191b049
+role_base_sha: 934080c2082fb2742fd1d157ac30f684470d0f60
+green_head: 7008ccefd63494410c7790bed26ead80fb6dd8c0
+tasks_completed: none (2.5 stays [~] until the last part)
+tasks_deferred: 2.5 parts 3 onward, 2.6, 3.x, 4.x (later rounds)
+tasks_blocked: none
+targeted_red_command: not applicable to copy-pin replacement; targeted vitest
+  and the scoped GREEN and COVERAGE commands are the gates
+new_files: measure/runs/www_test_audit_pilot_20261122/gate-7008ccef.json,
+  green-7008ccef.log, coverage-7008ccef.log (untracked run artifacts)
+handoff: D5 part 2 is complete at 7008ccef with plan marker [~]. GREEN and
+  COVERAGE exit 0. Line coverage is 89.94 percent against floor 85.52.
+  K pins stayed with reasons. 115 pins remain across 12 rows. No push was
+  made.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "01e1e9d2904f3ee13718d6d86a4b54bb774f100e",
+  "phase_base_sha": "aeaa6a11902e320b40bff38f9726ac2aec5e36c8",
+  "role_base_sha": "01e1e9d2904f3ee13718d6d86a4b54bb774f100e",
+  "audited_head_sha": "01e1e9d2904f3ee13718d6d86a4b54bb774f100e",
+  "status": "fail",
+  "summary": "F46 and F47 are resolved. The six sampled Green logs match the revised definitions, and twelve fresh report claims check out. The plan still claims all run-file counts were removed, but one historical JSON count remains.",
+  "blocking_findings": [
+    "F48 [Blocker] review-a: plan.md:609 says every count of run files was removed from report.md and plan.md. However, plan.md:554–556 retains a count of 36 of 37 pre-existing role JSONs. This is a historical, bounded set, but it contradicts the unqualified statement. Qualify the statement or remove the count."
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD returned 01e1e9d2904f3ee13718d6d86a4b54bb774f100e, matching role_base_sha and audited_head_sha.",
+    "F46 withdrawn: report.md:173 defines role result logs by a MEASURE_AGENT_RESULT block and notes that dispositions lines may be present or absent. Report.md:175 defines test-run log patterns and requires runner-only output for green-<sha>.log files. Lines 177 and 179 distinguish the accounting plan and explain the overlapping filename pattern.",
+    "F47 withdrawn: report.md no longer gives run-file counts. The changed plan text at lines 609-619 gives no run-file count. The only remaining role-artifact count is the historical 36 of 37 pre-existing role JSONs at plan.md:554-556; later rounds do not change that bounded historical subset.",
+    "Log sample 1: green-0165b8e.log contains whole MEASURE_AGENT_RESULT and END_MEASURE_AGENT_RESULT lines and a dispositions line.",
+    "Log sample 2: green-09a817c.log contains a result block and dispositions: none.",
+    "Log sample 3: green-5a104ba.log contains a whole result block with no dispositions line.",
+    "Log sample 4: green-7008cce.log contains a whole result block with no dispositions line.",
+    "Log sample 5: green-0be4a037.log has no result marker and ends with Vitest files, tests and duration output.",
+    "Log sample 6: green-4d168813.log has no result marker and ends with Vitest files, tests and duration output.",
+    "report.md:177 matches green-7008ccef.log: it contains an accounting-track task plan with Phase 7 Red and Green tasks, and no Vitest summary or result block. The named rerun green-at-7008ccef.log ends with a Vitest summary.",
+    "Numeric-reference scan: report.md hits at lines 10, 12, 14, 22-31, 33, 39-61, 69-78, 82, 86, 97, 99-101, 107, 112, 118, 138, 141, 159, 172-177, 192, 197, 199, 201, 207 and 217 refer to metrics, test cases or files, commits, or fixed references; none states a current run-file-kind inventory count.",
+    "Numeric-reference scan: plan.md hits at lines 12, 27, 50, 52, 57, 65, 68-72, 85-88, 91-105, 107-126, 127-149, 153-185, 197-215, 226, 230-237, 246-249, 261-270, 275, 282-307, 319-372, 385-434, 449-492, 504-506, 520, 527-530, 534, 537, 541-542, 547, 554-556, 560-568, 576, 581, 583, 593, 595, 607 and 609-619. Counts in these hits are case/test/code-file counts, fixed filenames and commit references, or historical facts. The 36/37 role JSON count at lines 554-556 is bounded to the pre-existing set and is not changed by later additions.",
+    "Independent sample 1: report.md:33 says green-7008ccef.log is an accounting plan with no Vitest summary or result block; its contents match that description.",
+    "Independent sample 2: report.md:33 names green-at-7008ccef.log as the D5 part 2 rerun; its tail reports 89 files and 3081 passing tests.",
+    "Independent sample 3: report.md:39 names the 733319505 GREEN and COVERAGE rerun pair; both files exist.",
+    "Independent sample 4: report.md:40 names the 7c2d93e2 GREEN and COVERAGE pair; both files exist.",
+    "Independent sample 5: report.md:46 names the fb5622ed7 GREEN and COVERAGE rerun pair; both files exist.",
+    "Independent sample 6: report.md:69 D1 counts reconcile against classification.md: the rows total 67 cases, with 7 deletes and 60 rewrites.",
+    "Independent sample 7: report.md:70 D2 deletions reconcile against classification.md: eight rows total 22 cases.",
+    "Independent sample 8: report.md:71 D3 has zero rows; classification.md:150-153 says both image-source suites validate live images, and plan.md:96-98 records no test commit and no gate.",
+    "Independent sample 9: report.md:72 D4 breakdown matches classification.md: 3 mocked-locale cases, 2 filename cases and 1 env-flag case, totaling 6.",
+    "Independent sample 10: report.md:75 R2 rows total 16 cases. `git show --stat adf24e723` shows nine changed files; the remaining two cases are the `www-features-look-pins` row and are recorded as earlier in 0be4a0374.",
+    "Independent sample 11: report.md:191's helper claim is supported by contrast-parent-override.adversarial.test.tsx:3-5, 51-62. The two R2 contrast tests import fixtures/contrast; the separate helper fixture test is not an R2 contrast test.",
+    "Independent sample 12: report.md:192 says the second check passed by another family. second-check-d1b9d59.json has status pass and route openai/gpt-6-luna; spec.md:4 names the Muse-family author.",
+    "The exact phase range 997662659f962202e3314605f39ee5fbd8fcbf3b..01e1e9d2904f3ee13718d6d86a4b54bb774f100e changes plan.md and report.md only. The apps/ path diff is empty.",
+    "No exported product symbol changed, so build-graph inspection was not applicable. The reviewed diff contains documentation only."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --name-status aeaa6a11902e320b40bff38f9726ac2aec5e36c8..01e1e9d2904f3ee13718d6d86a4b54bb774f100e",
+    "git diff --name-only aeaa6a11902e320b40bff38f9726ac2aec5e36c8..01e1e9d2904f3ee13718d6d86a4b54bb774f100e -- apps",
+    "git diff aeaa6a11902e320b40bff38f9726ac2aec5e36c8..01e1e9d2904f3ee13718d6d86a4b54bb774f100e -- measure/tracks/www_test_audit_pilot_20261122/report.md measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "for f in measure/runs/www_test_audit_pilot_20261122/green-0165b8e.log measure/runs/www_test_audit_pilot_20261122/green-09a817c.log measure/runs/www_test_audit_pilot_20261122/green-5a104ba.log measure/runs/www_test_audit_pilot_20261122/green-7008cce.log measure/runs/www_test_audit_pilot_20261122/green-0be4a037.log measure/runs/www_test_audit_pilot_20261122/green-4d168813.log; do grep -nE '^(MEASURE_AGENT_RESULT|END_MEASURE_AGENT_RESULT|dispositions:)' \"$f\"; tail -4 \"$f\"; done",
+    "read measure/runs/www_test_audit_pilot_20261122/green-7008ccef.log",
+    "tail -8 measure/runs/www_test_audit_pilot_20261122/green-at-7008ccef.log",
+    "rg -n -i '([0-9][^\\\\n]{0,60}\\\\b(log|logs|file|files|json)\\\\b|\\\\b(log|logs|file|files|json)\\\\b[^\\\\n]{0,60}[0-9])' measure/tracks/www_test_audit_pilot_20261122/report.md measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "python3 -c \"from pathlib import Path; s=Path('measure/tracks/www_test_audit_pilot_20261122/classification.md').read_text().split('## D1 rows')[1].split('## D2 rows')[0]; rows=[x for x in s.splitlines() if x.startswith('| src/')]; print('rows',len(rows),'delete cases',sum(int(x.split('|')[3].strip()) for x in rows if '| delete |' in x),'rewrite cases',sum(int(x.split('|')[3].strip()) for x in rows if '| rewrite |' in x),'total',sum(int(x.split('|')[3].strip()) for x in rows))\"",
+    "python3 -c \"from pathlib import Path; s=Path('measure/tracks/www_test_audit_pilot_20261122/classification.md').read_text().split('## D2 rows')[1].split('## D3 rows')[0]; rows=[x for x in s.splitlines() if x.startswith('| src/')]; print('D2 row cases',sum(int(x.split('|')[3].strip()) for x in rows),'rows',len(rows))\"",
+    "read measure/tracks/www_test_audit_pilot_20261122/classification.md lines 150-161",
+    "read measure/tracks/www_test_audit_pilot_20261122/plan.md lines 96-105",
+    "git show --stat --oneline adf24e723",
+    "python3 -c \"from pathlib import Path; s=Path('measure/tracks/www_test_audit_pilot_20261122/classification.md').read_text().split('## R2 rows')[1].split('## R3 rows')[0]; rs=[x for x in s.splitlines() if x.startswith('| src/')]; print('R2 rows',len(rs),'cases',sum(int(x.split('|')[3].strip()) for x in rs))\"",
+    "grep -nE 'fixtures/contrast|from .*contrast' apps/www-reading-advantage/src/__tests__/*.test.*",
+    "read apps/www-reading-advantage/src/__tests__/contrast-parent-override.adversarial.test.tsx",
+    "read measure/runs/www_test_audit_pilot_20261122/second-check-d1b9d59.json",
+    "read measure/tracks/www_test_audit_pilot_20261122/spec.md lines 1-5"
+  ],
+  "changed_files": [
+    "measure/tracks/www_test_audit_pilot_20261122/report.md",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "The log definitions and twelve independent samples check out, but plan.md:609 overstates removal of all run-file counts."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "No test suite run was needed for this artifact audit; six log samples and twelve report claims were checked against existing evidence."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The exact range changes report.md and plan.md only; no apps/ path changed."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The audit records provenance, exact diff scope, six log samples, the numeric-reference scan, and twelve independent claims."
+    }
+  ]
+}

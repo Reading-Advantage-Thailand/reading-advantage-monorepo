@@ -1,0 +1,77 @@
+# Red log: www test audit pilot, Phase 1 task 1.2 round 2 (final)
+
+Role: measure-mid-red (r2). Track: www_test_audit_pilot_20261122.
+Phase heading: "Phase 1: Baseline and classification". Task 1.2 only.
+
+## Base SHAs
+
+- phase_base_sha (immutable): cbd023b1bd29333992f7511646cff1245191b049
+- role_base_sha (immutable): 08bec4c365bac5c15795b144bc45a86c42714f20
+- HEAD at start: 08bec4c365bac5c15795b144bc45a86c42714f20 (clean tree).
+- HEAD at end: 1d4ddd2c0 (one pathspec commit, classification.md only).
+
+## Scope proof
+
+- `git status --short` before the commit showed only classification.md
+  modified. No unrelated user work was present.
+- `git diff --name-only <phase_base_sha> HEAD -- apps/` prints nothing.
+  No file under `apps/` changed in this round.
+
+## Trigger
+
+Task 1.3 second check failed (second-check-08bec4c.json): 4 of 18
+sampled rows disagree (22.2 %, above the 15 % stop threshold), and the
+row weights totaled 3,150 against the 3,175-case baseline. The PM
+approved four stricter rubric notes, applied word for word to every row
+and added under "Rubric notes (r2)" at the top of classification.md.
+
+## Fixes applied
+
+- mapping.red removed-kind rows (3): D2 becomes K. The adversarial
+  sweep checks source literals, not manifest values; note 1 needs the
+  same public surface.
+- reading-cover no-crop row (1): D2 becomes R2. The aspect ratio cannot
+  prove CSS did not crop; rewrite as a visual behavior assertion.
+- primary-page-images source rows (8): D3 becomes K. The A34 sources
+  exist and the cases validate live output images; note 2 needs a gone
+  target. The hash-guard case stays K; the env-gated vacuous case stays D4.
+- storytime-page-images source rows (2): D3 becomes K. The A45 manifest
+  exists; note 2 keeps them.
+- entrance-visibility rows (3): D1 delete becomes D1 rewrite. Reduced
+  motion visibility is user behavior; note 3.
+- Re-audit of every other D1/D2/D3 row against notes 1-3: blog figure,
+  hero, and contrast pins, look-pins F1/F2/F2r6, i18n typo pin, no-gse
+  sweep, phase-w3 audits, and batch-19 source pins move from delete to
+  rewrite. Tutor-screens order and reading-card alt pins move from D2 to
+  K (different surface from their rendered proofs; note 1). All other
+  D2 rows show the same rule on the same surface with a subsuming kept
+  duplicate and stay.
+- Arithmetic: five file rows mis-summed in r1 (a duplicated K row each
+  for blog-locale and captures-final, a missing batch-16 K row, a
+  missing batch-19 K row, a missing reading-card control). Fixed; every
+  file's rows now sum to its runner count (verified per file against
+  the JSON run). Summary: K 2843, D1 67 (delete 22, rewrite 45),
+  D2 22, D3 0, D4 6, D5 221, R2 16. Total 3175.
+- Projection updated honestly: certain deletes 50 cases (1.6 %); D5
+  replacement saves about 141 to 161 more; total about 191 to 211 cases
+  (6.0 to 6.6 %), below the 20 % target, stated without inflation.
+- Approved merge line added apart: blog-posts-validation per-rule merge
+  ships as a separate Green commit and counts toward 20 % only if the
+  merged test still fails on one broken post and names that post.
+
+## MEASURE_AGENT_RESULT (final)
+
+```
+MEASURE_AGENT_RESULT
+baseline_sha: cbd023b1bd29333992f7511646cff1245191b049
+role: measure-mid-red
+track: www_test_audit_pilot_20261122
+phase: "Phase 1: Baseline and classification"
+head: 1d4ddd2c0
+commits: 1d4ddd2c0 (chore(measure): reclassify www tests with r2 rubric notes)
+tests: none written (role writes no failing test; see role note)
+files: measure/tracks/www_test_audit_pilot_20261122/classification.md (r2 reclassification)
+remaining_failures: none in this role; task 1.3 second check reruns against this head by a later role
+status: pass
+handoff: r2 reclassification complete; per-file reconciliation method recorded in this log (static it/each/for/describe expansion cross-checked with the runner JSON; dynamic filesystem suites counted by the runner only)
+```

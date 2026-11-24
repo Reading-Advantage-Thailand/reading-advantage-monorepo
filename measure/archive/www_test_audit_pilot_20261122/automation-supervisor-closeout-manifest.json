@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "track_id": "www_test_audit_pilot_20261122",
+  "role": "measure-closeout",
+  "status": "closed",
+  "completion_date": "2026-11-25",
+  "pre_closeout_head": "2bfbd373fef2fc500798efe721975fa0a345e73f",
+  "archive_path": "measure/archive/www_test_audit_pilot_20261122",
+  "acceptance": {
+    "final": "measure/runs/www_test_audit_pilot_20261122/final-acceptance-2bfbd37.json",
+    "final_status": "pass",
+    "audited_head_sha": "2bfbd373fef2fc500798efe721975fa0a345e73f",
+    "provenance": "The audited_head_sha equals the current pre-closeout HEAD; blocking_findings is empty; role gate PASS was recorded by the final-acceptance role.",
+    "phase_acceptances": [
+      "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-2bfbd37.json (pass, 2bfbd373f)",
+      "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-8a126f6.json (pass, 8a126f612)",
+      "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-e91c4d4.json (pass, e91c4d4cc)",
+      "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p4-2bfbd37.json (pass, 2bfbd373f)"
+    ],
+    "superseded": "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-d2c8e63.json is superseded by phase-acceptance-p4-2bfbd37.json, which audits final-acceptance HEAD 2bfbd373f. The older result stays as historical evidence."
+  },
+  "audits": {
+    "review_a": "measure/runs/www_test_audit_pilot_20261122/review-a-2bfbd37.json: pass at 2bfbd373f, 0 blocking findings",
+    "adversarial": "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-7336f42.json: pass at 7336f42b3, 0 blocking findings",
+    "second_check": "measure/runs/www_test_audit_pilot_20261122/second-check-d1b9d59.json: pass; ex post rate 16.2 percent accepted as a PM-disclosed exception on 2026-11-24",
+    "d5_revert": "Commit f97a72f9066c7f2509ec70045a28734926c878fa; PM decision 2026-11-25 option C; price, baht and commission pins restored",
+    "plan_state": "50 of 50 top-level tasks carry [x] and a commit SHA; no [~] or [ ] task remains; no [b] task remains"
+  },
+  "final_values": {
+    "cases_in_final_run": 1494,
+    "files_in_final_run": 98,
+    "baseline_cases": 3175,
+    "cut_cases": 1681,
+    "cut_pct": 52.9,
+    "baseline_line_coverage_pct": 86.52,
+    "final_line_coverage_pct": 92.08,
+    "cut_source": "The whole cut comes from the PM-approved blog merge at 257a6b0cd; the task 3.5 merge removed 1709 cases (gate-257a6b0c.json).",
+    "d5_disposition": "D5 was reverted by PM decision 2026-11-25 option C because it lost price, baht and commission pins."
+  },
+  "commands": [
+    "git rev-parse HEAD -> 2bfbd373fef2fc500798efe721975fa0a345e73f; git branch --show-current -> www/test-audit; git status --short -> empty",
+    "git check-ignore -v measure/runs/www_test_audit_pilot_20261122/final-acceptance-2bfbd37.json -> .gitignore:56 measure/runs/",
+    "grep -rn 'measure/tracks/www_test_audit_pilot_20261122' tests scripts -> no hit (A9 pre-move scan)",
+    "grep -n 'measure/tracks/[a-z_0-9-]*/plan\\.md' tests/*.sh -> only fixture_* paths in tests/orchestrator_marker_vocabulary_cases.sh",
+    "mv measure/tracks/www_test_audit_pilot_20261122 measure/archive/www_test_audit_pilot_20261122",
+    "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track www_test_audit_pilot_20261122",
+    "bash measure/generate.sh; git add measure/generated/architecture.json measure/generated/routes.md",
+    "env GENERATED_CHECK_COMMAND='bash measure/generate.sh && git diff --quiet measure/generated/' python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track www_test_audit_pilot_20261122",
+    "git add -f measure/runs/www_test_audit_pilot_20261122/ && git add measure/archive/www_test_audit_pilot_20261122 measure/tracks.md",
+    "git commit -m 'chore(measure): close out www test audit pilot (track_id: www_test_audit_pilot_20261122)'"
+  ],
+  "closeout_gates": {
+    "no_in_progress_or_space_tasks": "PASS: grep over the archived plan finds no ^- [~] and no ^- [ ] task",
+    "completed_tasks_with_sha": "PASS: closeout checker reports no plan feedback; all 50 [x] tasks resolve to ancestor SHAs",
+    "registry_active_section": "PASS: the track id is absent from measure/tracks.md before the '## Archived Tracks' heading",
+    "registry_archive_entry": "PASS: archived entry has a description equal to the collapsed metadata.json description",
+    "metadata_status_and_completed": "PASS: status done, completed 2026-11-25",
+    "final_acceptance": "PASS: final-acceptance-2bfbd37.json status pass, 0 blocking findings",
+    "generated_freshness": "PASS through GENERATED_CHECK_COMMAND='bash measure/generate.sh && git diff --quiet measure/generated/' after staging the regenerated files. The committed generated facts pinned 3e80d3679 from the prior closeout; the generator refreshed sourceRevision and generatedAt to 2bfbd373f. measure/gates.json is absent from this worktree, so the command is supplied in the environment as in the www_features_pricing_20261120 closeout",
+    "A5": "PASS: rg 'PASS=[0-9]+.*FAIL=0|all checks pass' over the archived plan.md and report.md -> no hit",
+    "A6": "PASS: the archived registry note makes no resolution claim that contradicts an adversarial result; the cover note names every open item"
+  },
+  "test_reference_audit": {
+    "A9": "No tests/*.sh, scripts/ or support file hardcodes measure/tracks/www_test_audit_pilot_20261122/. The only generic plan.md path hits are fixture_* paths in tests/orchestrator_marker_vocabulary_cases.sh, so no test change was needed.",
+    "heavy_run": "After the archive move, HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run --reporter=dot' -> exit 0; summary: Test Files 98 passed (98), Tests 1494 passed (1494), Duration 97.82s. The MISSING_MESSAGE IntlError and 'Could not parse CSS stylesheet' lines are expected noise from negative-case tests. Final acceptance had already re-run check-types, lint, Vitest and coverage at HEAD 2bfbd373f with exit 0, 0 errors plus 1 pre-existing lint warning, and 92.08 % lines. No apps path changed during closeout."
+  },
+  "retained_evidence": [
+    "measure/runs/www_test_audit_pilot_20261122/ (424 files, force-added to git: final acceptance, phase acceptances, gate JSONs, green and coverage logs, adversarial probes, mutation scripts, classification and timing evidence, closeout result)",
+    "measure/runs/www_test_audit_pilot_20261122/final-acceptance-2bfbd37.json and .log",
+    "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p4-2bfbd37.json and .log",
+    "measure/runs/www_test_audit_pilot_20261122/green-at-f97a72f9.log and coverage-at-f97a72f9.log",
+    "measure/runs/www_test_audit_pilot_20261122/baseline.json and baseline.log",
+    "measure/runs/www_test_audit_pilot_20261122/gate-257a6b0c.json and proof-blog-merge.log",
+    "measure/runs/www_test_audit_pilot_20261122/closeout-2bfbd37.json and closeout-2bfbd37.log",
+    "Final acceptance commit 2bfbd373fef2fc500798efe721975fa0a345e73f; D5 revert commit f97a72f9066c7f2509ec70045a28734926c878fa"
+  ],
+  "artifact_cleanup": "None. The orchestrator named no bulky artifact for deletion. The full measure/runs/www_test_audit_pilot_20261122/ folder is retained and force-added because the archived plan and report cite its files.",
+  "open_items_not_fixed": [
+    "bash measure/doctor.sh exits 1 on the stale architecture input snapshot pin; PM acknowledged 2026-11-24, and the track changed no packages/, services/ or integrations/ path",
+    "F52 to F55 and N13, N14 stay open by PM decision",
+    "ADV-26 to ADV-32, ADV-P1-9 and N8 stay open in measure/tech-debt.md (2026-11-24 row)",
+    "The 16.2 percent ex post second-check rate is a PM-disclosed exception (2026-11-24)",
+    "F11 and F18 exceptions stay recorded in the plan and acceptance results; F18 status is PM-approved 2026-11-24 option A",
+    "CI run measures and the timing hypothesis stay report-only; no follow-up task was opened"
+  ],
+  "registry_note": "measure/tracks.md archived entry records final values, the D5 revert, the superseded Phase 4 result, and every open item.",
+  "lessons_and_tech_debt": "The pilot lessons stay in the archived report.md section 6. measure/lessons-learned.md and measure/tech-debt.md are unchanged: tech-debt.md already carries the 2026-11-24 row for the late findings, and no near-term planning fact moved."
+}

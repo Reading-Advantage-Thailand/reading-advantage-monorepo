@@ -1,0 +1,161 @@
+# Green run log: www test audit pilot (Green base 7008cce)
+
+Role: measure-jr-green. Route: opencode-go/hy4-flash-free#high.
+This round covers task 2.5 (D5) parts 3 and 4 and task 2.6.
+
+## Base verification
+
+- role_base_sha: 7008ccefd63494410c7790bed26ead80fb6dd8c0.
+- phase_base_sha (Phase 1): cbd023b1bd29333992f7511646cff1245191b049.
+- Baseline: case_count=3175, line_coverage_pct=86.52. Floor 85.52.
+- The working tree was clean at the start and end of this round.
+- Both base SHAs are ancestors of HEAD. Phase 2 commits D1 through D5 part 2
+  are inside phase_base_sha..HEAD.
+
+## Prior D5 parts
+
+- Part 1: ee5c7b7390847eee0879ca9e8fa94b5eb4d33bd3 (phase-4-contact-copy, 4 pins).
+- Part 2: 7008ccefd63494410c7790bed26ead80fb6dd8c0 (primary-advantage content, 102 pins).
+
+## Part 3: c577cdf18746f049571f21103bf8870dce0d114f
+
+Files: www-batch-20261116.locale.test.ts (25 pins),
+www-batch-20261119.locale.test.ts (31 pins), and
+www-stem-date-line.locale.test.ts (5 pins). 61 D5 pins in scope.
+
+Word-for-word copy assertions become checks that each key resolves to a
+non-empty string in every locale from localeConfig.locales. Fact guards stay
+as narrow token checks, so the fact survives without the whole sentence.
+
+Targeted command before commit:
+pnpm --filter www-reading-advantage exec vitest run
+  src/__tests__/www-batch-20261116.locale.test.ts
+  src/__tests__/www-batch-20261119.locale.test.ts
+  src/__tests__/www-stem-date-line.locale.test.ts --maxWorkers=1
+Result: 3 files passed, 68 tests passed.
+
+Kept as K in this part, with reasons:
+- The 2027 school year badges, tags, and detail lines guard a customer-promised date.
+- The 30 November 2026 launch labels guard a customer-promised date.
+- The zh no-release-date lines guard a claim limit.
+- The STEM roadmap badge and tag guard a claim limit.
+- The 2026-11-19 LIMITS rows guard claim limits and stay unchanged.
+- Absence sweeps for old dates and old copy guard customer facts and stay unchanged.
+
+No price, money figure, legal fact, or tutor-commission test changed.
+
+Gates:
+- GREEN exit 0: 89 files passed, 3048 tests passed.
+  Log: measure/runs/www_test_audit_pilot_20261122/green-c577cdf.log.
+- COVERAGE exit 0: 89 files passed, 3048 tests passed.
+  Lines 89.94, statements 88.60, branches 80.85, functions 83.75 percent.
+  Log: measure/runs/www_test_audit_pilot_20261122/coverage-c577cdf.log.
+- Gate: measure/runs/www_test_audit_pilot_20261122/gate-c577cdf.json.
+
+The first GREEN attempt ran while Part 4 edits were uncommitted. It failed on
+three in-flight features-content cases. The gate was re-run at the Part 3 tree
+through a pathspec checkout, and HEAD was restored after both commands.
+
+## Part 4: 407c5d9bd88b840bd896c2f36defb466c8d90832
+
+Files: www-tutor-calculator.locale.test.ts (6 pins),
+www-tutor-reedy-claim.test.tsx (10 pins), www-features-page.content.test.tsx
+(6 pins), www-pricing-page.content.test.tsx (6 pins),
+www-features-pricing.locale.test.ts (9 pins),
+storytime-advantage/page.content.test.tsx (15 pins),
+www-reading-card.red.test.ts (1 pin), and codecamp-advantage/page.test.tsx
+(1 pin). 54 D5 pins in scope.
+
+The shared fixture helper gained keysUnderScope, which collects string-leaf
+keys under a scope and skips intentionally empty values. Each replacement
+still checks every key as a non-empty string in every shipped locale.
+
+Targeted commands before commit:
+pnpm --filter www-reading-advantage exec vitest run (five files) --maxWorkers=1
+Result: 5 files passed, 108 tests passed.
+pnpm --filter www-reading-advantage exec vitest run (two files) --maxWorkers=1
+Result: 2 files passed, 68 tests passed.
+
+Kept as K in this part, with reasons:
+- The codecamp page keeps the real production denominators 4, 20, and 106.
+- The zh managed-service roadmap description guards a claim limit.
+- Reedy forbidden-claim sweeps guard the availability claim limit.
+- Price figures, the 3,000 floor, and old-amount sweeps guard money facts.
+- Storytime claim scanners, poster, and no-video-host checks guard claim limits.
+- The tutor screens slot order and the price table guard structure.
+
+The reading-card exact alt pin became a rendered non-empty alt check. No locale
+key carries that source alt, so a locale-key check does not apply there.
+No tutor-commission money test changed.
+
+Gates:
+- GREEN exit 0: 89 files passed, 3035 tests passed.
+  Log: measure/runs/www_test_audit_pilot_20261122/green-407c5d9.log.
+- COVERAGE exit 0: 89 files passed, 3035 tests passed.
+  Lines 90.03, statements 88.60, branches 80.76, functions 83.85 percent.
+  Log: measure/runs/www_test_audit_pilot_20261122/coverage-407c5d9.log.
+- Gate: measure/runs/www_test_audit_pilot_20261122/gate-407c5d9.json.
+- Lint through heavy-run, exit 0 with 3 pre-existing warnings:
+  measure/runs/www_test_audit_pilot_20261122/lint-407c5d9.log.
+- Check-types through heavy-run, exit 0:
+  measure/runs/www_test_audit_pilot_20261122/check-types-407c5d9.log.
+
+## Case counts
+
+Part 2 ended at 3081 cases. Part 3 ended at 3048, a cut of 33. Part 4 ended
+at 3035, a cut of 13. The cut comes from collapsing per-key exact-copy cases
+into one key-coverage case per key group. Every pinned key is still checked.
+
+## Doctor check
+
+bash measure/doctor.sh passes its four Measure checks: guard declarations,
+the anti-pattern catalog, plan markers, and review-track blocks. Its final
+architecture step exits 1 with "Analyzer input snapshot hash does not match
+current bytes". The snapshot covers analyzer sources and workspace manifests.
+This round changed only www test files and plan.md, so the failure predates
+the diff. The strategy's documented live gate is the GREEN and COVERAGE pair;
+both pass at both part commits.
+
+## Targeted Red command
+
+No Red test exists in Phase 2 of this track. The role note in plan.md records
+the accepted deviation. The targeted vitest runs and the two heavy gates are
+the evidence for this phase.
+
+## New files added
+
+- apps/www-reading-advantage/src/__tests__/fixtures/locale-key-check.ts
+  (added in part 1, extended in part 4).
+- measure/runs/www_test_audit_pilot_20261122/green-7008cce.log
+- measure/runs/www_test_audit_pilot_20261122/green-c577cdf.log
+- measure/runs/www_test_audit_pilot_20261122/coverage-c577cdf.log
+- measure/runs/www_test_audit_pilot_20261122/gate-c577cdf.json
+- measure/runs/www_test_audit_pilot_20261122/green-407c5d9.log
+- measure/runs/www_test_audit_pilot_20261122/coverage-407c5d9.log
+- measure/runs/www_test_audit_pilot_20261122/gate-407c5d9.json
+- measure/runs/www_test_audit_pilot_20261122/lint-407c5d9.log
+- measure/runs/www_test_audit_pilot_20261122/check-types-407c5d9.log
+
+All files under measure/runs/ are ignored by git. No production file changed.
+No push was made.
+
+## MEASURE_AGENT_RESULT
+
+MEASURE_AGENT_RESULT
+phase: Green
+track: www_test_audit_pilot_20261122
+phase_base_sha: cbd023b1bd29333992f7511646cff1245191b049
+role_base_sha: 7008ccefd63494410c7790bed26ead80fb6dd8c0
+green_head: c673f21341a19e961e8e1b9c3625c5b9ba62027c
+tasks_completed: 2.5 (parts 1-4: ee5c7b739, 7008ccefd, c577cdf18, 407c5d9bd); 2.6
+tasks_deferred: 3.x and 4.x (later rounds)
+tasks_blocked: none
+targeted_red_command: not applicable; Phase 2 writes no Red test. Targeted
+  vitest runs passed: 3 files/68 tests, 5 files/108 tests, and 2 files/68 tests.
+new_files: the locale-key-check fixture and the nine run artifacts listed above
+handoff: D5 is complete at 407c5d9bd. All 221 D5 pins were reviewed. Fact
+  guards stayed as K with reasons in each part commit body and this log. GREEN
+  exits 0 at 3035 cases. Line coverage is 90.03 percent against floor 85.52.
+  Lint exits 0 with 3 pre-existing warnings. Check-types exits 0. Plan tasks
+  2.5 and 2.6 are [x]. No production file changed. No push was made.
+END_MEASURE_AGENT_RESULT

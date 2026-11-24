@@ -1,0 +1,30 @@
+# Adversarial log: www test audit pilot, Phase 2 bounded pass
+
+Audited head: 2be9b74db01c8053256f5f18453ca4e38b2390f0.
+Phase range: a1caa58034f6455e91205a5673ef172a974a7992..2be9b74db.
+
+Attack case (a) holds. The git diff on all seven tutor-commission K
+files is empty across the phase range.
+
+Attack case (b) found a defect. The D4 commit removed no payout check,
+but it also did not remove its full class row. ADV-1 routes to Green.
+
+Attack case (c) holds. No e2e file is counted.
+
+Anti-patterns A1, A3, A4, A5, A7, A8 hold against the commits and the
+gate JSONs, with one nit on the coverage label (ADV-2).
+
+Both new fixtures hold. Ten committed probes pass at bfda22bd8.
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 2: Delete batch (D1-D5)
+commits: bfda22bd8
+tests_run: pnpm --filter www-reading-advantage exec vitest run src/__tests__/locale-key-check.adversarial.test.ts src/__tests__/real-css.adversarial.test.ts --reporter=verbose (10 passed, 2 files); pnpm --filter www-reading-advantage exec vitest list on the three D4 files (nav th/zh cases still present at HEAD)
+files_changed: apps/www-reading-advantage/src/__tests__/locale-key-check.adversarial.test.ts; apps/www-reading-advantage/src/__tests__/real-css.adversarial.test.ts; measure/runs/www_test_audit_pilot_20261122/adversarial-2be9b74.json; measure/runs/www_test_audit_pilot_20261122/adversarial-2be9b74.log
+plan_updates: none
+known_failures: ADV-1 blocking. D4 commit 0d705612d deleted 1 of the 3 classified navigation cases, and gate-0d705612.json lists 'returns the active th locale' and 'returns the active zh locale' as deleted while both still run at HEAD. The runner delta is 6 but the static diff removes 4 cases, with no skip in either log.
+handoff: Route ADV-1 to Green. Green deletes the two remaining classified nav weak cases, or gets PM approval to keep them and amends the classification row and the gate record. ADV-2 is a nit on the coverage label location. The committed probes add 10 cases; later suite counts include them. The adversarial result JSON is measure/runs/www_test_audit_pilot_20261122/adversarial-2be9b74.json.
+END_MEASURE_AGENT_RESULT

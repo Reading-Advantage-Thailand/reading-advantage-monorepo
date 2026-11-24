@@ -1,0 +1,28 @@
+# Adversarial log: www test audit pilot, Phase 3, round 3 (confirmation)
+
+Audited head: 704745a3c. No commit.
+
+ADV-11 is closed by my own probe. 88b26fb9b added the shared
+mislabelledPostRefs predicate. A temporary th/ZZ-ADV-UPPER.MD post
+failed three cases and was named in each. The probe file passes 2 of 2
+and the merged validation passes 17 of 17. The temp file is deleted.
+
+No known way to pass a failing rendered check from the earlier rounds.
+Verdict pass.
+
+Remaining loader edge cases, recorded as notes: -segments.json posts
+(ADV-12, by design), nested subfolder posts (ADV-13, pipeline never
+writes one), and ASCII-only suffix checks (ADV-14, theoretical).
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3), adversarial round 3 (confirmation)
+commits: none
+tests_run: pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts src/lib/blog-posts-validation.test.ts --reporter=dot (19 passed at 704745a3c); pnpm --filter www-reading-advantage exec vitest run src/lib/blog-posts-validation.test.ts --reporter=verbose with a temporary th/ZZ-ADV-UPPER.MD (3 named failures); pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts --reporter=verbose (2 passed)
+files_changed: measure/runs/www_test_audit_pilot_20261122/adversarial-704745a.json; measure/runs/www_test_audit_pilot_20261122/adversarial-704745a.log
+plan_updates: none
+known_failures: none. ADV-11 closed; ADV-8 closed; ADV-9 and ADV-10 kept; ADV-12 to ADV-14 are notes.
+handoff: Phase 3 adversarial verdict is pass at 704745a3c. The loader surface is closed: .mdx, .markdown, extension-less, and uppercase .MD files are all seen and named. Remaining edge cases are recorded as notes only. Result JSON: measure/runs/www_test_audit_pilot_20261122/adversarial-704745a.json.
+END_MEASURE_AGENT_RESULT

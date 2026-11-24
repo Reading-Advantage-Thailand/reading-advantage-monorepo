@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: closeout
+status: complete
+track: www_test_audit_pilot_20261122
+phase: closeout
+commits: closeout commit reported in the returned result block; pre-closeout HEAD 2bfbd373fef2fc500798efe721975fa0a345e73f
+tests_run: closeout gate -> PASS: closeout checks passed, exit 0; post-archive heavy-run vitest -> exit 0, Test Files 98 passed (98), Tests 1494 passed (1494), Duration 97.82s; heavy-run doctor -> exit 1 on the architecture step only, with steps 1 to 3 PASS on the known stale pin acknowledged by the PM 2026-11-24; final acceptance at 2bfbd373f -> pass with check-types 0, lint 0 errors and 1 pre-existing warning, 98 files and 1494 tests, 92.08 percent lines
+files_changed: measure/tracks.md (active entry removed, archived entry added); measure/archive/www_test_audit_pilot_20261122/ (metadata.json, plan.md, report.md, automation-supervisor-closeout-manifest.json and the moved track files); measure/runs/www_test_audit_pilot_20261122/ (closeout-2bfbd37.json and this log, force-added with all retained run evidence); measure/generated/architecture.json and measure/generated/routes.md (regenerated to 2bfbd373f and staged)
+plan_updates: task 1.3 points to tasks 4.17 and 4.18; tasks 4.1 and 2.5 point to the later D5 revert f97a72f90 and the changed cut figures; report.md section 5 records F18 status PM-approved 2026-11-24 option A and the superseded phase-acceptance-d2c8e63.json; metadata status done with completed 2026-11-25; 50 [x] tasks, no [~], [ ] or [b] task
+known_failures: none blocking. bash measure/doctor.sh exits 1 at the stale architecture input snapshot pin (PM acknowledged 2026-11-24); phase-acceptance-d2c8e63.json is superseded by phase-acceptance-p4-2bfbd37.json; F52 to F55, N13 and N14, ADV-26 to ADV-32, ADV-P1-9 and N8, the 16.2 percent second-check exception, and the F11 and F18 exceptions stay open by PM decision.
+handoff: Closeout gate PASS. The track is archived and the registry row, metadata and closeout manifest agree. A5, A6 and A9 pass: no test or script hardcoded the old track path, so no test fix was needed. The post-archive Vitest gate still passes 98 files and 1494 tests. The full measure/runs/www_test_audit_pilot_20261122/ folder is force-added and retained; no bulky artifact was deleted because the orchestrator named none. No push, merge or deploy was made. The generated facts were refreshed from 3e80d3679 to 2bfbd373f and are part of the closeout commit. The doctor architecture step stays with the PM acknowledgement of 2026-11-24.
+END_MEASURE_AGENT_RESULT

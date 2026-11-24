@@ -1,0 +1,35 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Phase 4 acceptance remediation F31 to F36 on the report. PM approved F18 option A.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: 24733e3b0cc63ae533501cfaf4f4998c96aafe4e
+green_head: a0b229def673fb476ad2ded5719f54431d94511d
+report_commit: 3ad5dba96817a803d1ad6c6bc1675c71467cc50b
+plan_evidence_commit: a0b229def673fb476ad2ded5719f54431d94511d
+report: measure/tracks/www_test_audit_pilot_20261122/report.md
+review: measure/runs/www_test_audit_pilot_20261122/phase-acceptance-24733e3.log
+
+tasks_flipped_to_x:
+- 4.6 Report acceptance remediation F31 to F36 (3ad5dba96). Evidence: report commit 3ad5dba96 and plan commit a0b229de.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: none tracked. report.md and plan.md were changed. No test or production file changed.
+
+checks_run:
+- F31: git show --format= --name-status adf24e723 listed nine paths. The report now says fourteen R2 cases rewritten in nine files, with the git command named.
+- F32: git log --oneline 635a604c8..HEAD -- <path> for each of the five timing files. Only primary-advantage/page.content.test.tsx has commits: 7008ccefd, 733319505, fb5622ed7. git log --oneline 8a126f612..HEAD -- <path> lists none. The report now says four of five are unchanged K rows and describes the fifth.
+- F33: read the failing target of each cited proof log. proof-adv17.log has exit 0 and passing runs, so it is not a mutation proof. K table now has Mutation check and Other file proofs columns. A proof is credited only when its failing rule is the K row rule. The table still has 77 rows summing to 2843 cases.
+- F34: checked all 42 named GREEN and COVERAGE logs with python3 over measure/runs/www_test_audit_pilot_20261122/*.log. Every file exists and holds a passing test summary. green-7008ccef.log holds an accounting plan, so the D5 part 2 row now cites green-at-7008ccef.log. Per-class rows cite exact per-commit log names.
+- F35: read phase-acceptance-bfda22b.json and review-a-8a78788.json. git show --name-only 3b044ec9 4d1688131 showed 3b044ec9 changes only the Reedy test and 4d1688131 changes the D1 rewrites including the workbook. Report lines now label Review A F1-F3 and Acceptance F1-F3 with role and source file, each with its own fix.
+- F36: removed the timing follow-up recommendation. The report now states that the PM decided the time gap and hypothesis stay in this report only.
+- F18: changed the status to approved by the PM on 2026-11-24, option A, in both the finding line and the open-items section.
+- Rescan: checked counts and units, unchanged claims, proof-to-rule matches, receipts that are plans rather than runs, and reused finding IDs. All 46 finding lines now carry role and source. Long-sentence scan found none.
+
+gate: one required heavy-run gate exited 0. CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot passed 98 files and 1412 tests. Log: measure/runs/www_test_audit_pilot_20261122/green-3ad5dba96.log. No test changed, so no other gate was required.
+dispositions: F31=FIX; F32=FIX; F33=FIX; F34=FIX; F35=FIX; F36=FIX
+END_MEASURE_AGENT_RESULT

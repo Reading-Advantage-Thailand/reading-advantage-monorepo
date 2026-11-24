@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 2: Delete batch (D1-D5), adversarial round 5",
+  "baseline_sha": "7b15edd95",
+  "phase_base_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+  "role_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "audited_head_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "status": "pass",
+  "summary": "ADV-4, ADV-5, and ADV-6 are closed: dce443985 widened the inactive patterns (formerly, previously, no longer, lapsed, expired; th หมดอายุ; zh 已过期 and 过期) and the reversal probe file passes 9 of 9. The new positive check is sound: APPROVED_ELIGIBILITY_SENTENCES holds independent string literals written in the fixture, not values read from the locale files, so a rewrite of the shipped copy changes only the checked side and the exact-match rule fails. Four temporary positive-check probes held. No production file changed. No new false pass, so no commit.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "ADV-4 closed: en formerly active now breaks. The INACTIVE en set of fixtures/reedy-eligibility.ts lists formerly, previously, no longer, lapsed, and expired next to inactive, non-active, and in-active.",
+    "ADV-5 closed: th หมดอายุ now breaks. The INACTIVE th set lists the expired package.",
+    "ADV-6 closed: zh 已过期 and 过期 now break. The INACTIVE zh set lists the invalid and the expired package.",
+    "ADV-7 [Note] adversarial: the positive check is not self-referential. The fixture file holds no import; APPROVED_ELIGIBILITY_SENTENCES is a literal record. A rewrite of a shipped eligibility sentence is caught two ways: a rewording that keeps every marker word fails the exact-match rule, and a rewording that drops a marker fails the marker rule. Temporary probes proved both paths for en, th, and zh, and proved no approved sentence itself carries a reversal."
+  ],
+  "evidence": [
+    "pnpm --filter www-reading-advantage exec vitest run on the reversal probe file, the contact-authority probe file, and www-tutor-reedy-claim.test.tsx at 8a126f612: 3 files, 40 tests, all passed.",
+    "A temporary probe file proved four facts: each locale's lead approved sentence passes with both facts; a reworded sentence that keeps every marker breaks through the exact-match rule in all three locales; a reworded sentence that drops a marker breaks through the marker rule; and no approved sentence carries a reversal for its own fact set.",
+    "The fixture file src/__tests__/fixtures/reedy-eligibility.ts contains no import statement; the approved list cannot track a locale-file rewrite.",
+    "git diff --name-only 7b15edd95..8a126f612 -- apps/ names test files and fixtures only; the non-test grep returns exit 1 with no output.",
+    "The temporary probe file was deleted; git status is clean."
+  ],
+  "commands": [
+    "git show dce44398537f4b57d24cb4611a53847805466cc1 --stat",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/reedy-inactive-reversal.adversarial.test.tsx src/__tests__/contact-authority-import-actual.adversarial.test.tsx src/__tests__/www-tutor-reedy-claim.test.tsx --reporter=dot",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/tmp-positive-probe.adversarial.test.ts --reporter=verbose",
+    "git diff --name-only 7b15edd95..8a126f612 -- apps/ | grep -v -E '\\.(test|adversarial)\\.tsx?$|__tests__|fixtures'"
+  ],
+  "changed_files": [
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-8a126f6.json",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-8a126f6.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "kimi-code-plan-cn/kimi-for-coding",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "The widened patterns close ADV-4 to ADV-6 (9 of 9 probes pass) and the independent approved-sentence list catches any copy rewrite (tmp-positive-probe, 4 of 4 held)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "The exact-match positive check removes the blocklist-gap risk that bounded this surface; every probe sentence names the rule it attacks."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The round range 7b15edd95..8a126f612 changes the fixture and measure files only; no production file changed."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every claim names a command result; the self-reference question was settled by reading the fixture source and by a runtime probe."
+    }
+  ]
+}

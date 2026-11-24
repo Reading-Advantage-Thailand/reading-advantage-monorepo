@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "role": "review-a",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 1: Baseline and classification",
+  "baseline_sha": "cbd023b1bd29333992f7511646cff1245191b049",
+  "phase_base_sha": "cbd023b1bd29333992f7511646cff1245191b049",
+  "role_base_sha": "1d4ddd2c02acea93c50c715e043391113f4b2c03",
+  "audited_head_sha": "1d4ddd2c02acea93c50c715e043391113f4b2c03",
+  "status": "fail",
+  "summary": "HEAD and the exact phase diff are verified. The fresh sample has 3 disagreements in 37 rows (8.11%), below the 15% stop threshold. Three D1 delete rows still conflict with rubric note 3. Per-file runner counts cannot be independently checked from the supplied baseline artifacts.",
+  "blocking_findings": [
+    "F1 [Blocker] review-a: D1 rows for source scanners/card layout (classification.md:122), the reading-card cover and featured-row behavior (line 128), and cover dimensions/other-card behavior (line 129) are marked delete. These rows protect user-visible layout or image behavior, so rubric note 3 requires rewrite, not delete. Rationale: deleting these rows removes the behavior test instead of replacing it."
+  ],
+  "nonblocking_findings": [
+    "F2 [Nit] review-a: baseline.json records only aggregate counts, and red-08bec4c-r2.log states that per-file counts were checked without listing those counts or the runner breakdown. Rationale: the 91 file rows sum to 3,175, but the required per-file comparison is not reproducible from the supplied artifacts."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned 1d4ddd2c02acea93c50c715e043391113f4b2c03.",
+    "The exact cbd023b1bd29333992f7511646cff1245191b049..1d4ddd2c02acea93c50c715e043391113f4b2c03 diff changes classification.md and plan.md only.",
+    "All four round-1 disagreements are corrected: removed-kind manifest rows are K (classification.md:96); the no-crop check is R2 (line 199); the live A34/A45 source tests are K, while the environment-dependent A34 check is D4 (lines 99, 111, 159); entrance visibility is D1 rewrite (line 120). Both A34 files and the A45 MANIFEST.txt exist in their configured locations.",
+    "Classification has 129 counted rows across 91 files; class weights sum to 3,175: K 2,843, D1 67, D2 22, D4 6, D5 221, R2 16. Seven additional rows are not counted, giving 136 table rows.",
+    "The fresh stratified sample contains 37 distinct rows and 322 counted cases. It excludes each exact row in second-check-08bec4c.json. It includes all remaining D1 delete rows, all non-reused D2 rows, all D4 rows, the tutor-commission rows, pricing rows reviewed, locale routing, accessibility, and three seeded random rows.",
+    "Sampling method: include mandatory strata first; use Python random.Random(20261123) to select three additional rows from unreviewed rows. The round-1 sample rows were excluded by file and case-label identity.",
+    "Fresh disagreement rates: 3/37 rows = 8.11%; 15/322 counted cases = 4.66%. The two Playwright rows contribute 9 non-counted cases and no disagreement.",
+    "www-features-look-pins.red.test.ts:262-269 contains source-level F3 layout checks, while 272-299 retains render-level checks; note 3 still says the D1 user-visible test must be rewritten.",
+    "www-reading-card.red.test.ts:183-211 pins the visible cover image and alt; lines 256-262 checks the featured-row bullet layout. The classification marks the source-check row delete at classification.md:128.",
+    "www-reading-cover.red.test.ts:200-239 checks the cover's portrait dimensions and rendered crop fit. The source-pin row is marked delete at classification.md:129.",
+    "www-pricing-required-rows.red.test.ts:105-143 uses a real translator and renders valid and invalid price rows. Its K action is correct.",
+    "proxy-redirect.test.ts:16-45 asserts public redirect status, host, query, and prefixed locale behavior; blog-locale.test.ts:10-34 tests locale-specific paths."
+  ],
+  "commands": [
+    {
+      "command": "git rev-parse HEAD",
+      "result": "1d4ddd2c02acea93c50c715e043391113f4b2c03"
+    },
+    {
+      "command": "git status --short",
+      "result": "clean before writing the supplied result artifacts"
+    },
+    {
+      "command": "git diff --stat cbd023b1bd29333992f7511646cff1245191b049..1d4ddd2c02acea93c50c715e043391113f4b2c03",
+      "result": "classification.md and plan.md only"
+    },
+    {
+      "command": "Static classification count",
+      "result": "129 counted rows; 91 distinct Vitest files; 3,175 weighted cases"
+    },
+    {
+      "command": "test -f A34 image list && test -f A34 brief",
+      "result": "exit 0"
+    },
+    {
+      "command": "test -f /home/daniebo/Desktop/handoff/a45-storytime-www-images/MANIFEST.txt",
+      "result": "exit 0"
+    },
+    {
+      "command": "Tests",
+      "result": "Not run; this report-only review checks classification artifacts and test sources."
+    }
+  ],
+  "changed_files": [
+    "measure/tracks/www_test_audit_pilot_20261122/classification.md",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "medium",
+  "disagreement_rate_rows": "3/37 (8.11%)",
+  "disagreement_rate_cases": "15/322 (4.66%)",
+  "sampled_rows": [
+    {"file":"src/__tests__/proxy-redirect.test.ts","row":"all 5 redirect cases (n=5)","own_class":"K","own_action":"keep","verdict":"agree","reason":"Tests middleware responses at the public redirect surface."},
+    {"file":"src/lib/blog-locale.test.ts","row":"postsDirectory en/th/zh; th differs (n=4)","own_class":"K","own_action":"keep","verdict":"agree","reason":"Tests locale-specific output from the exported path builder."},
+    {"file":"src/locales/navigation.test.tsx","row":"uses configured default for unsupported locale (n=1)","own_class":"K","own_action":"keep","verdict":"agree","reason":"The row checks fallback logic through the locale hook."},
+    {"file":"src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx","row":"all 4 contracts (n=4)","own_class":"K","own_action":"keep","verdict":"agree","reason":"The row checks rendered accessibility and contact behavior."},
+    {"file":"src/__tests__/www-pricing-page.content.test.tsx","row":"price-table wiring and money figures (n=23)","own_class":"K","own_action":"keep","verdict":"agree","reason":"Renders each locale and checks table rows, baht figures, and route links."},
+    {"file":"src/__tests__/www-pricing-required-rows.red.test.ts","row":"all 7 RA4 cases (n=7)","own_class":"K","own_action":"keep","verdict":"agree","reason":"Uses real translations and rejects missing or invalid rows."},
+    {"file":"src/__tests__/www-features-pricing.locale.test.ts","row":"locale key hygiene, money figures, removal rules (n=13)","own_class":"K","own_action":"keep","verdict":"agree","reason":"Includes positive controls and checks rendered-independent money and locale data rules."},
+    {"file":"src/__tests__/www-tutor-calculator.locale.test.ts","row":"payout figures, D-17/D-10 rules, claim guards (n=15)","own_class":"K","own_action":"keep","verdict":"agree","reason":"Checks required money mechanisms and removed claims across three locale dictionaries."},
+    {"file":"src/components/marketing/tutor-commission-calculator.test.tsx","row":"first paint, rows, presets, eligibility (n=22)","own_class":"K","own_action":"keep","verdict":"agree","reason":"Exercises rendered calculator inputs, preset figures, and eligibility behavior."},
+    {"file":"src/components/marketing/tutor-commission-calculator.adversarial.test.tsx","row":"leg, edit, preset, price, display cases (n=17)","own_class":"K","own_action":"keep","verdict":"agree","reason":"Checks visible output under hostile inputs and different locales."},
+    {"file":"src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx","row":"add, remove, clear, bar, walk cases (n=30)","own_class":"K","own_action":"keep","verdict":"agree","reason":"Checks the rendered state against the calculation module across seeded interactions."},
+    {"file":"src/app/[locale]/(marketing)/blog/page.test.tsx","row":"all 9 pagination cases (n=9)","own_class":"K","own_action":"keep","verdict":"agree","reason":"Exercises rendered pagination, metadata, and redirect behavior."},
+    {"file":"src/app/[locale]/(marketing)/products/storytime-advantage/page.test.tsx","row":"all 2 structure cases (n=2)","own_class":"K","own_action":"keep","verdict":"agree","reason":"Checks rendered page structure."},
+    {"file":"src/components/marketing/mastery-advantage-graph.test.tsx","row":"all 13 buildSteps and interaction cases (n=13)","own_class":"K","own_action":"keep","verdict":"agree","reason":"Checks behavior through the component."},
+    {"file":"src/lib/__tests__/real-logos-mapping.red.test.ts","row":"manifest mapping, file cases, and removed-kind values (n=34)","own_class":"K","own_action":"keep","verdict":"agree","reason":"The removed-kind assertion checks manifest values, not the source-literal sweep."},
+    {"file":"src/lib/tutor-commission.adversarial.test.ts","row":"float, boundary, hostile, conservation cases (n=24)","own_class":"K","own_action":"keep","verdict":"agree","reason":"Independent controls check payout and tax behavior in integer satang."},
+    {"file":"src/lib/tutor-commission.followups.adversarial.test.ts","row":"all 4 edge cases (n=4)","own_class":"K","own_action":"keep","verdict":"agree","reason":"Tests distinct negative, zero, and one-student edge inputs."},
+    {"file":"src/lib/tutor-commission.settlement.adversarial.test.ts","row":"all 37 settlement-parity cases (n=37)","own_class":"K","own_action":"keep","verdict":"agree","reason":"Uses a separate settlement model with wrong-result controls."},
+    {"file":"src/__tests__/www-features-look-pins.red.test.ts","row":"source scanners, card order, base grid, F3 source pins, picture column (n=8)","own_class":"D1","own_action":"rewrite","verdict":"disagree","reason":"The source assertions protect user-visible card layout; note 3 requires rewriting rather than deleting them."},
+    {"file":"src/__tests__/phase-3-group-b-types.test.ts","row":"production components free of unsafe assertions (n=1)","own_class":"D1","own_action":"delete","verdict":"agree","reason":"This case performs static AST checks, not user-visible behavior checks."},
+    {"file":"src/__tests__/phase-3-i18n.red.test.ts","row":"CTA copy, bypass casts, and tsc diagnostics (n=3)","own_class":"D1","own_action":"delete","verdict":"agree","reason":"The row is source/static analysis; its rendered CTA behavior remains in a separate K row."},
+    {"file":"src/__tests__/www-pricing-rows-fluid.red.test.ts","row":"pricing source pins (n=2)","own_class":"D1","own_action":"delete","verdict":"agree","reason":"Source pins are separated from retained rendered row behavior."},
+    {"file":"src/__tests__/www-reading-card.red.test.ts","row":"cover source and featured-row behavior pins (n=3)","own_class":"D1","own_action":"rewrite","verdict":"disagree","reason":"Cover selection and visible card layout are user-facing behavior; note 3 requires a behavior rewrite."},
+    {"file":"src/__tests__/www-reading-cover.red.test.ts","row":"cover dimensions and other-card regression pins (n=4)","own_class":"D1","own_action":"rewrite","verdict":"disagree","reason":"Image dimensions and card appearance are user-facing behavior; note 3 requires a behavior rewrite."},
+    {"file":"src/components/layout/layout-components.test.ts","row":"does not retain empty layout component modules (n=1)","own_class":"D1","own_action":"delete","verdict":"agree","reason":"The test checks an empty-module migration guard, not user-visible behavior."},
+    {"file":"src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx","row":"container count, order, and retired test id (n=3)","own_class":"D2","own_action":"delete","verdict":"agree","reason":"The retained page-content test checks the same rendered structure and old references."},
+    {"file":"src/lib/blog-locale.test.ts","row":"calculateReadingTime returns number type (n=1)","own_class":"D2","own_action":"delete","verdict":"agree","reason":"The retained value tests call the same helper and distinguish numeric results."},
+    {"file":"src/lib/__tests__/real-logos-favicon.red.test.ts","row":"byte identity, lengths, and ICO magic (n=4)","own_class":"D2","own_action":"delete","verdict":"agree","reason":"The retained favicon byte tests inspect the same delivered files and properties."},
+    {"file":"src/lib/__tests__/real-logos-references.red.test.ts","row":"zero references to removed literals (n=11)","own_class":"D2","own_action":"delete","verdict":"agree","reason":"The retained adversarial sweep checks the same source literals on the same source tree."},
+    {"file":"src/__tests__/products-page-pictures.red.test.tsx","row":"retired Storytime set guard (n=1)","own_class":"D2","own_action":"delete","verdict":"agree","reason":"The retained manifest guard checks the same retired paths on the product picture manifest."},
+    {"file":"src/lib/__tests__/tutor-screens.adversarial.test.ts","row":"ADV-M4 slot order (n=1)","own_class":"D2","own_action":"delete","verdict":"agree","reason":"The retained EXPECTED order test checks the same tutorScreens manifest surface."},
+    {"file":"src/__tests__/www-features-pricing.locale.test.ts","row":"features and pricing copy pins and scope guards (n=9)","own_class":"D5","own_action":"replace with locale-key checks","verdict":"agree","reason":"The row pins marketing copy; locale-key checks are the stated replacement."},
+    {"file":"src/locales/navigation.test.tsx","row":"returns the active locale (n=3)","own_class":"D4","own_action":"delete","verdict":"agree","reason":"The tests echo a mocked locale and do not check the hook's decision."},
+    {"file":"src/lib/__tests__/real-logos-captures.red.test.ts","row":"names first and last capture (n=2)","own_class":"D4","own_action":"delete","verdict":"agree","reason":"The cases pin filename literals in their own test source."},
+    {"file":"src/lib/__tests__/primary-page-images.test.ts","row":"source files present when A34_REQUIRE_SOURCES=1 (n=1)","own_class":"D4","own_action":"delete","verdict":"agree","reason":"Without the flag it returns early; with the flag, missing sources fail the explicit existence assertions."},
+    {"file":"e2e/locale-middleware.spec.ts","row":"redirects, bypasses, and pagination (n=7, not counted)","own_class":"not counted","own_action":"keep outside Vitest count","verdict":"agree","reason":"This is a Playwright suite and the spec excludes it from the case target."},
+    {"file":"e2e/link-locale-preservation.spec.ts","row":"internal links keep locale prefix (n=2, not counted)","own_class":"not counted","own_action":"keep outside Vitest count","verdict":"agree","reason":"This is a Playwright suite and the spec excludes it from the case target."}
+  ],
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {"axis":"correctness","score":3,"evidence":"classification.md:122, 128, and 129 still mark user-visible D1 rows for deletion."},
+    {"axis":"test_meaning","score":4,"evidence":"www-pricing-required-rows.red.test.ts:105-143 checks invalid and valid rendered rows."},
+    {"axis":"scope_discipline","score":5,"evidence":"git diff shows only classification.md and plan.md changed."},
+    {"axis":"evidence_quality","score":3,"evidence":"baseline.log:16-17 records aggregate runner counts but no per-file count breakdown."}
+  ]
+}

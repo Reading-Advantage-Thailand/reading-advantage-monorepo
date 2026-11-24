@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: measure-strategy
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 1: Baseline and classification
+commits: cbd023b1b
+tests_run: none. This role specifies the two gate commands through heavy-run.sh and does not run them.
+files_changed: measure/tracks/www_test_audit_pilot_20261122/test-strategy.md (committed, 302 lines, only path in commit); measure/runs/www_test_audit_pilot_20261122/strategy-2e7fb87.log (this log, gitignored under measure/runs/)
+plan_updates: none. The plan was read, not edited. The strategy records the Red/Green gate substitution in section 1.6.
+known_failures: none
+handoff: The strategy commit is cbd023b1bd29333992f7511646cff1245191b049. The orchestrator must capture the immutable phase_base_sha right after this pathspec commit by running git rev-parse HEAD in this worktree and recording the value in the Phase 1 Red evidence of plan.md. That value is cbd023b1b. Do not use role_base_sha 2e7fb87; it predates the strategy commit. Gate decisions: Review A yes in every phase; Review B no because test-only work changes no production security surface and the K list plus adversarial cover access and data rules; Review C no because no route, schema, component, or response shape changes, and if scheduled its only assertion is that no production file changed; UX browser no because no rendered surface changes and Playwright files are classified but not gated; adversarial yes and bounded for P1 to P3; standalone security review no. Risks: P1 high, P2 critical, P3 high, P4 medium. K list protects tutor-commission money and payout tests, access, student data, and data migration; no K row deletes without a named duplicate. The strategy writes no test count. Gate commands use HEAVY_PREFLIGHT_WAIT_S=3600 with heavy-run.sh and were not run. No push.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 3: Rewrite batch (R1-R3), adversarial round 7",
+  "baseline_sha": "a0b8e18e8",
+  "phase_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "role_base_sha": "e831157de689a3deef0f80d8d4860fdc41e760a5",
+  "audited_head_sha": "e831157de689a3deef0f80d8d4860fdc41e760a5",
+  "status": "fail",
+  "summary": "The F25 symlink fix holds on its own case: a symlink chain and a symlink to a post outside the posts dir in th are both read, and the title rule fails naming each link. One silent skip remains: a symlink to a directory named .md is dropped by listPostFiles and not reported by brokenPostRefs, while the phase-base test and blog.ts crash loudly with EISDIR. ADV-22 routes to Green with a committed failing probe.",
+  "blocking_findings": [
+    "ADV-22 [Blocker] adversarial: the loader silently skips a symlink to a directory named .md. listPostFiles in src/__tests__/fixtures/blog-posts-loader.ts accepts a symlink only when statSync(fullPath).isFile(); for a directory target isFile() is false, so the entry is dropped, and brokenPostRefs reports it only when statSync throws, which it does not. A temporary th/zz-adv-dirlink.md pointing at a real directory left all 17 validation cases green, while the phase-base test (git show 257a6b0cd^: readdirSync names filtered by endsWith('.md'), read with readFileSync) and blog.ts readFileSync crash with EISDIR. Route-to-Green: surface directory symlinks whose name ends .md (for example in a non-file refs list asserted empty, or by parsing them so the read fails loudly). The committed probe src/__tests__/blog-posts-loader.adversarial.test.ts fails its ADV-22 case until the fix lands."
+  ],
+  "nonblocking_findings": [
+    "ADV-23 [Note] adversarial: a locale-level symlink to a directory is skipped by localeDirectories (dirent.isDirectory() is false for a symlink), so posts under a symlinked locale directory are not validated; blog.ts iterates fixed locale names, so this only matters if a locale dir were replaced by a symlink."
+  ],
+  "evidence": [
+    "A temporary two-link chain th/zz-adv-chain1.md -> th/zz-adv-chain2.md -> an outside target with no title failed the title rule naming th/zz-adv-chain1 and th/zz-adv-chain2.",
+    "A temporary th/zz-adv-outside.md -> an outside target with no title failed the title rule naming th/zz-adv-outside (the F25 case).",
+    "A temporary th/zz-adv-dirlink.md -> a real directory left all 17 cases green (silent skip); every temporary file, link, directory, and outside target was removed and git status is clean.",
+    "The committed probe at 865f52a91 passes its two held cases and fails its ADV-22 case against a temp tree under /home/daniebo/.cache/opencode, which self-cleans."
+  ],
+  "commands": [
+    "git show 257a6b0cd^:apps/www-reading-advantage/src/lib/blog-posts-validation.test.ts",
+    "pnpm --filter www-reading-advantage exec vitest run src/lib/blog-posts-validation.test.ts --reporter=verbose",
+    "pnpm --filter www-reading-advantage exec vitest run src/lib/blog-posts-validation.test.ts --reporter=dot",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts --reporter=verbose",
+    "git add apps/www-reading-advantage/src/__tests__/blog-posts-loader.adversarial.test.ts && git commit -m 'test(www): add phase 3 round 7 adversarial checks (track_id: www_test_audit_pilot_20261122)'"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/blog-posts-loader.adversarial.test.ts",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-865f52a.json",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-865f52a.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "kimi-code-plan-cn/kimi-for-coding",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "The F25 fix reads chained and outside symlinks, but a directory symlink named .md is skipped silently (blog-posts-loader.adversarial.test.ts fails 1 of 3)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "Two of three symlink probes fail loudly and name the link; the third is the silent class the loader claims to reject."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "Every probe was temporary and removed; the only commit updates the probe file."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The phase-base comparison and the isolated green run are quoted command results."
+    }
+  ]
+}

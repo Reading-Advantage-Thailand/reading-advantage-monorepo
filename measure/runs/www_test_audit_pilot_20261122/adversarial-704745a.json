@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 3: Rewrite batch (R1-R3), adversarial round 3 (confirmation)",
+  "baseline_sha": "4de4b39ff",
+  "phase_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "role_base_sha": "704745a3ca2bb27b52f28e2fcf65df9d994b64ac",
+  "audited_head_sha": "704745a3ca2bb27b52f28e2fcf65df9d994b64ac",
+  "status": "pass",
+  "summary": "ADV-11 is closed by my own probe: 88b26fb9b added a shared mislabelledPostRefs predicate to fixtures/blog-posts-loader.ts, and a temporary th/ZZ-ADV-UPPER.MD post now fails three cases and is named in each. The probe file passes 2 of 2 and the merged validation passes 17 of 17 at 704745a3c. No production file changed. No known way to pass a failing rendered check from the earlier rounds. Verdict pass.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "ADV-8 closed: 98c2713d3 made the loader extension-agnostic and flags Markdown-like non-.md files by name (recorded at 04e7ff8a8).",
+    "ADV-9 kept: the R2 rewrites catch the old class-pin mutations for flex-wrap, min-w-0, and the hero gradient (recorded at 8f7d94961).",
+    "ADV-10 kept: the merged rules name offenders and empty discovery fails loudly (recorded at 8f7d94961).",
+    "ADV-11 closed: 88b26fb9b flags any name with a case-insensitive .md suffix that is not exactly .md, plus .mdx, .markdown, other extensions, and none; my temporary th/ZZ-ADV-UPPER.MD failed three cases and was named in each.",
+    "ADV-12 note: the -segments.json allowance is by design; a post hidden behind that name escapes every rule, and a post behind .json never reaches production.",
+    "ADV-13 note: the file sweep reads one level per locale directory; a post in a nested subfolder would escape, but the blog pipeline never writes one and the shipped blog lib also reads one level.",
+    "ADV-14 note: the suffix checks are ASCII; a fullwidth or lookalike extension (for example a fullwidth .ｍｄ) would not match, which is a theoretical edge only."
+  ],
+  "evidence": [
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts src/lib/blog-posts-validation.test.ts --reporter=dot at 704745a3c: 2 files, 19 tests, all passed.",
+    "A temporary th/ZZ-ADV-UPPER.MD post failed 'discovers at least one post', 'file uses the .md extension', and 'no non-Markdown post file in any locale', each naming th/ZZ-ADV-UPPER.MD; the file was deleted and git status is clean.",
+    "The probe file passes 2 of 2 at 704745a3c, including the ADV-11 case.",
+    "git status is clean after the probe; no production edit remains."
+  ],
+  "commands": [
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts src/lib/blog-posts-validation.test.ts --reporter=dot",
+    "pnpm --filter www-reading-advantage exec vitest run src/lib/blog-posts-validation.test.ts --reporter=verbose",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts --reporter=verbose"
+  ],
+  "changed_files": [
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-704745a.json",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-704745a.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "kimi-code-plan-cn/kimi-for-coding",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "The .MD probe is flagged and named in three cases, and the probe file passes 2 of 2 at 704745a3c."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "The shared predicate mislabelledPostRefs serves the validation and the probe, so one fix reaches both."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The round range changes the fixture, the validation test, and the probe file only; my run left no edit."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every claim names a vitest result or a named probe file; the .MD failure output quotes the file name."
+    }
+  ]
+}

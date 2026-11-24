@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+commits: none
+tests_run: Targeted Vitest passed 52 tests in 10 files. Existing mutation proofs and gate receipts reviewed.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-0165b8e.json and review-a-0165b8e.log
+plan_updates: none
+known_failures: F19 blocks acceptance. The revised contrast predicate can accept a WCAG-AA failure.
+handoff: Route F19 to Green. Replace the lightness-only check with a contrast calculation against the rendered background, or another assertion that rejects foreground and background pairs below WCAG AA. The blog merge preserves all 15 predicates and the 20% target condition. The two additional requested blog mutations were not run because this audit role cannot edit production files; static inspection confirms the corresponding predicates and violation labels.
+dispositions: none
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+commits: none
+tests_run: Targeted Vitest passed 55 tests in 9 files. Reviewed F22-F24 and ADV-15/17 proof logs and the current adversarial and gate receipts.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-a0b8e18.json and review-a-a0b8e18.log
+plan_updates: none
+known_failures: Nonblocking F25: the test loader skips symlinked .md entries that production discovers. No current post is a symlink.
+handoff: F22-F24 and ADV-15/17/18/19 are closed for shipped content. Both R2 contrast tests pass, all five hero gradient properties are asserted, and the case reduction is 55.65%. F25 is a late test-fixture finding; record it as tech debt, not a Green remediation.
+dispositions: none
+END_MEASURE_AGENT_RESULT

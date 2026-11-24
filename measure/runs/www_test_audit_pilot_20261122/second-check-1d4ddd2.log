@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 1: Baseline and classification
+commits: none
+tests_run: No tests run; static audit only
+files_changed: measure/runs/www_test_audit_pilot_20261122/second-check-1d4ddd2.json and second-check-1d4ddd2.log
+plan_updates: none
+known_failures: Three sampled D1 delete rows conflict with rubric note 3; per-file runner count comparison lacks source evidence
+handoff: HEAD matches audited_head_sha. Fresh sample: 3/37 rows (8.11%) and 15/322 counted cases (4.66%). The row weights include 9 Playwright cases marked not counted. The rate is below 15%, but F1 routes to Green for the D1 action errors. The four round-1 disagreements are resolved.
+END_MEASURE_AGENT_RESULT

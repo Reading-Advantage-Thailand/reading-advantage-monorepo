@@ -1,0 +1,63 @@
+Phase acceptance log, round 2: www_test_audit_pilot_20261122, Phase 1 (Baseline and classification)
+Audited HEAD: 2bfbd373fef2fc500798efe721975fa0a345e73f (current; git status clean at start).
+phase_base_sha: cbd023b1bd29333992f7511646cff1245191b049. Phase 1 end: a1caa58034f6455e91205a5673ef172a974a7992.
+Track base: 635a604c89b2c909cfce33f555b7f043d4ea520f. Round 1 result: phase-acceptance-p1-51252ca.json (fail on F1).
+Route: claude-agent/sonnet#xhigh.
+Result JSON: measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-2bfbd37.json (status pass).
+Probe script: measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-2bfbd37-probes.py (read-only, 117 PASS, 0 FAIL).
+
+PROVISIONAL VERDICT (written first): PASS.
+
+Verdict: PASS.
+Round 1 blocker F1 is closed. Phase 1 content still verifies at this HEAD. No blocking finding remains.
+
+F1 withdrawn
+- adversarial-p1-7336f42.json exists for Phase 1 (round 3, status pass, route claude-agent/sonnet#xhigh).
+  The checker prints "PASS: audit result is valid". Its blocking findings and violation arrays are empty.
+- Two earlier Phase 1 adversarial results failed (ADV-P1-1 in adversarial-p1-51252ca.json, ADV-P1-8 in adversarial-p1-fdf62c9.json).
+  The PM chose option C on 2026-11-25. Commit f97a72f90 reverted the D5 class.
+- review-a-2bfbd37.json audits this exact HEAD. It passes and the checker accepts it.
+- The delta from the adversarial head 7336f42b3 to HEAD holds three documents: classification.md, plan.md and report.md.
+  It holds 0 apps paths. The classification delta is two added note lines.
+
+Nonblocking findings
+- N1: the record names the wrong rows for the ex post second-check count. The D2 explicit-English row is not in the 37-row sample.
+  The sample holds D4 navigation, D2 Primary and the D5 features-pricing locale row, which f97a72f90 reverted.
+  The count 6 of 37 (16.2 %) is right and stays above the 15 % stop rule. The PM exception sits in task 4.17 prose.
+- N2: classification.md still holds one stale D5 sentence in the Approved merge line section (same item as Review A N14).
+- N3: plan task 1.3 says "Rate in the log" and the final log gives no number. This item carries over from round 1.
+
+What I verified (read-only)
+- Phase 1 diff cbd023b1b..a1caa5803 holds classification.md and plan.md only. The apps diff is empty. The plan Phase 1 section is unchanged since round 1.
+- Tasks 1.1 to 1.4 are [x]. Task SHAs 08bec4c36, d1b9d597b and a1caa5803 resolve.
+- classification.md: K rows first. K 2843 plus the reverted D5 rows 221 equals the Summary K 3064 (96.5 %).
+  Check line 3064 + 67 + 22 + 0 + 6 + 0 + 16 = 3175 equals case_count. All 136 row lines equal the a1caa5803 rows.
+- All 98 test files have a row. The e2e rows and the i18n-cli row say not counted. All 77 K files and 14 D5 files exist at HEAD.
+- The seven tutor-commission test files are unchanged from the Phase 1 end to HEAD.
+- baseline.json is unchanged: case_count=3175, line_coverage_pct=86.52. heavy-run.log still holds three exit 0 baseline jobs.
+- per-file-counts.md matches the row sums for all 91 files. The runner JSON is gone (PM-accepted ADV-P1-5).
+- D5 revert f97a72f90: 12 test files only. 8 of 12 equal the pre-D5 files. green-at-f97a72f9.log shows 1494 passed.
+- A5 holds. A3, A4, A6 and A7 do not apply. The A9 and A15 scans found no hit.
+
+Deviations
+- This acceptance and the Phase 1 adversarial pass share the route claude-agent/sonnet#xhigh (barred DeepSeek route replaced).
+  I re-checked the adversarial output with my own probes and did not re-run its mutation harness.
+- My round 1 JSON used objects in commands, which the checker rejects. This round writes plain strings.
+
+Not run
+- No Vitest suite. Phase 1 ships no test change. The Phase 1 tree is not checked out, and test-strategy.md section 1.5 forbids a second worktree.
+
+No file outside measure/runs/ changed. Nothing was committed.
+
+MEASURE_AGENT_RESULT
+role: measure-phase-acceptance
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 1: Baseline and classification
+commits: none
+tests_run: no Vitest run (Phase 1 ships no test change); python3 -I phase-acceptance-p1-2bfbd37-probes.py passed 117 of 117; checker audit-result passed for adversarial-p1-7336f42.json and review-a-2bfbd37.json; heavy-run.log shows three exit 0 baseline jobs
+files_changed: measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-2bfbd37.json, measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-2bfbd37.log, measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-2bfbd37-probes.py
+plan_updates: none (gate-only role)
+known_failures: none blocking; N1 ex post rows misnamed in the record (6 of 37 stays right); N2 stale D5 sentence in classification.md; N3 task 1.3 rate wording
+handoff: Verdict PASS, retry_recommendation none. Round 1 blocker F1 is closed by adversarial-p1-7336f42.json. Phase 1 is accepted at 2bfbd373f. Optional doc fixes: name the D5 row in report.md section 6, add a pointer under task 1.3 to tasks 4.17 and 4.18, and extend the D5 note to the Approved merge line sentence. Final acceptance can rerun. Nothing outside measure/runs changed and nothing was committed.
+END_MEASURE_AGENT_RESULT

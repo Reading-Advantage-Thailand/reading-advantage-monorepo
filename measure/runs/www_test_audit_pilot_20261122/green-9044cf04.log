@@ -1,0 +1,42 @@
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 1 erratum and commission FAQ pin
+commits:
+  - ca91946bfe314ca55a55874d03b5cba6a597993c (test fix, ADV-P1-1)
+  - 9044cf04b0ab60d5f005ef9e5339ae1c9a0122a3 (Phase 1 erratum and second-check exception)
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: 51252ca9e09bd458052894304aaa7680b1daabc2
+final_green_head: 9044cf04b0ab60d5f005ef9e5339ae1c9a0122a3
+dispositions: ADV-P1-1=FIX; ADV-P1-2=FIX; ADV-P1-3=FIX; ADV-P1-4=FIX; ADV-P1-6=FIX
+rule=faq.items.5.answer breakage_exit=1 log=measure/runs/www_test_audit_pilot_20261122/green-p1-thai-breakage.log
+tests_run:
+  - command: HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-calculator.locale.test.ts --reporter=dot'
+    exit_code: 0
+    output: "Test Files 1 passed (1); Tests 19 passed (19)."
+  - command: HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run --reporter=dot'
+    exit_code: 0
+    output: "Test Files 98 passed (98); Tests 1414 passed (1414)."
+  - command: HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage'
+    exit_code: 0
+    output: "Test Files 98 passed (98); Tests 1414 passed (1414); Lines 92.08% (1675/1819)."
+  - command: HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage check-types'
+    exit_code: 0
+    output: "$ tsc --noEmit"
+  - command: HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage lint'
+    exit_code: 0
+    output: "eslint . -> 3 problems (0 errors, 3 warnings); all three predate this round."
+case_count: 1414
+file_count: 98
+line_coverage_percent: 92.08
+coverage_floor_percent: 85.52
+files_changed:
+  - apps/www-reading-advantage/src/__tests__/www-tutor-calculator.locale.test.ts
+  - measure/tracks/www_test_audit_pilot_20261122/classification.md
+  - measure/tracks/www_test_audit_pilot_20261122/report.md
+  - measure/tracks/www_test_audit_pilot_20261122/plan.md
+plan_updates: Task 4.17 is [x] with commit 1 SHA ca91946b on the first line. All earlier tasks and SHAs stay intact. The final cut is 1761 cases, or 55.5 percent of the 3175 baseline; the earlier 1413 counts in tasks 4.13 to 4.15 are at their named heads. No task flipped to [b].
+known_failures: None. One case was added, so the final count rose from 1413 to 1414 and the cut fell from 1762 to 1761. Line coverage stayed at 92.08 percent. The live locale copy was restored byte for byte after the breakage proof; git diff for that file is empty.
+handoff: ADV-P1-1 is fixed. The test now asserts the exact en and th text of faq.items.5.answer from LIVE_LINE_PINS, which matches the live locale source. The breakage proof changed the Thai answer to 'settles yearly, flat rate' in a temporary edit, failed the named case with exit 1, and restored the source. ADV-P1-2 and ADV-P1-3 are fixed with erratum lines in the D2, D4 and D5 sections of classification.md, including the restored commission FAQ pin, and report.md now names both halves of fb5622ed7. ADV-P1-4 is fixed in report.md: the ex post second-check rate is 6 of 37, or 16.2 percent, above the 15 percent stop rule, accepted by the PM as a disclosed exception on 2026-11-24 because the rows were restored in Phases 2 and 3. The 'another family' claim is weakened to say the classifier route is not recorded. ADV-P1-6 is fixed: the K share is 89.5 percent. Report and plan now state final values 1414 cases, 92.08 percent lines and a 1761-case cut. No line citation and no run-file count was added. No push was made. Substitution note from earlier rounds still applies: the Red model family is not recorded in the run files; the picker excluded only openai.
+END_MEASURE_AGENT_RESULT

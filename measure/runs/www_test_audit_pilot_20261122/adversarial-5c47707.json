@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 2: Delete batch (D1-D5), adversarial round 4",
+  "baseline_sha": "d30e5a242",
+  "phase_base_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+  "role_base_sha": "5c477077724cb3a51fcf749e8c531c121793e12b",
+  "audited_head_sha": "5c477077724cb3a51fcf749e8c531c121793e12b",
+  "status": "fail",
+  "summary": "ADV-3 is closed: e153b885a widened INACTIVE_PATTERNS in the shared fixture src/__tests__/fixtures/reedy-eligibility.ts, and the reversal probe file, the F1 probe file, and the main Reedy test all pass at 5c4770777 (34 cases). No production file changed in the round range. Three new reversals still pass the check: en 'formerly active', th 'หมดอายุ' next to the active phrase, and zh '已过期' next to the valid marker. ADV-4 to ADV-6 route to Green with the committed failing probe file.",
+  "blocking_findings": [
+    "ADV-4 [Blocker] adversarial: the AC-24 eligibility check admits the English reversal 'formerly active'. The probe 'Open to students with a formerly active class package, on lessons they finished.' carries the word 'active' and every marker, and no NEGATION pattern (without, unfinished, not, never, no, everyone, anyone) or INACTIVE pattern (inactive, non-active, in-active) matches 'formerly'. eligibilityBreaks returns an empty list. Route-to-Green: add a pattern for 'formerly' (or another qualifier that reverses while keeping the active word) to the shared fixture.",
+    "ADV-5 [Blocker] adversarial: the AC-24 eligibility check admits the Thai expired-package reversal. The probe 'เปิดให้นักเรียนที่มีแพ็กเกจคลาสที่ใช้งานอยู่แต่หมดอายุ ในบทเรียนที่เรียนจบแล้ว' keeps 'ใช้งานอยู่' so the active-word check passes, and NEGATION th (ไม่, ทุกคน) and INACTIVE th (ไม่ใช้งาน, ไม่ได้ใช้งาน, ยกเลิก next to แพ็กเกจ) do not match 'หมดอายุ'. eligibilityBreaks returns an empty list. Route-to-Green: add a 'หมดอายุ' pattern to the Thai inactive set.",
+    "ADV-6 [Blocker] adversarial: the AC-24 eligibility check admits the Chinese expired-package reversal. The probe '面向课程包已过期但仍标记为有效的学生，用于已完成的课程。' keeps '有效' so the active-word check passes, and NEGATION zh (未, 不, 没有, 所有, 任何) and INACTIVE zh (无效, 非有效) do not match '已过期'. eligibilityBreaks returns an empty list. Route-to-Green: add a '已过期' pattern to the Chinese inactive set."
+  ],
+  "nonblocking_findings": [
+    "ADV-3 closed: e153b885a moved the rule into src/__tests__/fixtures/reedy-eligibility.ts and widened INACTIVE_PATTERNS to en /\\bnon-?active\\b/i and /\\bin-active\\b/i and to Thai cancelled-package patterns in both word orders. The committed probe file src/__tests__/reedy-inactive-reversal.adversarial.test.tsx now imports the fixture and its three original probes pass at 5c4770777."
+  ],
+  "evidence": [
+    "pnpm --filter www-reading-advantage exec vitest run on the reversal probe file, the contact-authority probe file, and www-tutor-reedy-claim.test.tsx at 5c4770777: 3 files, 34 tests, all passed.",
+    "Six held probes break as required: en non-active, en in-active, th cancelled, en not currently active, en lapsed, en expired.",
+    "Three new probes fail: en formerly active, th expired (หมดอายุ), zh expired (已过期); each carries the active word and every marker word with an empty break list.",
+    "git diff --name-only d30e5a242..5c4770777 -- apps/ names test files, probe files, and fixtures only; the non-test grep returns exit 1 with no output.",
+    "The updated probe file is committed at 7b15edd95 and fails 3 of 9 cases until Green widens the fixture patterns."
+  ],
+  "commands": [
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/reedy-inactive-reversal.adversarial.test.tsx src/__tests__/contact-authority-import-actual.adversarial.test.tsx src/__tests__/www-tutor-reedy-claim.test.tsx --reporter=dot",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/reedy-inactive-reversal.adversarial.test.tsx --reporter=verbose",
+    "git diff --name-only d30e5a242..5c4770777 -- apps/ | grep -v -E '\\.(test|adversarial)\\.tsx?$|__tests__|fixtures'",
+    "git add apps/www-reading-advantage/src/__tests__/reedy-inactive-reversal.adversarial.test.tsx && git commit -m 'test(www): add phase 2 remediation adversarial checks (track_id: www_test_audit_pilot_20261122)'"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/reedy-inactive-reversal.adversarial.test.tsx",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-5c47707.json",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-5c47707.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "kimi-code-plan-cn/kimi-for-coding",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "The ADV-3 fix closes the three reported reversals, but the check still admits formerly-active, Thai expired, and Chinese expired reversals (reedy-inactive-reversal.adversarial.test.tsx fails 3 of 9 at 7b15edd95)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The shared fixture gives one rule for the main test and the probe file, and six of nine reversal probes break as required."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The round range d30e5a242..5c4770777 changes test files and fixtures only; no production file changed."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every claim names a probe sentence and a vitest result; the failing probes were demonstrated before the probe file was committed."
+    }
+  ]
+}

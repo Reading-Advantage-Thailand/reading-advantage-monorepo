@@ -1,0 +1,45 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+stdout | src/__tests__/no-gse-in-customer-copy.test.ts > www customer copy holds no GSE, Pearson, or YLE > prints the pending hits for the PM
+PENDING for the PM:
+src/app/[locale]/(marketing)/blog/posts/en/the-advantage-engine-kst-srs.md:24: GSE -> **Knowledge Space Theory (KST)**, a mathematical framework pioneered by Jean-Claude Falmagne, models learning as a directed graph of skills. In our system, we don’t just track a "grade." We map a student’s precise **Knowledge State** across thousands of granular objectives aligned with the Global Scale of English (GSE) and international math standards.
+src/app/[locale]/(marketing)/blog/posts/en/the-advantage-engine-kst-srs.md:24: Global Scale of English -> **Knowledge Space Theory (KST)**, a mathematical framework pioneered by Jean-Claude Falmagne, models learning as a directed graph of skills. In our system, we don’t just track a "grade." We map a student’s precise **Knowledge State** across thousands of granular objectives aligned with the Global Scale of English (GSE) and international math standards.
+src/app/[locale]/(marketing)/blog/posts/th/the-advantage-engine-kst-srs.md:24: GSE -> **Knowledge Space Theory (KST)** เป็นกรอบงานทางคณิตศาสตร์ที่ริเริ่มโดย Jean-Claude Falmagne ซึ่งจำลองการเรียนรู้เป็นกราฟทักษะที่เชื่อมโยงกัน ในระบบของเรา เราไม่ได้แค่ติดตาม "เกรด" แต่เราสร้างแผนที่ **Knowledge State** (สถานะความรู้) ที่แม่นยำของนักเรียนผ่านจุดประสงค์การเรียนรู้นับพันที่สอดคล้องกับมาตรฐาน Global Scale of English (GSE) และมาตรฐานคณิตศาสตร์สากล
+src/app/[locale]/(marketing)/blog/posts/th/the-advantage-engine-kst-srs.md:24: Global Scale of English -> **Knowledge Space Theory (KST)** เป็นกรอบงานทางคณิตศาสตร์ที่ริเริ่มโดย Jean-Claude Falmagne ซึ่งจำลองการเรียนรู้เป็นกราฟทักษะที่เชื่อมโยงกัน ในระบบของเรา เราไม่ได้แค่ติดตาม "เกรด" แต่เราสร้างแผนที่ **Knowledge State** (สถานะความรู้) ที่แม่นยำของนักเรียนผ่านจุดประสงค์การเรียนรู้นับพันที่สอดคล้องกับมาตรฐาน Global Scale of English (GSE) และมาตรฐานคณิตศาสตร์สากล
+
+····x
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/no-gse-in-customer-copy.test.ts > www rendered customer pages hold no blocked term > renders every customer route and sweeps its visible copy
+AssertionError: Blocked terms on rendered pages:
+b2c solutions section: GSE -> components.products.b2cSolutions.title components.products.b2cSolutions.description GSE components.products.b2cSolutions.features.0.title components.products.b2: expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "b2c solutions section: GSE -> components.products.b2cSolutions.title components.products.b2cSolutions.description GSE components.products.b2cSolutions.features.0.title components.products.b2",[39m
+[31m+ ][39m
+
+ ❯ src/__tests__/no-gse-in-customer-copy.test.ts:377:82
+    375|       cleanup();
+    376|     }
+    377|     expect(failures, `Blocked terms on rendered pages:\n${failures.joi…
+       |                                                                                  ^
+    378|   });
+    379| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  10:54:50
+   Duration  2.01s (transform 698ms, setup 66ms, import 992ms, tests 373ms, environment 425ms)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run '--maxWorkers=1' '--reporter=dot' src/__tests__/no-gse-in-customer-copy.test.ts
