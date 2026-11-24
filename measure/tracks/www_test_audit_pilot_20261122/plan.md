@@ -757,7 +757,7 @@ Each task below is one commit for one class.
   and report.md: the restored rows carry errata, the K share is 89.5 percent,
   both halves of fb5622ed7 are named, and the ex post second-check rate is
   6 of 37, or 16.2 percent. The PM accepted that rate as a disclosed exception
-  on 2026-11-24, because the rows were restored in Phases 2 and 3.
+  on 2026-11-24, because the rows were restored in Phase 2 task 2.7.
   ADV-P1-5: per-file-counts.md rests on a JSON reporter output that no longer
   exists, with 0 retained runner JSON files; 1858 of 3175 cases were re-derived
   independently. Accepted as a note.
@@ -787,3 +787,4 @@ Each task below is one commit for one class.
   in measure/tech-debt.md and as a late finding under the Phase 4 heading.
   No production code changed. No push was made.
   F1, F2, N8, N9 and N10 fixed the report counts, the lint warning count, the FAQ pin note and the tech-debt records.
+  ADV-P1-12, ADV-P1-10, ADV-P1-11 and ADV-P1-4c fixed the blog-merge cut, the projection note, the revert row and the Phase 2 wording.

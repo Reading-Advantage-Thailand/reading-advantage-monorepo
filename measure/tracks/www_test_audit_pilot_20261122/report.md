@@ -11,7 +11,7 @@ The baseline holds 3175 cases and 86.52 % line coverage (`measure/runs/www_test_
 
 The blog merge carried the cut. The blog merge is the task 3.5 merge of the blog test file. The merged file fell from 1726 cases to 17 cases (`measure/runs/www_test_audit_pilot_20261122/gate-257a6b0c.json`: cases_before 3094, cases_after 1385). The blog merge removed 1709 cases. It counts only because one broken post fails the merged test and is named in the failure (`measure/runs/www_test_audit_pilot_20261122/proof-blog-merge.log`). The rule is the `Approved merge line` of the `classification.md` Approved merge line section.
 
-Without the blog merge, the cut is small. Phase 2 ended at 3094 cases (`gate-257a6b0c.json`, cases_before). That cut is 81 cases, or 2.6 % of 3175 (`baseline.json`, `gate-257a6b0c.json`). Later R2 and helper cases raised the count. Without the blog merge, the pre-merge count at `e91c4d4cc` would be 3121 cases, a cut of 54 cases or 1.7 % (`gate-66aeb1011.json`, `gate-257a6b0c.json`; computed from those files). The classification projected 5.5 % to 6.2 % (the `classification.md` Projected cut section). The honest cut without the blog merge stays below that range.
+Without the blog merge, the suite holds 3203 cases, the final 1494 plus the 1709 cases the blog merge removed. That is 28 above the 3175 baseline. The whole cut comes from the PM-approved blog merge. Phase 2 ended at 3094 cases (`gate-257a6b0c.json`, cases_before). Later R2 and helper cases raised the count, and the D5 revert restored the exact pins. The classification projected 5.5 % to 6.2 % (the `classification.md` Projected cut section); that projection is superseded by the D5 revert.
 
 ## 2. Per-class commits
 
@@ -23,10 +23,11 @@ Each row comes from the named gate JSON. The `GREEN` column is its `green_exit_c
 | D2 | 2.2 | e332f594e | 3168 | 3146 | 0 | 89.92 | green-e332f594.log | coverage-e332f594.log | gate-e332f594.json |
 | D3 | 2.3 | 409108d3e | not recorded | not recorded | not recorded | not recorded | none; no rows | none; no rows | none; no gate (the `plan.md` Phase 2 task for D3) |
 | D4 | 2.4 | 0d705612d | 3146 | 3140 | 0 | 89.86 | green-0d705612.log | coverage-0d705612.log | gate-0d705612.json |
-| D5 part 1 | 2.5 | ee5c7b739 | 3140 | 3140 | 0 | 89.94 | green-ee5c7b73.log | coverage-ee5c7b73.log | gate-ee5c7b73.json |
-| D5 part 2 | 2.5 | 7008ccefd | 3140 | 3081 | 0 | 89.94 | green-at-7008ccef.log | coverage-7008ccef.log | gate-7008ccef.json |
-| D5 part 3 | 2.5 | c577cdf18 | 3081 | 3048 | 0 | 89.94 | green-c577cdf.log | coverage-c577cdf.log | gate-c577cdf.json |
-| D5 part 4 | 2.5 | 407c5d9bd | 3048 | 3035 | 0 | 90.03 | green-407c5d9.log | coverage-407c5d9.log | gate-407c5d9.json |
+| D5 part 1 (reverted) | 2.5 | ee5c7b739 | 3140 | 3140 | 0 | 89.94 | green-ee5c7b73.log | coverage-ee5c7b73.log | gate-ee5c7b73.json |
+| D5 part 2 (reverted) | 2.5 | 7008ccefd | 3140 | 3081 | 0 | 89.94 | green-at-7008ccef.log | coverage-7008ccef.log | gate-7008ccef.json |
+| D5 part 3 (reverted) | 2.5 | c577cdf18 | 3081 | 3048 | 0 | 89.94 | green-c577cdf.log | coverage-c577cdf.log | gate-c577cdf.json |
+| D5 part 4 (reverted) | 2.5 | 407c5d9bd | 3048 | 3035 | 0 | 90.03 | green-407c5d9.log | coverage-407c5d9.log | gate-407c5d9.json |
+| D5 revert | 4.18 | f97a72f90 | 1414 | 1494 | 0 | 92.08 | green-at-f97a72f9.log | coverage-at-f97a72f9.log | none; no gate (the revert) |
 | R2 | 3.2 | adf24e723 | 3094 | 3094 | 0 | 91.60 | green-adf24e7.log | coverage-adf24e7.log | gate-adf24e7.json |
 | Blog merge | 3.5 | 257a6b0cd | 3094 | 1385 | 0 | 91.60 | green-257a6b0c.log | coverage-257a6b0c.log | gate-257a6b0c.json |
 

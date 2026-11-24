@@ -255,6 +255,8 @@ Check: 3064 + 67 + 22 + 0 + 6 + 0 + 16 = 3175.
 - Projected total cut: about 176 to 196 cases, about 5.5 to 6.2 %.
   The honest projection is below the 20 % target of 635 cases.
   The projection is not inflated to reach the target.
+  Note: D5 was reverted on 2026-11-25 by PM option C. This projection counts a
+  D5 cut that no longer exists and is superseded.
 
 ## Approved merge line (separate Green commit)
 
