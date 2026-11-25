@@ -45,9 +45,9 @@ const DELETED_EN =
 const DELETED_TH =
   "หนังสือ Reading Advantage ใช้เรียนผ่าน Tutor Advantage ไม่ได้นำเสนอเป็นแอปสำหรับโรงเรียน";
 const STATUS_EN =
-  "Status: Reading Advantage Origins 2 is on sale through Tutor Advantage.";
+  "Your child learns with a local tutor and a printed workbook.";
 const STATUS_TH =
-  "Reading Advantage Origins 2 วางจำหน่ายผ่าน Tutor Advantage";
+  "ลูกของคุณเรียนกับครูสอนพิเศษในพื้นที่ พร้อมหนังสือแบบฝึกหัดฉบับพิมพ์";
 
 const hoisted = vi.hoisted(() => {
   const state: { messages: unknown } = { messages: {} };
