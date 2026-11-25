@@ -552,7 +552,7 @@ Defaults taken on 2026-11-20 (the orchestrator may change them; each has the rea
 ## Phase 5: Launch day master merge (2026-11-26)
 
 - [x] Task: Merge `origin/master` into `storytime-launch-day` as step 1 of the launch. Run the www and Storytime gates, then push the branch. No deploy, no traffic move, and no master push in this step.
-  - Merge commit `MERGE_SHA`, recorded in the follow-up regeneration commit. The merge took 135 master commits over 50 branch commits. Six files conflicted.
+  - Merge commit `5facf7febbf2be749c0809db32fb7ac61247430c`. The merge took 135 master commits over 50 branch commits. Six files conflicted.
   - `apps/www-reading-advantage/src/locales/pages/home.ts`: the Storytime sentence keeps the launch form ("the first Storytime Advantage unit is available now"). The other-program sentence takes master's 2027 school-year text. The zh line takes master's text.
   - `apps/www-reading-advantage/src/__tests__/fixtures/storytime-page-expected.ts` and `www-batch-20261116.locale.test.ts`: the Storytime pins keep the launch form. The zh suite pin and the en/th suite pin follow the merged `home.ts` line.
   - `www-batch-20261130.locale.test.ts`: the en/th suite pin follows the merged line. The zh suite pin follows master's zh text. The Storytime clauses of these pins still hold the launch form.
