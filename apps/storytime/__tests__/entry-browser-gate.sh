@@ -7,8 +7,10 @@ set -uo pipefail
 # The gate runs the real app against a local database and a local account that live for one
 # run. Playwright opens the sign-in page and the join page signed out at 390, 980, and 1280 px,
 # checks the logo, the art, the two-column shell, the thumb-size controls, the password toggle,
-# the wrong-password flow, and the join tiles and buttons, and writes 12 full-page screenshots
-# to a scratch folder under ~/.cache/opencode/ (not committed). No password is printed.
+# the wrong-password flow, and the join tiles and buttons. It writes 12 full-page screenshots
+# to a scratch folder under ~/.cache/opencode/ (not committed). It also checks C1: the first load
+# with the place picture stays under 300000 bytes on the CDP encodedDataLength basis of task 3.2.
+# No password is printed.
 #
 # Without --locked the script re-enters through heavy-run.sh, as the other gate scripts do.
 # Callers run the script plain, with no flock.
@@ -205,8 +207,31 @@ try {
         if (/\/media\//.test(pathname) || /storage\.google/.test(url) || /amazonaws\.com/.test(url) || /[?&](X-Amz-Signature|Signature|signature|Expires)=/i.test(url)) mediaRequests.push(url);
       });
 
+      // C1: the first load of the sign-in route, with the place picture, on the CDP
+      // transfer basis of the 442296-byte gate row of task 3.2. Watch every response
+      // before networkidle; encodedDataLength is the byte count on the wire.
+      const transfers = [];
+      const byId = new Map();
+      const cdp = await context.newCDPSession(page);
+      cdp.on('Network.requestWillBeSent', event => {
+        byId.set(event.requestId, { url: event.request.url });
+      });
+      cdp.on('Network.loadingFinished', event => {
+        const item = byId.get(event.requestId);
+        if (item) transfers.push({ ...item, bytes: event.encodedDataLength });
+      });
+      await cdp.send('Network.enable');
+
       // B1: the logo and the art decode and answer 200 with no cookie.
       const signIn = await page.goto(`${base}/${locale}/sign-in`, { waitUntil: 'networkidle' });
+      const firstLoadBytes = transfers.reduce((sum, r) => sum + r.bytes, 0);
+      const placeUnits = transfers
+        .filter(r => /\/_next\/static\/media\/path-[dp]/.test(new URL(r.url).pathname))
+        .map(r => `${new URL(r.url).pathname.split('/').pop().split('.')[0]}:${r.bytes}`);
+      console.log(`transferred_bytes_first_load_with_place_pictures_${locale}_${view.name}=${firstLoadBytes}`);
+      console.log(`entry_art_units_${locale}_${view.name}=${placeUnits.join(',')}`);
+      check(firstLoadBytes <= 300000, `C1 ${locale} ${view.name} first load with place pictures at most 300000 bytes`, `bytes=${firstLoadBytes} art=${placeUnits.join(',')}`);
+      await cdp.detach();
       check(signIn?.status() === 200, `B1 ${locale} ${view.name} sign-in answers 200`, `status=${signIn?.status()}`);
       const logo = page.locator('img[data-entry-logo]').first();
       check((await logo.count()) === 1, `B1 ${locale} ${view.name} one entry logo`, `count=${await logo.count()}`);

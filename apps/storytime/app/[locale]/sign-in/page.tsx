@@ -148,7 +148,9 @@ export default async function SignInPage({
           ) : null}
         </div>
         <p data-entry-nologin>
-          <Link href={`/${locale}/join`}>{t("signInNoLogin")}</Link>
+          <Link href={`/${locale}/join`} prefetch={false}>
+            {t("signInNoLogin")}
+          </Link>
         </p>
       </section>
     </main>
