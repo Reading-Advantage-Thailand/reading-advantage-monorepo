@@ -38,6 +38,7 @@ html {
 body {
   background: var(--sq-cream);
   color: var(--st-ink);
+  min-height: 100dvh;
 }
 /* The two-tone focus ring reaches 3:1 on brown, amber, and cream (finding A2-F3). The ring is
  * `!important`, so a control rule that sets a box shadow can not hide it. */
