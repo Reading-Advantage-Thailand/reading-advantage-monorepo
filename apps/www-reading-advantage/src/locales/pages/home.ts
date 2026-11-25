@@ -48,7 +48,7 @@ export const en = {
             roadmapNote: "In the 2027 school year, Thai primary schools open Science, Math, and Zhongwen Advantage: workbooks and apps.",
             roadmapTag: "Planned",
             roadmapTag2027: "2027 school year",
-            storytimePreparingLabel: "Available Now",
+            storytimePreparingLabel: "Available now",
         },
         schools: {
             imageAlt: "A teacher at the board while students work from printed workbooks and tablets.",
@@ -500,7 +500,7 @@ export const zh = {
             roadmapNote: "在2027学年，泰国小学开设 Science Advantage、Math Advantage 和 Zhongwen Advantage，配套练习册和应用。",
             roadmapTag: "计划中",
             roadmapTag2027: "2027 school year",
-            storytimePreparingLabel: "Available Now",
+            storytimePreparingLabel: "Available now",
         },
         schools: {
             imageAlt: "老师站在黑板前，学生使用纸质练习册和平板电脑学习。",

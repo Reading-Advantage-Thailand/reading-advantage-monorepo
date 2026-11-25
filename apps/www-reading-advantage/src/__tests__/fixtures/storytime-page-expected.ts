@@ -47,7 +47,7 @@ export const EXPECTED_AUX_COPY = {
 
 export const LABEL_COPY = {
   en: {
-    badge: "Available Now",
+    badge: "Available now",
     gradeRange: "English program for Anuban 2 to P2",
     features: [
       "One sound, one song, and two books each week",
@@ -67,7 +67,7 @@ export const LABEL_COPY = {
     home: "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก Science, Math, Zhongwen และ STEM Advantage อยู่ในแผนงาน หน่วยการเรียนรู้แรกของ Storytime Advantage พร้อมใช้งานแล้ว",
   },
   zh: {
-    badge: "Available Now",
+    badge: "Available now",
     gradeRange: "面向 Anuban 2 至 P2 的英语课程",
     features: [
       "每周一个发音、一首歌和两本书",

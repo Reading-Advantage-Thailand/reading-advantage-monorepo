@@ -109,13 +109,13 @@ const ROW_B = [
   },
   {
     key: "components.products.b2bSolutions.products.storytimeAdvantage.badge",
-    en: "Available Now",
+    en: "Available now",
     th: "พร้อมใช้งานแล้ว",
     old: { en: "First unit being prepared", th: "กำลังจัดเตรียมหน่วยแรก" },
   },
   {
     key: "pages.home.v2.products.storytimePreparingLabel",
-    en: "Available Now",
+    en: "Available now",
     th: "พร้อมใช้งานแล้ว",
     old: { en: "First unit being prepared", th: "กำลังจัดเตรียมหน่วยแรก" },
   },

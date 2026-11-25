@@ -68,13 +68,13 @@ const LAUNCH = [
   },
   {
     key: "components.products.b2bSolutions.products.storytimeAdvantage.badge",
-    en: "Available Now",
+    en: "Available now",
     th: "พร้อมใช้งานแล้ว",
     old: { en: "Launches 30 November 2026", th: "เปิดตัววันที่ 30 พฤศจิกายน 2569" },
   },
   {
     key: "pages.home.v2.products.storytimePreparingLabel",
-    en: "Available Now",
+    en: "Available now",
     th: "พร้อมใช้งานแล้ว",
     old: { en: "Launches 30 November 2026", th: "เปิดตัววันที่ 30 พฤศจิกายน 2569" },
   },
@@ -111,8 +111,8 @@ describe("www batch 2026-11-30, storytime launch day", () => {
     expect(read("zh", "components.common.navigation.itemsDescription.storytimeAdvantage")).toBe(
       "English for Anuban 2 to P2; the first unit is available now",
     );
-    expect(read("zh", "components.products.b2bSolutions.products.storytimeAdvantage.badge")).toBe("Available Now");
-    expect(read("zh", "pages.home.v2.products.storytimePreparingLabel")).toBe("Available Now");
+    expect(read("zh", "components.products.b2bSolutions.products.storytimeAdvantage.badge")).toBe("Available now");
+    expect(read("zh", "pages.home.v2.products.storytimePreparingLabel")).toBe("Available now");
   });
 
   it("keeps the zh overview and suite lines as the deletion-only copy", () => {
