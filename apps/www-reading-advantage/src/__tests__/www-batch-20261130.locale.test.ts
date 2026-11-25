@@ -81,7 +81,7 @@ const LAUNCH = [
   {
     key: "pages.home.suite.description",
     en: "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. In the 2027 school year, Thai primary schools open Science Advantage, Math Advantage, and Zhongwen Advantage: workbooks and apps. STEM Advantage is planned. The first Storytime Advantage unit is available now.",
-    th: "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก ในปีการศึกษา 2570 โรงเรียนประถมศึกษาไทยจะเปิดใช้ Science Advantage, Math Advantage และ Zhongwen Advantage ทั้งหนังสือแบบฝึกหัดและแอป STEM Advantage อยู่ในแผน หน่วยการเรียนรู้แรกของ Storytime Advantage พร้อมใช้งานแล้ว",
+    th: "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก Science, Math, Zhongwen และ STEM Advantage อยู่ในแผนงาน หน่วยการเรียนรู้แรกของ Storytime Advantage พร้อมใช้งานแล้ว",
     old: { en: "The first Storytime Advantage unit launches on 30 November 2026", th: "หน่วยการเรียนรู้แรกของ Storytime Advantage เปิดตัววันที่ 30 พฤศจิกายน 2569" },
   },
 ] as const;
