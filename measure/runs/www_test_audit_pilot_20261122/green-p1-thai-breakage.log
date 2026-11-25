@@ -1,0 +1,32 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+···············x···
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/www-tutor-calculator.locale.test.ts > 7. the two live lines (AC-6, PR section 5) > holds the exact en and th commission FAQ answer
+AssertionError: th faq.items.5.answer: expected 'settles yearly, flat rate' to be 'ติวเตอร์ได้รับค่าคอมมิชชันตามโมเดลคอม…' // Object.is equality
+
+Expected: [32m"ติวเตอร์ได้รับค่าคอมมิชชันตามโมเดลคอมมิชชันแบบยูนิเลเวล และระบบสรุปยอดให้ทุกเดือน อัตราจะสูงขึ้นตามยอดรวมของเครือข่ายในเดือนนั้น เครื่องคำนวณในหน้านี้แสดงตัวอย่าง ตัวเลขจริงมาจากคลาสที่เปิดสอนและมีการจ่ายเงินจริง"[39m
+Received: [31m"settles yearly, flat rate"[39m
+
+ ❯ src/__tests__/www-tutor-calculator.locale.test.ts:476:61
+    474|     const pin = FAQ_ANSWER_PIN!;
+    475|     expect(at(DICTS.en, pin.path), "en faq.items.5.answer").toBe(pin.e…
+    476|     expect(at(DICTS.th, pin.path), "th faq.items.5.answer").toBe(pin.t…
+       |                                                             ^
+    477|   });
+    478|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 passed (19)
+   Start at  22:22:02
+   Duration  1.11s (transform 235ms, setup 75ms, import 249ms, tests 19ms, environment 456ms)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run src/__tests__/www-tutor-calculator.locale.test.ts '--reporter=dot'

@@ -1,0 +1,42 @@
+MUTATION PROOF (R2)
+Note: a cover fit crops the portrait reading book
+Production file: apps/www-reading-advantage/src/app/[locale]/(marketing)/features/page.tsx
+Edit: 'pictureClass: "max-h-[300px] [&>img]:max-h-[300px] [&>img]:object-contain"' -> 'pictureClass: "max-h-[300px] [&>img]:max-h-[300px] [&>img]:object-cover"'
+Test file: src/__tests__/www-reading-cover.red.test.ts
+Expected: test exits 1; the production edit is restored after the run.
+Test exit code: 1
+--- test output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+······x···
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/www-reading-cover.red.test.ts > F4: the rendered reading picture is not cropped > control: neither the reading picture wrapper nor image applies a crop fit
+AssertionError: wrapper crop-fit declarations: expected [ 'object-fit: cover' ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "object-fit: cover",[39m
+[31m+ ][39m
+
+ ❯ src/__tests__/www-reading-cover.red.test.ts:266:63
+    264|     const fit = readingPictureFit();
+    265|     expect(fit.computed, "reading image must not crop to cover").not.t…
+    266|     expect(fit.wrapperCrops, "wrapper crop-fit declarations").toEqual(…
+       |                                                               ^
+    267|     expect(fit.imageCrops, "image crop-fit declarations").toEqual([]);
+    268|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  14:34:34
+   Duration  1.58s (transform 180ms, setup 59ms, import 716ms, tests 205ms, environment 435ms)
+

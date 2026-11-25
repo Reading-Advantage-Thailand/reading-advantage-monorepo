@@ -1,0 +1,36 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Review A remediation F49 on the plan. Phase 4.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: 1fcebeeeac80cff1017cadb47265e148106e0379
+green_head: 4230e12cb02efe8af1e90617008c4d66f08b1c90
+class_commit: e652235f8c59c6194e8ab019e4af9dfa14276b03
+plan_evidence_commit: 4230e12cb02efe8af1e90617008c4d66f08b1c90
+plan: measure/tracks/www_test_audit_pilot_20261122/plan.md
+review: measure/runs/www_test_audit_pilot_20261122/review-a-1fcebee.json
+
+tasks_flipped_to_x:
+- 4.11 Run-file count remediation F49 (e652235f8). Evidence: class commit e652235f8 and tick commit 4230e12c.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: none tracked. Only plan.md changed. No test or production file changed.
+
+checks_run:
+- Exhaustive digit scan: python3 -I -c with re.finditer over plan.md and report.md. Pattern found every digit group within 40 characters of log, logs, JSON, JSONs, file, files, gate, runs or artifacts.
+- COUNT-OF-RUN-FILES hits before the fix: plan.md task 4.5 held 'all 30 gate JSONs' and '36 of 37 pre-existing role JSONs'. The first was undated. The second was bounded but the task 4.9 exception named only the role JSON count.
+- KEEP hits verified: plan.md task numbers such as 2.10, 3.12, 4.5; commit-derived file names such as gate-0be4a037.json, green-at-7008ccef.log, proof-f19-phase-4-browser-regressions.log; case counts such as 22 duplicate cases in 6 files and 6 weak-check cases in 3 files; dates such as 2026-11-23 and 05:45; and fixed paths such as measure/runs/www_test_audit_pilot_20261122. report.md hits were the same kinds: case counts, coverage percents, durations, SHAs, named log pairs and file counts of source files.
+- Gate-JSON fact checked over all current gate-*.json files: every one holds green_exit_code. Checked at head e652235f8; no gate JSON was added after the dated head cb12d6f0f.
+- Fix: task 4.5 now states the schema checks were made at head cb12d6f0f and says 'green_exit_code in the gate JSON files'. The 36-of-37 role JSON measurement stays with the same dated qualifier. Task 4.9 now names both dated measurements. Task 4.10 now names both and no longer says task 4.5 was generally unchanged.
+- Clean re-run of the count-pattern scan: zero COUNT-OF-RUN-FILES candidates. The remaining hits are KEEP facts or measurements dated to head cb12d6f0f.
+- The only sentence over 25 words in plan.md is the pre-existing F11 recorded deviation. report.md has none.
+
+gate: one required heavy-run gate exited 0. CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot passed 98 files and 1412 tests. Log: measure/runs/www_test_audit_pilot_20261122/green-e652235f8.log. No test changed, so no other gate was required.
+
+deviation: both commit headers were shortened for the 100-character commitlint limit. The meaning and track id stay.
+dispositions: F49=FIX
+END_MEASURE_AGENT_RESULT

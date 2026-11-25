@@ -1,0 +1,20 @@
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report (document-only late-finding round)
+commits:
+  - 47f4cac872450120e984468bbd14a97ff9a7b637 (label pre-merge task and add late findings)
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: dc9d39dac96b66a60d0c07b8ccdecc49c0352395
+final_green_head: 47f4cac872450120e984468bbd14a97ff9a7b637
+dispositions: N2=FIX; N3=FIX
+tests_run: None. This round is documents only. No test suite ran and no production or test file changed.
+files_changed:
+  - measure/tracks/www_test_audit_pilot_20261122/plan.md
+  - measure/tracks/www_test_audit_pilot_20261122/report.md
+  - measure/tech-debt.md
+plan_updates: Task 4.3 labels 1763 cases and 92.07 percent as pre-merge at e91c4d4cc and states the final values after master merge 6ee56327b: 1762 cut, 1413 cases, 92.08 percent lines. Task 4.15 was updated in place with ADV-31 and ADV-32 and the corrected ADV-26 and ADV-27 wording; its first line keeps the ADV-25 fix SHA e993f5aa1. No task flipped to [b]; no deferred owner.
+known_failures: None. The commit subject is 99 characters, within the 100-character commitlint limit. measure/tech-debt.md stays at 50 lines as its header asks.
+handoff: N2 is fixed in plan.md task 4.3. N3 is fixed in measure/tech-debt.md and plan.md task 4.15: ADV-31 records that mkdirSync and symlinkSync run between mkdtempSync and try in the adversarial loader test and the sibling helper postsTree(), so a throw leaks the temp base; ADV-32 corrects the earlier records, because the 2027 school-year clause removal passes in en as well, and only the th APPROVED_SCHOOL_YEAR value plus the circular control pass while en and zh edits fail the label handoff tests. The ADV-26 and ADV-27 rows now carry that corrected precision in both files. Report.md section 7 now says the five slowest files are at the pre-merge head. git diff --stat against role_base_sha lists only plan.md, report.md and measure/tech-debt.md. No push was made. Substitution note from earlier rounds still applies: the Red model family is not recorded in the run files; the picker excluded only openai.
+END_MEASURE_AGENT_RESULT

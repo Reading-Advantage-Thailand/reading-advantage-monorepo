@@ -1,0 +1,106 @@
+# Green run log: www test audit pilot (Review A remediation round B)
+
+Role: measure-jr-green. Route: opencode-go/hy4-flash-free#high.
+Track: www_test_audit_pilot_20261122.
+Phase: Phase 2: Delete batch (D1-D5), Review A remediation round B.
+
+## Base verification
+
+- Immutable phase_base_sha (Phase 2): a1caa58034f6455e91205a5673ef172a974a7992.
+- role_base_sha for round B: 9eb3b9c4f80be311ea19bef33d36a32f2c964251.
+- Review A file: measure/runs/www_test_audit_pilot_20261122/review-a-c673f21.json.
+- The D1 rewrites under repair sit in phase_base_sha..HEAD. No production file is
+  changed by any commit in this round. The worktree is clean at the end.
+
+## Commits
+
+- 4d168813116345c2b6684bcc543c2c33279f9cfa — test(www): fix d1 behavior
+  rewrites after review. Holds nine D1 test files and the new real-css helper.
+- 8a78788199a95e641cd40056d044e3dc60563273 — chore(measure): record www audit
+  review a remediation. Holds plan tasks 2.7 and 2.8.
+
+## Tasks flipped to [x]
+
+- 2.7 Review A remediation round A (9eb3b9c4f). Fix commits 733319505,
+  fb5622ed7, 9eb3b9c4f. Evidence: green-9eb3b9c4.log, coverage-9eb3b9c4.log,
+  gate-9eb3b9c4.json.
+- 2.8 Review A remediation round B (4d1688131). Fix commit 4d1688131.
+  Evidence: green-4d168813.log, coverage-4d168813.log, gate-4d168813.json,
+  and the proof logs named below.
+
+No task was flipped to [b]. No deferred owner is needed.
+
+## Mutation proofs (targeted Red output)
+
+Each proof applies one temporary production mutation, runs the targeted test,
+records the FAILING output, then restores the file with git checkout.
+
+- F1 — proof-f1.log. Remove md:w-48 from the featured picture wrapper in
+  program-card.tsx. The width pin fails:
+  "storytime picture wrapper width limit: expected 'auto' to be
+  'calc(var(--spacing) * 48)'".
+- F2a — proof-f2a.log. Add <span>GSE</span> to the rendered ContactPage. The
+  rendered sweep fails: "contact: GSE -> GSE Contact Us Get in touch ...".
+  The sweep joins text nodes with spaces so an isolated element stays a word.
+- F2b — proof-f2b.log. Add "95% coming in 2026" to the Math en hero description.
+  The generated-route-metadata check fails on the stale date, and the restored
+  scoped check fails with "math: 95%".
+- F3a — proof-f3a.log. Remove textColor="dark" from the rendered Products page.
+  The hero subtitle check fails: expected 'rgb(51, 65, 85)' to be
+  'rgba(255, 255, 255, 0.9)'.
+- F3b — proof-f3b.log. Add blur-sm to the workbook image in b2b-solutions.tsx.
+  The real-CSS check fails: "workbook image must carry no blur utility:
+  expected [ 'blur-sm' ] to deeply equal []".
+- F4a — proof-f4a.log. Change the phone anchor href to tel:+660000000000 while
+  keeping its label. The destination check fails: expected
+  'tel:+660990058038' to be 'tel:+660000000000'.
+- F4b — proof-f4b.log. Hard-code the English "Close" label in the Sheet close
+  span. The Thai case fails: "th Sheet close label must match its own locale:
+  expected 'Close' to be 'ปิด'".
+
+Baseline runs before each mutation passed. The eight D1 files pass together with
+66 cases (precommit-targeted.log).
+
+## New files added by this round
+
+- apps/www-reading-advantage/src/__tests__/fixtures/real-css.ts — compiles the
+  app's real globals.css and resolves rendered class tokens to shipped CSS.
+
+No other new file. No production file is added or changed.
+
+## Gate results (final round B HEAD)
+
+- GREEN exit 0: 89 files passed, 3069 tests passed.
+  Log: measure/runs/www_test_audit_pilot_20261122/green-4d168813.log.
+- COVERAGE exit 0: 89 files passed, 3069 tests passed.
+  Lines 90.94, statements 89.71, branches 81.79, functions 85.51 percent.
+  Log: measure/runs/www_test_audit_pilot_20261122/coverage-4d168813.log.
+- Gate: measure/runs/www_test_audit_pilot_20261122/gate-4d168813.json.
+- Coverage floor 85.52 percent. Lines stay above the floor.
+
+Both heavy commands ran once each through the shared runner, in separate calls.
+
+## MEASURE_AGENT_RESULT
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: pass
+track: www_test_audit_pilot_20261122
+phase: Phase 2: Delete batch (D1-D5) — Review A remediation round B
+phase_base_sha: a1caa58034f6455e91205a5673ef172a974a7992
+role_base_sha: 9eb3b9c4f80be311ea19bef33d36a32f2c964251
+green_head: 8a78788199a95e641cd40056d044e3dc60563273
+commits: 4d1688131, 8a7878819
+tasks_flipped_to_x: 2.7 (733319505, fb5622ed7, 9eb3b9c4f), 2.8 (4d1688131)
+tasks_flipped_to_b: none
+dispositions: F1=FIX; F2=FIX; F3=FIX; F4=FIX
+proofs: F1=proof-f1.log; F2=proof-f2a.log,proof-f2b.log; F3=proof-f3a.log,proof-f3b.log; F4=proof-f4a.log,proof-f4b.log
+tests_run: GREEN exit 0 (green-4d168813.log); COVERAGE exit 0 (coverage-4d168813.log); floor 85.52
+files_changed: nine D1 test files plus fixtures/real-css.ts; no production file
+new_files: apps/www-reading-advantage/src/__tests__/fixtures/real-css.ts
+plan_updates: tasks 2.7 and 2.8 added in commit 8a7878819; no counts in plan.md
+known_failures: none in the scoped www gates
+handoff: All four Review A D1 findings have behavior tests and mutation proofs.
+  Each proof restores its production file. No push was made. Review A can
+  re-audit HEAD 8a7878819.
+END_MEASURE_AGENT_RESULT

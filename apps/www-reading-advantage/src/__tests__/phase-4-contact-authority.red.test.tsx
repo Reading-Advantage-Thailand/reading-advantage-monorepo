@@ -1,7 +1,8 @@
-import { cleanup, render } from "@testing-library/react";
+import { cleanup, fireEvent, render } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import ContactPage from "@/app/[locale]/(marketing)/contact/page";
 import Footer from "@/components/common/footer";
+import { ContactForm } from "@/components/contact/contact-form";
 import { contactDetails } from "@/config/contact";
 import enMessages from "@/locales/en";
 import thMessages from "@/locales/th";
@@ -26,41 +27,49 @@ vi.mock("@/locales/server", () => ({
   }),
 }));
 
+vi.mock("@/locales/client", () => ({
+  useScopedI18n: vi.fn(() => (key: string) => key),
+}));
+
 vi.mock("next/image", () => ({
   default: (props: React.ComponentProps<"img">) => <img {...props} />,
 }));
 
-type ImportMetaWithGlob = ImportMeta & {
-  glob: <T>(
-    pattern: string,
-    options: { eager: true; import: string; query: string },
-  ) => Record<string, T>;
-};
-
-const contactPageSources = (import.meta as ImportMetaWithGlob).glob<string>(
-  "../app/[locale]/(marketing)/contact/page.tsx",
-  { eager: true, import: "default", query: "?raw" },
-);
-const footerSources = (import.meta as ImportMetaWithGlob).glob<string>(
-  "../components/common/footer.tsx",
-  {
-    eager: true,
-    import: "default",
-    query: "?raw",
+/*
+ * The render checks take the authority from the test, not from the shipped
+ * config. Every rendered destination must follow these distinct values.
+ * A component that hard-codes a real config literal fails the checks below.
+ * The duplicate check reads the shipped config through vi.importActual.
+ */
+vi.mock("@/config/contact", () => ({
+  contactDetails: {
+    supportEmail: "authority@example.test",
+    phoneNumber: "+66 000-111-2222",
+    phoneHref: "tel:+660001112222",
+    tiktokUrl: "https://www.tiktok.com/@authority.test",
+    tiktokLabel: "@authority.test",
+    lineQrSrc: "/line-qr-authority.jpg",
+    lineQrAlt: "Authority Line QR",
   },
-);
-const contactFormSources = (import.meta as ImportMetaWithGlob).glob<string>(
-  "../components/contact/contact-form.tsx",
-  { eager: true, import: "default", query: "?raw" },
-);
+}));
 
 const localeMessages = [enMessages, thMessages, zhMessages];
-const contactHandle = new URL(contactDetails.tiktokUrl).pathname.slice(1);
 
 type AuthorityDuplicate = {
   path: string;
   value: string;
 };
+
+/**
+ * Reads the shipped contact config. The mock above serves the render checks.
+ * The duplicate check compares the locale fields with the real shipped values.
+ */
+async function shippedContactDetails(): Promise<typeof contactDetails> {
+  const actual = await vi.importActual<typeof import("@/config/contact")>(
+    "@/config/contact",
+  );
+  return actual.contactDetails;
+}
 
 function readMessage(messages: object, path: string): unknown {
   return path.split(".").reduce<unknown>((value, segment) => {
@@ -81,11 +90,17 @@ function findAuthorityDuplicates(
   });
 }
 
-function findMissingAuthorityReferences(
-  source: string,
-  references: string[],
-): string[] {
-  return references.filter((reference) => !source.includes(reference));
+/** Collects the rendered anchors that carry an href. */
+function renderedAnchors(container: HTMLElement): HTMLAnchorElement[] {
+  return Array.from(container.querySelectorAll("a[href]"));
+}
+
+/** Finds an anchor by the label it renders to the visitor. */
+function anchorWithLabel(
+  anchors: HTMLAnchorElement[],
+  label: string,
+): HTMLAnchorElement | undefined {
+  return anchors.find((anchor) => anchor.textContent?.includes(label));
 }
 
 afterEach(() => {
@@ -98,36 +113,6 @@ describe("RC-P4-001 contact authority contract", () => {
     serverWiring.messages = enMessages as unknown as Record<string, unknown>;
     const contactPage = render(await ContactPage());
     const footer = render(await Footer());
-    const contactPageSource =
-      contactPageSources["../app/[locale]/(marketing)/contact/page.tsx"];
-    const footerSource = footerSources["../components/common/footer.tsx"];
-    const contactFormSource =
-      contactFormSources["../components/contact/contact-form.tsx"];
-    const contactPageReferences = [
-      "contactDetails.supportEmail",
-      "contactDetails.phoneNumber",
-      "contactDetails.phoneHref",
-      "contactDetails.tiktokLabel",
-      "contactDetails.tiktokUrl",
-    ];
-    const footerReferences = [
-      "contactDetails.supportEmail",
-      "contactDetails.phoneNumber",
-      "contactDetails.tiktokLabel",
-    ];
-
-    const missingReferences = [
-      ...findMissingAuthorityReferences(
-        contactPageSource,
-        contactPageReferences,
-      ).map((reference) => `contact page: ${reference}`),
-      ...findMissingAuthorityReferences(footerSource, footerReferences).map(
-        (reference) => `footer: ${reference}`,
-      ),
-      ...findMissingAuthorityReferences(contactFormSource, [
-        "contactDetails.supportEmail",
-      ]).map((reference) => `contact form: ${reference}`),
-    ];
 
     const renderedValues = [
       contactDetails.supportEmail,
@@ -136,7 +121,6 @@ describe("RC-P4-001 contact authority contract", () => {
     ];
     const renderedSurfaces = [contactPage.container, footer.container];
 
-    expect(missingReferences).toEqual([]);
     expect(
       renderedSurfaces.every((surface) =>
         renderedValues.every((value) => surface.textContent?.includes(value)),
@@ -144,19 +128,87 @@ describe("RC-P4-001 contact authority contract", () => {
     ).toBe(true);
   });
 
-  it("rejects duplicate raw contact values in authority locale fields", () => {
+  it("points every rendered contact destination at the authority values", async () => {
+    serverWiring.messages = enMessages as unknown as Record<string, unknown>;
+    const contactPage = render(await ContactPage());
+    const anchors = renderedAnchors(contactPage.container);
+
+    const mailto = `mailto:${contactDetails.supportEmail}`;
+    expect(
+      anchors.some((anchor) => anchor.getAttribute("href") === mailto),
+      `a mailto link must point to ${mailto}`,
+    ).toBe(true);
+
+    const phoneLink = anchorWithLabel(anchors, contactDetails.phoneNumber);
+    expect(phoneLink, "the phone link must render").toBeDefined();
+    expect(
+      phoneLink?.getAttribute("href"),
+      "the phone link must use the authority tel: destination",
+    ).toBe(contactDetails.phoneHref);
+
+    const tiktokLink = anchorWithLabel(anchors, contactDetails.tiktokLabel);
+    expect(tiktokLink, "the TikTok link must render").toBeDefined();
+    expect(
+      tiktokLink?.getAttribute("href"),
+      "the TikTok link must use the authority destination",
+    ).toBe(contactDetails.tiktokUrl);
+
+    expect(
+      contactPage.container.querySelector(
+        `img[src="${contactDetails.lineQrSrc}"]`,
+      ),
+      "the LINE QR image must use the authority source",
+    ).not.toBeNull();
+  });
+
+  it("submits the contact form to the authority email address", () => {
+    const locations: string[] = [];
+    const originalLocation = window.location;
+    const fakeLocation = {
+      get href(): string {
+        return locations[locations.length - 1] ?? "";
+      },
+      set href(value: string) {
+        locations.push(value);
+      },
+    };
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: fakeLocation,
+    });
+    try {
+      const rendered = render(<ContactForm />);
+      const form = rendered.container.querySelector("form");
+      expect(form, "the contact form must render").not.toBeNull();
+      fireEvent.submit(form as HTMLFormElement);
+      expect(locations.length, "submit must navigate once").toBe(1);
+      expect(
+        locations[0].startsWith(`mailto:${contactDetails.supportEmail}?`),
+        "the form must submit to the authority email",
+      ).toBe(true);
+    } finally {
+      Object.defineProperty(window, "location", {
+        configurable: true,
+        value: originalLocation,
+      });
+    }
+  });
+
+  it("rejects duplicate raw contact values in authority locale fields", async () => {
+    const shipped = await shippedContactDetails();
+    const shippedHandle = new URL(shipped.tiktokUrl).pathname.slice(1);
     const authorities: AuthorityDuplicate[] = [
       {
         path: "pages.contact.email.address",
-        value: contactDetails.supportEmail,
+        value: shipped.supportEmail,
       },
       {
         path: "pages.contact.phone.number",
-        value: contactDetails.phoneNumber,
+        value: shipped.phoneNumber,
       },
       {
         path: "pages.contact.social.tiktok",
-        value: contactHandle,
+        value: shippedHandle,
       },
     ];
     const duplicates = localeMessages.flatMap((messages) =>
@@ -166,11 +218,13 @@ describe("RC-P4-001 contact authority contract", () => {
     expect(duplicates).toEqual([]);
   });
 
-  it("detects a duplicate-value counterexample without flagging a translated label", () => {
+  it("detects a duplicate-value counterexample without flagging a translated label", async () => {
+    const shipped = await shippedContactDetails();
+    const shippedHandle = new URL(shipped.tiktokUrl).pathname.slice(1);
     const counterexample = {
       pages: {
         contact: {
-          email: { address: contactDetails.supportEmail },
+          email: { address: shipped.supportEmail },
           phone: { number: "Call our team" },
           social: { tiktok: "ติดตามเรา" },
         },
@@ -179,22 +233,22 @@ describe("RC-P4-001 contact authority contract", () => {
     const duplicates = findAuthorityDuplicates(counterexample, [
       {
         path: "pages.contact.email.address",
-        value: contactDetails.supportEmail,
+        value: shipped.supportEmail,
       },
       {
         path: "pages.contact.phone.number",
-        value: contactDetails.phoneNumber,
+        value: shipped.phoneNumber,
       },
       {
         path: "pages.contact.social.tiktok",
-        value: contactHandle,
+        value: shippedHandle,
       },
     ]);
 
     expect(duplicates).toEqual([
       {
         path: "pages.contact.email.address",
-        value: contactDetails.supportEmail,
+        value: shipped.supportEmail,
       },
     ]);
   });

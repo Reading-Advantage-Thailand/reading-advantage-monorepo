@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 2: Delete batch (D1-D5), remediation round 3",
+  "baseline_sha": "bfda22bd8",
+  "phase_base_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+  "role_base_sha": "99262eda416ff8e9c5865645b8ea85d6a29a9987",
+  "audited_head_sha": "d30e5a242",
+  "status": "fail",
+  "summary": "F1 and F2 hold. F1: vi.importActual returns the shipped contact config, not the mock, the shipped values are non-empty, and no raw shipped value sits in an unscanned locale leaf today. F2: the three Products sections take no props, so no props-carried copy can bypass the per-section sweep. F3 has a false pass: three reversals of the active-package rule (en 'non-active', en 'in-active', th cancelled package) carry every marker word and still report no break. ADV-3 routes to Green with a committed failing test.",
+  "blocking_findings": [
+    "ADV-3 [Blocker] adversarial: the AC-24 eligibility check of www-tutor-reedy-claim.test.tsx misses three reversals of the active-package rule. eligibilityBreaks copies NEGATION_PATTERNS, INACTIVE_PATTERNS, and ACTIVE_WORD; a temporary edit of the shipped test proved with three failing probes that 'Open to students with a non-active class package, on lessons they finished.' and the in-active variant return an empty break list, because /\\bno\\b/ has no word boundary inside 'non' and /\\binactive\\b/ does not match the hyphenated forms, while /\\bactive\\b/ still matches. A Thai cancelled-package sentence 'ยกเลิกแพ็กเกจคลาสที่ใช้งานอยู่' also returns an empty break list, because INACTIVE th only lists /ไม่ใช้งาน/ and NEGATION th only lists /ไม่/ and /ทุกคน/. The shipped en/th/zh copy is clean today, so the suite is green, but a future edit can reverse the rule inside the checked strings without a failure. Route-to-Green: widen INACTIVE_PATTERNS (for example a hyphenated in-active/non-active pattern for en and a cancelled-package pattern for th) or otherwise make these probes break. The committed failing probe file is src/__tests__/reedy-inactive-reversal.adversarial.test.tsx; it copies the shipped pattern sets and asserts each reversal is rejected."
+  ],
+  "nonblocking_findings": [
+    "ADV-4 [Nit] adversarial: F1 holds, with one scope note. The committed probe src/__tests__/contact-authority-import-actual.adversarial.test.tsx proves vi.importActual returns the shipped config values, that every shipped config value is a non-empty string, and that no shipped raw value currently appears in any locale leaf outside the three scanned paths. The duplicate check still scans only pages.contact.email.address, pages.contact.phone.number, and pages.contact.social.tiktok; a future duplicate of a shipped value in any other locale field would escape. Consider deriving the scanned field set from the shipped config keys.",
+    "ADV-5 [Nit] adversarial: F2 holds, with one coverage note. products/page.tsx renders <B2BSolutions />, <B2CSolutions />, and <TutorAdvantage /> with no props, so copy cannot ride props past the per-section sweep, and every route section is either swept through the route render or through its own importActual render. The rendered sweep reads text nodes only; a hard-coded blocked term inside an element attribute would escape the rendered sweep, though locale-sourced attribute values are covered by the locale leaf sweep."
+  ],
+  "evidence": [
+    "Temporary edit of www-tutor-reedy-claim.test.tsx added eight reversal probes; vitest run -t 'TEMPORARY ADVERSARIAL PROBES' failed exactly three: en non-active, en in-active, and th cancelled package; en inactive, en not active, th ไม่ได้ใช้งาน, zh 非有效的, and zh 没有有效 passed.",
+    "git checkout -- restored www-tutor-reedy-claim.test.tsx; git status shows no residual edit.",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/contact-authority-import-actual.adversarial.test.tsx src/__tests__/reedy-inactive-reversal.adversarial.test.ts at d30e5a242: 3 passed in the F1 probe file, 3 failed in the reversal file, as intended.",
+    "products/page.tsx renders the three solution sections with no props; b2c-solutions.tsx and tutor-advantage.tsx take no parameters.",
+    "The shipped en Reedy copy 'Reedy voice practice is open to students with an active class package, on lessons they finished.' carries no negation, so the current suite is green.",
+    "The temp F1 probe passed all three probes: importActual bypasses the mock, no raw shipped value outside the scanned paths, and every shipped config value is a non-empty string."
+  ],
+  "commands": [
+    "git show 7c2d93e207a8f093eddb8e8429fcbef88f54d3a1",
+    "git show 3b044ec9d250f78c90c7c7fc23b5b6d2680a40c3",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/tmp-f1-probe.adversarial.test.ts --reporter=verbose",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-reedy-claim.test.tsx -t 'TEMPORARY ADVERSARIAL PROBES' --reporter=verbose",
+    "git checkout -- apps/www-reading-advantage/src/__tests__/www-tutor-reedy-claim.test.tsx",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/contact-authority-import-actual.adversarial.test.tsx src/__tests__/reedy-inactive-reversal.adversarial.test.ts --reporter=verbose",
+    "git add apps/www-reading-advantage/src/__tests__/contact-authority-import-actual.adversarial.test.tsx apps/www-reading-advantage/src/__tests__/reedy-inactive-reversal.adversarial.test.tsx && git commit -m 'test(www): add phase 2 remediation adversarial checks (track_id: www_test_audit_pilot_20261122)'"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/contact-authority-import-actual.adversarial.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/reedy-inactive-reversal.adversarial.test.tsx",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-d30e5a2.json",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-d30e5a2.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "kimi-code-plan-cn/kimi-for-coding",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "F1 and F2 hold, but the F3 eligibility check admits three reversals of the active-package rule (reedy-inactive-reversal.adversarial.test.ts fails 3 of 3)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The F3 fix carries its own inactive probes, and my committed probes show the shipped check catches five of eight reversal shapes but misses three."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The remediation range bfda22bd8..99262eda4 changes the three named test files and plan.md only; my commits add test files only."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Every probe result names a command; the failing reversal probes were demonstrated against the shipped eligibilityBreaks before the standalone file was committed."
+    }
+  ]
+}

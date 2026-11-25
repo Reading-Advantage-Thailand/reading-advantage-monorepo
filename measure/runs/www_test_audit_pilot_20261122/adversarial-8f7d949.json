@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 3: Rewrite batch (R1-R3)",
+  "baseline_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "phase_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "role_base_sha": "941278cf354b58582e2da0f5f1b5ebf605a2a768",
+  "audited_head_sha": "8f7d94961",
+  "status": "fail",
+  "summary": "The blog merge names every broken post for the delimiter, slug, and cross-locale rules, and empty discovery fails loudly. The R2 rewrites catch all three production mutations that the old class pins caught. One real false pass: the merged loader never reads a non-.md file, so a .mdx post escapes all 15 rules and both discovery cases, and the .md-extension rule is tautological. ADV-8 routes to Green with a committed failing test.",
+  "blocking_findings": [
+    "ADV-8 [Blocker] adversarial: the merged blog validation never loads a non-.md post. loadAllPosts in src/lib/blog-posts-validation.test.ts filters with f.endsWith(\".md\"), so a post saved as *.mdx is skipped by every rule and by both discovery cases. The 'file uses the .md extension' rule cannot fail, because every loaded post is .md by construction. A temporary en/zz-adversarial-mdx-probe.mdx with a missing title title left the whole suite green at 941278cf3. Route-to-Green: make the loader extension-agnostic (or add a directory sweep that rejects non-.md post files) and export the loader so probes can import it. The committed failing test src/__tests__/blog-posts-loader.adversarial.test.ts writes a temporary .mdx probe and asserts the shipped load sees it; it self-cleans and fails 1 of 1 until the fix lands."
+  ],
+  "nonblocking_findings": [
+    "ADV-9 [Note] adversarial: the R2 rewrites hold. Three temporary production mutations each failed exactly the rewritten case that replaced the old class pin: flex-wrap removed from blog-pagination.tsx failed 'wraps pagination controls on narrow screens' through the computed flex-wrap value; min-w-0 removed from blog-card.tsx failed 'keeps related article cards safe at mobile width' through the computed min-width; the default gradient changed from-amber-50 to from-red-500 in hero-section.tsx failed 'applies the specified default background gradient' through the computed gradient stop. Every production file was restored with git checkout --.",
+    "ADV-10 [Note] adversarial: the blog merge names offenders and fails on empty discovery. A th post with a trailing '---' failed 'no raw frontmatter delimiter in body' naming 'th/zz-adv-delimiter-probe'; an uppercase th slug failed 'slug is URL-safe' naming 'th/ZZ-ADV-Uppercase-PROBE'; a th post dated before its en twin failed 'date is not older than en post' naming 'th/1-district-1-quality-school'. An empty en directory fails both discovery cases, and a missing posts directory throws at load. No rule uses a try/catch or an early return over posts (the only guard is the dead enPost lookup inside the cross-locale rule, which filters to en slugs first)."
+  ],
+  "evidence": [
+    "Temporary th/zz-adv-delimiter-probe.md failed the delimiter rule naming th/zz-adv-delimiter-probe; temporary th/ZZ-ADV-Uppercase-PROBE.md failed the slug rule naming th/ZZ-ADV-Uppercase-PROBE; both files were deleted.",
+    "A temporary en/zz-adversarial-mdx-probe.mdx with valid frontmatter left all 17 merged cases green, including 'file uses the .md extension'.",
+    "sed moved th/1-district-1-quality-school.md to date 2020-01-01; the cross-locale case failed naming th/1-district-1-quality-school; git checkout -- restored the file.",
+    "Three temporary production mutations failed exactly the three rewritten R2 cases; git checkout -- restored all three files and git status is clean.",
+    "The committed probe src/__tests__/blog-posts-loader.adversarial.test.ts fails 1 of 1 at 8f7d94961 and removes its temporary .mdx file in afterAll."
+  ],
+  "commands": [
+    "pnpm --filter www-reading-advantage exec vitest run src/lib/blog-posts-validation.test.ts --reporter=verbose",
+    "pnpm --filter www-reading-advantage exec vitest run src/lib/blog-posts-validation.test.ts -t \"never older\" --reporter=verbose",
+    "pnpm --filter www-reading-advantage exec vitest run src/components/blog/blog-pagination.test.tsx src/__tests__/phase-4-browser-regressions.red.test.tsx src/components/marketing/hero-section.test.tsx --reporter=verbose",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts --reporter=verbose",
+    "git add apps/www-reading-advantage/src/__tests__/blog-posts-loader.adversarial.test.ts && git commit -m 'test(www): add phase 3 adversarial checks (track_id: www_test_audit_pilot_20261122)'"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/blog-posts-loader.adversarial.test.ts",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-8f7d949.json",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-8f7d949.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "kimi-code-plan-cn/kimi-for-coding",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "The R2 rewrites catch all three mutations and the merged rules name offenders, but the merged loader skips non-.md posts entirely (blog-posts-loader.adversarial.test.ts fails 1 of 1)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "Every probed rule names locale/slug on failure; the .md-extension rule is the one vacuous case."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "All production mutations were temporary and restored; the only commit adds one test file."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Each claim names a probe file, a mutation, or a vitest result; git status is clean after every restore."
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report (merge task before final acceptance)
+commits:
+  - 6ee56327b84bd45fee1277d5da940b278ea60b26 (merge origin/master into the pilot branch)
+  - e836e728922d8b01ac3fd74fcccd7bd7df47b56b (plan evidence: task 4.13)
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: d2c8e6336743897f6f55bc6dc1f0a5b3e5005683
+final_green_head: e836e728922d8b01ac3fd74fcccd7bd7df47b56b
+substitution_note: The Red model family is not recorded in the run files. The picker excluded only openai. No coder was delegated; no model substitution was made.
+tests_run:
+  - command: HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage check-types'
+    exit_code: 0
+    output: "$ tsc --noEmit"
+  - command: HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage lint'
+    exit_code: 0
+    output: "eslint . -> 3 problems (0 errors, 3 warnings); all three warnings predate this merge."
+  - command: HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run --reporter=dot'
+    exit_code: 0
+    output: "Test Files 98 passed (98); Tests 1413 passed (1413); Duration 123.08s."
+  - command: HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage'
+    exit_code: 0
+    output: "Test Files 98 passed (98); Tests 1413 passed (1413); Statements 90.95%; Branches 83.09%; Functions 87.52%; Lines 92.08% (1675/1819); Duration 164.69s."
+case_count: 1413
+file_count: 98
+line_coverage_percent: 92.08
+coverage_floor_percent: 85.52
+files_changed:
+  - apps/www-reading-advantage/src/__tests__/www-batch-20261116.locale.test.ts (merged: pilot structure plus master copy and new test)
+  - apps/www-reading-advantage/src/__tests__/fixtures/storytime-page-expected.ts (merged: pilot constants plus master copy and APPROVED_SCHOOL_YEAR)
+  - apps/www-reading-advantage/src/app/[locale]/(marketing)/products/storytime-advantage/page.content.test.tsx (master)
+  - apps/www-reading-advantage/src/locales/pages/home.ts (master, production)
+  - measure/tracks/www_daily_blog_posts_20261115/plan.md (master)
+  - measure/tracks/www_test_audit_pilot_20261122/plan.md (task 4.13)
+new_files_added_by_merge:
+  - apps/www-reading-advantage/public/blog/2026-11-23-decodable-nest.webp
+  - apps/www-reading-advantage/public/blog/2026-11-23-kitchen-evening.webp
+  - apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/posts/en/she-taps-nest-and-hears-it.md
+  - apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/posts/th/she-taps-nest-and-hears-it.md
+plan_updates: Task 4.13 was flipped to [x] with merge SHA 6ee56327b on the first line. Recorded in commit e836e7289. No task was flipped to [b]; no deferred owner is needed.
+known_failures: bash measure/doctor.sh exits 1 on a pre-existing architecture-enforcement tool failure. The tool prints "Architecture check failed: V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes" and "this is a tool failure, not a boundary verdict". The merge touched no architecture file. The strategy's documented live gates, the four heavy-run commands above, all exited 0.
+handoff: Accept the merge at final Green HEAD e836e7289. The merge commit is 6ee56327b and its exact subject is "chore(measure): merge master into www test audit pilot (track_id: www_test_audit_pilot_20261122)". The plan-evidence commit is e836e7289. origin/master was 968bde612595fdcfcbadd8d7d14bafbfa8aa8b67. The ort strategy auto-merged both expected conflict files; manual inspection confirmed the pilot structure and every master change are present. No production code was written by this role; production changes come only from master. No push was made. The immutable phase_base_sha is e91c4d4cc3c8d5d61a1e9b802c031247543180fa; it is an ancestor of role_base_sha and of final Green HEAD. Targeted Red command output: vitest exited 0 with 98 files and 1413 tests passed; coverage exited 0 at 92.08 percent lines. New files added by the merge are listed above. Substitution note: the Red model family is not recorded in the run files and the picker excluded only openai. A reviewer can run the role gate with GREEN_TEST_COMMAND='pnpm --filter www-reading-advantage exec vitest run --reporter=dot' and MEASURE_HEAVY_RUN=/home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,21 @@
+Review A (correctness and architecture) for www_test_audit_pilot_20261122, Phase 4: Pilot report.
+Audited HEAD: e836e728922d8b01ac3fd74fcccd7bd7df47b56b. Scope: d2c8e6336..e836e7289 (merge 6ee56327b of origin/master 968bde612, and plan commit e836e7289).
+Result JSON: measure/runs/www_test_audit_pilot_20261122/review-a-e836e72.json
+
+Check 1 PASS: the three merged test and fixture files hold the pilot structure and every master change. Line-set comparisons on both sides return rc=0.
+Check 2 PASS: the blog loader sweeps every locale directory. The two new posts and their cover image are checked.
+Check 3 FAIL: report.md:10 and report.md:199 call the e91c4d4cc run (1412 cases, 92.07 %) final. HEAD runs 1413 tests at 92.08 %. The report does not mention the master merge.
+Test run at HEAD: Test Files 98 passed (98); Tests 1413 passed (1413); All files lines 92.08.
+
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: HEAVY_PREFLIGHT_WAIT_S=3600 bash heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage' gave Test Files 98 passed (98), Tests 1413 passed (1413), lines 92.08.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-e836e72.json and review-a-e836e72.log
+plan_updates: none
+known_failures: Blocking F1: report.md:10 and report.md:199 call the pre-merge 1412-case, 92.07 % run final. HEAD gives 1413 tests and 92.08 %. The report does not mention the master merge.
+handoff: Route F1 to Green. Label the report.md section 1 and section 7 values as pre-merge at e91c4d4cc. Add the post-merge values from green-merge-e836e7289.log (1413 cases, 92.08 %), or replace the old values. Nonblocking: change 'conflicted' to 'auto-merged' in plan.md 4.13 (N1). Call the task 3.5 merge 'the blog merge' in report.md:12-14 (N2). The merge itself is correct and adds no production code beyond master.
+END_MEASURE_AGENT_RESULT

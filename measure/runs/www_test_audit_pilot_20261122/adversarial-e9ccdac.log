@@ -1,0 +1,31 @@
+# Adversarial log: www test audit pilot, Phase 3, round 4
+
+Audited head: 74a7213c2. Probe commit: e9ccdac5e.
+
+The F22 loader fix mirrors blog.ts: nothing production-discoverable is
+skipped; the loader also sees non-locale directories that production
+ignores (ADV-16 note). The F24 hero fix discriminates: a temporary
+custom-gradient edit to to-white failed with the named stop. No
+tutor-commission K file changed in the phase range.
+
+One real false pass (ADV-15): jsdom pre-resolves var() in computed
+background-color from the :root token map and ignores an ancestor's
+inline custom property override. A mechanism probe printed the split:
+the child's custom property reads #ff0000 while its computed
+background-color reads rgb(15, 23, 42). The contrast helper trusts the
+pre-resolved value, so the ratio uses the wrong colour. The committed
+probe fails its ADV-15 case until Green resolves var() from the element
+cascade.
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3), adversarial round 4
+commits: e9ccdac5e
+tests_run: pnpm --filter www-reading-advantage exec vitest run src/__tests__/tmp-contrast-probe.adversarial.test.tsx --reporter=verbose (case-variant held, correctly-cased override missed, fallback held); pnpm --filter www-reading-advantage exec vitest run src/__tests__/tmp-jsdom-probe.adversarial.test.tsx --reporter=verbose (mechanism probe); pnpm --filter www-reading-advantage exec vitest run src/components/marketing/hero-section.test.tsx -t "custom gradient" --reporter=verbose (failed on to-white, restored); pnpm --filter www-reading-advantage exec vitest run src/__tests__/contrast-parent-override.adversarial.test.tsx --reporter=verbose (1 failed, 2 passed)
+files_changed: apps/www-reading-advantage/src/__tests__/contrast-parent-override.adversarial.test.tsx; measure/runs/www_test_audit_pilot_20261122/adversarial-e9ccdac.json; measure/runs/www_test_audit_pilot_20261122/adversarial-e9ccdac.log
+plan_updates: none
+known_failures: ADV-15 blocking. The contrast helper computes from the :root token when an ancestor overrides a colour token inline.
+handoff: Route ADV-15 to Green. Green resolves var() from the element cascade in src/__tests__/fixtures/contrast.ts instead of trusting jsdom's pre-resolved computed background-color; the committed probe passes after the fix and stays as armor. ADV-16 is a note: the loader also sees directories that production ignores. Result JSON: measure/runs/www_test_audit_pilot_20261122/adversarial-e9ccdac.json.
+END_MEASURE_AGENT_RESULT

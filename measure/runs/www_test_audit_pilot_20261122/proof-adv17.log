@@ -1,0 +1,166 @@
+Overall exit codes: [0, 0, 0, 0]
+MUTATION PROOF — ADV-17 to ADV-19
+No production mutation is possible for an injected stylesheet rule, so this log records
+the committed probe result, the two new unit cases, and the shipped-page no-false-throw check.
+
+=== ADV-17 probe (expect 4 of 4) ===
+Test file: src/__tests__/contrast-parent-override.adversarial.test.tsx
+Exit code: 0
+--- output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+ ✓ src/__tests__/contrast-parent-override.adversarial.test.tsx > contrast helper custom property cascade > ignores a case-variant inline override (custom properties are case-sensitive) 68ms
+ ✓ src/__tests__/contrast-parent-override.adversarial.test.tsx > contrast helper custom property cascade > uses the var() fallback when the property is unset 17ms
+ ✓ src/__tests__/contrast-parent-override.adversarial.test.tsx > contrast helper custom property cascade > honours a correctly-cased inline override on the parent (ADV-15) 2ms
+ ✓ src/__tests__/contrast-parent-override.adversarial.test.tsx > contrast helper custom property cascade > throws when an injected class rule declares a colour token (ADV-17) 7ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  19:06:15
+   Duration  1.50s (transform 57ms, setup 62ms, import 731ms, tests 95ms, environment 437ms)
+
+
+=== fixture unit cases including ADV-18 and ADV-19 ===
+Test file: src/__tests__/contrast-fixture.test.ts
+Exit code: 0
+--- output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+ ✓ src/__tests__/contrast-fixture.test.ts > WCAG contrast fixture > puts rgb(120,120,120) on #faf9f7 below the AA floor 1ms
+ ✓ src/__tests__/contrast-fixture.test.ts > WCAG contrast fixture > gives black on white a ratio of 21 0ms
+ ✓ src/__tests__/contrast-fixture.test.ts > WCAG contrast fixture > throws on an unresolved colour 1ms
+ ✓ src/__tests__/contrast-fixture.test.ts > WCAG contrast fixture > composes translucent layers over an opaque ancestor 1ms
+ ✓ src/__tests__/contrast-fixture.test.ts > WCAG contrast fixture > composes a translucent layer over the page background 0ms
+ ✓ src/__tests__/contrast-fixture.test.ts > WCAG contrast fixture > throws when a background image would paint behind text 38ms
+ ✓ src/__tests__/contrast-fixture.test.ts > WCAG contrast fixture > throws when an unsupported background colour would paint 9ms
+ ✓ src/__tests__/contrast-fixture.test.ts > WCAG contrast fixture > skips a fully transparent background 7ms
+ ✓ src/__tests__/contrast-fixture.test.ts > WCAG contrast fixture > stops the walk at an opaque background 0ms
+ ✓ src/__tests__/contrast-fixture.test.ts > WCAG contrast fixture > finds backgrounds from type and descendant selectors 41ms
+ ✓ src/__tests__/contrast-fixture.test.ts > WCAG contrast fixture > uses the painted body rule instead of the white fallback 13ms
+ ✓ src/__tests__/contrast-fixture.test.ts > WCAG contrast fixture > throws on an inline custom property override on the element 1ms
+ ✓ src/__tests__/contrast-fixture.test.ts > WCAG contrast fixture > throws on a custom property override set on an ancestor 1ms
+ ✓ src/__tests__/contrast-fixture.test.ts > WCAG contrast fixture > throws when a custom property override cannot be resolved 13ms
+ ✓ src/__tests__/contrast-fixture.test.ts > WCAG contrast fixture > throws for a colour token rule matching an ancestor (ADV-18) 5ms
+ ✓ src/__tests__/contrast-fixture.test.ts > WCAG contrast fixture > throws for a colour token rule inside @media (ADV-19) 5ms
+
+ Test Files  1 passed (1)
+      Tests  16 passed (16)
+   Start at  19:06:17
+   Duration  1.45s (transform 57ms, setup 73ms, import 656ms, tests 138ms, environment 428ms)
+
+
+=== R2 no-false-throw check: contact ===
+Test file: src/__tests__/phase-4-browser-regressions.red.test.tsx
+Exit code: 0
+--- output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+ ✓ src/__tests__/phase-4-browser-regressions.red.test.tsx > Phase 4 browser regression contracts > keeps Storytime FAQ locale keys complete 2ms
+ ✓ src/__tests__/phase-4-browser-regressions.red.test.tsx > Phase 4 browser regression contracts > keeps related article cards safe at mobile width 118ms
+ ✓ src/__tests__/phase-4-browser-regressions.red.test.tsx > Phase 4 browser regression contracts > uses an accessible contrast treatment for contact eyebrows 78ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  19:06:19
+   Duration  2.03s (transform 409ms, setup 67ms, import 1.17s, tests 198ms, environment 430ms)
+
+
+=== R2 no-false-throw check: pricing ===
+Test file: src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx
+Exit code: 0
+--- output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+Could not parse CSS stylesheet
+stderr | src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx > Remaining Phase 4 browser regression contracts > contains related article content at a 390px viewport
+Received `true` for a non-boolean attribute `fill`.
+
+If you want to write it to the DOM, pass a string instead: fill="true" or fill={value.toString()}.
+
+ ✓ src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx > Remaining Phase 4 browser regression contracts > contains related article content at a 390px viewport 117ms
+ ✓ src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx > Remaining Phase 4 browser regression contracts > keeps pricing hero text at WCAG-AA contrast 62ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  19:06:21
+   Duration  1.75s (transform 188ms, setup 66ms, import 903ms, tests 180ms, environment 443ms)
+

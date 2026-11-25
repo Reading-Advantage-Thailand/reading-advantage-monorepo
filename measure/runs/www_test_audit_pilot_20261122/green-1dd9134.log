@@ -1,0 +1,31 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Review A remediation F21. Phase 3: Rewrite batch (R1-R3).
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+phase_base_sha: 8a126f612abcc258c6c6711d6ac03fa085bbcbff
+role_base_sha: 1dd9134aa8c72d75e72f483b65a8af7e2cb78591
+green_head: 941278cf354b58582e2da0f5f1b5ebf605a2a768
+implementation_commit: 93a16fe3bcd37d303faa78f5c0d8975ce376063b
+plan_evidence_commit: 941278cf354b58582e2da0f5f1b5ebf605a2a768
+
+tasks_flipped_to_x:
+- 3.8 Review A remediation F21 (93a16fe3b). Evidence: implementation commit 93a16fe3b and plan commit 941278cf.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: none tracked. contrast.ts, real-css.ts and contrast-fixture.test.ts were changed. The plan commit changed the existing plan.md.
+
+fix: the class-token background reader is gone. real-css.ts exports the compiled stylesheet and a copy with @layer wrappers removed and @property rules dropped, because jsdom ignores layered rules and cannot parse @property descriptors. contrast.ts injects that stylesheet once into the test document and reads color and background-color with window.getComputedStyle. jsdom applies class, type, id and descendant selectors. Recursive composition is unchanged: opaque stops, translucent composes over the parent backdrop, transparent is skipped, background images and unreadable values throw, and unresolved foreground throws.
+
+unit_test: eleven cases pass. Two new cases pin a type-selector body background plus a descendant-selector translucent layer, and a page whose only painted background is the body rule. Both R2 contrast tests still pass on the shipped pages. jsdom logs cosmetic parse warnings for modern declarations it cannot model; the selectors and declarations these tests need are verified by the passing unit and page tests.
+
+gates: four heavy-run gates exited 0 after the implementation commit. check-types 0. lint 0 with three known warnings in untouched files. full vitest 0 with 94 files and 1396 tests. coverage 0 with lines at 91.83 percent. cases_before=1394, cases_after=1396; the two new cases are cascade unit tests. Line coverage is above the 85.52 floor and the 86.52 baseline.
+
+proofs: measure/runs/www_test_audit_pilot_20261122/proof-f21-phase-4-browser-regressions.log and proof-f21-phase-4-browser-regressions-remaining.log. A sky-300 contact eyebrow and a slate-400 pricing title each failed the target numeric contrast assertion with exit 1. Each production edit was restored with git checkout. git status shows no production change.
+
+deviation: the two commit headers were shortened for the 100-character commitlint limit. The meaning and track id stay.
+dispositions: F21=FIX
+END_MEASURE_AGENT_RESULT

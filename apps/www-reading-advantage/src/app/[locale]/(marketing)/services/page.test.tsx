@@ -3,6 +3,7 @@ import { cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { en, th, zh } from "@/locales/pages/services";
 import Services from "@/app/[locale]/(marketing)/services/page";
+import { computedForElement } from "@/__tests__/fixtures/real-css";
 
 const localeState = vi.hoisted(() => ({ current: "en" as Locale }));
 
@@ -29,11 +30,28 @@ vi.mock("next/image", () => ({
 const localeMessages = { en, th, zh };
 type Locale = keyof typeof localeMessages;
 
+/** The computed tone colors of each service badge, read from the shipped CSS. */
 const toneCases = [
-  { serviceIndex: 0, className: "bg-amber-100 text-amber-800" },
-  { serviceIndex: 1, className: "bg-site-border text-slate-700" },
-  { serviceIndex: 2, className: "bg-emerald-100 text-emerald-800" },
-  { serviceIndex: 3, className: "bg-emerald-100 text-emerald-800" },
+  {
+    serviceIndex: 0,
+    background: "oklch(0.962 0.059 95.617)",
+    color: "rgb(146, 64, 14)",
+  },
+  {
+    serviceIndex: 1,
+    background: "rgb(218, 212, 200)",
+    color: "rgb(51, 65, 85)",
+  },
+  {
+    serviceIndex: 2,
+    background: "oklch(0.95 0.052 163.051)",
+    color: "rgb(6, 95, 70)",
+  },
+  {
+    serviceIndex: 3,
+    background: "oklch(0.95 0.052 163.051)",
+    color: "rgb(6, 95, 70)",
+  },
 ] as const;
 
 afterEach(() => {
@@ -61,7 +79,14 @@ describe("Services localized status tones", () => {
           service.statusBadge,
         );
         expect(badge).toHaveTextContent(service.statusBadge);
-        expect(badge).toHaveClass(...toneCase.className.split(" "));
+        const tone = computedForElement(badge, [
+          "background-color",
+          "color",
+        ]);
+        expect(tone["background-color"], `${locale} badge background`).toBe(
+          toneCase.background,
+        );
+        expect(tone.color, `${locale} badge text`).toBe(toneCase.color);
       }
     });
   }

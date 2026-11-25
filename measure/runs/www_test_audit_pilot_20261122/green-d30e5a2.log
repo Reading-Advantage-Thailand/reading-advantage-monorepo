@@ -1,0 +1,88 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+round: Adversarial remediation ADV-3
+track: www_test_audit_pilot_20261122
+phase: Phase 2: Delete batch (D1-D5)
+phase_base_sha: a1caa58034f6455e91205a5673ef172a974a7992
+role_base_sha: d30e5a2422fa9f9b9d109f65ed61d213ecdee48f
+audited_head_sha: d30e5a2422fa9f9b9d109f65ed61d213ecdee48f
+green_head: 09a817cd9f9ed49d49053151202eaff6cc6c529b
+dispositions: ADV-3=FIX
+tasks_flipped_to_x: 2.11 Adversarial remediation ADV-3 (e153b885)
+tasks_flipped_to_b: none.
+proofs: measure/runs/www_test_audit_pilot_20261122/proof-adv3.log
+
+FINDING FIX
+ADV-3 FIX. The eligibility check moved to one fixture:
+apps/www-reading-advantage/src/__tests__/fixtures/reedy-eligibility.ts.
+The main test and the adversarial probe file import that fixture. Each file
+deleted its own copy of the pattern sets and of the break finder.
+The English set forbids the plain, the hyphenated, and the prefixed forms:
+/\binactive\b/, /\bnon-?active\b/, and /\bin-active\b/. The existing
+negations stay.
+The Thai set forbids ไม่ใช้งาน and ไม่ได้ใช้งาน. It also forbids ยกเลิก next to
+the package phrase in both word orders.
+The zh set stays as it was: /无效/ and /非有效/.
+The shipped en, th, and zh copy still passes. The existing negative controls
+still break. The main test gained a control for every wider reversal shape.
+Every adversarial probe and its expectation stayed in the probe file.
+
+COMMITS
+e153b885ad91ecd3256b65a81362b484cd89e2a3
+test(www): reject more reversals in the reedy check (track_id: www_test_audit_pilot_20261122)
+Pathspec commit of three test files: the new fixture
+src/__tests__/fixtures/reedy-eligibility.ts, the main test
+src/__tests__/www-tutor-reedy-claim.test.tsx, and the probe file
+src/__tests__/reedy-inactive-reversal.adversarial.test.tsx.
+09a817cd9f9ed49d49053151202eaff6cc6c529b
+chore(measure): record www audit adversarial remediation (track_id: www_test_audit_pilot_20261122)
+Pathspec commit of measure/tracks/www_test_audit_pilot_20261122/plan.md only.
+The plan holds no case count and no coverage number for this task.
+
+HEAVY GATE COMMANDS
+GREEN at e153b885:
+ HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot'
+ exit 0. 93 test files passed. 3088 tests passed.
+COVERAGE at e153b885:
+ HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage'
+ exit 0. 93 test files passed. 3088 tests passed. Lines 91.65 percent.
+The line coverage floor is 85.52 percent. Each run used one heavy job at a
+time. Each run waited for the shared heavy lock behind another session job.
+
+GATE FILES
+measure/runs/www_test_audit_pilot_20261122/green-e153b88.log
+measure/runs/www_test_audit_pilot_20261122/coverage-e153b88.log
+measure/runs/www_test_audit_pilot_20261122/gate-e153b88.json
+measure/runs/ is gitignored. The files stay as local evidence for the reviewers.
+
+BREAKAGE PROOF
+proof-adv3.log. The shipped Reedy bullet was changed to the non-active
+sentence. The main test failed and named the inactive rule. The locale file
+was restored with git checkout before the commit. git status --short shows no
+production change after the restore.
+
+TARGETED COMMAND OUTPUT
+CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot src/__tests__/www-tutor-reedy-claim.test.tsx src/__tests__/reedy-inactive-reversal.adversarial.test.tsx
+ Test Files  2 passed (2)
+      Tests  31 passed (31)
+
+NEW FILES
+apps/www-reading-advantage/src/__tests__/fixtures/reedy-eligibility.ts
+  The shared AC-24 eligibility rule: the marker words, the negation patterns,
+  the active word, the inactive patterns, and the break finder.
+
+OPEN ITEM FOR THE NEXT ROUND
+The type check fails on the D1 file
+src/__tests__/no-gse-in-customer-copy.test.ts. Eight page calls pass a props
+argument to page components that take none. The D1 rewrite 4d1688131
+introduced those calls, and the last green type check log predates that
+commit. The failure is not in the D5 class, so this commit changes no line of
+that file. Evidence: measure/runs/www_test_audit_pilot_20261122/check-types-adv3.log.
+The orchestrator can route a D1 fix for the eight calls.
+
+HANDOFF TO REVIEW ROLES
+ADV-4 and ADV-5 are nits. No file changed for them.
+The phase range is a1caa58034f6455e91205a5673ef172a974a7992..09a817cd9f9ed49d49053151202eaff6cc6c529b.
+Task 2.11 is marked [x]. No task is marked [b]. No production file changed.
+The phase base and the role base stay as they were.
+END_MEASURE_AGENT_RESULT

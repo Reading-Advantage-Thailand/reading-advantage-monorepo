@@ -1,0 +1,44 @@
+MUTATION PROOF (R2)
+Note: removing flex-wrap stops pagination controls from wrapping
+Production file: apps/www-reading-advantage/src/components/blog/blog-pagination.tsx
+Edit: 'className="flex flex-wrap items-center justify-center gap-2 py-8"' -> 'className="flex items-center justify-center gap-2 py-8"'
+Test file: src/components/blog/blog-pagination.test.tsx
+Expected: test exits 1; the production edit is restored after the run.
+Test exit code: 1
+--- test output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+stderr | src/components/blog/blog-pagination.test.tsx > BlogPagination > renders pagination nav
+Received `false` for a non-boolean attribute `scroll`.
+
+If you want to write it to the DOM, pass a string instead: scroll="false" or scroll={value.toString()}.
+
+If you used to conditionally omit it with scroll={condition && value}, pass scroll={condition ? value : undefined} instead.
+
+··x···
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/blog/blog-pagination.test.tsx > BlogPagination > wraps pagination controls on narrow screens
+AssertionError: expected 'nowrap' to be 'wrap' // Object.is equality
+
+Expected: [32m"wrap"[39m
+Received: [31m"[7mno[27mwrap"[39m
+
+ ❯ src/components/blog/blog-pagination.test.tsx:41:7
+     39|     expect(
+     40|       computedForElement(navigation, ["flex-wrap"])["flex-wrap"],
+     41|     ).toBe("wrap");
+       |       ^
+     42|   });
+     43|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  14:34:23
+   Duration  1.31s (transform 36ms, setup 73ms, import 488ms, tests 146ms, environment 437ms)
+

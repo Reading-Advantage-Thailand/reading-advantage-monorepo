@@ -1,0 +1,32 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+·x···
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/phase-4-contact-authority.red.test.tsx > RC-P4-001 contact authority contract > points every rendered contact destination at the authority values
+AssertionError: the phone link must use the authority tel: destination: expected 'tel:+660990058038' to be 'tel:+660001112222' // Object.is equality
+
+Expected: [32m"tel:+660[7m001112222[27m"[39m
+Received: [31m"tel:+660[7m990058038[27m"[39m
+
+ ❯ src/__tests__/phase-4-contact-authority.red.test.tsx:136:7
+    134|       phoneLink?.getAttribute("href"),
+    135|       "the phone link must use the authority tel: destination",
+    136|     ).toBe(contactDetails.phoneHref);
+       |       ^
+    137|
+    138|     const tiktokLink = anchorWithLabel(anchors, contactDetails.tiktokL…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  02:34:11
+   Duration  1.17s (transform 253ms, setup 67ms, import 409ms, tests 83ms, environment 461ms)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run '--maxWorkers=1' '--reporter=dot' src/__tests__/phase-4-contact-authority.red.test.tsx

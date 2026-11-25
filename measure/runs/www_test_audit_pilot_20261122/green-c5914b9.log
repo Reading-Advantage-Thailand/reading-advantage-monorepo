@@ -1,0 +1,98 @@
+# Green run log: www test audit pilot (Green base c5914b92d)
+
+Role: measure-jr-green. Route: opencode-go/hy4-flash-free#high.
+This round covers Phase 2 tasks 2.2 (D2), 2.3 (D3), and 2.4 (D4).
+D5 stays with the next round.
+
+## Base verification
+
+- role_base_sha: c5914b92d6aecd668a0275cdb38b495947a60fa2 (D1 plan evidence commit).
+- phase_base_sha (Phase 1): cbd023b1bd29333992f7511646cff1245191b049.
+- Baseline: case_count=3175, line_coverage_pct=86.52. Coverage floor 85.52.
+- The working tree was clean at the start of this round.
+
+## Commits
+
+- e332f594e70498666ce2f3c9c5c2afc492dceea4 test(www): delete d2 duplicate tests.
+  6 test files changed. 22 cases removed. 1 file deleted. No production file changed.
+- c1410ed97 chore(measure): record www audit d2 gate. Marked 2.2 and 2.3 [x].
+- 0d705612d77a786b42484f5df067f9bbb54e2389 test(www): delete d4 weak-check tests.
+  3 test files changed. 6 cases removed. No production file changed.
+- 5a104ba6dfbcdd1740f21c979d011a2251d7a657 chore(measure): record www audit d4 gate.
+  Marked 2.4 [x].
+
+## D2 change summary
+
+Deleted 22 duplicate cases from 6 files. The whole of
+`products/primary-advantage/page.test.tsx` went, since all 3 of its cases were D2.
+Each named duplicate stays: page.content.test.tsx container, order, and
+old-reference cases; blog-locale default; blog.test.ts reading-time values;
+real-logos-captures-adversarial favicon byte rows; real-logos-adversarial FR-5
+sweeps; www-tutor-followups manifest guard; tutor-screens.test.ts order and
+portrait pins. The K favicon case "ICO magic in one copy" stays.
+
+## D3 change summary
+
+No D3 rows under r2 note 2. No test commit and no gate.
+
+## D4 change summary
+
+Deleted 6 weak-check cases from 3 files. The 3 active-locale cases echoed a
+mock. The 2 filename-literal cases pinned their own test file. The
+A34_REQUIRE_SOURCES case returned early and passed without the flag. No
+result-checking test was weakened.
+
+## Gate results
+
+### D2 (e332f594)
+
+- GREEN exit 0: 89 files passed, 3146 tests passed.
+  Log: measure/runs/www_test_audit_pilot_20261122/green-e332f594.log.
+- COVERAGE exit 0: 89 files passed, 3146 tests passed.
+  Lines 89.92, statements 88.62, branches 81.03, functions 83.68 percent.
+  Log: measure/runs/www_test_audit_pilot_20261122/coverage-e332f594.log.
+- Gate: measure/runs/www_test_audit_pilot_20261122/gate-e332f594.json.
+
+### D4 (0d705612)
+
+- GREEN exit 0: 89 files passed, 3140 tests passed.
+  Log: measure/runs/www_test_audit_pilot_20261122/green-0d705612.log.
+- COVERAGE exit 0: 89 files passed, 3140 tests passed.
+  Lines 89.86, statements 88.56, branches 80.92, functions 83.68 percent.
+  Log: measure/runs/www_test_audit_pilot_20261122/coverage-0d705612.log.
+- Gate: measure/runs/www_test_audit_pilot_20261122/gate-0d705612.json.
+
+RolldownError parse messages for Thai blog .md files are V8 remap noise.
+baseline.log records the same messages. The provider excludes those files.
+
+## Targeted deletion-set checks
+
+- Command: git diff --name-only --diff-filter=D c5914b92d..HEAD --
+  apps/www-reading-advantage
+- Output: apps/www-reading-advantage/src/app/[locale]/(marketing)/products/
+  primary-advantage/page.test.tsx
+- The path is the D2 delete row at classification.md line 141. No K row is deleted.
+
+## MEASURE_AGENT_RESULT
+
+MEASURE_AGENT_RESULT
+phase: Green
+track: www_test_audit_pilot_20261122
+phase_base_sha: cbd023b1bd29333992f7511646cff1245191b049
+role_base_sha: c5914b92d6aecd668a0275cdb38b495947a60fa2
+green_head: 5a104ba6dfbcdd1740f21c979d011a2251d7a657
+tasks_completed: 2.2 (e332f594e70498666ce2f3c9c5c2afc492dceea4),
+  2.3 (no D3 rows, no commit), 2.4 (0d705612d77a786b42484f5df067f9bbb54e2389)
+tasks_deferred: 2.5 (D5, 221 pins), 2.6, 3.x, 4.x (later rounds)
+tasks_blocked: none
+targeted_red_command: git diff --name-only --diff-filter=D c5914b92d..HEAD
+  -- apps/www-reading-advantage; one path, primary-advantage/page.test.tsx,
+  the D2 delete row; no K row deleted
+new_files: measure/runs/www_test_audit_pilot_20261122/gate-e332f594.json,
+  gate-0d705612.json, green-e332f594.log, coverage-e332f594.log,
+  green-0d705612.log, coverage-0d705612.log; untracked run artifacts
+handoff: D2, D3, and D4 are done. GREEN and COVERAGE exit 0 for both test
+  commits. Line coverage stays above 85.52. No task is deferred to a human
+  owner. D5 is a large class of 221 copy pins; it goes to the next Green
+  round so the class ships complete. No push was made.
+END_MEASURE_AGENT_RESULT

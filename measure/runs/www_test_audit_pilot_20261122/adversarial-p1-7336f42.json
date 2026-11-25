@@ -1,0 +1,91 @@
+{
+ "schema_version": 1,
+ "role": "measure-adversarial-testing",
+ "track": "www_test_audit_pilot_20261122",
+ "phase": "Phase 1: Baseline and classification",
+ "round": 3,
+ "track_base_sha": "635a604c89b2c909cfce33f555b7f043d4ea520f",
+ "baseline_sha": "cbd023b1bd29333992f7511646cff1245191b049",
+ "phase_base_sha": "cbd023b1bd29333992f7511646cff1245191b049",
+ "phase_end_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+ "role_base_sha": "7336f42b31b2a80eb4ba61a093a84ada9befa866",
+ "audited_head_sha": "7336f42b31b2a80eb4ba61a093a84ada9befa866",
+ "previous_results": [
+  "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca.json",
+  "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-fdf62c9.json"
+ ],
+ "status": "pass",
+ "summary": "The D5 revert (f97a72f90, PM option C) closes ADV-P1-8. All nine money mutants fail at HEAD: pricing S7 (1,200 and a 3,500 typo), S9 answer 2, tutorRole.points.3 in th, S9 answer 3, features S5 body 3, and three sample pins from the restored files. The ADV-P1-1 FAQ mutants fail at HEAD too. The structure holds at the new class sums (K 3064, D1 67, D2 22, D4 6, R2 16 = 3175): 98 files with a row, e2e and i18n-cli not counted, the seven tutor-commission files in K rows only, no K case deleted, and every classification mutant caught. The errata are true, and classification.md and report.md state the D5 revert with its reason. No blocker. One report paragraph is stale after the revert (ADV-P1-12): the cut without the blog merge is now minus 28 cases, not plus 54. Route note: the route picker returned a barred DeepSeek route (reported by the orchestrator), so claude-agent/sonnet#xhigh was used as a substitution.",
+ "blocking_findings": [],
+ "nonblocking_findings": [
+  "ADV-P1-12 [Note] adversarial: report.md section 1 still says 'Without the blog merge, the cut is small' and quotes 81 cases (2.6 %) and 54 cases (1.7 %). Those figures come from the tree with D5 applied. After the revert the suite holds 3203 cases without the blog merge (1494 + 1709), which is 28 more than the 3175 baseline. The pilot cut comes entirely from the blog merge. Criterion (a) still passes, because the PM approved the merge and proof-blog-merge.log holds its breakage proof. Fix: update the paragraph.",
+  "ADV-P1-10 [Nit] adversarial: classification.md lines 252 to 254 and 266 still count a D5 cut: 'D5 replacements collapse 221 exact-pin cases into locale-key checks', 'Cut from D5: about 141 to 161 cases', and 'the primary-advantage content pin set (102 D5 cases); its replacement design decides the final count'. The Phase 1 projection carries no stale note. Fix: add one line that D5 was reverted on 2026-11-25 and the projection is superseded.",
+  "ADV-P1-11 [Nit] adversarial: The report section 2 per-class commit table lists D5 parts 1 to 4 (3140 to 3035 cases) with no revert mark and no row for f97a72f90 (1414 to 1494 cases, green-at-f97a72f9.log, coverage-at-f97a72f9.log). The revert logs appear only in sections 1 and 7. Fix: add the row.",
+  "ADV-P1-4c [Nit] adversarial: plan.md task 4.17 still reads 'restored in Phases 2 and 3'. Task 4.18 corrects the wording in prose, and report.md is correct. Fix: edit the task 4.17 line or leave the correction in task 4.18.",
+  "ADV-P1-5 [Note] adversarial (carried, PM accepted in plan task 4.17): per-file-counts.md rests on a runner JSON that is not kept. 1858 of 3175 cases were re-derived.",
+  "ADV-P1-7 [Nit] adversarial (carried, PM accepted in plan task 4.17): two zero-case sentinel rows name K files inside D sections (phase-3-i18n.red.test.ts in D2, www-tutor-screens-copy.adversarial.test.ts in D5).",
+  "ADV-P1-9 [Nit] adversarial (carried, recorded in measure/tech-debt.md and plan task 4.18): the K case name 'shows no other baht amount than the FR-9 and FR-10 figures' overstates its two-literal check. The restored exact pins now catch a 3,500 typo, but the name still overstates."
+ ],
+ "evidence": [
+  "ADV-P1-8 withdrawn: adversarial-p1-7336f42-mutation-run.py ran 8 HEAD test files in a /tmp copy. Control: 156 passed. Pricing S7 body 3,000 to 1,200 baht (en and th): 5 cases fail. S7 typo 3,500: the same 5 fail. S9 answer 2 flipped: the same 5 fail. tutorRole.points.3 th changed to 'shows the money you will actually get': 'holds the new th copy at both paths' fails. S9 answer 3: 5 cases fail. Features S5 body 3 ('Prices never change'): 5 cases fail. Round 2 caught none of the first four.",
+  "ADV-P1-1 withdrawn (resolved, still holds): adversarial-p1-7336f42-thai-claim-harness.py at HEAD. faq-th, faq-th-one-word, faq-en-only, faq-en-one-word and faq-en-and-zh all fail at HEAD (exit 1). The failing cases are 'holds the new th copy at both paths' and 'holds the new en copy at both paths'. points3-th, points3-en-only and points3-en-and-zh fail too. HEAD runs 26 cases, the same as a1caa5803, and the base control passes. The ca91946bf test is gone; the original exact pins cover faq.items.5.answer.",
+  "ADV-P1-2 withdrawn (resolved, still holds): report.md section 3 names both halves of fb5622ed7. The Primary page.content.test.tsx at HEAD holds cefr-timeline, reversed-split, overlapping-section, stat-card (probe G3).",
+  "ADV-P1-3 withdrawn (resolved, still holds): classification.md carries four Erratum lines (probe G0, G9). The D5 erratum now reads 'returned with the D5 revert'. fb5622ed7 touches blog-locale.test.ts and the Primary page.content.test.tsx. 9eb3b9c4f touches navigation.test.tsx, which runs th and zh and has no en case. Of 22 deleted-case titles, 20 are absent at HEAD and only the two restored rows are present.",
+  "ADV-P1-4 withdrawn (resolved, still holds): report.md section 6 states 3 of 37 recorded, 6 of 37 (16.2 percent) ex post, the PM exception of 2026-11-24, and now 'all three rows were restored in Phase 2 task 2.7'. The string 'Phases 2 and 3' no longer appears in report.md (probe G10). The wording defect left in plan task 4.17 is ADV-P1-4c.",
+  "ADV-P1-6 withdrawn (resolved, still holds): the Summary table reads K 3064 (96.5 %) and D5 0. Probe G4 checks the six shares against n/3175 and the nine shares add to 100.0 percent.",
+  "python3 -I adversarial-p1-7336f42-probes.py -> 71 PASS, 0 FAIL, exit 0, two identical runs. Class sums K 3064, D1 67, D2 22, D4 6, R2 16 = 3175 = case_count. The K section holds 2843 and the D5 section 221; the revert note folds D5 into K. The classification differs from a1caa5803 by errata, the revert note and the Summary rows only.",
+  "Classification mutants: M1 to M6, M8 and M9 are detected as in round 1. Round 1 M7 (a D5 row moved into K, sum kept) is now accepted by design, because D5 is effective K. Replacements M7a (a D1 row moved into K), M7b (revert note removed), M7c (a tutor-commission row moved to D5) and M7d (Summary back at K 2843) are all detected.",
+  "K list: the seven tutor-commission files hold K rows only and are unchanged from a1caa5803 to HEAD. The pattern tutor-commission* matches exactly those seven paths. e2e rows (6) and the i18n-cli row say not counted. 98 test files each have a row.",
+  "No K case deleted: 59 K and reverted-D5 files compared at a1caa5803 and HEAD by static case title. blog-posts-validation.test.ts (PM-approved blog merge) and one Storytime page.content control (renamed to a stricter control that also clears the approved school year) lose a static title. The two deleted files (primary-advantage/page.test.tsx in D2, layout-components.test.ts in D1) are D rows.",
+  "Revert fidelity: f97a72f90 changes 12 test files and nothing else under apps. 8 are byte-identical to the pre-D5 tree 5a104ba6d. 4 differ only by named non-D5 commits: master's suite-line change and merge (www-batch-20261116, Storytime), the D1 fix 4d1688131 (www-reading-card), the D2 restore fb5622ed7 (Primary). The Storytime file also keeps the F12 scanner controls (Thai month, school year), which are stricter and drop no pin. No restored file imports the D5 locale-key helper.",
+  "Numbers (A5): green-at-f97a72f9.log 1494 tests in 98 files. coverage-at-f97a72f9.log Lines 92.08 percent (1675/1819). The cut 3175 - 1494 = 1681 is 52.94 percent. K 3064/3175 is 96.50 percent. git diff --name-only f97a72f90 HEAD -- apps is empty. heavy-run.log shows www full suite, test:coverage and lint at exit 0 on 2026-11-25.",
+  "Sample of three more pins from the restored files: N1 pricing S1 body 2 (price-inclusion claim, en and th), N2 pricing S5 body (books priced per book, by quotation, en and th), N3 Reedy package-gated access claim (en FAQ answer and th page description). Each fails at HEAD: 5 cases, 5 cases, and 2 cases ('en: the Reedy FAQ answer is the package sentence only', 'th: the page Reedy description drops the Tutor-Advantage-only clause'). N3 is an access claim, not a price figure.",
+  "Non-blog count: 1494 + 1709 (cases removed by the blog merge, gate-257a6b0c.json: 3094 to 1385) = 3203, which is 28 above the 3175 baseline. Before the revert the pre-merge count without the blog merge was 3121 (a cut of 54).",
+  "Not run: the full suite; a mutation sweep of other restored pins; the Phase 1 GREEN and COVERAGE suites. Side effect: Vitest rewrote its gitignored results cache under apps/www-reading-advantage/node_modules/.vite. git status --short is empty before and after."
+ ],
+ "commands": [
+  "git rev-parse HEAD; git status --short => 7336f42b31b2a80eb4ba61a093a84ada9befa866; empty",
+  "python3 -I measure/runs/www_test_audit_pilot_20261122/adversarial-p1-7336f42-mutation-run.py => control 156 passed; all 9 mutants caught by HEAD tests",
+  "python3 -I measure/runs/www_test_audit_pilot_20261122/adversarial-p1-7336f42-thai-claim-harness.py => exit 0; every faq and points3 mutant caught at HEAD (26 cases, same as a1caa5803)",
+  "python3 -I measure/runs/www_test_audit_pilot_20261122/adversarial-p1-7336f42-probes.py => 71 PASS, 0 FAIL, exit 0 (two identical runs)",
+  "git diff --name-only f97a72f90 HEAD -- apps => empty",
+  "git diff --numstat 5a104ba6d HEAD -- <12 restored files> => 8 identical; 4 differ by named non-D5 commits",
+  "git diff -U0 a1caa5803 HEAD -- measure/tracks/www_test_audit_pilot_20261122/classification.md => errata, the D5 revert note and the Summary rows only"
+ ],
+ "changed_files": [
+  "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-7336f42.json",
+  "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-7336f42.log",
+  "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-7336f42-probes.py",
+  "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-7336f42-thai-claim-harness.py",
+  "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-7336f42-mutation-run.py"
+ ],
+ "test_strategy_violations": [],
+ "live_contract_violations": [],
+ "prod_wiring_violations": [],
+ "route_parity_violations": [],
+ "retry_recommendation": "none",
+ "confidence": "high",
+ "route": "claude-agent/sonnet#xhigh",
+ "ratings": [
+  {
+   "axis": "correctness",
+   "score": 4,
+   "evidence": "The Summary table sums to 3175 (probe G1) and nine of nine money mutants fail at HEAD, but report.md section 1 still quotes D5-applied cut figures (ADV-P1-12)."
+  },
+  {
+   "axis": "test_meaning",
+   "score": 4,
+   "evidence": "The restored exact pins catch every sampled price and commission mutant, including a 3,500 typo, while the K case at www-pricing-page.content.test.tsx:306 still overstates its two-literal check (ADV-P1-9)."
+  },
+  {
+   "axis": "scope_discipline",
+   "score": 5,
+   "evidence": "f97a72f90 changes 12 test files only, 8 identical to pre-D5 and 4 differing by named non-D5 commits (probe G13); git status --short is empty before and after."
+  },
+  {
+   "axis": "evidence_quality",
+   "score": 5,
+   "evidence": "Every claim has a command result: control 156 passed and per-mutant failing case names, 71 probe PASS lines twice, and green-at-f97a72f9.log with 1494 tests."
+  }
+ ]
+}

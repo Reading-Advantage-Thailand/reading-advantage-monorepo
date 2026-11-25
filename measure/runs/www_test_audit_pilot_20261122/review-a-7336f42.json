@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "ecff7cfadfe454ebc5baeacf9ae1f8f7f30ece42",
+  "phase_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "role_base_sha": "7336f42b31b2a80eb4ba61a093a84ada9befa866",
+  "audited_head_sha": "7336f42b31b2a80eb4ba61a093a84ada9befa866",
+  "status": "pass",
+  "summary": "F1 and F2 are fixed. report.md now gives 2843 for the 77 K-section rows and 3064 (96.5 %) for the Summary table in both places, and it gives one lint warning. N8, N9 and N10 are recorded and true. N8 has a late-finding line in the contract form. tech-debt.md stays at 50 lines. No current-value claim in report.md is stale. The commit adds no line citation and no run-file count. Two items do not block.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N11 (source): the report.md section 3 lint bullet now says 'Lint warnings, one', but it still cites only `review-a-c673f21.json`. That file records the earlier three warnings. The current count of one has no cited lint log; plan 4.18 records it, and this role's round 6 heavy-run lint gave '✖ 1 problem (0 errors, 1 warning)'. Suggested: cite plan task 4.18 for the current count.",
+    "N12 (pre-existing record, outside this commit): plan task 4.4 (added in e034575f4) says 'The case sum stays at 2843 (classification.md:226)'. classification.md line 226 is now an e2e row, and the Summary table now gives K 3064. The 2843 value is still true for the 77 K-section rows at that task's time. This is a historical record, so no change is required. If the orchestrator wants it, replace the line citation with 'the classification.md K rows section'."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned 7336f42b31b2a80eb4ba61a093a84ada9befa866, equal to audited_head_sha and role_base_sha. `git status --short` is empty.",
+    "`git diff --stat ecff7cfad..HEAD` lists measure/tech-debt.md (2 +-), plan.md (+2) and report.md (8 +-) only. One commit: 7336f42b3.",
+    "F1 withdrawn as fixed. report.md section 4 now says 'lists 77 K file groups with 2843 cases. With the 221 reverted D5 cases, the Summary table gives 3064 K cases (96.5 %).' The section close says 'The 77 K-section rows still sum to 2843 cases; the Summary table gives 3064 cases (96.5 %) after the D5 revert.' Both agree with classification.md (Summary K 3064, 96.5 %; 2843 + 221 = 3064).",
+    "F2 withdrawn as fixed. report.md section 3 now says 'Lint warnings, one. The unused `beforeEach` import predates Phase 2. D5 part 2 made `sectionOf` and `copy` unused; both warnings went away with the D5 revert.' This matches this role's round 6 heavy-run lint result (1 warning, beforeEach) and plan 4.18.",
+    "N9 recorded and true: report.md section 1 adds 'The commission FAQ pin at `ca91946b` added one case, which the D5 revert removed again; the restored pre-D5 file holds the original pins.' In round 6, `git diff a1caa5803 HEAD -- www-tutor-calculator.locale.test.ts` was empty, and that file has not changed since.",
+    "N10 recorded: the tech-debt row title now reads 'Late adversarial and review findings (ADV-26 to ADV-32, L1, ADV-P1-9, N8)'.",
+    "N8 recorded and true: the tech-debt row appends '[N8] D5 helper fixtures locale-key-check.ts and reedy-eligibility.ts and CONTAINER_STORY_IMAGES are used only by adversarial tests or unused; one adversarial test comment says both files import the fixture.' This matches the round 6 `rg -l` result. The plan Phase 4 heading adds '- Late finding N8: tech-debt (...)' in the contracts.md form.",
+    "`wc -l measure/tech-debt.md` gives 50. The diff replaces one row with one row.",
+    "Stale-count grep (`rg -n -i '2843|3064|1494|1414|1761|1681|55\\.5|52\\.9|three warnings|three pre-existing|warnings?, three|lint'` over report.md and plan.md): report.md holds only current or labelled values (1494, 1681, 52.9 %, 2843 for the K section, 3064 for the Summary, one warning). plan.md hits for 1414, 1761, 55.5 and three warnings sit in tasks 4.13, 4.15 and 4.17 at their named heads, and task 4.18 labels them pre-revert. Plan 4.3 gives the final 1681 and 1494.",
+    "`git diff ecff7cfad..HEAD | grep '^+' | grep -nE ':[0-9]+\\b'` returns no hit, so the commit adds no line citation. The commit adds no count of a run-file kind.",
+    "No tests ran this round. The commit changes documents only, and the apps tree equals ecff7cfad, where this role ran 1494 tests at 92.08 % lines and lint gave 1 warning."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git status --short",
+    "git log --oneline ecff7cfad..HEAD",
+    "git diff --stat ecff7cfad..HEAD",
+    "git diff ecff7cfad..HEAD -- measure/tracks",
+    "git diff ecff7cfad..HEAD -- measure/tech-debt.md",
+    "wc -l measure/tech-debt.md",
+    "rg -n -i '2843|3064|1494|1414|1761|1681|55\\.5|52\\.9|three warnings|three pre-existing|warnings?, three|lint' report.md plan.md",
+    "git diff ecff7cfad..HEAD | grep '^+' | grep -nE ':[0-9]+\\b'",
+    "git log -1 --format=%h -S'classification.md:226' -- plan.md",
+    "sed -n 224,228p classification.md"
+  ],
+  "changed_files": [
+    "measure/tech-debt.md",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "measure/tracks/www_test_audit_pilot_20261122/report.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "claude-agent/opus#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "report.md section 4 gives 2843 for the 77 K-section rows and 3064 (96.5 %) for the Summary in both places, which matches classification.md, and section 3 gives one lint warning, which matches the round 6 heavy-run lint."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "This round changes documents only; the apps tree equals ecff7cfad, where this role ran 1494 tests at 92.08 % lines."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "`git diff --stat ecff7cfad..HEAD` lists report.md, plan.md and measure/tech-debt.md only, and each hunk serves F1, F2, N8, N9 or N10."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Each fix is traceable, but the one-warning lint claim still cites review-a-c673f21.json, which records three warnings (N11)."
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 1 erratum and Phase 4 report (Review A notes)
+commits:
+  - fdf62c97b974cb7aec47a4a4e79f5538488ce9af (correct d4 erratum and review notes)
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: 9044cf04b0ab60d5f005ef9e5339ae1c9a0122a3
+final_green_head: fdf62c97b974cb7aec47a4a4e79f5538488ce9af
+dispositions: N5=FIX; N6=FIX; N7=FIX
+tests_run: None. This round is documents only. No test suite ran and no production or test file changed.
+files_changed:
+  - measure/tracks/www_test_audit_pilot_20261122/classification.md
+  - measure/tracks/www_test_audit_pilot_20261122/report.md
+  - measure/tracks/www_test_audit_pilot_20261122/plan.md
+plan_updates: Task 4.17 keeps its round 6 SHA lines unchanged. One line under it names this round's change without a SHA, and ADV-P1-5 and ADV-P1-7 are recorded with wording from adversarial-p1-51252ca.json. No task 4.18 was added. No task flipped to [b].
+known_failures: None. The commit subject is 92 characters, within the 100-character limit. No line citation and no run-file count was added.
+handoff: N5 is fixed in the classification.md D4 erratum with the exact text 'The th and zh cases of the navigation row were restored in 9eb3b9c4f; the en case stays deleted.' The report D4 bullet already stated that history and was left unchanged. N6 is fixed in report.md section 7: the quoted results now use two spaces, matching green-at-ca91946b.log. N7 is fixed in plan.md task 4.17: ADV-P1-5 records that per-file-counts.md rests on a JSON reporter output that no longer exists, with 0 retained runner JSON files and 1858 of 3175 cases re-derived independently, accepted as a note; ADV-P1-7 records the two zero-case sentinel rows in D sections, which are excluded from every sum, accepted as a note. git diff --stat lists only the three track documents. No push was made. Substitution note from earlier rounds still applies: the Red model family is not recorded in the run files; the picker excluded only openai.
+END_MEASURE_AGENT_RESULT

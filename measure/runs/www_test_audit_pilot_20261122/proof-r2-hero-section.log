@@ -1,0 +1,37 @@
+MUTATION PROOF (R2)
+Note: a left-to-right default gradient breaks the shipped direction
+Production file: apps/www-reading-advantage/src/components/marketing/hero-section.tsx
+Edit: 'customGradient || "bg-gradient-to-br from-amber-50 via-orange-50 to-sky-50"' -> 'customGradient || "bg-gradient-to-r from-amber-50 via-orange-50 to-sky-50"'
+Test file: src/components/marketing/hero-section.test.tsx
+Expected: test exits 1; the production edit is restored after the run.
+Test exit code: 1
+--- test output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+··x····
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/marketing/hero-section.test.tsx > HeroSection > applies the specified default background gradient
+AssertionError: expected 'to right in oklab' to be 'to bottom right in oklab' // Object.is equality
+
+Expected: [32m"to [7mbottom [27mright in oklab"[39m
+Received: [31m"to right in oklab"[39m
+
+ ❯ src/components/marketing/hero-section.test.tsx:54:48
+     52|     const gradient = gradientOverlay(rendered.container);
+     53|
+     54|     expect(gradient["--tw-gradient-position"]).toBe("to bottom right i…
+       |                                                ^
+     55|     expect(gradient["--tw-gradient-from"]).toBe("oklch(98.7%0.022 95.2…
+     56|     expect(gradient["--tw-gradient-via"]).not.toBe("");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  14:34:07
+   Duration  1.34s (transform 51ms, setup 70ms, import 506ms, tests 145ms, environment 449ms)
+

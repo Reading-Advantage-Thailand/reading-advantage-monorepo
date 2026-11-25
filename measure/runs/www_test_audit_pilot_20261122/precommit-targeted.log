@@ -1,0 +1,17 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+··············stdout | src/__tests__/no-gse-in-customer-copy.test.ts > www customer copy holds no GSE, Pearson, or YLE > prints the pending hits for the PM
+PENDING for the PM:
+src/app/[locale]/(marketing)/blog/posts/en/the-advantage-engine-kst-srs.md:24: GSE -> **Knowledge Space Theory (KST)**, a mathematical framework pioneered by Jean-Claude Falmagne, models learning as a directed graph of skills. In our system, we don’t just track a "grade." We map a student’s precise **Knowledge State** across thousands of granular objectives aligned with the Global Scale of English (GSE) and international math standards.
+src/app/[locale]/(marketing)/blog/posts/en/the-advantage-engine-kst-srs.md:24: Global Scale of English -> **Knowledge Space Theory (KST)**, a mathematical framework pioneered by Jean-Claude Falmagne, models learning as a directed graph of skills. In our system, we don’t just track a "grade." We map a student’s precise **Knowledge State** across thousands of granular objectives aligned with the Global Scale of English (GSE) and international math standards.
+src/app/[locale]/(marketing)/blog/posts/th/the-advantage-engine-kst-srs.md:24: GSE -> **Knowledge Space Theory (KST)** เป็นกรอบงานทางคณิตศาสตร์ที่ริเริ่มโดย Jean-Claude Falmagne ซึ่งจำลองการเรียนรู้เป็นกราฟทักษะที่เชื่อมโยงกัน ในระบบของเรา เราไม่ได้แค่ติดตาม "เกรด" แต่เราสร้างแผนที่ **Knowledge State** (สถานะความรู้) ที่แม่นยำของนักเรียนผ่านจุดประสงค์การเรียนรู้นับพันที่สอดคล้องกับมาตรฐาน Global Scale of English (GSE) และมาตรฐานคณิตศาสตร์สากล
+src/app/[locale]/(marketing)/blog/posts/th/the-advantage-engine-kst-srs.md:24: Global Scale of English -> **Knowledge Space Theory (KST)** เป็นกรอบงานทางคณิตศาสตร์ที่ริเริ่มโดย Jean-Claude Falmagne ซึ่งจำลองการเรียนรู้เป็นกราฟทักษะที่เชื่อมโยงกัน ในระบบของเรา เราไม่ได้แค่ติดตาม "เกรด" แต่เราสร้างแผนที่ **Knowledge State** (สถานะความรู้) ที่แม่นยำของนักเรียนผ่านจุดประสงค์การเรียนรู้นับพันที่สอดคล้องกับมาตรฐาน Global Scale of English (GSE) และมาตรฐานคณิตศาสตร์สากล
+
+····················································
+
+ Test Files  8 passed (8)
+      Tests  66 passed (66)
+   Start at  01:27:38
+   Duration  9.33s (transform 615ms, setup 359ms, import 3.05s, tests 1.64s, environment 3.48s)
+

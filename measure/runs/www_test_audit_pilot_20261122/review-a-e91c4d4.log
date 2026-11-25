@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+commits: none
+tests_run: pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts src/__tests__/blog-posts-loader-dotfile.test.ts src/__tests__/blog-posts-loader-symlink.test.ts src/lib/blog-posts-validation.test.ts --reporter=verbose; 4 files and 24 tests passed.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-e91c4d4.json and review-a-e91c4d4.log
+plan_updates: none
+known_failures: ADV-23 note: locale-directory symlinks are not traversed; the phase-base validation used the same isDirectory filter.
+handoff: F25 withdrawn. Regular .md files and symlinks to regular files are loaded. Unreadable .md entries fail both discovery checks with named references. All 15 blog rules and two discovery cases remain. The 20 percent target and test-only scope pass. The known locale-symlink gap does not meet the blocker condition.
+dispositions: none
+END_MEASURE_AGENT_RESULT

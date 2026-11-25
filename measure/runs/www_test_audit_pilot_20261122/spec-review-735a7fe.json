@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Spec and plan are comprehensible and stay at the requirement and task level. The Red/Green deviation is accepted in substance for test-only work. No Blocker found. Four nonblocking findings remain: a mutation-check contradiction in the K row, a conflicting owner for the second check, an unrecorded role-gate substitution for the deviation, and an unnamed second-check output file.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F1 [Major] spec.md §5 K row / spec.md §3: The K action says to add a mutation check when one is absent, but §3 forbids a Stryker run and §7 names no mutation command, so the implementer cannot tell whether to add one. Rationale: Conflicting sections leave the K-test edge case undefined and repeat a gate the pilot replaces.",
+    "F2 [Major] plan.md Role note / task 1.3: The role note assigns the second check to measure-mid-red while task 1.3 requires a different model family. Rationale: Source plan §5 step 3 requires a second model distinct from the classifier, and the conflicting assignment leaves the check owner undefined.",
+    "F3 [Major] plan.md Role note (Red/Green deviation): The deviation is accepted in substance, but the plan does not record how the mid-red and jr-green role gates pass with no failing Red test, which workflow.md step 3 requires. Rationale: An unrecorded gate substitution blocks Phase 1 at the harness gate even though the phase commands are checkable.",
+    "F4 [Major] plan.md task 1.3: The result of the report-only second check has no named output file. Rationale: Other phase outputs name a file, and an unnamed report leaves a file-location detail to the implementer."
+  ],
+  "evidence": [
+    "HEAD verified equal to audited_head_sha 735a7fe4490599f1c70d4b723367ab3b8dd25a64 via git rev-parse HEAD.",
+    "apps/www-reading-advantage/package.json: name www-reading-advantage; test:coverage = vitest run --coverage (line 19); dependencies @reading-advantage/ui (line 30), @reading-advantage/utils (line 31), @reading-advantage/config (line 56); no core module dependency.",
+    "grep of @reading-advantage/ under apps/www-reading-advantage found only config in tsconfig.json and eslint.config.mjs and ui/utils/config in package.json; no domain, auth, api, db, or payout import.",
+    "/home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh exists and documents -c '<command>' and HEAVY_PREFLIGHT_WAIT_S (line 51).",
+    "measure/workflow.md lines 55-62 require a failing Red test before Green; plan.md lines 20-31 declare the deviation for reviewer judgment.",
+    "Source plan A-66 sections 3-7 read and applied; spec.md and plan.md quote the classes, gates, order, and due constraints without volatile baseline counts."
+  ],
+  "commands": [
+    "git rev-parse HEAD (in www-test-audit worktree) -> 735a7fe4490599f1c70d4b723367ab3b8dd25a64",
+    "read spec.md, plan.md, source plan A-66/plan.md, measure/workflow.md, package.json, heavy-run.sh",
+    "grep @reading-advantage/ under apps/www-reading-advantage"
+  ],
+  "changed_files": [
+    "measure/runs/www_test_audit_pilot_20261122/spec-review-735a7fe.json",
+    "measure/runs/www_test_audit_pilot_20261122/spec-review-735a7fe.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "medium",
+  "paraphrase": {
+    "proposes": "This pilot cuts the www-reading-advantage Vitest case count by at least 20 percent without lowering fault detection. It records a baseline case count and line coverage through the shared heavy-run runner, classifies every www test file into K, D1-D5, and R1-R3 with K rows first, then deletes D1-D5 and rewrites R1-R3 in one commit per class. After each commit the suite must pass and line coverage must fall by at most one point. K tests stay unless a named duplicate keeps the same rule, and the track ships no push before phase acceptance.",
+    "current_system": "Per this spec, www-reading-advantage has a Vitest suite and Playwright e2e files. Only Vitest cases count toward the 20 percent target; Playwright cases count only if the spec names a reason, which it does not. The app depends only on @reading-advantage/ui, utils, and config, so it touches none of the five core modules and needs no mutation baseline. Baseline counts and coverage live in run logs and are measured with the named Vitest commands through the shared runner."
+  },
+  "role": "spec-review",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "track setup",
+  "baseline_sha": "735a7fe4490599f1c70d4b723367ab3b8dd25a64",
+  "audited_head_sha": "735a7fe4490599f1c70d4b723367ab3b8dd25a64"
+}

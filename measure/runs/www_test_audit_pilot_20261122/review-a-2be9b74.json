@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 2: Delete batch (D1-D5)",
+  "baseline_sha": "2be9b74db01c8053256f5f18453ca4e38b2390f0",
+  "phase_base_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+  "role_base_sha": "2be9b74db01c8053256f5f18453ca4e38b2390f0",
+  "audited_head_sha": "2be9b74db01c8053256f5f18453ca4e38b2390f0",
+  "status": "pass",
+  "summary": "The one-line plan change records PM approval of the F11 exception. F11 is closed. Phase 2 passes Review A with no blocking findings.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F17 [Nit] review-a: The unused compiledCss export is removed, but the full feature and pricing locale-key lists remain duplicated between www-features-pricing.locale.test.ts, www-features-page.content.test.tsx, and www-pricing-page.content.test.tsx. Keep each required list in one fixture."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned 2be9b74db01c8053256f5f18453ca4e38b2390f0, equal to role_base_sha and audited_head_sha.",
+    "The exact review range cab8ffd8e014c7ea83f1496747f421aa4bc8e344..2be9b74db01c8053256f5f18453ca4e38b2390f0 changes only measure/tracks/www_test_audit_pilot_20261122/plan.md.",
+    "The word diff shows one changed plan line: the F11 deviation records PM approval of the exception on 2026-11-23.",
+    "The phase-range diff a1caa58034f6455e91205a5673ef172a974a7992..2be9b74db01c8053256f5f18453ca4e38b2390f0 contains test files, test fixtures, and plan.md only; no production file changed.",
+    "F11 withdrawn: plan.md:178 records PM approval on 2026-11-23 and cites review-a-cab8ffd.json.",
+    "F10 remains withdrawn: green-at-7008ccef.log reports 89 files and 3,081 tests passed; plan.md:179 records exit 0.",
+    "F16 remains withdrawn: the rerun GREEN logs report 3,057 and 3,061 passing tests; both COVERAGE logs report 89.98% lines, above the 85.52% floor, and plan.md:180 records exit 0.",
+    "Review A rounds 3 and 4 withdrew the contested F1, F2, F3, F4, F9, F10, F12, and F16 findings on their respective evidence. F11 was the last blocking finding."
+  ],
+  "commands": [
+    "git rev-parse HEAD && git diff --name-status cab8ffd8e014c7ea83f1496747f421aa4bc8e344..2be9b74db01c8053256f5f18453ca4e38b2390f0 && git diff --word-diff=porcelain cab8ffd8e014c7ea83f1496747f421aa4bc8e344..2be9b74db01c8053256f5f18453ca4e38b2390f0 -- measure/tracks/www_test_audit_pilot_20261122/plan.md && git diff --check cab8ffd8e014c7ea83f1496747f421aa4bc8e344..2be9b74db01c8053256f5f18453ca4e38b2390f0"
+  ],
+  "changed_files": [
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "plan.md:178 records PM approval of the only remaining blocker, F11."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The supplied rerun logs show passing GREEN results and 89.98% line coverage at both F16 commits."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The cab8ffd8e..2be9b74db diff changes only one plan.md line."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The diff, PM approval record, and cited rerun logs support the closed findings."
+    }
+  ]
+}

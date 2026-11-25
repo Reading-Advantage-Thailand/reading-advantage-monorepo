@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "7336f42b31b2a80eb4ba61a093a84ada9befa866",
+  "phase_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "role_base_sha": "2bfbd373fef2fc500798efe721975fa0a345e73f",
+  "audited_head_sha": "2bfbd373fef2fc500798efe721975fa0a345e73f",
+  "status": "pass",
+  "summary": "Commit 2bfbd373f changes classification.md, report.md and plan.md only. The blog merge removed 1709 cases: gate-257a6b0c.json gives 3094 - 1385, and the per-post sweep over 119 posts gives 1726 cases before the merge and 17 after. So 1494 + 1709 = 3203, which is 28 above 3175. The projection note, the f97a72f90 table row, the reverted D5 marks and the plan 4.17 wording are correct. No 81/54/3121 cut figure, line citation or run-file count remains. The final values agree: 1494, 1681 (52.9 %), 92.08 % and 3064 (96.5 %). Two wording items do not block.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N13 (counterfactual wording, changed line): report.md section 1 says 'Without the blog merge, the suite holds 3203 cases, the final 1494 plus the 1709 cases the blog merge removed.' The 1709 comes from the 119 posts at task 3.5. Master later added one en post and one th post (121 now). The old per-post file would now hold 14 x 121 + 2 + 59 = 1755 cases, so the unmerged suite at HEAD would hold about 3232 cases, not 3203. The sentence defines 3203 as that sum, and the conclusion holds either way: there is no net cut without the blog merge. Suggested text: 'the final 1494 plus the 1709 cases the blog merge removed at task 3.5'. Also add the sources of the computed figure (green-at-f97a72f9.log, gate-257a6b0c.json; computed).",
+    "N14 (stale projection text, ADV-P1-10 remainder): classification.md, Approved merge line section, still ends 'The second lever is the primary-advantage content pin set (102 D5 cases); its replacement design decides the final count.' ADV-P1-10 named this line, but the new note covers only the Projected cut block. After the D5 revert that lever no longer exists. Suggested: extend the note to this sentence."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned 2bfbd373fef2fc500798efe721975fa0a345e73f, equal to audited_head_sha and role_base_sha. `git status --short` is empty.",
+    "`git diff --stat 7336f42b3..HEAD` lists classification.md (+2), plan.md (3 +-) and report.md (11 +-) only. One commit: 2bfbd373f.",
+    "1709 check from the gate: python3 -I reading gate-257a6b0c.json gives cases_before 3094 and cases_after 1385, with green_exit_code 0. 3094 - 1385 = 1709.",
+    "1709 check from git: `git show 257a6b0cd^:apps/www-reading-advantage/src/lib/blog-posts-validation.test.ts` has 2 static cases, 14 per-post it() templates and 1 per-th-post cross-locale template. At 257a6b0cd^, `git ls-tree` gives 61 en and 58 th .md posts, so 14 x 119 + 2 + 58 = 1726. The merged file at 257a6b0cd has 17 it() cases (`grep -cE '^\\s*it\\('`). 1726 - 17 = 1709.",
+    "Arithmetic: 1494 + 1709 = 3203, and 3203 - 3175 = 28. green-at-f97a72f9.log holds 'Tests  1494 passed (1494)'.",
+    "Projection note: classification.md now adds 'Note: D5 was reverted on 2026-11-25 by PM option C. This projection counts a D5 cut that no longer exists and is superseded.' after the projected total. See N14 for the Approved merge line sentence.",
+    "Table: report.md section 2 marks the D5 parts 1 to 4 '(reverted)'. It adds '| D5 revert | 4.18 | f97a72f90 | 1414 | 1494 | 0 | 92.08 | green-at-f97a72f9.log | coverage-at-f97a72f9.log | none; no gate (the revert) |'. 1414 is the count at f97a72f90^ (fdf62c97b; ca91946b gave 1414, and the later commits change documents only). 1494 and 92.08 match green-at-f97a72f9.log and coverage-at-f97a72f9.log.",
+    "Plan: task 4.17 now says 'because the rows were restored in Phase 2 task 2.7'. `rg -n -i 'phases 2 and 3'` finds only task 4.18's correction text, which quotes the old wording. Task 4.18 adds one line that names ADV-P1-12, ADV-P1-10, ADV-P1-11 and ADV-P1-4c. All four are in adversarial-p1-7336f42.json.",
+    "Stale figures: `rg -n -w '81|54|3121|2\\.6|1\\.7'` over report.md, plan.md and classification.md hits only plan '54 pins' (the D5 part 4 pin count) and task numbers 2.6. No 81, 54, 3121, 2.6 % or 1.7 % cut figure remains.",
+    "Final numbers agree: report.md section 1 gives 1494 cases, 92.08 %, a cut of 1681 (52.9 %) and a rise of 5.56. Section 4 gives 2843 for the 77 K-section rows and 3064 (96.5 %) for the Summary. The classification Summary gives K 3064 (96.5 %).",
+    "`git diff 7336f42b3..HEAD | grep '^+' | grep -nE ':[0-9]+\\b'` returns no hit, so the commit adds no line citation. The commit adds no count of a run-file kind.",
+    "No tests ran this round. The commit changes documents only, and the apps tree equals ecff7cfad, where this role ran 1494 tests at 92.08 % lines."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git status --short",
+    "git log --oneline 7336f42b3..HEAD",
+    "git diff --stat 7336f42b3..HEAD",
+    "git diff 7336f42b3..HEAD",
+    "python3 -I -c 'print selected keys of gate-257a6b0c.json'",
+    "grep -E 'Tests  ' green-at-f97a72f9.log",
+    "git show 257a6b0cd:apps/www-reading-advantage/src/lib/blog-posts-validation.test.ts | grep -cE '^\\s*it\\('",
+    "git show 257a6b0cd^:apps/www-reading-advantage/src/lib/blog-posts-validation.test.ts | grep -nE '^\\s*(it|describe)(\\.each)?\\('",
+    "git ls-tree --name-only 257a6b0cd^ <posts>/en/ and <posts>/th/ | grep -c '\\.md$'",
+    "git ls-tree --name-only HEAD <posts>/en/ and <posts>/th/ | grep -c '\\.md$'",
+    "rg -n -w '81|54|3121|2\\.6|1\\.7' report.md plan.md classification.md",
+    "rg -n -i 'phases 2 and 3' measure/tracks/www_test_audit_pilot_20261122/",
+    "python3 -I -c 'print findings of adversarial-p1-7336f42.json'",
+    "sed -n 244,272p classification.md",
+    "git diff 7336f42b3..HEAD | grep '^+' | grep -nE ':[0-9]+\\b'"
+  ],
+  "changed_files": [
+    "measure/tracks/www_test_audit_pilot_20261122/classification.md",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "measure/tracks/www_test_audit_pilot_20261122/report.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "claude-agent/opus#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "1709 checks out from gate-257a6b0c.json (3094 - 1385) and from git (14 x 119 + 2 + 58 = 1726 before, 17 after), but the '3203 cases' counterfactual uses the task 3.5 post count, not the 121 posts at HEAD."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "This round changes documents only; the apps tree equals ecff7cfad, where this role ran 1494 tests at 92.08 % lines."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "`git diff --stat 7336f42b3..HEAD` lists classification.md, report.md and plan.md only, and each hunk maps to ADV-P1-10, -11, -12 or -4c."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "The new table row cites green-at-f97a72f9.log and coverage-at-f97a72f9.log, but the 3203 sentence cites no source, and the classification second-lever sentence (N14) has no note."
+    }
+  ]
+}

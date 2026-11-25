@@ -1,0 +1,29 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Phase acceptance remediation F25. Phase 3: Rewrite batch (R1-R3).
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+phase_base_sha: 8a126f612abcc258c6c6711d6ac03fa085bbcbff
+role_base_sha: a0b8e18e8f0e4529dca74b3a29b8c7741a4bd388
+green_head: e831157de689a3deef0f80d8d4860fdc41e760a5
+implementation_commit: 7b62bed78b4bfefdb6abecf2579869150c2de476
+plan_evidence_commit: e831157de689a3deef0f80d8d4860fdc41e760a5
+
+tasks_flipped_to_x:
+- 3.14 Phase acceptance remediation F25 (7b62bed78). Evidence: implementation commit 7b62bed78 and plan commit e831157d.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: one tracked file, src/__tests__/blog-posts-loader-symlink.test.ts. The loader fixture and the validation test were changed. The plan commit changed the existing plan.md. No post or production file changed.
+
+fix: the loader accepts a regular file or a symbolic link whose target, checked with statSync, is a regular file. A broken link is reported by brokenPostRefs and asserted empty in both discovery cases, so it is named rather than crashing or being skipped. Dot-prefix handling, the extension rule and the -segments.json allowance are unchanged.
+
+unit_test: the new symlink test uses a temporary directory. It proves a symlinked blank-title .md post is loaded and that a broken link is flagged.
+
+gates: four heavy-run gates exited 0 after the implementation commit. check-types 0. lint 0 with three known warnings in untouched files. full vitest 0 with 98 files and 1410 tests. coverage 0 with lines at 92.07 percent. cases_before=1408, cases_after=1410; the two new symlink cases add the count. Line coverage is above the 85.52 floor and the 86.52 baseline.
+
+proofs: measure/runs/www_test_audit_pilot_20261122/proof-f25.log. A blank-title file outside the posts dir was symlinked as en/zz-symlink-probe.md; the title rule failed and named en/zz-symlink-probe. Both temporary paths were removed. git status shows no post or production change.
+dispositions: F25=FIX
+END_MEASURE_AGENT_RESULT

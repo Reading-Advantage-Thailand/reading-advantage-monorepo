@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 2: Delete batch (D1-D5)",
+  "baseline_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "phase_base_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+  "role_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "audited_head_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "status": "pass",
+  "summary": "Phase 2 passes Review A apart from F17, which remains a nonblocking nit. ADV-4 to ADV-6 are closed. The orchestrator directs default A for F18: retain the independent AC-24 exact-string allowlist, pending PM confirmation.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F17 [Nit] review-a: The unused compiledCss export is removed, but the full feature and pricing locale-key lists remain duplicated between www-features-pricing.locale.test.ts, www-features-page.content.test.tsx, and www-pricing-page.content.test.tsx. Keep each required list in one fixture."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned 8a126f612abcc258c6c6711d6ac03fa085bbcbff, equal to role_base_sha and audited_head_sha.",
+    "The audited range is a1caa58034f6455e91205a5673ef172a974a7992..8a126f612abcc258c6c6711d6ac03fa085bbcbff. Changed files in this phase are tests, test fixtures, and plan.md; no production file changed.",
+    "proof-adv456.log records a failing-first run after temporary shipped-copy rewording, where the eligibility test reports an inactive-package break.",
+    "adversarial-8a126f6.json reports ADV-4 to ADV-6 closed, the nine reversal probes passing, four positive-check probes held, and ADV-7 as a note.",
+    "fixtures/reedy-eligibility.ts:85–112 stores approved sentence literals independently of locale files. eligibilityBreaks at lines 148–154 rejects an otherwise-valid sentence absent from that list.",
+    "F18 withdrawn: the orchestrator directs default A, retaining the independent exact-string allowlist and accepting the fixture-update cost pending PM confirmation.",
+    "The independent list prevents a copy rewrite from silently redefining the test oracle. This aligns with the pilot rule to preserve fault detection for the AC-24 customer claim.",
+    "The specified track test-strategy.md file does not exist at the repository path. The track spec says the fidelity rule in spec.md:37–44 controls kept tests."
+  ],
+  "commands": [
+    "git rev-parse HEAD && git diff --name-status 5c477077724cb3a51fcf749e8c531c121793e12b..8a126f612abcc258c6c6711d6ac03fa085bbcbff && git diff --name-status a1caa58034f6455e91205a5673ef172a974a7992..8a126f612abcc258c6c6711d6ac03fa085bbcbff && git diff --check a1caa58034f6455e91205a5673ef172a974a7992..8a126f612abcc258c6c6711d6ac03fa085bbff && git status --short",
+    "rg -n 'APPROVED_ELIGIBILITY_SENTENCES|activePackage must carry|approved eligibility sentences' apps/www-reading-advantage/src/__tests__/fixtures/reedy-eligibility.ts",
+    "git diff --name-only a1caa58034f6455e91205a5673ef172a974a7992..8a126f612abcc258c6c6711d6ac03fa085bbcbff -- apps"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/fixtures/reedy-eligibility.ts",
+    "apps/www-reading-advantage/src/__tests__/reedy-inactive-reversal.adversarial.test.tsx",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "proof-adv456.log records the negative-copy mutation failing under the eligibility check."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "adversarial-8a126f6.json reports nine reversal probes and four positive-check probes passing."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The audited app diff contains test and fixture paths only."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The cited adversarial result, proof log, and fixture lines support the closure and the recorded default A decision."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 3: Rewrite batch (R1-R3), adversarial round 6 (closing confirmation)",
+  "baseline_sha": "3bad02148",
+  "phase_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "role_base_sha": "a0b8e18e8f0e4529dca74b3a29b8c7741a4bd388",
+  "audited_head_sha": "a0b8e18e8f0e4529dca74b3a29b8c7741a4bd388",
+  "status": "pass",
+  "summary": "ADV-17 is closed: contrast.ts scans every document stylesheet at read time, recurses into grouping at-rules, matches the tested element and every ancestor, and throws on an unevaluable selector. The probe file passes 4 of 4 with unchanged expectations, the helper unit tests pass with 2 new cases, and the R2 contrast tests pass: 5 files, 28 tests. No shipped page shows a silent contrast pass. Verdict pass.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "ADV-17 closed: 6be92dd85 scans every document stylesheet at read time; the committed probe's injected-class-rule case now throws as required, and the ADV-15 and fallback cases still pass.",
+    "ADV-18 closed: the guard now matches the tested element and every ancestor for document-stylesheet token rules.",
+    "ADV-19 closed: grouping at-rules are walked recursively, so token rules inside @media or @supports are seen.",
+    "ADV-20 [Note] adversarial: selector evaluation uses jsdom's element.matches; a selector that jsdom evaluates differently from a browser would throw only when it raises, so a browser-specific mismatch could stay silent, though no shipped page is known to depend on such a selector.",
+    "ADV-21 [Note] adversarial: shadow-root styles are outside document.styleSheets; the shipped pages use no shadow DOM, so this cannot let a rendered contrast failure pass on a shipped page."
+  ],
+  "evidence": [
+    "pnpm --filter www-reading-advantage exec vitest run on the probe file, contrast-fixture.test.ts, phase-4-browser-regressions.red.test.tsx, phase-4-browser-regressions-remaining.red.test.tsx, and hero-text-contrast.red.test.ts at a0b8e18e8: 5 files, 28 tests, all passed.",
+    "The probe file passes 4 of 4 with unchanged expectations, including the ADV-17 injected-class-rule case that failed at 3bad02148.",
+    "contrast.ts iterates document.styleSheets at read time and recurses into grouping at-rules.",
+    "git status is clean; no production edit and no commit belong to this round."
+  ],
+  "commands": [
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/contrast-parent-override.adversarial.test.tsx src/__tests__/contrast-fixture.test.ts src/__tests__/phase-4-browser-regressions.red.test.tsx src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx src/__tests__/hero-text-contrast.red.test.ts --reporter=dot"
+  ],
+  "changed_files": [
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-a0b8e18.json",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-a0b8e18.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "kimi-code-plan-cn/kimi-for-coding",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "The probe passes 4 of 4 and all 28 tests across the helper and R2 contrast tests pass at a0b8e18e8."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "Fail-closed behavior now covers inline, compiled, and injected token rules, element and ancestors, and grouping at-rules."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "No production edit and no commit belong to this round; the fix touched the helper, its unit tests, and the probe."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The verdict rests on one green run of five files and the probe's unchanged expectations."
+    }
+  ]
+}

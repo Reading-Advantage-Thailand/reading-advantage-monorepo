@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 2: Delete batch (D1-D5)",
+  "baseline_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+  "phase_base_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+  "role_base_sha": "2be9b74db01c8053256f5f18453ca4e38b2390f0",
+  "audited_head_sha": "2be9b74db01c8053256f5f18453ca4e38b2390f0",
+  "status": "fail",
+  "summary": "Attack cases (a) and (c) hold: all seven tutor-commission K files are unchanged in the phase range, and no e2e file is counted. The D4 deletion does not match its class row, and gate-0d705612.json records two deletions that still run at HEAD. Both new fixtures hold against hostile probes. ADV-1 routes to Green.",
+  "blocking_findings": [
+    "ADV-1 [Blocker] adversarial: D4 commit 0d705612d deleted only 1 of the 3 classified navigation cases, and gate-0d705612.json lists cases as deleted that still run. classification.md row D4 names 'returns the active locale x3' in src/locales/navigation.test.tsx. The commit changed it.each(['en','th','zh']) to it.each(['th','zh']), so 'returns the active th locale' and 'returns the active zh locale' still exist and pass at HEAD (vitest list confirms 3 nav cases). gate-0d705612.json deleted_case_names lists all three locale cases plus claims deleted_cases=6 with cases_after=3140, but the static diff c1410ed97..0d705612d removes only 4 cases (navigation 1, real-logos-captures.red 2, primary-page-images 1), and neither green log shows a skip. The deletion set does not match the class rows (test-strategy.md Phase 2 Green gate item 3), and the gate record is false. Route-to-Green: delete the two remaining classified nav cases, or get PM approval to keep them and amend the classification row and the gate record."
+  ],
+  "nonblocking_findings": [
+    "ADV-2 [Nit] adversarial: no coverage log carries a literal line_coverage_pct= label line. The label lives in the gate JSON files, and each log holds the istanbul 'Lines : NN.NN%' summary. Every gate value matches its log summary (spot-checked 407c5d9: 90.03), so the A3 defense holds in substance."
+  ],
+  "evidence": [
+    "git diff on the seven tutor-commission K files across a1caa5803..2be9b74db is empty (exit 0, no output).",
+    "vitest list at HEAD shows src/locales/navigation.test.tsx still runs 'returns the active th locale' and 'returns the active zh locale'.",
+    "git show 0d705612d --stat shows 3 files and 22 deletions; the navigation hunk only drops 'en' from the it.each array.",
+    "green-e332f594.log reports 3146 passed; green-0d705612.log reports 3140 passed; neither log contains a skip line.",
+    "grep -c line_coverage_pct over all coverage-*.log files returns 0; tail of coverage-407c5d9.log shows 'Lines : 90.03%', equal to gate-407c5d9.json line_coverage_pct.",
+    "baseline.json line_coverage_pct=86.52 and every gate floor is 85.52, the baseline minus 1 point; every gate line_coverage_pct is 89.86 to 90.94.",
+    "green-at-7008ccef.log reports 89 files and 3081 tests passed, matching gate-7008ccef.json cases_after=3081 (F10 remediation holds).",
+    "per-file-counts.md contains no e2e row, and classification.md lists all six e2e files as not counted.",
+    "Both fixture probes pass: 10 of 10 in locale-key-check.adversarial.test.ts and real-css.adversarial.test.ts at commit bfda22bd8.",
+    "The phase-range diff under apps/ names test files and test fixtures only; no production file changed."
+  ],
+  "commands": [
+    "git diff --name-only a1caa58034f6455e91205a5673ef172a974a7992..HEAD -- apps/www-reading-advantage/src/lib/tutor-commission.test.ts apps/www-reading-advantage/src/lib/tutor-commission.adversarial.test.ts apps/www-reading-advantage/src/lib/tutor-commission.followups.adversarial.test.ts apps/www-reading-advantage/src/lib/tutor-commission.settlement.adversarial.test.ts apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.test.tsx apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.adversarial.test.tsx apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx",
+    "git show 0d705612d77a786b42484f5df067f9bbb54e2389 --stat",
+    "git diff c1410ed97..0d705612d --stat",
+    "pnpm --filter www-reading-advantage exec vitest list src/lib/__tests__/real-logos-captures.red.test.ts src/lib/__tests__/primary-page-images.test.ts src/locales/navigation.test.tsx",
+    "grep -a -E 'Tests  ' measure/runs/www_test_audit_pilot_20261122/green-e332f594.log measure/runs/www_test_audit_pilot_20261122/green-0d705612.log",
+    "grep -a -c line_coverage_pct measure/runs/www_test_audit_pilot_20261122/coverage-*.log",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/locale-key-check.adversarial.test.ts src/__tests__/real-css.adversarial.test.ts --reporter=verbose",
+    "git diff --name-only a1caa58034f6455e91205a5673ef172a974a7992..HEAD -- apps/ | grep -v -E '\\.(test|adversarial)\\.tsx?$|__tests__|fixtures'"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/locale-key-check.adversarial.test.ts",
+    "apps/www-reading-advantage/src/__tests__/real-css.adversarial.test.ts"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "kimi-code-plan-cn/kimi-for-coding",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "Tutor-commission K files are unchanged, but the D4 deletion set does not match its class row and the D4 gate record is false (gate-0d705612.json vs navigation.test.tsx at HEAD)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "Ten committed adversarial probes pass at bfda22bd8; the two surviving nav weak cases contradict the deletion plan rather than the suite behavior."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The phase-range diff under apps/ names test files and fixtures only; no production file changed."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 3,
+      "evidence": "Green and coverage logs back most gate values, but gate-0d705612.json lists two cases as deleted that vitest list shows running at HEAD."
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 2: Delete batch (D1-D5)",
+  "baseline_sha": "99262eda416ff8e9c5865645b8ea85d6a29a9987",
+  "phase_base_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+  "role_base_sha": "99262eda416ff8e9c5865645b8ea85d6a29a9987",
+  "audited_head_sha": "99262eda416ff8e9c5865645b8ea85d6a29a9987",
+  "status": "pass",
+  "summary": "F1-F5 from phase acceptance are resolved. The contact check uses shipped config, the CEFR sweep renders all three omitted product sections, and the Reedy check rejects inactive eligibility. Both remediation commits pass their gates. No production file or K rule changed.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F17 [Nit] review-a: The unused compiledCss export is removed, but the full feature and pricing locale-key lists remain duplicated between www-features-pricing.locale.test.ts, www-features-page.content.test.tsx, and www-pricing-page.content.test.tsx. Keep each required list in one fixture."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned 99262eda416ff8e9c5865645b8ea85d6a29a9987, equal to role_base_sha and audited_head_sha.",
+    "The exact audit range is a1caa58034f6455e91205a5673ef172a974a7992..99262eda416ff8e9c5865645b8ea85d6a29a9987. It changes test files, test fixtures, and the track plan only.",
+    "F1 withdrawn: phase-4-contact-authority.red.test.tsx:67–72 uses vi.importActual for the shipped config; lines 197–219 compare locale fields with shipped raw values. proof-pa-f1.log shows the shipped phone inserted into a locale field fails the check.",
+    "F2 withdrawn: no-gse-in-customer-copy.test.ts:277–320 includes B2B, B2C, and Tutor sections as separate rendered entries. products/page.tsx:180–182 renders those same sections on the Products route. The Products route itself is also swept for parent content.",
+    "proof-pa-f2.log shows a hard-coded GSE heading in the B2C section fails the rendered sweep. The three sections use their real component implementations through vi.importActual.",
+    "F3 withdrawn: www-tutor-reedy-claim.test.tsx:74–98 rejects inactive forms in English, Thai, and Chinese; lines 294–323 test the negative controls. proof-pa-f3.log shows the inactive Reedy sentence fails.",
+    "Each commit passes its GREEN and COVERAGE gate. gate-7c2d93e2.json reports both exits 0 and 91.55% lines. gate-3b044ec9.json reports both exits 0 and 91.55% lines. Both exceed the 85.52% floor.",
+    "green-7c2d93e2.log reports 91 files and 3,079 tests passed. green-3b044ec9.log reports 91 files and 3,081 tests passed.",
+    "F4 withdrawn: plan.md:194 records the immutable gate-file deviation and explains that the D1 commit and logs identify the correct result.",
+    "F5 withdrawn: plan.md:141–145 names the 407c5d9 logs as the task 2.6 checkpoint results.",
+    "F1 does not weaken the K contact-authority rule in classification.md:48; the duplicate check now uses actual config values. The phase-acceptance evidence reports the tutor-commission K tests unchanged.",
+    "The phase diff contains no production file. The changed app paths are tests and test fixtures."
+  ],
+  "commands": [
+    "git rev-parse HEAD && git diff --name-status a1caa58034f6455e91205a5673ef172a974a7992..99262eda416ff8e9c5865645b8ea85d6a29a9987 && git diff --check a1caa58034f6455e91205a5673ef172a974a7992..99262eda416ff8e9c5865645b8ea85d6a29a9987 && git status --short",
+    "rg -n 'All files|% Lines' measure/runs/www_test_audit_pilot_20261122/coverage-7c2d93e2.log measure/runs/www_test_audit_pilot_20261122/coverage-3b044ec9.log",
+    "rg -n 'Test Files|Tests\\s+[0-9]+ passed' measure/runs/www_test_audit_pilot_20261122/green-7c2d93e2.log measure/runs/www_test_audit_pilot_20261122/green-3b044ec9.log"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/phase-4-contact-authority.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/no-gse-in-customer-copy.test.ts",
+    "apps/www-reading-advantage/src/__tests__/www-tutor-reedy-claim.test.tsx",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "proof-pa-f1.log, proof-pa-f2.log, and proof-pa-f3.log show the named mutations fail."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "The three proof logs show failing-first tests for the contact duplicate, rendered GSE heading, and inactive Reedy eligibility."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The audited phase diff changes tests, fixtures, and plan.md, with no production path."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Both gate receipts report exit 0 and 91.55% lines; the cited plan lines resolve F4 and F5."
+    }
+  ]
+}

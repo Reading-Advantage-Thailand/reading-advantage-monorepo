@@ -105,7 +105,7 @@ export const en = {
         eyebrow: "The suite",
         title: "Three live product lines. More on the roadmap.",
         description:
-            "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. Science, Math, Zhongwen, and STEM Advantage are on our roadmap. The first Storytime Advantage unit is available now.",
+            "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. In the 2027 school year, Thai primary schools open Science Advantage, Math Advantage, and Zhongwen Advantage: workbooks and apps. STEM Advantage is planned. The first Storytime Advantage unit is available now.",
     },
     mission: {
         title: "Student Success Is Our Mission",
@@ -331,7 +331,7 @@ export const th = {
         eyebrow: "ชุดผลิตภัณฑ์",
         title: "สามสายผลิตภัณฑ์ที่เปิดใช้งานแล้ว และอีกหลายสายอยู่ในแผนงาน",
         description:
-            "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก Science, Math, Zhongwen และ STEM Advantage อยู่ในแผนงาน หน่วยการเรียนรู้แรกของ Storytime Advantage พร้อมใช้งานแล้ว",
+            "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก ในปีการศึกษา 2570 โรงเรียนประถมศึกษาไทยจะเปิดใช้ Science Advantage, Math Advantage และ Zhongwen Advantage ทั้งหนังสือแบบฝึกหัดและแอป STEM Advantage อยู่ในแผน หน่วยการเรียนรู้แรกของ Storytime Advantage พร้อมใช้งานแล้ว",
     },
     mission: {
         title: "ภารกิจของเราคือความสำเร็จของนักเรียน",
@@ -557,7 +557,7 @@ export const zh = {
         eyebrow: "产品套件",
         title: "三条已上线的产品线，更多已在路线图中。",
         description:
-            "Primary Advantage、Reading Advantage 和 CodeCamp Advantage 已上线。Mastery Advantage 在 CodeCamp Advantage 中运行，并通过带标签的内容进入 Primary Advantage。Science、Math、Zhongwen 和 STEM Advantage 在路线图中，暂无日期。",
+            "Primary Advantage、Reading Advantage 和 CodeCamp Advantage 已上线。Mastery Advantage 在 CodeCamp Advantage 中运行，并通过带标签的内容进入 Primary Advantage。在2027学年，泰国小学开设 Science Advantage、Math Advantage 和 Zhongwen Advantage，配套练习册和应用。",
     },
     mission: {
         title: "学生的成功就是我们的使命",

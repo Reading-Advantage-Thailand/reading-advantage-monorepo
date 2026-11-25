@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: phase-acceptance
+status: blocked
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+commits: none
+tests_run: check-types, lint, and test:coverage pass through heavy-run. Lint has zero errors and three known warnings. Vitest passes 1,398 tests in 95 files with 91.95% line coverage. The in-memory probes show two blocking false passes.
+files_changed: phase-acceptance-704745a.json, phase-acceptance-704745a.log
+plan_updates: none
+known_failures: F22: The blog merge misses a dot-prefixed Markdown post that the phase-base suite rejected. F23: The contrast helper misses an element's local color override.
+handoff: Do not accept 704745a3c or credit the merge toward the 20% target. Route F22 and F23 to Green. Record F24 as late tech debt. Rerun the applicable reviews and acceptance at the resulting HEAD.
+END_MEASURE_AGENT_RESULT

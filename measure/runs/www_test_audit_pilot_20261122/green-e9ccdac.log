@@ -1,0 +1,31 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Adversarial remediation ADV-15. Phase 3: Rewrite batch (R1-R3).
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+phase_base_sha: 8a126f612abcc258c6c6711d6ac03fa085bbcbff
+role_base_sha: e9ccdac5e327a800f32155b34e149f13a1d3b493
+green_head: 496ce22335df338926d9d8467770228247b53f30
+implementation_commit: a53d426d5ba9fcf5c0a1f4a85c59a1280c4b96f7
+plan_evidence_commit: 496ce22335df338926d9d8467770228247b53f30
+
+tasks_flipped_to_x:
+- 3.12 Adversarial remediation ADV-15 (a53d426d5). Evidence: implementation commit a53d426d5 and plan commit 496ce223.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: none tracked. The contrast fixture, its unit test and the committed probe were changed. The plan commit changed the existing plan.md. No post or production file changed.
+
+fix: no CSS cascade was rebuilt. The helper fails closed. A --color-* custom property declared on the element or any ancestor throws with the tag and property name. The compiled stylesheet is scanned once for colour-token declarations outside :root, :host or html; a matching selector throws with the selector and name, and an unevaluable selector throws. The root token map stays the only resolved source.
+
+test_changes: the two F23 unit cases that expected an inline override to change the ratio now expect a throw, so failing closed replaces the resolve-from-element rule. The probe's ADV-15 assertion now expects a throw naming --color-slate-900; its two held cases still pass.
+
+gates: four heavy-run gates exited 0 after the implementation commit. check-types 0. lint 0 with three known warnings in untouched files. full vitest 0 with 97 files and 1405 tests. coverage 0 with lines at 91.79 percent. cases_before=1402, cases_after=1405; the three committed probe cases add the count. Line coverage is above the 85.52 floor and the 86.52 baseline. Both R2 contrast tests pass on shipped pages.
+
+proofs: measure/runs/www_test_audit_pilot_20261122/proof-adv15.log. An inline --color-slate-900 on the pricing h1 made the contrast case throw with the property name. The production file was restored with git checkout. git status shows no production or post change.
+
+deviation: both commit headers were shortened for the 100-character commitlint limit. The meaning and track id stay.
+dispositions: ADV-15=FIX
+END_MEASURE_AGENT_RESULT

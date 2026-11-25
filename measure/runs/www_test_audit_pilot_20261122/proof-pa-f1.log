@@ -1,0 +1,41 @@
+heavy-run: lock wait over 600 s — priority p2 — holder PID 3154828: flock -w 1800 -E 201 /home/daniebo/Desktop/primary-parity-progress/heavy.lock /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh --locked -c bash /home/daniebo/.cache/opencode/measure-heavy-run-gate.sh 
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+···x·
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/phase-4-contact-authority.red.test.tsx > RC-P4-001 contact authority contract > rejects duplicate raw contact values in authority locale fields
+AssertionError: expected [ { …(2) } ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   {[39m
+[31m+     "path": "pages.contact.phone.number",[39m
+[31m+     "value": "+66 099-005-8038",[39m
+[31m+   },[39m
+[31m+ ][39m
+
+ ❯ src/__tests__/phase-4-contact-authority.red.test.tsx:218:24
+    216|     );
+    217|
+    218|     expect(duplicates).toEqual([]);
+       |                        ^
+    219|   });
+    220|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  10:46:03
+   Duration  1.19s (transform 400ms, setup 58ms, import 521ms, tests 87ms, environment 424ms)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run '--maxWorkers=1' '--reporter=dot' src/__tests__/phase-4-contact-authority.red.test.tsx

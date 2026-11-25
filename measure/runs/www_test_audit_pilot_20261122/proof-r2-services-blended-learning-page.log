@@ -1,0 +1,37 @@
+MUTATION PROOF (R2)
+Note: a six-column first pane breaks the asymmetric split
+Production file: apps/www-reading-advantage/src/app/[locale]/(marketing)/services/blended-learning/page.tsx
+Edit: 'lg:col-span-7' -> 'lg:col-span-6'
+Test file: src/app/[locale]/(marketing)/services/blended-learning/page.test.tsx
+Expected: test exits 1; the production edit is restored after the run.
+Test exit code: 1
+--- test output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+x
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/app/[locale]/(marketing)/services/blended-learning/page.test.tsx > Blended Learning overview layout > uses the specified asymmetric desktop split
+AssertionError: expected 'span 6 / span 6' to be 'span 7 / span 7' // Object.is equality
+
+Expected: [32m"span [7m7[27m / span [7m7[27m"[39m
+Received: [31m"span [7m6[27m / span [7m6[27m"[39m
+
+ ❯ src/app/[locale]/(marketing)/services/blended-learning/page.test.tsx:36:7
+     34|         ? computedForElement(columns[0], ["grid-column"])["grid-column…
+     35|         : "",
+     36|     ).toBe("span 7 / span 7");
+       |       ^
+     37|     expect(
+     38|       columns[1] instanceof HTMLElement
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  14:33:51
+   Duration  1.38s (transform 75ms, setup 58ms, import 582ms, tests 134ms, environment 441ms)
+

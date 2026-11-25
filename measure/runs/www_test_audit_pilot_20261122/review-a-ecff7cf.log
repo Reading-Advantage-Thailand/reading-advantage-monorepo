@@ -1,0 +1,28 @@
+Review A (correctness and architecture), round 6, for www_test_audit_pilot_20261122, Phase 4: Pilot report.
+Audited HEAD: ecff7cfadfe454ebc5baeacf9ae1f8f7f30ece42. Scope: fdf62c97b..ecff7cfad (f97a72f90 D5 revert, ecff7cfad records). Phase base: e91c4d4cc.
+Result JSON: measure/runs/www_test_audit_pilot_20261122/review-a-ecff7cf.json
+
+Check 1 PASS: seven files equal a1caa5803. batch-19, reading-card and primary keep only their D1 and D2 changes.
+batch-16 equals master 968bde612. Storytime equals master plus the Thai-month controls. No production file changed.
+Mutation probes (vi.mock, no source edit): th pricing S7 3,000 -> 2,500 บาท fails 'holds every pricing TH string'.
+th tutorRole.points.3 fails 'holds the new th copy at both paths'. Result: 2 failed | 41 passed (43).
+Check 2 PASS: the classification sums give 3175, with K 3064 (96.5 %). No K row was deleted.
+Check 3 FAIL: report.md section 4 still says the Summary table gives 2843 K cases (F1).
+Section 3 still says three lint warnings; lint now gives 1 warning (F2).
+Sections 1 and 7 give the right values: 1494, 1681 (52.9 %), 92.08 % and 5.56.
+Check 4 PASS: plan 4.18 is faithful, and tech-debt.md stays at 50 lines and holds ADV-P1-9.
+Nonblocking: N8 leftover D5 helpers; N9 the ca91946b case is gone, but the report does not say so; N10 the tech-debt row title.
+Coverage at HEAD: Test Files 98 passed (98); Tests 1494 passed (1494); lines 92.08.
+
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: heavy-run test:coverage gave 98 files, 1494 passed, lines 92.08; heavy-run lint gave 1 warning; heavy-run vitest probe (two vi.mock pin mutations) gave 2 failed | 41 passed (43), only the restored pin cases failing.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-ecff7cf.json, review-a-ecff7cf.log, probe-review-a-ecff7cf/src/pricing-s7-baht-mutation.test.ts, probe-review-a-ecff7cf/src/tutor-points3-th-mutation.test.ts
+plan_updates: none
+known_failures: F1 report.md section 4 gives 2843 K cases where classification.md Summary now gives 3064; F2 report.md section 3 gives three lint warnings where lint now gives one.
+handoff: Route F1 and F2 to Green. These are late findings that meet the wrong-result exception; the Round limit applies. F1: state 2843 for the 77 K-section rows and 3064 (96.5 %) for the Summary table with the reverted D5 rows. F2: state one lint warning (beforeEach), because the revert removed the two D5 part 2 warnings. Optional: N8 leftover D5 helpers, N9 the removed ca91946b case, N10 the tech-debt row title. The revert itself is correct.
+END_MEASURE_AGENT_RESULT

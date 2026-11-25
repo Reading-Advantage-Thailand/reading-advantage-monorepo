@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "role": "phase-acceptance",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 3: Rewrite batch (R1-R3)",
+  "baseline_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "phase_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "role_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "audited_head_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "status": "pass",
+  "summary": "Phase 3 passes at e91c4d4cc. The merged blog suite rejects the phase-base counterexamples and names the affected posts. The suite count falls by 55.53%.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "F26 [Nit] phase-acceptance: blog-posts-loader.adversarial.test.ts:75–85 uses a fixed directory under /home/daniebo. A probe that denies write access there fails at mkdirSync before the loader runs. This is a test portability issue, not a loss of phase-base fault detection. Use a unique temporary directory in a follow-up."
+  ],
+  "evidence": [
+    "Acceptance used e91c4d4cc3c8d5d61a1e9b802c031247543180fa as its role base and audited HEAD. The phase base was 8a126f612abcc258c6c6711d6ac03fa085bbcbff.",
+    "Green, Review A, and adversarial testing all target e91c4d4cc. Green records role base 865f52a91. No prerequisite needs a test-only HEAD exception.",
+    "Test-strategy.md:78–87 excludes Review B, Review C, and UX browser review for this phase. No browser ran.",
+    "All 15 Phase 3 tasks have [x] and a valid first-line SHA from the phase history or its base. Tasks 3.1 and 3.3 have no R1 or R3 rows.",
+    "Task 3.2 covers 14 R2 rewrites in adf24e723 and two earlier rewrites under the F11 approval. The approved blog merge has its own commit, 257a6b0cd.",
+    "A5: Fourteen class, merge, and remediation receipts match the labeled GREEN and coverage summaries. All four exit fields are zero in each receipt. Line coverage ranges from 91.60% to 92.07%.",
+    "A3, A4, A6, and A7 do not apply. The exact phase diff changes no Measure contract test, framework filter, or track registry.",
+    "Fresh heavy-run coverage passed all 1,412 tests in 98 files with no skipped test. It reports 92.07% lines (1,674 of 1,818), above the 85.52% floor.",
+    "Fresh heavy-run type checking completed with no diagnostics. Lint reported zero errors and three existing warnings. V8 still reports the existing Markdown remap warnings.",
+    "F25 withdrawn: proof-f25.log and the real-filesystem loader tests confirm that a symlink to a regular file is parsed. The paired in-memory probe gave both suites the same symlink entry and blank author. Both exited 1 and named the entry.",
+    "ADV-22 closed: proof-adv22.log names the directory symlink in both discovery cases. The fresh paired probes exercise a symlink to a directory and a direct directory, each with a lowercase .md name.",
+    "Both directory inputs fail at the phase base with EISDIR. At the audited HEAD, both discovery cases fail and name the input. The two forms cannot pass by omission.",
+    "The uppercase .MD symlink to a directory is an extra check, not a loss. The phase base ignores that suffix. The merged suite names the input and exits 1.",
+    "ADV-23 stays a note. Both suites exclude a locale-level directory symlink through the same Dirent.isDirectory() test. ADV-24 stays a note because hard links are regular files to both suites.",
+    "The merged suite retains 15 rules and two discovery cases. proof-blog-merge.log names a broken regular post. A fresh blank-author probe also exits 1 and names en/1-district-1-quality-school.",
+    "The approved merge counts under classification.md:250–255. It preserves the K row and fails by post name. The baseline of 3,175 cases falls to 1,412, a reduction of 1,763 cases or 55.53%.",
+    "F1, F2, and F3 still hold. Fresh probes exit 1 for a duplicate contact number, visible GSE copy in the B2C section, and a cancelled Tutor Advantage package.",
+    "F22, F23, and F24 still hold. Fresh probes exit 1 for a dot-prefixed post, a pricing color override, and a changed hero gradient stop.",
+    "The focused run passes 91 tests in 11 files. It includes the F1–F3 and F22–F25 checks and the loader and contrast probes.",
+    "The phase diff and commit path inventory contain only www tests, test fixtures, and plan.md. No production file, blog post, or tutor-commission test changed. The Phase 4 pilot report remains out of scope."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git status --porcelain=v1 --branch",
+    "git diff a0b8e18e8..HEAD",
+    "git diff --name-status 8a126f612..e91c4d4cc",
+    "git diff --check 8a126f612..e91c4d4cc",
+    "git diff --name-only 8a126f612..e91c4d4cc -- . ':(exclude)measure/**' ':(exclude,glob)apps/www-reading-advantage/**/*.test.ts' ':(exclude,glob)apps/www-reading-advantage/**/*.test.tsx' ':(exclude,glob)apps/www-reading-advantage/src/__tests__/fixtures/**'",
+    "git log --format= --name-only 8a126f612..e91c4d4cc -- . ':(exclude)measure/**' ':(exclude,glob)apps/www-reading-advantage/**/*.test.ts' ':(exclude,glob)apps/www-reading-advantage/**/*.test.tsx' ':(exclude,glob)apps/www-reading-advantage/src/__tests__/fixtures/**'",
+    "git diff --exit-code 8a126f612..e91c4d4cc -- 'apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/posts' 'apps/www-reading-advantage/src/lib/tutor-commission*' 'apps/www-reading-advantage/src/__tests__/phase-4-contact-authority.red.test.tsx' 'apps/www-reading-advantage/src/__tests__/no-gse-in-customer-copy.test.ts' 'apps/www-reading-advantage/src/__tests__/www-tutor-reedy-claim.test.tsx'",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage check-types'",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage lint'",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage'",
+    "CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot src/__tests__/phase-4-contact-authority.red.test.tsx src/__tests__/no-gse-in-customer-copy.test.ts src/__tests__/www-tutor-reedy-claim.test.tsx src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx src/__tests__/contrast-fixture.test.ts src/__tests__/contrast-parent-override.adversarial.test.tsx src/__tests__/blog-posts-loader-dotfile.test.ts src/__tests__/blog-posts-loader-symlink.test.ts src/__tests__/blog-posts-loader.adversarial.test.ts src/lib/blog-posts-validation.test.ts src/components/marketing/hero-section.test.tsx",
+    "NO_COLOR=1 CI=true node --input-type=module -e 'import {spawnSync} from \"node:child_process\";async function probe(){const {startVitest}=await import(\"vitest/node\");const {execFileSync}=await import(\"node:child_process\");const [which,kind]=process.argv.slice(1);const file=\"src/lib/blog-posts-validation.test.ts\";const base=which===\"base\";const old=base?execFileSync(\"git\",[\"show\",`8a126f612:apps/www-reading-advantage/${file}`],{encoding:\"utf8\"}):null;const name={chain:\"phase3-chain.md\",directory:\"phase3-dir.md\",direct:\"phase3-direct.md\",extra:\"phase3-extra.MD\",regular:\"1-district-1-quality-school.md\"}[kind];const isRegular=kind===\"regular\";const direntDirectory=kind===\"direct\";const targetFile=kind===\"chain\";const facade=`import actualFs from \"node:fs\";const name=${JSON.stringify(name)};const fs={...actualFs,readdirSync(dir,opt){const list=actualFs.readdirSync(dir,opt);if(${isRegular}||!String(dir).endsWith(\"/blog/posts/en\"))return list;return [...list,opt?.withFileTypes?{name,isDirectory(){return ${direntDirectory};},isFile(){return false;},isSymbolicLink(){return ${!direntDirectory};}}:name];},statSync(file,...args){if(!${isRegular}&&String(file).endsWith(\"/en/\"+name))return {isFile(){return ${targetFile};}};return actualFs.statSync(file,...args);},readFileSync(file,opt){if(!String(file).endsWith(\"/en/\"+name))return actualFs.readFileSync(file,opt);if(!${targetFile||isRegular})throw Object.assign(new Error(\"EISDIR: \"+file),{code:\"EISDIR\"});const raw=actualFs.readFileSync(String(file).replace(name,\"1-district-1-quality-school.md\"),opt);const broken=raw.replace(/^author:.*$/m,${JSON.stringify(\"author: \\\"\\\"\")});if(broken===raw)throw new Error(\"Probe input mismatch\");return broken;}};`;const opts={watch:false,maxWorkers:1,reporters:[\"dot\"],...(base?{testNamePattern:\"phase3-(chain|dir|direct|extra).*author|discovers at least one\"}:{})};const ctx=await startVitest(\"test\",[file],opts,{plugins:[{name:\"phase3-fidelity\",enforce:\"pre\",transform(code,id){if(!id.endsWith(base?\"/\"+file:\"/fixtures/blog-posts-loader.ts\"))return;const src=base?old:code;const anchor=base?\"import fs from \\\"fs\\\";\":\"import fs from \\\"node:fs\\\";\";if(!src.includes(anchor))throw new Error(\"Probe source mismatch\");return src.replace(anchor,()=>facade);}}]});await ctx.close();}for(const [side,kind,expected] of [[\"base\",\"chain\",1],[\"head\",\"chain\",1],[\"base\",\"directory\",1],[\"head\",\"directory\",1],[\"base\",\"direct\",1],[\"head\",\"direct\",1],[\"base\",\"extra\",0],[\"head\",\"extra\",1],[\"head\",\"regular\",1]]){console.log(`=== ${side} ${kind} ===`);const r=spawnSync(process.execPath,[\"--input-type=module\",\"-e\",`await (${probe})();`,side,kind],{stdio:\"inherit\"});console.log(`=== ${side} ${kind}: exit ${r.status}; expected ${expected} ===`);if(r.status!==expected)process.exitCode=1;}'",
+    "NO_COLOR=1 CI=true node --input-type=module -e 'import {startVitest} from \"vitest/node\";const ctx=await startVitest(\"test\",[\"src/__tests__/blog-posts-loader.adversarial.test.ts\"],{watch:false,maxWorkers:1,reporters:[\"dot\"],testNamePattern:\"ADV-22\"},{plugins:[{name:\"acceptance-ci-permissions\",enforce:\"pre\",transform(code,id){if(!id.endsWith(\"/blog-posts-loader.adversarial.test.ts\"))return;const anchor=\"import fs from \\\"node:fs\\\";\";if(!code.includes(anchor))throw new Error(\"Probe source mismatch\");return code.replace(anchor,()=>`import actualFs from \"node:fs\";const fs={...actualFs,mkdirSync(p,...args){if(String(p).startsWith(\"/home/daniebo/\"))throw Object.assign(new Error(\"EACCES: \"+p),{code:\"EACCES\"});return actualFs.mkdirSync(p,...args);}};`);}}]});await ctx.close();'"
+  ],
+  "changed_files": [
+    "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-e91c4d4.json",
+    "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-e91c4d4.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "openai/gpt-6.2-sol#high (substitution: ra-quota pick printed claude-agent/sonnet#max, but the Claude 7-day window is above 90 %; gpt-6.2-sol is an approved phase-acceptance route and not the Red family)",
+  "ratings": [
+    {"axis": "correctness", "score": 5, "evidence": "The paired blog probes reject the malformed lowercase .md inputs at both the phase base and audited HEAD."},
+    {"axis": "test_meaning", "score": 4, "evidence": "The fresh blank-author probe fails by post name, but blog-posts-loader.adversarial.test.ts:83 depends on a user-specific directory."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "The exact phase diff contains only www tests, their fixtures, and plan.md."},
+    {"axis": "evidence_quality", "score": 5, "evidence": "The fresh coverage run confirms the 1,412 tests and 92.07% line coverage in gate-66aeb1011.json."}
+  ],
+  "reviewer_ratings": [
+    {"reviewer_role": "review-a", "reviewer_route": "openai/gpt-6-luna#high", "agreed": true, "score": 5, "evidence": "The paired symlink probe independently confirms the base and merged suites both reject the blank author."},
+    {"reviewer_role": "adversarial", "reviewer_route": "kimi-code-plan-cn/kimi-for-coding", "agreed": true, "score": 5, "evidence": "The paired directory probes independently confirm that the merged suite rejects and names both directory entries."}
+  ]
+}

@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: phase-acceptance
+status: blocked
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: Heavy-run type check, lint, and coverage pass. Vitest passes 1,412 tests in 98 files with 92.07% line coverage. The report claim checks fail.
+files_changed: phase-acceptance-a0b229d.json, phase-acceptance-a0b229d.log
+plan_updates: none
+known_failures: F33–F35 remain incomplete. F37–F42 identify wrong report claims about commits, warnings, finding history, loader behavior, and source lines.
+handoff: Do not accept a0b229def. Route the listed report defects to the report owner. Apply the remediation round limit before another commit. Keep the timing gap and hypothesis in the report only. Rerun acceptance at the corrected HEAD.
+END_MEASURE_AGENT_RESULT

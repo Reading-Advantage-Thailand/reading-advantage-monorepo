@@ -1,0 +1,27 @@
+# Adversarial log: www test audit pilot, Phase 3, round 7
+
+Audited head: e831157de. Probe commit: 865f52a91.
+
+The F25 symlink fix holds on its own case. A two-link chain and an
+outside target in th were both read, and the title rule failed naming
+each link.
+
+One silent skip remains (ADV-22). A symlink to a directory named .md is
+dropped by listPostFiles and not reported by brokenPostRefs, while the
+phase-base test and blog.ts crash loudly with EISDIR. The committed
+probe fails its ADV-22 case until Green surfaces the name.
+
+A locale-level directory symlink is not followed (ADV-23 note).
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3), adversarial round 7
+commits: 865f52a91
+tests_run: pnpm --filter www-reading-advantage exec vitest run src/lib/blog-posts-validation.test.ts --reporter=verbose (chain and outside symlinks named; dir symlink silent); pnpm --filter www-reading-advantage exec vitest run src/lib/blog-posts-validation.test.ts --reporter=dot (17 passed after cleanup); pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts --reporter=verbose (2 passed, 1 failed as intended)
+files_changed: apps/www-reading-advantage/src/__tests__/blog-posts-loader.adversarial.test.ts; measure/runs/www_test_audit_pilot_20261122/adversarial-865f52a.json; measure/runs/www_test_audit_pilot_20261122/adversarial-865f52a.log
+plan_updates: none
+known_failures: ADV-22 blocking. A symlink to a directory named .md is skipped silently.
+handoff: Route ADV-22 to Green. Green surfaces directory symlinks whose name ends .md in src/__tests__/fixtures/blog-posts-loader.ts (a non-file refs list asserted empty, or parse them so the read fails loudly); the committed probe passes after the fix and stays as armor. ADV-23 is a note. Result JSON: measure/runs/www_test_audit_pilot_20261122/adversarial-865f52a.json.
+END_MEASURE_AGENT_RESULT

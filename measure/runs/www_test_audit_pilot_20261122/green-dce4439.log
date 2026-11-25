@@ -1,0 +1,63 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+···············································································································································································································································································································································································································································································································stdout | src/__tests__/no-gse-in-customer-copy.test.ts > www customer copy holds no GSE, Pearson, or YLE > prints the pending hits for the PM
+PENDING for the PM:
+src/app/[locale]/(marketing)/blog/posts/en/the-advantage-engine-kst-srs.md:24: GSE -> **Knowledge Space Theory (KST)**, a mathematical framework pioneered by Jean-Claude Falmagne, models learning as a directed graph of skills. In our system, we don’t just track a "grade." We map a student’s precise **Knowledge State** across thousands of granular objectives aligned with the Global Scale of English (GSE) and international math standards.
+src/app/[locale]/(marketing)/blog/posts/en/the-advantage-engine-kst-srs.md:24: Global Scale of English -> **Knowledge Space Theory (KST)**, a mathematical framework pioneered by Jean-Claude Falmagne, models learning as a directed graph of skills. In our system, we don’t just track a "grade." We map a student’s precise **Knowledge State** across thousands of granular objectives aligned with the Global Scale of English (GSE) and international math standards.
+src/app/[locale]/(marketing)/blog/posts/th/the-advantage-engine-kst-srs.md:24: GSE -> **Knowledge Space Theory (KST)** เป็นกรอบงานทางคณิตศาสตร์ที่ริเริ่มโดย Jean-Claude Falmagne ซึ่งจำลองการเรียนรู้เป็นกราฟทักษะที่เชื่อมโยงกัน ในระบบของเรา เราไม่ได้แค่ติดตาม "เกรด" แต่เราสร้างแผนที่ **Knowledge State** (สถานะความรู้) ที่แม่นยำของนักเรียนผ่านจุดประสงค์การเรียนรู้นับพันที่สอดคล้องกับมาตรฐาน Global Scale of English (GSE) และมาตรฐานคณิตศาสตร์สากล
+src/app/[locale]/(marketing)/blog/posts/th/the-advantage-engine-kst-srs.md:24: Global Scale of English -> **Knowledge Space Theory (KST)** เป็นกรอบงานทางคณิตศาสตร์ที่ริเริ่มโดย Jean-Claude Falmagne ซึ่งจำลองการเรียนรู้เป็นกราฟทักษะที่เชื่อมโยงกัน ในระบบของเรา เราไม่ได้แค่ติดตาม "เกรด" แต่เราสร้างแผนที่ **Knowledge State** (สถานะความรู้) ที่แม่นยำของนักเรียนผ่านจุดประสงค์การเรียนรู้นับพันที่สอดคล้องกับมาตรฐาน Global Scale of English (GSE) และมาตรฐานคณิตศาสตร์สากล
+
+···················································································································stderr | src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx > Wave 5 Phase 4 accessibility, navigation, and contact contracts > keeps reviewed interactive components discoverable and stateful
+Received `false` for a non-boolean attribute `scroll`.
+
+If you want to write it to the DOM, pass a string instead: scroll="false" or scroll={value.toString()}.
+
+If you used to conditionally omit it with scroll={condition && value}, pass scroll={condition ? value : undefined} instead.
+
+stderr | src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx > Wave 5 Phase 4 accessibility, navigation, and contact contracts > publishes Services through the shared primary navigation contract
+Received `true` for a non-boolean attribute `priority`.
+
+If you want to write it to the DOM, pass a string instead: priority="true" or priority={value.toString()}.
+
+·····················stderr | src/app/[locale]/(marketing)/services/page.test.tsx > Services localized status tones > keeps localized badge tones for en
+Received `true` for a non-boolean attribute `fill`.
+
+If you want to write it to the DOM, pass a string instead: fill="true" or fill={value.toString()}.
+
+···········································································································································································································································································································stderr | src/components/blog/blog-pagination.test.tsx > BlogPagination > renders pagination nav
+Received `false` for a non-boolean attribute `scroll`.
+
+If you want to write it to the DOM, pass a string instead: scroll="false" or scroll={value.toString()}.
+
+If you used to conditionally omit it with scroll={condition && value}, pass scroll={condition ? value : undefined} instead.
+
+····················································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································stderr | src/__tests__/www-pricing-required-rows.red.test.ts > RA4: omitted rows do not render a silent empty table > rejects omitted rows instead of resolving to zero rows
+IntlError: MISSING_MESSAGE: Could not resolve `pages.pricing.subjects.rows` in messages for locale `en`.
+    at getFallbackFromErrorAndNotify (file:///home/daniebo/Desktop/rama-worktrees/www-test-audit/node_modules/use-intl/dist/esm/development/initializeConfig-CUsOI8u2.js:96:19)
+    at translateFn.raw (file:///home/daniebo/Desktop/rama-worktrees/www-test-audit/node_modules/use-intl/dist/esm/development/initializeConfig-CUsOI8u2.js:204:14)
+    at Module.PricingPage (/home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage/src/app/[locale]/(marketing)/pricing/page.tsx:42:19)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage/src/__tests__/www-pricing-required-rows.red.test.ts:108:5
+    at file:///home/daniebo/Desktop/rama-worktrees/www-test-audit/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20 {
+  code: 'MISSING_MESSAGE',
+  originalMessage: 'Could not resolve `pages.pricing.subjects.rows` in messages for locale `en`.'
+}
+
+·······stderr | src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx > Remaining Phase 4 browser regression contracts > contains related article content at a 390px viewport
+Received `true` for a non-boolean attribute `fill`.
+
+If you want to write it to the DOM, pass a string instead: fill="true" or fill={value.toString()}.
+
+···································stderr | src/__tests__/phase-4-browser-regressions-final.red.test.tsx > Final Phase 4 browser regression contracts > detects overflow in the real article tag and related card structures
+Received `true` for a non-boolean attribute `fill`.
+
+If you want to write it to the DOM, pass a string instead: fill="true" or fill={value.toString()}.
+
+······················································································································································································································································································································
+
+ Test Files  93 passed (93)
+      Tests  3094 passed (3094)
+   Start at  13:42:46
+   Duration  86.88s (transform 1.22s, setup 4.11s, import 10.49s, tests 25.40s, environment 38.44s)
+

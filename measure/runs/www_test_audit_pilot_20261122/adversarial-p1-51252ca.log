@@ -1,0 +1,112 @@
+Adversarial log: www_test_audit_pilot_20261122, Phase 1 (Baseline and classification), bounded pass
+Audited HEAD: 51252ca9e09bd458052894304aaa7680b1daabc2 (no commit made; git status clean at start and end).
+role_base_sha: 51252ca9e09bd458052894304aaa7680b1daabc2.
+phase_base_sha: cbd023b1bd29333992f7511646cff1245191b049 (strategy commit).
+Phase 1 end: a1caa58034f6455e91205a5673ef172a974a7992. Track base: 635a604c89b2c909cfce33f555b7f043d4ea520f.
+Route: claude-agent/sonnet#xhigh.
+Result JSON: measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca.json.
+
+PROVISIONAL VERDICT (written first): FAIL. One Blocker, ADV-P1-1. Six nonblocking items.
+This is the first Phase 1 adversarial pass. No earlier Phase 1 finding exists, so no CONTEST item applies.
+
+Verdict: FAIL.
+The classification structure holds. The counts, the K list, the e2e rows, and the class sums all pass.
+One D5 row hides a payout-rule claim. The Thai text of that claim has no test at HEAD.
+
+Blocking finding
+- ADV-P1-1 [Blocker]: classification.md puts the live-line pins of www-tutor-calculator.locale.test.ts in D5.
+  The row says "exact prose pins (money pins stay as K)".
+  One live line is the FAQ answer at faq.items.5.answer.
+  It states a unilevel commission model, monthly settlement, and a rate that rises with network volume.
+  Commit 407c5d9bd replaced the exact en and th pins with a key-presence check.
+  Mutation proof 1 (adversarial-p1-51252ca-thai-claim-harness.py): the Thai answer says "settles yearly, flat rate".
+    HEAD tests (2 files, 23 cases): exit 0. Nothing fails.
+    a1caa5803 tests (2 files, 26 cases): exit 1. "holds the new th copy at both paths" fails.
+  Mutation proof 2 (adversarial-p1-51252ca-subset-run.sh): same change in a /tmp copy.
+    51 HEAD test files that reference locale or tutor modules, 1011 cases with the control: no HEAD test fails.
+    Only the a1caa5803 positive control fails.
+    The control run has 67 environment failures (the copy lacks measure/tracks). The mutant run has 68.
+  The English answer stays guarded, but only through the zh-equals-en cases.
+  Rationale: Review A rated the same loss class as Blocker in F9 (Reedy limits) and F12 (price and date).
+  Fix: Green restores an exact th and en assertion for faq.items.5.answer, with one breakage proof.
+  PM adds an erratum line to classification.md for the row.
+
+Nonblocking findings
+- ADV-P1-2 [Note]: the D2 Primary row ("no old test id") named a kept duplicate that did not keep the rule.
+  At a1caa5803 the kept page.content.test.tsx names none of the four old test ids.
+  Its old-reference scanner checks image paths and one name. Commit fb5622ed7 restored the rule.
+  Plan task 4.12 and report.md section 3 name only the blog-locale half of that commit.
+- ADV-P1-3 [Note]: classification.md at HEAD still lists three restored rows as delete, with no erratum.
+  The rows are the D4 navigation row, the D2 explicit-English row, and the D2 Primary row.
+  The D4 reason "no logic under test" is false for the th and zh cases.
+  report.md cites classification.md as the source of the D2 and D4 rows.
+- ADV-P1-4 [Note]: the second check understates the classifier error rate.
+  It recorded 3 of 37 disagreements (8.11 %). Three rows it agreed with were restored later.
+  The ex post rate is 6 of 37 (16.22 %), above the 15 % stop rule. The residual rate at Phase 1 end is 3 of 37 (8.11 %).
+  D5 has 13 rows with cases (221 cases). The sample drew 1 of them. ADV-P1-1 sits in an unsampled D5 row.
+  report.md says only that the second check passed.
+- ADV-P1-5 [Note]: per-file-counts.md rests on a JSON reporter output that no longer exists.
+  I re-derived 1858 of 3175 cases (58.5 %). 24 files by static count give 132 cases.
+  blog-posts-validation gives 1726 = 14 x 119 + 2 + 58, from the 119 .md post files at a1caa5803.
+  The 67 dynamic files need a rerun at a1caa5803 for an independent count.
+- ADV-P1-6 [Nit]: the K share in the Summary table reads 89.6 %. The value 2843/3175 is 89.5 %.
+- ADV-P1-7 [Nit]: two zero-case sentinel rows sit in D sections. They name phase-3-i18n.red.test.ts (D2) and
+  www-tutor-screens-copy.adversarial.test.ts (D5). Both files hold K rows. A path-based D filter lists them as D.
+  The n column of the e2e rows counts declared test() calls. Runtime counts differ (link-locale 2 declared, 6 run;
+  locale-middleware 7 declared, 9 run). The rows are excluded from every sum.
+
+Attack results (probe script: adversarial-p1-51252ca-probes.py, 28 PASS, 0 FAIL, two identical runs)
+- Mislabeled K row: M1 relabels tutor-commission.test.ts as D1. The check fails on it. PASS.
+- Uncounted file: M2 drops the blog-draft row. The check fails on it, on the sum, and on the per-file count. PASS.
+- e2e not-counted rows: M3 removes "not counted" from photos.spec.ts. M8 counts contact.spec.ts as K. Both fail. PASS.
+- Duplicate with no rule, structural: M4 names a missing file. M5 names a dash. Both fail. PASS.
+- Class sums: M6 adds 1 to one n. M7 moves a D5 row into K and keeps the sum. The sum check holds for M7. The Summary table check fails. PASS.
+- Empty classification (A4): M9 fails on every check. PASS.
+- Blind spot: a structural check accepts the Primary D2 row. Only a token bridge finds it. ADV-P1-2 comes from that bridge.
+- D2 token bridge on the other six rows: references literals (11) equal; favicon covers both copies, length, magic, identity;
+  tutor-screens pins order and portrait; retired-Storytime regexes equal; reading-time number case kept in blog.test.ts. PASS.
+- K list: seven tutor-commission files exist at a1caa5803, hold K rows only, and show no change from a1caa5803 to HEAD.
+  The pattern tutor-commission* matches exactly those seven paths. PASS.
+- Class sums: K 2843, D1 67, D2 22, D4 6, D5 221, R2 16 equal 3175 (case_count in baseline.json). PASS.
+- Per-file counts: 91 rows, runner sum 3175, all agree with the row sums (see ADV-P1-5 for the independence limit). PASS.
+- File set: 98 test files at a1caa5803 (91 src, 6 e2e, 1 scripts). Each has one row. 0 missing, 0 stray. PASS.
+- A5: plan Phase 1 says "Both runner commands exited 0" and holds no number. heavy-run.log shows three exit 0 www jobs. PASS.
+- A9: no "measure/archive" path in classification.md or plan.md. PASS.
+- A7: Phase 1 adds no word filter. The K list is an explicit path pattern. The sentinel rows (ADV-P1-7) are the only path-filter risk.
+- A4 plan markers: not applicable. The Phase 1 diff holds no marker-check code.
+- Reused: phase-acceptance-p1-51252ca-probes.py reran (79 PASS, 0 FAIL). The bfda22b K-file diff attack ran again to HEAD.
+
+Known context re-judged
+- D4 navigation row and D2 explicit-English row: the code is restored (9eb3b9c4f, fb5622ed7).
+  classification.md still lists both as delete with no erratum. I raised them once, inside ADV-P1-3, not as separate blockers.
+
+Not run
+- The full test suite. The subset run covers 51 HEAD files, not all 91.
+- A mutation sweep of the other D5 rows. ADV-P1-1 proves one row. It does not prove the other rows are clean.
+- The Phase 1 GREEN and COVERAGE suites. The Phase 1 tree is not checked out here, and strategy section 1.5 forbids a second worktree.
+
+Side effects
+- No tracked file changed. git status --short is empty before and after.
+- Vitest rewrote its gitignored results cache at apps/www-reading-advantage/node_modules/.vite/vitest/.../results.json.
+- /tmp copies were deleted. The scripts write only under /tmp.
+
+Commands
+1. git rev-parse HEAD; git status --short -> 51252ca9e09bd458052894304aaa7680b1daabc2; empty.
+2. python3 -I measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca-probes.py -> 28 PASS, 0 FAIL, exit 0.
+3. python3 -I measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca-thai-claim-harness.py -> exit 0, VERDICT thai_claim_unpinned_at_head=True.
+4. bash measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca-subset-run.sh -> only_positive_control_caught_it=True.
+5. python3 -I measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-51252ca-probes.py -> 79 PASS, 0 FAIL.
+6. git diff --name-only a1caa5803 HEAD -- <seven tutor-commission test paths> -> empty.
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 1: Baseline and classification
+commits: none
+tests_run: python3 -I adversarial-p1-51252ca-probes.py (28 PASS, 0 FAIL); adversarial-p1-51252ca-thai-claim-harness.py (th-only mutant: HEAD tests exit 0, a1caa5803 tests exit 1); adversarial-p1-51252ca-subset-run.sh (51 HEAD files, only the positive control fails); phase-acceptance-p1-51252ca-probes.py (79 PASS). No full suite run.
+files_changed: measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca.json, measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca.log, measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca-probes.py, measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca-thai-claim-harness.py, measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca-subset-run.sh
+plan_updates: none
+known_failures: ADV-P1-1 blocking. The Thai commission-model FAQ answer (faq.items.5.answer) has no test at HEAD. Commit 407c5d9bd replaced its exact pin with a key-presence check.
+handoff: Route ADV-P1-1 to Green. Green restores an exact th and en assertion for faq.items.5.answer in www-tutor-calculator.locale.test.ts with one breakage proof. Then rerun this pass and phase acceptance. ADV-P1-2 to ADV-P1-7 are nonblocking. PM adds classification.md erratum lines for the three restored rows and states the second-check limit in report.md. Nothing was committed.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 3: Rewrite batch (R1-R3)",
+  "baseline_sha": "704745a3ca2bb27b52f28e2fcf65df9d994b64ac",
+  "phase_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "role_base_sha": "704745a3ca2bb27b52f28e2fcf65df9d994b64ac",
+  "audited_head_sha": "704745a3ca2bb27b52f28e2fcf65df9d994b64ac",
+  "status": "pass",
+  "summary": "ADV-8 and ADV-11 are closed. The shared loader keeps the 15 validation predicates and two discovery cases, flags the tested non-.md post forms, ignores JSON companions, and loads shipped Markdown posts. The full phase diff contains no production or post changes.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD returned 704745a3ca2bb27b52f28e2fcf65df9d994b64ac, matching role_base_sha and audited_head_sha.",
+    "ADV-8 and ADV-11 are withdrawn: fixtures/blog-posts-loader.ts:33–38 flags Markdown-like extensions and case-insensitive .md suffixes that are not exactly .md; lines 45–61 lists non-hidden files in locale folders; lines 68–85 parses only lowercase .md files.",
+    "The validation test preserves all 15 rules and both discovery cases. Comparison with 257a6b0cd^ shows the per-post checks became aggregate checks over every loaded post; required-field, optional-field, content, naming, and locale-date predicates remain equivalent. The .md rule now checks the shared discovery predicate.",
+    "blog-posts-validation.test.ts:56–60 and 211–216 keep discovery non-vacuous and require no mislabelled post files. The adversarial tests at lines 37–72 exercise .mdx discovery and uppercase .MD rejection.",
+    "The shipped locale folders contain .md posts and -segments.json companions. The loader parses only .md; the suffix predicate excludes .json, so companions do not become posts or hide their corresponding Markdown files.",
+    "The targeted Vitest run passed 2 files and 19 tests: blog-posts-validation.test.ts and blog-posts-loader.adversarial.test.ts.",
+    "proof-adv8.log shows a malformed .mdx probe fails three validation assertions and names the path. proof-adv11.log shows an uppercase .MD probe fails the extension and both discovery assertions and names the path. Both probes were removed.",
+    "The adversarial-704745a.json receipt reports pass at the audited head, confirms the .MD probe and 17 validation tests, and records ADV-12 through ADV-14 as notes rather than findings.",
+    "The exact phase diff 8a126f612abcc258c6c6711d6ac03fa085bbcbff..704745a3ca2bb27b52f28e2fcf65df9d994b64ac contains test files, test fixtures, and plan.md only. The blog posts path has no changed files.",
+    "gate-88b26fb9b.json reports GREEN, COVERAGE, check-types, and lint exit 0; it records 1398 cases and 91.95% line coverage, above the 85.52% floor.",
+    "The plan records baseline=3175 and current cases=1398. The reduction is 55.97%; the maximum count allowed by a 20% reduction is 2540.",
+    "test-strategy.md:11 says graph.db is absent and this track changes no exported product symbol. The changed loader exports are test fixtures; rg shows their consumers are test files."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --name-status 8a126f612abcc258c6c6711d6ac03fa085bbcbff..704745a3ca2bb27b52f28e2fcf65df9d994b64ac",
+    "git diff 257a6b0cd^..HEAD -- apps/www-reading-advantage/src/lib/blog-posts-validation.test.ts",
+    "git diff --name-only 8a126f612abcc258c6c6711d6ac03fa085bbcbff..704745a3ca2bb27b52f28e2fcf65df9d994b64ac -- apps/www-reading-advantage/src/app/'[locale]'/'(marketing)'/blog/posts",
+    "git diff --check 8a126f612abcc258c6c6711d6ac03fa085bbcbff..704745a3ca2bb27b52f28e2fcf65df9d994b64ac",
+    "git status --short",
+    "pnpm --filter www-reading-advantage exec vitest run src/lib/blog-posts-validation.test.ts src/__tests__/blog-posts-loader.adversarial.test.ts",
+    "python3 -c \"baseline=3175; current=1398; print('reduction_pct=', round((baseline-current)*100/baseline, 2), '20pct_max=', int(baseline*0.8))\"",
+    "find apps/www-reading-advantage/src/app/'[locale]'/'(marketing)'/blog/posts -type f -name '*-segments.json' -printf '%P\\n'",
+    "rg -n '\\b(loadAllPosts|listPostFiles|mislabelledPostRefs)\\b' apps/www-reading-advantage/src"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/blog-posts-loader.adversarial.test.ts",
+    "apps/www-reading-advantage/src/__tests__/contrast-fixture.test.ts",
+    "apps/www-reading-advantage/src/__tests__/fixtures/blog-posts-loader.ts",
+    "apps/www-reading-advantage/src/__tests__/fixtures/contrast.ts",
+    "apps/www-reading-advantage/src/__tests__/fixtures/real-css.ts",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions-final.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/phase-4-browser-regressions.red.test.tsx",
+    "apps/www-reading-advantage/src/__tests__/www-reading-cover.red.test.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/blended-learning/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/managed-service/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/services/page.test.tsx",
+    "apps/www-reading-advantage/src/components/blog/blog-pagination.test.tsx",
+    "apps/www-reading-advantage/src/components/marketing/hero-section.test.tsx",
+    "apps/www-reading-advantage/src/lib/blog-posts-validation.test.ts",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "The shared loader parses .md posts and flags .mdx and uppercase .MD probes; the validation and discovery tests pass."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "The targeted run passed 19 tests, and both mutation proofs show the adversarial file name in failed assertions."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The audited phase diff contains no production file or blog post, and the changed loader is under __tests__/fixtures."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The audit uses the targeted test output, two mutation logs, gate receipts, plan evidence, and exact Git diffs."
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "997662659f962202e3314605f39ee5fbd8fcbf3b",
+  "phase_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "role_base_sha": "997662659f962202e3314605f39ee5fbd8fcbf3b",
+  "audited_head_sha": "997662659f962202e3314605f39ee5fbd8fcbf3b",
+  "status": "fail",
+  "summary": "The requested source checks and twelve independent samples pass. Three remaining report claims are wrong: the history section still maps IDs, Green logs do not carry dispositions, and coverage logs do not end with test summaries.",
+  "blocking_findings": [
+    "F43 [Blocker] review-a: report.md:175,179 retains finding-to-role mapping and per-finding dispositions after PM decision C limited Finding history to source pointers, file counts, and highest IDs. Line 175 maps F1-F3 to Review A and Acceptance. Line 179 names F17, F26, F10, F11, F16, and F18 with statuses. Remove these mappings and statuses.",
+    "F44 [Blocker] review-a: report.md:173 says each green-*.log holds a dispositions line. A search of every green-*.log in the run directory finds no such line. These paths are test-run logs, not Green role result logs. Replace the pointer with the actual role-artifact path or remove the claim.",
+    "F45 [Blocker] review-a: report.md:33,63 says the cited logs end with a passing test summary. The sampled COVERAGE logs end with a coverage table, not a test summary. The coverage logs for 4d1688131, bcaa97ff4, and both reruns show a final Coverage summary and line percentages. State separately what the GREEN and COVERAGE logs contain."
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD returned 997662659f962202e3314605f39ee5fbd8fcbf3b, matching role_base_sha and audited_head_sha.",
+    "The exact role range a0b229def673fb476ad2ded5719f54431d94511d..997662659f962202e3314605f39ee5fbd8fcbf3b changes report.md and plan.md only. The Phase 4 range e91c4d4cc3c8d5d61a1e9b802c031247543180fa..HEAD adds report.md and changes plan.md. The apps/ diff is empty.",
+    "The requested F/ADV scan returns only report.md:175,177,179. Line 177 contains the permitted file counts and highest IDs. Lines 175 and 179 retain extra ID-to-role and disposition text.",
+    "The line-number citation scan `grep -nE ':[[:space:]]*[0-9]+'` returns no matches. Matches for the broad word `line` refer to coverage metrics and a test filename, not citations.",
+    "The report's Finding history counts match the run files: 20 pre-existing Review A JSON files, 13 adversarial JSON files, 7 phase-acceptance JSON files, and 3 second-check JSON files. The 21st Review A JSON is this provisional audit artifact.",
+    "The cited highest IDs match their JSONs: review-a-cb12d6f.json has F30, adversarial-e91c4d4.json has ADV-24, and phase-acceptance-a0b229d.json has F42.",
+    "F33 verified: proof-adv8.log and proof-adv11.log each fail a `.md` extension assertion and also fail discovery assertions for their `.mdx` or uppercase `.MD` probes. Report.md:86 separates the discovery checks from the `.md` naming assertion.",
+    "F34 verified: the report names green-4d168813.log and coverage-4d168813.log, plus green-bcaa97f.log and coverage-bcaa97f.log. All four paths exist. The Green logs end with passing test totals; the coverage logs end with coverage tables.",
+    "F38 verified: review-a-c673f21.json says only the unused beforeEach import predates Phase 2; it says D5 part 2 made sectionOf and copy unused. Report.md:78 preserves that distinction.",
+    "F41 verified: blog-posts-loader.ts:121 checks `file.endsWith('.md')` before parsing. The file sweep separately lists entries, while loadAllPosts parses only the exact lowercase suffix.",
+    "The claimed Green-log disposition pointers do not exist: searching all green-*.log files finds no line starting `dispositions:`.",
+    "Eight sampled log paths exist. The four GREEN logs end with passing test totals. The four COVERAGE logs end with a `Coverage summary` and percentage rows, not a test summary.",
+    "Independent sample 1: all fourteen commit SHAs named in the class and remediation tables resolve with `git cat-file -e`.",
+    "Independent sample 2: baseline.json and baseline.log report 3175 cases and 86.52 percent line coverage.",
+    "Independent sample 3: gate-66aeb1011.json and green-66aeb1011.log report 1412 cases and 92.07 percent line coverage.",
+    "Independent sample 4: the case reduction is 1763, or 55.53 percent of 3175; the 20 percent target is 635 cases. Report.md:10 rounds to 55.5 percent.",
+    "Independent sample 5: baseline and final line coverage differ by 5.55 points, matching report.md:10.",
+    "Independent sample 6: gate-257a6b0c.json records 3094 cases before and 1385 after the merge, a 1709-case reduction. The validation file falls from 1726 cases to 17.",
+    "Independent sample 7: without the merge, 1412 plus 1709 gives 3121 cases; 3175 minus 3121 is 54 cases, or 1.70 percent.",
+    "Independent sample 8: classification.md:226-234 gives K 2843, D1 67, D2 22, D3 0, D4 6, D5 221, R1 0, R2 16, and R3 0; the classes sum to 3175.",
+    "Independent sample 9: classification.md:240-248 projects a 176-to-196 case cut, or 5.5-to-6.2 percent, before the blog merge.",
+    "Independent sample 10: baseline.log reports 90.47 seconds and green-66aeb1011.log reports 98.11 seconds. Their difference is 7.64 seconds.",
+    "Independent sample 11: timing-at-head.json recomputes the five largest assertion-duration sums as 6461.93, 1649.38, 1303.32, 970.85, and 859.77 ms.",
+    "Independent sample 12: report.md's K table has 77 rows and 2843 cases. Its role-history file counts and highest IDs match the run artifacts. No model names occur in the report.",
+    "The report's twelve requested independent claims check out. The three blockers concern added Finding history and log-summary statements."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --name-status a0b229def673fb476ad2ded5719f54431d94511d..997662659f962202e3314605f39ee5fbd8fcbf3b",
+    "git diff --name-only a0b229def673fb476ad2ded5719f54431d94511d..997662659f962202e3314605f39ee5fbd8fcbf3b -- apps",
+    "git diff --name-status e91c4d4cc3c8d5d61a1e9b802c031247543180fa..997662659f962202e3314605f39ee5fbd8fcbf3b",
+    "git diff a0b229def673fb476ad2ded5719f54431d94511d..997662659f962202e3314605f39ee5fbd8fcbf3b -- measure/tracks/www_test_audit_pilot_20261122/report.md measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "grep -nE 'F[0-9]+|ADV-' measure/tracks/www_test_audit_pilot_20261122/report.md",
+    "grep -nE ':[[:space:]]*[0-9]+' measure/tracks/www_test_audit_pilot_20261122/report.md",
+    "ls measure/runs/www_test_audit_pilot_20261122/review-a-*.json",
+    "ls measure/runs/www_test_audit_pilot_20261122/adversarial-*.json",
+    "ls measure/runs/www_test_audit_pilot_20261122/phase-acceptance-*.json",
+    "ls measure/runs/www_test_audit_pilot_20261122/second-check-*.json",
+    "git show --name-status --format=fuller adf24e723",
+    "git show --name-only --format=fuller 4d1688131",
+    "ls -l measure/runs/www_test_audit_pilot_20261122/green-4d168813.log measure/runs/www_test_audit_pilot_20261122/coverage-4d168813.log measure/runs/www_test_audit_pilot_20261122/green-bcaa97f.log measure/runs/www_test_audit_pilot_20261122/coverage-bcaa97f.log",
+    "for f in measure/runs/www_test_audit_pilot_20261122/green-*.log; do if ! grep -q '^dispositions:' \"$f\"; then printf 'MISSING dispositions: %s\\\\n' \"$f\"; fi; done",
+    "tail -8 measure/runs/www_test_audit_pilot_20261122/green-4d168813.log",
+    "tail -8 measure/runs/www_test_audit_pilot_20261122/coverage-4d168813.log",
+    "tail -8 measure/runs/www_test_audit_pilot_20261122/green-bcaa97f.log",
+    "tail -8 measure/runs/www_test_audit_pilot_20261122/coverage-bcaa97f.log",
+    "python3 -c \"from pathlib import Path; import re; p=Path('measure/tracks/www_test_audit_pilot_20261122/report.md').read_text().splitlines(); print('line-number citations:',[x for x in p if re.search(r':[ \\\\t]*[0-9]+',x)]); print('finding scan:',[(i+1,x) for i,x in enumerate(p) if re.search(r'F[0-9]+|ADV-',x)])\"",
+    "python3 -c \"import glob,os; base='measure/runs/www_test_audit_pilot_20261122'; groups={'Review A':glob.glob(base+'/review-a-*.json'),'adversarial':glob.glob(base+'/adversarial-*.json'),'phase acceptance':glob.glob(base+'/phase-acceptance-*.json'),'second check':glob.glob(base+'/second-check-*.json')}; groups['Review A']=[p for p in groups['Review A'] if os.path.basename(p)!='review-a-9976626.json']; print({k:len(v) for k,v in groups.items()})\"",
+    "for sha in 0be4a0374 e332f594e 409108d3e 0d705612d ee5c7b739 7008ccefd c577cdf18 407c5d9bd adf24e723 257a6b0cd 4d1688131 bcaa97ff4 733319505 fb5622ed7; do if git cat-file -e \"$sha^{commit}\"; then printf 'commit exists %s\\\\n' \"$sha\"; else printf 'missing commit %s\\\\n' \"$sha\"; fi; done",
+    "python3 -c \"from pathlib import Path; import re; p=Path('measure/tracks/www_test_audit_pilot_20261122/classification.md').read_text().splitlines(); rows=[x for x in p[220:236] if x.startswith('|') and not x.startswith('|---')]; print('summary rows:',rows); k=Path('measure/tracks/www_test_audit_pilot_20261122/report.md').read_text().splitlines(); i=k.index('| K file group | Cases | Mutation check | Other file proofs |'); j=next(n for n in range(i+1,len(k)) if k[n].startswith('## ')); rs=[x for x in k[i+2:j] if x.startswith('| src/')]; cs=[x.strip().strip('|').split('|') for x in rs]; print('K rows=',len(rs),'K sum=',sum(int(c[1]) for c in cs))\"",
+    "rg -n 'Test Files|Tests |Duration' measure/runs/www_test_audit_pilot_20261122/baseline.log",
+    "tail -5 measure/runs/www_test_audit_pilot_20261122/green-66aeb1011.log",
+    "python3 -c \"import json; d=json.load(open('measure/runs/www_test_audit_pilot_20261122/timing-at-head.json')); by=[(sum(a.get('duration',0) for a in r['assertionResults']),r['name'].split('/apps/www-reading-advantage/')[1]) for r in d['testResults']]; [print(f'{p}: {t:.2f} ms') for t,p in sorted(by,reverse=True)[:5]]\"",
+    "python3 -c \"import glob,json,os; base='measure/runs/www_test_audit_pilot_20261122'; rows=[json.load(open(p)) for p in glob.glob(base+'/*.json') if p.endswith('.json') and os.path.basename(p)!='review-a-9976626.json']; print('role JSONs checked from supplied run files')\"",
+    "grep -nEi 'gpt|kimi|model|route' measure/tracks/www_test_audit_pilot_20261122/report.md",
+    "git status --short"
+  ],
+  "changed_files": [
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "measure/tracks/www_test_audit_pilot_20261122/report.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 3,
+      "evidence": "The F33, F34, F38, and F41 corrections check out, but report.md:173 and :175, :179, and :33, :63 retain false or disallowed claims."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "No suite run was requested; proof logs and gate logs were read, and the Green log reports 1412 tests passed."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The exact range changes only report.md and plan.md, with no apps/ path."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "The audit checks the requested log paths, proof outputs, JSON counts, Git SHAs, and twelve sampled claims."
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "role": "phase-acceptance",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 2: Delete batch (D1-D5)",
+  "baseline_sha": "bfda22bd8fcf9b2905934dc598121889d676231a",
+  "phase_base_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+  "role_base_sha": "bfda22bd8fcf9b2905934dc598121889d676231a",
+  "audited_head_sha": "bfda22bd8fcf9b2905934dc598121889d676231a",
+  "status": "fail",
+  "summary": "All 3,079 www tests pass at bfda22bd8 with 90.93% line coverage. The phase still weakens three checks of the site and its locale data.",
+  "blocking_findings": [
+    "F1 [Blocker] phase-acceptance: The D1 contact rewrite weakens a K check. classification.md:48 keeps the check for duplicate raw contact values. phase-4-contact-authority.red.test.tsx:43–53 mocks the config for the whole file. The check at lines 186–205 now compares the real locale fields with the mock phone number. The phase-base check rejects the shipped phone number in pages.contact.phone.number. The current check accepts it. Keep the mock for the render checks and use the real config for the duplicate check.",
+    "F2 [Blocker] phase-acceptance: The D1 CEFR-only rewrite still omits real customer copy. no-gse-in-customer-copy.test.ts:95–97 mocks B2CSolutions and TutorAdvantage to null. The render list at lines 271–302 restores B2BSolutions only. The Products route renders all three sections at products/page.tsx:180–182. An added hard-coded GSE heading in B2CSolutions escapes the new sweep. The phase-base source sweep checked that component. Include both missing sections in the rendered sweep.",
+    "F3 [Blocker] phase-acceptance: The D5 Reedy check still accepts a reversal of the active-package rule. www-tutor-reedy-claim.test.tsx:57,74–79,166–175 accepts inactive as active and does not reject inactive. The English sentence 'Open to students with an inactive class package, on lessons they finished.' matches each required marker and no negation pattern. The phase-base equality check rejected this sentence. Check the eligibility fact and add this counterexample."
+  ],
+  "nonblocking_findings": [
+    "F4 [Nit] phase-acceptance: gate-0be4a037.json:7 names the Phase 1 strategy commit as phase_base_sha. Its implementation SHA and its two logs identify the correct D1 result. Git shows no app changes between the strategy commit and the actual Phase 2 base.",
+    "F5 [Nit] phase-acceptance: gate-7008ccef.json:20 still names the original non-test GREEN log. plan.md:179 cites the correct rerun. plan.md:142–145 calls the 407c5d9 results final, but later tasks cite the remediation results. Name those 407c5d9 results as the task 2.6 checkpoint results."
+  ],
+  "evidence": [
+    "plan.md:83–174 has nine complete tasks. The Git history resolves each cited SHA within the phase range.",
+    "The phase diff changes only www tests, test fixtures, and the track plan. No production path, tracks registry, or Measure framework path changes.",
+    "Review A passed at 2be9b74db. The only allowed intervening commit is bfda22bd8fcf9b2905934dc598121889d676231a. It adds locale-key-check.adversarial.test.ts and real-css.adversarial.test.ts only.",
+    "adversarial-bfda22b.json and its log cover the audited HEAD. Git confirms that 0d705612d removed all three supported-locale cases and 9eb3b9c4f restored the Thai and Chinese cases.",
+    "test-strategy.md:78–87 makes Review B, Review C, and the browser review not applicable. No browser ran.",
+    "The Phase 1 runner recorded 3,175 passes and 86.52% lines. The Phase 2 floor is 85.52%.",
+    "The labeled case counts in the GREEN and COVERAGE logs agree at the seven class commits. Line coverage is D1 89.92%, D2 89.92%, D4 89.86%, and D5 parts 1–4 at 89.94%, 89.94%, 89.94%, and 90.03%. The classification has no D3 row.",
+    "F10: green-at-7008ccef.log records 3,081 passes in the commit-specific worktree. coverage-7008ccef.log records the same count and 89.94% lines.",
+    "F11: 2be9b74db records the PM's approval of the two R2 cases in D1. The exception does not complete the rest of task 3.2.",
+    "F16: The 733319505 and fb5622ed7 reruns record 3,057 and 3,061 passes. Both coverage logs report 89.98% lines. The later remediation logs report 90.04% to 90.94% lines.",
+    "The checkpoint lint log records zero errors and three warnings. The checkpoint type check log records tsc --noEmit, and plan.md:148 records exit 0.",
+    "A5: The current plan's test pass claims agree with the runner output for the named commits when read with the F10 and F16 rerun records. A3, A4, A6, and A7 do not apply to the framework diff.",
+    "The scoped GREEN rerun at bfda22bd8 passed 91 files and 3,079 tests. It ran all 10 added adversarial cases and no Playwright cases.",
+    "The scoped COVERAGE retry passed 91 files and 3,079 tests at bfda22bd8. V8 reported 90.93% lines, or 1,465 of 1,611. The first run hit the 120-second tool timeout. The longer retry finished in 132.40 seconds.",
+    "The V8 coverage retry prints Markdown remap warnings. The Phase 1 baseline log records the same warning class. The coverage retry prints the final summary.",
+    "The Phase 2 cut is 96 of 3,175 cases, about 3.02%. The 20% target and the pilot report remain track-level criteria. classification.md:250–255 records the separate approved merge.",
+    "The seven tutor-commission test files are unchanged. The K finding concerns the separate contact authority row.",
+    "A Node check read the real and mocked phone values from their files. The duplicate predicate returned true with the real value and false with the mock.",
+    "The GSE test reads locale dictionaries, blog files, and public SVGs, and sweeps the render list. None of those checks reads hard-coded copy in the two omitted components.",
+    "A Node check of the Reedy predicates returned true for all four required substring checks and false for all seven negation checks on the inactive-package counterexample.",
+    "The earlier breakage logs confirm the named regressions for the Math claim, contact destination, Reedy negation sentence, and pricing amount. They do not test the counterexamples in this result."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git status --porcelain=v1 --branch",
+    "git log --format='%H %s' --name-status a1caa58034f6455e91205a5673ef172a974a7992..bfda22bd8",
+    "git log --format='%H %s' --name-status 2be9b74db..bfda22bd8",
+    "git diff --name-status a1caa58034f6455e91205a5673ef172a974a7992..bfda22bd8",
+    "git diff --check a1caa58034f6455e91205a5673ef172a974a7992..bfda22bd8",
+    "git show 0d705612d77a786b42484f5df067f9bbb54e2389 -- apps/www-reading-advantage/src/locales/navigation.test.tsx",
+    "git show a1caa58034f6455e91205a5673ef172a974a7992:apps/www-reading-advantage/src/__tests__/phase-4-contact-authority.red.test.tsx",
+    "git show 2be9b74db01c8053256f5f18453ca4e38b2390f0 -- measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "git branch -r --contains bfda22bd8",
+    "rg -a -H 'Test Files\\s+[0-9]|Tests\\s+[0-9]+ passed|Lines\\s+:' measure/runs/www_test_audit_pilot_20261122 -g 'green-*.log' -g 'coverage-*.log' -g 'baseline.log' -g '!*-failed.log'",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot'",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'CI=true pnpm --filter www-reading-advantage exec vitest run --coverage --coverage.reporter=text-summary --coverage.clean=false --maxWorkers=1 --reporter=dot'",
+    "node -e 'const fs=require(\"node:fs\"); const path=\"apps/www-reading-advantage/src/\"; const key=/phoneNumber: \"([^\"]+)\"/; const real=fs.readFileSync(path+\"config/contact.ts\",\"utf8\").match(key)[1]; const mocked=fs.readFileSync(path+\"__tests__/phase-4-contact-authority.red.test.tsx\",\"utf8\").match(key)[1]; const localizedValue=real; console.log(\"Injected a duplicate of the shipped phone into a representative locale field.\"); console.log(\"Phase-base duplicate predicate:\",localizedValue.includes(real)); console.log(\"Audited duplicate predicate:\",localizedValue.includes(mocked));'",
+    "node -e 'const copy=\"Open to students with an inactive class package, on lessons they finished.\"; const bans=[/\\bwithout\\b/i,/\\bunfinished\\b/i,/\\bnot\\b/i,/\\bnever\\b/i,/\\bno\\b/i,/\\beveryone\\b/i,/\\banyone\\b/i]; console.log(copy, !bans.some(RegExp.prototype.test.bind(/never-matches/))); console.log(\"match results:\",copy.includes(\"active\"),copy.includes(\"package\"),copy.includes(\"lessons\"),copy.includes(\"finished\"),bans.map(function(pattern){return pattern.test(copy)}));'"
+  ],
+  "changed_files": [
+    "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-bfda22b.json",
+    "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-bfda22b.log"
+  ],
+  "test_strategy_violations": [
+    "F1: The new contact mock weakens the kept duplicate check. See classification.md:48 and test-strategy.md:190.",
+    "F2: The D1 rewrite drops two rendered components from the CEFR-only rule. See spec.md:37–44 and classification.md:132.",
+    "F3: The D5 rewrite accepts a false Reedy eligibility statement. See spec.md:37–44 and www-tutor-reedy-claim.test.tsx:166–175."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "openai/gpt-6.2-sol#high (substitution: pick printed claude-agent/sonnet#max, but the Claude 7-day window is at 90 %; the pick without Claude exited 3; gpt-6.2-sol is an approved phase-acceptance route, slightly over its weekly pace, and not the Red family)",
+  "ratings": [
+    {"axis": "correctness", "score": 3, "evidence": "phase-4-contact-authority.red.test.tsx:186–205 no longer rejects the shipped phone value in the locale field."},
+    {"axis": "test_meaning", "score": 3, "evidence": "The Reedy predicate probe accepts inactive as active, despite the passing proof for the earlier negation at proof-f9-r2.log:9."},
+    {"axis": "scope_discipline", "score": 4, "evidence": "The exact Git range contains only tests, fixtures, and the plan, with the mixed D1/R2 commit approved at plan.md:178."},
+    {"axis": "evidence_quality", "score": 4, "evidence": "green-at-7008ccef.log closes F10, but gate-7008ccef.json:20 still names the wrong source log."}
+  ],
+  "reviewer_ratings": [
+    {"reviewer_role": "review-a", "reviewer_route": "openai/gpt-6.2-sol#high", "agreed": true, "score": 5, "evidence": "The c673f21 verdict correctly refused the unusable original GREEN citation in gate-7008ccef.json:20."},
+    {"reviewer_role": "review-a", "reviewer_route": "openai/gpt-6.2-sol#high", "agreed": true, "score": 5, "evidence": "The 8a78788 verdict identified the omitted Product sections still evident in no-gse-in-customer-copy.test.ts:95–97."},
+    {"reviewer_role": "review-a", "reviewer_route": "openai/gpt-6-luna#high", "agreed": true, "score": 3, "evidence": "The c2f5cfd fail fits plan.md:178–180 at that HEAD, but the F2 withdrawal missed the two Product components still mocked to null."},
+    {"reviewer_role": "review-a", "reviewer_route": "openai/gpt-6-luna#high", "agreed": true, "score": 3, "evidence": "The cab8ffd verdict correctly kept F11 pending and identified the reruns now cited at plan.md:179–180."},
+    {"reviewer_role": "review-a", "reviewer_route": "openai/gpt-6-luna#high", "agreed": false, "score": 1, "evidence": "The 2be9b74 pass closes F11 correctly but misses the mock value used by the K rule at phase-4-contact-authority.red.test.tsx:186–205."},
+    {"reviewer_role": "adversarial", "reviewer_route": "kimi-code-plan-cn/kimi-for-coding", "agreed": false, "score": 1, "evidence": "The initial ADV-1 blocker contradicts git show 0d705612d, which removes the entire three-case navigation block."},
+    {"reviewer_role": "adversarial", "reviewer_route": "kimi-code-plan-cn/kimi-for-coding", "agreed": true, "score": 4, "evidence": "The bfda22b verdict correctly withdraws ADV-1, as confirmed by the navigation diffs for 0d705612d and 9eb3b9c4f."}
+  ]
+}

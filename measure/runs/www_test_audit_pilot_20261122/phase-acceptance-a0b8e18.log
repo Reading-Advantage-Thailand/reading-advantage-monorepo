@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: phase-acceptance
+status: blocked
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+commits: none
+tests_run: Heavy-run type check, lint, and coverage pass. Vitest passes 1,408 cases in 97 files with 92.01% line coverage. The focused run passes 47 cases. Fresh probes confirm F22, F23, and F24 are closed.
+files_changed: phase-acceptance-a0b8e18.json, phase-acceptance-a0b8e18.log
+plan_updates: none
+known_failures: F25: The phase-base validation reads and rejects a symlinked .md post with a blank title. The merged validation skips it.
+handoff: Do not accept a0b8e18e8. Route F25 to Green and apply the remediation round limit. Restore phase-base coverage for symlinked .md posts. Rerun the applicable reviews and acceptance at the resulting HEAD.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "role": "phase-acceptance",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 3: Rewrite batch (R1-R3)",
+  "baseline_sha": "a0b8e18e8f0e4529dca74b3a29b8c7741a4bd388",
+  "phase_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "role_base_sha": "a0b8e18e8f0e4529dca74b3a29b8c7741a4bd388",
+  "audited_head_sha": "a0b8e18e8f0e4529dca74b3a29b8c7741a4bd388",
+  "status": "fail",
+  "summary": "The three prior findings are closed. F25 blocks acceptance because the merged blog check skips a symlinked Markdown post that the phase-base check reads and rejects.",
+  "blocking_findings": [
+    "F25 [Blocker] phase-acceptance: The `isFile()` guard at fixtures/blog-posts-loader.ts:61 skips symlinked .md entries. The phase base reads them, and blog.ts:79–85 still discovers them. A blank title on en/acceptance-symlink.md fails by name at the phase base. The audited merge passes all 17 cases without reading that entry. This weakens the K blog validation row, even though no shipped post is a symlink."
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "The phase base is 8a126f612abcc258c6c6711d6ac03fa085bbcbff. Acceptance started at a0b8e18e8f0e4529dca74b3a29b8c7741a4bd388, which is also its role base.",
+    "The Green result names a0b8e18e8 as green_head and 3bad02148 as its role base. Review A and adversarial testing both pass at a0b8e18e8. No prerequisite needs a test-only HEAD exception.",
+    "Test-strategy.md:78–87 excludes Review B, Review C, and UX browser review for this phase. No browser ran.",
+    "All 13 Phase 3 tasks have [x] and a valid first-line SHA in the phase history or at the base. Tasks 3.1 and 3.3 cite the base because classification.md has no R1 or R3 rows.",
+    "Task 3.2 covers 14 R2 rewrites in adf24e723 and two earlier rewrites under the F11 approval. Task 3.5 uses a separate merge commit, 257a6b0cd.",
+    "Twelve class, merge, and remediation receipts match the labeled GREEN and coverage summaries. Each receipt records four zero exits. Line coverage ranges from 91.60% to 92.06%, above the 85.52% floor.",
+    "A5: The current plan's class and remediation pass claims match the runner evidence. The test-only adversarial probe commits are not class commits. The current aggregate run has no failing or skipped probe.",
+    "A3, A4, A6, and A7 do not apply. The phase diff changes no Measure contract test, framework filter, or track registry.",
+    "At the audited HEAD, the three heavy-run gates completed successfully. Coverage passed 1,408 cases in 97 files and reported 92.01% lines (1,659 of 1,803). Type checking reported no diagnostics. Lint reported zero errors and three existing warnings.",
+    "The runner reports existing V8 warnings for Markdown remapping. The warnings do not replace the 17 blog validation cases or the named mutation failures.",
+    "F22 withdrawn: proof-f22.log records exit 1 on a dot-prefixed regular post. The fresh in-memory en/.acceptance-regular.md input also exits 1 and names that post in the URL-safe slug rule.",
+    "F23 withdrawn: proof-f23.log records exit 1 on the color override. A fresh inline --color-slate-900 override on the pricing heading's parent exits 1 and names the property instead of returning a passing ratio.",
+    "F24 withdrawn: proof-f24.log records exit 1 on changed gradient stops. A fresh mutation that changes only the last stop to white exits 1 at the --tw-gradient-to assertion.",
+    "The fresh focused run passes 47 cases across six files. It includes the contrast guard probes for injected stylesheets, ancestor matches, and grouping rules.",
+    "The exact phase diff and commit path inventory contain only www test files, test fixtures, and plan.md. No production file, blog post, or tutor-commission test changed.",
+    "The merged blog suite still runs 15 rules and two discovery cases. proof-blog-merge.log records named post failures. A fresh blank title on the regular en/1-district-1-quality-school.md file produces one named failure and 16 passes.",
+    "F25 comparison: The same file-system stand-in supplies acceptance-symlink.md and a blank title to both suites. The phase base reads it and fails once by name. The audited HEAD lists it, never reads it, and passes all 17 cases.",
+    "F25 is a loss versus 8a126f612, not an equal pre-existing limit. The F22 remediation changed the same guard line and retained its isFile() exclusion.",
+    "The named failure on a regular post meets the narrow condition at classification.md:250–255. The raw reduction from 3,175 to 1,408 is 55.65%. The independent K gate still fails, so the merge cannot support a compliant 20% result at this HEAD.",
+    "With no credit for the 1,709 cases removed by the merge, the comparison count is 3,117 and the reduction is 1.83%. The pilot report remains a Phase 4 task.",
+    "The probes ran in memory. No tracked file needed restoration."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git status --porcelain=v1 --branch",
+    "git log --format='%h %s' 8a126f612..a0b8e18e8",
+    "git diff --name-status 8a126f612..a0b8e18e8",
+    "git diff --check 8a126f612..a0b8e18e8",
+    "git diff --name-only 8a126f612..a0b8e18e8 -- . ':(exclude)measure/**' ':(exclude,glob)apps/www-reading-advantage/**/*.test.ts' ':(exclude,glob)apps/www-reading-advantage/**/*.test.tsx' ':(exclude,glob)apps/www-reading-advantage/src/__tests__/fixtures/**'",
+    "git diff --name-only 8a126f612..a0b8e18e8 -- 'apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/posts' 'apps/www-reading-advantage/src/lib/tutor-commission*'",
+    "git show '8a126f612:apps/www-reading-advantage/src/lib/blog-posts-validation.test.ts'",
+    "git show 286d95a99 -- apps/www-reading-advantage/src/__tests__/fixtures/blog-posts-loader.ts",
+    "find 'apps/www-reading-advantage/src/app/[locale]/(marketing)/blog/posts' -type l -printf '%P\\n'",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage check-types'",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage lint'",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage'",
+    "CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot src/__tests__/contrast-fixture.test.ts src/__tests__/contrast-parent-override.adversarial.test.tsx src/__tests__/blog-posts-loader-dotfile.test.ts src/__tests__/blog-posts-loader.adversarial.test.ts src/lib/blog-posts-validation.test.ts src/components/marketing/hero-section.test.tsx",
+    "NO_COLOR=1 CI=true node --input-type=module -e 'import {startVitest} from \"vitest/node\";import {execFileSync} from \"node:child_process\";const mode=process.argv[1];const test=\"src/lib/blog-posts-validation.test.ts\";const old=mode===\"base\"?execFileSync(\"git\",[\"show\",`8a126f612:apps/www-reading-advantage/${test}`],{encoding:\"utf8\"}):null;const name=mode===\"dot\"?\".acceptance-regular.md\":\"acceptance-symlink.md\";const facade=`import actualFs from \"node:fs\"; const fs={...actualFs,readdirSync(dir,options){const list=actualFs.readdirSync(dir,options);if(!String(dir).endsWith(\"/blog/posts/en\"))return list;const name=${JSON.stringify(name)};console.log(\"PROBE discovered\",name);return [...list,options?.withFileTypes?{name,isFile(){return ${mode===\"dot\"};},isSymbolicLink(){return ${mode!==\"dot\"};}}:name];},readFileSync(file,options){if(!String(file).endsWith(${JSON.stringify(\"/\"+name)}))return actualFs.readFileSync(file,options);console.log(\"PROBE read\",file);const good=actualFs.readFileSync(String(file).replace(${JSON.stringify(name)},\"1-district-1-quality-school.md\"),options);return ${mode===\"dot\"}?good:good.replace(/^title:.*$/m,${JSON.stringify(\"title: \\\"\\\"\")});}};`;const ctx=await startVitest(\"test\",[test],{watch:false,maxWorkers:1,reporters:[\"dot\"]},{plugins:[{name:\"acceptance-blog\",enforce:\"pre\",transform(code,id){const base=mode===\"base\";if(!id.endsWith(base?\"/\"+test:\"/fixtures/blog-posts-loader.ts\"))return;const source=base?old:code;const anchor=base?\"import fs from \\\"fs\\\";\":\"import fs from \\\"node:fs\\\";\";if(!source.includes(anchor))throw new Error(\"Probe source mismatch\");return source.replace(anchor,()=>facade);}}]});await ctx.close();' head",
+    "NO_COLOR=1 CI=true node --input-type=module -e 'import {startVitest} from \"vitest/node\";import {execFileSync} from \"node:child_process\";const mode=process.argv[1];const test=\"src/lib/blog-posts-validation.test.ts\";const old=mode===\"base\"?execFileSync(\"git\",[\"show\",`8a126f612:apps/www-reading-advantage/${test}`],{encoding:\"utf8\"}):null;const name=mode===\"dot\"?\".acceptance-regular.md\":\"acceptance-symlink.md\";const facade=`import actualFs from \"node:fs\"; const fs={...actualFs,readdirSync(dir,options){const list=actualFs.readdirSync(dir,options);if(!String(dir).endsWith(\"/blog/posts/en\"))return list;const name=${JSON.stringify(name)};console.log(\"PROBE discovered\",name);return [...list,options?.withFileTypes?{name,isFile(){return ${mode===\"dot\"};},isSymbolicLink(){return ${mode!==\"dot\"};}}:name];},readFileSync(file,options){if(!String(file).endsWith(${JSON.stringify(\"/\"+name)}))return actualFs.readFileSync(file,options);console.log(\"PROBE read\",file);const good=actualFs.readFileSync(String(file).replace(${JSON.stringify(name)},\"1-district-1-quality-school.md\"),options);return ${mode===\"dot\"}?good:good.replace(/^title:.*$/m,${JSON.stringify(\"title: \\\"\\\"\")});}};`;const ctx=await startVitest(\"test\",[test],{watch:false,maxWorkers:1,reporters:[\"dot\"]},{plugins:[{name:\"acceptance-blog\",enforce:\"pre\",transform(code,id){const base=mode===\"base\";if(!id.endsWith(base?\"/\"+test:\"/fixtures/blog-posts-loader.ts\"))return;const source=base?old:code;const anchor=base?\"import fs from \\\"fs\\\";\":\"import fs from \\\"node:fs\\\";\";if(!source.includes(anchor))throw new Error(\"Probe source mismatch\");return source.replace(anchor,()=>facade);}}]});await ctx.close();' base"
+  ],
+  "changed_files": [
+    "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-a0b8e18.json",
+    "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-a0b8e18.log"
+  ],
+  "test_strategy_violations": [
+    "F25 weakens the K blog validation row at classification.md:106 and fails the Phase 3 gate at test-strategy.md:238."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "openai/gpt-6.2-sol#high (substitution: ra-quota pick printed claude-agent/sonnet#max, but the Claude 7-day window is above 90 %; gpt-6.2-sol is an approved phase-acceptance route and not the Red family)",
+  "ratings": [
+    {"axis": "correctness", "score": 3, "evidence": "The guard at fixtures/blog-posts-loader.ts:61 drops an input that the phase-base suite rejects."},
+    {"axis": "test_meaning", "score": 3, "evidence": "The URL-safe slug test rejects the new regular dotfile probe, but the same suite omits the symlink probe."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "The exact Git range contains only www tests, test fixtures, and the track plan."},
+    {"axis": "evidence_quality", "score": 4, "evidence": "The head coverage run matches gate-6be92dd85.json, but proof-blog-merge.log covers regular files only."}
+  ],
+  "reviewer_ratings": [
+    {"reviewer_role": "review-a", "reviewer_route": "openai/gpt-6-luna#high", "agreed": false, "score": 1, "evidence": "Review A identifies the isFile() gap at line 61 but treats it as a nit without testing the phase base."},
+    {"reviewer_role": "adversarial", "reviewer_route": "kimi-code-plan-cn/kimi-for-coding", "agreed": false, "score": 1, "evidence": "The focused run confirms the contrast probe results, but the pass verdict misses the phase-base failure for acceptance-symlink.md."}
+  ]
+}

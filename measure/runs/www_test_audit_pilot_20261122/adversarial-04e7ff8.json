@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 3: Rewrite batch (R1-R3), adversarial round 2",
+  "baseline_sha": "8f7d94961",
+  "phase_base_sha": "8a126f612abcc258c6c6711d6ac03fa085bbcbff",
+  "role_base_sha": "04e7ff8a88d0820c1c0b332045bcfbbd213b14bf",
+  "audited_head_sha": "04e7ff8a88d0820c1c0b332045bcfbbd213b14bf",
+  "status": "fail",
+  "summary": "ADV-8 is closed: 98c2713d3 made the loader extension-agnostic and flags Markdown-like non-.md files by name. A new false pass remains: an uppercase .MD post is never parsed and never flagged, so it escapes all 17 cases; isolated, the suite is green with only an uppercase .MD post present. The no-extension, .markdown, and new-locale-folder probes fail and name the file. The -segments.json allowance holds as designed. ADV-11 routes to Green with a committed failing test.",
+  "blocking_findings": [
+    "ADV-11 [Blocker] adversarial: an uppercase .MD post escapes the merged blog validation. loadAllPosts parses only files ending exactly \".md\" (case-sensitive), and the mislabelled sweep of blog-posts-validation.test.ts uses MARKDOWN_LIKE_RE /\\.(?:mdx|markdown|mdown|mkd)$/i, which omits a plain .md stem and so misses .MD; the no-extension branch needs a dot, which the file has. A valid post saved as th/ZZ-ADV-UPPER.MD left all 17 cases green at 04e7ff8a8 (isolated run: 17 passed with only that file present). Route-to-Green: flag a case-insensitive .md suffix that is not exactly \".md\" (for example /\\.md$/i.test(ref) && !ref.endsWith(\".md\")). The committed probe src/__tests__/blog-posts-loader.adversarial.test.tsx fails its new ADV-11 case until the fix lands."
+  ],
+  "nonblocking_findings": [
+    "ADV-8 closed: 98c2713d3 added fixtures/blog-posts-loader.ts, which lists every non-hidden regular file per locale directory and parses only .md files; the extension rule and both discovery-adjacent cases flag Markdown-like non-.md files by name. A temporary en/zz-adv-probe.mdx and th/zz-adv-probe.markdown were each named in three failing cases. The committed mdx probe passes 1 of 1.",
+    "ADV-9 kept: the R2 rewrites catch the old class-pin mutations (recorded at 8f7d94961).",
+    "ADV-10 kept: the merged rules name offenders and empty discovery fails loudly (recorded at 8f7d94961).",
+    "ADV-12 [Note] adversarial: the -segments.json allowance holds as designed. A temporary en/zz-adv-segments.json holding post-shaped frontmatter was neither parsed nor flagged, so a post hidden behind that name escapes every rule; real -segments.json data companions stay ignored as intended. A post behind .json never reaches production (the blog lib reads .md only). Optional hardening: validate that -segments.json files parse as JSON and carry no frontmatter."
+  ],
+  "evidence": [
+    "At 04e7ff8a8 the probe file and src/lib/blog-posts-validation.test.ts pass: 2 files, 18 tests.",
+    "With en/zz-adv-noext, en/zz-adv-probe.mdx, th/zz-adv-probe.markdown, and ja/zz-adv-ja-post.md (missing title) present, the validation named en/zz-adv-noext, en/zz-adv-probe.mdx, and th/zz-adv-probe.markdown in three cases and ja/zz-adv-ja-post in the title rule.",
+    "Isolated run with only th/ZZ-ADV-UPPER.MD present: 17 passed, 17 failed none, proving the uppercase .MD post is invisible.",
+    "A temporary en/zz-adv-segments.json with frontmatter content was invisible to all cases and was not named in any failure.",
+    "Every temporary file and the ja directory were deleted; git status is clean before the probe commit.",
+    "The committed probe at 4de4b39ff fails the ADV-11 case and passes the mdx case; its temp files self-clean."
+  ],
+  "commands": [
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts src/lib/blog-posts-validation.test.ts --reporter=dot",
+    "pnpm --filter www-reading-advantage exec vitest run src/lib/blog-posts-validation.test.ts --reporter=verbose",
+    "pnpm --filter www-reading-advantage exec vitest run src/lib/blog-posts-validation.test.ts --reporter=dot",
+    "pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts --reporter=verbose",
+    "git add apps/www-reading-advantage/src/__tests__/blog-posts-loader.adversarial.test.ts && git commit -m 'test(www): add phase 3 adversarial checks (track_id: www_test_audit_pilot_20261122)'"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/blog-posts-loader.adversarial.test.ts",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-04e7ff8.json",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-04e7ff8.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "kimi-code-plan-cn/kimi-for-coding",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "The ADV-8 fix flags .mdx, .markdown, and extension-less posts by name, but the uppercase .MD probe leaves the suite green (isolated run: 17 passed)."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "Four of five new loader probes fail and name the file; the -segments.json allowance is a documented scope decision."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "All probes were temporary and removed; the only commit updates the probe file."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Every claim names a probe file and a vitest result; the isolated green run isolates the .MD false pass."
+    }
+  ]
+}

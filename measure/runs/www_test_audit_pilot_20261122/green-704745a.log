@@ -1,0 +1,30 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Phase 3 acceptance remediation F22 to F24.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+phase_base_sha: 8a126f612abcc258c6c6711d6ac03fa085bbcbff
+role_base_sha: 704745a3ca2bb27b52f28e2fcf65df9d994b64ac
+green_head: 74a7213c2cd5cbcd163fc21a743d0d1a01d399af
+
+tasks_flipped_to_x:
+- 3.11 Phase acceptance remediation F22 to F24 (286d95a99). Evidence: commits 286d95a99, de68074d9, 338047c69 and plan commit 74a7213c.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: one tracked file, src/__tests__/blog-posts-loader-dotfile.test.ts. The loader fixture, the contrast fixture and its unit test, and the hero test were changed. The plan commit changed the existing plan.md. No post or production file changed.
+
+fixes:
+- F22: the loader no longer skips dot-prefixed names. blog.ts markdownSlugs filters only by the .md suffix, and a comment cites it. The loader takes an optional base directory for the temporary-directory unit test.
+- F23: custom properties resolve from the element cascade: inline, then jsdom computed value, then the compiled :root map. An undecidable override throws with the element and name. The oklch parser accepts a percent lightness without a following space.
+- F24: the hero tests compare every gradient stop, from, via and to, against values resolved from the compiled stylesheet through real-css.ts.
+
+gates: each of the three commits passed four heavy-run gates with exit 0: check-types, lint, full vitest and coverage. Case counts: F22 1398 to 1399, F23 1399 to 1402, F24 1402 to 1402. Line coverage is 92.06 percent at the last gate, above the 85.52 floor and the 86.52 baseline. Each lint log holds zero errors and three known warnings in untouched files.
+
+proofs: measure/runs/www_test_audit_pilot_20261122/proof-f22.log, proof-f23.log and proof-f24.log. A dot-prefixed post fails the slug rule by name; an inline custom-property override on the pricing h1 fails the WCAG AA case; a changed hero via stop fails the gradient case. Every production edit was restored with git checkout. git status shows no production or post change.
+
+deviation: three commit headers were shortened for the 100-character commitlint limit. The meaning and track id stay.
+dispositions: F22=FIX; F23=FIX; F24=FIX
+END_MEASURE_AGENT_RESULT

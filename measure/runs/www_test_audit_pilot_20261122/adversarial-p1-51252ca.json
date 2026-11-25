@@ -1,0 +1,112 @@
+{
+ "schema_version": 1,
+ "role": "measure-adversarial-testing",
+ "track": "www_test_audit_pilot_20261122",
+ "phase": "Phase 1: Baseline and classification",
+ "track_base_sha": "635a604c89b2c909cfce33f555b7f043d4ea520f",
+ "baseline_sha": "cbd023b1bd29333992f7511646cff1245191b049",
+ "phase_base_sha": "cbd023b1bd29333992f7511646cff1245191b049",
+ "phase_end_sha": "a1caa58034f6455e91205a5673ef172a974a7992",
+ "role_base_sha": "51252ca9e09bd458052894304aaa7680b1daabc2",
+ "audited_head_sha": "51252ca9e09bd458052894304aaa7680b1daabc2",
+ "status": "fail",
+ "summary": "The classification structure holds. All 9 mutations of classification.md are detected, the class sums equal 3175, the seven tutor-commission K files stay in K rows and stay unchanged, and the e2e and i18n-cli rows say not counted. One blocker stands. A D5 row hid a payout-rule claim: the Thai text of the commission-model FAQ answer (faq.items.5.answer) has no test at HEAD. A mutation of that text passes all 51 HEAD test files that reference locale or tutor modules. The a1caa5803 version of the test fails on it. Six nonblocking items follow, including a third restored row (D2 Primary) that no plan or report line names.",
+ "blocking_findings": [
+  "ADV-P1-1 [Blocker] adversarial: A D5 row hides a payout-rule claim, and the Thai text of that claim has no test at HEAD. classification.md puts the live-line pins of www-tutor-calculator.locale.test.ts in D5 with the reason 'exact prose pins (money pins stay as K)'. One live line is the FAQ answer at faq.items.5.answer. It states a unilevel commission model, monthly settlement, and a rate that rises with network volume. Commit 407c5d9bd replaced the exact en and th pins with a key-presence check. Proof 1 (adversarial-p1-51252ca-thai-claim-harness.py): the Thai answer changed to 'settles yearly, flat rate' passes both HEAD test files (23 cases, exit 0) and fails the a1caa5803 test 'holds the new th copy at both paths' (exit 1). Proof 2 (adversarial-p1-51252ca-subset-run.sh): the same change in a /tmp copy fails none of the 51 HEAD test files that reference locale or tutor modules; only the a1caa5803 positive control fails. The English answer stays guarded, but only through the zh-equals-en cases. Rationale: Review A rated the same loss class as Blocker in F9 (Reedy limits) and F12 (price and date). Fix: Green restores an exact th and en assertion for faq.items.5.answer in www-tutor-calculator.locale.test.ts with one breakage proof. PM adds an erratum line to classification.md for the row."
+ ],
+ "nonblocking_findings": [
+  "ADV-P1-2 [Note] adversarial: The D2 Primary row ('no old test id') named a kept duplicate that did not keep the rule. At a1caa5803 page.content.test.tsx names none of cefr-timeline, reversed-split, overlapping-section, stat-card. Its old-reference scanner checks image paths and one name. Commit fb5622ed7 restored the rule, so the code is fixed. Plan task 4.12 and report.md section 3 name only the blog-locale half of that commit. Fix: name the Primary restore in report.md.",
+  "ADV-P1-3 [Note] adversarial: classification.md at HEAD still lists three restored rows as delete, with no erratum: the D4 navigation row (9eb3b9c4f), the D2 explicit-English row (fb5622ed7), and the D2 Primary row (fb5622ed7). The D4 reason 'no logic under test' is false for the th and zh cases. report.md cites classification.md as the source of the D2 and D4 rows. Fix: add one erratum line for each restored row.",
+  "ADV-P1-4 [Note] adversarial: The second check understates the classifier error rate. It recorded 3 of 37 disagreements (8.11 %). Three rows it agreed with were restored later (D4 navigation, D2 explicit-English, D2 Primary). The ex post rate is 6 of 37 (16.22 %), above the 15 % stop rule. The residual rate at Phase 1 end is 3 of 37 (8.11 %). D5 has 13 rows with cases (221 cases). The sample drew 1 of them. ADV-P1-1 sits in an unsampled D5 row. report.md says only that the second check passed. Fix: state the limit in report.md.",
+  "ADV-P1-5 [Note] adversarial: per-file-counts.md rests on a JSON reporter output that no longer exists (0 retained runner JSON files). I re-derived 1858 of 3175 cases (58.5 %): 24 files by static count (132 cases) and blog-posts-validation (1726 = 14 x 119 + 2 + 58, from the 119 .md post files at a1caa5803). The other 67 dynamic files need a rerun at a1caa5803 for an independent count. The 91 row sums, the class sums, and baseline.json agree.",
+  "ADV-P1-6 [Nit] adversarial: The K share in the Summary table reads 89.6 %. The value 2843/3175 is 89.5 %. The shares add to 100.1 %.",
+  "ADV-P1-7 [Nit] adversarial: Two zero-case sentinel rows sit in D sections. They name phase-3-i18n.red.test.ts (D2) and www-tutor-screens-copy.adversarial.test.ts (D5). Both files hold K rows, so a path-based D filter lists them as D. The n column of the e2e rows counts declared test() calls. Runtime counts differ (link-locale 2 declared, 6 run; locale-middleware 7 declared, 9 run). The rows are excluded from every sum."
+ ],
+ "evidence": [
+  "First Phase 1 adversarial pass. No earlier Phase 1 finding exists, so no F<n> withdrawn entry and no CONTEST item applies.",
+  "git rev-parse HEAD -> 51252ca9e09bd458052894304aaa7680b1daabc2. git status --short was empty before and after every command. The run files are gitignored (measure/runs).",
+  "python3 -I adversarial-p1-51252ca-probes.py -> 28 PASS, 0 FAIL, exit 0, two identical runs. Mutants M1 (tutor-commission K row to D1), M2 (row dropped), M3 (e2e loses 'not counted'), M4 and M5 (D2 kept duplicate missing), M6 (n off by one), M7 (D5 row moved to K, sum kept), M8 (e2e counted as K), M9 (empty file) are all detected.",
+  "M7 keeps the class sum at 3175 and fails the Summary-table check. A relabel that keeps the sum is therefore caught.",
+  "Class sums by independent parser: K 2843, D1 67, D2 22, D4 6, D5 221, R2 16 = 3175 = case_count in baseline.json. D3, R1, R3 are 0. The 98 test files at a1caa5803 (91 src, 6 e2e, 1 scripts) each have a row; 0 missing, 0 stray.",
+  "K list: the pattern tutor-commission* matches exactly 7 paths at a1caa5803. All 7 hold K rows only. git diff --name-only a1caa5803 HEAD over the 7 paths is empty.",
+  "e2e rows: all 6 e2e files and scripts/__tests__/i18n-cli.test.ts have a Not counted row with 'not counted' in the note. None of them sits in a counted section. vitest.config.ts includes only src/**/*.test.ts(x) and excludes scripts/__tests__/**.",
+  "D2 token bridge: references (11 literals equal to the kept real-logos-adversarial list), favicon (both copies, length 6507, ICO magic, identity), tutor-screens (order and portrait false), retired-Storytime (two regexes equal), reading-time (kept in blog.test.ts 'returns a number, not a string' and value cases) all keep the rule. Primary 'no old test id' does not (ADV-P1-2). Explicit-English does not (known F51).",
+  "page.content.test.tsx at a1caa5803 names none of the four old test ids; HEAD names all four after fb5622ed7.",
+  "D4 rows: real-logos-captures 'names the first and last capture' checks the test file's own constant. primary-page-images 'are present when A34_REQUIRE_SOURCES=1' returns early without the flag, and the other cases still fail when sources are missing under the flag. Both deletes keep fault detection. The navigation row is known context.",
+  "Mutation proof 1: the Thai answer 'ทุกเดือน ... สูงขึ้น' replaced by 'ทุกปี ... คงที่'. Control (no mutation): HEAD 23 passed, a1caa5803 26 passed. th-only mutant: HEAD exit 0 (23 passed), a1caa5803 exit 1 ('holds the new th copy at both paths'). en-only mutant: HEAD fails ADV-C3 (zh equals en). en-and-zh mutant: HEAD fails 'keeps the zh values equal to en'.",
+  "Mutation proof 2: adversarial-p1-51252ca-subset-run.sh ran 51 HEAD test files plus the a1caa5803 positive control (1011 cases). Control: 67 failed, all in real-logos-captures-adversarial.test.ts (ENOENT under /tmp/measure/tracks; the copy has no repo root). Mutant: 68 failed. The only extra failure is the a1caa5803 positive control 'holds the new th copy at both paths'.",
+  "Second-check accounting from second-check-1d4ddd2.json: sample 37 rows (K 18, D1 7, D2 6, D5 1, D4 3, not counted 2). Recorded disagreements 3 (all D1, fixed in r3). Rows agreed and restored later: D2 Primary, D2 blog-locale, D4 navigation.",
+  "Counts: blog-posts-validation 1726 = 14 x 119 + 2 + 58 (en 61, th 58 .md files). 24 files match a static counter exactly (132 cases). retained_runner_json_files=0.",
+  "A5: plan Phase 1 says 'Both runner commands exited 0' and holds no number. heavy-run.log has three 'job ended exit 0' www lines on 2026-11-22. A9: no 'measure/archive' path in classification.md or plan.md. A7: Phase 1 adds no word filter. A4 (plan markers): not applicable to Phase 1.",
+  "Reused probes: phase-acceptance-p1-51252ca-probes.py reran (79 PASS, 0 FAIL). The adversarial-bfda22b K-file attack (a) reran to HEAD with the same empty diff.",
+  "Not run: the full suite; the Phase 1 GREEN and COVERAGE suites; a mutation sweep of the other D5 rows. Side effect: Vitest rewrote its gitignored results cache under apps/www-reading-advantage/node_modules/.vite."
+ ],
+ "commands": [
+  {
+   "command": "git rev-parse HEAD; git status --short",
+   "result": "51252ca9e09bd458052894304aaa7680b1daabc2; empty"
+  },
+  {
+   "command": "python3 -I measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca-probes.py",
+   "result": "28 PASS, 0 FAIL, exit 0 (two identical runs)"
+  },
+  {
+   "command": "python3 -I measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca-thai-claim-harness.py",
+   "result": "exit 0; th-only mutant: HEAD tests exit 0, a1caa5803 tests exit 1; thai_claim_unpinned_at_head=True"
+  },
+  {
+   "command": "bash measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca-subset-run.sh",
+   "result": "51 HEAD files, 1011 cases; only the a1caa5803 positive control fails under the mutation; only_positive_control_caught_it=True"
+  },
+  {
+   "command": "python3 -I measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p1-51252ca-probes.py",
+   "result": "79 PASS, 0 FAIL"
+  },
+  {
+   "command": "git diff --name-only a1caa5803 HEAD -- <seven tutor-commission test paths>",
+   "result": "empty"
+  },
+  {
+   "command": "git show a1caa5803:<file> for the D2 and D4 case bodies and the kept duplicates",
+   "result": "five of seven D2 rows keep the rule; two do not (Primary, explicit-English)"
+  }
+ ],
+ "changed_files": [
+  "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca.json",
+  "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca.log",
+  "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca-probes.py",
+  "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca-thai-claim-harness.py",
+  "measure/runs/www_test_audit_pilot_20261122/adversarial-p1-51252ca-subset-run.sh"
+ ],
+ "test_strategy_violations": [
+  "spec section 4 (fidelity rule) and test-strategy section 7 attack 'a mislabeled row drives a deletion': ADV-P1-1. The D5 label hid a payout-rule claim."
+ ],
+ "live_contract_violations": [],
+ "prod_wiring_violations": [],
+ "route_parity_violations": [],
+ "retry_recommendation": "retry_implementation",
+ "confidence": "high",
+ "route": "claude-agent/sonnet#xhigh",
+ "ratings": [
+  {
+   "axis": "correctness",
+   "score": 3,
+   "evidence": "classification.md:226-233 sums to 3175 and the structure holds, but the D5 row for www-tutor-calculator.locale.test.ts hid a payout claim that the th mutant proves untested at HEAD."
+  },
+  {
+   "axis": "test_meaning",
+   "score": 3,
+   "evidence": "adversarial-p1-51252ca-probes.py detects 9 of 9 classification mutants, yet a structural check cannot see a D2 row that names an existing file with a different rule (ADV-P1-2)."
+  },
+  {
+   "axis": "scope_discipline",
+   "score": 5,
+   "evidence": "git status --short is empty before and after, and Phase 1 changed classification.md and plan.md only (git diff --name-status cbd023b1b a1caa5803)."
+  },
+  {
+   "axis": "evidence_quality",
+   "score": 4,
+   "evidence": "adversarial-p1-51252ca-thai-claim-harness.py gives exit codes for six mutant and test pairs, but the Phase 1 per-file runner JSON is not retained (ADV-P1-5)."
+  }
+ ]
+}

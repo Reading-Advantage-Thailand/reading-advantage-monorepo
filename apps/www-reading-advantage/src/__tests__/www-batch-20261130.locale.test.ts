@@ -80,8 +80,8 @@ const LAUNCH = [
   },
   {
     key: "pages.home.suite.description",
-    en: "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. Science, Math, Zhongwen, and STEM Advantage are on our roadmap. The first Storytime Advantage unit is available now.",
-    th: "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก Science, Math, Zhongwen และ STEM Advantage อยู่ในแผนงาน หน่วยการเรียนรู้แรกของ Storytime Advantage พร้อมใช้งานแล้ว",
+    en: "Primary Advantage, Reading Advantage, and CodeCamp Advantage are live. Mastery Advantage runs in CodeCamp Advantage and is entering Primary Advantage through tagged content. In the 2027 school year, Thai primary schools open Science Advantage, Math Advantage, and Zhongwen Advantage: workbooks and apps. STEM Advantage is planned. The first Storytime Advantage unit is available now.",
+    th: "Primary Advantage, Reading Advantage และ CodeCamp Advantage เปิดใช้งานแล้ว Mastery Advantage ทำงานอยู่ใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก ในปีการศึกษา 2570 โรงเรียนประถมศึกษาไทยจะเปิดใช้ Science Advantage, Math Advantage และ Zhongwen Advantage ทั้งหนังสือแบบฝึกหัดและแอป STEM Advantage อยู่ในแผน หน่วยการเรียนรู้แรกของ Storytime Advantage พร้อมใช้งานแล้ว",
     old: { en: "The first Storytime Advantage unit launches on 30 November 2026", th: "หน่วยการเรียนรู้แรกของ Storytime Advantage เปิดตัววันที่ 30 พฤศจิกายน 2569" },
   },
 ] as const;
@@ -115,12 +115,12 @@ describe("www batch 2026-11-30, storytime launch day", () => {
     expect(read("zh", "pages.home.v2.products.storytimePreparingLabel")).toBe("Available now");
   });
 
-  it("keeps the zh overview and suite lines as the deletion-only copy", () => {
+  it("keeps the zh overview line and the merged zh suite line in Chinese", () => {
     expect(read("zh", "pages.products.overview.gradeBands.storytime.description")).toBe(
       "Storytime Advantage 是面向 Anuban 2 至 P2 的英语课程。每周有一个发音、一首歌和两本书。",
     );
     expect(read("zh", "pages.home.suite.description")).toBe(
-      "Primary Advantage、Reading Advantage 和 CodeCamp Advantage 已上线。Mastery Advantage 在 CodeCamp Advantage 中运行，并通过带标签的内容进入 Primary Advantage。Science、Math、Zhongwen 和 STEM Advantage 在路线图中，暂无日期。",
+      "Primary Advantage、Reading Advantage 和 CodeCamp Advantage 已上线。Mastery Advantage 在 CodeCamp Advantage 中运行，并通过带标签的内容进入 Primary Advantage。在2027学年，泰国小学开设 Science Advantage、Math Advantage 和 Zhongwen Advantage，配套练习册和应用。",
     );
   });
 

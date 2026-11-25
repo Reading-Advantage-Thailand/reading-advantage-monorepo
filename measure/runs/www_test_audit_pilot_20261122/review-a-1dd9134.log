@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+commits: none
+tests_run: Targeted Vitest passed 61 tests in 11 files. Reviewed both F20 proof logs and gate receipts; no new production mutation run.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-1dd9134.json and review-a-1dd9134.log
+plan_updates: none
+known_failures: F21 blocks acceptance. The class-only background reader can miss the actual CSS backdrop.
+handoff: Route F21 to Green. Read the rendered background after applying the compiled stylesheet, including non-class selectors such as the body rule. F20 is withdrawn. The requested production mutation was not run because this audit role cannot edit production files; the two existing proof logs were reviewed.
+dispositions: none
+END_MEASURE_AGENT_RESULT

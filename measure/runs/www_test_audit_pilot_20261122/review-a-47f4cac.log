@@ -1,0 +1,23 @@
+Review A (correctness and architecture), round 4 (documents only), for www_test_audit_pilot_20261122, Phase 4: Pilot report.
+Audited HEAD: 47f4cac872450120e984468bbd14a97ff9a7b637. Scope: dc9d39dac..47f4cac87. Phase base: e91c4d4cc.
+Result JSON: measure/runs/www_test_audit_pilot_20261122/review-a-47f4cac.json
+
+Scope PASS: git diff --stat lists plan.md, report.md and measure/tech-debt.md only.
+Plan 4.3 PASS: the pre-merge values are 1763 cases and 92.07 % at e91c4d4cc. The final values after 6ee56327b are a cut of 1762 cases, 1413 cases and 92.08 %.
+tech-debt.md PASS: ADV-26, ADV-27, ADV-31 and ADV-32 match adversarial-da99c46.json and adversarial-dc9d39d.json. The file stays at 50 lines.
+Report section 7 PASS: both places say 'pre-merge head'.
+No line citation and no run-file count were added.
+Nonblocking N4: no plan task records commit 47f4cac87, and the late-finding calls are not in the exact contracts.md line form.
+
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: None; documents-only change, apps tree equal to dc9d39dac (1413 tests, 92.08 % lines in this role's round 3 run).
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-47f4cac.json and review-a-47f4cac.log
+plan_updates: none
+known_failures: none
+handoff: PASS. Optional record fix (N4): add a plan line for commit 47f4cac87. Write each late-finding call as '- Late finding <id>: tech-debt (<reason>)' under the Phase 4 heading. Nothing blocks.
+END_MEASURE_AGENT_RESULT

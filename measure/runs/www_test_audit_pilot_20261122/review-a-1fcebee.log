@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: None; this was an artifact-only audit.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-1fcebee.json and review-a-1fcebee.log
+plan_updates: none
+known_failures: F49: plan.md:554 retains an unqualified count of all 30 gate JSONs.
+handoff: F48 is withdrawn. The exact range changes plan.md only, and no test or production file changed. Route F49 to Green to remove or date the gate-JSON count.
+END_MEASURE_AGENT_RESULT

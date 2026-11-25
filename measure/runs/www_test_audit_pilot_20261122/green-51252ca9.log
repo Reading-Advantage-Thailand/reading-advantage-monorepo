@@ -1,0 +1,18 @@
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report (plan record form fix)
+commits:
+  - 51252ca9e09bd458052894304aaa7680b1daabc2 (record late findings and document commit)
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: 47f4cac872450120e984468bbd14a97ff9a7b637
+final_green_head: 51252ca9e09bd458052894304aaa7680b1daabc2
+dispositions: N4=FIX
+tests_run: None. This round changes plan.md only. No test suite ran and no production or test file changed.
+files_changed:
+  - measure/tracks/www_test_audit_pilot_20261122/plan.md
+plan_updates: The Phase 4 heading now writes L1 and ADV-26 to ADV-32 as eight separate lines in the contract form '- Late finding <id>: tech-debt (<reason>)'. New task 4.16 is [x] with document commit SHA 47f4cac87 on its first line. All existing tasks and SHAs stay intact; ADV-25 stays FIX with e993f5aa1. No task flipped to [b].
+known_failures: None. The commit subject is 97 characters, within the 100-character limit.
+handoff: N4 is fixed. git diff --stat against role_base_sha lists plan.md only, with 16 added lines. Task 4.16 records that 47f4cac87 added ADV-31 and ADV-32, corrected ADV-26 and ADV-27, and labelled task 4.3 pre-merge. No push was made. Substitution note from earlier rounds still applies: the Red model family is not recorded in the run files; the picker excluded only openai.
+END_MEASURE_AGENT_RESULT

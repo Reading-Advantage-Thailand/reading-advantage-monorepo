@@ -1,0 +1,60 @@
+# Green run log: www test audit pilot (Review A remediation round A)
+
+Role: measure-jr-green (round A, MiniMax). Route: opencode-go/minimax-m2.5#high.
+This record is written after the round ended out of steps. Numbers come from the
+committed run logs and gate files. No number is invented.
+
+## Base verification
+
+- role_base_sha for the round: c673f21341a19e961e8e1b9c3625c5b9ba62027c.
+- phase_base_sha (Phase 2): a1caa58034f6455e91205a5673ef172a974a7992.
+- Review A file: measure/runs/www_test_audit_pilot_20261122/review-a-c673f21.json.
+- Review A status: fail, 12 blocking findings (F1 through F12).
+
+## Commits (round A)
+
+- 733319505cc2cb0d8b45e19e26c6e822abf1e89f test(www): fix d5 locale-key and
+  fact checks after review. Closes F7, F9, F12, F8.
+- fb5622ed7496bda9e9cc25e26318a6d8b136db7a test(www): restore d2 same-rule
+  checks. Closes F5.
+- 9eb3b9c4f80be311ea19bef33d36a32f2c964251 test(www): restore d4 supported-locale
+  case. Closes F6.
+
+## Gate results (final round A HEAD, 9eb3b9c4f)
+
+- GREEN exit 0: 89 files passed, 3063 tests passed.
+  Log: measure/runs/www_test_audit_pilot_20261122/green-9eb3b9c4.log.
+- COVERAGE exit 0: 89 files passed, 3063 tests passed.
+  Lines 90.04, statements 88.69, branches 80.96, functions 83.78 percent.
+  Log: measure/runs/www_test_audit_pilot_20261122/coverage-9eb3b9c4.log.
+- Gate: measure/runs/www_test_audit_pilot_20261122/gate-9eb3b9c4.json.
+- Coverage floor 85.52 percent. Lines stay above the floor.
+
+## Outstanding at end of round A
+
+F1, F2, F3, and F4 remain open. All four are D1 findings from Review A.
+Round B (this role) is dispatched to fix them. No production file changed in
+round A. No push was made.
+
+## MEASURE_AGENT_RESULT
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: partial
+track: www_test_audit_pilot_20261122
+phase: Phase 2: Delete batch (D1-D5) — Review A remediation round A
+phase_base_sha: a1caa58034f6455e91205a5673ef172a974a7992
+role_base_sha: c673f21341a19e961e8e1b9c3625c5b9ba62027c
+green_head: 9eb3b9c4f80be311ea19bef33d36a32f2c964251
+commits: 733319505, fb5622ed7, 9eb3b9c4f
+findings_fixed: F7, F9, F12, F8, F5, F6
+findings_open: F1, F2, F3, F4 (D1; handed to round B)
+tests_run: GREEN exit 0 (green-9eb3b9c4.log); COVERAGE exit 0, lines 90.04
+  (coverage-9eb3b9c4.log); floor 85.52
+files_changed: test files under apps/www-reading-advantage only; no production file
+plan_updates: none in this round (round A ended out of steps before its records)
+known_failures: Review A still fails on F1 through F4; those are D1 findings
+handoff: Round B must fix F1, F2, F3, F4 with behavior tests through public
+  surfaces and mutation proofs. No production change is committed. No push was
+  made.
+END_MEASURE_AGENT_RESULT

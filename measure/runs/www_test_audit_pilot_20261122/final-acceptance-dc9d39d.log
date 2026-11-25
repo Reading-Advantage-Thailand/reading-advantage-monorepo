@@ -1,0 +1,41 @@
+Final acceptance log: www_test_audit_pilot_20261122 at dc9d39dac96b66a60d0c07b8ccdecc49c0352395
+Route: claude-agent/sonnet#xhigh (PM substitution of 2026-11-24: openai and kimi excluded).
+Result JSON: measure/runs/www_test_audit_pilot_20261122/final-acceptance-dc9d39d.json (status fail).
+Probe script: measure/runs/www_test_audit_pilot_20261122/final-acceptance-dc9d39d-probes.py (read-only).
+
+Verdict: FAIL on two procedural gaps. The work itself meets the spec.
+
+Blocking findings
+- F1: Phase 1 has no phase-acceptance result. Results exist for Phases 2, 3 and 4 only.
+- F2: The Phase 4 result audited d2c8e6336. The 15 later paths hold 8 track paths that are not plan or evidence files.
+  Review A and the adversarial pass both pass at dc9d39dac and mitigate F2.
+
+Gates run through heavy-run at HEAD (HEAVY_PREFLIGHT_WAIT_S=3600, one command per call)
+- check-types: pass.
+- lint: pass, 0 errors, 3 known warnings.
+- Vitest (--reporter=dot): 98 files, 1413 tests passed.
+- test:coverage: 98 files, 1413 tests passed, 92.08 percent lines.
+- bash measure/doctor.sh: exit 1, pre-existing architecture pin (Nit N1).
+
+Spec criteria
+- (a) cut 55.5 percent (3175 to 1413), target 20 percent: met.
+- (b) coverage 86.52 to 92.08 percent, floor 85.52, lowest gate 89.86: met.
+- (c) 30 gate JSON files all pass: met.
+- (d) one commit per class: met.
+- (e) no K row deleted, 7 money files unchanged against the baseline: met.
+- (f) report with sections 1 to 8: met.
+- No production code changed by the pilot: met (0 non-test paths in 102 own commits).
+- Checker status lists C10 as a closeout candidate.
+
+MEASURE_AGENT_RESULT
+role: final-acceptance
+status: complete
+track: www_test_audit_pilot_20261122
+phase: track review
+commits: none
+tests_run: heavy-run check-types pass; heavy-run lint pass (0 errors, 3 warnings); heavy-run vitest run --reporter=dot pass (98 files, 1413 tests); heavy-run test:coverage pass (1413 tests, 92.08 percent lines); bash measure/doctor.sh exit 1 (pre-existing architecture pin)
+files_changed: measure/runs/www_test_audit_pilot_20261122/final-acceptance-dc9d39d.json, measure/runs/www_test_audit_pilot_20261122/final-acceptance-dc9d39d.log, measure/runs/www_test_audit_pilot_20261122/final-acceptance-dc9d39d-probes.py
+plan_updates: none (gate-only role)
+known_failures: F1 no phase-acceptance result for Phase 1; F2 commits after d2c8e6336 not covered (8 track paths); N1 doctor.sh exit 1 on the stale architecture pin, which predates the track
+handoff: Verdict FAIL, retry_recommendation retry_audit. Option A: run measure-phase-acceptance for Phase 1 and for Phase 4 at dc9d39dac, then re-run final acceptance at that HEAD. Option B: the PM records an exception for F1 (Phase 1 changed no apps file) and for F2 (review-a-dc9d39d and adversarial-dc9d39d pass at dc9d39dac), plus an acknowledgement of N1 (doctor exit 1, stale pin from ci_green_master_20261115), then final acceptance re-runs. The brief said Phase 1 to 4 acceptance results exist; Phase 1 has none. Also add ADV-31 and ADV-32 to measure/tech-debt.md, and label plan task 4.3 as pre-merge (N2, N3). No file outside measure/runs changed and nothing was committed.
+END_MEASURE_AGENT_RESULT

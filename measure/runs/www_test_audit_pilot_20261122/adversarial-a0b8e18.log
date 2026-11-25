@@ -1,0 +1,29 @@
+# Adversarial log: www test audit pilot, Phase 3, round 6 (closing confirmation)
+
+Audited head: a0b8e18e8. No commit.
+
+ADV-17 is closed. contrast.ts scans every document stylesheet at read
+time, recurses into grouping at-rules, matches the tested element and
+every ancestor, and throws on an unevaluable selector. The probe file
+passes 4 of 4 with unchanged expectations; the helper unit tests and
+the R2 contrast tests pass. Five files, 28 tests, all green.
+
+Remaining helper edge cases are notes: jsdom selector evaluation could
+differ from a browser without raising (ADV-20), and shadow-root styles
+are outside the scan (ADV-21, no shipped page uses shadow DOM). Neither
+lets a rendered contrast failure pass on a shipped page.
+
+Verdict pass.
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3), adversarial round 6 (closing confirmation)
+commits: none
+tests_run: pnpm --filter www-reading-advantage exec vitest run src/__tests__/contrast-parent-override.adversarial.test.tsx src/__tests__/contrast-fixture.test.ts src/__tests__/phase-4-browser-regressions.red.test.tsx src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx src/__tests__/hero-text-contrast.red.test.ts --reporter=dot (28 passed at a0b8e18e8)
+files_changed: measure/runs/www_test_audit_pilot_20261122/adversarial-a0b8e18.json; measure/runs/www_test_audit_pilot_20261122/adversarial-a0b8e18.log
+plan_updates: none
+known_failures: none. ADV-15 to ADV-19 closed; ADV-20 and ADV-21 are notes.
+handoff: Phase 3 adversarial verdict is pass at a0b8e18e8. The contrast helper fails closed across inline, compiled, and injected token rules, element and ancestors, and grouping at-rules. The probe file stays as regression armor. Result JSON: measure/runs/www_test_audit_pilot_20261122/adversarial-a0b8e18.json.
+END_MEASURE_AGENT_RESULT

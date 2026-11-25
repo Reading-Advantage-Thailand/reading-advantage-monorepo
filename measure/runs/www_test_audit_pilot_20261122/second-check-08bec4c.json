@@ -1,0 +1,234 @@
+{
+  "schema_version": 1,
+  "role": "review-a",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 1: Baseline and classification",
+  "baseline_sha": "cbd023b1bd29333992f7511646cff1245191b049",
+  "phase_base_sha": "cbd023b1bd29333992f7511646cff1245191b049",
+  "role_base_sha": "08bec4c365bac5c15795b144bc45a86c42714f20",
+  "audited_head_sha": "08bec4c365bac5c15795b144bc45a86c42714f20",
+  "status": "fail",
+  "summary": "The 18-row sample disagrees on 4 rows (22.22%), above the 15% stop threshold. The class table is 25 cases below the 3,175-case baseline.",
+  "blocking_findings": [
+    "F1 [Blocker] review-a: 4 of 18 sampled rows disagree (22.22%), above the 15% stop threshold. D2 rows for logo removed-kind checks and cover crop behavior lack true duplicates; the D3 image tests have live source fixtures; D1 entrance-visibility checks should be replaced with behavior tests, not deleted. Rationale: the named duplicates do not test the same rule, the D3 target is not dead, and visibility under reduced motion is user behavior.",
+    "F2 [Blocker] review-a: classification.md row weights total 3,150 Vitest cases, but baseline.json reports 3,175. K rows total 2,803 rather than 2,827, and D5 rows total 220 rather than 221. Rationale: the summary arithmetic misses 25 baseline cases."
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "HEAD verified as 08bec4c365bac5c15795b144bc45a86c42714f20.",
+    "Exact audited diff cbd023b1bd29333992f7511646cff1245191b049..08bec4c365bac5c15795b144bc45a86c42714f20 changes classification.md and plan.md only.",
+    "classification.md: K row weights sum to 2803; D1 68; D2 28; D3 10; D4 6; D5 220; R2 15; total 3150.",
+    "baseline.json reports case_count=3175; baseline.log lines 16-18 and 32-35 report 3,175 cases passed for both runs.",
+    "The 18-row sample contains 1,885 cases, or 59.4% of the 3,175 baseline; disagreement is 4/18 rows (22.22%) and 15/1,885 cases (0.80%).",
+    "Sampling method: include all sensitive D1-D4 rows for pricing or locale routing; add the default-en locale duplicate row; add the 1,726-case blog validation weight sentinel; choose 13 remaining positive-count rows with Python random.Random(1130); add the commission and pricing-stacking K rows.",
+    "classification.md lines 114-115: the pricing source pins duplicate rendered cases only; lines 131-132: logo removed-kind rows claim the adversarial source sweep as a duplicate; lines 117-120: the entrance visibility test protects reduced-motion and visibility rules.",
+    "www-pricing-rows-fluid.red.test.ts lines 99-128 separates two source-text pins from the rendered 3-row proof.",
+    "The two A34 source files named by primary-page-images.test.ts exist at the configured /home/daniebo/Desktop/advantage-pr/11-content paths, so its D3 tests do not skip for missing inputs in this environment.",
+    "blog-posts-validation.test.ts lines 72-205 registers independent per-post assertions. It checks all posts per rule and can aggregate failures by rule if the aggregator continues after each post. This is a fair structural consolidation only if it preserves every assertion and reports each failing post; otherwise it games the runner case metric.",
+    "plan.md lines 46-63: task 1.1 cites baseline artifacts and task 1.3 sets a stop threshold above 15%; baseline.log records both exits as 0."
+  ],
+  "commands": [
+    {
+      "command": "git rev-parse HEAD",
+      "result": "08bec4c365bac5c15795b144bc45a86c42714f20"
+    },
+    {
+      "command": "git diff --stat cbd023b1bd29333992f7511646cff1245191b049..08bec4c365bac5c15795b144bc45a86c42714f20",
+      "result": "classification.md and plan.md only; no test files changed"
+    },
+    {
+      "command": "test -e /home/daniebo/Desktop/advantage-pr/11-content/www-primary-advantage-page-images.md",
+      "result": "exit 0"
+    },
+    {
+      "command": "test -e /home/daniebo/Desktop/advantage-pr/11-content/www-primary-advantage-page-brief.md",
+      "result": "exit 0"
+    },
+    {
+      "command": "Static source review; no tests run as instructed",
+      "result": "Completed"
+    }
+  ],
+  "changed_files": [
+    "measure/tracks/www_test_audit_pilot_20261122/classification.md",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "escalate_human",
+  "confidence": "high",
+  "disagreement_rate_rows": "4/18 (22.22%)",
+  "disagreement_rate_cases": "15/1885 (0.80%)",
+  "sampled_rows": [
+    {
+      "file": "src/__tests__/www-pricing-rows-fluid.red.test.ts",
+      "row": "source pins for pricing row mapping (n=2)",
+      "own_class": "D1",
+      "own_action": "delete the source pins; retain the rendered checks",
+      "verdict": "agree",
+      "reason": "Lines 99-128 show source-text checks separately from the rendered row behavior."
+    },
+    {
+      "file": "src/lib/__tests__/real-logos-mapping.red.test.ts",
+      "row": "removed-kind manifest values (n=3)",
+      "own_class": "K",
+      "own_action": "keep",
+      "verdict": "disagree",
+      "reason": "The adversarial duplicate scans source literals, not actual siteLogos values; it does not retain the manifest-value rule."
+    },
+    {
+      "file": "src/app/[locale]/(marketing)/services/page.test.tsx",
+      "row": "localized badge tones (n=3)",
+      "own_class": "R2",
+      "own_action": "rewrite against accessible status semantics",
+      "verdict": "agree",
+      "reason": "The test renders each locale but uses class assertions at line 64."
+    },
+    {
+      "file": "src/__tests__/blog-figure-natural-size.test.ts",
+      "row": "figure CSS rules (n=4)",
+      "own_class": "D1",
+      "own_action": "delete or replace with a browser behavior test",
+      "verdict": "agree",
+      "reason": "Lines 12-48 read CSS source and match declarations."
+    },
+    {
+      "file": "src/__tests__/products-entrance-visibility.red.test.ts",
+      "row": "entrance visibility and reduced-motion rules (n=3)",
+      "own_class": "D1",
+      "own_action": "replace with behavior tests",
+      "verdict": "disagree",
+      "reason": "Lines 43-68 read source, but reduced-motion visibility and permanently hidden content are user-facing behavior that merits replacement tests."
+    },
+    {
+      "file": "src/lib/__tests__/primary-page-images.test.ts",
+      "row": "external A34 source-dependent tests (n=8)",
+      "own_class": "D3",
+      "own_action": "do not delete until the external source dependency is retired or replaced",
+      "verdict": "disagree",
+      "reason": "The configured source list and brief exist; lines 172-292 validate actual output images, so the target is live in this environment."
+    },
+    {
+      "file": "src/__tests__/www-features-pricing.locale.test.ts",
+      "row": "copy pins and scope guards (n=9)",
+      "own_class": "D5",
+      "own_action": "replace only exact copy pins with locale-key checks",
+      "verdict": "agree",
+      "reason": "Lines 94-157 pin exact locale values; lines 168-197 retain monetary figures separately."
+    },
+    {
+      "file": "src/lib/blog-locale.test.ts",
+      "row": "explicit en path duplicates default path (n=1)",
+      "own_class": "D2",
+      "own_action": "delete the redundant explicit-en case",
+      "verdict": "agree",
+      "reason": "Lines 16-18 test the default and lines 28-30 test the same en output explicitly."
+    },
+    {
+      "file": "src/__tests__/phase-2-seo-blog-routes.red.test.ts",
+      "row": "article and pagination SEO (n=10)",
+      "own_class": "K",
+      "own_action": "keep",
+      "verdict": "agree",
+      "reason": "The tests exercise generated metadata for real localized routes and article data."
+    },
+    {
+      "file": "src/__tests__/phase-3-group-b-types.test.ts",
+      "row": "production components free of unsafe assertions (n=1)",
+      "own_class": "D1",
+      "own_action": "delete the source-AST check",
+      "verdict": "agree",
+      "reason": "Lines 391-399 parse production source instead of testing behavior."
+    },
+    {
+      "file": "src/__tests__/www-reading-cover.red.test.ts",
+      "row": "rendered wrapper applies no crop fit (n=1)",
+      "own_class": "R2",
+      "own_action": "rewrite as a visual behavior assertion",
+      "verdict": "disagree",
+      "reason": "Lines 233-240 assert CSS class text; the ratio assertion cannot prove that CSS did not crop the image."
+    },
+    {
+      "file": "src/components/common/localized-link.test.tsx",
+      "row": "locale-prefixed links (n=8)",
+      "own_class": "K",
+      "own_action": "keep",
+      "verdict": "agree",
+      "reason": "Lines 31-73 render the link and assert locale-prefixed public hrefs."
+    },
+    {
+      "file": "src/lib/__tests__/real-logos-captures.red.test.ts",
+      "row": "capture files and PNG bytes (n=16)",
+      "own_class": "K",
+      "own_action": "keep",
+      "verdict": "agree",
+      "reason": "Lines 63-71 verify each capture exists and has PNG magic bytes."
+    },
+    {
+      "file": "src/app/[locale]/(marketing)/products/tutor-advantage/page.images.test.tsx",
+      "row": "tutor page image behavior (n=33)",
+      "own_class": "K",
+      "own_action": "keep",
+      "verdict": "agree",
+      "reason": "Lines 210-359 render all three locales and check files, alts, ordering, and banned paths."
+    },
+    {
+      "file": "src/lib/tutor-commission.test.ts",
+      "row": "commission calculations and payout invariants (n=34)",
+      "own_class": "K",
+      "own_action": "keep",
+      "verdict": "agree",
+      "reason": "Lines 147-171 check integer-satang conservation; later cases cover boundaries, clamps, and tax."
+    },
+    {
+      "file": "src/__tests__/www-pricing-stacking.red.test.ts",
+      "row": "pricing stacking and baht figures (n=22)",
+      "own_class": "K",
+      "own_action": "keep",
+      "verdict": "agree",
+      "reason": "Lines 123-207 cover English, Thai, and Chinese stacking rules and exact money figures."
+    },
+    {
+      "file": "src/lib/blog-locale.test.ts",
+      "row": "default English blog path (n=1)",
+      "own_class": "D2",
+      "own_action": "delete only if explicit-en path remains",
+      "verdict": "agree",
+      "reason": "Lines 16-18 and 28-30 produce the same path; this row touches locale routing."
+    },
+    {
+      "file": "src/lib/blog-posts-validation.test.ts",
+      "row": "all post validation cases (n=1726)",
+      "own_class": "K",
+      "own_action": "keep, or consolidate per rule with full aggregation",
+      "verdict": "agree",
+      "reason": "Lines 72-205 assert all discovered posts across frontmatter, content, naming, and locale rules."
+    }
+  ],
+  "blog_validation_merge_opinion": "Conditional approval. One case per rule can preserve fault detection if it evaluates every post, accumulates failures, and names each failing locale and slug. It is a fair structural cut only with all assertions unchanged and a transparent report of case counts; otherwise the reduced runner count games the metric.",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 2,
+      "evidence": "classification.md lines 131-132 names a source-literal sweep as a duplicate of runtime manifest checks."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 3,
+      "evidence": "www-pricing-rows-fluid.red.test.ts lines 115-127 includes real rendered row assertions."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The phase diff contains only classification.md and plan.md."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "baseline.log lines 16-18 records 3,175 passing cases with exit 0."
+    }
+  ]
+}

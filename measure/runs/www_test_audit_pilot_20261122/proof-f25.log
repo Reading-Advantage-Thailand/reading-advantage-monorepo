@@ -1,0 +1,56 @@
+MUTATION PROOF — F25 symlinked post
+A blank-title post outside the posts dir was symlinked as en/zz-symlink-probe.md.
+Expected: the title rule fails and names en/zz-symlink-probe.
+Test exit code: 1
+--- test output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > discovers at least one post in the en/ directory 2ms
+ × src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > title is a non-empty string on every post 5ms
+   → expected [ Array(1) ] to deeply equal []
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > date is present and matches YYYY-MM-DD on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > date is a valid calendar date on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > excerpt is a non-empty string on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > author is a non-empty string on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > tags is an array on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > every tag is a non-empty string on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — optional fields > readingTime if present is a positive number on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — optional fields > coverImage if present is an absolute path starting with / on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post frontmatter — optional fields > coverImage if present exists on disk on every post 1ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post content > has a non-empty body after frontmatter on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post content > does not embed raw frontmatter delimiters in any body 1ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post file naming > slug is URL-safe on every post 0ms
+ ✓ src/lib/blog-posts-validation.test.ts > blog post file naming > file uses the .md extension on every post 1ms
+ ✓ src/lib/blog-posts-validation.test.ts > cross-locale consistency > en/ directory exists and is non-empty (canonical source) 1ms
+ ✓ src/lib/blog-posts-validation.test.ts > cross-locale consistency > a matching non-en post is never older than its en post 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/blog-posts-validation.test.ts > blog post frontmatter — required fields > title is a non-empty string on every post
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "en/zz-symlink-probe: title is a non-empty string",[39m
+[31m+ ][39m
+
+ ❯ src/lib/blog-posts-validation.test.ts:70:7
+     68|         isNonEmptyString(post.data.title),
+     69|       ),
+     70|     ).toEqual([]);
+       |       ^
+     71|   });
+     72|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 16 passed (17)
+   Start at  19:49:38
+   Duration  653ms (transform 36ms, setup 64ms, import 51ms, tests 14ms, environment 423ms)
+

@@ -1,0 +1,91 @@
+Phase acceptance log: www_test_audit_pilot_20261122, Phase 4 (Pilot report), round 2.
+Audited HEAD: 2bfbd373fef2fc500798efe721975fa0a345e73f (current; git status clean outside measure/runs before and after the gates).
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa (the Phase 4 base recorded in phase-acceptance-d2c8e63.json).
+role_base_sha: 2bfbd373fef2fc500798efe721975fa0a345e73f. Track base: 635a604c89b2c909cfce33f555b7f043d4ea520f.
+Earlier Phase 4 result: phase-acceptance-d2c8e63.json (pass at d2c8e6336). Final acceptance asked for a new Phase 4 result at the final head.
+Route: claude-agent/sonnet#xhigh.
+Result JSON: measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p4-2bfbd37.json (status pass).
+Probe script: measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p4-2bfbd37-probes.py (read-only, 213 PASS, 0 FAIL).
+Mutation probe: measure/runs/www_test_audit_pilot_20261122/phase-acceptance-p4-2bfbd37-mutate.mjs (in memory, no file changed).
+
+PROVISIONAL VERDICT (written first): PASS.
+
+Verdict: PASS.
+Phase 4 content holds at this HEAD. No blocking finding remains. Five nonblocking items stay open.
+
+Gates (heavy-run, one command per call, HEAVY_PREFLIGHT_WAIT_S=3600)
+- pnpm --filter www-reading-advantage test:coverage: heavy-run job ended exit 0 after 150 s. Vitest: 98 files, 1494 tests, all passed.
+  Coverage: lines 92.08 % (1675/1819), statements 90.95 %, branches 82.99 %, functions 87.52 %. The line floor is 85.52 %.
+  The 122 "Failed to parse ... .md" lines match the 122 in coverage-at-f97a72f9.log. They are known noise.
+- pnpm --filter www-reading-advantage check-types: heavy-run job ended exit 0 after 4 s. Output: "tsc --noEmit" and no diagnostic.
+- pnpm --filter www-reading-advantage lint: heavy-run job ended exit 0 after 5 s. 0 errors, 1 warning:
+  'beforeEach' is unused at src/__tests__/www-reading-card.red.test.ts:3. The report and plan task 4.18 say one warning.
+
+Path rule decision (the brief asked for it)
+- Phase 4 needs Review A only (test-strategy.md section 2 table row P4 and section 10). It needs no adversarial pass.
+  review-a-2bfbd37.json targets this exact HEAD and passes. So no Phase 4 adversarial result is needed at this apps tree.
+- adversarial-dc9d39d.json predates the D5 revert. dc9d39dac to HEAD changes 12 test files under apps (f97a72f90) plus documents.
+  The test-only exception does not extend that result to HEAD. It is not a prerequisite, so this is not a finding.
+- adversarial-p1-7336f42.json passes at 7336f42b3 and mutation-tested the restored pins. The apps tree at HEAD (5580899cc)
+  equals the apps tree at 7336f42b3. The delta 7336f42b3 to HEAD is classification.md, plan.md and report.md only.
+- My own fresh mutants run against the HEAD apps tree. The control passes 89 of 89 cases. Each mutant fails:
+  S7 floor 2,400 baht in en and th fails 5 cases. S9 answer 2 "by invoice" fails 3 cases. Thai tutorRole.points.3 "guarantee" fails 1 case.
+
+Findings to withdraw or keep
+- No CONTEST item arrived with this brief. No earlier finding is kept.
+- F52, F53 and F54 of phase-acceptance-d2c8e63.json are still present in report.md. F55 is fixed. See N3 below.
+
+Nonblocking findings
+- N1: classification.md:267 keeps "The second lever is the primary-advantage content pin set (102 D5 cases); its replacement design decides the final count."
+  The D5 revert removed that lever. Plan task 4.18 says ADV-P1-10 fixed the projection note. ADV-P1-10 named this sentence, and the note sits above it.
+  Review A N14 and Phase 1 acceptance N2 report the same item.
+- N2: report.md:14 says "Without the blog merge, the suite holds 3203 cases". HEAD holds 121 posts (62 en, 59 th). The unmerged file would hold
+  14 x 121 + 2 + 59 = 1755 cases, so the suite would hold about 3232. The sentence defines 3203 as 1494 plus 1709, and the conclusion holds (Review A N13).
+- N3: F52 (report.md:72 "No commit and no gate" against the table row 409108d3e), F53 (report.md:78 "the phase-base test" without 8a126f612)
+  and F54 (report.md:203 cites the gate-66aeb1011.json green command for the wait variable) stay open. final-acceptance-dc9d39d.json N6 lists them as known open items.
+- N4: plan tasks 4.13, 4.15 and 4.18 say the gates passed. They name no lint or check-types log. Task 4.15 names no log for e993f5aa1.
+  The claims hold: ~/.local/state/heavy-run.log shows exit 0 for the suite, coverage, check-types and lint before f97a72f90 (2026-11-25 00:25 to 00:31).
+- N5: plan.md:789-790 record the work of documents commits ecff7cfad, 7336f42b3 and 2bfbd373f under task 4.18, whose SHA is f97a72f90. No line names those SHAs.
+
+What I verified
+- Tasks 4.1 to 4.18 all use [x]. Each first-line SHA resolves to a commit in e91c4d4cc..HEAD. Each full-SHA Commit line matches (probe G1).
+- Numbers: baseline 3175 cases and 86.52 %. Final 1494 cases in 98 files and 92.08 %. Cut 1681 = 52.9 %. Target 635. Rise 5.56 points (probe G2).
+  Blog merge 3094 to 1385 removes 1709. 1494 + 1709 = 3203, which is 28 above 3175. K 3064 = 2843 + 221 = 96.5 % (probe G4).
+- Section 2 table: 11 class rows equal their gate JSON in cases_before, cases_after, green_exit_code and coverage. All 23 fix rows resolve with their logs (probe G3, G12).
+- Criteria (b) and (c): all 30 gate JSON files show status pass, both exit codes 0 and coverage at or above 85.52 (probe G3b).
+- One commit per class: D1, D2, D4, D5 (four parts), R2 and the blog merge each change www test paths only. The D5 revert f97a72f90 changes 12 files, all from the D5 parts.
+  8 of the 12 equal the pre-D5 tree 5a104ba6d. 4 differ by named non-D5 commits (master merge, 4d1688131, fb5622ed7, 733319505) (probe G6).
+- No K row deleted: 77 K files and 14 D5 files exist at HEAD. The seven tutor-commission files are unchanged from a1caa5803 to HEAD.
+  Every lost static case title maps to a D1, D2 or D4 row of its own file. Two exceptions are approved: the blog merge and one stricter Storytime control (probe G4).
+  The two deleted files are D1 and D2 rows. HEAD holds 1494 cases against a lower bound of 1431.
+- No production code changed: git diff 635a604c89 HEAD lists 5 non-test paths outside measure/. All 5 come from the master merge and equal master 968bde612.
+  HEAD differs from master only in 51 test and fixture paths. No track-only commit touches a non-test path outside measure/ (probe G5).
+- Late findings: plan.md holds 10 lines in the contract form "Late finding <id>: tech-debt (<reason>)". One tech-debt.md row names all ten. tech-debt.md holds 50 lines (probe G7).
+- A5: the plan holds no "PASS=N" or "all checks pass" claim. Every count claim in tasks 4.2, 4.3, 4.13, 4.17 and 4.18 matches a log (probe G8).
+- A3, A4, A6 and A7 do not apply. The Phase 4 range changes no contract test, filter or tracks registry. A4: Phase 4 has 18 [x] tasks, not 0.
+  tracks.md says "new ... Phase 1 next". It makes no resolved claim, so A6 does not trigger. Closeout rewrites it.
+- A9 and A15: no row cites measure/archive. No sha256, checksum or md5 field was added. Every track-only commit subject names the track id.
+- Phase checker: head 2bfbd373f, worktree clean. The track has no incomplete phase and appears as closeout candidate C10.
+
+Deviations
+- This role and the Phase 1 adversarial pass share the route claude-agent/sonnet#xhigh. I re-checked the adversarial claims with my own probes. I did not re-run its harness.
+- The probes use static case titles. They do not prove runner case identity. The runner total (1494) and the 89-case control back them.
+- The Phase 4 tree is not checked out apart from HEAD. test-strategy.md section 1.5 forbids a second worktree.
+
+Not run
+- No second full Vitest run. One coverage run covers the 98 files. No browser review (not applicable to Phase 4).
+
+No file outside measure/runs/ changed. Nothing was committed.
+
+MEASURE_AGENT_RESULT
+role: phase-acceptance
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: Heavy-run coverage, check-types and lint passed at 2bfbd373f. Vitest passed 1494 tests in 98 files with 92.08% line coverage. Lint holds 0 errors and 1 warning. Three fresh mutants failed at the HEAD apps tree.
+files_changed: phase-acceptance-p4-2bfbd37.json, phase-acceptance-p4-2bfbd37.log, phase-acceptance-p4-2bfbd37-probes.py, phase-acceptance-p4-2bfbd37-mutate.mjs
+plan_updates: none
+known_failures: None at the audited HEAD. N1 to N5 are nonblocking documentation items. Each fix needs a new HEAD.
+handoff: Accept Phase 4 at 2bfbd373f. No Phase 4 adversarial result is needed. Review A at HEAD and the Phase 1 adversarial pass at the equal apps tree cover the path rule. Re-run final acceptance at the head that holds this result.
+END_MEASURE_AGENT_RESULT

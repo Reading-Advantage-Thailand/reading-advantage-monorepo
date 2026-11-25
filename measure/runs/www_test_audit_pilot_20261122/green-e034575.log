@@ -1,0 +1,29 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Review A remediation F29 on the pilot report. Phase 4.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: e034575f4159e6977231c22e0f6ffc93f1512d53
+green_head: cb12d6f0fe6fee1f5268214b5d2d5ae25ca96636
+report_commit: e97dc13537b4a6c7965e87e0f2f6bde9759b8d1f
+plan_evidence_commit: cb12d6f0fe6fee1f5268214b5d2d5ae25ca96636
+report: measure/tracks/www_test_audit_pilot_20261122/report.md
+review: measure/runs/www_test_audit_pilot_20261122/review-a-e034575.log
+
+tasks_flipped_to_x:
+- 4.5 Report review remediation F29 (e97dc1353). Evidence: report commit e97dc1353 and plan commit cb12d6f0.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: none tracked. report.md and plan.md were changed. No test or production file changed.
+
+fix: the report no longer claims a root duration field in timing-at-head.json. That field is absent. The report now names the real root keys and testResults[] keys. It states that the five slowest figures sum assertionResults[].duration within each testResults[] entry. The five figures were recomputed from those fields and match the report. Other schema claims were checked: green_exit_code in all 30 gate JSONs, route and phase in all 35 role JSONs, and test_wall_seconds=90.47 in baseline.json.
+
+gates: four heavy-run gates exited 0 after the report commit. check-types 0. lint 0 with three known warnings in untouched files. full vitest 0 with 98 files and 1412 tests. coverage 0 with lines at 92.07 percent. Logs: check-types-e97dc1353.log, lint-e97dc1353.log, green-e97dc1353.log and coverage-e97dc1353.log in measure/runs/www_test_audit_pilot_20261122/.
+
+deviations: none in this round. Earlier commit headers were shortened for commitlint. Those changes are recorded in the track plan.
+dispositions: F29=FIX
+END_MEASURE_AGENT_RESULT

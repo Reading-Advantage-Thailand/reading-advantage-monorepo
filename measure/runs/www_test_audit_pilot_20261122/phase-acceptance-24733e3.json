@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "role": "phase-acceptance",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "24733e3b0cc63ae533501cfaf4f4998c96aafe4e",
+  "phase_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "role_base_sha": "24733e3b0cc63ae533501cfaf4f4998c96aafe4e",
+  "audited_head_sha": "24733e3b0cc63ae533501cfaf4f4998c96aafe4e",
+  "status": "fail",
+  "summary": "The live gates pass and the headline numbers reconcile. The pilot report contains a wrong file count and does not present reliable gate, mutation, or finding evidence.",
+  "blocking_findings": [
+    "F31 [Blocker] phase-acceptance: report.md:73 says adf24e723 changed 14 files. Git lists nine paths, and plan.md:267 says nine files. The commit rewrote 14 R2 cases, not 14 files. Correct the count and unit.",
+    "F32 [Blocker] phase-acceptance: report.md:266 calls all five slowest files unchanged K rows. The fifth file, Primary Advantage page.content.test.tsx, changed in 7008ccefd, 733319505, and fb5622ed7. It includes both kept K cases and rewritten cases. Keep the correct timing sums and correct the interpretation.",
+    "F33 [Blocker] phase-acceptance: The K table at report.md:94,133,136 credits proofs for different rules in the same files. The K rows cover Storytime FAQ keys, pagination wiring, and hero props. The cited failures cover contrast, narrow wrapping, and gradients. proof-adv17.log is also a passing run, not a failing target. Mark each K row that lacks a proof of its own rule. Keep unrelated proof references separate.",
+    "F34 [Blocker] phase-acceptance: report.md:27 points to a gate receipt whose GREEN log contains an accounting plan, not a test run. The correct rerun is green-at-7008ccef.log. The generic gate JSON reference at report.md:61 also cannot locate the F16 reruns for 733319505 and fb5622ed7. Cite the real per-commit GREEN and COVERAGE logs as test-strategy.md:272 requires.",
+    "F35 [Blocker] phase-acceptance: report.md:181–183 lists Review A F1–F3 but does not distinguish the separate acceptance F1–F3 in phase-acceptance-bfda22b.json. It also attributes the workbook fix to 3b044ec9, which only changes the Reedy test. The workbook fix is in 4d1688131. Distinguish reused IDs by role and source. Record each disposition without substituting a different finding."
+  ],
+  "nonblocking_findings": [
+    "F36 [Nit] phase-acceptance: report.md:268 still recommends a timing follow-up task. The PM decided that the time gap and the hypothesis stay in the report only. Remove the recommendation without adding a follow-up task."
+  ],
+  "evidence": [
+    "The phase base is e91c4d4cc3c8d5d61a1e9b802c031247543180fa. The acceptance role base and audited HEAD are both 24733e3b0cc63ae533501cfaf4f4998c96aafe4e.",
+    "Green and Review A target the exact audited HEAD. Green used cb12d6f0f as its role base. Phase 3 acceptance passed at the Phase 4 base. No test-only exception is needed.",
+    "Review B, Review C, UX browser review, and adversarial testing do not apply to Phase 4 under test-strategy.md:67–69 and :277–279. No browser ran.",
+    "All five Phase 4 tasks carry [x] and a first-line SHA for an actual report commit. The report is absent at the phase base and nonempty at the audited HEAD.",
+    "The exact range touches only report.md and plan.md. The path check outside measure/ returns no output. No test, fixture, production file, or blog post changed.",
+    "At the audited HEAD, fresh heavy-run coverage passed 1,412 tests in 98 files and measured 92.07% lines (1,674 of 1,818). Type checking produced no diagnostics. Lint had zero errors and three existing warnings.",
+    "A5: The recorded Phase 4 Green log shows 1,412 passing tests, and the fresh commands pass. Passing commands do not validate the report assertions in F31–F35. A3, A4, A6, and A7 do not apply to the unchanged Measure framework.",
+    "I opened and compared baseline.json, nine class and merge receipts, the final receipt, the time logs and JSON, and the cited proof and review artifacts.",
+    "The baseline is 3,175 cases and 86.52% lines. The final result is 1,412 cases and 92.07% lines. The 1,763-case cut is 55.53%, and coverage rises 5.55 points.",
+    "The blog merge removes 1,709 cases and passes the named breakage condition in proof-blog-merge.log. Before the merge, the cut was 81 cases. Without the merge, the final cut would be 54 cases.",
+    "The nine class and merge receipt values match the numerical cells in report.md:22–31. The D3 row correctly has no test gate. The D5 part 2 cited Green path does not prove its result.",
+    "The 77 K groups match classification.md by path and count. They sum to 2,843. The current table has 67 none labels and 10 proof labels. Those counts do not establish that the proofs match the K rules.",
+    "The baseline GREEN duration is 90.47 s. The final historical GREEN duration is 98.11 s. The increase is 7.64 s. The report correctly separates the unknown cause from the hypothesis.",
+    "I recomputed the five head assertion-time sums in order: 6461.93, 1649.38, 1303.32, 970.85, and 859.77 ms. All five match. The timing JSON has no root duration.",
+    "F27 added a status column, but F33 shows that some row statuses are wrong. F28 and F29 fix the unknown-cause and timing schema text. F30 correctly reports 36 of 37 historical role JSONs with both fields.",
+    "The Phase 2 acceptance artifact records its F1–F3 as closed. The pilot report does not accurately identify all of them. ADV-4 and ADV-5 also reuse IDs for scope notes in adversarial-d30e5a2.json.",
+    "The report contains the lessons and open items sections. The PM approved option A for F18 on 2026-11-24. Closeout updates report.md:198 and :234. The timing increase and hypothesis are report-only."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git status --porcelain=v1 --branch",
+    "git log --format='%h %s' --name-status e91c4d4cc..24733e3b0",
+    "git diff --name-only e91c4d4cc..24733e3b0 -- . ':(exclude)measure/**'",
+    "git show --format= --name-status adf24e723",
+    "git log --oneline a1caa5803..e91c4d4cc -- 'apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.content.test.tsx'",
+    "git show --format='%h %s' --name-only 3b044ec9 4d1688131",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage check-types'",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage lint'",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage'"
+  ],
+  "changed_files": [
+    "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-24733e3.json",
+    "measure/runs/www_test_audit_pilot_20261122/phase-acceptance-24733e3.log"
+  ],
+  "test_strategy_violations": [
+    "F33: The report does not accurately identify unproven K rows as required by test-strategy.md:275 and spec.md:35.",
+    "F34: The report does not cite the actual per-commit GREEN and COVERAGE logs as required by test-strategy.md:272."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "route": "openai/gpt-6.2-sol#high (substitution: ra-quota pick printed claude-agent/sonnet#max earlier and now gives no route: Claude 7d 95 %, Kimi closed for the week, opencode-go WAIT; codex is 57.0 % against pace 54.8 %, a small overage, and gpt-6.2-sol is an approved phase-acceptance route and not the Red family)",
+  "ratings": [
+    {"axis": "correctness", "score": 3, "evidence": "The headline numbers match the runner, but report.md:73 counts nine R2 files as fourteen."},
+    {"axis": "test_meaning", "score": 3, "evidence": "The report presence check distinguishes the two trees but cannot catch the wrong evidence in report.md:94."},
+    {"axis": "scope_discipline", "score": 5, "evidence": "The exact Phase 4 Git range touches only report.md and plan.md."},
+    {"axis": "evidence_quality", "score": 3, "evidence": "The timing sums match timing-at-head.json, but the D5 part 2 citation does not lead to the actual GREEN run."}
+  ],
+  "reviewer_ratings": [
+    {"reviewer_role": "review-a", "reviewer_route": "openai/gpt-6-luna#high", "agreed": false, "score": 1, "evidence": "The F30 recount agrees, but the phase pass misses the report.md:73 conflict with the actual Git diff."}
+  ]
+}

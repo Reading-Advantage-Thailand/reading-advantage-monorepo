@@ -124,6 +124,14 @@ const FORBIDDEN_NAMES = [
   "Class Quest",
 ] as const;
 
+/** Test ids that only the old page used. */
+const OLD_TEST_IDS = [
+  "cefr-timeline",
+  "reversed-split",
+  "overlapping-section",
+  "stat-card",
+] as const;
+
 const MONTHS_EN = [
   "January",
   "February",
@@ -544,6 +552,15 @@ describe.each(LOCALES)("PrimaryAdvantage content in %s", (locale) => {
   it("references no image and no name of the old page", () => {
     expectContainers();
     expect(findOldReferences(document.body.innerHTML)).toEqual([]);
+  });
+
+  it("renders no test id of the old page", () => {
+    expectContainers();
+    const found = OLD_TEST_IDS.filter(
+      (testId) =>
+        document.querySelectorAll(`[data-testid="${testId}"]`).length > 0,
+    );
+    expect(found, "old data-testid values still on the page").toEqual([]);
   });
 
   it("shows no price, no date except the approved line, and no free term", () => {

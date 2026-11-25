@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report, adversarial attack of the master merge",
+  "baseline_sha": "d2c8e6336743897f6f55bc6dc1f0a5b3e5005683",
+  "phase_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "role_base_sha": "da99c46c7bc7f11ddddd00bd398216cdf27e335b",
+  "audited_head_sha": "da99c46c7bc7f11ddddd00bd398216cdf27e335b",
+  "status": "pass",
+  "summary": "The master merge holds. Every mutation that the brief named fails by name. These are the home year copy, the roadmap rule, APPROVED_SCHOOL_YEAR, the Thai month class, CONTAINER_STORY_IMAGES, and both new posts. The gaps are weak guards, not merge defects. The full suite passes at the audited head: 98 files, 1413 tests, exit 0. Six late findings go to tech-debt under the stop rule. ADV-25 needs a decision: a hard-coded home path would fail the www CI job. Verdict pass.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "ADV-25 [Late finding; suggested call tech-debt; the orchestrator may take the careful one-fix-round call] adversarial: src/__tests__/blog-posts-loader.adversarial.test.ts:77 builds a temp directory under the literal path /home/daniebo/.cache/opencode. That path exists on this machine only. mkdirSync with recursive true runs outside the try block. A user that cannot create /home/daniebo gets EACCES. The case 'surfaces a symlink to a directory named .md (ADV-22)' then fails. CI runs 'pnpm turbo run build lint check-types test --filter=www-reading-advantage...' on ubuntu-latest (.github/workflows/ci.yml), and the www test script is 'vitest run'. I did not run CI. Probe P14 is a proxy: the same call for a missing home directory failed here with EACCES. The sibling tests use mkdtempSync in the OS temp directory (blog-posts-loader-symlink.test.ts:32). The www CI job would fail at the later www push. A fix is a test-file edit, and a fix commit invalidates this result.",
+    "ADV-26 [Late finding; suggested call tech-debt] adversarial: the 2027 school year that master added to the home suite line has weak guards. P1: a changed year fails by name in en and zh, through the year class of the claims scanner. P11: a th year change from 2570 to 2571 passes all 1413 tests, because a Thai year never matches /20\\d\\d/. P9: removing the clause in en, th, and zh passes all 1413 tests, because no test asserts that the year is present. P11: a Thai 'STEM Advantage อยู่ในแผนงาน' passes. The new rule (www-batch-20261116.locale.test.ts:188-193) checks 'on our roadmap' and '暂无日期' in every locale. It checks no Thai phrase. Master guarded this line with the exact pin expect(home).toBe(expected.home) at 968bde612, and D5 removed that pin on the pilot side. The pilot asserts '2027' and '2570' on the badges, the roadmap note, and the six detail lines (www-batch-20261116.locale.test.ts:147-152, 228-233, 289-294), but not on pages.home.suite.description.",
+    "ADV-27 [Late finding; suggested call tech-debt] adversarial: expected copy data pins nothing, and the merge edited it. P11: noise in LABEL_COPY.en.home, LABEL_COPY.th.home, LABEL_COPY.zh.home, the en and th fields of ROW_B row 7, and OVERVIEW_LABEL_COPY.en.description leaves all 1413 tests green. Static search: no test reads the en, th, or zh field of any ROW_A or ROW_B row (www-batch-20261116.locale.test.ts:139-178 read only key and old). LABEL_COPY has one reader, '.en.navigation' at page.content.test.tsx:300. EXPECTED_META, EXPECTED_AUX_COPY, OVERVIEW_LABEL_COPY, PAGE_COPY, and IMAGE_ALT have no importer outside the fixture. Master changed three LABEL_COPY.home strings and the ROW_B home strings in 968bde612, so the strings look pinned and are not. P4: the school-year control (page.content.test.tsx:439) uses APPROVED_SCHOOL_YEAR.en as its own sample, so it passes for any value of the constant. P11: APPROVED_SCHOOL_YEAR.th changes nothing in the suite.",
+    "ADV-28 [Late finding; suggested call tech-debt] adversarial: the Thai month class has controls for 4 of 12 months (ธันวาคม, มกราคม, พฤษภาคม, and พฤศจิกายน through APPROVED_DATES.th). P5: deleting ธันวาคม fails by name. P11: deleting the other eight months passes all 1413 tests. A misspelled month name stays invisible. The pilot commit 733319505 added the class. The English class has a control for every month (page.content.test.tsx:188-202).",
+    "ADV-29 [Late finding; note; parity with the baseline] adversarial: P8: a YAML syntax error in one post fails blog-posts-validation.test.ts at collection and names no post. The other 16 rules do not run. The baseline 635a604c8 parsed every post at module scope with no catch, so the behavior is the same. The rule failures of P7 name the post. The report claim 'named in the failure' holds for rule violations, as proof-blog-merge.log shows.",
+    "ADV-30 [Late finding; note; static; not reproduced] adversarial: blog-posts-loader.adversarial.test.ts:39 and :56-58 write probe files into the real en posts directory. The probes are a .mdx file and an uppercase .MD file. blog-blocks.test.ts:210 sweeps that directory, blog-draft.test.ts publishedEnglishCount reads every entry of it, and blog-posts-validation.test.ts lists it. Under parallel files, an overlap would fail one reader. The strategy gate uses --maxWorkers=1, and the CI test script does not. P12: ten parallel runs of the seven files that touch the tree all passed."
+  ],
+  "evidence": [
+    "P0 baseline at da99c46c7 with a clean tree: vitest on www-batch-20261116.locale, storytime-advantage/page.content, and blog-posts-validation gave 3 files, 109 tests, all passed.",
+    "P1: home.ts en and zh year 2027 changed to 2028. Two tests failed by name. The names are 'holds no forbidden claim in the en label handoff' and 'in the zh label handoff'. The message was: expected [ 'year' ] to deeply equal [].",
+    "P2: the home.ts en 2027 sentence replaced by 'Science, Math, Zhongwen, and STEM Advantage are on our roadmap.' One test failed by name. The name is 'www batch 2026-11-16, row B > holds no roadmap-without-date line in any locale of the home suite line'. It was the only failure of 109.",
+    "P3: the home.ts zh 2027 sentence replaced by the old line with 暂无日期 failed the same test. The message was: not to contain '暂无日期'. The zh branch of the rule is live.",
+    "P4: APPROVED_SCHOOL_YEAR en and zh changed to 2028. The en and zh label handoff tests failed by name. The control 'control: the claims scanner clears the approved public date and the approved school year' stayed green (page.content.test.tsx:439).",
+    "P5: ธันวาคม removed from MONTHS_TH. Two tests failed by name. They are 'control: the claims scanner flags the term class Thai month' and 'control: the claims scanner clears the approved public date and the approved school year'.",
+    "P6: two images swapped in CONTAINER_STORY_IMAGES st-section-3. Three tests failed by name: 'renders approved structure, links, and images in en', 'in th', and 'in zh'. The message was 'story images in st-section-3'.",
+    "P7: th post coverImage set to a missing file, and the en post excerpt removed. Two tests failed. They name 'th/she-taps-nest-and-hears-it: coverImage exists on disk' and 'en/she-taps-nest-and-hears-it: excerpt is a non-empty string'.",
+    "P8: a YAML syntax error in the en post title. The file failed at collection ('Failed Suites 1', 'Tests no tests'). The failure named no post (ADV-29).",
+    "P9: the 2027 clause removed from the home suite line in en, th, and zh: exit 0, 98 files, 1413 tests passed.",
+    "P10: the P11 set plus a missing figure file in the en post. Exit 1, with 4 failures, all in blog-draft.test.ts. Each says 'Failed to load post she-taps-nest-and-hears-it' (src/lib/blog.ts:280). My hypothesis H1 said that no test renders a post with a figure block. getAllBlogPosts renders every post, so H1 is refuted.",
+    "P11: the weak-spot set. It holds the th year, the th roadmap word, APPROVED_SCHOOL_YEAR.th, eight Thai months, and noise in LABEL_COPY, ROW_B row 7, and OVERVIEW_LABEL_COPY. Exit 0, 98 files, 1413 tests passed, 101.41s.",
+    "P12: ten parallel runs of blog-posts-loader.adversarial, blog-blocks, blog-draft, blog-posts-validation, lib/blog.test, blog-locale, and phase-2-seo-blog-routes: 0 of 10 failed, 87 tests each.",
+    "P13: clean full run at da99c46c7 after every revert: exit 0, Test Files 98 passed (98), Tests 1413 passed (1413), 111.18s. The plan task 4.13 claim holds.",
+    "P14: a node mkdirSync call with recursive true for /home/zz-ci-user-absent/.cache/opencode/zz-adv-loader-base/th/zz-adv-dir-target threw EACCES and created nothing. This one node call is not in the command list of the brief.",
+    "python3 -I: 3175 - 1413 = 1762 cases, 55.496 percent (55.5); 92.08 - 86.52 = 5.56 points; 1675 / 1819 = 92.0836 percent. baseline.json holds case_count 3175 and line_coverage_pct 86.52; gate-66aeb1011.json holds 1412 and 92.07.",
+    "git branch -r --contains HEAD printed nothing, so the 'no push' claim of task 4.13 holds. Merge 6ee56327b has the parents d2c8e6336 and 968bde612.",
+    "git diff --name-only 968bde612 6ee56327b -- apps packages services | rg -v 'test|fixtures' printed nothing (rc 1). git diff --stat 6ee56327b HEAD -- apps packages services printed nothing.",
+    "A4 and A7 are not applicable: the scope holds no marker check and no plan parser. findUnapprovedClaimTerms removes only the exact approved strings; controls at page.content.test.tsx:440-446 keep hits after the removal, and P5 shows they are live.",
+    "check-types, lint, and coverage were not re-run by this role. Those claims rest on green-merge-e836e7289.log and on the coverage rerun in review-a-e836e72.json.",
+    "No CONTEST item came with the brief. The brief named no phase_base_sha; e91c4d4cc comes from green-da99c46c7.log.",
+    "After every probe the revert script printed TREE CLEAN. Final git status --short --untracked-files=all printed 0 lines, git stash list printed 0 lines, and the posts directories hold no zz-, .mdx, or .MD entry."
+  ],
+  "commands": [
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run www-batch-20261116.locale storytime-advantage/page.content blog-posts-validation --reporter=verbose' (P0 to P6, one edit set each)",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run blog-posts-validation --reporter=verbose' (P7, P8)",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run --reporter=dot' (P9, P10, P11 with edits; P13 clean)",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'bash /tmp/adv-da99c46/race.sh' (P12: ten runs of vitest run blog-posts-loader.adversarial blog-blocks blog-draft blog-posts-validation lib/blog.test blog-locale phase-2-seo-blog-routes --reporter=dot)",
+    "python3 -I measure/runs/www_test_audit_pilot_20261122/adversarial-da99c46-probes.py check|apply <P1..P11> and revert",
+    "git diff --name-only 968bde612 6ee56327b -- apps packages services | rg -v 'test|fixtures'",
+    "git branch -r --contains HEAD",
+    "python3 -I (arithmetic of the report numbers)"
+  ],
+  "changed_files": [
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-da99c46.json",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-da99c46.log",
+    "measure/runs/www_test_audit_pilot_20261122/adversarial-da99c46-probes.py"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "claude-agent/sonnet#max",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "P1 to P3 and P5 to P7 fail by name and P13 passes 1413 tests in 98 files at da99c46c7; ADV-25 is the one defect that fails off this machine."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 3,
+      "evidence": "P9 and P11 pass the full suite with the th year changed, the 2027 clause removed, eight Thai months deleted, and noise in the dead copy data."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "git diff --name-only 968bde612 6ee56327b -- apps packages services shows only test and fixture files, and my probes left git status clean."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Every claim has a probe label with a result in adversarial-da99c46.log; check-types, lint, and coverage were not re-run."
+    }
+  ]
+}

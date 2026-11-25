@@ -1,0 +1,29 @@
+# Adversarial log: www test audit pilot, Phase 3, round 8 (closing confirmation)
+
+Audited head: e91c4d4cc. No commit.
+
+ADV-22 is closed. brokenPostRefs flags any name ending in .md
+(case-insensitive) that is not a readable regular file after following
+links. My own temporary directory symlink th/ZZ-ADV-Closing.MD failed
+both discovery cases and was named. The probe file passes 3 of 3 with
+unchanged expectations; the loader unit tests and the merged validation
+pass. Four files, 24 tests, all green.
+
+Further loader edge cases are notes: locale-level directory symlinks
+(ADV-23), and hard links, which are indistinguishable from regular
+files at this layer (ADV-24).
+
+Verdict pass.
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3), adversarial round 8 (closing confirmation)
+commits: none
+tests_run: pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts src/__tests__/blog-posts-loader-dotfile.test.ts src/__tests__/blog-posts-loader-symlink.test.ts src/lib/blog-posts-validation.test.ts --reporter=dot (24 passed at e91c4d4cc); pnpm --filter www-reading-advantage exec vitest run src/lib/blog-posts-validation.test.ts --reporter=verbose with a temporary directory symlink (named in both discovery cases, restored); pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts src/lib/blog-posts-validation.test.ts --reporter=dot (20 passed after cleanup)
+files_changed: measure/runs/www_test_audit_pilot_20261122/adversarial-e91c4d4.json; measure/runs/www_test_audit_pilot_20261122/adversarial-e91c4d4.log
+plan_updates: none
+known_failures: none. ADV-22 closed; ADV-23 kept; ADV-24 is a note.
+handoff: Phase 3 loader surface is closed at e91c4d4cc. The probe file stays as regression armor. Result JSON: measure/runs/www_test_audit_pilot_20261122/adversarial-e91c4d4.json.
+END_MEASURE_AGENT_RESULT

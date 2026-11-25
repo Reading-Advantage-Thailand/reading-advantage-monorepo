@@ -1,0 +1,36 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Review A remediation F46 and F47 on the report. Phase 4.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: aeaa6a11902e320b40bff38f9726ac2aec5e36c8
+green_head: 01e1e9d2904f3ee13718d6d86a4b54bb774f100e
+report_commit: 58b847e6b80ce4fa380c678e00c69e885d872768
+plan_evidence_commit: 01e1e9d2904f3ee13718d6d86a4b54bb774f100e
+report: measure/tracks/www_test_audit_pilot_20261122/report.md
+review: measure/runs/www_test_audit_pilot_20261122/review-a-aeaa6a1.json
+
+tasks_flipped_to_x:
+- 4.9 Report review remediation F46 F47 (58b847e6b). Evidence: report commit 58b847e6b and plan commit 01e1e9d2.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: none tracked. report.md and plan.md were changed. No test or production file changed.
+
+checks_run:
+- Read green-7008ccef.log. It holds an accounting-track task plan with Phase 7 Red and Green rows for intake documents and monthly close. It holds no Vitest summary and no MEASURE_AGENT_RESULT block. The report now says exactly this and names green-at-7008ccef.log as the rerun.
+- Read green-5a104ba.log. It holds a complete MEASURE_AGENT_RESULT block with no dispositions: line. This proved that marker-only files are role result logs, not test-run logs.
+- grepped both files for run-file counts: 26, 45, 73, 44 named logs, 20 review-a files, 13 adversarial files, 7 acceptance files, 3 second-check files and all highest-finding-ID lines. None remain.
+- Rewrote Finding history with definitions and no counts. It names the role result log definition and the grep command, the test-run log patterns, the accounting-plan file, and the overlap of the two name patterns. It no longer states file counts or highest IDs.
+- Rewrote plan.md task 4.8 to remove its 26 and 45 counts.
+- Verified 33 SHAs with git cat-file -e, the K table at 77 rows summing to 2843 cases, no sentence over 25 words, and no line-number citations.
+- Re-read both files for other count or category claims about run files. None remain.
+
+gate: one required heavy-run gate exited 0. CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot passed 98 files and 1412 tests. Log: measure/runs/www_test_audit_pilot_20261122/green-58b847e6b.log. No test changed, so no other gate was required.
+
+deviation: the report commit header was shortened for the 100-character commitlint limit. The meaning and track id stay.
+dispositions: F46=FIX; F47=FIX
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,63 @@
+# Red log: www test audit pilot, Phase 1 (final)
+
+Role: measure-mid-red. Track: www_test_audit_pilot_20261122.
+Phase heading: "Phase 1: Baseline and classification". Tasks 1.1 and 1.2.
+
+## Base SHAs
+
+- phase_base_sha (orchestrator-supplied, immutable): cbd023b1bd29333992f7511646cff1245191b049
+- role_base_sha (orchestrator-supplied, immutable): cbd023b1bd29333992f7511646cff1245191b049
+- Both values resolve in this worktree. This role committed new Red work
+  in one commit (see below); HEAD now sits past both base values.
+
+## Scope proof
+
+- `git status --short` before the commit showed only
+  `measure/tracks/www_test_audit_pilot_20261122/plan.md` modified and
+  `classification.md` untracked. No unrelated user work was present.
+- `git diff --name-only <phase_base_sha> HEAD -- apps/` prints nothing.
+  No file under `apps/` changed. The role gate for this phase checks only
+  that no file under `apps/` changed, with RED_TEST_COMMAND unset.
+
+## Expected Red / Green
+
+- At the base, classification.md, baseline.json, and baseline.log did not
+  exist, so the substituted Red gate failed.
+- After this role, classification.md exists in the track directory and
+  baseline.json plus baseline.log exist under
+  `measure/runs/www_test_audit_pilot_20261122/` (run logs stay local and
+  uncommitted). The `apps/` diff stays empty. The gate passes.
+
+## Task evidence
+
+- 1.1 baseline: GREEN test command exit 0 (91 files, 3175 cases pass,
+  wall 90.47 s). Coverage command exit 0 without OOM and without an
+  added flag (lines 86.52, branches 76.74, functions 78.24,
+  statements 85.21, wall 149.11 s). Labeled values live in
+  baseline.json; raw tails live in baseline.log. The plan names no number.
+- 1.2 classification: classification.md holds one row per file, split per
+  describe block with case names when a file mixes classes. K rows first.
+  Every `e2e/*.spec.ts` file and the excluded i18n-cli suite are marked
+  not counted. D2 rows name the kept duplicate. The summary table gives
+  the case count per class and the projected cut. The honest projection
+  is below the 20 % target, stated without inflation; the two levers that
+  could close the gap are named.
+- No failing test was written, under the accepted role note in plan.md.
+  No file under `apps/` changed.
+
+## MEASURE_AGENT_RESULT (final)
+
+```
+MEASURE_AGENT_RESULT
+baseline_sha: cbd023b1bd29333992f7511646cff1245191b049
+role: measure-mid-red
+track: www_test_audit_pilot_20261122
+phase: "Phase 1: Baseline and classification"
+head: 08bec4c36
+commits: 1 (chore(measure): classify www tests for the audit pilot)
+tests: none written (role writes no failing test; see role note)
+files: measure/tracks/www_test_audit_pilot_20261122/classification.md (new); measure/tracks/www_test_audit_pilot_20261122/plan.md (1.1 and 1.2 marked done with evidence paths)
+remaining_failures: none in this role; tasks 1.3 (second check) and 1.4 (checkpoint) belong to later roles
+status: pass
+handoff: none; 1.1 and 1.2 complete with evidence paths in plan.md
+```

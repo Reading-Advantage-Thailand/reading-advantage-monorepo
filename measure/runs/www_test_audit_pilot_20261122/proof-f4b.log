@@ -1,0 +1,32 @@
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+·x
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/phase-3-i18n.red.test.ts > Wave 5 T8 and T15 i18n contracts > renders localized CTA interpolation and Sheet screen-reader text
+AssertionError: th Sheet close label must match its own locale: expected 'Close' to be 'ปิด' // Object.is equality
+
+Expected: [32m"ปิด"[39m
+Received: [31m"Close"[39m
+
+ ❯ src/__tests__/phase-3-i18n.red.test.ts:156:9
+    154|         screenReaderClose?.textContent,
+    155|         `${locale} Sheet close label must match its own locale`,
+    156|       ).toBe(sheet.close);
+       |         ^
+    157|       renderedByLocale.push({
+    158|         locale,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  01:27:11
+   Duration  1.15s (transform 189ms, setup 70ms, import 322ms, tests 132ms, environment 460ms)
+
+undefined
+/home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run src/__tests__/phase-3-i18n.red.test.ts '--maxWorkers=1' '--reporter=dot'

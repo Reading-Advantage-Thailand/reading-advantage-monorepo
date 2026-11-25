@@ -1,0 +1,29 @@
+Provisional review record. HEAD and diff provenance are verified. Static review only; no test command ran.
+
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: partial
+track: www_test_audit_pilot_20261122
+phase: Phase 1: Baseline and classification
+commits: none
+tests_run: none; static review only
+files_changed: provisional JSON and log under measure/runs/www_test_audit_pilot_20261122/
+plan_updates: none
+known_failures: provisional disagreement rate is above 15%; class-row arithmetic differs from baseline
+handoff: Provisional verdict: escalate to the human because the row disagreement rate exceeds the stop threshold. I will complete the sample and refine the result.
+END_MEASURE_AGENT_RESULT
+
+The completed sample covers 18 of 138 rows and 1,885 of 3,175 cases. It includes all sensitive D1-D4 rows, plus seeded random rows and targeted money rows.
+
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: blocked
+track: www_test_audit_pilot_20261122
+phase: Phase 1: Baseline and classification
+commits: none
+tests_run: none; static review only
+files_changed: measure/runs/www_test_audit_pilot_20261122/second-check-08bec4c.json and .log
+plan_updates: none
+known_failures: 4 of 18 sampled rows disagree (22.22%), above the 15% stop threshold; classification row weights total 3,150 instead of 3,175
+handoff: The track must stop under the plan rule. Human decision needed: Should PM revise the classification rubric and rerun the second-check, or accept the current classification and continue? Options: (A) revise the rubric and rerun the second-check; (B) accept the current classification and continue despite the stop threshold.
+END_MEASURE_AGENT_RESULT

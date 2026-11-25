@@ -1,0 +1,27 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Adversarial remediation ADV-11. Phase 3: Rewrite batch (R1-R3).
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+phase_base_sha: 8a126f612abcc258c6c6711d6ac03fa085bbcbff
+role_base_sha: 4de4b39ffc1d89d4408cfb091f014b9652eeeabb
+green_head: 704745a3ca2bb27b52f28e2fcf65df9d994b64ac
+implementation_commit: 88b26fb9b9959f47f7ec9d71cfff629aa4c5b75f
+plan_evidence_commit: 704745a3ca2bb27b52f28e2fcf65df9d994b64ac
+
+tasks_flipped_to_x:
+- 3.10 Adversarial remediation ADV-11 (88b26fb9b). Evidence: implementation commit 88b26fb9b and plan commit 704745a3.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: none tracked. The loader fixture, the validation test and the committed probe were changed. The plan commit changed the existing plan.md. No post file was added.
+
+fix: the fixture owns the mislabelled-file predicate. A name with a case-insensitive .md suffix that is not exactly .md is flagged, along with .mdx, .markdown, other Markdown-like extensions and extensionless files. Data companions such as -segments.json stay ignored. The validation test imports the shared predicate. The probe keeps its expectation and uses the shared predicate in its setup. All 15 rules and both discovery cases remain. ADV-12 is an optional note and received no change.
+
+gates: four heavy-run gates exited 0 after the implementation commit. check-types 0. lint 0 with three known warnings in untouched files. full vitest 0 with 95 files and 1398 tests. coverage 0 with lines at 91.95 percent. cases_before=1397, cases_after=1398; the adversarial commit added the second probe case and this fix adds none. Line coverage is above the 85.52 floor and the 86.52 baseline.
+
+proofs: measure/runs/www_test_audit_pilot_20261122/proof-adv11.log. A copy of a valid th post saved as th/zz-adv-upper.MD made the extension rule and both discovery cases fail, naming the file. The temporary post was deleted, no leftover exists, and the shipped posts pass.
+dispositions: ADV-11=FIX
+END_MEASURE_AGENT_RESULT

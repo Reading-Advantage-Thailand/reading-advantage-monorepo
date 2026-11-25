@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "a0b229def673fb476ad2ded5719f54431d94511d",
+  "phase_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "role_base_sha": "a0b229def673fb476ad2ded5719f54431d94511d",
+  "audited_head_sha": "a0b229def673fb476ad2ded5719f54431d94511d",
+  "status": "pass",
+  "summary": "F31-F36 are resolved. The changed report and plan contain no remaining incorrect claims in the requested checks or the twelve independent samples.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "git rev-parse HEAD returned a0b229def673fb476ad2ded5719f54431d94511d, matching role_base_sha and audited_head_sha.",
+    "The exact remediation range 24733e3b0cc63ae533501cfaf4f4998c96aafe4e..a0b229def673fb476ad2ded5719f54431d changes report.md and plan.md only. The phase-base range e91c4d4cc3c8d5d61a1e9b802c031247543180fa..HEAD adds report.md and changes plan.md. The apps/ diff is empty.",
+    "F31 verified: report.md:99 says fourteen R2 cases were rewritten in nine files. git show --name-status adf24e723 lists nine paths. Plan.md:267 records fourteen cases.",
+    "F32 verified: report.md:295 says four slowest files are unchanged and the fifth changed in three commits. The five-file git log has no commits for four paths and lists 7008ccefd, 733319505, and fb5622ed7 for primary-advantage/page.content.test.tsx.",
+    "F33 sampled proof logs on nine distinct K rows. They fail their matching rules for i18n labels, mobile card width, tag overflow, contact destinations, pricing amounts, reading-cover fit, pagination wrapping, hero gradients, and blog validation. Other-file proofs and passing runs remain outside the Mutation check column.",
+    "F34 verified: the corrected D5 part 2 row names green-at-7008ccef.log and coverage-7008ccef.log. All 61 unique log references in the report's gate and remediation tables exist. Eight sampled logs have matching test or coverage summaries.",
+    "F35 verified: the report labels Review A and acceptance findings with role and source. git show --name-only 4d1688131 lists the workbook D1 test files; commit 3b044ec9 is not named as the workbook fix.",
+    "F36 verified: report.md:295 says no follow-up task was opened. The report contains no timing follow-up recommendation.",
+    "Independent sample 1: baseline.json records 3175 cases and 86.52 percent line coverage.",
+    "Independent sample 2: gate-66aeb1011.json records 1412 cases and 92.07 percent line coverage.",
+    "Independent sample 3: subtracting baseline and final cases gives 1763, or 55.53 percent. The 20 percent target equals 635 cases.",
+    "Independent sample 4: subtracting baseline line coverage from final line coverage gives a 5.55-point increase.",
+    "Independent sample 5: gate-257a6b0c.json records 3094 cases before and 1385 after the merge, a 1709-case reduction. The report's 1726-to-17 file counts reconcile with that receipt.",
+    "Independent sample 6: gate-257a6b0c.json records 3094 cases before the merge. Adding back 1709 to the final 1412 gives 3121 cases without the merge, a 54-case or 1.70 percent cut.",
+    "Independent sample 7: classification.md:226-234 gives K=2843, D1=67, D2=22, D3=0, D4=6, D5=221, R1=0, R2=16, and R3=0. The classes sum to 3175.",
+    "Independent sample 8: classification.md:240-248 projects a 176-to-196 case cut, or 5.5-to-6.2 percent, before the separately approved blog merge.",
+    "Independent sample 9: role JSON counts for Phases 2 and 3 reconcile to 37 rounds: Review A 15, adversarial 13, phase acceptance 5, second check 3, and spec review 1.",
+    "Independent sample 10: role JSON routes match report.md:195-201 and :270-271: Review A used Luna 13 times and 6.2-sol twice; adversarial used Kimi 13 times; phase acceptance used 6.2-sol five times; second check used Luna three times.",
+    "Independent sample 11: plan.md:246-248 records F11, F10, and F16 as deviations with commit and test evidence. The report's finding lines identify them as recorded deviations.",
+    "Independent sample 12: report.md:227 and :263 state that F18 was PM-approved on 2026-11-24, option A. A search finds no pending status or follow-up recommendation.",
+    "The Green log at green-e97dc1353.log ends with 98 test files and 1412 tests passed. No test run was requested for this artifact-only review."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git diff --name-status 24733e3b0cc63ae533501cfaf4f4998c96aafe4e..a0b229def673fb476ad2ded5719f54431d94511d",
+    "git diff --name-status e91c4d4cc3c8d5d61a1e9b802c031247543180fa..a0b229def673fb476ad2ded5719f54431d94511d",
+    "git diff --name-only e91c4d4cc3c8d5d61a1e9b802c031247543180fa..a0b229def673fb476ad2ded5719f54431d94511d -- apps",
+    "git show --name-status --format=fuller adf24e723",
+    "git log --oneline 635a604c8..HEAD -- apps/www-reading-advantage/src/components/marketing/tutor-commission-calculator.legs.adversarial.test.tsx apps/www-reading-advantage/src/lib/__tests__/real-logos-captures-adversarial.test.ts apps/www-reading-advantage/src/lib/blog-blocks.test.ts apps/www-reading-advantage/src/lib/__tests__/storytime-page-images.test.ts 'apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.content.test.tsx'",
+    "python3 -c \"from pathlib import Path; import re; p=Path('measure/tracks/www_test_audit_pilot_20261122/report.md').read_text().splitlines(); block='\\\\n'.join(p[20:87]); names=sorted(set(re.findall(r'([A-Za-z0-9-]+\\\\.log)',block))); base=Path('measure/runs/www_test_audit_pilot_20261122'); missing=[n for n in names if not (base/n).is_file()]; print('table_log_refs=',len(names),'missing=',missing)\"",
+    "git show --name-only --format=fuller 4d1688131",
+    "python3 -c \"import json; b=json.load(open('measure/runs/www_test_audit_pilot_20261122/baseline.json')); f=json.load(open('measure/runs/www_test_audit_pilot_20261122/gate-66aeb1011.json')); print('baseline',b); print('final',f); print('cut',b['case_count']-f['case_count'],'pct',round((b['case_count']-f['case_count'])/b['case_count']*100,2),'coverage_delta',round(f['line_coverage_pct']-b['line_coverage_pct'],2))\"",
+    "python3 -c \"import json; d=json.load(open('measure/runs/www_test_audit_pilot_20261122/gate-257a6b0c.json')); print('before',d['cases_before'],'after',d['cases_after'],'removed',d['cases_before']-d['cases_after'])\"",
+    "python3 -c \"import glob,json,os,collections; fs=glob.glob('measure/runs/www_test_audit_pilot_20261122/*.json'); rows=[(os.path.basename(f),json.load(open(f))) for f in fs if 'role' in json.load(open(f))]; p2a=[(n,d) for n,d in rows if d.get('role')=='measure-review-a-correctness' and d.get('phase')=='Phase 2: Delete batch (D1-D5)']; p3a=[(n,d) for n,d in rows if d.get('role')=='measure-review-a-correctness' and d.get('phase')=='Phase 3: Rewrite batch (R1-R3)']; adv=[(n,d) for n,d in rows if d.get('role')=='measure-adversarial-testing']; acc=[(n,d) for n,d in rows if d.get('role')=='phase-acceptance' and d.get('phase') in ('Phase 2: Delete batch (D1-D5)','Phase 3: Rewrite batch (R1-R3)')]; second=[(n,d) for n,d in rows if n.startswith('second-check-')]; spec=[(n,d) for n,d in rows if d.get('role')=='spec-review']; print('ReviewA P2/P3',len(p2a),len(p3a),'adversarial',len(adv),'acceptance',len(acc),'second',len(second),'spec',len(spec),'total',len(p2a)+len(p3a)+len(adv)+len(acc)+len(second)+len(spec))\"",
+    "python3 -c \"import glob,json,os,collections; fs=glob.glob('measure/runs/www_test_audit_pilot_20261122/*.json'); rows=[(os.path.basename(f),json.load(open(f))) for f in fs if 'role' in json.load(open(f))]; groups=[('Review A',[(n,d) for n,d in rows if d.get('role')=='measure-review-a-correctness' and d.get('phase') in ('Phase 2: Delete batch (D1-D5)','Phase 3: Rewrite batch (R1-R3)')]),('Adversarial',[(n,d) for n,d in rows if d.get('role')=='measure-adversarial-testing']),('Acceptance',[(n,d) for n,d in rows if d.get('role')=='phase-acceptance' and d.get('phase') in ('Phase 2: Delete batch (D1-D5)','Phase 3: Rewrite batch (R1-R3)')]),('Second check',[(n,d) for n,d in rows if n.startswith('second-check-')])]; [print(label,len(items),dict(collections.Counter(d.get('route') for n,d in items))) for label,items in groups]\"",
+    "rg -ni 'recommendation|pending|F18|option A' measure/tracks/www_test_audit_pilot_20261122/report.md",
+    "tail -5 measure/runs/www_test_audit_pilot_20261122/green-0be4a037.log",
+    "tail -5 measure/runs/www_test_audit_pilot_20261122/coverage-0be4a037.log",
+    "tail -5 measure/runs/www_test_audit_pilot_20261122/green-e332f594.log",
+    "tail -5 measure/runs/www_test_audit_pilot_20261122/green-at-7008ccef.log",
+    "tail -5 measure/runs/www_test_audit_pilot_20261122/coverage-7008ccef.log",
+    "tail -5 measure/runs/www_test_audit_pilot_20261122/green-at-fb5622ed7.log",
+    "tail -5 measure/runs/www_test_audit_pilot_20261122/coverage-at-fb5622ed7.log",
+    "tail -5 measure/runs/www_test_audit_pilot_20261122/green-66aeb1011.log",
+    "git status --short"
+  ],
+  "changed_files": [
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "measure/tracks/www_test_audit_pilot_20261122/report.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "openai/gpt-6-luna#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "The F31-F36 fixes match Git, proof logs, gate receipts, and the PM's approved F18 decision."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "The audit was artifact-only; the cited proof logs show failures for their targeted mutations and the Green log shows 1412 passing tests."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "The audited range changes only plan.md and report.md, with no apps/ paths."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 5,
+      "evidence": "Twelve independent report claims and each requested remediation were checked against source files or Git output."
+    }
+  ]
+}

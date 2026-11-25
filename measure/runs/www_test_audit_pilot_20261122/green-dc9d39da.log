@@ -1,0 +1,44 @@
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report (ADV-25 fix and late findings)
+commits:
+  - e993f5aa1fce6835e06a6a265fe1c6e39483b5b3 (ADV-25 test temp directory fix)
+  - 9ccdeac32567ebcb048fabb21f77533a51588c78 (report wording N2, N3, L1)
+  - dc9d39dac96b66a60d0c07b8ccdecc49c0352395 (plan task 4.15 and tech-debt)
+phase_base_sha: e91c4d4cc3c8d5d61a1e9b802c031247543180fa
+role_base_sha: da99c46c7bc7f11ddddd00bd398216cdf27e335b
+final_green_head: dc9d39dac96b66a60d0c07b8ccdecc49c0352395
+dispositions: ADV-25=FIX; N2=FIX; N3=FIX; L1=FIX
+tests_run:
+  - command: HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run src/__tests__/blog-posts-loader.adversarial.test.ts --reporter=dot'
+    exit_code: 0
+    output: "Test Files 1 passed (1); Tests 3 passed (3); Duration 683ms."
+  - command: HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage exec vitest run --reporter=dot'
+    exit_code: 0
+    output: "Test Files 98 passed (98); Tests 1413 passed (1413); Duration 116.12s."
+  - command: HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage'
+    exit_code: 0
+    output: "Test Files 98 passed (98); Tests 1413 passed (1413); Statements 90.95%; Branches 83.09%; Functions 87.52%; Lines 92.08% (1675/1819); Duration 171.03s."
+  - command: HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage check-types'
+    exit_code: 0
+    output: "$ tsc --noEmit"
+  - command: HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage lint'
+    exit_code: 0
+    output: "eslint . -> 3 problems (0 errors, 3 warnings); all three warnings predate this round."
+case_count: 1413
+file_count: 98
+line_coverage_percent: 92.08
+coverage_floor_percent: 85.52
+files_changed:
+  - apps/www-reading-advantage/src/__tests__/blog-posts-loader.adversarial.test.ts
+  - apps/www-reading-advantage/src/lib/__tests__/primary-page-images.test.ts
+  - apps/www-reading-advantage/src/lib/__tests__/storytime-page-images.test.ts
+  - measure/tracks/www_test_audit_pilot_20261122/report.md
+  - measure/tracks/www_test_audit_pilot_20261122/plan.md
+  - measure/tech-debt.md
+plan_updates: Task 4.15 flipped to [x] with step-1 SHA e993f5aa1 on the first line. It records Late finding L1 and lists ADV-26 to ADV-30 as tech-debt. The same six items were added to measure/tech-debt.md. No task flipped to [b]; no deferred owner.
+known_failures: None. Two requested commit subjects exceeded the 100-character commitlint limit (104 and 101 characters). The established repo convention was used: minimal 100-character equivalents, with no --no-verify. One Resolved tech-debt row from 2026-06-03 was pruned so the file stays at 50 lines.
+handoff: ADV-25 is fixed. The ADV-22 symlink probe now uses fs.mkdtempSync under os.tmpdir() and removes the tree in the existing finally block; every assertion stays. The two other hard-coded home paths were read-only source-root fallbacks for active source-dependent tests. They now use os.homedir(), which removes the literal path without skipping those cases or changing coverage. rg for /home/daniebo under apps/www-reading-advantage/src returns no hit. N2, N3 and L1 are fixed in report.md: the cut without the blog merge is named, the post-merge quote uses one space as in green-merge-e836e7289.log, and the timing run is at the pre-merge head. Case count and coverage did not change, so all report values remain valid. No line citation and no count of a run-file kind was added. All five heavy-run gates exited 0. No push was made. Substitution note from earlier rounds still applies: the Red model family is not recorded in the run files; the picker excluded only openai.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,75 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+round: Review A round 3, evidence-only for F10 and F16
+track: www_test_audit_pilot_20261122
+phase: Phase 2: Delete batch (D1-D5)
+phase_base_sha: a1caa58034f6455e91205a5673ef172a974a7992
+role_base_sha: c2f5cfdb00f2603f003916165ec0d354b7ec0da8
+audited_head_sha: c2f5cfdb00f2603f003916165ec0d354b7ec0da8
+green_head: cab8ffd8e014c7ea83f1496747f421aa4bc8e344
+dispositions: F10=FIX; F16=FIX
+tasks_flipped_to_x: none. This round adds evidence only.
+tasks_flipped_to_b: none.
+
+NEW EVIDENCE FILES
+measure/runs/www_test_audit_pilot_20261122/green-at-7008ccef.log
+  GREEN at 7008ccef, exit 0. 89 test files passed, 3081 tests passed.
+  Overwrote the earlier partial file that held a heavy-run lock-wait error.
+measure/runs/www_test_audit_pilot_20261122/coverage-7008ccef.log
+  Existing evidence from an earlier round. Lines 89.94 percent. Not rerun.
+measure/runs/www_test_audit_pilot_20261122/green-at-733319505.log
+  GREEN at 733319505, exit 0. 89 test files passed, 3057 tests passed.
+measure/runs/www_test_audit_pilot_20261122/coverage-at-733319505.log
+  COVERAGE at 733319505, exit 0. Lines 89.98 percent.
+measure/runs/www_test_audit_pilot_20261122/green-at-fb5622ed7.log
+  GREEN at fb5622ed7, exit 0. 89 test files passed, 3061 tests passed.
+measure/runs/www_test_audit_pilot_20261122/coverage-at-fb5622ed7.log
+  COVERAGE at fb5622ed7, exit 0. Lines 89.98 percent.
+measure/runs/ is gitignored. The logs stay as local evidence for the reviewers.
+
+INSTALL METHOD
+Two heavy-run installs at 7008ccef failed. Attempt one used --prefer-offline and
+ended with exit 124 when the hang guard stopped a puppeteer postinstall idle for
+1200 seconds. Attempt two omitted --prefer-offline and hung at the same
+puppeteer postinstall. It was stopped with SIGTERM, exit 143. Per PM direction,
+node_modules was symlinked from the role-base worktree into each old worktree.
+The three commits change no dependency. Their lockfile is identical. The
+symlinked node_modules made all five gate commands pass.
+
+HEAVY GATE COMMANDS
+ GREEN at 7008ccef:
+  HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /tmp/www-audit-at-7008ccef && CI=true pnpm --filter www-reading-advantage exec vitest run --maxWorkers=1 --reporter=dot'
+  exit 0.
+ GREEN at 733319505:
+  same command with cd /tmp/www-audit-at-733319505. exit 0.
+ COVERAGE at 733319505:
+  HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'cd /tmp/www-audit-at-733319505 && pnpm --filter www-reading-advantage test:coverage'
+  exit 0.
+ GREEN at fb5622ed7:
+  same GREEN command with cd /home/daniebo/Desktop/rama-worktrees/www-audit-fb5622ed7. exit 0.
+ COVERAGE at fb5622ed7:
+  same COVERAGE command with cd /home/daniebo/Desktop/rama-worktrees/www-audit-fb5622ed7. exit 0.
+All five runs used HEAVY_PREFLIGHT_WAIT_S=3600. Each began before 05:30 Bangkok.
+No run started at or after the 05:30 cutoff. No run failed a test.
+
+WORKTREE CLEANUP
+Removed /tmp/www-audit-at-7008ccef.
+Removed /tmp/www-audit-at-733319505.
+Removed /home/daniebo/Desktop/rama-worktrees/www-audit-fb5622ed7.
+An attempt to create /tmp/www-audit-at-fb5622ed7 failed twice during checkout
+because tmpfs ran short. Git left no directory there. Ran git worktree prune.
+No temp worktree remains.
+
+COMMIT
+cab8ffd8e014c7ea83f1496747f421aa4bc8e344
+chore(measure): record per-commit www audit gates (track_id: www_test_audit_pilot_20261122)
+Pathspec commit of measure/tracks/www_test_audit_pilot_20261122/plan.md only.
+The F11 line was not edited. No case count or coverage number was added to the plan.
+
+HANDOFF TO REVIEW ROLES
+F10 has a separate GREEN log at 7008ccef with exit 0. F16 has per-commit GREEN
+and COVERAGE logs at 733319505 and fb5622ed7, each with exit 0. The plan cites
+every new log path and each exit status. The phase range is
+a1caa58034f6455e91205a5673ef172a974a7992..cab8ffd8e014c7ea83f1496747f421aa4bc8e344.
+No task moved to [x] or [b] in this round. No production file or test file changed.
+END_MEASURE_AGENT_RESULT

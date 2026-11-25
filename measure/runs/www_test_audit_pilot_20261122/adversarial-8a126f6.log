@@ -1,0 +1,30 @@
+# Adversarial log: www test audit pilot, Phase 2, round 5 (final Reedy round)
+
+Audited head: 8a126f612.
+
+ADV-4, ADV-5, and ADV-6 are closed. dce443985 widened the inactive
+patterns and the reversal probe file passes 9 of 9; the main Reedy test
+and the contact-authority probe file pass with it (40 cases).
+
+The positive check is sound. APPROVED_ELIGIBILITY_SENTENCES in
+fixtures/reedy-eligibility.ts holds independent literals; the fixture
+has no import, so the list cannot track a locale-file rewrite. A
+reworded shipped sentence is caught by the exact-match rule when every
+marker stays, and by the marker rule when a marker drops. Four temporary
+probes proved both paths for en, th, and zh, and proved no approved
+sentence carries a reversal. The temp file is deleted.
+
+No production file changed. No real false pass, so no commit.
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 2: Delete batch (D1-D5), adversarial round 5
+commits: none
+tests_run: pnpm --filter www-reading-advantage exec vitest run src/__tests__/reedy-inactive-reversal.adversarial.test.tsx src/__tests__/contact-authority-import-actual.adversarial.test.tsx src/__tests__/www-tutor-reedy-claim.test.tsx --reporter=dot (40 passed at 8a126f612); pnpm --filter www-reading-advantage exec vitest run src/__tests__/tmp-positive-probe.adversarial.test.ts --reporter=verbose (4 passed, temp file deleted)
+files_changed: measure/runs/www_test_audit_pilot_20261122/adversarial-8a126f6.json; measure/runs/www_test_audit_pilot_20261122/adversarial-8a126f6.log
+plan_updates: none
+known_failures: none. ADV-4, ADV-5, ADV-6 closed; the positive check holds (ADV-7 note).
+handoff: The Reedy surface is closed at 8a126f612. The reversal probe file stays as regression armor. The orchestrator can close the ADV-3 to ADV-6 chain. Result JSON: measure/runs/www_test_audit_pilot_20261122/adversarial-8a126f6.json.
+END_MEASURE_AGENT_RESULT

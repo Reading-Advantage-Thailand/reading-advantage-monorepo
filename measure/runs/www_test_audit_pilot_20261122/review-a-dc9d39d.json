@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "da99c46c7bc7f11ddddd00bd398216cdf27e335b",
+  "phase_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "role_base_sha": "dc9d39dac96b66a60d0c07b8ccdecc49c0352395",
+  "audited_head_sha": "dc9d39dac96b66a60d0c07b8ccdecc49c0352395",
+  "status": "pass",
+  "summary": "The ADV-25 fix keeps the one ADV-22 assertion and removes its unique temp directory. The two homedir() fallbacks give the same path on this machine and skip the same cases where the source roots are missing. The report edits fix N2, N3 and L1 and add no line citation or run-file count. Plan 4.15 and the tech-debt row match the adversarial record, and the pruned Resolved row is harmless. The coverage run at HEAD gives 1413 tests and 92.08 % lines.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "L1 residue (re-review scope, changed paragraph): report.md section 7 now opens with 'one verbose run at the pre-merge head', but the same paragraph ends with 'The five slowest files at head are:'. Suggested text: 'The five slowest files at the pre-merge head are:'. The table values are correct for timing-at-head.json. This is wording only."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned dc9d39dac96b66a60d0c07b8ccdecc49c0352395, equal to audited_head_sha and role_base_sha. `git status --short` was empty before this run wrote its files.",
+    "`git diff --stat da99c46c7..HEAD` lists blog-posts-loader.adversarial.test.ts, primary-page-images.test.ts, storytime-page-images.test.ts, measure/tech-debt.md, plan.md and report.md. No production file changed.",
+    "Check 1: in e993f5aa1, the ADV-22 case changes only the tempBase source (fs.mkdtempSync(path.join(tmpdir(), 'blog-loader-adversarial-'))) and the finally block (fs.rmSync(tempBase, { recursive: true, force: true })). The setup lines and the one expect(...).toContain('th/zz-adv-dirlink.md') stay unchanged. The file still holds 3 it() cases (`grep -c '^\\s*it('` gives 3). After the full coverage run, `ls -d /tmp/blog-loader-adversarial-*` finds no directory, so the cleanup works. rmSync removes the link and not its target, and the target is inside tempBase.",
+    "Check 1 note: mkdirSync and symlinkSync still run before the try block, as before the change. A setup failure would leave the unique temp directory. This is not a regression.",
+    "Check 2 (this machine): `node -e 'console.log(require(\"os\").homedir())'` gives /home/daniebo. So join(homedir(), 'Desktop/advantage-pr') and join(homedir(), 'Desktop/handoff/a45-storytime-www-images') equal the old literal paths. The A34_SOURCE_ROOT and A45_STORYTIME_SOURCE_ROOT overrides still win through `??`. The full coverage run gives 1413 passed and no skipped case, as at da99c46c7.",
+    "Check 2 (machine without the roots): with HOME=/tmp/opencode/no-such-home, `vitest run primary-page-images.test.ts storytime-page-images.test.ts` gives 'Tests  2 passed | 10 skipped (12)'. The skip gates are unchanged: primary uses `it.skipIf(!SOURCES_PRESENT && !REQUIRE_SOURCES)` from existsSync(LIST_PATH) && existsSync(BRIEF_PATH), and storytime uses `it.skipIf(!SOURCES_PRESENT)` from existsSync(MANIFEST). The old literal path was also missing on such a machine and took the same branch. No case newly fails or newly runs there. A different user with the same ~/Desktop layout would now run the source cases; that is the intent of the fix.",
+    "`rg -n '/home/daniebo' apps/www-reading-advantage/src` returns no hit, as plan 4.15 says.",
+    "Check 3: report.md section 1 now says 'The honest cut without the blog merge stays below that range' (N2 fixed). Section 7 quotes `Test Files 98 passed (98)` and `Tests 1413 passed (1413)` with one space, as in green-merge-e836e7289.log (N3 fixed). Section 7 says 'one verbose run at the pre-merge head' (L1 fixed, one residue word; see the nonblocking finding). The 9ccdeac32 diff adds no file:line reference and no count of a run-file kind.",
+    "Check 4: plan.md task 4.15 matches the diffs. The commits e993f5aa1 and 9ccdeac32 exist. The ADV-26 to ADV-30 summaries match the nonblocking findings in adversarial-da99c46.json. The L1 line follows the 'Late finding <id>: tech-debt' form.",
+    "Check 4 (tech-debt.md): the file is 50 lines before and after the change. Its header says 'Keep it at or below **50 lines**' and 'Remove or summarize resolved items'. The pruned row is the 2026-06-03 audit_20260603_housekeeping_batch row with Status Resolved (F-101 and F-202 resolved by ai_adapter_package_20260603). measure/tracks.md:1247 shows that track complete and archived. The F-101 and F-202 records stay in measure/audit-reports/science-advantage_20260603. No test or script under the repo reads that row: rg for housekeeping_batch, F-101 and F-202 in the scripts and tests that reference tech-debt.md returns no hit.",
+    "Coverage gate: `HEAVY_PREFLIGHT_WAIT_S=3600 bash heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage'` gives 'Test Files  98 passed (98)', 'Tests  1413 passed (1413)', and 'All files | 90.95 | 83.09 | 87.52 | 92.08'. The case count and coverage are unchanged."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git status --short",
+    "git log --oneline da99c46c7..HEAD",
+    "git diff --stat da99c46c7..HEAD",
+    "git diff da99c46c7..HEAD -- apps",
+    "git diff da99c46c7..HEAD -- measure/",
+    "node -e 'console.log(require(\"os\").homedir())'",
+    "rg -n '/home/daniebo' apps/www-reading-advantage/src",
+    "grep -c '^\\s*it(' apps/www-reading-advantage/src/__tests__/blog-posts-loader.adversarial.test.ts",
+    "wc -l measure/tech-debt.md; git show da99c46c7:measure/tech-debt.md | wc -l",
+    "rg -n 'F-101|F-202' measure --glob '!measure/runs/**' --glob '!measure/archive/**'",
+    "rg -n 'housekeeping_batch|F-101|F-202|2026-06-03 \\|' <scripts and tests that reference tech-debt.md>",
+    "HEAVY_PREFLIGHT_WAIT_S=3600 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c 'pnpm --filter www-reading-advantage test:coverage'",
+    "ls -d /tmp/blog-loader-adversarial-*",
+    "export HOME=/tmp/opencode/no-such-home; ../../node_modules/.bin/vitest run src/lib/__tests__/primary-page-images.test.ts src/lib/__tests__/storytime-page-images.test.ts",
+    "python3 -I -c '<print nonblocking_findings of adversarial-da99c46.json>'"
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/blog-posts-loader.adversarial.test.ts",
+    "apps/www-reading-advantage/src/lib/__tests__/primary-page-images.test.ts",
+    "apps/www-reading-advantage/src/lib/__tests__/storytime-page-images.test.ts",
+    "measure/tech-debt.md",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md",
+    "measure/tracks/www_test_audit_pilot_20261122/report.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "claude-agent/opus#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 5,
+      "evidence": "With HOME=/tmp/opencode/no-such-home the two image suites give 'Tests  2 passed | 10 skipped (12)', and the full coverage run at HEAD gives 1413 passed at 92.08 % lines."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 5,
+      "evidence": "The ADV-22 case keeps its one toContain('th/zz-adv-dirlink.md') assertion, and no /tmp/blog-loader-adversarial-* directory remains after the run."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "`git diff --stat da99c46c7..HEAD` lists the three ADV-25 test files and the report, plan and tech-debt records only."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Plan 4.15 cites the commits, gate values and late-finding calls, and each claim checks out; report.md section 7 still says 'The five slowest files at head'."
+    }
+  ]
+}

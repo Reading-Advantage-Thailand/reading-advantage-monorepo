@@ -1,0 +1,36 @@
+# Adversarial log: www test audit pilot, Phase 2 remediation round 3
+
+Audited head: d30e5a242 (this role's probe commit).
+Remediation range: bfda22bd8..99262eda4 (7c2d93e2 F1/F2, 3b044ec9 F3,
+99262eda4 plan).
+
+F1 holds. A temporary probe proved vi.importActual returns the shipped
+contact config, not the mock, that every shipped value is non-empty, and
+that no raw shipped value sits in an unscanned locale leaf today. A
+committed probe file pins these facts (ADV-4 scope note: the check
+scans three named paths only).
+
+F2 holds. products/page.tsx renders the three solution sections with no
+props, so no copy can ride props past the per-section sweep (ADV-5
+note: the rendered sweep reads text nodes only).
+
+F3 has a false pass. A temporary edit of www-tutor-reedy-claim.test.tsx
+proved that three reversals of the active-package rule return an empty
+break list: en 'non-active', en 'in-active', and a Thai
+cancelled-package sentence. The shipped copy is clean today, so the
+suite is green. ADV-3 routes to Green. The committed probe file
+src/__tests__/reedy-inactive-reversal.adversarial.test.tsx fails 3 of 3
+cases until Green widens the inactive patterns.
+
+MEASURE_AGENT_RESULT
+role: measure-adversarial-testing
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 2: Delete batch (D1-D5), remediation round 3
+commits: d30e5a242
+tests_run: pnpm --filter www-reading-advantage exec vitest run src/__tests__/contact-authority-import-actual.adversarial.test.tsx src/__tests__/reedy-inactive-reversal.adversarial.test.ts --reporter=verbose (3 passed, 3 failed as intended); pnpm --filter www-reading-advantage exec vitest run src/__tests__/www-tutor-reedy-claim.test.tsx -t 'TEMPORARY ADVERSARIAL PROBES' (3 failed, 5 passed, temp edit restored)
+files_changed: apps/www-reading-advantage/src/__tests__/contact-authority-import-actual.adversarial.test.tsx; apps/www-reading-advantage/src/__tests__/reedy-inactive-reversal.adversarial.test.tsx; measure/runs/www_test_audit_pilot_20261122/adversarial-d30e5a2.json; measure/runs/www_test_audit_pilot_20261122/adversarial-d30e5a2.log
+plan_updates: none
+known_failures: ADV-3 blocking. The AC-24 eligibility check admits en 'non-active', en 'in-active', and a Thai cancelled-package reversal. ADV-4 and ADV-5 are nits.
+handoff: Route ADV-3 to Green. Green widens INACTIVE_PATTERNS (or the active-word check) in www-tutor-reedy-claim.test.tsx until the committed failing file reedy-inactive-reversal.adversarial.test.tsx passes; the file pins the defect and stays as regression armor. ADV-4 and ADV-5 are notes for F1 scope and F2 coverage. The F1 probe file passes and can stay. Result JSON: measure/runs/www_test_audit_pilot_20261122/adversarial-d30e5a2.json.
+END_MEASURE_AGENT_RESULT

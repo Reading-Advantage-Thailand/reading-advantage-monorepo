@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "role": "measure-review-a-correctness",
+  "track": "www_test_audit_pilot_20261122",
+  "phase": "Phase 4: Pilot report",
+  "baseline_sha": "e836e728922d8b01ac3fd74fcccd7bd7df47b56b",
+  "phase_base_sha": "e91c4d4cc3c8d5d61a1e9b802c031247543180fa",
+  "role_base_sha": "da99c46c7bc7f11ddddd00bd398216cdf27e335b",
+  "audited_head_sha": "da99c46c7bc7f11ddddd00bd398216cdf27e335b",
+  "status": "pass",
+  "summary": "F1 is fixed. Every final-count and coverage claim in report.md now labels 1412 cases and 92.07 % as the pre-merge run at e91c4d4cc and gives 1413 cases and 92.08 % as the final run. The cut is 1762 cases (55.5 %), and the rise is 5.56 points. N1 is fixed. N2 is fixed except one sentence at the end of the report.md section 1 third paragraph. The edit adds no line citation and no count of run files. One late finding goes to tech-debt.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "N2 residue (re-review scope, changed paragraph): the last sentence of the report.md section 1 third paragraph still says 'The honest pre-merge cut stays below that range.' Here 'pre-merge' means 'without the blog merge'. The previous sentence of the same paragraph now uses 'pre-merge' for the master merge ('the pre-merge count at `e91c4d4cc`'). Under that meaning, the cut is 55.5 %, which is above the 5.5 % to 6.2 % range. Suggested text: 'The honest cut without the blog merge stays below that range.'",
+    "N3 (changed line, quote form): report.md section 7 quotes `Test Files  98 passed (98)` and `Tests  1413 passed (1413)` with two spaces and cites green-merge-e836e7289.log. That log holds 'Test Files 98 passed (98); Tests 1413 passed (1413)' with one space. The values are correct. Only the quoted form differs from the cited file.",
+    "Late finding L1: tech-debt (report.md is the phase deliverable, but no reader receives a wrong result; the timing section is a labelled HYPOTHESIS, and the merge changed none of the five slowest files). The report.md section 7 text 'one verbose run at head' describes timing-at-head.json. That JSON gives numTotalTests 1412, so the run was at the pre-merge head, not at HEAD da99c46 (1413 tests). The merge made this claim stale. Round 1 of this re-review cycle missed it. Under the Late-finding stop rule this goes to measure/tech-debt.md. Suggested text: 'one verbose run at the pre-merge head'. The orchestrator records 'Late finding L1: tech-debt (...)' in plan.md."
+  ],
+  "evidence": [
+    "git rev-parse HEAD returned da99c46c7bc7f11ddddd00bd398216cdf27e335b, equal to audited_head_sha and role_base_sha. `git status --short` is empty.",
+    "`git diff --name-status e836e7289..HEAD` lists report.md and plan.md only. Commits: 152fd0f67 (report) and da99c46c7 (plan 4.14). The apps tree is the same as at e836e7289, so the green-merge-e836e7289.log values still describe HEAD.",
+    "F1 withdrawn as fixed. Checked: report.md section 1 says 'The pre-merge run at `e91c4d4cc` holds 1412 cases and 92.07 %' (gate-66aeb1011.json), 'The master merge `6ee56327b` added one master case', and 'The final run at `e836e7289` holds 1413 cases and 92.08 %' (green-merge-e836e7289.log). Section 7 labels the 1412 line 'before the master merge' and adds the post-merge line. The +7.64 s difference is now scoped to the baseline and the pre-merge run.",
+    "Arithmetic check (`python3 -I -c 'print(3175-1413, round((3175-1413)/3175*100,2), round(92.08-86.52,2), 1412+1709)'`) gives 1762, 55.5, 5.56, 3121. These agree with the report: the cut is 1762 cases or 55.5 %, the rise is 5.56 points, and the count without the blog merge at e91c4d4cc is 3121.",
+    "green-merge-e836e7289.log:22-28 holds 'Tests 1413 passed (1413)', 'Lines 92.08% (1675/1819)', case_count 1413 and line_coverage_percent 92.08. The round-1 run of this role at e836e7289 gave the same values.",
+    "`rg -n '1763|5\\.55|92\\.07|1412|1413|92\\.08' report.md` returns lines 10, 199 and 200 only. The old 1763 cut and 5.55 rise are gone. Each remaining 1412 or 92.07 value is labelled pre-merge.",
+    "D5 bullet: 'The final case count is 3035' now says 'The case count after that step is 3035 cases (`gate-407c5d9.json`)'. No other 'final' count claim remains (`rg -n -i final report.md` hits only line 10's final run and a test file name in the K table).",
+    "N1 withdrawn as fixed: plan.md task 4.13 now says 'the two auto-merged test and fixture files'.",
+    "N2 mostly fixed: report.md section 1 names 'the blog merge' and defines it as the task 3.5 merge of the blog test file. One sentence still uses 'pre-merge' for the blog merge; see the N2 residue entry.",
+    "No line citation added: `rg -n ':[0-9]+\\b' report.md` returns no hit. The 152fd0f67 and da99c46c7 diffs add no file:line reference and no count of a run-file kind. Each new value cites a named run file.",
+    "Other claims hold at HEAD because only measure files changed since e836e7289: the tutor-commission diff from a1caa5803 is empty, and the primary page.content git log results at section 7 are unchanged (verified in round 1 at e836e7289).",
+    "plan.md task 4.14 matches the diff. 152fd0f67 resolves (`git cat-file -t` gives commit). Its subject is 100 characters (`git log -1 --format=%s 152fd0f67 | wc -c` gives 101 with the newline).",
+    "Late-finding status: Phase 4 has had more than two audit rounds (54 review-a run files exist for this track), so L1 is a late finding under contracts.md:162-172."
+  ],
+  "commands": [
+    "git rev-parse HEAD",
+    "git status --short",
+    "git diff --name-status e836e7289..HEAD",
+    "git log --oneline e836e7289..HEAD",
+    "git diff e836e7289..HEAD",
+    "sed -n 20,30p measure/runs/www_test_audit_pilot_20261122/green-merge-e836e7289.log",
+    "python3 -I -c \"import json;d=json.load(open('measure/runs/www_test_audit_pilot_20261122/timing-at-head.json'));print(d['numTotalTests'],d['numTotalTestSuites'])\"",
+    "rg -n -i 'final|at head|HEAD|pre-merge|post-merge|master' report.md",
+    "rg -n '1763|5\\.55|92\\.07|1412|1413|92\\.08|55\\.5|5\\.56|:[0-9]+\\b' report.md",
+    "python3 -I -c 'print(3175-1413, round((3175-1413)/3175*100,2), round(92.08-86.52,2), 1412+1709)'",
+    "git cat-file -t 152fd0f67",
+    "git log -1 --format=%s 152fd0f67 | wc -c"
+  ],
+  "changed_files": [
+    "measure/tracks/www_test_audit_pilot_20261122/report.md",
+    "measure/tracks/www_test_audit_pilot_20261122/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "route": "claude-agent/opus#high",
+  "ratings": [
+    {
+      "axis": "correctness",
+      "score": 4,
+      "evidence": "report.md section 1 gives the 1762-case, 55.5 % cut and the 5.56-point rise, which the python3 arithmetic check confirms, but the section 1 sentence 'The honest pre-merge cut stays below that range' is now ambiguous."
+    },
+    {
+      "axis": "test_meaning",
+      "score": 4,
+      "evidence": "This round is artifact-only; the cited green-merge-e836e7289.log values (1413 tests, 92.08 % lines) match this role's round-1 coverage run at the same apps tree."
+    },
+    {
+      "axis": "scope_discipline",
+      "score": 5,
+      "evidence": "`git diff --name-status e836e7289..HEAD` lists report.md and plan.md only, and each hunk serves F1, N1 or N2."
+    },
+    {
+      "axis": "evidence_quality",
+      "score": 4,
+      "evidence": "Each new value cites baseline.json, gate-66aeb1011.json or green-merge-e836e7289.log, but section 7 quotes the green-merge values with two spaces where the log has one."
+    }
+  ]
+}

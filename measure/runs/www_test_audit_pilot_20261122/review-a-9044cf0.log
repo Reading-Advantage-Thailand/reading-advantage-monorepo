@@ -1,0 +1,26 @@
+Review A (correctness and architecture), round 5, for www_test_audit_pilot_20261122, Phase 4: Pilot report.
+Audited HEAD: 9044cf04b0ab60d5f005ef9e5339ae1c9a0122a3. Scope: 47f4cac87..9044cf04b (51252ca9e, ca91946bf, 9044cf04b). Phase base: e91c4d4cc.
+Result JSON: measure/runs/www_test_audit_pilot_20261122/review-a-9044cf0.json
+
+Check 1 PASS: the new case pins the exact en and th faq.items.5.answer from the imported live locale module.
+A vi.mock probe under measure/runs changed the th answer. Result: 1 failed | 18 passed (19); only the new case failed. No source file changed.
+Check 2 PASS: the class sums total 3175, and the K share is 89.5 %. The D2 and D5 errata are accurate.
+Nonblocking N5: the D4 erratum says the th and zh cases 'were not deleted'. 0d705612d deleted them, and 9eb3b9c4f restored them; the en case stays deleted.
+Check 3 PASS: both fb5622ed7 halves are named. The report states 6 of 37 (16.2 %) with the PM exception, and the 'another family' claim is removed.
+The final values are 1414 cases, a cut of 1761 (55.5 %), 92.08 % and a rise of 5.56. The pre-merge values stay labelled. No line citation and no run-file count were added.
+Nonblocking N6: section 7 quotes the green-at-ca91946b.log values with one space; the raw log has two.
+Check 4 PASS: plan 4.16 and 4.17 match the commits. Nonblocking N7: 4.17 does not record ADV-P1-5 and ADV-P1-7.
+Coverage at HEAD: Test Files 98 passed (98); Tests 1414 passed (1414); lines 92.08.
+
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: heavy-run test:coverage gave 98 files, 1414 passed, lines 92.08; heavy-run vitest probe (vi.mock th faq answer ทุกเดือน -> ทุกปี) gave 1 failed | 18 passed (19), only the new pin case failing.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-9044cf0.json, review-a-9044cf0.log, probe-review-a-9044cf0/src/thai-faq-mutation.test.ts
+plan_updates: none
+known_failures: none
+handoff: PASS. Optional wording fixes. N5: change the D4 erratum to 'The th and zh cases of the navigation row were restored in 9eb3b9c4f; the en case stays deleted.' N6: quote green-at-ca91946b.log with two spaces. N7: record ADV-P1-5 and ADV-P1-7 in plan 4.17. Nothing blocks.
+END_MEASURE_AGENT_RESULT

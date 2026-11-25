@@ -1,0 +1,45 @@
+MUTATION PROOF (R2)
+Note: a light pricing hero title breaks WCAG-AA contrast
+Production file: apps/www-reading-advantage/src/app/[locale]/(marketing)/pricing/page.tsx
+Edit: 'className="mb-6 max-w-3xl text-3xl font-bold leading-display tracking-tight text-slate-900 md:text-5xl"' -> 'className="mb-6 max-w-3xl text-3xl font-bold leading-display tracking-tight text-slate-400 md:text-5xl"'
+Test file: src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx
+Expected: test exits 1; the production edit is restored after the run.
+Test exit code: 1
+--- test output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+stderr | src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx > Remaining Phase 4 browser regression contracts > contains related article content at a 390px viewport
+Received `true` for a non-boolean attribute `fill`.
+
+If you want to write it to the DOM, pass a string instead: fill="true" or fill={value.toString()}.
+
+·x
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx > Remaining Phase 4 browser regression contracts > keeps pricing hero text at WCAG-AA contrast
+AssertionError: Remaining browser finding: pricing hero text must meet WCAG-AA contrast: expected false to be true // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- true[39m
+[31m+ false[39m
+
+ ❯ src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx:116:8
+    114|         "Remaining browser finding: pricing hero text must meet WCAG-A…
+    115|       )
+    116|       .toBe(true);
+       |        ^
+    117|   });
+    118| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  14:33:22
+   Duration  1.84s (transform 116ms, setup 87ms, import 723ms, tests 162ms, environment 679ms)
+

@@ -26,6 +26,7 @@ import {
   findClaimTerms,
   findUnapprovedClaimTerms,
   APPROVED_DATES,
+  APPROVED_SCHOOL_YEAR,
   type ClaimTermName,
   type ExpectedCopy,
 } from "@/__tests__/fixtures/storytime-page-expected";
@@ -102,6 +103,11 @@ const CLAIM_CONTROLS: Record<ClaimTermName, readonly string[]> = {
     "Start in November",
     "Start in December",
     "STARTS IN MAY",
+  ],
+  "Thai month": [
+    "เปิดตัววันที่ 30 ธันวาคม 2569",
+    "เปิดตัววันที่ 30 มกราคม 2569",
+    "เริ่มในเดือนพฤษภาคม",
   ],
   "พ.ศ.": ["เปิดภาคเรียน พ.ศ. 2569"],
   "฿": ["฿500"],
@@ -322,16 +328,17 @@ describe("Storytime Advantage content", () => {
     for (const text of ALLOWED_TERMS) expect(findClaimTerms(text), text).toEqual([]);
   });
 
-  it("control: the claims scanner clears only the one approved public date", () => {
+  it("control: the claims scanner clears the approved public date and the approved school year", () => {
     expect(findClaimTerms(APPROVED_DATES.en)).toEqual(["year", "English month"]);
-    expect(findClaimTerms(APPROVED_DATES.th)).toEqual([]);
+    expect(findClaimTerms(APPROVED_DATES.th)).toEqual(["Thai month"]);
     expect(findUnapprovedClaimTerms(`The first unit launches on ${APPROVED_DATES.en}.`)).toEqual([]);
     expect(findUnapprovedClaimTerms(`เปิดตัววันที่ ${APPROVED_DATES.th}`)).toEqual([]);
+    expect(findUnapprovedClaimTerms(`${APPROVED_SCHOOL_YEAR.en}, Thai primary schools open Science Advantage.`)).toEqual([]);
     expect(findUnapprovedClaimTerms("The first unit launches on 30 November 2027.")).toContain("year");
     expect(findUnapprovedClaimTerms("The first unit launches on 30 December 2026.")).toContain("English month");
     expect(findUnapprovedClaimTerms("The first unit launches in 2026.")).toContain("year");
     expect(findUnapprovedClaimTerms("The first unit launches in November.")).toContain("English month");
-    expect(findUnapprovedClaimTerms("เปิดตัววันที่ 30 ธันวาคม 2569")).toEqual([]);
+    expect(findUnapprovedClaimTerms("เปิดตัววันที่ 30 ธันวาคม 2569")).toEqual(["Thai month"]);
     expect(findUnapprovedClaimTerms("เปิดตัว พ.ศ. 2569")).toContain("พ.ศ.");
   });
 

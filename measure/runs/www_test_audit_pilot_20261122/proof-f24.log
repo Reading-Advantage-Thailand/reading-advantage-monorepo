@@ -1,0 +1,41 @@
+MUTATION PROOF — F24 hero gradient stops
+The default hero via and to stops were changed to white and amber.
+Expected: the default gradient case fails on a stop value.
+Test exit code: 1
+--- test output ---
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/www-test-audit/apps/www-reading-advantage
+
+ ✓ src/components/marketing/hero-section.test.tsx > HeroSection > renders title prop as a heading element 88ms
+ ✓ src/components/marketing/hero-section.test.tsx > HeroSection > renders description prop text 4ms
+ × src/components/marketing/hero-section.test.tsx > HeroSection > applies the specified default background gradient 28ms
+   → --tw-gradient-via: expected 'var(--color-white)' to be 'oklch(98%0.016 73.684)' // Object.is equality
+ ✓ src/components/marketing/hero-section.test.tsx > HeroSection > replaces the default gradient with a custom gradient 15ms
+ ✓ src/components/marketing/hero-section.test.tsx > HeroSection > renders the CTA button with correct href when ctaButton prop is provided 6ms
+ ✓ src/components/marketing/hero-section.test.tsx > HeroSection > does not render CTA button when ctaButton prop is omitted 1ms
+ ✓ src/components/marketing/hero-section.test.tsx > HeroSection > renders the floating image without a hidden container at any breakpoint 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/marketing/hero-section.test.tsx > HeroSection > applies the specified default background gradient
+AssertionError: --tw-gradient-via: expected 'var(--color-white)' to be 'oklch(98%0.016 73.684)' // Object.is equality
+
+Expected: [32m"[7moklch(98%0.016 73.684[27m)"[39m
+Received: [31m"[7mvar(--color-white[27m)"[39m
+
+ ❯ src/components/marketing/hero-section.test.tsx:86:44
+     84|
+     85|     for (const property of GRADIENT_PROPERTIES) {
+     86|       expect(gradient[property], property).toBe(expected[property]);
+       |                                            ^
+     87|     }
+     88|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  18:16:43
+   Duration  1.30s (transform 47ms, setup 67ms, import 499ms, tests 150ms, environment 426ms)
+

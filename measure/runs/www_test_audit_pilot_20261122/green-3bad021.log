@@ -1,0 +1,31 @@
+GREEN ROLE LOG — www_test_audit_pilot_20261122
+Adversarial remediation ADV-17 to ADV-19. Phase 3: Rewrite batch (R1-R3).
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+track: www_test_audit_pilot_20261122
+phase: Phase 3: Rewrite batch (R1-R3)
+phase_base_sha: 8a126f612abcc258c6c6711d6ac03fa085bbcbff
+role_base_sha: 3bad0214859529defe74fa22d275bbf5bc5edc1c
+green_head: a0b8e18e8f0e4529dca74b3a29b8c7741a4bd388
+implementation_commit: 6be92dd85838aeead1d28b160d5f1cad5e79e902
+plan_evidence_commit: a0b8e18e8f0e4529dca74b3a29b8c7741a4bd388
+
+tasks_flipped_to_x:
+- 3.13 Adversarial remediation ADV-17 to ADV-19 (6be92dd85). Evidence: implementation commit 6be92dd85 and plan commit a0b8e18e.
+
+tasks_flipped_to_b: none. No task needs a human action.
+
+new_files: none tracked. The contrast fixture and its unit test were changed. The plan commit changed the existing plan.md. No post or production file changed.
+
+fix: the stylesheet guard runs at read time over every document.styleSheets entry, including the injected compiled copy, and recurses into grouping at-rules. A style rule outside :root, :host or html that declares a --color-* token throws with the selector and name when the tested element or any ancestor matches it. An unevaluable selector throws. Inline --color-* declarations still throw. The root token map stays the only resolved source.
+
+unit_test: two new cases cover an ancestor match and a rule inside @media. The fixture passes 16 cases. The probe passes 4 of 4. Its expectations were not changed.
+
+gates: four heavy-run gates exited 0 after the implementation commit. check-types 0. lint 0 with three known warnings in untouched files. full vitest 0 with 97 files and 1408 tests. coverage 0 with lines at 92.01 percent. cases_before=1405, cases_after=1408; one committed probe case and two new unit cases add the count. Line coverage is above the 85.52 floor and the 86.52 baseline.
+
+proofs: measure/runs/www_test_audit_pilot_20261122/proof-adv17.log. No production mutation is possible for an injected stylesheet rule, so the log records the probe at 4 of 4, the fixture at 16 of 16, and both R2 contrast tests passing with no false throw. git status shows no production or post change.
+
+deviation: both commit headers were shortened for the 100-character commitlint limit. The meaning and track id stay.
+dispositions: ADV-17=FIX; ADV-18=FIX; ADV-19=FIX
+END_MEASURE_AGENT_RESULT

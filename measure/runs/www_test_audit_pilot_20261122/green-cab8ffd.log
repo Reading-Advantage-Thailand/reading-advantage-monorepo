@@ -1,0 +1,40 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+round: Review A round 4, record-only for F11
+track: www_test_audit_pilot_20261122
+phase: Phase 2: Delete batch (D1-D5)
+phase_base_sha: a1caa58034f6455e91205a5673ef172a974a7992
+role_base_sha: cab8ffd8e014c7ea83f1496747f421aa4bc8e344
+green_head: 2be9b74db01c8053256f5f18453ca4e38b2390f0
+dispositions: F11=FIX
+tasks_completed: record only
+tasks_flipped_to_x: none. This round records the PM approval only.
+tasks_flipped_to_b: none.
+tests_run: none. This round changes no test file and no production file.
+new_files: measure/runs/www_test_audit_pilot_20261122/green-cab8ffd.log
+files_changed: measure/tracks/www_test_audit_pilot_20261122/plan.md
+plan_updates: measure/tracks/www_test_audit_pilot_20261122/plan.md, Recorded deviations block, F11 line.
+commit: 2be9b74db01c8053256f5f18453ca4e38b2390f0
+commit_message: chore(measure): record pm approval of the d1/r2 exception (track_id: www_test_audit_pilot_20261122)
+
+CHANGE
+The F11 line of the Recorded deviations block now ends with:
+Approved by the PM as a recorded exception on 2026-11-23 (Review A round 4, review-a-cab8ffd.json).
+Every other line of plan.md is unchanged. The commit changes one line in one file.
+
+SCOPE
+No test file changed. No production file changed. No task marker moved to [x] or to [b].
+The commit is a pathspec commit of measure/tracks/www_test_audit_pilot_20261122/plan.md only.
+measure/runs/ is gitignored, so this log stays as local evidence for the reviewers.
+
+HANDOFF TO REVIEW ROLES
+F11 is closed as a recorded exception approved by the PM on 2026-11-23.
+The phase range is a1caa58034f6455e91205a5673ef172a974a7992..2be9b74db01c8053256f5f18453ca4e38b2390f0.
+F10 and F16 keep their recorded evidence. Each log reports exit 0:
+measure/runs/www_test_audit_pilot_20261122/green-at-7008ccef.log
+measure/runs/www_test_audit_pilot_20261122/green-at-733319505.log
+measure/runs/www_test_audit_pilot_20261122/coverage-at-733319505.log
+measure/runs/www_test_audit_pilot_20261122/green-at-fb5622ed7.log
+measure/runs/www_test_audit_pilot_20261122/coverage-at-fb5622ed7.log
+RESULT: PASS
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,13 @@
+MEASURE_AGENT_RESULT
+role: measure-review-a-correctness
+status: complete
+track: www_test_audit_pilot_20261122
+phase: Phase 4: Pilot report
+commits: none
+tests_run: None; the brief requested an artifact check. Reviewed the passed Green log at the audited head.
+files_changed: measure/runs/www_test_audit_pilot_20261122/review-a-e034575.json and review-a-e034575.log
+plan_updates: none
+known_failures: F29: report.md claims timing-at-head.json has a zero duration field, but the JSON has no such field.
+handoff: F27 and F28 are withdrawn. The K row statuses and five timing sums match their sources. Route F29 to Green: replace the false JSON duration-field claim with the actual schema. No other report content changed in this remediation range.
+dispositions: none
+END_MEASURE_AGENT_RESULT
