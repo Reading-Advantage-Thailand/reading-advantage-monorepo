@@ -23,7 +23,7 @@ export const en = {
       storytime: {
         name: "Storytime Advantage",
         forText: "For: Kindergarten Anuban 2 to P2",
-        status: "Status: Available now",
+        status: "Your child taps a word and hears it from 30 November 2026.",
         body: "A teacher leads a 30-minute scripted class. The screen supports the teacher; it never runs the lesson.",
         bullets: [
           "Practise letter formation, phonics and timed sight-word recognition.",
@@ -34,7 +34,7 @@ export const en = {
       primary: {
         name: "Primary Advantage",
         forText: "For: English learners in grades P3 to P6",
-        status: "Status: Live in schools",
+        status: "Your teachers start every lesson with a clear plan.",
         body: "Printed workbooks and an app support leveled reading at CEFR-aligned levels from Pre-A1 to B2.",
         bullets: [
           "Ask a lesson chatbot questions about the passage.",
@@ -45,21 +45,21 @@ export const en = {
       reading: {
         name: "Reading Advantage books",
         forText: "For: Families learning through Tutor Advantage",
-        status: "Status: Reading Advantage Origins 2 is on sale through Tutor Advantage.",
+        status: "Your child learns with a local tutor and a printed workbook.",
         body: "",
         bullets: [],
       },
       codecamp: {
         name: "CodeCamp Advantage",
         forText: "For: Adults building full-stack engineering skills",
-        status: "Status: Live",
+        status: "You learn one skill at a time with Mastery Advantage.",
         body: "An adult bootcamp that runs for about 12–15 weeks.",
         bullets: [],
       },
       schoolSubjects: {
         name: "Science, Math and Zhongwen Advantage",
         forText: "For: Primary schools",
-        status: "Status: For the 2027 school year",
+        status: "Your school opens three subjects in the 2027 school year.",
         body: "Each subject is planned as an app with printed workbooks, built on the Primary Advantage base.",
         bullets: [],
       },
@@ -132,7 +132,7 @@ export const th = {
       storytime: {
         name: "Storytime Advantage",
         forText: "เด็กอนุบาล 2 ถึง ป.2",
-        status: "พร้อมใช้งานแล้ว",
+        status: "ลูกของคุณแตะคำแล้วได้ยินเสียงอ่าน ตั้งแต่วันที่ 30 พฤศจิกายน 2026",
         body: "ครูเป็นผู้นำบทเรียนตามสคริปต์ ใช้เวลา 30 นาที หน้าจอช่วยสนับสนุนครู แต่ไม่ได้ทำหน้าที่สอนแทนครู",
         bullets: [
           "ฝึกเขียนตัวอักษร ฝึกเสียงตัวอักษร และฝึกจำคำศัพท์ที่เห็นบ่อยภายในเวลาที่กำหนด",
@@ -143,7 +143,7 @@ export const th = {
       primary: {
         name: "Primary Advantage",
         forText: "ผู้เรียนภาษาอังกฤษชั้น ป.3 ถึง ป.6",
-        status: "เปิดใช้งานในโรงเรียนแล้ว",
+        status: "ครูของคุณเริ่มทุกบทเรียนด้วยแผนการสอนที่ชัดเจน",
         body: "เวิร์กบุ๊กฉบับพิมพ์และแอปช่วยสนับสนุนการอ่านแบบแบ่งระดับ ตั้งแต่ Pre-A1 ถึง B2 ซึ่งสอดคล้องกับ CEFR",
         bullets: [
           "ถามแชตบอตประจำบทเรียนเกี่ยวกับเนื้อเรื่อง",
@@ -154,21 +154,21 @@ export const th = {
       reading: {
         name: "Reading Advantage books",
         forText: "ครอบครัวที่เรียนผ่าน Tutor Advantage",
-        status: "Reading Advantage Origins 2 วางจำหน่ายผ่าน Tutor Advantage",
+        status: "ลูกของคุณเรียนกับครูสอนพิเศษในพื้นที่ พร้อมหนังสือแบบฝึกหัดฉบับพิมพ์",
         body: "",
         bullets: [],
       },
       codecamp: {
         name: "CodeCamp Advantage",
         forText: "ผู้ใหญ่ที่ต้องการพัฒนาทักษะวิศวกรรมซอฟต์แวร์แบบ full-stack",
-        status: "เปิดสอนแล้ว",
+        status: "คุณเรียนรู้ทีละทักษะกับ Mastery Advantage",
         body: "หลักสูตรเร่งรัดสำหรับผู้ใหญ่ ใช้เวลาประมาณ 12–15 สัปดาห์",
         bullets: [],
       },
       schoolSubjects: {
         name: "Science, Math and Zhongwen Advantage",
         forText: "โรงเรียนประถมศึกษา",
-        status: "สำหรับปีการศึกษา 2027",
+        status: "โรงเรียนของคุณเปิดสอนสามวิชาในปีการศึกษา 2027",
         body: "เราวางแผนให้แต่ละวิชาเป็นแอปที่ใช้คู่กับเวิร์กบุ๊กฉบับพิมพ์ โดยพัฒนาต่อยอดจากพื้นฐานของ Primary Advantage",
         bullets: [],
       },
