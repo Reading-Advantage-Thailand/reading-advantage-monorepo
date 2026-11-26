@@ -1,5 +1,5 @@
 # Queue
-- [ ] Launch Storytime now (Daniel's word 2026-11-25 22:31 UTC): storytime-launch-day to production, then check the live pages
+- [x] Launch Storytime now (Daniel's word 2026-11-25 22:31 UTC): storytime-launch-day to production, then check the live pages
 - [ ] Primary parity quick fixes (track primary_parity_quick_fixes_20261011)
 - [ ] Primary print kit look sync (track to create)
 - [ ] Reading Phase 1 reading_standard_base (M): plan /home/daniebo/Desktop/handoff/2026-11-26-reading-app-upgrade-plan.md; all 8 phases approved by Daniel; take the plan's recommended answers to its decisions except D3 (objective set: ask Mastery through the PM) and D9 (no-school learners use the reserved school row); start only after Storytime is live and its launch fixes are done
