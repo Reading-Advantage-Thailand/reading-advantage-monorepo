@@ -33,7 +33,7 @@ import {
 } from "./curriculum-release";
 
 const approvalRef =
-  "measure/tracks/sales_advantage_golive_20260701/curriculum-approval.json";
+  "measure/archive/sales_advantage_golive_20260701/curriculum-approval.json";
 
 let temporaryRoot: string;
 let sourceRoot: string;
@@ -559,7 +559,7 @@ describe("Sales curriculum release contract", () => {
       throw new Error("fixture approval must be approved");
     }
     approved.approval.evidenceRef =
-      "measure/tracks/sales_advantage_golive_20260701/../forged.json";
+      "measure/archive/sales_advantage_golive_20260701/../forged.json";
 
     await expect(assertCurriculumReleaseReady(
       approved,
@@ -574,7 +574,7 @@ describe("Sales curriculum release contract", () => {
       throw new Error("fixture approval must be approved");
     }
     approved.approval.evidenceRef =
-      "measure/tracks/sales_advantage_golive_20260701/other-review.json";
+      "measure/archive/sales_advantage_golive_20260701/other-review.json";
 
     await expect(assertCurriculumReleaseReady(
       approved,

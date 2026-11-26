@@ -267,7 +267,7 @@ async function main(): Promise<void> {
   );
   const output = resolve(
     argument("output") ??
-      "measure/tracks/sales_advantage_golive_20260701/openrouter-curriculum-draft.json",
+      "measure/archive/sales_advantage_golive_20260701/openrouter-curriculum-draft.json",
   );
   const model = process.env.SALES_CURRICULUM_MODEL ??
     "google/gemini-2.5-flash-lite";

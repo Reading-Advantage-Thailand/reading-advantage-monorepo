@@ -358,7 +358,7 @@ describe("Sales production readiness", () => {
       "apps/sales-advantage/release-source.json",
     );
     expect(releaseArchive).toContain(
-      "measure/tracks/sales_advantage_golive_20260701/curriculum-approval.json",
+      "measure/archive/sales_advantage_golive_20260701/curriculum-approval.json",
     );
     expect(roleRunbook).toContain(
       '"${release_commit_sha}:apps/sales-advantage/scripts/create-sales-release-archive.sh"',

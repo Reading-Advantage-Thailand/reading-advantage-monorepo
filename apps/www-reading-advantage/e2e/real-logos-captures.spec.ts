@@ -4,7 +4,7 @@
  * Track: www_real_logos_20261008.
  *
  * Saves the 15 named viewport captures (1280x800, not full page) under
- * measure/tracks/www_real_logos_20261008/captures/. The dark pair emulates
+ * measure/archive/www_real_logos_20261008/captures/. The dark pair emulates
  * prefers-color-scheme: dark. The site has no theme switch.
  *
  * Also asserts the served favicon is the new 6507-byte ICO at the root and
@@ -12,7 +12,7 @@
  * No hash (repo policy).
  *
  * Note: this spec writes the committed PNGs under
- * measure/tracks/www_real_logos_20261008/captures/. A later `pnpm test:e2e`
+ * measure/archive/www_real_logos_20261008/captures/. A later `pnpm test:e2e`
  * run rewrites those tracked files.
  */
 import { existsSync, mkdirSync } from "node:fs";
@@ -28,7 +28,7 @@ const APP_ROOT = process.cwd();
 const REPO_ROOT = join(APP_ROOT, "..", "..");
 const CAPTURES_DIR = join(
   REPO_ROOT,
-  "measure/tracks/www_real_logos_20261008/captures",
+  "measure/archive/www_real_logos_20261008/captures",
 );
 
 const VIEWPORT = { width: 1280, height: 800 };

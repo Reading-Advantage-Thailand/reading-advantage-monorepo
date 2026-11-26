@@ -43,4 +43,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: real-logos-captures
-          path: measure/tracks/www_real_logos_20261008/captures/
+          path: measure/archive/www_real_logos_20261008/captures/

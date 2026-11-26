@@ -49,7 +49,7 @@ const LEDGER_FILE_NAME = "verification-ledger.json";
 const LOG_ROOT = `measure/runs/${TRACK_ID}`;
 const P2_ROOT = `${LOG_ROOT}/p2`;
 const TECH_DEBT_PATH = resolve(ROOT, "measure/tech-debt.md");
-const PLAN_PATH = resolve(ROOT, "measure/tracks", TRACK_ID, "plan.md");
+const PLAN_PATH = resolve(ROOT, "measure/archive", TRACK_ID, "plan.md");
 const GUARD_TEST_PATH = resolve(ROOT, "tests/security-upgrade-version-guard.test.ts");
 const WORKSPACE_PATH = resolve(ROOT, "pnpm-workspace.yaml");
 const LOCKFILE_PATH = resolve(ROOT, "pnpm-lock.yaml");
@@ -920,7 +920,7 @@ describe("the predates-track verdict of the amendment", () => {
   it("fails a synthetic row whose source sits outside the run path", () => {
     const { row, context: local } = buildPredatesFixture({
       tests: ["one.test.ts"],
-      evidence: "source=measure/tracks/security_upgrade_20261026/notes.log tests=one.test.ts master_sha=1111111111111111111111111111111111111111",
+      evidence: "source=measure/archive/security_upgrade_20261026/notes.log tests=one.test.ts master_sha=1111111111111111111111111111111111111111",
     });
     const failures = checkPredatesRow(row, local);
     expect(hasReason(failures, "predates_source_outside_run_root")).toBe(true);

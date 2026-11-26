@@ -24,7 +24,7 @@ const RELEASE_CANDIDATE = join(
 );
 const APPROVAL_EVIDENCE = join(
   REPOSITORY_ROOT,
-  "measure/tracks/sales_advantage_golive_20260701/curriculum-approval.json",
+  "measure/archive/sales_advantage_golive_20260701/curriculum-approval.json",
 );
 const STATIC_SEED = join(
   REPOSITORY_ROOT,

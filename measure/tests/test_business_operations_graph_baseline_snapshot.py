@@ -17,7 +17,7 @@ from unittest import mock
 REPO_ROOT = Path(__file__).resolve().parents[2]
 FIXTURE_ROOT = (
     REPO_ROOT
-    / "measure/tracks/business_operations_graph_baseline_remediation_20260730/fixtures/v1"
+    / "measure/archive/business_operations_graph_baseline_remediation_20260730/fixtures/v1"
 )
 
 

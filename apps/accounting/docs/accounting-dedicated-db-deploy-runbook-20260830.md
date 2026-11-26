@@ -13,7 +13,7 @@ table relocation out of the main schema.
 Accounting runs on a dedicated database named `accounting` on the existing shared
 Cloud SQL instance `reading-advantage:asia-southeast1:cloud-sql`. Identity stays
 in Accounts; the dedicated database holds only Accounting product data. See
-`measure/tracks/accounting_dedicated_db_launch_20260830/db-topology-decision.md`.
+`measure/archive/accounting_dedicated_db_launch_20260830/db-topology-decision.md`.
 
 ## 1. Provision the database and roles
 

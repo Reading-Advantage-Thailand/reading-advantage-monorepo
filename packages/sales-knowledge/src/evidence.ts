@@ -55,7 +55,7 @@ export const SalesReleaseEvidenceManifestSchema = z
         approval: z
           .object({
             path: z.literal(
-              "measure/tracks/sales_advantage_golive_20260701/curriculum-approval.json",
+              "measure/archive/sales_advantage_golive_20260701/curriculum-approval.json",
             ),
             byteSha256: z.literal(APPROVAL_EVIDENCE_DIGEST),
             canonicalSha256: z.literal(APPROVAL_CANONICAL_SHA256),

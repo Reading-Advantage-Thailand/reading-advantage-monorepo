@@ -35,7 +35,7 @@ OPENROUTER_API_KEY='<provided securely>' \
 SALES_CURRICULUM_EXTERNAL_SHARING_APPROVED=advantage-pr-to-openrouter \
 pnpm --filter sales-advantage curriculum:generate-openrouter-draft -- \
   --source-root=/absolute/path/to/advantage-pr \
-  --output=measure/tracks/sales_advantage_golive_20260701/openrouter-curriculum-draft.json
+  --output=measure/archive/sales_advantage_golive_20260701/openrouter-curriculum-draft.json
 ```
 
 Sending the private source corpus requires explicit approval for OpenRouter.
@@ -46,7 +46,7 @@ stops before reading source files or creating an AI client.
 ## Human approval
 
 Review the pinned graph and complete
-`measure/tracks/sales_advantage_golive_20260701/curriculum-approval.md`. Then
+`measure/archive/sales_advantage_golive_20260701/curriculum-approval.md`. Then
 replace the pending values in the adjacent `curriculum-approval.json` with the
 real reviewer, UTC time, `decision: "approved"`, the exact manifest source
 object, four true checks, and substantive notes. Record that JSON file's SHA-256

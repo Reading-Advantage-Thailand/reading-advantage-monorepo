@@ -295,7 +295,7 @@ function trackLocalApprovalEvidencePath(
   evidenceRef: string,
 ): string {
   const designatedEvidenceRef =
-    "measure/tracks/sales_advantage_golive_20260701/curriculum-approval.json";
+    "measure/archive/sales_advantage_golive_20260701/curriculum-approval.json";
   if (
     evidenceRef !== designatedEvidenceRef ||
     normalize(evidenceRef) !== evidenceRef

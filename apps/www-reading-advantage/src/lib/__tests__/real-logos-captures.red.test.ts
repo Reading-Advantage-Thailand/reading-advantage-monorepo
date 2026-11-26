@@ -4,7 +4,7 @@
  * Track: www_real_logos_20261008.
  *
  * Asserts each named capture file exists under
- * measure/tracks/www_real_logos_20261008/captures/. Each file must be non-empty
+ * measure/archive/www_real_logos_20261008/captures/. Each file must be non-empty
  * and must start with the PNG magic 89 50 4E 47. No hash (repo policy).
  *
  * Intentionally RED while the files are absent. Green saves the PNGs.
@@ -19,7 +19,7 @@ const TEST_DIR = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(TEST_DIR, "../../../../..");
 const CAPTURES_DIR = join(
   REPO_ROOT,
-  "measure/tracks/www_real_logos_20261008/captures",
+  "measure/archive/www_real_logos_20261008/captures",
 );
 
 const PNG_MAGIC = Buffer.from([0x89, 0x50, 0x4e, 0x47]);

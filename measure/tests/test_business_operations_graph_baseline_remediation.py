@@ -21,7 +21,7 @@ from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-TRACK_DIR = REPO_ROOT / "measure/tracks/business_operations_graph_baseline_remediation_20260730"
+TRACK_DIR = REPO_ROOT / "measure/archive/business_operations_graph_baseline_remediation_20260730"
 FIXTURE_ROOT = TRACK_DIR / "fixtures/v1"
 PARENT_FIXTURE_ROOT = FIXTURE_ROOT / "parent-fail-artifacts-v1"
 PLAN_PATH = TRACK_DIR / "plan.md"
@@ -34,19 +34,19 @@ PARENT_MANIFEST_SHA256 = "15f3c61fbcea4ea13c777e4f80ff061de2fa007985ef38b77dd560
 FIXTURE_INDEX_SHA256 = "887f5975b5f876b08751cd3884bb39ac70678320abc9e187875ed84a10e2ea4f"
 PARENT_PINS = {
     "phase0-review-b-safety-20260730.json": {
-        "authoritative": "measure/tracks/small_company_admin_privileges_20260722/phase0-review-b-safety-20260730.json",
+        "authoritative": "measure/archive/small_company_admin_privileges_20260722/phase0-review-b-safety-20260730.json",
         "sha256": "5bfe10b18aaf650687a337f02a64dab35de378ef8ba333e4946af6e80143fc9f",
         "size": 9256,
         "kind": "independent-review-fail",
     },
     "phase0-graph-baseline-producer-evidence-20260722.md": {
-        "authoritative": "measure/tracks/small_company_admin_privileges_20260722/phase0-graph-baseline-producer-evidence-20260722.md",
+        "authoritative": "measure/archive/small_company_admin_privileges_20260722/phase0-graph-baseline-producer-evidence-20260722.md",
         "sha256": "6d3613787361d0747d6ed9f590583257d92ac15f6717fbd58d9a1bcc006181db",
         "size": 7206,
         "kind": "producer-evidence-fail",
     },
     "red-rereview-correctness-20260730.json": {
-        "authoritative": "measure/tracks/business_operations_graph_baseline_remediation_20260730/red-rereview-correctness-20260730.json",
+        "authoritative": "measure/archive/business_operations_graph_baseline_remediation_20260730/red-rereview-correctness-20260730.json",
         "sha256": "e64fdbd2f67145a18c8e0d821b39629ec750cb71eae78acde357d245ddf19d73",
         "size": 8665,
         "kind": "mid-red-rereview-fail",

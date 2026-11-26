@@ -54,7 +54,7 @@ function createReleaseRepository() {
   temporaryRoots.push(root);
   for (const path of [
     "apps/sales-advantage/scripts",
-    "measure/tracks/sales_advantage_golive_20260701",
+    "measure/archive/sales_advantage_golive_20260701",
     "packages/example",
   ]) {
     mkdirSync(join(root, path), { recursive: true });
@@ -67,7 +67,7 @@ function createReleaseRepository() {
     "pnpm-workspace.yaml",
     "turbo.json",
     "apps/sales-advantage/cloudbuild.yaml",
-    "measure/tracks/sales_advantage_golive_20260701/curriculum-approval.json",
+    "measure/archive/sales_advantage_golive_20260701/curriculum-approval.json",
     "packages/example/index.ts",
   ]) {
     writeFileSync(join(root, path), `committed:${path}\n`);
@@ -150,7 +150,7 @@ describe("Sales exact release source archive", () => {
       "apps/sales-advantage/cloudbuild.yaml",
       "apps/sales-advantage/scripts/create-sales-release-archive.sh",
       "apps/sales-advantage/scripts/release-source-manifest.mjs",
-      "measure/tracks/sales_advantage_golive_20260701/curriculum-approval.json",
+      "measure/archive/sales_advantage_golive_20260701/curriculum-approval.json",
       "packages/example/index.ts",
     ]));
     expect(manifestPaths).not.toContain(

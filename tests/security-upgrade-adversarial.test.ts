@@ -28,7 +28,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const GUARD_TEST_PATH = resolve(ROOT, "tests/security-upgrade-version-guard.test.ts");
 const LOCKFILE_PATH = resolve(ROOT, "pnpm-lock.yaml");
 const WORKSPACE_PATH = resolve(ROOT, "pnpm-workspace.yaml");
-const AUDIT_PATH = resolve(ROOT, "measure/tracks/security_upgrade_20261026/audit-2026-10-26.md");
+const AUDIT_PATH = resolve(ROOT, "measure/archive/security_upgrade_20261026/audit-2026-10-26.md");
 
 const PHASE_BASE_SHA = "24471e25ab76881b637e6caa36a15870a6894491";
 const GREEN_GATE_BASE_SHA = "a64616a4d0a71497cfcdedfee1d55d21146833b4";

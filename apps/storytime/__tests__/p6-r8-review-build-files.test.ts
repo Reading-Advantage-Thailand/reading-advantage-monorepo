@@ -279,7 +279,7 @@ function mustLeaveOutPaths(): string[] {
   return [
     "measure/index.md",
     "measure/tracks.md",
-    "measure/tracks/storytime_app_rebuild_20261025/plan.md",
+    "measure/archive/storytime_app_rebuild_20261025/plan.md",
     "docs/runbooks/storytime-deploy.md",
     "docs/primary-rpg-skin.md",
     ".git/HEAD",

@@ -4,7 +4,7 @@
  * Track: www_real_logos_20261008. Role: measure-adversarial-testing.
  *
  * These tests attack the Phase 2 capture set. They read the real PNG files under
- * measure/tracks/www_real_logos_20261008/captures/, the real favicon files, the real
+ * measure/archive/www_real_logos_20261008/captures/, the real favicon files, the real
  * capture spec, the real app source and the real plan. They change no production code.
  *
  * The attacks:
@@ -44,7 +44,7 @@ import { describe, expect, it } from "vitest";
 const TEST_DIR = dirname(fileURLToPath(import.meta.url));
 const APP_ROOT = join(TEST_DIR, "../../..");
 const REPO_ROOT = join(TEST_DIR, "../../../../..");
-const TRACK_DIR = join(REPO_ROOT, "measure/tracks/www_real_logos_20261008");
+const TRACK_DIR = join(REPO_ROOT, "measure/archive/www_real_logos_20261008");
 const CAPTURES_DIR = join(TRACK_DIR, "captures");
 const PLAN_PATH = join(TRACK_DIR, "plan.md");
 const RED_TEST_PATH = join(

@@ -547,7 +547,7 @@ describe("S2 adversarial round 3 - the release candidate resists tampering", () 
       status: "approved",
       reviewer: "adversary",
       reviewedAt: "2026-11-15T00:00:00.000Z",
-      evidenceRef: "measure/tracks/sales_advantage_golive_20260701/curriculum-approval.json",
+      evidenceRef: "measure/archive/sales_advantage_golive_20260701/curriculum-approval.json",
       evidenceSha256: "0".repeat(64),
       checks: { pedagogy: true, sourceTraceability: true, honestClaims: true, roleplayRubrics: true },
     };
@@ -558,7 +558,7 @@ describe("S2 adversarial round 3 - the release candidate resists tampering", () 
 
   it("the old golive approval cannot bless the re-pinned candidate", async () => {
     const evidenceRef =
-      "measure/tracks/sales_advantage_golive_20260701/curriculum-approval.json";
+      "measure/archive/sales_advantage_golive_20260701/curriculum-approval.json";
     const evidenceSha256 = createHash("sha256")
       .update(readFileSync(join(WORKSPACE_ROOT, evidenceRef)))
       .digest("hex");
