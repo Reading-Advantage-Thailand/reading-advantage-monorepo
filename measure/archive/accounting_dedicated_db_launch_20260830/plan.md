@@ -89,7 +89,7 @@ nothing because the `accounting-web` client is already registered._
     - [x] New `apps/accounting/docs/accounting-dedicated-db-deploy-runbook-20260830.md` covers provisioning, roles, secrets, candidate deploy, promotion, DNS, rollback, and smoke commands
     - [x] The runbook includes an export-and-import contingency for any non-production Accounting rows found in the main product database; production has none
     - [x] The runbook names the rollback anchor: shift traffic back to the previous serving revision
-- [b] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md) deferred:owner
+- [x] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md) deferred:owner not needed (PM 2026-11-26: shelved)
 
 ## Phase 2: Test
 
@@ -139,7 +139,7 @@ Red-phase commits contain ONLY the new test files and Measure document edits.
 - [x] Task: Confirm the Red phase
     - [x] Run each new suite and record the failing assertion counts here
     - [x] Commit the test files and this plan only
-- [b] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md) deferred:owner
+- [x] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md) deferred:owner not needed (PM 2026-11-26: shelved)
 
 ### Phase 2 Red execution record (2026-08-30)
 
@@ -340,11 +340,11 @@ provide the behavior.
 - The Red pipeline and verifier run exited 1 with three expected failures. Fifteen existing tests passed.
 - The Green focused run exited 0 with 18 tests. The full Accounting suite exited 0 with 33 files and 236 tests.
 - Accounting `check-types`, lint, YAML parsing, promotion shell syntax, and `git diff --check` each exited 0. Lint retained one unrelated warning.
-- [b] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) deferred:owner
+- [x] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) deferred:owner not needed (PM 2026-11-26: shelved)
 
 ## Phase 4: Generate Docs & Doctor
 
-- [b] Task: Provision the GCP resources deferred:owner
+- [x] Task: Provision the GCP resources deferred:owner not needed (PM 2026-11-26: shelved)
     - [x] Enable the required APIs in project `reading-advantage` — not needed (PM 2026-11-26)
     - [x] Create the `accounting` Artifact Registry repository in `asia-southeast1` — not needed (PM 2026-11-26)
     - [x] Create the `accounting-cloud-run` runtime service account and grant Secret Manager access plus `roles/cloudsql.client` — not needed (PM 2026-11-26)
@@ -353,13 +353,13 @@ provide the behavior.
     - [x] Provision `accounting_migration` and `accounting_runtime` from a privileged workstation and run the grants file — not needed (PM 2026-11-26)
     - [x] Create the nine `ACCOUNTING_*` secrets from the secrets contract (`ACCOUNTING_DIRECT_DATABASE_URL`, `ACCOUNTING_DATABASE_URL`, `ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET`, six `ACCOUNTING_STORAGE_*`), mapping the storage secrets to unprefixed `STORAGE_*` env vars in Cloud Run — not needed (PM 2026-11-26)
     - [x] Confirm the `accounting-web` OIDC client secret value matches the Accounts bootstrap registration — not needed (PM 2026-11-26)
-- [b] Task: Deploy the candidate and run candidate acceptance deferred:owner
+- [x] Task: Deploy the candidate and run candidate acceptance deferred:owner not needed (PM 2026-11-26: shelved)
     - [x] Submit `apps/accounting/cloudbuild.yaml` and wait for the IAM-gated first candidate or the no-traffic subsequent candidate — not needed (PM 2026-11-26)
     - [x] Run the unauthenticated, malformed-return, and preview-handoff cases against the candidate URL and capture the redirect chains — not needed (PM 2026-11-26)
     - [x] Complete a sign-in with an Accounting identity through the callback origin and confirm the session cookie — not needed (PM 2026-11-26)
     - [x] Confirm the forbidden case with a no-role identity — not needed (PM 2026-11-26)
     - [x] Write the acceptance note with `status: pass` and attach screenshots — not needed (PM 2026-11-26)
-- [b] Task: Promote, wire DNS, and run production smoke deferred:owner
+- [x] Task: Promote, wire DNS, and run production smoke deferred:owner not needed (PM 2026-11-26: shelved)
     - [x] Run `promote-accounting-candidate.sh` only after the acceptance note passes
     - [x] Create the domain mapping for `accounting.reading-advantage.com` and update the Squarespace DNS record
     - [x] Run the production smoke cases: 2xx home, 401 unauthenticated API, 307 malformed return, authenticated expense submission with evidence — not needed (PM 2026-11-26)
@@ -385,7 +385,7 @@ provide the behavior.
 - [x] Task: Retrospective — not needed (PM 2026-11-26)
     - [x] Add a lesson: a bounded product database follows the company-identity layout (own journal, own client, own roles, own secrets) on the shared instance; the main product client is never reused for a bounded product — not needed (PM 2026-11-26)
     - [x] Reference the existing tech-debt row for the shared cross-app public-URL helper; this track adds another per-app copy, not the shared package — not needed (PM 2026-11-26)
-- [b] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md) deferred:owner
+- [x] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md) deferred:owner not needed (PM 2026-11-26: shelved)
 
 ## Checkpoints
 

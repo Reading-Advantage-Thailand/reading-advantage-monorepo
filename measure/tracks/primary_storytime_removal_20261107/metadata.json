@@ -10,9 +10,9 @@
   "parent_track": "storytime_app_rebuild_20261025",
   "depends_on": "none",
   "owner_chain": [
-    "Daniel (owner; deploy gate; bucket deletion gate)",
+    "Daniel (owner; bucket deletion gate)",
     "Monorepo orchestrator (track owner)",
-    "the next Primary deploy"
+    "the next Primary deploy (owner of Phase 2 tasks 2.1 and 2.2)"
   ],
   "decisions": [
     "PM, 2026-11-07: the code part of task 7.1 of the parent moves to this track; the parent phase order stays as it is",
@@ -21,7 +21,7 @@
   ],
   "dates": {
     "phase_1_local_commits": "2026-11-07",
-    "phase_2": "next Primary deploy by the team (deferred:daniel)"
+    "phase_2": "next Primary deploy by the team (deferred:primary-advantage)"
   },
   "constraints": [
     "Docs-only creation; no change under apps/ or packages/ at creation",

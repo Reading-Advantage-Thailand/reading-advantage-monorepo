@@ -55,17 +55,17 @@ Do not start Phase 2 until the security gate is green.
   - [x] Adapter-boundary (T4): `MockProvider` exists at `packages/ai/src/providers/mock.ts`. Seed script uses `@reading-advantage/ai` adapter exclusively — no direct OpenRouter/Google SDK call.
   - [x] `AI_PROVIDER=mock` for dry runs: documented in seed script header comments.
   - **Both conditions met at HEAD.**
-- [b] Task: Measure — User Manual Verification 'Preconditions & reconciliation' — deferred:human-gated
+- [x] Task: Measure — User Manual Verification 'Preconditions & reconciliation' — deferred:human-gated not needed (PM 2026-11-26: shelved)
 
 ---
 
 ## Phase 1: Production curriculum seed + human approval
 
-- [b] superseded:not-used — the mock/draft database path was exploratory; the chosen release architecture seeds only the immutable deterministic graph after its release gate passes.
-- [b] superseded:not-used — OpenRouter generation was not approved or run, and it is not required for the reviewed deterministic candidate.
-  - [b] superseded:not-used — no AI-generated draft rows are part of the selected release path.
+- [x] superseded:not-used — the mock/draft database path was exploratory; the chosen release architecture seeds only the immutable deterministic graph after its release gate passes. not needed (PM 2026-11-26: shelved)
+- [x] superseded:not-used — OpenRouter generation was not approved or run, and it is not required for the reviewed deterministic candidate. not needed (PM 2026-11-26: shelved)
+  - [x] superseded:not-used — no AI-generated draft rows are part of the selected release path. not needed (PM 2026-11-26: shelved)
 - [x] Task: Human review — the project owner approved the exact deterministic graph (`ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717`), all eight scenarios/rubrics, source traceability, pedagogy, and claims. The graph-bound record identifies `Project owner`; its external reviewer-controlled trust anchor is `8b058a5b66631bbffe662a131eed5330bb0c12fa10134a096378e9a4c8bff404`.
-- [b] superseded:not-used — the admin draft-to-approved flip is replaced by fail-closed seeding of the exact graph only after manifest evidence and the external trust anchor match.
+- [x] superseded:not-used — the admin draft-to-approved flip is replaced by fail-closed seeding of the exact graph only after manifest evidence and the external trust anchor match. not needed (PM 2026-11-26: shelved)
 - [x] superseded:merged-into-human-review — production-curriculum manual verification is the completed exact-graph review and external trust-anchor step above.
 
 ---
@@ -142,9 +142,9 @@ Do not start Phase 2 until the security gate is green.
   - [x] All env vars documented: DB, auth, AI provider (openrouter/google/openai/mock), eval model overrides, chat model, storage (S3-compatible), Next.js
   - [x] Key name correction: storage adapter reads `STORAGE_ACCESS_KEY` / `STORAGE_SECRET_KEY` (not `_ACCESS_KEY_ID` / `_SECRET_ACCESS_KEY`)
 - [x] Task: Write `apps/sales-advantage/scripts/sales-smoke.sh` — post-deploy smoke (GET / → 200, GET /api/auth/session → 200, POST /api/trpc → 401 unauth)
-  - [b] Authenticated smoke — deferred:qa-credential-provisioning
-- [b] Task: Local production build smoke — `docker build -f apps/sales-advantage/Dockerfile .` succeeds — deferred:docker-unavailable
-- [b] Task: Measure — User Manual Verification 'Deploy infrastructure' — deferred:human-gated
+  - [x] Authenticated smoke — deferred:qa-credential-provisioning not needed (PM 2026-11-26: shelved)
+- [x] Task: Local production build smoke — `docker build -f apps/sales-advantage/Dockerfile .` succeeds — deferred:docker-unavailable not needed (PM 2026-11-26: shelved)
+- [x] Task: Measure — User Manual Verification 'Deploy infrastructure' — deferred:human-gated not needed (PM 2026-11-26: shelved)
 
 ---
 
@@ -169,16 +169,16 @@ Do not start Phase 2 until the security gate is green.
   - Historical rollout evidence in commit `20ec943033549f103d78be0fa39d5e264ec23cf0` shows an authenticated `SALES_ADMIN` dashboard.
   - `qa-browserevidence-20260719.md` records `SESSION_INVALID`. `review-2026-07-20.md` keeps `SALES_REP` browser QA open.
   - Manual QA may start only when a valid Accounts session yields authenticated `SALES_REP` from the Sales callback.
-- [b] Task: End-to-end QA pass (from `sales_advantage_mvp_20260622/plan.md` Phase 8) superseded:not-used — PM decision 2026-11-21 (Daniel asked: "Then what to do? Close? Archive?")
-  - [b] Auth: admin login → Accounts provisions rep → company SSO rep login — deferred:accounts-provisioned-sales-rep
-  - [b] Dashboard modules + progress; theory lesson mark-complete — deferred:valid-sales-rep-session
-  - [b] Roleplay: record → submit → evaluation displays; retry → best-attempt logic — deferred:valid-sales-rep-session
-  - [b] Quiz: submit → 70% threshold; Chat: Thai streaming response — deferred:valid-sales-rep-session
-  - [b] Admin: cohort overview and per-rep detail; verify the release-owner curriculum approval boundary rather than a local credential workflow — deferred:valid-sales-rep-session
-  - [b] i18n toggle EN↔TH; rate-limit: 11th submission/hour → 429 — deferred:valid-sales-rep-session
+- [x] Task: End-to-end QA pass (from `sales_advantage_mvp_20260622/plan.md` Phase 8) superseded:not-used — PM decision 2026-11-21 (Daniel asked: "Then what to do? Close? Archive?") not needed (PM 2026-11-26: shelved)
+  - [x] Auth: admin login → Accounts provisions rep → company SSO rep login — deferred:accounts-provisioned-sales-rep not needed (PM 2026-11-26: shelved)
+  - [x] Dashboard modules + progress; theory lesson mark-complete — deferred:valid-sales-rep-session not needed (PM 2026-11-26: shelved)
+  - [x] Roleplay: record → submit → evaluation displays; retry → best-attempt logic — deferred:valid-sales-rep-session not needed (PM 2026-11-26: shelved)
+  - [x] Quiz: submit → 70% threshold; Chat: Thai streaming response — deferred:valid-sales-rep-session not needed (PM 2026-11-26: shelved)
+  - [x] Admin: cohort overview and per-rep detail; verify the release-owner curriculum approval boundary rather than a local credential workflow — deferred:valid-sales-rep-session not needed (PM 2026-11-26: shelved)
+  - [x] i18n toggle EN↔TH; rate-limit: 11th submission/hour → 429 — deferred:valid-sales-rep-session not needed (PM 2026-11-26: shelved)
 - [x] Task: Verify audio storage is private (signed URL only) and no orphaned keys on failure
       Evidence (2026-08-14, commit `7330697b`): package-local Vitest passed 2 files and 12 tests with one worker. The route test asserts `public: false` and no public URL. It proves null persistence after upload failure and exact-key deletion after a later failure. This is automated audio evidence only.
-- [b] Task: Measure — User Manual Verification 'Deploy + QA' — deferred:human-gated
+- [x] Task: Measure — User Manual Verification 'Deploy + QA' — deferred:human-gated not needed (PM 2026-11-26: shelved)
 
 ---
 
@@ -189,7 +189,7 @@ Do not start Phase 2 until the security gate is green.
 > complete merely because that successor is active.
 
 - [x] Task: Update `measure/deployment-status.md` — sales-advantage now deployed (service, project, deploy source)
-- [b] Task: Update `measure/tech-debt.md` — go-live shortcuts (audio retention policy, no auto CI/CD trigger, free-tier eval-model reliability + fallback monitoring) — deferred:phase3-qa-complete
-- [b] Task: Update `measure/lessons-learned.md` if any reusable lesson emerged — deferred:phase3-qa-complete
-- [b] Task: Archive this track and the reconciled `sales_advantage_mvp_20260622`; update `measure/tracks.md` rows to `[x]` — deferred:phase3-qa-and-human-closeout
-- [b] Task: Measure — User Manual Verification 'Closeout' — deferred:human-gated
+- [x] Task: Update `measure/tech-debt.md` — go-live shortcuts (audio retention policy, no auto CI/CD trigger, free-tier eval-model reliability + fallback monitoring) — deferred:phase3-qa-complete not needed (PM 2026-11-26: shelved)
+- [x] Task: Update `measure/lessons-learned.md` if any reusable lesson emerged — deferred:phase3-qa-complete not needed (PM 2026-11-26: shelved)
+- [x] Task: Archive this track and the reconciled `sales_advantage_mvp_20260622`; update `measure/tracks.md` rows to `[x]` — deferred:phase3-qa-and-human-closeout not needed (PM 2026-11-26: shelved)
+- [x] Task: Measure — User Manual Verification 'Closeout' — deferred:human-gated not needed (PM 2026-11-26: shelved)

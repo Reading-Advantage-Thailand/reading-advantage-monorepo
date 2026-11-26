@@ -231,7 +231,7 @@ The final runs set `pnpm_config_verify_deps_before_run=false` because pnpm depen
 
 ## Phase 4: Generate Docs & Doctor
 
-- [b] Task: Verify the candidate revisions and complete the owner gates deferred:owner
+- [x] Task: Verify the candidate revisions and complete the owner gates deferred:owner not needed (PM 2026-11-26: shelved)
     - [x] Deploy the Sales candidate tag with no traffic shift
     - [x] Deploy the Marketing candidate with no traffic shift, wired with both preview-origin URL forms
     - [x] Run the Sales and Marketing candidate-hop unauthenticated and start-route cases
@@ -374,7 +374,7 @@ The final runs set `pnpm_config_verify_deps_before_run=false` because pnpm depen
 - [x] Task: Retrospective
      - [x] Add a lesson: SSO redirect helpers must be ported to every consumer at repair time, never left as per-app copies
      - [x] Open a `tech-debt.md` row for a shared cross-app redirect helper package, owner daniebo
-- [b] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md) deferred:owner
+- [x] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md) deferred:owner not needed (PM 2026-11-26: shelved)
 
 ## Checkpoints
 

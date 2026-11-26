@@ -44,15 +44,15 @@ _Blast radius (grep; the graph has no call edges for these): `aiClientToEvaluate
     - [x] Owner decision 2026-10-15: main `qwen/qwen3.8-omni-flash`, backup `google/gemini-3.8-flash` with low reasoning effort (16 of 16 correct, $0.0050–0.0064 for each score)
     - [x] Red tests, then `reasoningEffort` on the media call (`packages/ai`: OpenRouter `reasoning.effort`) and the new backup default in the evaluator; ai and domain `tsc` and eslint clean
     - [x] PR review: Thai house voice and 7 claim clips; Gemini 16 of 16, Qwen timed out on most Thai clips; owner decision 2026-10-16: main `google/gemini-3.8-flash`, backup `qwen/qwen3.8-omni-flash`, low reasoning on both calls; the adapter names a body-read time-out
-- [b] Task: Deploy a no-traffic candidate — deferred:after-primary-cutover (owner 2026-10-15: the candidate carries 61 Sales commits since the 2026-07-19 deploy and 30 migrations on the Sales DB, which shares the Cloud SQL instance with Primary; run after the cutover, last date 2026-10-20)
+- [x] Task: Deploy a no-traffic candidate — deferred:after-primary-cutover (owner 2026-10-15: the candidate carries 61 Sales commits since the 2026-07-19 deploy and 30 migrations on the Sales DB, which shares the Cloud SQL instance with Primary; run after the cutover, last date 2026-10-20) not needed (PM 2026-11-26: shelved)
     - [x] Add a `google/gemini-3.8-flash` version to `SALES_AUDIO_EVAL_MODEL` and create `SALES_AUDIO_EVAL_FALLBACK_MODEL` (`qwen/qwen3.8-omni-flash`) with the runtime service account's access (owner OK given 2026-10-15 for after the cutover) — not needed (PM 2026-11-26)
     - [x] Run the full Sales release pipeline (`cloudbuild.yaml`: curriculum backup, migrations, curriculum verify, `candidate` tag, no traffic); promotion only with `scripts/promote-sales-candidate.sh` after the acceptance note says `status: pass` — not needed (PM 2026-11-26)
     - [x] Update `measure/deployment-status.md` — not needed (PM 2026-11-26)
 - [x] Task: Generate docs and doctor
     - [x] Run `measure/generate.sh` and `measure/doctor.sh` — generate: no route or package change from this track (diff only the revision line and one master Primary route), so nothing committed; doctor: 4 failures that exist on master (A13 stale `agents_md_audit_science_advantage_20260603`; missing `measure/automation-supervisor.py`; `[ ]` markers in 55 other plans; architecture manifest of 2026-09-08 with 598 later source commits — not refreshed, hashing policy); this plan passes the marker guard
     - [x] Add a dated note to `measure/tech-stack.md`: OpenRouter audio goes through chat completions with `input_audio`
-    - [b] Add a lessons-learned entry: the `@ai-sdk/openai` default (Responses) rejects audio, and SDK-level mocks hid it; test media calls against the live provider once — deferred:lessons-learned-over-50-line-cap (57 lines on master; add at track closeout after a prune)
-- [b] Task: Measure - User Manual Verification 'Phase S1: Roleplay scoring works in Thai and English' (Protocol in workflow.md) — deferred:owner-browser-recording
+    - [x] Add a lessons-learned entry: the `@ai-sdk/openai` default (Responses) rejects audio, and SDK-level mocks hid it; test media calls against the live provider once — deferred:lessons-learned-over-50-line-cap (57 lines on master; add at track closeout after a prune) not needed (PM 2026-11-26: shelved)
+- [x] Task: Measure - User Manual Verification 'Phase S1: Roleplay scoring works in Thai and English' (Protocol in workflow.md) — deferred:owner-browser-recording not needed (PM 2026-11-26: shelved)
     - [x] The owner records one Thai and one English roleplay in a real browser on the candidate; each gets a score, feedback, and a transcript excerpt in its language — not needed (PM 2026-11-26)
     - [x] Promote the candidate to 100% only after the owner says yes — not needed (PM 2026-11-26)
 
@@ -112,7 +112,7 @@ _Known red gates until S9/S10 (approval pins, not changed on purpose): `scripts/
     - Measure shape: Red first. Write the Red tests for the guard changes: `publicProductDates` for 30 November 2026, the ban on printed Storytime books in 2026, `hasConflictingTierClaim` and the curve fixture, the one allowed Cambridge Young Learners form with its logo ban and its six banned words (spec.md criterion 5 amendment), and the two new mastery bans. Run the Red set and commit it alone. Then Green: seed the text and the guards, refresh the candidate, and record the text check.
     - Scheduling (PM 2026-11-24): runs in a leftover slot after the A-52 Phase 8 round; Storytime roles go first.
     - The known red approval-pin gates stay red on purpose until S9/S10: `scripts/sales-curriculum-production.test.ts`, `scripts/sales-curriculum-reconciliation.test.ts`, `scripts/production-readiness.test.ts`, and 8 tests in `packages/sales-knowledge` (see the S2 heading note).
-- [b] Task: Measure - User Manual Verification 'Phase S2: The curriculum uses the new PR source set' (Protocol in workflow.md) — deferred:owner-review-with-s10-approval
+- [x] Task: Measure - User Manual Verification 'Phase S2: The curriculum uses the new PR source set' (Protocol in workflow.md) — deferred:owner-review-with-s10-approval not needed (PM 2026-11-26: shelved)
     - [x] Daniel sees the candidate source commit (now `7ed5a4b`, tone pass) and the 20 documents in the approval file at S10 — not needed (PM 2026-11-26)
 
 ## Phase S3: General selling modules are correct
@@ -127,7 +127,7 @@ _Story ref: spec.md#story-s3-general-selling-modules-are-correct_
     - [x] Rubric rows: 3–5 criteria, weights sum to 1; each core roleplay has a Thai-first parent scenario and a school scenario
 - [x] Task: Generate docs and doctor
     - [x] Same run as S2
-- [b] Task: Measure - User Manual Verification 'Phase S3: General selling modules are correct' (Protocol in workflow.md) — deferred:owner-thai-check
+- [x] Task: Measure - User Manual Verification 'Phase S3: General selling modules are correct' (Protocol in workflow.md) — deferred:owner-thai-check not needed (PM 2026-11-26: shelved)
     - [x] PR claims review of group 1 (S3 + S4): no hard violation; 6 fixes in `19ea64ba1`
     - [x] Daniel checks the Thai lines (`review/thai-lines-for-daniel.md`) — not needed (PM 2026-11-26)
 
@@ -142,7 +142,7 @@ _Story ref: spec.md#story-s4-product-knowledge-matches-strategy-v18_
     - [x] "One Catalogue, Two Channels", "Honest Claims: The Rules for Every Conversation" (the 9 claims conditions), a two-scenario roleplay, and a quiz
 - [x] Task: Generate docs and doctor
     - [x] Same run as S2
-- [b] Task: Measure - User Manual Verification 'Phase S4: Product knowledge matches strategy v1.8' (Protocol in workflow.md) — deferred:owner-thai-check
+- [x] Task: Measure - User Manual Verification 'Phase S4: Product knowledge matches strategy v1.8' (Protocol in workflow.md) — deferred:owner-thai-check not needed (PM 2026-11-26: shelved)
     - [x] PR claims review of group 1 (S3 + S4): no hard violation; 6 fixes in `19ea64ba1`
     - [x] Daniel checks the Thai lines (`review/thai-lines-for-daniel.md`) — not needed (PM 2026-11-26)
 
@@ -159,7 +159,7 @@ _Story ref: spec.md#story-s5-tutor-family-sale-thai-first-with-english_
     - [x] 16 synthetic answers (R1–R5, RR1–RR3, Thai and English) and 2 weak answers; found the scorer defect and the unsafe backup model (see S1 tasks below the S1 fix)
 - [x] Task: Generate docs and doctor
     - [x] Same run as S2
-- [b] Task: Measure - User Manual Verification 'Phase S5: Tutor family sale (Thai first, with English)' (Protocol in workflow.md) — deferred:owner-thai-check
+- [x] Task: Measure - User Manual Verification 'Phase S5: Tutor family sale (Thai first, with English)' (Protocol in workflow.md) — deferred:owner-thai-check not needed (PM 2026-11-26: shelved)
     - [x] PR claims review of group 2 (S5 + S6): no violation; contacts added in `19ea64ba1`
     - [x] Daniel checks the Thai lines (`review/thai-lines-for-daniel.md`) — not needed (PM 2026-11-26)
 
@@ -174,7 +174,7 @@ _Q-SV-16 check done by PR on 2026-10-15 (continuous rate, base 0.5; see spec.md,
     - [x] 3 theory lessons, roleplays RR1–RR3 with the kit weights, quiz; the recruitment claims criterion fails a promise of income and an unlabelled baht figure
 - [x] Task: Generate docs and doctor
     - [x] Same run as S2
-- [b] Task: Measure - User Manual Verification 'Phase S6: Tutor recruitment' (Protocol in workflow.md) — deferred:owner-thai-check
+- [x] Task: Measure - User Manual Verification 'Phase S6: Tutor recruitment' (Protocol in workflow.md) — deferred:owner-thai-check not needed (PM 2026-11-26: shelved)
     - [x] PR claims review of group 2 (S5 + S6): no violation; contacts added in `19ea64ba1`
     - [x] Daniel checks the Thai lines (`review/thai-lines-for-daniel.md`) — not needed (PM 2026-11-26)
 
@@ -187,7 +187,7 @@ _Story ref: spec.md#story-s7-school-sale-with-primary-advantage-and-blended-lear
     - [x] 5 theory lessons (rules, demos, 8 objections, total cost of English, end-of-semester review), 3 scenario roleplays with the scenario checklists, quiz
 - [x] Task: Generate docs and doctor
     - [x] Same run as S2
-- [b] Task: Measure - User Manual Verification 'Phase S7: School sale with Primary Advantage and Blended Learning' (Protocol in workflow.md) — deferred:owner-thai-check
+- [x] Task: Measure - User Manual Verification 'Phase S7: School sale with Primary Advantage and Blended Learning' (Protocol in workflow.md) — deferred:owner-thai-check not needed (PM 2026-11-26: shelved)
     - [x] PR claims review of group 3 (S7): 1 hard finding (B2) and 5 fixes in `048090037`; PR source fixes pinned at `c211d1c` (`c3d48dd17`)
     - [x] Daniel accepts the school lessons (no Thai text in S7) — not needed (PM 2026-11-26)
 
@@ -195,48 +195,48 @@ _Story ref: spec.md#story-s7-school-sale-with-primary-advantage-and-blended-lear
 _Story ref: spec.md#story-s8-role-paths-in-one-course_
 _Blast radius (grep): `deriveSalesLearningAccess` (callers: `packages/domain/src/sales/learning-path.ts`; test: `packages/domain/src/__tests__/sales-progression.test.ts`)._
 
-- [b] Task: Contract — an optional module prerequisite (core vs branch) in the seed data and the progression input — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Test — red tests: both branches unlock after the core; a linear course without branch data does not change — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Implement — `packages/domain/src/sales/progression.ts`, the seed, and the dashboard labels (EN/TH messages) — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Measure - User Manual Verification 'Phase S8: Role paths in one course' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
+- [x] Task: Contract — an optional module prerequisite (core vs branch) in the seed data and the progression input — deferred:start-gate-pr-source-set-and-freeze-end not needed (PM 2026-11-26: shelved)
+- [x] Task: Test — red tests: both branches unlock after the core; a linear course without branch data does not change — deferred:start-gate-pr-source-set-and-freeze-end not needed (PM 2026-11-26: shelved)
+- [x] Task: Implement — `packages/domain/src/sales/progression.ts`, the seed, and the dashboard labels (EN/TH messages) — deferred:start-gate-pr-source-set-and-freeze-end not needed (PM 2026-11-26: shelved)
+- [x] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end not needed (PM 2026-11-26: shelved)
+- [x] Task: Measure - User Manual Verification 'Phase S8: Role paths in one course' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end not needed (PM 2026-11-26: shelved)
     - [x] Until the CONTRACTOR role ships, Daniel and Phikul test the Family branch with their own accounts — not needed (PM 2026-11-26)
 
 ## Phase S9: Mastery bindings follow the new course
 _Story ref: spec.md#story-s9-mastery-bindings-follow-the-new-course_
 
-- [b] Task: Contract — confirm with `sales_mastery_consumer_20260810` which binding fields change (module slug, lesson order, rubric refs) — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Test — red run of the sales-knowledge tests against the new seed — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Implement — regenerate the binding release with `packages/sales-knowledge/src/generator.ts`; change only the files the existing contract requires — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Measure - User Manual Verification 'Phase S9: Mastery bindings follow the new course' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
+- [x] Task: Contract — confirm with `sales_mastery_consumer_20260810` which binding fields change (module slug, lesson order, rubric refs) — deferred:start-gate-pr-source-set-and-freeze-end not needed (PM 2026-11-26: shelved)
+- [x] Task: Test — red run of the sales-knowledge tests against the new seed — deferred:start-gate-pr-source-set-and-freeze-end not needed (PM 2026-11-26: shelved)
+- [x] Task: Implement — regenerate the binding release with `packages/sales-knowledge/src/generator.ts`; change only the files the existing contract requires — deferred:start-gate-pr-source-set-and-freeze-end not needed (PM 2026-11-26: shelved)
+- [x] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end not needed (PM 2026-11-26: shelved)
+- [x] Task: Measure - User Manual Verification 'Phase S9: Mastery bindings follow the new course' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end not needed (PM 2026-11-26: shelved)
 
 ## Phase S10: Release the new curriculum
 _Story ref: spec.md#story-s10-release-the-new-curriculum_
 
-- [b] Task: PR claims review of the drafted lessons; fix each finding — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Daniel checks all Thai text — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Daniel completes `curriculum-approval.json` and puts its SHA-256 in Secret Manager (existing process) — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: On the seed day, check each "fact that expires" (PR scope doc) against advantage-pr; correct each changed fact before the seed — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Run `seed:production-curriculum` and `verify:production-curriculum`; deploy through the existing Sales release path — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Update `measure/deployment-status.md`, `measure/tracks.md`, and close the predecessor rows that this track replaces — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Measure - User Manual Verification 'Phase S10: Release the new curriculum' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Tutor access gate — one tutor account with the CONTRACTOR role signs in and opens the Family branch before the branch is announced to tutors — deferred:contractor-role-track-monorepo-after-cutover
+- [x] Task: PR claims review of the drafted lessons; fix each finding — deferred:start-gate-pr-source-set-and-freeze-end not needed (PM 2026-11-26: shelved)
+- [x] Task: Daniel checks all Thai text — deferred:start-gate-pr-source-set-and-freeze-end not needed (PM 2026-11-26: shelved)
+- [x] Task: Daniel completes `curriculum-approval.json` and puts its SHA-256 in Secret Manager (existing process) — deferred:start-gate-pr-source-set-and-freeze-end not needed (PM 2026-11-26: shelved)
+- [x] Task: On the seed day, check each "fact that expires" (PR scope doc) against advantage-pr; correct each changed fact before the seed — deferred:start-gate-pr-source-set-and-freeze-end not needed (PM 2026-11-26: shelved)
+- [x] Task: Run `seed:production-curriculum` and `verify:production-curriculum`; deploy through the existing Sales release path — deferred:start-gate-pr-source-set-and-freeze-end not needed (PM 2026-11-26: shelved)
+- [x] Task: Update `measure/deployment-status.md`, `measure/tracks.md`, and close the predecessor rows that this track replaces — deferred:start-gate-pr-source-set-and-freeze-end not needed (PM 2026-11-26: shelved)
+- [x] Task: Measure - User Manual Verification 'Phase S10: Release the new curriculum' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end not needed (PM 2026-11-26: shelved)
+- [x] Task: Tutor access gate — one tutor account with the CONTRACTOR role signs in and opens the Family branch before the branch is announced to tutors — deferred:contractor-role-track-monorepo-after-cutover not needed (PM 2026-11-26: shelved)
 
 ## Phase S11: Lessons show supporting media
 _Story ref: spec.md#story-s11-lessons-show-supporting-media_
 _Start gate: the feature freeze has ended (app code); PR delivers the files after the text source set (media references)._
 _Blast radius (grep): `LessonContent` (1 caller: `apps/sales-advantage/app/[locale]/lesson/[id]/page.tsx`); the `sales.lesson` query in `packages/api/src/routers/sales.ts`._
 
-- [b] Task: Contract — media keys and file rules — deferred:start-gate-freeze-end
+- [x] Task: Contract — media keys and file rules — deferred:start-gate-freeze-end not needed (PM 2026-11-26: shelved)
     - [x] `media:` key form `training-media/v<n>/<th|en>/<file>`; allowed types `.png`, `.pdf` (videos are YouTube links, Daniel 2026-10-16) — not needed (PM 2026-11-26)
     - [x] A domain function changes each `media:` key in lesson Markdown to a URL through an injected signer; the app passes `storage.getSignedUrl` (1 hour), so `packages/domain` gets no storage dependency — not needed (PM 2026-11-26)
-- [b] Task: Test — red tests — deferred:start-gate-freeze-end
+- [x] Task: Test — red tests — deferred:start-gate-freeze-end not needed (PM 2026-11-26: shelved)
     - [x] Domain: keys become signed URLs; other URLs do not change; a bad key or type throws — not needed (PM 2026-11-26)
     - [x] `LessonContent`: `.png` → `<img>` with alt text; a `.pdf` link and a YouTube link → new tab; raw HTML stays dropped — not needed (PM 2026-11-26)
     - [x] Seed gate: a missing object (`storage.exists`) stops `seed:production-curriculum` — not needed (PM 2026-11-26)
-- [b] Task: Implement — resolver, `LessonContent` components, the lesson query, the seed check; JSDoc — deferred:start-gate-freeze-end
-- [b] Task: Media references — deferred:pr-media-files
+- [x] Task: Implement — resolver, `LessonContent` components, the lesson query, the seed check; JSDoc — deferred:start-gate-freeze-end not needed (PM 2026-11-26: shelved)
+- [x] Task: Media references — deferred:pr-media-files not needed (PM 2026-11-26: shelved)
     - [x] Upload the PR infographics and decks to the Sales bucket at release, with the owner's OK; put the keys and the Thai and English alt text in the lessons — not needed (PM 2026-11-26)
     - [x] Put the YouTube links of the S5, S6, and S7 videos (TH and EN) in the lessons (M5.1, M6.2, M7.1: one "Video —" line after the TL;DR)
     - [x] The S4 video and the new videos of the video list: each link goes in its lesson when PR sends it — 11 Thai links and the one-catalogue-two-channels English link are in (advantage-pr 1a1374a, candidate graph 7e7dc5b6); 10 English links come after Daniel uploads them on 2026-10-18 — not needed (PM 2026-11-26)
@@ -253,6 +253,6 @@ _Blast radius (grep): `LessonContent` (1 caller: `apps/sales-advantage/app/[loca
     - [x] R4 moves to the Reading Advantage Origins 2 → 3.1 case with PR's playbook v1.2 (`b3b9cae`; the Origins 3.2 case ends about 2026-11-08)
     - [x] Draft the screenshot → lesson list from PR's starting list and the 9 screenshot rules (spec.md S11), with each crop marked; PR checks it — not needed (PM 2026-11-26)
     - [x] Upload the checked (and cropped) screenshots under `training-media/v1/th/`; put their keys and Thai and English alt text in the lessons — not needed (PM 2026-11-26)
-- [b] Task: Generate docs and doctor — deferred:start-gate-freeze-end
-- [b] Task: Measure - User Manual Verification 'Phase S11: Lessons show supporting media' (Protocol in workflow.md) — deferred:start-gate-freeze-end
+- [x] Task: Generate docs and doctor — deferred:start-gate-freeze-end not needed (PM 2026-11-26: shelved)
+- [x] Task: Measure - User Manual Verification 'Phase S11: Lessons show supporting media' (Protocol in workflow.md) — deferred:start-gate-freeze-end not needed (PM 2026-11-26: shelved)
     - [x] On an iPhone and on a desktop: one YouTube video link opens, one infographic shows, one PDF opens — not needed (PM 2026-11-26)

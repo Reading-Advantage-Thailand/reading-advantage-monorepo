@@ -6,7 +6,7 @@
 - [x] Task: Implement the minimum domain/backend contracts and persistence behind the Red tests. Accepted — `phase1-persistence-acceptance-20260811.md` (commit `c5ecf18`).
 - [x] Task: Add behavior-level contract tests and adapters for the Company Identity attestor, authorized private-evidence reads, and scope/digest-bound durable outbox projector required by the historical private-evidence MVP. Accepted — source commit `48470311` (Git note evidence); maintenance commits `da3ce21` (audit-boundary repair) and `e27090fa` (H-1 recheck). Suites at acceptance: focused 115/115, backend 318/318, storage 74/74, DB 31/31; PostgreSQL 16 migration-upgrade integration passed; Reviews A and B both ACCEPT. Detailed evidence lives in the phase-1 acceptance/maintenance notes in this track directory.
 
-- [b] Task: Add live CRM and Tutor owner contracts after their source owners accept the source-native contracts. — deferred:crm-tutor-source-owners (owner confirmed 2026-08-20: no live imports for now; owner-attested historical packets are sufficient)
+- [x] Task: Add live CRM and Tutor owner contracts after their source owners accept the source-native contracts. — deferred:crm-tutor-source-owners (owner confirmed 2026-08-20: no live imports for now; owner-attested historical packets are sufficient) not needed (PM 2026-11-26: shelved)
 
 ## Phase 2 — controlled operational imports
 
@@ -73,7 +73,7 @@
   - Focused Finance regression tests passed 23/23. Backend typecheck, focused lint, Prettier, scoped diff check, and backend build passed.
   - `measure/doctor.sh` remains red only for deprecated `[ ]` markers in unrelated active plans. No phase acceptance is claimed.
 
-- [b] Task: Pilot one reconciled month and one billing packet through owner-attested private-evidence packets. — deferred:finance-owner-data (owner will supply the pilot month and packet after production deployment; owner is remote, 2026-08-20)
+- [x] Task: Pilot one reconciled month and one billing packet through owner-attested private-evidence packets. — deferred:finance-owner-data (owner will supply the pilot month and packet after production deployment; owner is remote, 2026-08-20) not needed (PM 2026-11-26: shelved)
 
   The pilot must prove authorization, audit, rollback, replay, and conflict behavior.
   An authorized owner must supply the pilot month and packet.
@@ -237,5 +237,5 @@
 
 ## Phase 3 — close and accountant exchange
 
-- [b] Task: Implement close controls and accountant packs after the required written policy decisions and pilot acceptance. — deferred:accountant-owner-decisions (owner will obtain the policy list from the accountant, 2026-08-20)
-- [b] Task: Release Finance Operations after Company Admin access and all integration reviews pass. — deferred:company-admin-owner (owner confirmed 2026-08-20: Company Admin access is SSO-based; SSO integration is required before release)
+- [x] Task: Implement close controls and accountant packs after the required written policy decisions and pilot acceptance. — deferred:accountant-owner-decisions (owner will obtain the policy list from the accountant, 2026-08-20) not needed (PM 2026-11-26: shelved)
+- [x] Task: Release Finance Operations after Company Admin access and all integration reviews pass. — deferred:company-admin-owner (owner confirmed 2026-08-20: Company Admin access is SSO-based; SSO integration is required before release) not needed (PM 2026-11-26: shelved)
