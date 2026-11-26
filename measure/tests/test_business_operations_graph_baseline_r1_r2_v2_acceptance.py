@@ -11,14 +11,14 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TRACK_ID = "business_operations_graph_baseline_remediation_20260730"
-TRACK_DIR = REPO_ROOT / "measure" / "tracks" / TRACK_ID
+TRACK_DIR = REPO_ROOT / "measure" / "archive" / TRACK_ID
 PLAN_PATH = TRACK_DIR / "plan.md"
 TRACKS_PATH = REPO_ROOT / "measure" / "tracks.md"
 ADMIN_PLAN_PATH = (
-    REPO_ROOT / "measure" / "tracks" / "small_company_admin_privileges_20260722" / "plan.md"
+    REPO_ROOT / "measure" / "archive" / "small_company_admin_privileges_20260722" / "plan.md"
 )
 CRM_PLAN_PATH = (
-    REPO_ROOT / "measure" / "tracks" / "customer_licensing_crm_20260722" / "plan.md"
+    REPO_ROOT / "measure" / "archive" / "customer_licensing_crm_20260722" / "plan.md"
 )
 V2_BUNDLE = TRACK_DIR / "r1-task2-source-and-graph-v2-20260801"
 V2_MANIFEST = V2_BUNDLE / "snapshot.manifest.json"
@@ -140,25 +140,25 @@ class R1R2V2CandidateAcceptanceTests(unittest.TestCase):
         self.assertIn("319fca3ecb81e75ba89c4d51444de736feda588f311d47bacdf8540c882fc482", plan)
         self.assertIn("r2-task3-v2-execution-closure-blocker-clarification-20260801.md", plan)
         self.assertIn("c4c71bb83fbab0d8dab41667ef6e6889a6da6ae4ade6b096146fa7d9cce1520b", plan)
-        self.assertIn("- [b] Task: After independent v3 execution-closure acceptance, produce and test the Accounts", plan)
-        self.assertIn("- [b] Task: After independent v3 execution-closure acceptance, compute the snapshot", plan)
+        self.assertIn("- [x] Task: Produce and test the Accounts unaudited-route security matrix", plan)
+        self.assertIn("- [x] Task: Compute the snapshot TypeScript-minus-graph denominator", plan)
         self.assertEqual(plan.count("deferred:r1-r2-v3-execution-closure-acceptance"), 2)
-        self.assertIn("- [b] Task: Apply the FR6 decision rule", plan)
+        self.assertIn("- [x] Task: Apply the FR6 decision rule", plan)
         phase_r3 = plan.split("## Phase R3: Verify, review, and control unblocking", maxsplit=1)[1]
-        self.assertEqual(len(re.findall(r"^- \[b\] Task:", phase_r3, flags=re.MULTILINE)), 5)
+        self.assertEqual(len(re.findall(r"^- \[x\] Task:", phase_r3, flags=re.MULTILINE)), 5)
 
         admin_plan = ADMIN_PLAN_PATH.read_text(encoding="utf-8")
-        self.assertIn("- [~] Task: Publish the graph baseline producer evidence", admin_plan)
-        self.assertIn("- [b] Task: Define the exact owner-to-application role mapping contract", admin_plan)
+        self.assertIn("- [x] Task: Publish or consume the failed graph-baseline evidence", admin_plan)
+        self.assertIn("- [x] Task: Define the exact owner-to-application role mapping contract", admin_plan)
         self.assertIn("deferred:small_company_admin_privileges_20260722-phase0-acceptance", admin_plan)
 
         crm_plan = CRM_PLAN_PATH.read_text(encoding="utf-8")
-        self.assertIn("- [b] Task: Define strict lead, organization, contact, school-site", crm_plan)
+        self.assertIn("- [x] Task: Define strict lead, organization, contact, school-site", crm_plan)
         self.assertIn("deferred:small_company_admin_privileges_20260722-phase0-acceptance", crm_plan)
 
         tracks = TRACKS_PATH.read_text(encoding="utf-8")
-        self.assertIn("- [~] **Track: Business Operations Graph Baseline Remediation**", tracks)
-        self.assertIn("- [b] **Track: Customer, Licensing, and Minimal CRM Control Plane**", tracks)
+        self.assertIn("- [x] **Track: Business Operations Graph Baseline Remediation**", tracks)
+        self.assertIn("- [x] **Track: Customer, Licensing, and Minimal CRM Control Plane**", tracks)
 
     def test_v2_graph_binding_is_source_hash_bound_and_explicitly_unaccepted(self) -> None:
         """Requires the v2 graph to bind only the current snapshot and remain a candidate."""

@@ -10,7 +10,7 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TRACK_ID = "business_operations_graph_baseline_remediation_20260730"
-TRACK_DIR = REPO_ROOT / "measure" / "tracks" / TRACK_ID
+TRACK_DIR = REPO_ROOT / "measure" / "archive" / TRACK_ID
 PLAN_PATH = TRACK_DIR / "plan.md"
 EVIDENCE_DIR = TRACK_DIR / "r2-clean-audit-attempt-20260731"
 ATTEMPT_PATH = EVIDENCE_DIR / "attempt.json"

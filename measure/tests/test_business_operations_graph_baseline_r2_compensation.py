@@ -16,7 +16,7 @@ from measure.business_operations_graph_baseline_compensation import (
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TRACK_ID = "business_operations_graph_baseline_remediation_20260730"
-TRACK_DIR = REPO_ROOT / "measure" / "tracks" / TRACK_ID
+TRACK_DIR = REPO_ROOT / "measure" / "archive" / TRACK_ID
 PLAN_PATH = TRACK_DIR / "plan.md"
 EVIDENCE_PATH = TRACK_DIR / "r2-task2-compensation-denominator-20260731.json"
 FIXTURES_PATH = TRACK_DIR / "r2-task2-adversarial-fixtures-v1.json"
@@ -43,7 +43,7 @@ class R2Task2CompensationDenominatorTests(unittest.TestCase):
     def test_plan_marks_task_two_in_progress_with_evidence_scope(self) -> None:
         """Pins the implementation-in-progress marker and evidence scope."""
         plan = PLAN_PATH.read_text(encoding="utf-8")
-        self.assertIn("- [~] Task: If the clean branch is unavailable", plan)
+        self.assertIn("- [x] Task: If the clean branch is unavailable", plan)
         self.assertIn("measure/business_operations_graph_baseline_compensation.py", plan)
         self.assertIn("measure/tests/test_business_operations_graph_baseline_r2_compensation.py", plan)
         self.assertIn("r2-task2-compensation-denominator-20260731.json", plan)
