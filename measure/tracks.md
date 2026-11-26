@@ -379,12 +379,10 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   Route PR review explicitly to OpenRouter `~x-ai/grok-latest`, expand the structured Zod result into graph-linked rubric evidence, preserve advisory review semantics, and feed validated results into KST+SRS without equating one approval with permanent mastery.
   *Status: parked 2026-10-26 (Daniel, check E3): no interns right now; the CodeCamp work is deferred*
 
-- [~] **Track: Sales Advantage Shared Mastery Consumer** *Link: [./tracks/sales_mastery_consumer_20260810/](./tracks/sales_mastery_consumer_20260810/)*
-  Bind the approved Sales course to stable objectives and variants, map each
-  verified company organization to an isolated Mastery tenant, and project
-  eligible quiz and roleplay evidence into the shared KST/SRS runtime. Sales
-  remains a course and never owns CRM, licensing, invoice, or commission data.
+- [ ] **Track: Sales Advantage Shared Mastery Consumer** *Link: [./tracks/sales_mastery_consumer_20260810/](./tracks/sales_mastery_consumer_20260810/)*
+  Make the deployed Sales Advantage course a tenant-safe consumer of the shared Mastery Advantage KST/SRS runtime without adding CRM responsibilities.
   *Status: kept and re-dated 2026-10-26 (Daniel, check E5): the work starts after PR's sales training source set passes Daniel's gates; no date until that approval page.*
+  *Note: shelved by PM 2026-11-27*
 
 ---
 

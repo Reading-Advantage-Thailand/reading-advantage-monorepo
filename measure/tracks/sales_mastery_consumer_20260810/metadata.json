@@ -1,7 +1,7 @@
 {
   "track_id": "sales_mastery_consumer_20260810",
   "type": "feature",
-  "status": "in-progress",
+  "status": "shelved",
   "created_at": "2026-08-10T00:00:00Z",
   "updated_at": "2026-10-26T00:00:00Z",
   "description": "Make the deployed Sales Advantage course a tenant-safe consumer of the shared Mastery Advantage KST/SRS runtime without adding CRM responsibilities.",

@@ -220,7 +220,7 @@
   boundary. Red commit: `75b68ba25`. Green implementation commit:
   `401b65d3f777dc4e4da6a0127d1a56f523c8d984`. Verification and handoff:
   `phase2-review-b-green-remediation-evidence-20260816.md`.
-- [~] Task: Record the approved Review A remediation Red contracts for trusted
+- [ ] Task: Record the approved Review A remediation Red contracts for trusted
    Company Identity, reviewed activity, scoped Mastery access, provider errors,
    strict payloads, and disposable PostgreSQL 16 persistence. Test commit:
    `63f1ec7e8563b96397c6d07ec994255482f4bf46`. Evidence:
@@ -232,7 +232,7 @@
      them locally with `pnpm --filter @reading-advantage/db exec vitest run` and
      the two paths: `src/__tests__/sales-phase2-review-a-durable.red.test.ts` and
      `src/__tests__/sales-phase2-transaction-atomicity.red.test.ts`.
-- [~] Task: Docs strategy: Record the owner-approved successor ledger strategy in
+- [ ] Task: Docs strategy: Record the owner-approved successor ledger strategy in
   `phase2-successor-ledger-strategy.md`. It supersedes only the old Phase 2
   execution deferral and does not grant Phase 2 acceptance. The first commit
   contains only this strategy and this plan block. The follow-up
@@ -240,7 +240,7 @@
   - Preserve historical commits.
   - Exclude APK.
   - Keep Phase 3 wiring out of scope.
-- [b] Task: Implementation: After the two docs commits and capture of
+- [b] Task: Implementation: After the two docs commits and capture of (deferred:backlog)
   `successor_phase2_base_sha`, add the successor Red contracts and conditional
   Green implementation for the append-only learner-attempt ledger.
   - Include `lessonId` in the trusted retry scope.
@@ -256,21 +256,21 @@
 
 ## Phase 3 — project Sales evidence into KST/SRS
 
-- [b] Task: Project validated quiz attempts and eligible immutable roleplay
+- [b] Task: Project validated quiz attempts and eligible immutable roleplay (deferred:backlog)
   evaluations into graph-linked `practice.v1` evidence. Theory completion and
   chat must remain unable to mutate mastery.
-- [b] Task: Add durable AI/mutation rate limiting, release-owner curriculum
+- [b] Task: Add durable AI/mutation rate limiting, release-owner curriculum (deferred:backlog)
   approval audit, and versioned evaluator/rubric provenance.
-- [b] Task: Expose organization-scoped due review, recommended practice, and
+- [b] Task: Expose organization-scoped due review, recommended practice, and (deferred:backlog)
   mastery evidence through Sales domain/API boundaries and learner/admin UI.
 
 ## Phase 4 — verification and release
 
-- [b] Task: Run focused shared-runtime, domain, API, DB, and Sales build/test/
+- [b] Task: Run focused shared-runtime, domain, API, DB, and Sales build/test/ (deferred:backlog)
   type/lint gates from a clean dependency build.
-- [b] Task: Deploy through the existing Sales release path and complete
+- [b] Task: Deploy through the existing Sales release path and complete (deferred:backlog)
   authenticated browser QA for Accounts provisioning/SSO, the course loop,
   KST/SRS changes, i18n, audio privacy/orphan cleanup, and durable rate limits.
-- [b] Task: Reconcile `sales_advantage_golive_20260701`, deployment status,
+- [b] Task: Reconcile `sales_advantage_golive_20260701`, deployment status, (deferred:backlog)
   technical debt, and lessons learned; archive only after independent and owner
   acceptance.
