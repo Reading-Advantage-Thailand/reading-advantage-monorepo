@@ -17,6 +17,7 @@ steps:
       - "$_RELEASE_COMMIT_SHA"
       - "https://github.com/Reading-Advantage-Thailand/reading-advantage-monorepo.git"
       - "."
+      - ".traffic-upload-ignore"
 
   # CODECAMP_DATABASE_URL is a Cloud SQL unix-socket URL
   # (?host=/cloudsql/<instance>). Cloud Build steps have no /cloudsql socket,

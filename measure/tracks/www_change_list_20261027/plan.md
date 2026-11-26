@@ -57,6 +57,10 @@
 - Push and deploy. The push to `origin/master` stays with Daniel.
 - New design, a new page, a new image or a new feature. The batch records these and sends them to the PM orchestrator.
 
+## PM operations task 2026-11-27
+
+- [x] 1. Reduce the upload for the five manual traffic builds. Keep the source verification and the push build scope. Evidence: `.traffic-upload-ignore` contains 511 files and 23,312,882 bytes; Git and gcloud lists match. The five test files pass 117 tests. The marker lint and frozen lockfile check pass.
+
 ## Deploy traffic guard (2026-11-27)
 
 - [x] T.1 Write stub tests, add the shared guard, and connect the deploy workflows. Keep the manual release checks. Test: AC-10. Stub tests: 16 pass. CI tests: 235 pass. Bash syntax and marker lint pass.

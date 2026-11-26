@@ -18,6 +18,7 @@ steps:
       - "$_RELEASE_COMMIT_SHA"
       - "https://github.com/Reading-Advantage-Thailand/reading-advantage-monorepo.git"
       - "."
+      - ".traffic-upload-ignore"
 
   # ── Migrate database ─────────────────────────────────────────────────
   # The build worker does not receive a Cloud Run /cloudsql mount. Start the

@@ -17,6 +17,7 @@ steps:
       - "$_RELEASE_COMMIT_SHA"
       - "https://github.com/Reading-Advantage-Thailand/reading-advantage-monorepo.git"
       - "."
+      - ".traffic-upload-ignore"
 
   # DATABASE_URL is a Cloud SQL unix-socket URL (?host=/cloudsql/<instance>) held
   # in its own secret, PRIMARY_V2_DATABASE_URL. Never point the legacy

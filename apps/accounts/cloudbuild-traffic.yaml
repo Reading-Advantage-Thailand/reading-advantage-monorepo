@@ -17,6 +17,7 @@ steps:
       - "$_RELEASE_COMMIT_SHA"
       - "https://github.com/Reading-Advantage-Thailand/reading-advantage-monorepo.git"
       - "."
+      - ".traffic-upload-ignore"
 
   - name: "node:22-slim"
     id: "migrate-company-identity"

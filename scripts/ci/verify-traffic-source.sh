@@ -2,7 +2,7 @@
 # verify-traffic-source.sh — bind an uploaded source tree to a release commit.
 #
 # Usage:
-#   verify-traffic-source.sh <commit> <repo-url> <uploaded-root>
+#   verify-traffic-source.sh <commit> <repo-url> <uploaded-root> [.traffic-upload-ignore]
 #
 # A person starts a traffic Cloud Build file by hand and uploads a source tree. This script
 # proves that the upload equals the tree of the release commit, so that a wrong tree cannot
@@ -14,7 +14,7 @@
 #   1. One read of the upstream master: the commits and the trees, no blob.
 #   2. The release commit must exist in that master and must be an ancestor of its tip.
 #   3. Expected list: the NUL-separated tree list of the commit, minus the paths that the
-#      `.gcloudignore` of that commit excludes (the ignore rules of Git).
+#      selected ignore file of that commit excludes (the ignore rules of Git).
 #   4. Actual list: every regular file and symbolic link below <uploaded-root>.
 #   5. Both lists are NUL-separated, sorted bytewise, and compared two ways.
 #   6. If the lists are equal, the Git blob id of each path is compared.
@@ -122,10 +122,15 @@ for tool in cat find xargs grep readlink mktemp rm wc; do
 done
 
 # --- Arguments. The commit is checked before any Git use of it. ---
-[ "$#" -eq 3 ] || fail "usage: verify-traffic-source.sh <commit> <repo-url> <uploaded-root>"
+[ "$#" -eq 3 ] || [ "$#" -eq 4 ] || fail "usage: verify-traffic-source.sh <commit> <repo-url> <uploaded-root> [.traffic-upload-ignore]"
 commit=$1
 url=$2
 upload_arg=$3
+ignore_file=.gcloudignore
+if [ "$#" -eq 4 ]; then
+  [ "$4" = ".traffic-upload-ignore" ] || fail "unsupported traffic upload ignore file"
+  ignore_file=$4
+fi
 
 case $commit in
   "" | *[!0-9a-f]*) fail "the release commit must be 40 lowercase hex characters" ;;
@@ -163,9 +168,9 @@ esac
 
 # The rules of the commit. Git loads this one blob on demand from the named remote.
 rules=$scratch/gcloudignore
-git show "${commit}:.gcloudignore" > "$rules" || fail "the commit has no .gcloudignore"
+git show "${commit}:${ignore_file}" > "$rules" || fail "the commit has no ${ignore_file}"
 if grep -Eq '^[[:space:]]*#!include:' "$rules"; then
-  fail "the .gcloudignore of the commit holds a #!include: line"
+  fail "the ${ignore_file} of the commit holds a #!include: line"
 fi
 
 # --- Expected list. ---

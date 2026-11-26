@@ -50,7 +50,7 @@ const RUNBOOK = join(ROOT, "docs", "runbooks", "traffic-moves.md");
 const GITHUB_URL = "https://github.com/Reading-Advantage-Thailand/reading-advantage-monorepo.git";
 
 /** The four arguments of the bind step (spec section 3a-1). */
-const BIND_ARGS = ["scripts/ci/verify-traffic-source.sh", "$_RELEASE_COMMIT_SHA", GITHUB_URL, "."];
+const BIND_ARGS = ["scripts/ci/verify-traffic-source.sh", "$_RELEASE_COMMIT_SHA", GITHUB_URL, ".", ".traffic-upload-ignore"];
 
 /** The default value of the `_RELEASE_COMMIT_SHA` substitution. */
 const REQUIRED_SHA = "REQUIRED_RELEASE_COMMIT_SHA";
@@ -357,6 +357,7 @@ function fixture(entries) {
 function stepFixture() {
   return fixture([
     { path: ".gcloudignore", content: REAL_GCLOUDIGNORE },
+    { path: ".traffic-upload-ignore", content: REAL_GCLOUDIGNORE },
     { path: "scripts/ci/verify-traffic-source.sh", content: readFileSync(SCRIPT, "utf8") },
     { path: "README.md", content: "# fixture\n" },
   ]);
@@ -381,6 +382,7 @@ function ancestorFixture() {
   const dir = scratch();
   const { bare, work, url } = bareFixture(dir);
   writeEntry(work, { path: ".gcloudignore", content: REAL_GCLOUDIGNORE });
+  writeEntry(work, { path: ".traffic-upload-ignore", content: REAL_GCLOUDIGNORE });
   writeEntry(work, { path: "scripts/ci/verify-traffic-source.sh", content: readFileSync(SCRIPT, "utf8") });
   writeEntry(work, { path: "README.md", content: "# older\n" });
   gitText(work, ["add", "-A"]);
@@ -767,6 +769,24 @@ describe("T: phase 2 traffic source binding", () => {
       }
       assertNoAnchorLine(`${res.stdout}\n${res.stderr}`, `T-03 ${app.name}`);
     }
+  });
+
+  it("the traffic scope comes from the release commit and rejects extra files", () => {
+    const f = fixture([
+      { path: ".gcloudignore", content: REAL_GCLOUDIGNORE },
+      { path: ".traffic-upload-ignore", content: "docs/\n" },
+      { path: "README.md", content: "# fixture\n" },
+      { path: "docs/example.md", content: "# excluded\n" },
+    ]);
+    const args = [f.sha, f.url, ".", ".traffic-upload-ignore"];
+    assertNonZero(runScript(args, { cwd: f.upload }), "extra file");
+    rmSync(join(f.upload, "docs/example.md"));
+    const result = runScript(args, { cwd: f.upload });
+    if (result.status !== 0) throw new Error(result.stderr);
+    assertNonZero(runScript([f.sha, f.url, ".", "other.ignore"], { cwd: f.upload }), "unknown scope");
+    assertNonZero(runScript([f.sha, f.url, "."], { cwd: f.upload }), "default scope");
+    writeFileSync(join(f.upload, "README.md"), "# changed\n");
+    assertNonZero(runScript(args, { cwd: f.upload }), "changed file");
   });
 
   it("T-04 each file holds the REQUIRED substitution and a malformed SHA fails before a fetch", () => {

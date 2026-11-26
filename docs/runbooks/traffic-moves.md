@@ -28,9 +28,12 @@ serves all traffic. It then confirms the traffic state.
   names a revision by number. The one exception is the `sales-advantage` file: it moves the
   traffic to the revision that its step `capture-company-candidate` records (see the section
   `sales-advantage`).
-- Start a traffic file with `gcloud builds submit --project=<project> --config=<file> .` from
-  the repository root at the commit of the push. Add `--substitutions=<name>=<value>` for each
-  substitution that the section names.
+- Start a traffic file from the repository root at the commit of the push.
+  For Primary, Accounts, Accounting, Codecamp, and Marketing, use
+  `gcloud builds submit --project=<project> --config=<file> --ignore-file=.traffic-upload-ignore .`.
+  The source check uses the same ignore file from the release commit.
+  Add `--substitutions=<name>=<value>` for each substitution that the section names.
+  The default `.gcloudignore` still applies to push builds and the Sales traffic file.
 - The first step of each traffic file, `bind-release-source`, needs the release commit on the
   upstream `master`. A live traffic run passes only after the first push of that commit to
   `master`.
