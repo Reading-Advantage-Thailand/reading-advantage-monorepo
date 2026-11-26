@@ -112,10 +112,11 @@ describe("teacher manual (FR-15, S5 request 2026-10-20)", () => {
 
   it("links each section to its help video (track primary_in_app_help_20261023, FR-10)", async () => {
     await renderPage();
-    const videos = ["signin", "class", "start-class", "assign-book", "lesson", "after-lesson", "homework", "class-sheet"].map(
+    const videos = ["signin", "class", "assign-book", "lesson", "after-lesson", "homework", "class-sheet"].map(
       (id) => within(document.getElementById(id)!).getByRole("link", { name: testMessages.en.Help.watchVideo }).getAttribute("href"),
     );
-    expect(videos).toEqual(["B5", "E2", "B3", "D2", "D3", "D6", "E4", "B4"].map((id) => `/teacher/help?play=${id}`));
+    expect(videos).toEqual(["B5", "E2", "D2", "D3", "D6", "E4", "B4"].map((id) => `/teacher/help?play=${id}`));
+    expect(within(document.getElementById("start-class")!).queryByRole("link", { name: testMessages.en.Help.watchVideo })).toBeNull();
   });
 
   it("links the class parts to My classes for several classes or a failed read", async () => {

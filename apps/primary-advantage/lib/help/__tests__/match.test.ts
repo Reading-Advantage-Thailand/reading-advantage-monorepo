@@ -33,7 +33,7 @@ describe("helpVideosFor (spec FR-2, FR-4)", () => {
   });
 
   it("keeps the registry order for videos of the same page", () => {
-    expect(ids(helpVideosFor("/teacher/class-roster/abc", "teacher").matched)).toEqual(["E2", "B3", "B4", "E3", "D2", "E5"]);
+    expect(ids(helpVideosFor("/teacher/class-roster/abc", "teacher").matched)).toEqual(["E2", "B4", "E3", "D2", "E5"]);
   });
 
   it("puts the more specific page first", () => {

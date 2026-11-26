@@ -43,7 +43,7 @@ describe("teacherHelpIndex (FR-9)", () => {
 
   it("keeps PR's work order inside the class page and books areas (look check 2026-10-23)", () => {
     const area = (name: string) => teacherHelpIndex().find((group) => group.area === name)?.videos.map((v) => v.id);
-    expect(area("roster")).toEqual(["E2", "B3", "B4", "E3", "G3"]);
+    expect(area("roster")).toEqual(["E2", "B4", "E3", "G3"]);
     expect(area("books")).toEqual(["D2", "D3", "D5", "D4", "J4", "D6", "J3"]);
     expect(area("start")).toEqual(["A2", "E7", "E1", "J5", "A4"]);
   });

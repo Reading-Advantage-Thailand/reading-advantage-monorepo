@@ -157,7 +157,6 @@ export const MANUAL_SECTIONS: ManualSection[] = [
   },
   {
     id: "start-class",
-    video: "B3",
     key: "startClass",
     number: "3",
     lead: true,

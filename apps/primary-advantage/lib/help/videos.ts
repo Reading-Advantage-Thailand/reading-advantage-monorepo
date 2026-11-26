@@ -34,7 +34,8 @@ export const HELP_VIDEOS: readonly HelpVideo[] = [
   { id: "J5", audience: "teacher", format: "16x9", routes: ["/teacher/dashboard"], general: false, title: { th: "ดูแบบที่นักเรียนเห็น", en: "See what your students see" }, durationSec: 35, enabled: true },
   { id: "B5", audience: "teacher", format: "16x9", routes: ["/auth/signin"], general: false, title: { th: "ครูเข้าสู่ระบบแบบใหม่", en: "The new teacher sign-in" }, durationSec: 61, enabled: true },
   { id: "E2", audience: "teacher", format: "16x9", routes: ["/teacher/my-classes", ROSTER, "/teacher/class-roster"], general: false, title: { th: "ชั้นเรียนของฉันและหน้าชั้นเรียน", en: "My classes and the class page" }, durationSec: 44, enabled: true },
-  { id: "B3", audience: "teacher", format: "16x9", routes: [ROSTER], general: false, title: { th: "เปิดชั้นเรียนให้นักเรียนเข้าสู่ระบบ", en: "Start the class so students can sign in" }, durationSec: 66, enabled: true },
+  // Hold until the new recording describes the current class session durations.
+  { id: "B3", audience: "teacher", format: "16x9", routes: [ROSTER], general: false, title: { th: "เปิดชั้นเรียนให้นักเรียนเข้าสู่ระบบ", en: "Start the class so students can sign in" }, durationSec: 66, enabled: false },
   { id: "B4", audience: "teacher", format: "16x9", routes: [`${ROSTER}/class-sheet`, `${ROSTER}/qr-cards`, ROSTER], general: false, title: { th: "พิมพ์ใบรายชื่อชั้นเรียนและบัตร QR", en: "Print the class sheet and QR cards" }, durationSec: 62, enabled: true },
   { id: "E3", audience: "teacher", format: "16x9", routes: [`${ROSTER}/enrollment`, ROSTER], general: false, title: { th: "เพิ่มและนำนักเรียนออกจากชั้นเรียน", en: "Add and remove students" }, durationSec: 40, enabled: true },
   { id: "G3", audience: "teacher", format: "16x9", routes: [`${ROSTER}/reedy`], general: false, title: { th: "รีดี้สำหรับครู: เวลาที่ใช้และความเป็นส่วนตัว", en: "Reedy for teachers: time used and privacy" }, durationSec: 41, enabled: true },

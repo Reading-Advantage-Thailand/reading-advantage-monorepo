@@ -38,10 +38,16 @@ describe("HelpIndex (FR-9)", () => {
   });
 
   it("opens the video of the play parameter (the manual link, FR-10) and records the play", () => {
-    renderWithMessages(<HelpIndex initial="B3" />);
-    fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Play Start the class so students can sign in" }));
+    renderWithMessages(<HelpIndex initial="E2" />);
+    fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Play My classes and the class page" }));
     const body = JSON.parse(String((fetchMock.mock.calls as unknown as [string, RequestInit][])[0][1].body));
-    expect(body).toMatchObject({ event: "play", routePattern: "/teacher/help", videoId: "B3" });
+    expect(body).toMatchObject({ event: "play", routePattern: "/teacher/help", videoId: "E2" });
+  });
+
+  it("does not open a video on hold from a saved link", () => {
+    renderWithMessages(<HelpIndex initial="B3" />);
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(screen.queryByRole("button", { name: /Start the class so students can sign in/ })).toBeNull();
   });
 
   it("ignores a play parameter that is not a teacher video", () => {
