@@ -59,10 +59,12 @@ jobs:
             };
             const matrix = rows
               .filter((row) => row.id !== "www-reading-advantage" && ["direct", "gated"].includes(row.mode) && hit(row))
-              .map(({ id, service, project, cloudbuild }) => ({
+              .map(({ id, service, project, region, mode, cloudbuild }) => ({
                 id,
                 service,
                 project,
+                region,
+                mode,
                 cloudbuild,
                 substitutions: substitutions(cloudbuild),
               }));
@@ -142,6 +144,11 @@ jobs:
             --project="${{ secrets.GCP_PROJECT_ID }}" \
             --config="apps/www-reading-advantage/cloudbuild.yaml" \
             .
+
+      - name: Check Cloud Run traffic
+        env:
+          PROJECT: ${{ secrets.GCP_PROJECT_ID }}
+        run: bash scripts/ci/ensure-traffic.sh www-reading-advantage asia-southeast1 "$PROJECT" direct
 
       - name: Display Deployment URL 📋
         run: |

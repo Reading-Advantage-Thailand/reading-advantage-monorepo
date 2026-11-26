@@ -10,6 +10,14 @@ and a tag. The push build holds no production database step and moves no traffic
 starts the traffic file by hand on Daniel's word. No GitHub workflow runs a
 `cloudbuild-traffic.yaml` file.
 
+The push job reports the traffic state in the job summary. `traffic: HELD` identifies the
+latest ready revision, the serving revision, and the manual release file. A warning identifies
+a serving revision that is more than one revision behind. These messages do not authorize a
+traffic move.
+
+The www service uses a direct deploy. Its guard restores traffic to LATEST if an older revision
+serves all traffic. It then confirms the traffic state.
+
 ## Rules for every manual traffic file
 
 - The new revision must start against the old schema. The push deploys the new code before the

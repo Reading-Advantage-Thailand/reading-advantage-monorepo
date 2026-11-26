@@ -56,3 +56,7 @@
 
 - Push and deploy. The push to `origin/master` stays with Daniel.
 - New design, a new page, a new image or a new feature. The batch records these and sends them to the PM orchestrator.
+
+## Deploy traffic guard (2026-11-27)
+
+- [x] T.1 Write stub tests, add the shared guard, and connect the deploy workflows. Keep the manual release checks. Test: AC-10. Stub tests: 16 pass. CI tests: 235 pass. Bash syntax and marker lint pass.

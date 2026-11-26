@@ -1353,6 +1353,7 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
   *Link: [./tracks/www_change_list_20261027/](./tracks/www_change_list_20261027/)*
   *Status: active, standing (no end date); Phase 0 open | Priority: MEDIUM | Requested by Daniel 2026-10-26 (tracks page, row E8)*
   *Note: PR keeps one www change list in its repository. Each Monday the PM orchestrator sends the new entries to Monorepo. This standing track builds them weekly. It replaces the two archived July www tracks.*
+  *2026-11-27: The deploy traffic guard restores LATEST for www when an older revision serves all traffic. The guard reports held traffic for gated services. The manual release checks remain in place.*
 
 - [x] **Track: www Tutor Advantage calculator and screens** — *created 2026-11-17, archived 2026-11-18*
   *Link: [./archive/www_tutor_calculator_20261117/](./archive/www_tutor_calculator_20261117/)*

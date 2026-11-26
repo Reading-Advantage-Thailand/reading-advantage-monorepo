@@ -10,6 +10,7 @@
  * @module cd-workflows.test
  */
 import { afterAll, describe, it } from "vitest";
+import { execFileSync } from "node:child_process";
 import { changedFileCount, removeScratchDirs } from "./helpers/scratch.mjs";
 import {
   allSteps,
@@ -186,6 +187,8 @@ describe("W: per-app CD workflows", () => {
       must(matrix.length === 1, `${row.id}: matrix length=${matrix.length}`);
       must(matrix[0].id === row.id, `${row.id}: matrix id=${matrix[0].id}`);
       must(matrix[0].cloudbuild === row.cloudbuild, `${row.id}: cloudbuild differs`);
+      must(matrix[0].mode === "gated", `${row.id}: traffic guard mode differs`);
+      must(matrix[0].region === row.region, `${row.id}: traffic guard region differs`);
       must(result.gcloudCalls.length === 0, `${row.id}: gcloud_calls=${result.gcloudCalls.length}`);
     }
   });
@@ -342,7 +345,7 @@ describe("W: per-app CD workflows", () => {
     }
   });
 
-  it("W-13 no workflow step moves traffic", () => {
+  it("W-13 no workflow step issues a raw traffic move command", () => {
     let hits = 0;
     for (const { name } of workflowTexts()) {
       const doc = workflow(name);
@@ -352,6 +355,35 @@ describe("W: per-app CD workflows", () => {
       }
     }
     must(hits === 0, `workflow_detector_hits=${hits}`);
+  });
+
+  it("W-13a every push deploy checks traffic and preserves the manual gates", () => {
+    const holdRows = readText("scripts/ci/traffic-hold.txt").trim().split("\n")
+      .filter((line) => !line.startsWith("#"))
+      .map((line) => line.split("|"));
+    const expected = [...gatedRows().map((row) => row.service), "sales-advantage"].sort();
+    must(holdRows.map(([service]) => service).sort().join(",") === expected.join(","),
+      "traffic hold list differs from gated services and sales");
+    for (const [, file, reason] of holdRows) {
+      must(reason, `missing hold reason for ${file}`);
+      readText(file.split(" (step")[0]);
+    }
+    for (const [name, job, command] of [
+      [WWW, "deploy", 'bash scripts/ci/ensure-traffic.sh www-reading-advantage asia-southeast1 "$PROJECT" direct'],
+      [APPS, "build", 'bash scripts/ci/ensure-traffic.sh "$SERVICE" "$REGION" "$PROJECT" "$MODE"'],
+    ]) {
+      const steps = workflow(name).jobs[job].steps;
+      const submit = steps.findIndex((step) => step.name.includes("Submit Cloud Build"));
+      must(submit >= 0 && steps[submit + 1]?.run === command, `${name}: missing post-deploy guard`);
+      if (name === APPS) {
+        must(steps[submit + 1].env.MODE === "${{ matrix.mode }}", "the apps guard must receive the deployment mode");
+      }
+    }
+    const sales = cloudbuild("apps/sales-advantage/cloudbuild.yaml").steps;
+    const guard = sales.at(-1);
+    must(guard.id === "check-cloud-run-traffic" && guard.args.at(-1) === "gated",
+      "the manual sales candidate build must use the held guard");
+    execFileSync("bash", ["scripts/ci/__tests__/ensure-traffic.test.sh"], { stdio: "pipe" });
   });
 
   it("W-14 the workflows use exactly the two measured secrets", () => {

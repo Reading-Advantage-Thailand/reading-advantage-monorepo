@@ -138,3 +138,12 @@ The page shows one row per pair of changed page and locale, not one row per entr
 | AC-7 | Lint, typecheck and the www build pass for the batch branch. |
 | AC-8 | One live approval page opens for Daniel, with one row per changed page and locale. |
 | AC-9 | After the pass, the branch merges into local `master`, then the worktree is removed and the branch is deleted in the same turn. |
+| AC-10 | The shared Cloud Run traffic guard confirms live traffic for www and reports held traffic for manual releases. |
+
+## 13. Deploy traffic guard (2026-11-27)
+
+The orchestrator approved the PM correction to the deploy process. The www deploy must restore traffic to LATEST if an older revision serves all traffic. The guard must confirm the result.
+
+All gated services keep their manual release checks and traffic steps. The guard reports the ready revision, the serving revisions, and the manual release file. It warns if a serving revision is more than one revision behind the latest ready revision.
+
+Sales remains excluded from push deployment. The manual candidate build reports traffic without moving it. The guard fails if it cannot determine traffic. No live deploy or traffic change is part of this task.

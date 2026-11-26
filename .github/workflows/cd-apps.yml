@@ -1,7 +1,7 @@
 name: CD — apps
 
-# Every app in this workflow deploys a tagged revision with no traffic (gated). A traffic move is a
-# separate manual step on Daniel's word. www is the only direct app (cd-www-reading-advantage.yml).
+# Gated apps deploy a tagged revision with no traffic. The guard reports the manual
+# release step. www is the direct app (cd-www-reading-advantage.yml).
 on:
   push:
     branches:
@@ -64,10 +64,12 @@ jobs:
             };
             const matrix = rows
               .filter((row) => row.id !== "www-reading-advantage" && ["direct", "gated"].includes(row.mode) && hit(row))
-              .map(({ id, service, project, cloudbuild }) => ({
+              .map(({ id, service, project, region, mode, cloudbuild }) => ({
                 id,
                 service,
                 project,
+                region,
+                mode,
                 cloudbuild,
                 substitutions: substitutions(cloudbuild),
               }));
@@ -115,3 +117,11 @@ jobs:
             --config="${{ matrix.cloudbuild }}" \
             ${{ matrix.substitutions }} \
             .
+
+      - name: Check Cloud Run traffic
+        env:
+          SERVICE: ${{ matrix.service }}
+          REGION: ${{ matrix.region }}
+          PROJECT: ${{ matrix.project }}
+          MODE: ${{ matrix.mode }}
+        run: bash scripts/ci/ensure-traffic.sh "$SERVICE" "$REGION" "$PROJECT" "$MODE"

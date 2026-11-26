@@ -1,0 +1,8 @@
+# Service | manual traffic file or runbook | reason
+primary-advantage-app|apps/primary-advantage/cloudbuild-traffic.yaml|Database migration and doctor check
+marketing|apps/marketing/cloudbuild-traffic.yaml|Database migration and runtime database check
+accounts|apps/accounts/cloudbuild-traffic.yaml|Identity migration and runtime database check
+accounting|apps/accounting/cloudbuild-traffic.yaml|Database migration and runtime database check
+codecamp-advantage|apps/codecamp-advantage/cloudbuild-traffic.yaml|Database migration and scheduler check
+storytime-app|docs/runbooks/storytime-deploy.md (step 4)|Review switch check and manual approval
+sales-advantage|apps/sales-advantage/cloudbuild-traffic.yaml|Manual release and rollback checks
