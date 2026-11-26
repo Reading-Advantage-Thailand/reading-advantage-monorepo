@@ -23,7 +23,7 @@ export const en = {
       storytime: {
         name: "Storytime Advantage",
         forText: "For: Kindergarten Anuban 2 to P2",
-        status: "Your child taps a word and hears it from 30 November 2026.",
+        status: "Your child taps a word and hears it.",
         body: "A teacher leads a 30-minute scripted class. The screen supports the teacher; it never runs the lesson.",
         bullets: [
           "Practise letter formation, phonics and timed sight-word recognition.",
@@ -132,7 +132,7 @@ export const th = {
       storytime: {
         name: "Storytime Advantage",
         forText: "เด็กอนุบาล 2 ถึง ป.2",
-        status: "ลูกของคุณแตะคำแล้วได้ยินเสียงอ่าน ตั้งแต่วันที่ 30 พฤศจิกายน 2026",
+        status: "ลูกของคุณแตะคำแล้วได้ยินเสียงอ่าน",
         body: "ครูเป็นผู้นำบทเรียนตามสคริปต์ ใช้เวลา 30 นาที หน้าจอช่วยสนับสนุนครู แต่ไม่ได้ทำหน้าที่สอนแทนครู",
         bullets: [
           "ฝึกเขียนตัวอักษร ฝึกเสียงตัวอักษร และฝึกจำคำศัพท์ที่เห็นบ่อยภายในเวลาที่กำหนด",

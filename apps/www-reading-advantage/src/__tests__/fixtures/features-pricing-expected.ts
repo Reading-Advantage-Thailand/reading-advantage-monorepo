@@ -36,7 +36,7 @@ export const FEATURES_ENTRIES: FixtureEntry[] = [
   { id: "TH-FP-06", label: `S2 heading`, en: `From first stories to adult coding`, th: `จากนิทานเรื่องแรก สู่การเขียนโค้ดสำหรับผู้ใหญ่` },
   { id: "TH-FP-07", label: `S2 body`, en: `A kindergartener follows a story. A primary student reads at their level. A family learns with a local tutor. An adult builds full-stack engineering skills.`, th: `เด็กอนุบาลเรียนรู้ไปกับเรื่องราว นักเรียนประถมอ่านในระดับที่เหมาะกับตนเอง ครอบครัวเรียนกับติวเตอร์ในพื้นที่ และผู้ใหญ่พัฒนาทักษะวิศวกรรมซอฟต์แวร์แบบ full-stack` },
   { id: "TH-FP-08", label: `Storytime card for`, en: `For: Kindergarten Anuban 2 to P2`, th: `เด็กอนุบาล 2 ถึง ป.2` },
-  { id: "TH-FP-09", label: `Storytime card status`, en: `Your child taps a word and hears it from 30 November 2026.`, th: `ลูกของคุณแตะคำแล้วได้ยินเสียงอ่าน ตั้งแต่วันที่ 30 พฤศจิกายน 2026` },
+  { id: "TH-FP-09", label: `Storytime card status`, en: `Your child taps a word and hears it.`, th: `ลูกของคุณแตะคำแล้วได้ยินเสียงอ่าน` },
   { id: "TH-FP-10", label: `Storytime card body`, en: `A teacher leads a 30-minute scripted class. The screen supports the teacher; it never runs the lesson.`, th: `ครูเป็นผู้นำบทเรียนตามสคริปต์ ใช้เวลา 30 นาที หน้าจอช่วยสนับสนุนครู แต่ไม่ได้ทำหน้าที่สอนแทนครู` },
   { id: "TH-FP-11", label: `Storytime bullet 1`, en: `Practise letter formation, phonics and timed sight-word recognition.`, th: `ฝึกเขียนตัวอักษร ฝึกเสียงตัวอักษร และฝึกจำคำศัพท์ที่เห็นบ่อยภายในเวลาที่กำหนด` },
   { id: "TH-FP-12", label: `Storytime bullet 2`, en: `Read along with stories and questions, then recall five items each day.`, th: `อ่านนิทานและตอบคำถามไปด้วยกัน จากนั้นทบทวนสิ่งที่เรียนรู้วันละ 5 รายการ` },
