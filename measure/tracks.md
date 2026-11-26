@@ -44,34 +44,18 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
-- [~] **Track: www daily blog posts of PR** — *created 2026-11-15*
-  *Link: [./tracks/www_daily_blog_posts_20261115/](./tracks/www_daily_blog_posts_20261115/)*
-  *Status: active, light lane; post 2026-11-15 (`a-five-year-old-reads-by-herself`) live; one task per post; the track stays open for later daily posts | Owner: Monorepo orchestrator | PM task A-61 follow-up*
-  *Note: PR's daily posts in en and th, written from `apps/www-reading-advantage/docs/blog-post-format.md` (track `www_blog_rich_format_20261115`, archived 2026-11-18). www-only push is standing-approved (Daniel 2026-11-15).*
 
-- [~] **Track: Security upgrade — Next.js, React, sharp and the critical and high npm fixes** — *created 2026-10-26*
-  *Link: [./tracks/security_upgrade_20261026/](./tracks/security_upgrade_20261026/)*
-  *Status: active, opened 2026-10-26; audit done; Phase 1 (version guard and upgrade) next | Owner: Monorepo orchestrator | PM assignment A-21 | Due 2026-10-27 | Priority: TOP*
-  *Note: Daniel 2026-10-26: "Somebad CVEs came out on NePM this week. We need an audit and update with redeploy ASAP." `pnpm audit --json` reports 8 critical and 93 high advisories over 32 packages. Targets: next 16.4.1, react and react-dom 19.2.9, sharp 0.35.5 or later, plus every patch and minor fix. The audit file is [audit-2026-10-26.md](./tracks/security_upgrade_20261026/audit-2026-10-26.md). The supply chain check found no hit. Push and deploy stay with Daniel's team.*
 
 - [~] **Track: Primary In-App Help (What's New videos)** — *created 2026-10-23*
   *Link: [./tracks/primary_in_app_help_20261023/](./tracks/primary_in_app_help_20261023/)*
   *Status: live 2026-10-23 on revision 00141-nuh (in master); D5 open; plan approved 2026-10-23; owner decisions recorded (both hosts, all videos approved, sign-in help, plays log in the system role) | Priority: next, after the Boonyathat deploy*
   *Note: contextual help button in the teacher and student shells; plays PR's tutorial video for the current page*
 
-- [~] **Track: Storytime app rebuild (an app in the monorepo)** — *created 2026-10-25*
-  *Link: [./tracks/storytime_app_rebuild_20261025/](./tracks/storytime_app_rebuild_20261025/)*
-  *Status: active, opened 2026-10-25; Phase 1 (app scaffold and service config) next | Owner: Monorepo orchestrator | Milestone 1: one week end to end (teacher app, at-home app, one read-along, one decodable, one song) at Daniel's quality bar | Release goal: internal release 1 on 2026-12-01 (S17 scope open until after milestone 1)*
-  *Note: Daniel 2026-10-25: "Storytime is an APP in the MONOREPO." `apps/storytime` with its own Cloud Run service and container (`storytime-app`, S30), sharing packages with primary-advantage. Printed QR paths `/th/st/<level>/<week>` must answer before about 2026-11-22. S1–S28 survival report: [docs/s1-s28-survival.md](./tracks/storytime_app_rebuild_20261025/docs/s1-s28-survival.md).*
 
-- [~] **Track: Storytime at-home release (weeks 1 to 7 in the app)** — *created 2026-11-06*
-  *Link: [./tracks/storytime_at_home_release_20261106/](./tracks/storytime_at_home_release_20261106/)*
-  *Status: active, opened 2026-11-06; Phase 1 received locally at f2989514d, not deployed | Owner: Monorepo orchestrator | Parent: storytime_app_rebuild_20261025 | Phase 1 local commits by 2026-11-14, date needed 2026-11-16; Phase 3 deploy target 2026-11-20 (`deferred:daniel`); Phase 4 Entry redesign (A-71) planned 2026-11-20, preview by 2026-11-22 12:00 ICT*
-  *Note: PM decision 2026-11-05 moved tasks 3.10 and 3.11 of the parent here. PM hand-off 2026-11-06: 7 week packages from Workbooks commit 82f88853. Dependency: Red and Green of Phase 1 start after the parent Phase 3 heading carries its checkpoint. No push and no deploy without Daniel's word.*
 
 - [ ] **Track: Remove the void Storytime code from Primary** — *created 2026-11-07*
   *Link: [./tracks/primary_storytime_removal_20261107/](./tracks/primary_storytime_removal_20261107/)*
-  *Status: active, opened 2026-11-07; Phase 1 removed locally at ccb3ba4e7, accepted at e62a8eba7 [checkpoint], not deployed; Phase 2 is the next Primary deploy by the team (`deferred:daniel`) | Owner: Monorepo orchestrator | Parent: storytime_app_rebuild_20261025 (task 7.1, code part) | Phase 1 local commits 2026-11-07*
+  *Status: active, opened 2026-11-07; Phase 1 removed locally at ccb3ba4e7, accepted at e62a8eba7 [checkpoint], not deployed; Phase 2 is the next Primary deploy by the team (`deferred:daniel`) | Owner: the next Primary deploy | Parent: storytime_app_rebuild_20261025 (task 7.1, code part) | Phase 1 local commits 2026-11-07*
   *Note: Daniel 2026-11-07: "Are we back to the Storytime app inside Primary for a third time after I have originated that?" 25 files deleted, 9 edited in apps/primary-advantage. The bucket prefix gs://primary-app-storage/storytime/ stays untouched. No push and no deploy.*
 
 - [ ] **Track: Architecture identity and provider debt** — *created 2026-11-11*
@@ -80,16 +64,7 @@ This file tracks all major tracks for the project.
   *Status: new, opened 2026-11-11; starts not before 2026-11-21 (after the 2026-11-20 Storytime release); due 2026-12-15 | Owner: Monorepo orchestrator | Depends on: task 1.4d of the architecture CI input pin track (closed 2026-11-19) | Priority: P2*
   *Note: PM decision of 2026-11-11: the 111 findings (COMPANY_IDENTITY_PRODUCT_ISOLATION 93, COMPANY_IDENTITY_DB_BOUNDARY 5, AI_PROVIDER_BOUNDARY 11, INTEGRATION_PROVIDER_BOUNDARY 2) are accepted as debt only until this track closes. A new finding of these rules still fails CI. No push and no deploy.*
 
-- [~] **Track: Sales Advantage 2027 training — roleplay scoring repair and curriculum rebuild** — *created 2026-10-15*
-  *Link: [./tracks/sales_training_2027_20261015/](./tracks/sales_training_2027_20261015/)*
-  *Status: S1 (scoring bug fix) code done, deploy after the Primary cutover, merged into master 2026-10-23 (branch sales/training-2027 removed); S2–S11 start after the PR source-set commit and the end of the feature freeze; tutor access needs the CONTRACTOR role (Monorepo, after the cutover) | Priority: HIGH | Requested by the owner; scope agreed with PR*
-  *Note: roleplay scoring fails in production for every recording (Responses format rejects audio); models: qwen/qwen3.8-omni-flash, backup google/gemini-2.5-flash-lite.*
-  *Status: kept and re-dated 2026-10-26 (Daniel, check E5): the work starts after PR's sales training source set passes Daniel's gates; no date until that approval page.*
 
-- [ ] **Track: Real Advantage logos on the www site** — *created 2026-10-08*
-  *Link: [./tracks/www_real_logos_20261008/](./tracks/www_real_logos_20261008/)*
-  *Status: queued; starts after the Primary cutover blockers | Priority: MEDIUM | Requested by PR (logos approved by Daniel 2026-10-08)*
-  *Note: Thai lockups approved 2026-10-08 (advantage-pr e222d0e); the Primary app logo waits until after the freeze.*
 
 - [ ] **Track: Primary public pages in the RPG skin (home, about, contact, Our books)** — *created 2026-10-07*
   *Link: [./tracks/primary_public_pages_20261007/](./tracks/primary_public_pages_20261007/)*
@@ -163,13 +138,6 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [ ] **Track: Company Finance Operations Foundation (first draft)** *Link: [./tracks/company_finance_operations_20260729/](./tracks/company_finance_operations_20260729/)*
   *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
 
-- [~] **Track: Company Finance Operations Foundation** *Link: [./tracks/company_finance_operations_20260810/](./tracks/company_finance_operations_20260810/)*
-  Define the distinct `apps/accounting` product through policy-neutral contracts,
-  ports, schema, and Red tests for money, idempotency, immutable history,
-  authorization, audit, provenance, and source-system isolation. THB valuation
-  policy decided by the owner 2026-08-20 (settlement-derived rate, 2dp half-up);
-  close/accountant policy list and pilot data remain pending.
-  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
 
 - [ ] **Track: Accounting App Foundation** *Link: [./tracks/accounting_app_foundation_20260820/](./tracks/accounting_app_foundation_20260820/)*
   Build `apps/accounting` on the Finance Operations foundation: Accounts SSO
@@ -181,33 +149,9 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 
 
-- [~] **Track: Small-Company Admin Privilege Simplification** *Link: [./tracks/small_company_admin_privileges_20260722/](./tracks/small_company_admin_privileges_20260722/)*
-  Make `COMPANY_ADMIN` the intentional owner/operator role with exact inherited
-  administrator access to Marketing, Sales, Codecamp, and future internal apps,
-  while ordinary employees retain explicit app roles.
-  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
-- [b] **Track: Business Operations Graph Baseline Remediation** *Link: [./tracks/business_operations_graph_baseline_remediation_20260730/](./tracks/business_operations_graph_baseline_remediation_20260730/)*
-  Historical/incomplete remediation of the failed full-repository graph gate.
-  Deferred for resource safety on 2026-08-10; it is not a successor delivery
-  prerequisite and does not unblock Admin S1 or CRM. See the dated resource-
-  safety disposition in the track.
-  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
-- [b] **Track: Customer, Licensing, and Minimal CRM Control Plane** *Link: [./tracks/customer_licensing_crm_20260722/](./tracks/customer_licensing_crm_20260722/)*
-  Add leads, customers, contacts, school sites, sales ownership, shared demos,
-  school trials, subscriptions, provisioning ports, and future revenue/commission
-  attribution seams behind Company Admin; its bounded Accounts/backend safety
-  gate is not yet accepted.
-- [ ] **Track: www CRM Lead Intake** *Link: [./tracks/www_crm_lead_intake_20260722/](./tracks/www_crm_lead_intake_20260722/)*
-  Replace Contact Us `mailto:` and no-op commercial CTAs with validated,
-  attributable, spam-resistant CRM intake and operator notification. Depends on
-  the accepted lead contract from the customer/licensing track and owns Wave 5 T1.
 - [x] **Track: www bare-domain redirect to 0.0.0.0** *Link: [./archive/www_bare_domain_redirect_20261022/](./archive/www_bare_domain_redirect_20261022/)*
   Closed 2026-10-23. The www locale redirect used the container host `0.0.0.0`; `src/proxy.ts`
   now uses the forwarded public host. Deployed from master d1caf393b; live check passed.
-- [ ] **Track: Reading License Control-Plane Migration** *Link: [./tracks/reading_license_control_plane_migration_20260722/](./tracks/reading_license_control_plane_migration_20260722/)*
-  Prove production truth, import expired history without reactivation, and make
-  Company Admin the sole writer for new/renewed Reading demos, school trials,
-  and subscriptions while Reading retains local runtime enforcement.
 
 ---
 
@@ -466,15 +410,6 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 > These own build/deploy/QA only; they **consume** the security remediation waves as hard
 > preconditions and do not duplicate them (see `medium-plus-coverage-matrix.md`).
 
-- [~] **Track: Sales Advantage Go-Live** *Link: [./tracks/sales_advantage_golive_20260701/](./tracks/sales_advantage_golive_20260701/)*
-  Take `apps/sales-advantage` from code-complete to a deployed MVP. Feature surface (domain,
-  router, audio-upload route, rep/admin UI, chat, quiz, seed script) already exists on HEAD;
-  `sales_advantage_mvp_20260622` Phases 3–7 are implemented (checkboxes stale). This track
-  hard-gates on Wave 1 sales security (IDOR/route-gating/tRPC role-enum/XSS/schema drift),
-  seeds + human-approves real curriculum, adds Docker/cloudbuild, provisions the cloud
-  `sales_advantage` DB, deploys to Cloud Run, and runs end-to-end QA. Successor to
-  `sales_advantage_mvp_20260622` Phase 8.
-  *Status: kept and re-dated 2026-10-26 (Daniel, check E5): the work starts after PR's sales training source set passes Daniel's gates; no date until that approval page.*
 
 - [x] **Track: Marketing Go-Live** *Link: [./archive/marketing_golive_20260701/](./archive/marketing_golive_20260701/)*
   Take `apps/marketing` (the video-production pipeline; FR-1..FR-6 met, 151 tests green in the
@@ -511,13 +446,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 
 
-- [ ] **Track: Sales and Marketing SSO Parity and Demo Accounts** *Link: [./tracks/sales_marketing_sso_parity_20260829/](./tracks/sales_marketing_sso_parity_20260829/)*
-  Port the Codecamp SSO redirect repair to Sales and Marketing: carry the destination through sign-in, stop overwriting the language cookie, port the forwarding-origin approval with the Codecamp callback-origin handoff, fail cleanly on unsafe return paths, surface sign-in errors, deny   no-role sessions, and provision demo-only acceptance accounts with generated credentials. Part of the five-app launch program; this is the SSO hard gate. Plan reviewed and approved 2026-08-29 (reviews/plan-review-a-2026-08-29-r5.json: pass).
-  *Status: parked 2026-10-26 (Daniel, check E11b): the marketing service stays up and the code stays; no work*
 
-- [ ] **Track: Accounting Dedicated Database Launch** *Link: [./tracks/accounting_dedicated_db_launch_20260830/](./tracks/accounting_dedicated_db_launch_20260830/)*
-  Take `apps/accounting`, the only one of the five company apps with no Cloud Run deployment, to production on its own dedicated database: a separate `accounting` database on the shared Cloud SQL instance following the company-identity layout (own drizzle journal, runtime client, migration/runtime roles, secrets), SSO origin-approval and redirect parity with the Sales repair, a candidate no-traffic Cloud Build pipeline with a manual acceptance-gated promotion script, and DNS for accounting.reading-advantage.com. Status: Draft 2026-08-30.
-  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
 
 - [ ] **Track: Codecamp Tutor Consolidation** *Link: [./tracks/codecamp_tutor_consolidation_20260820/](./tracks/codecamp_tutor_consolidation_20260820/)*
   Retire the stateless /api/chat route and extend the intervention tutor with an ask mode, so all 88 lessons gain conversation memory, lesson-content grounding, curated resources, and support telemetry.
@@ -668,6 +597,121 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 ---
 
 ## Archived Tracks
+
+- [x] **Track: www daily blog posts of PR** — *created 2026-11-15, archived 2026-11-26*
+  *Link: [./archive/www_daily_blog_posts_20261115/](./archive/www_daily_blog_posts_20261115/)*
+  *The daily blog posts of PR on the www blog, one task per post, written from docs/blog-post-format.md.*
+  *Status: active, light lane; post 2026-11-15 (`a-five-year-old-reads-by-herself`) live; one task per post; the track stays open for later daily posts | Owner: Monorepo orchestrator | PM task A-61 follow-up*
+  *Note: PR's daily posts in en and th, written from `apps/www-reading-advantage/docs/blog-post-format.md` (track `www_blog_rich_format_20261115`, archived 2026-11-18). www-only push is standing-approved (Daniel 2026-11-15).*
+  *Note: Closed by PM 2026-11-26: all tasks closed*
+
+- [x] **Track: Security upgrade — Next.js, React, sharp and the critical and high npm fixes** — *created 2026-10-26, archived 2026-11-26*
+  *Link: [./archive/security_upgrade_20261026/](./archive/security_upgrade_20261026/)*
+  *Upgrade next to 16.4.1, react and react-dom to 19.2.9, sharp to 0.35.5 or later, and every other critical or high npm fix that is a patch or a minor bump. Add a version-guard test that reads pnpm-lock.yaml. Verify each deployed app. Write the redeploy list. Merge to the local master. Push and deploy stay with Daniel's team.*
+  *Status: active, opened 2026-10-26; audit done; Phase 1 (version guard and upgrade) next | Owner: Monorepo orchestrator | PM assignment A-21 | Due 2026-10-27 | Priority: TOP*
+  *Note: Daniel 2026-10-26: "Somebad CVEs came out on NePM this week. We need an audit and update with redeploy ASAP." `pnpm audit --json` reports 8 critical and 93 high advisories over 32 packages. Targets: next 16.4.1, react and react-dom 19.2.9, sharp 0.35.5 or later, plus every patch and minor fix. The audit file is [audit-2026-10-26.md](./tracks/security_upgrade_20261026/audit-2026-10-26.md). The supply chain check found no hit. Push and deploy stay with Daniel's team.*
+  *Note: Closed by PM 2026-11-26: all tasks closed*
+
+- [x] **Track: Real Advantage logos on the www site** — *created 2026-10-08, archived 2026-11-26*
+  *Link: [./archive/www_real_logos_20261008/](./archive/www_real_logos_20261008/)*
+  *Replace the placeholder product wordmarks on the www site with the approved Advantage logo files from advantage-pr.*
+  *Status: queued; starts after the Primary cutover blockers | Priority: MEDIUM | Requested by PR (logos approved by Daniel 2026-10-08)*
+  *Note: Thai lockups approved 2026-10-08 (advantage-pr e222d0e); the Primary app logo waits until after the freeze.*
+  *Note: Closed by PM 2026-11-26: all tasks closed*
+
+- [x] **Track: Storytime app rebuild (an app in the monorepo)** — *created 2026-10-25, archived 2026-11-26*
+  *Link: [./archive/storytime_app_rebuild_20261025/](./archive/storytime_app_rebuild_20261025/)*
+  *Rebuild Storytime Advantage as its own app (apps/storytime) inside reading-advantage-monorepo, with its own Cloud Run service and container (S30) and native package sharing with primary-advantage: a teacher app and an at-home app. Milestone 1 is one week end to end: the teacher app, the at-home app, one read-along, one decodable, and one song at Daniel's quality bar.*
+  *Status: active, opened 2026-10-25; Phase 1 (app scaffold and service config) next | Owner: Monorepo orchestrator | Milestone 1: one week end to end (teacher app, at-home app, one read-along, one decodable, one song) at Daniel's quality bar | Release goal: internal release 1 on 2026-12-01 (S17 scope open until after milestone 1)*
+  *Note: Daniel 2026-10-25: "Storytime is an APP in the MONOREPO." `apps/storytime` with its own Cloud Run service and container (`storytime-app`, S30), sharing packages with primary-advantage. Printed QR paths `/th/st/<level>/<week>` must answer before about 2026-11-22. S1–S28 survival report: [docs/s1-s28-survival.md](./tracks/storytime_app_rebuild_20261025/docs/s1-s28-survival.md).*
+  *Note: Closed by PM 2026-11-26: done by the Storytime launch; live since 2026-11-26 on storytime-app-00045-jeg*
+
+- [x] **Track: Storytime at-home release (weeks 1 to 7 in the app)** — *created 2026-11-06, archived 2026-11-26*
+  *Link: [./archive/storytime_at_home_release_20261106/](./archive/storytime_at_home_release_20261106/)*
+  *Bring Storytime weeks 1 to 7 into the app for the at-home release of 2026-11-20: receive the Workbooks week packages of commit 82f88853 (w01 r2 in its own commit, w02 to w07 as draft), receive the approved A-42 pin after Daniel's content check of 2026-11-16, and deploy on Daniel's word.*
+  *Status: active, opened 2026-11-06; Phase 1 received locally at f2989514d, not deployed | Owner: Monorepo orchestrator | Parent: storytime_app_rebuild_20261025 | Phase 1 local commits by 2026-11-14, date needed 2026-11-16; Phase 3 deploy target 2026-11-20 (`deferred:daniel`); Phase 4 Entry redesign (A-71) planned 2026-11-20, preview by 2026-11-22 12:00 ICT*
+  *Note: PM decision 2026-11-05 moved tasks 3.10 and 3.11 of the parent here. PM hand-off 2026-11-06: 7 week packages from Workbooks commit 82f88853. Dependency: Red and Green of Phase 1 start after the parent Phase 3 heading carries its checkpoint. No push and no deploy without Daniel's word.*
+  *Note: Closed by PM 2026-11-26: done by the Storytime launch; live since 2026-11-26 on storytime-app-00045-jeg*
+
+- [x] **Track: Sales Advantage 2027 training — roleplay scoring repair and curriculum rebuild** — *created 2026-10-15, archived 2026-11-26*
+  *Link: [./archive/sales_training_2027_20261015/](./archive/sales_training_2027_20261015/)*
+  *Sales Advantage 2027 training: repair roleplay scoring (Thai and English) and rebuild the curriculum for the 2027 products and sales strategies, agreed with the PR session.*
+  *Status: S1 (scoring bug fix) code done, deploy after the Primary cutover, merged into master 2026-10-23 (branch sales/training-2027 removed); S2–S11 start after the PR source-set commit and the end of the feature freeze; tutor access needs the CONTRACTOR role (Monorepo, after the cutover) | Priority: HIGH | Requested by the owner; scope agreed with PR*
+  *Note: roleplay scoring fails in production for every recording (Responses format rejects audio); models: qwen/qwen3.8-omni-flash, backup google/gemini-2.5-flash-lite.*
+  *Status: kept and re-dated 2026-10-26 (Daniel, check E5): the work starts after PR's sales training source set passes Daniel's gates; no date until that approval page.*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+
+- [x] **Track: Company Finance Operations Foundation** — *created 2026-08-10, archived 2026-11-26*
+  *Link: [./archive/company_finance_operations_20260810/](./archive/company_finance_operations_20260810/)*
+  *Create the policy-neutral foundation for the distinct apps/accounting Finance Operations product without claiming ownership of statutory books or tax filings.*
+  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+
+- [x] **Track: Small-Company Admin Privilege Simplification** — *created 2026-07-22, archived 2026-11-26*
+  *Link: [./archive/small_company_admin_privileges_20260722/](./archive/small_company_admin_privileges_20260722/)*
+  *Simplify internal authorization for a small company by making COMPANY_ADMIN the owner/operator role with automatic administrator access to internal applications.*
+  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+
+- [x] **Track: Business Operations Graph Baseline Remediation** — *created 2026-07-30, archived 2026-11-26*
+  *Link: [./archive/business_operations_graph_baseline_remediation_20260730/](./archive/business_operations_graph_baseline_remediation_20260730/)*
+  *Remediate the failed business-operations graph baseline by binding an exact dirty-tree source snapshot, closing or compensating for repo-graph audit and tsconfig coverage gaps, and requiring independent acceptance before successor work begins.*
+  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+
+- [x] **Track: Customer, Licensing, and Minimal CRM Control Plane** — *created 2026-07-22, archived 2026-11-26*
+  *Link: [./archive/customer_licensing_crm_20260722/](./archive/customer_licensing_crm_20260722/)*
+  *Build a minimal company-operations CRM and licensing control plane for leads, customers, demos, school trials, subscriptions, provisioning, and future sales attribution.*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+
+- [x] **Track: www CRM Lead Intake** — *created 2026-07-22, archived 2026-11-26*
+  *Link: [./archive/www_crm_lead_intake_20260722/](./archive/www_crm_lead_intake_20260722/)*
+  *Route www-reading-advantage Contact Us and approved commercial CTA submissions into the minimal CRM with validation, attribution, anti-spam controls, notifications, and reliable UX.*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+
+- [x] **Track: Reading License Control-Plane Migration** — *created 2026-07-22, archived 2026-11-26*
+  *Link: [./archive/reading_license_control_plane_migration_20260722/](./archive/reading_license_control_plane_migration_20260722/)*
+  *Make Reading Advantage the first company-operations licensing consumer by importing expired history and centrally provisioning demos, school trials, and new or renewed subscriptions into Reading's local license model.*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+
+- [x] **Track: Sales Advantage Go-Live** — *created 2026-07-01, archived 2026-11-26*
+  *Link: [./archive/sales_advantage_golive_20260701/](./archive/sales_advantage_golive_20260701/)*
+  *Close authenticated production QA for the deployed Sales Advantage course. The deterministic curriculum, Cloud SQL database, and Cloud Run service are deployed. Accounts owns employee provisioning. Authenticated SALES_REP end-to-end QA remains open. The successor track sales_mastery_consumer_20260810 owns shared Mastery KST/SRS. This track does not claim shared-Mastery completion.*
+  *Status: kept and re-dated 2026-10-26 (Daniel, check E5): the work starts after PR's sales training source set passes Daniel's gates; no date until that approval page.*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+
+- [x] **Track: Sales and Marketing SSO Parity and Demo Accounts** — *created 2026-08-29, archived 2026-11-26*
+  *Link: [./archive/sales_marketing_sso_parity_20260829/](./archive/sales_marketing_sso_parity_20260829/)*
+  *Port the Codecamp SSO redirect repair to Sales and Marketing, add the role-denial message, and provision demo-only acceptance accounts with generated credentials.*
+  *Status: parked 2026-10-26 (Daniel, check E11b): the marketing service stays up and the code stays; no work*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+
+- [x] **Track: Accounting Dedicated Database Launch** — *created 2026-08-30, archived 2026-11-26*
+  *Link: [./archive/accounting_dedicated_db_launch_20260830/](./archive/accounting_dedicated_db_launch_20260830/)*
+  *Launch apps/accounting on its own dedicated database (separate accounting database on the shared Cloud SQL instance, company-identity layout): dedicated drizzle journal, runtime client, least-privilege roles and grants, SSO origin/redirect parity with Sales, candidate no-traffic Cloud Build pipeline with manual promotion gate, secrets, and DNS for accounting.reading-advantage.com.*
+  *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+
+- [x] **Track: TypeScript 6 Major Migration** — *created 2026-06-13, archived 2026-11-26*
+  *Link: [./archive/typescript6_major_migration/](./archive/typescript6_major_migration/)*
+  *Major migration to TypeScript 6. Covers new type-checking strictness, decorator metadata, isolated declarations, and tsconfig changes. Affects all apps and packages in the monorepo.*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+
+- [x] **Track: Zod 4 Major Migration** — *created 2026-06-13, archived 2026-11-26*
+  *Link: [./archive/zod4_major_migration/](./archive/zod4_major_migration/)*
+  *Major migration from Zod 3 to Zod 4. Coordinated with zod_boundary_hardening_20260603 which owns env/schema validation hardening. This track handles the version bump, API changes (z.string() refinements, .parse vs .safeParse, z.object .strict default), and schema rewrites.*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+
+- [x] **Track: Zustand 5 Major Migration** — *created 2026-06-13, archived 2026-11-26*
+  *Link: [./archive/zustand5_major_migration/](./archive/zustand5_major_migration/)*
+  *Major migration to Zustand 5. Covers new store creation API, middleware changes, and TypeScript type inference updates. Affects reading-advantage (currently v4) and aligns with advantage-games (already v5).*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+
+- [x] **Track: Primary Legacy Data Migration** — *created 2026-10-04, archived 2026-11-26*
+  *Link: [./archive/primary_legacy_data_migration_20261004/](./archive/primary_legacy_data_migration_20261004/)*
+  *Move the legacy Primary data into the shared schema for the cutover: ID map, ETL, Tutor compatibility views, old article links, and teacher credentials with a forced password change.*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+
 
 - [x] **Track: www test audit pilot** — *created 2026-11-22, archived 2026-11-25*
   *Link: [./archive/www_test_audit_pilot_20261122/](./archive/www_test_audit_pilot_20261122/)*
@@ -1494,21 +1538,12 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 
 #### Backlog Major Migrations (spawned from dependency_upgrade_hardening_20260607)
 
-- [ ] **Track: TypeScript 6 Major Migration** *(typescript6_major_migration — superseded)*
-  *Link: [./tracks/typescript6_major_migration/](./tracks/typescript6_major_migration/)*
-  Superseded before implementation by the stable TypeScript 7 native-compiler track below. The TypeScript 7 track now targets one compiler (amended 2026-11-05).
 
 - [ ] **Track: TypeScript 7 Native Compiler Migration** *(typescript7_native_migration_20260710)*
   *Link: [./tracks/typescript7_native_migration_20260710/](./tracks/typescript7_native_migration_20260710/)*
   Move the monorepo to one compiler, TypeScript 7 (tsgo), with no second install. Amended 2026-11-05 (Daniel): vinext 1.x upgrade first, then a TypeScript 7 trial in a worktree with a regression list and memory/time table, then Cloudflare preparation (Node-only dependency inventory and adapter plan, no code moves), then a rollout phase deferred until Daniel decides.
 
-- [ ] **Track: Zod 4 Major Migration** *(zod4_major_migration)*
-  *Link: [./tracks/zod4_major_migration/](./tracks/zod4_major_migration/)*
-  Major migration from Zod 3 to Zod 4. Coordinated with `zod_boundary_hardening_20260603` which owns env/schema validation hardening. This track handles the version bump, API changes (`z.string()` refinements, `.parse` vs `.safeParse`, `z.object` `.strict` default), and schema rewrites.
 
-- [ ] **Track: Zustand 5 Major Migration** *(zustand5_major_migration)*
-  *Link: [./tracks/zustand5_major_migration/](./tracks/zustand5_major_migration/)*
-  Major migration to Zustand 5. Covers new store creation API, middleware changes, and TypeScript type inference updates. Affects reading-advantage (currently v4) and aligns with advantage-games (already v5).
 
 ---
 
@@ -1653,8 +1688,6 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 
 
 
-- [ ] **Track: Primary Legacy Data Migration** *Link: [./tracks/primary_legacy_data_migration_20261004/](./tracks/primary_legacy_data_migration_20261004/)*
-  ID map, ETL, Tutor compatibility views, old article links, teacher credentials with a forced password change.
 
 - [~] **Track: Primary Mastery Evidence (T2 of the Primary Mastery Graph Program)** (created 2026-10-06 at the owner's request; lane-h; Phases 0-4 implemented and verified on a clone of the production copy the same day, 1361 evidence rows from 1065 legacy quiz rows; merged into integration 146e46261; the per-phase owner checks are open) *Link: [./tracks/primary_mastery_evidence_20261006/](./tracks/primary_mastery_evidence_20261006/)*
   `recordPrimaryEvidence`, the evidence policy as data (program 4.2), the question, flashcard, and game source adapters, the durable job, tenant scoping, and the evidence summary for calibration. Shadow mode: evidence only, no adaptation, no UI.
