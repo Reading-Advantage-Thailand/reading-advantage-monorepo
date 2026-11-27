@@ -244,10 +244,6 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 
 
-- [~] **Track: APK Standard Game Experience** *Link: [./tracks/apk_standard_game_experience_20260810/](./tracks/apk_standard_game_experience_20260810/)*
-  Briefing, guided tutorial, and class demonstration are in the live host. S4 debrief and S5 intern workflow stay dropped. S2 owner browser verification remains for later.
-  *Status: parked 2026-10-26 (Daniel, check E4): the games that shipped with the cutover are complete; this track is the larger September rebuild*
-
 - [x] **Track: APK Legacy Catalog Completion** *Link: [./archive/apk_legacy_catalog_completion_20260818/](./archive/apk_legacy_catalog_completion_20260818/)*
   Refactored the exact 20 remaining legacy catalog games into standard APK
   cartridges. The 28-entry catalog, compact and wide browser lifecycle, both
@@ -475,6 +471,11 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [ ] **Track: APK Arcade Portfolio Refactor** *Link: [./tracks/apk_arcade_portfolio_refactor_20260908/](./tracks/apk_arcade_portfolio_refactor_20260908/)*
   Plan the complete game rebuild, shared arcade experience, listening, progression, and social play. Sol medium handoff is complete; implementation remains planned.
+  *Status: parked 2026-10-26 (Daniel, check E4): the games that shipped with the cutover are complete; this track is the larger September rebuild*
+  *Status: shelved, not done (PM 2026-11-27).*
+
+- [ ] **Track: APK Standard Game Experience** *Link: [./tracks/apk_standard_game_experience_20260810/](./tracks/apk_standard_game_experience_20260810/)*
+  Briefing, guided tutorial, and class demonstration are in the live host. S4 debrief and S5 intern workflow stay dropped. S2 owner browser verification remains for later.
   *Status: parked 2026-10-26 (Daniel, check E4): the games that shipped with the cutover are complete; this track is the larger September rebuild*
   *Status: shelved, not done (PM 2026-11-27).*
 

@@ -314,7 +314,8 @@ closure, while S2.7 remains blocked on product-owner manual verification._
    `APK_TUTORIAL_QC_BROWSER` was not set. The next documentation task and the manual task
    remain blocked by their declared owners.
 
-- [~] Task: Document the shared path and bespoke mechanic hook
+- [ ] Task: Document the shared path and bespoke mechanic hook
+  Status: stale in-progress marker cleared, track shelved (PM 2026-11-28)
   - [x] Document how an intern declares steps `b0bc6f7b6`
   - [x] Document how cartridge code demonstrates a mechanic without recreating UI `b0bc6f7b6`
   - [x] Run the combined graph update and generated-facts refresh `390448dd2`
@@ -348,7 +349,8 @@ closure, while S2.7 remains blocked on product-owner manual verification._
 
   **Root structural-gate result (2026-08-13):** The whole-repository build-graph audit emitted no output and was terminated after approximately four minutes with exit 130; no audit Green is claimed. `measure/doctor.sh` exited 1 on 80 deprecated `[ ]` markers in nine unrelated plans, so its fail-fast path did not run architecture checks. The separate direct checker exited 1 with `files=4247`, `findings=697`, `parseErrors=0`, debt additions 137, debt removals 0, and renames 21. Repository-wide structural Green remains deferred to `root-structural-gates`; S2.6 and S2 are not complete.
 
-- [~] Task: Measure - User Manual Verification 'Phase S2: Guided Gameplay Tutorial' (Protocol in workflow.md)
+- [ ] Task: Measure - User Manual Verification 'Phase S2: Guided Gameplay Tutorial' (Protocol in workflow.md)
+  Status: stale in-progress marker cleared, track shelved (PM 2026-11-28)
   **First agent pass (2026-08-20):** Kimi WebBridge opened Dragon Flight on the public arcade,
   started the guided tutorial, and captured compact and wide screenshots in `evidence/`.
   Product-owner manual verification remains later.
