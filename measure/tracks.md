@@ -50,6 +50,7 @@ This file tracks all major tracks for the project.
 
 
 - [ ] **Track: Reading Phase 1 (light card)** — *created 2026-11-27* *Link: [./tracks/reading_phase_1_20261127/](./tracks/reading_phase_1_20261127/)*
+  *Description: Reading Phase 1 (light card) — created 2026-11-27*
 
 
 
