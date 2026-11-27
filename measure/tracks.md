@@ -44,6 +44,15 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
+- [~] **Track: Primary Parity Before the Cutover: quick fixes (existing track)** *Link: [./tracks/primary_parity_quick_fixes_20261011/](./tracks/primary_parity_quick_fixes_20261011/)*
+- [ ] **Track: Primary print kit look sync (light card)** — *created 2026-11-27* *Link: [./tracks/primary_print_kit_look_sync_20261127/](./tracks/primary_print_kit_look_sync_20261127/)*
+- [ ] **Track: Reading Phase 1 (light card)** — *created 2026-11-27* *Link: [./tracks/reading_phase_1_20261127/](./tracks/reading_phase_1_20261127/)*
+- [ ] **Track: Lexical matcher and article profile job (light card)** — *created 2026-11-27* *Link: [./tracks/lexical_matcher_profile_job_20261127/](./tracks/lexical_matcher_profile_job_20261127/)*
+- [ ] **Track: B2C Phase 0 reader decisions spike (light card)** — *created 2026-11-27* *Link: [./tracks/reader_b2c_decisions_spike_20261127/](./tracks/reader_b2c_decisions_spike_20261127/)*
+- [ ] **Track: Reading Phases 2 to 8 (light card)** — *created 2026-11-27* *Link: [./tracks/reading_phases_2_to_8_20261127/](./tracks/reading_phases_2_to_8_20261127/)*
+- [ ] **Track: Next.js security upgrade (light card)** — *created 2026-11-27* *Link: [./tracks/nextjs_security_upgrade_20261127/](./tracks/nextjs_security_upgrade_20261127/)*
+- [ ] **Track: Tutor page Thai, A-63 (light card)** — *created 2026-11-27* *Link: [./tracks/tutor_page_thai_a63_20261127/](./tracks/tutor_page_thai_a63_20261127/)*
+- [ ] **Track: www council pages** — *created 2026-11-27* *Link: [./tracks/www_council_20261127/](./tracks/www_council_20261127/)*
 
 
 - [~] **Track: Primary In-App Help (What's New videos)** — *created 2026-10-23*
@@ -637,78 +646,78 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   *Status: S1 (scoring bug fix) code done, deploy after the Primary cutover, merged into master 2026-10-23 (branch sales/training-2027 removed); S2–S11 start after the PR source-set commit and the end of the feature freeze; tutor access needs the CONTRACTOR role (Monorepo, after the cutover) | Priority: HIGH | Requested by the owner; scope agreed with PR*
   *Note: roleplay scoring fails in production for every recording (Responses format rejects audio); models: qwen/qwen3.8-omni-flash, backup google/gemini-2.5-flash-lite.*
   *Status: kept and re-dated 2026-10-26 (Daniel, check E5): the work starts after PR's sales training source set passes Daniel's gates; no date until that approval page.*
-  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not on the retired queue (./archive/QUEUE-2026-11-27.md); becomes a new item in ./tracks.md if needed*
 
 - [x] **Track: Company Finance Operations Foundation** — *created 2026-08-10, archived 2026-11-26*
   *Link: [./archive/company_finance_operations_20260810/](./archive/company_finance_operations_20260810/)*
   *Create the policy-neutral foundation for the distinct apps/accounting Finance Operations product without claiming ownership of statutory books or tax filings.*
   *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
-  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not on the retired queue (./archive/QUEUE-2026-11-27.md); becomes a new item in ./tracks.md if needed*
 
 - [x] **Track: Small-Company Admin Privilege Simplification** — *created 2026-07-22, archived 2026-11-26*
   *Link: [./archive/small_company_admin_privileges_20260722/](./archive/small_company_admin_privileges_20260722/)*
   *Simplify internal authorization for a small company by making COMPANY_ADMIN the owner/operator role with automatic administrator access to internal applications.*
   *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
-  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not on the retired queue (./archive/QUEUE-2026-11-27.md); becomes a new item in ./tracks.md if needed*
 
 - [x] **Track: Business Operations Graph Baseline Remediation** — *created 2026-07-30, archived 2026-11-26*
   *Link: [./archive/business_operations_graph_baseline_remediation_20260730/](./archive/business_operations_graph_baseline_remediation_20260730/)*
   *Remediate the failed business-operations graph baseline by binding an exact dirty-tree source snapshot, closing or compensating for repo-graph audit and tsconfig coverage gaps, and requiring independent acceptance before successor work begins.*
   *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
-  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not on the retired queue (./archive/QUEUE-2026-11-27.md); becomes a new item in ./tracks.md if needed*
 
 - [x] **Track: Customer, Licensing, and Minimal CRM Control Plane** — *created 2026-07-22, archived 2026-11-26*
   *Link: [./archive/customer_licensing_crm_20260722/](./archive/customer_licensing_crm_20260722/)*
   *Build a minimal company-operations CRM and licensing control plane for leads, customers, demos, school trials, subscriptions, provisioning, and future sales attribution.*
-  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not on the retired queue (./archive/QUEUE-2026-11-27.md); becomes a new item in ./tracks.md if needed*
 
 - [x] **Track: www CRM Lead Intake** — *created 2026-07-22, archived 2026-11-26*
   *Link: [./archive/www_crm_lead_intake_20260722/](./archive/www_crm_lead_intake_20260722/)*
   *Route www-reading-advantage Contact Us and approved commercial CTA submissions into the minimal CRM with validation, attribution, anti-spam controls, notifications, and reliable UX.*
-  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not on the retired queue (./archive/QUEUE-2026-11-27.md); becomes a new item in ./tracks.md if needed*
 
 - [x] **Track: Reading License Control-Plane Migration** — *created 2026-07-22, archived 2026-11-26*
   *Link: [./archive/reading_license_control_plane_migration_20260722/](./archive/reading_license_control_plane_migration_20260722/)*
   *Make Reading Advantage the first company-operations licensing consumer by importing expired history and centrally provisioning demos, school trials, and new or renewed subscriptions into Reading's local license model.*
-  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not on the retired queue (./archive/QUEUE-2026-11-27.md); becomes a new item in ./tracks.md if needed*
 
 - [x] **Track: Sales Advantage Go-Live** — *created 2026-07-01, archived 2026-11-26*
   *Link: [./archive/sales_advantage_golive_20260701/](./archive/sales_advantage_golive_20260701/)*
   *Close authenticated production QA for the deployed Sales Advantage course. The deterministic curriculum, Cloud SQL database, and Cloud Run service are deployed. Accounts owns employee provisioning. Authenticated SALES_REP end-to-end QA remains open. The successor track sales_mastery_consumer_20260810 owns shared Mastery KST/SRS. This track does not claim shared-Mastery completion.*
   *Status: kept and re-dated 2026-10-26 (Daniel, check E5): the work starts after PR's sales training source set passes Daniel's gates; no date until that approval page.*
-  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not on the retired queue (./archive/QUEUE-2026-11-27.md); becomes a new item in ./tracks.md if needed*
 
 - [x] **Track: Sales and Marketing SSO Parity and Demo Accounts** — *created 2026-08-29, archived 2026-11-26*
   *Link: [./archive/sales_marketing_sso_parity_20260829/](./archive/sales_marketing_sso_parity_20260829/)*
   *Port the Codecamp SSO redirect repair to Sales and Marketing, add the role-denial message, and provision demo-only acceptance accounts with generated credentials.*
   *Status: parked 2026-10-26 (Daniel, check E11b): the marketing service stays up and the code stays; no work*
-  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not on the retired queue (./archive/QUEUE-2026-11-27.md); becomes a new item in ./tracks.md if needed*
 
 - [x] **Track: Accounting Dedicated Database Launch** — *created 2026-08-30, archived 2026-11-26*
   *Link: [./archive/accounting_dedicated_db_launch_20260830/](./archive/accounting_dedicated_db_launch_20260830/)*
   *Launch apps/accounting on its own dedicated database (separate accounting database on the shared Cloud SQL instance, company-identity layout): dedicated drizzle journal, runtime client, least-privilege roles and grants, SSO origin/redirect parity with Sales, candidate no-traffic Cloud Build pipeline with manual promotion gate, secrets, and DNS for accounting.reading-advantage.com.*
   *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
-  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not on the retired queue (./archive/QUEUE-2026-11-27.md); becomes a new item in ./tracks.md if needed*
 
 - [x] **Track: TypeScript 6 Major Migration** — *created 2026-06-13, archived 2026-11-26*
   *Link: [./archive/typescript6_major_migration/](./archive/typescript6_major_migration/)*
   *Major migration to TypeScript 6. Covers new type-checking strictness, decorator metadata, isolated declarations, and tsconfig changes. Affects all apps and packages in the monorepo.*
-  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not on the retired queue (./archive/QUEUE-2026-11-27.md); becomes a new item in ./tracks.md if needed*
 
 - [x] **Track: Zod 4 Major Migration** — *created 2026-06-13, archived 2026-11-26*
   *Link: [./archive/zod4_major_migration/](./archive/zod4_major_migration/)*
   *Major migration from Zod 3 to Zod 4. Coordinated with zod_boundary_hardening_20260603 which owns env/schema validation hardening. This track handles the version bump, API changes (z.string() refinements, .parse vs .safeParse, z.object .strict default), and schema rewrites.*
-  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not on the retired queue (./archive/QUEUE-2026-11-27.md); becomes a new item in ./tracks.md if needed*
 
 - [x] **Track: Zustand 5 Major Migration** — *created 2026-06-13, archived 2026-11-26*
   *Link: [./archive/zustand5_major_migration/](./archive/zustand5_major_migration/)*
   *Major migration to Zustand 5. Covers new store creation API, middleware changes, and TypeScript type inference updates. Affects reading-advantage (currently v4) and aligns with advantage-games (already v5).*
-  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not on the retired queue (./archive/QUEUE-2026-11-27.md); becomes a new item in ./tracks.md if needed*
 
 - [x] **Track: Primary Legacy Data Migration** — *created 2026-10-04, archived 2026-11-26*
   *Link: [./archive/primary_legacy_data_migration_20261004/](./archive/primary_legacy_data_migration_20261004/)*
   *Move the legacy Primary data into the shared schema for the cutover: ID map, ETL, Tutor compatibility views, old article links, and teacher credentials with a forced password change.*
-  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not in QUEUE.md; becomes a new QUEUE.md item if needed*
+  *Note: Closed by PM 2026-11-26: shelved: no work since October or earlier, not on the retired queue (./archive/QUEUE-2026-11-27.md); becomes a new item in ./tracks.md if needed*
 
 
 - [x] **Track: www test audit pilot** — *created 2026-11-22, archived 2026-11-25*
@@ -1719,10 +1728,6 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 
 
 ---
-
-- [~] **Track: Primary Parity Before the Cutover: quick fixes (ADM-02, ADM-06, TCH-05, TCH-08, STU-02, STU-03, STU-06, STU-07, STU-08, STU-16, STU-17, PUB-04, PUB-05)**
-  *Link: [./tracks/primary_parity_quick_fixes_20261011/](./tracks/primary_parity_quick_fixes_20261011/)*
-  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 2*
 
 ---
 
