@@ -48,7 +48,7 @@ This file tracks all major tracks for the project.
   *Note: Daniel 2026-11-27: "Typescript and tooling upgrades should be completed before we start any new apps." First card by the PM's order.*
   *Note: Daniel 2026-11-27: for every platform change, Reading Advantage first, then Storytime, then the back office apps (accounting, workbooks, marketing, accounts), and Primary Advantage last, after the same change runs clean on the others.*
 
-- [ ] **Track: CI green on master** — *created 2026-11-15*
+- [~] **Track: CI green on master** — *created 2026-11-15*
   *Link: [./tracks/ci_green_master_20261115/](./tracks/ci_green_master_20261115/)*
   *Status: round 3 pushed at a54b5741a (CI run 43686964616): PC-1 www lint, PC-2 manifest
   hashes (refreshed twice; concurrent pushes stale the report pin), and PC-3 analyzer parse

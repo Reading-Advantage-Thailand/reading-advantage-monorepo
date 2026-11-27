@@ -357,6 +357,18 @@ Track: `ci_green_master_20261115` (light lane).
   the pattern in other packages. No assertion changed, no test skipped.
 - Gate from the package directory with its own config: 2 files, 35 tests pass.
 
+## CI round 15 (2026-11-27): revert the shared config change
+
+- The round-14 fix put `testTimeout` in `packages/advantage-play-kit/vitest.config.ts`.
+  That file is a source input for every app that consumes the kit. Run `46059700450`
+  therefore selected nine apps and started nine per-app "Check" jobs, eight of which
+  fail on gates outside this track. The matching CD run `46059700563` started builds
+  for the same nine apps. That CD run was cancelled before checkout finished; no
+  deploy ran.
+- The config line is reverted. The two round-14 test cases get their own 30 s budgets
+  instead. Test files deploy no app, so the next push selects no app and runs no
+  per-app "Check" job.
+
 ## Follow-up (deferred to a later owner)
 
 - [ ] The architecture report pin goes stale on every master push that changes analyzer

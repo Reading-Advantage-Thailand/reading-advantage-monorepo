@@ -857,6 +857,6 @@ describe("standard-pack suitability contracts", () => {
     expect(cohortSource).not.toMatch(/from "..\//);
     expect(cohortSource).not.toMatch(/(?:materializeStandardAssetUnion|createStandardAssetResolver|selectedUnion|publish.*Binding)/);
     expect(cohortSource).not.toMatch(/from "(?:node:|.*\/apps\/)/);
-  });
+  }, 30_000);
 
 });

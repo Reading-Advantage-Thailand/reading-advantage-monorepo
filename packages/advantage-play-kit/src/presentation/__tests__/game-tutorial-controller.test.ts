@@ -782,7 +782,7 @@ describe("APKGameHost tutorial integration", () => {
     expect(await screen.findByRole("region", { name: "Game result" })).toBeInTheDocument();
     expect(screen.getByText("Pixel art assets by ElvGames")).toBeInTheDocument();
     expect(onComplete).toHaveBeenCalledOnce();
-  });
+  }, 30_000);
 
   it("routes pause, resume, advance, replay, and skip host controls through tutorial commands", async () => {
     const clock = createManualClock();
