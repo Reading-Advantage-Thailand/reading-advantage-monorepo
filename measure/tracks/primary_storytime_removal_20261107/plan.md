@@ -34,8 +34,8 @@ Roles after Green (not plan tasks): the orchestrator runs these roles after the 
 
 ## Phase 2: Production leaves the route
 
-- [b] 2.1 The next Primary deploy by the team carries the deletion commit. Target: the next Primary deploy. Tests: AC-2.1. deferred:primary-advantage (owner: the next Primary deploy)
-- [b] 2.2 After the deploy, request `https://primary.reading-advantage.com/th/st/2/1`. It must not answer with the void Storytime page. Record the command and the status. Tests: AC-2.2. deferred:primary-advantage (owner: the next Primary deploy)
+- [x] 2.1 The next Primary deploy by the team carries the deletion commit. Target: the next Primary deploy. Tests: AC-2.1. deferred:primary-advantage (owner: the next Primary deploy) Evidence: ccb3ba4e7 is in the serving revision 00141 (git merge-base --is-ancestor ccb3ba4e7 origin/master exit 0; primary-advantage-app-00141-q2d takes 100% traffic; its image tag is a sha256 digest and does not name the commit)
+- [x] 2.2 After the deploy, request `https://primary.reading-advantage.com/th/st/2/1`. It must not answer with the void Storytime page. Record the command and the status. Tests: AC-2.2. deferred:primary-advantage (owner: the next Primary deploy) Evidence: `curl -s -o /dev/null -w '%{http_code}' https://primary.reading-advantage.com/th/st/2/1` returned 404 on 2026-11-27; the first 200 bytes start with `<!DOCTYPE html><html id="__next_error__">`, which is the Next.js error page, not the void Storytime page
 
 ## Phase 3: Closeout
 

@@ -64,7 +64,7 @@ This file tracks all major tracks for the project.
 
 - [ ] **Track: Remove the void Storytime code from Primary** — *created 2026-11-07*
   *Link: [./tracks/primary_storytime_removal_20261107/](./tracks/primary_storytime_removal_20261107/)*
-  *Status: active, opened 2026-11-07; Phase 1 removed locally at ccb3ba4e7, accepted at e62a8eba7 [checkpoint], not deployed; Phase 2 is the next Primary deploy by the team (`deferred:daniel`) | Owner: the next Primary deploy | Parent: storytime_app_rebuild_20261025 (task 7.1, code part) | Phase 1 local commits 2026-11-07*
+  *Status: active, opened 2026-11-07; Phase 1 removed locally at ccb3ba4e7, accepted at e62a8eba7 [checkpoint]; Phase 2 closed 2026-11-27: ccb3ba4e7 is in the serving revision 00141 and `/th/st/2/1` returns 404, not the void Storytime page; Phase 3 closeout task 3.1 stays open, so this is a closeout candidate and is not archived | Owner: the next Primary deploy | Parent: storytime_app_rebuild_20261025 (task 7.1, code part) | Phase 1 local commits 2026-11-07*
   *Note: Daniel 2026-11-07: "Are we back to the Storytime app inside Primary for a third time after I have originated that?" 25 files deleted, 9 edited in apps/primary-advantage. The bucket prefix gs://primary-app-storage/storytime/ stays untouched. No push and no deploy.*
 
 - [ ] **Track: Architecture identity and provider debt** — *created 2026-11-11*

@@ -26,8 +26,9 @@ Track: `ci_green_master_20261115` (light lane).
   analyzer-reconciliation.v2.json`, four hash fields only (input snapshot, two report hashes,
   review subject), no new field, no coverage growth. PC-3 fix: `280dd4a2f`, a build step for
   the two target packages before the check in `.github/workflows/ci.yml`.
-- [~] 1.5 Run local gates (app lint, architecture check), push to master, watch CI, and close
+- [ ] 1.5 Run local gates (app lint, architecture check), push to master, watch CI, and close
   the track when CI is green.
+  Reason (2026-11-27): the newest completed CI run on master is 45962645071 (failure). Its first red job is "Build, Lint, and Test" (conclusion failure). CI is not green, so the marker returns from [~] to [ ] and the track stays open.
   Gates run: app lint exit 0; `pnpm architecture:check --skip-input-snapshot-pin` exits 1
   with `debt-change` (PC-4) and parseErrors=0; root `pnpm lint --concurrency=2` exits 1 on
   `primary-advantage#lint` (PC-5: 13 errors, 11 in `tests/pwa/fixtures/`, 2 in
