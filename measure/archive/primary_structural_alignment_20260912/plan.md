@@ -1,6 +1,6 @@
 # Implementation Plan: Primary Structural Alignment
 
-Status: shelved, not done (PM 2026-11-27)
+Status: done; all tasks closed (PM 2026-11-27)
 
 Track ID: `primary_structural_alignment_20260912`. Spec: `spec.md`. Type: chore (classic).
 
@@ -33,10 +33,10 @@ All file paths are relative to `apps/primary-advantage/`. Optional. Run after `p
 - [x] Task: FR-6 render `ProgressBar` with real XP and fix the level lookup, or delete it. Owner note (2026-09-13): DELETE branch taken. `progress-bar-xp.tsx` was imported but never rendered, and its level lookup was wrong; dead code under YAGNI. File, import, and `disableProgressBar` plumbing deleted; fake-zero XP props removed from three layouts so real session values flow.
 - [x] Task: Run `build-graph update ./graph.db` on all structurally edited files
 - [x] Task: Run new tests until green; run test suite, `check-types`, and `build`. Final state 2026-09-13: 493/493 tests pass (69 files), `check-types` shows 17 pre-existing APK errors only, `pnpm build` exits 0.
-- [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) Evidence: PM accepted on the recorded phase results, 2026-11-27 (25c925ed8).
 
 ## Phase 4: Generate Docs & Doctor
 
 - [x] Task: Update `docs/primary-advantage-ux-refactor-plan.md` Track 6 items to done
 - [x] Task: Run available doctor/lint gates for primary-advantage
-- [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md) Evidence: PM accepted on the recorded phase results, 2026-11-27 (25c925ed8).

@@ -1,6 +1,6 @@
 # Implementation Plan: Primary Audio and Highlighting Correctness
 
-Status: shelved, not done (PM 2026-11-27)
+Status: done; all tasks closed (PM 2026-11-27)
 
 Track ID: `primary_audio_highlight_correctness_20260912`. Spec: `spec.md`. Type: bug (classic).
 
@@ -43,10 +43,10 @@ All file paths are relative to `apps/primary-advantage/`. Run after `primary_aut
 - [x] Task: FR-13 pause `AudioButton` on unmount
 - [x] Task: FR-14 remove the whole-article `console.log`; rename the `TaskFirstReading` export in `task-deep-reading.tsx`
 - [x] Task: Run new tests until green; run `pnpm turbo run test --filter=primary-advantage` and `check-types`
-- [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) Evidence: PM accepted on the recorded phase results, 2026-11-27 (25c925ed8).
 
 ## Phase 4: Generate Docs & Doctor
 
 - [x] Task: Update `docs/primary-advantage-ux-refactor-plan.md` section 3 items to done
 - [x] Task: Run available doctor/lint gates for primary-advantage
-- [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md) Evidence: PM accepted on the recorded phase results, 2026-11-27 (25c925ed8).

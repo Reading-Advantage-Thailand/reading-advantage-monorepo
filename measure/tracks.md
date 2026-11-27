@@ -46,6 +46,7 @@ This file tracks all major tracks for the project.
   *Link: [./tracks/typescript7_native_migration_20260710/](./tracks/typescript7_native_migration_20260710/)*
   Move the monorepo to one compiler, TypeScript 7 (tsgo), with no second install. Amended 2026-11-05 (Daniel): vinext 1.x upgrade first, then a TypeScript 7 trial in a worktree with a regression list and memory/time table, then Cloudflare preparation (Node-only dependency inventory and adapter plan, no code moves), then a rollout phase deferred until Daniel decides.
   *Note: Daniel 2026-11-27: "Typescript and tooling upgrades should be completed before we start any new apps." First card by the PM's order.*
+  *Note: Daniel 2026-11-27: for every platform change, Reading Advantage first, then Storytime, then the back office apps (accounting, workbooks, marketing, accounts), and Primary Advantage last, after the same change runs clean on the others.*
 
 
 - [ ] **Track: Reading Phase 1 (light card)** — *created 2026-11-27* *Link: [./tracks/reading_phase_1_20261127/](./tracks/reading_phase_1_20261127/)*
@@ -133,8 +134,10 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 > `packages/backend` package scaffold. After that structural gate, the remaining
 > kernel work and durable queue phases may proceed in parallel. Capability-bound
 > job handlers remain blocked on full kernel acceptance. Migration is staged:
-> small/new apps first, Reading Advantage next, and Primary Advantage last. This
-> program does not authorize a big-bang rewrite or Cloudflare Workers as a
+> Reading Advantage first, then Storytime, then the back office apps
+> (accounting, workbooks, marketing, accounts), and Primary Advantage last after
+> the same change runs clean on the others. This program does not authorize a
+> big-bang rewrite or Cloudflare Workers as a
 > backend runtime.
 
 
@@ -691,30 +694,6 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   and make `clear()` complete (audit item 3; S2, S3).
   *Status: shelved, not done (PM 2026-11-27).*
 
-- [ ] **Track: Primary Authorization Hardening** *Link: [./tracks/primary_authorization_hardening_20260912/](./tracks/primary_authorization_hardening_20260912/)*
-  Close the write-path holes: privilege escalation on `PATCH /api/users/[id]`, five unauthenticated API routes (including unbounded AI spend and path-join `unlink`), ten unguarded server actions including `deleteAllArticles`, client-authoritative XP, and cross-tenant student reads. Blocks tracks 2-6.
-  *Status: shelved, not done (PM 2026-11-27).*
-
-- [ ] **Track: Primary Broken UX Fixes** *Link: [./tracks/primary_broken_ux_fixes_20260912/](./tracks/primary_broken_ux_fixes_20260912/)*
-  Fix Chinese message scopes, the blank `/admin` landing page, dead admin and footer links, `captoliza` typos in live files, the stray `act` import, and two `console` module imports. One-line and small fixes only.
-  *Status: shelved, not done (PM 2026-11-27).*
-
-- [ ] **Track: Primary Audio and Highlighting Correctness** *Link: [./tracks/primary_audio_highlight_correctness_20260912/](./tracks/primary_audio_highlight_correctness_20260912/)*
-  No shared audio hook exists here. Extract one `useAudioSegment` hook, cancel the highlight `setTimeout` chain, fix `AudioButton` `load()` and zero end time, align lesson audio field names, and stop leaked clips.
-  *Status: shelved, not done (PM 2026-11-27).*
-
-- [ ] **Track: Primary Loading and State Correctness** *Link: [./tracks/primary_loading_state_correctness_20260912/](./tracks/primary_loading_state_correctness_20260912/)*
-  Fix stuck skeletons, the games-page hydration mismatch, unbounded article scroll, the admin search storm, components declared inside a render body, and hardcoded Thai lookups.
-  *Status: shelved, not done (PM 2026-11-27).*
-
-- [ ] **Track: Primary Component Deduplication** *Link: [./tracks/primary_component_deduplication_20260912/](./tracks/primary_component_deduplication_20260912/)*
-  Delete nine dead files first (including `class-roster.tsx` and `reports.tsx`), then merge nine fork pairs (6,082 identical lines). About 13,900 lines are removable.
-  *Status: shelved, not done (PM 2026-11-27).*
-
-- [ ] **Track: Primary Structural Alignment (optional)** *Link: [./tracks/primary_structural_alignment_20260912/](./tracks/primary_structural_alignment_20260912/)*
-  Long tail: migrate 33 API routes onto `createTenantDB` and `assertCan`, add `error.tsx` per route group, and close remaining i18n and a11y gaps. Optional. Run after track 5.
-  *Status: shelved, not done (PM 2026-11-27).*
-
 - [ ] **Track: Observability Stack: Sentry + Request Context + Tracing** *Link: [./tracks/observability_stack_20260603/](./tracks/observability_stack_20260603/)*
   Add `@sentry/nextjs`; create `sentry.client.config.ts` and `sentry.server.config.ts`. Add `instrumentation.ts` registering Sentry + `@opentelemetry/sdk-node` + `@opentelemetry/exporter-trace-otlp-http`. Introduce `AsyncLocalStorage<RequestContext>` to auto-attach `requestId`/`userId`/`latencyMs` to every log. Migrate 5 largest `route.ts` files' catch blocks from `console.error` to `logger.error`. Wrap `generateObject` calls in real OTel spans. Resolves F-902, F-903, F-904, F-905, F-906. 1 week. **Medium.** **Track 9.**
   *Status: parked 2026-10-26 (Daniel, check E1): no work since July to September; the back office is outside the Tutor focus*
@@ -780,7 +759,8 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   *Status: shelved, not done (PM 2026-11-27).*
 
 - [ ] **Track: Monorepo Continuous Deployment** (created 2026-10-09; spec only; code after the Primary cutover and the end of the freeze) *Link: [./tracks/monorepo_cd_20261009/](./tracks/monorepo_cd_20261009/)*
-  A push to master deploys each changed app: one shared GitHub deploy workflow, an app gate, tagged rollout with approval for Primary, keyless auth, and rollback. Primary and www first; CodeCamp after the migration ceiling fix.
+  A push to master deploys each changed app: one shared GitHub deploy workflow, an app gate, tagged rollout with approval for Primary, keyless auth, and rollback. Platform changes run on Reading Advantage first, then Storytime, then the back office apps (accounting, workbooks, marketing, accounts); Primary Advantage is last, after the same change runs clean on the others.
+  *Note: Daniel 2026-11-27: Primary Advantage has current users, so it is last for every platform change.*
   *Status: shelved, not done (PM 2026-11-27).*
 
 - [ ] **Track: Shared Accounts Across Apps** (created 2026-10-09; spec only; code after the Primary cutover and the end of the freeze) *Link: [./tracks/shared_accounts_20261009/](./tracks/shared_accounts_20261009/)*
@@ -811,6 +791,36 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   *Status: shelved, not done (PM 2026-11-27).*
 
 ## Archived Tracks
+
+- [x] **Track: Primary Authorization Hardening** — *archived 2026-11-27* *Link: [./archive/primary_authorization_hardening_20260912/](./archive/primary_authorization_hardening_20260912/)*
+  Close the write-path holes: privilege escalation on `PATCH /api/users/[id]`, five unauthenticated API routes (including unbounded AI spend and path-join `unlink`), ten unguarded server actions including `deleteAllArticles`, client-authoritative XP, and cross-tenant student reads. Blocks tracks 2-6.
+  *Status: done; all tasks closed (PM 2026-11-27).*
+  *Note: PM accepted the recorded phase results 2026-11-27 (25c925ed8); no Primary code changed.*
+
+- [x] **Track: Primary Broken UX Fixes** — *archived 2026-11-27* *Link: [./archive/primary_broken_ux_fixes_20260912/](./archive/primary_broken_ux_fixes_20260912/)*
+  Fix Chinese message scopes, the blank `/admin` landing page, dead admin and footer links, `captoliza` typos in live files, the stray `act` import, and two `console` module imports. One-line and small fixes only.
+  *Status: done; all tasks closed (PM 2026-11-27).*
+  *Note: PM accepted the recorded phase results 2026-11-27 (25c925ed8); no Primary code changed.*
+
+- [x] **Track: Primary Audio and Highlighting Correctness** — *archived 2026-11-27* *Link: [./archive/primary_audio_highlight_correctness_20260912/](./archive/primary_audio_highlight_correctness_20260912/)*
+  No shared audio hook exists here. Extract one `useAudioSegment` hook, cancel the highlight `setTimeout` chain, fix `AudioButton` `load()` and zero end time, align lesson audio field names, and stop leaked clips.
+  *Status: done; all tasks closed (PM 2026-11-27).*
+  *Note: PM accepted the recorded phase results 2026-11-27 (25c925ed8); no Primary code changed.*
+
+- [x] **Track: Primary Loading and State Correctness** — *archived 2026-11-27* *Link: [./archive/primary_loading_state_correctness_20260912/](./archive/primary_loading_state_correctness_20260912/)*
+  Fix stuck skeletons, the games-page hydration mismatch, unbounded article scroll, the admin search storm, components declared inside a render body, and hardcoded Thai lookups.
+  *Status: done; all tasks closed (PM 2026-11-27).*
+  *Note: PM accepted the recorded phase results 2026-11-27 (25c925ed8); no Primary code changed.*
+
+- [x] **Track: Primary Component Deduplication** — *archived 2026-11-27* *Link: [./archive/primary_component_deduplication_20260912/](./archive/primary_component_deduplication_20260912/)*
+  Delete nine dead files first (including `class-roster.tsx` and `reports.tsx`), then merge nine fork pairs (6,082 identical lines). About 13,900 lines are removable.
+  *Status: done; all tasks closed (PM 2026-11-27).*
+  *Note: PM accepted the recorded phase results 2026-11-27 (25c925ed8); no Primary code changed.*
+
+- [x] **Track: Primary Structural Alignment (optional)** — *archived 2026-11-27* *Link: [./archive/primary_structural_alignment_20260912/](./archive/primary_structural_alignment_20260912/)*
+  Long tail: migrate 33 API routes onto `createTenantDB` and `assertCan`, add `error.tsx` per route group, and close remaining i18n and a11y gaps. Optional. Run after track 5.
+  *Status: done; all tasks closed (PM 2026-11-27).*
+  *Note: PM accepted the recorded phase results 2026-11-27 (25c925ed8); no Primary code changed.*
 
 - [x] **Track: codecamp-advantage — Cloud Run Cold-Start Fix** — *archived 2026-11-27*
   *Link: [./archive/codecamp_infra_cold_start_20260608/](./archive/codecamp_infra_cold_start_20260608/)*

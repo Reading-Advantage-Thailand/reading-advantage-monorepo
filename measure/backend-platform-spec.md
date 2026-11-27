@@ -334,16 +334,16 @@ Existing `packages/domain` code is migrated opportunistically rather than copied
 
 1. **Foundation:** land AST enforcement and freeze ratcheting baselines. No
    capability or worker rollout may weaken the baseline.
-2. **Small/new applications first:** select bounded, low-risk operations in
-   newer/smaller apps and prove descriptor, executor, generated catalog,
-   bindings, tenancy, and rollback. Selection is evidence-based and does not
-   assert that an entire app is already migrated.
-3. **Reading Advantage next:** inventory legacy routes, migrate vertical slices
+2. **Reading Advantage first:** inventory legacy routes, migrate vertical slices
    by domain, preserve response contracts, and ratchet direct DB/provider debt
    down after each slice.
-4. **Primary Advantage last:** begin only after kernel and Reading patterns are
-   stable and Primary's Prisma/Drizzle and known stabilization constraints are
-   reconciled. No mechanical fork-wide port.
+3. **Storytime, then the back office apps (accounting, workbooks, marketing,
+   accounts):** select bounded, low-risk operations and prove descriptor,
+   executor, generated catalog, bindings, tenancy, and rollback. Selection is
+   evidence-based and does not assert that an entire app is already migrated.
+4. **Primary Advantage last:** begin only after the same change has run clean on
+   the other apps and Primary's Prisma/Drizzle and known stabilization constraints
+   are reconciled. No mechanical fork-wide port.
 
 Each slice has a compatibility test, authorization/tenant test, generated
 binding update, observability proof, and rollback plan. Old routes are removed

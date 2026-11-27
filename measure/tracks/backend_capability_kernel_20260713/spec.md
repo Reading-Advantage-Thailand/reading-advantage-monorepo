@@ -67,7 +67,9 @@ route visibility during incremental migration.
 Select one low-risk operation in a small/new app using documented criteria.
 Wrap/reuse its existing domain logic, preserve the transport contract, and add
 auth/tenant/error compatibility tests. Ratchet any removed direct-boundary debt
-down. Reading Advantage is the next program stage; Primary remains last.
+down. The program order is Reading Advantage first, then Storytime, then the back
+office apps (accounting, workbooks, marketing, accounts); Primary Advantage remains
+last, after the same change runs clean on the others.
 
 ## Non-functional Requirements
 

@@ -1,6 +1,6 @@
 # Implementation Plan: Primary Component Deduplication
 
-Status: shelved, not done (PM 2026-11-27)
+Status: done; all tasks closed (PM 2026-11-27)
 
 Track ID: `primary_component_deduplication_20260912`. Spec: `spec.md`. Type: chore (classic).
 
@@ -44,10 +44,10 @@ All file paths are relative to `apps/primary-advantage/`. Depends on tracks 1-4 
 - [x] Task: Run `build-graph update ./graph.db` on all structurally edited files
 - [x] Task: Run new tests until green; run test suite, `check-types`, and `build`
 - Deviation note (2026-09-13): AC-5's ~14,400-line target is not fully met. Measured removals: ~5,438 from deletions/renames/helpers plus ~3,782 from six true merges (sentence-order 2,114→1,228; cloze 2,636→1,690; flashcard 1,412→892; written-question 574→663; order-word 2,238→1,296; matching 1,452→875) — about 9,220 total, 64 percent of target. The first pass left the note's predecessor claim false: order-word and matching were still concatenated. A second pass on 2026-09-13 rebuilt both as parameterized components, gated by 32 characterization tests written before the merges. Matching missed its 590-line estimate by 13: the variant config needs 22 distinct label keys with JSDoc, and docs were kept over line golf. No concatenated pairs remain.
-- [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) Evidence: PM accepted on the recorded phase results, 2026-11-27 (25c925ed8).
 
 ## Phase 4: Generate Docs & Doctor
 
 - [x] Task: Update `docs/primary-advantage-ux-refactor-plan.md` section 5 items to done
 - [x] Task: Run available doctor/lint gates for primary-advantage
-- [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md) Evidence: PM accepted on the recorded phase results, 2026-11-27 (25c925ed8).

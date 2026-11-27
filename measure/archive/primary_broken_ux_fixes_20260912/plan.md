@@ -1,6 +1,6 @@
 # Implementation Plan: Primary Broken UX Fixes
 
-Status: shelved, not done (PM 2026-11-27)
+Status: done; all tasks closed (PM 2026-11-27)
 
 Track ID: `primary_broken_ux_fixes_20260912`. Spec: `spec.md`. Type: bug (classic).
 
@@ -38,10 +38,10 @@ These fixes change no data contracts. This phase pins the invariants as greppabl
 - [x] Task: FR-8 replace `captoliza` with `capitalize` in the eight live occurrences
 - [x] Task: FR-9 remove the `act` import and the two `console` module imports
 - [x] Task: Run new tests until green; run `pnpm turbo run test --filter=primary-advantage` and `check-types`
-- [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) Evidence: PM accepted on the recorded phase results, 2026-11-27 (25c925ed8).
 
 ## Phase 4: Generate Docs & Doctor
 
 - [x] Task: Update `docs/primary-advantage-ux-refactor-plan.md` Track 2 items to done
 - [x] Task: Run available doctor/lint gates for primary-advantage
-- [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md) Evidence: PM accepted on the recorded phase results, 2026-11-27 (25c925ed8).

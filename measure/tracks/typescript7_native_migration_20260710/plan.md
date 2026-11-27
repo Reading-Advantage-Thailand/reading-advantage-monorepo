@@ -271,11 +271,15 @@ PM 2026-11-23: parked until after the 30 Nov launch.
   - Done when: the answer cites at least one counted fact per area and names the separate
     Cloudflare track as the owner of the move; `git diff --stat` shows no file outside this
     track changed in the phase.
+- [ ] Task: Cloudflare trials use the free tier. Any paid plan or a new account cost goes to Daniel as a spend Task with the price before the spend.
+- [ ] Task: Cloudflare trial on Reading Advantage: build, adapter, a preview URL, smoke test; no production traffic, the team deploys
+- [ ] Task: Cloudflare trial on Storytime (same steps, after Reading Advantage runs clean)
 - [ ] Task: Measure - User Manual Verification 'Phase 4: Cloudflare preparation, not the move (PM step 2)' (Protocol in workflow.md).
 
 ## Phase 5: Rollout to one compiler (after Daniel decides on the PM step 1 report)
 
 > Daniel 2026-11-27 gave the priority decision this phase waited for. The tasks below are open.
+> For every platform change, Reading Advantage first, then Storytime, then the back office apps (accounting, workbooks, marketing, accounts), and Primary Advantage last, after the same change runs clean on the others.
 
 - [ ] Task: Make TypeScript 7 the only compiler
   - What: pin the exact 7.0.x in the workspace; remove the `overrides.typescript` 5.9.3 pin and

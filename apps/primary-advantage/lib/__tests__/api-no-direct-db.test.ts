@@ -92,7 +92,7 @@ describe("AC-1: no direct @reading-advantage/db imports in app/api routes", () =
       offenders,
       `Direct db-client import count: ${offenders.length}. ` +
         `Routes must reach the database through createTenantDB ` +
-        `(see measure/tracks/primary_structural_alignment_20260912 AC-1): ` +
+        `(see measure/archive/primary_structural_alignment_20260912 AC-1): ` +
         `${offenders.join(", ")}`,
     ).toEqual([]);
   });

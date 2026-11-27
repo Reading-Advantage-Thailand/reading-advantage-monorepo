@@ -88,6 +88,7 @@ _Story ref: spec.md#story-s5_
 
 > Red/Green grouping: S5.1 is Red. S5.2 to S5.7 are Green. S5.8 is the phase
 > verification. The image is the product; providers are adapters.
+> Cloudflare trials and adapters use the free tier. Any paid plan or a new account cost goes to Daniel as a spend Task with the price before the spend.
 
 - [ ] Task: S5.1 Red — keep apps/workbooks free of provider SDKs and provider variables
   - What: add a grep-style test over `apps/workbooks` source, `package.json` dependencies, and `Dockerfile`. Reject `@google-cloud`, `firebase`, `aws-sdk`, `@aws-sdk`, `cloudflare`, `wrangler`, `K_SERVICE`, `GOOGLE_`, `AWS_`, and `CF_`. Allow those names only under `apps/workbooks/deploy/<provider>/`. Add a fixture that proves the test fails on a hit.
