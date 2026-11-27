@@ -118,6 +118,8 @@ decision, canonical import with attribution, and a pinned successor pack before 
 
 > *2026-05-22: Deployment is moving off Vercel; GCP Cloud Run vs Cloudflare is not yet decided. The connection-pooling and reactive-query-layer tracks both depend on this decision.*
 
+> *2026-11-27 (Daniel, `workbooks_sso_onboarding_20260803`): the image is the product; providers are adapters. Every app ships one provider-neutral container image. Provider build, push, and run steps live under `apps/<app>/deploy/<provider>/`. App source, dependencies, and the Dockerfile name no provider SDK or provider environment variable.*
+
 ## Workspace Structure
 
 ```

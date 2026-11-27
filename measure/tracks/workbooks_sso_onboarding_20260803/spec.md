@@ -128,6 +128,26 @@ of S0–S3.
 **Estimate:** M
 **Priority:** Must
 
+### Story S5: Provider-neutral deploy
+**As a** platform operator
+**I want** one generic image and one adapter for each provider
+**So that** Google Cloud, Amazon, and Cloudflare can run the same app
+
+Daniel said on 2026-11-27: "It needs to be provider-neutral -- google cloud,
+amazon, cloudflare, etc." The image is the product; providers are adapters.
+
+**What:** keep `apps/workbooks` free of provider SDKs and provider environment
+variables; keep one generic Dockerfile; put each provider's build, push, and run
+steps under `apps/workbooks/deploy/<provider>/`.
+**Why:** one image must run on every provider without source changes.
+**Done when:** the S5.1 guard test passes, the Dockerfile names no provider, the
+three adapters build and push the same image with the same variables, the deploy
+note lists those variables, and the light gates pass. This track runs no real
+deploy and no account setup; the team deploys.
+
+**Estimate:** M
+**Priority:** Must
+
 ## Non-Functional Requirements
 
 - **NFR-1:** No secret value is ever passed as a Docker build argument or baked

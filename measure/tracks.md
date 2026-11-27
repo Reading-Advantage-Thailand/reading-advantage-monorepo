@@ -610,6 +610,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [ ] **Track: Workbooks SSO Onboarding** *Link: [./tracks/workbooks_sso_onboarding_20260803/](./tracks/workbooks_sso_onboarding_20260803/)*
   *Status: parked 2026-10-26 (Daniel, check E9): no work since July and September*
   *Status: shelved, not done (PM 2026-11-27).*
+  *Note: S5 provider-neutral deploy next after TS7*
 
 - [ ] **Track: Versioned Workbook Content and Editions** *Link: [./tracks/workbook_content_versioning_20260711/](./tracks/workbook_content_versioning_20260711/)*
   Define the shared article-and-asset catalog contract, publish immutable workbook editions,
