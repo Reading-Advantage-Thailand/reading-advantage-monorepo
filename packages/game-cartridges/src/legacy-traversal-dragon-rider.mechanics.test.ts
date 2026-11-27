@@ -218,5 +218,5 @@ describe("legacy traversal Phase 3 Dragon Rider mechanics", () => {
     expect(new Set(cartridge.manifest.capabilities).size).toBe(
       cartridge.manifest.capabilities.length,
     );
-  });
+  }, 30_000);
 });

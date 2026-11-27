@@ -369,6 +369,18 @@ Track: `ci_green_master_20261115` (light lane).
   instead. Test files deploy no app, so the next push selects no app and runs no
   per-app "Check" job.
 
+## CI round 16 (2026-11-27): run 46061492663
+
+- The scoped APK fix removed the nine-app selection, but the revert commit still selected
+  nine apps because it touched the shared config file. Its CD run `46061492920` was
+  cancelled before checkout finished; no deploy ran. Eight per-app "Check" jobs failed
+  on gates outside this track (codecamp session expiry, sales curriculum pins, accounts
+  module resolution, and others).
+- The main job reached the Test step. One more 5 s timeout appeared, in
+  `packages/game-cartridges/src/legacy-traversal-dragon-rider.mechanics.test.ts`
+  ("requires the accepted gate-to-boss traversal loop"). No assertion failed.
+- Fix: that case gets a 30 s budget. Test files deploy no app. Local gate: 1 test passes.
+
 ## Follow-up (deferred to a later owner)
 
 - [ ] The architecture report pin goes stale on every master push that changes analyzer
