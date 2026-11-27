@@ -1,5 +1,7 @@
 # Implementation Plan: Codecamp SSO Redirect Repair
 
+Status: shelved, not done (PM 2026-11-27)
+
 > **Browser acceptance:** Run all six acceptance cases in the live application
 > with the in-app browser. Capture a screenshot of the landing page and the full
 > redirect chain from the network panel for each case. Unit tests on `proxy.ts`

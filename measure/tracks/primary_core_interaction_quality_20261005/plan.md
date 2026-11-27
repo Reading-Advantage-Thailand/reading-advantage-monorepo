@@ -1,5 +1,7 @@
 # Plan — Primary Core Interaction Quality
 
+Status: shelved, not done (PM 2026-11-27)
+
 > Re-dated 2026-10-26 (Daniel, decision C5): Phases 1-4 (the quality fixes) run after Storytime
 > release 1 (2026-12-01). Phase 0 (verify the September tracks) is not re-dated; it runs now
 > (decision C6, a browser check on a cheap model).

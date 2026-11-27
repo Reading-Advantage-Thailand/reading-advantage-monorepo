@@ -1,5 +1,7 @@
 # Implementation Plan: CodeCamp Interactive Media and Diagrams Integration
 
+Status: shelved, not done (PM 2026-11-27)
+
 ## Phase 1: Track Setup
 
 - [x] Create Measure track metadata, spec, and plan.

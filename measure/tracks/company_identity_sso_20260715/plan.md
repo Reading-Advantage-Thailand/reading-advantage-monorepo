@@ -1,5 +1,7 @@
 # Implementation Plan: Company Employee Identity and SSO
 
+Status: shelved, not done (PM 2026-11-27)
+
 > **Successor coordination (2026-07-22):** Complete observation and legacy-auth
 > retirement here, but implement the approved small-company owner/operator
 > access policy in `small_company_admin_privileges_20260722`. Do not restore the
@@ -110,25 +112,25 @@ _Story ref: spec.md#story-s1_
           connections.
 
 - [ ] Task 6: Establish the backend identity module and adapter boundary.
-    - [~] Add transport-independent identity repository interfaces and
+    - [ ] Add transport-independent identity repository interfaces and
           capability contracts.
-    - [~] Add the PostgreSQL identity adapter in the approved ownership root.
-    - [~] Connect authentication, authorization, audit, transaction, and
+    - [ ] Add the PostgreSQL identity adapter in the approved ownership root.
+    - [ ] Connect authentication, authorization, audit, transaction, and
           structured-error policies through the backend executor.
-    - [~] Register exact architecture-enforcement allowlists without wildcard
+    - [ ] Register exact architecture-enforcement allowlists without wildcard
           exemptions.
-    - [~] Run the counterexample fixtures and ratchet tests.
+    - [ ] Run the counterexample fixtures and ratchet tests.
 
 ### Generate Docs & Doctor
 
 - [ ] Task 7: Generate identity architecture facts and run phase gates.
-    - [~] Document the database topology, migration commands, environment
+    - [ ] Document the database topology, migration commands, environment
           variables, ownership rules, and local PostgreSQL test workflow.
-    - [~] Run `measure/generate.sh` and review generated changes.
-    - [~] Run the Measure doctor and database ledger doctor.
-    - [~] Run targeted tests, coverage, lint, typecheck, and builds for the
+    - [ ] Run `measure/generate.sh` and review generated changes.
+    - [ ] Run the Measure doctor and database ledger doctor.
+    - [ ] Run targeted tests, coverage, lint, typecheck, and builds for the
           database, backend, and auth packages.
-    - [~] Update `graph.db` for all structural changes.
+    - [ ] Update `graph.db` for all structural changes.
 
 - [ ] Task: Measure - User Manual Verification 'Phase S1: Establish Company Identity Boundary' (Protocol in workflow.md)
 
@@ -209,12 +211,12 @@ _Blast radius: `validateSession` has 31 source references but 0 graph-resolved c
 ### Generate Docs & Doctor
 
 - [b] Task 14: Document and verify the SSO protocol. (deferred:backlog)
-    - [~] Document client registration, redirect URIs, session lifecycles,
+    - [ ] Document client registration, redirect URIs, session lifecycles,
           logout semantics, key/secret rotation, and incident revocation.
-    - [~] Generate capability and route documentation.
-    - [~] Run Measure doctor, auth security tests, PostgreSQL integration tests,
+    - [ ] Generate capability and route documentation.
+    - [ ] Run Measure doctor, auth security tests, PostgreSQL integration tests,
           coverage, lint, typecheck, and builds.
-    - [~] Inspect the shared session and role symbols before modification and
+    - [ ] Inspect the shared session and role symbols before modification and
           update `graph.db` afterward.
 
 - [b] Task: Measure - User Manual Verification 'Phase S2: Provide Employee SSO' (Protocol in workflow.md) (deferred:backlog)
@@ -284,13 +286,13 @@ _Blast radius: `roleAtLeast` has 5 source references but 0 graph-resolved caller
 ### Generate Docs & Doctor
 
 - [b] Task 20: Document and verify employee administration. (deferred:backlog)
-    - [~] Publish the company-versus-application role matrix.
-    - [~] Document bootstrap, recovery, suspension, termination, and
+    - [ ] Publish the company-versus-application role matrix.
+    - [ ] Document bootstrap, recovery, suspension, termination, and
           session-revocation procedures.
-    - [~] Generate capability and audit-event documentation.
-    - [~] Run Measure doctor, local PostgreSQL tests, coverage, lint, typecheck,
+    - [ ] Generate capability and audit-event documentation.
+    - [ ] Run Measure doctor, local PostgreSQL tests, coverage, lint, typecheck,
           Accounts build, and backend package builds.
-    - [~] Update `graph.db` for new capabilities, schemas, routes, and UI.
+    - [ ] Update `graph.db` for new capabilities, schemas, routes, and UI.
 
 - [b] Task: Measure - User Manual Verification 'Phase S3: Manage Employees and App Roles' (Protocol in workflow.md) (deferred:backlog)
 
@@ -350,12 +352,12 @@ _Blast radius: `requireMarketingSession` has 9 source references but 0 graph-res
 ### Generate Docs & Doctor
 
 - [b] Task 25: Document and verify the Marketing integration. (deferred:backlog)
-    - [~] Document client configuration, permissions, role assignment, smoke
+    - [ ] Document client configuration, permissions, role assignment, smoke
           tests, rollback, and deployment environment.
-    - [~] Generate route and capability facts.
-    - [~] Run Measure doctor, Marketing tests, coverage, lint, typecheck, and
+    - [ ] Generate route and capability facts.
+    - [ ] Run Measure doctor, Marketing tests, coverage, lint, typecheck, and
           build.
-    - [~] Run the architecture boundary guards and update `graph.db`.
+    - [ ] Run the architecture boundary guards and update `graph.db`.
 
 - [b] Task: Measure - User Manual Verification 'Phase S4: Connect Marketing' (Protocol in workflow.md) (deferred:backlog)
 
@@ -431,12 +433,12 @@ _Blast radius: `createRepAccount` has 4 source references, `getCohortOverview` h
 ### Generate Docs & Doctor
 
 - [b] Task 32: Document and verify the Sales integration. (deferred:backlog)
-    - [~] Document the role matrix, Accounts onboarding handoff, organization
+    - [ ] Document the role matrix, Accounts onboarding handoff, organization
           scoping, client configuration, deployment, and rollback.
-    - [~] Generate capability and route facts.
-    - [~] Run Measure doctor, Sales/API/domain tests, PostgreSQL integration
+    - [ ] Generate capability and route facts.
+    - [ ] Run Measure doctor, Sales/API/domain tests, PostgreSQL integration
           tests, coverage, lint, typecheck, and builds.
-    - [~] Run architecture and authorization boundary guards.
+    - [ ] Run architecture and authorization boundary guards.
 
 - [b] Task: Measure - User Manual Verification 'Phase S5: Connect Sales Advantage' (Protocol in workflow.md) (deferred:backlog)
 
@@ -632,16 +634,16 @@ _Story ref: spec.md#story-s7_
           `38c3f0c0-2b04-4bca-825d-93e9f83f2cf0` deployed revision
           `codecamp-advantage-00020-hay` at 100%; see
           [`codecamp-cutover-postflight-20260720.md`](./codecamp-cutover-postflight-20260720.md).
-    - [~] Observe authentication and product metrics through the agreed window.
+    - [ ] Observe authentication and product metrics through the agreed window.
 
 - [b] Task 48: Retire legacy authentication after explicit approval. (deferred:backlog)
-    - [~] Confirm no unresolved migrated-account exceptions remain.
-    - [~] Confirm rollback evidence and observation-window results are accepted.
-    - [~] Obtain explicit operator approval before disabling legacy credential
+    - [ ] Confirm no unresolved migrated-account exceptions remain.
+    - [ ] Confirm rollback evidence and observation-window results are accepted.
+    - [ ] Obtain explicit operator approval before disabling legacy credential
           paths.
-    - [~] Disable legacy auth entry points and secrets without deleting backup
+    - [ ] Disable legacy auth entry points and secrets without deleting backup
           evidence.
-    - [~] Run final cross-application SSO, role-isolation, suspension, logout,
+    - [ ] Run final cross-application SSO, role-isolation, suspension, logout,
           and product-data verification.
 
 ### Generate Docs & Doctor
@@ -654,7 +656,7 @@ _Story ref: spec.md#story-s7_
     - [x] Run affected package/app tests, PostgreSQL integration tests,
           coverage, lint, typecheck, and builds. — The accepted migration/rehearsal and release-gate evidence is summarized in [`migration-evidence-20260719.md`](./migration-evidence-20260719.md).
     - [x] Run the full architecture-enforcement and migration-ledger gates. — Boundary, migration SHA, idempotency, and secret-boundary evidence are recorded in [`migration-evidence-20260719.md`](./migration-evidence-20260719.md) and [`secret-inventory-20260719.md`](./secret-inventory-20260719.md).
-    - [~] Rebuild `graph.db` with the canonical current schema and run its integrity audit. — The 2026-07-15 graph is stale and incompatible; the successor program graph-baseline phase owns current evidence.
-    - [~] Complete independent security, migration, and change-quality review.
+    - [ ] Rebuild `graph.db` with the canonical current schema and run its integrity audit. — The 2026-07-15 graph is stale and incompatible; the successor program graph-baseline phase owns current evidence.
+    - [ ] Complete independent security, migration, and change-quality review.
 
 - [b] Task: Measure - User Manual Verification 'Phase S7: Cut Over and Verify Production' (Protocol in workflow.md) (deferred:backlog)

@@ -1,5 +1,7 @@
 # Implementation Plan: Primary Component Deduplication
 
+Status: shelved, not done (PM 2026-11-27)
+
 Track ID: `primary_component_deduplication_20260912`. Spec: `spec.md`. Type: chore (classic).
 
 All file paths are relative to `apps/primary-advantage/`. Depends on tracks 1-4 for shared-file fixes. Deletions come first.

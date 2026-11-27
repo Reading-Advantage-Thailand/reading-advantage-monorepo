@@ -1,5 +1,7 @@
 # Implementation Plan: Memory — Client Quick Wins
 
+Status: shelved, not done (PM 2026-11-27)
+
 Track ID: `reading_mem_client_quick_20260918`. Spec: `spec.md`. Type: chore (classic).
 
 All file paths are relative to `apps/reading-advantage/` unless noted.

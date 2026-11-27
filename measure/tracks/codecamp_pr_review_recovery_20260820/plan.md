@@ -1,5 +1,7 @@
 # Implementation Plan: Codecamp PR Review Recovery
 
+Status: shelved, not done (PM 2026-11-27)
+
 > **Browser acceptance:** Submit a real pull request from an intern account and
 > watch the lesson page move through `processing` to `reviewed`. Then submit a
 > pull request containing only generated files and confirm the `skipped` state

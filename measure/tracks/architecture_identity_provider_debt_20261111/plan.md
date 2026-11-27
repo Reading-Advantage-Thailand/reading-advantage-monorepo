@@ -1,5 +1,7 @@
 # Implementation Plan: Identity and provider debt in the v1 architecture baseline
 
+Status: shelved, not done (PM 2026-11-27)
+
 > **Track ID:** `architecture_identity_provider_debt_20261111` · **Spec:** [spec.md](./spec.md) · **Depends on:** [architecture_ci_input_pin_20261110](../architecture_ci_input_pin_20261110/) task 1.4d
 > **Dates:** Start not before 2026-11-21. Due 2026-12-15. Priority P2.
 

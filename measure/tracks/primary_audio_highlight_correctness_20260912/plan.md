@@ -1,5 +1,7 @@
 # Implementation Plan: Primary Audio and Highlighting Correctness
 
+Status: shelved, not done (PM 2026-11-27)
+
 Track ID: `primary_audio_highlight_correctness_20260912`. Spec: `spec.md`. Type: bug (classic).
 
 All file paths are relative to `apps/primary-advantage/`. Run after `primary_authorization_hardening_20260912`. May run in parallel with `primary_broken_ux_fixes_20260912`.

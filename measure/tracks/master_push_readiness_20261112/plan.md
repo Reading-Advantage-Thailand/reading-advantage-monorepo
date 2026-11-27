@@ -1,5 +1,7 @@
 # Implementation Plan: Master push readiness
 
+Status: shelved, not done (PM 2026-11-27)
+
 > **Track ID:** `master_push_readiness_20261112` · **Spec:** [spec.md](./spec.md)
 > **Due:** Phase 1 on 2026-11-15 (PM decision 2). Phase 2 starts after the deploy word list goes to Daniel.
 > No push. No deploy. No IAM change, except the `deferred:pm` grant of task 1.7.

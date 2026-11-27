@@ -1,5 +1,7 @@
 # Implementation Plan: Codecamp Mastery Evidence Projection
 
+Status: shelved, not done (PM 2026-11-27)
+
 > **Browser acceptance:** Complete one full Phase A module end to end as an
 > intern: read the theory, answer the checkpoints, submit the exercise, take the
 > quiz, and open the pull request. Then show the resulting objective evidence in

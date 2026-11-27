@@ -1,5 +1,7 @@
 # Plan — Reading Phases 2 to 8
 
+Status: shelved, not done (PM 2026-11-27)
+
 Light card. One registry line in `measure/tracks.md`. One track at a time in plan order. Source: `/home/daniebo/Desktop/handoff/2026-11-26-reading-app-upgrade-plan.md`. No spec, no review, no gates.
 
 ## Phase 1

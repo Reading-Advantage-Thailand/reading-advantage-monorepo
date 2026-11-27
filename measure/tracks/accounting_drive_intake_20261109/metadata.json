@@ -1,7 +1,7 @@
 {
   "track_id": "accounting_drive_intake_20261109",
   "type": "feature",
-  "status": "new",
+  "status": "shelved",
   "created_at": "2026-11-09T00:00:00Z",
   "updated_at": "2026-11-09T00:00:00Z",
   "description": "Take the office assistant's Google Drive uploads into apps/accounting as pending submissions with private evidence, add the CEO monthly close sign-off with a lock and an audit row, propose a read-only Tutor Advantage settlement interface, and hold the monthly invoice pull, the Drive IAM grant, the PA-INV and Storytime receipts, and the deploy as deferred tasks.",

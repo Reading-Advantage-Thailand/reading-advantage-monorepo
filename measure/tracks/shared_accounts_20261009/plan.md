@@ -1,5 +1,7 @@
 # Implementation Plan: Shared Accounts Across Apps
 
+Status: shelved, not done (PM 2026-11-27)
+
 Track: `shared_accounts_20261009`. Spec: [spec.md](./spec.md).
 No task starts before the preconditions in Phase 0 are true.
 

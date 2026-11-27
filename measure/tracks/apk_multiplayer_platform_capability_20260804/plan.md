@@ -1,5 +1,7 @@
 # Implementation Plan: Standard Multiplayer Capability for the Advantage Play Kit
 
+Status: shelved, not done (PM 2026-11-27)
+
 Exemplar for the capability shape is the existing optional `responsive` block:
 `MountCartridgeOptions` (`packages/advantage-play-kit/src/runtime/types.ts:382`)
 and its handling in `mountCartridge`

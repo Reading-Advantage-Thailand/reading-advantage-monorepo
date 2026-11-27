@@ -1,5 +1,7 @@
 # Implementation Plan: Primary Structural Alignment
 
+Status: shelved, not done (PM 2026-11-27)
+
 Track ID: `primary_structural_alignment_20260912`. Spec: `spec.md`. Type: chore (classic).
 
 All file paths are relative to `apps/primary-advantage/`. Optional. Run after `primary_component_deduplication_20260912` to avoid merge conflicts on shared components.

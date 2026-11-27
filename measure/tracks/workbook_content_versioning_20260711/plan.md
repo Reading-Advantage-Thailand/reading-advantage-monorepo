@@ -1,5 +1,7 @@
 # Implementation Plan: Workbook Publishing Platform and Ecosystem Import
 
+Status: shelved, not done (PM 2026-11-27)
+
 > This plan imports `advantage-workbooks` as a governed internal web publishing platform.
 > It preserves Reading and Primary source ownership, replaces runtime filesystem storage,
 > and adds immutable editions, durable artifacts, reviewed AI proposals, and source-owned
@@ -53,7 +55,6 @@ fixture only; do not change its public signature during this track._
   - [ ] Run `measure/generate.sh` and `measure/doctor.sh` when their project-local
     prerequisites are available; record unsupported commands rather than bypassing
     them.
-- [b] Task: Measure - User Manual Verification 'Phase S1: Select source content' (Protocol in workflow.md) — (deferred:backlog)
 
 ## Phase S2: Implement drafts, immutable editions, and provenance
 
@@ -89,7 +90,6 @@ _Story ref: spec.md#story-s2-publish-immutable-editions_
     exact evidence in this track.
   - [ ] Run generated-documentation and doctor checks, recording known baseline debt
     separately.
-- [b] Task: Measure - User Manual Verification 'Phase S2: Publish immutable editions' (Protocol in workflow.md) — (deferred:backlog)
 
 ## Phase S3: Import legacy projects and establish artifact foundations
 
@@ -127,7 +127,6 @@ _Story ref: spec.md#story-s3-import-legacy-workbook-projects-and-assets_
     commands, then run the applicable aggregate validation gates.
   - [ ] Record migration, rollback, and artifact-validation operational guidance in the
     track before any dashboard cutover is planned.
-- [b] Task: Measure - User Manual Verification 'Phase S3: Reproduce release artifacts' (Protocol in workflow.md) — (deferred:backlog)
 
 ## Phase S4: Port the production workspace to `apps/workbooks`
 
@@ -160,3 +159,11 @@ _Story ref: spec.md#story-s3-import-legacy-workbook-projects-and-assets_
 - [ ] Task: Run shadow import/parallel render, internal dogfood, controlled teacher consumption, full reconciliation, human print sign-off, and reverse-order rollback rehearsal.
 - [ ] Task: Freeze standalone writes only after independent final review, no open Critical/High findings, a final hash manifest, read-only archive, and product-owner cutover acceptance.
 - [ ] Task: Measure - User Manual Verification 'Phase S7: Pilot consumption, cut over, and retain rollback' (Protocol in workflow.md).
+
+## Backlog
+
+These checks are outside the active phases until the track resumes.
+
+- [ ] Task: Measure - User Manual Verification 'Phase S1: Select source content' (Protocol in workflow.md).
+- [ ] Task: Measure - User Manual Verification 'Phase S2: Publish immutable editions' (Protocol in workflow.md).
+- [ ] Task: Measure - User Manual Verification 'Phase S3: Reproduce release artifacts' (Protocol in workflow.md).

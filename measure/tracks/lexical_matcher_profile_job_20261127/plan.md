@@ -1,5 +1,7 @@
 # Plan — Lexical matcher and article profile job
 
+Status: shelved, not done (PM 2026-11-27)
+
 Light card. One registry line in `measure/tracks.md`. This shared foundation serves the Reading plan and the B2C plan. No spec, no review, no gates.
 
 ## Phase 1

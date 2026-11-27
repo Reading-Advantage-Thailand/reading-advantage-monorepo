@@ -1,5 +1,7 @@
 # Implementation Plan: Reading Audio and Highlighting Correctness
 
+Status: shelved, not done (PM 2026-11-27)
+
 Track ID: `audio_highlight_correctness_20260911`. Spec: `spec.md`. Type: bug (classic).
 
 All file paths are relative to `apps/reading-advantage/`.

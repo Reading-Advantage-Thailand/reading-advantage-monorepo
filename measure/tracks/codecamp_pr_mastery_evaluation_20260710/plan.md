@@ -1,5 +1,7 @@
 # Implementation Plan: Codecamp PR Review as Mastery Evidence
 
+Status: shelved, not done (PM 2026-11-27)
+
 > **Browser acceptance:** Exercise the complete student and teacher PR flow in
 > the live app with the in-app browser: submission/status, structured feedback,
 > objective evidence, advisory approval semantics, retry/revision, mastery/SRS
@@ -73,7 +75,7 @@ _Story ref: spec.md#story-s4_
 - [ ] Task: Close and verify the PR evaluation track — the 2026-08-11 product-owner decision `Approve active rollout` is durably recorded in `release-approval.json` for the current active rollout's advisory PR feedback only; this bounded approval does not close the track.
   - [x] Record bounded active-rollout approval provenance — `67324e850` adds `release-approval.json`, binding the exact owner-selected label to config commit `508fac6fd`, reviewed HEAD `46f97a54d69c37f931c72069ff063d95e1525c41`, and advisory-only scope.
 - [ ] Run frozen/live evaluations, end-to-end GitHub flow, affected/root gates, graph/generate/doctor, and curriculum/product-owner review — human-labelled fixtures, frozen/live evaluation, credentialed GitHub, browser, graph/generate/doctor, and broader curriculum/product-owner review gates remain open. Focused approval evidence: `bash tests/codecamp_pr_release_approval_provenance.sh` exited 0 with `=== Total: 9 checks (PASS=9, FAIL=0) ===`; it rejects mismatched marker, wrong revisions, broader authority, broadened source, and absent decision.
-  - [~] Task: Measure - User Manual Verification 'Phase S4: Calibrate and release safely' (Protocol in workflow.md) — durable provenance is recorded, but human-labelled evaluation, credentialed GitHub, browser, graph/doctor, and broader curriculum/product-owner verification remain open.
+  - [ ] Task: Measure - User Manual Verification 'Phase S4: Calibrate and release safely' (Protocol in workflow.md) — durable provenance is recorded, but human-labelled evaluation, credentialed GitHub, browser, graph/doctor, and broader curriculum/product-owner verification remain open.
 
 ## Production Incident Repair: Durable PR Review Recovery (2026-08-10)
 _Story refs: S2, S3, S4; production incident addendum in spec.md_

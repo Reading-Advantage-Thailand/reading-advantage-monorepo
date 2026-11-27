@@ -1,5 +1,7 @@
 # Implementation Plan: Storage Hardening and Floci Verification
 
+Status: shelved, not done (PM 2026-11-27)
+
 _Rebased 2026-08-24 against the current adapter, consumers, Compose stack, and
 CI workflow._
 

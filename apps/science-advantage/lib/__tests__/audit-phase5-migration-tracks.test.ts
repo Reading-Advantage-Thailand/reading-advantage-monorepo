@@ -483,7 +483,7 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 5: Generate Mi
     });
 
     it.each(PROPOSED_TRACKS)(
-      'track $trackId is listed in the "Pending Tracks — Audit Findings" section',
+      'track $trackId is listed in the audit or Shelved Tracks section',
       async ({ trackId }) => {
         const contents = await fs.readFile(TRACKS_REGISTRY, 'utf-8');
         // Find the section; the section ends at the next `####`
@@ -501,9 +501,10 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 5: Generate Mi
         const section = sectionEndMatch
           ? tail.slice(0, PENDING_HEADING.length + (sectionEndMatch.index ?? tail.length))
           : tail;
+        const shelvedSection = contents.split('\n## Shelved Tracks\n')[1]?.split('\n## ')[0] ?? '';
         expect(
-          section.includes(trackId),
-          `track ${trackId} is not listed under "${PENDING_HEADING}" in measure/tracks.md. Add an entry with a Link to ${trackId.startsWith('protocol_v1_1') || trackId.startsWith('app_domain') || trackId.startsWith('tenant_db') || trackId.startsWith('argon2id') || trackId.startsWith('ai_adapter') ? './archive/' : './tracks/'}${trackId}/`,
+          section.includes(trackId) || shelvedSection.includes(`](./tracks/${trackId}/)`),
+          `track ${trackId} must have a registry row in the audit or Shelved Tracks section`,
         ).toBe(true);
       },
     );

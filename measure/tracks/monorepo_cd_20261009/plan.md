@@ -1,5 +1,7 @@
 # Implementation Plan: Monorepo Continuous Deployment
 
+Status: shelved, not done (PM 2026-11-27)
+
 Track: `monorepo_cd_20261009`. Spec: [spec.md](./spec.md).
 No task starts before the preconditions in Phase 0 are true.
 

@@ -1,5 +1,7 @@
 # Plan — Primary RPG skin (track primary_rpg_skin_20261006)
 
+Status: shelved, not done (PM 2026-11-27)
+
 Spec: `spec.md`. Review page: `review.html`. Owner approved the plan on 2026-10-06.
 
 ## Phase 0: kit, backdrops, mocks (owner gate: the look)

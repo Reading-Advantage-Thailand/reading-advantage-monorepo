@@ -1,5 +1,7 @@
 # Plan: APK Kit Defect Remediation
 
+Status: shelved, not done (PM 2026-11-27)
+
 Contract-first TDD per finding. One atomic commit per phase. Implementer:
 coder subagent per session routing; orchestrator verifies gates.
 

@@ -1,5 +1,7 @@
 # Implementation plan
 
+Status: shelved, not done (PM 2026-11-27)
+
 ## Phase S1: Company SSO sign-in [checkpoint: 8f8118e]
 _Story ref: spec.md#story-s1_
 

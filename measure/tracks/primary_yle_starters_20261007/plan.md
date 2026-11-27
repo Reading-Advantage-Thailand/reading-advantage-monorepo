@@ -1,5 +1,7 @@
 # Plan: Primary YLE-format Starters Tasks
 
+Status: shelved, not done (PM 2026-11-27)
+
 Track `primary_yle_starters_20261007`. Spec: [spec.md](./spec.md). Start after the deploy on
 2026-10-11; work on a lane branch; nothing deploys in the freeze; the migration ships in the
 additive window of 2026-11-09 or later.

@@ -1,5 +1,7 @@
 # Implementation Plan: Reading Advantage Full Feature Review
 
+Status: shelved, not done (PM 2026-11-27)
+
 > **Track ID:** `reading_advantage_full_review_20260626`  
 > **Parent:** `monorepo_feature_review_masterplan_20260626`  
 > **Depends on:** `shared_foundation_review_20260626` inventory phase at minimum.

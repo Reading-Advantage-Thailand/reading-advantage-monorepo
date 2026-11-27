@@ -1,5 +1,7 @@
 # Plan — Primary public pages in the RPG skin
 
+Status: shelved, not done (PM 2026-11-27)
+
 Feature freeze: all code on `primary/public-pages` (from `primary-parity-integration`); the merge waits
 until the Primary cutover passes.
 

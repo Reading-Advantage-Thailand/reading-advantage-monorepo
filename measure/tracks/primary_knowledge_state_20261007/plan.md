@@ -1,5 +1,7 @@
 # Plan: Primary Knowledge State (T3)
 
+Status: shelved, not done (PM 2026-11-27)
+
 Track `primary_knowledge_state_20261007`. Spec: [spec.md](./spec.md). Build after the freeze, on
 lane-h, with no deploy before the migration window that the owner picks.
 

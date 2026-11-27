@@ -1,5 +1,7 @@
 # Implementation Plan: Primary Authorization Hardening
 
+Status: shelved, not done (PM 2026-11-27)
+
 Track ID: `primary_authorization_hardening_20260912`. Spec: `spec.md`. Type: bug (classic).
 
 All file paths are relative to `apps/primary-advantage/`. This track blocks tracks 2-6.

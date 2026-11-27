@@ -1,7 +1,7 @@
 {
   "track_id": "primary_parity_cleanup_20261011",
   "type": "chore",
-  "status": "new",
+  "status": "shelved",
   "created_at": "2026-10-11T00:00:00Z",
   "updated_at": "2026-10-11T00:00:00Z",
   "description": "Primary Parity Before the Cutover: cleanup (System Testing page, Admin Article Creation, content generation, old game host M4 with the ElvGames copy first, old game URL redirects, AI model configuration)",

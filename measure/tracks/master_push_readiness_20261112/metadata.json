@@ -1,7 +1,7 @@
 {
   "track_id": "master_push_readiness_20261112",
   "type": "chore",
-  "status": "new",
+  "status": "shelved",
   "created_at": "2026-11-12T00:00:00Z",
   "updated_at": "2026-11-13T00:00:00Z",
   "opened": "2026-11-12",

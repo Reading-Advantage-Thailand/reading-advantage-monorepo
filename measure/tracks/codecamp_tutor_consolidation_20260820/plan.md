@@ -1,5 +1,7 @@
 # Implementation Plan: Codecamp Tutor Consolidation
 
+Status: shelved, not done (PM 2026-11-27)
+
 > **Browser acceptance:** Hold a four-turn conversation on a Phase A lesson and
 > a Phase C lesson, in Thai and in English. Confirm that turn 2 uses turn 1, and
 > that a question about a code block in the lesson is answered from that block.

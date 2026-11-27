@@ -1,5 +1,7 @@
 # Implementation Plan: Codecamp Targeted Intervention Tutor
 
+Status: shelved, not done (PM 2026-11-27)
+
 > **Browser acceptance:** Use the in-app browser for each intervention level
 > and resource type. Verify the learner action, grounded follow-up questions,
 > hint escalation, exact video timestamp/repository pointer, resume behavior,

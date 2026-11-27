@@ -2,7 +2,7 @@
   "id": "reading_advantage_agents_md_audit_20260610",
   "title": "AGENTS.md Compliance Audit — reading-advantage",
   "type": "chore",
-  "status": "new",
+  "status": "shelved",
   "created": "2026-06-05",
   "scheduled": "2026-06-10",
   "protocol": "measure/agents-md-audit-protocol.md (v1.1)",

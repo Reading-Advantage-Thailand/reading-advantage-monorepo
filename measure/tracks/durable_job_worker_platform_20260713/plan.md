@@ -1,5 +1,7 @@
 # Implementation Plan: Durable Job Worker Platform
 
+Status: shelved, not done (PM 2026-11-27)
+
 ## Dependencies and sequencing
 
 Durable contract/test work that writes under `packages/backend/src/jobs/` starts

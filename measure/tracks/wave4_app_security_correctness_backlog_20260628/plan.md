@@ -1,5 +1,7 @@
 # Implementation Plan: Wave 4 — App Security & Correctness Backlog (Medium+)
 
+Status: shelved, not done (PM 2026-11-27)
+
 > **Track ID:** `wave4_app_security_correctness_backlog_20260628`
 > **Depends on:** Wave 0 tenant/auth/contract primitives; Wave 2 tenant-isolation + provider harnesses (local proof if absent).
 > **Method:** Contract-first TDD. Red tests before implementation. One representative-then-propagate slice per finding cluster; remaining same-class sites enumerated and closed, not pattern-only.

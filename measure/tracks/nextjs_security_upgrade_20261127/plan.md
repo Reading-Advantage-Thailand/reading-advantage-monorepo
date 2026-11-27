@@ -1,5 +1,7 @@
 # Plan — Next.js security upgrade
 
+Status: shelved, not done (PM 2026-11-27)
+
 Light card. One registry line in `measure/tracks.md`. This card records the work only. Do not run the upgrade and do not change a dependency or a lockfile in this change. The www build prints `next upgrade --agent=security`. Each app gets its own upgrade, gates, render check, and own CD push. The CD deploy-traffic guard of d9c242832 reports held traffic for gated services; no traffic move is implied here. No spec, no review, no gates.
 
 ## Phase 1

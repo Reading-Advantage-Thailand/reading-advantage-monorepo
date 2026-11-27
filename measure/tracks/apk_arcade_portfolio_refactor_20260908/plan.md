@@ -1,5 +1,7 @@
 # Detailed implementation plan
 
+Status: shelved, not done (PM 2026-11-27)
+
 ## Status
 
 Implementation is active under the owner instruction to use subagents.

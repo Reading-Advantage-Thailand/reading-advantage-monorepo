@@ -1,5 +1,7 @@
 # Plan — Primary parity cleanup
 
+Status: shelved, not done (PM 2026-11-27)
+
 Work on `primary-parity-integration` (or a lane branch from it). Before a write to integration, tell
 the monorepo session. App root: `apps/primary-advantage` (paths below are relative to it unless they
 start with `packages/`, `docs/`, `measure/`, or `~`). Tests: `pnpm --filter primary-advantage test`,
@@ -203,7 +205,7 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
     - [x] Run the grep checks of Phases 3 to 8 again; each gives no output
         - Results (2026-10-12, direct binaries under the heavy lock, one at a time): app vitest 217 files, 1266 tests pass. play-kit vitest 79 files, 751 tests pass. `packages/ai` vitest 241 pass, 3 fail (`phase-10-closeout.test.ts`: the F-101/F-202 row check and the 50-line caps of `measure/tech-debt.md` and `measure/lessons-learned.md`; known, not fixed). `tsc --noEmit` clean for the app, `packages/ai` (dist rebuilt first), and play-kit. ESLint: 0 errors (app 635 warnings, play-kit 1, ai 2).
         - Grep checks of Phases 3 to 8: no output, with one change. The M4 check finds `standard-pack-qc` in `apps/primary-advantage/Dockerfile` (the new E-7 line, on purpose). Without the Dockerfile the output is empty. `pnpm-lock.yaml` shows 2 importers for `link:../../packages/game-cartridges` (Reading Advantage and Advantage Games).
-- [~] Task: Side-by-side acceptance on the rehearsal copy
+- [ ] Task: Side-by-side acceptance on the rehearsal copy
     - [x] Write `measure/tracks/primary_parity_cleanup_20261011/acceptance-pairs.json` with the rows AC-1 to AC-10 of the spec (the pair list contract of `primary_parity_acceptance_20261011`)
     - [x] Fill the behavior contract template (`docs/runbooks/primary-behavior-contract-template.md`) for FR-10 and FR-13
         - Saved as `behavior-contract-fr10.md` and `behavior-contract-fr13.md`. `acceptance-pairs.json` parses with `PairList` (10 pairs). API and asset probes (AC-3, AC-6, AC-7, AC-8) are curl lines in `acceptance.md`, because a pair path needs a locale.
@@ -223,7 +225,7 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
     - [x] Run `measure/generate.sh`; stage the files that it changes
     - [x] Run `measure/doctor.sh`; fix each failure that names a file of this track
         - Only A13 fails (`agents_md_audit_science_advantage_20260603`); it is not from this track.
-    - [~] If `graph.db` is fresh, run `build-graph update ./graph.db <changed files>` — skipped by order of the orchestrator
+    - [ ] If `graph.db` is fresh, run `build-graph update ./graph.db <changed files>` — skipped by order of the orchestrator
 - [ ] Task: Measure - User Manual Verification 'Phase 9: Records, Acceptance, Docs & Doctor' (Protocol in workflow.md)
 
 ## Phase: Review Fixes 2026-10-13

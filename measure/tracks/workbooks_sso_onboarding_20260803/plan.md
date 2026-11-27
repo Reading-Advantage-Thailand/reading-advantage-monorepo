@@ -1,5 +1,7 @@
 # Implementation Plan: Workbooks Company SSO Onboarding and Deployability
 
+Status: shelved, not done (PM 2026-11-27)
+
 Exemplar for every application-side file is `apps/marketing` — the cleanest
 company-only integration. Mirror its shape rather than inventing one.
 

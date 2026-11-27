@@ -1,5 +1,7 @@
 # Implementation Plan: Memory — Bound the Metrics Cache
 
+Status: shelved, not done (PM 2026-11-27)
+
 Track ID: `reading_mem_metrics_cache_20260918`. Spec: `spec.md`. Type: chore (classic).
 
 All file paths are relative to `apps/reading-advantage/` unless noted.

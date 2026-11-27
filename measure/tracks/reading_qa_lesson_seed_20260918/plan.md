@@ -1,5 +1,7 @@
 # Implementation Plan: Reading QA — Lesson Seed Completeness
 
+Status: shelved, not done (PM 2026-11-27)
+
 Track ID: `reading_qa_lesson_seed_20260918`. Spec: `spec.md`. Type: bug (classic).
 
 All file paths are relative to `apps/reading-advantage/` unless noted. Execute after track `reading_qa_lesson_page_20260918` (its fixed endpoints are this track's verification surface).

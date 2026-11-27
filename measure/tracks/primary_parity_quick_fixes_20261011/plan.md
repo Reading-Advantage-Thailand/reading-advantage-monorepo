@@ -1,5 +1,7 @@
 # Plan — Primary parity quick fixes
 
+Status: shelved, not done (PM 2026-11-27)
+
 Work on `primary-parity-integration` (or a lane branch from it), except FR-12: FR-12 goes on
 `primary/public-pages` (spec FR-12). App root: `apps/primary-advantage` (paths below are relative to
 it unless they start with `packages/`). Tests: `pnpm --filter primary-advantage test` and
@@ -144,7 +146,7 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
     - [x] `pnpm --filter primary-advantage check-types`, then `pnpm --filter @reading-advantage/domain check-types`
     - [x] `pnpm --filter primary-advantage lint` and the domain lint on the changed files
     - Results (2026-10-12, lock + nice, one at a time, vitest/tsc/eslint binaries from the root `node_modules/.bin`): app test 235 files, 1422 tests; 1 failure at first (`teacher-reports.test.tsx` expected no fourth tile; caused by FR-3), fixed in 4d8117c3d, file now 6 pass. Domain test 151 files pass, 4 skipped; 1 suite failed (`mastery-persistence-public-api.test.ts` runs `tsc` on the domain project, which fails on the old `src/codecamp` errors; not from this track). App `tsc --noEmit` exit 0. Domain `tsc --noEmit`: only `src/codecamp` errors (`@reading-advantage/integrations-github`, old). Eslint on the 44 changed app files: 1 error caused by this track (`code-sign-in.tsx` disable comment for the undefined rule `@next/next/no-img-element`), fixed in 4d8117c3d; 0 errors after, warnings are old. Domain eslint on `src/games`: exit 0. Known closeout tests on the line caps of `measure/tech-debt.md` and `lessons-learned.md`: not in the failed list of this run.
-- [~] Task: Side-by-side acceptance on the rehearsal copy
+- [ ] Task: Side-by-side acceptance on the rehearsal copy
     - [x] Write `measure/tracks/primary_parity_quick_fixes_20261011/acceptance-pairs.json` with the rows AC-1 to AC-13 of the spec (the pair list contract of `primary_parity_acceptance_20261011`)
     - [x] Fill the behavior contract template (`docs/runbooks/primary-behavior-contract-template.md`) for FR-3, FR-5, FR-6, and FR-11
     - [x] Run the kit on the matched copies with a production build of each app (one app at a time) - done 2026-10-12 in batch capture 1 at commit 0c9356701; results in `acceptance.md`

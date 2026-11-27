@@ -1,5 +1,7 @@
 # Implementation Plan: www change list (standing)
 
+Status: shelved, not done (PM 2026-11-27)
+
 > **Track ID:** `www_change_list_20261027` · **Spec:** [spec.md](./spec.md)
 > **Request:** Daniel, 2026-10-26, tracks page row E8. A standing track that builds PR's weekly www copy changes.
 > **Standing:** no end date. One weekly batch runs per phase.

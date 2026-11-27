@@ -1,5 +1,7 @@
 # Plan — Primary Mastery Evidence (T2)
 
+Status: shelved, not done (PM 2026-11-27)
+
 Measure TDD workflow; one commit per task with `(track_id: primary_mastery_evidence_20261006)`;
 tests before implementation; type check and lint once per phase before the phase commit.
 Branch `primary/lane-h-objective-tags` in `~/Desktop/rama-worktrees/lane-h` (T1 merged into

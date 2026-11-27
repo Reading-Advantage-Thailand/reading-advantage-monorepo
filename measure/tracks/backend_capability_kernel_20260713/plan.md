@@ -1,5 +1,7 @@
 # Implementation Plan: Backend Capability Kernel
 
+Status: shelved, not done (PM 2026-11-27)
+
 ## Dependencies and sequencing
 
 Start only after `backend_architecture_enforcement_20260713` publishes an

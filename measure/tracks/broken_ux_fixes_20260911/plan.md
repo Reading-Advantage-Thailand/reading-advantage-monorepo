@@ -1,5 +1,7 @@
 # Implementation Plan: Reading Broken UX Fixes
 
+Status: shelved, not done (PM 2026-11-27)
+
 Track ID: `broken_ux_fixes_20260911`. Spec: `spec.md`. Type: bug (classic).
 
 All file paths are relative to `apps/reading-advantage/`.

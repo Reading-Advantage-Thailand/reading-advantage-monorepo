@@ -1,5 +1,7 @@
 # Plan — The Guild Hall, Milestones, Bestiary, Familiars (wave 3)
 
+Status: shelved, not done (PM 2026-11-27)
+
 > Parked 2026-10-26 (Daniel, decision C4): the guild lives in the 3D browser game Chibi Quest
 > (advantage-mmorpg, a separate app on its own subdomain), not in the Chibi Quest Expansion Pack
 > of Primary Advantage; Primary wave 3 drops the guild parts. Daniel: "Keep this information for

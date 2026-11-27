@@ -1,5 +1,7 @@
 # Implementation Plan: Company Finance Operations and Accounting Handoff
 
+Status: shelved, not done (PM 2026-11-27)
+
 ## Status and Execution Rules
 
 - Planning only: no app code, migration, source endpoint, integration, or data

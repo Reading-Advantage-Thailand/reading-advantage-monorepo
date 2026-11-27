@@ -1,5 +1,7 @@
 # Implementation Plan: Primary Loading and State Correctness
 
+Status: shelved, not done (PM 2026-11-27)
+
 Track ID: `primary_loading_state_correctness_20260912`. Spec: `spec.md`. Type: bug (classic).
 
 All file paths are relative to `apps/primary-advantage/`. Run after `primary_authorization_hardening_20260912`. May run in parallel with tracks 2 and 3.

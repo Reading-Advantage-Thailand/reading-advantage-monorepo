@@ -1,5 +1,7 @@
 # Implementation Plan: Reading Structural UX Alignment
 
+Status: shelved, not done (PM 2026-11-27)
+
 Track ID: `structural_ux_alignment_20260911`. Spec: `spec.md`. Type: chore (classic).
 
 All file paths are relative to `apps/reading-advantage/`. Run after `component_deduplication_20260911` to avoid merge conflicts on shared components.

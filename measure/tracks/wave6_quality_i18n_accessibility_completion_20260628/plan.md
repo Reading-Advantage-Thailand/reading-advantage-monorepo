@@ -1,5 +1,7 @@
 # Implementation Plan: Wave 6 — Quality, i18n, Accessibility, Adapters & Docs Completion
 
+Status: shelved, not done (PM 2026-11-27)
+
 > **Track ID:** `wave6_quality_i18n_accessibility_completion_20260628`
 > **Depends on:** Wave 2 provider-adapter contracts; Wave 3 games completion/scoring contract + runtime package; Wave 4 security fixes.
 > **Method:** Contract-first TDD where behavior changes; for docs/curriculum, evidence-anchored review with a verifiable check (link/version/lint) before edit.

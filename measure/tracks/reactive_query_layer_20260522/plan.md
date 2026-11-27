@@ -1,5 +1,7 @@
 # Implementation Plan: Reactive Query Layer — STUB
 
+Status: shelved, not done (PM 2026-11-27)
+
 > **This track is a STUB.** It has no real phases or tasks until it is expanded —
 > see `spec.md` "Next Step". It is blocked on Track 4
 > (`prisma_drizzle_slice_cleanup_20260505`) and `connection_pooling_20260522`,

@@ -1,5 +1,7 @@
 # Implementation Plan: Reading Component Deduplication
 
+Status: shelved, not done (PM 2026-11-27)
+
 Track ID: `component_deduplication_20260911`. Spec: `spec.md`. Type: chore (classic).
 
 All file paths are relative to `apps/reading-advantage/`. Depends on `broken_ux_fixes_20260911` and `audio_highlight_correctness_20260911` for shared files.

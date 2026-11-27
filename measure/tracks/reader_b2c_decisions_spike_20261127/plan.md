@@ -1,5 +1,7 @@
 # Plan — B2C Phase 0 reader decisions spike
 
+Status: shelved, not done (PM 2026-11-27)
+
 Light card. One registry line in `measure/tracks.md`. Source: `/home/daniebo/Desktop/handoff/2026-11-26-b2c-reading-app-plan.md`, approved by Daniel. Take the recommended answers. No spec, no review, no gates.
 
 ## Phase 1

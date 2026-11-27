@@ -1,5 +1,7 @@
 # Implementation plan: Sales Advantage shared Mastery consumer
 
+Status: shelved, not done (PM 2026-11-27)
+
 ## Phase 0 — reconcile and admit the consumer
 
 - [x] Task: Evidence: `a4be6a73c`. Reconcile Sales go-live documentation with the current production

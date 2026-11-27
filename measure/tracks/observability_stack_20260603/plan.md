@@ -1,5 +1,7 @@
 # Plan: Observability Stack — Sentry + Request Context + Tracing
 
+Status: shelved, not done (PM 2026-11-27)
+
 > TDD-first. Each FR writes failing tests before the implementation. The 5 largest `route.ts` files are migrated in Phase 5; the remaining 42 `console.*` sites are batched in Phase 6.
 
 ## Phase 0: Setup

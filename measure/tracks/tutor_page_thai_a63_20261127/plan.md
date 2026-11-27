@@ -1,5 +1,7 @@
 # Plan — Tutor page Thai (A-63)
 
+Status: shelved, not done (PM 2026-11-27)
+
 Light card. One registry line in `measure/tracks.md`. Source: PM todo A-63. Do not publish a Thai line before Daniel checks it. No spec, no review, no gates.
 
 ## Phase 1

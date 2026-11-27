@@ -1,5 +1,7 @@
 # Implementation Plan: Wave 5 — Public Surface Completion
 
+Status: shelved, not done (PM 2026-11-27)
+
 > **Track ID:** `wave5_public_surface_completion_20260628`
 > **Depends on:** Wave 3 claims gate (copy reconciliation); Wave 2 migration-doctor (Science deploy verification).
 > **Method:** Contract-first TDD. Red tests before implementation. Public copy changes require PO approval recorded in Phase 0.

@@ -1,5 +1,7 @@
 # Implementation Plan: Reading Loading and State Correctness
 
+Status: shelved, not done (PM 2026-11-27)
+
 Track ID: `loading_state_correctness_20260911`. Spec: `spec.md`. Type: bug (classic).
 
 All file paths are relative to `apps/reading-advantage/`.
