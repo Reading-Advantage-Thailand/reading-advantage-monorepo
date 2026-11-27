@@ -14,7 +14,7 @@ const SALES_PACKAGE_VERSION = "0.1.0";
 const SALES_VERIFIER_EXPORT = "verifySalesReleaseEvidence";
 const SALES_EVIDENCE_MANIFEST_EXPORT = "salesReleaseEvidenceManifest";
 const GATE_ZOD_VERSION = "3.25.76";
-const ENGINE_ZOD_VERSION = "4.4.3";
+const ENGINE_ZOD_VERSION = "4.6.7";
 const TS_FSRS_VERSION = "5.4.1";
 
 /** Returns whether a path is a strict descendant of a directory. */

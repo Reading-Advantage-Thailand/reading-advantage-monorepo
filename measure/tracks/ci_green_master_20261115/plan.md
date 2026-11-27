@@ -26,9 +26,12 @@ Track: `ci_green_master_20261115` (light lane).
   analyzer-reconciliation.v2.json`, four hash fields only (input snapshot, two report hashes,
   review subject), no new field, no coverage growth. PC-3 fix: `280dd4a2f`, a build step for
   the two target packages before the check in `.github/workflows/ci.yml`.
-- [ ] 1.5 Run local gates (app lint, architecture check), push to master, watch CI, and close
+- [~] 1.5 Run local gates (app lint, architecture check), push to master, watch CI, and close
   the track when CI is green.
   Reason (2026-11-27): the newest completed CI run on master is 45962645071 (failure). Its first red job is "Build, Lint, and Test" (conclusion failure). CI is not green, so the marker returns from [~] to [ ] and the track stays open.
+  In progress (2026-11-28): the newest completed CI run is now 46027332310 on a3a2be6ce
+  (failure). Round 11 below records the cause and the local gate. The task closes when the
+  pushed SHA is green on every job.
   Gates run: app lint exit 0; `pnpm architecture:check --skip-input-snapshot-pin` exits 1
   with `debt-change` (PC-4) and parseErrors=0; root `pnpm lint --concurrency=2` exits 1 on
   `primary-advantage#lint` (PC-5: 13 errors, 11 in `tests/pwa/fixtures/`, 2 in
@@ -276,6 +279,28 @@ Track: `ci_green_master_20261115` (light lane).
   in 1.11 s (was 2.05 s); the phase-13 regression guards pass 8 tests and skip 13.
 - Not fixed here: every later failure in that run gave no result, because turbo
   cancelled the tasks. The next run reports all of them through `--continue`.
+
+## CI round 11 (PM 2026-11-27): the stale zod pin in the packed consumer
+
+- Failing run `46027332310` on `a3a2be6ce`: "Select affected apps" passed,
+  "Build, Lint, and Test" failed, "Check ${{ matrix.id }}" was skipped.
+- Five failed tests share one cause: `Error: Engine consumer resolved zod 4.6.7,
+  expected 4.4.3`. Commit `7387c4876` (security upgrades) moved zod to 4.6.7 in the
+  lockfile. Two literals kept the old value: `ENGINE_ZOD_VERSION` in
+  `packages/mastery-runtime-compat/fixtures/consumer/check-consumer.mjs` and
+  `RESOLVED_RUNTIME_VERSIONS.engineZod` in
+  `packages/mastery-runtime-compat/src/__tests__/release-artifact.test.ts`.
+  This is a stale pin, not a product defect.
+- Three more failures were timeouts with no assertion failure: `release-artifact.test.ts`
+  in codecamp-knowledge (hook 60 s), `wave0-phase3-typed-errors.test.ts` in api
+  (hook 10 s), and `standard-pack-suitability.test.ts` in advantage-play-kit (test 5 s).
+- Fix: two existing version literals move from 4.4.3 to 4.6.7. No assertion changed,
+  no file added, no hash added.
+- Gate, run through heavy-run with npm 10.8.2 on PATH and vitest called directly:
+  before exit 1 (3 failed, 23 passed, first error `Engine consumer resolved zod
+  4.6.7, expected 4.4.3`); after exit 0 (26 passed).
+- Local npm 11.17.0 rejects `--ignore-scripts` in the packed-consumer install with
+  EALLOWSCRIPTS. The CI run did not report that error.
 
 ## Follow-up (deferred to a later owner)
 
