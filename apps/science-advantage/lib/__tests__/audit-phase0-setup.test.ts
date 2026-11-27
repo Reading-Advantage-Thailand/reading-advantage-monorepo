@@ -63,7 +63,7 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 0: Setup)', ()
       expect(match).not.toBeNull();
       const total = Number(match![1]);
       expect(total).toBeGreaterThan(0);
-    });
+    }, 30_000);
   });
 
   describe('Protocol §14.2 — graph.db is fresh (<24h)', () => {

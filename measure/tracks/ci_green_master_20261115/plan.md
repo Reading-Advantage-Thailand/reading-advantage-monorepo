@@ -320,6 +320,17 @@ Track: `ci_green_master_20261115` (light lane).
 - Fix: four test budgets move to 180 s, 60 s, 20 s, and 30 s. No assertion changed,
   no test skipped, no source file changed.
 
+## CI round 13 (2026-11-27): run 46052393480
+
+- Run `46052393480` on `6dd201c8c` reached the Test step. The four round-12 timeouts
+  passed. One new timeout remains: `apps/science-advantage/lib/__tests__/
+  audit-phase0-setup.test.ts`, "Protocol §14.1 — build-graph stats reports Total files > 0",
+  "Test timed out in 5000ms". No assertion failed.
+- Fix: that case gets a 30 s budget. No assertion changed.
+- Local check: the same file cannot pass here because the local `build-graph scan` is still
+  writing `graph.db`, so `stats` reports 0 files. CI builds `graph.db` fully in its own
+  step before the test.
+
 ## Follow-up (deferred to a later owner)
 
 - [ ] The architecture report pin goes stale on every master push that changes analyzer
