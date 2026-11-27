@@ -60,6 +60,7 @@
 ## PM operations task 2026-11-27
 
 - [x] 1. Reduce the upload for the five manual traffic builds. Keep the source verification and the push build scope. Evidence: `.traffic-upload-ignore` contains 511 files and 23,312,882 bytes; Git and gcloud lists match. The five test files pass 117 tests. The marker lint and frozen lockfile check pass.
+- [x] 2. Restore the two Accounts deployment bindings from the serving revision. Evidence: `apps/accounts/cloudbuild.yaml` preserves the exact `DATABASE_URL` secret reference and `DEPLOY_REMARK` binding. The new test fails before the fix. Three test files pass 77 tests. Marker lint passes.
 
 ## Deploy traffic guard (2026-11-27)
 

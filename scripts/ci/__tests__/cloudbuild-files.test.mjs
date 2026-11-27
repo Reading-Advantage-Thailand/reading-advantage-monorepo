@@ -181,6 +181,12 @@ describe("F: Cloud Build files", () => {
     }
   });
 
+  it("Accounts keeps the serving revision's database and deployment marker bindings", () => {
+    const text = stepText(deployStep(cloudbuild("apps/accounts/cloudbuild.yaml")));
+    must(text.includes(",DATABASE_URL=ra-web-database-url:latest"), "Accounts DATABASE_URL binding missing");
+    must(text.includes(",DEPLOY_REMARK="), "Accounts DEPLOY_REMARK binding missing");
+  });
+
   it("F-08 the 9 push files other than the legacy reading-advantage file hold no database step", () => {
     const rows = readTable().filter((row) => row.id !== "reading-advantage");
     must(rows.length === 9, `files_checked=${rows.length}`);
