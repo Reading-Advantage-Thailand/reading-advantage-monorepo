@@ -233,7 +233,8 @@ PM 2026-11-23: parked until after the 30 Nov launch.
     `git branch -d <branch>`. Delete trial build output.
   - Files: none in the main checkout.
   - Done when: `git worktree list` and `git branch -a` show no trial item.
-- [b] Task: Measure - User Manual Verification 'Phase 3: TypeScript 7 trial (PM step 1)' (Protocol in workflow.md) (deferred:product-owner)
+- [x] Task: Measure - User Manual Verification 'Phase 3: TypeScript 7 trial (PM step 1)' (Protocol in workflow.md) — PM pass 2026-11-27 on the phase evidence
+  - Evidence: PM decision 2026-11-27
 
 ## Phase 4: Cloudflare preparation, not the move (PM step 2)
 
@@ -264,7 +265,8 @@ PM 2026-11-23: parked until after the 30 Nov launch.
   - Done when: the answer cites at least one counted fact per area and names the separate
     Cloudflare track as the owner of the move; `git diff --stat` shows no file outside this
     track changed in the phase.
-- [b] Task: Measure - User Manual Verification 'Phase 4: Cloudflare preparation, not the move (PM step 2)' (Protocol in workflow.md) (deferred:product-owner)
+- [x] Task: Measure - User Manual Verification 'Phase 4: Cloudflare preparation, not the move (PM step 2)' (Protocol in workflow.md) — PM pass 2026-11-27 on the phase evidence
+  - Evidence: PM decision 2026-11-27
 
 ## Phase 5: Rollout to one compiler (after Daniel decides on the PM step 1 report)
 

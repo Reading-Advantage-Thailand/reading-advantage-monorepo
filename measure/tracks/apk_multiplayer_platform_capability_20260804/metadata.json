@@ -1,7 +1,7 @@
 {
   "track_id": "apk_multiplayer_platform_capability_20260804",
   "type": "feature",
-  "status": "parked",
+  "status": "shelved",
   "created_at": "2026-08-04T00:00:00Z",
   "updated_at": "2026-10-26T00:00:00Z",
   "description": "Make multiplayer a Play Kit platform capability: a versioned multiplayer.v1 contract in game-contracts, a transport-agnostic session system any cartridge opts into, a deployable tenant-bound session service, and Wizard vs Zombie as the first adopter in both race and shared-world tiers.",

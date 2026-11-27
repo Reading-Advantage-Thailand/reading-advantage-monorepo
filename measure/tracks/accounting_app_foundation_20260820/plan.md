@@ -14,60 +14,60 @@ _Story ref: spec.md#story-s2_
 
 - [x] Task: Contracts & schema — Zod contracts for expense/bill submissions (amount, 3-letter currency, payee, category, evidence ref, settled-THB total required for non-THB); Drizzle tables in the new accounting database stream; tenant-registry classification N/A (separate stream, not in the main barrel — tenant-coverage 12/12 passes). c84b2d3
 - [x] Task: Red tests — submission validation (missing evidence, bad currency, non-THB without settled total), authorization (STAFF can submit, cannot approve), evidence stored in private storage via the storage adapter only. 966019b
-- [~] Task: Implement — submission domain functions extending `finance-operations` records, private-storage evidence upload, submission UI (staff).
-- [b] Task: Generate docs & doctor — `measure/generate.sh`, `measure/doctor.sh`. (deferred:accounting_app_foundation_20260820-phase-s1-acceptance)
-- [b] Task: Measure - User Manual Verification 'Phase S2: Expense & bill submission with evidence' (Protocol in workflow.md) (deferred:owner-manual-verification)
+- [ ] Task: Implement — submission domain functions extending `finance-operations` records, private-storage evidence upload, submission UI (staff).
+- [b] Task: Generate docs & doctor — `measure/generate.sh`, `measure/doctor.sh`. (deferred:backlog)
+- [b] Task: Measure - User Manual Verification 'Phase S2: Expense & bill submission with evidence' (Protocol in workflow.md) (deferred:backlog)
 
 ## Phase S3: Settlement-derived THB valuation
 _Story ref: spec.md#story-s3_
 
-- [b] Task: Contracts — extend the finance-operations THB valuation contracts with the owner-decided policy (2026-08-20): rate = settled THB ÷ source amount (derived, evidence-bound), 2dp half-up, no rate-date; settlement figure bound to bank/settlement evidence. (deferred:accounting_app_foundation_20260820-phase-s2-acceptance)
-- [b] Task: Red tests — $20/฿692 → rate 34.60 & THB ฿692.00; rounding half-up at 2dp; original amount/currency preserved; bare caller-asserted conversion without settlement evidence rejected. (deferred:accounting_app_foundation_20260820-phase-s2-acceptance)
-- [b] Task: Implement — wire policy into the existing `thb-valuation` preparer; expose derived rate + THB equivalent on accepted records. (deferred:accounting_app_foundation_20260820-phase-s2-acceptance)
-- [b] Task: Generate docs & doctor — `measure/generate.sh`, `measure/doctor.sh`. (deferred:accounting_app_foundation_20260820-phase-s2-acceptance)
-- [b] Task: Measure - User Manual Verification 'Phase S3: Settlement-derived THB valuation' (Protocol in workflow.md) (deferred:owner-manual-verification)
+- [b] Task: Contracts — extend the finance-operations THB valuation contracts with the owner-decided policy (2026-08-20): rate = settled THB ÷ source amount (derived, evidence-bound), 2dp half-up, no rate-date; settlement figure bound to bank/settlement evidence. (deferred:backlog)
+- [b] Task: Red tests — $20/฿692 → rate 34.60 & THB ฿692.00; rounding half-up at 2dp; original amount/currency preserved; bare caller-asserted conversion without settlement evidence rejected. (deferred:backlog)
+- [b] Task: Implement — wire policy into the existing `thb-valuation` preparer; expose derived rate + THB equivalent on accepted records. (deferred:backlog)
+- [b] Task: Generate docs & doctor — `measure/generate.sh`, `measure/doctor.sh`. (deferred:backlog)
+- [b] Task: Measure - User Manual Verification 'Phase S3: Settlement-derived THB valuation' (Protocol in workflow.md) (deferred:backlog)
 
 ## Phase S4: Owner approval with immutable audit
 _Story ref: spec.md#story-s4_
 
-- [b] Task: Contracts & schema — approve/reject commands with reason, state machine (pending → approved/rejected), correction-by-reversing-entry contract; append-only audit table with DB-level `REVOKE UPDATE, DELETE` (per lessons-learned). (deferred:accounting_app_foundation_20260820-phase-s3-acceptance)
-- [b] Task: Red tests — only OWNER can approve; approved records reject mutation; corrections create reversing entries; every transition writes an audit event. (deferred:accounting_app_foundation_20260820-phase-s3-acceptance)
-- [b] Task: Implement — approval domain functions + owner review UI. (deferred:accounting_app_foundation_20260820-phase-s3-acceptance)
-- [b] Task: Generate docs & doctor — `measure/generate.sh`, `measure/doctor.sh`. (deferred:accounting_app_foundation_20260820-phase-s3-acceptance)
-- [b] Task: Measure - User Manual Verification 'Phase S4: Owner approval with immutable audit' (Protocol in workflow.md) (deferred:owner-manual-verification)
+- [b] Task: Contracts & schema — approve/reject commands with reason, state machine (pending → approved/rejected), correction-by-reversing-entry contract; append-only audit table with DB-level `REVOKE UPDATE, DELETE` (per lessons-learned). (deferred:backlog)
+- [b] Task: Red tests — only OWNER can approve; approved records reject mutation; corrections create reversing entries; every transition writes an audit event. (deferred:backlog)
+- [b] Task: Implement — approval domain functions + owner review UI. (deferred:backlog)
+- [b] Task: Generate docs & doctor — `measure/generate.sh`, `measure/doctor.sh`. (deferred:backlog)
+- [b] Task: Measure - User Manual Verification 'Phase S4: Owner approval with immutable audit' (Protocol in workflow.md) (deferred:backlog)
 
 ## Phase S5: Double-entry ledger, Thai SME chart
 _Story ref: spec.md#story-s5_
 
-- [b] Task: Contracts & schema — chart-of-accounts, journal entries, journal lines; standard Thai SME chart seed (cash, bank, AR, AP, input/output VAT, WHT payable, payroll, revenue, expense classes); balanced-entry invariant in Zod + DB constraint; decimal money columns only. (deferred:accounting_app_foundation_20260820-phase-s4-acceptance)
-- [b] Task: Red tests — unbalanced journals rejected at contract and DB level; approval (S4) posts a balanced journal; trial balance report balances; real-DB migration smoke test (mock-DB blind spot lesson). (deferred:accounting_app_foundation_20260820-phase-s4-acceptance)
-- [b] Task: Implement — posting engine in a new `accounting` backend module (uses finance-operations records as source facts), chart seed migration, journal + trial balance UI. (deferred:accounting_app_foundation_20260820-phase-s4-acceptance)
-- [b] Task: Generate docs & doctor — `measure/generate.sh`, `measure/doctor.sh`. (deferred:accounting_app_foundation_20260820-phase-s4-acceptance)
-- [b] Task: Measure - User Manual Verification 'Phase S5: Double-entry ledger, Thai SME chart' (Protocol in workflow.md) (deferred:owner-manual-verification)
+- [b] Task: Contracts & schema — chart-of-accounts, journal entries, journal lines; standard Thai SME chart seed (cash, bank, AR, AP, input/output VAT, WHT payable, payroll, revenue, expense classes); balanced-entry invariant in Zod + DB constraint; decimal money columns only. (deferred:backlog)
+- [b] Task: Red tests — unbalanced journals rejected at contract and DB level; approval (S4) posts a balanced journal; trial balance report balances; real-DB migration smoke test (mock-DB blind spot lesson). (deferred:backlog)
+- [b] Task: Implement — posting engine in a new `accounting` backend module (uses finance-operations records as source facts), chart seed migration, journal + trial balance UI. (deferred:backlog)
+- [b] Task: Generate docs & doctor — `measure/generate.sh`, `measure/doctor.sh`. (deferred:backlog)
+- [b] Task: Measure - User Manual Verification 'Phase S5: Double-entry ledger, Thai SME chart' (Protocol in workflow.md) (deferred:backlog)
 
 ## Phase S6: VAT & tax invoices
 _Story ref: spec.md#story-s6_
 
-- [b] Task: Contracts & schema — 7% VAT fields on bills, input/output VAT accounts (chart already seeded), tax-invoice document contract with sequential numbering. (deferred:accounting_app_foundation_20260820-phase-s5-acceptance)
-- [b] Task: Red tests — VAT splits post to the correct accounts; tax invoice generation binds evidence and posts output VAT; VAT report totals reconcile with journals. (deferred:accounting_app_foundation_20260820-phase-s5-acceptance)
-- [b] Task: Implement — VAT capture in submission/approval flow, tax-invoice generation for school billing, VAT report UI. (deferred:accounting_app_foundation_20260820-phase-s5-acceptance)
-- [b] Task: Generate docs & doctor — `measure/generate.sh`, `measure/doctor.sh`. (deferred:accounting_app_foundation_20260820-phase-s5-acceptance)
-- [b] Task: Measure - User Manual Verification 'Phase S6: VAT & tax invoices' (Protocol in workflow.md) (deferred:owner-manual-verification)
+- [b] Task: Contracts & schema — 7% VAT fields on bills, input/output VAT accounts (chart already seeded), tax-invoice document contract with sequential numbering. (deferred:backlog)
+- [b] Task: Red tests — VAT splits post to the correct accounts; tax invoice generation binds evidence and posts output VAT; VAT report totals reconcile with journals. (deferred:backlog)
+- [b] Task: Implement — VAT capture in submission/approval flow, tax-invoice generation for school billing, VAT report UI. (deferred:backlog)
+- [b] Task: Generate docs & doctor — `measure/generate.sh`, `measure/doctor.sh`. (deferred:backlog)
+- [b] Task: Measure - User Manual Verification 'Phase S6: VAT & tax invoices' (Protocol in workflow.md) (deferred:backlog)
 
 ## Phase S7: Withholding tax
 _Story ref: spec.md#story-s7_
 
-- [b] Task: Contracts & schema — WHT rates per payment type (P.N.D. 1/3/53), WHT certificate contract, WHT payable posting. (deferred:accounting_app_foundation_20260820-phase-s6-acceptance)
-- [b] Task: Red tests — WHT amount splits on approval; certificate generation; WHT report reconciles. (deferred:accounting_app_foundation_20260820-phase-s6-acceptance)
-- [b] Task: Implement — WHT calculation in approval flow, certificate PDF, WHT report UI. (deferred:accounting_app_foundation_20260820-phase-s6-acceptance)
-- [b] Task: Generate docs & doctor — `measure/generate.sh`, `measure/doctor.sh`. (deferred:accounting_app_foundation_20260820-phase-s6-acceptance)
-- [b] Task: Measure - User Manual Verification 'Phase S7: Withholding tax' (Protocol in workflow.md) (deferred:owner-manual-verification)
+- [b] Task: Contracts & schema — WHT rates per payment type (P.N.D. 1/3/53), WHT certificate contract, WHT payable posting. (deferred:backlog)
+- [b] Task: Red tests — WHT amount splits on approval; certificate generation; WHT report reconciles. (deferred:backlog)
+- [b] Task: Implement — WHT calculation in approval flow, certificate PDF, WHT report UI. (deferred:backlog)
+- [b] Task: Generate docs & doctor — `measure/generate.sh`, `measure/doctor.sh`. (deferred:backlog)
+- [b] Task: Measure - User Manual Verification 'Phase S7: Withholding tax' (Protocol in workflow.md) (deferred:backlog)
 
 ## Phase S8: Accountant export pack
 _Story ref: spec.md#story-s8_
 
-- [b] Task: Contracts — periodic export pack (journals + evidence references) reusing the finance-operations accountant-pack boundary. (deferred:accounting_app_foundation_20260820-phase-s7-acceptance)
-- [b] Task: Red tests — export completeness vs journal, immutability of exported periods, access limited to OWNER/ACCOUNTANT. (deferred:accounting_app_foundation_20260820-phase-s7-acceptance)
-- [b] Task: Implement — export generation + download UI. (deferred:accounting_app_foundation_20260820-phase-s7-acceptance)
-- [b] Task: Generate docs & doctor — `measure/generate.sh`, `measure/doctor.sh`. (deferred:accounting_app_foundation_20260820-phase-s7-acceptance)
-- [b] Task: Measure - User Manual Verification 'Phase S8: Accountant export pack' (Protocol in workflow.md) (deferred:owner-manual-verification)
+- [b] Task: Contracts — periodic export pack (journals + evidence references) reusing the finance-operations accountant-pack boundary. (deferred:backlog)
+- [b] Task: Red tests — export completeness vs journal, immutability of exported periods, access limited to OWNER/ACCOUNTANT. (deferred:backlog)
+- [b] Task: Implement — export generation + download UI. (deferred:backlog)
+- [b] Task: Generate docs & doctor — `measure/generate.sh`, `measure/doctor.sh`. (deferred:backlog)
+- [b] Task: Measure - User Manual Verification 'Phase S8: Accountant export pack' (Protocol in workflow.md) (deferred:backlog)

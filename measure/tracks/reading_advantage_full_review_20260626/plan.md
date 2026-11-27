@@ -52,5 +52,5 @@
 
 ## Phase 7: Acceptance
 
-- [~] Task: Run Measure phase acceptance for this review track after line-review synthesis. Evidence pending: prior `phase-acceptance-result.json` predates the 51-batch line review and must be rerun or superseded.
-- [~] Task: Feed accepted findings into the final roadmap track after phase/final acceptance approves this review. Evidence pending: final roadmap must consume the line-review synthesis, not the earlier sampled pass.
+- [ ] Task: Run Measure phase acceptance for this review track after line-review synthesis. Evidence pending: prior `phase-acceptance-result.json` predates the 51-batch line review and must be rerun or superseded.
+- [ ] Task: Feed accepted findings into the final roadmap track after phase/final acceptance approves this review. Evidence pending: final roadmap must consume the line-review synthesis, not the earlier sampled pass.

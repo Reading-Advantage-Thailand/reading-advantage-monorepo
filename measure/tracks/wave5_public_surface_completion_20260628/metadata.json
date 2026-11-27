@@ -1,7 +1,7 @@
 {
   "track_id": "wave5_public_surface_completion_20260628",
   "type": "feature",
-  "status": "parked",
+  "status": "shelved",
   "created_at": "2026-06-28T00:00:00Z",
   "updated_at": "2026-10-26T00:00:00Z",
   "description": "Wave 5 remediation: complete non-claims public-surface defects on www (forms, SEO, assets, i18n, a11y, comparison/pricing, nav, contact, test hygiene), marketing schema/UX/i18n, and Science build/deploy de-Prisma.",

@@ -19,7 +19,7 @@ _Graph context: `reviewExercise` is reached through the API and durable worker; 
 - [x] Task: Implement explicit review routing
   - [x] Route PR evaluation through OpenRouter with `CODECAMP_PR_REVIEW_MODEL`; leave tutor routing independent — review and tutor use distinct settings (review = `~x-ai/grok-latest`, tutor = `xiaomi/mimo-v2.5`).
   - [x] Persist provenance and remove reliance on provider-global defaults — provenance persisted as immutable advisory evidence; cannot approve a PR or mutate Mastery.
-- [~] Task: Verify and document Phase S1
+- [ ] Task: Verify and document Phase S1
   - [x] Run AI/package/webhook/deploy-config gates, live preflight when credentialed — credentialed preflight passed on 2026-07-15 against `~x-ai/grok-latest`.
   - [ ] graph update/audit, docs, doctor — Codecamp company SSO cut over successfully on 2026-07-20 in revision `codecamp-advantage-00020-hay`; rebuild the current repository graph and run the remaining documentation/doctor gates.
   - [ ] Task: Measure - User Manual Verification 'Phase S1: Route review models explicitly' (Protocol in workflow.md) — the SSO cutover is complete; credentialed Codecamp verification and browser evidence remain open.
@@ -36,7 +36,7 @@ _Story ref: spec.md#story-s2_
 - [x] Task: Implement trusted context assembly and evaluation
   - [x] Fetch graph-bound exercise/rubric/previous-attempt/test context through domain ports — context fetched from domain ports; revision attempts receive bounded summary of earlier attempts excluding messages/prompts/reasoning.
   - [x] Validate model output twice and render grounded GitHub/student feedback — output validated; GitHub Check Runs context bounded to allowed fields and explicitly unavailable when credentials missing.
-- [~] Task: Verify and document Phase S2
+- [ ] Task: Verify and document Phase S2
   - [x] Run domain/AI/webhook/security/fixture suites — 39+47+40+25+15+24 = 190 focused tests pass; webhooks build passed; lint clean.
   - [ ] graph caller checks, affected builds, docs, doctor — the 2026-07-20 Codecamp SSO cutover is complete; the current graph, affected-build, documentation, and doctor evidence remains open.
   - [ ] Task: Measure - User Manual Verification 'Phase S2: Produce objective-level review evidence' (Protocol in workflow.md) — credentialed GitHub/Codecamp verification and browser evidence remain open.
@@ -53,7 +53,7 @@ _Story ref: spec.md#story-s3_
 - [x] Task: Implement evidence persistence and projections
   - [x] Convert validated results into idempotent practice submissions and SRS/card review inputs — authenticated deterministic APK approval records immutable trusted attempt before activity/Mastery projection.
   - [x] Project activity/progress status from bindings while retaining full attempt history — intern admin page exposes safe attempt provenance + prior corrections only.
-- [~] Task: Verify and document Phase S3
+- [ ] Task: Verify and document Phase S3
   - [x] Run webhook/worker/DB/Mastery/tenant/concurrency suites — 211 webhooks tests pass; durable-worker adversarial suite passes.
   - [ ] graph/generate/doctor, end-to-end fixture flow — the Codecamp SSO cutover is complete; the current graph/generate/doctor evidence and credentialed end-to-end fixture flow remain open.
   - [ ] Task: Measure - User Manual Verification 'Phase S3: Feed PR evidence into Mastery' (Protocol in workflow.md)
@@ -70,9 +70,9 @@ _Story ref: spec.md#story-s4_
 - [x] Task: Implement harness, observability, and guarded release
   - [x] Build offline replay/reporting and production model-provenance/drift metrics — implemented per implementation-status.md.
   - [x] Deploy shadow then canary under explicit approval with retry-safe queue transition — shadow mode deployed in `codecamp-advantage-00019-682` with `CODECAMP_PR_REVIEW_ROLLOUT_MODE=shadow`; canary requires explicit approver.
-- [~] Task: Close and verify the PR evaluation track — the 2026-08-11 product-owner decision `Approve active rollout` is durably recorded in `release-approval.json` for the current active rollout's advisory PR feedback only; this bounded approval does not close the track.
+- [ ] Task: Close and verify the PR evaluation track — the 2026-08-11 product-owner decision `Approve active rollout` is durably recorded in `release-approval.json` for the current active rollout's advisory PR feedback only; this bounded approval does not close the track.
   - [x] Record bounded active-rollout approval provenance — `67324e850` adds `release-approval.json`, binding the exact owner-selected label to config commit `508fac6fd`, reviewed HEAD `46f97a54d69c37f931c72069ff063d95e1525c41`, and advisory-only scope.
-- [~] Run frozen/live evaluations, end-to-end GitHub flow, affected/root gates, graph/generate/doctor, and curriculum/product-owner review — human-labelled fixtures, frozen/live evaluation, credentialed GitHub, browser, graph/generate/doctor, and broader curriculum/product-owner review gates remain open. Focused approval evidence: `bash tests/codecamp_pr_release_approval_provenance.sh` exited 0 with `=== Total: 9 checks (PASS=9, FAIL=0) ===`; it rejects mismatched marker, wrong revisions, broader authority, broadened source, and absent decision.
+- [ ] Run frozen/live evaluations, end-to-end GitHub flow, affected/root gates, graph/generate/doctor, and curriculum/product-owner review — human-labelled fixtures, frozen/live evaluation, credentialed GitHub, browser, graph/generate/doctor, and broader curriculum/product-owner review gates remain open. Focused approval evidence: `bash tests/codecamp_pr_release_approval_provenance.sh` exited 0 with `=== Total: 9 checks (PASS=9, FAIL=0) ===`; it rejects mismatched marker, wrong revisions, broader authority, broadened source, and absent decision.
   - [~] Task: Measure - User Manual Verification 'Phase S4: Calibrate and release safely' (Protocol in workflow.md) — durable provenance is recorded, but human-labelled evaluation, credentialed GitHub, browser, graph/doctor, and broader curriculum/product-owner verification remain open.
 
 ## Production Incident Repair: Durable PR Review Recovery (2026-08-10)

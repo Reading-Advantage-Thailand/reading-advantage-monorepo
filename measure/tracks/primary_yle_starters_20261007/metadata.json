@@ -1,7 +1,7 @@
 {
   "track_id": "primary_yle_starters_20261007",
   "type": "feature",
-  "status": "new",
+  "status": "shelved",
   "created_at": "2026-10-06T23:56:40Z",
   "updated_at": "2026-10-06T23:56:40Z",
   "description": "YLE-format Starters (Pre-A1) reading and writing tasks for Primary: the item contract and JSON Schema, the practice and secure importers, the exact-key matcher, five task screens, the after-reading lesson step, level bank practice sets, secure test sittings, and mastery evidence from every answer. Start after the 2026-10-11 deploy; migration in the 2026-11-09 window.",

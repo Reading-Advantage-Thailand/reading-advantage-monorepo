@@ -1,7 +1,7 @@
 {
   "track_id": "codecamp_pr_mastery_evaluation_20260710",
   "type": "feature",
-  "status": "parked",
+  "status": "shelved",
   "created_at": "2026-07-10T08:13:12Z",
   "updated_at": "2026-10-26T00:00:00Z",
   "description": "Move Codecamp PR review to explicit OpenRouter Grok Latest routing, produce structured graph-linked rubric evidence, preserve advisory semantics, and feed validated outcomes into Mastery KST+SRS.",

@@ -1,7 +1,7 @@
 {
   "track_id": "company_identity_sso_20260715",
   "type": "feature",
-  "status": "parked",
+  "status": "shelved",
   "created_at": "2026-07-15T07:11:37Z",
   "updated_at": "2026-10-26T00:00:00Z",
   "description": "Create a separate employee identity database, first-party Accounts app, and shared SSO for Marketing, Sales Advantage, and Codecamp Advantage, including migration of existing Codecamp accounts.",

@@ -82,7 +82,7 @@
     - `controllers/activity-target-validation-red.test.ts` — asserts `postActivityLog` rejects missing `targetId` and no `details.articleId` fallback; missing license resolves to `LicenseType.BASIC`.
     - `controllers/report-typed-context-red.test.ts` — source-scan asserts no `(req as any)` / `requireRole(...as any)` casts in report controllers.
   - Red run: `cd apps/reading-advantage && CI=true pnpm run test -- __tests__/controllers/assignment-status-enum-red.test.ts __tests__/controllers/reporting-metrics-red.test.ts __tests__/controllers/activity-target-validation-red.test.ts __tests__/controllers/report-typed-context-red.test.ts` → 12 failed / 5 passed / 17 total; failures match expected missing behavior.
-- [~] Task: Implement the correctness fixes behind domain functions.
+- [ ] Task: Implement the correctness fixes behind domain functions.
 - [x] Task: Build the product-level learning-loop test suite covering XP → level → assignment progression. — `fbedacbf`
   - Evidence refs: Reading M-RA-PB-8.
   - Red tests added under `apps/reading-advantage/__tests__/learning-loop/`:
@@ -103,39 +103,39 @@
 
 ## Phase 5: CodeCamp Reliability and Least-Privilege
 
-- [~] Task: Write Red tests for typed domain errors, tenant-scoped PR-review queries, and isolated test-harness state.
+- [ ] Task: Write Red tests for typed domain errors, tenant-scoped PR-review queries, and isolated test-harness state.
   - Evidence refs: CodeCamp MT-8/MT-9/MT-10.
-- [~] Task: Implement typed errors, PR-review scoping, and per-case harness isolation.
-- [~] Task: Add progression policy, least-privilege permission checks, and observability via shared adapter.
+- [ ] Task: Implement typed errors, PR-review scoping, and per-case harness isolation.
+- [ ] Task: Add progression policy, least-privilege permission checks, and observability via shared adapter.
   - Evidence refs: CodeCamp MT-11/MT-13/MT-14.
-- [~] Task: Run CodeCamp/domain/api targeted tests.
+- [ ] Task: Run CodeCamp/domain/api targeted tests.
 
 ## Phase 6: Sales Reliability, Curriculum, and Observability
 
-- [~] Task: Write Red tests for curriculum integrity/progression gating, transactional + rate-limited roleplay/reporting writes, and Sales audit events.
+- [ ] Task: Write Red tests for curriculum integrity/progression gating, transactional + rate-limited roleplay/reporting writes, and Sales audit events.
   - Evidence refs: Sales T5/T8/T9.
-- [~] Task: Implement transaction wrappers, rate limits (reuse Wave 0 limiter), progression gates, and audit logging.
-- [~] Task: Run Sales/domain targeted tests.
+- [ ] Task: Implement transaction wrappers, rate limits (reuse Wave 0 limiter), progression gates, and audit logging.
+- [ ] Task: Run Sales/domain targeted tests.
 
 ## Phase 7: Primary Prisma Removal and Secret Eradication
 
-- [~] Task: Write Red tests/guards asserting no Prisma runtime import and no hardcoded secret/credential literals in committed Primary source.
+- [ ] Task: Write Red tests/guards asserting no Prisma runtime import and no hardcoded secret/credential literals in committed Primary source.
   - Evidence refs: Primary M7; Primary M9 (~103 instances).
-- [~] Task: Remove Prisma artifacts; replace hardcoded secrets with env reads + production guards for seed/test credentials.
-- [~] Task: Run Primary targeted tests, type checks, and lint.
+- [ ] Task: Remove Prisma artifacts; replace hardcoded secrets with env reads + production guards for seed/test credentials.
+- [ ] Task: Run Primary targeted tests, type checks, and lint.
 
 ## Phase 8: Public Blog Security
 
-- [~] Task: Write Red tests proving blog HTML is sanitized and frontmatter is Zod-validated.
+- [ ] Task: Write Red tests proving blog HTML is sanitized and frontmatter is Zod-validated.
   - Evidence refs: www T9 (LRF-028).
-- [~] Task: Add sanitization + Zod frontmatter parsing to the blog rendering path.
-- [~] Task: Run www targeted tests.
+- [ ] Task: Add sanitization + Zod frontmatter parsing to the blog rendering path.
+- [ ] Task: Run www targeted tests.
 
 ## Phase 9: Quality Gates and Closeout
 
-- [~] Task: Run all required verification commands from `spec.md`.
-- [~] Task: Update `medium-plus-coverage-matrix.md` marking owned tracks resolved only when behavior tests prove the fixes.
-- [~] Task: Verify each site-closure checklist marks every affected same-class site fixed, not-applicable, or explicitly deferred to a named follow-up.
-- [~] Task: Add lessons learned for any new tenant/secret/observability patterns.
-- [~] Task: Run Measure phase acceptance and archive the track.
+- [ ] Task: Run all required verification commands from `spec.md`.
+- [ ] Task: Update `medium-plus-coverage-matrix.md` marking owned tracks resolved only when behavior tests prove the fixes.
+- [ ] Task: Verify each site-closure checklist marks every affected same-class site fixed, not-applicable, or explicitly deferred to a named follow-up.
+- [ ] Task: Add lessons learned for any new tenant/secret/observability patterns.
+- [ ] Task: Run Measure phase acceptance and archive the track.
 </content>

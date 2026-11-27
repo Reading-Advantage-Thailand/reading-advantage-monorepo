@@ -53,7 +53,7 @@ fixture only; do not change its public signature during this track._
   - [ ] Run `measure/generate.sh` and `measure/doctor.sh` when their project-local
     prerequisites are available; record unsupported commands rather than bypassing
     them.
-- [b] Task: Measure - User Manual Verification 'Phase S1: Select source content' (Protocol in workflow.md) — deferred:product-owner
+- [b] Task: Measure - User Manual Verification 'Phase S1: Select source content' (Protocol in workflow.md) — (deferred:backlog)
 
 ## Phase S2: Implement drafts, immutable editions, and provenance
 
@@ -89,7 +89,7 @@ _Story ref: spec.md#story-s2-publish-immutable-editions_
     exact evidence in this track.
   - [ ] Run generated-documentation and doctor checks, recording known baseline debt
     separately.
-- [b] Task: Measure - User Manual Verification 'Phase S2: Publish immutable editions' (Protocol in workflow.md) — deferred:product-owner
+- [b] Task: Measure - User Manual Verification 'Phase S2: Publish immutable editions' (Protocol in workflow.md) — (deferred:backlog)
 
 ## Phase S3: Import legacy projects and establish artifact foundations
 
@@ -127,7 +127,7 @@ _Story ref: spec.md#story-s3-import-legacy-workbook-projects-and-assets_
     commands, then run the applicable aggregate validation gates.
   - [ ] Record migration, rollback, and artifact-validation operational guidance in the
     track before any dashboard cutover is planned.
-- [b] Task: Measure - User Manual Verification 'Phase S3: Reproduce release artifacts' (Protocol in workflow.md) — deferred:product-owner
+- [b] Task: Measure - User Manual Verification 'Phase S3: Reproduce release artifacts' (Protocol in workflow.md) — (deferred:backlog)
 
 ## Phase S4: Port the production workspace to `apps/workbooks`
 

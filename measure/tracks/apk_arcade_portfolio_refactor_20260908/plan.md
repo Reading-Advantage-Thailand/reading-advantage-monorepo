@@ -60,12 +60,12 @@ Do not call a planning packet an implementation or a completed game.
 
 Dependencies: Phase 0.
 
-- [~] P1.1: Trace all input, result, completion, session, and host consumers.
-- [~] P1.2: Add behavioral compatibility cases for old hosts, duplicate terms, and one completion per session.
+- [ ] P1.1: Trace all input, result, completion, session, and host consumers.
+- [ ] P1.2: Add behavioral compatibility cases for old hosts, duplicate terms, and one completion per session.
 - [x] P1.3: Specify optional modality configuration, host confirmation receipts, and typed learning evidence without altering the five-field result.
-- [~] P1.4: Define common action meanings, device layouts, focus rules, and capability-based hints.
-- [~] P1.5: Define speech timing, replay assistance, failure, and fallback state transitions.
-- [~] P1.6: Review the contracts and run affected contract tests, type checks, and builds.
+- [ ] P1.4: Define common action meanings, device layouts, focus rules, and capability-based hints.
+- [ ] P1.5: Define speech timing, replay assistance, failure, and fallback state transitions.
+- [ ] P1.6: Review the contracts and run affected contract tests, type checks, and builds.
 
 Exit: Existing callers remain compatible; new optional settings have validated defaults and explicit ownership.
 
@@ -73,13 +73,13 @@ Exit: Existing callers remain compatible; new optional settings have validated d
 
 Dependencies: Phase 0 inventory. Runs beside Phase 1 contract work.
 
-- [~] P1A.1: Inventory new terrain, actor, animation, prop, effect, UI, icon, font, music, and sound collections.
-- [~] P1A.2: Inspect representative source images, animations, and existing approval records.
-- [~] P1A.3: Shortlist competing candidates for Wizard maps and the shared arcade shell.
-- [~] P1A.4: Compare perspective, pixel scale, palette, animation coverage, semantic clarity, and mobile readability.
-- [~] P1A.5: Build a small playable comparison using existing APK bindings and shortlisted assets.
-- [~] P1A.6: Check collision alignment, occlusion, texture loading, animation behavior, and speech intelligibility on target layouts.
-- [~] P1A.7: Record selections, rejected alternatives, exact paths, remaining gaps, and reasons for retained older assets.
+- [ ] P1A.1: Inventory new terrain, actor, animation, prop, effect, UI, icon, font, music, and sound collections.
+- [ ] P1A.2: Inspect representative source images, animations, and existing approval records.
+- [ ] P1A.3: Shortlist competing candidates for Wizard maps and the shared arcade shell.
+- [ ] P1A.4: Compare perspective, pixel scale, palette, animation coverage, semantic clarity, and mobile readability.
+- [ ] P1A.5: Build a small playable comparison using existing APK bindings and shortlisted assets.
+- [ ] P1A.6: Check collision alignment, occlusion, texture loading, animation behavior, and speech intelligibility on target layouts.
+- [ ] P1A.7: Record selections, rejected alternatives, exact paths, remaining gaps, and reasons for retained older assets.
 - [ ] P1A.8: Review the visual comparison with the owner through the existing phase verification process.
 
 Exit: Selected assets demonstrate a coherent, readable arcade experience at gameplay size.
@@ -90,12 +90,12 @@ Use `asset-selection.md` for evaluation criteria and required evidence.
 
 Dependencies: P1.1, P1.2, P1.4, and Phase 1A selection.
 
-- [~] P2.1: Trace the existing briefing, tutorial, play, completion, replay, and exit paths across all three game hosts.
-- [~] P2.2: Design shared screens using existing pixel assets, readable locale fonts, and responsive layout rules.
-- [~] P2.3: Test direct play, practice, defeat, victory, replay, exit, stale receipts, malformed receipts, save timeouts, and idempotent retries.
-- [~] P2.4: Refactor existing shell components and route every retained cartridge through them.
-- [~] P2.5: Add consistent sound cues, reduced motion, keyboard focus, and touch controls.
-- [~] P2.6: Verify compact and wide screens in a real browser, including Thai labels and long titles.
+- [ ] P2.1: Trace the existing briefing, tutorial, play, completion, replay, and exit paths across all three game hosts.
+- [ ] P2.2: Design shared screens using existing pixel assets, readable locale fonts, and responsive layout rules.
+- [ ] P2.3: Test direct play, practice, defeat, victory, replay, exit, stale receipts, malformed receipts, save timeouts, and idempotent retries.
+- [ ] P2.4: Refactor existing shell components and route every retained cartridge through them.
+- [ ] P2.5: Add consistent sound cues, reduced motion, keyboard focus, and touch controls.
+- [ ] P2.6: Verify compact and wide screens in a real browser, including Thai labels and long titles.
 - [ ] P2.7: Review the phase and complete owner verification under `measure/workflow.md`.
 
 Exit: A student reaches play quickly, receives clear results, and replays without duplicate completion or stale input.
@@ -104,13 +104,13 @@ Exit: A student reaches play quickly, receives clear results, and replays withou
 
 Dependencies: P1.3, P1.5. Runs beside Phase 2 after shared interfaces stabilize.
 
-- [~] P3.1: Inventory existing recordings, speech adapters, storage, browser audio, and host locale data.
-- [~] P3.2: Define audio references, truthful locale reporting, strict modality evidence, and the minimal internal synthesis port.
-- [~] P3.3: Test autoplay restrictions, late loads, failed loads, replay, pause, focus loss, target changes, and unmount.
-- [~] P3.4: Implement shared speech playback, bounded preloading, cancellation, and coordinated speech, music, and effects channels.
-- [~] P3.5: Implement Thai targets with English audio choices, completed-playback confirmation, and explicit reading fallback.
-- [~] P3.6: Validate reserved learning evidence at host and server boundaries before existing metadata persistence.
-- [~] P3.7: Verify Thai targets, English audio answer choices, mobile activation, and rejected silent fallback.
+- [ ] P3.1: Inventory existing recordings, speech adapters, storage, browser audio, and host locale data.
+- [ ] P3.2: Define audio references, truthful locale reporting, strict modality evidence, and the minimal internal synthesis port.
+- [ ] P3.3: Test autoplay restrictions, late loads, failed loads, replay, pause, focus loss, target changes, and unmount.
+- [ ] P3.4: Implement shared speech playback, bounded preloading, cancellation, and coordinated speech, music, and effects channels.
+- [ ] P3.5: Implement Thai targets with English audio choices, completed-playback confirmation, and explicit reading fallback.
+- [ ] P3.6: Validate reserved learning evidence at host and server boundaries before existing metadata persistence.
+- [ ] P3.7: Verify Thai targets, English audio answer choices, mobile activation, and rejected silent fallback.
 - [ ] P3.8: Review pronunciation, timing, tests, type checks, builds, and owner verification.
 
 Exit: Students hear English answer choices for a Thai target; failure never silently changes the measured modality.
@@ -119,17 +119,17 @@ Exit: Students hear English answer choices for a Thai target; failure never sile
 
 Dependencies: Phases 1–3 and Phase 1A for integration. Map design can begin after Phase 0.
 
-- [~] P4.1: Document the existing favorite's movement, collection, shockwave, pressure, and result behavior.
-- [~] P4.2: Use Phase 1A selections for terrain and sprites; document semantic bindings and consistent scale.
-- [~] P4.3: Design one connected graveyard with alternative routes, narrow passages, and clear landmarks.
-- [~] P4.4: Define reusable collision, navigation, spawn, pickup, and camera boundaries in APK.
-- [~] P4.5: Test map reachability, all four spawn approaches, obstacle avoidance, stuck recovery, corner movement, and invalid placements.
-- [~] P4.6: Test elapsed-time movement, equal diagonal speed, immunity, collision-safe knockback, visible touch abilities, and safe spawns.
-- [~] P4.7: Implement map simulation and navigation; keep cartridge-specific rules inside the Wizard module.
-- [~] P4.8: Implement readable art, animations, feedback, and common action controls.
-- [~] P4.9: Integrate reading and listening rounds with the shared start, pause, results, and replay screens.
-- [~] P4.10: Test long and short decks, duplicate translations, wrong choices, audio failure, and terminal cleanup.
-- [~] P4.11: Run real browser sessions on compact touch and wide keyboard layouts.
+- [ ] P4.1: Document the existing favorite's movement, collection, shockwave, pressure, and result behavior.
+- [ ] P4.2: Use Phase 1A selections for terrain and sprites; document semantic bindings and consistent scale.
+- [ ] P4.3: Design one connected graveyard with alternative routes, narrow passages, and clear landmarks.
+- [ ] P4.4: Define reusable collision, navigation, spawn, pickup, and camera boundaries in APK.
+- [ ] P4.5: Test map reachability, all four spawn approaches, obstacle avoidance, stuck recovery, corner movement, and invalid placements.
+- [ ] P4.6: Test elapsed-time movement, equal diagonal speed, immunity, collision-safe knockback, visible touch abilities, and safe spawns.
+- [ ] P4.7: Implement map simulation and navigation; keep cartridge-specific rules inside the Wizard module.
+- [ ] P4.8: Implement readable art, animations, feedback, and common action controls.
+- [ ] P4.9: Integrate reading and listening rounds with the shared start, pause, results, and replay screens.
+- [ ] P4.10: Test long and short decks, duplicate translations, wrong choices, audio failure, and terminal cleanup.
+- [ ] P4.11: Run real browser sessions on compact touch and wide keyboard layouts.
 - [ ] P4.12: Compare route use and replay interest with the existing game through customer sessions.
 - [ ] P4.13: Review the complete experience and record owner verification.
 
@@ -140,11 +140,11 @@ Exit: One complete game validates the shared foundation. A map screenshot alone 
 Dependencies: Pilot gameplay and trusted completion from Phase 4.
 
 - [x] P5.1: Inspect current identity, mastery, XP, quests, and inventory consumers before selecting ownership.
-- [~] P5.2: Define a small cosmetic reward set and concrete quest rules.
-- [~] P5.3: Define Zod contracts, permissions, transaction boundaries, and retry semantics.
-- [~] P5.4: Test tenant isolation, replayed submissions, interrupted grants, and untrusted reward values.
-- [~] P5.5: Implement backend commands and queries through existing database and auth adapters.
-- [~] P5.6: Show confirmed progression in shared entry and result screens.
+- [ ] P5.2: Define a small cosmetic reward set and concrete quest rules.
+- [ ] P5.3: Define Zod contracts, permissions, transaction boundaries, and retry semantics.
+- [ ] P5.4: Test tenant isolation, replayed submissions, interrupted grants, and untrusted reward values.
+- [ ] P5.5: Implement backend commands and queries through existing database and auth adapters.
+- [ ] P5.6: Show confirmed progression in shared entry and result screens.
 - [ ] P5.7: Verify reward behavior across the supported host apps and complete phase review.
 
 Exit: Progress persists correctly; client display XP cannot grant authoritative rewards.
@@ -157,11 +157,11 @@ This review does not establish Phase 5 implementation or acceptance.
 
 Dependencies: Phases 4–5 and validated modality evidence.
 
-- [~] P6.1: Define challenge identity, content, seed, difficulty, modality, eligibility, and expiry.
-- [~] P6.2: Define personal improvement, team contribution, tie, abandonment, and replay rules.
-- [~] P6.3: Test cross-school access, duplicate contribution, mismatched modality, and expired challenges.
-- [~] P6.4: Implement asynchronous challenges and shared class goals through backend modules.
-- [~] P6.5: Integrate entry selection, comparable results, and teacher-controlled participation.
+- [ ] P6.1: Define challenge identity, content, seed, difficulty, modality, eligibility, and expiry.
+- [ ] P6.2: Define personal improvement, team contribution, tie, abandonment, and replay rules.
+- [ ] P6.3: Test cross-school access, duplicate contribution, mismatched modality, and expired challenges.
+- [ ] P6.4: Implement asynchronous challenges and shared class goals through backend modules.
+- [ ] P6.5: Integrate entry selection, comparable results, and teacher-controlled participation.
 - [ ] P6.6: Validate fairness and participation with a classroom pilot before wider exposure.
 
 Exit: Comparable runs share the same rules, and class goals count each eligible contribution once.
@@ -185,9 +185,9 @@ Dependencies: Phase 4 validates the foundation. RPG and social integration follo
 
 - [ ] P8.1: Resolve the proposed dispositions in `portfolio.md` using customer evidence and owner choices.
 - [ ] P8.2: Rebuild the retained puzzle games using shared controls, shell, learning rules, and suitable audio modes.
-- [~] P8.3: Rebuild retained defense and shooting games with readable targets and fair action accounting.
-- [~] P8.4: Rebuild retained exploration and sentence games with distinct objectives and tested recovery.
-- [~] P8.5: Keep vocabulary lane flight and sentence jousting separate. Consolidate only confirmed redundant variants and preserve historical links and results.
+- [ ] P8.3: Rebuild retained defense and shooting games with readable targets and fair action accounting.
+- [ ] P8.4: Rebuild retained exploration and sentence games with distinct objectives and tested recovery.
+- [ ] P8.5: Keep vocabulary lane flight and sentence jousting separate. Consolidate only confirmed redundant variants and preserve historical links and results.
 - [ ] P8.6: Add Listen to Sequence and Read to Select Audio only where they improve the retained mechanic.
 - [ ] P8.7: Verify every retained game with the common acceptance checklist and actual browser play.
 - [ ] P8.8: Verify every retired or combined title has a replacement route and intact historical results.
@@ -199,7 +199,7 @@ A completed Wizard pilot does not complete the portfolio refactor.
 
 Dependencies: Accepted release batches from the preceding phases.
 
-- [~] P9.1: Check auth, content loading, locale, audio, completion, navigation, and progression on Advantage Games, Reading, and Primary.
+- [ ] P9.1: Check auth, content loading, locale, audio, completion, navigation, and progression on Advantage Games, Reading, and Primary.
 - [ ] P9.2: Run targeted local checks for changed behavior, one at a time. Record coverage limits and unrelated failures.
 - [ ] P9.3: Refresh only the required preview modules within the local resource limit. Verify current rendered behavior.
 - [ ] P9.4: Update product documentation. Defer graph updates under the owner testing constraint.

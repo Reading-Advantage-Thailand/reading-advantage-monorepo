@@ -92,7 +92,7 @@ Red-phase commits contain ONLY the new test files and Measure document edits.
     - [x] Use `usePathname` and `useSearchParams` in `AuthEntry` to build the sign-in link
     - [x] Render the error message for each of the four codes on the landing page
     - [x] Add the English and Thai strings
-- [~] Task: Confirm the Green phase
+- [ ] Task: Confirm the Green phase
     - [x] Run the Codecamp suite, `check-types`, and `lint`
     - [ ] Run the top-level build, because it is the supervisor gate (blocked by a cross-track `codecamp-knowledge` regression; see the Phase 3 record)
     - [x] Confirm the legacy mode path by running the suite with `CODECAMP_AUTH_MODE=legacy`

@@ -109,7 +109,7 @@ _Story ref: spec.md#story-s1_
     - [x] Apply least-privilege database credentials for runtime and migration
           connections.
 
-- [~] Task 6: Establish the backend identity module and adapter boundary.
+- [ ] Task 6: Establish the backend identity module and adapter boundary.
     - [~] Add transport-independent identity repository interfaces and
           capability contracts.
     - [~] Add the PostgreSQL identity adapter in the approved ownership root.
@@ -121,7 +121,7 @@ _Story ref: spec.md#story-s1_
 
 ### Generate Docs & Doctor
 
-- [~] Task 7: Generate identity architecture facts and run phase gates.
+- [ ] Task 7: Generate identity architecture facts and run phase gates.
     - [~] Document the database topology, migration commands, environment
           variables, ownership rules, and local PostgreSQL test workflow.
     - [~] Run `measure/generate.sh` and review generated changes.
@@ -130,7 +130,7 @@ _Story ref: spec.md#story-s1_
           database, backend, and auth packages.
     - [~] Update `graph.db` for all structural changes.
 
-- [~] Task: Measure - User Manual Verification 'Phase S1: Establish Company Identity Boundary' (Protocol in workflow.md)
+- [ ] Task: Measure - User Manual Verification 'Phase S1: Establish Company Identity Boundary' (Protocol in workflow.md)
 
 ## Phase S2: Provide Employee SSO
 _Story ref: spec.md#story-s2_
@@ -208,7 +208,7 @@ _Blast radius: `validateSession` has 31 source references but 0 graph-resolved c
 
 ### Generate Docs & Doctor
 
-- [b] Task 14: Document and verify the SSO protocol. (deferred:company_identity_sso_20260715-s1-acceptance)
+- [b] Task 14: Document and verify the SSO protocol. (deferred:backlog)
     - [~] Document client registration, redirect URIs, session lifecycles,
           logout semantics, key/secret rotation, and incident revocation.
     - [~] Generate capability and route documentation.
@@ -217,7 +217,7 @@ _Blast radius: `validateSession` has 31 source references but 0 graph-resolved c
     - [~] Inspect the shared session and role symbols before modification and
           update `graph.db` afterward.
 
-- [b] Task: Measure - User Manual Verification 'Phase S2: Provide Employee SSO' (Protocol in workflow.md) (deferred:company_identity_sso_20260715-s1-acceptance)
+- [b] Task: Measure - User Manual Verification 'Phase S2: Provide Employee SSO' (Protocol in workflow.md) (deferred:backlog)
 
 ## Phase S3: Manage Employees and App Roles
 _Story ref: spec.md#story-s3_
@@ -283,7 +283,7 @@ _Blast radius: `roleAtLeast` has 5 source references but 0 graph-resolved caller
 
 ### Generate Docs & Doctor
 
-- [b] Task 20: Document and verify employee administration. (deferred:company_identity_sso_20260715-s2-acceptance)
+- [b] Task 20: Document and verify employee administration. (deferred:backlog)
     - [~] Publish the company-versus-application role matrix.
     - [~] Document bootstrap, recovery, suspension, termination, and
           session-revocation procedures.
@@ -292,7 +292,7 @@ _Blast radius: `roleAtLeast` has 5 source references but 0 graph-resolved caller
           Accounts build, and backend package builds.
     - [~] Update `graph.db` for new capabilities, schemas, routes, and UI.
 
-- [b] Task: Measure - User Manual Verification 'Phase S3: Manage Employees and App Roles' (Protocol in workflow.md) (deferred:company_identity_sso_20260715-s2-acceptance)
+- [b] Task: Measure - User Manual Verification 'Phase S3: Manage Employees and App Roles' (Protocol in workflow.md) (deferred:backlog)
 
 ## Phase S4: Connect Marketing
 _Story ref: spec.md#story-s4_
@@ -349,7 +349,7 @@ _Blast radius: `requireMarketingSession` has 9 source references but 0 graph-res
 
 ### Generate Docs & Doctor
 
-- [b] Task 25: Document and verify the Marketing integration. (deferred:company_identity_sso_20260715-s3-acceptance)
+- [b] Task 25: Document and verify the Marketing integration. (deferred:backlog)
     - [~] Document client configuration, permissions, role assignment, smoke
           tests, rollback, and deployment environment.
     - [~] Generate route and capability facts.
@@ -357,7 +357,7 @@ _Blast radius: `requireMarketingSession` has 9 source references but 0 graph-res
           build.
     - [~] Run the architecture boundary guards and update `graph.db`.
 
-- [b] Task: Measure - User Manual Verification 'Phase S4: Connect Marketing' (Protocol in workflow.md) (deferred:company_identity_sso_20260715-s3-acceptance)
+- [b] Task: Measure - User Manual Verification 'Phase S4: Connect Marketing' (Protocol in workflow.md) (deferred:backlog)
 
 ## Phase S5: Connect Sales Advantage
 _Story ref: spec.md#story-s5_
@@ -430,7 +430,7 @@ _Blast radius: `createRepAccount` has 4 source references, `getCohortOverview` h
 
 ### Generate Docs & Doctor
 
-- [b] Task 32: Document and verify the Sales integration. (deferred:company_identity_sso_20260715-s4-acceptance)
+- [b] Task 32: Document and verify the Sales integration. (deferred:backlog)
     - [~] Document the role matrix, Accounts onboarding handoff, organization
           scoping, client configuration, deployment, and rollback.
     - [~] Generate capability and route facts.
@@ -438,7 +438,7 @@ _Blast radius: `createRepAccount` has 4 source references, `getCohortOverview` h
           tests, coverage, lint, typecheck, and builds.
     - [~] Run architecture and authorization boundary guards.
 
-- [b] Task: Measure - User Manual Verification 'Phase S5: Connect Sales Advantage' (Protocol in workflow.md) (deferred:company_identity_sso_20260715-s4-acceptance)
+- [b] Task: Measure - User Manual Verification 'Phase S5: Connect Sales Advantage' (Protocol in workflow.md) (deferred:backlog)
 
 ## Phase S6: Migrate Codecamp Accounts
 _Story ref: spec.md#story-s6_
@@ -544,7 +544,7 @@ _Blast radius: `validateSession` has 31 source references and shared `requireRol
     - [x] Update `graph.db` for all changed schemas, auth exports, routes, and
           product-principal mappings. — Structural graph/doctor closeout is explicitly deferred.
 
-- [b] Task: Measure - User Manual Verification 'Phase S6: Migrate Codecamp Accounts' (Protocol in workflow.md) (deferred:company_identity_sso_20260715-s5-acceptance)
+- [b] Task: Measure - User Manual Verification 'Phase S6: Migrate Codecamp Accounts' (Protocol in workflow.md) (deferred:backlog)
 
 ## Phase S7: Cut Over and Verify Production
 _Story ref: spec.md#story-s7_
@@ -634,7 +634,7 @@ _Story ref: spec.md#story-s7_
           [`codecamp-cutover-postflight-20260720.md`](./codecamp-cutover-postflight-20260720.md).
     - [~] Observe authentication and product metrics through the agreed window.
 
-- [b] Task 48: Retire legacy authentication after explicit approval. (deferred:company_identity_sso_20260715-s6-acceptance)
+- [b] Task 48: Retire legacy authentication after explicit approval. (deferred:backlog)
     - [~] Confirm no unresolved migrated-account exceptions remain.
     - [~] Confirm rollback evidence and observation-window results are accepted.
     - [~] Obtain explicit operator approval before disabling legacy credential
@@ -646,7 +646,7 @@ _Story ref: spec.md#story-s7_
 
 ### Generate Docs & Doctor
 
-- [b] Task 49: Complete production documentation and final quality gates. (deferred:company_identity_sso_20260715-s6-acceptance)
+- [b] Task 49: Complete production documentation and final quality gates. (deferred:backlog)
     - [x] Publish final topology, client registry, secret inventory, migration
           evidence, rollback revisions, and operational runbooks. — [`production-topology-20260719.md`](./production-topology-20260719.md), [`client-registry-20260719.md`](./client-registry-20260719.md), [`secret-inventory-20260719.md`](./secret-inventory-20260719.md), [`migration-evidence-20260719.md`](./migration-evidence-20260719.md).
     - [x] Generate architecture, capability, route, and schema facts. — Final deployment and client derivation references are captured in [`production-topology-20260719.md`](./production-topology-20260719.md) and [`client-registry-20260719.md`](./client-registry-20260719.md).
@@ -657,4 +657,4 @@ _Story ref: spec.md#story-s7_
     - [~] Rebuild `graph.db` with the canonical current schema and run its integrity audit. — The 2026-07-15 graph is stale and incompatible; the successor program graph-baseline phase owns current evidence.
     - [~] Complete independent security, migration, and change-quality review.
 
-- [b] Task: Measure - User Manual Verification 'Phase S7: Cut Over and Verify Production' (Protocol in workflow.md) (deferred:company_identity_sso_20260715-s6-acceptance)
+- [b] Task: Measure - User Manual Verification 'Phase S7: Cut Over and Verify Production' (Protocol in workflow.md) (deferred:backlog)

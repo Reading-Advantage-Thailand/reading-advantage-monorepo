@@ -19,7 +19,7 @@ _Graph context: current `getChatContext` has one known consumer and supplies onl
 - [x] Task: Implement intervention generation behind the AI adapter
   - [x] Add task-level `CODECAMP_TUTOR_MODEL` configuration defaulting to `xiaomi/mimo-v2.5` — `resolveCodecampTutorModel` validates identifier and defaults to `DEFAULT_CODECAMP_TUTOR_MODEL`.
   - [x] Remove Codecamp's direct provider SDK path and persist complete provenance — route `apps/codecamp-advantage/app/api/chat/route.ts` uses internal AI adapter; `generateTutorIntervention` persists provenance with provider response metadata.
-- [~] Task: Verify and document Phase S1
+- [ ] Task: Verify and document Phase S1
   - [x] Run AI adapter, contract, model preflight, lint, type-check, tests, coverage, build — 45 focused tests pass; 86.16% statement and 88.48% line coverage; type-check passed per `implementation-status.md` (2026-07-15). Credential-gated MiMo preflight passed in legacy revision `codecamp-advantage-00019-682`.
   - [ ] graph update/audit, docs, doctor — Codecamp company SSO cut over successfully on 2026-07-20 in revision `codecamp-advantage-00020-hay`; rebuild the current repository graph and run the remaining documentation/doctor gates.
   - [ ] Task: Measure - User Manual Verification 'Phase S1: Freeze the intervention contract' (Protocol in workflow.md) — the SSO cutover is complete; assigned-learner access and browser evidence remain to be reverified against the live revision.
@@ -36,7 +36,7 @@ _Story ref: spec.md#story-s2_
 - [x] Task: Implement context assembly in the owning domain module
   - [x] Replace title/description-only context with validated, least-privilege activity context — `createTutorContextFromAuthorizedActivity` derives context from owned durable session, not from client input.
   - [x] Keep the route thin and share context/provenance behavior with tests and future apps — `apps/codecamp-advantage/lib/tutor-intervention.ts` is a thin wrapper; domain logic lives in `packages/domain/src/codecamp/tutor.ts`.
-- [~] Task: Verify and document Phase S2
+- [ ] Task: Verify and document Phase S2
   - [x] Run security/privacy/context/load gates — authz contract tests, privacy coverage, and local route smoke (200/401) passed in `implementation-status.md`.
   - [ ] graph caller checks, affected suites, generated docs, doctor — the 2026-07-20 Codecamp SSO cutover is complete; the current graph, generated-doc, affected-suite, and doctor evidence remains open.
   - [ ] Task: Measure - User Manual Verification 'Phase S2: Ground tutoring in activity state' (Protocol in workflow.md) — assigned-learner access and browser evidence remain to be reverified against the live SSO revision.
@@ -53,7 +53,7 @@ _Story ref: spec.md#story-s3_
 - [x] Task: Implement coach UI and policy orchestration
   - [x] Render diagnostic questions, structured hints, resource cards, exact video ranges, and check-again actions — shipped in the guided APK tutor surface.
   - [x] Record intervention/resource-use events without fabricating correctness — shipped through immutable support/resource events and verified joins.
-- [~] Task: Verify and document Phase S3
+- [ ] Task: Verify and document Phase S3
   - [ ] Run browser/mobile/accessibility/policy/adversarial tests and conduct learner-like manual walkthroughs — assigned-learner browser/mobile walkthrough remains required against the successfully cut-over 2026-07-20 SSO revision.
   - [ ] Task: Measure - User Manual Verification 'Phase S3: Escalate support safely' (Protocol in workflow.md) — assigned-learner access and browser/mobile evidence remain open; SSO cutover is complete.
 
@@ -69,6 +69,6 @@ _Story ref: spec.md#story-s4_
 - [x] Task: Implement evidence joins and projections
   - [x] Attach intervention history to checkpoint/check/PR evidence and planner remediation — shipped through verified-evidence joins and tenant-scoped admin projections.
   - [x] Add student/teacher summaries and efficacy events without storing hidden reasoning — teacher/admin summary shipped; hidden reasoning is excluded.
-- [~] Task: Verify and close the tutor track
+- [ ] Task: Verify and close the tutor track
   - [ ] Run end-to-end activity/tutor/Mastery flows, model fixtures, affected/root gates, graph/generate/doctor, and product-owner review — assigned-learner walkthrough against the live SSO revision, frozen live-model fixtures, human efficacy review, graph/generate/doctor, and product-owner review remain open.
   - [ ] Task: Measure - User Manual Verification 'Phase S4: Connect intervention to Mastery' (Protocol in workflow.md) — assigned-learner access, efficacy review, graph/doctor, and browser acceptance remain open; SSO cutover is complete.

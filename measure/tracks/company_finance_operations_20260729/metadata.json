@@ -1,7 +1,7 @@
 {
   "track_id": "company_finance_operations_20260729",
   "type": "feature",
-  "status": "parked",
+  "status": "shelved",
   "created_at": "2026-07-29T00:00:00Z",
   "updated_at": "2026-10-26T00:00:00Z",
   "description": "Build a company-wide Finance Operations web app for payables, reimbursements, payroll-summary imports, school-customer billing, Tutor Advantage reconciliation, historical accounting-report import, and monthly Thai-accountant handoff.",

@@ -1,7 +1,7 @@
 {
   "track_id": "primary_core_interaction_quality_20261005",
   "type": "feature",
-  "status": "planned",
+  "status": "shelved",
   "created_at": "2026-10-05T00:00:00Z",
   "updated_at": "2026-10-26T00:00:00Z",
   "description": "Lane G: verify the September audio, loading, and deduplication fixes in a browser, then bring the reader, audio control, flashcard review, practice activities, lesson task components, and games catalog copy to the Lane C quality bar.",

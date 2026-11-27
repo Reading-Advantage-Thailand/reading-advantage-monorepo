@@ -18,19 +18,19 @@
 - [x] Task: Record remaining PO answers: approved comparison/pricing figures and final legal copy. Lead capture remains successor-owned.
 - [x] Task: Reconcile T12 pricing/comparison against the Wave 3 claims matrix. Unverified prices and competitor claims are removed.
 - [x] Task: Resolve the Phase 0 blockers through the 2026-09-07 owner decision.
-- [~] Task: Record baseline www/marketing/science pass/fail for the required verification commands.
+- [ ] Task: Record baseline www/marketing/science pass/fail for the required verification commands.
 
 ## Phase 1: Conversion — Lead Capture and Dead Components
 
-- [b] Task: Write Red tests proving waitlist + contact forms post to the chosen backend/adapter and validate input. — superseded:www_crm_lead_intake_20260722 (deferred:www_crm_lead_intake_20260722-acceptance)
+- [b] Task: Write Red tests proving waitlist + contact forms post to the chosen backend/adapter and validate input. — superseded:www_crm_lead_intake_20260722 (deferred:backlog)
   - Evidence refs: www T1 (LRF-008/009).
-- [b] Task: Implement form submission + validation + analytics. — superseded:www_crm_lead_intake_20260722 (deferred:www_crm_lead_intake_20260722-acceptance)
+- [b] Task: Implement form submission + validation + analytics. — superseded:www_crm_lead_intake_20260722 (deferred:backlog)
 - [x] Task: Remove or implement empty/dead layout components flagged by import-usage audit.
   - Evidence refs: www T2 (LRF-010).
   - Red failed with all three empty files detected: `fade-in.tsx`, `page-transition.tsx`, and `scroll-fade.tsx`.
   - Green removed the three unimported zero-byte files. The focused suite passes 1/1.
   - The exact combined command `CI=true ../../node_modules/.bin/vitest run src/components/layout/layout-components.test.ts src/__tests__/phase-2-seo-assets.red.test.ts --maxWorkers=1` passes 5/5.
-- [~] Task: Run www targeted tests.
+- [ ] Task: Run www targeted tests.
   - The focused T2 suite passes. The direct full Vitest command stopped with exit 130 after more than four minutes without output.
 
 ## Phase 2: SEO Metadata and Static Assets
@@ -46,7 +46,7 @@
   - Typecheck, targeted lint, format, diff, and graph checks pass for the completed work.
   - The preserved blog Red hash is `716c5a38b644a938374e367f4ff4d0fb9a12b7cc9f36cffb7251466de7e4afee`.
   - The Phase 3 i18n Red remains a separate candidate. This task includes no Thai wording change.
-- [~] Task: Run www targeted tests/build.
+- [ ] Task: Run www targeted tests/build.
   - `CI=true ../../node_modules/.bin/vitest run src/__tests__/phase-2-seo-assets.red.test.ts --maxWorkers=1` passes 4/4 after the metadata, asset, and route-export repair. The combined T2/T3 command above passes 5/5.
   - `CI=true ../../node_modules/.bin/next build` from `apps/www-reading-advantage` exits 1 because Turbopack cannot bind a port in this environment (`Operation not permitted`). This is an environment-owned diagnostic, not a build Green.
   - Build and browser verification remain unclaimed.
@@ -148,9 +148,9 @@
 
 ## Phase 6: www Test Hygiene
 
-- [~] Task: Unskip homepage test, dedupe Primary test, deepen product tests.
+- [ ] Task: Unskip homepage test, dedupe Primary test, deepen product tests.
   - Evidence refs: www T16 (LRF-043).
-- [~] Task: Run www full targeted test pass.
+- [ ] Task: Run www full targeted test pass.
 
 ## Phase 7: Marketing Schema, UX, and i18n
 
@@ -210,15 +210,15 @@
 
 ## Phase 8: Science Build/Deploy De-Prisma
 
-- [~] Task: Write Red test/guard asserting build command runs Drizzle migrate, not Prisma.
+- [ ] Task: Write Red test/guard asserting build command runs Drizzle migrate, not Prisma.
   - Evidence refs: Science ST-6 (HI-08, F-SA-B36-001/003, DOC-01).
-- [~] Task: Replace Prisma build command with Drizzle migrate; align tsconfig test inclusion.
-- [~] Task: Verify Science deploy path against Wave 2 migration-doctor gate.
+- [ ] Task: Replace Prisma build command with Drizzle migrate; align tsconfig test inclusion.
+- [ ] Task: Verify Science deploy path against Wave 2 migration-doctor gate.
 
 ## Phase 9: Acceptance and Closeout
 
-- [~] Task: Run all required verification commands from `spec.md`.
-- [~] Task: Update `medium-plus-coverage-matrix.md` and the Wave 3 claims matrix with completed evidence.
-- [~] Task: Add lessons learned for SEO/i18n/form-adapter patterns.
-- [~] Task: Run Measure phase acceptance and archive the track.
+- [ ] Task: Run all required verification commands from `spec.md`.
+- [ ] Task: Update `medium-plus-coverage-matrix.md` and the Wave 3 claims matrix with completed evidence.
+- [ ] Task: Add lessons learned for SEO/i18n/form-adapter patterns.
+- [ ] Task: Run Measure phase acceptance and archive the track.
 </content>

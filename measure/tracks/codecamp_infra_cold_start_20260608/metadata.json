@@ -1,7 +1,7 @@
 {
   "track_id": "codecamp_infra_cold_start_20260608",
   "type": "feature",
-  "status": "parked",
+  "status": "shelved",
   "created_at": "2026-06-08T00:00:00Z",
   "updated_at": "2026-10-26T00:00:00Z",
   "description": "Fix Cloud Run cold-start time exceeding the 5-second P0 budget. Likely fixes: container min-instances configuration, image-size reduction, or startup hook optimization.",

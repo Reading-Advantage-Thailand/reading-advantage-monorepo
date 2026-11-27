@@ -292,7 +292,7 @@ closed; Red failures arise from missing platform behavior.
   - Review A complete-enqueue mismatch follow-up (2026-08-16; current HEAD start `c572d0b87`): the first snapshot test claimed `task9-red` after the adapter promoted `task9-follow-up-queue`. The test now claims with the promoted queue from its follow-up request. Safe complete enqueue passed 1 and skipped 23. Live schema passed 3/3, concurrency passed 14/14, and complete enqueue passed 24/24. No production Red remains.
   - Review A rerun after correction commit `98bdfca33` (2026-08-16; verification start `27c7f4f23`): safe complete enqueue passed 1 and skipped 23. Isolated PG16 schema passed 3/3, concurrency passed 14/14, and complete enqueue passed 24/24. The run left zero scratch databases. It left two migration-created test roles, which were removed after verification; final scratch databases and durable-job roles were zero. TypeScript, lint, Prettier, and diff checks passed. No production Red remains.
   - Review A remediation Red (2026-08-16; approved test commit `81df805826846c10306e81126d9f8c6b429bd1a4`; current HEAD `e6265b0be`): added the exact tenant-registry ownership exception contract and the M3/M4 transition-first lock-barrier contract. The approved PostgreSQL 16 barrier run passed 26/26. The safe enqueue suite passed 1 test and skipped 25. The architecture contract remains expected Red because the exact ownership-map exception is absent. This lease changed no production or configuration source. Phase 3 remains unaccepted pending the ownership-map exception review.
-- [~] Task 14a: Implement the owner-approved first-class analyzer reconciliation
+- [ ] Task 14a: Implement the owner-approved first-class analyzer reconciliation
   v2. Preserve the accepted v1 manifest bytes at SHA-256
   `4c95113cfff50d9e92f0770e1f18ef7d195dd50b5201f108e90990771ca46ec0`.
   Add explicit v1/v2 policy selection and preserve v1 behavior and output.
@@ -370,9 +370,9 @@ hash in the receipt.
 
 ## Phase 4: Worker Service and `review_jobs` Adoption
 
-- [b] Task 15: Implement `services/worker` composition over the job port: typed registry, polling/backpressure, lease renewal, graceful shutdown, health, logs, and OCI build with no direct DB/job-table access. (deferred:durable_job_worker_platform_20260713-phase3-acceptance)
-- [b] Task 16: Adapt or reversibly migrate `review_jobs` through the backend PostgreSQL adapter while retaining current review business logic and admin authorization. (deferred:durable_job_worker_platform_20260713-phase3-acceptance)
-- [b] Task 17: Run compatibility, safety-strengthening, restart, dual/shadow-equivalence, webhook latency/redelivery, and rollback drills before retiring any old polling path. (deferred:durable_job_worker_platform_20260713-phase3-acceptance)
+- [b] Task 15: Implement `services/worker` composition over the job port: typed registry, polling/backpressure, lease renewal, graceful shutdown, health, logs, and OCI build with no direct DB/job-table access. (deferred:backlog)
+- [b] Task 16: Adapt or reversibly migrate `review_jobs` through the backend PostgreSQL adapter while retaining current review business logic and admin authorization. (deferred:backlog)
+- [b] Task 17: Run compatibility, safety-strengthening, restart, dual/shadow-equivalence, webhook latency/redelivery, and rollback drills before retiring any old polling path. (deferred:backlog)
 
 **Verification:** `CI=true pnpm --filter @reading-advantage/worker test && pnpm --filter @reading-advantage/worker check-types && docker build -f services/worker/Dockerfile . && pnpm --filter @reading-advantage/worker validate:oci --target cloud-run --target ecs-fargate && CI=true pnpm --filter @reading-advantage/webhooks test`
 
@@ -382,9 +382,9 @@ exists before old-path removal.
 
 ## Phase 5: Capability Integration, Documentation, and Doctor
 
-- [b] Task 18: After kernel acceptance, add Red then Green tests binding selected handlers to `job` descriptors and invoking only the capability executor. (deferred:durable_job_worker_platform_20260713-phase4-and-backend_capability_kernel_20260713-final-acceptance)
-- [b] Task 19: Document operations for deploy, scale, Cloud Run and ECS/Fargate runtime validation, health, drain, replay, migration/rollback, and `review_jobs` compatibility; generate catalog entries. (deferred:durable_job_worker_platform_20260713-phase4-and-backend_capability_kernel_20260713-final-acceptance)
-- [b] Task 20: Run full quality/architecture/doctor gates and independent concurrency, security, tenancy, and failure-mode review; close Critical/High findings. (deferred:durable_job_worker_platform_20260713-phase4-and-backend_capability_kernel_20260713-final-acceptance)
+- [b] Task 18: After kernel acceptance, add Red then Green tests binding selected handlers to `job` descriptors and invoking only the capability executor. (deferred:backlog)
+- [b] Task 19: Document operations for deploy, scale, Cloud Run and ECS/Fargate runtime validation, health, drain, replay, migration/rollback, and `review_jobs` compatibility; generate catalog entries. (deferred:backlog)
+- [b] Task 20: Run full quality/architecture/doctor gates and independent concurrency, security, tenancy, and failure-mode review; close Critical/High findings. (deferred:backlog)
 
 **Verification:** `CI=true pnpm --filter @reading-advantage/worker test && CI=true pnpm --filter @reading-advantage/backend test && pnpm turbo run lint check-types --filter=@reading-advantage/worker --filter=@reading-advantage/backend --filter=@reading-advantage/webhooks && pnpm backend:generate && git diff --exit-code -- measure/generated && pnpm architecture:check && bash measure/doctor.sh`
 

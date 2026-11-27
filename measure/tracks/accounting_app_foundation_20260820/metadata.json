@@ -1,7 +1,7 @@
 {
   "track_id": "accounting_app_foundation_20260820",
   "type": "feature",
-  "status": "parked",
+  "status": "shelved",
   "created_at": "2026-08-20T01:54:43Z",
   "updated_at": "2026-10-26T00:00:00Z",
   "description": "Build apps/accounting as the in-house finance workspace: SSO via apps/accounts, staff expense/bill submission with evidence, owner approval with immutable audit, full double-entry ledger on a standard Thai SME chart of accounts, Thai statutory support (VAT, WHT, tax invoices), and accountant export — on top of the Finance Operations foundation.",

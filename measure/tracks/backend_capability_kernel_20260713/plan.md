@@ -43,13 +43,13 @@ setup; handler non-execution is asserted for every failed precondition.
 
 ## Phase 3: Kernel Implementation
 
-- [~] Task 10: Implement descriptor builders and fail-closed registry validation.
-- [~] Task 11: Implement executor context creation plus input/auth/tenant/authorization ordering using existing adapters.
-- [~] Task 12: Implement transaction, output validation, typed error normalization, and secret-safe observability.
-- [~] Task 13: Implement audit and durable idempotency orchestration; add the reviewed Drizzle capability-idempotency schema/migration, tenant-registry classification, PostgreSQL adapter, and isolated two-connection atomic acquisition/settlement/rollback evidence; then make all Phase 2 tests Green.
+- [ ] Task 10: Implement descriptor builders and fail-closed registry validation.
+- [ ] Task 11: Implement executor context creation plus input/auth/tenant/authorization ordering using existing adapters.
+- [ ] Task 12: Implement transaction, output validation, typed error normalization, and secret-safe observability.
+- [ ] Task 13: Implement audit and durable idempotency orchestration; add the reviewed Drizzle capability-idempotency schema/migration, tenant-registry classification, PostgreSQL adapter, and isolated two-connection atomic acquisition/settlement/rollback evidence; then make all Phase 2 tests Green.
 - [x] Task 13-D (docs/provenance checkpoint): Canonical Phase 3 provenance/adoption test strategy published; Phase 3 reframed as provenance reconciliation and live-proof adoption, not a new Red phase. Implementation tasks 10-13 remain `[~]` pending remediation items R1-R7 in the strategy. [evidence: test-strategy.md, strategy commit 184c81c83d38aaec3436a355f39c3e426b031e38]
 - [x] Task 13-E (bounded Green reconciliation): Made the PG16 migration lookup independent of the working directory and added kernel coverage regression tests. The live kernel gate passed with 10 files and 165 tests. The coverage gate reported 95.46% kernel line coverage. Tasks 10-13 remain `[~]` because R2-R6 remain open. [evidence: implementation commit 316bbe193, phase-3-acceptance-evidence.md]
-- [~] Task 13-F (repository failure classification): Recorded the database, domain, and architecture results. R3 and R4 need exact failing-file dispositions. R5 is closed. R6 remains open. The architecture compatibility repair is `a084bb4a9`. [evidence: phase-3-repository-verification-20260814.md]
+- [ ] Task 13-F (repository failure classification): Recorded the database, domain, and architecture results. R3 and R4 need exact failing-file dispositions. R5 is closed. R6 remains open. The architecture compatibility repair is `a084bb4a9`. [evidence: phase-3-repository-verification-20260814.md]
 
 **Verification:** `CI=true pnpm vitest run packages/backend/src/kernel/__tests__ && pnpm --filter @reading-advantage/backend check-types && pnpm --filter @reading-advantage/db test && pnpm --filter @reading-advantage/domain test`
 
@@ -61,9 +61,9 @@ not grow.
 
 ## Phase 4: Catalog and Route Bindings (Red to Green)
 
-- [~] Task 14: Add Red generator fixtures for duplicate IDs/routes, stale output, unsafe exposure, incompatible kinds, and a synchronous job binding.
-- [~] Task 15: Implement deterministic descriptor discovery and JSON/Markdown capability catalog generation.
-- [~] Task 16: Implement deterministic route manifest/thin bindings that invoke only the executor by capability ID.
+- [ ] Task 14: Add Red generator fixtures for duplicate IDs/routes, stale output, unsafe exposure, incompatible kinds, and a synchronous job binding.
+- [ ] Task 15: Implement deterministic descriptor discovery and JSON/Markdown capability catalog generation.
+- [ ] Task 16: Implement deterministic route manifest/thin bindings that invoke only the executor by capability ID.
 
 **Verification:** `CI=true pnpm vitest run packages/backend/src/generator/__tests__ && pnpm backend:generate && git diff --exit-code -- measure/generated`
 
@@ -72,9 +72,9 @@ generated binding resolves to exactly one registered capability.
 
 ## Phase 5: Small/New-App Pilot, Documentation, and Doctor
 
-- [~] Task 17: Inventory candidate operations, select one bounded small/new-app pilot, and record compatibility, tenant, baseline, rollout, and rollback evidence.
-- [~] Task 18: Implement the pilot through a generated binding and executor, run compatibility/auth/tenant/error tests, and ratchet removed debt downward.
-- [~] Task 19: Document authoring/migration workflow, wire stale-generation checks into CI/doctor, run full gates, and complete independent acceptance review.
+- [ ] Task 17: Inventory candidate operations, select one bounded small/new-app pilot, and record compatibility, tenant, baseline, rollout, and rollback evidence.
+- [ ] Task 18: Implement the pilot through a generated binding and executor, run compatibility/auth/tenant/error tests, and ratchet removed debt downward.
+- [ ] Task 19: Document authoring/migration workflow, wire stale-generation checks into CI/doctor, run full gates, and complete independent acceptance review.
 
 **Verification:** `CI=true pnpm --filter @reading-advantage/backend test && pnpm --filter @reading-advantage/backend lint && pnpm --filter @reading-advantage/backend check-types && pnpm backend:generate && git diff --exit-code -- measure/generated && pnpm architecture:check && bash measure/doctor.sh`
 

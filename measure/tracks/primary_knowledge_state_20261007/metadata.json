@@ -1,7 +1,7 @@
 {
   "track_id": "primary_knowledge_state_20261007",
   "type": "feature",
-  "status": "new",
+  "status": "shelved",
   "created_at": "2026-10-07T00:08:00Z",
   "updated_at": "2026-10-07T00:08:00Z",
   "description": "T3 of the Primary Mastery Graph Program: the graph slice, getStudentKnowledgeState over buildKstState, the cold-start seed, the shadow log after each evidence job, the level test readiness signal, projections for T5, and a SYSTEM-only admin view. Shadow mode only.",

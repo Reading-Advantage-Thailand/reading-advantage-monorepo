@@ -1,7 +1,7 @@
 {
   "track_id": "codecamp_intervention_tutor_20260710",
   "type": "feature",
-  "status": "parked",
+  "status": "shelved",
   "created_at": "2026-07-10T08:13:12Z",
   "updated_at": "2026-10-26T00:00:00Z",
   "description": "Replace Codecamp's general chatbot with a targeted MiMo-V2.5 intervention coach grounded in the current activity, objective, attempt, test failure, misconception, scaffold history, and curated remediation resources.",
