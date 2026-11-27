@@ -67,7 +67,7 @@ describe("AdvantageGamesAuthoringQc", () => {
     expect(screen.getAllByTestId("safe-region-overlay").length).toBeGreaterThan(0);
     expect(screen.getByRole("region", { name: "Game result" })).toBeInTheDocument();
     expect(await screen.findByRole("img", { name: "Dragon Flight QC canvas" })).toBeInTheDocument();
-  });
+  }, 30000);
 
   it("exposes accessible control target sizes and focus rings for QC operators", async () => {
     render(<AdvantageGamesAuthoringQc preview={preview as StandardPackQcPreview} />);

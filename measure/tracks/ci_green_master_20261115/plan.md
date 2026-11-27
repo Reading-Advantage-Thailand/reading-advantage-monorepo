@@ -381,6 +381,14 @@ Track: `ci_green_master_20261115` (light lane).
   ("requires the accepted gate-to-boss traversal loop"). No assertion failed.
 - Fix: that case gets a 30 s budget. Test files deploy no app. Local gate: 1 test passes.
 
+## CI round 17 (2026-11-27): run 46064461711
+
+- The cartridge timeout passed. The main job then failed on one Jest 5 s timeout in
+  `apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.test.tsx`
+  ("switches to wide touch composition ..."), with no assertion failure.
+- Fix: that case gets a 30 s budget. Local gate, after building the cartridge package:
+  1 suite, 6 tests pass.
+
 ## Follow-up (deferred to a later owner)
 
 - [ ] The architecture report pin goes stale on every master push that changes analyzer
