@@ -314,7 +314,7 @@ closure, while S2.7 remains blocked on product-owner manual verification._
    `APK_TUTORIAL_QC_BROWSER` was not set. The next documentation task and the manual task
    remain blocked by their declared owners.
 
-- [ ] Task: Document the shared path and bespoke mechanic hook
+- [~] Task: Document the shared path and bespoke mechanic hook
   - [x] Document how an intern declares steps `b0bc6f7b6`
   - [x] Document how cartridge code demonstrates a mechanic without recreating UI `b0bc6f7b6`
   - [x] Run the combined graph update and generated-facts refresh `390448dd2`
@@ -348,7 +348,7 @@ closure, while S2.7 remains blocked on product-owner manual verification._
 
   **Root structural-gate result (2026-08-13):** The whole-repository build-graph audit emitted no output and was terminated after approximately four minutes with exit 130; no audit Green is claimed. `measure/doctor.sh` exited 1 on 80 deprecated `[ ]` markers in nine unrelated plans, so its fail-fast path did not run architecture checks. The separate direct checker exited 1 with `files=4247`, `findings=697`, `parseErrors=0`, debt additions 137, debt removals 0, and renames 21. Repository-wide structural Green remains deferred to `root-structural-gates`; S2.6 and S2 are not complete.
 
-- [ ] Task: Measure - User Manual Verification 'Phase S2: Guided Gameplay Tutorial' (Protocol in workflow.md)
+- [~] Task: Measure - User Manual Verification 'Phase S2: Guided Gameplay Tutorial' (Protocol in workflow.md)
   **First agent pass (2026-08-20):** Kimi WebBridge opened Dragon Flight on the public arcade,
   started the guided tutorial, and captured compact and wide screenshots in `evidence/`.
   Product-owner manual verification remains later.
@@ -394,7 +394,7 @@ _Story ref: spec.md#story-s3_
   - Skip transitions from demo to real play through the existing `demo-complete` → `countdown` contract edge.
   - Keep the teacher Advance control (demo → briefing) unchanged.
 
-- [b] Task: Measure - User Manual Verification 'Phase S3: Safe Demonstration Mode' (Protocol in workflow.md) — (deferred:backlog)
+- [ ] Task: Measure - User Manual Verification 'Phase S3: Safe Demonstration Mode' (Protocol in workflow.md).
 
 ## Phase S4: Standard Learning Debrief — dropped
 
@@ -404,34 +404,34 @@ Owner instruction 2026-08-20: the live host already has debrief. Do not reopen t
 
 _Story ref: spec.md#story-s4_
 
-- [b] Task: Define debrief contracts — (deferred:backlog)
+- [b] Task: Define debrief contracts — deferred:s3-product-acceptance
   - Define outcome, standard statistics, missed-content review, custom-stat, label, and attribution schemas
   - Bound extension slots and validate all numeric result values
   - Preserve host ownership of navigation, persistence, and authoritative XP
 
-- [b] Task: Write failing debrief tests — (deferred:backlog)
+- [b] Task: Write failing debrief tests — deferred:s3-product-acceptance
   - Cover victory, defeat, and complete outcomes
   - Cover score, accuracy, XP, correct answers, attempts, and learning review
   - Cover invalid values, excessive custom statistics, replay, and exit
   - Cover Thai/English compact and wide presentation
 
-- [b] Task: Implement the standardized debrief screen — (deferred:backlog)
+- [b] Task: Implement the standardized debrief screen — deferred:s3-product-acceptance
   - Preserve the legacy centered result-card information architecture
   - Add learning-review and required attribution regions
   - Add responsive replay and exit actions
   - Export the component and public contracts
 
-- [b] Task: Integrate debrief into the APK lifecycle — (deferred:backlog)
+- [b] Task: Integrate debrief into the APK lifecycle — deferred:s3-product-acceptance
   - Render only validated terminal results
   - Ensure normal gameplay completes exactly once
   - Route replay through clean teardown and configured restart phase
   - Delegate exit to the host
 
-- [b] Task: Document and verify debrief behavior — (deferred:backlog)
+- [b] Task: Document and verify debrief behavior — deferred:s3-product-acceptance
   - Update developer and host integration documentation
   - Run focused tests, coverage, type checks, lint, graph update, generation, and doctor
 
-- [b] Task: Measure - User Manual Verification 'Phase S4: Standard Learning Debrief' (Protocol in workflow.md) — (deferred:backlog)
+- [b] Task: Measure - User Manual Verification 'Phase S4: Standard Learning Debrief' (Protocol in workflow.md) — deferred:s3-product-acceptance
 
 ## Phase S5: Intern-Ready Game Workflow — dropped
 
@@ -441,43 +441,43 @@ Owner instruction 2026-08-20: the scaffold already generates runnable game code.
 
 _Story ref: spec.md#story-s5_
 
-- [b] Task: Extend cartridge manifest and readiness contracts — (deferred:backlog)
+- [b] Task: Extend cartridge manifest and readiness contracts — deferred:s4-product-acceptance
   - Make briefing, tutorial, demo, and debrief declarations mandatory for new-game scaffolds
   - Add actionable readiness errors for missing or placeholder definitions
   - Preserve bounded bespoke tutorial-action hooks
 
-- [b] Task: Write failing scaffold and readiness tests — (deferred:backlog)
+- [b] Task: Write failing scaffold and readiness tests — deferred:s4-product-acceptance
   - Verify every generated file and export
   - Verify malformed or incomplete experience definitions fail closed
   - Verify generated cartridges compile without application imports
   - Verify readiness requires lifecycle, cleanup, accessibility, responsive, and attribution evidence
 
-- [b] Task: Extend the cartridge scaffold — (deferred:backlog)
+- [b] Task: Extend the cartridge scaffold — deferred:s4-product-acceptance
   - Generate typed experience configuration and tutorial-action modules
   - Generate lifecycle, presentation, runtime, and browser tests
   - Generate QC registration for every lifecycle state
   - Avoid copying any legacy or Tutor Advantage source tree
 
-- [b] Task: Build the complete public exemplar — (deferred:backlog)
+- [b] Task: Build the complete public exemplar — deferred:s4-product-acceptance
   - Demonstrate briefing, tutorial, demo, gameplay, victory/defeat/complete debrief, replay, and exit
   - Use the standard asset library and required attribution
   - Record authored versus generated code and duplicated infrastructure avoided
 
-- [b] Task: Extend APK authoring QC — (deferred:backlog)
+- [b] Task: Extend APK authoring QC — deferred:s4-product-acceptance
   - Preview every phase independently
   - Support compact/wide, touch/keyboard, Thai/English, and reduced-motion controls
   - Inspect lifecycle events, canvas count, completion count, diagnostics, and attribution
 
-- [b] Task: Add focused visual and browser regression coverage — (deferred:backlog)
+- [b] Task: Add focused visual and browser regression coverage — deferred:s4-product-acceptance
   - Capture briefing, tutorial, demo, and debrief reference states
   - Verify representative compact and wide viewports
   - Verify real keyboard, pointer, and touch interactions
   - Keep this coverage scoped to the new APK experience surfaces
 
-- [b] Task: Publish the intern authoring guide and readiness checklist — (deferred:backlog)
+- [b] Task: Publish the intern authoring guide and readiness checklist — deferred:s4-product-acceptance
   - Explain which values interns configure and which systems APK owns
   - Provide one vocabulary and one sentence example
   - Document common, extension, and bespoke paths
   - Run all affected package and QC gates, graph update, generation, and doctor
 
-- [b] Task: Measure - User Manual Verification 'Phase S5: Intern-Ready Game Workflow' (Protocol in workflow.md) — (deferred:backlog)
+- [b] Task: Measure - User Manual Verification 'Phase S5: Intern-Ready Game Workflow' (Protocol in workflow.md) — deferred:s4-product-acceptance

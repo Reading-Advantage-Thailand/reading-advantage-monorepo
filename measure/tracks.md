@@ -303,7 +303,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 
 
-- [ ] **Track: APK Standard Game Experience** *Link: [./tracks/apk_standard_game_experience_20260810/](./tracks/apk_standard_game_experience_20260810/)* (shelved by PM 2026-11-27)
+- [~] **Track: APK Standard Game Experience** *Link: [./tracks/apk_standard_game_experience_20260810/](./tracks/apk_standard_game_experience_20260810/)*
   Briefing, guided tutorial, and class demonstration are in the live host. S4 debrief and S5 intern workflow stay dropped. S2 owner browser verification remains for later.
   *Status: parked 2026-10-26 (Daniel, check E4): the games that shipped with the cutover are complete; this track is the larger September rebuild*
 
