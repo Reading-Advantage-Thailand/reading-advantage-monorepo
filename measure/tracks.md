@@ -44,13 +44,19 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
+- [ ] **Track: TypeScript 7 Native Compiler Migration** *(typescript7_native_migration_20260710)*
+  *Link: [./tracks/typescript7_native_migration_20260710/](./tracks/typescript7_native_migration_20260710/)*
+  Move the monorepo to one compiler, TypeScript 7 (tsgo), with no second install. Amended 2026-11-05 (Daniel): vinext 1.x upgrade first, then a TypeScript 7 trial in a worktree with a regression list and memory/time table, then Cloudflare preparation (Node-only dependency inventory and adapter plan, no code moves), then a rollout phase deferred until Daniel decides.
+  *Note: Daniel 2026-11-27: "Typescript and tooling upgrades should be completed before we start any new apps." First card by the PM's order.*
+
+- [ ] **Track: Next.js security upgrade (light card)** — *created 2026-11-27* *Link: [./tracks/nextjs_security_upgrade_20261127/](./tracks/nextjs_security_upgrade_20261127/)*
+
 - [~] **Track: Primary Parity Before the Cutover: quick fixes (existing track)** *Link: [./tracks/primary_parity_quick_fixes_20261011/](./tracks/primary_parity_quick_fixes_20261011/)*
 - [ ] **Track: Primary print kit look sync (light card)** — *created 2026-11-27* *Link: [./tracks/primary_print_kit_look_sync_20261127/](./tracks/primary_print_kit_look_sync_20261127/)*
 - [ ] **Track: Reading Phase 1 (light card)** — *created 2026-11-27* *Link: [./tracks/reading_phase_1_20261127/](./tracks/reading_phase_1_20261127/)*
 - [ ] **Track: Lexical matcher and article profile job (light card)** — *created 2026-11-27* *Link: [./tracks/lexical_matcher_profile_job_20261127/](./tracks/lexical_matcher_profile_job_20261127/)*
 - [ ] **Track: B2C Phase 0 reader decisions spike (light card)** — *created 2026-11-27* *Link: [./tracks/reader_b2c_decisions_spike_20261127/](./tracks/reader_b2c_decisions_spike_20261127/)*
 - [ ] **Track: Reading Phases 2 to 8 (light card)** — *created 2026-11-27* *Link: [./tracks/reading_phases_2_to_8_20261127/](./tracks/reading_phases_2_to_8_20261127/)*
-- [ ] **Track: Next.js security upgrade (light card)** — *created 2026-11-27* *Link: [./tracks/nextjs_security_upgrade_20261127/](./tracks/nextjs_security_upgrade_20261127/)*
 - [ ] **Track: Tutor page Thai, A-63 (light card)** — *created 2026-11-27* *Link: [./tracks/tutor_page_thai_a63_20261127/](./tracks/tutor_page_thai_a63_20261127/)*
 - [ ] **Track: www council pages** — *created 2026-11-27* *Link: [./tracks/www_council_20261127/](./tracks/www_council_20261127/)*
 
@@ -1546,12 +1552,7 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 
 #### Backlog Major Migrations (spawned from dependency_upgrade_hardening_20260607)
 
-
-- [ ] **Track: TypeScript 7 Native Compiler Migration** *(typescript7_native_migration_20260710)*
-  *Link: [./tracks/typescript7_native_migration_20260710/](./tracks/typescript7_native_migration_20260710/)*
-  Move the monorepo to one compiler, TypeScript 7 (tsgo), with no second install. Amended 2026-11-05 (Daniel): vinext 1.x upgrade first, then a TypeScript 7 trial in a worktree with a regression list and memory/time table, then Cloudflare preparation (Node-only dependency inventory and adapter plan, no code moves), then a rollout phase deferred until Daniel decides.
-
-
+> The TypeScript 7 card is now the first card of Active Tracks (Daniel, 2026-11-27).
 
 ---
 

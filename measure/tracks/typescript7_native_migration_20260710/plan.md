@@ -1,5 +1,7 @@
 # Plan: TypeScript 7 Native Compiler Migration
 
+Routes (PM 2026-11-27): Claude, Codex (stops at 85% weekly), MiniMax or free routes; not opencode-go/deepseek-v4.1-flash; heavy builds and full type checks run inside scripts/jobs/heavy-run.sh.
+
 > Amended 2026-11-05 (Daniel via the PM; Author model: claude-code/claude-sonnet-5-5).
 > The end state has ONE compiler: TypeScript 7 (tsgo). The dual-compiler design is removed.
 > Read the Amendment Note in `spec.md` for the owner decisions, word for word.
@@ -210,6 +212,11 @@ PM 2026-11-23: parked until after the 30 Nov launch.
   - Files: `measure/tracks/typescript7_native_migration_20260710/evidence/` regression list.
   - Done when: every failing workspace is "pre-existing" (with the baseline entry) or
     "regression" (with a cause class); no entry is unclassified.
+- [ ] Task: Fix the regression list found by the trial.
+  - What: fix each new regression inside this track. The PM decides any trade-off; the track does
+    not stop for a report.
+  - Files: the paths named in the Phase 3 regression list.
+  - Done when: each regression has a fix and a gate result, or a PM decision recorded in this track.
 - [ ] Task: Run the 7.1 beta as one extra data point.
   - What: in the same worktree, repeat the type check on `packages/types`, `packages/domain`,
     and `apps/primary-advantage` with the 7.1 beta. Label the result "extra data point".
@@ -268,9 +275,9 @@ PM 2026-11-23: parked until after the 30 Nov launch.
 
 ## Phase 5: Rollout to one compiler (after Daniel decides on the PM step 1 report)
 
-> Every task below is `[b]` with `deferred:pm` until the PM decides on the Phase 3 report.
+> Daniel 2026-11-27 gave the priority decision this phase waited for. The tasks below are open.
 
-- [b] Task: Make TypeScript 7 the only compiler (deferred:backlog)
+- [ ] Task: Make TypeScript 7 the only compiler
   - What: pin the exact 7.0.x in the workspace; remove the `overrides.typescript` 5.9.3 pin and
     the second install; fix each `tsconfig` with narrow `types` lists; remove `baseUrl` from
     `apps/marketing/tsconfig.json`.
@@ -279,30 +286,30 @@ PM 2026-11-23: parked until after the 30 Nov launch.
   - Done when: `pnpm why typescript` shows one major version; `pnpm install --frozen-lockfile`
     exits 0; every `check-types` script exits as the Phase 1 baseline allows; `git grep` finds
     no new `@ts-ignore`, `@ts-nocheck`, or `ignoreBuildErrors`.
-- [b] Task: Move linting off the TypeScript 5 API (deferred:backlog)
+- [ ] Task: Move linting off the TypeScript 5 API
   - What: apply the Phase 3 plan for `typescript-eslint` (Oxlint type-aware through tsgolint),
     pin the rule set, and move or remove each other API consumer from the Phase 3 table.
   - Files: `packages/config/eslint/`, app `eslint.config.mjs` files, an Oxlint config, `package.json`
     files that list the old tools.
   - Done when: `pnpm turbo run lint` exits as the baseline allows with the second install gone;
     each consumer row from Phase 3 is marked "done".
-- [b] Task: Route CI and Turbo to TypeScript 7 (deferred:backlog)
+- [ ] Task: Route CI and Turbo to TypeScript 7
   - What: update `turbo.json` and `.github/workflows/ci.yml`; bound checker count under Turbo;
     observe three representative CI runs.
   - Files: `turbo.json`, `.github/workflows/ci.yml`.
   - Done when: three CI runs finish with no new nondeterminism, memory failure, or cache error;
     the checker setting is written in the CI file.
-- [b] Task: Update operator documents (deferred:backlog)
+- [ ] Task: Update operator documents
   - What: update `measure/tech-stack.md` and the operator notes for editor setup, checker
     count, fallback, and rollback. Mark `typescript6_major_migration` superseded.
   - Files: `measure/tech-stack.md`, `measure/tracks.md`, operator notes under `docs/`.
   - Done when: the documents name TypeScript 7 as the only compiler and give one rollback
     command; `grep -n "TypeScript 6" measure/tech-stack.md` shows no bridge text.
-- [b] Task: Run Measure doctor and final acceptance (deferred:backlog)
+- [ ] Task: Run Measure doctor and final acceptance
   - What: run `measure/generate.sh` and `measure/doctor.sh` with their documented commands;
     run the aggregate `lint`, `test`, `check-types`, and `build` gates under `heavy-run.sh`;
     complete the change-quality review against `spec.md` and this plan.
   - Files: generated Measure files; review notes in the track folder.
   - Done when: doctor exits 0; no migration-caused regression remains against the baseline;
     no Critical or High finding is open.
-- [b] Task: Measure - User Manual Verification 'Phase 5: Rollout to one compiler' (Protocol in workflow.md) (deferred:backlog)
+- [ ] Task: Measure - User Manual Verification 'Phase 5: Rollout to one compiler' (Protocol in workflow.md)
