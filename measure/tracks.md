@@ -55,10 +55,6 @@ This file tracks all major tracks for the project.
 
 
 
-- [ ] **Track: Remove the void Storytime code from Primary** — *created 2026-11-07*
-  *Link: [./tracks/primary_storytime_removal_20261107/](./tracks/primary_storytime_removal_20261107/)*
-  *Status: active, opened 2026-11-07; Phase 1 removed locally at ccb3ba4e7, accepted at e62a8eba7 [checkpoint]; Phase 2 closed 2026-11-27: ccb3ba4e7 is in the serving revision 00141 and `/th/st/2/1` returns 404, not the void Storytime page; Phase 3 closeout task 3.1 stays open, so this is a closeout candidate and is not archived | Owner: the next Primary deploy | Parent: storytime_app_rebuild_20261025 (task 7.1, code part) | Phase 1 local commits 2026-11-07*
-  *Note: Daniel 2026-11-07: "Are we back to the Storytime app inside Primary for a third time after I have originated that?" 25 files deleted, 9 edited in apps/primary-advantage. The bucket prefix gs://primary-app-storage/storytime/ stays untouched. No push and no deploy.*
 
 
 
@@ -791,6 +787,12 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   *Status: shelved, not done (PM 2026-11-27).*
 
 ## Archived Tracks
+
+- [x] **Track: Remove the void Storytime code from Primary** — *created 2026-11-07, archived 2026-11-27*
+  *Link: [./archive/primary_storytime_removal_20261107/](./archive/primary_storytime_removal_20261107/)*
+  *Description: Remove the void Storytime code from apps/primary-advantage (code part of task 7.1 of storytime_app_rebuild_20261025), so that Storytime lives only in apps/storytime. The route leaves production at the next Primary deploy by the team.*
+  *Status: done; Phase 1 accepted at e62a8eba7. Phase 2 closed on the serving revision 00141 and route 404. Phase 3 accepted on the recorded phase results (ccb3ba4e7), 2026-11-27.*
+  *Note: Daniel 2026-11-07: "Are we back to the Storytime app inside Primary for a third time after I have originated that?" 25 files deleted, 9 edited in apps/primary-advantage. The bucket prefix gs://primary-app-storage/storytime/ stays untouched. No push and no deploy.*
 
 - [x] **Track: Primary Authorization Hardening** — *archived 2026-11-27* *Link: [./archive/primary_authorization_hardening_20260912/](./archive/primary_authorization_hardening_20260912/)*
   Close the write-path holes: privilege escalation on `PATCH /api/users/[id]`, five unauthenticated API routes (including unbounded AI spend and path-join `unlink`), ten unguarded server actions including `deleteAllArticles`, client-authoritative XP, and cross-tenant student reads. Blocks tracks 2-6.

@@ -41,4 +41,4 @@ Roles after Green (not plan tasks): the orchestrator runs these roles after the 
 
 Phase 3 starts after the Phase 2 deploy record exists, or after Daniel's word to close with the Phase 2 tasks open.
 
-- [ ] 3.1 Final acceptance at an immutable HEAD, after the phase gates. Then closeout: archive the track, update `measure/tracks.md`, and mark the parent task 7.1 code part done. The two `[b]` tasks of Phase 2 stay as `[b]` and carry the deploy record when it exists.
+- [x] 3.1 Final acceptance and closeout. Evidence: accepted on the recorded phase results, 2026-11-27 (ccb3ba4e7). Evidence class: person-checked.
