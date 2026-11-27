@@ -26,7 +26,7 @@ Track: `ci_green_master_20261115` (light lane).
   analyzer-reconciliation.v2.json`, four hash fields only (input snapshot, two report hashes,
   review subject), no new field, no coverage growth. PC-3 fix: `280dd4a2f`, a build step for
   the two target packages before the check in `.github/workflows/ci.yml`.
-- [~] 1.5 Run local gates (app lint, architecture check), push to master, watch CI, and close
+- [ ] 1.5 Run local gates (app lint, architecture check), push to master, watch CI, and close
   the track when CI is green.
   Reason (2026-11-27): the newest completed CI run on master is 45962645071 (failure). Its first red job is "Build, Lint, and Test" (conclusion failure). CI is not green, so the marker returns from [~] to [ ] and the track stays open.
   In progress (2026-11-28): the newest completed CI run is now 46027332310 on a3a2be6ce
@@ -388,6 +388,22 @@ Track: `ci_green_master_20261115` (light lane).
   ("switches to wide touch composition ..."), with no assertion failure.
 - Fix: that case gets a 30 s budget. Local gate, after building the cartridge package:
   1 suite, 6 tests pass.
+
+## CI round 18 (2026-11-27): run 46068295261 — blocked
+
+- The authoring QC timeout passed. The main job then failed on several timeouts at once,
+  including budgets already raised in this track:
+  `src/__tests__/primary-legacy-import.test.ts` ("orders the questions ..."), 30 s;
+  `src/assets/standard-pack-ingestion-ledger.test.ts` ("rejects a successor catalog ..."),
+  30 s; `src/react/apk-game-host.test.tsx` ("tracks the live reduced-motion preference ..."),
+  5 s; `src/scaffolding/__tests__/scaffold-runtime.integration.test.ts`
+  ("compiles, registers, launches ..."), 60 s; and a Jest failure in
+  `src/lib/adaptive-difficulty/performance-benchmark.test.ts`. No assertion was weaker.
+- Classification: systemic CI capacity drift. New timeouts appear in a different package on
+  each run and now pass their own raised budgets. Individual bumps do not converge.
+- Task 1.5 returns to `[ ]`. The track stays open. A systemic decision is needed: more CI
+  runner capacity, or a global test-timeout route. A global route in a shared package makes
+  `scripts/ci/affected-apps.mjs` select apps and triggers deploys, a human gate.
 
 ## Follow-up (deferred to a later owner)
 
