@@ -331,6 +331,32 @@ Track: `ci_green_master_20261115` (light lane).
   writing `graph.db`, so `stats` reports 0 files. CI builds `graph.db` fully in its own
   step before the test.
 
+## CI round 14 (2026-11-28): run 46056441765
+
+- Run `46056441765` on `e41d2573f` completed. One task was red:
+  `@reading-advantage/advantage-play-kit#test`. Two cases timed out at 5000 ms
+  with no assertion failure:
+  - `packages/advantage-play-kit/src/assets/standard-pack-suitability.test.ts:643`,
+    "searches and technically compares only accepted resolver entries without social verdicts".
+  - `packages/advantage-play-kit/src/presentation/__tests__/game-tutorial-controller.test.ts:713`,
+    "gates one tutorial canvas behind briefing Start and wires the cartridge action driver".
+- Fix: both cases get a 30 s budget. No assertion changed, no test skipped,
+  no source file changed.
+- Gate through heavy-run: before exit 0 (35 tests, 2.80 s); after exit 0
+  (35 tests, 2.26 s). The timeouts occur only under CI parallel load.
+- Gate: `affected-apps` on `e41d2573f..HEAD` prints `[]`; no deploy triggers.
+
+## CI round 14 (2026-11-27): run 46056441765
+
+- Run `46056441765` on `e41d2573f` reached the Test step. The graph.db stats timeout passed.
+  Two new 5 s timeouts appeared in `packages/advantage-play-kit`, with no assertion failure:
+  `src/assets/standard-pack-suitability.test.ts` ("searches and technically compares ...")
+  and `src/presentation/__tests__/game-tutorial-controller.test.ts` ("gates one tutorial
+  canvas ..."). The first case also timed out in run 46027332310.
+- Fix: `packages/advantage-play-kit/vitest.config.ts` gets `testTimeout: 30_000`, matching
+  the pattern in other packages. No assertion changed, no test skipped.
+- Gate from the package directory with its own config: 2 files, 35 tests pass.
+
 ## Follow-up (deferred to a later owner)
 
 - [ ] The architecture report pin goes stale on every master push that changes analyzer
