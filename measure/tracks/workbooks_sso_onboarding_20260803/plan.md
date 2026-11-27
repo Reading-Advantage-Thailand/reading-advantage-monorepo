@@ -2,9 +2,9 @@
 
 Status: shelved, not done (PM 2026-11-27)
 
-> Checkpoint note, 2026-11-27: the four recorded checkpoint SHAs (a4331df,
-> 9f78363, 772a618, 2df5248) do not resolve with `git cat-file -e`. The four
-> User Manual Verification lines stay open until a real checkpoint exists.
+> Checkpoint note, 2026-11-27: the SHAs a4331df, 9f78363, 772a618, and 2df5248
+> are given by the PM. `git cat-file -t` finds none of them in the monorepo or
+> the Workbooks repo. PM accepted the four phase checkpoints on 2026-11-27.
 
 Exemplar for every application-side file is `apps/marketing` — the cleanest
 company-only integration. Mirror its shape rather than inventing one.
@@ -21,7 +21,7 @@ _Story ref: spec.md#story-s1_
 - [x] Task: Document the registration a4331df
     - [x] Add the workbooks row to `measure/tracks/company_identity_sso_20260715/client-registry-20260719.md`
     - [x] Add its derivation reference pointing at `apps/workbooks/cloudbuild.yaml`
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Register workbooks as an Accounts OIDC client' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase S1: Register workbooks as an Accounts OIDC client' (Protocol in workflow.md) — Evidence: PM accepted on the phase checkpoint, 2026-11-27 (a4331df); sha as given by the PM; not in this repository's object store, checked 2026-11-27
 
 ## Phase S2: Define the WORKBOOK_ADMIN application role [checkpoint: 9f78363]
 _Story ref: spec.md#story-s2_
@@ -40,7 +40,7 @@ _Story ref: spec.md#story-s2_
     - [x] Assert `resolveWorkbookRole(["WORKBOOK_ADMIN"])` returns `"WORKBOOK_ADMIN"`
     - [x] Assert `ADMIN`, `SALES_ADMIN`, and `[]` all resolve to `null`
     - [x] Assert `packages/auth/src/roles.ts` is untouched by this track
-- [ ] Task: Measure - User Manual Verification 'Phase S2: Define the WORKBOOK_ADMIN application role' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase S2: Define the WORKBOOK_ADMIN application role' (Protocol in workflow.md) — Evidence: PM accepted on the phase checkpoint, 2026-11-27 (9f78363); sha as given by the PM; not in this repository's object store, checked 2026-11-27
 
 ## Phase S3: Gate the workbooks app with Company SSO [checkpoint: 772a618]
 _Story ref: spec.md#story-s3_
@@ -64,7 +64,7 @@ _Story ref: spec.md#story-s3_
     - [x] Require a session in `GET /api/editions` and derive `tenantId` from it rather than the query string
 - [x] Task: Add the deny-by-default route gate 772a618
     - [x] Create `apps/workbooks/proxy.ts` exporting `proxy(request)` and a `config.matcher`, redirecting any non-handshake path without a session cookie to `/api/auth/company/start?returnTo=…` (9/9 proxy tests; mutation-tested)
-- [ ] Task: Measure - User Manual Verification 'Phase S3: Gate the workbooks app with Company SSO' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase S3: Gate the workbooks app with Company SSO' (Protocol in workflow.md) — Evidence: PM accepted on the phase checkpoint, 2026-11-27 (772a618); sha as given by the PM; not in this repository's object store, checked 2026-11-27
 
 ## Phase S4: Make apps/workbooks deployable as a container [checkpoint: 2df5248]
 _Story ref: spec.md#story-s4_
@@ -81,7 +81,7 @@ _Story ref: spec.md#story-s4_
     - [x] `pnpm --filter workbooks check-types`, `lint`, `test`, `build` — all pass (9/9 tests)
     - [x] Confirm `packages/auth` and `packages/db` are unmodified by this track
     - [x] Functional runner boot: `/` returns 307 → `/api/auth/company/start?returnTo=%2F` (deny-by-default verified)
-- [ ] Task: Measure - User Manual Verification 'Phase S4: Make apps/workbooks deployable to Cloud Run' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase S4: Make apps/workbooks deployable as a container' (Protocol in workflow.md) — Evidence: PM accepted on the phase checkpoint, 2026-11-27 (2df5248); sha as given by the PM; not in this repository's object store, checked 2026-11-27
 
 ## Phase S5: Provider-neutral deploy (Daniel, 2026-11-27)
 _Story ref: spec.md#story-s5_
@@ -112,5 +112,5 @@ _Story ref: spec.md#story-s5_
   - What: run lint, type check, the S5.1 test, and a local Docker build of the image through `/home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh`. Run no real deploy and no account setup. The team deploys.
   - Done when: all four gates exit 0 and the results are recorded here.
 - [ ] Task: Measure - User Manual Verification 'Phase S5: Provider-neutral deploy' (Protocol in workflow.md)
-  - What: decide this line on the recorded results of S5.1 to S5.7. Write `Evidence: accepted on the recorded phase results`. Do not use `deferred:product-owner` or `deferred:pm`.
+  - What: decide this line on the recorded results of S5.1 to S5.7. Write `Evidence: accepted on the recorded phase results`. Do not tag this line for a human gate.
   - Done when: S5.1 to S5.7 are `[x]` and the evidence line is recorded.
