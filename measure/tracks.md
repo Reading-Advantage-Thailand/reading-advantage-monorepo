@@ -48,22 +48,6 @@ This file tracks all major tracks for the project.
   *Note: Daniel 2026-11-27: "Typescript and tooling upgrades should be completed before we start any new apps." First card by the PM's order.*
   *Note: Daniel 2026-11-27: for every platform change, Reading Advantage first, then Storytime, then the back office apps (accounting, workbooks, marketing, accounts), and Primary Advantage last, after the same change runs clean on the others.*
 
-- [~] **Track: CI green on master** — *created 2026-11-15*
-  *Link: [./tracks/ci_green_master_20261115/](./tracks/ci_green_master_20261115/)*
-  *Status: round 3 pushed at a54b5741a (CI run 43686964616): PC-1 www lint, PC-2 manifest
-  hashes (refreshed twice; concurrent pushes stale the report pin), and PC-3 analyzer parse
-  errors are green in CI. PC-5 fixed on branch ci/primary-lint at 39649dca8 (pushed to
-  origin, merges with the next Primary deploy); master keeps the 13 primary lint errors as
-  the one allowed job failure. PC-4 is the only remaining cause on master and is reported:
-  every baseline write route is closed by the Gate 1 v1 freeze and the v1-to-v2 mirror, and
-  the Hashing and Provenance Policy forbids the acceptedSha256 route (strategy doc Q11);
-  the ledger is debt-ledger.v1.json. PC-6 is reported: the primary and storytime page
-  revamps broke the Oct-27 ink thresholds; a threshold or page decision belongs to the www
-  owner. Track stays open for the PM route decision on PC-4 and the www owner decision on
-  PC-6 | Chore, light lane, PM order 2026-11-15 | Run 43667794723 at 8d3cb8233 |
-  Done when ci.yml passes on master except the PC-5 job (2026-11-17)*
-
-
 - [ ] **Track: Reading Phase 1 (light card)** — *created 2026-11-27* *Link: [./tracks/reading_phase_1_20261127/](./tracks/reading_phase_1_20261127/)*
   *Description: Reading Phase 1 (light card) — created 2026-11-27*
 
@@ -468,6 +452,10 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 ---
 
 ## Shelved Tracks
+
+- [ ] **Track: CI green on master** — *created 2026-11-15*
+  *Link: [./tracks/ci_green_master_20261115/](./tracks/ci_green_master_20261115/)*
+  *Status: shelved, not done (PM 2026-11-28). Systemic CI capacity drift after 18 rounds; needs runner capacity (deferred:spend, Task 1.5) or a global test timeout (deferred:public, Task 1.5 deploy gate).*
 
 - [ ] **Track: APK Arcade Portfolio Refactor** *Link: [./tracks/apk_arcade_portfolio_refactor_20260908/](./tracks/apk_arcade_portfolio_refactor_20260908/)*
   Plan the complete game rebuild, shared arcade experience, listening, progression, and social play. Sol medium handoff is complete; implementation remains planned.

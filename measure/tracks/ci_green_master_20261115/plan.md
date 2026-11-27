@@ -28,15 +28,7 @@ Track: `ci_green_master_20261115` (light lane).
   the two target packages before the check in `.github/workflows/ci.yml`.
 - [ ] 1.5 Run local gates (app lint, architecture check), push to master, watch CI, and close
   the track when CI is green.
-  Reason (2026-11-27): the newest completed CI run on master is 45962645071 (failure). Its first red job is "Build, Lint, and Test" (conclusion failure). CI is not green, so the marker returns from [~] to [ ] and the track stays open.
-  In progress (2026-11-28): the newest completed CI run is now 46027332310 on a3a2be6ce
-  (failure). Round 11 below records the cause and the local gate. The task closes when the
-  pushed SHA is green on every job.
-  Gates run: app lint exit 0; `pnpm architecture:check --skip-input-snapshot-pin` exits 1
-  with `debt-change` (PC-4) and parseErrors=0; root `pnpm lint --concurrency=2` exits 1 on
-  `primary-advantage#lint` (PC-5: 13 errors, 11 in `tests/pwa/fixtures/`, 2 in
-  `lib/safe-callback-path.ts` and one rehearsal page test). PC-4 and PC-5 are outside the
-  light-lane fix rule and stay open for the PM.
+  Shelved 2026-11-28: see CI round 18. Resume when Daniel decides runner capacity or a global timeout.
 
 ## Gate record (2026-11-15, branch `chore/ci-green` rebased on `32475cd34`)
 
