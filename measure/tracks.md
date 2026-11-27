@@ -48,6 +48,21 @@ This file tracks all major tracks for the project.
   *Note: Daniel 2026-11-27: "Typescript and tooling upgrades should be completed before we start any new apps." First card by the PM's order.*
   *Note: Daniel 2026-11-27: for every platform change, Reading Advantage first, then Storytime, then the back office apps (accounting, workbooks, marketing, accounts), and Primary Advantage last, after the same change runs clean on the others.*
 
+- [ ] **Track: CI green on master** — *created 2026-11-15*
+  *Link: [./tracks/ci_green_master_20261115/](./tracks/ci_green_master_20261115/)*
+  *Status: round 3 pushed at a54b5741a (CI run 43686964616): PC-1 www lint, PC-2 manifest
+  hashes (refreshed twice; concurrent pushes stale the report pin), and PC-3 analyzer parse
+  errors are green in CI. PC-5 fixed on branch ci/primary-lint at 39649dca8 (pushed to
+  origin, merges with the next Primary deploy); master keeps the 13 primary lint errors as
+  the one allowed job failure. PC-4 is the only remaining cause on master and is reported:
+  every baseline write route is closed by the Gate 1 v1 freeze and the v1-to-v2 mirror, and
+  the Hashing and Provenance Policy forbids the acceptedSha256 route (strategy doc Q11);
+  the ledger is debt-ledger.v1.json. PC-6 is reported: the primary and storytime page
+  revamps broke the Oct-27 ink thresholds; a threshold or page decision belongs to the www
+  owner. Track stays open for the PM route decision on PC-4 and the www owner decision on
+  PC-6 | Chore, light lane, PM order 2026-11-15 | Run 43667794723 at 8d3cb8233 |
+  Done when ci.yml passes on master except the PC-5 job (2026-11-17)*
+
 
 - [ ] **Track: Reading Phase 1 (light card)** — *created 2026-11-27* *Link: [./tracks/reading_phase_1_20261127/](./tracks/reading_phase_1_20261127/)*
   *Description: Reading Phase 1 (light card) — created 2026-11-27*
@@ -786,6 +801,18 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [ ] **Track: game_catalog_route_repair_20260713**
   *Link: [./tracks/game_catalog_route_repair_20260713/](./tracks/game_catalog_route_repair_20260713/)*
   *Status: shelved, not done (PM 2026-11-27).*
+
+- [ ] **Track: Science Advantage Relaunch** *Link: [./tracks/science_advantage_relaunch_20261006/](./tracks/science_advantage_relaunch_20261006/)*
+  Review of apps/science-advantage and the Nov 2026 to May 2027 plan: Science as a program of the shared platform, workbook digital twin, Mastery tag/shadow/adaptive. All decisions approved 2026-10-06; Phase 0 in progress.
+  *Status: shelved, not done (PM 2026-11-27). New apps wait for TypeScript and tooling.*
+
+- [ ] **Track: Math Advantage Program** *Link: [./tracks/math_advantage_program_20261006/](./tracks/math_advantage_program_20261006/)*
+  Math as a program of the shared platform: P3 and P4 Book 1, generated practice on the Mastery runtime, demo 2027-03-08. All decisions approved 2026-10-06; Phase 0 in progress. Parked by Daniel.
+  *Status: shelved, not done (PM 2026-11-27). New apps wait for TypeScript and tooling; Math is parked by Daniel.*
+
+- [ ] **Track: Zhongwen Advantage Program** *Link: [./tracks/zhongwen_advantage_program_20261006/](./tracks/zhongwen_advantage_program_20261006/)*
+  Zhongwen as a program of the shared platform: YCT 1 and 2, English lesson shape with a script layer, demo 2027-03-29 for May 2027 (Daniel's decision). All decisions approved 2026-10-06; Phase 0 in progress.
+  *Status: shelved, not done (PM 2026-11-27). New apps wait for TypeScript and tooling.*
 
 ## Archived Tracks
 
@@ -1887,14 +1914,7 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
 
 
 
-- [ ] **Track: Science Advantage Relaunch** *Link: [./tracks/science_advantage_relaunch_20261006/](./tracks/science_advantage_relaunch_20261006/)*
-  Review of apps/science-advantage and the Nov 2026 to May 2027 plan: Science as a program of the shared platform, workbook digital twin, Mastery tag/shadow/adaptive. All decisions approved 2026-10-06; Phase 0 in progress.
 
-- [ ] **Track: Math Advantage Program** *Link: [./tracks/math_advantage_program_20261006/](./tracks/math_advantage_program_20261006/)*
-  Math as a program of the shared platform: P3 and P4 Book 1, generated practice on the Mastery runtime, demo 2027-03-08. All decisions approved 2026-10-06; Phase 0 in progress.
-
-- [ ] **Track: Zhongwen Advantage Program** *Link: [./tracks/zhongwen_advantage_program_20261006/](./tracks/zhongwen_advantage_program_20261006/)*
-  Zhongwen as a program of the shared platform: YCT 1 and 2, English lesson shape with a script layer, demo 2027-03-29 for May 2027 (Daniel's decision). All decisions approved 2026-10-06; Phase 0 in progress.
 
 
 
@@ -1958,20 +1978,3 @@ Closed and archived on 2026-10-26 by PM assignment A-20, part 2, on Daniel's dec
   *Link: [./archive/sales_traffic_source_binding_20261108/](./archive/sales_traffic_source_binding_20261108/)*
   *Bind the uploaded source of the traffic files of sales-advantage (Phase 1) and of accounts, accounting, codecamp-advantage, marketing, and primary-advantage (Phase 2) to _RELEASE_COMMIT_SHA before the first source-reading step (Review B finding F4 of per_app_cicd_20261107).*
   *Status: completed (final acceptance r2 PASS at 613cba7fa, 2026-11-09; Phase 1 checkpoint 7c11aa22c, Phase 2 checkpoint 4c34987ca; adversarial Phase 1 rejected 33 of 33 mutants, Phase 2 rejected 10 of 10) | Chore, security fix of Review B finding F4 (per_app_cicd_20261107) | 2 phases: sales-advantage (Phase 1), accounts, accounting, codecamp-advantage, marketing, primary-advantage (Phase 2); shared script scripts/ci/verify-traffic-source.sh | Gates six apps: task 2.3h of per_app_cicd_20261107 for the five apps other than primary-advantage, task 2.3c for primary-advantage; the live traffic proofs stay `deferred:daniel` in per_app_cicd_20261107 tasks 2.3h and 2.3c*
-
-
-
-- [ ] **Track: CI green on master** — *created 2026-11-15*
-  *Link: [./tracks/ci_green_master_20261115/](./tracks/ci_green_master_20261115/)*
-  *Status: round 3 pushed at a54b5741a (CI run 43686964616): PC-1 www lint, PC-2 manifest
-  hashes (refreshed twice; concurrent pushes stale the report pin), and PC-3 analyzer parse
-  errors are green in CI. PC-5 fixed on branch ci/primary-lint at 39649dca8 (pushed to
-  origin, merges with the next Primary deploy); master keeps the 13 primary lint errors as
-  the one allowed job failure. PC-4 is the only remaining cause on master and is reported:
-  every baseline write route is closed by the Gate 1 v1 freeze and the v1-to-v2 mirror, and
-  the Hashing and Provenance Policy forbids the acceptedSha256 route (strategy doc Q11);
-  the ledger is debt-ledger.v1.json. PC-6 is reported: the primary and storytime page
-  revamps broke the Oct-27 ink thresholds; a threshold or page decision belongs to the www
-  owner. Track stays open for the PM route decision on PC-4 and the www owner decision on
-  PC-6 | Chore, light lane, PM order 2026-11-15 | Run 43667794723 at 8d3cb8233 |
-  Done when ci.yml passes on master except the PC-5 job (2026-11-17)*
