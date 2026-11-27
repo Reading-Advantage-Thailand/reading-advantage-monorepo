@@ -302,6 +302,24 @@ Track: `ci_green_master_20261115` (light lane).
 - Local npm 11.17.0 rejects `--ignore-scripts` in the packed-consumer install with
   EALLOWSCRIPTS. The CI run did not report that error.
 
+## CI round 12 (2026-11-27): rerun of run 46038578811
+
+- Attempt 1 of run `46038578811` ended at the Build step with no job log. The check-run
+  annotation says "The hosted runner lost communication with the server." The failed job
+  was rerun once.
+- Attempt 2 reached the Test step. The zod pin failure is gone. Four timeouts remain,
+  each with no assertion failure:
+  - `packages/codecamp-knowledge/src/__tests__/release-artifact.test.ts:57`,
+    "Hook timed out in 60000ms" (beforeAll, second run in a row).
+  - `packages/api/src/__tests__/wave0-phase3-typed-errors.test.ts:165`,
+    "Hook timed out in 10000ms" (beforeAll, second run in a row).
+  - `packages/domain/src/__tests__/phase-4-adversarial.test.ts`, 5C.2,
+    "Test timed out in 5000ms".
+  - `apps/science-advantage/lib/__tests__/audit-phase2-static-analysis.test.ts`,
+    section 4 cross-validation, "Test timed out in 5000ms".
+- Fix: four test budgets move to 180 s, 60 s, 20 s, and 30 s. No assertion changed,
+  no test skipped, no source file changed.
+
 ## Follow-up (deferred to a later owner)
 
 - [ ] The architecture report pin goes stale on every master push that changes analyzer

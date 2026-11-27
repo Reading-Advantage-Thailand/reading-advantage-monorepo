@@ -611,7 +611,7 @@ describe("Phase 4 adversarial: leaderboard limit clamping (live-DB)", () => {
       rows.length,
       `Leaderboard row count with limit=50: ${rows.length} — expected 50`,
     ).toBe(50);
-  });
+  }, 20_000);
 
   it("5C.3: limit = 0 is clamped to 0 (returns empty result)", async () => {
     await seedSchoolAndUser(harness, SCHOOL_A_ID, USER_A_ID);

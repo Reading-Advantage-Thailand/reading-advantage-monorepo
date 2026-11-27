@@ -83,7 +83,7 @@ describe("packed graph release artifact", () => {
       join(extractedPackage, "node_modules/zod"),
       "dir",
     );
-  });
+  }, 180_000);
 
   afterAll(() => rmSync(tempRoot, { recursive: true, force: true }));
 

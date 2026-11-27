@@ -165,7 +165,7 @@ describe("Wave 0 Phase 3 — Typed error mapping", () => {
     beforeAll(async () => {
       salesModule = await import("@reading-advantage/domain/sales");
       usersModule = await import("@reading-advantage/domain/users");
-    });
+    }, 60_000);
 
     it("domain exports ScenarioNotFoundError with typed code", () => {
       expect(

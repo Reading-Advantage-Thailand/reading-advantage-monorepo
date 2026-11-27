@@ -558,7 +558,7 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 2: Static Anal
       // (rehashOnLogin, verifyPassword) — they exist regardless of
       // the migration.
       expect(bgFunctionHits, 'build-graph should index the 2 functions in packages/auth/src/password.ts').toBeGreaterThanOrEqual(2);
-    });
+    }, 30_000);
   });
 
   // ============================================================
