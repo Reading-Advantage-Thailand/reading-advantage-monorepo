@@ -229,7 +229,7 @@ PM 2026-11-23: parked until after the 30 Nov launch.
     `dd669e5f8`; install commit `b345d890f` (two pin files); `tsc --version` gives `Version 7.0.2`.
     Snapshots before and after are equal for both directories (`MAIN_SNAPSHOT_EQUAL=1`,
     `ROLE_SNAPSHOT_EQUAL=1`). Evidence: `jr-green-dd669e5.log`.
-- [~] Task: Run the type checks on the trial install and record memory and time.
+- [x] Task: Run the type checks on the trial install and record memory and time. [commit: 8e988bf24450fcc4312b4690cb8ff8428a51a972] Record: `evidence/phase3/trial/typecheck-ts7.json`.
   - What: run `check-types` in each workspace that has the script, one at a time under `heavy-run.sh`,
     with peak RSS (`/usr/bin/time -v`) and wall time. Use the same method as
     `capture-phase1-baseline.py`. Do not edit any `tsconfig`; record `types: []` and
@@ -377,6 +377,37 @@ PM 2026-11-23: parked until after the 30 Nov launch.
 - Orchestrator decision Q1 holds: every `check-types` workspace runs from the live scan; the 31 Phase 1 names are checked by name; `apps/reading-advantage` keeps the no-valid-baseline mark. Each row will hold exit status, diagnostic `[file, line, code]` triples, peak RSS in MiB, and wall time.
 - No install, build, or type check ran. No production code, manifest, or lockfile changed.
 - TR2 stays `[~]`. Green writes the record; this role does not.
+
+#### TR2 Green evidence (Junior Green, 2026-11-28)
+
+- Role: Measure Junior Green. Model: opencode-go/hungerg-free. Task TR2 only.
+- Immutable `phase_base_sha`: `7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e`. `role_base_sha`: `92320a15d7898ea368c677083a0264f6e18dc79c`.
+- Red commits inside the phase range: `2d30ab4ee` and `92320a15d`. No Red test changed.
+- Implementation commit: `8e988bf24450fcc4312b4690cb8ff8428a51a972`. Plan evidence: the commit that adds this block.
+- Targeted Red rerun: exit 1, `Ran 34 tests`, `FAILED (failures=12)`, and no errors.
+- PM deviation (2026-11-28 16:32): the load ceiling is 6 on the 12-core host. The load wait cap is 60 seconds per workspace.
+- PM deviation (2026-11-28 16:32): each 5.9.3 control runs immediately before its 7.0.2 row. The control moved from TR4 into TR2.
+- The Red module defines `MAX_LOAD1 = 1.5` but no test asserts that value. No Red edit was needed.
+- Control method: `.ts59` holds TypeScript 5.9.3. Each control attempt swaps root TypeScript resolution, then restores 7.0.2 before the trial attempt.
+- Run set: 43 workspaces in four batches. The set includes all 31 Phase 1 workspaces and 12 later workspaces.
+- TypeScript 7.0.2 result: 17 exits of 0, 26 non-zero exits, 0 timeouts, and 0 invalid rows.
+- TypeScript 7.0.2 diagnostics: 1718. Peak RSS sum: 19458.2 MiB. Largest peak: 2082.1 MiB. Wall-time sum: 161.380 s.
+- Peak RSS sums add per-workspace peaks. They do not measure concurrent memory.
+- TypeScript 5.9.3 control: 41 valid passes, 1 diagnostic failure, and 1 invalid OOM row. Wall-time sum: 171.120 s.
+- `apps/reading-advantage` keeps `no valid 5.9.3 baseline`. Three control attempts abort with signal 6 and a heap OOM.
+- `apps/storytime` is the one non-zero control exit. It reports 4 diagnostics.
+- Findings: removed `baseUrl` affects 6 workspaces. The `types` default affects 14 workspaces and 1103 diagnostics.
+- Findings: the TypeScript API surface affects 6 workspaces and 439 diagnostics. Asset module declarations affect 2 workspaces and 13 diagnostics.
+- The basic `tsc --help` omits `--checkers`. Expanded help lists the flag with no default. Three checker variants ran.
+- Repeat runs: `packages/types`, `packages/domain`, and `apps/primary-advantage` each hold 3 valid paired runs.
+- Heavy gates: 12 entries exit 0. No job interval overlaps. Every job stays below 1800 s.
+- Final state: `TRIAL_TSC_VERSION=7.0.2`, `HOLD_EXISTS=0`, `TSCONFIG_CHANGED=0`, `MAIN_SNAPSHOT_EQUAL=1`, and `ROLE_SNAPSHOT_EQUAL=1`.
+- GREEN_TEST_COMMAND with the implementation SHA: exit 0, `Ran 34 tests`, and `OK`.
+- TR1 classes: exit 0, `Ran 12 tests`, and `OK`. The vinext module: exit 0, `Ran 29 tests`, and `OK (skipped=21)`.
+- `bash measure/doctor.sh` under `heavy-run.sh`: exit 1 on the pre-existing V2 reconciliation manifest mismatch. Evidence: `raw-logs/TR2-doctor.log`.
+- Evidence: `evidence/phase3/trial/typecheck-ts7.json`, `capture-typechecks.py`, and `raw-logs/TR2-*`.
+- Earlier invalid attempts are marked under `raw-logs/superseded/TR2-B-1-pre-pm/`. They are not measurement rows.
+- No task is deferred. No `tsconfig` or committed product file changed. No main manifest or lockfile changed. No push and no deploy ran.
 
 ## Phase 4: Cloudflare preparation, not the move (PM step 2)
 
