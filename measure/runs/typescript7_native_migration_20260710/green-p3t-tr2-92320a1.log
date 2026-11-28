@@ -1,0 +1,113 @@
+# Measure Junior Green report: Phase 3 TR2 (type checks)
+
+- Role: Measure Junior Green. Model: opencode-go/hungerg-free.
+- Track: `typescript7_native_migration_20260710`.
+- Phase: `Phase 3: TypeScript 7 trial (PM step 1)`.
+- Task: TR2. Status: pass.
+- Role worktree: `/home/daniebo/Desktop/rama-worktrees/ts7-phase3`.
+- Trial worktree: `/home/daniebo/Desktop/rama-worktrees/ts7-trial`.
+- Immutable `phase_base_sha`: `7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e`.
+- `role_base_sha`: `92320a15d7898ea368c677083a0264f6e18dc79c`.
+- Red commits in the phase range: `2d30ab4ee` and `92320a15d`.
+- Trial base: `dd669e5f8429df04c427a8b6ec519829b0cb13c6`.
+- Trial install commit: `b345d890fe8dea7309685202824639cc4c8623c8`.
+- Compiler: `Version 7.0.2`.
+- Implementation commit: `8e988bf24450fcc4312b4690cb8ff8428a51a972`.
+- Plan-evidence commit: `d378857133b29f6d56a1f3d2d035f4fa1944790e`.
+- Preserved TR1 log commit: `1cacb322d8aa5978ae47759937fb16482f2e2b3b`.
+
+## Targeted Red command
+
+- Command: `PYTHONDONTWRITEBYTECODE=1 P3_PHASE_BASE=7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e P3_GREEN_COMMITS='366734bb6191c166845dacb8a7ede7934c163e70' python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialTypecheckTests`.
+- Result: exit 1. `Ran 34 tests`. `FAILED (failures=12)`. No errors.
+- The 12 failures name the missing TR2 record. No Red test changed.
+
+## PM deviation
+
+- PM direction (2026-11-28 16:32): the load ceiling is 6 on the 12-core host.
+- PM direction (2026-11-28 16:32): the load wait cap is 60 seconds per workspace.
+- PM direction (2026-11-28 16:32): each 5.9.3 control runs immediately before its 7.0.2 row.
+- The control moved from TR4 into TR2. The plan and record name this deviation.
+- The Red module defines `MAX_LOAD1 = 1.5`, but no test asserts that value.
+- The control uses `.ts59`. Each attempt swaps root TypeScript resolution and restores 7.0.2 before the trial attempt.
+
+## Results
+
+| Measure | TypeScript 7.0.2 | TypeScript 5.9.3 control |
+| --- | ---: | ---: |
+| Workspaces | 43 | 43 |
+| Exit 0 | 17 | 42 |
+| Non-zero exit | 26 | 1 |
+| Invalid rows | 0 | 1 |
+| Diagnostics | 1718 | 4 |
+| Peak RSS sum | 19458.2 MiB | 31740.4 MiB |
+| Largest peak | 2082.1 MiB | 2256.9 MiB |
+| Wall-time sum | 161.380 s | 171.120 s |
+
+- Peak RSS sums add per-workspace peaks. They do not measure concurrent memory.
+- The control has 41 valid passes. `apps/reading-advantage` is the invalid row.
+- Three Reading control attempts abort with signal 6 and a heap OOM.
+- `apps/reading-advantage` keeps the note `no valid 5.9.3 baseline`.
+- `apps/storytime` is the one non-zero control exit. It reports 4 diagnostics.
+
+## Findings
+
+- Removed `baseUrl`: 6 workspaces and 6 diagnostics.
+- `types` default: 14 workspaces and 1103 diagnostics.
+- TypeScript API surface: 6 workspaces and 439 diagnostics.
+- Asset module declarations: 2 workspaces and 13 diagnostics.
+- Basic `tsc --help` omits `--checkers`. Expanded help lists it with no default.
+- Three checker variants cover the slowest valid rows.
+- Earlier attempts are superseded under `raw-logs/superseded/TR2-B-1-pre-pm/`.
+
+## Gates
+
+- Heavy gates: 12 entries exit 0. No job interval overlaps. Every job stays below 1800 s.
+- Batch times: 154 s, 95 s, 127 s, and 14 s.
+- Repeat times: 43 s and 41 s. Checker variant times: 3 s each.
+- `TR2-final-state`: `TRIAL_TSC_VERSION=7.0.2`, `HOLD_EXISTS=0`, and `TSCONFIG_CHANGED=0`.
+- `TR2-final-state`: `MAIN_SNAPSHOT_EQUAL=1` and `ROLE_SNAPSHOT_EQUAL=1`.
+- `TR2-doctor`: exit 1 on the pre-existing V2 reconciliation manifest mismatch.
+- No architecture source changed. No push and no deploy ran.
+
+## Verification
+
+- GREEN_TEST_COMMAND with the implementation and plan SHAs: exit 0. `Ran 34 tests`. `OK`.
+- TR1 classes: exit 0. `Ran 12 tests`. `OK`.
+- Vinext module: exit 0. `Ran 29 tests`. `OK (skipped=21)`.
+- TR2 is `[x]` with implementation SHA `8e988bf24450fcc4312b4690cb8ff8428a51a972`.
+- No task is `[b]`. No `tsconfig` or committed product file changed.
+
+## New files
+
+- `evidence/phase3/trial/typecheck-ts7.json`.
+- `evidence/phase3/trial/capture-typechecks.py`.
+- `evidence/phase3/trial/raw-logs/TR2-*`.
+- `evidence/phase3/trial/raw-logs/superseded/TR2-B-1-pre-pm/`.
+- `measure/runs/typescript7_native_migration_20260710/green-p3t-tr2-92320a1.log`.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: pass
+track: typescript7_native_migration_20260710
+phase: Phase 3: TypeScript 7 trial (PM step 1)
+task: TR2 - Run the type checks on the trial install and record memory and time
+phase_base_sha: 7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e
+role_base_sha: 92320a15d7898ea368c677083a0264f6e18dc79c
+red_command: PYTHONDONTWRITEBYTECODE=1 P3_PHASE_BASE=7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e P3_GREEN_COMMITS='366734bb6191c166845dacb8a7ede7934c163e70' python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialTypecheckTests
+red_result: exit 1; Ran 34 tests; FAILED (failures=12); no errors; no Red test edited
+implementation_commits: 8e988bf24450fcc4312b4690cb8ff8428a51a972
+plan_evidence_commit: d378857133b29f6d56a1f3d2d035f4fa1944790e
+green_test_command: PYTHONDONTWRITEBYTECODE=1 P3_PHASE_BASE=7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e P3_GREEN_COMMITS='366734bb6191c166845dacb8a7ede7934c163e70 8e988bf24450fcc4312b4690cb8ff8428a51a972 d378857133b29f6d56a1f3d2d035f4fa1944790e' python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialTypecheckTests
+green_test_exit: 0; Ran 34 tests; OK
+tr1_test_exit: 0; Ran 12 tests; OK
+vinext_test_exit: 0; Ran 29 tests; OK (skipped=21)
+doctor_exit: 1; pre-existing V2 reconciliation manifest mismatch; evidence raw-logs/TR2-doctor.log
+trial_summary: 43 workspaces; 17 exit 0; 26 non-zero; 0 timeout; 0 invalid; 1718 diagnostics
+control_summary: 43 workspaces; 41 valid passes; 1 diagnostic failure; 1 invalid OOM row
+peak_rss_totals: trial sum 19458.2 MiB, max 2082.1 MiB; control sum 31740.4 MiB, max 2256.9 MiB
+wall_time_totals: trial 161.380 s; control 171.120 s
+task_markers: TR2 flipped to [x] with implementation SHA and record path; no task flipped to [b]
+new_files: evidence/phase3/trial/typecheck-ts7.json; evidence/phase3/trial/capture-typechecks.py; evidence/phase3/trial/raw-logs/TR2-*; evidence/phase3/trial/raw-logs/superseded/TR2-B-1-pre-pm/*; measure/runs/typescript7_native_migration_20260710/green-p3t-tr2-92320a1.log
+handoff: Review TR2 at the final Green HEAD reported by the orchestrator. The record is evidence/phase3/trial/typecheck-ts7.json. It holds 43 TypeScript 7 rows and 43 paired TypeScript 5.9.3 control rows. TR4 can classify regressions from these pairs. No task is deferred. Facts changed: the TypeScript 7.0.2 trial now covers 43 workspaces, and TR2 is complete. No price, public date, or customer claim changed.
+END_MEASURE_AGENT_RESULT
