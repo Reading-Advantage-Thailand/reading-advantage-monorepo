@@ -1,0 +1,84 @@
+# Measure Junior Green report: Phase 3 TR1 (trial worktree)
+
+- Role: Measure Junior Green. Model: opencode-go/hy4-flash-free#high. Track: `typescript7_native_migration_20260710`.
+- Phase: `Phase 3: TypeScript 7 trial (PM step 1)` (id P3). Scope: TR1 only (create the trial worktree with the latest stable 7.0.x).
+- Worktree: `/home/daniebo/Desktop/rama-worktrees/ts7-phase3`, branch `ts7/phase3`.
+- Trial worktree: `/home/daniebo/Desktop/rama-worktrees/ts7-trial`, branch `ts7/trial-p3`.
+- Status: pass. No push and no deploy. No product file, manifest, or lockfile changed in `$MAIN` or `$ROLE_WT`.
+
+## SHAs and bases
+
+- Immutable `phase_base_sha`: `7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e`.
+- `role_base_sha`: `dd669e5f8` (pre-role HEAD).
+- Red commits inside `phase_base_sha..HEAD`: `f2cb8367f` (Red tests), `dd669e5f8` (Red role log).
+- Trial base (`P3_TRIAL_BASE`): `dd669e5f8429df04c427a8b6ec519829b0cb13c6` (`origin/master` after fetch).
+- Trial install commit on `ts7/trial-p3`: `b345d890fe8dea7309685202824639cc4c8623c8`. It holds only `pnpm-lock.yaml` and `pnpm-workspace.yaml`.
+- Implementation commit: `366734bb6191c166845dacb8a7ede7934c163e70`.
+- Plan-evidence commit: `be0b2287fe7dda4f1ceae9c6c3ddb1bbffab8d26`.
+- Final Green HEAD: `be0b2287fe7dda4f1ceae9c6c3ddb1bbffab8d26`.
+
+## Targeted Red command (rerun before implementation)
+
+- Command: `PYTHONDONTWRITEBYTECODE=1 P3_PHASE_BASE=7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialWorktreeTests`.
+- Result: exit 1; `Ran 34 tests`; `FAILED (failures=14)`; no errors. No Red test was edited.
+
+## Gates
+
+| Gate | Kind | Exit | Evidence |
+| --- | --- | --- | --- |
+| TR1-registry | light | 0 | `raw-logs/registry.log`; `TS_CHOSEN=7.0.2`, `TS_LATEST_TAG=7.0.2`, `TS_BETA_TAG=7.1.0-beta` |
+| TR1-snapshot-before | light | 0 | `raw-logs/snapshot.main_before.log`, `raw-logs/snapshot.role_before.log`; both quiet codes 0 |
+| TR1-worktree | light | 0 | `raw-logs/worktree.log`; `WT_CLEAN=1`; path and branch in porcelain |
+| TR1-install-A | heavy p2 | 0 | `raw-logs/state_a.log`; `TSC_VERSION=Version 5.9.3`; 13 s |
+| TR1-build-dist-A | heavy p2 | 0 | `raw-logs/build-dist-a.log`; `BUILD_ALL_EXIT=0`; `DIST_MISSING=0`; 121 s; 33 `BUILD_EXIT=` lines |
+| TR1-swap-B | heavy p2 | 0 | `raw-logs/TR1-swap-B.gate.log` and `raw-logs/TR1-swap-B-onepnpm.log`; 22 s |
+| TR1-swap-B-why | heavy p2 | 0 | `raw-logs/state_b.why-final.log`; `TS_SINGLE=1`; 3 s |
+| TR1-install-commit | light | 0 | `raw-logs/install-commit.log`; `INSTALL_COMMIT_PATHS=pnpm-lock.yaml,pnpm-workspace.yaml` |
+| TR1-lock-scan | light | 0 | `raw-logs/lock-scan.log`; 21 added keys, 1 removed key, `REQUIRES_BUILD_ADDED=0` |
+| TR1-snapshot-after | light | 0 | `raw-logs/snapshot.main_after.log`, `raw-logs/snapshot.role_after.log`; equality 1 for both |
+
+- Exact compiler version in `$WT`: `Version 7.0.2`.
+- Snapshot result: `MAIN_SNAPSHOT_EQUAL=1`, `ROLE_SNAPSHOT_EQUAL=1`; `after_epoch=1795856241` (after the end of TR1-swap-B).
+- Disk: `before=543446` MB, `after=543380` MB. Both above the 6000 MB floor.
+- Every install used `PUPPETEER_SKIP_DOWNLOAD=1`. The successful swap used one pnpm process with `--config.manage-package-manager-versions=false`.
+
+## PM-directed trial-only settings
+
+- Trial-base addition: `.puppeteerrc.cjs` from master commit `3d87a41ce` (`skipDownload: true`). It stays staged in `ts7-trial`; it is not part of the install commit.
+- Trial-only workspace setting: `supportedArchitectures` with linux, x64, glibc at the end of `pnpm-workspace.yaml` in `ts7-trial`. Four added lines. Lockfile churn from this setting is expected. This setting is not proposed for the main repo, where ten Dockerfiles build on `node:22-alpine` (musl).
+- Finding: TypeScript 7.0.2 fetches every platform binary despite `supportedArchitectures`.
+
+## Verification
+
+- GREEN_TEST_COMMAND exit: 0; `Ran 34 tests`; `OK`.
+- `measure.tests.test_typescript7_native_migration_phase3_vinext` exit: 0; `OK (skipped=21)`.
+- `bash measure/doctor.sh` exit: 1; pre-existing V2 reconciliation manifest hash mismatch. No architecture source changed.
+
+## New files
+
+- `measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/trial-worktree.json` and its `raw-logs/` folder.
+- `measure/runs/typescript7_native_migration_20260710/jr-green-dd669e5.log` (PM-named log; staged, not committed, because the immutable Red scope rule allows only `green-p3t-*.log` in this folder).
+- `measure/runs/typescript7_native_migration_20260710/green-p3t-tr1-dd669e5.log` (committed in-scope copy).
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: pass
+track: typescript7_native_migration_20260710
+phase: Phase 3: TypeScript 7 trial (PM step 1)
+task: TR1 - Create the trial worktree with the latest stable TypeScript 7.0.x
+phase_base_sha: 7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e
+role_base_sha: dd669e5f8
+red_command: PYTHONDONTWRITEBYTECODE=1 P3_PHASE_BASE=7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialWorktreeTests
+red_result: exit 1; Ran 34 tests; FAILED (failures=14); no errors; no Red test edited
+implementation_commits: 366734bb6191c166845dacb8a7ede7934c163e70
+plan_evidence_commit: be0b2287fe7dda4f1ceae9c6c3ddb1bbffab8d26
+green_test_command: PYTHONDONTWRITEBYTECODE=1 P3_PHASE_BASE=7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e P3_GREEN_COMMITS="366734bb6191c166845dacb8a7ede7934c163e70 be0b2287fe7dda4f1ceae9c6c3ddb1bbffab8d26" python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialWorktreeTests
+green_test_exit: 0; Ran 34 tests; OK (final run with both Green SHAs)
+doctor_exit: 1; pre-existing architecture reconciliation hash mismatch; no architecture source changed
+tsc_version: Version 7.0.2
+snapshot_result: MAIN_SNAPSHOT_EQUAL=1; ROLE_SNAPSHOT_EQUAL=1; after_epoch 1795856241
+trial_install_commit: b345d890fe8dea7309685202824639cc4c8623c8 (only pnpm-lock.yaml and pnpm-workspace.yaml)
+task_markers: TR1 flipped to [x] with the implementation commit SHA and the record path; no task flipped to [b]
+new_files: measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/trial-worktree.json; measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/*; measure/runs/typescript7_native_migration_20260710/green-p3t-tr1-dd669e5.log; measure/runs/typescript7_native_migration_20260710/jr-green-dd669e5.log
+handoff: Review TR1 at the final Green HEAD. The record is evidence/phase3/trial/trial-worktree.json. The trial worktree is outside the main checkout on ts7/trial-p3 with tsc 7.0.2. The main pnpm-lock.yaml, package.json, and pnpm-workspace.yaml are byte-equal before and after. No task is deferred. Facts changed: TypeScript 7.0.2 installed in the trial only; TR1 complete. No push and no deploy.
+END_MEASURE_AGENT_RESULT
