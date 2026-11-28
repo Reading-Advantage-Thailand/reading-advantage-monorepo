@@ -1,0 +1,260 @@
+GATE=TR1-swap-B
+CMD=edit pnpm-workspace.yaml line 123 then pnpm install --no-frozen-lockfile then pnpm why typescript
+START_EPOCH=1795853791
+HEAVY_RUN_ACTIVE=1
+HEAVY_PRIORITY=p2
+PUPPETEER_SKIP_DOWNLOAD=1
+LOAD1_START=3.19
+MEMAVAIL_MB_START=15748
+SWAPFREE_KIB_START=5345824
+DISK_FREE_MB=542398
+WS_YAML_LINES_CHANGED=6
+OVERRIDE_BEFORE=5.9.3
+OVERRIDE_AFTER=7.0.2
+Scope: all 49 workspace projects
+✓ Lockfile passes supply-chain policies (verified 13d ago)
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Progress: resolved 6, reused 0, downloaded 0, added 0
+Progress: resolved 8, reused 0, downloaded 0, added 0
+Progress: resolved 12, reused 0, downloaded 0, added 0
+Progress: resolved 18, reused 0, downloaded 0, added 0
+Progress: resolved 19, reused 0, downloaded 0, added 0
+Progress: resolved 22, reused 0, downloaded 0, added 0
+Progress: resolved 23, reused 0, downloaded 0, added 0
+Progress: resolved 26, reused 0, downloaded 0, added 0
+Progress: resolved 28, reused 0, downloaded 0, added 0
+Progress: resolved 31, reused 0, downloaded 0, added 0
+Progress: resolved 32, reused 0, downloaded 0, added 0
+[WARN] GET https://registry.npmjs.org/@trpc%2Fclient error (UND_ERR_SOCKET). Will retry in 10 seconds. 2 retries left.
+[WARN] Request took 19278ms: https://registry.npmjs.org/@testing-library%2Fjest-dom
+Progress: resolved 33, reused 0, downloaded 0, added 0
+Progress: resolved 36, reused 0, downloaded 0, added 0
+Progress: resolved 40, reused 0, downloaded 0, added 0
+Progress: resolved 41, reused 0, downloaded 0, added 0
+Progress: resolved 42, reused 0, downloaded 0, added 0
+[WARN] Request took 27431ms: https://registry.npmjs.org/@trpc%2Fclient
+apps/advantage-games                     | [WARN] deprecated eslint@9.39.4
+Progress: resolved 46, reused 0, downloaded 0, added 0
+Progress: resolved 56, reused 0, downloaded 0, added 0
+Progress: resolved 58, reused 0, downloaded 0, added 0
+Progress: resolved 64, reused 0, downloaded 0, added 0
+Progress: resolved 67, reused 0, downloaded 0, added 0
+Progress: resolved 69, reused 0, downloaded 0, added 0
+Progress: resolved 70, reused 0, downloaded 0, added 0
+Progress: resolved 73, reused 0, downloaded 0, added 0
+Progress: resolved 75, reused 0, downloaded 0, added 0
+[WARN] GET https://registry.npmjs.org/typescript error (unknown). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/jsdom error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+[WARN] Request took 43857ms: https://registry.npmjs.org/@testing-library%2Freact
+Progress: resolved 76, reused 0, downloaded 0, added 0
+Progress: resolved 81, reused 0, downloaded 0, added 0
+Progress: resolved 86, reused 0, downloaded 0, added 0
+Progress: resolved 89, reused 0, downloaded 0, added 0
+Progress: resolved 90, reused 0, downloaded 0, added 0
+Progress: resolved 91, reused 0, downloaded 0, added 0
+[WARN] Request took 52733ms: https://registry.npmjs.org/jsdom
+Progress: resolved 99, reused 0, downloaded 0, added 0
+Progress: resolved 106, reused 0, downloaded 0, added 0
+Progress: resolved 111, reused 0, downloaded 0, added 0
+Progress: resolved 122, reused 0, downloaded 0, added 0
+apps/reading-advantage                   | [WARN] deprecated react-tailwindcss-datepicker@1.7.4
+Progress: resolved 144, reused 0, downloaded 0, added 0
+apps/reading-advantage                   | [WARN] deprecated uuid@10.0.0
+Progress: resolved 166, reused 0, downloaded 0, added 0
+apps/science-advantage                   | [WARN] deprecated @opentelemetry/sdk-trace-base@2.8.0
+[WARN] GET https://registry.npmjs.org/drizzle-orm error (23). Will retry in 10 seconds. 2 retries left.
+Progress: resolved 178, reused 0, downloaded 0, added 0
+[WARN] GET https://registry.npmjs.org/next error (23). Will retry in 10 seconds. 2 retries left.
+Progress: resolved 187, reused 0, downloaded 0, added 0
+Progress: resolved 193, reused 0, downloaded 0, added 0
+Progress: resolved 198, reused 0, downloaded 0, added 0
+[WARN] GET https://registry.npmjs.org/react error (23). Will retry in 10 seconds. 2 retries left.
+Progress: resolved 210, reused 0, downloaded 0, added 0
+Progress: resolved 217, reused 0, downloaded 0, added 0
+[WARN] Request took 12296ms: https://registry.npmjs.org/sbd
+[WARN] Request took 12444ms: https://registry.npmjs.org/text-readability
+[WARN] Request took 12591ms: https://registry.npmjs.org/ts-fsrs
+[WARN] Request took 12712ms: https://registry.npmjs.org/wink-eng-lite-web-model
+[WARN] Request took 12742ms: https://registry.npmjs.org/sharp
+[WARN] Request took 12780ms: https://registry.npmjs.org/@types%2Fcanvas-confetti
+[WARN] Request took 12817ms: https://registry.npmjs.org/wink-nlp
+Progress: resolved 224, reused 0, downloaded 0, added 0
+[WARN] Request took 13560ms: https://registry.npmjs.org/recharts
+[WARN] Request took 13576ms: https://registry.npmjs.org/@types%2Fnodemailer
+[WARN] Request took 13659ms: https://registry.npmjs.org/@types%2Freact-gauge-chart
+[WARN] Request took 13825ms: https://registry.npmjs.org/@types%2Flodash
+[WARN] Request took 13924ms: https://registry.npmjs.org/@types%2Fjest
+Progress: resolved 229, reused 0, downloaded 0, added 0
+[WARN] Request took 14010ms: https://registry.npmjs.org/eslint-plugin-jest-dom
+Progress: resolved 230, reused 0, downloaded 0, added 0
+[WARN] Request took 15927ms: https://registry.npmjs.org/cross-env
+Progress: resolved 231, reused 0, downloaded 0, added 0
+Progress: resolved 232, reused 0, downloaded 0, added 0
+Progress: resolved 233, reused 0, downloaded 0, added 0
+Progress: resolved 275, reused 0, downloaded 0, added 0
+Progress: resolved 300, reused 0, downloaded 0, added 0
+Progress: resolved 330, reused 0, downloaded 0, added 0
+Progress: resolved 347, reused 0, downloaded 0, added 0
+Progress: resolved 355, reused 0, downloaded 0, added 0
+Progress: resolved 358, reused 0, downloaded 0, added 0
+Progress: resolved 383, reused 0, downloaded 0, added 0
+Progress: resolved 413, reused 0, downloaded 0, added 0
+Progress: resolved 447, reused 0, downloaded 0, added 0
+Progress: resolved 456, reused 0, downloaded 0, added 0
+Progress: resolved 461, reused 0, downloaded 0, added 0
+[WARN] Request took 10719ms: https://registry.npmjs.org/@esbuild%2Fwin32-arm64
+Progress: resolved 492, reused 0, downloaded 0, added 0
+Progress: resolved 493, reused 0, downloaded 0, added 0
+[WARN] Request took 13193ms: https://registry.npmjs.org/@esbuild%2Flinux-ia32
+Progress: resolved 525, reused 0, downloaded 0, added 0
+Progress: resolved 541, reused 0, downloaded 0, added 0
+Progress: resolved 551, reused 0, downloaded 0, added 0
+[WARN] Request took 10272ms: https://registry.npmjs.org/@babel%2Fcode-frame
+Progress: resolved 590, reused 0, downloaded 0, added 0
+[WARN] Request took 11281ms: https://registry.npmjs.org/pretty-format
+Progress: resolved 623, reused 0, downloaded 0, added 0
+[WARN] Request took 17862ms: https://registry.npmjs.org/@esbuild%2Fsunos-x64
+Progress: resolved 658, reused 0, downloaded 0, added 0
+[WARN] Request took 18795ms: https://registry.npmjs.org/@esbuild%2Fnetbsd-x64
+[WARN] Request took 17021ms: https://registry.npmjs.org/scheduler
+Progress: resolved 670, reused 0, downloaded 0, added 0
+Progress: resolved 712, reused 0, downloaded 0, added 0
+Progress: resolved 726, reused 0, downloaded 0, added 0
+Progress: resolved 738, reused 0, downloaded 0, added 0
+[WARN] Request took 20791ms: https://registry.npmjs.org/@next%2Fswc-linux-x64-gnu
+Progress: resolved 767, reused 0, downloaded 0, added 0
+Progress: resolved 776, reused 0, downloaded 0, added 0
+Progress: resolved 809, reused 0, downloaded 0, added 0
+Progress: resolved 814, reused 0, downloaded 0, added 0
+Progress: resolved 828, reused 0, downloaded 0, added 0
+[WARN] Request took 20882ms: https://registry.npmjs.org/@eslint%2Fcore
+Progress: resolved 832, reused 0, downloaded 0, added 0
+Progress: resolved 833, reused 0, downloaded 0, added 0
+[WARN] Request took 12894ms: https://registry.npmjs.org/@firebase%2Fdatabase-types
+Progress: resolved 834, reused 0, downloaded 0, added 0
+[WARN] Request took 30430ms: https://registry.npmjs.org/istanbul-lib-coverage
+Progress: resolved 835, reused 0, downloaded 0, added 0
+[WARN] GET https://registry.npmjs.org/@tailwindcss%2Fnode error (unknown). Will retry in 10 seconds. 2 retries left.
+[WARN] Request took 44292ms: https://registry.npmjs.org/istanbul-reports
+Progress: resolved 836, reused 0, downloaded 0, added 0
+Progress: resolved 837, reused 0, downloaded 0, added 0
+[WARN] GET https://registry.npmjs.org/@esbuild%2Fopenbsd-x64 error (unknown). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/jest-cli error (unknown). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript-eslint%2Fparser error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript-eslint%2Ftypescript-estree error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript-eslint%2Feslint-plugin error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/puppeteer error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/yargs error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@tailwindcss%2Foxide error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@esbuild%2Fdarwin-arm64 error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/saxes error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@vitest%2Fspy error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] Request took 59529ms: https://registry.npmjs.org/@next%2Fswc-darwin-arm64
+Progress: resolved 838, reused 0, downloaded 0, added 0
+[WARN] GET https://registry.npmjs.org/@next%2Fswc-linux-x64-musl error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@next%2Fswc-win32-arm64-msvc error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@swc%2Fhelpers error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/caniuse-lite error (23). Will retry in 10 seconds. 2 retries left.
+Progress: resolved 839, reused 0, downloaded 0, added 0
+Progress: resolved 840, reused 0, downloaded 0, added 0
+[WARN] GET https://registry.npmjs.org/@radix-ui%2Freact-context error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/hls.js error (23). Will retry in 10 seconds. 2 retries left.
+Progress: resolved 841, reused 0, downloaded 0, added 0
+Progress: resolved 844, reused 0, downloaded 0, added 0
+Progress: resolved 845, reused 0, downloaded 0, added 0
+Progress: resolved 846, reused 0, downloaded 0, added 0
+Progress: resolved 848, reused 0, downloaded 0, added 0
+Progress: resolved 851, reused 0, downloaded 0, added 0
+Progress: resolved 852, reused 0, downloaded 0, added 0
+[WARN] Request took 70277ms: https://registry.npmjs.org/@radix-ui%2Freact-context
+Progress: resolved 853, reused 0, downloaded 0, added 0
+Progress: resolved 854, reused 0, downloaded 0, added 0
+[WARN] GET https://registry.npmjs.org/@typescript-eslint%2Ftypescript-estree error (23). Will retry in 1 minute. 1 retries left.
+[WARN] GET https://registry.npmjs.org/puppeteer error (23). Will retry in 1 minute. 1 retries left.
+Progress: resolved 855, reused 0, downloaded 0, added 0
+Progress: resolved 856, reused 0, downloaded 0, added 0
+Progress: resolved 862, reused 0, downloaded 0, added 0
+Progress: resolved 867, reused 0, downloaded 0, added 0
+Progress: resolved 873, reused 0, downloaded 0, added 0
+Progress: resolved 877, reused 0, downloaded 0, added 0
+Progress: resolved 898, reused 0, downloaded 0, added 0
+Progress: resolved 914, reused 0, downloaded 0, added 0
+Progress: resolved 931, reused 0, downloaded 0, added 0
+Progress: resolved 948, reused 0, downloaded 0, added 0
+Progress: resolved 969, reused 0, downloaded 0, added 0
+Progress: resolved 971, reused 0, downloaded 0, added 0
+[WARN] Request took 10107ms: https://registry.npmjs.org/@typescript-eslint%2Ftsconfig-utils
+[WARN] Request took 10178ms: https://registry.npmjs.org/@types%2Foffscreencanvas
+[WARN] Request took 10973ms: https://registry.npmjs.org/@types%2Fdraco3d
+Progress: resolved 977, reused 0, downloaded 0, added 0
+Progress: resolved 982, reused 0, downloaded 0, added 0
+Progress: resolved 997, reused 0, downloaded 0, added 0
+Progress: resolved 998, reused 0, downloaded 0, added 0
+[WARN] Request took 15334ms: https://registry.npmjs.org/@typescript-eslint%2Fproject-service
+Progress: resolved 1020, reused 0, downloaded 0, added 0
+Progress: resolved 1056, reused 0, downloaded 0, added 0
+Progress: resolved 1117, reused 0, downloaded 0, added 0
+Progress: resolved 1170, reused 0, downloaded 0, added 0
+[WARN] Request took 18718ms: https://registry.npmjs.org/potpack
+Progress: resolved 1209, reused 0, downloaded 0, added 0
+[WARN] Request took 19693ms: https://registry.npmjs.org/bidi-js
+[WARN] Request took 19711ms: https://registry.npmjs.org/draco3d
+[WARN] Request took 20151ms: https://registry.npmjs.org/webgl-sdf-generator
+[WARN] Request took 20256ms: https://registry.npmjs.org/troika-three-utils
+Progress: resolved 1265, reused 0, downloaded 0, added 0
+[WARN] Request took 20757ms: https://registry.npmjs.org/promise-worker-transferable
+[WARN] Request took 20849ms: https://registry.npmjs.org/troika-worker-utils
+[WARN] Request took 21039ms: https://registry.npmjs.org/@use-gesture%2Fcore
+Progress: resolved 1329, reused 0, downloaded 0, added 0
+[WARN] Request took 21371ms: https://registry.npmjs.org/mj-context-menu
+[WARN] Request took 21393ms: https://registry.npmjs.org/mhchemparser
+[WARN] Request took 21494ms: https://registry.npmjs.org/@wooorm%2Fstarry-night
+[WARN] Request took 21929ms: https://registry.npmjs.org/@lezer%2Flr
+[WARN] Request took 22033ms: https://registry.npmjs.org/esm
+[WARN] Request took 22305ms: https://registry.npmjs.org/style-mod
+Progress: resolved 1402, reused 0, downloaded 0, added 0
+[WARN] Request took 22399ms: https://registry.npmjs.org/speech-rule-engine
+Progress: resolved 1441, reused 0, downloaded 0, added 0
+[WARN] Request took 23366ms: https://registry.npmjs.org/use-callback-ref
+[WARN] Request took 23367ms: https://registry.npmjs.org/use-sidecar
+[WARN] Request took 23727ms: https://registry.npmjs.org/@codemirror%2Fview
+[WARN] Request took 24072ms: https://registry.npmjs.org/@codemirror%2Fstate
+Progress: resolved 1511, reused 0, downloaded 0, added 0
+[WARN] Request took 24571ms: https://registry.npmjs.org/react-style-singleton
+Progress: resolved 1564, reused 0, downloaded 0, added 0
+Progress: resolved 1570, reused 0, downloaded 0, added 0
+Progress: resolved 1576, reused 0, downloaded 0, added 0
+Progress: resolved 1580, reused 0, downloaded 0, added 0
+Progress: resolved 1581, reused 0, downloaded 0, added 0
+Progress: resolved 1582, reused 0, downloaded 0, added 0
+
+<--- Last few GCs --->
+
+[2697320:0x3c41d000]   307769 ms: Scavenge (interleaved) 2029.3 (2040.8) -> 2029.3 (2051.8) MB, pooled: 0 MB, 7.51 / 0.00 ms  (average mu = 0.719, current mu = 0.824) allocation failure; 
+[2697320:0x3c41d000]   308129 ms: Mark-Compact (reduce) 2044.5 (2059.9) -> 2043.7 (2052.0) MB, pooled: 0 MB, 257.54 / 0.00 ms  (+ 18.9 ms in 125 steps since start of marking, biggest step 4.0 ms, walltime since start of marking 321 ms) (average mu = 0.603
+FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 0x75356c node::OOMErrorHandler(char const*, v8::OOMDetails const&) [node]
+ 2: 0xc52cd0  [node]
+ 3: 0xc52dbf  [node]
+ 4: 0xef6695  [node]
+ 5: 0xf07ffc  [node]
+ 6: 0xedd4b3  [node]
+ 7: 0xeb2604  [node]
+ 8: 0xe999d5  [node]
+ 9: 0x1233e8f  [node]
+10: 0x1234152  [node]
+11: 0x1234ac1  [node]
+12: 0x1244b6a  [node]
+13: 0x13b32de  [node]
+14: 0x7ba407e769b6 
+Aborted (core dumped)
+INSTALL_EXIT=134
+TSC_VERSION=Version 7.0.2
+DISK_FREE_MB_AFTER=541867
+WHY_EXIT=0
+TS_RESOLVED=
+SWAPFREE_KIB_END=5266172
+EXIT=0
+ELAPSED_S=322

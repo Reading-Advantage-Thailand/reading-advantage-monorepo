@@ -1,0 +1,168 @@
+GATE=TR1-swap-B
+CMD=edit pnpm-workspace.yaml line 123 then pnpm install --no-frozen-lockfile then pnpm why typescript
+START_EPOCH=1795854210
+HEAVY_RUN_ACTIVE=1
+HEAVY_PRIORITY=p2
+PUPPETEER_SKIP_DOWNLOAD=1
+LOAD1_START=4.17
+MEMAVAIL_MB_START=17319
+SWAPFREE_KIB_START=5267036
+DISK_FREE_MB=541844
+WS_YAML_LINES_CHANGED=1
+TRIAL_ONLY_SETTING_LINES=4
+OVERRIDE_BEFORE=5.9.3
+OVERRIDE_AFTER=7.0.2
+Scope: all 49 workspace projects
+✓ Lockfile passes supply-chain policies (verified 13d ago)
+Progress: resolved 1, reused 0, downloaded 0, added 0
+apps/advantage-games                     | [WARN] deprecated eslint@9.39.4
+Progress: resolved 83, reused 0, downloaded 0, added 0
+apps/reading-advantage                   | [WARN] deprecated react-tailwindcss-datepicker@1.7.4
+Progress: resolved 176, reused 0, downloaded 0, added 0
+apps/reading-advantage                   | [WARN] deprecated uuid@10.0.0
+apps/science-advantage                   | [WARN] deprecated @opentelemetry/sdk-trace-base@2.8.0
+Progress: resolved 217, reused 0, downloaded 0, added 0
+Progress: resolved 222, reused 0, downloaded 0, added 0
+Progress: resolved 234, reused 0, downloaded 0, added 0
+Progress: resolved 235, reused 0, downloaded 0, added 0
+Progress: resolved 623, reused 0, downloaded 0, added 0
+Progress: resolved 1084, reused 0, downloaded 0, added 0
+Progress: resolved 1454, reused 0, downloaded 0, added 0
+Progress: resolved 1590, reused 0, downloaded 0, added 0
+Progress: resolved 1600, reused 0, downloaded 0, added 0
+Progress: resolved 1601, reused 0, downloaded 0, added 0
+Progress: resolved 1606, reused 0, downloaded 0, added 0
+Progress: resolved 1662, reused 0, downloaded 0, added 0
+Progress: resolved 1698, reused 0, downloaded 0, added 0
+Progress: resolved 1759, reused 0, downloaded 0, added 0
+Progress: resolved 1849, reused 0, downloaded 0, added 0
+Progress: resolved 1905, reused 0, downloaded 0, added 0
+Progress: resolved 1908, reused 0, downloaded 0, added 0
+Progress: resolved 1939, reused 0, downloaded 0, added 0
+Progress: resolved 1968, reused 0, downloaded 0, added 0
+Progress: resolved 1993, reused 0, downloaded 0, added 0
+Progress: resolved 1996, reused 0, downloaded 0, added 0
+[WARN] Request took 11543ms: https://registry.npmjs.org/vscode-textmate
+Progress: resolved 1997, reused 0, downloaded 0, added 0
+[WARN] Request took 11716ms: https://registry.npmjs.org/strip-ansi
+[WARN] Request took 12413ms: https://registry.npmjs.org/tapable
+Progress: resolved 1999, reused 0, downloaded 0, added 0
+[WARN] Request took 12606ms: https://registry.npmjs.org/@csstools%2Fcolor-helpers
+Progress: resolved 2000, reused 0, downloaded 0, added 0
+[WARN] Request took 13475ms: https://registry.npmjs.org/side-channel-list
+[WARN] Request took 13543ms: https://registry.npmjs.org/object-inspect
+[WARN] Request took 13888ms: https://registry.npmjs.org/side-channel-map
+Progress: resolved 2003, reused 0, downloaded 0, added 0
+[WARN] Request took 14795ms: https://registry.npmjs.org/define-data-property
+[WARN] Request took 14855ms: https://registry.npmjs.org/dot-prop
+[WARN] Request took 15191ms: https://registry.npmjs.org/get-proto
+[WARN] Request took 15416ms: https://registry.npmjs.org/side-channel-weakmap
+Progress: resolved 2007, reused 0, downloaded 0, added 0
+[WARN] Request took 16336ms: https://registry.npmjs.org/json-bigint
+[WARN] Request took 16397ms: https://registry.npmjs.org/functions-have-names
+Progress: resolved 2009, reused 0, downloaded 0, added 0
+[WARN] Request took 16838ms: https://registry.npmjs.org/jwa
+[WARN] Request took 17016ms: https://registry.npmjs.org/@emnapi%2Fruntime
+[WARN] Request took 17159ms: https://registry.npmjs.org/@emnapi%2Fcore
+[WARN] Request took 17394ms: https://registry.npmjs.org/safe-buffer
+Progress: resolved 2014, reused 0, downloaded 0, added 0
+[WARN] Request took 18133ms: https://registry.npmjs.org/@tybys%2Fwasm-util
+[WARN] Request took 18339ms: https://registry.npmjs.org/@jridgewell%2Fresolve-uri
+Progress: resolved 2016, reused 0, downloaded 0, added 0
+[WARN] Request took 18981ms: https://registry.npmjs.org/has-flag
+Progress: resolved 2017, reused 0, downloaded 0, added 0
+[WARN] Request took 20442ms: https://registry.npmjs.org/punycode
+Progress: resolved 2018, reused 0, downloaded 0, added 0
+[WARN] Request took 28552ms: https://registry.npmjs.org/tldts-core
+Progress: resolved 2019, reused 0, downloaded 0, added 0
+[WARN] GET https://registry.npmjs.org/@firebase%2Fapp-check-interop-types error (23). Will retry in 10 seconds. 2 retries left.
+Progress: resolved 2020, reused 0, downloaded 0, added 0
+Progress: resolved 2060, reused 0, downloaded 0, added 0
+Progress: resolved 2079, reused 0, downloaded 0, added 0
+Progress: resolved 2125, reused 0, downloaded 0, added 0
+Progress: resolved 2180, reused 0, downloaded 0, added 0
+Progress: resolved 2191, reused 0, downloaded 0, added 0
+Progress: resolved 2195, reused 0, downloaded 0, added 0
+[WARN] Request took 10476ms: https://registry.npmjs.org/socks-proxy-agent
+Progress: resolved 2196, reused 0, downloaded 0, added 0
+[WARN] Request took 10484ms: https://registry.npmjs.org/pac-proxy-agent
+[WARN] Request took 10952ms: https://registry.npmjs.org/through
+[WARN] Request took 10954ms: https://registry.npmjs.org/@smithy%2Fis-array-buffer
+[WARN] Request took 11340ms: https://registry.npmjs.org/estree-util-attach-comments
+[WARN] Request took 11328ms: https://registry.npmjs.org/micromark-extension-mdx-expression
+Progress: resolved 2201, reused 0, downloaded 0, added 0
+[WARN] Request took 12041ms: https://registry.npmjs.org/micromark-extension-mdx-jsx
+[WARN] Request took 12041ms: https://registry.npmjs.org/micromark-extension-mdx-md
+[WARN] Request took 12258ms: https://registry.npmjs.org/micromark-extension-mdxjs-esm
+[WARN] Request took 12218ms: https://registry.npmjs.org/astring
+Progress: resolved 2205, reused 0, downloaded 0, added 0
+[WARN] Request took 12605ms: https://registry.npmjs.org/yallist
+[WARN] Request took 12617ms: https://registry.npmjs.org/esast-util-from-js
+[WARN] Request took 13085ms: https://registry.npmjs.org/micromark-factory-label
+[WARN] Request took 13085ms: https://registry.npmjs.org/micromark-factory-title
+Progress: resolved 2209, reused 0, downloaded 0, added 0
+[WARN] Request took 18256ms: https://registry.npmjs.org/micromark-factory-whitespace
+Progress: resolved 2210, reused 0, downloaded 0, added 0
+[WARN] Request took 18479ms: https://registry.npmjs.org/micromark-util-html-tag-name
+[WARN] Request took 18485ms: https://registry.npmjs.org/micromark-factory-destination
+Progress: resolved 2212, reused 0, downloaded 0, added 0
+[WARN] Request took 20318ms: https://registry.npmjs.org/is-alphanumerical
+Progress: resolved 2213, reused 0, downloaded 0, added 0
+[WARN] Request took 20343ms: https://registry.npmjs.org/character-reference-invalid
+Progress: resolved 2272, reused 0, downloaded 0, added 0
+Progress: resolved 2283, reused 0, downloaded 0, added 0
+Progress: resolved 2294, reused 0, downloaded 0, added 0
+Progress: resolved 2303, reused 0, downloaded 0, added 0
+Progress: resolved 2306, reused 0, downloaded 0, added 0
+Progress: resolved 2319, reused 0, downloaded 0, added 0
+Progress: resolved 2338, reused 0, downloaded 0, added 0
+[WARN] 18 deprecated subdependencies found: @esbuild-kit/core-utils@3.3.2, @esbuild-kit/esm-loader@2.6.5, @opentelemetry/propagator-jaeger@1.30.1, @opentelemetry/sdk-trace-base@1.30.1, @opentelemetry/sdk-trace-base@2.12.0, @opentelemetry/sdk-trace-node@1.30.1, @smithy/core@3.25.1, debug@4.1.0, fluent-ffmpeg@2.1.3, git-raw-commits@4.0.0, glob@10.5.0, glob@7.2.3, inflight@1.0.6, mathjax-full@3.2.2, node-domexception@1.0.0, puppeteer@23.11.1, uuid@9.0.1, whatwg-encoding@3.1.1
+[WARN] Issues with peer dependencies found. Run "pnpm peers check" to list them.
+
+Progress: resolved 2338, reused 1, downloaded 0, added 0
+Progress: resolved 2338, reused 315, downloaded 0, added 0
+Packages: -357
+--------------------------------------------------------------------------------
+Progress: resolved 2338, reused 315, downloaded 0, added 0, done
+. prepare$ husky
+. prepare: Done
+Done in 2m 5.7s using pnpm v11.8.0
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-linux-loong64/-/typescript-linux-loong64-7.0.2.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-win32-x64/-/typescript-win32-x64-7.0.2.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-freebsd-arm64/-/typescript-freebsd-arm64-7.0.2.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-netbsd-x64/-/typescript-netbsd-x64-7.0.2.tgz error (ECONNRESET). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-linux-riscv64/-/typescript-linux-riscv64-7.0.2.tgz error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-linux-s390x/-/typescript-linux-s390x-7.0.2.tgz error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-netbsd-arm64/-/typescript-netbsd-arm64-7.0.2.tgz error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-openbsd-arm64/-/typescript-openbsd-arm64-7.0.2.tgz error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-openbsd-x64/-/typescript-openbsd-x64-7.0.2.tgz error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-sunos-x64/-/typescript-sunos-x64-7.0.2.tgz error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-win32-arm64/-/typescript-win32-arm64-7.0.2.tgz error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-darwin-arm64/-/typescript-darwin-arm64-7.0.2.tgz error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-darwin-x64/-/typescript-darwin-x64-7.0.2.tgz error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-freebsd-x64/-/typescript-freebsd-x64-7.0.2.tgz error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-linux-arm/-/typescript-linux-arm-7.0.2.tgz error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-linux-arm64/-/typescript-linux-arm64-7.0.2.tgz error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-linux-mips64el/-/typescript-linux-mips64el-7.0.2.tgz error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-linux-ppc64/-/typescript-linux-ppc64-7.0.2.tgz error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-freebsd-arm64/-/typescript-freebsd-arm64-7.0.2.tgz error (UND_ERR_SOCKET). Will retry in 1 minute. 1 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-linux-ppc64/-/typescript-linux-ppc64-7.0.2.tgz error (ECONNRESET). Will retry in 1 minute. 1 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-win32-x64/-/typescript-win32-x64-7.0.2.tgz error (23). Will retry in 1 minute. 1 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-linux-riscv64/-/typescript-linux-riscv64-7.0.2.tgz error (23). Will retry in 1 minute. 1 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-netbsd-arm64/-/typescript-netbsd-arm64-7.0.2.tgz error (23). Will retry in 1 minute. 1 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-openbsd-arm64/-/typescript-openbsd-arm64-7.0.2.tgz error (23). Will retry in 1 minute. 1 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-openbsd-x64/-/typescript-openbsd-x64-7.0.2.tgz error (23). Will retry in 1 minute. 1 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-win32-arm64/-/typescript-win32-arm64-7.0.2.tgz error (23). Will retry in 1 minute. 1 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-darwin-arm64/-/typescript-darwin-arm64-7.0.2.tgz error (23). Will retry in 1 minute. 1 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-darwin-x64/-/typescript-darwin-x64-7.0.2.tgz error (23). Will retry in 1 minute. 1 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-freebsd-x64/-/typescript-freebsd-x64-7.0.2.tgz error (23). Will retry in 1 minute. 1 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-linux-arm64/-/typescript-linux-arm64-7.0.2.tgz error (23). Will retry in 1 minute. 1 retries left.
+[WARN] GET https://registry.npmjs.org/@typescript/typescript-linux-mips64el/-/typescript-linux-mips64el-7.0.2.tgz error (23). Will retry in 1 minute. 1 retries left.
+INSTALL_EXIT=124
+TSC_VERSION=Version 7.0.2
+DISK_FREE_MB_AFTER=541353
+WHY_EXIT=0
+TS_RESOLVED=7.0.2
+SWAPFREE_KIB_END=5279424
+EXIT=0
+ELAPSED_S=911

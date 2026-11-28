@@ -1,0 +1,17 @@
+GATE=TR1-swap-B
+CMD=cd /home/daniebo/Desktop/rama-worktrees/ts7-trial && PUPPETEER_SKIP_DOWNLOAD=1 timeout 900 pnpm install --config.manage-package-manager-versions=false --no-frozen-lockfile --fetch-timeout 60000 --network-concurrency 4 --reporter ndjson > TR1-swap-B-onepnpm.log 2>&1
+START_EPOCH=1795856112
+HEAVY_RUN_ACTIVE=1
+HEAVY_PRIORITY=p2
+PUPPETEER_SKIP_DOWNLOAD=1
+WS_YAML_LINES_CHANGED=1
+TRIAL_ONLY_SETTING_LINES=4
+OVERRIDE_BEFORE=5.9.3
+OVERRIDE_AFTER=7.0.2
+TSC_VERSION=Version 7.0.2
+TS_SINGLE=1
+TS_RESOLVED=7.0.2
+EXIT=0
+ELAPSED_S=22
+NOTE=One pnpm process only; --config.manage-package-manager-versions=false; lifecycle prepare exitCode 0 in TR1-swap-B-onepnpm.log.
+NOTE=TypeScript 7.0.2 fetches every platform binary despite supportedArchitectures; recorded as a finding.

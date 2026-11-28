@@ -1,0 +1,27 @@
+GATE=TR1-swap-B
+CMD=edit pnpm-workspace.yaml line 123 then pnpm install --no-frozen-lockfile then pnpm why typescript
+START_EPOCH=1795852297
+HEAVY_RUN_ACTIVE=1
+HEAVY_PRIORITY=p2
+LOAD1_START=14.41
+MEMAVAIL_MB_START=15399
+SWAPFREE_KIB_START=5353972
+DISK_FREE_MB=542788
+WS_YAML_LINES_CHANGED=1
+OVERRIDE_BEFORE=5.9.3
+OVERRIDE_AFTER=7.0.2
+Scope: all 49 workspace projects
+✓ Lockfile passes supply-chain policies (verified 11m ago)
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 0, reused 1, downloaded 0, added 0
+Progress: resolved 0, reused 258, downloaded 0, added 0
+Progress: resolved 0, reused 350, downloaded 0, added 0
+Packages: +40 -336
+++++++++------------------------------------------------------------------------
+Progress: resolved 0, reused 350, downloaded 0, added 40, done
+node_modules/puppeteer postinstall$ node install.mjs
+node_modules/puppeteer postinstall: **INFO** Skipping Firefox download as instructed.
+[WARN] GET https://registry.npmjs.org/@next/swc-linux-x64-musl/-/swc-linux-x64-musl-16.4.1.tgz error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@next/swc-win32-arm64-msvc/-/swc-win32-arm64-msvc-16.4.1.tgz error (23). Will retry in 10 seconds. 2 retries left.
+[WARN] GET https://registry.npmjs.org/@next/swc-linux-x64-musl/-/swc-linux-x64-musl-16.4.1.tgz error (23). Will retry in 1 minute. 1 retries left.
+node_modules/puppeteer postinstall: Failed

@@ -1,0 +1,5 @@
+GATE=TR1-snapshot
+SNAPSHOT_DIR=main
+--- git diff text for pnpm-lock.yaml package.json pnpm-workspace.yaml ---
+MAIN_DIFF_QUIET=0
+EXIT=0

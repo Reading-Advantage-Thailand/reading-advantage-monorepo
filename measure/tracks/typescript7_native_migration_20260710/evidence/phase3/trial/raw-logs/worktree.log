@@ -1,0 +1,68 @@
+GATE=TR1-worktree
+START_EPOCH=1795851241
+HEAVY=false
+Preparing worktree (new branch 'ts7/trial-p3')
+branch 'ts7/trial-p3' set up to track 'origin/master'.
+Updating files:   1% (1033/93454)Updating files:   2% (1870/93454)Updating files:   3% (2804/93454)Updating files:   4% (3739/93454)Updating files:   5% (4673/93454)Updating files:   5% (5114/93454)Updating files:   6% (5608/93454)Updating files:   7% (6542/93454)Updating files:   8% (7477/93454)Updating files:   8% (8152/93454)Updating files:   8% (8195/93454)Updating files:   9% (8411/93454)Updating files:  10% (9346/93454)Updating files:  11% (10280/93454)Updating files:  12% (11215/93454)Updating files:  13% (12150/93454)Updating files:  13% (13002/93454)Updating files:  14% (13084/93454)Updating files:  15% (14019/93454)Updating files:  16% (14953/93454)Updating files:  17% (15888/93454)Updating files:  18% (16822/93454)Updating files:  18% (16992/93454)Updating files:  19% (17757/93454)Updating files:  20% (18691/93454)Updating files:  21% (19626/93454)Updating files:  22% (20560/93454)Updating files:  23% (21495/93454)Updating files:  24% (22429/93454)Updating files:  25% (23364/93454)Updating files:  26% (24299/93454)Updating files:  27% (25233/93454)Updating files:  28% (26168/93454)Updating files:  29% (27102/93454)Updating files:  30% (28037/93454)Updating files:  31% (28971/93454)Updating files:  32% (29906/93454)Updating files:  33% (30840/93454)Updating files:  34% (31775/93454)Updating files:  35% (32709/93454)Updating files:  35% (32946/93454)Updating files:  36% (33644/93454)Updating files:  37% (34578/93454)Updating files:  38% (35513/93454)Updating files:  39% (36448/93454)Updating files:  40% (37382/93454)Updating files:  41% (38317/93454)Updating files:  42% (39251/93454)Updating files:  43% (40186/93454)Updating files:  44% (41120/93454)Updating files:  45% (42055/93454)Updating files:  46% (42989/93454)Updating files:  47% (43924/93454)Updating files:  48% (44858/93454)Updating files:  49% (45793/93454)Updating files:  50% (46727/93454)Updating files:  51% (47662/93454)Updating files:  52% (48597/93454)Updating files:  53% (49531/93454)Updating files:  54% (50466/93454)Updating files:  55% (51400/93454)Updating files:  56% (52335/93454)Updating files:  57% (53269/93454)Updating files:  58% (54204/93454)Updating files:  59% (55138/93454)Updating files:  60% (56073/93454)Updating files:  61% (57007/93454)Updating files:  62% (57942/93454)Updating files:  62% (58013/93454)Updating files:  63% (58877/93454)Updating files:  64% (59811/93454)Updating files:  65% (60746/93454)Updating files:  66% (61680/93454)Updating files:  67% (62615/93454)Updating files:  68% (63549/93454)Updating files:  69% (64484/93454)Updating files:  70% (65418/93454)Updating files:  71% (66353/93454)Updating files:  72% (67287/93454)Updating files:  73% (68222/93454)Updating files:  74% (69156/93454)Updating files:  75% (70091/93454)Updating files:  76% (71026/93454)Updating files:  77% (71960/93454)Updating files:  78% (72895/93454)Updating files:  79% (73829/93454)Updating files:  80% (74764/93454)Updating files:  81% (75698/93454)Updating files:  82% (76633/93454)Updating files:  83% (77567/93454)Updating files:  84% (78502/93454)Updating files:  85% (79436/93454)Updating files:  86% (80371/93454)Updating files:  87% (81305/93454)Updating files:  88% (82240/93454)Updating files:  88% (83034/93454)Updating files:  89% (83175/93454)Updating files:  90% (84109/93454)Updating files:  91% (85044/93454)Updating files:  92% (85978/93454)Updating files:  93% (86913/93454)Updating files:  94% (87847/93454)Updating files:  95% (88782/93454)Updating files:  96% (89716/93454)Updating files:  97% (90651/93454)Updating files:  98% (91585/93454)Updating files:  99% (92520/93454)Updating files: 100% (93454/93454)Updating files: 100% (93454/93454), done.
+HEAD is now at dd669e5f8 chore(measure): p3 tr1 red role log (track_id: typescript7_native_migration_20260710)
+WT_HEAD=dd669e5f8429df04c427a8b6ec519829b0cb13c6
+WT_CLEAN=1
+--- porcelain ---
+worktree /home/daniebo/Desktop/reading-advantage-monorepo
+HEAD dd669e5f8429df04c427a8b6ec519829b0cb13c6
+branch refs/heads/master
+
+worktree /home/daniebo/Desktop/rama-worktrees/accounting-intake-p7
+HEAD f54d045fb29b3477645a7303e087e1e39d3d287c
+branch refs/heads/accounting/drive-intake-p7
+
+worktree /home/daniebo/Desktop/rama-worktrees/ci-arch-manifest-20261127
+HEAD 485b2fd2ed043d5eb3c284e56b3e35b6b33bbc86
+branch refs/heads/ci/arch-manifest-20261127
+
+worktree /home/daniebo/Desktop/rama-worktrees/early-safe-20261125
+HEAD ba32f3d0e4b188d0a08337b5e9c246ae0556718f
+branch refs/heads/early-safe-20261125
+
+worktree /home/daniebo/Desktop/rama-worktrees/reading-standard-base
+HEAD 0c7528a4be8276c8f3668d9720922120209f9182
+branch refs/heads/reading/standard-base
+
+worktree /home/daniebo/Desktop/rama-worktrees/sales-january-course
+HEAD 965b39c70bc179fd6cefbd47cce37f390040b392
+branch refs/heads/sales/january-course
+
+worktree /home/daniebo/Desktop/rama-worktrees/sales-seed-1c531677
+HEAD 5d8c0ac61d5d49fdd5ec79e1c4fa76a89570cfc6
+branch refs/heads/sales/seed-1c531677-20261124
+
+worktree /home/daniebo/Desktop/rama-worktrees/storytime-media-fixture
+HEAD 9c51ad668cb66a5ddbc837d763f1f30fce87c50b
+branch refs/heads/storytime/media-list-fixture
+
+worktree /home/daniebo/Desktop/rama-worktrees/ts7-phase3
+HEAD dd669e5f8429df04c427a8b6ec519829b0cb13c6
+branch refs/heads/ts7/phase3
+
+worktree /home/daniebo/Desktop/rama-worktrees/ts7-trial
+HEAD dd669e5f8429df04c427a8b6ec519829b0cb13c6
+branch refs/heads/ts7/trial-p3
+
+worktree /home/daniebo/Desktop/rama-worktrees/www-fr05-20261127
+HEAD 26c5486da21e2cf3409b3e105f10aef49e95e549
+branch refs/heads/www/fr05-20261127
+
+worktree /home/daniebo/Desktop/rama-worktrees/www-launch-post-20261126
+HEAD 99acf536a4f66a62f7432ad196c9f3a62b8a501a
+branch refs/heads/www/launch-post-20261126
+
+worktree /home/daniebo/Desktop/rama-worktrees/www-storytime-launch-day
+HEAD bdc76132ddb388dab1b751c37885b17bb5c2278d
+branch refs/heads/storytime-launch-day
+
+worktree /home/daniebo/Desktop/rama-worktrees/www-test-audit
+HEAD 5ba8f408d6a2c6361149326c45dab14a5223458d
+branch refs/heads/www/test-audit
+
+EXIT=0
+ELAPSED_S=11

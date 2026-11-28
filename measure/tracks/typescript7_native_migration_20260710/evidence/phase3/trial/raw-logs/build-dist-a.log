@@ -1,0 +1,192 @@
+GATE=TR1-build-dist-A
+CMD=pnpm --workspace-concurrency=1 --filter ./packages/** run --if-present build
+START_EPOCH=1795851337
+HEAVY_RUN_ACTIVE=1
+HEAVY_PRIORITY=p2
+LOAD1_START=11.28
+MEMAVAIL_MB_START=15020
+SWAPFREE_KIB_START=5420304
+DISK_FREE_MB=543355
+Scope: 33 of 49 workspace projects
+$ tsc
+$ tsc
+$ tsc --project tsconfig.build.json
+$ tsup src/index.ts --format esm --dts
+[34mCLI[39m Building entry: src/index.ts
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Target: es2022
+[34mESM[39m Build start
+[32mESM[39m [1mdist/index.js [22m[32m84.91 KB[39m
+[32mESM[39m ⚡️ Build success in 74ms
+[34mDTS[39m Build start
+[32mDTS[39m ⚡️ Build success in 2308ms
+[32mDTS[39m [1mdist/index.d.ts [22m[32m13.26 KB[39m
+$ tsc --project tsconfig.build.json
+$ tsup src/index.ts --format esm --dts
+[34mCLI[39m Building entry: src/index.ts
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Target: es2022
+[34mESM[39m Build start
+[32mESM[39m [1mdist/index.js [22m[32m59.97 KB[39m
+[32mESM[39m ⚡️ Build success in 42ms
+[34mDTS[39m Build start
+[32mDTS[39m ⚡️ Build success in 3758ms
+[32mDTS[39m [1mdist/index.d.ts [22m[32m248.77 KB[39m
+$ tsc
+$ tsc
+$ tsc
+$ tsc
+$ tsc
+$ tsup src/index.ts src/cn.ts src/ffmpeg-process.ts src/hooks/index.ts src/structured-error.ts --format esm --dts
+[34mCLI[39m Building entry: src/cn.ts, src/ffmpeg-process.ts, src/index.ts, src/structured-error.ts, src/hooks/index.ts
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Target: es2022
+[34mESM[39m Build start
+[32mESM[39m [1mdist/hooks/index.js      [22m[32m2.75 KB[39m
+[32mESM[39m [1mdist/cn.js               [22m[32m61.00 B[39m
+[32mESM[39m [1mdist/ffmpeg-process.js   [22m[32m1.92 KB[39m
+[32mESM[39m [1mdist/chunk-XLMR5Y6E.js   [22m[32m161.00 B[39m
+[32mESM[39m [1mdist/structured-error.js [22m[32m93.00 B[39m
+[32mESM[39m [1mdist/chunk-EXLYIKGK.js   [22m[32m433.00 B[39m
+[32mESM[39m [1mdist/index.js            [22m[32m143.00 B[39m
+[32mESM[39m ⚡️ Build success in 39ms
+[34mDTS[39m Build start
+[32mDTS[39m ⚡️ Build success in 5027ms
+[32mDTS[39m [1mdist/index.d.ts            [22m[32m173.00 B[39m
+[32mDTS[39m [1mdist/ffmpeg-process.d.ts   [22m[32m942.00 B[39m
+[32mDTS[39m [1mdist/cn.d.ts               [22m[32m292.00 B[39m
+[32mDTS[39m [1mdist/structured-error.d.ts [22m[32m1.05 KB[39m
+[32mDTS[39m [1mdist/hooks/index.d.ts      [22m[32m781.00 B[39m
+$ node scripts/clean-dist.mjs && tsc
+$ tsc
+$ tsc
+$ tsup src/index.ts --format esm --dts
+[34mCLI[39m Building entry: src/index.ts
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Using tsup config: /home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/auth-client/tsup.config.ts
+[34mCLI[39m Target: es2022
+[34mESM[39m Build start
+[32mESM[39m [1mdist/index.js [22m[32m4.73 KB[39m
+[32mESM[39m ⚡️ Build success in 17ms
+[34mDTS[39m Build start
+[32mDTS[39m ⚡️ Build success in 1590ms
+[32mDTS[39m [1mdist/index.d.ts [22m[32m2.49 KB[39m
+$ tsc
+$ tsc && node scripts/copy-data.mjs
+$ tsc
+$ tsup
+[34mCLI[39m Building entry: {"index":"src/index.ts"}
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m Building entry: {"client":"src/client.ts"}
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Using tsup config: /home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/ui/tsup.config.ts
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Using tsup config: /home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/ui/tsup.config.ts
+[34mCLI[39m Target: es2022
+[34mESM[39m Build start
+[34mCLI[39m Target: es2022
+[34mESM[39m Build start
+[32mESM[39m [1mdist/client.js [22m[32m1.52 KB[39m
+[32mESM[39m ⚡️ Build success in 29ms
+[32mESM[39m [1mdist/index.js [22m[32m25.73 KB[39m
+[32mESM[39m ⚡️ Build success in 74ms
+[34mDTS[39m Build start
+[34mDTS[39m Build start
+[32mDTS[39m ⚡️ Build success in 2493ms
+[32mDTS[39m [1mdist/client.d.ts [22m[32m923.00 B[39m
+[32mDTS[39m ⚡️ Build success in 3345ms
+[32mDTS[39m [1mdist/index.d.ts [22m[32m15.13 KB[39m
+$ node scripts/clean-dist.mjs && tsc
+$ tsc -p tsconfig.build.json
+$ tsc
+$ tsc && node scripts/copy-data.mjs
+$ tsup src/index.ts src/catalog.ts src/labyrinth-goblin-king.ts src/shadow-gate-dungeon.ts src/spellweavers-run.ts src/dragon-flight.ts src/astral-mage.ts src/sorcerer-ziggurat.ts src/legacy-traversal-cartridges.ts src/castle-defense.ts src/magic-defense.ts src/rpg-battle.ts src/wizard-vs-zombie.ts src/enchanted-library.ts src/rune-match.ts src/alchemists-synthesis.ts src/potion-rush.ts src/dungeon-liberator.ts src/rune-forge-chamber.ts src/village-guardian.ts src/abyssal-well.ts src/archers-revenge.ts src/storm-castle-tower.ts src/griffin-sky-joust.ts src/realm-carver.ts src/paladins-twin-soul.ts src/devourer-slime.ts src/haunted-library.ts src/gryphon-patrol.ts src/existing-core-cutover-semantic-candidates.ts src/existing-core-cutover-qc.ts --format esm && tsc -p tsconfig.build.json --emitDeclarationOnly
+[34mCLI[39m Building entry: src/abyssal-well.ts, src/alchemists-synthesis.ts, src/archers-revenge.ts, src/astral-mage.ts, src/castle-defense.ts, src/catalog.ts, src/devourer-slime.ts, src/dragon-flight.ts, src/dungeon-liberator.ts, src/enchanted-library.ts, src/existing-core-cutover-qc.ts, src/existing-core-cutover-semantic-candidates.ts, src/griffin-sky-joust.ts, src/gryphon-patrol.ts, src/haunted-library.ts, src/index.ts, src/labyrinth-goblin-king.ts, src/legacy-traversal-cartridges.ts, src/magic-defense.ts, src/paladins-twin-soul.ts, src/potion-rush.ts, src/realm-carver.ts, src/rpg-battle.ts, src/rune-forge-chamber.ts, src/rune-match.ts, src/shadow-gate-dungeon.ts, src/sorcerer-ziggurat.ts, src/spellweavers-run.ts, src/storm-castle-tower.ts, src/village-guardian.ts, src/wizard-vs-zombie.ts
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Target: es2022
+[34mESM[39m Build start
+[32mESM[39m [1mdist/shadow-gate-dungeon.js                       [22m[32m17.79 KB[39m
+[32mESM[39m [1mdist/sorcerer-ziggurat.js                         [22m[32m18.97 KB[39m
+[32mESM[39m [1mdist/spellweavers-run.js                          [22m[32m15.10 KB[39m
+[32mESM[39m [1mdist/storm-castle-tower.js                        [22m[32m40.42 KB[39m
+[32mESM[39m [1mdist/rune-match.js                                [22m[32m52.86 KB[39m
+[32mESM[39m [1mdist/village-guardian.js                          [22m[32m47.01 KB[39m
+[32mESM[39m [1mdist/labyrinth-goblin-king.js                     [22m[32m24.33 KB[39m
+[32mESM[39m [1mdist/wizard-vs-zombie.js                          [22m[32m83.97 KB[39m
+[32mESM[39m [1mdist/legacy-traversal-cartridges.js               [22m[32m21.04 KB[39m
+[32mESM[39m [1mdist/magic-defense.js                             [22m[32m46.36 KB[39m
+[32mESM[39m [1mdist/paladins-twin-soul.js                        [22m[32m44.46 KB[39m
+[32mESM[39m [1mdist/potion-rush.js                               [22m[32m54.92 KB[39m
+[32mESM[39m [1mdist/realm-carver.js                              [22m[32m52.73 KB[39m
+[32mESM[39m [1mdist/rpg-battle.js                                [22m[32m43.11 KB[39m
+[32mESM[39m [1mdist/rune-forge-chamber.js                        [22m[32m35.75 KB[39m
+[32mESM[39m [1mdist/dungeon-liberator.js                         [22m[32m51.88 KB[39m
+[32mESM[39m [1mdist/enchanted-library.js                         [22m[32m46.26 KB[39m
+[32mESM[39m [1mdist/existing-core-cutover-qc.js                  [22m[32m14.41 KB[39m
+[32mESM[39m [1mdist/existing-core-cutover-semantic-candidates.js [22m[32m1001.00 B[39m
+[32mESM[39m [1mdist/griffin-sky-joust.js                         [22m[32m41.44 KB[39m
+[32mESM[39m [1mdist/gryphon-patrol.js                            [22m[32m43.30 KB[39m
+[32mESM[39m [1mdist/haunted-library.js                           [22m[32m45.88 KB[39m
+[32mESM[39m [1mdist/index.js                                     [22m[32m37.68 KB[39m
+[32mESM[39m [1mdist/chunk-AJGAH4B2.js                            [22m[32m25.81 KB[39m
+[32mESM[39m [1mdist/abyssal-well.js                              [22m[32m42.33 KB[39m
+[32mESM[39m [1mdist/alchemists-synthesis.js                      [22m[32m27.06 KB[39m
+[32mESM[39m [1mdist/archers-revenge.js                           [22m[32m45.22 KB[39m
+[32mESM[39m [1mdist/astral-mage.js                               [22m[32m20.04 KB[39m
+[32mESM[39m [1mdist/catalog.js                                   [22m[32m233.00 B[39m
+[32mESM[39m [1mdist/chunk-P5EAPACH.js                            [22m[32m22.42 KB[39m
+[32mESM[39m [1mdist/castle-defense.js                            [22m[32m49.10 KB[39m
+[32mESM[39m [1mdist/chunk-M4SYIWOG.js                            [22m[32m3.91 KB[39m
+[32mESM[39m [1mdist/devourer-slime.js                            [22m[32m50.04 KB[39m
+[32mESM[39m [1mdist/chunk-Z476VFVW.js                            [22m[32m2.08 KB[39m
+[32mESM[39m [1mdist/dragon-flight.js                             [22m[32m35.32 KB[39m
+[32mESM[39m ⚡️ Build success in 139ms
+$ tsc
+$ tsc -p tsconfig.build.json
+$ tsc
+$ tsc
+$ tsc
+BUILD_ALL_EXIT=0
+BUILD_EXIT=@reading-advantage/activity-react=0
+BUILD_EXIT=@reading-advantage/activity-runtime=0
+BUILD_EXIT=@reading-advantage/activity-tutorial=0
+BUILD_EXIT=@reading-advantage/advantage-play-kit-3d=0
+BUILD_EXIT=@reading-advantage/advantage-play-kit=0
+BUILD_EXIT=@reading-advantage/ai=0
+BUILD_EXIT=@reading-advantage/api=0
+BUILD_EXIT=@reading-advantage/architecture-enforcement=0
+BUILD_EXIT=@reading-advantage/auth-client=0
+BUILD_EXIT=@reading-advantage/auth=0
+BUILD_EXIT=@reading-advantage/avatar-kit=0
+BUILD_EXIT=@reading-advantage/backend=0
+BUILD_EXIT=@reading-advantage/codecamp-knowledge=0
+BUILD_EXIT=@reading-advantage/config=0
+BUILD_EXIT=@reading-advantage/db=0
+BUILD_EXIT=@reading-advantage/domain=0
+BUILD_EXIT=@reading-advantage/game-cartridges-3d=0
+BUILD_EXIT=@reading-advantage/game-cartridges=0
+BUILD_EXIT=@reading-advantage/game-contracts=0
+BUILD_EXIT=@reading-advantage/integrations-github=0
+BUILD_EXIT=@reading-advantage/knowledge-space-core=0
+BUILD_EXIT=@reading-advantage/knowledge-space-practice=0
+BUILD_EXIT=@reading-advantage/mastery-runtime-compat=0
+BUILD_EXIT=@reading-advantage/practice-core=0
+BUILD_EXIT=@reading-advantage/read-along=0
+BUILD_EXIT=@reading-advantage/scripts=0
+BUILD_EXIT=@reading-advantage/sales-knowledge=0
+BUILD_EXIT=@reading-advantage/srs-engine=0
+BUILD_EXIT=@reading-advantage/storage=0
+BUILD_EXIT=@reading-advantage/types=0
+BUILD_EXIT=@reading-advantage/ui=0
+BUILD_EXIT=@reading-advantage/utils=0
+BUILD_EXIT=@reading-advantage/webhooks=0
+DIST_MISSING=0
+SWAPFREE_KIB_END=5417008
+EXIT=0
+ELAPSED_S=121

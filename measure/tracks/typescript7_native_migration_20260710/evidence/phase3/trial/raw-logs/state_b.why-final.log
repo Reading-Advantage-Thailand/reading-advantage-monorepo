@@ -1,0 +1,171 @@
+GATE=TR1-swap-B-why
+CMD=pnpm why typescript
+START_EPOCH=1795856182
+HEAVY_RUN_ACTIVE=1
+HEAVY_PRIORITY=p2
+PUPPETEER_SKIP_DOWNLOAD=1
+TS_RESOLVED=7.0.2
+TS_SINGLE=1
+TSC_VERSION=Version 7.0.2
+typescript@7.0.2
+├── @reading-advantage/activity-react@0.1.0 (devDependencies)
+├── @reading-advantage/activity-runtime@0.1.0 (devDependencies)
+├── @reading-advantage/activity-tutorial@0.1.0 (dependencies)
+├── @reading-advantage/advantage-play-kit@0.1.0 (devDependencies)
+├── @reading-advantage/advantage-play-kit-3d@0.1.0 (devDependencies)
+├── @reading-advantage/ai@0.1.0 (devDependencies)
+├── @reading-advantage/api@0.1.0 (devDependencies)
+├── @reading-advantage/architecture-enforcement@0.1.0 (dependencies)
+├── @reading-advantage/auth@0.1.0 (devDependencies)
+├── @reading-advantage/auth-client@0.1.0 (devDependencies)
+├── @reading-advantage/avatar-kit@0.1.0 (devDependencies)
+├── @reading-advantage/backend@0.1.0 (devDependencies)
+├── @reading-advantage/codecamp-knowledge@0.1.0 (devDependencies)
+├── @reading-advantage/config@0.0.0 (devDependencies)
+├── @reading-advantage/db@0.1.0 (devDependencies)
+├── @reading-advantage/domain@0.1.0 (devDependencies)
+├── @reading-advantage/game-cartridges@0.1.0 (devDependencies)
+├── @reading-advantage/game-cartridges-3d@0.1.0 (devDependencies)
+├── @reading-advantage/game-contracts@0.1.0 (devDependencies)
+├── @reading-advantage/integrations-github@0.1.0 (devDependencies)
+├── @reading-advantage/knowledge-space-core@0.1.0 (devDependencies)
+├── @reading-advantage/knowledge-space-practice@0.1.0 (devDependencies)
+├── @reading-advantage/mastery-runtime-compat@0.1.0 (devDependencies)
+├── @reading-advantage/practice-core@0.1.0 (devDependencies)
+├── @reading-advantage/read-along@0.0.0 (devDependencies)
+├── @reading-advantage/sales-knowledge@0.1.0 (devDependencies)
+├── @reading-advantage/session-service@0.1.0 (devDependencies)
+├── @reading-advantage/srs-engine@0.1.0 (devDependencies)
+├── @reading-advantage/storage@0.1.0 (devDependencies)
+├── @reading-advantage/types@0.1.0 (devDependencies)
+├── @reading-advantage/ui@0.0.0 (devDependencies)
+├── @reading-advantage/utils@0.0.0 (devDependencies)
+├── @reading-advantage/webhooks@0.1.0 (devDependencies)
+├── @reading-advantage/worker@0.1.0 (devDependencies)
+├─┬ @trpc/client@11.18.0
+│ ├── @reading-advantage/api@0.1.0 (dependencies)
+│ ├─┬ @trpc/react-query@11.18.0
+│ │ ├── codecamp-advantage@0.1.0 (dependencies)
+│ │ ├── reading-advantage@0.1.0 (dependencies)
+│ │ └── sales-advantage@0.1.0 (dependencies)
+│ ├── codecamp-advantage@0.1.0 (dependencies)
+│ ├── reading-advantage@0.1.0 (dependencies)
+│ └── sales-advantage@0.1.0 (dependencies)
+├── @trpc/react-query@11.18.0 [deduped]
+├─┬ @trpc/server@11.18.0
+│ ├── @reading-advantage/api@0.1.0 (dependencies)
+│ ├── @trpc/client@11.18.0 [deduped]
+│ ├── @trpc/react-query@11.18.0 [deduped]
+│ ├── codecamp-advantage@0.1.0 (dependencies)
+│ ├── reading-advantage@0.1.0 (dependencies)
+│ └── sales-advantage@0.1.0 (dependencies)
+├─┬ @typescript-eslint/eslint-plugin@8.61.1
+│ └─┬ typescript-eslint@8.61.1
+│   ├── @reading-advantage/config@0.0.0 (devDependencies)
+│   ├─┬ eslint-config-next@16.0.0 peer#4fe5 (2 variations)
+│   │ ├── vocabulary-games@0.1.0 (devDependencies)
+│   │ └── www-reading-advantage@0.1.0 (devDependencies)
+│   ├─┬ eslint-config-next@16.0.0 peer#2861 (2 variations)
+│   │ ├── reading-advantage@0.1.0 (devDependencies)
+│   │ └── science-advantage@0.1.0 (devDependencies)
+│   └── vocabulary-games@0.1.0 (devDependencies)
+├─┬ @typescript-eslint/parser@8.61.1
+│ ├─┬ @shadcn/lint@0.2.0
+│ │ └── www-reading-advantage@0.1.0 (devDependencies)
+│ ├── @typescript-eslint/eslint-plugin@8.61.1 [deduped]
+│ ├─┬ eslint-module-utils@2.13.0
+│ │ └─┬ eslint-plugin-import@2.32.0
+│ │   ├── eslint-config-next@16.0.0 peer#4fe5 (2 variations) [deduped]
+│ │   └─┬ eslint-import-resolver-typescript@3.10.1
+│ │     ├── eslint-config-next@16.0.0 peer#4fe5 (2 variations) [deduped]
+│ │     └── eslint-module-utils@2.13.0 [circular]
+│ ├── eslint-plugin-import@2.32.0 [deduped]
+│ └── typescript-eslint@8.61.1 [deduped]
+├─┬ @typescript-eslint/project-service@8.61.1
+│ └─┬ @typescript-eslint/typescript-estree@8.61.1
+│   ├── @typescript-eslint/parser@8.61.1 [deduped]
+│   ├─┬ @typescript-eslint/type-utils@8.61.1
+│   │ └── @typescript-eslint/eslint-plugin@8.61.1 [deduped]
+│   ├─┬ @typescript-eslint/utils@8.61.1
+│   │ ├── @typescript-eslint/eslint-plugin@8.61.1 [deduped]
+│   │ ├── @typescript-eslint/type-utils@8.61.1 [deduped]
+│   │ └── typescript-eslint@8.61.1 [deduped]
+│   └── typescript-eslint@8.61.1 [deduped]
+├─┬ @typescript-eslint/tsconfig-utils@8.61.1
+│ ├── @typescript-eslint/project-service@8.61.1 [deduped]
+│ └── @typescript-eslint/typescript-estree@8.61.1 [deduped]
+├── @typescript-eslint/type-utils@8.61.1 [deduped]
+├─┬ @typescript-eslint/typescript-estree@5.62.0
+│ └─┬ @typescript-eslint/utils@5.62.0
+│   └─┬ eslint-plugin-testing-library@6.5.0
+│     └── reading-advantage@0.1.0 (devDependencies)
+├── @typescript-eslint/typescript-estree@8.61.1 [deduped]
+├── @typescript-eslint/utils@8.61.1 [deduped]
+├── accounting@0.1.0 (devDependencies)
+├── accounts@0.1.0 (devDependencies)
+├── activity-vinext-fixture@0.1.0 (devDependencies)
+├── codecamp-advantage@0.1.0 (devDependencies)
+├─┬ cosmiconfig@9.0.2
+│ ├─┬ @commitlint/load@19.8.1
+│ │ └─┬ @commitlint/cli@19.8.1
+│ │   └── reading-advantage-monorepo@0.0.0 (devDependencies)
+│ ├─┬ cosmiconfig-typescript-loader@6.3.0
+│ │ └── @commitlint/load@19.8.1 [deduped]
+│ └─┬ puppeteer@23.11.1
+│   └─┬ @revideo/renderer@0.10.4
+│     └── www-reading-advantage@0.1.0 (devDependencies)
+├── cosmiconfig-typescript-loader@6.3.0 [deduped]
+├── eslint-config-next@16.0.0 peer#4fe5 (2 variations) [deduped]
+├── eslint-config-next@16.0.0 peer#2861 (2 variations) [deduped]
+├── marketing@0.1.0 (devDependencies)
+├─┬ next-intl@4.13.0
+│ ├── codecamp-advantage@0.1.0 (dependencies)
+│ ├── primary-advantage@0.1.0 (dependencies)
+│ ├── reading-advantage@0.1.0 (dependencies)
+│ ├── sales-advantage@0.1.0 (dependencies)
+│ ├── storytime@0.1.0 (dependencies)
+│ └── www-reading-advantage@0.1.0 (dependencies)
+├── primary-advantage@0.1.0 (devDependencies)
+├── reading-advantage@0.1.0 (devDependencies)
+├── reading-advantage-monorepo@0.0.0 (devDependencies)
+├── sales-advantage@0.1.0 (devDependencies)
+├── science-advantage@0.1.0 (devDependencies)
+├── storytime@0.1.0 (devDependencies)
+├─┬ ts-api-utils@2.5.0
+│ ├── @typescript-eslint/eslint-plugin@8.61.1 [deduped]
+│ ├── @typescript-eslint/type-utils@8.61.1 [deduped]
+│ └── @typescript-eslint/typescript-estree@8.61.1 [deduped]
+├─┬ ts-node@10.9.2
+│ ├─┬ jest-config@30.4.2
+│ │ ├─┬ @jest/core@30.4.2
+│ │ │ ├─┬ jest@30.4.2 peer#e13d (2 variations)
+│ │ │ │ ├── reading-advantage@0.1.0 (devDependencies)
+│ │ │ │ └── vocabulary-games@0.1.0 (devDependencies)
+│ │ │ ├─┬ jest@30.4.2 peer#03a9 (2 variations)
+│ │ │ │ └── @reading-advantage/scripts@0.1.0 (devDependencies)
+│ │ │ ├─┬ jest-cli@30.4.2 peer#e13d (2 variations)
+│ │ │ │ └── jest@30.4.2 peer#e13d (2 variations) [deduped]
+│ │ │ └─┬ jest-cli@30.4.2 peer#03a9 (2 variations)
+│ │ │   └── jest@30.4.2 peer#03a9 (2 variations) [deduped]
+│ │ └── jest-cli@30.4.2 peer#e13d (2 variations) [deduped]
+│ ├── primary-advantage@0.1.0 (devDependencies)
+│ ├── reading-advantage@0.1.0 (devDependencies)
+│ └── vocabulary-games@0.1.0 (devDependencies)
+├─┬ tsup@8.5.1
+│ ├── @reading-advantage/auth-client@0.1.0 (devDependencies)
+│ ├── @reading-advantage/avatar-kit@0.1.0 (devDependencies)
+│ ├── @reading-advantage/game-cartridges@0.1.0 (devDependencies)
+│ ├── @reading-advantage/game-contracts@0.1.0 (devDependencies)
+│ ├── @reading-advantage/ui@0.0.0 (devDependencies)
+│ └── @reading-advantage/utils@0.0.0 (devDependencies)
+├─┬ tsutils@3.21.0
+│ └── @typescript-eslint/typescript-estree@5.62.0 [deduped]
+├── typescript-eslint@8.61.1 [deduped]
+├── vocabulary-games@0.1.0 (devDependencies)
+├── workbooks@0.0.0 (devDependencies)
+└── www-reading-advantage@0.1.0 (devDependencies)
+
+Found 1 version of typescript
+WHY_EXIT=0
+EXIT=0
+ELAPSED_S=3

@@ -1,0 +1,32 @@
+GATE=TR1-install-A
+CMD=pnpm install --frozen-lockfile
+START_EPOCH=1795851286
+HEAVY_RUN_ACTIVE=1
+HEAVY_PRIORITY=p2
+LOAD1_START=5.18
+MEMAVAIL_MB_START=14272
+SWAPFREE_KIB_START=5419600
+DISK_FREE_MB=543446
+Scope: all 49 workspace projects
+✓ Lockfile passes supply-chain policies (verified 13d ago)
+Lockfile is up to date, resolution step is skipped
+Packages: +2112
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 0, reused 1, downloaded 0, added 0
+Progress: resolved 0, reused 1850, downloaded 0, added 0
+Progress: resolved 0, reused 2007, downloaded 0, added 907
+Progress: resolved 0, reused 2007, downloaded 0, added 2112
+Progress: resolved 0, reused 2007, downloaded 0, added 2112, done
+[WARN] Failed to create bin at /home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/api/node_modules/.bin/tutorial-check. ENOENT: no such file or directory, chmod '/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/api/node_modules/@reading-advantage/activity-tutorial/dist/cli.js'
+[WARN] Failed to create bin at /home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/codecamp-knowledge/node_modules/.bin/tutorial-check. ENOENT: no such file or directory, chmod '/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/codecamp-knowledge/node_modules/@reading-advantage/activity-tutorial/dist/cli.js'
+[WARN] Failed to create bin at /home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/domain/node_modules/.bin/tutorial-check. ENOENT: no such file or directory, chmod '/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/domain/node_modules/@reading-advantage/activity-tutorial/dist/cli.js'
+
+. prepare$ husky
+. prepare: Done
+Done in 5.2s using pnpm v11.8.0
+INSTALL_EXIT=0
+TSC_VERSION=Version 5.9.3
+DISK_FREE_MB_AFTER=543380
+SWAPFREE_KIB_END=5420412
+EXIT=0
+ELAPSED_S=13

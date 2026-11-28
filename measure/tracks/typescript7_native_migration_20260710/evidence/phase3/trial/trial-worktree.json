@@ -1,0 +1,185 @@
+{
+  "registry": {
+    "versions_7_0_stable": [
+      "7.0.2"
+    ],
+    "chosen": "7.0.2",
+    "log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/registry.log",
+    "latest_tag": "7.0.2",
+    "beta_tag": "7.1.0-beta"
+  },
+  "worktree": {
+    "path": "/home/daniebo/Desktop/rama-worktrees/ts7-trial",
+    "branch": "ts7/trial-p3",
+    "base_sha": "dd669e5f8429df04c427a8b6ec519829b0cb13c6",
+    "porcelain": "GATE=TR1-worktree-final\nHEAVY=false\nworktree /home/daniebo/Desktop/reading-advantage-monorepo\nHEAD 3d87a41ce4bf79756b06a75bba75e24aa041cd40\nbranch refs/heads/master\n\nworktree /home/daniebo/Desktop/rama-worktrees/accounting-intake-p7\nHEAD f54d045fb29b3477645a7303e087e1e39d3d287c\nbranch refs/heads/accounting/drive-intake-p7\n\nworktree /home/daniebo/Desktop/rama-worktrees/ci-arch-manifest-20261127\nHEAD 485b2fd2ed043d5eb3c284e56b3e35b6b33bbc86\nbranch refs/heads/ci/arch-manifest-20261127\n\nworktree /home/daniebo/Desktop/rama-worktrees/early-safe-20261125\nHEAD ba32f3d0e4b188d0a08337b5e9c246ae0556718f\nbranch refs/heads/early-safe-20261125\n\nworktree /home/daniebo/Desktop/rama-worktrees/reading-standard-base\nHEAD 0c7528a4be8276c8f3668d9720922120209f9182\nbranch refs/heads/reading/standard-base\n\nworktree /home/daniebo/Desktop/rama-worktrees/sales-january-course\nHEAD 965b39c70bc179fd6cefbd47cce37f390040b392\nbranch refs/heads/sales/january-course\n\nworktree /home/daniebo/Desktop/rama-worktrees/sales-seed-1c531677\nHEAD 5d8c0ac61d5d49fdd5ec79e1c4fa76a89570cfc6\nbranch refs/heads/sales/seed-1c531677-20261124\n\nworktree /home/daniebo/Desktop/rama-worktrees/storytime-media-fixture\nHEAD 9c51ad668cb66a5ddbc837d763f1f30fce87c50b\nbranch refs/heads/storytime/media-list-fixture\n\nworktree /home/daniebo/Desktop/rama-worktrees/ts7-phase3\nHEAD dd669e5f8429df04c427a8b6ec519829b0cb13c6\nbranch refs/heads/ts7/phase3\n\nworktree /home/daniebo/Desktop/rama-worktrees/ts7-trial\nHEAD b345d890fe8dea7309685202824639cc4c8623c8\nbranch refs/heads/ts7/trial-p3\n\nworktree /home/daniebo/Desktop/rama-worktrees/www-fr05-20261127\nHEAD 26c5486da21e2cf3409b3e105f10aef49e95e549\nbranch refs/heads/www/fr05-20261127\n\nworktree /home/daniebo/Desktop/rama-worktrees/www-launch-post-20261126\nHEAD 99acf536a4f66a62f7432ad196c9f3a62b8a501a\nbranch refs/heads/www/launch-post-20261126\n\nworktree /home/daniebo/Desktop/rama-worktrees/www-storytime-launch-day\nHEAD bdc76132ddb388dab1b751c37885b17bb5c2278d\nbranch refs/heads/storytime-launch-day\n\nworktree /home/daniebo/Desktop/rama-worktrees/www-test-audit\nHEAD 5ba8f408d6a2c6361149326c45dab14a5223458d\nbranch refs/heads/www/test-audit\n\nEXIT=0\n"
+  },
+  "state_a": {
+    "log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/state_a.log",
+    "tsc_version": "5.9.3"
+  },
+  "state_b": {
+    "log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/TR1-swap-B.gate.log",
+    "why_log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/state_b.why-final.log",
+    "ts_resolved": [
+      "7.0.2"
+    ],
+    "tsc_version": "7.0.2"
+  },
+  "snapshots": {
+    "main_before_log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/snapshot.main_before.log",
+    "main_after_log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/snapshot.main_after.log",
+    "role_before_log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/snapshot.role_before.log",
+    "role_after_log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/snapshot.role_after.log",
+    "after_epoch": 1795856241,
+    "main_snapshot_equal": 1,
+    "role_snapshot_equal": 1
+  },
+  "install_commit": {
+    "sha": "b345d890fe8dea7309685202824639cc4c8623c8",
+    "paths": [
+      "pnpm-lock.yaml",
+      "pnpm-workspace.yaml"
+    ],
+    "ws_yaml_lines_changed": 1,
+    "override_before": "5.9.3",
+    "override_after": "7.0.2",
+    "trial_only_setting_lines": 4
+  },
+  "lock_key_changes": {
+    "added": [
+      "@typescript/typescript-aix-ppc64@7.0.2",
+      "@typescript/typescript-darwin-arm64@7.0.2",
+      "@typescript/typescript-darwin-x64@7.0.2",
+      "@typescript/typescript-freebsd-arm64@7.0.2",
+      "@typescript/typescript-freebsd-x64@7.0.2",
+      "@typescript/typescript-linux-arm64@7.0.2",
+      "@typescript/typescript-linux-arm@7.0.2",
+      "@typescript/typescript-linux-loong64@7.0.2",
+      "@typescript/typescript-linux-mips64el@7.0.2",
+      "@typescript/typescript-linux-ppc64@7.0.2",
+      "@typescript/typescript-linux-riscv64@7.0.2",
+      "@typescript/typescript-linux-s390x@7.0.2",
+      "@typescript/typescript-linux-x64@7.0.2",
+      "@typescript/typescript-netbsd-arm64@7.0.2",
+      "@typescript/typescript-netbsd-x64@7.0.2",
+      "@typescript/typescript-openbsd-arm64@7.0.2",
+      "@typescript/typescript-openbsd-x64@7.0.2",
+      "@typescript/typescript-sunos-x64@7.0.2",
+      "@typescript/typescript-win32-arm64@7.0.2",
+      "@typescript/typescript-win32-x64@7.0.2",
+      "typescript@7.0.2"
+    ],
+    "removed": [
+      "typescript@5.9.3"
+    ],
+    "lock_scan_log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/lock-scan.log",
+    "explained_drift": [],
+    "requires_build_added": 0,
+    "allow_builds": []
+  },
+  "disk_free_mb": {
+    "before": 543446,
+    "after": 543380
+  },
+  "gates": [
+    {
+      "id": "TR1-registry",
+      "heavy": false,
+      "heavy_command": "",
+      "log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/registry.log",
+      "start_epoch": 1795851232,
+      "exit": 0,
+      "elapsed_s": 9
+    },
+    {
+      "id": "TR1-snapshot-before",
+      "heavy": false,
+      "heavy_command": "",
+      "log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/snapshot.main_before.log",
+      "start_epoch": 1795851241,
+      "exit": 0,
+      "elapsed_s": 0
+    },
+    {
+      "id": "TR1-worktree",
+      "heavy": false,
+      "heavy_command": "",
+      "log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/worktree.log",
+      "start_epoch": 1795851243,
+      "exit": 0,
+      "elapsed_s": 9
+    },
+    {
+      "id": "TR1-install-A",
+      "heavy": true,
+      "heavy_command": "HEAVY_PRIORITY=p2 HEAVY_MIN_AVAIL_MB=1500 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c \"bash /tmp/opencode/p3-install-a.sh\"",
+      "log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/state_a.log",
+      "start_epoch": 1795851286,
+      "exit": 0,
+      "elapsed_s": 13
+    },
+    {
+      "id": "TR1-build-dist-A",
+      "heavy": true,
+      "heavy_command": "HEAVY_PRIORITY=p2 HEAVY_MIN_AVAIL_MB=1500 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c \"bash /tmp/opencode/p3-build-dist-a.sh\"",
+      "log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/build-dist-a.log",
+      "start_epoch": 1795851337,
+      "exit": 0,
+      "elapsed_s": 121
+    },
+    {
+      "id": "TR1-swap-B",
+      "heavy": true,
+      "heavy_command": "HEAVY_PRIORITY=p2 HEAVY_MIN_AVAIL_MB=1500 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c \"cd /home/daniebo/Desktop/rama-worktrees/ts7-trial && PUPPETEER_SKIP_DOWNLOAD=1 timeout 900 pnpm install --config.manage-package-manager-versions=false --no-frozen-lockfile --fetch-timeout 60000 --network-concurrency 4 --reporter ndjson\"",
+      "log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/TR1-swap-B.gate.log",
+      "start_epoch": 1795856112,
+      "exit": 0,
+      "elapsed_s": 22
+    },
+    {
+      "id": "TR1-swap-B-why",
+      "heavy": true,
+      "heavy_command": "HEAVY_PRIORITY=p2 HEAVY_MIN_AVAIL_MB=1500 bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c \"PUPPETEER_SKIP_DOWNLOAD=1 bash /tmp/opencode/p3-why.sh\"",
+      "log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/state_b.why-final.log",
+      "start_epoch": 1795856182,
+      "exit": 0,
+      "elapsed_s": 3
+    },
+    {
+      "id": "TR1-install-commit",
+      "heavy": false,
+      "heavy_command": "",
+      "log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/install-commit.log",
+      "start_epoch": 1795856200,
+      "exit": 0,
+      "elapsed_s": 1
+    },
+    {
+      "id": "TR1-lock-scan",
+      "heavy": false,
+      "heavy_command": "",
+      "log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/lock-scan.log",
+      "start_epoch": 1795856210,
+      "exit": 0,
+      "elapsed_s": 1
+    },
+    {
+      "id": "TR1-snapshot-after",
+      "heavy": false,
+      "heavy_command": "",
+      "log": "measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/raw-logs/snapshot.main_after.log",
+      "start_epoch": 1795856241,
+      "exit": 0,
+      "elapsed_s": 0
+    }
+  ],
+  "notes": [
+    "Trial-only install setting in ts7-trial pnpm-workspace.yaml: supportedArchitectures os linux, cpu x64, libc glibc; four added lines; lockfile churn from this setting is expected.",
+    "Trial-base addition .puppeteerrc.cjs from master commit 3d87a41ce sets skipDownload true; it stays staged in ts7-trial and is not part of the install commit.",
+    "Every install uses PUPPETEER_SKIP_DOWNLOAD=1 so the puppeteer postinstall does not download Chrome.",
+    "One pnpm process per install: --config.manage-package-manager-versions=false; earlier hangs came from two pnpm versions sharing the v11 store index.",
+    "Finding: TypeScript 7.0.2 fetches every platform binary even with supportedArchitectures set to linux x64 glibc.",
+    "No deploy and no push. No change to the main checkout pnpm-lock.yaml, package.json, or pnpm-workspace.yaml."
+  ]
+}
