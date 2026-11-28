@@ -9,6 +9,7 @@ Routes (PM 2026-11-27): Claude, Codex (stops at 85% weekly), MiniMax or free rou
 > Constraints for every phase: run each heavy step through
 > `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'`, one at a time.
 > Heavy steps run only after 22:00 ICT, and only when no Storytime heavy run waits.
+> Lifted 2026-11-28 (PM): the 22:00 ICT window no longer applies. `heavy-run.sh` holds the lock.
 > Use `--maxWorkers=1` for vitest. No push. No deploy. Add no new hash field.
 > Stage only the paths that this track owns.
 
@@ -167,12 +168,13 @@ PM 2026-11-23: parked until after the 30 Nov launch.
 ## Phase 3: TypeScript 7 trial (PM step 1)
 
 > Phase 3 target (PM 2026-11-21): report to the PM by 2026-11-28.
+> Orchestrator default 2026-11-28: new report target 2026-12-02 (the 2026-11-28 target is missed).
 
 - [ ] Task: Bump vinext 1.2.0 to the latest 1.4.x and adopt the Oxc lessons of the Math test bed.
   - PM 2026-11-21 (stack modernization): bump vinext 1.2.0 -> latest 1.4.x and adopt the Oxc lessons of the Math test bed (ra-math-advantage measure/archive/vinext-oxc-toolchain_20261114/oxc-evidence.md).
   - What: find every package that pins vinext 1.2.0. `apps/marketing` and `apps/activity-vinext-fixture` pin it today. `grep` the repo for other manifests, workspace files, and lockfile entries.
   - Target: vinext 1.4.6, the latest 1.4.x on npm. Check with `npm view vinext versions --json`. Checked 2026-11-21. Change only the pinning manifests and their lockfile entries.
-  - Gates: build each vinext app, run its tests, and run the runtime verify script. Use `heavy-run.sh` at `HEAVY_PRIORITY=p2`. Run one heavy step at a time after 22:00 ICT. Use `--maxWorkers=1` for vitest. Run `apps/marketing/scripts/verify-vinext-runtime.mjs` on the build. It needs HTTP 200 on `/` and HTTP 401 on `/api/campaigns`. Save each exit code and log under `evidence/`.
+  - Gates: build each vinext app, run its tests, and run the runtime verify script. Use `heavy-run.sh` at `HEAVY_PRIORITY=p2`. Run one heavy step at a time through heavy-run.sh, which holds the lock (PM 2026-11-28: the 22:00 ICT window is lifted). Use `--maxWorkers=1` for vitest. Run `apps/marketing/scripts/verify-vinext-runtime.mjs` on the build. It needs HTTP 200 on `/` and HTTP 401 on `/api/campaigns`. Save each exit code and log under `evidence/`.
   - Oxc lessons from `oxc-evidence.md` sections 6, 8, and 11. Give each lesson a check or a defer decision with a reason.
     - oxlint: check the root config and zero-warning lint scripts on a seeded finding. Math finds no rule gap, because no ESLint config remains to diff. Record that fact.
     - oxfmt: check `oxfmt --check` on a pinned exact version with an explicit ignore list. Math uses a format-only commit and a blame-ignore entry. Defer the repo-wide reformat if it is outside this phase, and give the reason.
@@ -241,6 +243,21 @@ PM 2026-11-23: parked until after the 30 Nov launch.
   - Files: none in the main checkout.
   - Done when: `git worktree list` and `git branch -a` show no trial item.
 - [ ] Task: Measure - User Manual Verification 'Phase 3: TypeScript 7 trial (PM step 1)' (Protocol in workflow.md).
+
+### Phase 3 Task 1 strategy evidence (Measure Strategy, 2026-11-28)
+
+- Role: Measure Strategy. Model: claude-code/claude-sonnet-5-5. Task: the vinext bump (the first Phase 3 task) only.
+- Role base: `190c38252`. This value is not the `phase_base_sha`. The orchestrator captures that value after the strategy commit. The rule is in `test-strategy.md` section 5a.4.
+- Strategy: `test-strategy.md` section 5a (full). Section 5 holds an outline of the later Phase 3 tasks. Each gets its own strategy round.
+- Risk: medium. Reviews: security yes, UX/API conditional, adversarial yes (narrow), browser yes (narrow). The reasons are in section 5a.2.
+- Finding (read-only, 2026-11-28): vinext 1.4.6 asks for React `^19.3.1`. The repository pins React 19.2.9. That peer is "not met". `npm view vinext@1.4.6 peerDependencies engines --json` shows the range. `measure/tech-debt.md:25` records that a React upgrade needs its own track.
+- Default in force (strategy default C, `test-strategy.md` section 5a.3): install 1.4.6 under React 19.2.9, record the unmet peer, and let the live gates decide. The orchestrator records the waiver here before the Green commit merges. The PM can reverse it.
+- Registry fact: `npm view vinext dist-tags --json` shows `latest` as 1.4.7 (published 2026-11-26). The target stays 1.4.6, as the PM named it.
+- RED_TEST_COMMAND: `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_vinext`. The GREEN_TEST_COMMAND is in section 5a.6.
+- The bump makes six Phase 2 tests fail on purpose (section 5a.9). The orchestrator checks their names.
+- Two plan lines changed on 2026-11-28: the Phase 3 report target (new target 2026-12-02) and the Gates line of Task 1 (the 22:00 ICT window is lifted).
+- The task marker stays `[ ]`. The orchestrator sets `[~]` before Mid Red (A8).
+- This role changed no product code, no test, no `package.json`, and no lockfile.
 
 ## Phase 4: Cloudflare preparation, not the move (PM step 2)
 

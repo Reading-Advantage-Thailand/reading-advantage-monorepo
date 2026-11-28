@@ -7,6 +7,11 @@ This strategy covers the amended plan: Phase 2 (vinext 1.x), Phase 3 (TypeScript
 (Cloudflare preparation), and Phase 5 (gated rollout). Phase 2 has the full section. Phases 3 and 4
 have outlines. The full sections come before each phase starts. Phase 5 waits for Daniel.
 
+Revision 2026-11-28 (Phase 3, first task). Author model: claude-code/claude-sonnet-5-5. The strategy
+role started from `190c38252` (origin/master). That value is not the `phase_base_sha` (section 2).
+Section 5a is new: the full section for the first Phase 3 task. Sections 1, 5, and 8 changed. The
+other Phase 3 tasks keep an outline in section 5; each gets its own strategy round later.
+
 ## Contents
 
 - [Superseded history](#superseded-history-2026-11-05)
@@ -15,6 +20,7 @@ have outlines. The full sections come before each phase starts. Phase 5 waits fo
 - [3. Anti-pattern vocabulary used here](#3-anti-pattern-vocabulary-used-here)
 - [4. Phase 2: vinext 1.x upgrade (full section)](#4-phase-2-vinext-1x-upgrade-pm-step-0)
 - [5. Phase 3 outline](#5-phase-3-outline-typescript-7-trial)
+- [5a. Phase 3 Task 1: vinext 1.4.6 (full section)](#5a-phase-3-task-1-bump-vinext-to-146)
 - [6. Phase 4 outline](#6-phase-4-outline-cloudflare-preparation)
 - [7. Phase 5 note](#7-phase-5-note-gated-rollout)
 - [8. Open questions and defaults](#8-open-questions-and-defaults)
@@ -42,14 +48,15 @@ constrained host (peak RSS, wall time, swap delta, and OOM exit codes).
 | Heavy steps | Run each through `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'`. Run one at a time. |
 | What is heavy | Any command that starts `pnpm`, `vitest`, `vinext`, `tsc`, or a browser. A heavy step also includes `pnpm install`. |
 | What is light | A Python unit test that reads files, `git` read commands, `rg`, and `curl` reads of the npm registry. Light steps may run at any time. |
-| Time window | For this track, heavy steps run only after 22:00 ICT. The end of the window is 06:00 ICT (default; see section 8, question 4). |
-| Storytime priority | Start a heavy step only when no Storytime heavy run waits. If `heavy-run.sh` names a Storytime holder, stop and wait. Storytime keeps the priority. |
+| Time window | **Lifted 2026-11-28** (PM, 07:35). Phase 2 ran after 22:00 ICT. Phase 3 and later run at any hour. `heavy-run.sh` holds the lock, so the rule is: one heavy step at a time. |
+| Storytime priority | Run every heavy step at `HEAVY_PRIORITY=p2`. Do not raise it to `p1`. If `heavy-run.sh` names a holder, wait. Do not start a second heavy job beside it. |
 | Memory | The machine has 7 GB of memory. Run vitest with `--maxWorkers=1`. Run no second heavy job at the same time. |
 | Pipes | A heavy command that pipes to `tee` starts with `set -o pipefail;`. Without it the exit code of the tool is lost. |
 | No push, no deploy | This holds for every phase. A deploy command or a `git push` in any gate is a failure. |
 | No new hash | Add no hash field, checksum, or manifest hash (AGENTS.md hashing policy). Lockfile integrity lines are normal lockfile content and are not new fields. |
 | Staging | The repository has many untracked files from other sessions. Every commit names its paths. A Storytime role commits on master at the same time. |
-| Worktrees | Phases 2 and 4 use the shared master tree only (A16). Phase 3 needs one trial worktree. See section 5 and section 8, question 2. |
+| Worktrees | Phases 2 and 4 use the shared master tree only (A16). Phase 3 uses worktrees: one for each Green round, and one trial worktree. The main checkout holds uncommitted owner edits, so no role works in it. See section 8, questions 2 and 10. |
+| Heavy job cap | A p2 job stops at 1800 s (`maxLockSecondsP2`, exit 124). Each gate is its own job and must finish under the cap. A gate that hits the cap splits. Do not raise the priority. |
 
 ## 2. phase_base_sha capture point
 
@@ -485,11 +492,26 @@ The orchestrator records its output with the decision.
 
 The full section comes before Phase 3 starts. These points are fixed now.
 
-**New Phase 3 task (PM 2026-11-21).**
+**First Phase 3 task (PM 2026-11-21): the vinext bump.** Section 5a holds the full strategy. The
+report target moved to 2026-12-02 (orchestrator default, 2026-11-28).
 
-| Task | Check | Evidence class | Report |
-| --- | --- | --- | --- |
-| Bump vinext 1.2.0 to the latest 1.4.x and adopt the Oxc lessons of the Math test bed. | Build, tests, and the runtime verify script of each vinext app under `heavy-run.sh` at `HEAVY_PRIORITY=p2`. One check or defer reason per Oxc lesson, and before and after build times. | automated | PM by 2026-11-28 |
+**Outline of the later Phase 3 tasks.** Each task gets its own strategy round before its Red role
+starts. The risk values below are planning values. The round may change them.
+
+| Task (plan order) | Risk | Security | UX/API | Adversarial | Browser | Main concern |
+| --- | --- | --- | --- | --- | --- | --- |
+| Create the trial worktree (7.0.x) | low | skip | skip | skip | skip | The worktree branches from the commit that holds the vinext bump. The check is the lockfile snapshot rule below. |
+| Type checks, memory and time | medium | skip | skip | yes | skip | A fast run with missing diagnostics is a failed measurement (A4, A5). The 5.9.3 control run comes first. |
+| Tests on the trial install | medium | skip | skip | yes | skip | Compare failures by file and name against the control (A7). |
+| List the regressions | low | skip | skip | yes | skip | The classifier. No entry stays unclassified (A4). |
+| Fix the regressions | **high** | yes | conditional | yes | conditional | The task changes product files. It needs a full strategy that names each file after the list exists. |
+| Run the 7.1 beta | low | skip | skip | skip | skip | A test removes the beta rows and recomputes the verdict. |
+| One-compiler plan and report | low | skip | skip | skip | skip | A wrong claim, not a code defect (A5, A6). |
+| Remove the trial worktree | low | skip | skip | skip | skip | The task deletes paths. Look at each target first. The proof is `git worktree list` and `git branch -a`. |
+| Manual verification task | low | skip | skip | skip | skip | PM 2026-11-21: closed on automated evidence. |
+
+The trial worktree must start from a commit that holds the vinext bump of section 5a. Then the
+5.9.3 control and the 7.0.x runs use the same vinext version.
 
 **Baseline facts that shape the method.**
 
@@ -551,6 +573,418 @@ PM for a recorded exception. The cleanup task must end with `git worktree list` 
 tree). Review C: skip (no UI or API). Adversarial: yes, against the classifier (a swapped
 diagnostic, a missing diagnostic, a beta row that changes the verdict). UX browser: skip.
 
+## 5a. Phase 3 Task 1: bump vinext to 1.4.6
+
+Scope: `apps/marketing` and `apps/activity-vinext-fixture` move from vinext 1.2.0 to vinext 1.4.6.
+The change touches two `package.json` files and the lockfile entries that follow. The task also
+records one check or one defer decision for each Oxc lesson, and the build time before and after.
+Evidence class: automated. Risk: **medium** (5a.2). The target version is the constant `TARGET`
+in the Red test file. Its value is `1.4.6` (PM, 2026-11-21).
+
+### 5a.1 Facts observed at strategy time (2026-11-28, read-only)
+
+These facts are inputs. Green must re-verify each one and record the result.
+
+| Fact | Value | Source |
+| --- | --- | --- |
+| Declared version | `vinext` `1.2.0`, exact, in both apps | `apps/marketing/package.json:24`, `apps/activity-vinext-fixture/package.json:12` |
+| Lockfile entries | two importer `vinext:` blocks, the package key `vinext@1.2.0:`, and one snapshot key | `rg -n 'vinext' pnpm-lock.yaml` (lines 525, 915, 14130, 26439) |
+| Other pins | None. Only the two manifests declare `vinext`. `pnpm-workspace.yaml:145` holds the stale entry `vinext@0.2.0` in `minimumReleaseAgeExclude`. It does not pin 1.2.0. | `rg -n 'vinext' pnpm-workspace.yaml` |
+| Registry | 1.4.6 was published 2026-11-16. 1.4.7 was published 2026-11-26 and is now the `latest` tag. Both have the same peers. | `npm view vinext time --json`, `npm view vinext dist-tags --json` |
+| 1.4.6 peers | `vite ^8.0.0`, `react ^19.3.1`, `react-dom ^19.3.1`, `@vitejs/plugin-react ^5.1.4 \|\| ^6.0.0`, `@vitejs/plugin-rsc ^0.5.37` (optional), node `>=22` | `npm view vinext@1.4.6 peerDependencies engines --json` |
+| 1.4.6 dependencies | The same six packages as 1.2.0. Only `@vinext/types` moves from `^1.0.1` to `^1.0.2`. The lockfile already resolves 1.0.2. | `npm view vinext@1.4.6 dependencies --json` |
+| Repo values | React and React DOM `19.2.9`, exact, in both manifests and in `overrides`. Vite override `8.1.6`. plugin-react `6.0.3`. Node `24.19.0`. | manifests, `pnpm-workspace.yaml` |
+| React pin guard | `tests/security-upgrade-adversarial.test.ts` holds `react: "19.2.9"` in `STRATEGY_REQUIRED_PINS`. `measure/tech-debt.md:25` says a React upgrade needs its own track. | those two files |
+
+**Expected result: the React peer is "not met" for 1.4.6.** React 19.2.9 does not satisfy
+`^19.3.1`. Each other peer is met. Phase 2 met the same case for 1.4.3, and the PM chose 1.2.0 to
+avoid it. The PM decision of 2026-11-21 asks for 1.4.x and does not name React. Section 5a.3 holds
+the decision gate.
+
+Facts that shape the method:
+
+- No tracked manifest declares `oxlint`, `oxfmt`, or `tsrs`. No `.oxlintrc.json`, `.oxfmtrc.json`,
+  or `.git-blame-ignore-revs` exists. Lint is ESLint (`eslint .` in marketing, shared base config).
+  The fixture has no lint script.
+- The fixture has no `test` script and no vitest. Its live proof is the build and the probe.
+- The workspace packages that the apps import export from `dist/`. That folder is git-ignored. A
+  fresh worktree has none. Green builds the packages first (gate `P-prereq-build`).
+- Both `next-env.d.ts` files are tracked. `vinext build` rewrites them. The main checkout holds
+  uncommitted owner edits of both files.
+- `.gitignore` lists `.next/` and `dist/`. It does not list `.vinext/`.
+- `next` stays installed (override `next: 16.4.1`). Marketing imports `@reading-advantage/api`, which
+  lists `next` as a required peer (`packages/api/package.json:73`). Many other apps declare `next`
+  (`rg -l '^\s+"next":' apps/*/package.json` lists them). Some declare `eslint-config-next`.
+  Marketing and the fixture declare neither.
+- Math compared vinext 0.0.55 with 1.4.6 and got ratios of 0.34 to 0.59. This task compares 1.2.0
+  with 1.4.6. The Math ratio is not the expected ratio here. No ratio threshold applies.
+
+### 5a.2 Risk classification and review applicability
+
+| Item | Risk | Reason |
+| --- | --- | --- |
+| Task 1 | **medium** | A server framework moves three minor versions on an app with an auth boundary. The React peer is not met. The lockfile changes under the `hoisted` linker. The app is non-critical (Daniel, 2026-11-05) and no deploy runs. |
+| Task 1 under option B (5a.3) | **high** | A repo-wide React change touches `pnpm-workspace.yaml`, the manifests of many apps, and a guard test. It needs a new strategy before Red. |
+
+| Role | Applies? | Scope and reason |
+| --- | --- | --- |
+| Review A (correctness) | **Yes** | Check each note block against its raw log and the registry output. Check the scope rule and the lockfile diff. Check that no test passes with nothing done. |
+| Security review (Review B) | **Yes** | Reason: new framework minors, new lockfile keys, and an unmet peer. Check (1) each added lockfile package key is vinext, a vinext dependency, or an `explained_drift` entry. (2) `git diff -U0 pnpm-lock.yaml \| rg -c '^\+.*requiresBuild: true'` shows no new build-script package. Each one that appears must be in `allowBuilds`. Exit 1 with no output means 0. Exit 2 fails the detector (A14). (3) The 401 on `/api/campaigns` holds. The `marketing-proxy`, `phase-w3-*-auth`, and `runtime-headers` tests pass. (4) `verify-vinext-runtime.mjs` is byte-equal to the base. |
+| UX/API review (Review C) | **Conditional** | Run only if a Green commit touches `apps/*/app`, `proxy.ts`, `vite.config.ts`, or `tsconfig*.json`. The expected diff has two manifests and the lockfile, so the role has no code to read. The orchestrator records the skip and the reason (A4). |
+| Adversarial testing | **Yes**, narrow | The attacks are in 5a.9. |
+| Browser review | **Yes**, narrow | jsdom tests and server-side fetches do not run the client bundle. An unmet React peer makes a hydration break more likely, and these tests cannot see it. The gate rows `H1-browser-*` do the work. If no browser tool exists, the gate ends `blocked`. It does not skip (lesson L9). |
+| Phase acceptance | At the end of Phase 3 | Later tasks remain in the phase. The orchestrator may run a task-level Review A after this task. |
+
+### 5a.3 Decision gate G3.0 (before Green edits a manifest)
+
+Green runs G3.0 first. It is a light step.
+
+1. Run `npm view vinext@1.4.6 peerDependencies engines --json` and
+   `npm view vinext@1.4.6 dependencies --json`. Save both outputs in the note block `peer-check-p3`.
+2. Compare each peer range with its repo value. Cite each repo value as `path:line`. Use
+   `cmd:node --version` for Node.
+3. If every non-optional row is "met", go to step 4 of the order of work in 5a.9.
+4. If a non-optional row is "not met", the default below applies until the orchestrator records a
+   PM answer.
+
+| Option | Meaning | Effect |
+| --- | --- | --- |
+| A | Stay on vinext 1.2.0. | The task becomes a record. No manifest changes. |
+| B | Move React and React DOM to 19.3.1 for the whole repository, in its own track. | `pnpm-workspace.yaml`, the manifests of many apps, and a guard test change. Risk becomes high. |
+| **C (default)** | Install 1.4.6 under React 19.2.9. Record the unmet peer as a named finding. Live gates decide. | The task stays inside the two apps. The PM can reverse it. |
+| D | Use 1.4.7 instead of 1.4.6. | The peers are the same. Change the constant `TARGET`. |
+
+Default C has three conditions:
+
+1. The `peer-check-p3` block holds a `waiver` object with the keys `peer`, `range`, `repo_value`,
+   `decision_ref`, and `live_gates`. The value of `decision_ref` is `strategy default C, 2026-11-28`
+   or a PM reference. `live_gates` is a list of gate ids.
+2. Every gate in `live_gates` has exit 0, and both `H1-browser-*` gates report `CONSOLE_ERRORS=0`.
+3. The orchestrator records the waiver in `plan.md` before the Green commit merges to master.
+
+If a condition fails, Green runs the rollback (5a.8) and ends with `status: blocked`. The
+orchestrator then asks the PM to choose option B.
+
+### 5a.4 phase_base_sha capture point
+
+The strategy commit is the point where Phase 3 starts. The orchestrator captures the immutable
+`phase_base_sha` in this order:
+
+1. The strategy commit exists on the branch that Red starts from.
+2. The orchestrator runs
+   `git log -1 --format=%H -- measure/tracks/typescript7_native_migration_20260710/test-strategy.md`.
+3. The output is the `phase_base_sha`. The orchestrator writes it to its run log and to the prompt
+   of Mid Red **before any later edit of this file**.
+
+A later strategy round for another Phase 3 task edits this file and moves the output of step 2.
+Therefore the orchestrator never recomputes the value. It reads the value from its run log.
+
+Two checks refute a wrong capture: the value is not equal to `190c38252` (the role base, which
+predates the strategy), and `git merge-base --is-ancestor 190c38252 <value>` exits 0. This file
+holds no phase SHA, so no edit can invalidate it.
+
+### 5a.5 Test file that Red writes
+
+Red writes one new file: `measure/tests/test_typescript7_native_migration_phase3_vinext.py`. It uses
+the Python standard library only. Red does not edit `test_typescript7_native_migration_phase2.py`
+(history, section 5a.7 explains the effect). Red may import the Phase 2 helpers `satisfies`,
+`resolve_installed`, `_lock_vinext_importer_entries`, `_declared_vinext`, `_lock_sections`,
+`_lock_change_is_in_scope`, `_changed_lock_lines`, `_bookkeeping_path_is_allowed`,
+`_parse_vitest_counts`, and `_labeled_values`. Red may copy them instead. The file adds no
+dependency and no hash. It resolves the track folder with `track_dir_resolve` (A9).
+
+The decisive Red tests read tracked files only. A worktree with no `node_modules` cannot fake
+them. Tests that read an installed package fail with a message that names the missing install.
+
+| Class and test | State at base | What it proves | Falsification |
+| --- | --- | --- | --- |
+| `P3T1TargetTests.test_target_is_stable_1_4_x` | green (guard) | `TARGET` matches `^1\.4\.\d+$`. It has no `^` and no `~`. | Set `TARGET` to `1.5.0` or `^1.4.6`: fail. |
+| `...test_both_apps_pin_target` | **red** | Both apps declare `vinext` equal to `TARGET`, exact. | Leave one app at 1.2.0: fail. |
+| `...test_exactly_two_manifests_declare_vinext` | green (guard) | A scan of every tracked `package.json` finds exactly 2 declarations of `vinext`. Both are the two apps. The count is a labeled integer (A3, A4). | Add a third manifest that declares vinext: fail. |
+| `...test_lock_importers_resolve_target` | **red** | The lockfile has exactly 2 importer entries for `vinext`. Each `specifier` equals `TARGET`. Each `version` starts with `TARGET`. | Edit one specifier: fail. |
+| `...test_lock_has_one_vinext_key` | **red** | The `packages:` section has exactly one key `vinext@<version>:`. It is `vinext@TARGET`. The text `vinext@1.2.0` appears 0 times. | Keep the old key beside the new key: fail (A3). |
+| `...test_installed_matches_target` | red (no install) | For each app, `resolve_installed(app, "vinext")` has the version `TARGET`. | Skip the install: fail. |
+| `P3T1PeerTests.test_note_blocks_parse` | **red** | The note `evidence/phase3-vinext-1-4-6.md` exists. It has the seven fenced JSON blocks of 5a.10. | Delete the note or one block: fail. |
+| `...test_peer_rows_recomputed` | **red** | Each row of `peer-check-p3` has a verdict. `satisfies(repo_value, range)` gives the same verdict. Each `repo_source` is `path:line` and that line holds the value. At least 6 rows exist (A4, A5). | Flip one verdict, or cite a wrong line: fail. |
+| `...test_unmet_peer_has_waiver_or_fix` | **red** | A non-optional "not met" row needs a `waiver` that meets 5a.3. The object is complete. Every `live_gates` entry has exit 0 in `gate-results-p3`. Both browser gates are present. | Write `met` for a "not met" range, or drop a live gate: fail (A5, A6). |
+| `...test_hardcoded_vinext_paths_exist` | red (no install) | Each `vinext/dist/...` path in `apps/marketing/vitest.config.ts`, `apps/marketing/Dockerfile`, and `verify-vinext-runtime.mjs` exists in the installed package. At least 7 distinct paths are found. | Point one alias at a missing shim: fail. |
+| `P3T1PinInventoryTests.test_pin_inventory_matches_scan` | **red** | The `pin-inventory` block lists each tracked file that names `vinext` in `package.json`, `pnpm-workspace.yaml`, `.npmrc`, and `.pnpmfile.cjs`. The test rescans and compares. The stale `vinext@0.2.0` entry is a row with `changed: false`. At least 3 rows (A4). | Remove a row, or mark the stale entry as changed: fail. |
+| `P3T1ScopeTests.test_green_commits_in_scope` | **red** (env unset) | `P3_GREEN_COMMITS` lists the Green commits. Each commit touches only these paths: the two app `package.json` files, `pnpm-lock.yaml`, the evidence folder of this track, and `plan.md` of this track. It may also touch one flat `measure/runs/<track>/green-p3-*.log`. It may touch `measure/tech-debt.md` under the Phase 2 append rule. The test **fails** when the variable is unset (A4). | Add a stray file to a scratch commit: fail. |
+| `...test_denied_paths_untouched` | **red** (env unset) | No Green commit touches `pnpm-workspace.yaml`, `tests/security-upgrade-*.test.ts`, `apps/*/next-env.d.ts`, `.gitignore`, `apps/marketing/scripts/verify-vinext-runtime.mjs`, or `apps/marketing/vitest.config.ts`. | Touch one denied path: fail. |
+| `...test_lock_diff_in_scope` | **red** (env unset) | In the Green commits each lockfile change is inside the two app importer blocks or inside `packages:` and `snapshots:`. Another importer block must not change. | Edit another importer: fail. |
+| `...test_lock_key_changes_explained` | **red** | The `lock-key-changes` block lists the `packages:` keys added and removed. The test recomputes both sets from the Green diff. Each added key is vinext, a vinext dependency (from the registry output in the note), or an `explained_drift` entry with a reason. | Add an unexplained key: fail (A5). |
+| `P3T1GateEvidenceTests.test_gate_results_complete` | **red** | `gate-results-p3` has one entry for each gate id of 5a.6. Each has `command`, `exit`, `log`, `start_epoch`. Each exit follows the pass condition. Each log exists and is not empty. Each heavy command holds `HEAVY_PRIORITY=p2` and `heavy-run.sh`. | Remove an entry, or lower the priority: fail. |
+| `...test_log_claims_match_labels` | **red** | For each gate, the labeled lines `GATE=`, `EXIT=`, and `ELAPSED_S=` at the start of a log line equal the note entry. No `ELAPSED_S` is 1800 or more (lesson L7). | Edit the log or the note: fail (A3, A5). |
+| `...test_vitest_counts_match_logs` | **red** | The labeled lines `Test Files  N passed (N)` and `Tests  M passed (M)` equal the note counts. `H1` files are not fewer than `H0` files. `H1` passed tests are not fewer than `H0`. A failure after the bump must be in the `H0` failure set, compared by file and name (A3, A7). The command holds `--maxWorkers=1`. | Drop a test file from the run: fail (A4). |
+| `...test_warning_counts_match_logs` | **red** | For each build and install log, `warning_line_count` equals the number of lines that match `(?i)warn`, and `peer_line_count` equals the lines that match `(?i)unmet peer`. The test uses the whole log (A7). | Edit the log or a count: fail. |
+| `...test_verify_script_is_oracle` | **red** (env unset) | No Green commit changes `verify-vinext-runtime.mjs`. The script text still holds the checks `!== 200` and `!== 401`. The gate log `H1-verify-marketing` holds `PORT_FREE=1` and `EXIT=0`. | Weaken the script: fail. |
+| `...test_build_times_recomputed` | **red** | See 5a.7. The test recomputes each median and ratio from the labeled `BUILD_RUN=` lines. | Edit one value in the note: fail. |
+| `...test_oxc_lessons_complete` | **red** | See 5a.8. The block has each lesson id once. | Delete a row: fail (A3, A4). |
+| `...test_rollback_proven` | **red** | See 5a.8. | Break the command: fail. |
+| `...test_no_deploy_or_push_in_logs` | **red** | The gate logs hold 0 lines that match `git push\|vinext deploy\|gcloud\|wrangler`. A read error is a failure (A14). | Add a deploy line to a log: fail. |
+| Synthetic tests for the helpers | green (guard) | The scope helpers accept a good input and reject a bad one. The bad inputs are: a lock edit in another importer, `pnpm-workspace.yaml`, `apps/marketing/next-env.d.ts`, and a `.py` file in the run folder. | Break a helper: at least one case fails. |
+
+The Red run shows `FAILED (failures=N)` and no `errors=` part. An error (for example an
+`ImportError`) means a broken test, not a valid Red. A missing note must make a test `self.fail(...)`.
+It must not raise. Red parses `N` as a labeled integer and lists the green guards by name (A3).
+Red does not write counts into `spec.md` or `plan.md`.
+
+### 5a.6 Targeted Red command, Green gate, and heavy gates
+
+**RED_TEST_COMMAND** (light, exits non-zero at base):
+
+```
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v \
+  measure.tests.test_typescript7_native_migration_phase3_vinext
+```
+
+**GREEN_TEST_COMMAND** (run from the repo root of the Green worktree, in this order; stop at the
+first non-zero exit; `$WT` is that root; each `PORT` has no listener, checked with
+`ss -ltn "sport = :<port>"`):
+
+```
+HR() { HEAVY_PRIORITY=p2 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=5400 \
+  bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c "$1"; }
+cd "$WT" && \
+PYTHONDONTWRITEBYTECODE=1 P3_GREEN_COMMITS="<sha> <sha>" \
+  python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_vinext && \
+HR "cd $WT && set -o pipefail; rm -rf apps/activity-vinext-fixture/dist && pnpm --filter activity-vinext-fixture build" && \
+HR "cd $WT && set -o pipefail; rm -rf apps/marketing/dist && MARKETING_RUNTIME_SMOKE_PORT=4391 pnpm --filter marketing build" && \
+HR "cd $WT && set -o pipefail; pnpm --filter marketing exec vitest run --maxWorkers=1" && \
+HR "cd $WT && set -o pipefail; MARKETING_RUNTIME_SMOKE_PORT=4393 node apps/marketing/scripts/verify-vinext-runtime.mjs"
+```
+
+The `marketing build` script runs `vinext build` and then the verify script once. The last line runs
+the verify script a second time on the finished build, as the plan asks. The fixture has no test
+script, so the fixture row is the build and the probe `H1-probe-fixture`. The note records "no test
+script" and does not claim a pass (A5).
+
+Each gate below is one `HR` call. Each command starts with `set -o pipefail;`. Each log
+starts with the labeled lines `GATE=<id>` and `CMD=<command>`, and ends with `EXIT=<n>` and
+`ELAPSED_S=<n>`. Logs go to `evidence/phase3/raw-logs/<id>.log`. Prefix `P` rows prepare the
+worktree. Prefix `H0` rows run on the base tree (vinext 1.2.0). Prefix `H1` rows run after the bump.
+
+| Id | Command (inside `HR`) | Pass condition | Refutation |
+| --- | --- | --- | --- |
+| `P-install-base` | `pnpm install --frozen-lockfile`, then print `VINEXT=` from `node -p "require('vinext/package.json').version"` | Exit 0 and `VINEXT=1.2.0`. The log holds `DISK_FREE_MB=<n>`. | A different version means the base is wrong: stop. |
+| `P-prereq-build` | `pnpm --workspace-concurrency=1 --filter 'marketing^...' --filter 'activity-vinext-fixture^...' run build` | Exit 0 and `DIST_MISSING=0` (the count of imported workspace packages with no `dist/`). Not timed. | A package with no `dist/` fails the count. A failure that has no link to vinext ends `blocked`. |
+| `H0-types-marketing`, `H0-types-fixture` | `pnpm --filter <app> run check-types` | Record exit and `DIAGNOSTICS=<n>` (`rg -c 'error TS[0-9]+'`; exit 1 means 0; exit 2 stops the gate, A14). This is the base. | A base failure is a pre-existing result. `H1` compares with it. |
+| `H0-build-marketing`, `H0-build-fixture` | the build commands of the Green gate, with `T0=$(date +%s)` first | Exit 0. `NEWFILES=<n>` (`find <app>/dist -type f -newermt "@$T0"`) is 1 or more. | Stale `dist/` gives `NEWFILES=0` and fails (A5). |
+| `H0-probe-fixture` | Start `node node_modules/vinext/dist/cli.js start` in the fixture folder with `PORT`, `HOSTNAME=127.0.0.1`. Run `curl -s -o body.txt -w 'HTTP_STATUS=%{http_code}\n'`. Stop by the PID of `ss -ltnp` for the port. | `HTTP_STATUS=200` and `body.txt` holds `Verify the shared package renders under Vinext.` | A body with no marker: `rg` exits 1 and the gate fails. |
+| `H0-time-marketing`, `H0-time-fixture` | The timed loop of 5a.7 | Three lines `BUILD_RUN=` with `EXIT=0`. | See 5a.7. |
+| `H0-test` | `pnpm --filter marketing exec vitest run --maxWorkers=1` | Record exit, counts, and failures. This is the base. | A base failure is pre-existing. |
+| `H0-guard`, `H1-guard` | `pnpm exec vitest run --maxWorkers=1 tests/security-upgrade-version-guard.test.ts tests/security-upgrade-adversarial.test.ts` (root) | Exit 0 at both points. The lockfile floors and the React pin still hold. | A changed override or floor fails the guard. |
+| `H0-lint-marketing`, `H1-lint-marketing` | `pnpm --filter marketing run lint` | The exit code at `H1` equals the exit code at `H0`. | A new lint failure from the bump shows as a difference. |
+| `H0-vitest-list`, `H1-vitest-list` | `pnpm --filter marketing exec vitest list --filesOnly` | See lesson L8. | |
+| `G3-edit` (no gate) | Green edits the two `package.json` files to `TARGET` | `git diff --stat` shows exactly those two files. | |
+| `H1-install-refresh` | `pnpm install --no-frozen-lockfile` | Exit 0. The log holds `peer_line_count`. If the job hits the cap (exit 124), split it. Do not edit `pnpm-workspace.yaml`. | A "no mature matching version" error stops the task: ask the PM. Do not add `minimumReleaseAgeExclude`. |
+| `H1-install` | `pnpm install --frozen-lockfile` (the Cloud Build form) | Exit 0. The lockfile is up to date. | Edit one specifier in a scratch copy: the command must fail. |
+| `H1-types-marketing`, `H1-types-fixture` | as `H0` | Exit 0 and `DIAGNOSTICS=0`, or equal to `H0`. | A new diagnostic is a vinext type change. The TypeScript 7 trial must not blame it on TypeScript 7. |
+| `H1-build-marketing`, `H1-build-fixture` | as `H0` | Exit 0 and `NEWFILES` is 1 or more. | as `H0` |
+| `H1-probe-fixture` | as `H0` | `HTTP_STATUS=200` and the marker. | as `H0` |
+| `H1-verify-marketing` | `MARKETING_RUNTIME_SMOKE_PORT=<port> node apps/marketing/scripts/verify-vinext-runtime.mjs`, after the log lines `PORT_FREE=1` | Exit 0. The script answers 200 on `/` and 401 on `/api/campaigns`. | A squatter on the port: the adversarial role tests it (5a.9). |
+| `H1-time-marketing`, `H1-time-fixture` | the timed loop of 5a.7 | as `H0` | |
+| `H1-test` | as `H0` | Exit 0. Counts follow `test_vitest_counts_match_logs`. | |
+| `H1-seed-lint` | Seed A: add the untracked file `apps/marketing/app/__p3_seed__.ts` with the line `debugger;` (error level). Run the marketing lint script. Seed B: replace the file text with `const p3Unused = 1;` (warning level). Run the script again. Remove the file in a `trap`. | `SEED_A_EXIT` is non-zero. `SEED_B_EXIT=0` and `SEED_B_WARNINGS` is 1 or more: the shared config sets `no-unused-vars` to `warn`, and the script has no `--max-warnings`. Record that as a finding. The log holds `SEED_REMOVED=1` and `git status` shows no change. | Run with no seed: the exit must equal `H1-lint-marketing`. Lessons L2 and L3. |
+| `H1-seed-tsc` | The same, with `const p3: number = "a";` in `apps/marketing/app/__p3_seed__.ts`. Run `check-types`. | Exit is non-zero and the log holds `SEED_CODE=TS2322`. `SEED_REMOVED=1`. | Lesson L6. |
+| `H1-check-marketing` | `pnpm --filter marketing exec vinext check` | Informational. Record the exit and each issue class. It never fails the gate. | Lesson L15. |
+| `H1-why-next` | `pnpm --filter marketing why next` and `pnpm --filter activity-vinext-fixture why next`, at `H0` and `H1` | The output at `H1` equals the output at `H0`. | Lesson L13. |
+| `H1-browser-marketing`, `H1-browser-fixture` | Start `vinext start` for each app on a free port. Open `/` in a browser. Read the console. | `BROWSER_TOOL=<name>`, `CONSOLE_ERRORS=0`, `HYDRATION_WARNINGS=0`. The fixture check control gives a visible result. | A tool of `none` ends `blocked` (lesson L9). |
+| `R-rollback` | The rollback of 5a.8, after the Green commit | `ROLLBACK_BYTES_EQUAL=1` and `REAPPLY_BYTES_EQUAL=1`. | A wrong path gives 0 and fails. |
+
+Order: `P-install-base`, `P-prereq-build`, the `H0` rows, `G3-edit`, `H1-install-refresh`,
+`H1-install`, the `H1` rows, the Green commit, `R-rollback`. Heavy steps run one at a time. A gate
+may merge with another only if it keeps its own log and exit code. Each job must finish in less than
+1800 s. If a job hits the cap, split it by app or by test folder. Do not raise the priority.
+
+### 5a.7 Build-time method (before and after)
+
+Both conditions use the same worktree, the same Node (24.19.0), the same install state, and no
+other heavy job. The `H0` condition has vinext 1.2.0. The `H1` condition has `TARGET`.
+
+1. The gate build (`H0-build-*` or `H1-build-*`) runs first. It fills the caches the same way for
+   both conditions. It is not a timed run.
+2. One `HR` job per app and per condition runs the timed loop. It runs inside the job, so a lock
+   wait is not part of the value:
+
+   ```
+   for i in 1 2 3; do
+     rm -rf apps/<app>/dist
+     wait until load1 (from /proc/loadavg) is 1.5 or less, for at most 600 s
+     L=$(cut -d' ' -f1 /proc/loadavg); S=$(date +%s%N)
+     pnpm --filter <app> exec vinext build >"run-$i.log" 2>&1; RC=$?
+     E=$(date +%s%N)
+     echo "BUILD_RUN=$i EXIT=$RC MS=$(( (E-S)/1000000 )) LOAD1_START=$L NEWFILES=$(find apps/<app>/dist -type f -newermt "@$((S/1000000000))" | wc -l) VINEXT=$(node -p "require('vinext/package.json').version")"
+   done
+   ```
+
+3. The loop times `vinext build` alone. It leaves out the verify script, whose server start
+   adds a fixed delay. The gate build runs the whole `pnpm --filter marketing build` once.
+4. A run is valid when four rules hold. `EXIT=0`. `NEWFILES` is 1 or more. `LOAD1_START` is 1.5 or
+   less. `VINEXT` equals the condition (1.2.0 at `H0`, `TARGET` at `H1`). A run that fails a rule is
+   invalid. Repeat it. Record each repeat.
+5. The note block `build-times` holds these values for each app: the three `MS` values before, the
+   three after, and the two medians. It also holds `ratio` (the after median divided by the before
+   median, two decimals) and `performance_finding`. `performance_finding` is true when the ratio is
+   above 1.00. A slower result is a finding. It is not a regression. The plan text "Math reports 2
+   to 3 times faster" is not a claim of this task (A6).
+
+The test `test_build_times_recomputed` reads the labeled lines from the logs. It recomputes the
+medians and the ratio. It fails in three cases. The note differs from the logs. A run is invalid or
+a `VINEXT` label does not match its condition. `performance_finding` does not follow the ratio
+(A3, A5).
+
+### 5a.8 Oxc lessons and rollback
+
+Source: `/home/daniebo/Desktop/ra-math-advantage/measure/archive/vinext-oxc-toolchain_20261114/oxc-evidence.md`,
+sections 6, 8, and 11. The role reads it only. The block `oxc-lessons` holds one row for each
+lesson id below, with `disposition` (`check` or `defer`), `result` or `reason`, and `gate` or
+`owner`. A `check` row names an existing gate log. A `defer` row has a reason of 20 characters or
+more and an owner (a plan task or `tech-debt`).
+
+| Id | Math source | Disposition | What Green records, or the reason |
+| --- | --- | --- | --- |
+| L1 | §6 S2 Green record | **check** (light) | `rg -n 'oxlint' <manifests>` finds 0 hits (exit 1). No `.oxlintrc.json` exists. Math found no rule gap because no ESLint config remains. Here the ESLint config remains (`packages/config/eslint`, `apps/marketing/eslint.config.mjs`). Record both facts. |
+| L2 | §11 Lint | **check** | Gate `H1-seed-lint`: seed A (error level) makes the lint script exit non-zero. Seed B (warning level) exits 0, so the script does not enforce zero warnings. `H1-lint-marketing` equals `H0-lint-marketing`. |
+| L3 | §11 Lint, order step 3 | **defer** | Oxlint, a root `.oxlintrc.json`, and `--max-warnings 0` in the lint scripts. Reason: a tool migration and a script change are outside a pins-only task. Seed B shows the gap. Owner: Phase 5 task "Move linting off the TypeScript 5 API". |
+| L4 | §11 Format, order step 5 | **defer** | oxfmt, a format-only commit, and `.git-blame-ignore-revs`. Reason: a repo-wide reformat touches thousands of files. The formatter today is Prettier (catalog). Owner: a separate formatting decision by the PM. |
+| L5 | §11 Type check, order step 4 | **defer** | `TSRS_FAST=1 oxlint --type-aware --type-check`. Reason: the spec keeps tsrs out (FR-4, Out of Scope), and oxlint is not installed. Owner: none in this track. |
+| L6 | §11 Type check | **check** | Gate `H1-seed-tsc`: the named fallback `tsc --noEmit` (the only type-check line here) reports TS2322 on a seeded probe. Record `SEED_CODE=TS2322`. |
+| L7 | §8 heavy-run 1800 s cap | **check** | Each gate log has `ELAPSED_S` below 1800 and no exit 124. A gate that hit the cap shows how Green split it. |
+| L8 | §8 vitest `include` gap | **check** | Compare `git ls-files 'apps/marketing/**/*.test.*'` with the `vitest list --filesOnly` output. Unmatched files must be 0, or each is a row with a reason. The `H1` file count is not below `H0` (A4). |
+| L9 | §8 missing browser tool | **check** | Record `BROWSER_TOOL=<name or none>` (try `agent-browser`, then the repo Playwright, then the OpenChamber browser). `none` ends `blocked`. |
+| L10 | §8 `vinext build` changes tracked files | **check** | After each build run `git status --porcelain --untracked-files=no`. Record `TRACKED_CHANGED=<n>` and the names. Also record each new untracked folder (for example `.vinext/`). Restore tracked files with `git checkout -- <path>` before the commit. Stage none of them. |
+| L11 | §8 `vinext build` (ignore and commit) | **defer** | A `.gitignore` entry for `.vinext/`, and a commit of the generated `next-env.d.ts`. Reason: both are outside the pins-only scope, and the owner holds uncommitted edits of both files in the main checkout. Owner: `tech-debt` (append-only row). |
+| L12 | §8 `eslint-config-next` config load | **check** | `rg -n 'eslint-config-next' apps/marketing apps/activity-vinext-fixture packages/config` finds 0 hits (exit 1). The lint gate loads its config with the same exit as `H0`. |
+| L13 | §8 dead dependency reinstalls `next` | **check** | `rg` finds no `next` or `eslint-config-next` declaration in the two manifests. `H1-why-next` equals the `H0` output. Record the cause of `next` in the marketing tree: the peer in `packages/api/package.json:73`. |
+| L14 | §8 removal of `next` | **defer** | Removing `next` from overrides and manifests. Reason: `packages/api` has `next` as a required peer, and other apps declare it. A removal changes files outside this task. Owner: none in this track. |
+| L15 | §8 `vinext check` | **check** | Gate `H1-check-marketing`. Informational: record the exit and the issue classes. It never fails the task. |
+| L16 | §8 no Vite config, and the `next/*` alias map | **check** | Both `vite.config.ts` files exist and call `vinext()`. Each alias target of `apps/marketing/vitest.config.ts` exists in 1.4.6 (`test_hardcoded_vinext_paths_exist`). |
+| L17 | §8 TypeScript 7 rows (`typescript6` alias, `@typescript/native` bin shadow, tsconfig sweep, `tsc` heap) and tsrs rows (platform binary, scope) | **defer** | Reason: they need a TypeScript 7 install. Owner: the later Phase 3 tasks (trial install and type checks). The tsrs rows stay out of the track. |
+| L18 | §8 rows that only Math has (Playwright `webServer`, `gates.sh` helper, S2 Red exception, ESLint "before" timing, npm re-resolve), and §11 order steps 2, 6, 7 | **defer** | Reason: this repository has no such script, uses exact pnpm pins, and plans steps 2, 6, and 7 in later tasks. Owner: the later Phase 3 tasks and Phase 5. Record `rg -n 'webServer' apps/marketing apps/activity-vinext-fixture` (exit 1) so the row is not empty (A4). |
+
+`test_oxc_lessons_complete` requires exactly 18 rows with the ids L1 to L18 (a labeled integer, A3).
+The expected row count changes only if a strategy amendment changes this table.
+
+**Rollback.** The `rollback` block holds the command and a proof. The command has two forms.
+
+Before the Green commit merges:
+
+```
+git checkout <role_base_sha> -- apps/marketing/package.json apps/activity-vinext-fixture/package.json pnpm-lock.yaml \
+  && pnpm install --frozen-lockfile
+```
+
+After it merges: `git revert <green sha>`, then `pnpm install --frozen-lockfile`. No deploy and no push.
+Here `<role_base_sha>` is the commit just before the Green commit. The gate `R-rollback` runs the
+file restore from the first form, checks `git diff --quiet <role_base_sha> -- <three paths>` and
+that the manifest text shows `"vinext": "1.2.0"`, and prints `ROLLBACK_BYTES_EQUAL=1`. It then
+restores the Green commit with `git checkout HEAD -- <three paths>` and prints `REAPPLY_BYTES_EQUAL=1`.
+Byte-equal files give the same frozen install as `H0`, so the gate needs no second install. The
+test `test_rollback_proven` checks the command text names all three paths, both labels are 1, and
+the `H0` logs show `VINEXT=1.2.0`.
+
+### 5a.9 Order of work, closeout, adversarial attacks, and anti-pattern coverage
+
+**Order of work.**
+
+1. **Orchestrator.** Set the task to `[~]` (A8; section 8, question 5). Capture `phase_base_sha`
+   (5a.4).
+2. **Red** (light). Commit the test file. Run `RED_TEST_COMMAND`. Report `N` and the green guards.
+3. **Green, light.** Gate G3.0 (5a.3). Write `peer-check-p3` and `pin-inventory`.
+4. **Green, heavy.** `P-install-base`, `P-prereq-build`, the `H0` rows.
+5. **Green, edit.** Edit the two manifests. Run `H1-install-refresh` and `H1-install`.
+6. **Green, heavy.** The `H1` rows. Write `build-times`, `oxc-lessons`, `lock-key-changes`, and
+   `gate-results-p3`.
+7. **Green, commit.** Stage only the allowed paths (5a.5). Run `R-rollback`. Write the Green log
+   `green-p3-<sha>.log` and the `rollback` block.
+8. **Gate.** The orchestrator runs `GREEN_TEST_COMMAND` with the full `P3_GREEN_COMMITS` list and
+   records the list in its run log.
+
+**Closeout.** `plan.md` marks the task `[x]` with the commit SHA and the note path, only after the
+gate exits 0 (A6). The text says "bumped" and never "upgraded in production". The manual
+verification task of Phase 3 stays open until the other tasks end. The Green commit does not merge
+to master before the orchestrator records the waiver of 5a.3 in `plan.md`. The `H1` type, build,
+and test rows are the base for the 5.9.3 control of the later trial.
+
+**Intentionally red tests after Green (aggregate-suite handling).** The Phase 2 module asserts the
+Phase 2 end state (vinext 1.2.0). The bump changes that state on purpose. Under default C these six
+Phase 2 tests fail after Green:
+
+- `P2T2DeclarationTests.test_both_apps_declare_candidate`
+- `P2T2DeclarationTests.test_lock_importers`
+- `P2T2DeclarationTests.test_lock_has_no_old_version`
+- `P2T2DeclarationTests.test_installed_matches_declared`
+- `P2T2PeerGuardTests.test_installed_peers_satisfied` (React 19.2.9 against `^19.3.1`)
+- `P2T3ResolvedNoteTests.test_resolved_after_matches_disk`
+
+The module is history of a closed phase. Nobody edits it. Nobody edits the Phase 2 note. The
+orchestrator runs this regression command after Green and compares the failure names with the list
+above. The failure set must equal the list. A missing name means the bump is absent. An extra name
+is a regression (A7). The command skips `P2T2ScopeTests`, which needs the Phase 2 commit list.
+
+```
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v \
+  measure.tests.test_typescript7_native_migration_phase2.P2CheckerTests \
+  measure.tests.test_typescript7_native_migration_phase2.P2T1PeerNoteTests \
+  measure.tests.test_typescript7_native_migration_phase2.P2T2DeclarationTests \
+  measure.tests.test_typescript7_native_migration_phase2.P2T2PeerGuardTests \
+  measure.tests.test_typescript7_native_migration_phase2.P2T2ScopeRuleTests \
+  measure.tests.test_typescript7_native_migration_phase2.P2T2BookkeepingRuleTests \
+  measure.tests.test_typescript7_native_migration_phase2.P2T3ResolvedNoteTests
+```
+
+Under option A or B the list changes. The orchestrator recomputes it from the same command. A
+`measure/tests` run is not part of a CI aggregate gate today (`rg` finds no call in the workflows,
+`measure/doctor.sh`, or `package.json`). If that changes, add the six names as a known failure.
+
+**Adversarial attacks** (narrow). The role gate uses the `H1-test` command as `PROJECT_TESTS`.
+
+1. Set the lock specifier of one app to `1.4.5` and confirm `test_lock_importers_resolve_target`
+   and `pnpm install --frozen-lockfile` fail.
+2. Leave a stale `dist/` and confirm `NEWFILES=0` fails the build gate.
+3. Start a squatter on the verify port that answers 200 on `/` and 401 on `/api/campaigns`. Run the
+   verify script. The script may pass falsely, because it polls the port and checks the child exit
+   only. If it does, report a finding for tech debt. Do not edit the script (it is the oracle).
+4. Flip the React row of `peer-check-p3` to `met` and confirm `test_peer_rows_recomputed` fails.
+5. Add a third manifest that declares vinext and confirm the exact-two test fails.
+6. Add a `build-times` run with `VINEXT=1.2.0` under the `H1` label and confirm the label check fails.
+7. Touch `pnpm-workspace.yaml` in a scratch Green commit and confirm `test_denied_paths_untouched` fails.
+8. Request `/api/campaigns` with no cookie, a malformed cookie, and a forged header. Each answer must
+   be 401.
+
+**Anti-pattern coverage for this task.**
+
+| Anti-pattern | Defense in this task |
+| --- | --- |
+| A3 | Counts are labeled: `BUILD_RUN=`, `EXIT=`, `ELAPSED_S=`, `DIST_MISSING=`, `Test Files  N passed (N)`, `Tests  M passed (M)`. The vinext declaration count is exactly 2. The lesson count is exactly 18. |
+| A4 | Empty rows fail: the pin inventory (3 or more), the peer rows (6 or more), the lessons (18), and the alias paths (7 or more). `P3_GREEN_COMMITS` unset fails. A build with no new file fails. A test run with fewer files than `H0` fails. |
+| A5 | The note repeats nothing it cannot cite. Each repo value cites `path:line`. Each gate claim matches the labeled lines of its log. The tests recompute the medians, the ratios, and the lock key sets. The fixture row says "no test script". |
+| A6 | `plan.md` says "bumped" only after the gate exits 0. A "not met" peer is never written as "met". The Math speed claim is not copied into this task. |
+| A7 | Failures compare by file and name. Warning and peer counts use whole logs with no pre-filter. The Phase 2 expected-red check compares names, not a count. |
+| A8 | The orchestrator sets `[~]` before Red. |
+| A9 | The test file uses `track_dir_resolve`. |
+| A14 | Every `rg` detector treats exit 2 as a failure. Exit 1 with no output means 0 hits. |
+| A16 | A16 forbids a worktree. The brief and section 8, question 10 record the exception. The main checkout holds uncommitted owner edits, and no role works in it. |
+
+### 5a.10 Evidence note and files
+
+The note is `evidence/phase3-vinext-1-4-6.md`. Raw logs are in `evidence/phase3/raw-logs/`. The note
+holds seven fenced JSON blocks, each with the name given here:
+
+| Block | Content |
+| --- | --- |
+| `peer-check-p3` | The registry output, the peer rows, the dependencies, and the `waiver` object if a row is "not met". |
+| `pin-inventory` | Each tracked file that names `vinext`, with `kind` and `changed`. |
+| `lock-key-changes` | The `packages:` keys added and removed, and each `explained_drift` entry. |
+| `gate-results-p3` | One entry for each gate id, with `command`, `exit`, `log`, `start_epoch`, and the counts. |
+| `build-times` | The values of 5a.7 for each app. |
+| `oxc-lessons` | The 18 rows of 5a.8. |
+| `rollback` | The two command forms and the proof labels. |
+
+The note also names the resolved `vinext`, `vite`, and `react` versions and the commands that
+reproduce them (`pnpm why vinext`, `pnpm why vite`, `pnpm why react`). The note adds no hash field.
+
 ## 6. Phase 4 outline: Cloudflare preparation
 
 The full section comes before Phase 4 starts. Phase 4 changes no code. Its deliverable is
@@ -609,6 +1043,11 @@ runs, and one rollback command. Risk will be high or critical for the CI and lin
 | 1 | vinext 1.4.3 needs React `^19.3.1`. The repository uses React 19.2.9 in every app. Which option? (a) Use the newest 1.x whose peers fit the current repository (vinext 1.2.0 looks right: React `^19.2.6`, and the plugin-rsc peer is optional; Task 1 must verify). (b) Move React to 19.3.1 for the whole repository, in its own track. (c) Skip Phase 2 and start Phase 3 on 0.2.0. | Task 1 runs and records the result. Phase 2 then stops. The orchestrator asks the PM. Strategy recommendation: option (a), because it keeps the change inside the two apps and reaches vinext 1.x. If Daniel requires "current" (1.4.3), choose (b) as a separate track. |
 | 2 | A16 forbids a worktree. The plan requires a trial worktree in Phase 3. May Phase 3 use one? | Yes. The plan and the spec are newer than A16 and name the worktree. The orchestrator records the exception in the Phase 3 run log. The repository already has 8 worktrees, so A16 is not enforced today. |
 | 3 | Phase 3 needs a 5.9.3 control run (RSS, time, tests) in the worktree. Is the extra heavy time acceptable? | Yes. Without it the memory table and the test classification are not valid. |
-| 4 | The spec says "after 22:00 ICT" but gives no end time. | The window ends at 06:00 ICT. |
+| 4 | The spec says "after 22:00 ICT" but gives no end time. | **Superseded 2026-11-28** (PM, 07:35): the window is lifted. The old default (end at 06:00 ICT) applied to Phase 2 only. |
 | 5 | The plan marks tasks `[ ]`. The A8 rule and the Mid Red gate need `[~]`. | The orchestrator's plan-update step sets the current task to `[~]` before Mid Red. |
 | 6 | The commit header in the task text is 103 characters. The limit is 100. | Use `docs(measure): rewrite the ts7 test strategy (track_id: typescript7_native_migration_20260710)` (94 characters). |
+| 7 | vinext 1.4.6 needs React `^19.3.1`. The repository pins React 19.2.9, and a root test and `measure/tech-debt.md:25` guard that pin. The PM asked for 1.4.x and did not name React. Which option? (A) stay on 1.2.0; (B) move React repo-wide in its own track; (C) install 1.4.6 under React 19.2.9, record the unmet peer, and let live gates decide; (D) use 1.4.7. | **C**, under the three conditions of 5a.3. AGENTS.md section 5 says to act on the default and report it. The PM can reverse it. Recommendation if C fails or the PM wants a clean peer: B in its own track. |
+| 8 | The plan names 1.4.6 as "the latest 1.4.x". The registry now shows 1.4.7 (published 2026-11-26). Which version? | 1.4.6, as the PM and the done-when text name it. The peers are the same. One constant (`TARGET`) changes if the PM wants 1.4.7. |
+| 9 | The bump makes six Phase 2 tests fail on purpose (5a.9). Edit them or freeze them? | Freeze them. The module is history of a closed phase. The orchestrator checks the failure names against the list in 5a.9. |
+| 10 | A16 forbids a worktree, and the main checkout holds uncommitted owner edits of two `next-env.d.ts` files. Where does Green work? | In a dedicated worktree from the `phase_base_sha`, with its own install. The orchestrator records the A16 exception. Each heavy job stays under 1800 s. |
+| 11 | `spec.md` (Constraints, "Time window") and the `plan.md` header still say heavy steps run after 22:00 ICT. | `plan.md` carries a "Lifted 2026-11-28 (PM)" line. `spec.md` is not edited here. The owner of the spec may add the same line. |
