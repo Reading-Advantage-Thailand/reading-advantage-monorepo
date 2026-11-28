@@ -172,7 +172,7 @@ PM 2026-11-23: parked until after the 30 Nov launch.
 > Phase 3 target (PM 2026-11-21): report to the PM by 2026-11-28.
 > Orchestrator default 2026-11-28: new report target 2026-12-02 (the 2026-11-28 target is missed).
 
-- [x] Task: Bump vinext 1.2.0 to the latest 1.4.x and adopt the Oxc lessons of the Math test bed.
+- [x] Task: Bump vinext 1.2.0 to the latest 1.4.x and adopt the Oxc lessons of the Math test bed. [commit: 88d2b864a]
   - Closed as a record, option A (orchestrator 2026-11-28): vinext 1.4.6 fails both builds under React 19.2.9 (needs 19.3.1). vinext stays 1.2.0. Evidence: 9256de54b, jr-green-058dfd5.log, evidence/phase3/raw-logs/. Before medians: marketing 5603 ms, fixture 4457 ms; after: none.
   - PM 2026-11-21 (stack modernization): bump vinext 1.2.0 -> latest 1.4.x and adopt the Oxc lessons of the Math test bed (ra-math-advantage measure/archive/vinext-oxc-toolchain_20261114/oxc-evidence.md).
   - What: find every package that pins vinext 1.2.0. `apps/marketing` and `apps/activity-vinext-fixture` pin it today. `grep` the repo for other manifests, workspace files, and lockfile entries.
