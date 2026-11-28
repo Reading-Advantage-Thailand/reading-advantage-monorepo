@@ -217,13 +217,18 @@ PM 2026-11-23: parked until after the 30 Nov launch.
 - All six Phase 2 tests stay green because no bump shipped. No app file and no generated `next-env.d.ts` changed. No other pin changed. No deploy and no push.
 - The PM must choose option B of section 5a.3 (a repo-wide React 19.3.1 move in its own track) or another option before this task can restart.
 
-- [~] Task: Create the trial worktree with the latest stable TypeScript 7.0.x.
+- [x] Task: Create the trial worktree with the latest stable TypeScript 7.0.x. [commit: 366734bb6]
+  - Record: `evidence/phase3/trial/trial-worktree.json`; raw logs in `evidence/phase3/trial/raw-logs/`.
   - What: make a git worktree on a new branch from master. Install the latest stable 7.0.x
     there only. 7.1 beta is not the gate version.
   - Files: the worktree only. The main checkout and its `pnpm-lock.yaml` stay unchanged.
   - Done when: `git -C <main> diff --quiet -- pnpm-lock.yaml package.json pnpm-workspace.yaml`
     exits 0 after the install; the worktree reports `tsc --version` 7.0.x with the exact number
     recorded.
+  - Result: trial worktree `/home/daniebo/Desktop/rama-worktrees/ts7-trial` on `ts7/trial-p3`, base
+    `dd669e5f8`; install commit `b345d890f` (two pin files); `tsc --version` gives `Version 7.0.2`.
+    Snapshots before and after are equal for both directories (`MAIN_SNAPSHOT_EQUAL=1`,
+    `ROLE_SNAPSHOT_EQUAL=1`). Evidence: `jr-green-dd669e5.log`.
 - [ ] Task: Run the type checks on the trial install and record memory and time.
   - What: run `check-types` in each workspace that has the script, one at a time under `heavy-run.sh`,
     with peak RSS (`/usr/bin/time -v`) and wall time. Use the same method as
@@ -342,6 +347,21 @@ PM 2026-11-23: parked until after the 30 Nov launch.
 - Orchestrator decisions in force (one line each): Q1 run all 43 `check-types` workspaces and check the 31 Phase 1 names by name. Q2 as written: the 5.9.3 control runs inside TR4. Q3 control tests run only for workspaces that fail under 7.0.x. Q4 TR5 fixes ship as patch files under `evidence/phase3/trial/patches/` and do not land on master in Phase 3. Q5 TR8 removes the trial branch with `git branch -D` after every commit above the base has a patch. Q6 A16 worktree exception recorded: the trial runs in `/home/daniebo/Desktop/rama-worktrees/ts7-trial` on branch `ts7/trial-p3` because the main checkout must stay unchanged.
 - Stale Phase 2 module failures on master 190c38252 (section 5b.10 references): `test_repo_values_are_cited`, `test_green_commits_in_scope`, `test_lock_diff_in_scope`, `test_gate_results_complete`, `test_probe_logs_hold_status`.
 - TR1 stays `[~]`. Green creates the worktree; this role does not.
+
+#### TR1 Green evidence (Junior Green, 2026-11-28)
+
+- Role: Measure Junior Green. Model: opencode-go/hy4-flash-free#high. Task TR1 only.
+- phase_base_sha: `7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e`. role_base_sha: `dd669e5f8`.
+- Implementation commit: `366734bb6191c166845dacb8a7ede7934c163e70`. Plan evidence: the commit that adds this block.
+- Trial base: `dd669e5f8429df04c427a8b6ec519829b0cb13c6` (`origin/master` after fetch). Install commit on `ts7/trial-p3`: `b345d890fe8dea7309685202824639cc4c8623c8` (only `pnpm-lock.yaml` and `pnpm-workspace.yaml`).
+- Targeted Red command rerun before implementation: exit 1, `Ran 34 tests`, `FAILED (failures=14)`, no errors. No Red test edited.
+- GREEN_TEST_COMMAND exit 0: `Ran 34 tests`, `OK`. The vinext module still exits 0 (`OK (skipped=21)`).
+- `bash measure/doctor.sh` exits 1 on the pre-existing V2 reconciliation manifest hash mismatch. No architecture source changed in this task.
+- Gates, all exit 0: TR1-registry (light), TR1-snapshot-before (light), TR1-worktree (light), TR1-install-A (heavy p2, `TSC_VERSION=Version 5.9.3`, 13 s), TR1-build-dist-A (heavy p2, `DIST_MISSING=0`, 121 s), TR1-swap-B (heavy p2, one pnpm process, 22 s), TR1-swap-B-why (heavy p2, `TS_SINGLE=1`, 3 s), TR1-install-commit (light), TR1-lock-scan (light), TR1-snapshot-after (light). No gate exceeded 1800 s and no two jobs overlapped.
+- Exact compiler in the trial: `Version 7.0.2`. Disk before 543446 MB and after 543380 MB. Both snapshots equal before and after; `after_epoch` follows the swap end.
+- PM-directed trial-only settings: `.puppeteerrc.cjs` from master `3d87a41ce` (`skipDownload: true`, staged in the trial, not in the install commit); `supportedArchitectures` linux/x64/glibc at the end of the trial `pnpm-workspace.yaml` (four added lines; lockfile churn expected). No such setting was made in the main repo, where ten Dockerfiles build on `node:22-alpine`.
+- Finding: TypeScript 7.0.2 fetches every platform binary even with `supportedArchitectures` set. Earlier hangs came from two pnpm versions sharing the v11 store index; the final swap used one pnpm process with `--config.manage-package-manager-versions=false`.
+- No push and no deploy. No product file, manifest, or lockfile changed in `$MAIN` or `$ROLE_WT`.
 
 ## Phase 4: Cloudflare preparation, not the move (PM step 2)
 

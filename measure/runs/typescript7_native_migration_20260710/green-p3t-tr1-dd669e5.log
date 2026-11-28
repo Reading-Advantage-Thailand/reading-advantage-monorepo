@@ -13,9 +13,9 @@
 - Red commits inside `phase_base_sha..HEAD`: `f2cb8367f` (Red tests), `dd669e5f8` (Red role log).
 - Trial base (`P3_TRIAL_BASE`): `dd669e5f8429df04c427a8b6ec519829b0cb13c6` (`origin/master` after fetch).
 - Trial install commit on `ts7/trial-p3`: `b345d890fe8dea7309685202824639cc4c8623c8`. It holds only `pnpm-lock.yaml` and `pnpm-workspace.yaml`.
-- Implementation commit: PENDING.
-- Plan-evidence commit: PENDING.
-- Final Green HEAD: PENDING.
+- Implementation commit: `366734bb6191c166845dacb8a7ede7934c163e70`.
+- Plan-evidence commit: this commit (SHA in the final reply).
+- Final Green HEAD: the plan-evidence commit (SHA in the final reply).
 
 ## Targeted Red command (rerun before implementation)
 
@@ -50,9 +50,9 @@
 
 ## Verification
 
-- GREEN_TEST_COMMAND exit: PENDING.
-- `measure.tests.test_typescript7_native_migration_phase3_vinext` exit: PENDING.
-- `bash measure/doctor.sh` exit: PENDING.
+- GREEN_TEST_COMMAND exit: 0; `Ran 34 tests`; `OK`.
+- `measure.tests.test_typescript7_native_migration_phase3_vinext` exit: 0; `OK (skipped=21)`.
+- `bash measure/doctor.sh` exit: 1; pre-existing V2 reconciliation manifest hash mismatch. No architecture source changed.
 
 ## New files
 
@@ -70,11 +70,11 @@ phase_base_sha: 7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e
 role_base_sha: dd669e5f8
 red_command: PYTHONDONTWRITEBYTECODE=1 P3_PHASE_BASE=7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialWorktreeTests
 red_result: exit 1; Ran 34 tests; FAILED (failures=14); no errors; no Red test edited
-implementation_commits: PENDING
-plan_evidence_commit: PENDING
-green_test_command: PENDING
-green_test_exit: PENDING
-doctor_exit: PENDING
+implementation_commits: 366734bb6191c166845dacb8a7ede7934c163e70
+plan_evidence_commit: this plan-evidence commit; SHA in the final reply
+green_test_command: PYTHONDONTWRITEBYTECODE=1 P3_PHASE_BASE=7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e P3_GREEN_COMMITS="366734bb6191c166845dacb8a7ede7934c163e70" python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialWorktreeTests
+green_test_exit: 0; Ran 34 tests; OK
+doctor_exit: 1; pre-existing architecture reconciliation hash mismatch; no architecture source changed
 tsc_version: Version 7.0.2
 snapshot_result: MAIN_SNAPSHOT_EQUAL=1; ROLE_SNAPSHOT_EQUAL=1; after_epoch 1795856241
 trial_install_commit: b345d890fe8dea7309685202824639cc4c8623c8 (only pnpm-lock.yaml and pnpm-workspace.yaml)
