@@ -53,7 +53,7 @@ role_base_sha: 058dfd571f929c47c55c64c0077afcc256e13fa1
 red_command: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_vinext
 red_result: exit 1; Ran 29 tests; FAILED (failures=25); no errors; 7 guards pass
 implementation_commits: none; option C failed the live build gates, so no bump was committed
-plan_evidence_commit: pending
+plan_evidence_commit: 9256de54b999a1f72d8e0476731a225ad7ff7693
 green_test_exit: not run; no implementation to gate
 doctor_exit: not run; no implementation to gate
 before_build_median_ms: marketing 5603; activity-vinext-fixture 4457
