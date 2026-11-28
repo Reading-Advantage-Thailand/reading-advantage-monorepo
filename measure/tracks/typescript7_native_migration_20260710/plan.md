@@ -217,7 +217,7 @@ PM 2026-11-23: parked until after the 30 Nov launch.
 - All six Phase 2 tests stay green because no bump shipped. No app file and no generated `next-env.d.ts` changed. No other pin changed. No deploy and no push.
 - The PM must choose option B of section 5a.3 (a repo-wide React 19.3.1 move in its own track) or another option before this task can restart.
 
-- [ ] Task: Create the trial worktree with the latest stable TypeScript 7.0.x.
+- [~] Task: Create the trial worktree with the latest stable TypeScript 7.0.x.
   - What: make a git worktree on a new branch from master. Install the latest stable 7.0.x
     there only. 7.1 beta is not the gate version.
   - Files: the worktree only. The main checkout and its `pnpm-lock.yaml` stay unchanged.
@@ -327,6 +327,21 @@ PM 2026-11-23: parked until after the 30 Nov launch.
 - Spec fix: the `spec.md` "Time window" bullet now says the window is lifted (PM 2026-11-28), in one line.
 - Task markers stay `[ ]`. The orchestrator sets `[~]` before each Red round (A8).
 - This role changed no product code, no test, no `package.json`, no lockfile, and no manifest.
+
+#### TR1 Red evidence (Mid Red, 2026-11-28)
+
+- Role: Measure Mid Red. Model: muse-spark-1.3-contributor. Task TR1 only (the trial worktree).
+- phase_base_sha: `7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e` (resolves). role_base_sha: `4491b47ce` (resolves; the pre-role HEAD).
+- New test file: `measure/tests/test_typescript7_native_migration_phase3_trial.py`. It holds the classes `P3TrialHelperTests`, `P3TrialScopeTests`, and `P3TrialWorktreeTests`, plus the pure helpers that later TR rounds reuse (`latest_stable_7_0`, `parse_time_v`, `parse_diagnostics`, `classify`, `verdict`, `test_command`, `lock_peer_consumers`, `escape_added`). It imports `track_dir_resolve` from the frozen Phase 2 module.
+- Red command: `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialWorktreeTests`.
+- Red result: exit non-zero with assertion failures only. The run has no `errors=` part. The full log is `measure/runs/typescript7_native_migration_20260710/mid-red-4491b47.log`.
+- Each failure comes from the missing `evidence/phase3/trial/trial-worktree.json` record or the unset `P3_GREEN_COMMITS` variable. No test raises an exception at base.
+- Tests that fail at base: `P3TrialScopeTests.test_green_commits_in_scope`, `P3TrialScopeTests.test_denied_paths_untouched`, `P3TrialWorktreeTests.test_record_parses`, `P3TrialWorktreeTests.test_registry_choice_is_latest_stable`, `P3TrialWorktreeTests.test_tsc_versions_match_logs`, `P3TrialWorktreeTests.test_single_typescript_after_swap`, `P3TrialWorktreeTests.test_worktree_placement`, `P3TrialWorktreeTests.test_base_follows_strategy`, `P3TrialWorktreeTests.test_main_snapshots_unchanged`, `P3TrialWorktreeTests.test_install_commit_only_pins`, `P3TrialWorktreeTests.test_lock_keys_explained`, `P3TrialWorktreeTests.test_gate_entries_valid`, `P3TrialWorktreeTests.test_disk_floor`, `P3TrialWorktreeTests.test_no_deploy_or_push_in_logs`.
+- Tests that pass at base (guards): the seventeen `P3TrialHelperTests` cases and the three synthetic `P3TrialScopeTests` cases (`test_scope_helper_accepts_allowed_paths`, `test_scope_helper_rejects_product_paths`, `test_tech_debt_diff_rule`). They guard the helpers and the scope rule before any evidence exists.
+- The frozen Phase 2, vinext, and Phase 1 modules are unchanged. No production code, manifest, or lockfile changed. No install, build, or heavy job ran. The vinext module still exits 0.
+- Orchestrator decisions in force (one line each): Q1 run all 43 `check-types` workspaces and check the 31 Phase 1 names by name. Q2 as written: the 5.9.3 control runs inside TR4. Q3 control tests run only for workspaces that fail under 7.0.x. Q4 TR5 fixes ship as patch files under `evidence/phase3/trial/patches/` and do not land on master in Phase 3. Q5 TR8 removes the trial branch with `git branch -D` after every commit above the base has a patch. Q6 A16 worktree exception recorded: the trial runs in `/home/daniebo/Desktop/rama-worktrees/ts7-trial` on branch `ts7/trial-p3` because the main checkout must stay unchanged.
+- Stale Phase 2 module failures on master 190c38252 (section 5b.10 references): `test_repo_values_are_cited`, `test_green_commits_in_scope`, `test_lock_diff_in_scope`, `test_gate_results_complete`, `test_probe_logs_hold_status`.
+- TR1 stays `[~]`. Green creates the worktree; this role does not.
 
 ## Phase 4: Cloudflare preparation, not the move (PM step 2)
 
