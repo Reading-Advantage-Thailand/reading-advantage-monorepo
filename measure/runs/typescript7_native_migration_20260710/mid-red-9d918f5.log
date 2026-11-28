@@ -1,0 +1,41 @@
+# Measure Mid Red report: Phase 3 Task 1 (vinext 1.4.6 Red checks)
+
+- Role: Measure Mid Red. Model: muse-spark-1.3-contributor. Track: `typescript7_native_migration_20260710`.
+- Phase: `Phase 3: TypeScript 7 trial (PM step 1)` (id P3). Scope: Task 1 only (the vinext bump).
+- Worktree: `/home/daniebo/Desktop/rama-worktrees/ts7-phase3`, branch `ts7/phase3`.
+- Status: complete. The Red tests fail for the intended reason. No push. No deploy.
+- Dirty paths at start: none. `git status --short` was empty. No unrelated work exists.
+
+## SHAs
+
+- Supplied `phase_base_sha`: `df256903d8f472f094ba4b51635afc0c11e674e6` (resolves; the strategy cross-reference fix).
+- Supplied `role_base_sha`: `9d918f5d2` (resolves; the pre-role HEAD).
+- `git merge-base --is-ancestor df256903d8f472f094ba4b51635afc0c11e674e6 9d918f5d2` exits 0.
+
+## Work
+
+- Wrote `measure/tests/test_typescript7_native_migration_phase3_vinext.py`. It encodes `TARGET = 1.4.6`. It asserts no React 19.3.x pin. It reuses the Phase 2 helpers by import. The frozen Phase 2 module is unchanged.
+- Ran the Red command. It exits non-zero with assertion failures only. No `errors=` part. No install, build, or heavy job ran.
+- Set the Task 1 marker to `[~]` in `plan.md` and added the Red evidence block with the failing test names.
+- Orchestrator decisions applied: Q1 option C is in force (install 1.4.6 under React 19.2.9, record the unmet peer, live gates decide). Q2 keeps the target at 1.4.6.
+
+## Red result
+
+- Summary: `Ran 29 tests`, `FAILED (failures=25)`, no errors. Three methods hold two failing subtests each, so the failing methods are 22.
+- Green guards at base: `P3T1TargetTests.test_target_is_stable_1_4_x`, `P3T1TargetTests.test_exactly_two_manifests_declare_vinext`, and the five `P3HelperTests` cases.
+- Failing methods: `P3T1TargetTests.test_both_apps_pin_target`, `P3T1LockTests.test_lock_importers_resolve_target`, `P3T1LockTests.test_lock_has_one_vinext_key`, `P3T1LockTests.test_installed_matches_target`, `P3T1PeerTests.test_note_blocks_parse`, `P3T1PeerTests.test_peer_rows_recomputed`, `P3T1PeerTests.test_unmet_peer_has_waiver_or_fix`, `P3T1PeerTests.test_hardcoded_vinext_paths_exist`, `P3T1PinInventoryTests.test_pin_inventory_matches_scan`, `P3T1ScopeTests.test_green_commits_in_scope`, `P3T1ScopeTests.test_denied_paths_untouched`, `P3T1ScopeTests.test_lock_diff_in_scope`, `P3T1ScopeTests.test_lock_key_changes_explained`, `P3T1GateEvidenceTests.test_gate_results_complete`, `P3T1GateEvidenceTests.test_log_claims_match_labels`, `P3T1GateEvidenceTests.test_vitest_counts_match_logs`, `P3T1GateEvidenceTests.test_warning_counts_match_logs`, `P3T1GateEvidenceTests.test_verify_script_is_oracle`, `P3T1GateEvidenceTests.test_build_times_recomputed`, `P3T1GateEvidenceTests.test_oxc_lessons_complete`, `P3T1GateEvidenceTests.test_rollback_proven`, `P3T1GateEvidenceTests.test_no_deploy_or_push_in_logs`.
+- Each failure names the 1.2.0 pin, the missing `evidence/phase3-vinext-1-4-6.md` note, the missing install, or the unset `P3_GREEN_COMMITS` variable.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: typescript7_native_migration_20260710
+phase: Phase 3: TypeScript 7 trial (PM step 1)
+baseline_sha: df256903d8f472f094ba4b51635afc0c11e674e6
+commits: 3751ce59c (plan evidence commit: Red tests and plan updates)
+tests_run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_vinext -> Ran 29 tests, FAILED (failures=25), no errors; the 22 failing methods name the 1.2.0 pin, the missing Phase 3 note, the missing install, or the unset P3_GREEN_COMMITS variable
+files_changed: measure/tests/test_typescript7_native_migration_phase3_vinext.py (new), measure/tracks/typescript7_native_migration_20260710/plan.md (Task 1 marker [~] and Red evidence block), measure/runs/typescript7_native_migration_20260710/mid-red-9d918f5.log (this log)
+plan_updates: Task 1 marker set to [~]; Red evidence block added with the failing test names and the guard names; no counts written
+known_failures: the 22 listed failing methods fail at base as intended (Red state); the 7 listed guards pass at base
+handoff: role_base_sha 9d918f5d2 is the pre-role HEAD; the evidence commit follows and proves new Red work. Green runs G3.0 first (strategy section 5a.3, default C): record the React ^19.3.1 unmet peer against repo value 19.2.9 with a waiver, and let the live gates decide. The React pin guard test and tech-debt.md:25 forbid a repo-wide React move in this task. Six Phase 2 tests will fail on purpose after Green (section 5a.9); the Phase 2 module stays frozen. Facts changed: none (Red only; the pins still read 1.2.0).
+END_MEASURE_AGENT_RESULT
