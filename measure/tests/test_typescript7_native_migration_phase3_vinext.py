@@ -895,7 +895,6 @@ class P3T1GateEvidenceTests(unittest.TestCase):
                 self.assertEqual(row.get("ratio"), ratio)
                 self.assertEqual(row.get("performance_finding"), ratio > 1.00)
 
-    @unittest.skip(_OPTION_A_SKIP)
     def test_oxc_lessons_complete(self) -> None:
         """Requires exactly the 18 Oxc lesson rows L1 to L18."""
         lessons, error = _load_p3_block("oxc-lessons")
@@ -906,7 +905,10 @@ class P3T1GateEvidenceTests(unittest.TestCase):
         self.assertIsInstance(rows, list)
         assert isinstance(rows, list)
         self.assertEqual(
-            sorted(row.get("id", "") for row in rows),
+            sorted(
+                (row.get("id", "") for row in rows),
+                key=lambda s: int(s[1:]) if isinstance(s, str) and s[1:].isdigit() else -1,
+            ),
             EXPECTED_LESSON_IDS,
             f"lesson rows found: {len(rows)}",
         )

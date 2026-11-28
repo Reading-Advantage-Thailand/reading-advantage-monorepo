@@ -1,0 +1,41 @@
+# Measure Mid Red report: Phase 3 Task 1b Oxc lesson order fix (Red)
+
+- Role: Measure Mid Red. Model: muse-spark-1.3-contributor. Track: `typescript7_native_migration_20260710`.
+- Phase: `Phase 3: TypeScript 7 trial (PM step 1)` (P3). Task T1b (Oxc lessons, option A).
+- Worktree: `/home/daniebo/Desktop/rama-worktrees/ts7-phase3`, branch `ts7/phase3`.
+- Status: complete. Red fails for the intended reason. No push. No deploy.
+- Dirty paths at start: Green's uncommitted files only (staged `jr-green-88d2b86.log`, modified `plan.md`, untracked `evidence/phase3/oxc-lessons.md` and `evidence/phase3/oxc/`). This role did not stage, commit, or revert them.
+
+## SHAs
+
+- Supplied `phase_base_sha`: `df256903d8f472f094ba4b51635afc0c11e674e6` (resolves).
+- Pre-role HEAD: `88d2b864a` (resolves; the option A record commit).
+
+## Work
+
+- Fixed the order defect in `test_oxc_lessons_complete`. The test compared string-sorted row ids with `EXPECTED_LESSON_IDS` in number order. No valid 18-row table passes that form.
+- The comparison now sorts ids by their number part. Row order no longer matters. Duplicates still fail. Every other assertion in the test is unchanged.
+- Moved the Oxc lesson test out of the option-A skip. The lesson check does not depend on the vinext 1.4.6 target. All 21 other target-dependent checks stay skipped.
+- Ran the Red command. It exits 1 with one failure only: the Oxc lesson test fails because the `oxc-lessons` block is not committed yet. It fails on the missing block, not on ordering.
+
+## Red result
+
+- Summary: `Ran 29 tests`, `FAILED (failures=1, skipped=21)`. No errors.
+- The failing test is `P3T1GateEvidenceTests.test_oxc_lessons_complete`. Its error names the missing note `evidence/phase3-vinext-1-4-6.md`.
+- Passing guards: `test_target_is_stable_1_4_x`, `test_exactly_two_manifests_declare_vinext`, and the five `P3HelperTests` cases.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: typescript7_native_migration_20260710
+phase: Phase 3: TypeScript 7 trial (PM step 1)
+task: Task T1b - Record the Oxc lessons of the Math test bed (option A)
+baseline_sha: df256903d8f472f094ba4b51635afc0c11e674e6
+role_base_sha: 88d2b864a
+commits: this Red commit (Oxc lesson order fix, unskip of the Oxc test, this log)
+tests_run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_vinext -> Ran 29 tests, FAILED (failures=1, skipped=21), exit 1
+files_changed: measure/tests/test_typescript7_native_migration_phase3_vinext.py (order-independent lesson id compare; Oxc test unskipped; no other assertion changed); measure/runs/typescript7_native_migration_20260710/mid-red-88d2b86.log (this log)
+plan_updates: none by this role; Green owns the Red evidence line
+known_failures: test_oxc_lessons_complete fails at base for the intended reason (the oxc-lessons block is not committed yet); the 21 other target-dependent checks stay skipped; the 7 guards pass
+handoff: Green is unblocked on the order defect; the Oxc test now fails only on the missing block. Green's uncommitted files were left untouched. Facts changed: none (Red only; the pins still read 1.2.0). No push and no deploy.
+END_MEASURE_AGENT_RESULT
