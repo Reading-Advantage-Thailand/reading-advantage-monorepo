@@ -1,0 +1,94 @@
+# Measure Strategy report: Phase 3 trial tasks TR1 to TR8 (round 2)
+
+- Role: Measure Strategy. Model: claude-code/claude-sonnet-5-5. Track: `typescript7_native_migration_20260710`.
+- Phase: `Phase 3: TypeScript 7 trial (PM step 1)` (id P3). Scope: the eight tasks after the T1b Oxc record.
+- Worktree: `/home/daniebo/Desktop/rama-worktrees/ts7-phase3`, branch `ts7/phase3`.
+- Strategy role base: `41307a208` (`git fetch origin` and `git merge --ff-only origin/master` gave "Already up to date").
+  It is not the `phase_base_sha`.
+- Status: complete. No push. No deploy. No product code, test, manifest, lockfile, install, or build.
+
+## Commits
+
+- `7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e`: the strategy (`test-strategy.md` section 5b, plus header, contents,
+  section 5 pointer, and section 8 rows 11 to 20), the `plan.md` edits, and the one-line `spec.md` fix. This is the
+  last commit that touches `test-strategy.md`.
+- The commit of this log is the next commit on the branch. It touches only this file.
+
+## phase_base_sha capture point
+
+After `7f86c5203` exists on `ts7/phase3`, the orchestrator runs
+`git log -1 --format=%H -- measure/tracks/typescript7_native_migration_20260710/test-strategy.md`.
+The output is `7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e`. The orchestrator stores it in its run log before any later
+strategy edit and never recomputes it. The TR5 addendum round edits the same file and moves the output of the command.
+Checks: the value is not `41307a208`, and `git merge-base --is-ancestor 41307a208 <value>` exits 0 (both verified).
+The tests read the value from `P3_PHASE_BASE` and fail when it is unset.
+
+## Exact TypeScript 7.0.x check (registry, 2026-11-28)
+
+- `npm view typescript versions --json`: the only stable 7.0.x is `7.0.2` (published 2026-07-08). `7.0.1-rc` is a
+  pre-release.
+- `npm view typescript dist-tags --json`: `latest` is `7.0.2`. `beta` is `7.1.0-beta` (2026-10-20).
+  `next` is `7.1.0-dev.20261127.1`.
+- `npm view typescript@7.0.2 bin exports dependencies --json`: bin `tsc`. `exports` holds `.` (to `./lib/version.cjs`)
+  and `./unstable/*` only. The classic compiler API is not in the root export. Platform binaries are optional dependencies.
+- TR1 repeats the check on the trial day (`TS_CHOSEN=`). The chosen value is the numeric maximum of the stable 7.0.x list.
+
+## Commands
+
+RED_TEST_COMMAND (TR1, light, exits non-zero at base once Red writes the module):
+
+```
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v \
+  measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests \
+  measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests \
+  measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialWorktreeTests
+```
+
+GREEN_TEST_COMMAND (TR1; the light part first, then the heavy gates of section 5b.8 in order; every heavy step is one
+`HR` call, which is `HEAVY_PRIORITY=p2 HEAVY_MIN_AVAIL_MB=1500 bash
+/home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c "<cmd>"`):
+
+```
+PYTHONDONTWRITEBYTECODE=1 P3_PHASE_BASE=<phase_base_sha> P3_GREEN_COMMITS="<sha> <sha>" \
+  python3 -m unittest -v \
+  measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests \
+  measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests \
+  measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialWorktreeTests
+HR "cd $WT && set -o pipefail; pnpm install --frozen-lockfile; echo TSC_VERSION=$(pnpm exec tsc --version)"   # TR1-install-A
+HR "...pnpm --workspace-concurrency=1 --filter './packages/**' run --if-present build..."                      # TR1-build-dist-A
+HR "...sed one line of pnpm-workspace.yaml; pnpm install --no-frozen-lockfile; pnpm why typescript..."        # TR1-swap-B
+```
+
+Light gates (not through `HR`): `TR1-registry`, `TR1-snapshot-before`, `TR1-worktree`, `TR1-install-commit`,
+`TR1-lock-scan`, `TR1-snapshot-after`. The commands of TR2 to TR8 are in section 5b.8. Worktree: `$WT` is
+`/home/daniebo/Desktop/rama-worktrees/ts7-trial`, branch `ts7/trial-p3`.
+
+## Findings and defaults
+
+1. TypeScript `7.0.2` is the only stable 7.0.x. `latest` is `7.0.2`.
+2. The live scan finds 43 workspaces with `check-types` (and 47 with `test`). The plan says 31. Twelve workspaces joined
+   after Phase 1. Default: run all of them and check the 31 by name. The TR2 "Done when" line in `plan.md` changed.
+3. The 5.9.3 control runs inside TR4. The install state flips 5.9.3, 7.0.x, 5.9.3, 7.0.x. TR1 ends on 7.0.x as the plan asks.
+4. Control tests run only for workspaces that fail under 7.0.x. `improved` applies to type checks only.
+5. TR5 fixes ship as patch files in the evidence folder and do not land on master in Phase 3. TR8 removes the branch
+   with `git branch -D` after every commit has a patch.
+6. `phase1-pre-existing-failures.json` has no row that maps to a type-check or test result of a workspace. The decision
+   "pre-existing" uses the 5.9.3 control on the same tree, and cites `compiler-baseline.json` when it has an entry.
+7. The five stale Phase 2 test names in section 5b.10 are an inference from the cause text in `plan.md`. The orchestrator
+   observes the names at `phase_base_sha`. The observed set wins.
+8. The `spec.md` "Time window" bullet now says the window is lifted (PM 2026-11-28), in one line.
+9. The package `typescript@7.0.2` has no classic JS compiler API in its root export. Expect `js-api-consumer` regressions
+   for `tsup`, `ts-node`, and `typescript-eslint`. TR7 probes this.
+
+MEASURE_AGENT_RESULT
+role: measure-strategy
+status: complete
+track: typescript7_native_migration_20260710
+phase: Phase 3: TypeScript 7 trial (PM step 1)
+commits: 7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e
+tests_run: none (read-only research only: npm view typescript versions dist-tags time, npm view typescript@7.0.2 bin exports dependencies, npm view @typescript/native-preview dist-tags, rg, sed, cat, and read-only python reads of the manifests, the lockfile, and the baseline JSON files; a read-only python table-shape and sentence-length check of the new section passed with 0 table problems); no build, no install, no heavy step, no unittest run
+files_changed: measure/tracks/typescript7_native_migration_20260710/test-strategy.md, measure/tracks/typescript7_native_migration_20260710/plan.md, measure/tracks/typescript7_native_migration_20260710/spec.md, measure/runs/typescript7_native_migration_20260710/strategy-41307a2.log
+plan_updates: TR2 What and Done-when lines (run set is every workspace with check-types at the trial base, not a fixed 31); one Phase 3 trial strategy evidence block; task markers unchanged ([ ]; the orchestrator sets [~] before each Red round)
+known_failures: none for this role; the Phase 2 module has 5 stale failures recorded in plan.md (names in test-strategy.md 5b.10, an inference the orchestrator must confirm by one light run at phase_base_sha); they are not regressions
+handoff: phase_base_sha capture point is after 7f86c5203: run git log -1 --format=%H -- measure/tracks/typescript7_native_migration_20260710/test-strategy.md (value 7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e now), store it in the run log, never recompute (the TR5 addendum edits that file). TS 7.0.x found: 7.0.2 (only stable 7.0.x; latest tag; beta tag 7.1.0-beta). RED_TEST_COMMAND (TR1) and GREEN_TEST_COMMAND are in this log; the commands of TR2 to TR8 are in section 5b.8. Trial worktree /home/daniebo/Desktop/rama-worktrees/ts7-trial, branch ts7/trial-p3; P3_TRIAL_BASE is origin/master taken when TR1 starts. QUESTIONS (defaults in force, see test-strategy.md section 8, rows 12 to 20): Q1 the plan says 31 workspaces, the live scan gives 43 (default: run all, check the 31 by name). Q2 the control runs inside TR4 and the install flips A, B, A, B (default as written; alternatives are a second control worktree or a control-first order). Q3 control tests only for workspaces that fail under 7.0.x (default yes; alternative is a full control test pass, adds hours). Q4 do TR5 fixes land on master in Phase 3 (default no, patch files in evidence, they stay for Phase 5). Q5 TR8 deletes the trial branch with git branch -D after every commit has a patch (default yes). Q6 the A16 worktree exception must be recorded by the orchestrator (the repo already has several worktrees). Facts changed: the heavy-step window is lifted in spec.md; the trial run set is 43 workspaces not 31; TypeScript 7.0.2 is the only stable 7.0.x; the 5.9.3 control moved into TR4; TR5 fixes become patch files. Next marker: the orchestrator sets [~] on the TR1 task before Mid Red round A (helpers, scope, TR1, TR2 classes).
+END_MEASURE_AGENT_RESULT
