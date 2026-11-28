@@ -229,7 +229,7 @@ PM 2026-11-23: parked until after the 30 Nov launch.
     `dd669e5f8`; install commit `b345d890f` (two pin files); `tsc --version` gives `Version 7.0.2`.
     Snapshots before and after are equal for both directories (`MAIN_SNAPSHOT_EQUAL=1`,
     `ROLE_SNAPSHOT_EQUAL=1`). Evidence: `jr-green-dd669e5.log`.
-- [ ] Task: Run the type checks on the trial install and record memory and time.
+- [~] Task: Run the type checks on the trial install and record memory and time.
   - What: run `check-types` in each workspace that has the script, one at a time under `heavy-run.sh`,
     with peak RSS (`/usr/bin/time -v`) and wall time. Use the same method as
     `capture-phase1-baseline.py`. Do not edit any `tsconfig`; record `types: []` and
@@ -362,6 +362,21 @@ PM 2026-11-23: parked until after the 30 Nov launch.
 - PM-directed trial-only settings: `.puppeteerrc.cjs` from master `3d87a41ce` (`skipDownload: true`, staged in the trial, not in the install commit); `supportedArchitectures` linux/x64/glibc at the end of the trial `pnpm-workspace.yaml` (four added lines; lockfile churn expected). No such setting was made in the main repo, where ten Dockerfiles build on `node:22-alpine`.
 - Finding: TypeScript 7.0.2 fetches every platform binary even with `supportedArchitectures` set. Earlier hangs came from two pnpm versions sharing the v11 store index; the final swap used one pnpm process with `--config.manage-package-manager-versions=false`.
 - No push and no deploy. No product file, manifest, or lockfile changed in `$MAIN` or `$ROLE_WT`.
+
+#### TR2 Red evidence (Mid Red, 2026-11-28)
+
+- Role: Measure Mid Red. Task TR2 only (the type checks with memory and time).
+- phase_base_sha: `7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e` (resolves). role_base_sha: `be0b2287f` (resolves; the pre-role HEAD).
+- New class: `P3TrialTypecheckTests` in `measure/tests/test_typescript7_native_migration_phase3_trial.py`. It follows test-strategy.md section 5b.8 TR2. It adds no hash and changes no TR1 assertion.
+- Red command: `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialTypecheckTests`.
+- Red result: exit non-zero with assertion failures only and no errors part. Full log: `measure/runs/typescript7_native_migration_20260710/mid-red-be0b228.log`.
+- Each failure comes from the missing `evidence/phase3/trial/typecheck-ts7.json` record or the unset `P3_GREEN_COMMITS` variable. No test raises at base.
+- Tests that fail at base: `P3TrialScopeTests.test_green_commits_in_scope`, `P3TrialScopeTests.test_denied_paths_untouched`, `P3TrialTypecheckTests.test_run_set_equals_live_scan`, `P3TrialTypecheckTests.test_rows_complete`, `P3TrialTypecheckTests.test_rows_match_raw_logs`, `P3TrialTypecheckTests.test_compiler_label_per_row`, `P3TrialTypecheckTests.test_fail_closed_rules`, `P3TrialTypecheckTests.test_run_order_rule`, `P3TrialTypecheckTests.test_no_tsconfig_edits`, `P3TrialTypecheckTests.test_repeat_runs_and_summary`, `P3TrialTypecheckTests.test_checker_variants`, `P3TrialTypecheckTests.test_baseline_columns`, `P3TrialTypecheckTests.test_gate_entries_valid`, `P3TrialTypecheckTests.test_no_deploy_or_push_in_logs`.
+- Tests that pass at base (guards): the `P3TrialHelperTests` cases and the three synthetic `P3TrialScopeTests` cases (`test_scope_helper_accepts_allowed_paths`, `test_scope_helper_rejects_product_paths`, `test_tech_debt_diff_rule`). They guard the helpers and the scope rule before the record exists.
+- The TR1 classes and the vinext module still exit 0 with `P3_PHASE_BASE=7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e` and `P3_GREEN_COMMITS='366734bb6191c166845dacb8a7ede7934c163e70 be0b2287fe7dda4f1ceae9c6c3ddb1bbffab8d26'` (brief values corrected by `git rev-parse`; short forms `366734bb6` and `be0b2287f` resolve to the same commits).
+- Orchestrator decision Q1 holds: every `check-types` workspace runs from the live scan; the 31 Phase 1 names are checked by name; `apps/reading-advantage` keeps the no-valid-baseline mark. Each row will hold exit status, diagnostic `[file, line, code]` triples, peak RSS in MiB, and wall time.
+- No install, build, or type check ran. No production code, manifest, or lockfile changed.
+- TR2 stays `[~]`. Green writes the record; this role does not.
 
 ## Phase 4: Cloudflare preparation, not the move (PM step 2)
 

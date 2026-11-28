@@ -1178,5 +1178,711 @@ class P3TrialWorktreeTests(unittest.TestCase):
                     return
 
 
+# Round B (TR2) contracts live here. They extend the file without changing
+# the TR1 assertions above. TR4 reuses this class through subclassing.
+TYPECHECK_EVIDENCE_REL = "evidence/phase3/trial/typecheck-ts7.json"
+TYPECHECK_TOP_KEYS = (
+    "run_list",
+    "batches",
+    "rows",
+    "repeats",
+    "checker_variants",
+    "gates",
+)
+TYPECHECK_ROW_KEYS = (
+    "workspace",
+    "package_name",
+    "script",
+    "command",
+    "compiler",
+    "exit_status",
+    "diagnostic_count",
+    "diagnostics",
+    "peak_rss_kib",
+    "peak_rss_mib",
+    "elapsed_ms",
+    "valid",
+    "log",
+    "time_file",
+    "baseline_elapsed_ms",
+)
+REPEAT_WORKSPACES = ("packages/types", "packages/domain", "apps/primary-advantage")
+READING_WORKSPACE = "apps/reading-advantage"
+READING_BASELINE_NOTE = "no valid 5.9.3 baseline"
+PHASE1_BASELINE_REL = "phase1-workspace-baseline.json"
+PHASE1_FILES = (
+    "compiler-baseline.json",
+    "phase1-workspace-baseline.json",
+    "phase1-pre-existing-failures.json",
+    "surface-inventory.json",
+)
+DIAG_CODE_PATTERN = re.compile(r"^TS\d+$")
+MANIFEST_PATTERN = re.compile(
+    r"^(?:apps|packages|services)/[^/]+/package\.json$|^packages/integrations/[^/]+/package\.json$"
+)
+
+
+def _median_int(values: list[int]) -> int:
+    """Return the median of an odd-length integer list.
+
+    Args:
+        values: The elapsed values in ms.
+
+    Returns:
+        The middle value of the sorted list.
+    """
+    ordered = sorted(values)
+    return ordered[len(ordered) // 2]
+
+
+def _load_typecheck_record(test: unittest.TestCase, evidence_rel: str) -> dict[str, Any]:
+    """Load the type-check evidence file, or fail the calling test.
+
+    Args:
+        test: The calling test case.
+        evidence_rel: The track-relative evidence path.
+
+    Returns:
+        The parsed record.
+    """
+    path = TRACK_DIR / evidence_rel
+    text = _read_text(path)
+    if text is None:
+        test.fail(f"TR2 record is missing: {path}")
+    try:
+        record = json.loads(text)
+    except json.JSONDecodeError as exc:
+        test.fail(f"TR2 record does not parse: {exc}")
+    assert isinstance(record, dict)
+    return record
+
+
+def _trial_base_sha(test: unittest.TestCase) -> str:
+    """Read the trial base SHA from the TR1 record.
+
+    Args:
+        test: The calling test case.
+
+    Returns:
+        The base SHA string.
+    """
+    record = _load_record(test)
+    base_sha = record.get("worktree", {}).get("base_sha")
+    if not isinstance(base_sha, str) or not base_sha:
+        test.fail("TR1 record worktree.base_sha is missing")
+    return base_sha
+
+
+def _live_run_list(test: unittest.TestCase, base_sha: str) -> tuple[list[str], dict[str, str]]:
+    """Recompute the check-types run list at the trial base.
+
+    Args:
+        test: The calling test case.
+        base_sha: The trial base commit.
+
+    Returns:
+        The ordered run list and the workspace-to-script map.
+    """
+    code, output = _run_git(["ls-tree", "-r", "--name-only", base_sha])
+    if code != 0:
+        test.fail("TR2 live scan lists no manifests at the trial base")
+    scripts: dict[str, str] = {}
+    for path in output.splitlines():
+        if not MANIFEST_PATTERN.match(path.strip()):
+            continue
+        manifest = path.strip()
+        workspace = manifest[: -len("/package.json")]
+        show_code, show_text = _run_git(["show", f"{base_sha}:{manifest}"])
+        if show_code != 0:
+            test.fail(f"TR2 live scan cannot read {manifest} at the trial base")
+        try:
+            data = json.loads(show_text)
+        except json.JSONDecodeError as exc:
+            test.fail(f"TR2 live scan cannot parse {manifest}: {exc}")
+        script = data.get("scripts", {}).get("check-types")
+        if isinstance(script, str) and script.strip():
+            scripts[workspace] = script.strip()
+    if not scripts:
+        test.fail("TR2 live scan finds no check-types workspace at the trial base")
+    ordered = sorted(scripts)
+    plain = [w for w in ordered if "pnpm build" not in scripts[w]]
+    built = [w for w in ordered if "pnpm build" in scripts[w]]
+    return plain + built, scripts
+
+
+def _phase1_elapsed_map(test: unittest.TestCase) -> dict[str, Any]:
+    """Read the Phase 1 workspace-to-elapsed map.
+
+    Args:
+        test: The calling test case.
+
+    Returns:
+        The workspace-to-elapsed map in ms.
+    """
+    path = TRACK_DIR / PHASE1_BASELINE_REL
+    text = _read_text(path)
+    if text is None:
+        test.fail(f"TR2 Phase 1 baseline is missing: {path}")
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        test.fail(f"TR2 Phase 1 baseline does not parse: {exc}")
+    rows = data.get("workspaces", [])
+    if not isinstance(rows, list) or not rows:
+        test.fail("TR2 Phase 1 baseline holds no workspace rows")
+    result: dict[str, Any] = {}
+    for row in rows:
+        if isinstance(row, dict) and row.get("workspace"):
+            result[str(row["workspace"])] = row.get("elapsed_ms")
+    if not result:
+        test.fail("TR2 Phase 1 baseline names no workspace")
+    return result
+
+
+def _row_log_and_time(
+    test: unittest.TestCase, row: dict[str, Any], evidence: str
+) -> tuple[str, str]:
+    """Read the row log and time files, or fail the calling test.
+
+    Args:
+        test: The calling test case.
+        row: The type-check row.
+        evidence: The evidence file name for messages.
+
+    Returns:
+        The log text and the time-file text.
+    """
+    workspace = row.get("workspace", "?")
+    log_value = row.get("log")
+    time_value = row.get("time_file")
+    log_path = REPO_ROOT / log_value if isinstance(log_value, str) else None
+    time_path = REPO_ROOT / time_value if isinstance(time_value, str) else None
+    log_text = _read_text(log_path) if log_path is not None else None
+    time_text = _read_text(time_path) if time_path is not None else None
+    if log_text is None:
+        test.fail(f"TR2 {evidence} row {workspace} log is missing or unreadable")
+    if time_text is None:
+        test.fail(f"TR2 {evidence} row {workspace} time file is missing or unreadable")
+    assert log_text is not None and time_text is not None
+    return log_text, time_text
+
+
+class P3TrialTypecheckTests(unittest.TestCase):
+    """TR2 record: type checks with memory and time on the trial install."""
+
+    EVIDENCE_REL = TYPECHECK_EVIDENCE_REL
+    COMPILER_RE = TRIAL_COMPILER_PATTERN
+
+    def test_run_set_equals_live_scan(self) -> None:
+        """Row workspaces equal the live scan; the 31 Phase 1 names persist."""
+        record = _load_typecheck_record(self, self.EVIDENCE_REL)
+        rows = record.get("rows")
+        if not isinstance(rows, list) or not rows:
+            self.fail("TR2 rows list is empty")
+            return
+        assert isinstance(rows, list)
+        row_names = [r.get("workspace") for r in rows if isinstance(r, dict)]
+        base_sha = _trial_base_sha(self)
+        run_list, _ = _live_run_list(self, base_sha)
+        if sorted(row_names) != sorted(run_list):
+            self.fail("TR2 row workspaces differ from the live scan at the trial base")
+        listed = record.get("run_list")
+        if not isinstance(listed, list) or [str(w) for w in listed] != row_names:
+            self.fail("TR2 run_list differs from the row order")
+        phase1 = _phase1_elapsed_map(self)
+        for name in phase1:
+            if name not in row_names:
+                self.fail(f"TR2 rows miss the Phase 1 workspace: {name}")
+        found: str | None = None
+        gates = record.get("gates")
+        if isinstance(gates, list):
+            for gate in gates:
+                if not isinstance(gate, dict):
+                    continue
+                text = _read_text(REPO_ROOT / gate["log"]) if isinstance(gate.get("log"), str) else None
+                if text is None:
+                    continue
+                value = _labeled_line_value(text, "WORKSPACES=")
+                if value is not None:
+                    found = value
+                    break
+        if found is None:
+            self.fail("TR2 gate logs hold no labeled line WORKSPACES=")
+        try:
+            count = int(found.strip())
+        except ValueError:
+            self.fail(f"TR2 WORKSPACES={found!r} is not a labeled integer")
+            return
+        if count != len(rows):
+            self.fail(f"TR2 WORKSPACES={count} differs from the row count {len(rows)}")
+
+    def test_rows_complete(self) -> None:
+        """Each row holds the 5b.6 keys with real memory, time, and triples."""
+        record = _load_typecheck_record(self, self.EVIDENCE_REL)
+        rows = record.get("rows")
+        if not isinstance(rows, list) or not rows:
+            self.fail("TR2 rows list is empty")
+            return
+        assert isinstance(rows, list)
+        for row in rows:
+            if not isinstance(row, dict):
+                self.fail("TR2 row is not a mapping")
+                return
+            workspace = row.get("workspace", "?")
+            for key in TYPECHECK_ROW_KEYS:
+                if key not in row:
+                    self.fail(f"TR2 row {workspace} misses key: {key}")
+                    return
+            rss = row.get("peak_rss_kib")
+            elapsed = row.get("elapsed_ms")
+            if not isinstance(rss, int) or rss <= 0:
+                self.fail(f"TR2 row {workspace} peak_rss_kib is not a positive integer")
+                return
+            if not isinstance(elapsed, int) or elapsed <= 0:
+                self.fail(f"TR2 row {workspace} elapsed_ms is not a positive integer")
+                return
+            mib = row.get("peak_rss_mib")
+            if not isinstance(mib, (int, float)) or mib <= 0:
+                self.fail(f"TR2 row {workspace} peak_rss_mib is not positive")
+                return
+            if abs(float(mib) * 1024 - rss) > 60:
+                self.fail(f"TR2 row {workspace} peak_rss_mib differs from peak_rss_kib")
+                return
+            triples = row.get("diagnostics")
+            if not isinstance(triples, list):
+                self.fail(f"TR2 row {workspace} diagnostics list is missing")
+                return
+            if row.get("diagnostic_count") != len(triples):
+                self.fail(f"TR2 row {workspace} diagnostic_count differs from the triples")
+                return
+            for triple in triples:
+                if (
+                    not isinstance(triple, list)
+                    or len(triple) != 3
+                    or not isinstance(triple[0], str)
+                    or not triple[0]
+                    or not isinstance(triple[1], int)
+                    or not isinstance(triple[2], str)
+                    or not DIAG_CODE_PATTERN.match(triple[2])
+                ):
+                    self.fail(f"TR2 row {workspace} holds a bad triple: {triple!r}")
+                    return
+
+    def test_rows_match_raw_logs(self) -> None:
+        """Exit, triples, RSS, and time match the log and time file labels."""
+        record = _load_typecheck_record(self, self.EVIDENCE_REL)
+        rows = record.get("rows")
+        if not isinstance(rows, list) or not rows:
+            self.fail("TR2 rows list is empty")
+            return
+        assert isinstance(rows, list)
+        for row in rows:
+            if not isinstance(row, dict):
+                self.fail("TR2 row is not a mapping")
+                return
+            workspace = str(row.get("workspace", "?"))
+            log_text, time_text = _row_log_and_time(self, row, "typecheck")
+            try:
+                parsed = parse_time_v(time_text)
+            except ValueError:
+                self.fail(f"TR2 row {workspace} time file misses a labeled line")
+                return
+            if row.get("exit_status") != parsed["exit_status"]:
+                self.fail(f"TR2 row {workspace} exit differs from the time file")
+                return
+            if row.get("peak_rss_kib") != parsed["peak_rss_kib"]:
+                self.fail(f"TR2 row {workspace} RSS differs from the time file")
+                return
+            if row.get("elapsed_ms") != parsed["elapsed_ms"]:
+                self.fail(f"TR2 row {workspace} time differs from the time file")
+                return
+            for label, want in (
+                ("WS_EXIT=", parsed["exit_status"]),
+                ("PEAK_RSS_KIB=", parsed["peak_rss_kib"]),
+                ("ELAPSED_MS=", parsed["elapsed_ms"]),
+            ):
+                value = _labeled_line_value(log_text, label)
+                if value is None:
+                    self.fail(f"TR2 row {workspace} log misses the labeled line {label}")
+                    return
+                try:
+                    seen = int(value.strip())
+                except ValueError:
+                    self.fail(f"TR2 row {workspace} log {label}{value!r} is not an integer")
+                    return
+                if seen != want:
+                    self.fail(f"TR2 row {workspace} log {label}{seen} differs from {want}")
+                    return
+            count_line = _labeled_line_value(log_text, "DIAGNOSTICS=")
+            if count_line is None:
+                self.fail(f"TR2 row {workspace} log misses the labeled line DIAGNOSTICS=")
+                return
+            try:
+                count = int(count_line.strip())
+            except ValueError:
+                self.fail(f"TR2 row {workspace} DIAGNOSTICS={count_line!r} is not an integer")
+                return
+            triples = parse_diagnostics(log_text)
+            if count != len(triples):
+                self.fail(f"TR2 row {workspace} DIAGNOSTICS={count} differs from the log triples")
+                return
+            stored = row.get("diagnostics")
+            if not isinstance(stored, list) or [list(t) for t in stored] != triples:
+                self.fail(f"TR2 row {workspace} triples differ from the raw log")
+                return
+            if row.get("diagnostic_count") != len(triples):
+                self.fail(f"TR2 row {workspace} count differs from the raw log triples")
+                return
+
+    def test_compiler_label_per_row(self) -> None:
+        """Each log TSC_VERSION line matches the row compiler version."""
+        record = _load_typecheck_record(self, self.EVIDENCE_REL)
+        rows = record.get("rows")
+        if not isinstance(rows, list) or not rows:
+            self.fail("TR2 rows list is empty")
+            return
+        assert isinstance(rows, list)
+        for row in rows:
+            if not isinstance(row, dict):
+                self.fail("TR2 row is not a mapping")
+                return
+            workspace = str(row.get("workspace", "?"))
+            compiler = row.get("compiler")
+            if not isinstance(compiler, str) or not self.COMPILER_RE.match(compiler):
+                self.fail(f"TR2 row {workspace} compiler {compiler!r} is outside the class")
+                return
+            log_value = row.get("log")
+            path = REPO_ROOT / log_value if isinstance(log_value, str) else None
+            text = _read_text(path) if path is not None else None
+            if text is None:
+                self.fail(f"TR2 row {workspace} log is missing or unreadable")
+                return
+            if _labeled_line_value(text, "TSC_VERSION=") != f"Version {compiler}":
+                self.fail(f"TR2 row {workspace} log TSC_VERSION differs from Version {compiler}")
+                return
+
+    def test_fail_closed_rules(self) -> None:
+        """Failed runs keep evidence; bad exits stay invalid with repeats."""
+        record = _load_typecheck_record(self, self.EVIDENCE_REL)
+        rows = record.get("rows")
+        if not isinstance(rows, list) or not rows:
+            self.fail("TR2 rows list is empty")
+            return
+        assert isinstance(rows, list)
+        for row in rows:
+            if not isinstance(row, dict):
+                self.fail("TR2 row is not a mapping")
+                return
+            workspace = str(row.get("workspace", "?"))
+            valid = row.get("valid")
+            if not isinstance(valid, bool):
+                self.fail(f"TR2 row {workspace} valid flag is not boolean")
+                return
+            attempts = row.get("attempts")
+            if not isinstance(attempts, int) or attempts < 1:
+                self.fail(f"TR2 row {workspace} attempts is not a positive integer")
+                return
+            exit_status = row.get("exit_status")
+            triples = row.get("diagnostics")
+            count = len(triples) if isinstance(triples, list) else 0
+            if exit_status in (124, 134, 137):
+                if valid:
+                    self.fail(f"TR2 row {workspace} exit {exit_status} must stay invalid")
+                    return
+                reason = row.get("invalid_reason")
+                if not isinstance(reason, str) or not reason:
+                    self.fail(f"TR2 row {workspace} invalid row holds no reason")
+                    return
+                if attempts != 3 and row.get("final") is not True:
+                    self.fail(f"TR2 row {workspace} invalid row has no 3 attempts or final flag")
+                    return
+                continue
+            if exit_status != 0 and count == 0 and not row.get("unparsed_tail"):
+                self.fail(f"TR2 row {workspace} failure keeps no unparsed_tail")
+                return
+            if exit_status != 0 and count == 0 and valid:
+                self.fail(f"TR2 row {workspace} failure without diagnostics must stay invalid")
+                return
+
+    def test_run_order_rule(self) -> None:
+        """Run list matches row order; build workspaces close; batches split."""
+        record = _load_typecheck_record(self, self.EVIDENCE_REL)
+        rows = record.get("rows")
+        run_list = record.get("run_list")
+        batches = record.get("batches")
+        if not isinstance(rows, list) or not rows:
+            self.fail("TR2 rows list is empty")
+            return
+        assert isinstance(rows, list)
+        row_names = [str(r.get("workspace")) for r in rows if isinstance(r, dict)]
+        if not isinstance(run_list, list) or [str(w) for w in run_list] != row_names:
+            self.fail("TR2 run_list differs from the row order")
+            return
+        scripts = {str(r.get("workspace")): str(r.get("script", "")) for r in rows if isinstance(r, dict)}
+        plain = [w for w in row_names if "pnpm build" not in scripts.get(w, "")]
+        built = [w for w in row_names if "pnpm build" in scripts.get(w, "")]
+        if row_names != plain + built:
+            self.fail("TR2 pnpm build workspaces are not last in path order")
+            return
+        if plain != sorted(plain) or built != sorted(built):
+            self.fail("TR2 run order is not sorted in path order")
+            return
+        if not isinstance(batches, list) or not batches:
+            self.fail("TR2 batches list is empty")
+            return
+        flat: list[str] = []
+        for batch in batches:
+            if not isinstance(batch, list) or not batch:
+                self.fail("TR2 batch entry is not a non-empty list")
+                return
+            flat.extend(str(w) for w in batch)
+        if flat != row_names:
+            self.fail("TR2 batches do not partition the run list in order")
+            return
+        if len(set(flat)) != len(flat):
+            self.fail("TR2 batches hold a duplicate workspace")
+
+    def test_no_tsconfig_edits(self) -> None:
+        """Every job log ends with TSCONFIG_CHANGED=0."""
+        record = _load_typecheck_record(self, self.EVIDENCE_REL)
+        gates = record.get("gates")
+        if not isinstance(gates, list) or not gates:
+            self.fail("TR2 gates list is empty")
+            return
+        assert isinstance(gates, list)
+        for gate in gates:
+            if not isinstance(gate, dict):
+                self.fail("TR2 gate entry is not a mapping")
+                return
+            gate_id = str(gate.get("id", "?"))
+            log_value = gate.get("log")
+            path = REPO_ROOT / log_value if isinstance(log_value, str) else None
+            text = _read_text(path) if path is not None else None
+            if text is None:
+                self.fail(f"TR2 gate {gate_id} log is missing or unreadable")
+                return
+            if not any(line.startswith("TSCONFIG_CHANGED=0") for line in text.splitlines()):
+                self.fail(f"TR2 gate {gate_id} log misses TSCONFIG_CHANGED=0")
+                return
+
+    def test_repeat_runs_and_summary(self) -> None:
+        """Three named workspaces hold 3 valid runs with a true summary."""
+        record = _load_typecheck_record(self, self.EVIDENCE_REL)
+        repeats = record.get("repeats")
+        if not isinstance(repeats, dict) or not repeats:
+            self.fail("TR2 repeats block is empty")
+            return
+        for workspace in REPEAT_WORKSPACES:
+            entry = repeats.get(workspace)
+            if not isinstance(entry, dict):
+                self.fail(f"TR2 repeats miss the workspace: {workspace}")
+                return
+            runs = entry.get("runs")
+            if not isinstance(runs, list) or len(runs) != 3:
+                self.fail(f"TR2 repeats for {workspace} do not hold 3 runs")
+                return
+            values: list[int] = []
+            for run in runs:
+                if not isinstance(run, dict):
+                    self.fail(f"TR2 repeat run for {workspace} is not a mapping")
+                    return
+                elapsed = run.get("elapsed_ms")
+                if not isinstance(elapsed, int) or elapsed <= 0:
+                    self.fail(f"TR2 repeat run for {workspace} elapsed_ms is not positive")
+                    return
+                time_value = run.get("time_file")
+                time_path = REPO_ROOT / time_value if isinstance(time_value, str) else None
+                time_text = _read_text(time_path) if time_path is not None else None
+                if time_text is None:
+                    self.fail(f"TR2 repeat run for {workspace} time file is missing")
+                    return
+                try:
+                    parsed = parse_time_v(time_text)
+                except ValueError:
+                    self.fail(f"TR2 repeat run for {workspace} time file misses a label")
+                    return
+                if parsed["elapsed_ms"] != elapsed:
+                    self.fail(f"TR2 repeat run for {workspace} time differs from the file")
+                    return
+                values.append(elapsed)
+            summary = entry.get("summary")
+            if not isinstance(summary, dict):
+                self.fail(f"TR2 repeats for {workspace} hold no summary")
+                return
+            if summary.get("median_ms") != _median_int(values):
+                self.fail(f"TR2 repeats for {workspace} median differs from the runs")
+                return
+            if summary.get("min_ms") != min(values) or summary.get("max_ms") != max(values):
+                self.fail(f"TR2 repeats for {workspace} range differs from the runs")
+
+    def test_checker_variants(self) -> None:
+        """The 3 slowest valid rows hold a checkers-1 or not-available row."""
+        record = _load_typecheck_record(self, self.EVIDENCE_REL)
+        rows = record.get("rows")
+        variants = record.get("checker_variants")
+        if not isinstance(rows, list) or not rows:
+            self.fail("TR2 rows list is empty")
+            return
+        assert isinstance(rows, list)
+        if not isinstance(variants, list) or len(variants) != 3:
+            self.fail("TR2 checker_variants list does not hold 3 rows")
+            return
+        assert isinstance(variants, list)
+        valid_rows = [r for r in rows if isinstance(r, dict) and r.get("valid") is True]
+        if len(valid_rows) < 3:
+            self.fail("TR2 rows hold fewer than 3 valid rows")
+            return
+        valid_rows.sort(key=lambda r: int(r.get("elapsed_ms", 0)), reverse=True)
+        want = [str(r.get("workspace")) for r in valid_rows[:3]]
+        seen = [str(v.get("workspace")) for v in variants if isinstance(v, dict)]
+        if sorted(seen) != sorted(want):
+            self.fail("TR2 checker variants do not cover the 3 slowest valid rows")
+            return
+        for variant in variants:
+            if not isinstance(variant, dict):
+                self.fail("TR2 checker variant is not a mapping")
+                return
+            workspace = str(variant.get("workspace", "?"))
+            kind = variant.get("variant")
+            if kind not in ("checkers-1", "not-available"):
+                self.fail(f"TR2 checker variant for {workspace} names no known variant")
+                return
+            log_value = variant.get("log")
+            path = REPO_ROOT / log_value if isinstance(log_value, str) else None
+            text = _read_text(path) if path is not None else None
+            if text is None:
+                self.fail(f"TR2 checker variant for {workspace} log is missing")
+                return
+            if kind == "checkers-1":
+                if not any(line.startswith("VARIANT=checkers-1") for line in text.splitlines()):
+                    self.fail(f"TR2 checker variant for {workspace} log misses VARIANT=checkers-1")
+                    return
+            else:
+                reason = variant.get("reason")
+                if not isinstance(reason, str) or len(reason) < 10:
+                    self.fail(f"TR2 checker variant for {workspace} holds no reason")
+                    return
+
+    def test_baseline_columns(self) -> None:
+        """Phase 1 values anchor the 31 rows; reading stays without baseline."""
+        record = _load_typecheck_record(self, self.EVIDENCE_REL)
+        rows = record.get("rows")
+        if not isinstance(rows, list) or not rows:
+            self.fail("TR2 rows list is empty")
+            return
+        assert isinstance(rows, list)
+        phase1 = _phase1_elapsed_map(self)
+        by_name = {str(r.get("workspace")): r for r in rows if isinstance(r, dict)}
+        for name, elapsed in phase1.items():
+            row = by_name.get(name)
+            if row is None:
+                self.fail(f"TR2 rows miss the Phase 1 workspace: {name}")
+                return
+            if row.get("baseline_elapsed_ms") != elapsed:
+                self.fail(f"TR2 row {name} baseline_elapsed_ms differs from Phase 1")
+                return
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            name = str(row.get("workspace", "?"))
+            if name not in phase1 and row.get("baseline_elapsed_ms") is not None:
+                self.fail(f"TR2 row {name} is new but baseline_elapsed_ms is not null")
+                return
+        reading = by_name.get(READING_WORKSPACE)
+        if reading is None:
+            self.fail(f"TR2 rows miss the workspace: {READING_WORKSPACE}")
+            return
+        if reading.get("baseline_valid") is not False:
+            self.fail("TR2 reading row baseline_valid is not false")
+            return
+        if reading.get("baseline_note") != READING_BASELINE_NOTE:
+            self.fail("TR2 reading row baseline_note misses the no-baseline text")
+            return
+        base_sha = _trial_base_sha(self)
+        for rel in PHASE1_FILES:
+            code, output = _run_git(["diff", "--name-only", base_sha, "--", f"measure/tracks/{TRACK_ID}/{rel}"])
+            if code != 0:
+                self.fail(f"TR2 baseline diff check stops for {rel}")
+                return
+            if output.strip():
+                self.fail(f"TR2 Phase 1 file differs against the trial base: {rel}")
+                return
+
+    def test_gate_entries_valid(self) -> None:
+        """Heavy gates ran at p2, exited 0, and never overlapped."""
+        record = _load_typecheck_record(self, self.EVIDENCE_REL)
+        gates = record.get("gates")
+        if not isinstance(gates, list) or not gates:
+            self.fail("TR2 gates list is empty")
+            return
+        intervals: list[tuple[int, int, str]] = []
+        for gate in gates:
+            if not isinstance(gate, dict):
+                self.fail("TR2 gate entry is not a mapping")
+                return
+            gate_id = str(gate.get("id", "?"))
+            for key in ("heavy", "heavy_command", "log", "start_epoch", "exit", "elapsed_s"):
+                if key not in gate:
+                    self.fail(f"TR2 gate {gate_id} misses key: {key}")
+                    return
+            if gate.get("heavy"):
+                command = gate.get("heavy_command", "")
+                if "HEAVY_PRIORITY=p2" not in command or "HEAVY_MIN_AVAIL_MB=1500" not in command:
+                    self.fail(f"TR2 heavy gate {gate_id} misses the p2 priority labels")
+                    return
+                log_value = gate.get("log")
+                path = REPO_ROOT / log_value if isinstance(log_value, str) else None
+                text = _read_text(path) if path is not None else None
+                if text is None:
+                    self.fail(f"TR2 heavy gate {gate_id} log is missing or unreadable")
+                    return
+                if not any(line.startswith("HEAVY_RUN_ACTIVE=1") for line in text.splitlines()):
+                    self.fail(f"TR2 heavy gate {gate_id} log misses HEAVY_RUN_ACTIVE=1")
+                    return
+                if not any(line.startswith("HEAVY_PRIORITY=p2") for line in text.splitlines()):
+                    self.fail(f"TR2 heavy gate {gate_id} log misses HEAVY_PRIORITY=p2")
+                    return
+            if gate.get("exit") != 0:
+                self.fail(f"TR2 gate {gate_id} exit is not 0")
+                return
+            elapsed = gate.get("elapsed_s")
+            if not isinstance(elapsed, (int, float)) or elapsed >= JOB_CAP_S:
+                self.fail(f"TR2 gate {gate_id} elapsed time hits the job cap")
+                return
+            start = gate.get("start_epoch")
+            if not isinstance(start, int):
+                self.fail(f"TR2 gate {gate_id} start_epoch is not an integer")
+                return
+            intervals.append((start, start + int(elapsed), gate_id))
+        intervals.sort()
+        for ( _first_start, first_end, first_id), (second_start, _second_end, second_id) in zip(
+            intervals, intervals[1:]
+        ):
+            if second_start < first_end:
+                self.fail(f"TR2 gate jobs overlap: {first_id} and {second_id}")
+
+    def test_no_deploy_or_push_in_logs(self) -> None:
+        """No gate log holds a deploy or push command."""
+        record = _load_typecheck_record(self, self.EVIDENCE_REL)
+        gates = record.get("gates")
+        if not isinstance(gates, list) or not gates:
+            self.fail("TR2 gates list is empty")
+            return
+        for gate in gates:
+            if not isinstance(gate, dict):
+                self.fail("TR2 gate entry is not a mapping")
+                return
+            log_value = gate.get("log")
+            path = REPO_ROOT / log_value if isinstance(log_value, str) else None
+            text = _read_text(path) if path is not None else None
+            if text is None:
+                self.fail(f"TR2 gate {gate.get('id', '?')} log is missing or unreadable")
+                return
+            for line in text.splitlines():
+                if DEPLOY_PATTERN.search(line):
+                    self.fail(f"TR2 gate {gate.get('id', '?')} log holds a deploy or push line")
+                    return
+
+
 if __name__ == "__main__":
     unittest.main()
