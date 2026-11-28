@@ -165,6 +165,8 @@ PM 2026-11-23: parked until after the 30 Nov launch.
 - The lockfile diff stays in the two app importers and the `packages` and `snapshots`
   sections. `pnpm-workspace.yaml` is unchanged. No deploy ran.
 
+- Tech debt: Phase 2 test module fails 5 stale-evidence tests on master 190c38252 (lock line drift at pnpm-lock.yaml:939, P2_GREEN_COMMITS unset, HR gate logs not tracked); no product failure.
+
 ## Phase 3: TypeScript 7 trial (PM step 1)
 
 > Phase 3 target (PM 2026-11-21): report to the PM by 2026-11-28.
@@ -185,8 +187,9 @@ PM 2026-11-23: parked until after the 30 Nov launch.
   - Rollback: set the two pins back to 1.2.0. Restore the lockfile entries. Rerun the gates. Keep the rollback command in the evidence note. No deploy and no push.
   - Evidence class: automated.
   - Done when: both apps build, test, and pass the runtime verify on 1.4.6. Each Oxc lesson has a check result or a defer with a reason. The before and after times are recorded. No other pin changed.
-- [ ] Task: Record the Oxc lessons of the Math test bed (split from Task 1, option A).
+- [x] Task: Record the Oxc lessons of the Math test bed (split from Task 1, option A). [commit: ec0b04c20]
   - What: fill the strategy section 5a Oxc table (oxlint, oxfmt, tsrs, rule gaps, workarounds) with a check result or a defer with reason on vinext 1.2.0; no pin change.
+  - Evidence: `evidence/phase3/oxc-lessons.md`; machine block: `evidence/phase3-vinext-1-4-6.md`. Result: 12 checked, 6 deferred.
 
 #### Task 1 Red evidence (Mid Red, 2026-11-28)
 

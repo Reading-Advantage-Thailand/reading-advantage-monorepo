@@ -1,0 +1,63 @@
+# Measure Junior Green report: Phase 3 Task 1b Oxc lessons
+
+- Role: Measure Junior Green. Model: opencode-go/hungerg-free.
+- Track: `typescript7_native_migration_20260710`.
+- Phase: `Phase 3: TypeScript 7 trial (PM step 1)`.
+- Task: T1b, Oxc lessons on vinext 1.2.0.
+- Worktree: `/home/daniebo/Desktop/rama-worktrees/ts7-phase3`, branch `ts7/phase3`.
+- Status: pass. The Oxc contract test runs and passes.
+- No dependency, manifest, lockfile, configuration, or app file changed.
+- No deploy and no push.
+
+## SHAs and tests
+
+- `phase_base_sha`: `df256903d8f472f094ba4b51635afc0c11e674e6`.
+- `role_base_sha`: `0111d200f8038164a2cffefa272f845e37e21178`.
+- Red retry: `0111d200f` fixed the numeric ID order and removed the Oxc skip.
+- Red command: `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_vinext`.
+- Red result: exit 1, `Ran 29 tests`, `FAILED (failures=1, skipped=21)`. Only the P3 note was missing.
+- Red log: `evidence/phase3/oxc/24-red-rerun-0111d200f.log`.
+- Green result: exit 0, `Ran 29 tests`, `OK (skipped=21)`.
+- Green log: `evidence/phase3/oxc/25-green-test.log`.
+- Implementation commit: `ec0b04c2028b6d967eb00abdd64cb5919c57c9e3`.
+
+## Evidence
+
+- Human note: `evidence/phase3/oxc-lessons.md`.
+- Machine note: `evidence/phase3-vinext-1-4-6.md`. It holds only the `oxc-lessons` block.
+- Rows: 18 total, 12 `check`, 6 `defer`.
+- Note contract: exit 0. Log: `evidence/phase3/oxc/28-note-contract.log`.
+- Oxlint `1.93.0` and Oxfmt `0.78.0` ran as exact one-off versions.
+- The tsrs comparison used TypeScript `7.1.0-beta` as extra data only.
+- Both TS2322 probes were removed.
+- Playwright ran both production pages. Each page has one 404 console error.
+- The Phase 2 module still exits 1 with five stale-evidence failures.
+- The requested Phase 2 tech-debt line is present in `plan.md`.
+
+## Doctor result
+
+- `TMPDIR=/dev/shm bash measure/doctor.sh` exits 1.
+- Cause: the V2 reconciliation manifest hash does not match the current bytes.
+- T1b changes no architecture source. The existing H0 live build, test, and runtime gates remain the behavioral evidence.
+- Doctor log: `evidence/phase3/oxc/27-doctor-retry.log`.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: pass
+track: typescript7_native_migration_20260710
+phase: Phase 3: TypeScript 7 trial (PM step 1)
+task: T1b - Record the Oxc lessons of the Math test bed
+phase_base_sha: df256903d8f472f094ba4b51635afc0c11e674e6
+role_base_sha: 0111d200f8038164a2cffefa272f845e37e21178
+red_command: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_vinext
+red_result: exit 1; Ran 29 tests; FAILED (failures=1, skipped=21); only the P3 note was missing
+implementation_commits: ec0b04c2028b6d967eb00abdd64cb5919c57c9e3
+plan_evidence_commit: this plan-evidence commit; SHA in final reply
+green_test_command: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_vinext
+green_test_exit: 0; Ran 29 tests; OK (skipped=21)
+doctor_exit: 1; pre-existing architecture reconciliation hash mismatch; no architecture source changed
+rows: 18 total; 12 check; 6 defer
+new_files: measure/tracks/typescript7_native_migration_20260710/evidence/phase3-vinext-1-4-6.md; measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc-lessons.md; measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/*.log; measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/browser-probe.mjs; this log
+task_markers: T1b flipped to [x] with ec0b04c20 and both note paths; no task flipped to [b]
+handoff: Review T1b at the final plan-evidence HEAD. The machine block is in evidence/phase3-vinext-1-4-6.md. The human note is evidence/phase3/oxc-lessons.md. Targeted Red failed once for the missing note, then Green passed 29 tests with 21 skips. Doctor still fails on an unrelated architecture manifest hash mismatch. The browser probe found one 404 console error per page; Phase 3 browser review owns that follow-up. Facts changed: no tool adoption; vinext stays 1.2.0; T1b is complete. No push and no deploy.
+END_MEASURE_AGENT_RESULT
