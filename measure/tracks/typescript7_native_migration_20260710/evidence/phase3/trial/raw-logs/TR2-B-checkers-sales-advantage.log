@@ -1,0 +1,61 @@
+GATE=TR2-B-checkers-sales-advantage
+CMD=capture-typechecks.py --gate TR2-B-checkers-sales-advantage
+START_EPOCH=1795859912
+HEAVY_RUN_ACTIVE=1
+HEAVY_PRIORITY=p2
+LOAD1_START=2.02
+MEMAVAIL_MB_START=16975
+SWAPFREE_KIB_START=5002912
+DISK_FREE_MB=539931
+WORKSPACES=43
+WS=apps/sales-advantage
+RUN=checkers-1
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+components/lesson-content.test.tsx(4,1): error TS2593: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+components/lesson-content.test.tsx(5,3): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+components/lesson-content.test.tsx(14,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(15,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(16,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(17,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(20,3): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+components/lesson-content.test.tsx(29,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(32,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(33,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(34,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(37,3): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+components/lesson-content.test.tsx(46,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(47,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(48,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(49,5): error TS2304: Cannot find name 'expect'.
+scripts/sales-runtime-contract.real-db.test.ts(50,7): error TS2593: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+scripts/sales-runtime-contract.real-db.test.ts(51,7): error TS2593: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+scripts/sales-runtime-contract.real-db.test.ts(56,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+scripts/sales-runtime-contract.real-db.test.ts(62,7): error TS2304: Cannot find name 'expect'.
+scripts/sales-runtime-contract.real-db.test.ts(65,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+scripts/sales-runtime-contract.real-db.test.ts(71,7): error TS2304: Cannot find name 'expect'.
+scripts/sales-runtime-contract.real-db.test.ts(77,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+scripts/sales-runtime-contract.real-db.test.ts(83,7): error TS2304: Cannot find name 'expect'.
+scripts/sales-runtime-contract.real-db.test.ts(95,7): error TS2304: Cannot find name 'expect'.
+scripts/sales-runtime-contract.real-db.test.ts(98,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+scripts/sales-runtime-contract.real-db.test.ts(154,7): error TS2304: Cannot find name 'expect'.
+undefined
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/apps/sales-advantage:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: tsc --noEmit --checkers 1
+WS_EXIT=1
+DIAGNOSTICS=27
+WARNINGS=0
+PEAK_RSS_KIB=345516
+ELAPSED_MS=2650
+LOAD1_START=2.02
+LOAD1_END=2.02
+SWAP_GROWTH_KIB=-568
+VALID=1
+TSCONFIG_CHANGED=0
+VARIANT=checkers-1
+SWAPFREE_KIB_END=5002344
+LOAD1_END=2.02
+TSCONFIG_CHANGED=0
+EXIT=0
+ELAPSED_S=3

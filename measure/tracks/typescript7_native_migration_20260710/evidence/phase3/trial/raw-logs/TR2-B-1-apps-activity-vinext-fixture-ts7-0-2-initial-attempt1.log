@@ -1,0 +1,21 @@
+WS=apps/activity-vinext-fixture
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+tsconfig.json(3,44): error TS5102: Option 'baseUrl' has been removed. Please remove it from your configuration.
+  Use '"paths": {"*": ["./*"]}' instead.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/apps/activity-vinext-fixture:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] activity-vinext-fixture@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=1
+WARNINGS=0
+PEAK_RSS_KIB=181608
+ELAPSED_MS=2430
+LOAD1_START=3.22
+LOAD1_END=3.22
+SWAP_GROWTH_KIB=192
+VALID=1
+TSCONFIG_CHANGED=0

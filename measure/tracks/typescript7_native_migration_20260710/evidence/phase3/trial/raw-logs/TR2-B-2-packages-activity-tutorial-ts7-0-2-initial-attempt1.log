@@ -1,0 +1,85 @@
+WS=packages/activity-tutorial
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit -p tsconfig.test.json
+src/checker.ts(23,42): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Expression'.
+src/checker.ts(23,58): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Expression'.
+src/checker.ts(24,10): error TS2339: Property 'isAsExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(24,43): error TS2339: Property 'isSatisfiesExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(24,83): error TS2339: Property 'isParenthesizedExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(28,32): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'PropertyName'.
+src/checker.ts(29,10): error TS2339: Property 'isIdentifier' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(29,35): error TS2339: Property 'isStringLiteral' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(29,63): error TS2339: Property 'isNumericLiteral' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(36,44): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Expression'.
+src/checker.ts(38,13): error TS2339: Property 'isStringLiteral' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(38,42): error TS2339: Property 'isNoSubstitutionTemplateLiteral' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(41,50): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Expression'.
+src/checker.ts(50,13): error TS2339: Property 'isNumericLiteral' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(54,61): error TS2339: Property 'SyntaxKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(54,105): error TS2339: Property 'SyntaxKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(55,11): error TS2339: Property 'isArrayLiteralExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(56,32): error TS7006: Parameter 'element' implicitly has an 'any' type.
+src/checker.ts(57,51): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Expression'.
+src/checker.ts(63,19): error TS2339: Property 'createSourceFile' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(63,62): error TS2339: Property 'ScriptTarget' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(63,92): error TS2339: Property 'ScriptKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(64,40): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'SourceFile'.
+src/checker.ts(64,86): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Diagnostic'.
+src/checker.ts(67,13): error TS2339: Property 'isVariableStatement' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(67,77): error TS7031: Binding element 'kind' implicitly has an 'any' type.
+src/checker.ts(67,100): error TS2339: Property 'SyntaxKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(69,15): error TS2339: Property 'isIdentifier' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(71,15): error TS2339: Property 'isObjectLiteralExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(72,45): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Expression'.
+src/checker.ts(74,17): error TS2339: Property 'isPropertyAssignment' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(87,40): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'ConciseBody'.
+src/checker.ts(87,57): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'ObjectLiteralExpression'.
+src/checker.ts(88,10): error TS2339: Property 'isObjectLiteralExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(88,70): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Expression'.
+src/checker.ts(88,125): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Expression'.
+src/checker.ts(88,143): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'ObjectLiteralExpression'.
+src/checker.ts(89,11): error TS2339: Property 'isBlock' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(90,50): error TS2339: Property 'isReturnStatement' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(93,13): error TS2339: Property 'isObjectLiteralExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(97,19): error TS2339: Property 'createSourceFile' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(97,62): error TS2339: Property 'ScriptTarget' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(97,92): error TS2339: Property 'ScriptKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(98,40): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'SourceFile'.
+src/checker.ts(98,86): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Diagnostic'.
+src/checker.ts(100,31): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'ParameterDeclaration'.
+src/checker.ts(101,16): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'ConciseBody'.
+src/checker.ts(103,12): error TS2339: Property 'isFunctionDeclaration' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(103,122): error TS7031: Binding element 'kind' implicitly has an 'any' type.
+src/checker.ts(103,145): error TS2339: Property 'SyntaxKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(107,12): error TS2339: Property 'isVariableStatement' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(107,75): error TS7031: Binding element 'kind' implicitly has an 'any' type.
+src/checker.ts(107,98): error TS2339: Property 'SyntaxKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(108,72): error TS7006: Parameter 'candidate' implicitly has an 'any' type.
+src/checker.ts(108,89): error TS2339: Property 'isIdentifier' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(110,30): error TS2339: Property 'isArrowFunction' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(110,65): error TS2339: Property 'isFunctionExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(117,49): error TS2339: Property 'isIdentifier' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(121,41): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Expression'.
+src/checker.ts(123,12): error TS2339: Property 'isPropertyAssignment' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(126,19): error TS2339: Property 'isShorthandPropertyAssignment' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(131,50): error TS2339: Property 'isIdentifier' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(132,15): error TS2339: Property 'isBinaryExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(132,76): error TS2339: Property 'SyntaxKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(132,117): error TS2339: Property 'isIdentifier' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/checker.ts(132,194): error TS2339: Property 'isIdentifier' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/activity-tutorial:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/activity-tutorial@0.1.0 check-types: `tsc --noEmit -p tsconfig.test.json`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=66
+WARNINGS=0
+PEAK_RSS_KIB=180328
+ELAPSED_MS=2390
+LOAD1_START=2.21
+LOAD1_END=2.12
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0

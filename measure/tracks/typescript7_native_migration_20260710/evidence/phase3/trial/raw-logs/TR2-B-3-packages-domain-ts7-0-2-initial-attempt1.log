@@ -1,0 +1,22 @@
+WS=packages/domain
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+src/primary-books/print/sync.ts(52,17): error TS2339: Property 'transpileModule' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/primary-books/print/sync.ts(52,79): error TS2339: Property 'ModuleKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/primary-books/print/sync.ts(52,111): error TS2339: Property 'ScriptTarget' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/domain:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/domain@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=3
+WARNINGS=0
+PEAK_RSS_KIB=951572
+ELAPSED_MS=3890
+LOAD1_START=4.46
+LOAD1_END=4.58
+SWAP_GROWTH_KIB=-4
+VALID=1
+TSCONFIG_CHANGED=0

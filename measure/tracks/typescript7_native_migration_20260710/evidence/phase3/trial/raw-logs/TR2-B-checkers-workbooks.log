@@ -1,0 +1,36 @@
+GATE=TR2-B-checkers-workbooks
+CMD=capture-typechecks.py --gate TR2-B-checkers-workbooks
+START_EPOCH=1795859737
+HEAVY_RUN_ACTIVE=1
+HEAVY_PRIORITY=p2
+LOAD1_START=3.38
+MEMAVAIL_MB_START=17792
+SWAPFREE_KIB_START=4998124
+DISK_FREE_MB=539967
+WORKSPACES=43
+WS=apps/workbooks
+RUN=checkers-1
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+tsconfig.json(7,5): error TS5102: Option 'baseUrl' has been removed. Please remove it from your configuration.
+  Use '"paths": {"*": ["./*"]}' instead.
+undefined
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/apps/workbooks:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: tsc --noEmit --checkers 1
+WS_EXIT=1
+DIAGNOSTICS=1
+WARNINGS=0
+PEAK_RSS_KIB=263572
+ELAPSED_MS=2450
+LOAD1_START=3.38
+LOAD1_END=3.38
+SWAP_GROWTH_KIB=820
+VALID=1
+TSCONFIG_CHANGED=0
+VARIANT=checkers-1
+SWAPFREE_KIB_END=4998944
+LOAD1_END=3.38
+TSCONFIG_CHANGED=0
+EXIT=0
+ELAPSED_S=3

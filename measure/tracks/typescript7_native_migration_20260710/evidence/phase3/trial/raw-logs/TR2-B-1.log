@@ -1,0 +1,480 @@
+GATE=TR2-B-1
+CMD=capture-typechecks.py --gate TR2-B-1
+START_EPOCH=1795858830
+HEAVY_RUN_ACTIVE=1
+HEAVY_PRIORITY=p2
+LOAD1_START=2.96
+MEMAVAIL_MB_START=16886
+SWAPFREE_KIB_START=5293516
+DISK_FREE_MB=541142
+WORKSPACES=43
+CONTROL_TSC_VERSION=Version 5.9.3
+WS=apps/accounting
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=1769952
+ELAPSED_MS=7220
+LOAD1_START=2.96
+LOAD1_END=2.81
+SWAP_GROWTH_KIB=496
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/accounting
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=1075312
+ELAPSED_MS=3100
+LOAD1_START=2.81
+LOAD1_END=2.99
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/accounts
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=712476
+ELAPSED_MS=5210
+LOAD1_START=2.99
+LOAD1_END=3.15
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/accounts
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit && tsc --noEmit -p tsconfig.test.json
+tsconfig.json(7,5): error TS5102: Option 'baseUrl' has been removed. Please remove it from your configuration.
+  Use '"paths": {"*": ["./*"]}' instead.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/apps/accounts:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] accounts@0.1.0 check-types: `tsc --noEmit && tsc --noEmit -p tsconfig.test.json`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=1
+WARNINGS=0
+PEAK_RSS_KIB=245140
+ELAPSED_MS=2620
+LOAD1_START=3.15
+LOAD1_END=3.15
+SWAP_GROWTH_KIB=4
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/activity-vinext-fixture
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=465416
+ELAPSED_MS=1460
+LOAD1_START=3.15
+LOAD1_END=3.22
+SWAP_GROWTH_KIB=4
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/activity-vinext-fixture
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+tsconfig.json(3,44): error TS5102: Option 'baseUrl' has been removed. Please remove it from your configuration.
+  Use '"paths": {"*": ["./*"]}' instead.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/apps/activity-vinext-fixture:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] activity-vinext-fixture@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=1
+WARNINGS=0
+PEAK_RSS_KIB=181608
+ELAPSED_MS=2430
+LOAD1_START=3.22
+LOAD1_END=3.22
+SWAP_GROWTH_KIB=192
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/advantage-games
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=1049440
+ELAPSED_MS=7430
+LOAD1_START=3.22
+LOAD1_END=3.18
+SWAP_GROWTH_KIB=104
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/advantage-games
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=938360
+ELAPSED_MS=4150
+LOAD1_START=3.18
+LOAD1_END=4.05
+SWAP_GROWTH_KIB=104
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/codecamp-advantage
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=925468
+ELAPSED_MS=4260
+LOAD1_START=4.05
+LOAD1_END=4.05
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/codecamp-advantage
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=580704
+ELAPSED_MS=2850
+LOAD1_START=4.05
+LOAD1_END=3.97
+SWAP_GROWTH_KIB=-4
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/marketing
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=831068
+ELAPSED_MS=4280
+LOAD1_START=3.97
+LOAD1_END=4.53
+SWAP_GROWTH_KIB=8
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/marketing
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+tsconfig.json(7,5): error TS5102: Option 'baseUrl' has been removed. Please remove it from your configuration.
+  Use '"paths": {"*": ["./*"]}' instead.
+tsconfig.json(9,15): error TS5090: Non-relative paths are not allowed. Did you forget a leading './'?
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/apps/marketing:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] marketing@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=2
+WARNINGS=0
+PEAK_RSS_KIB=246752
+ELAPSED_MS=2550
+LOAD1_START=4.53
+LOAD1_END=5.37
+SWAP_GROWTH_KIB=176
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/primary-advantage
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=2023036
+ELAPSED_MS=19100
+LOAD1_START=5.37
+LOAD1_END=5.13
+SWAP_GROWTH_KIB=208
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/primary-advantage
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ NODE_OPTIONS=--max-old-space-size=6144 tsc --noEmit
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=2132072
+ELAPSED_MS=6050
+LOAD1_START=5.13
+LOAD1_END=5.60
+SWAP_GROWTH_KIB=4
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/reading-advantage
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+<--- Last few GCs --->
+
+[3150573:0x43ffd000]    13291 ms: Scavenge (interleaved) 2037.9 (2049.3) -> 2036.4 (2053.3) MB, pooled: 0 MB, 3.55 / 0.00 ms  (average mu = 0.301, current mu = 0.265) allocation failure; 
+[3150573:0x43ffd000]    13786 ms: Mark-Compact 2040.3 (2053.3) -> 2031.8 (2053.5) MB, pooled: 0 MB, 486.29 / 0.00 ms  (average mu = 0.188, current mu = 0.097) allocation failure; scavenge might not succeed
+
+FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 0x75356c node::OOMErrorHandler(char const*, v8::OOMDetails const&) [node]
+ 2: 0xc52cd0  [node]
+ 3: 0xc52dbf  [node]
+ 4: 0xef6695  [node]
+ 5: 0xef66c2  [node]
+ 6: 0xef69ba  [node]
+ 7: 0xf076ba  [node]
+ 8: 0xf0ba60  [node]
+ 9: 0x199e0d1  [node]
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=2322928
+ELAPSED_MS=14190
+LOAD1_START=5.60
+LOAD1_END=5.64
+SWAP_GROWTH_KIB=0
+VALID=0
+TSCONFIG_CHANGED=0
+WS=apps/reading-advantage
+RUN=initial
+ATTEMPT=2
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+<--- Last few GCs --->
+
+[3152890:0x2c5b9000]    12129 ms: Mark-Compact 2038.1 (2052.8) -> 2028.5 (2061.0) MB, pooled: 0 MB, 358.56 / 0.00 ms  (average mu = 0.263, current mu = 0.190) allocation failure; scavenge might not succeed
+[3152890:0x2c5b9000]    12539 ms: Mark-Compact (reduce) 2037.2 (2061.0) -> 2032.5 (2044.3) MB, pooled: 0 MB, 279.66 / 0.00 ms  (+ 52.0 ms in 74 steps since start of marking, biggest step 5.6 ms, walltime since start of marking 346 ms) (average mu = 0.229,
+FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 0x75356c node::OOMErrorHandler(char const*, v8::OOMDetails const&) [node]
+ 2: 0xc52cd0  [node]
+ 3: 0xc52dbf  [node]
+ 4: 0xef6695  [node]
+ 5: 0xef66c2  [node]
+ 6: 0xef69ba  [node]
+ 7: 0xf076ba  [node]
+ 8: 0xf0ba60  [node]
+ 9: 0x199e0d1  [node]
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=2319140
+ELAPSED_MS=12950
+LOAD1_START=5.64
+LOAD1_END=5.55
+SWAP_GROWTH_KIB=356
+VALID=0
+TSCONFIG_CHANGED=0
+WS=apps/reading-advantage
+RUN=initial
+ATTEMPT=3
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+<--- Last few GCs --->
+
+[3154719:0x3eaad000]    13635 ms: Scavenge (interleaved) 2041.7 (2052.3) -> 2038.6 (2052.3) MB, pooled: 0 MB, 4.83 / 0.00 ms  (average mu = 0.288, current mu = 0.237) allocation failure; 
+[3154719:0x3eaad000]    13942 ms: Mark-Compact (reduce) 2042.3 (2052.6) -> 2037.5 (2044.2) MB, pooled: 0 MB, 235.66 / 0.00 ms  (+ 50.7 ms in 55 steps since start of marking, biggest step 5.0 ms, walltime since start of marking 299 ms) (average mu = 0.259,
+FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 0x75356c node::OOMErrorHandler(char const*, v8::OOMDetails const&) [node]
+ 2: 0xc52cd0  [node]
+ 3: 0xc52dbf  [node]
+ 4: 0xef6695  [node]
+ 5: 0xef66c2  [node]
+ 6: 0xef69ba  [node]
+ 7: 0xf076ba  [node]
+ 8: 0xf0ba60  [node]
+ 9: 0x199e0d1  [node]
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=2311024
+ELAPSED_MS=14330
+LOAD1_START=5.55
+LOAD1_END=6.07
+SWAP_GROWTH_KIB=-77412
+VALID=0
+TSCONFIG_CHANGED=0
+WS=apps/reading-advantage
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+components/index/book.tsx(3,19): error TS2307: Cannot find module '@/public/book-1.jpg' or its corresponding type declarations.
+components/index/book.tsx(4,28): error TS2307: Cannot find module '@/public/book1-original.jpg' or its corresponding type declarations.
+components/ui/toaster.tsx(13,20): error TS2307: Cannot find module '../../public/xpBox.webp' or its corresponding type declarations.
+components/ui/toaster.tsx(14,22): error TS2307: Cannot find module '../../public/ninja.svg' or its corresponding type declarations.
+components/ui/toaster.tsx(15,26): error TS2307: Cannot find module '../../public/ninja-star.svg' or its corresponding type declarations.
+components/ui/toaster.tsx(16,23): error TS2307: Cannot find module '../../public/knight-sword.svg' or its corresponding type declarations.
+components/ui/toaster.tsx(17,28): error TS2307: Cannot find module '../../public/knight.svg' or its corresponding type declarations.
+components/ui/toaster.tsx(18,26): error TS2307: Cannot find module '../../public/magic-wand-and-hat.svg' or its corresponding type declarations.
+components/ui/toaster.tsx(19,24): error TS2307: Cannot find module '../../public/man-mage-light.svg' or its corresponding type declarations.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/apps/reading-advantage:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] reading-advantage@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=9
+WARNINGS=0
+PEAK_RSS_KIB=1490828
+ELAPSED_MS=3590
+LOAD1_START=5.74
+LOAD1_END=5.36
+SWAP_GROWTH_KIB=1940
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/sales-advantage
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=920044
+ELAPSED_MS=4320
+LOAD1_START=5.36
+LOAD1_END=5.33
+SWAP_GROWTH_KIB=8
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/sales-advantage
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+components/lesson-content.test.tsx(4,1): error TS2593: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+components/lesson-content.test.tsx(5,3): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+components/lesson-content.test.tsx(14,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(15,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(16,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(17,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(20,3): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+components/lesson-content.test.tsx(29,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(32,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(33,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(34,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(37,3): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+components/lesson-content.test.tsx(46,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(47,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(48,5): error TS2304: Cannot find name 'expect'.
+components/lesson-content.test.tsx(49,5): error TS2304: Cannot find name 'expect'.
+scripts/sales-runtime-contract.real-db.test.ts(50,7): error TS2593: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+scripts/sales-runtime-contract.real-db.test.ts(51,7): error TS2593: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+scripts/sales-runtime-contract.real-db.test.ts(56,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+scripts/sales-runtime-contract.real-db.test.ts(62,7): error TS2304: Cannot find name 'expect'.
+scripts/sales-runtime-contract.real-db.test.ts(65,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+scripts/sales-runtime-contract.real-db.test.ts(71,7): error TS2304: Cannot find name 'expect'.
+scripts/sales-runtime-contract.real-db.test.ts(77,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+scripts/sales-runtime-contract.real-db.test.ts(83,7): error TS2304: Cannot find name 'expect'.
+scripts/sales-runtime-contract.real-db.test.ts(95,7): error TS2304: Cannot find name 'expect'.
+scripts/sales-runtime-contract.real-db.test.ts(98,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+scripts/sales-runtime-contract.real-db.test.ts(154,7): error TS2304: Cannot find name 'expect'.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/apps/sales-advantage:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] sales-advantage@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=27
+WARNINGS=0
+PEAK_RSS_KIB=572916
+ELAPSED_MS=8360
+LOAD1_START=5.33
+LOAD1_END=4.75
+SWAP_GROWTH_KIB=-176
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/science-advantage
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=1226840
+ELAPSED_MS=7530
+LOAD1_START=4.75
+LOAD1_END=4.61
+SWAP_GROWTH_KIB=76
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/science-advantage
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+lib/gamification/gamification-tenant-isolation.test.ts(101,3): error TS2593: Cannot find name 'beforeEach'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+lib/services/services-tenant-isolation.test.ts(59,3): error TS2593: Cannot find name 'beforeEach'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/apps/science-advantage:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] science-advantage@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=2
+WARNINGS=0
+PEAK_RSS_KIB=965820
+ELAPSED_MS=4430
+LOAD1_START=4.61
+LOAD1_END=4.64
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+SWAPFREE_KIB_END=5218444
+LOAD1_END=4.64
+TSCONFIG_CHANGED=0
+EXIT=0
+ELAPSED_S=154

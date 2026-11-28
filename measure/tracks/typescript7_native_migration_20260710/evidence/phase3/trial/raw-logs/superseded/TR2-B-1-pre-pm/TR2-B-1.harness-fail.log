@@ -1,0 +1,24 @@
+GATE=TR2-B-1
+CMD=capture-typechecks.py --gate TR2-B-1
+START_EPOCH=1795857328
+HEAVY_RUN_ACTIVE=1
+HEAVY_PRIORITY=p2
+LOAD1_START=1.26
+MEMAVAIL_MB_START=17618
+SWAPFREE_KIB_START=5333020
+DISK_FREE_MB=541189
+WORKSPACES=43
+Traceback (most recent call last):
+  File "/home/daniebo/Desktop/rama-worktrees/ts7-phase3/measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/capture-typechecks.py", line 483, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/home/daniebo/Desktop/rama-worktrees/ts7-phase3/measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/capture-typechecks.py", line 441, in main
+    final, _ = run_workspace(by_name[workspace], args.gate, "initial", compiler, baseline_rows)
+               ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/daniebo/Desktop/rama-worktrees/ts7-phase3/measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/capture-typechecks.py", line 386, in run_workspace
+    current = run_attempt(row, gate_id, attempt, run_label, compiler, baseline_rows, command_override)
+  File "/home/daniebo/Desktop/rama-worktrees/ts7-phase3/measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/capture-typechecks.py", line 289, in run_attempt
+    parsed = parse_time_v(time_path.read_text(encoding="utf-8"))
+  File "/home/daniebo/Desktop/rama-worktrees/ts7-phase3/measure/tracks/typescript7_native_migration_20260710/evidence/phase3/trial/capture-typechecks.py", line 119, in parse_time_v
+    raise ValueError("time -v output misses a labeled line")
+ValueError: time -v output misses a labeled line

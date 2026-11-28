@@ -1,0 +1,28 @@
+WS=apps/reading-advantage
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+components/index/book.tsx(3,19): error TS2307: Cannot find module '@/public/book-1.jpg' or its corresponding type declarations.
+components/index/book.tsx(4,28): error TS2307: Cannot find module '@/public/book1-original.jpg' or its corresponding type declarations.
+components/ui/toaster.tsx(13,20): error TS2307: Cannot find module '../../public/xpBox.webp' or its corresponding type declarations.
+components/ui/toaster.tsx(14,22): error TS2307: Cannot find module '../../public/ninja.svg' or its corresponding type declarations.
+components/ui/toaster.tsx(15,26): error TS2307: Cannot find module '../../public/ninja-star.svg' or its corresponding type declarations.
+components/ui/toaster.tsx(16,23): error TS2307: Cannot find module '../../public/knight-sword.svg' or its corresponding type declarations.
+components/ui/toaster.tsx(17,28): error TS2307: Cannot find module '../../public/knight.svg' or its corresponding type declarations.
+components/ui/toaster.tsx(18,26): error TS2307: Cannot find module '../../public/magic-wand-and-hat.svg' or its corresponding type declarations.
+components/ui/toaster.tsx(19,24): error TS2307: Cannot find module '../../public/man-mage-light.svg' or its corresponding type declarations.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/apps/reading-advantage:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] reading-advantage@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=9
+WARNINGS=0
+PEAK_RSS_KIB=1490828
+ELAPSED_MS=3590
+LOAD1_START=5.74
+LOAD1_END=5.36
+SWAP_GROWTH_KIB=1940
+VALID=1
+TSCONFIG_CHANGED=0

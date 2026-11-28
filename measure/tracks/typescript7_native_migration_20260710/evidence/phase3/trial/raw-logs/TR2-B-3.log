@@ -1,0 +1,1450 @@
+GATE=TR2-B-3
+CMD=capture-typechecks.py --gate TR2-B-3
+START_EPOCH=1795859327
+HEAVY_RUN_ACTIVE=1
+HEAVY_PRIORITY=p2
+LOAD1_START=1.66
+MEMAVAIL_MB_START=16029
+SWAPFREE_KIB_START=5222372
+DISK_FREE_MB=540579
+WORKSPACES=43
+CONTROL_TSC_VERSION=Version 5.9.3
+WS=packages/avatar-kit
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=421540
+ELAPSED_MS=1280
+LOAD1_START=1.66
+LOAD1_END=1.66
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/avatar-kit
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=185716
+ELAPSED_MS=2380
+LOAD1_START=1.66
+LOAD1_END=2.24
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/backend
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=778944
+ELAPSED_MS=8350
+LOAD1_START=2.24
+LOAD1_END=2.31
+SWAP_GROWTH_KIB=256
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/backend
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit && tsc --noEmit -p tsconfig.test.json
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=712484
+ELAPSED_MS=3900
+LOAD1_START=2.31
+LOAD1_END=2.36
+SWAP_GROWTH_KIB=-8
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/codecamp-knowledge
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=536140
+ELAPSED_MS=3570
+LOAD1_START=2.36
+LOAD1_END=2.49
+SWAP_GROWTH_KIB=8
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/codecamp-knowledge
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit && tsc -p tsconfig.test.json
+src/cli.ts(1,30): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/cli.ts(2,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/cli.ts(3,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/cli.ts(4,46): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/cli.ts(71,22): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/cli.ts(105,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/cli.ts(125,22): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/cli.ts(125,83): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/cli.ts(127,3): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/cli.ts(127,38): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/source-sync.ts(1,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/codecamp-knowledge:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/codecamp-knowledge@0.1.0 check-types: `tsc --noEmit && tsc -p tsconfig.test.json`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=11
+WARNINGS=0
+PEAK_RSS_KIB=186488
+ELAPSED_MS=2460
+LOAD1_START=2.49
+LOAD1_END=2.49
+SWAP_GROWTH_KIB=-8
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/db
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=905796
+ELAPSED_MS=6120
+LOAD1_START=2.49
+LOAD1_END=2.80
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/db
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+src/__tests__/accounting-schema.test.ts(14,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/accounting-schema.test.ts(15,46): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/auth-security-phase1-journal.test.ts(37,42): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/auth-security-phase1-journal.test.ts(38,31): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/auth-security-phase1-journal.test.ts(39,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/barrel-hygiene.test.ts(23,42): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/barrel-hygiene.test.ts(24,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/barrel-hygiene.test.ts(25,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/capability-idempotency-schema.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/capability-idempotency-schema.test.ts(2,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/capability-idempotency-schema.test.ts(9,42): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/challenge-migration-candidate.test.ts(2,26): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/challenge-migration-candidate.test.ts(3,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/challenge-migration-candidate.test.ts(6,31): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/challenge-migration-candidate.test.ts(7,23): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/challenge-migration-candidate.test.ts(9,22): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-0049-historical-ledger-gap.test.ts(15,40): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-0049-historical-ledger-gap.test.ts(16,23): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-0049-historical-ledger-gap.test.ts(17,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-0049-historical-ledger-gap.test.ts(18,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-0049-historical-ledger-gap.test.ts(19,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-0049-historical-ledger-gap.test.ts(34,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-0049-historical-ledger-gap.test.ts(346,14): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-0049-historical-ledger-gap.test.ts(355,37): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-0049-historical-ledger-gap.test.ts(358,37): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-0049-historical-ledger-gap.test.ts(362,23): error TS7006: Parameter 'status' implicitly has an 'any' type.
+src/__tests__/codecamp-0049-ledger-gap-deploy-contract.test.ts(10,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-0049-ledger-gap-deploy-contract.test.ts(11,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-0049-ledger-gap-deploy-contract.test.ts(12,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-0049-ledger-gap-deploy-contract.test.ts(99,14): error TS7006: Parameter 'block' implicitly has an 'any' type.
+src/__tests__/codecamp-curriculum-data-combined.test.ts(2,28): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-curriculum-data-combined.test.ts(3,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-curriculum-data-combined.test.ts(52,33): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-exercise-quiz-repair-0049.real-db.test.ts(2,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-exercise-quiz-repair-0049.real-db.test.ts(3,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-exercise-quiz-repair-0049.real-db.test.ts(4,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-exercise-quiz-repair-0049.real-db.test.ts(12,19): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-exercise-quiz-repair-0049.real-db.test.ts(14,46): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/codecamp-principal-0043.real-db.test.ts(2,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-principal-0043.real-db.test.ts(3,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-principal-0043.real-db.test.ts(4,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-principal-0043.real-db.test.ts(9,19): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/codecamp-principal-0043.real-db.test.ts(12,15): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/company-product-principal-0042.real-db.test.ts(2,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/company-product-principal-0042.real-db.test.ts(3,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/company-product-principal-0042.real-db.test.ts(4,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/company-product-principal-0042.real-db.test.ts(9,19): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/company-product-principal-0042.real-db.test.ts(11,40): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/company-product-principals-schema.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/company-product-principals-schema.test.ts(2,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/company-product-principals-schema.test.ts(54,21): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/company-product-principals-schema.test.ts(78,21): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/company-product-principals-schema.test.ts(115,21): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/connection-options.test.ts(51,24): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/connection-options.test.ts(54,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/connection-options.test.ts(59,14): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/connection-options.test.ts(61,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/connection-options.test.ts(96,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/connection-options.test.ts(106,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/connection-options.test.ts(116,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/connection-options.test.ts(121,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/connection-options.test.ts(128,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/connection-options.test.ts(133,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/connection-options.test.ts(140,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/contract-stubs.test.ts(16,42): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/contract-stubs.test.ts(17,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/contract-stubs.test.ts(18,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/deploy-gate-contract.test.ts(29,52): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/deploy-gate-contract.test.ts(30,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/deploy-gate-contract.test.ts(31,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-migration-format.test.ts(59,43): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-migration-format.test.ts(60,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-migration-format.test.ts(61,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-phase1-contracts-adversarial.test.ts(46,55): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-phase1-contracts-adversarial.test.ts(47,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-phase1-contracts-adversarial.test.ts(48,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-phase1-contracts-adversarial.test.ts(420,16): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase1-contracts-adversarial.test.ts(432,16): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase1-contracts-adversarial.test.ts(433,13): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase1-contracts-adversarial.test.ts(530,52): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase1-contracts-adversarial.test.ts(551,53): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase1-contracts.test.ts(42,55): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-phase1-contracts.test.ts(43,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-phase1-contracts.test.ts(44,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-phase1-contracts.test.ts(313,10): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts(57,55): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts(58,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts(59,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts(332,60): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts(506,16): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts(551,36): error TS7006: Parameter 'line' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts(568,10): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts(647,14): error TS7006: Parameter 'l' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts(666,14): error TS7006: Parameter 'l' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts(684,14): error TS7006: Parameter 'l' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts(702,16): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts(709,16): error TS7006: Parameter 'l' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts(813,8): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts(837,16): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts(838,13): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts(856,16): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/__tests__/drizzle045-phase3-integration-gates.test.ts(82,42): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-phase3-integration-gates.test.ts(83,31): error TS2591: Cannot find name 'node:module'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-phase3-integration-gates.test.ts(84,47): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-phase3-integration-gates.test.ts(85,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-phase4-closure-gates.test.ts(106,42): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-phase4-closure-gates.test.ts(107,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-phase4-closure-gates.test.ts(108,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-schema-compile.test.ts(49,42): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-schema-compile.test.ts(50,31): error TS2591: Cannot find name 'node:module'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-schema-compile.test.ts(51,47): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-schema-compile.test.ts(52,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-zod-contract.test.ts(43,42): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-zod-contract.test.ts(44,31): error TS2591: Cannot find name 'node:module'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-zod-contract.test.ts(45,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/drizzle045-zod-contract.test.ts(46,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/durable-jobs-role-hardening-pg16.red.test.ts(1,42): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/durable-jobs-role-hardening-pg16.red.test.ts(2,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/durable-jobs-role-hardening-pg16.red.test.ts(11,42): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/durable-jobs-role-hardening-pg16.red.test.ts(41,18): error TS2503: Cannot find namespace 'NodeJS'.
+src/__tests__/durable-jobs-role-hardening-pg16.red.test.ts(44,18): error TS2503: Cannot find namespace 'NodeJS'.
+src/__tests__/durable-jobs-role-hardening-pg16.red.test.ts(248,59): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/durable-jobs-role-hardening-pg16.red.test.ts(252,66): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/durable-jobs-schema-migration.red.test.ts(5,8): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/durable-jobs-schema-migration.red.test.ts(6,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/durable-jobs-schema-migration.red.test.ts(13,42): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/durable-jobs-schema-migration.red.test.ts(32,12): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/durable-jobs-schema-pg16.red.test.ts(1,43): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/durable-jobs-schema-pg16.red.test.ts(2,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/durable-jobs-schema-pg16.red.test.ts(20,42): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/durable-jobs-schema-pg16.red.test.ts(27,12): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/durable-jobs-schema-pg16.red.test.ts(28,9): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/durable-jobs-schema-pg16.red.test.ts(159,18): error TS2503: Cannot find namespace 'NodeJS'.
+src/__tests__/durable-jobs-schema-pg16.red.test.ts(178,16): error TS2503: Cannot find namespace 'NodeJS'.
+src/__tests__/durable-jobs-schema-pg16.red.test.ts(220,3): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/durable-jobs-schema-pg16.red.test.ts(745,58): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/durable-jobs-transition-fixtures.test.ts(1,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/env-guards.test.ts(24,28): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/env-guards.test.ts(25,23): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/env-guards.test.ts(26,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/env-guards.test.ts(27,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/env-guards.test.ts(42,11): error TS2503: Cannot find namespace 'NodeJS'.
+src/__tests__/env-guards.test.ts(50,25): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/env-guards.test.ts(53,15): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/env-guards.test.ts(54,15): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/env-guards.test.ts(65,30): error TS7006: Parameter 'chunk' implicitly has an 'any' type.
+src/__tests__/env-guards.test.ts(68,30): error TS7006: Parameter 'chunk' implicitly has an 'any' type.
+src/__tests__/env-guards.test.ts(81,24): error TS7006: Parameter 'err' implicitly has an 'any' type.
+src/__tests__/env-guards.test.ts(85,24): error TS7006: Parameter 'status' implicitly has an 'any' type.
+src/__tests__/env-guards.test.ts(85,32): error TS7006: Parameter 'signal' implicitly has an 'any' type.
+src/__tests__/fresh-migration.integration.test.ts(1,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/fresh-migration.integration.test.ts(2,23): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/fresh-migration.integration.test.ts(3,26): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/fresh-migration.integration.test.ts(4,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/fresh-migration.integration.test.ts(5,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/fresh-migration.integration.test.ts(18,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/fresh-migration.integration.test.ts(44,14): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/fresh-migration.integration.test.ts(54,37): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/fresh-migration.integration.test.ts(57,37): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/fresh-migration.integration.test.ts(61,23): error TS7006: Parameter 'status' implicitly has an 'any' type.
+src/__tests__/journal-integrity.test.ts(25,55): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/journal-integrity.test.ts(26,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/journal-integrity.test.ts(27,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/journal-integrity.test.ts(54,14): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/journal-integrity.test.ts(55,11): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/ledger-doctor.test.ts(27,23): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/ledger-doctor.test.ts(28,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/ledger-doctor.test.ts(29,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/ledger-doctor.test.ts(30,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/ledger-doctor.test.ts(40,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/ledger-doctor.test.ts(47,11): error TS2503: Cannot find namespace 'NodeJS'.
+src/__tests__/ledger-doctor.test.ts(62,19): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/ledger-doctor.test.ts(68,30): error TS7006: Parameter 'chunk' implicitly has an 'any' type.
+src/__tests__/ledger-doctor.test.ts(71,30): error TS7006: Parameter 'chunk' implicitly has an 'any' type.
+src/__tests__/ledger-doctor.test.ts(78,24): error TS7006: Parameter 'err' implicitly has an 'any' type.
+src/__tests__/ledger-doctor.test.ts(82,23): error TS7006: Parameter 'status' implicitly has an 'any' type.
+src/__tests__/ledger-doctor.test.ts(82,31): error TS7006: Parameter 'signal' implicitly has an 'any' type.
+src/__tests__/main-journal-accounting-guard.adversarial.test.ts(2,27): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/main-journal-accounting-guard.adversarial.test.ts(3,71): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/main-journal-accounting-guard.adversarial.test.ts(4,31): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/main-journal-accounting-guard.adversarial.test.ts(35,9): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/main-journal-accounting-guard.adversarial.test.ts(46,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/main-journal-accounting-guard.test.ts(9,8): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/main-journal-accounting-guard.test.ts(10,27): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/main-journal-accounting-guard.test.ts(11,22): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/main-journal-accounting-guard.test.ts(29,57): error TS7006: Parameter 'file' implicitly has an 'any' type.
+src/__tests__/main-journal-accounting-guard.test.ts(44,55): error TS7006: Parameter 'file' implicitly has an 'any' type.
+src/__tests__/main-journal-accounting-guard.test.ts(82,18): error TS7006: Parameter 'line' implicitly has an 'any' type.
+src/__tests__/main-journal-accounting-guard.test.ts(106,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/main-journal-accounting-guard.test.ts(115,18): error TS7006: Parameter 'file' implicitly has an 'any' type.
+src/__tests__/main-journal-accounting-guard.test.ts(116,15): error TS7006: Parameter 'file' implicitly has an 'any' type.
+src/__tests__/main-journal-accounting-guard.test.ts(123,22): error TS7006: Parameter 'file' implicitly has an 'any' type.
+src/__tests__/marketing-topic-normalization-migration.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/marketing-topic-normalization-migration.test.ts(2,22): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/marketing-topic-normalization-migration.test.ts(8,8): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/marketing-topic-normalization-migration.test.ts(44,9): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/mastery-persistence-migration-repro.test.ts(8,30): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/mastery-persistence-migration-repro.test.ts(9,42): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/mastery-persistence-migration-repro.test.ts(10,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/mastery-persistence-migration-repro.test.ts(11,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/mastery-persistence-schema.test.ts(9,55): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/mastery-persistence-schema.test.ts(10,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/mastery-persistence-schema.test.ts(11,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/mastery-persistence-schema.test.ts(265,63): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/mastery-persistence-schema.test.ts(275,13): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/mastery-persistence-tenant-adversarial.test.ts(12,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/mastery-persistence-tenant-adversarial.test.ts(13,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/mastery-persistence-tenant-adversarial.test.ts(14,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/migration-ceiling-adversarial.test.ts(32,23): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/migration-ceiling-adversarial.test.ts(33,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/migration-ceiling-adversarial.test.ts(37,42): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/migration-ceiling-adversarial.test.ts(439,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/migration-ceiling-adversarial.test.ts(444,14): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/migration-ceiling-adversarial.test.ts(455,37): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/migration-ceiling-adversarial.test.ts(458,37): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/migration-ceiling-adversarial.test.ts(462,26): error TS7006: Parameter 'code' implicitly has an 'any' type.
+src/__tests__/migration-snapshot-chain.test.ts(1,42): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/migration-snapshot-chain.test.ts(2,18): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/migration-snapshot-chain.test.ts(5,27): error TS2304: Cannot find name '__dirname'.
+src/__tests__/migration-sql.test.ts(2,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/migration-sql.test.ts(3,22): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/migration-sql.test.ts(8,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/migration-sql.test.ts(24,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/migration-sql.test.ts(34,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/migration-sql.test.ts(46,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/migration-sql.test.ts(58,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/migration-sql.test.ts(86,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/package-esm-smoke.test.ts(22,42): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/package-esm-smoke.test.ts(23,23): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/package-esm-smoke.test.ts(24,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/package-esm-smoke.test.ts(25,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/package-esm-smoke.test.ts(35,11): error TS2503: Cannot find namespace 'NodeJS'.
+src/__tests__/package-esm-smoke.test.ts(42,25): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/package-esm-smoke.test.ts(45,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/package-esm-smoke.test.ts(53,30): error TS7006: Parameter 'chunk' implicitly has an 'any' type.
+src/__tests__/package-esm-smoke.test.ts(56,30): error TS7006: Parameter 'chunk' implicitly has an 'any' type.
+src/__tests__/package-esm-smoke.test.ts(63,24): error TS7006: Parameter 'err' implicitly has an 'any' type.
+src/__tests__/package-esm-smoke.test.ts(67,24): error TS7006: Parameter 'status' implicitly has an 'any' type.
+src/__tests__/package-esm-smoke.test.ts(67,32): error TS7006: Parameter 'signal' implicitly has an 'any' type.
+src/__tests__/package-esm-smoke.test.ts(98,13): error TS7006: Parameter 'line' implicitly has an 'any' type.
+src/__tests__/package-esm-smoke.test.ts(98,19): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/__tests__/package-esm-smoke.test.ts(99,18): error TS7031: Binding element 'line' implicitly has an 'any' type.
+src/__tests__/package-esm-smoke.test.ts(100,18): error TS7031: Binding element 'line' implicitly has an 'any' type.
+src/__tests__/package-esm-smoke.test.ts(101,15): error TS7031: Binding element 'line' implicitly has an 'any' type.
+src/__tests__/package-esm-smoke.test.ts(101,21): error TS7031: Binding element 'i' implicitly has an 'any' type.
+src/__tests__/phase-1-review-jobs-migration.test.ts(2,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-1-review-jobs-migration.test.ts(3,22): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-1-review-jobs-migration.test.ts(5,29): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-1-review-jobs-migration.test.ts(6,27): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-insert-roundtrip.test.ts(54,24): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema-adversarial.test.ts(53,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema-adversarial.test.ts(54,22): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema-adversarial.test.ts(180,10): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema-adversarial.test.ts(189,13): error TS7006: Parameter 'v' implicitly has an 'any' type.
+src/__tests__/phase-2-marketing-schema-adversarial.test.ts(258,10): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema-adversarial.test.ts(262,10): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema-adversarial.test.ts(351,23): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema-adversarial.test.ts(373,23): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema-adversarial.test.ts(377,23): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema-adversarial.test.ts(465,10): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema-adversarial.test.ts(469,23): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema-adversarial.test.ts(474,23): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema-adversarial.test.ts(536,37): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema-adversarial.test.ts(541,15): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/__tests__/phase-2-marketing-schema-adversarial.test.ts(561,10): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema-adversarial.test.ts(565,10): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema.test.ts(38,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema.test.ts(39,22): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema.test.ts(49,10): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema.test.ts(188,14): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema.test.ts(202,14): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-marketing-schema.test.ts(211,16): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-7-marketing-schema-integrity.red.test.ts(11,55): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-7-marketing-schema-integrity.red.test.ts(12,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-7-marketing-schema-integrity.red.test.ts(13,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-7-marketing-schema-integrity.red.test.ts(28,12): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/phase-7-marketing-schema-integrity.red.test.ts(30,9): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/phase-7-marketing-schema-integrity.red.test.ts(33,12): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/phase-7-marketing-schema-integrity.red.test.ts(35,9): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/phase-7-marketing-schema-integrity.red.test.ts(36,10): error TS7006: Parameter 'source' implicitly has an 'any' type.
+src/__tests__/primary-deploy-gate-contract.test.ts(7,27): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-deploy-gate-contract.test.ts(8,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-deploy-gate-contract.test.ts(9,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-deploy-gate-contract.test.ts(10,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-deploy-gate-contract.test.ts(126,19): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-legacy-id-map.test.ts(7,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-legacy-import.test.ts(78,16): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-legacy-import.test.ts(79,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-legacy-import.test.ts(86,36): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-legacy-import.test.ts(87,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-qa-seed.test.ts(7,27): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-qa-seed.test.ts(8,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-qa-seed.test.ts(9,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-qa-seed.test.ts(10,31): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-qa-seed.test.ts(15,42): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/primary-qa-seed.test.ts(17,19): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-qa-seed.test.ts(24,15): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-stories-migration.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-stories-migration.test.ts(2,22): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-stories-migration.test.ts(7,22): error TS2304: Cannot find name '__dirname'.
+src/__tests__/primary-student-login.test.ts(6,43): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/primary-student-login.test.ts(81,78): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/__tests__/primary-student-login.test.ts(89,67): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/__tests__/primary-student-login.test.ts(113,78): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/__tests__/sales-legacy-source-role-repair.real-db.test.ts(2,30): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-legacy-source-role-repair.real-db.test.ts(3,40): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-legacy-source-role-repair.real-db.test.ts(4,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-legacy-source-role-repair.real-db.test.ts(9,19): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-legacy-source-role-repair.real-db.test.ts(12,15): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/sales-mastery-postgres16-harness.ts(1,26): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-mastery-postgres16-harness.ts(2,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-mastery-postgres16-harness.ts(3,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-mastery-postgres16-harness.ts(9,42): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/sales-mastery-postgres16-harness.ts(32,17): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-mastery-postgres16-harness.ts(84,40): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-mastery-postgres16-harness.ts(139,39): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-mastery-tenant.integration.test.ts(1,26): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-mastery-tenant.integration.test.ts(2,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-mastery-tenant.integration.test.ts(12,42): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/sales-mastery-tenant.integration.test.ts(24,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-phase2-review-a-durable.red.test.ts(1,26): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-phase2-review-a-durable.red.test.ts(2,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-phase2-review-a-durable.red.test.ts(12,42): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/sales-phase2-review-a-durable.red.test.ts(17,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-phase2-transaction-atomicity.red.test.ts(1,26): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-phase2-transaction-atomicity.red.test.ts(2,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-phase2-transaction-atomicity.red.test.ts(13,42): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/sales-phase2-transaction-atomicity.red.test.ts(18,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-phase2-transaction-atomicity.red.test.ts(20,3): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-progress-activity-schema.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-progress-activity-schema.test.ts(2,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/sales-progress-activity-schema.test.ts(6,41): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/snapshot-drift.test.ts(30,43): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/snapshot-drift.test.ts(31,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/snapshot-drift.test.ts(32,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/snapshot-drift.test.ts(79,14): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/snapshot-drift.test.ts(80,11): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/snapshot-drift.test.ts(81,14): error TS7006: Parameter 'n' implicitly has an 'any' type.
+src/__tests__/snapshot-drift.test.ts(82,12): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/__tests__/snapshot-drift.test.ts(82,15): error TS7006: Parameter 'b' implicitly has an 'any' type.
+src/__tests__/stale-ledger.test.ts(27,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/stale-ledger.test.ts(28,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/stale-ledger.test.ts(29,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/stale-ledger.test.ts(30,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/stale-ledger.test.ts(45,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/standard-pack-successor-admission-persistence-store.integration.test.ts(1,26): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/standard-pack-successor-admission-persistence-store.integration.test.ts(2,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/standard-pack-successor-admission-persistence-store.integration.test.ts(16,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/standard-pack-successor-admission-persistence-store.integration.test.ts(18,42): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/standard-pack-successor-admission-receipts-schema.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/standard-pack-successor-admission-receipts-schema.test.ts(2,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/standard-pack-successor-admission-receipts-schema.test.ts(10,42): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/standard-pack-successor-commitments-schema.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/standard-pack-successor-commitments-schema.test.ts(2,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/standard-pack-successor-commitments-schema.test.ts(10,42): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/storytime-schema.test.ts(11,55): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/storytime-schema.test.ts(12,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/storytime-schema.test.ts(13,46): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/storytime-schema.test.ts(206,36): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/storytime-schema.test.ts(215,57): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/storytime-schema.test.ts(238,57): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/tutor-compat-views.test.ts(7,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/tutor-compat-views.test.ts(8,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/tutor-compat-views.test.ts(10,34): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/tutor-reader-grants.test.ts(6,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/tutor-reader-grants.test.ts(7,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/tutor-reader-grants.test.ts(8,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/tutor-reader-grants.test.ts(13,34): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/__tests__/tutor-reader-grants.test.ts(19,19): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/tutor-reader-grants.test.ts(27,13): error TS7006: Parameter 'v' implicitly has an 'any' type.
+src/__tests__/tutorial-capture-lease-migration.test.ts(2,26): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/tutorial-capture-lease-migration.test.ts(3,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/tutorial-capture-lease-migration.test.ts(12,46): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/tutorial-migration-0032.test.ts(2,26): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/tutorial-migration-0032.test.ts(3,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/tutorial-migration-0032.test.ts(18,46): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/wave2-migration-seed-governance.test.ts(16,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/wave2-migration-seed-governance.test.ts(17,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/wave2-migration-seed-governance.test.ts(18,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/accounting/__tests__/environment.test.ts(8,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/accounting/__tests__/schema-parity.test.ts(2,55): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/accounting/__tests__/schema-parity.test.ts(136,72): error TS7006: Parameter 'file' implicitly has an 'any' type.
+src/accounting/__tests__/schema-parity.test.ts(169,66): error TS7006: Parameter 'file' implicitly has an 'any' type.
+src/accounting/commands/doctor.ts(12,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/accounting/commands/doctor.ts(19,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/accounting/commands/doctor.ts(31,3): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/accounting/commands/migrate.ts(12,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/accounting/commands/migrate.ts(28,3): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/accounting/doctor.ts(1,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/accounting/doctor.ts(2,26): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/accounting/doctor.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/accounting/migration.ts(1,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/client.ts(6,26): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/client.ts(9,24): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/client.ts(10,24): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/bootstrap.integration.test.ts(1,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/bootstrap.integration.test.ts(27,35): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/bootstrap.integration.test.ts(28,10): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/bootstrap.integration.test.ts(31,28): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/bootstrap.integration.test.ts(45,7): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/bootstrap.integration.test.ts(45,48): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/boundary-exports.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/boundary-exports.test.ts(2,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/boundary-exports.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/constraints.integration.test.ts(7,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/local-bootstrap.integration.test.ts(1,26): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/local-bootstrap.integration.test.ts(2,41): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/local-bootstrap.integration.test.ts(3,27): error TS2591: Cannot find name 'node:util'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/local-bootstrap.integration.test.ts(214,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/local-bootstrap.integration.test.ts(238,19): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/metadata-allowlist.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/metadata-allowlist.test.ts(2,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/metadata-allowlist.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/migration-journal.test.ts(7,69): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/migration-journal.test.ts(8,50): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/migration-journal.test.ts(9,46): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/migration-journal.test.ts(58,14): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/company-identity/__tests__/migration-journal.test.ts(59,11): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/company-identity/__tests__/migration-journal.test.ts(154,10): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/company-identity/__tests__/migration-upgrade.integration.test.ts(1,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/migration-upgrade.integration.test.ts(9,8): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/migration-upgrade.integration.test.ts(10,24): error TS2591: Cannot find name 'node:os'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/migration-upgrade.integration.test.ts(11,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/migration-upgrade.integration.test.ts(12,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/migration-upgrade.integration.test.ts(573,25): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/company-identity/__tests__/privileges-audit.integration.test.ts(4,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/product-isolation.integration.test.ts(8,8): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/product-isolation.integration.test.ts(9,24): error TS2591: Cannot find name 'node:os'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/product-isolation.integration.test.ts(10,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/product-isolation.integration.test.ts(11,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/rollback.integration.test.ts(1,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/rollback.integration.test.ts(9,8): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/rollback.integration.test.ts(10,24): error TS2591: Cannot find name 'node:os'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/rollback.integration.test.ts(11,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/rollback.integration.test.ts(12,27): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/rollback.integration.test.ts(13,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/rollback.integration.test.ts(257,59): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/rollback.integration.test.ts(257,68): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/rollback.integration.test.ts(258,25): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/schema-metadata.test.ts(8,28): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/schema-metadata.test.ts(9,40): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/schema-metadata.test.ts(10,46): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/secret-persistence.integration.test.ts(1,40): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/sentinel-table-absence.integration.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/sentinel-table-absence.integration.test.ts(2,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/sentinel-table-absence.integration.test.ts(27,29): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/company-identity/__tests__/test-postgres.ts(1,29): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/test-postgres.ts(119,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/test-postgres.ts(123,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/test-postgres.ts(243,33): error TS2503: Cannot find namespace 'NodeJS'.
+src/company-identity/__tests__/test-postgres.ts(245,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/test-postgres.ts(303,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/test-postgres.ts(304,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/test-postgres.ts(385,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/__tests__/test-postgres.ts(386,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/bootstrap.ts(1,41): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/bootstrap.ts(133,35): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/bootstrap.ts(134,10): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/bootstrap.ts(142,28): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/bootstrap.ts(161,7): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/bootstrap.ts(161,48): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/client.ts(1,29): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/commands/bootstrap.ts(27,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/commands/bootstrap.ts(30,32): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/commands/bootstrap.ts(31,37): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/commands/bootstrap.ts(32,15): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/commands/bootstrap.ts(62,3): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/commands/doctor.ts(12,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/commands/doctor.ts(19,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/commands/doctor.ts(31,3): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/commands/local-bootstrap.ts(16,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/commands/local-bootstrap.ts(20,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/commands/local-bootstrap.ts(23,32): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/commands/local-bootstrap.ts(24,37): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/commands/local-bootstrap.ts(25,15): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/commands/local-bootstrap.ts(52,3): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/commands/migrate.ts(12,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/commands/migrate.ts(28,3): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/doctor.ts(1,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/doctor.ts(2,26): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/doctor.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/migration.ts(1,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/company-identity/persistence.ts(1,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/connection-options.ts(52,15): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/migration-files.ts(1,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/migration-files.ts(2,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/migration-files.ts(3,22): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/migration.ts(1,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/migrations-data/primary-legacy-import.ts(14,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/privileged.ts(14,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/privileged.ts(15,24): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-backfill-exercises.ts(16,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-backfill-exercises.ts(32,18): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-backfill-exercises.ts(35,3): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-backfill-exercises.ts(35,38): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-backfill-exercises.ts(37,6): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-backfill-exercises.ts(37,41): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-backfill-exercises.ts(299,10): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-backfill-exercises.ts(300,17): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-backfill-exercises.ts(301,3): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-backfill-exercises.ts(302,37): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-backfill-exercises.ts(307,17): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-backfill-exercises.ts(311,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-seed.ts(8,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-seed.ts(36,3): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-seed.ts(36,38): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-seed.ts(38,6): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-seed.ts(38,41): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-seed.ts(532,10): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-seed.ts(533,17): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-seed.ts(534,3): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-seed.ts(535,37): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-seed.ts(540,17): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/seed/codecamp-seed.ts(544,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/student-usernames.ts(1,27): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/db:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/db@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=515
+WARNINGS=0
+PEAK_RSS_KIB=1227788
+ELAPSED_MS=4450
+LOAD1_START=2.80
+LOAD1_END=4.58
+SWAP_GROWTH_KIB=4
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/domain
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=1166512
+ELAPSED_MS=7690
+LOAD1_START=4.58
+LOAD1_END=4.46
+SWAP_GROWTH_KIB=4
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/domain
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+src/primary-books/print/sync.ts(52,17): error TS2339: Property 'transpileModule' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/primary-books/print/sync.ts(52,79): error TS2339: Property 'ModuleKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/primary-books/print/sync.ts(52,111): error TS2339: Property 'ScriptTarget' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/domain:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/domain@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=3
+WARNINGS=0
+PEAK_RSS_KIB=951572
+ELAPSED_MS=3890
+LOAD1_START=4.46
+LOAD1_END=4.58
+SWAP_GROWTH_KIB=-4
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/game-cartridges
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=1786132
+ELAPSED_MS=9840
+LOAD1_START=4.58
+LOAD1_END=4.42
+SWAP_GROWTH_KIB=208
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/game-cartridges
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+src/astral-mage.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/astral-mage.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/astral-mage.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/castle-defense.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/castle-defense.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/castle-defense.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/dragon-flight.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/dragon-flight.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/dragon-flight.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/dungeon-liberator.test.ts(958,33): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/enchanted-library.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/gryphon-patrol.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/gryphon-patrol.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/gryphon-patrol.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/haunted-library.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/haunted-library.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/haunted-library.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-dragon-rider.learning.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-dragon-rider.learning.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-dragon-rider.learning.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-dragon-rider.mechanics.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-dragon-rider.mechanics.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-dragon-rider.mechanics.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-dragon-rider.responsive.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-dragon-rider.responsive.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-dragon-rider.responsive.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-griffin-riders-escape.learning.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-griffin-riders-escape.learning.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-griffin-riders-escape.learning.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-griffin-riders-escape.mechanics.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-griffin-riders-escape.mechanics.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-griffin-riders-escape.mechanics.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-griffin-riders-escape.responsive.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-griffin-riders-escape.responsive.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-griffin-riders-escape.responsive.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-labyrinth-goblin-king.learning.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-labyrinth-goblin-king.learning.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-labyrinth-goblin-king.learning.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-labyrinth-goblin-king.mechanics.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-labyrinth-goblin-king.mechanics.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-labyrinth-goblin-king.mechanics.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-labyrinth-goblin-king.responsive.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-labyrinth-goblin-king.responsive.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-labyrinth-goblin-king.responsive.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-phase3-adversarial.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-phase3-adversarial.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-phase3-adversarial.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-shadow-gate-dungeon.learning.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-shadow-gate-dungeon.learning.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-shadow-gate-dungeon.learning.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-shadow-gate-dungeon.mechanics.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-shadow-gate-dungeon.mechanics.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-shadow-gate-dungeon.mechanics.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-shadow-gate-dungeon.responsive.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-shadow-gate-dungeon.responsive.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-shadow-gate-dungeon.responsive.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-spellweavers-run.learning.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-spellweavers-run.learning.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-spellweavers-run.learning.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-spellweavers-run.mechanics.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-spellweavers-run.mechanics.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-spellweavers-run.mechanics.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-spellweavers-run.responsive.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-spellweavers-run.responsive.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/legacy-traversal-spellweavers-run.responsive.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/paladins-twin-soul.test.ts(6,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/paladins-twin-soul.test.ts(7,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/paladins-twin-soul.test.ts(8,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/rpg-battle.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/rpg-battle.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/rpg-battle.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/sorcerer-ziggurat.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/sorcerer-ziggurat.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/sorcerer-ziggurat.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/storm-castle-tower.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/storm-castle-tower.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/storm-castle-tower.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/village-guardian.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/village-guardian.test.ts(2,34): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/village-guardian.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/wizard-vs-zombie.test.ts(7,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/game-cartridges:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/game-cartridges@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=81
+WARNINGS=0
+PEAK_RSS_KIB=952512
+ELAPSED_MS=4440
+LOAD1_START=4.42
+LOAD1_END=4.38
+SWAP_GROWTH_KIB=8
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/game-cartridges-3d
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=726268
+ELAPSED_MS=3780
+LOAD1_START=4.38
+LOAD1_END=4.27
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/game-cartridges-3d
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=436688
+ELAPSED_MS=3760
+LOAD1_START=4.27
+LOAD1_END=4.25
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/game-contracts
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=554352
+ELAPSED_MS=2060
+LOAD1_START=4.25
+LOAD1_END=4.25
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/game-contracts
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+src/__tests__/phaser-version.test.ts(1,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/game-contracts:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/game-contracts@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=1
+WARNINGS=0
+PEAK_RSS_KIB=223376
+ELAPSED_MS=2710
+LOAD1_START=4.25
+LOAD1_END=4.23
+SWAP_GROWTH_KIB=4
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/integrations/github
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=456860
+ELAPSED_MS=1410
+LOAD1_START=4.23
+LOAD1_END=4.23
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/integrations/github
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+src/__tests__/client.test.ts(2,37): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/factory.test.ts(10,28): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/factory.test.ts(14,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/factory.test.ts(18,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/factory.test.ts(22,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/factory.test.ts(23,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/factory.test.ts(28,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/factory.test.ts(29,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/factory.test.ts(30,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/factory.test.ts(36,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/factory.test.ts(37,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/drivers/rest.ts(8,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/drivers/rest.ts(33,5): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/factory.ts(39,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/factory.ts(40,17): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/factory.ts(40,51): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/factory.ts(41,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/integrations/github:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/integrations-github@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=17
+WARNINGS=0
+PEAK_RSS_KIB=185696
+ELAPSED_MS=2550
+LOAD1_START=4.23
+LOAD1_END=4.21
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/knowledge-space-core
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=430608
+ELAPSED_MS=1490
+LOAD1_START=4.21
+LOAD1_END=4.21
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/knowledge-space-core
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=181604
+ELAPSED_MS=2370
+LOAD1_START=4.21
+LOAD1_END=4.21
+SWAP_GROWTH_KIB=868
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/knowledge-space-practice
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=430236
+ELAPSED_MS=1360
+LOAD1_START=4.27
+LOAD1_END=4.27
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/knowledge-space-practice
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=186360
+ELAPSED_MS=2320
+LOAD1_START=4.27
+LOAD1_END=4.27
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/mastery-runtime-compat
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=494704
+ELAPSED_MS=1640
+LOAD1_START=4.27
+LOAD1_END=4.49
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/mastery-runtime-compat
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+src/check-consumer.ts(1,26): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/check-consumer.ts(2,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/check-consumer.ts(35,26): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/check-consumer.ts(35,54): error TS7006: Parameter 'argument' implicitly has an 'any' type.
+src/check-consumer.ts(37,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/check-consumer.ts(38,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/check-consumer.ts(44,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/check-consumer.ts(45,29): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/check-consumer.ts(48,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/check-consumer.ts(49,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/check-consumer.ts(53,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(1,26): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(2,40): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(3,42): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(17,8): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(18,33): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(19,31): error TS2591: Cannot find name 'node:module'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(28,8): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(29,27): error TS2591: Cannot find name 'node:util'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(33,45): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/release-artifact.ts(308,10): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(454,12): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(526,21): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(561,21): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(632,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(648,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(744,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(779,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(781,9): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(905,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(908,22): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(914,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(969,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(998,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1011,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1033,14): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(1034,19): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(1037,43): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(1042,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1046,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1079,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1095,20): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(1116,20): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(1120,49): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(1137,23): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1183,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1283,21): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1301,30): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1427,17): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(1452,21): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1502,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1695,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(1961,20): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(2266,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/mastery-runtime-compat:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/mastery-runtime-compat@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=54
+WARNINGS=0
+PEAK_RSS_KIB=181396
+ELAPSED_MS=2450
+LOAD1_START=4.49
+LOAD1_END=4.49
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/practice-core
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=335232
+ELAPSED_MS=800
+LOAD1_START=4.49
+LOAD1_END=4.49
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/practice-core
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=181376
+ELAPSED_MS=2380
+LOAD1_START=4.49
+LOAD1_END=4.37
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/sales-knowledge
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=427148
+ELAPSED_MS=1300
+LOAD1_START=4.37
+LOAD1_END=4.37
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/sales-knowledge
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+tsconfig.json(7,5): error TS5102: Option 'baseUrl' has been removed. Please remove it from your configuration.
+  Use '"paths": {"*": ["./*"]}' instead.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/sales-knowledge:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/sales-knowledge@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=1
+WARNINGS=0
+PEAK_RSS_KIB=186340
+ELAPSED_MS=8470
+LOAD1_START=4.37
+LOAD1_END=4.01
+SWAP_GROWTH_KIB=16
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/srs-engine
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=424188
+ELAPSED_MS=1350
+LOAD1_START=4.01
+LOAD1_END=4.01
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/srs-engine
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=181132
+ELAPSED_MS=2340
+LOAD1_START=4.01
+LOAD1_END=3.93
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/storage
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=398928
+ELAPSED_MS=1370
+LOAD1_START=3.93
+LOAD1_END=3.93
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/storage
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=185884
+ELAPSED_MS=2470
+LOAD1_START=3.93
+LOAD1_END=3.77
+SWAP_GROWTH_KIB=8
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/types
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=514876
+ELAPSED_MS=1740
+LOAD1_START=3.77
+LOAD1_END=3.77
+SWAP_GROWTH_KIB=4
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/types
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+src/__tests__/wave2-types-regression-guard.test.ts(2,43): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/wave2-types-regression-guard.test.ts(3,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/wave2-types-regression-guard.test.ts(4,27): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/wave2-types-regression-guard.test.ts(5,31): error TS2591: Cannot find name 'node:module'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/wave2-types-regression-guard.test.ts(22,19): error TS2304: Cannot find name '__dirname'.
+src/__tests__/wave2-types-regression-guard.test.ts(34,14): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+src/__tests__/wave2-types-regression-guard.test.ts(35,11): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+src/__tests__/wave2-types-regression-guard.test.ts(36,14): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/wave2-types-regression-guard.test.ts(37,14): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/wave2-types-regression-guard.test.ts(38,11): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/wave2-types-regression-guard.test.ts(49,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/wave2-types-regression-guard.test.ts(54,17): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/contracts/sales.ts(150,26): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/types:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/types@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=13
+WARNINGS=0
+PEAK_RSS_KIB=181512
+ELAPSED_MS=2490
+LOAD1_START=3.77
+LOAD1_END=3.63
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/webhooks
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=655596
+ELAPSED_MS=2520
+LOAD1_START=3.63
+LOAD1_END=3.63
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/webhooks
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+src/__tests__/adversarial-claim-cas.test.ts(84,45): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/adversarial-claim-cas.test.ts(85,33): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/adversarial-webhook-flow.test.ts(32,28): error TS2591: Cannot find name 'crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/adversarial-webhook-flow.test.ts(156,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/adversarial-webhook-flow.test.ts(214,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-client.test.ts(2,28): error TS2591: Cannot find name 'crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-client.test.ts(5,53): error TS2591: Cannot find name 'crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-client.test.ts(8,35): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-client.test.ts(75,23): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-client.test.ts(78,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-client.test.ts(82,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-client.test.ts(96,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-client.test.ts(169,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-client.test.ts(170,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-client.test.ts(178,25): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(181,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-client.test.ts(182,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-client.test.ts(186,5): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(187,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-client.test.ts(191,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-client.test.ts(197,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-client.test.ts(198,5): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(205,12): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(215,25): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(218,5): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(228,5): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(235,12): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(246,5): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(260,25): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(263,5): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(272,5): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(288,12): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(298,25): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(301,5): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(305,5): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(310,12): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(314,5): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(319,12): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(329,5): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(343,25): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(346,5): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(350,5): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(358,12): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(362,5): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(377,29): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(383,5): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(398,29): error TS2304: Cannot find name 'global'.
+src/__tests__/github-client.test.ts(404,5): error TS2304: Cannot find name 'global'.
+src/__tests__/github-review.test.ts(2,28): error TS2591: Cannot find name 'crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-review.test.ts(23,52): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-review.test.ts(60,34): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-review.test.ts(61,12): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-review.test.ts(267,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-review.test.ts(270,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-review.test.ts(295,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-review.test.ts(296,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-webhook-ack-latency.test.ts(2,28): error TS2591: Cannot find name 'crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-webhook-ack-latency.test.ts(83,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-webhook-ack-latency.test.ts(91,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-webhook-idempotency.test.ts(2,28): error TS2591: Cannot find name 'crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-webhook-idempotency.test.ts(88,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-webhook-idempotency.test.ts(98,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-webhook.test.ts(2,28): error TS2591: Cannot find name 'crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-webhook.test.ts(73,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/github-webhook.test.ts(83,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-webhook-acks-after-enqueue.test.ts(2,28): error TS2591: Cannot find name 'crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-webhook-acks-after-enqueue.test.ts(96,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-2-webhook-acks-after-enqueue.test.ts(154,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-3-claim-skip-locked.test.ts(4,32): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-3-reclaim-stuck.test.ts(4,32): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-concurrency.test.ts(4,32): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-dead-code.test.ts(33,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-dead-code.test.ts(34,31): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-dead-code.test.ts(35,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-exhaust-to-dead.test.ts(2,28): error TS2591: Cannot find name 'crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-exhaust-to-dead.test.ts(108,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-exhaust-to-dead.test.ts(109,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-exhaust-to-dead.test.ts(162,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-exhaust-to-dead.test.ts(163,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-happy-path.test.ts(2,28): error TS2591: Cannot find name 'crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-happy-path.test.ts(126,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-happy-path.test.ts(127,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-happy-path.test.ts(183,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-happy-path.test.ts(184,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-idempotent-redelivery.test.ts(2,28): error TS2591: Cannot find name 'crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-idempotent-redelivery.test.ts(188,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-idempotent-redelivery.test.ts(189,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-idempotent-redelivery.test.ts(245,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-idempotent-redelivery.test.ts(246,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-retry-then-succeed.test.ts(2,28): error TS2591: Cannot find name 'crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-retry-then-succeed.test.ts(160,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-retry-then-succeed.test.ts(161,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-retry-then-succeed.test.ts(221,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-5-retry-then-succeed.test.ts(222,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-6-acceptance.test.ts(37,28): error TS2591: Cannot find name 'crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-6-acceptance.test.ts(39,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-6-acceptance.test.ts(40,31): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-6-acceptance.test.ts(41,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-6-acceptance.test.ts(125,36): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-6-acceptance.test.ts(126,14): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-6-acceptance.test.ts(340,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-6-acceptance.test.ts(341,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-6-acceptance.test.ts(363,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-6-acceptance.test.ts(364,12): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-7-closeout.test.ts(84,42): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-7-closeout.test.ts(85,31): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-7-closeout.test.ts(86,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-7-closeout.test.ts(87,26): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/phase-7-closeout.test.ts(443,10): error TS7006: Parameter 'line' implicitly has an 'any' type.
+src/github-client.ts(1,51): error TS2591: Cannot find name 'crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/github-client.ts(47,10): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/github-client.ts(55,10): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/github-client.ts(63,10): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/github-client.ts(86,18): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/github-client.ts(87,16): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/github-client.ts(89,36): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/github-client.ts(155,18): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/github-client.ts(163,32): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/github-client.ts(163,55): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/github.ts(335,46): error TS2304: Cannot find name 'setImmediate'.
+src/index.ts(17,23): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/review-worker.ts(31,28): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/review-worker.ts(81,15): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/review-worker.ts(93,15): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/review-worker.ts(104,15): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/review-worker.ts(115,15): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/review-worker.ts(126,15): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/review-worker.ts(328,16): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/review-worker.ts(329,15): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/review-worker.ts(1379,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/review-worker.ts(1380,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/webhooks:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/webhooks@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=131
+WARNINGS=0
+PEAK_RSS_KIB=249496
+ELAPSED_MS=3490
+LOAD1_START=3.63
+LOAD1_END=3.58
+SWAP_GROWTH_KIB=16
+VALID=1
+TSCONFIG_CHANGED=0
+SWAPFREE_KIB_END=5223760
+LOAD1_END=3.58
+TSCONFIG_CHANGED=0
+EXIT=0
+ELAPSED_S=127

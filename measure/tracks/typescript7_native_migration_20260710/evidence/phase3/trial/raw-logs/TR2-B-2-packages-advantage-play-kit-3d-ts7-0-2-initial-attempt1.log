@@ -1,0 +1,37 @@
+WS=packages/advantage-play-kit-3d
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+src/__tests__/contracts.test.ts(1,43): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/contracts.test.ts(2,22): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/contracts.test.ts(44,26): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/contracts.test.ts(46,12): error TS7006: Parameter 'd' implicitly has an 'any' type.
+src/__tests__/contracts.test.ts(47,9): error TS7006: Parameter 'd' implicitly has an 'any' type.
+src/__tests__/contracts.test.ts(117,77): error TS2345: Argument of type '(id: any) => void' is not assignable to parameter of type '(...args: any[] | [any]) => Awaitable<void>'.
+  Types of parameters 'id' and 'args' are incompatible.
+    Type 'any[] | [any]' is not assignable to type '[id: any]'.
+      Type 'any[]' is not assignable to type '[id: any]'.
+        Target requires 1 element(s) but source may have fewer.
+src/__tests__/contracts.test.ts(208,36): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/__tests__/i18n.test.ts(1,53): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/i18n.test.ts(2,32): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/i18n.test.ts(3,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/i18n.test.ts(17,14): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/story-game.test.ts(8,30): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/story-game.test.ts(9,22): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/story-game.test.ts(11,44): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/advantage-play-kit-3d:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/advantage-play-kit-3d@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=14
+WARNINGS=0
+PEAK_RSS_KIB=343300
+ELAPSED_MS=2590
+LOAD1_START=2.03
+LOAD1_END=2.03
+SWAP_GROWTH_KIB=8
+VALID=1
+TSCONFIG_CHANGED=0

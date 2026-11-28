@@ -1,0 +1,24 @@
+WS=packages/auth-client
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+src/__tests__/auth-security-phase1-contracts.test.ts(52,42): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/auth-security-phase1-contracts.test.ts(53,31): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/auth-security-phase1-contracts.test.ts(54,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/auth-security-phase1-contracts.test.ts(199,13): error TS7006: Parameter 'l' implicitly has an 'any' type.
+src/__tests__/auth-security-phase1-contracts.test.ts(200,14): error TS7006: Parameter 'l' implicitly has an 'any' type.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/auth-client:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/auth-client@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=5
+WARNINGS=0
+PEAK_RSS_KIB=181524
+ELAPSED_MS=3210
+LOAD1_START=1.76
+LOAD1_END=1.70
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0

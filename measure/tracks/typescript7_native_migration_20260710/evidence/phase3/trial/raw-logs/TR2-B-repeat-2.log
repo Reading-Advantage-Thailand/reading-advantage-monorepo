@@ -1,0 +1,134 @@
+GATE=TR2-B-repeat-2
+CMD=capture-typechecks.py --gate TR2-B-repeat-2
+START_EPOCH=1795859518
+HEAVY_RUN_ACTIVE=1
+HEAVY_PRIORITY=p2
+LOAD1_START=3.17
+MEMAVAIL_MB_START=17514
+SWAPFREE_KIB_START=4947508
+DISK_FREE_MB=540001
+WORKSPACES=43
+CONTROL_TSC_VERSION=Version 5.9.3
+WS=packages/types
+RUN=repeat2
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=501652
+ELAPSED_MS=2040
+LOAD1_START=3.17
+LOAD1_END=3.17
+SWAP_GROWTH_KIB=1236
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/types
+RUN=repeat2
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+src/__tests__/wave2-types-regression-guard.test.ts(2,43): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/wave2-types-regression-guard.test.ts(3,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/wave2-types-regression-guard.test.ts(4,27): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/wave2-types-regression-guard.test.ts(5,31): error TS2591: Cannot find name 'node:module'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/wave2-types-regression-guard.test.ts(22,19): error TS2304: Cannot find name '__dirname'.
+src/__tests__/wave2-types-regression-guard.test.ts(34,14): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+src/__tests__/wave2-types-regression-guard.test.ts(35,11): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+src/__tests__/wave2-types-regression-guard.test.ts(36,14): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/wave2-types-regression-guard.test.ts(37,14): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/wave2-types-regression-guard.test.ts(38,11): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/wave2-types-regression-guard.test.ts(49,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/wave2-types-regression-guard.test.ts(54,17): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/contracts/sales.ts(150,26): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/types:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/types@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=13
+WARNINGS=0
+PEAK_RSS_KIB=181408
+ELAPSED_MS=2500
+LOAD1_START=3.17
+LOAD1_END=3.31
+SWAP_GROWTH_KIB=64
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/domain
+RUN=repeat2
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=1163744
+ELAPSED_MS=7790
+LOAD1_START=3.31
+LOAD1_END=3.56
+SWAP_GROWTH_KIB=6208
+VALID=1
+TSCONFIG_CHANGED=0
+WS=packages/domain
+RUN=repeat2
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+src/primary-books/print/sync.ts(52,17): error TS2339: Property 'transpileModule' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/primary-books/print/sync.ts(52,79): error TS2339: Property 'ModuleKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/primary-books/print/sync.ts(52,111): error TS2339: Property 'ScriptTarget' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/domain:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/domain@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=3
+WARNINGS=0
+PEAK_RSS_KIB=952172
+ELAPSED_MS=3960
+LOAD1_START=3.56
+LOAD1_END=3.56
+SWAP_GROWTH_KIB=4
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/primary-advantage
+RUN=repeat2
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=2024184
+ELAPSED_MS=18950
+LOAD1_START=3.56
+LOAD1_END=3.52
+SWAP_GROWTH_KIB=436
+VALID=1
+TSCONFIG_CHANGED=0
+WS=apps/primary-advantage
+RUN=repeat2
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ NODE_OPTIONS=--max-old-space-size=6144 tsc --noEmit
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=1985628
+ELAPSED_MS=5650
+LOAD1_START=3.52
+LOAD1_END=3.40
+SWAP_GROWTH_KIB=13704
+VALID=1
+TSCONFIG_CHANGED=0
+SWAPFREE_KIB_END=4969180
+LOAD1_END=3.29
+TSCONFIG_CHANGED=0
+EXIT=0
+ELAPSED_S=43

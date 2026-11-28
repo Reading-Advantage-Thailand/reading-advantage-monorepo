@@ -1,0 +1,36 @@
+GATE=TR2-B-checkers-sales-knowledge
+CMD=capture-typechecks.py --gate TR2-B-checkers-sales-knowledge
+START_EPOCH=1795859829
+HEAVY_RUN_ACTIVE=1
+HEAVY_PRIORITY=p2
+LOAD1_START=2.33
+MEMAVAIL_MB_START=18287
+SWAPFREE_KIB_START=5001368
+DISK_FREE_MB=539954
+WORKSPACES=43
+WS=packages/sales-knowledge
+RUN=checkers-1
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+tsconfig.json(7,5): error TS5102: Option 'baseUrl' has been removed. Please remove it from your configuration.
+  Use '"paths": {"*": ["./*"]}' instead.
+undefined
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/sales-knowledge:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: tsc --noEmit --checkers 1
+WS_EXIT=1
+DIAGNOSTICS=1
+WARNINGS=0
+PEAK_RSS_KIB=185640
+ELAPSED_MS=2410
+LOAD1_START=2.33
+LOAD1_END=2.22
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0
+VARIANT=checkers-1
+SWAPFREE_KIB_END=5001368
+LOAD1_END=2.22
+TSCONFIG_CHANGED=0
+EXIT=0
+ELAPSED_S=3

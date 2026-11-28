@@ -1,0 +1,33 @@
+WS=apps/reading-advantage
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+
+<--- Last few GCs --->
+
+[3150573:0x43ffd000]    13291 ms: Scavenge (interleaved) 2037.9 (2049.3) -> 2036.4 (2053.3) MB, pooled: 0 MB, 3.55 / 0.00 ms  (average mu = 0.301, current mu = 0.265) allocation failure; 
+[3150573:0x43ffd000]    13786 ms: Mark-Compact 2040.3 (2053.3) -> 2031.8 (2053.5) MB, pooled: 0 MB, 486.29 / 0.00 ms  (average mu = 0.188, current mu = 0.097) allocation failure; scavenge might not succeed
+
+FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 0x75356c node::OOMErrorHandler(char const*, v8::OOMDetails const&) [node]
+ 2: 0xc52cd0  [node]
+ 3: 0xc52dbf  [node]
+ 4: 0xef6695  [node]
+ 5: 0xef66c2  [node]
+ 6: 0xef69ba  [node]
+ 7: 0xf076ba  [node]
+ 8: 0xf0ba60  [node]
+ 9: 0x199e0d1  [node]
+WS_EXIT=0
+DIAGNOSTICS=0
+WARNINGS=0
+PEAK_RSS_KIB=2322928
+ELAPSED_MS=14190
+LOAD1_START=5.60
+LOAD1_END=5.64
+SWAP_GROWTH_KIB=0
+VALID=0
+TSCONFIG_CHANGED=0

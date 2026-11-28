@@ -1,0 +1,30 @@
+GATE=TR2-control-install
+CMD=PUPPETEER_SKIP_DOWNLOAD=1 timeout 900 pnpm --dir /home/daniebo/Desktop/rama-worktrees/ts7-trial/.ts59 install --ignore-workspace --config.manage-package-manager-versions=false --no-frozen-lockfile --fetch-timeout 60000 --network-concurrency 4
+START_EPOCH=1795858427
+HEAVY_RUN_ACTIVE=1
+HEAVY_PRIORITY=p2
+LOAD1_START=1.41
+MEMAVAIL_MB_START=16466
+SWAPFREE_KIB_START=5337628
+DISK_FREE_MB=541182
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +1
++
+Packages are hard linked from the content-addressable store to the virtual store.
+  Content-addressable store is at: /home/daniebo/.local/share/pnpm/store/v11
+  Virtual store is at:             node_modules/.pnpm
+Progress: resolved 1, reused 1, downloaded 0, added 1, done
+
+dependencies:
++ typescript 5.9.3 (7.0.2 is available)
+
+Done in 481ms using pnpm v11.28.12
+INSTALL_EXIT=0
+CONTROL_TSC_VERSION=Version 5.9.3
+TRIAL_TSC_VERSION=Version 7.0.2
+SWAPFREE_KIB_END=5337628
+DISK_FREE_MB_END=541182
+LOAD1_END=1.41
+TSCONFIG_CHANGED=0
+EXIT=0
+ELAPSED_S=1

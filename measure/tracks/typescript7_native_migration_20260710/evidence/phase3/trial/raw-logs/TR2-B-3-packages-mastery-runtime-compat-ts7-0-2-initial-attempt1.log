@@ -1,0 +1,73 @@
+WS=packages/mastery-runtime-compat
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+src/check-consumer.ts(1,26): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/check-consumer.ts(2,31): error TS2591: Cannot find name 'node:url'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/check-consumer.ts(35,26): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/check-consumer.ts(35,54): error TS7006: Parameter 'argument' implicitly has an 'any' type.
+src/check-consumer.ts(37,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/check-consumer.ts(38,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/check-consumer.ts(44,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/check-consumer.ts(45,29): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/check-consumer.ts(48,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/check-consumer.ts(49,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/check-consumer.ts(53,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(1,26): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(2,40): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(3,42): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(17,8): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(18,33): error TS2591: Cannot find name 'node:fs/promises'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(19,31): error TS2591: Cannot find name 'node:module'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(28,8): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(29,27): error TS2591: Cannot find name 'node:util'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(33,45): error TS2339: Property 'dirname' does not exist on type 'ImportMeta'.
+src/release-artifact.ts(308,10): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(454,12): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(526,21): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(561,21): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(632,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(648,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(744,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(779,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(781,9): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(905,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(908,22): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(914,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(969,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(998,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1011,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1033,14): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(1034,19): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(1037,43): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(1042,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1046,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1079,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1095,20): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(1116,20): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(1120,49): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(1137,23): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1183,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1283,21): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1301,30): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1427,17): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(1452,21): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1502,19): error TS2503: Cannot find namespace 'NodeJS'.
+src/release-artifact.ts(1695,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(1961,20): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/release-artifact.ts(2266,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/mastery-runtime-compat:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/mastery-runtime-compat@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=54
+WARNINGS=0
+PEAK_RSS_KIB=181396
+ELAPSED_MS=2450
+LOAD1_START=4.49
+LOAD1_END=4.49
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0

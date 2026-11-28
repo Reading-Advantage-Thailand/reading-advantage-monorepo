@@ -1,0 +1,29 @@
+WS=apps/www-reading-advantage
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+src/__tests__/phase-3-group-b-types.test.ts(122,25): error TS2339: Property 'createSourceFile' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/phase-3-group-b-types.test.ts(125,8): error TS2339: Property 'ScriptTarget' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/phase-3-group-b-types.test.ts(127,36): error TS2339: Property 'ScriptKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/phase-3-group-b-types.test.ts(127,56): error TS2339: Property 'ScriptKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/phase-3-group-b-types.test.ts(131,27): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Node'.
+src/__tests__/phase-3-group-b-types.test.ts(132,12): error TS2339: Property 'isAsExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/phase-3-group-b-types.test.ts(136,19): error TS2339: Property 'isTypeAssertionExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/phase-3-group-b-types.test.ts(138,19): error TS2339: Property 'isNonNullExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/phase-3-group-b-types.test.ts(140,19): error TS2339: Property 'isSatisfiesExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/phase-3-group-b-types.test.ts(144,8): error TS2339: Property 'forEachChild' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/apps/www-reading-advantage:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] www-reading-advantage@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=10
+WARNINGS=0
+PEAK_RSS_KIB=600632
+ELAPSED_MS=8250
+LOAD1_START=2.55
+LOAD1_END=2.53
+SWAP_GROWTH_KIB=40
+VALID=1
+TSCONFIG_CHANGED=0

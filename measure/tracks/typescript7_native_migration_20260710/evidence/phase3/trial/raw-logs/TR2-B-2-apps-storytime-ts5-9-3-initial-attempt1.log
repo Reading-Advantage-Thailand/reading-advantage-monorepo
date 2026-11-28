@@ -1,0 +1,19 @@
+WS=apps/storytime
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 5.9.3
+TYPESCRIPT_PACKAGE=5.9.3
+app/[locale]/entry/entry-art.tsx(1,27): error TS2307: Cannot find module '../../look/places/path-p.webp' or its corresponding type declarations.
+app/[locale]/entry/entry-art.tsx(6,28): error TS2307: Cannot find module '../../look/places/path-d.webp' or its corresponding type declarations.
+app/[locale]/entry/entry-logo.tsx(1,23): error TS2307: Cannot find module '../../look/logo/storytime-advantage.svg' or its corresponding type declarations.
+app/[locale]/frame.tsx(1,23): error TS2307: Cannot find module '../look/logo/storytime-advantage.svg' or its corresponding type declarations.
+WS_EXIT=2
+DIAGNOSTICS=4
+WARNINGS=0
+PEAK_RSS_KIB=985276
+ELAPSED_MS=5800
+LOAD1_START=3.55
+LOAD1_END=3.35
+SWAP_GROWTH_KIB=0
+VALID=1
+TSCONFIG_CHANGED=0

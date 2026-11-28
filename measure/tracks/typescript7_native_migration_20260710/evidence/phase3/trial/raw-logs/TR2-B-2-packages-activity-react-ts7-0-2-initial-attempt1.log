@@ -1,0 +1,37 @@
+WS=packages/activity-react
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit -p tsconfig.test.json
+src/__tests__/package-boundaries.test.ts(25,25): error TS2339: Property 'createSourceFile' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/package-boundaries.test.ts(25,81): error TS2339: Property 'ScriptTarget' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/package-boundaries.test.ts(27,20): error TS2339: Property 'isImportDeclaration' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/package-boundaries.test.ts(28,15): error TS7006: Parameter 'declaration' implicitly has an 'any' type.
+src/__tests__/package-boundaries.test.ts(29,20): error TS2339: Property 'isStringLiteral' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/package-boundaries.test.ts(30,15): error TS7006: Parameter 'specifier' implicitly has an 'any' type.
+src/__tests__/package-boundaries.test.ts(31,30): error TS7006: Parameter 'specifier' implicitly has an 'any' type.
+src/__tests__/package-boundaries.test.ts(38,25): error TS2339: Property 'createSourceFile' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/package-boundaries.test.ts(38,81): error TS2339: Property 'ScriptTarget' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/package-boundaries.test.ts(40,30): error TS2339: Property 'canHaveModifiers' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/package-boundaries.test.ts(40,63): error TS2339: Property 'getModifiers' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/package-boundaries.test.ts(41,43): error TS7006: Parameter 'modifier' implicitly has an 'any' type.
+src/__tests__/package-boundaries.test.ts(41,77): error TS2339: Property 'SyntaxKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/package-boundaries.test.ts(42,32): error TS2339: Property 'isFunctionDeclaration' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/package-boundaries.test.ts(43,17): error TS2339: Property 'isClassDeclaration' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/package-boundaries.test.ts(44,17): error TS2339: Property 'isInterfaceDeclaration' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/package-boundaries.test.ts(45,17): error TS2339: Property 'isTypeAliasDeclaration' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+src/__tests__/package-boundaries.test.ts(46,43): error TS2339: Property 'getJSDocCommentsAndTags' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/activity-react:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/activity-react@0.1.0 check-types: `tsc --noEmit -p tsconfig.test.json`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=18
+WARNINGS=0
+PEAK_RSS_KIB=180860
+ELAPSED_MS=2380
+LOAD1_START=2.53
+LOAD1_END=2.41
+SWAP_GROWTH_KIB=8
+VALID=1
+TSCONFIG_CHANGED=0

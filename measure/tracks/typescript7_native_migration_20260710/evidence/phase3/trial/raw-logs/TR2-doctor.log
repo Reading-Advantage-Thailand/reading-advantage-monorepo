@@ -1,0 +1,19 @@
+GATE=TR2-doctor
+HEAVY_RUN_ACTIVE=1
+HEAVY_PRIORITY=p2
+START_EPOCH=1795860229
+PASS: A12/A13 guard declarations and archive directories verified (6 guards)
+PASS: measure anti-pattern catalog exists with A1-A15
+PASS: all active track plans use only [ ], [~], [x], or [b] task markers (72 plans checked)
+PASS: executed review tracks are not fully blocked by deferred:review-execution
+$ pnpm --filter @reading-advantage/architecture-enforcement exec tsx src/architecture-check-cli.ts
+Architecture check failed: V2 reconciliation manifest is invalid: Analyzer input snapshot hash does not match current bytes
+undefined
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/packages/architecture-enforcement:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 2: tsx src/architecture-check-cli.ts
+[ELIFECYCLE] Command failed with exit code 1.
+ARCHITECTURE: step 4 exits 1; this is a tool failure, not a boundary verdict
+DOCTOR: the architecture step did not produce a boundary verdict; the gate exits 1
+TSCONFIG_CHANGED=0
+EXIT=1
+ELAPSED_S=9

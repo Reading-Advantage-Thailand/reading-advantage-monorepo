@@ -1,0 +1,20 @@
+WS=apps/workbooks
+RUN=checkers-1
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+tsconfig.json(7,5): error TS5102: Option 'baseUrl' has been removed. Please remove it from your configuration.
+  Use '"paths": {"*": ["./*"]}' instead.
+undefined
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/apps/workbooks:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: tsc --noEmit --checkers 1
+WS_EXIT=1
+DIAGNOSTICS=1
+WARNINGS=0
+PEAK_RSS_KIB=263572
+ELAPSED_MS=2450
+LOAD1_START=3.38
+LOAD1_END=3.38
+SWAP_GROWTH_KIB=820
+VALID=1
+TSCONFIG_CHANGED=0

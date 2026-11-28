@@ -1,0 +1,5 @@
+SUPERSEDED=1
+REASON=PM deviation 2026-11-28 16:32; load wait and paired control method changed
+HEAVY_GUARD_EXIT=143
+COMPLETED_WORKSPACES=3
+TSCONFIG_CHANGED=0

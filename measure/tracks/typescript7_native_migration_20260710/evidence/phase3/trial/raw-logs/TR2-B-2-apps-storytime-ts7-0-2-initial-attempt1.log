@@ -1,0 +1,125 @@
+WS=apps/storytime
+RUN=initial
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+__tests__/look-2d-sound.test.ts(46,47): error TS2339: Property 'ScriptKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-2d-sound.test.ts(46,67): error TS2339: Property 'ScriptKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-2d-sound.test.ts(47,21): error TS2339: Property 'createSourceFile' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-2d-sound.test.ts(47,57): error TS2339: Property 'ScriptTarget' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-2d-sound.test.ts(49,27): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Node'.
+__tests__/look-2d-sound.test.ts(51,11): error TS2339: Property 'isImportDeclaration' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-2d-sound.test.ts(51,43): error TS2339: Property 'isExportDeclaration' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-2d-sound.test.ts(53,10): error TS2339: Property 'isStringLiteralLike' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-2d-sound.test.ts(54,81): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'StringLiteralLike'.
+__tests__/look-2d-sound.test.ts(56,55): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'StringLiteralLike'.
+__tests__/look-2d-sound.test.ts(58,12): error TS2339: Property 'isIdentifier' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-2d-sound.test.ts(59,12): error TS2339: Property 'isCallExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-2d-sound.test.ts(61,23): error TS2339: Property 'isPropertyAccessExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-2d-sound.test.ts(63,14): error TS2339: Property 'isIdentifier' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-2d-sound.test.ts(67,48): error TS2339: Property 'isStringLiteralLike' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-2d-sound.test.ts(72,11): error TS2339: Property 'isJsxOpeningElement' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-2d-sound.test.ts(72,43): error TS2339: Property 'isJsxSelfClosingElement' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-2d-sound.test.ts(73,10): error TS2339: Property 'isIdentifier' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-2d-sound.test.ts(78,8): error TS2339: Property 'forEachChild' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-brand-chrome.test.ts(100,19): error TS2339: Property 'createSourceFile' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-brand-chrome.test.ts(100,53): error TS2339: Property 'ScriptTarget' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-brand-chrome.test.ts(100,83): error TS2339: Property 'ScriptKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-brand-chrome.test.ts(102,29): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Node'.
+__tests__/look-brand-chrome.test.ts(104,10): error TS2339: Property 'isVariableDeclaration' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-brand-chrome.test.ts(105,10): error TS2339: Property 'isIdentifier' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-brand-chrome.test.ts(107,10): error TS2339: Property 'isStringLiteral' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-brand-chrome.test.ts(111,8): error TS2339: Property 'forEachChild' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-brand-chrome.test.ts(116,27): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Node'.
+__tests__/look-brand-chrome.test.ts(117,12): error TS2339: Property 'isJsxOpeningElement' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-brand-chrome.test.ts(117,44): error TS2339: Property 'isJsxSelfClosingElement' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-brand-chrome.test.ts(120,17): error TS2339: Property 'isJsxAttribute' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-brand-chrome.test.ts(125,16): error TS2339: Property 'isStringLiteral' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-brand-chrome.test.ts(128,23): error TS2339: Property 'isJsxExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-brand-chrome.test.ts(130,18): error TS2339: Property 'isStringLiteral' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-brand-chrome.test.ts(133,25): error TS2339: Property 'isIdentifier' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-brand-chrome.test.ts(143,8): error TS2339: Property 'forEachChild' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-frame.test.tsx(208,21): error TS2339: Property 'createSourceFile' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-frame.test.tsx(208,59): error TS2339: Property 'ScriptTarget' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-frame.test.tsx(208,89): error TS2339: Property 'ScriptKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-frame.test.tsx(214,29): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Node'.
+__tests__/look-frame.test.tsx(215,14): error TS2339: Property 'isStringLiteralLike' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-frame.test.tsx(216,14): error TS2339: Property 'isIdentifier' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-frame.test.tsx(217,14): error TS2339: Property 'isJsxOpeningElement' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-frame.test.tsx(217,46): error TS2339: Property 'isJsxSelfClosingElement' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-frame.test.tsx(219,65): error TS2339: Property 'isJsxAttribute' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-frame.test.tsx(219,86): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+__tests__/look-frame.test.tsx(226,10): error TS2339: Property 'forEachChild' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-reduced-motion.test.ts(63,19): error TS2339: Property 'createSourceFile' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-reduced-motion.test.ts(63,61): error TS2339: Property 'ScriptTarget' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-reduced-motion.test.ts(63,91): error TS2339: Property 'ScriptKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-reduced-motion.test.ts(64,27): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Node'.
+__tests__/look-reduced-motion.test.ts(65,12): error TS2339: Property 'isImportDeclaration' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-reduced-motion.test.ts(65,44): error TS2339: Property 'isStringLiteralLike' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-reduced-motion.test.ts(70,10): error TS2339: Property 'isStringLiteralLike' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-reduced-motion.test.ts(70,42): error TS2339: Property 'isJsxText' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-reduced-motion.test.ts(70,64): error TS2339: Property 'isTemplateHead' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-reduced-motion.test.ts(70,91): error TS2339: Property 'isTemplateMiddle' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-reduced-motion.test.ts(73,30): error TS2339: Property 'isImportDeclaration' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/look-reduced-motion.test.ts(82,8): error TS2339: Property 'forEachChild' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(31,18): error TS2339: Property 'createSourceFile' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(31,52): error TS2339: Property 'ScriptTarget' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(32,27): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Node'.
+__tests__/phase1-boundary.test.ts(33,13): error TS2339: Property 'isImportDeclaration' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(33,45): error TS2339: Property 'isExportDeclaration' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(34,13): error TS2339: Property 'isStringLiteralLike' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(35,12): error TS2339: Property 'isImportEqualsDeclaration' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(35,50): error TS2339: Property 'isExternalModuleReference' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(36,48): error TS2339: Property 'isStringLiteralLike' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(39,12): error TS2339: Property 'isCallExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(39,67): error TS2339: Property 'SyntaxKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(40,14): error TS2339: Property 'isIdentifier' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(41,34): error TS2339: Property 'isStringLiteralLike' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(42,8): error TS2339: Property 'forEachChild' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(63,15): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'CompilerOptions'.
+__tests__/phase1-boundary.test.ts(68,23): error TS2339: Property 'resolveModuleName' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(68,74): error TS2339: Property 'sys' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(126,25): error TS2339: Property 'readConfigFile' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(126,55): error TS2339: Property 'sys' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(128,30): error TS2339: Property 'parseJsonConfigFileContent' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase1-boundary.test.ts(128,75): error TS2339: Property 'sys' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-program.test.ts(20,21): error TS2339: Property 'createSourceFile' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-program.test.ts(20,75): error TS2339: Property 'ScriptTarget' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-program.test.ts(22,27): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Node'.
+__tests__/phase2-program.test.ts(24,10): error TS2339: Property 'isVariableDeclaration' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-program.test.ts(27,10): error TS2339: Property 'isCallExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-program.test.ts(29,10): error TS2339: Property 'isArrayLiteralExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-program.test.ts(32,16): error TS2339: Property 'isStringLiteral' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-program.test.ts(35,8): error TS2339: Property 'forEachChild' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-shared-package.test.ts(93,18): error TS2339: Property 'createSourceFile' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-shared-package.test.ts(93,52): error TS2339: Property 'ScriptTarget' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-shared-package.test.ts(94,27): error TS2694: Namespace '"/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version"' has no exported member 'Node'.
+__tests__/phase2-shared-package.test.ts(96,11): error TS2339: Property 'isImportDeclaration' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-shared-package.test.ts(96,43): error TS2339: Property 'isExportDeclaration' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-shared-package.test.ts(98,10): error TS2339: Property 'isStringLiteralLike' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-shared-package.test.ts(103,10): error TS2339: Property 'isImportEqualsDeclaration' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-shared-package.test.ts(104,10): error TS2339: Property 'isExternalModuleReference' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-shared-package.test.ts(106,10): error TS2339: Property 'isStringLiteralLike' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-shared-package.test.ts(111,10): error TS2339: Property 'isCallExpression' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-shared-package.test.ts(112,36): error TS2339: Property 'SyntaxKind' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-shared-package.test.ts(113,13): error TS2339: Property 'isIdentifier' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-shared-package.test.ts(115,10): error TS2339: Property 'isStringLiteralLike' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+__tests__/phase2-shared-package.test.ts(119,8): error TS2339: Property 'forEachChild' does not exist on type 'typeof import("/home/daniebo/Desktop/rama-worktrees/ts7-trial/node_modules/typescript/lib/version")'.
+app/[locale]/entry/entry-art.tsx(1,27): error TS2307: Cannot find module '../../look/places/path-p.webp' or its corresponding type declarations.
+app/[locale]/entry/entry-art.tsx(6,28): error TS2307: Cannot find module '../../look/places/path-d.webp' or its corresponding type declarations.
+app/[locale]/entry/entry-logo.tsx(1,23): error TS2307: Cannot find module '../../look/logo/storytime-advantage.svg' or its corresponding type declarations.
+app/[locale]/frame.tsx(1,23): error TS2307: Cannot find module '../look/logo/storytime-advantage.svg' or its corresponding type declarations.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/apps/storytime:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] storytime@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=106
+WARNINGS=0
+PEAK_RSS_KIB=717872
+ELAPSED_MS=3070
+LOAD1_START=3.35
+LOAD1_END=3.16
+SWAP_GROWTH_KIB=-8
+VALID=1
+TSCONFIG_CHANGED=0

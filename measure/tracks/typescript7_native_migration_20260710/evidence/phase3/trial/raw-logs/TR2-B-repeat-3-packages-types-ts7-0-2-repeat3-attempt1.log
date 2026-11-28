@@ -1,0 +1,32 @@
+WS=packages/types
+RUN=repeat3
+ATTEMPT=1
+TSC_VERSION=Version 7.0.2
+TYPESCRIPT_PACKAGE=7.0.2
+$ tsc --noEmit
+src/__tests__/wave2-types-regression-guard.test.ts(2,43): error TS2591: Cannot find name 'node:fs'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/wave2-types-regression-guard.test.ts(3,25): error TS2591: Cannot find name 'node:path'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/wave2-types-regression-guard.test.ts(4,27): error TS2591: Cannot find name 'node:child_process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/wave2-types-regression-guard.test.ts(5,31): error TS2591: Cannot find name 'node:module'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/wave2-types-regression-guard.test.ts(22,19): error TS2304: Cannot find name '__dirname'.
+src/__tests__/wave2-types-regression-guard.test.ts(34,14): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+src/__tests__/wave2-types-regression-guard.test.ts(35,11): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+src/__tests__/wave2-types-regression-guard.test.ts(36,14): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/wave2-types-regression-guard.test.ts(37,14): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/wave2-types-regression-guard.test.ts(38,11): error TS7006: Parameter 'name' implicitly has an 'any' type.
+src/__tests__/wave2-types-regression-guard.test.ts(49,5): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/wave2-types-regression-guard.test.ts(54,17): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/contracts/sales.ts(150,26): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+/home/daniebo/Desktop/rama-worktrees/ts7-trial/packages/types:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/types@0.1.0 check-types: `tsc --noEmit`
+Exit status 1
+WS_EXIT=1
+DIAGNOSTICS=13
+WARNINGS=0
+PEAK_RSS_KIB=181500
+ELAPSED_MS=2500
+LOAD1_START=3.32
+LOAD1_END=3.32
+SWAP_GROWTH_KIB=4
+VALID=1
+TSCONFIG_CHANGED=0
