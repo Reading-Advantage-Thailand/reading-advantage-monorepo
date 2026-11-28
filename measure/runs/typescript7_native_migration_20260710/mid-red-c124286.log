@@ -11,7 +11,7 @@
 - Supplied `phase_base_sha`: `7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e` (resolves).
 - Supplied `role_base_sha`: `c1242862e` (resolves; the pre-role HEAD). Full form: `c1242862e4eb9d30297327e45c12725e8aaaeeb9`.
 - `git merge-base --is-ancestor 7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e c1242862e` exits 0.
-- Evidence commit: pending. The next log commit records the id.
+- Evidence commit: `28925051b3fae9e8182a4da4016574dd613334ef`. The next commit only records this log id.
 
 ## Work
 
@@ -43,7 +43,8 @@ status: complete
 track: typescript7_native_migration_20260710
 phase: Phase 3: TypeScript 7 trial (PM step 1)
 baseline_sha: 7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e
-commits: pending; recorded in the next log commit
+commits: 28925051b3fae9e8182a4da4016574dd613334ef (Red evidence commit on top of role_base c1242862e); the next log commit records this id
+resulting_head: 28925051b3fae9e8182a4da4016574dd613334ef at the Red evidence commit; the log-only commit follows
 tests_run: PYTHONDONTWRITEBYTECODE=1 P3_PHASE_BASE=7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e P3_GREEN_COMMITS='8e988bf24450fcc4312b4690cb8ff8428a51a972 d378857133b29f6d56a1f3d2d035f4fa1944790e c1242862e4eb9d30297327e45c12725e8aaaeeb9' python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialTestRunParserTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialTestRunTests -> exit 1, Ran 40 tests, FAILED (failures=12), no errors; every failure names the missing tests-ts7.json record
 files_changed: measure/tests/test_typescript7_native_migration_phase3_trial.py (added P3TrialTestRunTests and P3TrialTestRunParserTests), measure/tracks/typescript7_native_migration_20260710/plan.md (TR3 marker [~] and Red evidence block), measure/runs/typescript7_native_migration_20260710/mid-red-c124286.log (this log, added with git add -f)
 plan_updates: TR3 marker set to [~]; Red evidence block added with the failing test names and the PM deviation statements; no run counts written
