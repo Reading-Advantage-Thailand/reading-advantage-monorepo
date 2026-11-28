@@ -1,0 +1,72 @@
+# Measure Strategy report: Phase 3 Task 1 (vinext 1.4.6)
+
+- Role: Measure Strategy. Model: claude-code/claude-sonnet-5-5. Track: `typescript7_native_migration_20260710`.
+- Phase: `Phase 3: TypeScript 7 trial (PM step 1)` (id P3). Scope: the first task only (the vinext bump).
+- Worktree: `/home/daniebo/Desktop/rama-worktrees/ts7-phase3`, branch `ts7/phase3`.
+- Strategy role base: `190c38252` (origin/master). It is not the `phase_base_sha`.
+- Status: complete. No push. No deploy. No product code, test, `package.json`, or lockfile changed.
+
+## Commits
+
+- `cf8b73659`: the strategy (section 5a, sections 1, 5, 8) and the plan edits.
+- `df256903d`: one cross-reference fix in the strategy. This is the last commit that touches
+  `test-strategy.md`.
+- The commit of this log is the next commit on the branch. It touches only this file.
+
+## phase_base_sha capture point
+
+After `df256903d` exists on `ts7/phase3`, the orchestrator runs
+`git log -1 --format=%H -- measure/tracks/typescript7_native_migration_20260710/test-strategy.md`.
+The output at this point is `df256903d8f472f094ba4b51635afc0c11e674e6`. The orchestrator stores that
+value in its run log before any later strategy edit and never recomputes it. A later strategy round
+for another Phase 3 task edits the same file and moves the output of the command. The value must not
+equal `190c38252`, and `git merge-base --is-ancestor 190c38252 <value>` must exit 0.
+
+## Commands
+
+RED_TEST_COMMAND (light, exits non-zero at base once Red writes the file):
+
+```
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v \
+  measure.tests.test_typescript7_native_migration_phase3_vinext
+```
+
+GREEN_TEST_COMMAND (section 5a.6 of `test-strategy.md`; every heavy step is one `HR` call, which is
+`HEAVY_PRIORITY=p2 HEAVY_MIN_AVAIL_MB=1500 HEAVY_PREFLIGHT_WAIT_S=5400 bash
+/home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c "<cmd>"`):
+
+```
+PYTHONDONTWRITEBYTECODE=1 P3_GREEN_COMMITS="<sha> <sha>" \
+  python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_vinext
+HR "cd $WT && set -o pipefail; rm -rf apps/activity-vinext-fixture/dist && pnpm --filter activity-vinext-fixture build"
+HR "cd $WT && set -o pipefail; rm -rf apps/marketing/dist && MARKETING_RUNTIME_SMOKE_PORT=4391 pnpm --filter marketing build"
+HR "cd $WT && set -o pipefail; pnpm --filter marketing exec vitest run --maxWorkers=1"
+HR "cd $WT && set -o pipefail; MARKETING_RUNTIME_SMOKE_PORT=4393 node apps/marketing/scripts/verify-vinext-runtime.mjs"
+```
+
+## Findings and defaults
+
+1. vinext 1.4.6 asks for React `^19.3.1`. The repository pins React 19.2.9 (both manifests, the
+   `overrides` of `pnpm-workspace.yaml`, and `STRATEGY_REQUIRED_PINS` in
+   `tests/security-upgrade-adversarial.test.ts`). `measure/tech-debt.md:25` says a React upgrade
+   needs its own track. That peer is "not met". Default C (strategy section 5a.3): install 1.4.6
+   under React 19.2.9, record the unmet peer as a named finding, and let the live gates decide.
+2. The registry `latest` tag is 1.4.7 (published 2026-11-26). The target stays 1.4.6, as the PM
+   named it. The peers are the same. One constant (`TARGET`) changes if the PM wants 1.4.7.
+3. The bump makes six Phase 2 tests fail on purpose (section 5a.9). The module stays frozen.
+4. The Oxc lesson table has 18 rows (L1 to L18), each a check or a defer with a reason.
+5. The `lint` script of marketing sets `no-unused-vars` to `warn` and has no `--max-warnings`. A
+   warning does not fail it. Gate `H1-seed-lint` records this.
+
+MEASURE_AGENT_RESULT
+role: measure-strategy
+status: complete
+track: typescript7_native_migration_20260710
+phase: Phase 3: TypeScript 7 trial (PM step 1)
+commits: cf8b73659, df256903d
+tests_run: none (read-only research only: npm view vinext@1.4.6 peerDependencies engines dependencies, npm view vinext versions dist-tags time, rg, sed, cat; a read-only python table and sentence check of test-strategy.md passed with 0 table problems); no build, no install, no heavy step
+files_changed: measure/tracks/typescript7_native_migration_20260710/test-strategy.md, measure/tracks/typescript7_native_migration_20260710/plan.md, measure/runs/typescript7_native_migration_20260710/strategy-190c382.log
+plan_updates: Phase 3 report target line (new target 2026-12-02); Task 1 Gates line (22:00 ICT window lifted, heavy-run.sh holds the lock); one lifted-window line in the plan header; one Phase 3 Task 1 strategy evidence block; task marker unchanged ([ ]; the orchestrator sets [~] before Mid Red)
+known_failures: none
+handoff: phase_base_sha capture point is after df256903d: run git log -1 --format=%H -- measure/tracks/typescript7_native_migration_20260710/test-strategy.md (value df256903d8f472f094ba4b51635afc0c11e674e6 now), store it in the run log, never recompute. RED_TEST_COMMAND and GREEN_TEST_COMMAND are in this log and in section 5a.6. QUESTION 1 (default C in force): vinext 1.4.6 needs React ^19.3.1 but the repo pins 19.2.9, and tech-debt.md:25 says React needs its own track. Options: A stay on 1.2.0 (task becomes a record); B move React to 19.3.1 repo-wide in its own track (risk high, new strategy first); C install 1.4.6 under 19.2.9, record the unmet peer, live gates and a browser check decide (default); D use 1.4.7. Record the waiver in plan.md before the Green commit merges to master. QUESTION 2 (default keep 1.4.6): latest is 1.4.7 (2026-11-26). Facts changed: Phase 3 report target is 2026-12-02; the heavy-step window is lifted; vinext 1.4.6 React peer is not met; registry latest is 1.4.7; the bump will fail six Phase 2 tests on purpose. spec.md Constraints Time window bullet is stale and not edited (strategy section 8, question 11). Green needs a dedicated worktree with a full install and a prerequisite package build (fresh worktree has no dist/); each heavy job must stay under 1800 s; the main checkout holds uncommitted owner edits of two next-env.d.ts files, so nobody works in it.
+END_MEASURE_AGENT_RESULT
