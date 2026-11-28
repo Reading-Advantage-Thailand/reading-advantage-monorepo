@@ -1,0 +1,49 @@
+# Measure Mid Red report: Phase 3 TR1 (trial worktree Red checks)
+
+- Role: Measure Mid Red. Model: muse-spark-1.3-contributor. Track: `typescript7_native_migration_20260710`.
+- Phase: `Phase 3: TypeScript 7 trial (PM step 1)` (id P3). Scope: TR1 only (the trial worktree with the latest stable 7.0.x).
+- Worktree: `/home/daniebo/Desktop/rama-worktrees/ts7-phase3`, branch `ts7/phase3`. Never worked in the main checkout. The trial worktree does not exist yet; Green creates it.
+- Status: complete. The Red tests fail for the intended reason. No push. No deploy.
+- Dirty paths at start: none. `git status --short` was empty. No unrelated work exists.
+
+## SHAs
+
+- Supplied `phase_base_sha`: `7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e` (resolves).
+- Supplied `role_base_sha`: `4491b47ce` (resolves; the pre-role HEAD).
+- `git merge-base --is-ancestor 7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e 4491b47ce` exits 0.
+- Evidence commit: `f2cb8367f` (Red tests and plan updates, on top of the role base; proves new Red work).
+
+## Work
+
+- Wrote `measure/tests/test_typescript7_native_migration_phase3_trial.py`. It holds `P3TrialHelperTests`, `P3TrialScopeTests`, and `P3TrialWorktreeTests`, plus the pure helpers that later TR rounds reuse. The target version is 7.0.2, recomputed from the registry list, never hardcoded as required. The file imports `track_dir_resolve` from the frozen Phase 2 module. The frozen Phase 1, Phase 2, and vinext modules are unchanged.
+- Fixed one helper defect before the evidence commit: `lock_peer_consumers` read the peer line at four spaces, but the lockfile nests it at six. The corrected form matches the repository lockfile. All helper guards pass.
+- Ran the Red command. It exits non-zero with assertion failures only. No `errors=` part. No install, build, or heavy job ran.
+- Set the TR1 marker to `[~]` in `plan.md` and added the Red evidence block with the failing test names, the Q1 to Q6 decisions, and the stale Phase 2 names.
+- Kept `measure.tests.test_typescript7_native_migration_phase3_vinext` at exit 0 (OK with Option A skips, a pre-existing state at this HEAD).
+
+## Red result
+
+- Summary: `Ran 34 tests`, `FAILED (failures=14)`, no errors. The same result holds with `P3_PHASE_BASE` set.
+- Green guards at base: the seventeen `P3TrialHelperTests` cases and the three synthetic `P3TrialScopeTests` cases. They guard the helpers and the scope rule before any evidence exists.
+- Failing tests: `P3TrialScopeTests.test_green_commits_in_scope`, `P3TrialScopeTests.test_denied_paths_untouched`, `P3TrialWorktreeTests.test_record_parses`, `P3TrialWorktreeTests.test_registry_choice_is_latest_stable`, `P3TrialWorktreeTests.test_tsc_versions_match_logs`, `P3TrialWorktreeTests.test_single_typescript_after_swap`, `P3TrialWorktreeTests.test_worktree_placement`, `P3TrialWorktreeTests.test_base_follows_strategy`, `P3TrialWorktreeTests.test_main_snapshots_unchanged`, `P3TrialWorktreeTests.test_install_commit_only_pins`, `P3TrialWorktreeTests.test_lock_keys_explained`, `P3TrialWorktreeTests.test_gate_entries_valid`, `P3TrialWorktreeTests.test_disk_floor`, `P3TrialWorktreeTests.test_no_deploy_or_push_in_logs`.
+- Each failure names the missing `evidence/phase3/trial/trial-worktree.json` record or the unset `P3_GREEN_COMMITS` variable. No test fails on an import or syntax error.
+
+## Handoff to Green
+
+- Green owns TR1 and works in `/home/daniebo/Desktop/rama-worktrees/ts7-trial` on branch `ts7/trial-p3`. Green does not edit production code, manifests, or the lockfile of the main checkout. Green writes `evidence/phase3/trial/trial-worktree.json` with the schema in the test module docstring, then runs the TR1 GREEN_TEST_COMMAND from section 5b.8.
+- Target version 7.0.2. Green re-verifies it on the trial day with the registry check. The tests recompute the choice, so a newer stable 7.0.x needs no test edit.
+- Facts changed: none (Red only; no trial worktree and no TR1 evidence exist yet).
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: typescript7_native_migration_20260710
+phase: Phase 3: TypeScript 7 trial (PM step 1)
+baseline_sha: 7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e
+commits: f2cb8367f (plan evidence commit: TR1 Red tests and plan updates, on top of role_base_sha 4491b47ce)
+tests_run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialWorktreeTests -> Ran 34 tests, FAILED (failures=14), no errors; the 12 worktree tests fail on the missing trial-worktree.json record and the 2 scope tests fail on the unset P3_GREEN_COMMITS variable
+files_changed: measure/tests/test_typescript7_native_migration_phase3_trial.py (new), measure/tracks/typescript7_native_migration_20260710/plan.md (TR1 marker [~] and Red evidence block), measure/runs/typescript7_native_migration_20260710/mid-red-4491b47.log (this log)
+plan_updates: TR1 marker set to [~]; Red evidence block added with the failing test names, the Q1 to Q6 decisions, and the stale Phase 2 names; no counts written
+known_failures: the 14 listed failing tests fail at base as intended (Red state); the 17 helper guards and 3 scope synthetic guards pass at base
+handoff: role_base_sha 4491b47ce is the pre-role HEAD; evidence commit f2cb8367f proves new Red work. Green creates the trial worktree at /home/daniebo/Desktop/rama-worktrees/ts7-trial on branch ts7/trial-p3, installs the latest stable 7.0.x there only, and writes evidence/phase3/trial/trial-worktree.json against the schema in the test module docstring. Facts changed: none.
+END_MEASURE_AGENT_RESULT
