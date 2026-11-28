@@ -1,0 +1,52 @@
+# Measure Mid Red report: Phase 3 TR3 (test-run Red checks)
+
+- Role: Measure Mid Red. Track: `typescript7_native_migration_20260710`.
+- Phase: `Phase 3: TypeScript 7 trial (PM step 1)` (id P3). Scope: TR3 only (run the tests on the trial install).
+- Worktree: `/home/daniebo/Desktop/rama-worktrees/ts7-phase3`, branch `ts7/phase3`. No work in the main checkout and none in `ts7-trial`.
+- Status: complete. The new Red tests fail for the intended reason. No push. No deploy.
+- Dirty paths at start: none. `git status --short` was empty. No unrelated user work exists.
+
+## SHAs
+
+- Supplied `phase_base_sha`: `7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e` (resolves).
+- Supplied `role_base_sha`: `c1242862e` (resolves; the pre-role HEAD). Full form: `c1242862e4eb9d30297327e45c12725e8aaaeeb9`.
+- `git merge-base --is-ancestor 7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e c1242862e` exits 0.
+- Evidence commit: pending. The next log commit records the id.
+
+## Work
+
+- Extended `measure/tests/test_typescript7_native_migration_phase3_trial.py` with `P3TrialTestRunTests` and `P3TrialTestRunParserTests`. The first class encodes the TR3 falsification contract of section 5b.8. The second class holds synthetic guards for the log parsers. No TR1 or TR2 assertion changed. The frozen Phase 1, Phase 2, and vinext modules are unchanged.
+- Coverage: one row per workspace with a `test` script at the trial base. Each row holds exit status, pass and fail counts, `[file, test name]` failure pairs, a built command, a log, and a time file. Vitest and Jest commands hold `--maxWorkers=1`. Each failure cites a matching Phase 1 test surface or the no-match text.
+- PM deviation (2026-11-28 16:32): the load ceiling is 6 and the wait cap is 60 seconds per workspace. The tests read `load_policy.max_load1` and `load_policy.wait_cap_s`. Each row holds `load1_start` and `load_wait_s`. Section 5b.4 item 8 names the superseded value 1.5.
+- PM deviation (2026-11-28 16:32): A and B rows run back to back per workspace. Orchestrator decision Q3 holds. TR3 records only the 7.0.2 rows. TR4 runs control tests for the workspaces that fail under B.
+- Ran the Red command. It exits non-zero with assertion failures only. No `errors=` part. No install, build, or workspace test ran.
+- Set the TR3 marker to `[~]` in `plan.md` and added the Red evidence block with the failing names. The block cites this log and holds no run counts.
+- Scope-rule note on this log name: `_trial_path_is_allowed` permits only `green-p3t-*.log` under `measure/runs/<track>/`. That rule governs Green commits checked through `P3_GREEN_COMMITS`. This file is a Red role log, so it keeps the ordered `mid-red-` name and is added with `git add -f`. The commit uses explicit pathspecs only.
+
+## Red result
+
+- Exact command: `PYTHONDONTWRITEBYTECODE=1 P3_PHASE_BASE=7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e P3_GREEN_COMMITS='8e988bf24450fcc4312b4690cb8ff8428a51a972 d378857133b29f6d56a1f3d2d035f4fa1944790e c1242862e4eb9d30297327e45c12725e8aaaeeb9' python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialTestRunParserTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialTestRunTests` -> exit 1, `Ran 40 tests`, `FAILED (failures=12)`, no errors.
+- Every failure names the missing `evidence/phase3/trial/tests-ts7.json` record. No test fails on an import or a syntax error.
+- Failing tests: `P3TrialTestRunTests.test_record_parses`, `P3TrialTestRunTests.test_run_set_equals_live_scan`, `P3TrialTestRunTests.test_command_matches_rule`, `P3TrialTestRunTests.test_counts_match_logs`, `P3TrialTestRunTests.test_failures_by_file_and_name`, `P3TrialTestRunTests.test_no_vacuous_pass`, `P3TrialTestRunTests.test_timeouts_are_sharded`, `P3TrialTestRunTests.test_failures_compared_with_phase1_file`, `P3TrialTestRunTests.test_no_playwright_rows`, `P3TrialTestRunTests.test_load_deviation_recorded`, `P3TrialTestRunTests.test_gate_entries_valid`, `P3TrialTestRunTests.test_no_deploy_or_push_in_logs`.
+- Guards at base: the `P3TrialHelperTests` cases, the synthetic `P3TrialScopeTests` cases, and the `P3TrialTestRunParserTests` cases pass. They guard the helpers, the scope rule, and the parsers before the record exists.
+- The TR1 and TR2 classes exit 0 with `P3_PHASE_BASE=7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e` and `P3_GREEN_COMMITS='8e988bf24450fcc4312b4690cb8ff8428a51a972 d378857133b29f6d56a1f3d2d035f4fa1944790e c1242862e4eb9d30297327e45c12725e8aaaeeb9'`. The vinext module exits 0 with `OK (skipped=21)`.
+- Stale Phase 2 module failures are not regressions: `test_repo_values_are_cited`, `test_green_commits_in_scope`, `test_lock_diff_in_scope`, `test_gate_results_complete`, `test_probe_logs_hold_status`.
+
+## Handoff to Green
+
+- Green owns TR3 and works in `/home/daniebo/Desktop/rama-worktrees/ts7-trial`. Green writes `evidence/phase3/trial/tests-ts7.json` against the contract in the test class, then runs the TR3 GREEN_TEST_COMMAND from section 5b.8. Green does not edit production code, manifests, or the lockfile of the main checkout.
+- Facts changed: none (Red only; no test evidence exists yet).
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: typescript7_native_migration_20260710
+phase: Phase 3: TypeScript 7 trial (PM step 1)
+baseline_sha: 7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e
+commits: pending; recorded in the next log commit
+tests_run: PYTHONDONTWRITEBYTECODE=1 P3_PHASE_BASE=7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e P3_GREEN_COMMITS='8e988bf24450fcc4312b4690cb8ff8428a51a972 d378857133b29f6d56a1f3d2d035f4fa1944790e c1242862e4eb9d30297327e45c12725e8aaaeeb9' python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialTestRunParserTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialTestRunTests -> exit 1, Ran 40 tests, FAILED (failures=12), no errors; every failure names the missing tests-ts7.json record
+files_changed: measure/tests/test_typescript7_native_migration_phase3_trial.py (added P3TrialTestRunTests and P3TrialTestRunParserTests), measure/tracks/typescript7_native_migration_20260710/plan.md (TR3 marker [~] and Red evidence block), measure/runs/typescript7_native_migration_20260710/mid-red-c124286.log (this log, added with git add -f)
+plan_updates: TR3 marker set to [~]; Red evidence block added with the failing test names and the PM deviation statements; no run counts written
+known_failures: the twelve listed P3TrialTestRunTests fail at base as intended on the missing evidence record; helper, scope synthetic, and parser guards pass; TR1 and TR2 classes and the vinext module stay exit 0 with the phase base and the three TR2 Green commits
+handoff: role_base_sha c1242862e is the pre-role HEAD; the evidence commit proves new Red work. Green runs the tests in the trial worktree under heavy-run.sh and writes tests-ts7.json with exit status, pass and fail counts, failure pairs, and phase1_ref per section 5b.8. The PM load ceiling is 6 with a 60 s wait cap. Q3 holds: control tests cover only workspaces that fail under 7.0.2. Stale Phase 2 failures are not regressions. Facts changed: none.
+END_MEASURE_AGENT_RESULT

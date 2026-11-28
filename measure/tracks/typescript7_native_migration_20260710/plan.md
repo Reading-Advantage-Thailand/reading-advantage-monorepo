@@ -239,7 +239,7 @@ PM 2026-11-23: parked until after the 30 Nov launch.
     wall time; `apps/reading-advantage` is marked "no valid 5.9.3 baseline"; the data covers
     every workspace that has a `check-types` script at the trial base. That set includes the 31
     workspaces of the Phase 1 baseline (strategy 5b.1, question 13).
-- [ ] Task: Run the tests on the trial install.
+- [~] Task: Run the tests on the trial install.
   - What: run the tests of every workspace with a test script under `heavy-run.sh`, one at a
     time, with vitest `--maxWorkers=1`. Default reading of Daniel's point 4: tests run on the
     trial install.
@@ -408,6 +408,23 @@ PM 2026-11-23: parked until after the 30 Nov launch.
 - Evidence: `evidence/phase3/trial/typecheck-ts7.json`, `capture-typechecks.py`, and `raw-logs/TR2-*`.
 - Earlier invalid attempts are marked under `raw-logs/superseded/TR2-B-1-pre-pm/`. They are not measurement rows.
 - No task is deferred. No `tsconfig` or committed product file changed. No main manifest or lockfile changed. No push and no deploy ran.
+
+#### TR3 Red evidence (Mid Red, 2026-11-28)
+
+- Role: Measure Mid Red. Task TR3 only (run the tests on the trial install).
+- phase_base_sha: `7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e` (resolves). role_base_sha: `c1242862e` (resolves; the pre-role HEAD).
+- New classes in `measure/tests/test_typescript7_native_migration_phase3_trial.py`: `P3TrialTestRunTests` (the TR3 falsification contract) and `P3TrialTestRunParserTests` (green guards for the log parsers). No TR1 or TR2 assertion changed.
+- RED_TEST_COMMAND: `PYTHONDONTWRITEBYTECODE=1 P3_PHASE_BASE=7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e P3_GREEN_COMMITS='8e988bf24450fcc4312b4690cb8ff8428a51a972 d378857133b29f6d56a1f3d2d035f4fa1944790e c1242862e4eb9d30297327e45c12725e8aaaeeb9' python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialTestRunParserTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialTestRunTests`.
+- Red result: exit non-zero with assertion failures only and no errors part. Full log: `measure/runs/typescript7_native_migration_20260710/mid-red-c124286.log`.
+- Each failure names the missing `evidence/phase3/trial/tests-ts7.json` record. No test fails on an import or a syntax error.
+- Tests that fail at base: `P3TrialTestRunTests.test_record_parses`, `P3TrialTestRunTests.test_run_set_equals_live_scan`, `P3TrialTestRunTests.test_command_matches_rule`, `P3TrialTestRunTests.test_counts_match_logs`, `P3TrialTestRunTests.test_failures_by_file_and_name`, `P3TrialTestRunTests.test_no_vacuous_pass`, `P3TrialTestRunTests.test_timeouts_are_sharded`, `P3TrialTestRunTests.test_failures_compared_with_phase1_file`, `P3TrialTestRunTests.test_no_playwright_rows`, `P3TrialTestRunTests.test_load_deviation_recorded`, `P3TrialTestRunTests.test_gate_entries_valid`, `P3TrialTestRunTests.test_no_deploy_or_push_in_logs`.
+- Tests that pass at base (guards): the `P3TrialHelperTests` cases, the synthetic `P3TrialScopeTests` cases, and the `P3TrialTestRunParserTests` cases. They guard the helpers, the scope rule, and the log parsers before the record exists.
+- The TR1 and TR2 classes stay exit 0 with the phase base and the three TR2 Green commits. The vinext module stays exit 0.
+- PM deviation (2026-11-28 16:32): the load ceiling is 6 on the 12-core host, and the wait cap is 60 seconds per workspace. These values replace the 1.5 target of `test-strategy.md` section 5b.4 item 8. The record holds `load_policy`; each row holds `load1_start` and `load_wait_s`.
+- PM deviation (2026-11-28 16:32): A (5.9.3) and B (7.0.2) rows run back to back per workspace. Orchestrator decision Q3 holds: control tests run only for workspaces that fail under 7.0.2, inside TR4. TR3 records the B rows only.
+- Stale Phase 2 module failures are not regressions: `test_repo_values_are_cited`, `test_green_commits_in_scope`, `test_lock_diff_in_scope`, `test_gate_results_complete`, `test_probe_logs_hold_status`.
+- No install, build, or workspace test ran. No production code, manifest, or lockfile changed. No push and no deploy ran.
+- TR3 stays `[~]`. Green writes the record; this role does not.
 
 ## Phase 4: Cloudflare preparation, not the move (PM step 2)
 

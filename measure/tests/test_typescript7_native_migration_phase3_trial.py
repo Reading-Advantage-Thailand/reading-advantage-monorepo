@@ -1884,5 +1884,846 @@ class P3TrialTypecheckTests(unittest.TestCase):
                     return
 
 
+# Round B (TR3) contracts live here. They extend the file without changing the
+# TR1 and TR2 assertions above. TR4 reuses the test class for the control rows
+# through subclassing. The PM deviation of 2026-11-28 16:32 replaces the load
+# ceiling of 1.5 in test-strategy.md section 5b.4 item 8. The new ceiling is 6
+# on the 12-core host, with a 60 s wait cap per workspace. Section 5b.0 row 3
+# and orchestrator decision Q3 keep the partial control: TR3 holds only the
+# 7.0.2 rows. TR4 runs control tests for the workspaces that fail under B.
+TEST_RUN_EVIDENCE_REL = "evidence/phase3/trial/tests-ts7.json"
+TEST_RUN_TOP_KEYS = ("rows", "gates", "load_policy")
+TEST_RUN_ROW_KEYS = (
+    "workspace",
+    "runner",
+    "script",
+    "command",
+    "exit_status",
+    "files_total",
+    "files_failed",
+    "tests_total",
+    "tests_passed",
+    "tests_failed",
+    "tests_skipped",
+    "failures",
+    "shards",
+    "peak_rss_kib",
+    "elapsed_ms",
+    "valid",
+    "invalid_reason",
+    "no_test_files",
+    "log",
+    "time_file",
+)
+TR3_MAX_LOAD1 = 6
+TR3_LOAD_WAIT_CAP_S = 60
+NO_MATCHING_PHASE1 = "no matching entry"
+PHASE1_PRE_EXISTING_REL = "phase1-pre-existing-failures.json"
+ANSI_ESCAPE_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
+KNOWN_RUNNERS = ("vitest", "jest", "node-test")
+
+
+def _strip_ansi(text: str) -> str:
+    """Remove ANSI color escapes from a test log.
+
+    Args:
+        text: The raw log text.
+
+    Returns:
+        The log text without color escapes.
+    """
+    return ANSI_ESCAPE_RE.sub("", text)
+
+
+def _load_test_run_record(test: unittest.TestCase) -> dict[str, Any]:
+    """Load the TR3 evidence record, or fail the calling test.
+
+    Args:
+        test: The calling test case.
+
+    Returns:
+        The parsed record.
+    """
+    path = TRACK_DIR / TEST_RUN_EVIDENCE_REL
+    text = _read_text(path)
+    if text is None:
+        test.fail(f"TR3 record is missing: {path}")
+    try:
+        record = json.loads(text)
+    except json.JSONDecodeError as exc:
+        test.fail(f"TR3 record does not parse: {exc}")
+    assert isinstance(record, dict)
+    return record
+
+
+def _live_test_scan(test: unittest.TestCase, base_sha: str) -> tuple[list[str], dict[str, str]]:
+    """Recompute the test-script workspaces at the trial base.
+
+    Args:
+        test: The calling test case.
+        base_sha: The trial base commit.
+
+    Returns:
+        The sorted workspace list and the workspace-to-script map.
+    """
+    code, output = _run_git(["ls-tree", "-r", "--name-only", base_sha])
+    if code != 0:
+        test.fail("TR3 live scan lists no manifests at the trial base")
+    scripts: dict[str, str] = {}
+    for path in output.splitlines():
+        manifest = path.strip()
+        if not MANIFEST_PATTERN.match(manifest):
+            continue
+        show_code, show_text = _run_git(["show", f"{base_sha}:{manifest}"])
+        if show_code != 0:
+            test.fail(f"TR3 live scan cannot read {manifest} at the trial base")
+        try:
+            data = json.loads(show_text)
+        except json.JSONDecodeError as exc:
+            test.fail(f"TR3 live scan cannot parse {manifest}: {exc}")
+        script = data.get("scripts", {}).get("test")
+        if isinstance(script, str) and script.strip():
+            scripts[manifest[: -len("/package.json")]] = script.strip()
+    if not scripts:
+        test.fail("TR3 live scan finds no test workspace at the trial base")
+    return sorted(scripts), scripts
+
+
+def _runner_from_script(script: str) -> str:
+    """Name the runner that a manifest test script uses.
+
+    Args:
+        script: The manifest `test` script text.
+
+    Returns:
+        `vitest`, `jest`, or `node-test`.
+
+    Raises:
+        ValueError: When no known runner appears in the script.
+    """
+    text = script.strip()
+    if re.search(r"\bvitest\b", text):
+        return "vitest"
+    if re.search(r"\bjest\b", text):
+        return "jest"
+    if "node --test" in text:
+        return "node-test"
+    raise ValueError(f"unknown runner in test script: {script}")
+
+
+def _row_package(row: dict[str, Any]) -> str:
+    """Return the pnpm filter value of a test row.
+
+    Args:
+        row: The test run row.
+
+    Returns:
+        The saved package name, or the last workspace path segment.
+    """
+    package_name = row.get("package_name")
+    if isinstance(package_name, str) and package_name.strip():
+        return package_name.strip()
+    workspace = str(row.get("workspace", ""))
+    return workspace.rsplit("/", 1)[-1]
+
+
+def _summary_tokens(text: str) -> dict[str, int]:
+    """Read labeled summary tokens such as `2 failed`.
+
+    Args:
+        text: The summary line body.
+
+    Returns:
+        A label-to-integer map.
+    """
+    tokens: dict[str, int] = {}
+    for value, label in re.findall(r"(\d+)\s+(passed|failed|skipped|todo|total)\b", text):
+        tokens[label] = int(value)
+    return tokens
+
+
+def _vitest_summary(text: str, label: str) -> dict[str, int]:
+    """Read one Vitest summary line by label.
+
+    Args:
+        text: The stripped log text.
+        label: `Test Files` or `Tests`.
+
+    Returns:
+        The total, passed, failed, and skipped counts.
+
+    Raises:
+        ValueError: When the labeled summary line is absent.
+    """
+    match = re.search(rf"^\s*{re.escape(label)}\s+(.*?)\s*\((\d+)\)\s*$", text, re.M)
+    if match is None:
+        raise ValueError(f"Vitest summary misses the labeled line {label}")
+    tokens = _summary_tokens(match.group(1))
+    return {
+        "total": int(match.group(2)),
+        "passed": tokens.get("passed", 0),
+        "failed": tokens.get("failed", 0),
+        "skipped": tokens.get("skipped", 0) + tokens.get("todo", 0),
+    }
+
+
+def _jest_summary(text: str, label: str) -> dict[str, int]:
+    """Read one Jest summary line by label.
+
+    Args:
+        text: The stripped log text.
+        label: `Test Suites` or `Tests`.
+
+    Returns:
+        The total, passed, failed, and skipped counts.
+
+    Raises:
+        ValueError: When the labeled summary line is absent.
+    """
+    match = re.search(rf"^\s*{re.escape(label)}\s*:\s*(.*?)\s*$", text, re.M)
+    if match is None:
+        raise ValueError(f"Jest summary misses the labeled line {label}:")
+    tokens = _summary_tokens(match.group(1))
+    if "total" not in tokens:
+        raise ValueError(f"Jest summary {label} has no labeled total")
+    return {
+        "total": tokens["total"],
+        "passed": tokens.get("passed", 0),
+        "failed": tokens.get("failed", 0),
+        "skipped": tokens.get("skipped", 0) + tokens.get("todo", 0),
+    }
+
+
+def _tap_count(text: str, labels: tuple[str, ...]) -> int:
+    """Read one labeled TAP count of `node --test`.
+
+    Args:
+        text: The stripped log text.
+        labels: The accepted TAP labels.
+
+    Returns:
+        The integer after the label.
+
+    Raises:
+        ValueError: When no labeled TAP line is present.
+    """
+    for label in labels:
+        match = re.search(rf"^#\s*{label}\s+(\d+)\s*$", text, re.M)
+        if match is not None:
+            return int(match.group(1))
+    raise ValueError("node --test output misses a labeled TAP count")
+
+
+def parse_test_counts(text: str, runner: str) -> dict[str, int | None]:
+    """Recompute test counts from labeled summary lines.
+
+    Args:
+        text: The stripped log text.
+        runner: `vitest`, `jest`, or `node-test`.
+
+    Returns:
+        File and test counts. File counts are None for `node-test`.
+
+    Raises:
+        ValueError: When a labeled summary is absent or the runner is unknown.
+    """
+    text = _strip_ansi(text)
+    if runner == "vitest":
+        files = _vitest_summary(text, "Test Files")
+        tests = _vitest_summary(text, "Tests")
+    elif runner == "jest":
+        files = _jest_summary(text, "Test Suites")
+        tests = _jest_summary(text, "Tests")
+    elif runner == "node-test":
+        return {
+            "files_total": None,
+            "files_failed": None,
+            "tests_total": _tap_count(text, ("tests",)),
+            "tests_passed": _tap_count(text, ("pass",)),
+            "tests_failed": _tap_count(text, ("fail",)),
+            "tests_skipped": _tap_count(text, ("skip", "skipped")),
+        }
+    else:
+        raise ValueError(f"unknown runner: {runner}")
+    return {
+        "files_total": files["total"],
+        "files_failed": files["failed"],
+        "tests_total": tests["total"],
+        "tests_passed": tests["passed"],
+        "tests_failed": tests["failed"],
+        "tests_skipped": tests["skipped"],
+    }
+
+
+def parse_test_failures(text: str, runner: str) -> list[list[str]]:
+    """Recompute the file-and-name failure pairs from a test log.
+
+    Args:
+        text: The stripped log text.
+        runner: `vitest`, `jest`, or `node-test`.
+
+    Returns:
+        One `[file, test name]` pair per failure line.
+    """
+    text = _strip_ansi(text)
+    pairs: list[list[str]] = []
+    current_file: str | None = None
+    for line in text.splitlines():
+        stripped = line.strip()
+        fail_match = re.search(r"\bFAIL\b\s+(\S+\.(?:test|spec)\.[cm]?[jt]sx?)", stripped)
+        if fail_match is not None:
+            current_file = fail_match.group(1)
+            title = stripped.split(fail_match.group(1), 1)[1].strip()
+            if title.startswith(">"):
+                title = title.lstrip("> ").strip()
+                if title:
+                    pairs.append([current_file, title])
+            continue
+        bullet = re.match(r"^[●]\s*(.+)$", stripped)
+        if bullet is not None and current_file is not None:
+            pairs.append([current_file, bullet.group(1).strip()])
+            continue
+        if runner == "node-test" and current_file is None:
+            not_ok = re.match(r"^not ok\s+\d+\s*-\s*(.+)$", stripped)
+            if not_ok is not None:
+                pairs.append(["node-test", not_ok.group(1).strip()])
+    return pairs
+
+
+def _failure_line_count(text: str, runner: str) -> int:
+    """Count the failure lines that the parser must turn into pairs.
+
+    Args:
+        text: The stripped log text.
+        runner: `vitest`, `jest`, or `node-test`.
+
+    Returns:
+        The number of failure lines for the runner.
+    """
+    text = _strip_ansi(text)
+    if runner == "vitest":
+        return len(re.findall(r"^\s*FAIL\b", text, re.M))
+    if runner == "jest":
+        return len(re.findall(r"^\s*●\s+", text, re.M))
+    if runner == "node-test":
+        return len(re.findall(r"^not ok\s+\d+\s*-", text, re.M))
+    return 0
+
+
+def _phase1_test_entries(test: unittest.TestCase) -> list[dict[str, Any]]:
+    """Read the Phase 1 entries that name a test surface.
+
+    Args:
+        test: The calling test case.
+
+    Returns:
+        The entries whose `type` is `test`.
+    """
+    path = TRACK_DIR / PHASE1_PRE_EXISTING_REL
+    text = _read_text(path)
+    if text is None:
+        test.fail(f"TR3 Phase 1 failure file is missing: {path}")
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        test.fail(f"TR3 Phase 1 failure file does not parse: {exc}")
+    entries = data.get("pre_existing_failures", [])
+    if not isinstance(entries, list):
+        test.fail("TR3 Phase 1 failure file holds no pre_existing_failures list")
+    return [e for e in entries if isinstance(e, dict) and e.get("type") == "test"]
+
+
+def _phase1_test_match(workspace: str, entries: list[dict[str, Any]]) -> tuple[str | None, int]:
+    """Find a Phase 1 test surface that names a workspace.
+
+    Args:
+        workspace: The trial workspace path.
+        entries: The Phase 1 entries of type `test`.
+
+    Returns:
+        The matching surface text, or None, with the number of matches.
+    """
+    tail = workspace.rsplit("/", 1)[-1]
+    matches: list[str] = []
+    for entry in entries:
+        surface = str(entry.get("surface", ""))
+        text = f"{surface} {entry.get('description', '')}"
+        if workspace in text or tail in text:
+            matches.append(surface)
+    return (matches[0] if len(matches) == 1 else None), len(matches)
+
+
+def _gate_log_text(test: unittest.TestCase, gate: dict[str, Any], what: str) -> str:
+    """Read a gate log, or fail the calling test.
+
+    Args:
+        test: The calling test case.
+        gate: The gate entry.
+        what: The gate label for messages.
+
+    Returns:
+        The log text.
+    """
+    value = gate.get("log")
+    path = REPO_ROOT / value if isinstance(value, str) else None
+    text = _read_text(path) if path is not None else None
+    if text is None:
+        test.fail(f"TR3 gate {what} log is missing or unreadable")
+    assert text is not None
+    return text
+
+
+class P3TrialTestRunParserTests(unittest.TestCase):
+    """Green guards for the TR3 log parsers before any evidence exists."""
+
+    def test_parse_vitest_counts_reads_labeled_summary(self) -> None:
+        """Vitest counts come from the two labeled summary lines."""
+        sample = (
+            " Test Files  1 failed | 4 passed (5)\n"
+            "      Tests  2 failed | 8 passed (10)\n"
+        )
+        parsed = parse_test_counts(sample, "vitest")
+        self.assertEqual(parsed["files_total"], 5)
+        self.assertEqual(parsed["files_failed"], 1)
+        self.assertEqual(parsed["tests_total"], 10)
+        self.assertEqual(parsed["tests_passed"], 8)
+        self.assertEqual(parsed["tests_failed"], 2)
+        self.assertEqual(parsed["tests_skipped"], 0)
+
+    def test_parse_jest_counts_reads_labeled_summary(self) -> None:
+        """Jest counts come from the Test Suites and Tests lines."""
+        sample = (
+            "Test Suites: 1 failed, 2 passed, 3 total\n"
+            "Tests:       2 failed, 10 passed, 12 total\n"
+        )
+        parsed = parse_test_counts(sample, "jest")
+        self.assertEqual(parsed["files_total"], 3)
+        self.assertEqual(parsed["files_failed"], 1)
+        self.assertEqual(parsed["tests_total"], 12)
+        self.assertEqual(parsed["tests_passed"], 10)
+        self.assertEqual(parsed["tests_failed"], 2)
+
+    def test_parse_node_counts_reads_tap_labels(self) -> None:
+        """The TAP labels give counts and leave file counts unset."""
+        sample = "# tests 5\n# pass 4\n# fail 1\n# skip 0\n"
+        parsed = parse_test_counts(sample, "node-test")
+        self.assertEqual(parsed["tests_total"], 5)
+        self.assertEqual(parsed["tests_passed"], 4)
+        self.assertEqual(parsed["tests_failed"], 1)
+        self.assertIsNone(parsed["files_total"])
+
+    def test_parse_counts_rejects_missing_label(self) -> None:
+        """A log without a labeled summary raises instead of guessing."""
+        with self.assertRaises(ValueError):
+            parse_test_counts("some test output\n", "vitest")
+
+    def test_parse_failures_keeps_file_and_name_pairs(self) -> None:
+        """Vitest FAIL lines and Jest bullet lines yield one pair each."""
+        vitest = (
+            " FAIL  tests/a.test.ts > group > first test\n"
+            " FAIL  tests/b.test.ts > second test\n"
+        )
+        self.assertEqual(
+            parse_test_failures(vitest, "vitest"),
+            [
+                ["tests/a.test.ts", "group > first test"],
+                ["tests/b.test.ts", "second test"],
+            ],
+        )
+        jest = (
+            "FAIL tests/c.test.ts\n"
+            "  ● group › only test\n"
+            "FAIL tests/d.test.ts\n"
+            "  ● another test\n"
+        )
+        self.assertEqual(
+            parse_test_failures(jest, "jest"),
+            [["tests/c.test.ts", "group › only test"], ["tests/d.test.ts", "another test"]],
+        )
+
+    def test_runner_from_script_maps_three_forms(self) -> None:
+        """The runner follows the script text; a new form raises."""
+        self.assertEqual(_runner_from_script("vitest run"), "vitest")
+        self.assertEqual(_runner_from_script("jest"), "jest")
+        self.assertEqual(_runner_from_script("node --test x.test.js"), "node-test")
+        with self.assertRaises(ValueError):
+            _runner_from_script("playwright test")
+
+
+class P3TrialTestRunTests(unittest.TestCase):
+    """TR3 record: tests run on the trial install under state B."""
+
+    def test_record_parses(self) -> None:
+        """The record exists, holds the TR3 keys, and adds no hash key."""
+        record = _load_test_run_record(self)
+        for key in TEST_RUN_TOP_KEYS:
+            if key not in record:
+                self.fail(f"TR3 record misses key: {key}")
+        _no_forbidden_keys(self, record, "tests-ts7.json")
+
+    def test_run_set_equals_live_scan(self) -> None:
+        """Row workspaces and runners equal the live test-script scan."""
+        record = _load_test_run_record(self)
+        rows = record.get("rows")
+        if not isinstance(rows, list) or not rows:
+            self.fail("TR3 rows list is empty")
+            return
+        assert isinstance(rows, list)
+        row_names = [r.get("workspace") for r in rows if isinstance(r, dict)]
+        base_sha = _trial_base_sha(self)
+        live, scripts = _live_test_scan(self, base_sha)
+        if sorted(row_names) != sorted(live):
+            self.fail("TR3 row workspaces differ from the live test-script scan")
+        for row in rows:
+            if not isinstance(row, dict):
+                self.fail("TR3 row is not a mapping")
+                return
+            workspace = str(row.get("workspace", "?"))
+            try:
+                want = _runner_from_script(scripts.get(workspace, ""))
+            except ValueError:
+                self.fail(f"TR3 live scan names no runner for {workspace}")
+                return
+            if row.get("runner") != want:
+                self.fail(f"TR3 row {workspace} runner {row.get('runner')!r} differs from {want!r}")
+
+    def test_command_matches_rule(self) -> None:
+        """Each command follows the builder; Vitest and Jest pin one worker."""
+        record = _load_test_run_record(self)
+        rows = record.get("rows")
+        if not isinstance(rows, list) or not rows:
+            self.fail("TR3 rows list is empty")
+            return
+        assert isinstance(rows, list)
+        for row in rows:
+            if not isinstance(row, dict):
+                self.fail("TR3 row is not a mapping")
+                return
+            workspace = str(row.get("workspace", "?"))
+            runner = row.get("runner")
+            if runner not in KNOWN_RUNNERS:
+                self.fail(f"TR3 row {workspace} names an unknown runner")
+                return
+            script = row.get("script")
+            if not isinstance(script, str) or not script.strip():
+                self.fail(f"TR3 row {workspace} holds no script text")
+                return
+            try:
+                want = test_command(_row_package(row), script)
+            except ValueError:
+                self.fail(f"TR3 row {workspace} script has an unknown form")
+                return
+            if row.get("command") != want:
+                self.fail(f"TR3 row {workspace} command differs from the built command")
+            if runner in ("vitest", "jest") and "--maxWorkers=1" not in str(row.get("command", "")):
+                self.fail(f"TR3 row {workspace} command drops --maxWorkers=1")
+
+    def test_counts_match_logs(self) -> None:
+        """Counts, exit status, memory, and time match the raw log labels."""
+        record = _load_test_run_record(self)
+        rows = record.get("rows")
+        if not isinstance(rows, list) or not rows:
+            self.fail("TR3 rows list is empty")
+            return
+        assert isinstance(rows, list)
+        for row in rows:
+            if not isinstance(row, dict):
+                self.fail("TR3 row is not a mapping")
+                return
+            workspace = str(row.get("workspace", "?"))
+            log_text, time_text = _row_log_and_time(self, row, "tests")
+            runner = row.get("runner")
+            if runner not in KNOWN_RUNNERS:
+                self.fail(f"TR3 row {workspace} names an unknown runner")
+                return
+            try:
+                parsed = parse_test_counts(log_text, runner)
+            except ValueError as exc:
+                self.fail(f"TR3 row {workspace} log misses a labeled count: {exc}")
+                return
+            for key, value in parsed.items():
+                if row.get(key) != value:
+                    self.fail(f"TR3 row {workspace} {key} differs from the raw log")
+                    return
+            try:
+                timed = parse_time_v(time_text)
+            except ValueError:
+                self.fail(f"TR3 row {workspace} time file misses a labeled line")
+                return
+            for key in ("exit_status", "peak_rss_kib", "elapsed_ms"):
+                if row.get(key) != timed[key]:
+                    self.fail(f"TR3 row {workspace} {key} differs from the time file")
+                    return
+            log_exit = _labeled_line_value(log_text, "WS_EXIT=")
+            if log_exit is None or not log_exit.strip().lstrip("-").isdigit():
+                self.fail(f"TR3 row {workspace} log misses a labeled WS_EXIT=")
+                return
+            if int(log_exit.strip()) != timed["exit_status"]:
+                self.fail(f"TR3 row {workspace} log WS_EXIT differs from the time file")
+
+    def test_failures_by_file_and_name(self) -> None:
+        """Failure pairs equal the failure lines; no line is dropped."""
+        record = _load_test_run_record(self)
+        rows = record.get("rows")
+        if not isinstance(rows, list) or not rows:
+            self.fail("TR3 rows list is empty")
+            return
+        assert isinstance(rows, list)
+        for row in rows:
+            if not isinstance(row, dict):
+                self.fail("TR3 row is not a mapping")
+                return
+            workspace = str(row.get("workspace", "?"))
+            runner = row.get("runner")
+            if runner not in KNOWN_RUNNERS:
+                self.fail(f"TR3 row {workspace} names an unknown runner")
+                return
+            log_text, _ = _row_log_and_time(self, row, "tests")
+            pairs = parse_test_failures(log_text, runner)
+            stored = row.get("failures")
+            if not isinstance(stored, list):
+                self.fail(f"TR3 row {workspace} failures list is missing")
+                return
+            normal = [list(pair) for pair in stored]
+            if normal != pairs:
+                self.fail(f"TR3 row {workspace} failure pairs differ from the raw log")
+                return
+            if len(pairs) != _failure_line_count(log_text, runner):
+                self.fail(f"TR3 row {workspace} drops a failure line")
+                return
+            for pair in pairs:
+                if len(pair) != 2 or not all(isinstance(item, str) and item for item in pair):
+                    self.fail(f"TR3 row {workspace} holds a malformed failure pair: {pair!r}")
+                    return
+
+    def test_no_vacuous_pass(self) -> None:
+        """An exit-zero row holds tests, unless the no-test-files rule holds."""
+        record = _load_test_run_record(self)
+        rows = record.get("rows")
+        if not isinstance(rows, list) or not rows:
+            self.fail("TR3 rows list is empty")
+            return
+        assert isinstance(rows, list)
+        for row in rows:
+            if not isinstance(row, dict):
+                self.fail("TR3 row is not a mapping")
+                return
+            workspace = str(row.get("workspace", "?"))
+            no_files = row.get("no_test_files")
+            if not isinstance(no_files, bool):
+                self.fail(f"TR3 row {workspace} no_test_files is not boolean")
+                return
+            log_text, _ = _row_log_and_time(self, row, "tests")
+            if no_files:
+                if _labeled_line_value(log_text, "TEST_FILES_GIT=") != "0":
+                    self.fail(f"TR3 row {workspace} no_test_files misses TEST_FILES_GIT=0")
+                    return
+                continue
+            if row.get("exit_status") != 0:
+                continue
+            total = row.get("tests_total")
+            if not isinstance(total, int) or total < 1:
+                self.fail(f"TR3 row {workspace} reports no tests with exit 0")
+                return
+
+    def test_timeouts_are_sharded(self) -> None:
+        """A timed-out row keeps a shard list that covers every shard."""
+        record = _load_test_run_record(self)
+        rows = record.get("rows")
+        if not isinstance(rows, list) or not rows:
+            self.fail("TR3 rows list is empty")
+            return
+        assert isinstance(rows, list)
+        for row in rows:
+            if not isinstance(row, dict):
+                self.fail("TR3 row is not a mapping")
+                return
+            if row.get("exit_status") != 124:
+                continue
+            workspace = str(row.get("workspace", "?"))
+            shards = row.get("shards")
+            if not isinstance(shards, list) or not shards:
+                self.fail(f"TR3 timed-out row {workspace} holds no shards")
+                return
+            names: list[str] = []
+            for shard in shards:
+                if not isinstance(shard, dict) or not isinstance(shard.get("shard"), str):
+                    self.fail(f"TR3 row {workspace} holds a malformed shard")
+                    return
+                names.append(shard["shard"])
+                if not isinstance(shard.get("exit_status"), int):
+                    self.fail(f"TR3 shard {shard['shard']} holds no exit status")
+                    return
+                log_text = _gate_log_text(self, shard, f"{workspace} shard {shard['shard']}")
+                if not re.search(rf"^SHARD={re.escape(shard['shard'])}\s*$", log_text, re.M):
+                    self.fail(f"TR3 shard {shard['shard']} log misses its labeled SHARD line")
+                    return
+            parts = [name.split("/") for name in names]
+            if any(len(part) != 2 or not all(p.isdigit() for p in part) for part in parts):
+                self.fail(f"TR3 row {workspace} shard labels are not i/n form")
+                return
+            counts = {int(part[1]) for part in parts}
+            if len(counts) != 1:
+                self.fail(f"TR3 row {workspace} shards name different totals")
+                return
+            total = counts.pop()
+            if total < 2:
+                self.fail(f"TR3 row {workspace} timeout has no shard split")
+                return
+            want = {f"{i}/{total}" for i in range(1, total + 1)}
+            if set(names) != want:
+                self.fail(f"TR3 row {workspace} shards do not cover 1/n to n/n")
+
+    def test_failures_compared_with_phase1_file(self) -> None:
+        """Each failing row cites a Phase 1 test surface or the no-match text."""
+        record = _load_test_run_record(self)
+        rows = record.get("rows")
+        if not isinstance(rows, list) or not rows:
+            self.fail("TR3 rows list is empty")
+            return
+        assert isinstance(rows, list)
+        entries = _phase1_test_entries(self)
+        for row in rows:
+            if not isinstance(row, dict):
+                self.fail("TR3 row is not a mapping")
+                return
+            failures = row.get("failures")
+            if not isinstance(failures, list) or not failures:
+                continue
+            workspace = str(row.get("workspace", "?"))
+            surface, matches = _phase1_test_match(workspace, entries)
+            if matches > 1:
+                self.fail(f"TR3 row {workspace} matches several Phase 1 test surfaces")
+                return
+            want = surface if surface is not None else NO_MATCHING_PHASE1
+            if row.get("phase1_ref") != want:
+                self.fail(f"TR3 row {workspace} phase1_ref {row.get('phase1_ref')!r} differs from {want!r}")
+                return
+
+    def test_no_playwright_rows(self) -> None:
+        """No row command or script starts a Playwright run."""
+        record = _load_test_run_record(self)
+        rows = record.get("rows")
+        if not isinstance(rows, list) or not rows:
+            self.fail("TR3 rows list is empty")
+            return
+        assert isinstance(rows, list)
+        for row in rows:
+            if not isinstance(row, dict):
+                self.fail("TR3 row is not a mapping")
+                return
+            for key in ("command", "script"):
+                value = str(row.get(key, ""))
+                if "playwright" in value.lower():
+                    self.fail(f"TR3 row {row.get('workspace', '?')} {key} names playwright")
+
+    def test_load_deviation_recorded(self) -> None:
+        """The PM load ceiling and wait cap replace the old 1.5 target."""
+        record = _load_test_run_record(self)
+        policy = record.get("load_policy")
+        if not isinstance(policy, dict):
+            self.fail("TR3 record holds no load_policy block")
+            return
+        if policy.get("max_load1") != TR3_MAX_LOAD1:
+            self.fail("TR3 load_policy max_load1 is not the PM ceiling")
+        if policy.get("wait_cap_s") != TR3_LOAD_WAIT_CAP_S:
+            self.fail("TR3 load_policy wait_cap_s is not the PM cap")
+        rows = record.get("rows")
+        if not isinstance(rows, list) or not rows:
+            self.fail("TR3 rows list is empty")
+            return
+        assert isinstance(rows, list)
+        for row in rows:
+            if not isinstance(row, dict):
+                self.fail("TR3 row is not a mapping")
+                return
+            workspace = str(row.get("workspace", "?"))
+            load1 = row.get("load1_start")
+            if not isinstance(load1, (int, float)) or isinstance(load1, bool) or load1 > TR3_MAX_LOAD1:
+                self.fail(f"TR3 row {workspace} load1_start exceeds the PM ceiling")
+                return
+            wait = row.get("load_wait_s")
+            if not isinstance(wait, (int, float)) or isinstance(wait, bool) or not 0 <= wait <= TR3_LOAD_WAIT_CAP_S:
+                self.fail(f"TR3 row {workspace} load_wait_s exceeds the PM cap")
+                return
+            log_text, _ = _row_log_and_time(self, row, "tests")
+            logged = _labeled_line_value(log_text, "LOAD1_START=")
+            if logged is None:
+                self.fail(f"TR3 row {workspace} log misses the labeled LOAD1_START=")
+                return
+            try:
+                seen = float(logged.strip())
+            except ValueError:
+                self.fail(f"TR3 row {workspace} LOAD1_START is not a labeled number")
+                return
+            if abs(seen - float(load1)) > 0.01:
+                self.fail(f"TR3 row {workspace} LOAD1_START differs from the record")
+
+    def test_gate_entries_valid(self) -> None:
+        """Heavy gates ran at p2, exited 0, and never overlapped."""
+        record = _load_test_run_record(self)
+        gates = record.get("gates")
+        if not isinstance(gates, list) or not gates:
+            self.fail("TR3 gates list is empty")
+            return
+        intervals: list[tuple[int, int, str]] = []
+        for gate in gates:
+            if not isinstance(gate, dict):
+                self.fail("TR3 gate entry is not a mapping")
+                return
+            gate_id = str(gate.get("id", "?"))
+            for key in ("heavy", "heavy_command", "log", "start_epoch", "exit", "elapsed_s"):
+                if key not in gate:
+                    self.fail(f"TR3 gate {gate_id} misses key: {key}")
+                    return
+            if gate.get("heavy"):
+                command = gate.get("heavy_command", "")
+                if "HEAVY_PRIORITY=p2" not in command or "HEAVY_MIN_AVAIL_MB=1500" not in command:
+                    self.fail(f"TR3 heavy gate {gate_id} misses the p2 priority labels")
+                    return
+                text = _gate_log_text(self, gate, gate_id)
+                if not any(line.startswith("HEAVY_RUN_ACTIVE=1") for line in text.splitlines()):
+                    self.fail(f"TR3 heavy gate {gate_id} log misses HEAVY_RUN_ACTIVE=1")
+                    return
+                if not any(line.startswith("HEAVY_PRIORITY=p2") for line in text.splitlines()):
+                    self.fail(f"TR3 heavy gate {gate_id} log misses HEAVY_PRIORITY=p2")
+                    return
+            if gate.get("exit") != 0:
+                self.fail(f"TR3 gate {gate_id} exit is not 0")
+                return
+            elapsed = gate.get("elapsed_s")
+            if not isinstance(elapsed, (int, float)) or elapsed >= JOB_CAP_S:
+                self.fail(f"TR3 gate {gate_id} elapsed time hits the job cap")
+                return
+            start = gate.get("start_epoch")
+            if not isinstance(start, int):
+                self.fail(f"TR3 gate {gate_id} start_epoch is not an integer")
+                return
+            intervals.append((start, start + int(elapsed), gate_id))
+        intervals.sort()
+        for (first_start, first_end, first_id), (second_start, _second_end, second_id) in zip(
+            intervals, intervals[1:]
+        ):
+            if second_start < first_end:
+                self.fail(f"TR3 gate jobs overlap: {first_id} and {second_id}")
+
+    def test_no_deploy_or_push_in_logs(self) -> None:
+        """No gate log holds a deploy or push command."""
+        record = _load_test_run_record(self)
+        gates = record.get("gates")
+        if not isinstance(gates, list) or not gates:
+            self.fail("TR3 gates list is empty")
+            return
+        for gate in gates:
+            if not isinstance(gate, dict):
+                self.fail("TR3 gate entry is not a mapping")
+                return
+            text = _gate_log_text(self, gate, str(gate.get("id", "?")))
+            for line in text.splitlines():
+                if DEPLOY_PATTERN.search(line):
+                    self.fail(f"TR3 gate {gate.get('id', '?')} log holds a deploy or push line")
+                    return
+
+
 if __name__ == "__main__":
     unittest.main()
