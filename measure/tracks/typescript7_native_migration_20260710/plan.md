@@ -170,7 +170,8 @@ PM 2026-11-23: parked until after the 30 Nov launch.
 > Phase 3 target (PM 2026-11-21): report to the PM by 2026-11-28.
 > Orchestrator default 2026-11-28: new report target 2026-12-02 (the 2026-11-28 target is missed).
 
-- [~] Task: Bump vinext 1.2.0 to the latest 1.4.x and adopt the Oxc lessons of the Math test bed.
+- [x] Task: Bump vinext 1.2.0 to the latest 1.4.x and adopt the Oxc lessons of the Math test bed.
+  - Closed as a record, option A (orchestrator 2026-11-28): vinext 1.4.6 fails both builds under React 19.2.9 (needs 19.3.1). vinext stays 1.2.0. Evidence: 9256de54b, jr-green-058dfd5.log, evidence/phase3/raw-logs/. Before medians: marketing 5603 ms, fixture 4457 ms; after: none.
   - PM 2026-11-21 (stack modernization): bump vinext 1.2.0 -> latest 1.4.x and adopt the Oxc lessons of the Math test bed (ra-math-advantage measure/archive/vinext-oxc-toolchain_20261114/oxc-evidence.md).
   - What: find every package that pins vinext 1.2.0. `apps/marketing` and `apps/activity-vinext-fixture` pin it today. `grep` the repo for other manifests, workspace files, and lockfile entries.
   - Target: vinext 1.4.6, the latest 1.4.x on npm. Check with `npm view vinext versions --json`. Checked 2026-11-21. Change only the pinning manifests and their lockfile entries.
@@ -184,6 +185,8 @@ PM 2026-11-23: parked until after the 30 Nov launch.
   - Rollback: set the two pins back to 1.2.0. Restore the lockfile entries. Rerun the gates. Keep the rollback command in the evidence note. No deploy and no push.
   - Evidence class: automated.
   - Done when: both apps build, test, and pass the runtime verify on 1.4.6. Each Oxc lesson has a check result or a defer with a reason. The before and after times are recorded. No other pin changed.
+- [ ] Task: Record the Oxc lessons of the Math test bed (split from Task 1, option A).
+  - What: fill the strategy section 5a Oxc table (oxlint, oxfmt, tsrs, rule gaps, workarounds) with a check result or a defer with reason on vinext 1.2.0; no pin change.
 
 #### Task 1 Red evidence (Mid Red, 2026-11-28)
 
