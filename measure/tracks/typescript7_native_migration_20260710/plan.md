@@ -170,7 +170,7 @@ PM 2026-11-23: parked until after the 30 Nov launch.
 > Phase 3 target (PM 2026-11-21): report to the PM by 2026-11-28.
 > Orchestrator default 2026-11-28: new report target 2026-12-02 (the 2026-11-28 target is missed).
 
-- [ ] Task: Bump vinext 1.2.0 to the latest 1.4.x and adopt the Oxc lessons of the Math test bed.
+- [~] Task: Bump vinext 1.2.0 to the latest 1.4.x and adopt the Oxc lessons of the Math test bed.
   - PM 2026-11-21 (stack modernization): bump vinext 1.2.0 -> latest 1.4.x and adopt the Oxc lessons of the Math test bed (ra-math-advantage measure/archive/vinext-oxc-toolchain_20261114/oxc-evidence.md).
   - What: find every package that pins vinext 1.2.0. `apps/marketing` and `apps/activity-vinext-fixture` pin it today. `grep` the repo for other manifests, workspace files, and lockfile entries.
   - Target: vinext 1.4.6, the latest 1.4.x on npm. Check with `npm view vinext versions --json`. Checked 2026-11-21. Change only the pinning manifests and their lockfile entries.
@@ -184,6 +184,18 @@ PM 2026-11-23: parked until after the 30 Nov launch.
   - Rollback: set the two pins back to 1.2.0. Restore the lockfile entries. Rerun the gates. Keep the rollback command in the evidence note. No deploy and no push.
   - Evidence class: automated.
   - Done when: both apps build, test, and pass the runtime verify on 1.4.6. Each Oxc lesson has a check result or a defer with a reason. The before and after times are recorded. No other pin changed.
+
+#### Task 1 Red evidence (Mid Red, 2026-11-28)
+
+- Role: Measure Mid Red. Model: muse-spark-1.3-contributor.
+- phase_base_sha: `df256903d8f472f094ba4b51635afc0c11e674e6`. role_base_sha: `9d918f5d2`.
+- New test file: `measure/tests/test_typescript7_native_migration_phase3_vinext.py`. It encodes `TARGET = 1.4.6`. It asserts no React 19.3.x pin.
+- Red command: `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_vinext`.
+- Red result: exit non-zero with assertion failures only. The run has no `errors=` part. The full log is `measure/runs/typescript7_native_migration_20260710/mid-red-9d918f5.log`.
+- Each failure comes from the 1.2.0 pin, the missing Phase 3 note, the missing install, or the unset `P3_GREEN_COMMITS` variable.
+- Tests that fail at base: `P3T1TargetTests.test_both_apps_pin_target`, `P3T1LockTests.test_lock_importers_resolve_target`, `P3T1LockTests.test_lock_has_one_vinext_key`, `P3T1LockTests.test_installed_matches_target`, `P3T1PeerTests.test_note_blocks_parse`, `P3T1PeerTests.test_peer_rows_recomputed`, `P3T1PeerTests.test_unmet_peer_has_waiver_or_fix`, `P3T1PeerTests.test_hardcoded_vinext_paths_exist`, `P3T1PinInventoryTests.test_pin_inventory_matches_scan`, `P3T1ScopeTests.test_green_commits_in_scope`, `P3T1ScopeTests.test_denied_paths_untouched`, `P3T1ScopeTests.test_lock_diff_in_scope`, `P3T1ScopeTests.test_lock_key_changes_explained`, `P3T1GateEvidenceTests.test_gate_results_complete`, `P3T1GateEvidenceTests.test_log_claims_match_labels`, `P3T1GateEvidenceTests.test_vitest_counts_match_logs`, `P3T1GateEvidenceTests.test_warning_counts_match_logs`, `P3T1GateEvidenceTests.test_verify_script_is_oracle`, `P3T1GateEvidenceTests.test_build_times_recomputed`, `P3T1GateEvidenceTests.test_oxc_lessons_complete`, `P3T1GateEvidenceTests.test_rollback_proven`, `P3T1GateEvidenceTests.test_no_deploy_or_push_in_logs`.
+- Tests that pass at base (guards): `P3T1TargetTests.test_target_is_stable_1_4_x`, `P3T1TargetTests.test_exactly_two_manifests_declare_vinext`, and the five `P3HelperTests` cases. They guard the target constant, the manifest scan, and the scope helpers.
+- The frozen Phase 2 module is unchanged. No production code, manifest, or lockfile changed. No install, build, or heavy job ran.
 
 - [ ] Task: Create the trial worktree with the latest stable TypeScript 7.0.x.
   - What: make a git worktree on a new branch from master. Install the latest stable 7.0.x
