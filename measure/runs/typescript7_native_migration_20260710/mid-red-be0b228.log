@@ -41,7 +41,7 @@ status: complete
 track: typescript7_native_migration_20260710
 phase: Phase 3: TypeScript 7 trial (PM step 1)
 baseline_sha: 7f86c5203a9f2f1d0c9f0cca8c414b46f1cbd27e
-commits: <evidence-sha> (plan evidence commit: TR2 Red tests and plan updates, on top of role_base_sha be0b2287f)
+commits: 2d30ab4ee (plan evidence commit: TR2 Red tests and plan updates, on top of role_base_sha be0b2287f)
 tests_run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialTypecheckTests -> Ran 34 tests, FAILED (failures=14), no errors; the 12 type-check tests fail on the missing typecheck-ts7.json record and the 2 scope tests fail on the unset P3_GREEN_COMMITS variable
 files_changed: measure/tests/test_typescript7_native_migration_phase3_trial.py (added P3TrialTypecheckTests), measure/tracks/typescript7_native_migration_20260710/plan.md (TR2 marker [~] and Red evidence block), measure/runs/typescript7_native_migration_20260710/mid-red-be0b228.log (this log, added with git add -f)
 plan_updates: TR2 marker set to [~]; Red evidence block added with the failing test names and the Q1 statement; no run counts written
