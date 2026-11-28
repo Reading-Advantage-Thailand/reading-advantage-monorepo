@@ -1,0 +1,13 @@
+GATE=H0-test
+CMD=pnpm --filter marketing exec vitest run --maxWorkers=1
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing
+
+
+ Test Files  65 passed (65)
+      Tests  573 passed (573)
+   Start at  10:14:11
+   Duration  51.76s (transform 1.89s, setup 0ms, import 15.80s, tests 22.56s, environment 7.15s)
+
+EXIT=0
+ELAPSED_S=54

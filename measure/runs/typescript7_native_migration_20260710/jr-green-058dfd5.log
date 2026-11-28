@@ -1,0 +1,67 @@
+# Measure Junior Green report: Phase 3 Task 1 (vinext 1.4.6 bump)
+
+- Role: Measure Junior Green. Model: opencode-go/hy4-flash-free#high.
+- Track: `typescript7_native_migration_20260710`.
+- Phase: `Phase 3: TypeScript 7 trial (PM step 1)` (P3). Task 1.
+- Worktree: `/home/daniebo/Desktop/rama-worktrees/ts7-phase3`, branch `ts7/phase3`.
+- phase_base_sha: `df256903d8f472f094ba4b51635afc0c11e674e6`.
+- role_base_sha: `058dfd571f929c47c55c64c0077afcc256e13fa1`.
+- Status: blocked. Option C failed the live build gates. The tree is back on vinext 1.2.0. No implementation commit and no Green commit. No deploy and no push.
+
+## Red rerun and G3.0
+
+- Red rerun at role base: `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_vinext` exits 1. It reports `Ran 29 tests` and `FAILED (failures=25)`, with no `errors=` part. Seven guards pass.
+- G3.0 registry reads: vinext 1.4.6 asks React `^19.3.1` and React DOM `^19.3.1`. The repository pins both at 19.2.9. `react-server-dom-webpack` is absent. The optional peers are `@mdx-js/rollup`, `@vitejs/plugin-rsc`, and `react-server-dom-webpack`. Node `>=22` is met by 24.19.0. Vite `^8.0.0` is met by 8.1.6. Plugin-react is met by 6.0.3. Plugin-rsc 0.5.38 is met. Strategy default C applied.
+
+## H0 gates on vinext 1.2.0
+
+- `P-install-base`: exit 0, `VINEXT=1.2.0`, `DISK_FREE_MB=570994`.
+- `P-prereq-build`: exit 0, `DIST_MISSING=0`.
+- `H0-types-marketing` and `H0-types-fixture`: exit 0. `H0-lint-marketing` and `H0-vitest-list`: exit 0.
+- `H0-guard`: exit 1 on a pre-existing `image-size` advisory. The failure is unrelated to vinext. `H1-guard` shows the same two failures.
+- `H0-build-marketing`: exit 0, `NEWFILES=168`. `H0-build-fixture`: exit 0, `NEWFILES=70`. Both rebuild one tracked `next-env.d.ts`; both files were restored before the rollback.
+- `H0-probe-fixture`: exit 0, `HTTP_STATUS=200`, the body holds `Verify the shared package renders under Vinext.`.
+- `H0-time-marketing`: exit 0. Three `BUILD_RUN` lines with `MS=5603`, `MS=5669`, `MS=5216`, median 5603 ms.
+- `H0-time-fixture`: exit 0. Three `BUILD_RUN` lines with `MS=4457`, `MS=4329`, `MS=4486`, median 4457 ms.
+- Host load stayed above the 1.5 target. The logs record each actual `LOAD1_START`. This is a deviation from the strategy method and a finding for lesson L7.
+- `H0-test`: exit 0, 65 test files and 573 tests passed, no failures.
+
+## H1 gates on vinext 1.4.6
+
+- The two manifests were edited to 1.4.6. The lockfile resolved both importers to 1.4.6. No workspace file changed.
+- `H1-install-refresh` first exited 124 when the hang guard stopped network retries. A retry with `--prefer-offline` exits 0. `H1-install` (`pnpm install --frozen-lockfile`) exits 0.
+- `H1-types-marketing` and `H1-types-fixture`: exit 0, `DIAGNOSTICS=0`. `H1-lint-marketing` and `H1-vitest-list`: exit 0, 65 files.
+- `H1-why-next`: exit 0. The output differs from H0 only in the vinext version label. The `next` dependency edge is unchanged.
+- `H1-guard`: exit 1, with the same two pre-existing `image-size` failures as H0.
+- Decisive failure: `H1-build-marketing` and `H1-build-fixture` both exit 1. vinext 1.4.6 reports `App Router requires react, react-dom, and react-server-dom-webpack 19.3.1 or later`. Both logs hold `NEWFILES=0`. Because the builds failed, no after timing, H1 test, seed, or browser gate was run. No after median exists. The waiver condition 2 of section 5a.3 cannot hold.
+
+## Rollback and final state
+
+- Command: `git checkout 058dfd571 -- apps/marketing/package.json apps/activity-vinext-fixture/package.json pnpm-lock.yaml`, then restore both `next-env.d.ts` files, remove `.vinext/`, then `pnpm install --frozen-lockfile --prefer-offline`.
+- Log `evidence/phase3/raw-logs/rollback-option-c.log`: exit 0, `VINEXT=1.2.0`, `ROLLBACK_BYTES_EQUAL=1`, `ELAPSED_S=1`.
+- `git status --short` now shows only `measure/tracks.md`. Both manifests and the lockfile are byte-equal to the role base. The track marker was set to `[~]` so measure-guard reads this worktree.
+- `plan.md` holds the blocked evidence. Task 1 stays `[~]`. No `[x]` marker and no fabricated note. No Green commit was made.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: blocked
+track: typescript7_native_migration_20260710
+phase: Phase 3: TypeScript 7 trial (PM step 1)
+task: Task 1 - Bump vinext 1.2.0 to 1.4.6 and adopt the Oxc lessons
+phase_base_sha: df256903d8f472f094ba4b51635afc0c11e674e6
+role_base_sha: 058dfd571f929c47c55c64c0077afcc256e13fa1
+red_command: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3_vinext
+red_result: exit 1; Ran 29 tests; FAILED (failures=25); no errors; 7 guards pass
+implementation_commits: none; option C failed the live build gates, so no bump was committed
+plan_evidence_commit: pending
+green_test_exit: not run; no implementation to gate
+doctor_exit: not run; no implementation to gate
+before_build_median_ms: marketing 5603; activity-vinext-fixture 4457
+after_build_median_ms: not available; both H1 builds exit 1
+phase2_intended_failures: none observed; the six named Phase 2 tests stay green because no bump shipped
+rollback_log: measure/tracks/typescript7_native_migration_20260710/evidence/phase3/raw-logs/rollback-option-c.log
+rollback_result: exit 0; VINEXT=1.2.0; ROLLBACK_BYTES_EQUAL=1
+new_files: measure/tracks/typescript7_native_migration_20260710/evidence/phase3/raw-logs/*.log (gate logs, including H1-build-marketing.log and H1-build-fixture.log); this log
+task_markers: Task 1 stays [~]; no task flipped to [x]; no task flipped to [b]
+handoff: Question for the PM: vinext 1.4.6 fails the live build gates under React 19.2.9. Which option replaces failed default C? Options: A stay on vinext 1.2.0 and close Task 1 as a record; B move React and React DOM to 19.3.1 repo-wide in a new track; D try 1.4.7, which has the same peers and fails the same check; or another PM direction. Default: keep vinext 1.2.0 and Task 1 blocked until the PM answers. Facts changed: none after rollback. No push and no deploy.
+END_MEASURE_AGENT_RESULT

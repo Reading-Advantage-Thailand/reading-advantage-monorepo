@@ -1,0 +1,78 @@
+GATE=P-prereq-build
+CMD=pnpm --workspace-concurrency=1 --filter 'marketing^...' --filter 'activity-vinext-fixture^...' run build && { M=0; for d in $(pnpm --filter 'marketing^...' --filter 'activity-vinext-fixture^...' list --depth -1 --parseable 2>/dev/null | sort -u); do if node -e "const p=require('$d/package.json'); process.exit(p.scripts&&p.scripts.build?0:1)" 2>/dev/null; then if [ ! -d "$d/dist" ]; then echo NO_DIST=$d; M=$((M+1)); fi; fi; done; echo DIST_MISSING=$M; }
+Scope: 22 of 49 workspace projects
+$ tsc
+$ tsc
+$ tsc
+$ tsc --project tsconfig.build.json
+$ tsup src/index.ts --format esm --dts
+[34mCLI[39m Building entry: src/index.ts
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Target: es2022
+[34mESM[39m Build start
+[32mESM[39m [1mdist/index.js [22m[32m84.91 KB[39m
+[32mESM[39m ⚡️ Build success in 21ms
+[34mDTS[39m Build start
+[32mDTS[39m ⚡️ Build success in 1442ms
+[32mDTS[39m [1mdist/index.d.ts [22m[32m13.26 KB[39m
+$ tsup src/index.ts --format esm --dts
+[34mCLI[39m Building entry: src/index.ts
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Target: es2022
+[34mESM[39m Build start
+[32mESM[39m [1mdist/index.js [22m[32m59.97 KB[39m
+[32mESM[39m ⚡️ Build success in 24ms
+[34mDTS[39m Build start
+[32mDTS[39m ⚡️ Build success in 2365ms
+[32mDTS[39m [1mdist/index.d.ts [22m[32m248.77 KB[39m
+$ tsc
+$ tsc
+$ tsc
+$ tsc
+$ tsup src/index.ts src/cn.ts src/ffmpeg-process.ts src/hooks/index.ts src/structured-error.ts --format esm --dts
+[34mCLI[39m Building entry: src/cn.ts, src/ffmpeg-process.ts, src/index.ts, src/structured-error.ts, src/hooks/index.ts
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Target: es2022
+[34mESM[39m Build start
+[32mESM[39m [1mdist/cn.js               [22m[32m61.00 B[39m
+[32mESM[39m [1mdist/structured-error.js [22m[32m93.00 B[39m
+[32mESM[39m [1mdist/chunk-EXLYIKGK.js   [22m[32m433.00 B[39m
+[32mESM[39m [1mdist/ffmpeg-process.js   [22m[32m1.92 KB[39m
+[32mESM[39m [1mdist/hooks/index.js      [22m[32m2.75 KB[39m
+[32mESM[39m [1mdist/chunk-XLMR5Y6E.js   [22m[32m161.00 B[39m
+[32mESM[39m [1mdist/index.js            [22m[32m143.00 B[39m
+[32mESM[39m ⚡️ Build success in 21ms
+[34mDTS[39m Build start
+[32mDTS[39m ⚡️ Build success in 3725ms
+[32mDTS[39m [1mdist/index.d.ts            [22m[32m173.00 B[39m
+[32mDTS[39m [1mdist/ffmpeg-process.d.ts   [22m[32m942.00 B[39m
+[32mDTS[39m [1mdist/cn.d.ts               [22m[32m292.00 B[39m
+[32mDTS[39m [1mdist/structured-error.d.ts [22m[32m1.05 KB[39m
+[32mDTS[39m [1mdist/hooks/index.d.ts      [22m[32m781.00 B[39m
+$ node scripts/clean-dist.mjs && tsc
+$ tsc
+$ tsc
+$ tsc && node scripts/copy-data.mjs
+$ tsc
+$ tsup src/index.ts --format esm --dts
+[34mCLI[39m Building entry: src/index.ts
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Using tsup config: /home/daniebo/Desktop/rama-worktrees/ts7-phase3/packages/auth-client/tsup.config.ts
+[34mCLI[39m Target: es2022
+[34mESM[39m Build start
+[32mESM[39m [1mdist/index.js [22m[32m4.73 KB[39m
+[32mESM[39m ⚡️ Build success in 13ms
+[34mDTS[39m Build start
+[32mDTS[39m ⚡️ Build success in 1366ms
+[32mDTS[39m [1mdist/index.d.ts [22m[32m2.49 KB[39m
+$ tsc && node scripts/copy-data.mjs
+$ node scripts/clean-dist.mjs && tsc
+$ tsc
+$ tsc
+DIST_MISSING=0
+EXIT=0
+ELAPSED_S=58

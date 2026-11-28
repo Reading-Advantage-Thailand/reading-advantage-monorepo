@@ -1,0 +1,9 @@
+GATE=P-install-base
+CMD=pnpm install --frozen-lockfile && { echo VINEXT=$(node -p "JSON.parse(require('fs').readFileSync('node_modules/vinext/package.json','utf8')).version"); echo DISK_FREE_MB=$(df -m . | tail -1 | awk '{print $4}'); }
+Scope: all 49 workspace projects
+Already up to date
+Done in 418ms using pnpm v11.8.0
+VINEXT=1.2.0
+DISK_FREE_MB=570994
+EXIT=0
+ELAPSED_S=2

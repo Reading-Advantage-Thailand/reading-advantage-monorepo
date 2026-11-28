@@ -1,0 +1,49 @@
+GATE=H1-check-marketing
+CMD=pnpm --filter marketing exec vinext check
+
+  vinext check
+
+  Scanning project...
+
+
+  [1mvinext compatibility report[0m
+  ========================================
+
+  [1mImports[0m: 3/3 fully supported
+    [32m✓[0m  next/server [90m(8 files)[0m [90m— NextRequest, NextResponse, NextFetchEvent, userAgent, userAgentFromString, after, connection[0m
+    [32m✓[0m  next/navigation [90m(4 files)[0m
+    [32m✓[0m  next/link [90m(3 files)[0m
+
+  [1mConfig[0m: 1/1 options supported
+    [32m✓[0m  headers
+
+  [1mLibraries[0m: 1/1 compatible
+    [32m✓[0m  zod
+
+  [1mProject structure[0m:
+    [32m✓[0m  App Router (app/)
+    [32m✓[0m  6 page(s)
+    [32m✓[0m  6 layout(s)
+    [32m✓[0m  14 route handler(s)
+    [32m✓[0m  1 error boundary(ies)
+    [32m✓[0m  proxy.ts (Next.js 16)
+    [31m✗[0m  __dirname / __filename (CommonJS globals) [90m— vinext only defines them in server code, where they point at the built output rather than your source tree; they are undefined in client bundles and ESM next.config files — use import.meta.dirname / import.meta.filename or fileURLToPath(import.meta.url)[0m
+
+  ----------------------------------------
+  [1mOverall[0m: [32m92% compatible[0m (11 supported, 0 partial, 1 issues)
+
+  [1mIssues to address:[0m
+    [31m✗[0m  __dirname / __filename (CommonJS globals) — vinext only defines them in server code, where they point at the built output rather than your source tree; they are undefined in client bundles and ESM next.config files — use import.meta.dirname / import.meta.filename or fileURLToPath(import.meta.url)
+       [90mvite.config.ts[0m
+
+  [1mRecommended next steps:[0m
+    Run [36mvinext init[0m to set up your project automatically
+
+  Or manually:
+    1. Add [36m"type": "module"[0m to package.json
+    2. Install: [36mpnpm add -D vinext vite @vitejs/plugin-react @vitejs/plugin-rsc react-server-dom-webpack[0m
+    3. Create vite.config.ts with [36mplugins: [vinext()][0m
+    4. Run: [36mnpx vite dev[0m
+
+EXIT=0
+ELAPSED_S=2

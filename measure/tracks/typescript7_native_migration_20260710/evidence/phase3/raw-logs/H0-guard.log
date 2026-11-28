@@ -1,0 +1,57 @@
+GATE=H0-guard
+CMD=pnpm exec vitest run --maxWorkers=1 tests/security-upgrade-version-guard.test.ts tests/security-upgrade-adversarial.test.ts
+heavy-run: load hold — load 23.66 over 18
+heavy-run: load hold — load 22.17 over 18
+heavy-run: load hold — load 19.92 over 18
+
+ RUN  v4.1.8 /home/daniebo/Desktop/rama-worktrees/ts7-phase3
+
+ ❯ tests/security-upgrade-adversarial.test.ts (51 tests | 1 failed) 4214ms
+     × passes the real lockfile of the repository 32ms
+ ❯ tests/security-upgrade-version-guard.test.ts (30 tests | 1 failed) 1156ms
+     × fails while any locked version sits below the fixed version of a critical or high advisory 25ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/security-upgrade-adversarial.test.ts > the real guard implementation runs on a synthetic bad fixture > passes the real lockfile of the repository
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "advisory=GHSA-5p2g-fcmc-qvqq GHSA-w3rx-r6r6-pgpr missing_line=image-size 2.",[39m
+[31m+ ][39m
+
+ ❯ tests/security-upgrade-adversarial.test.ts:938:22
+    936|     const locked = guard.parseLockedVersions(section);
+    937|     const failures = guard.evaluateGuard(locked, GUARD_ENTRIES);
+    938|     expect(failures).toEqual([]);
+       |                      ^
+    939|   });
+    940|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/security-upgrade-version-guard.test.ts > live version guard > fails while any locked version sits below the fixed version of a critical or high advisory
+Error: version-guard failures (1):
+advisory=GHSA-5p2g-fcmc-qvqq GHSA-w3rx-r6r6-pgpr missing_line=image-size 2.
+ ❯ tests/security-upgrade-version-guard.test.ts:471:13
+    469|     const failures = evaluateGuard(locked, GUARD_ENTRIES);
+    470|     if (failures.length > 0) {
+    471|       throw new Error(`version-guard failures (${failures.length}):\n$…
+       |             ^
+    472|     }
+    473|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 79 passed (81)
+   Start at  08:47:59
+   Duration  6.29s (transform 286ms, setup 0ms, import 373ms, tests 5.37s, environment 0ms)
+
+EXIT=1
+ELAPSED_S=8

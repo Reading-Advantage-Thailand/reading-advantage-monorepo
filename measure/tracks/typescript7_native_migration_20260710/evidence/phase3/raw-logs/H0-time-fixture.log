@@ -1,0 +1,8 @@
+GATE=H0-time-fixture
+CMD=BAD=0; for i in 1 2 3; do rm -rf apps/activity-vinext-fixture/dist; L=9; for w in $(seq 1 30); do L=$(cut -d' ' -f1 /proc/loadavg); awk -v x="$L" 'BEGIN{exit !(x<=1.5)}' && break; sleep 1; done; S=$(date +%s%N); pnpm --filter activity-vinext-fixture exec vinext build > /tmp/p3-time.log 2>&1; RC=$?; E=$(date +%s%N); echo "BUILD_RUN=$i EXIT=$RC MS=$(( (E-S)/1000000 )) LOAD1_START=$L NEWFILES=$(find apps/activity-vinext-fixture/dist -type f -newermt "@$((S/1000000000))" | wc -l) VINEXT=$(node -p "JSON.parse(require('fs').readFileSync('node_modules/vinext/package.json','utf8')).version")"; if [ $RC -ne 0 ]; then tail -40 /tmp/p3-time.log; BAD=1; fi; done; exit $BAD
+BUILD_RUN=1 EXIT=0 MS=4457 LOAD1_START=4.70 NEWFILES=70 VINEXT=1.2.0
+BUILD_RUN=2 EXIT=0 MS=4329 LOAD1_START=4.16 NEWFILES=70 VINEXT=1.2.0
+BUILD_RUN=3 EXIT=0 MS=4486 LOAD1_START=4.00 NEWFILES=70 VINEXT=1.2.0
+
+EXIT=0
+ELAPSED_S=150

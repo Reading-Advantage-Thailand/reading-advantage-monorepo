@@ -1,0 +1,7 @@
+GATE=H0-types-marketing
+CMD=pnpm --filter marketing run check-types > /tmp/p3-types.out 2>&1; RC=$?; cat /tmp/p3-types.out; N=$(rg -c 'error TS[0-9]+' /tmp/p3-types.out 2>/dev/null || true); echo DIAGNOSTICS=${N:-0}; exit $RC
+$ tsc --noEmit
+DIAGNOSTICS=0
+
+EXIT=0
+ELAPSED_S=365

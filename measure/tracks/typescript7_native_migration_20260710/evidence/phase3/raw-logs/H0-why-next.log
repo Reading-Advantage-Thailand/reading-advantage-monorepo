@@ -1,0 +1,20 @@
+GATE=H0-why-next
+CMD=pnpm --filter marketing why next > /tmp/p3-why-mkt-h0.txt 2>&1; pnpm --filter activity-vinext-fixture why next > /tmp/p3-why-fix-h0.txt 2>&1; cat /tmp/p3-why-mkt-h0.txt; echo '=== FIXTURE ==='; cat /tmp/p3-why-fix-h0.txt
+next@16.4.1 peer#764b (2 variations)
+└─┬ @unpic/react@1.0.2
+  └─┬ vinext@1.2.0
+    └── marketing@0.1.0 (dependencies)
+
+next@16.4.1 peer#ae89 (2 variations)
+└── @reading-advantage/api@0.1.0 (devDependencies)
+
+Found 1 version, 2 instances of next
+=== FIXTURE ===
+next@16.4.1
+└─┬ @unpic/react@1.0.2
+  └─┬ vinext@1.2.0
+    └── activity-vinext-fixture@0.1.0 (dependencies)
+
+Found 1 version of next
+EXIT=0
+ELAPSED_S=4

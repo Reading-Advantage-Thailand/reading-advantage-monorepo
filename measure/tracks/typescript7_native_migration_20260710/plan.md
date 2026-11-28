@@ -197,6 +197,20 @@ PM 2026-11-23: parked until after the 30 Nov launch.
 - Tests that pass at base (guards): `P3T1TargetTests.test_target_is_stable_1_4_x`, `P3T1TargetTests.test_exactly_two_manifests_declare_vinext`, and the five `P3HelperTests` cases. They guard the target constant, the manifest scan, and the scope helpers.
 - The frozen Phase 2 module is unchanged. No production code, manifest, or lockfile changed. No install, build, or heavy job ran.
 
+#### Task 1 Green evidence (Junior Green, blocked, 2026-11-28)
+
+- Role: Measure Junior Green. Model: opencode-go/hy4-flash-free#high. Task 1 only.
+- phase_base_sha: `df256903d8f472f094ba4b51635afc0c11e674e6`. role_base_sha: `058dfd571f929c47c55c64c0077afcc256e13fa1`.
+- Status: blocked. Option C of test-strategy.md section 5a.3 fails the live build gates. Task 1 stays `[~]`. No implementation commit and no Green commit. No archive move and no final closeout.
+- G3.0: vinext 1.4.6 asks React `^19.3.1` and React DOM `^19.3.1`. The repository pins 19.2.9. `react-server-dom-webpack` is absent. `@mdx-js/rollup`, `@vitejs/plugin-rsc`, and `react-server-dom-webpack` are optional. Node `>=22` is met by 24.19.0. Vite `^8.0.0` is met by 8.1.6. Plugin-react is met by 6.0.3. Plugin-rsc 0.5.38 is met.
+- H0 gates on vinext 1.2.0 exit 0: install, prerequisite build, types for both apps, builds for both apps, fixture probe, three timed builds per app, marketing vitest (65 files, 573 tests), vitest list, and lint. `H0-guard` exits 1 on a pre-existing `image-size` advisory, unrelated to vinext.
+- H1 gates on vinext 1.4.6: install refresh and frozen install exit 0; types for both apps exit 0 with `DIAGNOSTICS=0`; lint exits 0; vitest list holds 65 files; `H1-guard` holds the same two pre-existing failures as H0; `H1-why-next` differs from H0 only in the vinext version label.
+- Decisive failure: `H1-build-marketing` and `H1-build-fixture` both exit 1. vinext 1.4.6 reports `App Router requires react, react-dom, and react-server-dom-webpack 19.3.1 or later`. Both logs hold `NEWFILES=0`. Evidence: `evidence/phase3/raw-logs/H1-build-marketing.log` and `evidence/phase3/raw-logs/H1-build-fixture.log`.
+- The waiver of section 5a.3 cannot hold. Condition 2 fails because both browser gates are not reached and the live builds fail. Green does not mark Task 1 `[x]` and does not write a passing note.
+- Rollback: `git checkout <role_base_sha> -- apps/marketing/package.json apps/activity-vinext-fixture/package.json pnpm-lock.yaml`, then `pnpm install --frozen-lockfile --prefer-offline`. The log holds `VINEXT=1.2.0` and `ROLLBACK_BYTES_EQUAL=1`. Evidence: `evidence/phase3/raw-logs/rollback-option-c.log`.
+- All six Phase 2 tests stay green because no bump shipped. No app file and no generated `next-env.d.ts` changed. No other pin changed. No deploy and no push.
+- The PM must choose option B of section 5a.3 (a repo-wide React 19.3.1 move in its own track) or another option before this task can restart.
+
 - [ ] Task: Create the trial worktree with the latest stable TypeScript 7.0.x.
   - What: make a git worktree on a new branch from master. Install the latest stable 7.0.x
     there only. 7.1 beta is not the gate version.

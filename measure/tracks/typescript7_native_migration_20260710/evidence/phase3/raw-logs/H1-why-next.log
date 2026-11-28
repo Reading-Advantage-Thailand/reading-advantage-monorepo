@@ -1,0 +1,23 @@
+GATE=H1-why-next
+CMD=pnpm --filter marketing why next > /tmp/p3-why-mkt-h1.txt 2>&1; pnpm --filter activity-vinext-fixture why next > /tmp/p3-why-fix-h1.txt 2>&1; cat /tmp/p3-why-mkt-h1.txt; echo '=== FIXTURE ==='; cat /tmp/p3-why-fix-h1.txt; diff -q /tmp/p3-why-mkt-h0.txt /tmp/p3-why-mkt-h1.txt; A=$?; diff -q /tmp/p3-why-fix-h0.txt /tmp/p3-why-fix-h1.txt; B=$?; echo WHY_SAME=$((A+B))
+next@16.4.1 peer#764b (2 variations)
+└─┬ @unpic/react@1.0.2
+  └─┬ vinext@1.4.6
+    └── marketing@0.1.0 (dependencies)
+
+next@16.4.1 peer#ae89 (2 variations)
+└── @reading-advantage/api@0.1.0 (devDependencies)
+
+Found 1 version, 2 instances of next
+=== FIXTURE ===
+next@16.4.1
+└─┬ @unpic/react@1.0.2
+  └─┬ vinext@1.4.6
+    └── activity-vinext-fixture@0.1.0 (dependencies)
+
+Found 1 version of next
+Files /tmp/p3-why-mkt-h0.txt and /tmp/p3-why-mkt-h1.txt differ
+Files /tmp/p3-why-fix-h0.txt and /tmp/p3-why-fix-h1.txt differ
+WHY_SAME=2
+EXIT=0
+ELAPSED_S=5

@@ -42,7 +42,7 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
-- [ ] **Track: TypeScript 7 Native Compiler Migration** *(typescript7_native_migration_20260710)*
+- [~] **Track: TypeScript 7 Native Compiler Migration** *(typescript7_native_migration_20260710)*
   *Link: [./tracks/typescript7_native_migration_20260710/](./tracks/typescript7_native_migration_20260710/)*
   Move the monorepo to one compiler, TypeScript 7 (tsgo), with no second install. Amended 2026-11-05 (Daniel): vinext 1.x upgrade first, then a TypeScript 7 trial in a worktree with a regression list and memory/time table, then Cloudflare preparation (Node-only dependency inventory and adapter plan, no code moves), then a rollout phase deferred until Daniel decides.
   *Note: Daniel 2026-11-27: "Typescript and tooling upgrades should be completed before we start any new apps." First card by the PM's order.*

@@ -1,0 +1,5 @@
+GATE=H1-verify-marketing
+CMD=FREE=$(python3 -c "import socket;s=socket.socket();r=s.connect_ex(('127.0.0.1',4393));s.close();print(1 if r!=0 else 0)"); echo PORT_FREE=$FREE; if [ "$FREE" = 1 ]; then MARKETING_RUNTIME_SMOKE_PORT=4393 node apps/marketing/scripts/verify-vinext-runtime.mjs; else exit 1; fi
+PORT_FREE=1
+EXIT=0
+ELAPSED_S=0

@@ -1,0 +1,9 @@
+GATE=rollback-option-c
+CMD=git checkout 058dfd571f929c47c55c64c0077afcc256e13fa1 -- apps/marketing/package.json apps/activity-vinext-fixture/package.json pnpm-lock.yaml && git checkout -- apps/marketing/next-env.d.ts apps/activity-vinext-fixture/next-env.d.ts && rm -rf apps/activity-vinext-fixture/.vinext apps/marketing/.vinext && pnpm install --frozen-lockfile --prefer-offline && echo VINEXT=$(node -p "JSON.parse(require('fs').readFileSync('node_modules/vinext/package.json','utf8')).version") && echo ROLLBACK_BYTES_EQUAL=$(git diff --quiet 058dfd571f929c47c55c64c0077afcc256e13fa1 -- apps/marketing/package.json apps/activity-vinext-fixture/package.json pnpm-lock.yaml && echo 1 || echo 0)
+Scope: all 49 workspace projects
+Already up to date
+Done in 407ms using pnpm v11.8.0
+VINEXT=1.2.0
+ROLLBACK_BYTES_EQUAL=1
+EXIT=0
+ELAPSED_S=1

@@ -1,0 +1,24 @@
+GATE=H1-build-marketing
+CMD=BT0=$(date +%s); MARKETING_RUNTIME_SMOKE_PORT=4391 pnpm --filter marketing build > /tmp/p3-bm.log 2>&1; RC=$?; cat /tmp/p3-bm.log; echo NEWFILES=$(find apps/marketing/dist -type f -newermt "@$BT0" | wc -l); echo TRACKED_CHANGED=$(git status --porcelain --untracked-files=no -- apps/marketing | wc -l); git status --porcelain --untracked-files=no -- apps/marketing; exit $RC
+$ vinext build && node scripts/verify-vinext-runtime.mjs
+[vinext] Tip: migrate from `vinext build` to `vite build`.
+[31merror during build:
+Error: vinext: App Router requires react, react-dom, and react-server-dom-webpack 19.3.1 or later.
+Run: pnpm add react@latest react-dom@latest
+    at Object.onPrepare (file:///home/daniebo/Desktop/rama-worktrees/ts7-phase3/node_modules/vinext/dist/index.js:1360:10)
+    at BasicMinimalPluginContext.handler (file:///home/daniebo/Desktop/rama-worktrees/ts7-phase3/node_modules/vinext/dist/build/lifecycle.js:235:24)
+    at file:///home/daniebo/Desktop/rama-worktrees/ts7-phase3/node_modules/vite/dist/node/chunks/node.js:36078:87
+    at Array.map (<anonymous>)
+    at resolveConfig (file:///home/daniebo/Desktop/rama-worktrees/ts7-phase3/node_modules/vite/dist/node/chunks/node.js:36078:68)
+    at async createBuilder (file:///home/daniebo/Desktop/rama-worktrees/ts7-phase3/node_modules/vite/dist/node/chunks/node.js:33627:17)
+    at async CAC.<anonymous> (file:///home/daniebo/Desktop/rama-worktrees/ts7-phase3/node_modules/vite/dist/node/cli.js:765:19)[39m
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] marketing@0.1.0 build: `vinext build && node scripts/verify-vinext-runtime.mjs`
+Exit status 1
+NEWFILES=0
+TRACKED_CHANGED=2
+ M apps/marketing/next-env.d.ts
+ M apps/marketing/package.json
+
+EXIT=1
+ELAPSED_S=4
