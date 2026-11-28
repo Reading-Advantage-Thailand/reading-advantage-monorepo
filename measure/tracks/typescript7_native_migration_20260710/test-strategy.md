@@ -8,7 +8,7 @@ This strategy covers the amended plan: Phase 2 (vinext 1.x), Phase 3 (TypeScript
 have outlines. The full sections come before each phase starts. Phase 5 waits for Daniel.
 
 Revision 2026-11-28 (Phase 3, first task). Author model: claude-code/claude-sonnet-5-5. The strategy
-role started from `190c38252` (origin/master). That value is not the `phase_base_sha` (section 2).
+role started from `190c38252` (origin/master). That value is not the `phase_base_sha` (sections 2 and 5a.4).
 Section 5a is new: the full section for the first Phase 3 task. Sections 1, 5, and 8 changed. The
 other Phase 3 tasks keep an outline in section 5; each gets its own strategy round later.
 
