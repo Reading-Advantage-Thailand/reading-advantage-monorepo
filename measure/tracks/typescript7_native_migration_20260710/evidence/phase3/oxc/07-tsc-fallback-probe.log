@@ -1,0 +1,9 @@
+GATE=T1b-tsc-fallback-probe
+CMD=clean cache then pnpm --filter marketing run check-types on TS2322 seed
+TSC_EXIT=1
+TSC_TS2322_LINES=0
+SEED_REMOVED=1
+ M measure/tracks/typescript7_native_migration_20260710/plan.md
+FALLBACK=pnpm --filter marketing run check-types
+EXIT=0
+ELAPSED_S=8

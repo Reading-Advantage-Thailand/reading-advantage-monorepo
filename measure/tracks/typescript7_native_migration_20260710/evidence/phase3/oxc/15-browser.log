@@ -1,0 +1,122 @@
+GATE=T1b-browser
+CMD=Playwright 1.61.0 with system Chrome on marketing and fixture production builds
+PORT_FREE=1 APP=marketing PORT=4395
+APP=marketing
+BROWSER_TOOL=playwright
+BROWSER_VERSION=157.0.8103.78
+SERVER_PID=1512002
+HTTP_STATUS=200
+TITLE=Marketing Production Platform
+H1=Marketing Production Platform
+CONSOLE_ERRORS=1
+PAGE_ERRORS=0
+HYDRATION_WARNINGS=0
+FIXTURE_CONTROL=not-requested
+CONSOLE_ERROR=Failed to load resource: the server responded with a status of 404 (Not Found)
+APP_EXIT=0 APP=marketing
+PORT_FREE=1 APP=activity-vinext-fixture PORT=4396
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.textContent: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /usr/bin/google-chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-oJeX8e --remote-debugging-pipe --no-startup-window
+<launched> pid=1512420
+[pid=1512420][err] [1512420:1512445:1128/121222.927280:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[pid=1512420][err] [1512420:1512445:1128/121222.927669:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[pid=1512420][err] [1512420:1512445:1128/121222.927690:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[pid=1512420][err] [1512420:1512449:1128/121222.928856:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[pid=1512420][err] [1512420:1512449:1128/121222.928908:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[pid=1512420][err] [1512420:1512449:1128/121222.928915:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[pid=1512420][err] [1512420:1512420:1128/121222.939405:ERROR:chrome/browser/profiles/pref_service_builder_utils.cc:62] Could not create README file.
+[pid=1512420][err] [1512420:1512439:1128/121222.939502:ERROR:components/segmentation_platform/internal/database/ukm_database_backend.cc:142] Failed to open UKM database: 0 disk I/O error
+[pid=1512420][err] [1512420:1512445:1128/121222.962155:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[pid=1512420][err] [1512420:1512440:1128/121222.963610:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:53] Failed to write fake index file: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Code Cache/js/index
+[pid=1512420][err] [1512420:1512444:1128/121222.963607:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:53] Failed to write fake index file: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Code Cache/wasm/index
+[pid=1512420][err] [1512420:1512444:1128/121222.963656:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:107] Failed to write a new fake index.
+[pid=1512420][err] [1512420:1512440:1128/121222.963676:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:107] Failed to write a new fake index.
+[pid=1512420][err] [1512420:1512444:1128/121222.963755:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:53] Failed to write fake index file: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Code Cache/wasm/index
+[pid=1512420][err] [1512420:1512440:1128/121222.963775:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:53] Failed to write fake index file: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Code Cache/js/index
+[pid=1512420][err] [1512420:1512444:1128/121222.963790:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:107] Failed to write a new fake index.
+[pid=1512420][err] [1512420:1512444:1128/121222.963796:ERROR:net/disk_cache/simple/simple_backend_impl.cc:749] Simple Cache Backend: wrong file structure on disk: 8 path: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Code Cache/wasm
+[pid=1512420][err] [1512420:1512440:1128/121222.963826:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:107] Failed to write a new fake index.
+[pid=1512420][err] [1512420:1512440:1128/121222.963853:ERROR:net/disk_cache/simple/simple_backend_impl.cc:749] Simple Cache Backend: wrong file structure on disk: 8 path: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Code Cache/js
+[pid=1512420][err] [1512420:1512457:1128/121222.964232:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:53] Failed to write fake index file: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Code Cache/wasm/index
+[pid=1512420][err] [1512420:1512457:1128/121222.964280:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:107] Failed to write a new fake index.
+[pid=1512420][err] [1512420:1512457:1128/121222.964361:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:53] Failed to write fake index file: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Code Cache/wasm/index
+[pid=1512420][err] [1512420:1512457:1128/121222.964385:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:107] Failed to write a new fake index.
+[pid=1512420][err] [1512420:1512457:1128/121222.964389:ERROR:net/disk_cache/simple/simple_backend_impl.cc:749] Simple Cache Backend: wrong file structure on disk: 8 path: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Code Cache/wasm
+[pid=1512420][err] [1512420:1512488:1128/121222.964424:ERROR:net/disk_cache/disk_cache.cc:293] Unable to create cache
+[pid=1512420][err] [1512420:1512457:1128/121222.964452:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:53] Failed to write fake index file: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Code Cache/js/index
+[pid=1512420][err] [1512420:1512457:1128/121222.964478:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:107] Failed to write a new fake index.
+[pid=1512420][err] [1512420:1512457:1128/121222.964560:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:53] Failed to write fake index file: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Code Cache/js/index
+[pid=1512420][err] [1512420:1512457:1128/121222.964582:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:107] Failed to write a new fake index.
+[pid=1512420][err] [1512420:1512457:1128/121222.964588:ERROR:net/disk_cache/simple/simple_backend_impl.cc:749] Simple Cache Backend: wrong file structure on disk: 8 path: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Code Cache/js
+[pid=1512420][err] [1512420:1512488:1128/121222.964621:ERROR:net/disk_cache/disk_cache.cc:293] Unable to create cache
+[pid=1512420][err] [1512420:1512440:1128/121222.965107:ERROR:components/password_manager/core/browser/password_store/login_database.cc:1151] Unable to create the meta table.
+[pid=1512420][err] [1512420:1512440:1128/121222.965219:ERROR:components/password_manager/core/browser/password_store/login_database_async_helper.cc:78] Could not create/open login database.
+[pid=1512420][err] [1512420:1512455:1128/121222.965753:ERROR:components/password_manager/core/browser/password_store/login_database.cc:1151] Unable to create the meta table.
+[pid=1512420][err] [1512420:1512455:1128/121222.965878:ERROR:components/password_manager/core/browser/password_store/login_database_async_helper.cc:78] Could not create/open login database.
+[pid=1512420][err] [1512420:1512420:1128/121222.970353:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[pid=1512420][err] [1512420:1512445:1128/121222.970402:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[pid=1512420][err] [1512420:1512420:1128/121222.970445:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[pid=1512420][err] [1512420:1512445:1128/121222.970486:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[pid=1512420][err] [1512420:1512420:1128/121222.971317:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[pid=1512420][err] [1512420:1512445:1128/121222.971360:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[pid=1512420][err] [1512461:1512485:1128/121222.972109:ERROR:gpu/command_buffer/service/gpu_persistent_cache.cc:137] Persistent cache error: 2
+[pid=1512420][err] [1512420:1512420:1128/121222.972779:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[pid=1512420][err] [1512420:1512420:1128/121222.972804:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[pid=1512420][err] [1512420:1512445:1128/121222.973109:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[pid=1512420][err] [1512463:1512504:1128/121222.974029:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:53] Failed to write fake index file: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Shared Dictionary/cache/index
+[pid=1512420][err] [1512463:1512504:1128/121222.974098:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:107] Failed to write a new fake index.
+[pid=1512420][err] [1512463:1512504:1128/121222.974191:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:53] Failed to write fake index file: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Shared Dictionary/cache/index
+[pid=1512420][err] [1512463:1512504:1128/121222.974216:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:107] Failed to write a new fake index.
+[pid=1512420][err] [1512463:1512504:1128/121222.974231:ERROR:net/disk_cache/simple/simple_backend_impl.cc:749] Simple Cache Backend: wrong file structure on disk: 8 path: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Shared Dictionary/cache
+[pid=1512420][err] [1512463:1512504:1128/121222.976262:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:53] Failed to write fake index file: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Shared Dictionary/cache/index
+[pid=1512420][err] [1512463:1512504:1128/121222.976281:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:107] Failed to write a new fake index.
+[pid=1512420][err] [1512463:1512504:1128/121222.976347:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:53] Failed to write fake index file: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Shared Dictionary/cache/index
+[pid=1512420][err] [1512463:1512504:1128/121222.976372:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:107] Failed to write a new fake index.
+[pid=1512420][err] [1512463:1512504:1128/121222.976379:ERROR:net/disk_cache/simple/simple_backend_impl.cc:749] Simple Cache Backend: wrong file structure on disk: 8 path: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Shared Dictionary/cache
+[pid=1512420][err] [1512463:1512507:1128/121222.976401:ERROR:net/disk_cache/disk_cache.cc:293] Unable to create cache
+[pid=1512420][err] [1512420:1512420:1128/121222.976408:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[pid=1512420][err] [1512420:1512420:1128/121222.976942:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[pid=1512420][err] [1512420:1512445:1128/121222.976984:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[pid=1512420][err] [1512420:1512420:1128/121222.978671:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[pid=1512420][err] [1512420:1512445:1128/121222.978718:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[pid=1512420][err] [1512420:1512420:1128/121222.979006:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[pid=1512420][err] [1512463:1512508:1128/121222.979455:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:53] Failed to write fake index file: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Cache/Cache_Data/index
+[pid=1512420][err] [1512463:1512508:1128/121222.979496:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:107] Failed to write a new fake index.
+[pid=1512420][err] [1512463:1512508:1128/121222.979556:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:53] Failed to write fake index file: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Cache/Cache_Data/index
+[pid=1512420][err] [1512463:1512508:1128/121222.979577:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:107] Failed to write a new fake index.
+[pid=1512420][err] [1512463:1512508:1128/121222.979603:ERROR:net/disk_cache/simple/simple_backend_impl.cc:749] Simple Cache Backend: wrong file structure on disk: 8 path: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Cache/Cache_Data
+[pid=1512420][err] [1512463:1512508:1128/121222.979738:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:53] Failed to write fake index file: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Cache/Cache_Data/index
+[pid=1512420][err] [1512463:1512508:1128/121222.979760:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:107] Failed to write a new fake index.
+[pid=1512420][err] [1512463:1512508:1128/121222.979816:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:53] Failed to write fake index file: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Cache/Cache_Data/index
+[pid=1512420][err] [1512463:1512508:1128/121222.979835:ERROR:net/disk_cache/simple/simple_version_upgrade.cc:107] Failed to write a new fake index.
+[pid=1512420][err] [1512463:1512508:1128/121222.979841:ERROR:net/disk_cache/simple/simple_backend_impl.cc:749] Simple Cache Backend: wrong file structure on disk: 8 path: /tmp/playwright_chromiumdev_profile-oJeX8e/Default/Cache/Cache_Data
+[pid=1512420][err] [1512463:1512507:1128/121222.979861:ERROR:net/disk_cache/disk_cache.cc:293] Unable to create cache
+[pid=1512420][err] [1512420:1512420:1128/121223.095771:ERROR:content/browser/gpu/gpu_process_host.cc:1042] GPU process exited unexpectedly: exit_code=133
+[pid=1512420][err] [1512560:1512582:1128/121223.112176:ERROR:gpu/command_buffer/service/gpu_persistent_cache.cc:137] Persistent cache error: 2
+[pid=1512420][err] [1512420:1512420:1128/121223.211765:ERROR:content/browser/gpu/gpu_process_host.cc:1042] GPU process exited unexpectedly: exit_code=133
+[pid=1512420][err] [1512585:1512607:1128/121223.225908:ERROR:gpu/command_buffer/service/gpu_persistent_cache.cc:137] Persistent cache error: 2
+[pid=1512420][err] [1512420:1512420:1128/121223.326914:ERROR:content/browser/gpu/gpu_process_host.cc:1042] GPU process exited unexpectedly: exit_code=133
+[pid=1512420][err] [1512610:1512620:1128/121223.358824:ERROR:gpu/command_buffer/service/gpu_persistent_cache.cc:137] Persistent cache error: 2
+[pid=1512420][err] [1512420:1512420:1128/121223.465968:ERROR:content/browser/gpu/gpu_process_host.cc:1042] GPU process exited unexpectedly: exit_code=133
+[pid=1512420][err] [1512630:1512640:1128/121223.504373:ERROR:gpu/command_buffer/service/gpu_persistent_cache.cc:137] Persistent cache error: 2
+[pid=1512420][err] [1512420:1512420:1128/121223.611872:ERROR:content/browser/gpu/gpu_process_host.cc:1042] GPU process exited unexpectedly: exit_code=133
+[pid=1512420][err] [1512643:1512653:1128/121223.638223:ERROR:gpu/command_buffer/service/gpu_persistent_cache.cc:137] Persistent cache error: 2
+[pid=1512420][err] [1512420:1512420:1128/121223.741805:ERROR:content/browser/gpu/gpu_process_host.cc:1042] GPU process exited unexpectedly: exit_code=133
+[pid=1512420][err] [1512420:1512420:1128/121223.741824:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:385] GPU process isn't usable. Goodbye.
+Call log:
+  - waiting for locator('h1').first()
+
+    at /home/daniebo/Desktop/rama-worktrees/ts7-phase3/measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/browser-probe.mjs:70:52 {
+  log: [ "  - waiting for locator('h1').first()" ]
+}
+
+Node.js v24.19.0
+APP_EXIT=1 APP=activity-vinext-fixture
+EXIT=1
+ELAPSED_S=5

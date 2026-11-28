@@ -1,0 +1,14 @@
+GATE=T1b-workaround-inventory
+CMD=generated folders and Math geist dependency check
+apps/marketing/.vinext=absent
+apps/activity-vinext-fixture/.vinext=absent
+apps/marketing/.next=present
+apps/activity-vinext-fixture/.next=present
+
+GEIST_DECLARATIONS
+GEIST_DECLARATION_RG_EXIT=1
+
+GEIST_IMPORT_HITS
+GEIST_IMPORT_RG_EXIT=1
+
+EXIT=0

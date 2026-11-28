@@ -1,0 +1,25 @@
+GATE=T1b-tsrs-tsc-probe
+CMD=TSRS_FAST=1 oxlint@1.93.0 --type-aware --type-check versus tsc --noEmit on one TS2322 seed
+Version 5.9.3
+[ERROR] Command was killed with SIGABRT (Aborted): oxlint --type-aware --type-check apps/marketing/app/__t1b_ts_seed__.ts
+
+pnpm: Command was killed with SIGABRT (Aborted): oxlint --type-aware --type-check apps/marketing/app/__t1b_ts_seed__.ts
+    at getFinalError (file:///home/daniebo/.nvm/versions/node/v24.19.0/lib/node_modules/pnpm/dist/pnpm.mjs:135493:14)
+    at makeError (file:///home/daniebo/.nvm/versions/node/v24.19.0/lib/node_modules/pnpm/dist/pnpm.mjs:137800:21)
+    at getAsyncResult (file:///home/daniebo/.nvm/versions/node/v24.19.0/lib/node_modules/pnpm/dist/pnpm.mjs:141974:169)
+    at handlePromise (file:///home/daniebo/.nvm/versions/node/v24.19.0/lib/node_modules/pnpm/dist/pnpm.mjs:141959:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async waitForTracked (file:///home/daniebo/.nvm/versions/node/v24.19.0/lib/node_modules/pnpm/dist/pnpm.mjs:325780:5)
+    at async runDlxBin (file:///home/daniebo/.nvm/versions/node/v24.19.0/lib/node_modules/pnpm/dist/pnpm.mjs:326013:5)
+    at async runCommand (file:///home/daniebo/.nvm/versions/node/v24.19.0/lib/node_modules/pnpm/dist/pnpm.mjs:376047:17)
+    at async runCommandWithConfig (file:///home/daniebo/.nvm/versions/node/v24.19.0/lib/node_modules/pnpm/dist/pnpm.mjs:375962:32)
+    at async main4 (file:///home/daniebo/.nvm/versions/node/v24.19.0/lib/node_modules/pnpm/dist/pnpm.mjs:375837:3)
+TSRS_EXIT=1
+TSRS_TS2322_LINES=0
+TSC_EXIT=1
+TSC_TS2322_LINES=0
+SEED_REMOVED=1
+ M measure/tracks/typescript7_native_migration_20260710/plan.md
+FALLBACK=pnpm --filter marketing run check-types
+EXIT=0
+ELAPSED_S=11

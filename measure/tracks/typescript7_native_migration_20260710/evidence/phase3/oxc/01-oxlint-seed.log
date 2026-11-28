@@ -1,0 +1,35 @@
+GATE=T1b-oxlint-seed
+CMD=pnpm dlx oxlint@1.93.0 with default config and temporary seed
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Progress: resolved 3, reused 0, downloaded 0, added 0
+Progress: resolved 7, reused 0, downloaded 0, added 0
+Progress: resolved 8, reused 0, downloaded 0, added 0
+Progress: resolved 8, reused 0, downloaded 1, added 0
+Progress: resolved 9, reused 0, downloaded 1, added 0
+Progress: resolved 11, reused 0, downloaded 1, added 0
+Progress: resolved 12, reused 0, downloaded 1, added 0
+Progress: resolved 14, reused 0, downloaded 1, added 0
+[WARN] Request took 10129ms: https://registry.npmjs.org/@oxlint%2Fbinding-linux-riscv64-musl
+[WARN] Request took 10153ms: https://registry.npmjs.org/@oxlint%2Fbinding-openharmony-arm64
+Progress: resolved 16, reused 0, downloaded 1, added 0
+[WARN] Request took 10519ms: https://registry.npmjs.org/@oxlint%2Fbinding-linux-arm-musleabihf
+[WARN] Request took 11258ms: https://registry.npmjs.org/@oxlint%2Fbinding-linux-arm-gnueabihf
+[WARN] Request took 11454ms: https://registry.npmjs.org/@oxlint%2Fbinding-android-arm-eabi
+Progress: resolved 19, reused 0, downloaded 1, added 0
+Progress: resolved 19, reused 0, downloaded 2, added 0
+[WARN] Request took 12868ms: https://registry.npmjs.org/@oxlint%2Fbinding-linux-arm64-musl
+Packages: +2
+++
+Progress: resolved 20, reused 0, downloaded 2, added 2, done
+Version: 1.93.0
+
+apps/marketing/app/__t1b_oxlint_seed__.ts:1:1: warning eslint(no-debugger): `debugger` statement is not allowed help: Remove the debugger statement
+OXLINT_SEED_A_EXIT=0
+apps/marketing/app/__t1b_oxlint_seed__.ts:1:7: warning eslint(no-unused-vars): Variable 't1bUnused' is declared but never used. Unused variables should start with a '_'. help: Consider removing this declaration.
+OXLINT_SEED_B_EXIT=0
+apps/marketing/app/__t1b_oxlint_seed__.ts:1:7: warning eslint(no-unused-vars): Variable 't1bUnused' is declared but never used. Unused variables should start with a '_'. help: Consider removing this declaration.
+OXLINT_ZERO_WARNING_EXIT=1
+SEED_REMOVED=1
+ M measure/tracks/typescript7_native_migration_20260710/plan.md
+EXIT=0
+ELAPSED_S=18

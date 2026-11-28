@@ -1,0 +1,4 @@
+GATE=T1b-oxlint-type-help
+CMD=pnpm dlx oxlint@1.93.0 --help type-aware options
+EXIT=0
+ELAPSED_S=1

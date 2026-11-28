@@ -1,0 +1,4 @@
+GATE=T1b-alias-contract
+CMD=call unwrapped committed vinext path guard body without changing its skip
+ALIAS_GUARD_BODY=PASS
+EXIT=0

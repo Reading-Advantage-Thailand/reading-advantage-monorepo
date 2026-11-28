@@ -1,0 +1,30 @@
+GATE=T1b-heavy-cap
+CMD=parse labeled elapsed and exit values from T1b and cited H0 logs
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/00-red-rerun.log MAX_ELAPSED_S=-1 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/01-oxlint-seed.log MAX_ELAPSED_S=18 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/02-eslint-seed.log MAX_ELAPSED_S=15 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/03-oxfmt-help.log MAX_ELAPSED_S=14 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/04-oxfmt-check.log MAX_ELAPSED_S=1 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/05-tsrs-tsc-probe.log MAX_ELAPSED_S=11 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/06-oxlint-type-help.log MAX_ELAPSED_S=1 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/07-tsc-fallback-probe.log MAX_ELAPSED_S=8 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/08-tsc-isolated-probe.log MAX_ELAPSED_S=5 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/09-tsrs-tsc-retry.log MAX_ELAPSED_S=6 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/10-tsrs-tsc71-probe.log MAX_ELAPSED_S=44 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/11-vitest-list.log MAX_ELAPSED_S=8 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/12-light-inventory.log MAX_ELAPSED_S=-1 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/13-alias-contract.log MAX_ELAPSED_S=-1 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/14-vinext-check.log MAX_ELAPSED_S=3 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/15-browser.log MAX_ELAPSED_S=5 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/16-browser-bundled.log MAX_ELAPSED_S=35 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/17-browser-fixture.log MAX_ELAPSED_S=33 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/18-browser-fixture.log MAX_ELAPSED_S=4 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/19-browser-final.log MAX_ELAPSED_S=6 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/20-heavy-cap.log MAX_ELAPSED_S=-1 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/raw-logs/H0-build-marketing.log MAX_ELAPSED_S=965 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/raw-logs/H0-build-fixture.log MAX_ELAPSED_S=62 EXIT_124=0
+LOG=measure/tracks/typescript7_native_migration_20260710/evidence/phase3/raw-logs/H0-why-next.log MAX_ELAPSED_S=4 EXIT_124=0
+LOG_COUNT=24
+MAX_ELAPSED_S=965
+CAP_HITS=0
+EXIT=0

@@ -1,0 +1,61 @@
+GATE=T1b-tsrs-tsc71-probe
+CMD=one-off oxlint 1.93.0 plus tsrs 0.25.0-ts7.1.0-beta versus TypeScript 7.1.0-beta tsc
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Progress: resolved 4, reused 0, downloaded 0, added 0
+Progress: resolved 8, reused 0, downloaded 0, added 0
+Packages: +2
+++
+Progress: resolved 9, reused 0, downloaded 0, added 0
+Progress: resolved 9, reused 0, downloaded 1, added 1
+Progress: resolved 9, reused 0, downloaded 2, added 1
+Progress: resolved 9, reused 0, downloaded 2, added 2, done
+Version 7.1.0-beta (tsrs 0.25.0-ts7.1.0-beta, microsoft/TypeScript@3e9236361fa9)
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Progress: resolved 2, reused 0, downloaded 0, added 0
+Progress: resolved 3, reused 0, downloaded 0, added 0
+Progress: resolved 4, reused 0, downloaded 0, added 0
+Progress: resolved 4, reused 0, downloaded 1, added 0
+Progress: resolved 5, reused 0, downloaded 1, added 0
+[WARN] Request took 10420ms: https://registry.npmjs.org/@typescript%2Ftypescript-freebsd-x64
+Progress: resolved 6, reused 0, downloaded 1, added 0
+[WARN] Request took 11198ms: https://registry.npmjs.org/@typescript%2Ftypescript-darwin-x64
+[WARN] Request took 11403ms: https://registry.npmjs.org/@typescript%2Ftypescript-linux-arm
+[WARN] Request took 11397ms: https://registry.npmjs.org/@typescript%2Ftypescript-linux-arm64
+[WARN] Request took 11560ms: https://registry.npmjs.org/@typescript%2Ftypescript-linux-ppc64
+Progress: resolved 10, reused 0, downloaded 1, added 0
+[WARN] Request took 12474ms: https://registry.npmjs.org/@typescript%2Ftypescript-openbsd-x64
+[WARN] Request took 12529ms: https://registry.npmjs.org/@typescript%2Ftypescript-netbsd-x64
+[WARN] Request took 12876ms: https://registry.npmjs.org/@typescript%2Ftypescript-darwin-arm64
+Progress: resolved 13, reused 0, downloaded 1, added 0
+[WARN] Request took 13110ms: https://registry.npmjs.org/@typescript%2Ftypescript-netbsd-arm64
+[WARN] Request took 13578ms: https://registry.npmjs.org/@typescript%2Ftypescript-freebsd-arm64
+[WARN] Request took 13646ms: https://registry.npmjs.org/@typescript%2Ftypescript-android-arm64
+Progress: resolved 16, reused 0, downloaded 1, added 0
+[WARN] Request took 13977ms: https://registry.npmjs.org/@typescript%2Ftypescript-linux-riscv64
+[WARN] Request took 14041ms: https://registry.npmjs.org/@typescript%2Ftypescript-linux-loong64
+[WARN] Request took 14167ms: https://registry.npmjs.org/@typescript%2Ftypescript-openbsd-arm64
+[WARN] Request took 14663ms: https://registry.npmjs.org/@typescript%2Ftypescript-linux-mips64el
+Progress: resolved 20, reused 0, downloaded 1, added 0
+[WARN] Request took 15792ms: https://registry.npmjs.org/@typescript%2Ftypescript-win32-arm64
+Progress: resolved 21, reused 0, downloaded 2, added 0
+[WARN] Request took 17036ms: https://registry.npmjs.org/@typescript%2Ftypescript-linux-s390x
+Progress: resolved 22, reused 0, downloaded 2, added 0
+Packages: +2
+++
+Progress: resolved 22, reused 0, downloaded 2, added 2, done
+Version 7.1.0-beta
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +4
+++++
+Progress: resolved 29, reused 4, downloaded 0, added 4, done
+/dev/shm/t1b-ts71-probe/probe.ts:1:14: error typescript(TS2322): Type 'string' is not assignable to type 'number'.
+TSRS_EXIT=1
+TSRS_TS2322_LINES=1
+../../../../../dev/shm/t1b-ts71-probe/probe.ts(1,14): error TS2322: Type 'string' is not assignable to type 'number'.
+TSC71_EXIT=2
+TSC71_TS2322_LINES=1
+PROBE_REMOVED=1
+ M measure/tracks/typescript7_native_migration_20260710/plan.md
+FALLBACK=tsc --noEmit
+EXIT=0
+ELAPSED_S=44

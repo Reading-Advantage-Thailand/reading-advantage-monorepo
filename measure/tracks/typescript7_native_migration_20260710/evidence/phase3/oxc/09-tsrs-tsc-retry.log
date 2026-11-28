@@ -1,0 +1,17 @@
+GATE=T1b-tsrs-tsc-retry
+CMD=retry with /dev/shm scratch space after /tmp/opencode write errors
+Version 5.9.3
+../../../../../dev/shm/t1b-ts-probe/probe.ts(1,14): error TS2322: Type 'string' is not assignable to type 'number'.
+ISOLATED_TSC_EXIT=2
+ISOLATED_TSC_TS2322_LINES=1
+apps/marketing/app/__t1b_ts_seed__.ts(1,14): error TS2322: Type 'string' is not assignable to type 'number'.
+APP_TSC_EXIT=2
+APP_TSC_TS2322_LINES=1
+Failed to find type-aware linter executable. You may need to add the `tsrs` or `oxlint-tsgolint` package to your project?
+TSRS_EXIT=1
+TSRS_TS2322_LINES=0
+SEED_REMOVED=1
+ M measure/tracks/typescript7_native_migration_20260710/plan.md
+FALLBACK=tsc --noEmit
+EXIT=0
+ELAPSED_S=6

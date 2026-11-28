@@ -1,0 +1,103 @@
+GATE=T1b-eslint-seed
+CMD=pnpm --filter marketing run lint with temporary error and warning seeds
+$ eslint .
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/__tests__/phase-4-campaigns.test.ts
+  32:10  warning  'existsSync' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  79:10  warning  'readText' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/__tests__/wave2-test-truthfulness.test.ts
+  26:7  warning  'FIXTURE_DIR' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  78:9  warning  're' is assigned a value but never used. Allowed unused vars must match /^_/u           @typescript-eslint/no-unused-vars
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/api/campaigns/route.ts
+   49:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+  100:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/campaigns/[id]/page.tsx
+  36:6  warning  React Hook useEffect has a missing dependency: 'fetchCampaign'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/campaigns/[id]/video/page.tsx
+  110:6  warning  React Hook useEffect has missing dependencies: 'fetchCampaign' and 'fetchProjects'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/campaigns/page.tsx
+  41:6  warning  React Hook useEffect has a missing dependency: 'fetchCampaigns'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/lib/encryption.ts
+  5:7  warning  'AUTH_TAG_LENGTH' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+✖ 10 problems (0 errors, 10 warnings)
+
+ESLINT_BASE_EXIT=0
+$ eslint .
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/__t1b_eslint_seed__.ts
+  1:1  error  Unexpected 'debugger' statement  no-debugger
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/__tests__/phase-4-campaigns.test.ts
+  32:10  warning  'existsSync' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  79:10  warning  'readText' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/__tests__/wave2-test-truthfulness.test.ts
+  26:7  warning  'FIXTURE_DIR' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  78:9  warning  're' is assigned a value but never used. Allowed unused vars must match /^_/u           @typescript-eslint/no-unused-vars
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/api/campaigns/route.ts
+   49:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+  100:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/campaigns/[id]/page.tsx
+  36:6  warning  React Hook useEffect has a missing dependency: 'fetchCampaign'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/campaigns/[id]/video/page.tsx
+  110:6  warning  React Hook useEffect has missing dependencies: 'fetchCampaign' and 'fetchProjects'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/campaigns/page.tsx
+  41:6  warning  React Hook useEffect has a missing dependency: 'fetchCampaigns'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/lib/encryption.ts
+  5:7  warning  'AUTH_TAG_LENGTH' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+✖ 11 problems (1 error, 10 warnings)
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] marketing@0.1.0 lint: `eslint .`
+Exit status 1
+SEED_A_EXIT=1
+$ eslint .
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/__t1b_eslint_seed__.ts
+  1:7  warning  't1bUnused' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/__tests__/phase-4-campaigns.test.ts
+  32:10  warning  'existsSync' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  79:10  warning  'readText' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/__tests__/wave2-test-truthfulness.test.ts
+  26:7  warning  'FIXTURE_DIR' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  78:9  warning  're' is assigned a value but never used. Allowed unused vars must match /^_/u           @typescript-eslint/no-unused-vars
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/api/campaigns/route.ts
+   49:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+  100:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/campaigns/[id]/page.tsx
+  36:6  warning  React Hook useEffect has a missing dependency: 'fetchCampaign'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/campaigns/[id]/video/page.tsx
+  110:6  warning  React Hook useEffect has missing dependencies: 'fetchCampaign' and 'fetchProjects'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/campaigns/page.tsx
+  41:6  warning  React Hook useEffect has a missing dependency: 'fetchCampaigns'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/daniebo/Desktop/rama-worktrees/ts7-phase3/apps/marketing/app/lib/encryption.ts
+  5:7  warning  'AUTH_TAG_LENGTH' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+✖ 11 problems (0 errors, 11 warnings)
+
+SEED_B_EXIT=0
+SEED_B_WARNINGS=11
+SEED_REMOVED=1
+ M measure/tracks/typescript7_native_migration_20260710/plan.md
+EXIT=0
+ELAPSED_S=15

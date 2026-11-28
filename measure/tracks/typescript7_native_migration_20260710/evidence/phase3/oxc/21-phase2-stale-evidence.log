@@ -1,0 +1,171 @@
+test_caret_major_range_is_not_met (measure.tests.test_typescript7_native_migration_phase2.P2CheckerTests.test_caret_major_range_is_not_met)
+Requires a caret range to reject a version under its lower bound. ... ok
+test_caret_zero_major_range_is_not_met (measure.tests.test_typescript7_native_migration_phase2.P2CheckerTests.test_caret_zero_major_range_is_not_met)
+Requires the caret rule to hold the minor bound of a zero major. ... ok
+test_greater_or_equal_range_is_met (measure.tests.test_typescript7_native_migration_phase2.P2CheckerTests.test_greater_or_equal_range_is_met)
+Requires a greater-or-equal range to accept a later version. ... ok
+test_joined_caret_range_is_met (measure.tests.test_typescript7_native_migration_phase2.P2CheckerTests.test_joined_caret_range_is_met)
+Requires a joined range to accept a version in the second part. ... ok
+test_unsupported_range_form_raises (measure.tests.test_typescript7_native_migration_phase2.P2CheckerTests.test_unsupported_range_form_raises)
+Requires an unsupported range form to raise UnsupportedRange. ... ok
+test_candidate_is_stable_1x (measure.tests.test_typescript7_native_migration_phase2.P2T1PeerNoteTests.test_candidate_is_stable_1x)
+Requires the candidate to be a stable 1.x version. ... ok
+test_decision_follows_verdicts (measure.tests.test_typescript7_native_migration_phase2.P2T1PeerNoteTests.test_decision_follows_verdicts)
+Requires the overall verdict and the decision to follow the rows. ... ok
+test_note_exists_and_parses (measure.tests.test_typescript7_native_migration_phase2.P2T1PeerNoteTests.test_note_exists_and_parses)
+Requires the note to hold a peer-check block with every key. ... ok
+test_repo_values_are_cited (measure.tests.test_typescript7_native_migration_phase2.P2T1PeerNoteTests.test_repo_values_are_cited)
+Requires each repo value to be cited by path and line. ... FAIL
+test_rows_cover_every_registry_peer (measure.tests.test_typescript7_native_migration_phase2.P2T1PeerNoteTests.test_rows_cover_every_registry_peer)
+Requires one row for every registry peer and one node row. ... ok
+test_verdicts_recomputed (measure.tests.test_typescript7_native_migration_phase2.P2T1PeerNoteTests.test_verdicts_recomputed)
+Requires each row verdict to match the recomputed range check. ... ok
+test_green_log_in_other_run_folder_is_rejected (measure.tests.test_typescript7_native_migration_phase2.P2T2BookkeepingRuleTests.test_green_log_in_other_run_folder_is_rejected)
+Requires a Green log of another track to be rejected. ... ok
+test_green_log_in_track_run_folder_is_allowed (measure.tests.test_typescript7_native_migration_phase2.P2T2BookkeepingRuleTests.test_green_log_in_track_run_folder_is_allowed)
+Requires a Green log of this track to be allowed. ... ok
+test_python_file_in_run_folder_is_rejected (measure.tests.test_typescript7_native_migration_phase2.P2T2BookkeepingRuleTests.test_python_file_in_run_folder_is_rejected)
+Requires a script in the run folder to be rejected. ... ok
+test_review_file_in_run_folder_is_rejected (measure.tests.test_typescript7_native_migration_phase2.P2T2BookkeepingRuleTests.test_review_file_in_run_folder_is_rejected)
+Requires a review result in the run folder to be rejected. ... ok
+test_tech_debt_append_with_track_id_is_allowed (measure.tests.test_typescript7_native_migration_phase2.P2T2BookkeepingRuleTests.test_tech_debt_append_with_track_id_is_allowed)
+Requires a tech-debt append of this track to be allowed. ... ok
+test_tech_debt_other_track_id_is_rejected (measure.tests.test_typescript7_native_migration_phase2.P2T2BookkeepingRuleTests.test_tech_debt_other_track_id_is_rejected)
+Requires a tech-debt row of another track to be rejected. ... ok
+test_tech_debt_removed_line_is_rejected (measure.tests.test_typescript7_native_migration_phase2.P2T2BookkeepingRuleTests.test_tech_debt_removed_line_is_rejected)
+Requires a tech-debt diff with a removed line to be rejected. ... ok
+test_tech_debt_row_without_date_prefix_is_rejected (measure.tests.test_typescript7_native_migration_phase2.P2T2BookkeepingRuleTests.test_tech_debt_row_without_date_prefix_is_rejected)
+Requires a tech-debt row without the date prefix to be rejected. ... ok
+test_both_apps_declare_candidate (measure.tests.test_typescript7_native_migration_phase2.P2T2DeclarationTests.test_both_apps_declare_candidate)
+Requires both apps to declare the candidate without a range prefix. ... ok
+test_installed_matches_declared (measure.tests.test_typescript7_native_migration_phase2.P2T2DeclarationTests.test_installed_matches_declared)
+Requires the installed vinext version to match the declared version. ... ok
+test_lock_has_no_old_version (measure.tests.test_typescript7_native_migration_phase2.P2T2DeclarationTests.test_lock_has_no_old_version)
+Requires the lockfile to drop the old version and add the candidate. ... ok
+test_lock_importers (measure.tests.test_typescript7_native_migration_phase2.P2T2DeclarationTests.test_lock_importers)
+Requires exactly two lockfile importer entries for vinext. ... ok
+test_hardcoded_vinext_paths_exist (measure.tests.test_typescript7_native_migration_phase2.P2T2PeerGuardTests.test_hardcoded_vinext_paths_exist)
+Requires every hard-coded vinext path to exist in the package. ... ok
+test_installed_peers_satisfied (measure.tests.test_typescript7_native_migration_phase2.P2T2PeerGuardTests.test_installed_peers_satisfied)
+Requires every installed peer of vinext to satisfy its range. ... ok
+test_app_importer_lines_are_in_scope (measure.tests.test_typescript7_native_migration_phase2.P2T2ScopeRuleTests.test_app_importer_lines_are_in_scope)
+Requires the importer block of each app to be in scope. ... ok
+test_other_importer_lines_are_out_of_scope (measure.tests.test_typescript7_native_migration_phase2.P2T2ScopeRuleTests.test_other_importer_lines_are_out_of_scope)
+Requires a change in another importer block to fail the rule. ... ok
+test_other_section_lines_are_out_of_scope (measure.tests.test_typescript7_native_migration_phase2.P2T2ScopeRuleTests.test_other_section_lines_are_out_of_scope)
+Requires a change in another lockfile section to fail the rule. ... ok
+test_package_section_lines_are_in_scope (measure.tests.test_typescript7_native_migration_phase2.P2T2ScopeRuleTests.test_package_section_lines_are_in_scope)
+Requires the packages section and the snapshots section to be in scope. ... ok
+test_green_commits_in_scope (measure.tests.test_typescript7_native_migration_phase2.P2T2ScopeTests.test_green_commits_in_scope)
+Requires each Green commit to touch only the allowed paths. ... FAIL
+test_lock_diff_in_scope (measure.tests.test_typescript7_native_migration_phase2.P2T2ScopeTests.test_lock_diff_in_scope)
+Requires each lockfile change to stay in the app importers or packages. ... FAIL
+test_counts_match_logs (measure.tests.test_typescript7_native_migration_phase2.P2T3ResolvedNoteTests.test_counts_match_logs)
+Requires the vitest counts to match the raw logs and the baseline. ... ok
+test_gate_results_complete (measure.tests.test_typescript7_native_migration_phase2.P2T3ResolvedNoteTests.test_gate_results_complete)
+Requires one gate entry per strategy gate with an exit code and a log. ... FAIL
+test_probe_logs_hold_status (measure.tests.test_typescript7_native_migration_phase2.P2T3ResolvedNoteTests.test_probe_logs_hold_status)
+Requires the probe logs to hold their labeled status lines. ... FAIL
+test_resolved_after_matches_disk (measure.tests.test_typescript7_native_migration_phase2.P2T3ResolvedNoteTests.test_resolved_after_matches_disk)
+Requires the resolved versions to match the installed packages. ... ok
+test_warning_counts_match_logs (measure.tests.test_typescript7_native_migration_phase2.P2T3ResolvedNoteTests.test_warning_counts_match_logs)
+Requires each build log warning count to match the log lines. ... ok
+
+======================================================================
+FAIL: test_repo_values_are_cited (measure.tests.test_typescript7_native_migration_phase2.P2T1PeerNoteTests.test_repo_values_are_cited)
+Requires each repo value to be cited by path and line.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniebo/Desktop/rama-worktrees/ts7-phase3/measure/tests/test_typescript7_native_migration_phase2.py", line 876, in test_repo_values_are_cited
+    self.assertIn(
+    ~~~~~~~~~~~~~^
+        repo_value,
+        ^^^^^^^^^^^
+        lines[number - 1],
+        ^^^^^^^^^^^^^^^^^^
+        f"the cited line {number} of the row {package} does not hold {repo_value}",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: '0.5.38' not found in '        version: 19.2.2' : the cited line 939 of the row @vitejs/plugin-rsc does not hold 0.5.38
+
+======================================================================
+FAIL: test_green_commits_in_scope (measure.tests.test_typescript7_native_migration_phase2.P2T2ScopeTests.test_green_commits_in_scope)
+Requires each Green commit to touch only the allowed paths.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniebo/Desktop/rama-worktrees/ts7-phase3/measure/tests/test_typescript7_native_migration_phase2.py", line 1176, in test_green_commits_in_scope
+    commits = self._green_commits()
+  File "/home/daniebo/Desktop/rama-worktrees/ts7-phase3/measure/tests/test_typescript7_native_migration_phase2.py", line 1146, in _green_commits
+    self.assertTrue(
+    ~~~~~~~~~~~~~~~^
+        raw,
+        ^^^^
+        "P2_GREEN_COMMITS is unset or empty, so the Green commits are unknown",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: '' is not true : P2_GREEN_COMMITS is unset or empty, so the Green commits are unknown
+
+======================================================================
+FAIL: test_lock_diff_in_scope (measure.tests.test_typescript7_native_migration_phase2.P2T2ScopeTests.test_lock_diff_in_scope)
+Requires each lockfile change to stay in the app importers or packages.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniebo/Desktop/rama-worktrees/ts7-phase3/measure/tests/test_typescript7_native_migration_phase2.py", line 1229, in test_lock_diff_in_scope
+    commits = self._green_commits()
+  File "/home/daniebo/Desktop/rama-worktrees/ts7-phase3/measure/tests/test_typescript7_native_migration_phase2.py", line 1146, in _green_commits
+    self.assertTrue(
+    ~~~~~~~~~~~~~~~^
+        raw,
+        ^^^^
+        "P2_GREEN_COMMITS is unset or empty, so the Green commits are unknown",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: '' is not true : P2_GREEN_COMMITS is unset or empty, so the Green commits are unknown
+
+======================================================================
+FAIL: test_gate_results_complete (measure.tests.test_typescript7_native_migration_phase2.P2T3ResolvedNoteTests.test_gate_results_complete)
+Requires one gate entry per strategy gate with an exit code and a log.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniebo/Desktop/rama-worktrees/ts7-phase3/measure/tests/test_typescript7_native_migration_phase2.py", line 1572, in test_gate_results_complete
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        sorted(ids),
+        ^^^^^^^^^^^^
+        sorted(GATE_IDS),
+        ^^^^^^^^^^^^^^^^^
+        "the gate entries do not match the gate ids of the strategy",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: Lists differ: ['H0-[233 chars]ting'] != ['H0-[233 chars]ting', 'HR-build-fixture', 'HR-build-fixture-n[261 chars]ted']
+
+Second list contains 11 additional elements.
+First extra element 13:
+'HR-build-fixture'
+
+Diff is 699 characters long. Set self.maxDiff to None to see it. : the gate entries do not match the gate ids of the strategy
+
+======================================================================
+FAIL: test_probe_logs_hold_status (measure.tests.test_typescript7_native_migration_phase2.P2T3ResolvedNoteTests.test_probe_logs_hold_status)
+Requires the probe logs to hold their labeled status lines.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniebo/Desktop/rama-worktrees/ts7-phase3/measure/tests/test_typescript7_native_migration_phase2.py", line 1609, in test_probe_logs_hold_status
+    self.assertTrue(
+    ~~~~~~~~~~~~~~~^
+        fixture_log.is_file(),
+        ^^^^^^^^^^^^^^^^^^^^^^
+        f"the fixture probe log does not exist: {fixture_log}",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: False is not true : the fixture probe log does not exist: /home/daniebo/Desktop/rama-worktrees/ts7-phase3/measure/tracks/typescript7_native_migration_20260710/evidence/phase2/raw-logs/HR-probe-fixture.log
+
+----------------------------------------------------------------------
+Ran 36 tests in 0.039s
+
+FAILED (failures=5)

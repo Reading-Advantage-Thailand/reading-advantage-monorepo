@@ -1,0 +1,6 @@
+GATE=T1b-note-contract
+CMD=validate 18 Oxc rows, dispositions, owners, and cited logs
+Traceback (most recent call last):
+  File "<stdin>", line 9, in <module>
+AssertionError
+EXIT=1

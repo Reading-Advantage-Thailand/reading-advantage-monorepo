@@ -1,0 +1,34 @@
+GATE=T1b-browser-bundled
+CMD=Playwright bundled Chromium with TMPDIR=/dev/shm on both production builds
+PORT_FREE=1 APP=marketing PORT=4395
+APP=marketing
+BROWSER_TOOL=playwright
+BROWSER_VERSION=149.0.7827.55
+SERVER_PID=1513794
+HTTP_STATUS=200
+TITLE=Marketing Production Platform
+H1=Marketing Production Platform
+CONSOLE_ERRORS=1
+PAGE_ERRORS=0
+HYDRATION_WARNINGS=0
+FIXTURE_CONTROL=not-requested
+CONSOLE_ERROR=Failed to load resource: the server responded with a status of 404 (Not Found)
+APP_EXIT=0 APP=marketing
+PORT_FREE=1 APP=activity-vinext-fixture PORT=4396
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.textContent: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('h1').first()
+
+    at /home/daniebo/Desktop/rama-worktrees/ts7-phase3/measure/tracks/typescript7_native_migration_20260710/evidence/phase3/oxc/browser-probe.mjs:70:52 {
+  log: [ "  - waiting for locator('h1').first()" ],
+  name: 'TimeoutError'
+}
+
+Node.js v24.19.0
+APP_EXIT=1 APP=activity-vinext-fixture
+EXIT=1
+ELAPSED_S=35

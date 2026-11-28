@@ -1,0 +1,73 @@
+test_scope_accepts_allowed_paths (measure.tests.test_typescript7_native_migration_phase3_vinext.P3HelperTests.test_scope_accepts_allowed_paths)
+Requires the scope rule to accept the track evidence folder. ... ok
+test_scope_rejects_next_env (measure.tests.test_typescript7_native_migration_phase3_vinext.P3HelperTests.test_scope_rejects_next_env)
+Requires the scope rule to reject a tracked next-env file. ... ok
+test_scope_rejects_other_importer (measure.tests.test_typescript7_native_migration_phase3_vinext.P3HelperTests.test_scope_rejects_other_importer)
+Requires the lock scope to reject another app importer. ... ok
+test_scope_rejects_run_python_file (measure.tests.test_typescript7_native_migration_phase3_vinext.P3HelperTests.test_scope_rejects_run_python_file)
+Requires the scope rule to reject a Python file in the run folder. ... ok
+test_scope_rejects_workspace_file (measure.tests.test_typescript7_native_migration_phase3_vinext.P3HelperTests.test_scope_rejects_workspace_file)
+Requires the scope rule to reject the workspace file. ... ok
+test_build_times_recomputed (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1GateEvidenceTests.test_build_times_recomputed)
+Requires the note medians and ratio to match the BUILD_RUN lines. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_gate_results_complete (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1GateEvidenceTests.test_gate_results_complete)
+Requires one complete entry for each gate id of section 5a.6. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_log_claims_match_labels (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1GateEvidenceTests.test_log_claims_match_labels)
+Requires each gate log to hold the labeled lines of its entry. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_no_deploy_or_push_in_logs (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1GateEvidenceTests.test_no_deploy_or_push_in_logs)
+Requires no gate log to hold a deploy or push line. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_oxc_lessons_complete (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1GateEvidenceTests.test_oxc_lessons_complete)
+Requires exactly the 18 Oxc lesson rows L1 to L18. ... FAIL
+test_rollback_proven (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1GateEvidenceTests.test_rollback_proven)
+Requires the rollback command to name the three paths with proof. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_verify_script_is_oracle (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1GateEvidenceTests.test_verify_script_is_oracle)
+Requires the verify script to stay unchanged and strict. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_vitest_counts_match_logs (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1GateEvidenceTests.test_vitest_counts_match_logs)
+Requires the note counts to equal the labeled vitest lines. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_warning_counts_match_logs (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1GateEvidenceTests.test_warning_counts_match_logs)
+Requires the warning and peer counts to match the whole logs. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_installed_matches_target (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1LockTests.test_installed_matches_target)
+Requires the installed vinext to report TARGET for each app. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_lock_has_one_vinext_key (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1LockTests.test_lock_has_one_vinext_key)
+Requires one packages key at TARGET and no 1.2.0 entry left. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_lock_importers_resolve_target (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1LockTests.test_lock_importers_resolve_target)
+Requires both importer entries to specify TARGET and resolve it. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_hardcoded_vinext_paths_exist (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1PeerTests.test_hardcoded_vinext_paths_exist)
+Requires each hard-coded vinext path to exist in the install. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_note_blocks_parse (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1PeerTests.test_note_blocks_parse)
+Requires the note to hold all seven fenced JSON blocks. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_peer_rows_recomputed (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1PeerTests.test_peer_rows_recomputed)
+Requires each peer verdict to match the recomputed range check. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_unmet_peer_has_waiver_or_fix (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1PeerTests.test_unmet_peer_has_waiver_or_fix)
+Requires a complete waiver for each non-optional unmet peer. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_pin_inventory_matches_scan (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1PinInventoryTests.test_pin_inventory_matches_scan)
+Requires the pin inventory to list each scanned vinext file. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_denied_paths_untouched (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1ScopeTests.test_denied_paths_untouched)
+Requires no Green commit to touch a denied path. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_green_commits_in_scope (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1ScopeTests.test_green_commits_in_scope)
+Requires each Green commit to touch only allowed paths. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_lock_diff_in_scope (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1ScopeTests.test_lock_diff_in_scope)
+Requires each lockfile change to stay in the app importers. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_lock_key_changes_explained (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1ScopeTests.test_lock_key_changes_explained)
+Requires each added lock key to be vinext, a dependency, or drift. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_both_apps_pin_target (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1TargetTests.test_both_apps_pin_target)
+Requires both apps to declare vinext exactly at TARGET. ... skipped 'Option A 2026-11-28: vinext stays 1.2.0; 1.4.x needs React 19.3.1 (own track). Evidence: jr-green-058dfd5.log'
+test_exactly_two_manifests_declare_vinext (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1TargetTests.test_exactly_two_manifests_declare_vinext)
+Requires the manifest scan to find exactly the two app manifests. ... ok
+test_target_is_stable_1_4_x (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1TargetTests.test_target_is_stable_1_4_x)
+Requires TARGET to name a stable 1.4.x release without a prefix. ... ok
+
+======================================================================
+FAIL: test_oxc_lessons_complete (measure.tests.test_typescript7_native_migration_phase3_vinext.P3T1GateEvidenceTests.test_oxc_lessons_complete)
+Requires exactly the 18 Oxc lesson rows L1 to L18.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniebo/Desktop/rama-worktrees/ts7-phase3/measure/tests/test_typescript7_native_migration_phase3_vinext.py", line 902, in test_oxc_lessons_complete
+    self.fail(error)
+    ~~~~~~~~~^^^^^^^
+AssertionError: the evidence note is missing: measure/tracks/typescript7_native_migration_20260710/evidence/phase3-vinext-1-4-6.md
+
+----------------------------------------------------------------------
+Ran 29 tests in 0.065s
+
+FAILED (failures=1, skipped=21)

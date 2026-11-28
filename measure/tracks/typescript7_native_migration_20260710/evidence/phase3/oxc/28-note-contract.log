@@ -1,0 +1,8 @@
+GATE=T1b-note-contract
+CMD=validate the single P3 block and the 18 Oxc rows
+P3_BLOCK_COUNT=1
+ROW_COUNT=18
+CHECKED=12
+DEFERRED=6
+NOTE_CONTRACT=PASS
+EXIT=0

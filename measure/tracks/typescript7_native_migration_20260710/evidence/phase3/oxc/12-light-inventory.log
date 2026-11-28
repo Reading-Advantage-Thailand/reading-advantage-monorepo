@@ -1,0 +1,51 @@
+GATE=T1b-light-inventory
+CMD=tracked config, manifest, alias, and browser inventory
+VINEXT_VERSION=1.2.0
+TYPESCRIPT_OVERRIDE=5.9.3
+PRETTIER_DECLARED=3.8.4
+
+MANIFEST_TOOL_HITS
+
+MANIFEST_TOOL_HIT_COUNT=0
+.oxlintrc.json=absent
+.oxlintrc.jsonc=absent
+.oxfmtrc.json=absent
+.git-blame-ignore-revs=absent
+ESLINT_CONFIG_COUNT=44
+MARKETING_ESLINT_CONFIG=present
+SHARED_ESLINT_CONFIG=present
+MATH_ESLINT_CONFIG=none_remains_in_math_evidence
+
+VITE_CONFIGS
+apps/activity-vinext-fixture/vite.config.ts:5:  plugins: [vinext()],
+apps/marketing/vite.config.ts:9:  plugins: [vinext()],
+
+ALIAS_TARGETS
+vinext/dist/shims/server.js=present
+vinext/dist/shims/headers.js=present
+vinext/dist/shims/navigation.js=present
+vinext/dist/shims/link.js=present
+vinext/dist/shims/image.js=present
+vinext/dist/shims/metadata=present
+ALIAS_COUNT=6
+ALIAS_MISSING=0
+
+ESLINT_CONFIG_NEXT_HITS
+packages/config/eslint/README.md:20:import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
+packages/config/eslint/README.md:21:import nextTypescript from "eslint-config-next/typescript";
+ESLINT_CONFIG_NEXT_RG_EXIT=0
+
+NEXT_DECLARATIONS
+NEXT_DECLARATION_RG_EXIT=1
+
+WEBSERVER_HITS
+WEBSERVER_RG_EXIT=1
+
+BROWSER_TOOLS
+agent-browser=absent
+playwright=1.61.0
+playwright-core=1.61.0
+puppeteer=23.11.1
+CHROME=/usr/bin/google-chrome
+
+EXIT=0
