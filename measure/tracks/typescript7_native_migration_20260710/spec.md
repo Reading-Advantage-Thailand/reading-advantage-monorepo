@@ -95,8 +95,7 @@ The Phase 1 baseline stays valid. Use these facts:
 - **Heavy steps.** Run every heavy step through
   `bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c '<cmd>'`. Run one at a
   time. Heavy steps are `pnpm install`, builds, full tests, and type checks over the repository.
-- **Time window.** For this track, heavy steps run only after 22:00 ICT. They run only when no
-  Storytime heavy run waits (PM, 2026-11-05). Storytime keeps the priority.
+- **Time window.** Lifted 2026-11-28 (PM): heavy steps run at any hour; `heavy-run.sh` holds the lock and Storytime keeps the priority.
 - **Memory.** The machine has 7 GB of memory. Run vitest with `--maxWorkers=1`.
 - **No push and no deploy.** This applies to every phase of this track.
 - **Hashing policy (AGENTS.md).** Add no new hash field. Do not widen hash coverage in

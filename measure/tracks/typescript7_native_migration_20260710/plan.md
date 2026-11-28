@@ -225,14 +225,15 @@ PM 2026-11-23: parked until after the 30 Nov launch.
     exits 0 after the install; the worktree reports `tsc --version` 7.0.x with the exact number
     recorded.
 - [ ] Task: Run the type checks on the trial install and record memory and time.
-  - What: run `check-types` in each of the 31 workspaces one at a time under `heavy-run.sh`,
+  - What: run `check-types` in each workspace that has the script, one at a time under `heavy-run.sh`,
     with peak RSS (`/usr/bin/time -v`) and wall time. Use the same method as
     `capture-phase1-baseline.py`. Do not edit any `tsconfig`; record `types: []` and
     `baseUrl` errors as findings.
   - Files: trial evidence under `measure/tracks/typescript7_native_migration_20260710/evidence/`.
   - Done when: each workspace has an exit status, a diagnostic count, a peak RSS in MiB, and a
     wall time; `apps/reading-advantage` is marked "no valid 5.9.3 baseline"; the data covers
-    31 of 31 workspaces.
+    every workspace that has a `check-types` script at the trial base. That set includes the 31
+    workspaces of the Phase 1 baseline (strategy 5b.1, question 13).
 - [ ] Task: Run the tests on the trial install.
   - What: run the tests of every workspace with a test script under `heavy-run.sh`, one at a
     time, with vitest `--maxWorkers=1`. Default reading of Daniel's point 4: tests run on the
@@ -290,6 +291,42 @@ PM 2026-11-23: parked until after the 30 Nov launch.
 - Two plan lines changed on 2026-11-28: the Phase 3 report target (new target 2026-12-02) and the Gates line of Task 1 (the 22:00 ICT window is lifted).
 - The task marker stays `[ ]`. The orchestrator sets `[~]` before Mid Red (A8).
 - This role changed no product code, no test, no `package.json`, and no lockfile.
+
+### Phase 3 trial strategy evidence (Measure Strategy, 2026-11-28, round 2)
+
+- Role: Measure Strategy. Model: claude-code/claude-sonnet-5-5. Tasks: the eight tasks after the T1b task
+  (strategy ids TR1 to TR8: worktree, type checks, tests, regression list, fixes, 7.1 beta, report, cleanup).
+- Role base: `41307a208`. This value is not the `phase_base_sha`. The orchestrator captures that value after
+  the strategy commit. The rule is in `test-strategy.md` section 5b.3. It replaces the value of the vinext task.
+- Strategy: `test-strategy.md` section 5b (full). The section 5 outline stays as history. Section 5b wins.
+- Risk: TR1 low, TR2 medium, TR3 medium, TR4 medium, TR5 high, TR6 low, TR7 low, TR8 low. The phase is high.
+  Reviews: security for TR5 only; UX/API and browser for TR5 only if a fix touches UI or an API type;
+  adversarial for TR2 to TR5. The reasons are in section 5b.2.
+- Version check (registry, 2026-11-28): the only stable 7.0.x is 7.0.2 (`latest` tag, published 2026-07-08).
+  The `beta` tag is 7.1.0-beta. `npm view typescript versions --json` and `npm view typescript dist-tags --json`
+  give both. TR1 repeats the check on the day of the trial and records the exact number.
+- Trial layout: worktree `/home/daniebo/Desktop/rama-worktrees/ts7-trial`, branch `ts7/trial-p3`, outside the
+  main checkout. The main `pnpm-lock.yaml`, `package.json`, and `pnpm-workspace.yaml` stay unchanged. The
+  check compares a snapshot before and after the install (the plan text `git diff --quiet` holds only if no
+  other session edits those files).
+- Three readings differ from the task text. The 5.9.3 control runs inside the regression task (the install
+  flips 5.9.3, 7.0.x, 5.9.3, 7.0.x). The type check set is the live scan, not a fixed list (workspaces
+  joined after Phase 1). TR5 fixes ship as patch files in the evidence folder and do not land on master in
+  Phase 3. Questions 12 to 20 of `test-strategy.md` section 8 hold each default. The PM can reverse them.
+- Heavy runs: every type check and test run goes through `HEAVY_PRIORITY=p2 HEAVY_MIN_AVAIL_MB=1500 bash
+  /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c "<cmd>"`, one at a time, under the 1800 s
+  p2 cap, with vitest `--maxWorkers=1`. The Reading track uses the same slots.
+- Known stale tests: the Phase 2 module has stale failures (the tech-debt line above). They are not regressions.
+  The orchestrator records the observed names at `phase_base_sha` (section 5b.10).
+- RED_TEST_COMMAND (TR1): `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v
+  measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialHelperTests
+  measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialScopeTests
+  measure.tests.test_typescript7_native_migration_phase3_trial.P3TrialWorktreeTests`.
+  The GREEN_TEST_COMMAND and the commands of the other tasks are in section 5b.8.
+- Hashing policy: no new hash field. `compiler-baseline.json` and the Phase 1 JSON files stay unchanged.
+- Spec fix: the `spec.md` "Time window" bullet now says the window is lifted (PM 2026-11-28), in one line.
+- Task markers stay `[ ]`. The orchestrator sets `[~]` before each Red round (A8).
+- This role changed no product code, no test, no `package.json`, no lockfile, and no manifest.
 
 ## Phase 4: Cloudflare preparation, not the move (PM step 2)
 

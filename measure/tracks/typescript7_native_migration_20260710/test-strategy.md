@@ -12,6 +12,11 @@ role started from `190c38252` (origin/master). That value is not the `phase_base
 Section 5a is new: the full section for the first Phase 3 task. Sections 1, 5, and 8 changed. The
 other Phase 3 tasks keep an outline in section 5; each gets its own strategy round later.
 
+Revision 2026-11-28, round 2 (Phase 3, trial tasks TR1 to TR8). Author model: claude-code/claude-sonnet-5-5.
+The strategy role started from `41307a208` (origin/master). That value is not the `phase_base_sha`
+(section 5b.3). Section 5b is new: the full section for the eight remaining Phase 3 tasks. Sections
+5 and 8 changed. Section 5b wins on any conflict with the section 5 outline (5b.0).
+
 ## Contents
 
 - [Superseded history](#superseded-history-2026-11-05)
@@ -21,6 +26,7 @@ other Phase 3 tasks keep an outline in section 5; each gets its own strategy rou
 - [4. Phase 2: vinext 1.x upgrade (full section)](#4-phase-2-vinext-1x-upgrade-pm-step-0)
 - [5. Phase 3 outline](#5-phase-3-outline-typescript-7-trial)
 - [5a. Phase 3 Task 1: vinext 1.4.6 (full section)](#5a-phase-3-task-1-bump-vinext-to-146)
+- [5b. Phase 3 trial tasks TR1 to TR8 (full section)](#5b-phase-3-tasks-tr1-to-tr8-the-typescript-7-trial)
 - [6. Phase 4 outline](#6-phase-4-outline-cloudflare-preparation)
 - [7. Phase 5 note](#7-phase-5-note-gated-rollout)
 - [8. Open questions and defaults](#8-open-questions-and-defaults)
@@ -491,6 +497,11 @@ The orchestrator records its output with the decision.
 ## 5. Phase 3 outline: TypeScript 7 trial
 
 The full section comes before Phase 3 starts. These points are fixed now.
+
+**Superseded in part by section 5b (2026-11-28, round 2).** Section 5b is the full strategy for the
+trial tasks. Where this outline differs, section 5b wins. The main differences: the 5.9.3 control runs
+inside the regression task, the run set is a live scan, and the 7.1 beta uses a side tool directory
+(5b.0).
 
 **First Phase 3 task (PM 2026-11-21): the vinext bump.** Section 5a holds the full strategy. The
 report target moved to 2026-12-02 (orchestrator default, 2026-11-28).
@@ -985,6 +996,668 @@ holds seven fenced JSON blocks, each with the name given here:
 The note also names the resolved `vinext`, `vite`, and `react` versions and the commands that
 reproduce them (`pnpm why vinext`, `pnpm why vite`, `pnpm why react`). The note adds no hash field.
 
+## 5b. Phase 3 tasks TR1 to TR8: the TypeScript 7 trial
+
+Scope: the eight Phase 3 tasks after the T1b task, in plan order. TR1 creates the trial worktree.
+TR2 runs the type checks. TR3 runs the tests. TR4 lists the regressions. TR5 fixes them. TR6 runs the
+7.1 beta. TR7 writes the report. TR8 removes the trial. The ids TR1 to TR8 are new, so they do not clash
+with "Task 1" (vinext) in section 5a. Evidence class: automated. The Phase 3 manual verification task
+closes on the automated evidence of the phase (PM 2026-11-21).
+
+### 5b.0 Changes to the section 5 outline (section 5b wins)
+
+| # | Section 5 said | Section 5b says | Reason |
+| --- | --- | --- | --- |
+| 1 | The 5.9.3 control runs before the compiler swap. | The control runs inside TR4. The install state flips A, B, A, B (5b.5). | The plan makes TR1 end on 7.0.x. The control needs 5.9.3. |
+| 2 | Each of the 31 workspaces. | Each workspace with `check-types` at the trial base. The 31 of Phase 1 are checked by name. | 12 workspaces joined after Phase 1 (5b.1). |
+| 3 | The control also runs all tests. | The control runs tests only for workspaces that fail under 7.0.x. `improved` applies to type checks only. | A full control test pass costs hours and adds no class. |
+| 4 | The 7.1 beta runs in the same worktree. | The beta runs from a side tool directory, paired with a stable re-run on the same tree. | One pnpm install state stays valid. |
+| 5 | The trial starts from a commit with the vinext bump. | vinext stays 1.2.0 (option A). The base is a master commit that has the `phase_base_sha` as an ancestor. | The bump closed as a record. |
+| 6 | TR4 (list regressions) is low risk. | TR4 is medium risk. | It holds the classifier and the control installs. |
+| 7 | TR5 fixes land in the track. | Fixes live on the trial branch and ship as patch files in the evidence folder. They do not land on master in Phase 3. | The trial branch dies in TR8. The main tree keeps 5.9.3 until Phase 5. |
+
+### 5b.1 Facts observed at strategy time (2026-11-28, read-only)
+
+These facts are inputs. The Green role re-verifies each one and records the result.
+
+| Fact | Value | Source |
+| --- | --- | --- |
+| Stable 7.0.x on the registry | `7.0.2` only, published 2026-07-08 (143 days old). `7.0.1-rc` is a pre-release. No stable 7.0.0 or 7.0.1 exists. | `npm view typescript versions --json`, `npm view typescript time --json` |
+| Dist tags | `latest` 7.0.2. `beta` 7.1.0-beta (2026-10-20). `rc` 7.0.1-rc. `next` 7.1.0-dev.20261127.1. | `npm view typescript dist-tags --json` |
+| The 7.0.2 package | The bin is `tsc`. Platform binaries are optional dependencies. `exports` holds `.` (to `./lib/version.cjs`) and `./unstable/*` only. The classic compiler API is not in the root export. | `npm view typescript@7.0.2 bin exports dependencies --json` |
+| Preview package | `@typescript/native-preview` has `latest` 7.0.0-dev.20260707.2. This track does not use it. | `npm view @typescript/native-preview dist-tags --json` |
+| Compiler pin | `pnpm-workspace.yaml:123` holds `typescript: 5.9.3` in `overrides`. Root `package.json:36` declares `"typescript": "^5.8.3"`. The lockfile has one package key and one snapshot key, both `typescript@5.9.3`. | `rg -n` |
+| Linker | `nodeLinker: hoisted` (`pnpm-workspace.yaml:137`). | `rg -n` |
+| Workspaces | The globs `apps/*`, `packages/*`, `packages/integrations/*`, and `services/*` give 48 manifests. 43 have `check-types`. 47 have `test`. | read of all manifests |
+| New since Phase 1 | The 31 baseline workspaces are a subset of the 43. Twelve are new: `apps/accounting`, `apps/accounts`, `apps/storytime`, `apps/workbooks`, `packages/advantage-play-kit-3d`, `packages/architecture-enforcement`, `packages/avatar-kit`, `packages/backend`, `packages/game-cartridges-3d`, `packages/sales-knowledge`, `services/session-service`, `services/worker`. | read of manifests and `phase1-workspace-baseline.json` |
+| Check-types forms | Most are `tsc --noEmit`. `packages/activity-react` and `packages/activity-runtime` run `pnpm build && tsc --noEmit -p tsconfig.test.json`. `packages/codecamp-knowledge` runs two `tsc` calls. | `surface-inventory.json` |
+| Test forms | Vitest in most workspaces. Jest in `apps/reading-advantage` and `apps/advantage-games`. `node --test` in `packages/reading-advantage-scripts`. `apps/activity-vinext-fixture` has no `test` script. | manifests |
+| Phase 1 baseline | TS 5.9.3. Exit code and wall time for 31 workspaces. Peak RSS only for `packages/types` (397052 KiB). Four failures: `apps/primary-advantage` (131 diagnostics), `apps/reading-advantage` (exit 134), `apps/sales-advantage` (2), `apps/science-advantage` (31). 15 rows are marked contaminated. | `compiler-baseline.json`, `phase1-workspace-baseline.json` |
+| Pre-existing file | `phase1-pre-existing-failures.json` holds four surfaces: lint, tooling, architecture, and worktree-state. None maps to a type-check or test row of one workspace. | the file |
+| Peer consumers | 19 package names in the `packages:` section of the lockfile declare a `typescript` peer. They include `tsup`, `ts-node`, `typescript-eslint`, the `@typescript-eslint/*` set, `eslint-config-next`, `next-intl`, `cosmiconfig`, and `@trpc/*`. | read of `pnpm-lock.yaml` |
+| Heavy-run | The default is 3 slots. The p2 cap is 1800 s. The disk floor is 6000 MB. A deny list can refuse a command (exit 65). | header of `heavy-run.sh` |
+| Phase 2 module | It fails 5 tests on master (`plan.md:168`). The names are in 5b.10. | `plan.md`, `mid-red-d3b7793.log` |
+
+### 5b.2 Risk classification and review applicability
+
+| Task | Risk | Security | UX/API | Adversarial | Browser | Reason |
+| --- | --- | --- | --- | --- | --- | --- |
+| TR1 | low | skip | skip | skip | skip | A throwaway worktree. A gate scans the lock diff for new build-script packages. The snapshot rule guards the main tree. |
+| TR2 | medium | skip | skip | yes | skip | A fast run with missing diagnostics is a failed measurement (spec FR-3). |
+| TR3 | medium | skip | skip | yes | skip | The control is partial by design. Name-based comparison needs care (A7). |
+| TR4 | medium | skip | skip | yes | skip | The classifier decides the report. A wrong class misleads Daniel. |
+| TR5 | **high** | yes | conditional | yes | conditional | It edits product config and types. It needs the addendum of 5b.9 before Red. |
+| TR6 | low | skip | skip | skip | skip | One extra data point. No gate uses it. |
+| TR7 | low | skip | skip | skip | skip | Documents only. A wrong claim is the risk. Review A recomputes each claim. |
+| TR8 | low | skip | skip | skip | skip | It deletes paths. The rule is "look first". |
+| Phase 3 trial | **high** | | | | | The maximum of its tasks. |
+
+- UX/API review (TR5): run only if a fix touches `apps/*/app/**`, `proxy.ts`, or the exported types of
+  `packages/api`. Otherwise the orchestrator records the skip and the reason (A4).
+- Browser review (TR5): run only if a fix changes a rendered page. No gate of TR1 to TR8 starts an app.
+- Review A runs after TR2, after TR4, after each TR5 group, and after TR7. Phase acceptance runs last.
+
+### 5b.3 phase_base_sha capture point and the trial base
+
+The strategy commit is the point where TR1 to TR8 start. The orchestrator captures the immutable
+`phase_base_sha` in this order:
+
+1. The strategy commit exists on the branch where Red starts.
+2. The orchestrator runs
+   `git log -1 --format=%H -- measure/tracks/typescript7_native_migration_20260710/test-strategy.md`.
+3. The output is the `phase_base_sha` for TR1 to TR8. It replaces the value of the closed vinext task.
+   The orchestrator writes it in its run log and in the Mid Red prompt before any later edit of this file.
+4. The orchestrator never recomputes it. The TR5 addendum (5b.9) edits this file and moves the output.
+
+Two checks refute a wrong capture. The value is not `41307a208`, and
+`git merge-base --is-ancestor 41307a208 <value>` exits 0. The tests read the value from the
+environment variable `P3_PHASE_BASE`. They fail when it is unset or empty (A4).
+
+**Trial base.** `P3_TRIAL_BASE` is `git rev-parse origin/master` after `git fetch origin`, taken when
+TR1 starts. The `phase_base_sha` must be an ancestor of it. The orchestrator records it in its run log.
+The control and the 7.0.x runs share this base, so master drift cannot reach the comparison.
+
+### 5b.4 Heavy-run discipline
+
+```
+HR() { HEAVY_PRIORITY=p2 HEAVY_MIN_AVAIL_MB=1500 \
+  bash /home/daniebo/Desktop/advantage-pr/scripts/jobs/heavy-run.sh -c "$1"; }
+M=measure.tests.test_typescript7_native_migration_phase3_trial
+ROLE_WT=/home/daniebo/Desktop/rama-worktrees/ts7-phase3
+WT=/home/daniebo/Desktop/rama-worktrees/ts7-trial
+MAIN=/home/daniebo/Desktop/reading-advantage-monorepo
+```
+
+1. Every command that starts `pnpm`, `vitest`, `jest`, `tsc`, or `node --test`, and every install,
+   runs inside one `HR` call. Light steps are `git` reads, `rg`, `npm view`, Python tests, and reads
+   of `/proc`. A light step may run at any time.
+2. This track runs one `HR` call at a time. The next call starts after the earlier call exits. The
+   Reading track uses the same slots. Do not hold a slot between calls.
+3. Use `HEAVY_PRIORITY=p2`. Never raise it to `p1`. Each job must finish under 1800 s. A job that
+   exits 124 splits (batch rule below). Exit 65 (deny list) or 75 to 77 stops the task. Report it.
+4. A job script starts with `cd "$WT" && set -o pipefail`. It prints the header lines `GATE=`,
+   `CMD=`, `START_EPOCH=`, `HEAVY_RUN_ACTIVE=`, `HEAVY_PRIORITY=`, `LOAD1_START=`,
+   `MEMAVAIL_MB_START=`, `SWAPFREE_KIB_START=`, and `DISK_FREE_MB=`. It ends with `SWAPFREE_KIB_END=`,
+   `EXIT=`, and `ELAPSED_S=`. `heavy-run.sh` exports `HEAVY_RUN_ACTIVE=1` and `HEAVY_PRIORITY` to the job.
+   Those two lines are the proof that the job ran under `heavy-run.sh` at p2.
+5. The job exit code is 0 when the harness finished. A tool failure is data. The script records
+   `WS_EXIT=<n>` and goes on. A non-zero job exit means a harness defect and the gate fails.
+6. Vitest and Jest run with `--maxWorkers=1`. Every job sets `CI=1` and `TURBO_CONCURRENCY=1`.
+   The Phase 1 method sets `TURBO_CONCURRENCY=1` too.
+7. **Method.** Copy `capture-phase1-baseline.py`: one workspace at a time, the command
+   `pnpm --filter <package_name> run check-types`, the diagnostic regex `error TS\d+|warning TS\d+`,
+   and the per-workspace timeout 300 s. Add `/usr/bin/time -v -o <file>` around `timeout`. Do not copy
+   the `raw_output_sha256` field (hashing policy). `Maximum resident set size (kbytes)` is the largest
+   single process in the tree (`getrusage` children). TS 7 is one native process, so the value is
+   comparable with the 5.9.3 Node process.
+8. **Noise rules.** A run is valid when three rules hold. `LOAD1_START` is 1.5 or less. The swap growth
+   is under 1048576 KiB. The exit is not 124, 134, or 137. A run that fails a rule is invalid. Repeat it up
+   to twice. Record every attempt. If the last attempt is still invalid, keep the row with
+   `valid: false` and a reason. Memory does not depend on load. A row that is invalid for load only keeps
+   its RSS, and its time is excluded from medians (`noisy: true`). Other jobs may use the other slots, so
+   the load check is the only guard.
+9. **Batches (type checks).** The run list is the live scan in the order of 5b.8 (TR2). Split it into
+   jobs with a projected time under 1200 s. Use `elapsed_ms` of the Phase 1 row times 1.5, or 120 s for
+   a new workspace. The JSON `batches` array lists them. The batches partition the run list: no
+   duplicate and no gap. Each job stays under 1800 s.
+10. **Tests.** One job for each test workspace, with `timeout 1500` around the command. An exit 124
+    reruns the workspace in shards (`--shard=i/n`, with `n` chosen so a shard needs under 1200 s). The
+    row lists the shard results.
+11. **Stored logs.** Cap a stored log at 1 MiB. Keep the head, the tail, and every line that matches a
+    diagnostic, `FAIL`, `●`, or summary pattern. Write `TRUNCATED=1` and `ORIGINAL_LINES=<n>`. The
+    filter keeps all matching lines, so a recount gives the same result (A7).
+12. **Disk.** `DISK_FREE_MB` is 6000 or more before each install (the floor of `heavy-run.sh`). Record
+    it after the install too. If it drops below the floor, stop and report.
+13. **No push, no deploy.** No gate holds `git push`, `vinext deploy`, `gcloud`, or `wrangler`.
+
+### 5b.5 Trial layout, install states, and isolation
+
+| Name | Value |
+| --- | --- |
+| `$ROLE_WT` | `/home/daniebo/Desktop/rama-worktrees/ts7-phase3`, branch `ts7/phase3`. Evidence, plan edits, and tests are committed here. |
+| `$WT` | `/home/daniebo/Desktop/rama-worktrees/ts7-trial`, branch `ts7/trial-p3`. Heavy runs only. Never merged. It is outside the main checkout. |
+| `$MAIN` | `/home/daniebo/Desktop/reading-advantage-monorepo`. Read only, through `git -C`. |
+
+`git worktree add` runs from `$ROLE_WT`, not from `$MAIN`. A16 forbids a worktree. The orchestrator
+records the exception (section 8, question 2). The repository already has several worktrees.
+
+**Install states in `$WT`.**
+
+| State | Meaning | Entered by | Check line |
+| --- | --- | --- | --- |
+| A | TypeScript 5.9.3 (the control) | `git checkout <base> -- pnpm-workspace.yaml pnpm-lock.yaml`, then `pnpm install --frozen-lockfile` | `TSC_VERSION=Version 5.9.3` |
+| B | The chosen 7.0.x | the install commit (one line of `pnpm-workspace.yaml` and the lockfile) | `TSC_VERSION=Version <chosen>` |
+
+The order is A (TR1 install), B (TR1 swap), A (TR4 control), B (TR4 restore, for TR5 and later). The
+first B install uses `pnpm install --no-frozen-lockfile` after one line changes: line 123 of
+`pnpm-workspace.yaml` goes from `typescript: 5.9.3` to `typescript: <chosen>`. A commit on `ts7/trial-p3`
+named `trial: typescript <chosen>` holds the change. Later swaps use that commit and
+`--frozen-lockfile`. The check is `pnpm why typescript`. It shows exactly one version.
+
+**The `dist/` rule.** Packages export from `dist/`, which git ignores. TR1 builds `dist/` once under state
+A (`pnpm --workspace-concurrency=1 --filter './packages/**' run --if-present build`, split when a job nears
+the cap). Both conditions then read the same `dist/`. The trial does not test emit. A package whose build
+fails under 5.9.3 is listed in `dist_missing`. The two `pnpm build && tsc` workspaces rebuild `dist/`
+inside their own run, so they run last in each condition (5b.8, TR2).
+
+**Side tool directories.** `$WT/.ts71-beta` (TR6) and `$WT/.ts59` (TR5 dual-green check) come from
+`npm install --prefix <dir> --no-package-lock --ignore-scripts typescript@<version>`. They never change the
+pnpm install state. Each install is an `HR` call.
+
+**Isolation.** Take a snapshot in `$MAIN` and in `$ROLE_WT` before TR1 starts. Take it again after the
+last install of TR1. A snapshot is the text of `git -C <dir> diff -- pnpm-lock.yaml package.json
+pnpm-workspace.yaml`, saved as a file. It also holds the exit code of `git -C <dir> diff --quiet` on the
+same three paths. The two snapshots must be equal. The snapshot rule is the safe form of the plan text,
+because another session may edit those files in `$MAIN`. The TR4 swaps and the TR8 end repeat the check.
+
+### 5b.6 Evidence files and conventions
+
+Folder: `evidence/phase3/trial/`. Raw logs: `evidence/phase3/trial/raw-logs/`. The report sits one level
+up. Every file is new. No file adds a hash field. A key named `sha256`, `checksum`, `digest`, `hash`, or `md5`
+fails the tests. A git commit id (`base_sha`) is repository identity and is allowed.
+
+| File | Task | Content |
+| --- | --- | --- |
+| `trial-worktree.json` | TR1 | Registry check, worktree record, install states, isolation snapshots, lock diff scan, gate entries. |
+| `typecheck-ts7.json` | TR2 | One row for each workspace under state B, the batches, the repeat summary, the checker variants. |
+| `tests-ts7.json` | TR3 | One row for each test workspace under state B. |
+| `typecheck-control.json` | TR4 | The same rows under state A. |
+| `tests-control.json` | TR4 | Rows for the workspaces that fail under B. |
+| `regressions.json` | TR4 | One classified row for each workspace and kind. |
+| `fixes.json`, `patches/*.patch` | TR5 | One entry for each regression, one patch for each group. |
+| `beta-extra.json` | TR6 | The beta rows and the paired stable rows. |
+| `../ts7-trial-report.md` | TR7 | The report with fenced JSON blocks. |
+| `trial-cleanup.json` | TR8 | The before and after state of the worktree and the branch. |
+
+**Row of a type check** (TR2 and TR4): `workspace`, `package_name`, `script` (the manifest text),
+`command`, `compiler` (`5.9.3` or the chosen), `exit_status`, `timed_out`, `diagnostic_count`,
+`diagnostics` (every `[file, line, code]` triple, none dropped), `peak_rss_kib`, `peak_rss_mib` (KiB divided
+by 1024, one decimal), `elapsed_ms`,
+`load1_start`, `memavail_mb_start`, `swapfree_kib_start`, `swapfree_kib_end`, `valid`, `invalid_reason`,
+`noisy`, `attempts`, `baseline_elapsed_ms` (`null` for a new workspace), `baseline_valid`, `baseline_note`,
+`contaminated`, `log`, and `time_file`. `unparsed_tail` (the last 20 lines) is present when the exit is
+not 0 and no diagnostic matched.
+
+**Row of a test run** (TR3 and TR4): `workspace`, `runner` (`vitest`, `jest`, or `node-test`), `script`,
+`command`, `exit_status`, `files_total`, `files_failed`, `tests_total`, `tests_passed`, `tests_failed`,
+`tests_skipped`, `failures` (`[file, test name]` pairs), `shards` (empty or a list), `peak_rss_kib`,
+`elapsed_ms`, `valid`, `invalid_reason`, `no_test_files`, `log`, and `time_file`.
+
+**Gate entry** (every file): `id`, `heavy` (true or false), `heavy_command` (the `HR` text, for heavy gates),
+`log`, `start_epoch`, `exit`, `elapsed_s`.
+
+### 5b.7 Test module and rounds
+
+Red writes one new file: `measure/tests/test_typescript7_native_migration_phase3_trial.py`. It uses the
+Python standard library only. It adds no dependency and no hash. It does not edit the Phase 1, Phase 2, or
+vinext test modules (history). It may copy their helpers. It resolves the track folder with
+`track_dir_resolve` (A9). Tests read tracked evidence files. They never read live `git worktree` state, so
+they stay true after TR8 removes the worktree. Live state is checked by gates and then saved as evidence.
+
+| Class | Task | State at base |
+| --- | --- | --- |
+| `P3TrialHelperTests` | all | green (guards): the pure helpers and their synthetic cases |
+| `P3TrialScopeTests` | all | red while `P3_GREEN_COMMITS` is unset |
+| `P3TrialWorktreeTests` | TR1 | red (no record) |
+| `P3TrialTypecheckTests` | TR2 | red |
+| `P3TrialTestRunTests` | TR3 | red |
+| `P3TrialRegressionTests` | TR4 | red |
+| `P3TrialFixG<n>Tests` | TR5 | written by the TR5 addendum round |
+| `P3TrialBetaTests` | TR6 | red |
+| `P3TrialReportTests` | TR7 | red |
+| `P3TrialCleanupTests` | TR8 | red |
+
+**Rounds.** Red writes in rounds, so each round reads the real logs of the earlier round. TS 7 output
+formats are not known now.
+
+| Round | Classes | Starts after |
+| --- | --- | --- |
+| A | helpers, scope, TR1, TR2 | the strategy commit |
+| B | TR3, TR4 (and parser fixes from the TR2 logs) | TR2 closes |
+| TR5 addendum | one class for each fix group | TR4 closes (5b.9) |
+| C | TR6, TR7, TR8 | TR5 closes |
+
+**Pure helpers in `P3TrialHelperTests`** (each has synthetic cases that Red writes before any evidence
+exists):
+
+- `latest_stable_7_0(versions)`: keeps `^7\.0\.\d+$`, picks the maximum by numeric tuple, and raises on an
+  empty result. Case: `["7.0.2","7.0.10","7.0.1-rc","7.1.0-beta"]` gives `7.0.10`.
+- `parse_time_v(text)`: reads `Maximum resident set size (kbytes):`, `Elapsed (wall clock) time`, and
+  `Exit status:` by label (A3).
+- `parse_diagnostics(text)`: accepts the forms `file(line,col): error TSn:` and `file:line:col - error TSn:`.
+  It returns `[file, line, code]` triples. It strips the repository root.
+- `classify(kind, control_row, trial_row, flake, parity)`: the table of 5b.8 (TR4).
+- `verdict(rows)`: the verdict of the classified rows (5b.8, TR4). It raises when a row has a
+  `trial_compiler` outside `^7\.0\.\d+$` (5b.8, TR6).
+- `test_command(script)`: the command builder of 5b.8 (TR3). It raises on an unknown runner form.
+- `lock_peer_consumers(lock_text)`: the package names with a `typescript` peer (5b.8, TR7).
+- `escape_added(diff)`: finds `@ts-ignore`, `@ts-nocheck`, `ignoreBuildErrors`, a wider `skipLibCheck`, and
+  `"strict": false` on added lines (5b.9). It uses anchored patterns and no bare words (A7).
+
+**Scope rule (`P3TrialScopeTests`).** A Green commit on `ts7/phase3` may touch only these paths:
+
+- the `evidence/phase3/**` folder of this track;
+- the `plan.md` of this track;
+- one flat file `measure/runs/<track>/green-p3t-*.log`;
+- `measure/tech-debt.md`, under the Phase 2 append rule.
+
+It may not touch `pnpm-workspace.yaml`, `pnpm-lock.yaml`, a `package.json`, or a `tsconfig*.json`. It may
+not touch a file under `apps/`, `packages/`, or `services/`. It may not touch `compiler-baseline.json`,
+`phase1-*.json`, `surface-inventory.json`, `capture-phase1-baseline.py`, or an existing test module. The
+orchestrator passes every Green commit in `P3_GREEN_COMMITS`. The tests fail when the variable is unset
+(A4). Product edits happen only in `$WT`.
+
+### 5b.8 Task contracts
+
+Each task has Red evidence (tests that fail before the work), a RED command, a GREEN command, and heavy
+gates. Every GREEN command first runs the light module command and then the heavy gates in order. Stop at
+the first non-zero exit. `P3_PHASE_BASE` and `P3_GREEN_COMMITS` are in the environment. The light part is:
+
+```
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v $M.P3TrialHelperTests $M.P3TrialScopeTests <classes>
+```
+
+Every `RED_TEST_COMMAND` below exits non-zero at the base of its round. It shows `FAILED (failures=N)`
+and no `errors=` part. An error (for example an `ImportError`) is a broken test, not a valid Red. A missing
+evidence file must make a test call `self.fail(...)`. Red parses `N` as a labeled integer (A3) and lists
+the green guards by name. Red writes no count into `spec.md` or `plan.md`.
+
+#### TR1: create the trial worktree with the latest stable 7.0.x
+
+**RED_TEST_COMMAND:** `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v $M.P3TrialHelperTests $M.P3TrialScopeTests $M.P3TrialWorktreeTests`
+
+**GREEN_TEST_COMMAND:** the light command with class `$M.P3TrialWorktreeTests`, then the gates below.
+
+Red evidence (`P3TrialWorktreeTests`, all red at base):
+
+| Test | What it proves | Falsification |
+| --- | --- | --- |
+| `test_record_parses` | `trial-worktree.json` exists, has the keys of 5b.6, and holds no hash key. | Delete the file or add a `sha256` key: fail. |
+| `test_registry_choice_is_latest_stable` | `registry.chosen` equals `latest_stable_7_0(registry.versions_7_0_stable)`, and the log line `TS_CHOSEN=` has the same value. The list is not empty. | Choose `7.0.1-rc`, or pick by string order: fail. |
+| `test_tsc_versions_match_logs` | State A shows `Version 5.9.3`. State B shows `Version <chosen>`. Both come from labeled log lines. | Swap the two values: fail. |
+| `test_single_typescript_after_swap` | `ts_resolved` holds exactly one version, and it equals the chosen. | Add a second version: fail (A3). |
+| `test_worktree_placement` | The path is `/home/daniebo/Desktop/rama-worktrees/ts7-trial`. The branch is `ts7/trial-p3`. The path is not under `$MAIN`. The saved porcelain text lists both. | Use a path under `$MAIN`: fail. |
+| `test_base_follows_strategy` | `git merge-base --is-ancestor $P3_PHASE_BASE <base_sha>` exits 0. `git show <base_sha>:pnpm-workspace.yaml` holds `typescript: 5.9.3`. `git show <base_sha>:apps/marketing/package.json` holds `"vinext": "1.2.0"`. The test fails when `P3_PHASE_BASE` is unset (A4). | Use a base older than the strategy: fail. |
+| `test_main_snapshots_unchanged` | Both snapshot files exist and have equal text for `$MAIN` and for `$ROLE_WT`. `snapshots.after_epoch` is not less than the end epoch of `TR1-swap-B`. Both quiet exit codes are saved. | Take the "after" snapshot before the install: fail (A5). |
+| `test_install_commit_only_pins` | `install_commit_paths` is exactly `pnpm-lock.yaml` and `pnpm-workspace.yaml`. `ws_yaml_lines_changed` is 1. `override_before` is `5.9.3`. `override_after` is the chosen. | Edit a second line: fail. |
+| `test_lock_keys_explained` | `lock_key_changes` equals the labeled log lines. `typescript@5.9.3` is removed. `typescript@<chosen>` is added. Each other added key is a `@typescript/typescript-*@<chosen>` package or an `explained_drift` entry with a reason. `requires_build_added` is 0, or each package is in `allowBuilds`. | Add an unexplained key: fail (A5). |
+| `test_gate_entries_valid` | Each heavy entry has `HEAVY_PRIORITY=p2` and `HEAVY_MIN_AVAIL_MB=1500` in `heavy_command`. Its log shows `HEAVY_RUN_ACTIVE=1` and `HEAVY_PRIORITY=p2`. `exit` is 0. `ELAPSED_S` is below 1800. Job intervals (`start_epoch`, `elapsed_s`) do not overlap. | Lower the priority, or overlap two jobs: fail. |
+| `test_disk_floor` | `disk_free_mb.before` is 6000 or more, and `after` is saved. | Save 5000: fail. |
+| `test_no_deploy_or_push_in_logs` | No log of the task matches `git push\|vinext deploy\|gcloud\|wrangler`. A read error fails the test (A14). | Add a deploy line: fail. |
+
+Guards in `P3TrialHelperTests` (green at base): `latest_stable_7_0` cases, and `parse_time_v` on a saved
+sample of `/usr/bin/time -v` output.
+
+Gates (`HR` = heavy; light = no `HR`):
+
+| Id | Command | Pass condition |
+| --- | --- | --- |
+| `TR1-registry` (light) | `npm view typescript versions --json`, `npm view typescript dist-tags --json`, and a Python filter | Lines `TS_STABLE_7_0=`, `TS_CHOSEN=`, `TS_LATEST_TAG=`, and `TS_BETA_TAG=`. The chosen version is the numeric maximum of the stable 7.0.x list. At strategy time it is `7.0.2`. |
+| `TR1-snapshot-before` (light) | The snapshot of 5b.5 for `$MAIN` and `$ROLE_WT` | Two text files and the lines `MAIN_DIFF_QUIET=` and `ROLE_DIFF_QUIET=`. |
+| `TR1-worktree` (light) | `git -C $ROLE_WT worktree add -b ts7/trial-p3 $WT $P3_TRIAL_BASE`, then `git worktree list --porcelain` | `WT_HEAD` equals the base. `WT_CLEAN=1`. The porcelain text lists the path and the branch. |
+| `TR1-install-A` (`HR`) | `pnpm install --frozen-lockfile`, then `echo TSC_VERSION=$(pnpm exec tsc --version)` | Exit 0. `TSC_VERSION=Version 5.9.3`. `DISK_FREE_MB` is 6000 or more. After an exit 124, rerun once (pnpm resumes). Log both attempts. |
+| `TR1-build-dist-A` (`HR`, one or more jobs) | `pnpm --workspace-concurrency=1 --filter './packages/**' run --if-present build` | A `BUILD_EXIT=` line for each package and `DIST_MISSING=<n>` (packages that export from `dist/` and have no `dist/`). Split by package if a job nears 1800 s. |
+| `TR1-swap-B` (`HR`) | The B transition of 5b.5, then `pnpm why typescript` | Exit 0. `WS_YAML_LINES_CHANGED=1`. `TSC_VERSION=Version <chosen>`. One resolved version. |
+| `TR1-install-commit` (light) | `git -C $WT commit` of the two files, then `git show --name-only --format= <sha>` | `INSTALL_COMMIT=<sha>`. `INSTALL_COMMIT_PATHS` lists the two files. |
+| `TR1-lock-scan` (light) | A Python diff of the lockfile `packages:` keys between the base and the install commit | `LOCK_KEYS_ADDED=`, `LOCK_KEYS_REMOVED=`, and `REQUIRES_BUILD_ADDED=<n>`. Use `rg -c`: exit 1 means 0, exit 2 fails the gate (A14). |
+| `TR1-snapshot-after` (light) | The snapshot of 5b.5 again | `MAIN_SNAPSHOT_EQUAL=1` and `ROLE_SNAPSHOT_EQUAL=1`. |
+
+Done when (plan text, with the snapshot rule): the snapshots are equal. `tsc --version` in `$WT` gives
+the chosen 7.0.x. The record holds the exact number.
+
+#### TR2: run the type checks on the trial install
+
+**RED_TEST_COMMAND:** `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v $M.P3TrialHelperTests $M.P3TrialScopeTests $M.P3TrialTypecheckTests`
+
+**GREEN_TEST_COMMAND:** the light command with `$M.P3TrialWorktreeTests $M.P3TrialTypecheckTests`, then the gates below.
+
+**Run list.** Scan the manifests at `base_sha` (`git ls-tree` and `git show`). Keep each workspace that has a
+`check-types` script. Sort by path. Move the workspaces whose script contains `pnpm build` to the end,
+in path order. Record the list as `run_list`. TR4 reuses it.
+
+Red evidence (`P3TrialTypecheckTests`, all red at base). The class reads the file that a class attribute names,
+so TR4 reuses the same tests for `typecheck-control.json` with `compiler` `5.9.3`:
+
+| Test | What it proves | Falsification |
+| --- | --- | --- |
+| `test_run_set_equals_live_scan` | The row workspaces equal the live scan at `base_sha`. The 31 names of `phase1-workspace-baseline.json` are a subset. The labeled line `WORKSPACES=<n>` equals the row count. | Delete a row, or add a fake workspace: fail. |
+| `test_rows_complete` | Each row has the keys of 5b.6. `peak_rss_kib` and `elapsed_ms` are integers above 0. `diagnostic_count` equals the length of `diagnostics`. | Drop a key: fail. |
+| `test_rows_match_raw_logs` | The test recomputes `exit_status`, the diagnostic triples, the count, `peak_rss_kib`, and `elapsed_ms` from the log and the `.time` file by label (A3, A5). | Change one value in the JSON: fail. |
+| `test_compiler_label_per_row` | The log line `TSC_VERSION=` equals `Version <compiler>`. | Relabel a 5.9.3 log as 7.0.x: fail. |
+| `test_fail_closed_rules` | A row with a non-zero exit and no matched diagnostic has `unparsed_tail` and `valid: false`. A row with exit 124, 134, or 137 has `valid: false` and the matching reason. An invalid row has `attempts` of 3, or a `final` flag with its reason. No invalid row is dropped (A4). | Delete a diagnostic from the JSON and the log: the exit-with-no-diagnostic rule fails. |
+| `test_run_order_rule` | `run_list` equals the row order. The `pnpm build` workspaces are last. The `batches` partition the list (no gap, no duplicate). | Move one workspace: fail. |
+| `test_no_tsconfig_edits` | Every job log holds `TSCONFIG_CHANGED=0` at its end. | Edit a `tsconfig`: fail. |
+| `test_repeat_runs_and_summary` | `packages/types`, `packages/domain`, and `apps/primary-advantage` have 3 valid runs each. The summary median, minimum, and maximum equal the recomputed values. | Change the median: fail. |
+| `test_checker_variants` | The three valid rows with the largest `elapsed_ms` have a row labeled `VARIANT=checkers-1`. If the log line is `CHECKERS_FLAG=absent`, each has a `not-available` row. A skipped row fails (A4). | Remove a variant row: fail. |
+| `test_baseline_columns` | `baseline_elapsed_ms` equals the Phase 1 value for the 31 workspaces and is `null` for the others. `apps/reading-advantage` has `baseline_valid: false` and `baseline_note` equal to `no valid 5.9.3 baseline`. The Phase 1 JSON files have no diff against `base_sha`. | Edit a baseline value: fail. |
+| `test_gate_entries_valid`, `test_no_deploy_or_push_in_logs` | As in TR1. | As in TR1. |
+
+Gates:
+
+| Id | Command | Pass condition |
+| --- | --- | --- |
+| `TR2-flags` (`HR`) | `pnpm exec tsc --help`, then `rg -n -- '--checkers'` | `CHECKERS_FLAG=present` or `absent`, and `CHECKERS_DEFAULT=<n or unknown>`. Exit 2 of `rg` fails the gate. |
+| `TR2-B-<k>` (`HR`, one job for each batch) | The method of 5b.4 item 7 for each workspace of batch `k`, in `run_list` order | For each workspace: `WS=`, `TSC_VERSION=Version <chosen>`, `WS_EXIT=`, `DIAGNOSTICS=`, `PEAK_RSS_KIB=`, `ELAPSED_MS=`. The job ends with `TSCONFIG_CHANGED=0` and `EXIT=0`. |
+| `TR2-B-repeat` (`HR`) | Runs 2 and 3 for the three named workspaces | `RUN=2` and `RUN=3` blocks. Each starts with `LOAD1_START` of 1.5 or less. |
+| `TR2-B-checkers-<slug>` (`HR`) | `pnpm --filter <pkg> exec tsc --noEmit --checkers 1` for the three largest valid rows | `VARIANT=checkers-1`. Labeled as a variant. It never sets a Phase 5 value. |
+
+Do not edit any `tsconfig`. Record each `types` default and `baseUrl` error as a finding. A `check-types`
+failure never fails the job (5b.4 item 5).
+
+#### TR3: run the tests on the trial install
+
+**RED_TEST_COMMAND:** `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v $M.P3TrialHelperTests $M.P3TrialScopeTests $M.P3TrialTestRunTests`
+
+**GREEN_TEST_COMMAND:** the light command with classes of TR1 to TR3, then the gates below.
+
+**Command rule.** `test_command(script)` is a pure helper. `vitest run` gives
+`pnpm --filter <pkg> exec vitest run --maxWorkers=1`. `vitest run --maxWorkers=1` gives the same text.
+`jest` gives `pnpm --filter <pkg> exec jest --maxWorkers=1`. `node --test <file>` gives
+`pnpm --filter <pkg> exec node --test <file>`. Any other form raises, and a test fails (A4). Playwright
+end-to-end scripts are out of scope.
+
+Red evidence (`P3TrialTestRunTests`, all red at base):
+
+| Test | What it proves | Falsification |
+| --- | --- | --- |
+| `test_run_set_equals_live_scan` | The row workspaces equal the workspaces with a `test` script at `base_sha`. `runner` follows the script text. | Delete a row: fail. |
+| `test_command_matches_rule` | Each `command` equals `test_command(script)`, and the vitest and Jest commands hold `--maxWorkers=1`. | Drop the flag: fail. |
+| `test_counts_match_logs` | The counts equal the labeled lines of the log: `Test Files  N passed (N)` and `Tests  M passed (M)` (with `failed` forms) for Vitest, `Tests:` for Jest, and `# pass` and `# fail` for `node --test` (A3). | Edit a count: fail. |
+| `test_failures_by_file_and_name` | `failures` equals the `[file, test name]` pairs parsed from `FAIL` or `●` lines. The pair count equals the failure line count. No line is dropped (A7). | Remove one pair: fail. |
+| `test_no_vacuous_pass` | A row with exit 0 has `tests_total` of 1 or more, unless `no_test_files` is true and `TEST_FILES_GIT=0` in the log (A4). | Report 0 tests with exit 0: fail. |
+| `test_timeouts_are_sharded` | A row with exit 124 has a `shards` list that covers `1/n` to `n/n`. | Leave one shard out: fail. |
+| `test_failures_compared_with_phase1_file` | Each row with a failure has `phase1_ref`. The value is the `surface` text of a matching entry of `phase1-pre-existing-failures.json`, or the text `no matching entry`. An entry matches when its `type` is `test` and its text names the workspace. The test recomputes the match. At strategy time no entry matches. | Cite `primary-advantage ESLint` for a test failure: fail (its type is `lint`). |
+| `test_no_playwright_rows` | No command contains `playwright`. | Add one: fail. |
+| `test_gate_entries_valid`, `test_no_deploy_or_push_in_logs` | As in TR1. | As in TR1. |
+
+Gate `TR3-B-<slug>` (`HR`, one job for each test workspace): `CI=1 /usr/bin/time -v -o <time> timeout 1500
+<test_command>`. The log holds `WS=`, `RUNNER=`, `TEST_FILES_GIT=<n>`, `WS_EXIT=`, the tool output, and the job
+footer. A test failure never fails the job.
+
+#### TR4: list the regressions (control run and classifier)
+
+**RED_TEST_COMMAND:** `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v $M.P3TrialHelperTests $M.P3TrialScopeTests $M.P3TrialRegressionTests`
+
+**GREEN_TEST_COMMAND:** the light command with classes of TR1 to TR4, then the gates below.
+
+**Control stage.** The install flips to state A, runs the control, and flips back to state B.
+
+| Id | Command | Pass condition |
+| --- | --- | --- |
+| `TR4-swap-A` (`HR`) | The A transition of 5b.5 | Exit 0. `TSC_VERSION=Version 5.9.3`. |
+| `TR4-A-<k>` (`HR`) | The TR2 method over `run_list` under state A, with the same batches | Rows pass `P3TrialTypecheckTests` with `compiler` `5.9.3`. |
+| `TR4-A-tests-<slug>` (`HR`) | The TR3 method for each workspace whose B row has a non-zero exit or `tests_failed` above 0 | `tests-control.json` covers exactly that set (recomputed). |
+| `TR4-parity-A-<slug>` (`HR`) | `pnpm --filter <pkg> exec tsc --noEmit --listFilesOnly` for each workspace in the parity set | The file list is saved. The parity set holds each workspace where a control diagnostic is missing in the B row. |
+| `TR4-swap-B` (`HR`) | The B transition of 5b.5 (frozen install from the install commit) | `TSC_VERSION=Version <chosen>`. Then `TR4-snapshot` repeats the isolation check. |
+| `TR4-parity-B-<slug>` (`HR`) | The same list command under state B | The B file list is saved. |
+| `TR4-flake-<cond>-<slug>-<n>` (`HR`) | One rerun of each failing test file that fails in B and not in A, under B and under A | A test that passes on the rerun is `flaky`. |
+
+**The classifier.** `classify(kind, control_row, trial_row, flake, parity)` is a pure helper. Red writes
+its synthetic cases before any evidence exists. Each workspace and kind gets exactly one class:
+
+| Condition (checked in this order) | Class |
+| --- | --- |
+| The control row is invalid (exit 124, 134, or 137, or an unparsed failure). | `invalid-measurement`. The row keeps the trial result as information. `apps/reading-advantage` is expected here. |
+| The trial row has exit 134 or 137 and the control is valid, and the repeat with `MEMAVAIL_MB_START` of 3000 or more fails too. | `regression`, cause `memory`. |
+| The trial row is otherwise invalid. | `invalid-measurement`. |
+| Type check: both exit 0 with no diagnostic. Test: both exit 0. | `unchanged-pass` |
+| Type check: a trial triple `[file, line, code]` is not in the control set, or the trial exits non-zero while the control exits 0. Test: a failing `[file, name]` pair is not in the control set, and the flake rerun fails. | `regression`. The row holds the difference. |
+| Test: a failing `[file, name]` pair passes on the flake rerun. | `flaky` |
+| Type check: the trial set is a strict subset of the control set, or the trial exits 0 while the control has diagnostics. | `improved` only if `parity` holds equal file lists. Otherwise `invalid-measurement` with reason `diagnostics-missing`. |
+| The failing sets are equal. | `pre-existing` |
+
+`improved` applies to type checks only (5b.0, row 3). A swapped diagnostic (same count, another code) is a
+`regression`, because its triple is not in the control set. Compare triples. Never compare a bare count (A3).
+A test workspace with a passing trial row and no control row is `unchanged-pass`. A failing trial row with no
+control row is a harness defect (A4).
+
+**Rows and verdict.** Each `regressions.json` row has `workspace`, `kind` (`types` or `tests`), `class`,
+`cause_class`, `trial_compiler`, `control_ref`, `trial_ref`, `baseline_ref`, `diff`, and `reason`.
+`summary.verdict` is the result of `verdict(rows)`. It is `regressions-found` when a `regression` row exists.
+It is `incomplete` when an `invalid-measurement` row exists for any workspace other than
+`apps/reading-advantage`. Otherwise it is `no-regression`.
+
+**Cause classes.** Each `regression` row has one of: `types-default`, `baseurl-removed`, `removed-option`,
+`diagnostic-change`, `js-api-consumer`, `peer-range`, `emit-change`, `memory`, or `other`. The row cites at
+least one diagnostic line or test name, and the `tsconfig` line or the tool line that causes it. Typical
+codes are a hint only: `TS2688`, `TS2304`, `TS2580`, `TS2582`, `TS2591`, and `TS2307` suggest `types-default`;
+`TS5102` and `TS5107` suggest `removed-option`, and `baseurl-removed` when the line names `baseUrl`.
+
+**Baseline references.** `pre-existing` is decided against the control on the same tree. The row also cites
+`compiler-baseline.json#ts59_workspace_baseline.failures` when the workspace is in that list, with
+`baseline_delta` (control count minus baseline count). Otherwise it cites `control-only`. The Phase 1 file
+`phase1-pre-existing-failures.json` has no row that maps to a type-check or test result. Its text says a
+failure absent from it is "migration-caused". The control wins when the two disagree, because a failure in
+5.9.3 cannot come from TypeScript 7. The report states this.
+
+Red evidence (`P3TrialRegressionTests`, all red at base):
+
+| Test | What it proves | Falsification |
+| --- | --- | --- |
+| `test_control_rows_exist` | `typecheck-control.json` covers the run list. `tests-control.json` covers exactly the workspaces with a B failure (recomputed). Each control log shows `Version 5.9.3`. | Remove a control row: fail (A4). |
+| `test_every_row_classified` | `regressions.json` has one row for each workspace and kind of the B files, and a class from the table. The labeled integer `ROWS=` equals the count. | Delete a row: fail. |
+| `test_classes_recomputed` | `classify` returns the stored class for each row. | Change one class: fail (A5). |
+| `test_regression_rows_have_cause` | Each `regression` row has a cause class and a cited line or test name. | Remove a cause: fail. |
+| `test_pre_existing_cites_reference` | Each `pre-existing` row resolves `baseline_ref`: the entry exists in `compiler-baseline.json`, or the value is `control-only` and the control row fails. | Cite a workspace that is not in the file: fail. |
+| `test_flake_rule` | Each `regression` test row has a failing rerun under B. Each `flaky` row has a passing rerun. | Delete a rerun log: fail. |
+| `test_invalid_rows_listed` | Each `invalid-measurement` row appears in `summary.invalid` with a reason. | Hide a row: fail (A4). |
+| `test_summary_recomputed` | The summary integers (`regression`, `pre-existing`, `improved`, `unchanged-pass`, `flaky`, `invalid`) equal the recount. | Edit a count: fail. |
+| `test_state_restored` | The `TR4-swap-B` log shows `Version <chosen>`, and the snapshots are equal again. | Skip the restore: fail. |
+
+#### TR5: fix the regression list
+
+TR5 has its own strategy addendum, because the files are unknown until TR4 closes. Section 5b.9 holds
+the split and the invariants. The addendum names the groups, the paths, and the class names.
+
+**RED_TEST_COMMAND and GREEN_TEST_COMMAND:** named for each group by the addendum:
+`... $M.P3TrialHelperTests $M.P3TrialScopeTests $M.P3TrialFixG<n>Tests`.
+
+#### TR6: run the 7.1 beta as one extra data point
+
+**RED_TEST_COMMAND:** `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v $M.P3TrialHelperTests $M.P3TrialScopeTests $M.P3TrialBetaTests`
+
+**GREEN_TEST_COMMAND:** the light command with classes of TR1 to TR6, then the gates below.
+
+Red evidence (`P3TrialBetaTests`, all red at base):
+
+| Test | What it proves | Falsification |
+| --- | --- | --- |
+| `test_beta_rows_exact_set` | `beta-extra.json` has rows for exactly `packages/types`, `packages/domain`, and `apps/primary-advantage`. Each row has `label` equal to `extra data point` and `gate_use` false. `compiler` equals the registry `beta` tag saved in the file. | Add a fourth row, or drop the label: fail. |
+| `test_beta_log_version` | Each beta log shows `TSC_VERSION=Version <beta>`. | Run the stable binary: fail. |
+| `test_paired_stable_rerun` | Each beta row has a stable row from the same job and the same tree, with `Version <chosen>`. Each script is exactly `tsc --noEmit`; any other script gives a `not-available` row. | Drop the pair: fail. |
+| `test_verdict_ignores_beta` | `verdict(stable rows)` equals `summary.verdict` of `regressions.json`. `verdict` raises when a row has a beta `trial_compiler`. The report states the same verdict. | Pass a beta row into the verdict: raise. |
+| `test_side_install_isolated` | The log shows `npm install --prefix $WT/.ts71-beta --no-package-lock --ignore-scripts`. `LOCK_CHANGED=0` for `pnpm-lock.yaml` and `pnpm-workspace.yaml` in `$WT`. | Install the beta with pnpm: fail. |
+| `test_gate_entries_valid`, `test_no_deploy_or_push_in_logs` | As in TR1. | As in TR1. |
+
+Gates: `TR6-registry` (light): `npm view typescript dist-tags --json`, with the line `TS_BETA_TAG=`.
+`TR6-install-beta` (`HR`): the side install. `TR6-pair-<slug>` (`HR`, one job for each of the three
+workspaces): the stable re-run `pnpm --filter <pkg> run check-types`, then `cd $WT/<ws> && $WT/.ts71-beta/node_modules/.bin/tsc --noEmit`, both under `/usr/bin/time -v`.
+The beta row names no regression and decides no gate. The report shows it in a separate column (TR7).
+
+#### TR7: write the one-compiler plan and the report to the PM
+
+**RED_TEST_COMMAND:** `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v $M.P3TrialHelperTests $M.P3TrialScopeTests $M.P3TrialReportTests`
+
+**GREEN_TEST_COMMAND:** the light command with classes of TR1 to TR7, then the light gates below. TR7 has
+no heavy gate.
+
+The report is `evidence/phase3/ts7-trial-report.md`. It holds the fenced blocks `memory-time-table`,
+`regression-summary`, `consumer-table`, and `decision-request`. Its last heading is `## Decision request to Daniel`.
+
+Red evidence (`P3TrialReportTests`, all red at base):
+
+| Test | What it proves | Falsification |
+| --- | --- | --- |
+| `test_blocks_parse` | The four blocks parse, and no block holds a hash key. | Delete a block: fail. |
+| `test_table_matches_evidence` | Each workspace row equals the TR2 and TR4 files: exit, diagnostic count, `peak_rss_mib`, and `elapsed_s` for the 5.9.3 column and the 7.0.x column. The Phase 1 elapsed value equals the baseline JSON. The beta column exists only for the three beta workspaces. `compiler_stable` equals the chosen version. | Change one cell: fail. |
+| `test_claims_recomputed` | `speed_claim` and `memory_claim` equal the recomputed value. The value comes from the median of per-workspace ratios (7.0.x over 5.9.3) over valid, non-noisy pairs. A median below 0.95 gives `faster` or `lower`. A median above 1.05 gives `slower` or `higher`. Any other median gives `similar`. `slower_workspaces` lists each ratio above 1.05. | Write `faster` for `similar` data: fail (A6). |
+| `test_regression_summary_matches` | The block equals `regressions.json`. The text "no regressions" appears only when the count is 0. | Hide one regression: fail. |
+| `test_consumer_rows_cover_matrix` | The block has one row for each `consumer` in `surface-inventory.json` `ownership_matrix`, by exact name. A labeled `MATRIX_ROWS=<n>` equals the matrix length. Each row has `ts7_state` (`works`, `breaks`, `partial`, or `not-run`), `basis` (`run` or `static`), `action` (20 characters or more), and `removes_second_install`. A `static` row cites a probe log with `PROBE_HITS=` or `TS_API_KEYS=`. | Delete a row: fail. |
+| `test_peer_pass_covers_lock_consumers` | Every name from `lock_peer_consumers(<lockfile at base_sha>)` is a row or in `other_peer_consumers`. `PEER_CONSUMERS=<n>` equals the scan length. | Remove a name: fail. This is the second, independent pass (A4). |
+| `test_typescript_eslint_row` | The `typescript-eslint` row has an `action` that names `Oxlint` and `tsgolint`, and `removes_second_install` is true. | Remove the words: fail. |
+| `test_api_probe_gates_state` | `TS_API_KEYS=` is in the probe log. If `createProgram` is not in it, a row for `typescript-eslint`, `ts-node`, or `tsup` cannot be `works`. | Mark one `works`: fail. |
+| `test_no_tsrs_item` | No consumer `action` and no decision option names tsrs. | Add tsrs as an option: fail. |
+| `test_decision_request_last` | The last `##` heading is `Decision request to Daniel`. It has 2 options or more and a line that starts `Recommendation:`. | Move the heading up: fail. |
+
+Light gates: `TR7-api-probe` runs `node -p "Object.keys(require('typescript')).join(',')"` in `$WT` and
+prints `TS_API_KEYS=`. `TR7-consumer-probes` runs `rg -c` for `require\(.typescript.\)` and `from .typescript.`
+over the installed package of each static consumer and prints `PROBE_HITS=<n>`; exit 1 means 0 and exit 2
+fails the gate (A14). `next build` is not run: the deny list refuses a local Primary build, and the host has
+7 GB of memory. Its row is `static`. The report ends with a decision request to Daniel. The options are:
+roll out in Phase 5, stay on 5.9.3, or roll out after the open `pm-decision` items. A recommendation
+follows the options. The report states only true, supported facts (`AGENTS.md` section 6).
+
+#### TR8: remove the trial worktree and branch
+
+**RED_TEST_COMMAND:** `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v $M.P3TrialHelperTests $M.P3TrialScopeTests $M.P3TrialCleanupTests`
+
+**GREEN_TEST_COMMAND:** the light command with classes of TR1 to TR8, then the checks below.
+
+Rule: look at each target first. TR8 runs only after the report (TR7) is committed.
+
+Steps (all light): save `before` (`git worktree list --porcelain`, `git branch -a`,
+`git -C $WT status --porcelain --ignored`, `git -C $WT log --format='%H %s' $BASE..HEAD`, and the patch
+file list). Check that every commit above the base has a patch in `evidence/phase3/trial/patches/`.
+Run `git -C $ROLE_WT worktree remove $WT`. If it stops because of untracked or ignored folders, list them. Use
+`--force` only when each entry matches the generated allowlist: `node_modules`, `dist`, `.next`, `.vinext`,
+`*.tsbuildinfo`, `.turbo`, `coverage`, `.ts59`, and `.ts71-beta`. Then run `git worktree prune`. Delete the
+branch with `git branch -D ts7/trial-p3` after the patch check (`-d` refuses an unmerged branch). Do not
+push. Save `after` and the repeat of the isolation snapshot.
+
+Red evidence (`P3TrialCleanupTests`, all red at base):
+
+| Test | What it proves | Falsification |
+| --- | --- | --- |
+| `test_before_shows_trial` | `before` lists the trial path and the branch. This makes the removal real (A4). | Save an empty `before`: fail. |
+| `test_after_shows_no_trial` | `after.worktree_list` and `after.branch_list` hold neither `ts7-trial` nor `ts7/trial-p3`. `after.path_exists` is false. A remote branch with that name does not exist. | Leave the branch: fail. |
+| `test_unmerged_commits_archived` | Each commit in `before.unmerged_commits` has a patch in `archived_patches`. Each patch file exists and is not empty. | Delete a patch: fail. |
+| `test_force_is_justified` | If `force_used` is true, each listed entry matches the generated allowlist. | Force with a source file: fail. |
+| `test_main_snapshot_equal_at_end` | The final isolation snapshot is equal to the first. | Edit the lockfile in `$MAIN`: fail. |
+| `test_no_deploy_or_push_in_logs` | As in TR1. | As in TR1. |
+
+The orchestrator also runs `git worktree list` and `git branch -a` in the closeout and records both outputs.
+
+### 5b.9 TR5 split into Red and Green rounds
+
+TR5 runs only after TR4 closes. If `regressions.json` has no `regression` row (the summary integer is 0,
+recomputed), TR5 closes as a record. One test, `test_no_open_regressions`, proves the empty list. No
+Red or Green round follows (A4: the proof is the recount, not the word "none").
+
+If regressions exist, the strategy role writes an addendum (section 5b.9a) before any Red. The addendum
+reads `regressions.json`. It groups the `regression` rows by `cause_class` and by owning workspace family. A
+group has at most one cause class. It names, for each group: `fix_paths` (the paths the fix may touch), the
+risk, the review roles, and the class name `P3TrialFixG<n>Tests`.
+
+For each group `Gn`, one Red round and one Green round run in order.
+
+| Step | Work | Gate |
+| --- | --- | --- |
+| Red `Gn` (light) | Write `P3TrialFixG<n>Tests`. The tests fail at base because `fixes.json` has no entry or an entry with `status: open`. | `RED_TEST_COMMAND` for the class: `FAILED`, no `errors=`. |
+| Green `Gn` (heavy, in `$WT`) | Edit only `fix_paths`. Commit in `$WT` as `trial-fix: G<n>`. Export `git format-patch -1 --stdout` to `evidence/phase3/trial/patches/G<n>.patch`. Write the `fixes.json` entries. | The heavy gates below, then `GREEN_TEST_COMMAND`. |
+| Review | Review A for each group. Security review when a fix touches `tsconfig` of an auth or db package, a `package.json`, or a lockfile. UX/API review only if 5b.2 says so. | The role result files. |
+
+Red evidence for a group (`P3TrialFixG<n>Tests`):
+
+| Test | What it proves | Falsification |
+| --- | --- | --- |
+| `test_entry_per_regression` | Each regression row of the group has a `fixes.json` entry with `status` `fixed` or `pm-decision`. None is `open`. | Leave one open: fail (A4). |
+| `test_fix_scope` | The paths of the `diff --git` lines of `G<n>.patch` are inside the group `fix_paths`. | Add a stray path: fail. |
+| `test_no_escapes` | `escape_added(patch)` finds nothing. | Add `@ts-ignore`: fail (A7). |
+| `test_fix_results_recomputed` | Each `fixed` entry has a re-run row under state B. `classify` gives `unchanged-pass`, `pre-existing`, or `improved`, not `regression`. | Remove the re-run: fail (A5, A6). |
+| `test_dual_green_recorded` | `dual_green` is `true`, `false`, or `not-checked`. A `true` value cites a log with `Version 5.9.3`. | Cite a B log: fail. |
+| `test_pm_decision_complete` | A `pm-decision` entry names a file in this track with the options and the default taken. | Leave the file out: fail. |
+
+Heavy gates for a group: `TR5-G<n>-B-<slug>` re-runs each affected row with the TR2 or TR3 method under state B.
+`TR5-G<n>-A-<slug>` runs the dual-green check with `$WT/.ts59/node_modules/.bin/tsc --noEmit`, for plain `tsc --noEmit`
+scripts only. Other scripts get `dual_green: not-checked` with a reason. `TR5-G<n>-patch` (light) runs
+`git apply --check` of the patch against `$ROLE_WT` and prints `PATCH_APPLIES=1`.
+
+Invariants for every group:
+
+1. A fix edits types or configuration only. A fix that changes a runtime line becomes `pm-decision`. The
+   default is: record the finding and defer the fix to Phase 5 (`AGENTS.md` section 5: act on the default).
+2. A fix adds no `@ts-ignore`, `@ts-nocheck`, `@ts-expect-error`, `ignoreBuildErrors`, wider `skipLibCheck`,
+   `"strict": false`, or monorepo-wide `types: ["*"]` (spec FR-6).
+3. Three Green attempts for a group is the limit. After the third failure the group becomes `pm-decision`.
+4. Fixes do not land on master in Phase 3. The patch files are the archive. A fix with `dual_green: true`
+   may land early in Phase 5.
+5. After the last group, a final B re-run covers each workspace that had a regression. The classifier gives
+   no `regression` row, or each remaining row is `pm-decision`. The result is `regressions-after.json`.
+
+### 5b.10 Aggregate-suite handling and known red tests
+
+- **The new module is red until TR8.** Use the per-class commands of 5b.8 as gates. The whole-module
+  command is a gate only at the phase closeout:
+  `PYTHONDONTWRITEBYTECODE=1 P3_PHASE_BASE=<sha> P3_GREEN_COMMITS="<shas>" python3 -m unittest -v $M`.
+- **Known stale Phase 2 failures (5).** `plan.md:168` records them. They are Measure Python tests. They are
+  not type-check or test results of a workspace, so they never become a regression row. The causes are one
+  drifted lock line (`pnpm-lock.yaml:939`), two tests that need `P2_GREEN_COMMITS`, and two tests that read
+  `HR` logs that are not tracked. By that cause the names are most likely
+  `P2T1PeerNoteTests.test_repo_values_are_cited`, `P2T2ScopeTests.test_green_commits_in_scope`,
+  `P2T2ScopeTests.test_lock_diff_in_scope`, `P2T3ResolvedNoteTests.test_gate_results_complete`, and
+  `P2T3ResolvedNoteTests.test_probe_logs_hold_status`. This mapping is an inference from the cause text
+  (A5). The orchestrator runs the Phase 2 module once at `phase_base_sha` (light). It saves the observed
+  names in its run log. That set is the known set. The observed set wins over the names here.
+- **Known set check.** After each Green round the orchestrator reruns the Phase 2 module and the vinext
+  Phase 3 module (`test_typescript7_native_migration_phase3_vinext`). The failure names must equal the
+  known set. An extra name is a regression. A missing name is a note. Compare names, not counts (A7).
+  The trial changes no vinext pin, so no new failure is expected.
+- **No aggregate repository gate** (`pnpm turbo run lint`, `test`, `check-types`, `build`) runs in the trial.
+  Phase 5 acceptance runs them. A `measure/tests` run is not part of a CI gate today.
+
+### 5b.11 Adversarial attacks (narrow)
+
+The role gate uses the TR2 gate command for one small workspace (`packages/types`) as `PROJECT_TESTS`.
+
+1. Swap one diagnostic code in a TR2 row (same count). `test_rows_match_raw_logs` and the classifier cases fail.
+2. Delete one diagnostic from a trial row and its log. The classifier gives `invalid-measurement`, not `improved`.
+3. Lower `peak_rss_kib` in a row. The `.time` comparison fails.
+4. Remove a workspace row, and add a fake workspace row. The live-scan test fails in both cases.
+5. Relabel a 5.9.3 log as 7.0.x. `test_compiler_label_per_row` fails.
+6. Set `ELAPSED_S=1800` in a log. The cap rule fails.
+7. Overlap the epochs of two jobs. The no-overlap rule fails.
+8. Put a beta row into a stable file. `verdict` raises and the label test fails.
+9. Delete the `typescript-eslint` row, or one lockfile peer name, from the consumer table. The coverage tests fail.
+10. Write `faster` where the recomputed claim is `similar`. `test_claims_recomputed` fails.
+11. Touch `pnpm-lock.yaml` in a scratch Green commit on `ts7/phase3`. `P3TrialScopeTests` fails.
+12. Pick `7.0.1-rc` or `7.0.2` by string order against `["7.0.2","7.0.10"]`. The helper case fails.
+13. Edit `pnpm-lock.yaml` in `$MAIN` between the two snapshots. The isolation test fails.
+14. Add `@ts-ignore` to a scratch patch. `test_no_escapes` fails.
+
+### 5b.12 Anti-pattern coverage
+
+| Anti-pattern | Defense in TR1 to TR8 |
+| --- | --- |
+| A3 | Counts are labeled: `TS_CHOSEN=`, `WORKSPACES=`, `ROWS=`, `MATRIX_ROWS=`, `PEER_CONSUMERS=`, `PROBE_HITS=`, `DIAGNOSTICS=`, `Maximum resident set size (kbytes):`, `EXIT=`, `ELAPSED_S=`, `Test Files  N passed (N)`. Diagnostics compare as triples, never as a bare count. |
+| A4 | An empty list fails: registry versions, run list, rows, parity set, consumer rows, patches. A non-zero exit with no matched diagnostic is flagged. `P3_PHASE_BASE` and `P3_GREEN_COMMITS` unset fail. A test run with 0 tests fails. `before` must show the trial in TR8. An unsplit capped job fails. |
+| A5 | Each JSON value is recomputed from a raw log or a `.time` file. Each report cell is recomputed from the evidence. The classifier output is recomputed. The inferred Phase 2 names are marked as inference. |
+| A6 | `plan.md` says "recorded" and "listed", never "TypeScript 7 verified". The speed and memory claims come from the recomputation. The beta row is labeled and decides nothing. A fixed regression needs a gate log. |
+| A7 | Failures compare by file and name. Diagnostics compare by file, line, and code. The log cap keeps every matching line. The version filter uses an anchored pattern. Escape detectors use anchored patterns. |
+| A8 | The orchestrator sets `[~]` on the task before its Red round. |
+| A9 | The module uses `track_dir_resolve`. |
+| A14 | Every `rg` detector treats exit 2 as a failure. Exit 1 with no output means 0 hits. |
+| A16 | The worktree exception is recorded (section 8, question 2). `$WT` lives outside the main checkout and dies in TR8. |
+
 ## 6. Phase 4 outline: Cloudflare preparation
 
 The full section comes before Phase 4 starts. Phase 4 changes no code. Its deliverable is
@@ -1050,4 +1723,13 @@ runs, and one rollback command. Risk will be high or critical for the CI and lin
 | 8 | The plan names 1.4.6 as "the latest 1.4.x". The registry now shows 1.4.7 (published 2026-11-26). Which version? | 1.4.6, as the PM and the done-when text name it. The peers are the same. One constant (`TARGET`) changes if the PM wants 1.4.7. |
 | 9 | The bump makes six Phase 2 tests fail on purpose (5a.9). Edit them or freeze them? | Freeze them. The module is history of a closed phase. The orchestrator checks the failure names against the list in 5a.9. |
 | 10 | A16 forbids a worktree, and the main checkout holds uncommitted owner edits of two `next-env.d.ts` files. Where does Green work? | In a dedicated worktree from the `phase_base_sha`, with its own install. The orchestrator records the A16 exception. Each heavy job stays under 1800 s. |
-| 11 | `spec.md` (Constraints, "Time window") and the `plan.md` header still say heavy steps run after 22:00 ICT. | `plan.md` carries a "Lifted 2026-11-28 (PM)" line. `spec.md` is not edited here. The owner of the spec may add the same line. |
+| 11 | `spec.md` (Constraints, "Time window") and the `plan.md` header still say heavy steps run after 22:00 ICT. | **Resolved 2026-11-28, round 2.** `plan.md` carries a "Lifted 2026-11-28 (PM)" line. The `spec.md` "Time window" bullet now says the same, in one line. |
+| 12 | The plan has no task for the 5.9.3 control. TR4 holds it, so the install state flips A, B, A, B (5b.5). | As written in 5b.5. Alternatives: a second control worktree (more disk), or a control-first order (changes the plan order and the TR1 end state). |
+| 13 | The plan says "31 of 31 workspaces". The live scan at strategy time gives 43 workspaces with `check-types`. Twelve joined after Phase 1. | Run all of them. The 31 of Phase 1 are checked by name. The TR2 "Done when" line in `plan.md` changed to match. |
+| 14 | The control runs tests only for workspaces that fail under 7.0.x. | Yes. `improved` applies to type checks only. Alternative: a full control test pass (adds hours; the report target is 2026-12-02). |
+| 15 | Do the TR5 fixes land on master in Phase 3? | No. The patch files in the evidence folder are the archive. The trial branch dies in TR8. A fix with `dual_green: true` may land early in Phase 5. |
+| 16 | `git branch -d` refuses the unmerged trial branch in TR8. | Run `git branch -D ts7/trial-p3` after every commit above the base has a patch in the evidence folder. The branch is the trial of this track, and the plan and `AGENTS.md` require its removal. |
+| 17 | The 7.1 beta needs a second compiler install. | Use a side tool directory (`npm install --prefix`), not a second pnpm install. |
+| 18 | Thresholds: load 1.5 or less, swap growth under 1048576 KiB, a 5 percent band for the speed claim, `HEAVY_MIN_AVAIL_MB=1500`, per-workspace timeout 300 s for type checks and 1500 s for tests. | These are defaults. The PM may tune them. |
+| 19 | A stable 7.1 release may appear before TR1 starts. Which version is the gate? | The latest stable 7.0.x (spec FR-3). A stable 7.1 release replaces the beta as the extra data point. The report records it. |
+| 20 | The five stale Phase 2 test names in 5b.10 are an inference from the cause text. | The orchestrator observes the names at `phase_base_sha` and saves them. The observed set wins. |
